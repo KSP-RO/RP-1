@@ -1,4 +1,4 @@
-Welcome to Realistic Progression Zero, the lightweight tech-tree for Kerbal Space Prorgram's Realism Overhaul.
+Welcome to Realistic Progression Zero, the lightweight tech-tree for Kerbal Space Program's Realism Overhaul.
 
 License: CC-BY-4.0
 

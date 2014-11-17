@@ -13,3 +13,5 @@ deploy:
   file: RP-0-*.zip
   on:
     repo: KSP-RO/RP-0
+    tags: true
+    all_branches: true

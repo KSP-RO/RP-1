@@ -93,7 +93,6 @@ start:
     - sepMotor1
     - SXTSmallFuselage
     - miniFuelTank
-    - probeCoreOcto2
     - sensorThermometer
     - sensorBarometer
     - rcsTankMini

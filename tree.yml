@@ -1,0 +1,339 @@
+# RP-0 tech tree.
+#
+# This tree is in YAML format.
+# 
+# Please *only* puts things in here if they should be moved from
+# their original positions.
+#
+# You can convert it into ModuleManager directives by running:
+#
+#       perl bin/build-rp0
+#
+# Don't have Perl? Try Strawberry!
+#
+#       http://strawberryperl.com/
+
+start:
+    - trussPiece1x
+    - longAntenna
+    - parachuteSingle
+    - KzInterstageAdapter2
+    - KzResizableFairingBase
+    - KzResizableFairingBaseRing
+    - KzProcFairingSide1
+    - KzProcFairingSide2
+    - noseCone
+    - standardNoseCone
+    - SXTProtonlikeNoseCone
+    - wingConnector4
+    - wingConnector5
+    - structuralWing4
+    - delta_small
+    - wingConnector3
+    - structuralWing3
+    - LMiniAircaftTail
+    - StandardCtrlSrf
+    - smallCtrlSrf
+    - wingStrake
+    - rocketNoseCone
+    - winglet
+    - wingConnector
+    - wingConnector2
+    - structuralWing
+    - structuralWing2
+    - sweptWing1
+    - sweptWing2
+    - elevon2
+    - tailfin
+    - winglet3
+    - deltaWing
+    - sweptWing
+    - R8winglet
+    - elevon3
+    - airplaneTail
+    - CircularIntake
+    - SXTWingSmall
+    - CanardController
+    - MK1IntakeFuselage
+    - AdvancedCanard
+    - elevon5
+    - IntakeRadialLong
+    - airScoop
+    - LRadialAirIntake
+    - SXTInlineAirIntake
+    - SXTInlineAirIntakeTiny
+    - nacelleBody
+    - radialEngineBody
+    - ladder1
+    - spotLight1
+    - spotLight2
+    - parachuteDrogue
+    - SmallGearBay
+    - parachuteRadial
+    - parachuteLarge
+    - structuralIBeam3
+    - strutCube
+    - strutOcto
+    - structuralIBeam2
+    - structuralMiniNode
+    - trussPiece1x
+    - structuralPanel1
+    - strutConnector
+    - structuralIBeam1
+    - trussAdapter
+    - trussPiece3x
+    - structuralPanel2
+    - KzProcFairingFuselage1
+    - KzProcFairingFuselage2
+    - KzThrustPlate
+    - launchClamp1
+    - stackDecouplerMini
+    - smallHardpoint
+    - structuralPylon
+    - sepMotor1
+    - SXTSmallFuselage
+    - miniFuelTank
+    - SXTSputnik
+    - probeCoreOcto2
+    - sensorThermometer
+    - sensorBarometer
+    - rcsTankMini
+    - SXTFuel625m
+    - SnubOtron
+
+basicRocketry:
+    - fuelTankSmallFlat
+    - fuelTank
+    - GooExperiment
+    - stackDecoupler
+    - SXTWaxWing
+    - SXTBlackAdder2
+    - toroidalFuelTank
+    - fuelTankSmall
+    - SXTBlackAdder
+    - radialRCSTank
+    - MK1Fuselage
+    - RCSFuelTank
+    - rcsTankRadialLong
+    - liquidEngine2
+    - fuelTank_long
+
+generalRocketry:
+    - liquidEngine3
+    - RCSTank1-2
+    - fuelTank4-2
+    - fuelTank2-2
+    - fuelTank1-2
+    - fuelTank3-2
+
+survivability:
+
+stability:
+    - noseCone
+    - winglet
+    - radialDecoupler
+    - batteryPack
+    - batteryBankMini
+    - ksp_r_largeBatteryPack
+    - RCSBoonExt
+    - SquadRCSBlockHalf
+    - RCSBlockQuarter
+
+advRocketry:
+
+scienceTech:
+
+generalConstruction:
+
+flightControl:
+
+advConstruction:
+
+advFlightControl:
+
+electrics:
+
+spaceExploration:
+
+landing:
+
+heavyRocketry:
+
+fuelSystems:
+
+aerodynamicSystems:
+
+advExploration:
+
+precisionEngineering:
+
+advElectrics:
+
+specializedControl:
+
+heavierRocketry:
+
+specializedConstruction:
+
+advLanding:
+
+supersonicFlight:
+
+actuators:
+
+composites:
+
+fieldScience:
+
+nuclearPropulsion:
+
+ionPropulsion:
+
+largeElectrics:
+
+electronics:
+
+highAltitudeFlight:
+
+unmannedTech:
+
+largeControl:
+
+advMetalWorks:
+
+advAerodynamics:
+
+metaMaterials:
+
+heavyAerodynamics:
+
+veryHeavyRocketry:
+
+advancedMotors:
+
+hypersonicFlight:
+
+specializedElectrics:
+
+advUnmanned:
+
+advScienceTech:
+
+experimentalRocketry:
+
+aerospaceTech:
+
+experimentalElectrics:
+
+experimentalAerodynamics:
+
+experimentalScience:
+
+experimentalMotors:
+
+robotics:
+
+automation:
+
+nanolathing:
+
+specializedScienceTech:
+
+nuclearPower:
+
+largeNuclearPower:
+
+nuclearFuelSystems:
+
+advNuclearPower:
+
+nuclearSupport:
+
+improvedNuclearPropulsion:
+
+advNuclearPropulsion:
+
+fusionRockets:
+
+giganticRocketry:
+
+colossalRocketry:
+
+fusionPower:
+
+exoticAlloys:
+
+orbitalAssembly:
+
+advAerospaceComposites:
+
+expAircraftEngines:
+
+heavyControl:
+
+subsonicFlight:
+
+offworldManufacturing:
+
+orbitalSurveys:
+
+advSurveys:
+
+recycling:
+
+hydroponics:
+
+longTermHabitation:
+
+resourceUtilization:
+
+offworldMining:
+
+advOffworldMining:
+
+resourceExploitation:
+
+selfSufficientOutposts:
+
+specializedScienceTech:
+
+longTermScienceTech:
+
+scientificOutposts:
+
+advSolarTech:
+
+cuttingEdgeSolarTech:
+
+advPVMaterials:
+
+electricalSystems:
+
+advIonPropulsion:
+
+plasmaPropulsion:
+
+experimentalIonPropulsion:
+
+cuttingEdgeIonPropulsion:
+
+advPlasmaPropulsion:
+
+exoticReactions:
+
+highEnergyScience:
+
+orbitalMegastructures:
+
+specializedPlasmaTech:
+
+powerTransmission:
+
+antimatterPower:
+
+ultraHighEnergyPhysics:
+
+enhancedSurvivability:
+
+shortTermHabitation:
+

@@ -129,6 +129,7 @@ generalRocketry:
     - fuelTank3-2
 
 survivability:
+    - mk1pod
 
 stability:
     - noseCone
@@ -142,6 +143,9 @@ stability:
     - RCSBlockQuarter
 
 advRocketry:
+    - liquidEngine
+    - solidBooster
+    - solidBooster1-1
 
 scienceTech:
 

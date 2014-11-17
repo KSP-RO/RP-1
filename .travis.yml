@@ -1,9 +1,12 @@
 language: c
 
-script: make
+install:
+    - sudo apt-get install zip
 
-before_depoy:
-    - make release
+script: make release
+
+# before_depoy:
+#- make release
 
 deploy:
   provider: releases

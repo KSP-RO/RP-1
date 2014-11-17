@@ -1,0 +1,21 @@
+{
+
+    "comment" : "This is *NOT* a valid CKAN file. But it could be very easily made one after we have a release. It's also a really good place to keep track of dependencies and other information.",
+
+    "identifier" : "RP-0",
+    "abstract"   : "Realistic Progression Zero - The lightweight Realism Overhaul tech tree",
+    "license"    : "CC-BY-4.0",
+    "author"     : "RP-0 Group",
+    "resources"  : {
+        "repository" : "https://github.com/KSP-RO/RP-0"
+    },
+    "release_status" : "development",
+
+    "depends" : [
+        { "name" : "ModuleManager" } ,
+        { "name" : "RealismOverhaul" },
+        { "name" : "SXT" },
+        { "name" : "ProceduralFairings" },
+        { "name" : "CommunityTechTree" }
+    ]
+}

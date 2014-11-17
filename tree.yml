@@ -103,6 +103,14 @@ start:
     - ROAerobeeSustainer
     - OscarDtank
     - OscarEtank
+    - Proceduralwing2
+    - Proceduralwing2EndPiece
+    - Proceduralwing4
+    - ProceduralAllMovingWing
+    - ProceduralwingBac9
+    - ProceduralwingSPP
+    - pCtrlSrf1
+    - B9_Aero_Wing_ControlSurface_SH_4mProcedural
 
 basicRocketry:
     - fuelTankSmallFlat

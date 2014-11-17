@@ -93,7 +93,6 @@ start:
     - sepMotor1
     - SXTSmallFuselage
     - miniFuelTank
-    - SXTSputnik
     - probeCoreOcto2
     - sensorThermometer
     - sensorBarometer
@@ -113,6 +112,7 @@ basicRocketry:
     - toroidalFuelTank
     - fuelTankSmall
     - SXTBlackAdder
+    - SXTSputnik
     - radialRCSTank
     - MK1Fuselage
     - RCSFuelTank

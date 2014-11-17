@@ -100,6 +100,8 @@ start:
     - rcsTankMini
     - SXTFuel625m
     - SnubOtron
+    - RP0probeSounding0-3m
+    - ROAerobeeSustainer
 
 basicRocketry:
     - fuelTankSmallFlat

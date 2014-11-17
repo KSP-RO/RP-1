@@ -101,6 +101,8 @@ start:
     - SnubOtron
     - RP0probeSounding0-3m
     - ROAerobeeSustainer
+    - OscarDtank
+    - OscarEtank
 
 basicRocketry:
     - fuelTankSmallFlat

@@ -1569,7 +1569,7 @@ getopts('o:', \%opts);
 
 warn "Writing output to $opts{o}\n";
 
-if (@ARGV == 0) { @ARGV = "tree.yml" }
+if (@ARGV == 0) { @ARGV = "$Bin/../tree.yml" }
 
 open(my $out_fh, ">", $opts{o});
 

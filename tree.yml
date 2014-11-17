@@ -7,7 +7,7 @@
 #
 # You can convert it into ModuleManager directives by running:
 #
-#       perl bin/build-rp0
+#       perl bin/yml2mm
 #
 # Don't have Perl? Try Strawberry!
 #

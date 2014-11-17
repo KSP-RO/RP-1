@@ -17,5 +17,10 @@
         { "name" : "SXT" },
         { "name" : "ProceduralFairings" },
         { "name" : "CommunityTechTree" }
+    ],
+    "recommends" : [
+        { "name" : "ProceduralDyanmics" },
+        { "name" : "TweakScale" },
+        { "name" : "ProceduralParts" }
     ]
 }

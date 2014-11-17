@@ -18,4 +18,4 @@ $(TREE): $(TREE_SRC)
 	bin/yml2mm
 
 $(ZIPFILE): $(TREE)
-	zip -r $(ZIPFILE) GameData
+	zip -r $(ZIPFILE) README.md LICENSE.md GameData

@@ -5,9 +5,6 @@ install:
 
 script: make release
 
-# before_depoy:
-#- make release
-
 deploy:
   provider: releases
   api_key:

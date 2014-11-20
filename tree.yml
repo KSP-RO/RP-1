@@ -99,7 +99,9 @@ start:
     - SXTFuel625m
     - SnubOtron
     - RP0probeSounding0-3m
+# modeled on the electronics of WAC Corporal / Aerobee
     - ROAerobeeSustainer
+#Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
     - OscarDtank
     - OscarEtank
     - Proceduralwing2
@@ -117,25 +119,36 @@ basicRocketry:
     - GooExperiment
     - stackDecoupler
     - SXTWaxWing
+#(Black Arrow kick motor)
     - SXTBlackAdder2
+#Gamma 2 (Black Arrow upper stage engine)
     - toroidalFuelTank
     - fuelTankSmall
     - SXTBlackAdder
+#Gamma 8 (Black Arrow main engine)
     - SXTSputnik
     - radialRCSTank
     - MK1Fuselage
     - RCSFuelTank
     - rcsTankRadialLong
     - liquidEngine2
+#X-405 (Vanguard main engine)
     - fuelTank_long
+    - RO-AJ10-Early
+#(Vanguard/Able/[Early]Delta upper stage)
 
 generalRocketry:
     - liquidEngine3
+#11D33 (Molniya upper stage)
+    - RO-LR-89
+#LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     - RCSTank1-2
     - fuelTank4-2
     - fuelTank2-2
     - fuelTank1-2
     - fuelTank3-2
+    - radialEngineMini
+#LR-101 vernier (Thor/Jupiter/Atlas)
 
 survivability:
     - mk1pod

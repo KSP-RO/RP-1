@@ -14,6 +14,7 @@
 #       http://strawberryperl.com/
 
 start:
+#TL0. early tech. Sounding rockets, basic structural pieces and wings. Late 40s.
     - trussPiece1x
     - longAntenna
     - parachuteSingle
@@ -114,6 +115,7 @@ start:
     - B9_Aero_Wing_ControlSurface_SH_4mProcedural
 
 basicRocketry:
+#TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
     - fuelTankSmallFlat
     - fuelTank
     - GooExperiment
@@ -138,6 +140,7 @@ basicRocketry:
 #(Vanguard/Able/[Early]Delta upper stage)
 
 generalRocketry:
+#TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
     - liquidEngine3
 #11D33 (Molniya upper stage)
     - RO-LR-89
@@ -151,9 +154,11 @@ generalRocketry:
 #LR-101 vernier (Thor/Jupiter/Atlas)
 
 survivability:
+#First crewed capsules
     - mk1pod
 
 stability:
+#3-axis stability in orbit. CORONA etc.
     - noseCone
     - winglet
     - radialDecoupler
@@ -165,6 +170,7 @@ stability:
     - RCSBlockQuarter
 
 advRocketry:
+# TL2 1960-65 tech or so. Gemini, Voskhod, etc.
     - liquidEngine
     - solidBooster
     - solidBooster1-1
@@ -187,6 +193,7 @@ spaceExploration:
 landing:
 
 heavyRocketry:
+#TL3 Mid-late 60s tech. Saturn V, N-1.
     - solidBooster1-1Small
 # NOTE: This ^^ is going to change to a Castor 1, and be moved to advRocketry.
     - 
@@ -204,9 +211,8 @@ advElectrics:
 specializedControl:
 
 heavierRocketry:
-    - engineLargeSkipper_125m
-    - liquidEngineMiniRescale
-    - solidBoosterSmall
+#TL4 Apollo Applications program, working N-1, etc.
+
 
 specializedConstruction:
 
@@ -243,6 +249,10 @@ metaMaterials:
 heavyAerodynamics:
 
 veryHeavyRocketry:
+#TL5 80s tech
+    - engineLargeSkipper_125m
+    - liquidEngineMiniRescale
+    - solidBoosterSmall
 
 advancedMotors:
 

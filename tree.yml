@@ -115,6 +115,10 @@ start:
     - B9_Aero_Wing_ControlSurface_SH_4mProcedural
 
 basicRocketry:
+# Batteries; since players already have service modules.
+    - batteryPack
+    - batteryBankMini
+    - ksp_r_largeBatteryPack
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
     - fuelTankSmallFlat
     - fuelTank
@@ -162,9 +166,6 @@ stability:
     - noseCone
     - winglet
     - radialDecoupler
-    - batteryPack
-    - batteryBankMini
-    - ksp_r_largeBatteryPack
     - RCSBoonExt
     - SquadRCSBlockHalf
     - RCSBlockQuarter

@@ -31,6 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Contracts\ProbeAltitudeRecord.cs" />
+    <Compile Include="ProgressTreeAdder.cs" />
     <Compile Include="RecordsAltitudeProbe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -39,6 +41,7 @@
       <HintPath>..\..\..\..\..\..\..\Games\KSP_025clean\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\..\Games\KSP_025clean\KSP_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>

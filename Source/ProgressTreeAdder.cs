@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using KSP;
+using KSPAchievements;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
-    class ProgressTreeAdder : MonoBehaviour
+    [KSPScenario(ScenarioCreationOptions.AddToNewGames, new GameScenes[]
+{
+	GameScenes.FLIGHT,
+	GameScenes.TRACKSTATION,
+	GameScenes.SPACECENTER
+})]
+    class ProgressTreeAdder : ScenarioModule
     {
-        public void OnAwake()
+        public override void OnAwake()
         {
+            base.OnAwake();
             if ((object)ProgressTracking.Instance != null)
             {
-                KSPAchievements.RecordsAltitudeProbe altitudeRecordProbe = new KSPAchievements.RecordsAltitudeProbe();
+                RecordsAltitudeProbe altitudeRecordProbe = new KSPAchievements.RecordsAltitudeProbe();
                 AddNode(altitudeRecordProbe);
             }
             else
@@ -24,10 +31,20 @@ namespace RP0
             if ((object)(ProgressTracking.Instance.achievementTree[node.Id]) == null)
             {
                 ProgressTracking.Instance.achievementTree.AddNode(node);
+                if (node.OnDeploy != null)
+                    node.OnDeploy();
                 Debug.Log("*RP-0* Added node " + node.Id);
             }
             else
                 Debug.Log("*RP-0* Tree has node " + node.Id);
+        }
+        public override void OnLoad(ConfigNode node)
+        {
+            base.OnLoad(node);
+        }
+        public override void OnSave(ConfigNode node)
+        {
+            base.OnSave(node);
         }
     }
 }

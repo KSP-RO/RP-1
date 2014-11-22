@@ -14,7 +14,7 @@ namespace RP0
             string tmp = "";
             try
             {
-                tmp += "Part name: " + part.partName;
+                tmp += "Part name: " + part.name;
                 tmp += "\nTech Required: " + part.partInfo.TechRequired;
                 tmp += "\nEntry Cost: " + part.partInfo.entryCost;
             }

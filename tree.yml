@@ -175,33 +175,34 @@ start:
     launchClamp1:
         cost: 10
     stackDecouplerMini:
+        cost: 2
+    radialDecoupler:
+        cost: 20
 
+#TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
 # Batteries; since players already have service modules.
     batteryPack:
     batteryBankMini:
     ksp_r_largeBatteryPack:
-#TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
+
     fuelTankSmallFlat:
     fuelTank:
     GooExperiment:
     stackDecoupler:
 
-    SXTWaxWing:
-        entryCost: 6000
+    SXTWaxWing: # Black Arrow kick motor
+        entryCost: 8000
         cost: 400 # stage cost $1mil WHAT?
 
-    # Gamma 8 (Black Arrow main engine)
-    SXTBlackAdder:
-        entryCost: 60000
+    SXTBlackAdder: # Gamma 8 (Black Arrow main engine)
+        entryCost: 24000
         cost: 1200 # Stage cost 4m
 
-    # Black Arrow kick motor
-    SXTBlackAdder2:
-        entryCost: 30000
+    SXTBlackAdder2: #Gamma 2 (Black Arrow upper stage engine)
+        entryCost: 12000
         cost: 600 # Stage cost $3m in 1970, but avionics probably a large part
 
-#Gamma 2 (Black Arrow upper stage engine)
     toroidalFuelTank:
     fuelTankSmall:
     SXTSputnik:
@@ -210,29 +211,27 @@ basicRocketry:
     RCSFuelTank:
     rcsTankRadialLong:
 
-    # X-405 (Vanguard main engine)
-    liquidEngine2:
-        entryCost: 45000
+    liquidEngine2: # X-405 (Vanguard main engine)
+        entryCost: 18000
         cost: 900
 
     fuelTank_long:
 
-    # (Vanguard/Able/[Early]Delta upper stage)
-    RO-AJ10-Early:
-        entryCost: 7500
+    RO-AJ10-Early: # (Vanguard/Able/[Early]Delta upper stage)
+        entryCost: 3000
         cost: 150
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:
 
-    # Block L / 11D33 (Molniya upper stage)
+    # Blok E (Luna/Vostok), Blok L (Molniya) fourth stage engine
     liquidEngine3:
-        entryCost: 30000
+        entryCost: 12000
         cost: 600
 
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     RO-LR-89:
-        entryCost: 100000
+        entryCost: 40000
         cost: 2000
 
     RCSTank1-2:
@@ -243,20 +242,27 @@ generalRocketry:
 
     # LR-101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini:
-        entryCost: 2500
+        entryCost: 1000
         cost: 50
 
 survivability:
 #First crewed capsules
     mk1pod:
-        entryCost: 60000 # Full 100x
-        cost: 6000
+        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
+        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
+#Heatshields
+    0625_Heatshield:	    
+        entryCost: 6000
+        cost: 300
+    Heatshield-1M:
+        entryCost: 12000
+        cost: 600
+    1.25_Heatshield:
+        entryCost: 20000
+        cost: 1000
 
 stability:
 #3-axis stability in orbit. CORONA etc.
-    noseCone:
-    winglet:
-    radialDecoupler:
 
     # RCS joy.
 
@@ -264,11 +270,11 @@ stability:
         # TODO: Make sure my costs are sane!
 
     SquadRCSBlockHalf:
-        entryCost: 4800
+        entryCost: 2000 # breaks 20x rule because of avionics required
         cost: 20
 
     RCSBlockQuarter:
-        entryCost: 3000
+        entryCost: 1000
         cost: 15
 
 advRocketry:
@@ -381,8 +387,22 @@ robotics:
 
 automation:
 
+# FIXME this is our catchall node
 nanolathing:
-
+#DRE heatshields
+    2.5_Heatshield:
+    3.75_Heatshield:
+    6.25_Heatshield:
+#RO Heatshields
+    Heatshield-2M:
+    Heatshield-3M:
+    Heatshield-375M:
+    Heatshield-4M:
+    Heatshield-5M:
+    Heatshield-10M:
+    Heatshield-15M:
+    Heatshield-25M:
+   
 specializedScienceTech:
 
 nuclearPower:

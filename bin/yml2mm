@@ -17,7 +17,7 @@ use FindBin qw($Bin);
 # Editing this file? Make changes to the `yml2mm.lean` version, and
 # compile the portable version with `fatten yml2mm.lean yml2mm`
 
-my $DECORATION = "AFTER[RealismOverhaul]:FOR[RP-0]";
+my $DECORATION = "FOR[RP-0]";
 
 # Allow output file to be set.
 my %opts = (o => "$Bin/../GameData/RP-0/Tree.cfg");

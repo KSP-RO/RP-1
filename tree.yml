@@ -119,10 +119,19 @@ start:
     miniFuelTank:
     rcsTankMini:
     SXTFuel625m:
+
+    # Small solid
     SnubOtron:
+        entryCost: 0
+        cost: 3
+
     RP0probeSounding0-3m:
-# modeled on the electronics of WAC Corporal / Aerobee
+
+    # modeled on the electronics of WAC Corporal / Aerobee
     ROAerobeeSustainer:
+        entryCost: 0
+        cost: 6
+
 #Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
     OscarDtank:
     OscarEtank:
@@ -147,38 +156,65 @@ basicRocketry:
     fuelTank:
     GooExperiment:
     stackDecoupler:
+
     SXTWaxWing:
-#(Black Arrow kick motor)
+        entryCost: 6000
+        cost: 400 # stage cost $1mil WHAT?
+
+    # Gamma 8 (Black Arrow main engine)
+    SXTBlackAdder:
+        entryCost: 60000
+        cost: 1200 # Stage cost 4m
+
+    # Black Arrow kick motor
     SXTBlackAdder2:
+        entryCost: 30000
+        cost: 600 # Stage cost $3m in 1970, but avionics probably a large part
+
 #Gamma 2 (Black Arrow upper stage engine)
     toroidalFuelTank:
     fuelTankSmall:
-    SXTBlackAdder:
-#Gamma 8 (Black Arrow main engine)
     SXTSputnik:
     radialRCSTank:
     MK1Fuselage:
     RCSFuelTank:
     rcsTankRadialLong:
-    liquidEngine2:
-#X-405 (Vanguard main engine)
-    fuelTank_long:
-    RO-AJ10-Early:
-#(Vanguard/Able/[Early]Delta upper stage)
 
+    # X-405 (Vanguard main engine)
+    liquidEngine2:
+        entryCost: 45000
+        cost: 900
+
+    fuelTank_long:
+
+    # (Vanguard/Able/[Early]Delta upper stage)
+    RO-AJ10-Early:
+        entryCost: 7500
+        cost: 150
+
+# TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:
-#TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
+
+    # Block L / 11D33 (Molniya upper stage)
     liquidEngine3:
-#11D33 (Molniya upper stage)
+        entryCost: 30000
+        cost: 600
+
+    # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     RO-LR-89:
-#LR-79/89 (Thor/Jupiter main engine, Atlas booster)
+        entryCost: 100000
+        cost: 2000
+
     RCSTank1-2:
     fuelTank4-2:
     fuelTank2-2:
     fuelTank1-2:
     fuelTank3-2:
+
+    # LR-101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini:
-#LR-101 vernier (Thor/Jupiter/Atlas)
+        entryCost: 2500
+        cost: 50
 
 survivability:
 #First crewed capsules

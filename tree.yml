@@ -15,15 +15,6 @@
 
 start:
 #TL0. early tech. Sounding rockets, basic structural pieces and wings. Late 40s.
-    trussPiece1x:
-
-    # What's this cool ampersand? It's a label. See below as to why we want that:
-    longAntenna: &longAntenna
-        cost: 5
-        entryCost: 0
-
-    # Look! We can say this part is the same as some other part. Bam! No repetition.
-    SXTAntenna: *longAntenna
 
     # Parachutes
 
@@ -40,86 +31,114 @@ start:
 
     sensorThermometer:
         cost: 9
+
     sensorBarometer:
         cost: 20
 
+    # What's this cool ampersand? It's a label. See below as to why we want that:
+    longAntenna: &longAntenna
+        cost: 5
+        entryCost: 0
+
+    # Look! We can say this part is the same as some other part. Bam! No repetition.
+    SXTAntenna: *longAntenna
+
+    # Basic RemoteTech antenna, so things can get off the ground. :)
+    RTShortAntenna1:
+
+    # Fairings
+
     KzInterstageAdapter2:
-    KzResizableFairingBase:
-    KzResizableFairingBaseRing:
+    KzProcFairingFuselage1:
+    KzProcFairingFuselage2:
     KzProcFairingSide1:
     KzProcFairingSide2:
+    KzResizableFairingBase:
+    KzResizableFairingBaseRing:
+
+    # Nose Cones
+
     noseCone:
+    rocketNoseCone:
     standardNoseCone:
     SXTProtonlikeNoseCone:
-    wingConnector4:
-    wingConnector5:
-    structuralWing4:
+
+    # Wings
+
+    airplaneTail:
+    B9_Aero_Wing_ControlSurface_SH_4mProcedural:
     delta_small:
-    wingConnector3:
-    structuralWing3:
+    deltaWing:
+    elevon2:
+    elevon3:
     LMiniAircaftTail:
-    StandardCtrlSrf:
+    pCtrlSrf1:
+    ProceduralAllMovingWing:
+    Proceduralwing2:
+    Proceduralwing2EndPiece:
+    Proceduralwing4:
+    ProceduralwingBac9:
+    ProceduralwingSPP:
+    R8winglet:
     smallCtrlSrf:
-    wingStrake:
-    rocketNoseCone:
-    winglet:
-    wingConnector:
-    wingConnector2:
+    StandardCtrlSrf:
     structuralWing:
     structuralWing2:
+    structuralWing3:
+    structuralWing4:
+    sweptWing:
     sweptWing1:
     sweptWing2:
-    elevon2:
-    tailfin:
-    winglet3:
-    deltaWing:
-    sweptWing:
-    R8winglet:
-    elevon3:
-    airplaneTail:
-    CircularIntake:
     SXTWingSmall:
-    CanardController:
-    MK1IntakeFuselage:
-    AdvancedCanard:
-    elevon5:
-    IntakeRadialLong:
+    tailfin:
+    wingConnector:
+    wingConnector2:
+    wingConnector3:
+    wingConnector4:
+    wingConnector5:
+    winglet:
+    winglet3:
+    wingStrake:
+
+    # Intakes
+
     airScoop:
+    CircularIntake:
+    IntakeRadialLong:
     LRadialAirIntake:
+    MK1IntakeFuselage:
     SXTInlineAirIntake:
     SXTInlineAirIntakeTiny:
-    nacelleBody:
-    radialEngineBody:
+
+    # Structural
+    
+    smallHardpoint:
+    structuralIBeam1:
+    structuralIBeam2:
+    structuralIBeam3:
+    structuralMiniNode:
+    structuralPanel1:
+    structuralPanel2:
+    structuralPylon:
+    strutConnector:
+    strutCube:
+    strutOcto:
+    SXTSmallFuselage:
+    trussAdapter:
+    trussPiece1x:
+    trussPiece1x:
+    trussPiece3x:
+
+    # Lights, ladders and things
+
     ladder1:
     spotLight1:
     spotLight2:
-    SmallGearBay:
-    structuralIBeam3:
-    strutCube:
-    strutOcto:
-    structuralIBeam2:
-    structuralMiniNode:
-    trussPiece1x:
-    structuralPanel1:
-    strutConnector:
-    structuralIBeam1:
-    trussAdapter:
-    trussPiece3x:
-    structuralPanel2:
-    KzProcFairingFuselage1:
-    KzProcFairingFuselage2:
-    KzThrustPlate:
-    launchClamp1:
-        cost: 10
-    stackDecouplerMini:
-    smallHardpoint:
-    structuralPylon:
+
+    # Engines
+
     sepMotor1:
         cost: 7
-    SXTSmallFuselage:
-    miniFuelTank:
-    rcsTankMini:
-    SXTFuel625m:
 
     # Small solid
     SnubOtron:
@@ -131,23 +150,31 @@ start:
         cost: 1
 
     # modeled on the electronics of WAC Corporal / Aerobee
+    # Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
     ROAerobeeSustainer:
         entryCost: 0
         cost: 6
 
-#Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
+    # Tanks
+
+    SXTFuel625m:
+    miniFuelTank:
+    rcsTankMini:
     OscarDtank:
     OscarEtank:
-    Proceduralwing2:
-    Proceduralwing2EndPiece:
-    Proceduralwing4:
-    ProceduralAllMovingWing:
-    ProceduralwingBac9:
-    ProceduralwingSPP:
-    pCtrlSrf1:
-    B9_Aero_Wing_ControlSurface_SH_4mProcedural:
-# Basic RemoteTech antenna, so things can get off the ground. :)
-    RTShortAntenna1:
+
+    # Unsorted. Please sort me! ;)
+
+    CanardController:
+    AdvancedCanard:
+    elevon5:
+    nacelleBody:
+    radialEngineBody:
+    SmallGearBay:
+    KzThrustPlate:
+    launchClamp1:
+        cost: 10
+    stackDecouplerMini:
 
 basicRocketry:
 # Batteries; since players already have service modules.

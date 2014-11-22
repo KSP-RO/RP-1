@@ -21,7 +21,7 @@ namespace KSPAchievements
 			{
 				return;
 			}
-			if (vs.from == Vessel.Situations.FLYING)
+			/*if (vs.from == Vessel.Situations.FLYING)
 			{
 				if (vs.to == Vessel.Situations.SUB_ORBITAL)
 				{
@@ -30,13 +30,13 @@ namespace KSPAchievements
 					OnStow();
 					Terminate();
 				}
-			}
+			}*/
 		}
 		void iterateVessels(Vessel v)
 		{
 			if (v != FlightGlobals.ActiveVessel)
 				return;
-
+            //MonoBehaviour.print("**RA Iterating");
 			if (v.mainBody == Planetarium.fetch.Home)
 			{
 				if (v.altitude > record)
@@ -57,6 +57,7 @@ namespace KSPAchievements
 		}
 		protected override void OnLoad(ConfigNode node)
 		{
+            //Debug.Log("RecordsAltitudeProbe::OnLoad");
 			if (node.HasValue("record"))
 			{
 				double.TryParse(node.GetValue("record"), out record);
@@ -68,6 +69,7 @@ namespace KSPAchievements
 		}
 		protected override void OnSave(ConfigNode node)
 		{
+            //Debug.Log("RecordsAltitudeProbe::OnSave");
 			node.AddValue("record", this.record);
 		}
 		private void Terminate()

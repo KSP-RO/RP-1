@@ -8,7 +8,7 @@ using KSPAchievements;
 
 namespace Contracts
 {
-    /*class ProbeAltitudeRecord : AltitudeRecord
+    class ProbeAltitudeRecord : AltitudeRecord
     {
         public override bool MeetRequirements()
 		{
@@ -80,31 +80,87 @@ namespace Contracts
 				prestige = Contract.ContractPrestige.Trivial;
 				targetAltitude = (double)(Mathf.Ceil((float)(newTarget + 10000.0) / 1000f) * 1000f);
 			}
-			else if (newTarget < 50000.0)
+			else if (newTarget < 100000.0)
 			{
 				prestige = Contract.ContractPrestige.Significant;
-				targetAltitude = (double)(Mathf.Ceil((float)(newTarget + 20000.0) / 1000f) * 1000f);
+				targetAltitude = (double)(Mathf.Ceil((float)(newTarget + 20000.0) / 5000f) * 5000f);
 			}
 			else
 			{
 				prestige = Contract.ContractPrestige.Exceptional;
-				targetAltitude = (double)(Mathf.Ceil((float)((double)FlightGlobals.Bodies[1].maxAtmosphereAltitude * 0.8) / 1000f) * 1000f);
-				if (newTarget > targetAltitude)
-				{
-					targetAltitude = (double)(Mathf.Ceil((float)(newTarget + 20000.0) / 1000f) * 1000f);
-				}
+                targetAltitude = (double)(Mathf.Ceil((float)(newTarget + 100000.0) / 10000f) * 10000f);
+                if (newTarget > (Planetarium.fetch.Home.sphereOfInfluence - Planetarium.fetch.Home.Radius) * 0.9f)
+                    return false;
 			}
-			AddParameter(new AltitudeRecord(targetAltitude), null);
-			base.AddKeywordsRequired(new string[]
-			{
-				.(138103)
-			});
+			AddParameter(new Contracts.Parameters.ProbeAltitudeRecord(targetAltitude), null);
+            base.AddKeywordsRequired("Record");
 			expiryType = Contract.DeadlineType.None;
 			deadlineType = Contract.DeadlineType.None;
-			float num2 = Mathf.Floor((float)(targetAltitude / 10000.0) * 100f) / 100f;
-			base.SetFunds(num2 * 1000f, num2 * 5000f, null);
-			base.SetReputation(num2 * 20f, null);
+            // RP-0 scale funds by 0.1x
+            float reward = Mathf.Floor((float)(Math.Sqrt(Math.Sqrt(targetAltitude))));
+			base.SetFunds(reward * 50f, reward * 250f, null);
+			base.SetReputation(reward * 2f, null);
 			return true;
 		}
-    }*/
+    }
+}
+namespace Contracts.Parameters
+{
+    [Serializable]
+	public class ProbeAltitudeRecord : ContractParameter
+	{
+		protected double targetAltitude;
+		public double TargetAltitude
+		{
+			get
+			{
+				return targetAltitude;
+			}
+		}
+		public ProbeAltitudeRecord()
+		{
+		}
+		public ProbeAltitudeRecord(double targetAltitude)
+		{
+			targetAltitude = targetAltitude;
+		}
+		protected override string GetHashString()
+		{
+			return targetAltitude.ToString();
+		}
+		protected override string GetTitle()
+		{
+			return "Reach " + targetAltitude;
+		}
+		protected override void OnLoad(ConfigNode node)
+		{
+			if (node.HasValue("alt"))
+			{
+				targetAltitude = double.Parse(node.GetValue("alt"));
+			}
+		}
+		protected override void OnSave(ConfigNode node)
+		{
+			node.AddValue("alt", targetAltitude.ToString());
+		}
+		protected override void OnRegister()
+		{
+			GameEvents.OnProgressAchieved.Add(new EventData<ProgressNode>.OnEvent(OnProgressNodeAchieved));
+		}
+		protected override void OnUnregister()
+		{
+			GameEvents.OnProgressAchieved.Remove(new EventData<ProgressNode>.OnEvent(OnProgressNodeAchieved));
+		}
+		private void OnProgressNodeAchieved(ProgressNode node)
+		{
+			RecordsAltitudeProbe recordsAltitude = node as RecordsAltitudeProbe;
+			if (recordsAltitude != null)
+			{
+				if (recordsAltitude.record >= targetAltitude)
+				{
+					base.SetComplete();
+				}
+			}
+		}
+	}
 }

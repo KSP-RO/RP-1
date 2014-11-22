@@ -7,7 +7,7 @@ using KSPAchievements;
 
 namespace RP0
 {
-    [KSPScenario(ScenarioCreationOptions.AddToNewGames, new GameScenes[]
+    [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[]
 {
 	GameScenes.FLIGHT,
 	GameScenes.TRACKSTATION,

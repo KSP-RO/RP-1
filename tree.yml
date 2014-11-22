@@ -26,6 +26,7 @@ start:
     SXTAntenna: *longAntenna
 
     parachuteSingle:
+        cost: 10
     KzInterstageAdapter2:
     KzResizableFairingBase:
     KzResizableFairingBaseRing:
@@ -77,9 +78,12 @@ start:
     spotLight1:
     spotLight2:
     parachuteDrogue:
+        cost: 15
     SmallGearBay:
     parachuteRadial:
+        cost: 15
     parachuteLarge:
+        cost: 30
     structuralIBeam3:
     strutCube:
     strutOcto:
@@ -96,6 +100,7 @@ start:
     KzProcFairingFuselage2:
     KzThrustPlate:
     launchClamp1:
+        cost: 10
     stackDecouplerMini:
     smallHardpoint:
     structuralPylon:
@@ -103,7 +108,9 @@ start:
     SXTSmallFuselage:
     miniFuelTank:
     sensorThermometer:
+        cost: 9
     sensorBarometer:
+        cost: 20
     rcsTankMini:
     SXTFuel625m:
     SnubOtron:
@@ -170,6 +177,8 @@ generalRocketry:
 survivability:
 #First crewed capsules
     mk1pod:
+        entryCost: 60000 # Full 100x
+        cost: 6000
 
 stability:
 #3-axis stability in orbit. CORONA etc.

@@ -13,10 +13,10 @@ namespace Contracts
         public override bool MeetRequirements()
 		{
             Debug.Log("RP0*ProbeAltitudeRecord::MeetRequirements");
-            if (ProgressTracking.Instance.NodeComplete("ReachedSpace"))
+            /*if (ProgressTracking.Instance.NodeComplete("ReachedSpace"))
 			{
 				return false;
-			}
+			}*/
 			RecordsAltitudeProbe recordsAltitude = ProgressTracking.Instance.FindNode("AltitudeRecordProbe") as RecordsAltitudeProbe;
 			if (recordsAltitude != null)
 			{
@@ -122,9 +122,9 @@ namespace Contracts.Parameters
 		public ProbeAltitudeRecord()
 		{
 		}
-		public ProbeAltitudeRecord(double targetAltitude)
+		public ProbeAltitudeRecord(double targetAlt)
 		{
-			targetAltitude = targetAltitude;
+			targetAltitude = targetAlt;
 		}
 		protected override string GetHashString()
 		{

@@ -17,8 +17,10 @@ deploy:
     all_branches: true
 
 notifications:
-    irc: "irc.esper.net#rp0"
-    on_success: change
-    on_failure: always
-    use_notice: true
-    skip_join: true
+    irc: 
+        channels:
+            - "irc.esper.net#rp0"
+        on_success: change
+        on_failure: always
+        use_notice: true
+        skip_join: true

@@ -11,7 +11,18 @@ namespace RP0
     {
         public override string GetInfo()
         {
-            return "Part name: " + part.partName + "\nTech Required: " + part.partInfo.TechRequired + "\nEntry Cost: " + part.partInfo.entryCost;
+            string tmp = "";
+            try
+            {
+                tmp += "Part name: " + part.partName;
+                tmp += "\nTech Required: " + part.partInfo.TechRequired;
+                tmp += "\nEntry Cost: " + part.partInfo.entryCost;
+            }
+            catch (Exception e)
+            {
+                Debug.Log("**RP0 error getting info, exception " + e);
+            }
+            return tmp;
         }
     }
 }

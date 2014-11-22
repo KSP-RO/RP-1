@@ -138,6 +138,7 @@ start:
     # Engines
 
     sepMotor1:
+        cost: 7
 
     # Small solid
     SnubOtron:

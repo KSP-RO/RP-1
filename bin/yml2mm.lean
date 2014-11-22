@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use autodie;
 use Getopt::Std;
-use YAML::Tiny;
+use YAML qw(LoadFile);
 use FindBin qw($Bin);
 
 # YAML to ModuleManager converter
@@ -38,11 +38,20 @@ say {$out_fh}
 ;
 
 foreach my $file (@ARGV) {
-    my $yaml = YAML::Tiny->read($file)->[0]; # The 0th YAML section.
+    my $yaml = LoadFile($file);
 
     foreach my $tech (keys %$yaml) {
-        foreach my $part (@{ $yaml->{$tech}} ) {
-            say {$out_fh} "\@PART[$part]:$DECORATION { %TechRequired = $tech }";
+        foreach my $part (keys %{ $yaml->{$tech}} ) {
+            my $changes = "\t%TechRequired = $tech\n";
+
+            my $custom_fields = $yaml->{$tech}{$part};
+
+            # If there are changes listed for this part, copy them across.
+            foreach my $field (keys %$custom_fields) {
+                $changes .= "\t%$field = $custom_fields->{$field}\n";
+            }
+
+            say {$out_fh} "\@PART[$part]:$DECORATION\n{\n$changes}";
         }
     }
 }

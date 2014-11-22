@@ -5,1231 +5,1277 @@
 BEGIN {
 my %fatpacked;
 
-$fatpacked{"YAML/Tiny.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'YAML_TINY';
-  package YAML::Tiny;
-  BEGIN {
-    $YAML::Tiny::AUTHORITY = 'cpan:ADAMK';
-  }
-  {
-    $YAML::Tiny::VERSION = '1.56';
-  }
-  # git description: v1.55-3-gc945058
-  
-  
-  use strict;
-  use warnings;
-  
-  # UTF Support?
-  sub HAVE_UTF8 () { $] >= 5.007003 }
-  BEGIN {
-      if ( HAVE_UTF8 ) {
-          # The string eval helps hide this from Test::MinimumVersion
-          eval "require utf8;";
-          die "Failed to load UTF-8 support" if $@;
-      }
-  
-      # Class structure
-      require 5.004;
-      require Exporter;
-      require Carp;
-      @YAML::Tiny::ISA       = qw{ Exporter  };
-      @YAML::Tiny::EXPORT    = qw{ Load Dump };
-      @YAML::Tiny::EXPORT_OK = qw{ LoadFile DumpFile freeze thaw };
-  
-      # Error storage
-      $YAML::Tiny::errstr    = '';
-  }
-  
-  # The character class of all characters we need to escape
-  # NOTE: Inlined, since it's only used once
-  # my $RE_ESCAPE = '[\\x00-\\x08\\x0b-\\x0d\\x0e-\\x1f\"\n]';
-  
-  # Printed form of the unprintable characters in the lowest range
-  # of ASCII characters, listed by ASCII ordinal position.
-  my @UNPRINTABLE = qw(
-      z    x01  x02  x03  x04  x05  x06  a
-      x08  t    n    v    f    r    x0e  x0f
-      x10  x11  x12  x13  x14  x15  x16  x17
-      x18  x19  x1a  e    x1c  x1d  x1e  x1f
-  );
-  
-  # Printable characters for escapes
-  my %UNESCAPES = (
-      z => "\x00", a => "\x07", t    => "\x09",
-      n => "\x0a", v => "\x0b", f    => "\x0c",
-      r => "\x0d", e => "\x1b", '\\' => '\\',
-  );
-  
-  # Special magic boolean words
-  my %QUOTE = map { $_ => 1 } qw{
-      null Null NULL
-      y Y yes Yes YES n N no No NO
-      true True TRUE false False FALSE
-      on On ON off Off OFF
-  };
-  
-  
-  
-  
-  
-  #####################################################################
-  # Implementation
-  
-  # Create an empty YAML::Tiny object
-  sub new {
-      my $class = shift;
-      bless [ @_ ], $class;
-  }
-  
-  # Create an object from a file
-  sub read {
-      my $class = ref $_[0] ? ref shift : shift;
-  
-      # Check the file
-      my $file = shift or return $class->_error( 'You did not specify a file name' );
-      return $class->_error( "File '$file' does not exist" )              unless -e $file;
-      return $class->_error( "'$file' is a directory, not a file" )       unless -f _;
-      return $class->_error( "Insufficient permissions to read '$file'" ) unless -r _;
-  
-      # Slurp in the file
-      local $/ = undef;
-      local *CFG;
-      unless ( open(CFG, $file) ) {
-          return $class->_error("Failed to open file '$file': $!");
-      }
-      my $contents = <CFG>;
-      unless ( close(CFG) ) {
-          return $class->_error("Failed to close file '$file': $!");
-      }
-  
-      $class->read_string( $contents );
-  }
-  
-  # Create an object from a string
-  sub read_string {
-      my $class  = ref $_[0] ? ref shift : shift;
-      my $self   = bless [], $class;
-      my $string = $_[0];
-      eval {
-          unless ( defined $string ) {
-              die \"Did not provide a string to load";
-          }
-  
-          # Byte order marks
-          # NOTE: Keeping this here to educate maintainers
-          # my %BOM = (
-          #     "\357\273\277" => 'UTF-8',
-          #     "\376\377"     => 'UTF-16BE',
-          #     "\377\376"     => 'UTF-16LE',
-          #     "\377\376\0\0" => 'UTF-32LE'
-          #     "\0\0\376\377" => 'UTF-32BE',
-          # );
-          if ( $string =~ /^(?:\376\377|\377\376|\377\376\0\0|\0\0\376\377)/ ) {
-              die \"Stream has a non UTF-8 BOM";
-          } else {
-              # Strip UTF-8 bom if found, we'll just ignore it
-              $string =~ s/^\357\273\277//;
-          }
-  
-          # Try to decode as utf8
-          utf8::decode($string) if HAVE_UTF8;
-  
-          # Check for some special cases
-          return $self unless length $string;
-          unless ( $string =~ /[\012\015]+\z/ ) {
-              die \"Stream does not end with newline character";
-          }
-  
-          # Split the file into lines
-          my @lines = grep { ! /^\s*(?:\#.*)?\z/ }
-                  split /(?:\015{1,2}\012|\015|\012)/, $string;
-  
-          # Strip the initial YAML header
-          @lines and $lines[0] =~ /^\%YAML[: ][\d\.]+.*\z/ and shift @lines;
-  
-          # A nibbling parser
-          while ( @lines ) {
-              # Do we have a document header?
-              if ( $lines[0] =~ /^---\s*(?:(.+)\s*)?\z/ ) {
-                  # Handle scalar documents
-                  shift @lines;
-                  if ( defined $1 and $1 !~ /^(?:\#.+|\%YAML[: ][\d\.]+)\z/ ) {
-                      push @$self, $self->_read_scalar( "$1", [ undef ], \@lines );
-                      next;
-                  }
-              }
-  
-              if ( ! @lines or $lines[0] =~ /^(?:---|\.\.\.)/ ) {
-                  # A naked document
-                  push @$self, undef;
-                  while ( @lines and $lines[0] !~ /^---/ ) {
-                      shift @lines;
-                  }
-  
-              } elsif ( $lines[0] =~ /^\s*\-/ ) {
-                  # An array at the root
-                  my $document = [ ];
-                  push @$self, $document;
-                  $self->_read_array( $document, [ 0 ], \@lines );
-  
-              } elsif ( $lines[0] =~ /^(\s*)\S/ ) {
-                  # A hash at the root
-                  my $document = { };
-                  push @$self, $document;
-                  $self->_read_hash( $document, [ length($1) ], \@lines );
-  
-              } else {
-                  die \"YAML::Tiny failed to classify the line '$lines[0]'";
-              }
-          }
-      };
-      if ( ref $@ eq 'SCALAR' ) {
-          return $self->_error(${$@});
-      } elsif ( $@ ) {
-          require Carp;
-          Carp::croak($@);
-      }
-  
-      return $self;
-  }
-  
-  # Deparse a scalar string to the actual scalar
-  sub _read_scalar {
-      my ($self, $string, $indent, $lines) = @_;
-  
-      # Trim trailing whitespace
-      $string =~ s/\s*\z//;
-  
-      # Explitic null/undef
-      return undef if $string eq '~';
-  
-      # Single quote
-      if ( $string =~ /^\'(.*?)\'(?:\s+\#.*)?\z/ ) {
-          return '' unless defined $1;
-          $string = $1;
-          $string =~ s/\'\'/\'/g;
-          return $string;
-      }
-  
-      # Double quote.
-      # The commented out form is simpler, but overloaded the Perl regex
-      # engine due to recursion and backtracking problems on strings
-      # larger than 32,000ish characters. Keep it for reference purposes.
-      # if ( $string =~ /^\"((?:\\.|[^\"])*)\"\z/ ) {
-      if ( $string =~ /^\"([^\\"]*(?:\\.[^\\"]*)*)\"(?:\s+\#.*)?\z/ ) {
-          # Reusing the variable is a little ugly,
-          # but avoids a new variable and a string copy.
-          $string = $1;
-          $string =~ s/\\"/"/g;
-          $string =~ s/\\([never\\fartz]|x([0-9a-fA-F]{2}))/(length($1)>1)?pack("H2",$2):$UNESCAPES{$1}/gex;
-          return $string;
-      }
-  
-      # Special cases
-      if ( $string =~ /^[\'\"!&]/ ) {
-          die \"YAML::Tiny does not support a feature in line '$string'";
-      }
-      return {} if $string =~ /^{}(?:\s+\#.*)?\z/;
-      return [] if $string =~ /^\[\](?:\s+\#.*)?\z/;
-  
-      # Regular unquoted string
-      if ( $string !~ /^[>|]/ ) {
-          if (
-              $string =~ /^(?:-(?:\s|$)|[\@\%\`])/
-              or
-              $string =~ /:(?:\s|$)/
-          ) {
-              die \"YAML::Tiny found illegal characters in plain scalar: '$string'";
-          }
-          $string =~ s/\s+#.*\z//;
-          return $string;
-      }
-  
-      # Error
-      die \"YAML::Tiny failed to find multi-line scalar content" unless @$lines;
-  
-      # Check the indent depth
-      $lines->[0]   =~ /^(\s*)/;
-      $indent->[-1] = length("$1");
-      if ( defined $indent->[-2] and $indent->[-1] <= $indent->[-2] ) {
-          die \"YAML::Tiny found bad indenting in line '$lines->[0]'";
-      }
-  
-      # Pull the lines
-      my @multiline = ();
-      while ( @$lines ) {
-          $lines->[0] =~ /^(\s*)/;
-          last unless length($1) >= $indent->[-1];
-          push @multiline, substr(shift(@$lines), length($1));
-      }
-  
-      my $j = (substr($string, 0, 1) eq '>') ? ' ' : "\n";
-      my $t = (substr($string, 1, 1) eq '-') ? ''  : "\n";
-      return join( $j, @multiline ) . $t;
-  }
-  
-  # Parse an array
-  sub _read_array {
-      my ($self, $array, $indent, $lines) = @_;
-  
-      while ( @$lines ) {
-          # Check for a new document
-          if ( $lines->[0] =~ /^(?:---|\.\.\.)/ ) {
-              while ( @$lines and $lines->[0] !~ /^---/ ) {
-                  shift @$lines;
-              }
-              return 1;
-          }
-  
-          # Check the indent level
-          $lines->[0] =~ /^(\s*)/;
-          if ( length($1) < $indent->[-1] ) {
-              return 1;
-          } elsif ( length($1) > $indent->[-1] ) {
-              die \"YAML::Tiny found bad indenting in line '$lines->[0]'";
-          }
-  
-          if ( $lines->[0] =~ /^(\s*\-\s+)[^\'\"]\S*\s*:(?:\s+|$)/ ) {
-              # Inline nested hash
-              my $indent2 = length("$1");
-              $lines->[0] =~ s/-/ /;
-              push @$array, { };
-              $self->_read_hash( $array->[-1], [ @$indent, $indent2 ], $lines );
-  
-          } elsif ( $lines->[0] =~ /^\s*\-(\s*)(.+?)\s*\z/ ) {
-              # Array entry with a value
-              shift @$lines;
-              push @$array, $self->_read_scalar( "$2", [ @$indent, undef ], $lines );
-  
-          } elsif ( $lines->[0] =~ /^\s*\-\s*\z/ ) {
-              shift @$lines;
-              unless ( @$lines ) {
-                  push @$array, undef;
-                  return 1;
-              }
-              if ( $lines->[0] =~ /^(\s*)\-/ ) {
-                  my $indent2 = length("$1");
-                  if ( $indent->[-1] == $indent2 ) {
-                      # Null array entry
-                      push @$array, undef;
-                  } else {
-                      # Naked indenter
-                      push @$array, [ ];
-                      $self->_read_array( $array->[-1], [ @$indent, $indent2 ], $lines );
-                  }
-  
-              } elsif ( $lines->[0] =~ /^(\s*)\S/ ) {
-                  push @$array, { };
-                  $self->_read_hash( $array->[-1], [ @$indent, length("$1") ], $lines );
-  
-              } else {
-                  die \"YAML::Tiny failed to classify line '$lines->[0]'";
-              }
-  
-          } elsif ( defined $indent->[-2] and $indent->[-1] == $indent->[-2] ) {
-              # This is probably a structure like the following...
-              # ---
-              # foo:
-              # - list
-              # bar: value
-              #
-              # ... so lets return and let the hash parser handle it
-              return 1;
-  
-          } else {
-              die \"YAML::Tiny failed to classify line '$lines->[0]'";
-          }
-      }
-  
-      return 1;
-  }
-  
-  # Parse an array
-  sub _read_hash {
-      my ($self, $hash, $indent, $lines) = @_;
-  
-      while ( @$lines ) {
-          # Check for a new document
-          if ( $lines->[0] =~ /^(?:---|\.\.\.)/ ) {
-              while ( @$lines and $lines->[0] !~ /^---/ ) {
-                  shift @$lines;
-              }
-              return 1;
-          }
-  
-          # Check the indent level
-          $lines->[0] =~ /^(\s*)/;
-          if ( length($1) < $indent->[-1] ) {
-              return 1;
-          } elsif ( length($1) > $indent->[-1] ) {
-              die \"YAML::Tiny found bad indenting in line '$lines->[0]'";
-          }
-  
-          # Get the key
-          unless ( $lines->[0] =~ s/^\s*([^\'\" ][^\n]*?)\s*:(\s+(?:\#.*)?|$)// ) {
-              if ( $lines->[0] =~ /^\s*[?\'\"]/ ) {
-                  die \"YAML::Tiny does not support a feature in line '$lines->[0]'";
-              }
-              die \"YAML::Tiny failed to classify line '$lines->[0]'";
-          }
-          my $key = $1;
-  
-          # Do we have a value?
-          if ( length $lines->[0] ) {
-              # Yes
-              $hash->{$key} = $self->_read_scalar( shift(@$lines), [ @$indent, undef ], $lines );
-          } else {
-              # An indent
-              shift @$lines;
-              unless ( @$lines ) {
-                  $hash->{$key} = undef;
-                  return 1;
-              }
-              if ( $lines->[0] =~ /^(\s*)-/ ) {
-                  $hash->{$key} = [];
-                  $self->_read_array( $hash->{$key}, [ @$indent, length($1) ], $lines );
-              } elsif ( $lines->[0] =~ /^(\s*)./ ) {
-                  my $indent2 = length("$1");
-                  if ( $indent->[-1] >= $indent2 ) {
-                      # Null hash entry
-                      $hash->{$key} = undef;
-                  } else {
-                      $hash->{$key} = {};
-                      $self->_read_hash( $hash->{$key}, [ @$indent, length($1) ], $lines );
-                  }
-              }
-          }
-      }
-  
-      return 1;
-  }
-  
-  # Save an object to a file
-  sub write {
-      my $self = shift;
-      my $file = shift or return $self->_error('No file name provided');
-  
-      # Write it to the file
-      open( CFG, '>' . $file ) or return $self->_error(
-          "Failed to open file '$file' for writing: $!"
-          );
-      print CFG $self->write_string;
-      close CFG;
-  
-      return 1;
-  }
-  
-  # Save an object to a string
-  sub write_string {
-      my $self = shift;
-      return '' unless @$self;
-  
-      # Iterate over the documents
-      my $indent = 0;
-      my @lines  = ();
-      foreach my $cursor ( @$self ) {
-          push @lines, '---';
-  
-          # An empty document
-          if ( ! defined $cursor ) {
-              # Do nothing
-  
-          # A scalar document
-          } elsif ( ! ref $cursor ) {
-              $lines[-1] .= ' ' . $self->_write_scalar( $cursor, $indent );
-  
-          # A list at the root
-          } elsif ( ref $cursor eq 'ARRAY' ) {
-              unless ( @$cursor ) {
-                  $lines[-1] .= ' []';
-                  next;
-              }
-              push @lines, $self->_write_array( $cursor, $indent, {} );
-  
-          # A hash at the root
-          } elsif ( ref $cursor eq 'HASH' ) {
-              unless ( %$cursor ) {
-                  $lines[-1] .= ' {}';
-                  next;
-              }
-              push @lines, $self->_write_hash( $cursor, $indent, {} );
-  
-          } else {
-              Carp::croak("Cannot serialize " . ref($cursor));
-          }
-      }
-  
-      join '', map { "$_\n" } @lines;
-  }
-  
-  sub _write_scalar {
-      my $string = $_[1];
-      return '~'  unless defined $string;
-      return "''" unless length  $string;
-      if ( $string =~ /[\x00-\x08\x0b-\x0d\x0e-\x1f\"\'\n]/ ) {
-          $string =~ s/\\/\\\\/g;
-          $string =~ s/"/\\"/g;
-          $string =~ s/\n/\\n/g;
-          $string =~ s/([\x00-\x1f])/\\$UNPRINTABLE[ord($1)]/g;
-          return qq|"$string"|;
-      }
-      if ( $string =~ /(?:^\W|\s|:\z)/ or $QUOTE{$string} ) {
-          return "'$string'";
-      }
-      return $string;
-  }
-  
-  sub _write_array {
-      my ($self, $array, $indent, $seen) = @_;
-      if ( $seen->{refaddr($array)}++ ) {
-          die "YAML::Tiny does not support circular references";
-      }
-      my @lines  = ();
-      foreach my $el ( @$array ) {
-          my $line = ('  ' x $indent) . '-';
-          my $type = ref $el;
-          if ( ! $type ) {
-              $line .= ' ' . $self->_write_scalar( $el, $indent + 1 );
-              push @lines, $line;
-  
-          } elsif ( $type eq 'ARRAY' ) {
-              if ( @$el ) {
-                  push @lines, $line;
-                  push @lines, $self->_write_array( $el, $indent + 1, $seen );
-              } else {
-                  $line .= ' []';
-                  push @lines, $line;
-              }
-  
-          } elsif ( $type eq 'HASH' ) {
-              if ( keys %$el ) {
-                  push @lines, $line;
-                  push @lines, $self->_write_hash( $el, $indent + 1, $seen );
-              } else {
-                  $line .= ' {}';
-                  push @lines, $line;
-              }
-  
-          } else {
-              die "YAML::Tiny does not support $type references";
-          }
-      }
-  
-      @lines;
-  }
-  
-  sub _write_hash {
-      my ($self, $hash, $indent, $seen) = @_;
-      if ( $seen->{refaddr($hash)}++ ) {
-          die "YAML::Tiny does not support circular references";
-      }
-      my @lines  = ();
-      foreach my $name ( sort keys %$hash ) {
-          my $el   = $hash->{$name};
-          my $line = ('  ' x $indent) . "$name:";
-          my $type = ref $el;
-          if ( ! $type ) {
-              $line .= ' ' . $self->_write_scalar( $el, $indent + 1 );
-              push @lines, $line;
-  
-          } elsif ( $type eq 'ARRAY' ) {
-              if ( @$el ) {
-                  push @lines, $line;
-                  push @lines, $self->_write_array( $el, $indent + 1, $seen );
-              } else {
-                  $line .= ' []';
-                  push @lines, $line;
-              }
-  
-          } elsif ( $type eq 'HASH' ) {
-              if ( keys %$el ) {
-                  push @lines, $line;
-                  push @lines, $self->_write_hash( $el, $indent + 1, $seen );
-              } else {
-                  $line .= ' {}';
-                  push @lines, $line;
-              }
-  
-          } else {
-              die "YAML::Tiny does not support $type references";
-          }
-      }
-  
-      @lines;
-  }
-  
-  # Set error
-  sub _error {
-      $YAML::Tiny::errstr = $_[1];
-      undef;
-  }
-  
-  # Retrieve error
-  sub errstr {
-      $YAML::Tiny::errstr;
-  }
-  
-  
-  
-  
-  
-  #####################################################################
-  # YAML Compatibility
+$fatpacked{"Mo/builder.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'MO_BUILDER';
+  package Mo::builder;my$M="Mo::";
+  $VERSION=0.39;
+  *{$M.'builder::e'}=sub{my($P,$e,$o)=@_;$o->{builder}=sub{my($m,$n,%a)=@_;my$b=$a{builder}or return$m;my$i=exists$a{lazy}?$a{lazy}:!${$P.':N'};$i or ${$P.':E'}{$n}=\&{$P.$b}and return$m;sub{$#_?$m->(@_):!exists$_[0]{$n}?$_[0]{$n}=$_[0]->$b:$m->(@_)}}};
+MO_BUILDER
+
+$fatpacked{"Mo/default.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'MO_DEFAULT';
+  package Mo::default;my$M="Mo::";
+  $VERSION=0.39;
+  *{$M.'default::e'}=sub{my($P,$e,$o)=@_;$o->{default}=sub{my($m,$n,%a)=@_;exists$a{default}or return$m;my($d,$r)=$a{default};my$g='HASH'eq($r=ref$d)?sub{+{%$d}}:'ARRAY'eq$r?sub{[@$d]}:'CODE'eq$r?$d:sub{$d};my$i=exists$a{lazy}?$a{lazy}:!${$P.':N'};$i or ${$P.':E'}{$n}=$g and return$m;sub{$#_?$m->(@_):!exists$_[0]{$n}?$_[0]{$n}=$g->(@_):$m->(@_)}}};
+MO_DEFAULT
+
+$fatpacked{"YAML.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'YAML';
+  use 5.008001;
+  package YAML;
+  $YAML::VERSION = '0.90';
+  use YAML::Mo;
+  
+  use Exporter;
+  push @YAML::ISA, 'Exporter';
+  our @EXPORT = qw{ Dump Load };
+  our @EXPORT_OK = qw{ freeze thaw DumpFile LoadFile Bless Blessed };
+  
+  use YAML::Node; # XXX This is a temp fix for Module::Build
+  
+  # XXX This VALUE nonsense needs to go.
+  use constant VALUE => "\x07YAML\x07VALUE\x07";
+  
+  # YAML Object Properties
+  has dumper_class => default => sub {'YAML::Dumper'};
+  has loader_class => default => sub {'YAML::Loader'};
+  has dumper_object => default => sub {$_[0]->init_action_object("dumper")};
+  has loader_object => default => sub {$_[0]->init_action_object("loader")};
   
   sub Dump {
-      YAML::Tiny->new(@_)->write_string;
+      my $yaml = YAML->new;
+      $yaml->dumper_class($YAML::DumperClass)
+          if $YAML::DumperClass;
+      return $yaml->dumper_object->dump(@_);
   }
   
   sub Load {
-      my $self = YAML::Tiny->read_string(@_);
-      unless ( $self ) {
-          Carp::croak("Failed to load YAML document from string");
-      }
-      if ( wantarray ) {
-          return @$self;
-      } else {
-          # To match YAML.pm, return the last document
-          return $self->[-1];
-      }
+      my $yaml = YAML->new;
+      $yaml->loader_class($YAML::LoaderClass)
+          if $YAML::LoaderClass;
+      return $yaml->loader_object->load(@_);
   }
   
-  BEGIN {
-      *freeze = *Dump;
-      *thaw   = *Load;
+  {
+      no warnings 'once';
+      # freeze/thaw is the API for Storable string serialization. Some
+      # modules make use of serializing packages on if they use freeze/thaw.
+      *freeze = \ &Dump;
+      *thaw   = \ &Load;
   }
   
   sub DumpFile {
-      my $file = shift;
-      YAML::Tiny->new(@_)->write($file);
+      my $OUT;
+      my $filename = shift;
+      if (ref $filename eq 'GLOB') {
+          $OUT = $filename;
+      }
+      else {
+          my $mode = '>';
+          if ($filename =~ /^\s*(>{1,2})\s*(.*)$/) {
+              ($mode, $filename) = ($1, $2);
+          }
+          open $OUT, $mode, $filename
+            or YAML::Mo::Object->die('YAML_DUMP_ERR_FILE_OUTPUT', $filename, $!);
+      }
+      binmode $OUT, ':utf8';  # if $Config{useperlio} eq 'define';
+      local $/ = "\n"; # reset special to "sane"
+      print $OUT Dump(@_);
   }
   
   sub LoadFile {
-      my $self = YAML::Tiny->read($_[0]);
-      unless ( $self ) {
-          Carp::croak("Failed to load YAML document from '" . ($_[0] || '') . "'");
+      my $IN;
+      my $filename = shift;
+      if (ref $filename eq 'GLOB') {
+          $IN = $filename;
       }
-      if ( wantarray ) {
-          return @$self;
-      } else {
-          # Return only the last document to match YAML.pm,
-          return $self->[-1];
+      else {
+          open $IN, '<', $filename
+            or YAML::Mo::Object->die('YAML_LOAD_ERR_FILE_INPUT', $filename, $!);
+      }
+      binmode $IN, ':utf8';  # if $Config{useperlio} eq 'define';
+      return Load(do { local $/; <$IN> });
+  }
+  
+  sub init_action_object {
+      my $self = shift;
+      my $object_class = (shift) . '_class';
+      my $module_name = $self->$object_class;
+      eval "require $module_name";
+      $self->die("Error in require $module_name - $@")
+          if $@ and "$@" !~ /Can't locate/;
+      my $object = $self->$object_class->new;
+      $object->set_global_options;
+      return $object;
+  }
+  
+  my $global = {};
+  sub Bless {
+      require YAML::Dumper::Base;
+      YAML::Dumper::Base::bless($global, @_)
+  }
+  sub Blessed {
+      require YAML::Dumper::Base;
+      YAML::Dumper::Base::blessed($global, @_)
+  }
+  sub global_object { $global }
+  
+  1;
+  
+  =encoding UTF-8
+  
+  =head1 NAME
+  
+  YAML - YAML Ain't Markup Language (tm)
+  
+  =head1 NOTE
+  
+  This module has been released to CPAN as YAML::Old, and soon YAML.pm
+  will be changed to just be a frontend interface module for all the
+  various Perl YAML implementation modules, including YAML::Old.
+  
+  If you want robust and fast YAML processing using the normal Dump/Load
+  API, please consider switching to YAML::XS. It is by far the best Perl
+  module for YAML at this time. It requires that you have a C compiler,
+  since it is written in C.
+  
+  If you really need to use this version of YAML.pm it will always be
+  available as YAML::Old.
+  
+  If you don't care which YAML module use, as long as it's the best one
+  installed on your system, use YAML::Any.
+  
+  The rest of this documentation is left unchanged, until YAML.pm is
+  switched over to the new UI-only version.
+  
+  =head1 SYNOPSIS
+  
+      use YAML;
+  
+      # Load a YAML stream of 3 YAML documents into Perl data structures.
+      my ($hashref, $arrayref, $string) = Load(<<'...');
+      ---
+      name: ingy
+      age: old
+      weight: heavy
+      # I should comment that I also like pink, but don't tell anybody.
+      favorite colors:
+          - red
+          - green
+          - blue
+      ---
+      - Clark Evans
+      - Oren Ben-Kiki
+      - Ingy döt Net
+      --- >
+      You probably think YAML stands for "Yet Another Markup Language". It
+      ain't! YAML is really a data serialization language. But if you want
+      to think of it as a markup, that's OK with me. A lot of people try
+      to use XML as a serialization format.
+  
+      "YAML" is catchy and fun to say. Try it. "YAML, YAML, YAML!!!"
+      ...
+  
+      # Dump the Perl data structures back into YAML.
+      print Dump($string, $arrayref, $hashref);
+  
+      # YAML::Dump is used the same way you'd use Data::Dumper::Dumper
+      use Data::Dumper;
+      print Dumper($string, $arrayref, $hashref);
+  
+  =head1 DESCRIPTION
+  
+  The YAML.pm module implements a YAML Loader and Dumper based on the YAML
+  1.0 specification. L<http://www.yaml.org/spec/>
+  
+  YAML is a generic data serialization language that is optimized for
+  human readability. It can be used to express the data structures of most
+  modern programming languages. (Including Perl!!!)
+  
+  For information on the YAML syntax, please refer to the YAML
+  specification.
+  
+  =head1 WHY YAML IS COOL
+  
+  =over 4
+  
+  =item YAML is readable for people.
+  
+  It makes clear sense out of complex data structures. You should find
+  that YAML is an exceptional data dumping tool. Structure is shown
+  through indentation, YAML supports recursive data, and hash keys are
+  sorted by default. In addition, YAML supports several styles of scalar
+  formatting for different types of data.
+  
+  =item YAML is editable.
+  
+  YAML was designed from the ground up to be an excellent syntax for
+  configuration files. Almost all programs need configuration files, so
+  why invent a new syntax for each one? And why subject users to the
+  complexities of XML or native Perl code?
+  
+  =item YAML is multilingual.
+  
+  Yes, YAML supports Unicode. But I'm actually referring to programming
+  languages. YAML was designed to meet the serialization needs of Perl,
+  Python, Ruby, Tcl, PHP, Javascript and Java. It was also designed to be
+  interoperable between those languages. That means YAML serializations
+  produced by Perl can be processed by Python.
+  
+  =item YAML is taint safe.
+  
+  Using modules like Data::Dumper for serialization is fine as long as you
+  can be sure that nobody can tamper with your data files or
+  transmissions. That's because you need to use Perl's C<eval()> built-in
+  to deserialize the data. Somebody could add a snippet of Perl to erase
+  your files.
+  
+  YAML's parser does not need to eval anything.
+  
+  =item YAML is full featured.
+  
+  YAML can accurately serialize all of the common Perl data structures and
+  deserialize them again without losing data relationships. Although it is
+  not 100% perfect (no serializer is or can be perfect), it fares as well
+  as the popular current modules: Data::Dumper, Storable, XML::Dumper and
+  Data::Denter.
+  
+  YAML.pm also has the ability to handle code (subroutine) references and
+  typeglobs. (Still experimental) These features are not found in Perl's
+  other serialization modules.
+  
+  =item YAML is extensible.
+  
+  The YAML language has been designed to be flexible enough to solve it's
+  own problems. The markup itself has 3 basic construct which resemble
+  Perl's hash, array and scalar. By default, these map to their Perl
+  equivalents. But each YAML node also supports a tagging mechanism (type
+  system) which can cause that node to be interpreted in a completely
+  different manner. That's how YAML can support object serialization and
+  oddball structures like Perl's typeglob.
+  
+  =back
+  
+  =head1 YAML IMPLEMENTATIONS IN PERL
+  
+  This module, YAML.pm, is really just the interface module for YAML
+  modules written in Perl. The basic interface for YAML consists of two
+  functions: C<Dump> and C<Load>. The real work is done by the modules
+  YAML::Dumper and YAML::Loader.
+  
+  Different YAML module distributions can be created by subclassing
+  YAML.pm and YAML::Loader and YAML::Dumper. For example, YAML-Simple
+  consists of YAML::Simple YAML::Dumper::Simple and YAML::Loader::Simple.
+  
+  Why would there be more than one implementation of YAML? Well, despite
+  YAML's offering of being a simple data format, YAML is actually very
+  deep and complex. Implementing the entirety of the YAML specification is
+  a daunting task.
+  
+  For this reason I am currently working on 3 different YAML implementations.
+  
+  =over
+  
+  =item YAML
+  
+  The main YAML distribution will keeping evolving to support the entire
+  YAML specification in pure Perl. This may not be the fastest or most
+  stable module though. Currently, YAML.pm has lots of known bugs. It is
+  mostly a great tool for dumping Perl data structures to a readable form.
+  
+  =item YAML::Tiny
+  
+  The point of YAML::Tiny is to strip YAML down to the 90% that people
+  use most and offer that in a small, fast, stable, pure Perl form.
+  YAML::Tiny will simply die when it is asked to do something it can't.
+  
+  =item YAML::Syck
+  
+  C<libsyck> is the C based YAML processing library used by the Ruby
+  programming language (and also Python, PHP and Pugs). YAML::Syck is the
+  Perl binding to C<libsyck>. It should be very fast, but may have
+  problems of its own. It will also require C compilation.
+  
+  NOTE: Audrey Tang has actually completed this module and it works great
+        and is 10 times faster than YAML.pm.
+  
+  =back
+  
+  In the future, there will likely be even more YAML modules. Remember,
+  people other than Ingy are allowed to write YAML modules!
+  
+  =head1 FUNCTIONAL USAGE
+  
+  YAML is completely OO under the hood. Still it exports a few useful top
+  level functions so that it is dead simple to use. These functions just
+  do the OO stuff for you. If you want direct access to the OO API see the
+  documentation for YAML::Dumper and YAML::Loader.
+  
+  =head2 Exported Functions
+  
+  The following functions are exported by YAML.pm by default. The reason
+  they are exported is so that YAML works much like Data::Dumper. If you
+  don't want functions to be imported, just use YAML with an empty
+  import list:
+  
+      use YAML ();
+  
+  =over 4
+  
+  =item Dump(list-of-Perl-data-structures)
+  
+  Turn Perl data into YAML. This function works very much like
+  Data::Dumper::Dumper(). It takes a list of Perl data structures and
+  dumps them into a serialized form. It returns a string containing the
+  YAML stream. The structures can be references or plain scalars.
+  
+  =item Load(string-containing-a-YAML-stream)
+  
+  Turn YAML into Perl data. This is the opposite of Dump. Just like
+  Storable's thaw() function or the eval() function in relation to
+  Data::Dumper. It parses a string containing a valid YAML stream into a
+  list of Perl data structures.
+  
+  =back
+  
+  =head2 Exportable Functions
+  
+  These functions are not exported by default but you can request them in
+  an import list like this:
+  
+      use YAML qw'freeze thaw Bless';
+  
+  =over 4
+  
+  =item freeze() and thaw()
+  
+  Aliases to Dump() and Load() for Storable fans. This will also allow
+  YAML.pm to be plugged directly into modules like POE.pm, that use the
+  freeze/thaw API for internal serialization.
+  
+  =item DumpFile(filepath, list)
+  
+  Writes the YAML stream to a file instead of just returning a string.
+  
+  =item LoadFile(filepath)
+  
+  Reads the YAML stream from a file instead of a string.
+  
+  =item Bless(perl-node, [yaml-node | class-name])
+  
+  Associate a normal Perl node, with a yaml node. A yaml node is an object
+  tied to the YAML::Node class. The second argument is either a yaml node
+  that you've already created or a class (package) name that supports a
+  yaml_dump() function. A yaml_dump() function should take a perl node and
+  return a yaml node. If no second argument is provided, Bless will create
+  a yaml node. This node is not returned, but can be retrieved with the
+  Blessed() function.
+  
+  Here's an example of how to use Bless. Say you have a hash containing
+  three keys, but you only want to dump two of them. Furthermore the keys
+  must be dumped in a certain order. Here's how you do that:
+  
+      use YAML qw(Dump Bless);
+      $hash = {apple => 'good', banana => 'bad', cauliflower => 'ugly'};
+      print Dump $hash;
+      Bless($hash)->keys(['banana', 'apple']);
+      print Dump $hash;
+  
+  produces:
+  
+      ---
+      apple: good
+      banana: bad
+      cauliflower: ugly
+      ---
+      banana: bad
+      apple: good
+  
+  Bless returns the tied part of a yaml-node, so that you can call the
+  YAML::Node methods. This is the same thing that YAML::Node::ynode()
+  returns. So another way to do the above example is:
+  
+      use YAML qw(Dump Bless);
+      use YAML::Node;
+      $hash = {apple => 'good', banana => 'bad', cauliflower => 'ugly'};
+      print Dump $hash;
+      Bless($hash);
+      $ynode = ynode(Blessed($hash));
+      $ynode->keys(['banana', 'apple']);
+      print Dump $hash;
+  
+  Note that Blessing a Perl data structure does not change it anyway. The
+  extra information is stored separately and looked up by the Blessed
+  node's memory address.
+  
+  =item Blessed(perl-node)
+  
+  Returns the yaml node that a particular perl node is associated with
+  (see above). Returns undef if the node is not (YAML) Blessed.
+  
+  =back
+  
+  =head1 GLOBAL OPTIONS
+  
+  YAML options are set using a group of global variables in the YAML
+  namespace. This is similar to how Data::Dumper works.
+  
+  For example, to change the indentation width, do something like:
+  
+      local $YAML::Indent = 3;
+  
+  The current options are:
+  
+  =over 4
+  
+  =item DumperClass
+  
+  You can override which module/class YAML uses for Dumping data.
+  
+  =item LoaderClass
+  
+  You can override which module/class YAML uses for Loading data.
+  
+  =item Indent
+  
+  This is the number of space characters to use for each indentation level
+  when doing a Dump(). The default is 2.
+  
+  By the way, YAML can use any number of characters for indentation at any
+  level. So if you are editing YAML by hand feel free to do it anyway that
+  looks pleasing to you; just be consistent for a given level.
+  
+  =item SortKeys
+  
+  Default is 1. (true)
+  
+  Tells YAML.pm whether or not to sort hash keys when storing a document.
+  
+  YAML::Node objects can have their own sort order, which is usually what
+  you want. To override the YAML::Node order and sort the keys anyway, set
+  SortKeys to 2.
+  
+  =item Stringify
+  
+  Default is 0. (false)
+  
+  Objects with string overloading should honor the overloading and dump the
+  stringification of themselves, rather than the actual object's guts.
+  
+  =item UseHeader
+  
+  Default is 1. (true)
+  
+  This tells YAML.pm whether to use a separator string for a Dump
+  operation. This only applies to the first document in a stream.
+  Subsequent documents must have a YAML header by definition.
+  
+  =item UseVersion
+  
+  Default is 0. (false)
+  
+  Tells YAML.pm whether to include the YAML version on the
+  separator/header.
+  
+      --- %YAML:1.0
+  
+  =item AnchorPrefix
+  
+  Default is ''.
+  
+  Anchor names are normally numeric. YAML.pm simply starts with '1' and
+  increases by one for each new anchor. This option allows you to specify a
+  string to be prepended to each anchor number.
+  
+  =item UseCode
+  
+  Setting the UseCode option is a shortcut to set both the DumpCode and
+  LoadCode options at once. Setting UseCode to '1' tells YAML.pm to dump
+  Perl code references as Perl (using B::Deparse) and to load them back
+  into memory using eval(). The reason this has to be an option is that
+  using eval() to parse untrusted code is, well, untrustworthy.
+  
+  =item DumpCode
+  
+  Determines if and how YAML.pm should serialize Perl code references. By
+  default YAML.pm will dump code references as dummy placeholders (much
+  like Data::Dumper). If DumpCode is set to '1' or 'deparse', code
+  references will be dumped as actual Perl code.
+  
+  DumpCode can also be set to a subroutine reference so that you can
+  write your own serializing routine. YAML.pm passes you the code ref. You
+  pass back the serialization (as a string) and a format indicator. The
+  format indicator is a simple string like: 'deparse' or 'bytecode'.
+  
+  =item LoadCode
+  
+  LoadCode is the opposite of DumpCode. It tells YAML if and how to
+  deserialize code references. When set to '1' or 'deparse' it will use
+  C<eval()>. Since this is potentially risky, only use this option if you
+  know where your YAML has been.
+  
+  LoadCode can also be set to a subroutine reference so that you can write
+  your own deserializing routine. YAML.pm passes the serialization (as a
+  string) and a format indicator. You pass back the code reference.
+  
+  =item UseBlock
+  
+  YAML.pm uses heuristics to guess which scalar style is best for a given
+  node. Sometimes you'll want all multiline scalars to use the 'block'
+  style. If so, set this option to 1.
+  
+  NOTE: YAML's block style is akin to Perl's here-document.
+  
+  =item UseFold
+  
+  If you want to force YAML to use the 'folded' style for all multiline
+  scalars, then set $UseFold to 1.
+  
+  NOTE: YAML's folded style is akin to the way HTML folds text,
+        except smarter.
+  
+  =item UseAliases
+  
+  YAML has an alias mechanism such that any given structure in memory gets
+  serialized once. Any other references to that structure are serialized
+  only as alias markers. This is how YAML can serialize duplicate and
+  recursive structures.
+  
+  Sometimes, when you KNOW that your data is nonrecursive in nature, you
+  may want to serialize such that every node is expressed in full. (ie as
+  a copy of the original). Setting $YAML::UseAliases to 0 will allow you
+  to do this. This also may result in faster processing because the lookup
+  overhead is by bypassed.
+  
+  THIS OPTION CAN BE DANGEROUS. *If* your data is recursive, this option
+  *will* cause Dump() to run in an endless loop, chewing up your computers
+  memory. You have been warned.
+  
+  =item CompressSeries
+  
+  Default is 1.
+  
+  Compresses the formatting of arrays of hashes:
+  
+      -
+        foo: bar
+      -
+        bar: foo
+  
+  becomes:
+  
+      - foo: bar
+      - bar: foo
+  
+  Since this output is usually more desirable, this option is turned on by
+  default.
+  
+  =back
+  
+  =head1 YAML TERMINOLOGY
+  
+  YAML is a full featured data serialization language, and thus has its
+  own terminology.
+  
+  It is important to remember that although YAML is heavily influenced by
+  Perl and Python, it is a language in its own right, not merely just a
+  representation of Perl structures.
+  
+  YAML has three constructs that are conspicuously similar to Perl's hash,
+  array, and scalar. They are called mapping, sequence, and string
+  respectively. By default, they do what you would expect. But each
+  instance may have an explicit or implicit tag (type) that makes it
+  behave differently. In this manner, YAML can be extended to represent
+  Perl's Glob or Python's tuple, or Ruby's Bigint.
+  
+  =over 4
+  
+  =item stream
+  
+  A YAML stream is the full sequence of Unicode characters that a YAML
+  parser would read or a YAML emitter would write. A stream may contain
+  one or more YAML documents separated by YAML headers.
+  
+      ---
+      a: mapping
+      foo: bar
+      ---
+      - a
+      - sequence
+  
+  =item document
+  
+  A YAML document is an independent data structure representation within a
+  stream. It is a top level node. Each document in a YAML stream must
+  begin with a YAML header line. Actually the header is optional on the
+  first document.
+  
+      ---
+      This: top level mapping
+      is:
+          - a
+          - YAML
+          - document
+  
+  =item header
+  
+  A YAML header is a line that begins a YAML document. It consists of
+  three dashes, possibly followed by more info. Another purpose of the
+  header line is that it serves as a place to put top level tag and anchor
+  information.
+  
+      --- !recursive-sequence &001
+      - * 001
+      - * 001
+  
+  =item node
+  
+  A YAML node is the representation of a particular data structure. Nodes
+  may contain other nodes. (In Perl terms, nodes are like scalars.
+  Strings, arrayrefs and hashrefs. But this refers to the serialized
+  format, not the in-memory structure.)
+  
+  =item tag
+  
+  This is similar to a type. It indicates how a particular YAML node
+  serialization should be transferred into or out of memory. For instance
+  a Foo::Bar object would use the tag 'perl/Foo::Bar':
+  
+      - !perl/Foo::Bar
+          foo: 42
+          bar: stool
+  
+  =item collection
+  
+  A collection is the generic term for a YAML data grouping. YAML has two
+  types of collections: mappings and sequences. (Similar to hashes and arrays)
+  
+  =item mapping
+  
+  A mapping is a YAML collection defined by unordered key/value pairs with
+  unique keys. By default YAML mappings are loaded into Perl hashes.
+  
+      a mapping:
+          foo: bar
+          two: times two is 4
+  
+  =item sequence
+  
+  A sequence is a YAML collection defined by an ordered list of elements. By
+  default YAML sequences are loaded into Perl arrays.
+  
+      a sequence:
+          - one bourbon
+          - one scotch
+          - one beer
+  
+  =item scalar
+  
+  A scalar is a YAML node that is a single value. By default YAML scalars
+  are loaded into Perl scalars.
+  
+      a scalar key: a scalar value
+  
+  YAML has many styles for representing scalars. This is important because
+  varying data will have varying formatting requirements to retain the
+  optimum human readability.
+  
+  =item plain scalar
+  
+  A plain scalar is unquoted. All plain scalars are automatic candidates
+  for "implicit tagging". This means that their tag may be determined
+  automatically by examination. The typical uses for this are plain alpha
+  strings, integers, real numbers, dates, times and currency.
+  
+      - a plain string
+      - -42
+      - 3.1415
+      - 12:34
+      - 123 this is an error
+  
+  =item single quoted scalar
+  
+  This is similar to Perl's use of single quotes. It means no escaping
+  except for single quotes which are escaped by using two adjacent
+  single quotes.
+  
+      - 'When I say ''\n'' I mean "backslash en"'
+  
+  =item double quoted scalar
+  
+  This is similar to Perl's use of double quotes. Character escaping can
+  be used.
+  
+      - "This scalar\nhas two lines, and a bell -->\a"
+  
+  =item folded scalar
+  
+  This is a multiline scalar which begins on the next line. It is
+  indicated by a single right angle bracket. It is unescaped like the
+  single quoted scalar. Line folding is also performed.
+  
+      - >
+       This is a multiline scalar which begins on
+       the next line. It is indicated by a single
+       carat. It is unescaped like the single
+       quoted scalar. Line folding is also
+       performed.
+  
+  =item block scalar
+  
+  This final multiline form is akin to Perl's here-document except that
+  (as in all YAML data) scope is indicated by indentation. Therefore, no
+  ending marker is required. The data is verbatim. No line folding.
+  
+      - |
+          QTY  DESC          PRICE  TOTAL
+          ---  ----          -----  -----
+            1  Foo Fighters  $19.95 $19.95
+            2  Bar Belles    $29.95 $59.90
+  
+  =item parser
+  
+  A YAML processor has four stages: parse, load, dump, emit.
+  
+  A parser parses a YAML stream. YAML.pm's Load() function contains a
+  parser.
+  
+  =item loader
+  
+  The other half of the Load() function is a loader. This takes the
+  information from the parser and loads it into a Perl data structure.
+  
+  =item dumper
+  
+  The Dump() function consists of a dumper and an emitter. The dumper
+  walks through each Perl data structure and gives info to the emitter.
+  
+  =item emitter
+  
+  The emitter takes info from the dumper and turns it into a YAML stream.
+  
+  NOTE:
+  In YAML.pm the parser/loader and the dumper/emitter code are currently
+  very closely tied together. In the future they may be broken into
+  separate stages.
+  
+  =back
+  
+  For more information please refer to the immensely helpful YAML
+  specification available at L<http://www.yaml.org/spec/>.
+  
+  =head1 ysh - The YAML Shell
+  
+  The YAML distribution ships with a script called 'ysh', the YAML shell.
+  ysh provides a simple, interactive way to play with YAML. If you type in
+  Perl code, it displays the result in YAML. If you type in YAML it turns
+  it into Perl code.
+  
+  To run ysh, (assuming you installed it along with YAML.pm) simply type:
+  
+      ysh [options]
+  
+  Please read the C<ysh> documentation for the full details. There are
+  lots of options.
+  
+  =head1 BUGS & DEFICIENCIES
+  
+  If you find a bug in YAML, please try to recreate it in the YAML Shell
+  with logging turned on ('ysh -L'). When you have successfully reproduced
+  the bug, please mail the LOG file to the author (ingy@cpan.org).
+  
+  WARNING: This is still *ALPHA* code. Well, most of this code has been
+  around for years...
+  
+  BIGGER WARNING: YAML.pm has been slow in the making, but I am committed
+  to having top notch YAML tools in the Perl world. The YAML team is close
+  to finalizing the YAML 1.1 spec. This version of YAML.pm is based off of
+  a very old pre 1.0 spec. In actuality there isn't a ton of difference,
+  and this YAML.pm is still fairly useful. Things will get much better in
+  the future.
+  
+  =head1 RESOURCES
+  
+  L<http://lists.sourceforge.net/lists/listinfo/yaml-core> is the mailing
+  list. This is where the language is discussed and designed.
+  
+  L<http://www.yaml.org> is the official YAML website.
+  
+  L<http://www.yaml.org/spec/> is the YAML 1.0 specification.
+  
+  L<http://yaml.kwiki.org> is the official YAML wiki.
+  
+  =head1 SEE ALSO
+  
+  See YAML::XS. Fast!
+  
+  =head1 AUTHOR
+  
+  Ingy döt Net <ingy@cpan.org>
+  
+  is responsible for YAML.pm.
+  
+  The YAML serialization language is the result of years of collaboration
+  between Oren Ben-Kiki, Clark Evans and Ingy döt Net. Several others
+  have added help along the way.
+  
+  =head1 COPYRIGHT
+  
+  Copyright (c) 2005, 2006, 2008, 2011-2014. Ingy döt Net.
+  
+  Copyright (c) 2001, 2002, 2005. Brian Ingerson.
+  
+  Some parts copyright (c) 2009 - 2010 Adam Kennedy
+  
+  This program is free software; you can redistribute it and/or modify it
+  under the same terms as Perl itself.
+  
+  See L<http://www.perl.com/perl/misc/Artistic.html>
+  
+  =cut
+YAML
+
+$fatpacked{"YAML/Mo.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'YAML_MO';
+  package YAML::Mo;
+  $YAML::Mo::VERSION = '0.90';
+  # use Mo qw[builder default import];
+  #   The following line of code was produced from the previous line by
+  #   Mo::Inline version 0.31
+  no warnings;my$M=__PACKAGE__.'::';*{$M.Object::new}=sub{bless{@_[1..$#_]},$_[0]};*{$M.import}=sub{import warnings;$^H|=1538;my($P,%e,%o)=caller.'::';shift;eval"no Mo::$_",&{$M.$_.::e}($P,\%e,\%o,\@_)for@_;return if$e{M};%e=(extends,sub{eval"no $_[0]()";@{$P.ISA}=$_[0]},has,sub{my$n=shift;my$m=sub{$#_?$_[0]{$n}=$_[1]:$_[0]{$n}};$m=$o{$_}->($m,$n,@_)for sort keys%o;*{$P.$n}=$m},%e,);*{$P.$_}=$e{$_}for keys%e;@{$P.ISA}=$M.Object};*{$M.'builder::e'}=sub{my($P,$e,$o)=@_;$o->{builder}=sub{my($m,$n,%a)=@_;my$b=$a{builder}or return$m;sub{$#_?$m->(@_):!exists$_[0]{$n}?$_[0]{$n}=$_[0]->$b:$m->(@_)}}};*{$M.'default::e'}=sub{my($P,$e,$o)=@_;$o->{default}=sub{my($m,$n,%a)=@_;$a{default}or return$m;sub{$#_?$m->(@_):!exists$_[0]{$n}?$_[0]{$n}=$a{default}->(@_):$m->(@_)}}};my$i=\&import;*{$M.import}=sub{(@_==2 and not $_[1])?pop@_:@_==1?push@_,grep!/import/,@f:();goto&$i};@f=qw[builder default import];use strict;use warnings;
+  
+  our $DumperModule = 'Data::Dumper';
+  
+  my ($_new_error, $_info, $_scalar_info);
+  
+  no strict 'refs';
+  *{$M.'Object::die'} = sub {
+      my $self = shift;
+      my $error = $self->$_new_error(@_);
+      $error->type('Error');
+      Carp::croak($error->format_message);
+  };
+  
+  *{$M.'Object::warn'} = sub {
+      my $self = shift;
+      return unless $^W;
+      my $error = $self->$_new_error(@_);
+      $error->type('Warning');
+      Carp::cluck($error->format_message);
+  };
+  
+  # This code needs to be refactored to be simpler and more precise, and no,
+  # Scalar::Util doesn't DWIM.
+  #
+  # Can't handle:
+  # * blessed regexp
+  *{$M.'Object::node_info'} = sub {
+      my $self = shift;
+      my $stringify = $_[1] || 0;
+      my ($class, $type, $id) =
+          ref($_[0])
+          ? $stringify
+            ? &$_info("$_[0]")
+            : do {
+                require overload;
+                my @info = &$_info(overload::StrVal($_[0]));
+                if (ref($_[0]) eq 'Regexp') {
+                    @info[0, 1] = (undef, 'REGEXP');
+                }
+                @info;
+            }
+          : &$_scalar_info($_[0]);
+      ($class, $type, $id) = &$_scalar_info("$_[0]")
+          unless $id;
+      return wantarray ? ($class, $type, $id) : $id;
+  };
+  
+  #-------------------------------------------------------------------------------
+  $_info = sub {
+      return (($_[0]) =~ qr{^(?:(.*)\=)?([^=]*)\(([^\(]*)\)$}o);
+  };
+  
+  $_scalar_info = sub {
+      my $id = 'undef';
+      if (defined $_[0]) {
+          \$_[0] =~ /\((\w+)\)$/o or CORE::die();
+          $id = "$1-S";
+      }
+      return (undef, undef, $id);
+  };
+  
+  $_new_error = sub {
+      require Carp;
+      my $self = shift;
+      require YAML::Error;
+  
+      my $code = shift || 'unknown error';
+      my $error = YAML::Error->new(code => $code);
+      $error->line($self->line) if $self->can('line');
+      $error->document($self->document) if $self->can('document');
+      $error->arguments([@_]);
+      return $error;
+  };
+  
+  1;
+YAML_MO
+
+$fatpacked{"YAML/Node.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'YAML_NODE';
+  use strict; use warnings;
+  package YAML::Node;
+  $YAML::Node::VERSION = '0.90';
+  use YAML::Tag;
+  require YAML::Mo;
+  
+  use Exporter;
+  our @ISA     = qw(Exporter YAML::Mo::Object);
+  our @EXPORT  = qw(ynode);
+  
+  sub ynode {
+      my $self;
+      if (ref($_[0]) eq 'HASH') {
+  	$self = tied(%{$_[0]});
+      }
+      elsif (ref($_[0]) eq 'ARRAY') {
+  	$self = tied(@{$_[0]});
+      }
+      elsif (ref(\$_[0]) eq 'GLOB') {
+  	$self = tied(*{$_[0]});
+      }
+      else {
+  	$self = tied($_[0]);
+      }
+      return (ref($self) =~ /^yaml_/) ? $self : undef;
+  }
+  
+  sub new {
+      my ($class, $node, $tag) = @_;
+      my $self;
+      $self->{NODE} = $node;
+      my (undef, $type) = YAML::Mo::Object->node_info($node);
+      $self->{KIND} = (not defined $type) ? 'scalar' :
+                      ($type eq 'ARRAY') ? 'sequence' :
+  		    ($type eq 'HASH') ? 'mapping' :
+  		    $class->die("Can't create YAML::Node from '$type'");
+      tag($self, ($tag || ''));
+      if ($self->{KIND} eq 'scalar') {
+  	yaml_scalar->new($self, $_[1]);
+  	return \ $_[1];
+      }
+      my $package = "yaml_" . $self->{KIND};
+      $package->new($self)
+  }
+  
+  sub node { $_->{NODE} }
+  sub kind { $_->{KIND} }
+  sub tag {
+      my ($self, $value) = @_;
+      if (defined $value) {
+         	$self->{TAG} = YAML::Tag->new($value);
+  	return $self;
+      }
+      else {
+         return $self->{TAG};
+      }
+  }
+  sub keys {
+      my ($self, $value) = @_;
+      if (defined $value) {
+         	$self->{KEYS} = $value;
+  	return $self;
+      }
+      else {
+         return $self->{KEYS};
       }
   }
   
+  #==============================================================================
+  package yaml_scalar;
+  $yaml_scalar::VERSION = '0.90';
+  @yaml_scalar::ISA = qw(YAML::Node);
   
-  
-  
-  
-  #####################################################################
-  # Use Scalar::Util if possible, otherwise emulate it
-  
-  BEGIN {
-      local $@;
-      eval {
-          require Scalar::Util;
-      };
-      my $v = eval("$Scalar::Util::VERSION") || 0;
-      if ( $@ or $v < 1.18 ) {
-          eval <<'END_PERL';
-  # Scalar::Util failed to load or too old
-  sub refaddr {
-      my $pkg = ref($_[0]) or return undef;
-      if ( !! UNIVERSAL::can($_[0], 'can') ) {
-          bless $_[0], 'Scalar::Util::Fake';
-      } else {
-          $pkg = undef;
-      }
-      "$_[0]" =~ /0x(\w+)/;
-      my $i = do { local $^W; hex $1 };
-      bless $_[0], $pkg if defined $pkg;
-      $i;
+  sub new {
+      my ($class, $self) = @_;
+      tie $_[2], $class, $self;
   }
-  END_PERL
-      } else {
-          *refaddr = *Scalar::Util::refaddr;
+  
+  sub TIESCALAR {
+      my ($class, $self) = @_;
+      bless $self, $class;
+      $self
+  }
+  
+  sub FETCH {
+      my ($self) = @_;
+      $self->{NODE}
+  }
+  
+  sub STORE {
+      my ($self, $value) = @_;
+      $self->{NODE} = $value
+  }
+  
+  #==============================================================================
+  package yaml_sequence;
+  $yaml_sequence::VERSION = '0.90';
+  @yaml_sequence::ISA = qw(YAML::Node);
+  
+  sub new {
+      my ($class, $self) = @_;
+      my $new;
+      tie @$new, $class, $self;
+      $new
+  }
+  
+  sub TIEARRAY {
+      my ($class, $self) = @_;
+      bless $self, $class
+  }
+  
+  sub FETCHSIZE {
+      my ($self) = @_;
+      scalar @{$self->{NODE}};
+  }
+  
+  sub FETCH {
+      my ($self, $index) = @_;
+      $self->{NODE}[$index]
+  }
+  
+  sub STORE {
+      my ($self, $index, $value) = @_;
+      $self->{NODE}[$index] = $value
+  }
+  
+  sub undone {
+      die "Not implemented yet"; # XXX
+  }
+  
+  *STORESIZE = *POP = *PUSH = *SHIFT = *UNSHIFT = *SPLICE = *DELETE = *EXISTS =
+  *STORESIZE = *POP = *PUSH = *SHIFT = *UNSHIFT = *SPLICE = *DELETE = *EXISTS =
+  *undone; # XXX Must implement before release
+  
+  #==============================================================================
+  package yaml_mapping;
+  $yaml_mapping::VERSION = '0.90';
+  
+  @yaml_mapping::ISA = qw(YAML::Node);
+  
+  sub new {
+      my ($class, $self) = @_;
+      @{$self->{KEYS}} = sort keys %{$self->{NODE}};
+      my $new;
+      tie %$new, $class, $self;
+      $new
+  }
+  
+  sub TIEHASH {
+      my ($class, $self) = @_;
+      bless $self, $class
+  }
+  
+  sub FETCH {
+      my ($self, $key) = @_;
+      if (exists $self->{NODE}{$key}) {
+  	return (grep {$_ eq $key} @{$self->{KEYS}})
+  	       ? $self->{NODE}{$key} : undef;
       }
+      return $self->{HASH}{$key};
+  }
+  
+  sub STORE {
+      my ($self, $key, $value) = @_;
+      if (exists $self->{NODE}{$key}) {
+  	$self->{NODE}{$key} = $value;
+      }
+      elsif (exists $self->{HASH}{$key}) {
+  	$self->{HASH}{$key} = $value;
+      }
+      else {
+  	if (not grep {$_ eq $key} @{$self->{KEYS}}) {
+  	    push(@{$self->{KEYS}}, $key);
+  	}
+  	$self->{HASH}{$key} = $value;
+      }
+      $value
+  }
+  
+  sub DELETE {
+      my ($self, $key) = @_;
+      my $return;
+      if (exists $self->{NODE}{$key}) {
+  	$return = $self->{NODE}{$key};
+      }
+      elsif (exists $self->{HASH}{$key}) {
+  	$return = delete $self->{NODE}{$key};
+      }
+      for (my $i = 0; $i < @{$self->{KEYS}}; $i++) {
+  	if ($self->{KEYS}[$i] eq $key) {
+  	    splice(@{$self->{KEYS}}, $i, 1);
+  	}
+      }
+      return $return;
+  }
+  
+  sub CLEAR {
+      my ($self) = @_;
+      @{$self->{KEYS}} = ();
+      %{$self->{HASH}} = ();
+  }
+  
+  sub FIRSTKEY {
+      my ($self) = @_;
+      $self->{ITER} = 0;
+      $self->{KEYS}[0]
+  }
+  
+  sub NEXTKEY {
+      my ($self) = @_;
+      $self->{KEYS}[++$self->{ITER}]
+  }
+  
+  sub EXISTS {
+      my ($self, $key) = @_;
+      exists $self->{NODE}{$key}
   }
   
   1;
   
-  __END__
-  
-  =pod
+  =encoding UTF-8
   
   =head1 NAME
   
-  YAML::Tiny - Read/Write YAML files with as little code as possible
-  
-  =head1 PREAMBLE
-  
-  The YAML specification is huge. Really, B<really> huge. It contains all the
-  functionality of XML, except with flexibility and choice, which makes it
-  easier to read, but with a formal specification that is more complex than
-  XML.
-  
-  The original pure-Perl implementation L<YAML> costs just over 4 megabytes
-  of memory to load. Just like with Windows F<.ini> files (3 meg to load) and
-  CSS (3.5 meg to load) the situation is just asking for a B<YAML::Tiny>
-  module, an incomplete but correct and usable subset of the functionality,
-  in as little code as possible.
-  
-  Like the other C<::Tiny> modules, YAML::Tiny has no non-core dependencies,
-  does not require a compiler to install, is back-compatible to Perl 5.004,
-  and can be inlined into other modules if needed.
-  
-  In exchange for this adding this extreme flexibility, it provides support
-  for only a limited subset of YAML. But the subset supported contains most
-  of the features for the more common uses of YAML.
+  YAML::Node - A generic data node that encapsulates YAML information
   
   =head1 SYNOPSIS
   
-      #############################################
-      # In your file
+      use YAML;
+      use YAML::Node;
   
-      ---
-      rootproperty: blah
-      section:
-        one: two
-        three: four
-        Foo: Bar
-        empty: ~
+      my $ynode = YAML::Node->new({}, 'ingerson.com/fruit');
+      %$ynode = qw(orange orange apple red grape green);
+      print Dump $ynode;
   
+  yields:
   
-  
-      #############################################
-      # In your program
-  
-      use YAML::Tiny;
-  
-      # Create a YAML file
-      my $yaml = YAML::Tiny->new;
-  
-      # Open the config
-      $yaml = YAML::Tiny->read( 'file.yml' );
-  
-      # Reading properties
-      my $root = $yaml->[0]->{rootproperty};
-      my $one  = $yaml->[0]->{section}->{one};
-      my $Foo  = $yaml->[0]->{section}->{Foo};
-  
-      # Changing data
-      $yaml->[0]->{newsection} = { this => 'that' }; # Add a section
-      $yaml->[0]->{section}->{Foo} = 'Not Bar!';     # Change a value
-      delete $yaml->[0]->{section};                  # Delete a value
-  
-      # Add an entire document
-      $yaml->[1] = [ 'foo', 'bar', 'baz' ];
-  
-      # Save the file
-      $yaml->write( 'file.conf' );
+      --- !ingerson.com/fruit
+      orange: orange
+      apple: red
+      grape: green
   
   =head1 DESCRIPTION
   
-  B<YAML::Tiny> is a perl class for reading and writing YAML-style files,
-  written with as little code as possible, reducing load time and memory
-  overhead.
+  A generic node in YAML is similar to a plain hash, array, or scalar node
+  in Perl except that it must also keep track of its type. The type is a
+  URI called the YAML type tag.
   
-  Most of the time it is accepted that Perl applications use a lot
-  of memory and modules. The B<::Tiny> family of modules is specifically
-  intended to provide an ultralight and zero-dependency alternative to
-  many more-thorough standard modules.
+  YAML::Node is a class for generating and manipulating these containers.
+  A YAML node (or ynode) is a tied hash, array or scalar. In most ways it
+  behaves just like the plain thing. But you can assign and retrieve and
+  YAML type tag URI to it. For the hash flavor, you can also assign the
+  order that the keys will be retrieved in. By default a ynode will offer
+  its keys in the same order that they were assigned.
   
-  This module is primarily for reading human-written files (like simple
-  config files) and generating very simple human-readable files. Note that
-  I said B<human-readable> and not B<geek-readable>. The sort of files that
-  your average manager or secretary should be able to look at and make
-  sense of.
+  YAML::Node has a class method call new() that will return a ynode. You
+  pass it a regular node and an optional type tag. After that you can
+  use it like a normal Perl node, but when you YAML::Dump it, the magical
+  properties will be honored.
   
-  =for stopwords normalise
+  This is how you can control the sort order of hash keys during a YAML
+  serialization. By default, YAML sorts keys alphabetically. But notice
+  in the above example that the keys were Dumped in the same order they
+  were assigned.
   
-  L<YAML::Tiny> does not generate comments, it won't necessarily preserve the
-  order of your hashes, and it will normalise if reading in and writing out
-  again.
+  YAML::Node exports a function called ynode(). This function returns the tied object so that you can call special methods on it like ->keys().
   
-  It only supports a very basic subset of the full YAML specification.
+  keys() works like this:
   
-  =for stopwords embeddable
+      use YAML;
+      use YAML::Node;
   
-  Usage is targeted at files like Perl's META.yml, for which a small and
-  easily-embeddable module is extremely attractive.
+      %$node = qw(orange orange apple red grape green);
+      $ynode = YAML::Node->new($node);
+      ynode($ynode)->keys(['grape', 'apple']);
+      print Dump $ynode;
   
-  Features will only be added if they are human readable, and can be written
-  in a few lines of code. Please don't be offended if your request is
-  refused. Someone has to draw the line, and for YAML::Tiny that someone
-  is me.
+  produces:
   
-  If you need something with more power move up to L<YAML> (4 megabytes of
-  memory overhead) or L<YAML::Syck> (275k, but requires F<libsyck> and a C
-  compiler).
+      ---
+      grape: green
+      apple: red
   
-  To restate, L<YAML::Tiny> does B<not> preserve your comments, whitespace,
-  or the order of your YAML data. But it should round-trip from Perl
-  structure to file and back again just fine.
+  It tells the ynode which keys and what order to use.
   
-  =head1 YAML TINY SPECIFICATION
+  ynodes will play a very important role in how programs use YAML. They
+  are the foundation of how a Perl class can marshall the Loading and
+  Dumping of its objects.
   
-  This section of the documentation provides a specification for "YAML Tiny",
-  a subset of the YAML specification.
-  
-  It is based on and described comparatively to the YAML 1.1 Working Draft
-  2004-12-28 specification, located at L<http://yaml.org/spec/current.html>.
-  
-  Terminology and chapter numbers are based on that specification.
-  
-  =head2 1. Introduction and Goals
-  
-  The purpose of the YAML Tiny specification is to describe a useful subset
-  of the YAML specification that can be used for typical document-oriented
-  use cases such as configuration files and simple data structure dumps.
-  
-  =for stopwords extensibility
-  
-  Many specification elements that add flexibility or extensibility are
-  intentionally removed, as is support for complex data structures, class
-  and object-orientation.
-  
-  In general, the YAML Tiny language targets only those data structures
-  available in JSON, with the additional limitation that only simple keys
-  are supported.
-  
-  As a result, all possible YAML Tiny documents should be able to be
-  transformed into an equivalent JSON document, although the reverse is
-  not necessarily true (but will be true in simple cases).
-  
-  =for stopwords PCRE
-  
-  As a result of these simplifications the YAML Tiny specification should
-  be implementable in a (relatively) small amount of code in any language
-  that supports Perl Compatible Regular Expressions (PCRE).
-  
-  =head2 2. Introduction
-  
-  YAML Tiny supports three data structures. These are scalars (in a variety
-  of forms), block-form sequences and block-form mappings. Flow-style
-  sequences and mappings are not supported, with some minor exceptions
-  detailed later.
-  
-  The use of three dashes "---" to indicate the start of a new document is
-  supported, and multiple documents per file/stream is allowed.
-  
-  Both line and inline comments are supported.
-  
-  Scalars are supported via the plain style, single quote and double quote,
-  as well as literal-style and folded-style multi-line scalars.
-  
-  The use of explicit tags is not supported.
-  
-  The use of "null" type scalars is supported via the ~ character.
-  
-  The use of "bool" type scalars is not supported.
-  
-  =for stopwords serializer
-  
-  However, serializer implementations should take care to explicitly escape
-  strings that match a "bool" keyword in the following set to prevent other
-  implementations that do support "bool" accidentally reading a string as a
-  boolean
-  
-    y|Y|yes|Yes|YES|n|N|no|No|NO
-    |true|True|TRUE|false|False|FALSE
-    |on|On|ON|off|Off|OFF
-  
-  The use of anchors and aliases is not supported.
-  
-  The use of directives is supported only for the %YAML directive.
-  
-  =head2 3. Processing YAML Tiny Information
-  
-  B<Processes>
-  
-  =for stopwords deserialization
-  
-  The YAML specification dictates three-phase serialization and three-phase
-  deserialization.
-  
-  The YAML Tiny specification does not mandate any particular methodology
-  or mechanism for parsing.
-  
-  Any compliant parser is only required to parse a single document at a
-  time. The ability to support streaming documents is optional and most
-  likely non-typical.
-  
-  =for stopwords acyclic
-  
-  Because anchors and aliases are not supported, the resulting representation
-  graph is thus directed but (unlike the main YAML specification) B<acyclic>.
-  
-  Circular references/pointers are not possible, and any YAML Tiny serializer
-  detecting a circular reference should error with an appropriate message.
-  
-  B<Presentation Stream>
-  
-  =for stopwords unicode
-  
-  YAML Tiny is notionally unicode, but support for unicode is required if the
-  underlying language or system being used to implement a parser does not
-  support Unicode. If unicode is encountered in this case an error should be
-  returned.
-  
-  B<Loading Failure Points>
-  
-  =for stopwords modality
-  
-  =for stopwords parsers
-  
-  YAML Tiny parsers and emitters are not expected to recover from adapt to
-  errors. The specific error modality of any implementation is not dictated
-  (return codes, exceptions, etc) but is expected to be consistent.
-  
-  =head2 4. Syntax
-  
-  B<Character Set>
-  
-  YAML Tiny streams are implemented primarily using the ASCII character set,
-  although the use of Unicode inside strings is allowed if support by the
-  implementation.
-  
-  Specific YAML Tiny encoded document types aiming for maximum compatibility
-  should restrict themselves to ASCII.
-  
-  The escaping and unescaping of the 8-bit YAML escapes is required.
-  
-  The escaping and unescaping of 16-bit and 32-bit YAML escapes is not
-  required.
-  
-  B<Indicator Characters>
-  
-  Support for the "~" null/undefined indicator is required.
-  
-  Implementations may represent this as appropriate for the underlying
-  language.
-  
-  Support for the "-" block sequence indicator is required.
-  
-  Support for the "?" mapping key indicator is B<not> required.
-  
-  Support for the ":" mapping value indicator is required.
-  
-  Support for the "," flow collection indicator is B<not> required.
-  
-  Support for the "[" flow sequence indicator is B<not> required, with
-  one exception (detailed below).
-  
-  Support for the "]" flow sequence indicator is B<not> required, with
-  one exception (detailed below).
-  
-  Support for the "{" flow mapping indicator is B<not> required, with
-  one exception (detailed below).
-  
-  Support for the "}" flow mapping indicator is B<not> required, with
-  one exception (detailed below).
-  
-  Support for the "#" comment indicator is required.
-  
-  Support for the "&" anchor indicator is B<not> required.
-  
-  Support for the "*" alias indicator is B<not> required.
-  
-  Support for the "!" tag indicator is B<not> required.
-  
-  Support for the "|" literal block indicator is required.
-  
-  Support for the ">" folded block indicator is required.
-  
-  Support for the "'" single quote indicator is required.
-  
-  Support for the """ double quote indicator is required.
-  
-  Support for the "%" directive indicator is required, but only
-  for the special case of a %YAML version directive before the
-  "---" document header, or on the same line as the document header.
-  
-  For example:
-  
-    %YAML 1.1
-    ---
-    - A sequence with a single element
-  
-  Special Exception:
-  
-  To provide the ability to support empty sequences
-  and mappings, support for the constructs [] (empty sequence) and {}
-  (empty mapping) are required.
-  
-  For example,
-  
-    %YAML 1.1
-    # A document consisting of only an empty mapping
-    --- {}
-    # A document consisting of only an empty sequence
-    --- []
-    # A document consisting of an empty mapping within a sequence
-    - foo
-    - {}
-    - bar
-  
-  B<Syntax Primitives>
-  
-  Other than the empty sequence and mapping cases described above, YAML Tiny
-  supports only the indentation-based block-style group of contexts.
-  
-  All five scalar contexts are supported.
-  
-  Indentation spaces work as per the YAML specification in all cases.
-  
-  Comments work as per the YAML specification in all simple cases.
-  Support for indented multi-line comments is B<not> required.
-  
-  Separation spaces work as per the YAML specification in all cases.
-  
-  B<YAML Tiny Character Stream>
-  
-  The only directive supported by the YAML Tiny specification is the
-  %YAML language/version identifier. Although detected, this directive
-  will have no control over the parsing itself.
-  
-  =for stopwords recognise
-  
-  The parser must recognise both the YAML 1.0 and YAML 1.1+ formatting
-  of this directive (as well as the commented form, although no explicit
-  code should be needed to deal with this case, being a comment anyway)
-  
-  That is, all of the following should be supported.
-  
-    --- #YAML:1.0
-    - foo
-  
-    %YAML:1.0
-    ---
-    - foo
-  
-    % YAML 1.1
-    ---
-    - foo
-  
-  Support for the %TAG directive is B<not> required.
-  
-  Support for additional directives is B<not> required.
-  
-  Support for the document boundary marker "---" is required.
-  
-  Support for the document boundary market "..." is B<not> required.
-  
-  If necessary, a document boundary should simply by indicated with a
-  "---" marker, with not preceding "..." marker.
-  
-  Support for empty streams (containing no documents) is required.
-  
-  Support for implicit document starts is required.
-  
-  That is, the following must be equivalent.
-  
-   # Full form
-   %YAML 1.1
-   ---
-   foo: bar
-  
-   # Implicit form
-   foo: bar
-  
-  B<Nodes>
-  
-  Support for nodes optional anchor and tag properties are B<not> required.
-  
-  Support for node anchors is B<not> required.
-  
-  Support for node tags is B<not> required.
-  
-  Support for alias nodes is B<not> required.
-  
-  Support for flow nodes is B<not> required.
-  
-  Support for block nodes is required.
-  
-  B<Scalar Styles>
-  
-  Support for all five scalar styles are required as per the YAML
-  specification, although support for quoted scalars spanning more
-  than one line is B<not> required.
-  
-  Support for the chomping indicators on multi-line scalar styles
-  is required.
-  
-  B<Collection Styles>
-  
-  Support for block-style sequences is required.
-  
-  Support for flow-style sequences is B<not> required.
-  
-  Support for block-style mappings is required.
-  
-  Support for flow-style mappings is B<not> required.
-  
-  Both sequences and mappings should be able to be arbitrarily
-  nested.
-  
-  Support for plain-style mapping keys is required.
-  
-  Support for quoted keys in mappings is B<not> required.
-  
-  Support for "?"-indicated explicit keys is B<not> required.
-  
-  =for stopwords endeth
-  
-  Here endeth the specification.
-  
-  =head2 Additional Perl-Specific Notes
-  
-  For some Perl applications, it's important to know if you really have a
-  number and not a string.
-  
-  That is, in some contexts is important that 3 the number is distinctive
-  from "3" the string.
-  
-  Because even Perl itself is not trivially able to understand the difference
-  (certainly without XS-based modules) Perl implementations of the YAML Tiny
-  specification are not required to retain the distinctiveness of 3 vs "3".
-  
-  =head1 METHODS
-  
-  =for Pod::Coverage HAVE_UTF8 refaddr
-  
-  =head2 new
-  
-  The constructor C<new> creates and returns an empty C<YAML::Tiny> object.
-  
-  =head2 read $filename
-  
-  The C<read> constructor reads a YAML file from a file name,
-  and returns a new C<YAML::Tiny> object containing the parsed content.
-  
-  Returns the object on success, or C<undef> on error.
-  
-  When C<read> fails, C<YAML::Tiny> sets an error message internally
-  you can recover via C<< YAML::Tiny->errstr >>. Although in B<some>
-  cases a failed C<read> will also set the operating system error
-  variable C<$!>, not all errors do and you should not rely on using
-  the C<$!> variable.
-  
-  =head2 read_string $string;
-  
-  The C<read_string> constructor reads YAML data from a string,
-  and returns a new C<YAML::Tiny> object containing the parsed content.
-  
-  Returns the object on success, or C<undef> on error.
-  
-  =head2 write $filename
-  
-  The C<write> method generates the file content for the properties, and
-  writes it to disk to the filename specified.
-  
-  Returns true on success or C<undef> on error.
-  
-  =head2 write_string
-  
-  Generates the file content for the object and returns it as a string.
-  
-  =for stopwords errstr
-  
-  =head2 errstr
-  
-  When an error occurs, you can retrieve the error message either from the
-  C<$YAML::Tiny::errstr> variable, or using the C<errstr()> method.
-  
-  =head1 FUNCTIONS
-  
-  YAML::Tiny implements a number of functions to add compatibility with
-  the L<YAML> API. These should be a drop-in replacement, except that
-  YAML::Tiny will B<not> export functions by default, and so you will need
-  to explicitly import the functions.
-  
-  =head2 Dump
-  
-    my $string = Dump(list-of-Perl-data-structures);
-  
-  Turn Perl data into YAML. This function works very much like
-  Data::Dumper::Dumper().
-  
-  It takes a list of Perl data structures and dumps them into a serialized
-  form.
-  
-  It returns a string containing the YAML stream.
-  
-  The structures can be references or plain scalars.
-  
-  =head2 Load
-  
-    my @documents = Load(string-containing-a-YAML-stream);
-  
-  Turn YAML into Perl data. This is the opposite of Dump.
-  
-  Just like L<Storable>'s thaw() function or the eval() function in relation
-  to L<Data::Dumper>.
-  
-  It parses a string containing a valid YAML stream into a list of Perl data
-  structures.
-  
-  =head2 freeze() and thaw()
-  
-  Aliases to Dump() and Load() for L<Storable> fans. This will also allow
-  YAML::Tiny to be plugged directly into modules like POE.pm, that use the
-  freeze/thaw API for internal serialization.
-  
-  =head2 DumpFile(filepath, list)
-  
-  Writes the YAML stream to a file instead of just returning a string.
-  
-  =head2 LoadFile(filepath)
-  
-  Reads the YAML stream from a file instead of a string.
-  
-  =head1 SUPPORT
-  
-  Bugs should be reported via the CPAN bug tracker at
-  
-  L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=YAML-Tiny>
-  
-  =begin html
-  
-  For other issues, or commercial enhancement or support, please contact
-  <a href="http://ali.as/">Adam Kennedy</a> directly.
-  
-  =end html
+  The upcoming versions of YAML.pm will have much more information on this.
   
   =head1 AUTHOR
   
-  Adam Kennedy E<lt>adamk@cpan.orgE<gt>
-  
-  =head1 SEE ALSO
-  
-  =over 4
-  
-  =item * L<YAML>
-  
-  =item * L<YAML::Syck>
-  
-  =item * L<Config::Tiny>
-  
-  =item * L<CSS::Tiny>
-  
-  =item * L<http://use.perl.org/use.perl.org/_Alias/journal/29427.html>
-  
-  =item * L<http://ali.as/>
-  
-  =back
+  Ingy döt Net <ingy@cpan.org>
   
   =head1 COPYRIGHT
   
-  Copyright 2006 - 2012 Adam Kennedy.
+  Copyright (c) 2006, 2011-2014. Ingy döt Net. All rights reserved.
   
-  This program is free software; you can redistribute
-  it and/or modify it under the same terms as Perl itself.
+  Copyright (c) 2002. Brian Ingerson. All rights reserved.
   
-  The full text of the license can be found in the
-  LICENSE file included with this module.
+  This program is free software; you can redistribute it and/or modify it
+  under the same terms as Perl itself.
+  
+  See L<http://www.perl.com/perl/misc/Artistic.html>
   
   =cut
-YAML_TINY
+YAML_NODE
+
+$fatpacked{"YAML/Tag.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'YAML_TAG';
+  use strict; use warnings;
+  package YAML::Tag;
+  $YAML::Tag::VERSION = '0.90';
+  use overload '""' => sub { ${$_[0]} };
+  
+  sub new {
+      my ($class, $self) = @_;
+      bless \$self, $class
+  }
+  
+  sub short {
+      ${$_[0]}
+  }
+  
+  sub canonical {
+      ${$_[0]}
+  }
+  
+  1;
+  
+  =encoding UTF-8
+  
+  =head1 NAME
+  
+  YAML::Tag - Tag URI object class for YAML
+  
+  =head1 SYNOPSIS
+  
+      use YAML::Tag;
+  
+  =head1 DESCRIPTION
+  
+  Used by YAML::Node.
+  
+  =head1 AUTHOR
+  
+  Ingy döt Net <ingy@cpan.org>
+  
+  =head1 COPYRIGHT
+  
+  Copyright (c) 2006, 2011-2014. Ingy döt Net. All rights reserved.
+  
+  This program is free software; you can redistribute it and/or modify it
+  under the same terms as Perl itself.
+  
+  See L<http://www.perl.com/perl/misc/Artistic.html>
+  
+  =cut
+YAML_TAG
 
 $fatpacked{"autodie/Scope/Guard.pm"} = '#line '.(1+__LINE__).' "'.__FILE__."\"\n".<<'AUTODIE_SCOPE_GUARD';
   package autodie::Scope::Guard;
@@ -1548,7 +1594,7 @@ use strict;
 use warnings;
 use autodie;
 use Getopt::Std;
-use YAML::Tiny;
+use YAML qw(LoadFile);
 use FindBin qw($Bin);
 
 # YAML to ModuleManager converter
@@ -1582,11 +1628,20 @@ say {$out_fh}
 ;
 
 foreach my $file (@ARGV) {
-    my $yaml = YAML::Tiny->read($file)->[0]; # The 0th YAML section.
+    my $yaml = LoadFile($file);
 
     foreach my $tech (keys %$yaml) {
-        foreach my $part (@{ $yaml->{$tech}} ) {
-            say {$out_fh} "\@PART[$part]:$DECORATION { %TechRequired = $tech }";
+        foreach my $part (keys %{ $yaml->{$tech}} ) {
+            my $changes = "\t%TechRequired = $tech\n";
+
+            my $custom_fields = $yaml->{$tech}{$part};
+
+            # If there are changes listed for this part, copy them across.
+            foreach my $field (keys %$custom_fields) {
+                $changes .= "\t%$field = $custom_fields->{$field}\n";
+            }
+
+            say {$out_fh} "\@PART[$part]:$DECORATION\n{\n$changes}";
         }
     }
 }

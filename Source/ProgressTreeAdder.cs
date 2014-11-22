@@ -41,10 +41,19 @@ namespace RP0
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
+            OnAwake();
+            if ((object)ProgressTracking.Instance != null && node.HasNode("Progress"))
+            {
+                ProgressTracking.Instance.achievementTree.Load(node.GetNode("Progress"));
+            }
         }
         public override void OnSave(ConfigNode node)
         {
             base.OnSave(node);
+            if ((object)ProgressTracking.Instance != null)
+            {
+                ProgressTracking.Instance.achievementTree.Save(node.AddNode("Progress"));
+            }
         }
     }
 }

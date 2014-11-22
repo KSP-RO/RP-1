@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Contracts\ProbeAltitudeRecord.cs" />
+    <Compile Include="ModuleShowInfo.cs" />
     <Compile Include="ProgressTreeAdder.cs" />
     <Compile Include="RecordsAltitudeProbe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

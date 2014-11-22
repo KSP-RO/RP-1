@@ -132,7 +132,7 @@ namespace Contracts.Parameters
 		}
 		protected override string GetTitle()
 		{
-			return "Reach " + targetAltitude;
+			return "Reach " + targetAltitude.ToString("N0") + "m";
 		}
 		protected override void OnLoad(ConfigNode node)
 		{

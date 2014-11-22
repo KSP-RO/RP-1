@@ -15,3 +15,10 @@ deploy:
     repo: KSP-RO/RP-0
     tags: true
     all_branches: true
+
+notifications:
+    irc: "irc.esper.net#rp0"
+    on_success: change
+    on_failure: always
+    use_notice: true
+    skip_join: true

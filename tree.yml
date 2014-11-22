@@ -9,175 +9,183 @@
 #
 #       perl bin/yml2mm
 #
-# Don't have Perl? Try Strawberry!
+# Don't have Perl? Try DWIM Perl!
 #
-#       http://strawberryperl.com/
+#       http://dwimperl.com/
 
 start:
 #TL0. early tech. Sounding rockets, basic structural pieces and wings. Late 40s.
-    - trussPiece1x
-    - longAntenna
-    - parachuteSingle
-    - KzInterstageAdapter2
-    - KzResizableFairingBase
-    - KzResizableFairingBaseRing
-    - KzProcFairingSide1
-    - KzProcFairingSide2
-    - noseCone
-    - standardNoseCone
-    - SXTProtonlikeNoseCone
-    - wingConnector4
-    - wingConnector5
-    - structuralWing4
-    - delta_small
-    - wingConnector3
-    - structuralWing3
-    - LMiniAircaftTail
-    - StandardCtrlSrf
-    - smallCtrlSrf
-    - wingStrake
-    - rocketNoseCone
-    - winglet
-    - wingConnector
-    - wingConnector2
-    - structuralWing
-    - structuralWing2
-    - sweptWing1
-    - sweptWing2
-    - elevon2
-    - tailfin
-    - winglet3
-    - deltaWing
-    - sweptWing
-    - R8winglet
-    - elevon3
-    - airplaneTail
-    - CircularIntake
-    - SXTWingSmall
-    - CanardController
-    - MK1IntakeFuselage
-    - AdvancedCanard
-    - elevon5
-    - IntakeRadialLong
-    - airScoop
-    - LRadialAirIntake
-    - SXTInlineAirIntake
-    - SXTInlineAirIntakeTiny
-    - nacelleBody
-    - radialEngineBody
-    - ladder1
-    - spotLight1
-    - spotLight2
-    - parachuteDrogue
-    - SmallGearBay
-    - parachuteRadial
-    - parachuteLarge
-    - structuralIBeam3
-    - strutCube
-    - strutOcto
-    - structuralIBeam2
-    - structuralMiniNode
-    - trussPiece1x
-    - structuralPanel1
-    - strutConnector
-    - structuralIBeam1
-    - trussAdapter
-    - trussPiece3x
-    - structuralPanel2
-    - KzProcFairingFuselage1
-    - KzProcFairingFuselage2
-    - KzThrustPlate
-    - launchClamp1
-    - stackDecouplerMini
-    - smallHardpoint
-    - structuralPylon
-    - sepMotor1
-    - SXTSmallFuselage
-    - miniFuelTank
-    - sensorThermometer
-    - sensorBarometer
-    - rcsTankMini
-    - SXTFuel625m
-    - SnubOtron
-    - RP0probeSounding0-3m
+    trussPiece1x:
+
+    # What's this cool ampersand? It's a label. See below as to why we want that:
+    longAntenna: &longAntenna
+        cost: 5
+        entryCost: 0
+
+    # Look! We can say this part is the same as some other part. Bam! No repetition.
+    SXTAntenna: *longAntenna
+
+    parachuteSingle:
+    KzInterstageAdapter2:
+    KzResizableFairingBase:
+    KzResizableFairingBaseRing:
+    KzProcFairingSide1:
+    KzProcFairingSide2:
+    noseCone:
+    standardNoseCone:
+    SXTProtonlikeNoseCone:
+    wingConnector4:
+    wingConnector5:
+    structuralWing4:
+    delta_small:
+    wingConnector3:
+    structuralWing3:
+    LMiniAircaftTail:
+    StandardCtrlSrf:
+    smallCtrlSrf:
+    wingStrake:
+    rocketNoseCone:
+    winglet:
+    wingConnector:
+    wingConnector2:
+    structuralWing:
+    structuralWing2:
+    sweptWing1:
+    sweptWing2:
+    elevon2:
+    tailfin:
+    winglet3:
+    deltaWing:
+    sweptWing:
+    R8winglet:
+    elevon3:
+    airplaneTail:
+    CircularIntake:
+    SXTWingSmall:
+    CanardController:
+    MK1IntakeFuselage:
+    AdvancedCanard:
+    elevon5:
+    IntakeRadialLong:
+    airScoop:
+    LRadialAirIntake:
+    SXTInlineAirIntake:
+    SXTInlineAirIntakeTiny:
+    nacelleBody:
+    radialEngineBody:
+    ladder1:
+    spotLight1:
+    spotLight2:
+    parachuteDrogue:
+    SmallGearBay:
+    parachuteRadial:
+    parachuteLarge:
+    structuralIBeam3:
+    strutCube:
+    strutOcto:
+    structuralIBeam2:
+    structuralMiniNode:
+    trussPiece1x:
+    structuralPanel1:
+    strutConnector:
+    structuralIBeam1:
+    trussAdapter:
+    trussPiece3x:
+    structuralPanel2:
+    KzProcFairingFuselage1:
+    KzProcFairingFuselage2:
+    KzThrustPlate:
+    launchClamp1:
+    stackDecouplerMini:
+    smallHardpoint:
+    structuralPylon:
+    sepMotor1:
+    SXTSmallFuselage:
+    miniFuelTank:
+    sensorThermometer:
+    sensorBarometer:
+    rcsTankMini:
+    SXTFuel625m:
+    SnubOtron:
+    RP0probeSounding0-3m:
 # modeled on the electronics of WAC Corporal / Aerobee
-    - ROAerobeeSustainer
+    ROAerobeeSustainer:
 #Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
-    - OscarDtank
-    - OscarEtank
-    - Proceduralwing2
-    - Proceduralwing2EndPiece
-    - Proceduralwing4
-    - ProceduralAllMovingWing
-    - ProceduralwingBac9
-    - ProceduralwingSPP
-    - pCtrlSrf1
-    - B9_Aero_Wing_ControlSurface_SH_4mProcedural
+    OscarDtank:
+    OscarEtank:
+    Proceduralwing2:
+    Proceduralwing2EndPiece:
+    Proceduralwing4:
+    ProceduralAllMovingWing:
+    ProceduralwingBac9:
+    ProceduralwingSPP:
+    pCtrlSrf1:
+    B9_Aero_Wing_ControlSurface_SH_4mProcedural:
 # Basic RemoteTech antenna, so things can get off the ground. :)
-    - RTShortAntenna1
+    RTShortAntenna1:
 
 basicRocketry:
 # Batteries; since players already have service modules.
-    - batteryPack
-    - batteryBankMini
-    - ksp_r_largeBatteryPack
+    batteryPack:
+    batteryBankMini:
+    ksp_r_largeBatteryPack:
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
-    - fuelTankSmallFlat
-    - fuelTank
-    - GooExperiment
-    - stackDecoupler
-    - SXTWaxWing
+    fuelTankSmallFlat:
+    fuelTank:
+    GooExperiment:
+    stackDecoupler:
+    SXTWaxWing:
 #(Black Arrow kick motor)
-    - SXTBlackAdder2
+    SXTBlackAdder2:
 #Gamma 2 (Black Arrow upper stage engine)
-    - toroidalFuelTank
-    - fuelTankSmall
-    - SXTBlackAdder
+    toroidalFuelTank:
+    fuelTankSmall:
+    SXTBlackAdder:
 #Gamma 8 (Black Arrow main engine)
-    - SXTSputnik
-    - radialRCSTank
-    - MK1Fuselage
-    - RCSFuelTank
-    - rcsTankRadialLong
-    - liquidEngine2
+    SXTSputnik:
+    radialRCSTank:
+    MK1Fuselage:
+    RCSFuelTank:
+    rcsTankRadialLong:
+    liquidEngine2:
 #X-405 (Vanguard main engine)
-    - fuelTank_long
-    - RO-AJ10-Early
+    fuelTank_long:
+    RO-AJ10-Early:
 #(Vanguard/Able/[Early]Delta upper stage)
 
 generalRocketry:
 #TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
-    - liquidEngine3
+    liquidEngine3:
 #11D33 (Molniya upper stage)
-    - RO-LR-89
+    RO-LR-89:
 #LR-79/89 (Thor/Jupiter main engine, Atlas booster)
-    - RCSTank1-2
-    - fuelTank4-2
-    - fuelTank2-2
-    - fuelTank1-2
-    - fuelTank3-2
-    - radialEngineMini
+    RCSTank1-2:
+    fuelTank4-2:
+    fuelTank2-2:
+    fuelTank1-2:
+    fuelTank3-2:
+    radialEngineMini:
 #LR-101 vernier (Thor/Jupiter/Atlas)
 
 survivability:
 #First crewed capsules
-    - mk1pod
+    mk1pod:
 
 stability:
 #3-axis stability in orbit. CORONA etc.
-    - noseCone
-    - winglet
-    - radialDecoupler
-    - RCSBoonExt
-    - SquadRCSBlockHalf
-    - RCSBlockQuarter
+    noseCone:
+    winglet:
+    radialDecoupler:
+    RCSBoonExt:
+    SquadRCSBlockHalf:
+    RCSBlockQuarter:
 
 advRocketry:
 # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
-    - liquidEngine
-    - solidBooster
-    - solidBooster1-1
-    - M55
+    liquidEngine:
+    solidBooster:
+    solidBooster1-1:
+    M55:
 
 scienceTech:
 
@@ -197,9 +205,8 @@ landing:
 
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1.
-    - solidBooster1-1Small
+    solidBooster1-1Small:
 # NOTE: This ^^ is going to change to a Castor 1, and be moved to advRocketry.
-    - 
 
 fuelSystems:
 
@@ -253,9 +260,9 @@ heavyAerodynamics:
 
 veryHeavyRocketry:
 #TL5 80s tech
-    - engineLargeSkipper_125m
-    - liquidEngineMiniRescale
-    - solidBoosterSmall
+    engineLargeSkipper_125m:
+    liquidEngineMiniRescale:
+    solidBoosterSmall:
 
 advancedMotors:
 

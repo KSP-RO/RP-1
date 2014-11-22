@@ -93,7 +93,7 @@ start:
     ladder1:
     spotLight1:
     spotLight2:
-    SmallGearBay:
+    SmallGearBay:se
     structuralIBeam3:
     strutCube:
     strutOcto:
@@ -115,6 +115,7 @@ start:
     smallHardpoint:
     structuralPylon:
     sepMotor1:
+        cost: 7
     SXTSmallFuselage:
     miniFuelTank:
     rcsTankMini:

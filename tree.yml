@@ -25,8 +25,24 @@ start:
     # Look! We can say this part is the same as some other part. Bam! No repetition.
     SXTAntenna: *longAntenna
 
+    # Parachutes
+
     parachuteSingle:
         cost: 10
+    parachuteDrogue:
+        cost: 15
+    parachuteRadial:
+        cost: 15
+    parachuteLarge:
+        cost: 30
+
+    # Starting science
+
+    sensorThermometer:
+        cost: 9
+    sensorBarometer:
+        cost: 20
+
     KzInterstageAdapter2:
     KzResizableFairingBase:
     KzResizableFairingBaseRing:
@@ -77,13 +93,7 @@ start:
     ladder1:
     spotLight1:
     spotLight2:
-    parachuteDrogue:
-        cost: 15
     SmallGearBay:
-    parachuteRadial:
-        cost: 15
-    parachuteLarge:
-        cost: 30
     structuralIBeam3:
     strutCube:
     strutOcto:
@@ -107,10 +117,6 @@ start:
     sepMotor1:
     SXTSmallFuselage:
     miniFuelTank:
-    sensorThermometer:
-        cost: 9
-    sensorBarometer:
-        cost: 20
     rcsTankMini:
     SXTFuel625m:
     SnubOtron:

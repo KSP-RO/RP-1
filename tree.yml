@@ -126,6 +126,8 @@ start:
         cost: 3
 
     RP0probeSounding0-3m:
+        entryCost: 0
+        cost: 1
 
     # modeled on the electronics of WAC Corporal / Aerobee
     ROAerobeeSustainer:
@@ -227,9 +229,19 @@ stability:
     noseCone:
     winglet:
     radialDecoupler:
+
+    # RCS joy.
+
     RCSBoonExt:
+        # TODO: Make sure my costs are sane!
+
     SquadRCSBlockHalf:
+        entryCost: 4800
+        cost: 20
+
     RCSBlockQuarter:
+        entryCost: 3000
+        cost: 15
 
 advRocketry:
 # TL2 1960-65 tech or so. Gemini, Voskhod, etc.

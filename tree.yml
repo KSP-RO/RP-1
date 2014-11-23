@@ -442,6 +442,10 @@ nanolathing:
     Heatshield-10M:
     Heatshield-15M:
     Heatshield-25M:
+
+    # Let's build a truck!
+    SXTtruckcabinsmall:
+    SXTtruckcabin:
    
 specializedScienceTech:
 

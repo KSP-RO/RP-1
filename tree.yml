@@ -424,6 +424,11 @@ automation:
 
 # FIXME this is our catchall node
 nanolathing:
+
+    # Good try attemping to put heatshields in here. Most are generated
+    # in RO_DeadlyReEntry.cfg in a FINAL pass, so good luck catching
+    # that!
+
 #DRE heatshields
     2.5_Heatshield:
     3.75_Heatshield:

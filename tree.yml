@@ -238,7 +238,7 @@ basicRocketry:
 
     SXTWaxWing: # Black Arrow kick motor
         entryCost: 8000
-        cost: 400 # stage cost $1mil WHAT?
+        cost: 500 # stage cost $1mil WHAT?
 
     SXTBlackAdder: # Gamma 8 (Black Arrow main engine)
         entryCost: 24000
@@ -255,6 +255,10 @@ basicRocketry:
     RO-AJ10-Early: # (Vanguard/Able/[Early]Delta upper stage)
         entryCost: 3000
         cost: 150
+
+    RO-X-248: #Vanguard/Able/Delta kick motor
+        entryCost: 4000
+        cost: 200 # nautix says .6mil, but doesn't say what-year dollars
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:

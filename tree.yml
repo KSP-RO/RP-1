@@ -181,15 +181,60 @@ start:
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
-# Batteries; since players already have service modules.
+
+    # Batteries; since players already have service modules.
+
     batteryPack:
     batteryBankMini:
     ksp_r_largeBatteryPack:
 
+    # Tanks
+
     fuelTankSmallFlat:
     fuelTank:
+    toroidalFuelTank:
+    fuelTankSmall:
+    radialRCSTank:
+    MK1Fuselage:
+    RCSFuelTank:
+    rcsTankRadialLong:
+    fuelTank_long:
+
+    # New probe!
+
+    SXTSputnik:
+
+    # !!SCIENCE!!
+
+    # Stock goo experiment
     GooExperiment:
+        cost: 15
+
+    # Goo in a can (stack mount)
+    SXTProbeGooo:
+        cost: 20
+
+    # Goo as a science wedge (from DMagic Orbital Science)
+    # Expensive, because wedges are cool.
+    dmUSGoo:
+        cost: 50
+
+    # Decoupler
+
     stackDecoupler:
+
+    # Universal Storage structural
+
+    # Wedges are relatively expensive, because they've got to be
+    # wired for interchangeable components.
+    US.c.Hub.QuadCore:
+        cost: 200
+
+    # The decoupler is pretty cheap, because other decouplers are, too.
+    US.f.Dec.SafetyDecoupler125:
+        cost: 10
+
+    # Engines
 
     SXTWaxWing: # Black Arrow kick motor
         entryCost: 8000
@@ -203,19 +248,9 @@ basicRocketry:
         entryCost: 12000
         cost: 600 # Stage cost $3m in 1970, but avionics probably a large part
 
-    toroidalFuelTank:
-    fuelTankSmall:
-    SXTSputnik:
-    radialRCSTank:
-    MK1Fuselage:
-    RCSFuelTank:
-    rcsTankRadialLong:
-
     liquidEngine2: # X-405 (Vanguard main engine)
         entryCost: 18000
         cost: 900
-
-    fuelTank_long:
 
     RO-AJ10-Early: # (Vanguard/Able/[Early]Delta upper stage)
         entryCost: 3000

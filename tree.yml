@@ -487,6 +487,12 @@ advSurveys:
 
 recycling:
 
+    # Water Recycling System
+    US_Wedge_WRS:
+
+    # CO2 removal
+    US_Wedge_Sabatier:
+
 hydroponics:
 
 longTermHabitation:
@@ -540,6 +546,14 @@ antimatterPower:
 ultraHighEnergyPhysics:
 
 enhancedSurvivability:
+    # This comes after regular survivability, so let's add some cool tech here!
+   
+    US_Wedge_Carbon:
+    US_Wedge_Food:
+    US_q_Wedge_Water:           # Yes, the _q_ is correct
+    US_Wedge_Waste:
+    US_Wedge_WasteWater:
+    US_m_Wedge:Oxygen:          # Yes, the _m_ is correct
 
 shortTermHabitation:
 

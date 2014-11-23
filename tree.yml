@@ -45,6 +45,8 @@ start:
 
     # Basic RemoteTech antenna, so things can get off the ground. :)
     RTShortAntenna1:
+        cost: 2
+        entryCost: 0
 
     # Fairings
 
@@ -113,13 +115,29 @@ start:
     # Structural
     
     smallHardpoint:
+
+    # I can't figure out which of these is the smallest, but
+    # I've made them all cheaper because an I-beam shouldn't cost
+    # more than our motors.
+
     structuralIBeam1:
+        price: 10
+
     structuralIBeam2:
+        price: 10
+
     structuralIBeam3:
+        price: 10
+
     structuralMiniNode:
     structuralPanel1:
     structuralPanel2:
+
+    # TODO: This used to cost more than most rockets.
+    # What should it cost?
     structuralPylon:
+        price: 50
+
     strutConnector:
     strutCube:
     strutOcto:
@@ -141,6 +159,7 @@ start:
         cost: 7
 
     # Small solid
+    # XXX - Which part pack is this from??
     SnubOtron:
         entryCost: 0
         cost: 3
@@ -163,7 +182,7 @@ start:
     OscarDtank:
     OscarEtank:
 
-    # Unsorted. Please sort me! ;)
+    # Unsorted. Please sort and price me! ;)
 
     CanardController:
     AdvancedCanard:

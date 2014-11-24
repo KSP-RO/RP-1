@@ -121,31 +121,47 @@ start:
     # more than our motors.
 
     structuralIBeam1:
-        price: 10
+        cost: 10
 
     structuralIBeam2:
-        price: 10
+        cost: 10
 
     structuralIBeam3:
-        price: 10
+        cost: 10
 
     structuralMiniNode:
+        cost: 10
+
     structuralPanel1:
+        cost: 10
+
     structuralPanel2:
+        cost: 20
 
     # TODO: This used to cost more than most rockets.
     # What should it cost?
     structuralPylon:
-        price: 50
+        cost: 50
 
     strutConnector:
+        cost: 5
+
     strutCube:
+        cost: 5
+
     strutOcto:
+        cost: 7
+
     SXTSmallFuselage:
+
     trussAdapter:
+        cost: 10
+
     trussPiece1x:
-    trussPiece1x:
+        cost: 10
+
     trussPiece3x:
+        cost: 20
 
     # Lights, ladders and things
 

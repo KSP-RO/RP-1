@@ -19,6 +19,13 @@ use FindBin qw($Bin);
 
 my $DECORATION = "FOR[RP-0]";
 
+my %KNOWN_FIELDS;
+
+@KNOWN_FIELDS{qw(
+    cost
+    entryCost
+)} = ();
+
 # Allow output file to be set.
 my %opts = (o => "$Bin/../GameData/RP-0/Tree.cfg");
 getopts('o:', \%opts);
@@ -37,17 +44,29 @@ say {$out_fh}
     "// Please edit `tree.yml` and then run `yml2mm` to regenerate\n"
 ;
 
+my %seen_part;
+
 foreach my $file (@ARGV) {
     my $yaml = LoadFile($file);
 
     foreach my $tech (keys %$yaml) {
         foreach my $part (keys %{ $yaml->{$tech}} ) {
+
+            if ($seen_part{$part}++) {
+                warn "WARNING: '$part' appears MULTIPLE TIMES in the tree\n";
+            }
+
             my $changes = "\t%TechRequired = $tech\n";
 
             my $custom_fields = $yaml->{$tech}{$part};
 
             # If there are changes listed for this part, copy them across.
             foreach my $field (keys %$custom_fields) {
+                
+                if (! exists $KNOWN_FIELDS{$field}) {
+                    warn "WARNING: '$part' defines field '$field', are you sure?\n";
+                }
+
                 $changes .= "\t%$field = $custom_fields->{$field}\n";
             }
 

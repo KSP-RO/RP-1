@@ -17,6 +17,7 @@ start:
 #TL0. early tech. Sounding rockets, basic structural pieces and wings. Late 40s.
 
     # Parachutes
+    # Since these are all procedural priced, should these have costs at all?
 
     parachuteSingle:
         cost: 10
@@ -516,30 +517,7 @@ robotics:
 
 automation:
 
-# FIXME this is our catchall node
 nanolathing:
-
-    # Good try attemping to put heatshields in here. Most are generated
-    # in RO_DeadlyReEntry.cfg in a FINAL pass, so good luck catching
-    # that!
-
-#DRE heatshields
-    2.5_Heatshield:
-    3.75_Heatshield:
-    6.25_Heatshield:
-#RO Heatshields
-    Heatshield-2M:
-    Heatshield-3M:
-    Heatshield-375M:
-    Heatshield-4M:
-    Heatshield-5M:
-    Heatshield-10M:
-    Heatshield-15M:
-    Heatshield-25M:
-
-    # Let's build a truck!
-    SXTtruckcabinsmall:
-    SXTtruckcabin:
    
 specializedScienceTech:
 
@@ -655,3 +633,33 @@ enhancedSurvivability:
 
 shortTermHabitation:
 
+ORPHANS:
+
+    # Yah, that's right. We have an orphans node. Why not? We can have an
+    # AFTER RP-0 section if we want to move these into the tree somewhere.
+
+    # Good try attemping to put heatshields in here. Most are generated
+    # in RO_DeadlyReEntry.cfg in a FINAL pass, so good luck catching
+    # that!
+
+    # DRE heatshields
+    
+    2.5_Heatshield:
+    3.75_Heatshield:
+    6.25_Heatshield:
+
+    # RO Heatshields
+    
+    Heatshield-2M:
+    Heatshield-3M:
+    Heatshield-375M:
+    Heatshield-4M:
+    Heatshield-5M:
+    Heatshield-10M:
+    Heatshield-15M:
+    Heatshield-25M:
+
+    # Let's build a truck!
+    
+    SXTtruckcabinsmall:
+    SXTtruckcabin:

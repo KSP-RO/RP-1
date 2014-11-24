@@ -342,6 +342,7 @@ stability:
 
     RCSBoonExt:
         # TODO: Make sure my costs are sane!
+        # TODO: PART NOT SUPPORTED BY RO!
 
     SquadRCSBlockHalf:
         entryCost: 2000 # breaks 20x rule because of avionics required
@@ -351,7 +352,9 @@ stability:
         entryCost: 1000
         cost: 15
 
-    #Early Probe cores -- yes this is expensive.
+    # Early Probe cores -- yes this is expensive.
+    # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?
+    # Besides realism, how do we justify how expensive this is?
     probeCoreOcto2:
         entryCost: 20000
         cost: 1000
@@ -369,6 +372,48 @@ advRocketry:
     M55:
 
 scienceTech:
+
+    # These things are placed here by default, but they're not a bad selection,
+    # so let's get them costed out now...
+    
+    # Magnetometer boom. I can buy one of these for spacecraft use off the
+    # Internet for 11,000 EUR, which is only $1700 in 1960s USD. However it's
+    # got moving parts, and could have cost more back then, so let's give it
+    # a balanced value of $100k. Enough that you'd still put one on your science
+    # vessel, but not cheap enough you'd scatter them everywhere.
+    
+    dmmagBoom:
+        entryCost: 2000
+        cost: 100
+
+    # These are also cheap in modern dollars, so we're going for a similar
+    # "balanced" cost. It'd be great if KSP had a way to cheapen part costs the
+    # longer you have them.
+
+    SCANsat.Scanner:
+        entryCost: 2000
+        cost: 100
+
+    # 40x the size of a small panel. Linear scaling would have this at 12000 ($12m!)
+    # Let's not do linear scaling. This sort of bulk purchase is only $3m, 25% of the
+    # linear scale.
+    aje.SolarPanels:
+        entryCost: 6000         # Player already has cells; what's to develop?
+        cost: 3000
+
+    # What the hell is this supposed to be, anyway?
+    science.module:
+        entryCost: 8000
+        cost: 200
+
+    # DTS-M1
+    # TODO: PRICE ME!
+    mediumDishAntenna:
+
+    # Science wedge (it's an empty compartment)
+    # TODO: PRICE ME!
+    US.R90.Wedge.ScienceBay:
+
 
 generalConstruction:
 

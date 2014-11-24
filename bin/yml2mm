@@ -18,6 +18,7 @@ use FindBin qw($Bin);
 # compile the portable version with `fatten yml2mm.lean yml2mm`
 
 my $DECORATION = "FOR[RP-0]";
+my $DEFAULT_ENTRY_MULT = 20;
 
 my %KNOWN_FIELDS;
 
@@ -59,6 +60,10 @@ foreach my $file (@ARGV) {
             my $changes = "\t%TechRequired = $tech\n";
 
             my $custom_fields = $yaml->{$tech}{$part};
+
+            if (exists $custom_fields->{cost} and not exists $custom_fields->{entryCost}) {
+                $custom_fields->{entryCost} = $custom_fields->{cost} * $DEFAULT_ENTRY_MULT;
+            }
 
             # If there are changes listed for this part, copy them across.
             foreach my $field (keys %$custom_fields) {

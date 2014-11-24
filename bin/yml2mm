@@ -50,8 +50,8 @@ my %seen_part;
 foreach my $file (@ARGV) {
     my $yaml = LoadFile($file);
 
-    foreach my $tech (keys %$yaml) {
-        foreach my $part (keys %{ $yaml->{$tech}} ) {
+    foreach my $tech (sort keys %$yaml) {
+        foreach my $part (sort keys %{ $yaml->{$tech}} ) {
 
             if ($seen_part{$part}++) {
                 warn "WARNING: '$part' appears MULTIPLE TIMES in the tree\n";
@@ -66,7 +66,7 @@ foreach my $file (@ARGV) {
             }
 
             # If there are changes listed for this part, copy them across.
-            foreach my $field (keys %$custom_fields) {
+            foreach my $field (sort keys %$custom_fields) {
                 
                 if (! exists $KNOWN_FIELDS{$field}) {
                     warn "WARNING: '$part' defines field '$field', are you sure?\n";

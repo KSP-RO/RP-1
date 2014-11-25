@@ -12,7 +12,6 @@ namespace Contracts
     {
         public override bool MeetRequirements()
 		{
-            Debug.Log("RP0*ProbeAltitudeRecord::MeetRequirements");
             /*if (ProgressTracking.Instance.NodeComplete("ReachedSpace"))
 			{
 				return false;
@@ -71,7 +70,6 @@ namespace Contracts
         protected override bool Generate()
 		{
 			double newTarget = 10000.0;
-            Debug.Log("RP0*ProbeAltitudeRecord::Generate");
 			RecordsAltitudeProbe recordsAltitude = ProgressTracking.Instance.FindNode("AltitudeRecordProbe") as RecordsAltitudeProbe;
 			if (recordsAltitude != null)
 			{

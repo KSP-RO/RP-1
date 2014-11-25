@@ -17,16 +17,25 @@ start:
 #TL0. early tech. Sounding rockets, basic structural pieces and wings. Late 40s.
 
     # Parachutes
-    # Since these are all procedural priced, should these have costs at all?
+    # The *cost* here is not used when building ships, because RealChute
+    # provides procedural pricing. Instead, it *is* used when recovering
+    # stages. Since a spent parachute is worthless, these are all zero.
+    #
+    # TODO: We could do with stanzas that activate if RealChute is not
+    # installed, to provide fixed pricing for these.
 
     parachuteSingle:
-        cost: 10
+        cost: 0
     parachuteDrogue:
-        cost: 15
+        cost: 0
     parachuteRadial:
-        cost: 15
+        cost: 0
     parachuteLarge:
-        cost: 30
+        cost: 0
+    RC_cone:
+        cost: 0
+    RC_radial:
+        cost: 0
 
     # Starting science
 
@@ -317,13 +326,24 @@ survivability:
     mk1pod:
         entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
         cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
-#Heatshields
+
+    # Heatshields
+    
     0625_Heatshield:	    
         cost: 300
     Heatshield-1M:
         cost: 600
     1.25_Heatshield:
         cost: 1000
+
+    # Added the more advanced parachutes here, since they're very useful for
+    # getting people down safely.
+
+    RC_stack:
+        cost: 0
+    RC_cone_double:
+        cost: 0
+
 
 stability:
 #3-axis stability in orbit. CORONA etc.

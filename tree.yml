@@ -397,13 +397,13 @@ scienceTech:
     # "balanced" cost. It'd be great if KSP had a way to cheapen part costs the
     # longer you have them.
 
-    SCANsat.Scanner:
+    SCANsat_Scanner:
         cost: 100
 
     # 40x the size of a small panel. Linear scaling would have this at 12000 ($12m!)
     # Let's not do linear scaling. This sort of bulk purchase is only $3m, 25% of the
     # linear scale.
-    aje.solarPanels:
+    aje_solarPanels:
         entryCost: 6000         # Player already has cells; what's to develop?
         cost: 3000
 
@@ -417,7 +417,7 @@ scienceTech:
 
     # Science wedge (it's an empty compartment)
     # TODO: PRICE ME!
-    US.R90.Wedge.ScienceBay:
+    US_R90_Wedge_ScienceBay:
 
 
 generalConstruction:

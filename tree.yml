@@ -372,6 +372,10 @@ stability:
     solarPanels5:
         cost: 300
 
+    # What the hell is this supposed to be, anyway?
+    science_module:
+        cost: 1000
+
 advRocketry:
 # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
     liquidEngine:
@@ -391,14 +395,14 @@ scienceTech:
     # vessel, but not cheap enough you'd scatter them everywhere.
     
     dmmagBoom:
-        cost: 100
+        cost: 500
 
     # These are also cheap in modern dollars, so we're going for a similar
     # "balanced" cost. It'd be great if KSP had a way to cheapen part costs the
     # longer you have them.
 
     SCANsat_Scanner:
-        cost: 100
+        cost: 500
 
     # 40x the size of a small panel. Linear scaling would have this at 12000 ($12m!)
     # Let's not do linear scaling. This sort of bulk purchase is only $3m, 25% of the
@@ -407,18 +411,13 @@ scienceTech:
         entryCost: 6000         # Player already has cells; what's to develop?
         cost: 3000
 
-    # What the hell is this supposed to be, anyway?
-    science_module:
-        cost: 200
-
     # DTS-M1
-    # TODO: PRICE ME!
     mediumDishAntenna:
+        cost: 500
 
     # Science wedge (it's an empty compartment)
-    # TODO: PRICE ME!
     US_R90_Wedge_ScienceBay:
-
+        cost: 10
 
 generalConstruction:
 

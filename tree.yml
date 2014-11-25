@@ -265,8 +265,8 @@ basicRocketry:
         cost: 50
 
     # Decoupler
-
     stackDecoupler:
+        cost: 10
 
     # Universal Storage structural
 

@@ -408,7 +408,7 @@ scienceTech:
         cost: 3000
 
     # What the hell is this supposed to be, anyway?
-    science.module:
+    science_module:
         cost: 200
 
     # DTS-M1

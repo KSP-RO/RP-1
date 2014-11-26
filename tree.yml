@@ -292,7 +292,7 @@ basicRocketry:
         cost: 600 # Stage cost $3m in 1970, but avionics probably a large part
 
     liquidEngine2: # X-405 (Vanguard main engine)
-        cost: 800 # very expensive for its performance.
+        cost: 900
 
     RO-AJ10-Early: # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
@@ -309,7 +309,7 @@ generalRocketry:
 
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     RO-LR-89:
-        cost: 1000 # technically Atlas was ~2.5m per LV, but we include launch costs.
+        cost: 2000
 
     RCSTank1-2:
     fuelTank4-2:

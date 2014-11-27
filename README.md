@@ -7,10 +7,11 @@ License: CC-BY-NC-SA-4.0
 Forum thread: http://forum.kerbalspaceprogram.com/threads/99010
 Github Repo:  https://gihub.com/KSP-RO/RP-0
 
-Requirements:
+**Requirements:**
 - Realism Overhaul and all its required mods
 - Lack's SXT (although only the engines have RO configs as of yet)
-Secommended
+
+**Recommended:**
 - Procedural Fairings
 - Procedural Parts
 - Procedural Dynamics Procedural Wings

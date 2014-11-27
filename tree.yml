@@ -320,7 +320,7 @@ generalRocketry:
     # LR-101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini:
         cost: 50
-		
+
     # Castor 1 (Sergeant / M33) solid motor
     solidBooster1-1Small:
         cost: 290

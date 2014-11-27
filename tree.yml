@@ -320,6 +320,10 @@ generalRocketry:
     # LR-101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini:
         cost: 50
+		
+    # Castor 1 (Sergeant / M33) solid motor
+    solidBooster1-1Small:
+        cost: 290
 
 survivability:
 #First crewed capsules
@@ -435,8 +439,6 @@ landing:
 
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1.
-    solidBooster1-1Small:
-# NOTE: This ^^ is going to change to a Castor 1, and be moved to advRocketry.
 
 fuelSystems:
 

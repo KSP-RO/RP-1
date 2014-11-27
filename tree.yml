@@ -185,7 +185,7 @@ start:
         cost: 7
 
     # Small solid
-    # XXX - Which part pack is this from??
+    # This is from VSR; not all players will have it.
     SnubOtron:
         entryCost: 0
         cost: 3
@@ -260,9 +260,8 @@ basicRocketry:
         cost: 20
 
     # Goo as a science wedge (from DMagic Orbital Science)
-    # Expensive, because wedges are cool.
     dmUSGoo:
-        cost: 50
+        cost: 20
 
     # Decoupler
     stackDecoupler:
@@ -278,6 +277,10 @@ basicRocketry:
     # The decoupler is pretty cheap, because other decouplers are, too.
     US.f.Dec.SafetyDecoupler125:
         cost: 10
+
+    # This is a barometer and thermo in a single wedge. It looks cool. :)
+    dmUSPresTemp:
+        cost: 30
 
     # Engines
 
@@ -380,6 +383,10 @@ stability:
     science_module:
         cost: 1000
 
+    # Same in a wedge
+    dmUSMat:
+        cost: 1000
+
 advRocketry:
 # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
     liquidEngine:
@@ -399,6 +406,11 @@ scienceTech:
     # vessel, but not cheap enough you'd scatter them everywhere.
     
     dmmagBoom:
+        cost: 500
+
+    # The same, in a cool wedge.
+
+    dmUSMagBoom:
         cost: 500
 
     # These are also cheap in modern dollars, so we're going for a similar
@@ -634,7 +646,7 @@ enhancedSurvivability:
     US_q_Wedge_Water:           # Yes, the _q_ is correct
     US_Wedge_Waste:
     US_Wedge_WasteWater:
-    US_m_Wedge:Oxygen:          # Yes, the _m_ is correct
+    US_m_Wedge_Oxygen:          # Yes, the _m_ is correct
 
 shortTermHabitation:
 

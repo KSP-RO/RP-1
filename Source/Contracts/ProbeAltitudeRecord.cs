@@ -75,6 +75,13 @@ namespace Contracts
 			{
 				newTarget = recordsAltitude.record;
 			}
+
+			/*
+			 * We really want to make sure the player's next contract isn't goint to
+			 * be auto-completed by an existing vessel in orbit; however we can't enable
+			 * this code below until we can screen out asteroids; because of course
+			 * asteroids are vessels. o_O
+
             if ((object)FlightGlobals.Vessels != null)
             {
                 foreach (Vessel v in FlightGlobals.Vessels)
@@ -84,6 +91,9 @@ namespace Contracts
                             newTarget = v.orbit.ApA;
                 }
             }
+
+			*/
+
 			if (newTarget < 30000.0)
 			{
 				prestige = Contract.ContractPrestige.Trivial;

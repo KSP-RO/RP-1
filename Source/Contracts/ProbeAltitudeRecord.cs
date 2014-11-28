@@ -75,6 +75,15 @@ namespace Contracts
 			{
 				newTarget = recordsAltitude.record;
 			}
+            if ((object)FlightGlobals.Vessels != null)
+            {
+                foreach (Vessel v in FlightGlobals.Vessels)
+                {
+                    if ((object)v.orbit != null)
+                        if (newTarget < v.orbit.ApA)
+                            newTarget = v.orbit.ApA;
+                }
+            }
 			if (newTarget < 30000.0)
 			{
 				prestige = Contract.ContractPrestige.Trivial;
@@ -88,7 +97,7 @@ namespace Contracts
 			else
 			{
 				prestige = Contract.ContractPrestige.Exceptional;
-                targetAltitude = (double)(Mathf.Ceil((float)(newTarget + 100000.0) / 10000f) * 10000f);
+                targetAltitude = (double)(Mathf.Ceil((float)(newTarget * 1.5f) / 10000f) * 10000f);
                 if (newTarget > (Planetarium.fetch.Home.sphereOfInfluence - Planetarium.fetch.Home.Radius) * 0.9f)
                     return false;
 			}

@@ -9,7 +9,7 @@ Github Repo:  https://gihub.com/KSP-RO/RP-0
 
 **Requirements:**
 - Realism Overhaul and all its required mods
-- Community Tech Tree (and Tree Manager, to load it)
+- Community Tech Tree (and Tech Manager, to load it)
 - Lack's SXT (although only the engines have RO configs as of yet)
 
 **Recommended:**

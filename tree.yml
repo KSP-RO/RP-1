@@ -302,6 +302,19 @@ basicRocketry:
 
     RO-X-248: #Vanguard/Able/Delta kick motor
         cost: 200 # nautix says .6mil, but doesn't say what-year dollars
+       
+    # Mercury/Redstone, including the Explorer probe and kickers. From FASA
+    FASA_Mercury_Redstone_Eng: 
+    FASAExplorer_LFTLong:
+    FASAExplorerSgt:
+    FASAExplorerSgt11: 
+    FASAExplorerSgt3:
+    FASAExplorerNosecone:
+    FASAlaunchClamp125:
+    FASAExplorerSgt11Dec:
+    FASAExplorerSgt3Dec:
+    FASAMercuryRedstoneFin:
+    
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:

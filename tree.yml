@@ -282,6 +282,21 @@ basicRocketry:
     dmUSPresTemp:
         cost: 30
 
+    # US unlocks with fuel wedges; they're just cool looking tanks.
+    # We're giving this an alias so we can have lots of wedges with the
+    # same price.
+    US_Wedge_Fuel: &basicWedge
+        cost: 20
+    
+    US_Wedge_Monoprop: *basicWedge
+    US_l_Wedge_Hydrogen: *basicWedge
+    US_m_Wedge_Oxygen: *basicWedge
+    US_q_Wedge_Water: *basicWedge
+
+    # This isn't a wedge, it's just yet another radial tank, and
+    # should be priced with whatever prices we use for those.
+    US_Radial_Oxygen: *basicWedge
+
     # Engines
 
     SXTWaxWing: # Black Arrow kick motor
@@ -656,10 +671,8 @@ enhancedSurvivability:
    
     US_Wedge_Carbon:
     US_Wedge_Food:
-    US_q_Wedge_Water:           # Yes, the _q_ is correct
     US_Wedge_Waste:
     US_Wedge_WasteWater:
-    US_m_Wedge_Oxygen:          # Yes, the _m_ is correct
 
 shortTermHabitation:
 

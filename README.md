@@ -18,7 +18,7 @@ Github Repo:  https://gihub.com/KSP-RO/RP-0
 - Procedural Dynamics Procedural Wings
 - Ven's Stock Parts Revamp (not available on the CKAN yet)
 
-**Supported**
+**In Progress**
 - DMagic's Orbital Science
 - Universal Storage
 - TweakScale

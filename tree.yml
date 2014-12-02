@@ -304,8 +304,9 @@ basicRocketry:
         cost: 200 # nautix says .6mil, but doesn't say what-year dollars
        
     # Mercury/Redstone, including the Explorer probe and kickers. From FASA
+    FASAExplorerProbe:
     FASA_Mercury_Redstone_Eng: 
-    FASAExplorer_LFTLong:
+    FASAExplorerLFTLong:
     FASAExplorerSgt:
     FASAExplorerSgt11: 
     FASAExplorerSgt3:
@@ -314,6 +315,7 @@ basicRocketry:
     FASAExplorerSgt11Dec:
     FASAExplorerSgt3Dec:
     FASAMercuryRedstoneFin:
+    linearRcs:
     
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
@@ -340,6 +342,21 @@ generalRocketry:
     # Castor 1 (Sergeant / M33) solid motor
     solidBooster1-1Small:
         cost: 290
+        
+    #From FASA
+    FASAMercuryAtlasEng:
+    FASA_Mercury_LFT_Long:
+    FASA_Mercury_LFT_Short:
+    FASA_Atlas_LFT_Cone:
+    FASA_Atlas_LFT_Cone2:
+    FASAMercuryAtlasLFTLong:
+    FASAAtlasSLV3A:
+    FASAAtlasFMod:
+    FASAAtlasH:
+    FASAMercuryFairing:
+    FASAMercuryAtlasEngBooster:
+    FASAMercuryAtlasVernierEngine:
+    
 
 survivability:
 #First crewed capsules
@@ -363,6 +380,18 @@ survivability:
         cost: 0
     RC_cone_double:
         cost: 0
+        
+    #FASA Mercury things
+    FASAMercruyCap2:
+    FASAGeminiDecDark125:
+    FASAGeminiDecDark125.Redstone:
+    FASAGeminiDecDark125.Atlas:
+    FASA_Mercury_Parachute_Box:
+    FASAMercuryPod:
+    FASA_Mercury_Eng:
+    FASAMercuryDec:
+    FASAGeminiMiniSRB:
+    FASAlaunchClampAtlas:    
 
 
 stability:
@@ -399,6 +428,9 @@ stability:
     # Same in a wedge
     dmUSMat:
         cost: 1000
+        
+    #FASA
+    FASAMercuryPodRCS:
 
 advRocketry:
 # TL2 1960-65 tech or so. Gemini, Voskhod, etc.

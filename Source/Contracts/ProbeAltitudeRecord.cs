@@ -83,7 +83,7 @@ namespace Contracts
 			 * asteroids are vessels. o_O
              */
             // Trying new code:
-            if ((object)FlightGlobals.Vessels != null)
+            /*if ((object)FlightGlobals.Vessels != null)
             {
                 foreach (Vessel v in FlightGlobals.Vessels)
                 {
@@ -91,7 +91,7 @@ namespace Contracts
                         if (newTarget < v.orbit.ApA)
                             newTarget = v.orbit.ApA;
                 }
-            }
+            }*/
 
 			if (newTarget < 30000.0)
 			{

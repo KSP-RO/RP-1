@@ -12,33 +12,6 @@ namespace Contracts
     {
         public override bool MeetRequirements()
 		{
-            Debug.Log("HSFOrbital meetreq");
-            bool havePod = false;
-            foreach (AvailablePart p in PartLoader.LoadedPartsList)
-            {
-                if (p.partPrefab.CrewCapacity > 0)
-                {
-                    havePod = true;
-                    break;
-                }
-            }
-            // return false iff we have no crew pods AND we've not reached orbit
-            // so you should get this if you've reached orbit, even if you haven't researched any pods yet.
-            if (!havePod && !ProgressTracking.Instance.NodeComplete("Kerbin", "Orbit")) // SQUAD Y U HARDCODE
-                    return false;
-            Debug.Log("HSFOrbital met");
-            // one at a time
-			if (base.ContractState != State.Active)
-			{
-				HSFEarthOrbital[] currentContracts = ContractSystem.Instance.GetCurrentContracts<HSFEarthOrbital>();
-				for (int i = 0; i < currentContracts.Length; i++)
-				{
-					if (currentContracts[i].ContractState == State.Offered || currentContracts[i].ContractState == State.Active)
-					{
-						return false;
-					}
-				}
-			}
 			return true;
 		}
         protected override string GetDescription()
@@ -67,6 +40,33 @@ namespace Contracts
         }
         protected override bool Generate()
 		{
+            Debug.Log("HSFOrbital meetreq");
+            bool havePod = false;
+            foreach (AvailablePart p in PartLoader.LoadedPartsList)
+            {
+                if (p.partPrefab.CrewCapacity > 0)
+                {
+                    havePod = true;
+                    break;
+                }
+            }
+            // return false iff we have no crew pods AND we've not reached orbit
+            // so you should get this if you've reached orbit, even if you haven't researched any pods yet.
+            if (!havePod && !ProgressTracking.Instance.NodeComplete("Kerbin", "Orbit")) // SQUAD Y U HARDCODE
+                return false;
+            Debug.Log("HSFOrbital met");
+            // one at a time
+            if (base.ContractState != State.Active)
+            {
+                HSFEarthOrbital[] currentContracts = ContractSystem.Instance.GetCurrentContracts<HSFEarthOrbital>();
+                for (int i = 0; i < currentContracts.Length; i++)
+                {
+                    if (currentContracts[i].ContractState == State.Offered || currentContracts[i].ContractState == State.Active)
+                    {
+                        return false;
+                    }
+                }
+            }
             Debug.Log("HSFOrbital gen");
 			prestige = Contract.ContractPrestige.Exceptional;
 

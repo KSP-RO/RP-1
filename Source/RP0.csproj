@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Contracts\HSFEarthOrbital.cs" />
     <Compile Include="Contracts\ProbeAltitudeRecord.cs" />
     <Compile Include="ModuleShowInfo.cs" />
     <Compile Include="ProgressTreeAdder.cs" />

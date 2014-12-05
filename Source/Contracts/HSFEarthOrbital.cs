@@ -86,8 +86,8 @@ namespace Contracts.Parameters
     [Serializable]
 	public class HSFOrbital : ContractParameter
 	{
-        protected string bodyName;
-        protected CelestialBody body;
+        protected string bodyName = "";
+        protected CelestialBody body = null;
         private static CelestialBody GetBody(string bName)
         {
             for(int i = 0; i < FlightGlobals.Bodies.Count; i++)
@@ -99,16 +99,7 @@ namespace Contracts.Parameters
         }
         public HSFOrbital()
         {
-            try
-            {
-                body = Planetarium.fetch.Home;
-                bodyName = body.name;
-            }
-            catch
-            {
-                bodyName = "Kerbin";
-                body = GetBody(bodyName);
-            }
+            SetDefault();
         }
         public HSFOrbital(string newBodyName)
         {
@@ -119,6 +110,19 @@ namespace Contracts.Parameters
         {
             body = newBody;
             bodyName = body.name;
+        }
+        protected void SetDefault()
+        {
+            try
+            {
+                body = Planetarium.fetch.Home;
+                bodyName = body.name;
+            }
+            catch
+            {
+                bodyName = "Kerbin";
+                body = GetBody(bodyName);
+            }
         }
 		protected override string GetHashString()
 		{
@@ -135,6 +139,10 @@ namespace Contracts.Parameters
                 bodyName = node.GetValue(bodyName);
                 body = GetBody(bodyName);
 			}
+            if (bodyName == "" || (object)body == null)
+            {
+                SetDefault();
+            }
 		}
 		protected override void OnSave(ConfigNode node)
 		{
@@ -151,6 +159,7 @@ namespace Contracts.Parameters
 
 		protected void OnVesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> vs)
 		{
+            Debug.Log("HSF vessel sit change");
 			if (vs.to == Vessel.Situations.LANDED || vs.to == Vessel.Situations.SPLASHED)
 			    if (vs.from == Vessel.Situations.FLYING)
 				    if (vs.host.mainBody.isHomeWorld)

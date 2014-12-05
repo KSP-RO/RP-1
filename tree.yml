@@ -341,6 +341,7 @@ generalRocketry:
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     RO-LR-89:
         cost: 1000 # technically Atlas was ~2.5m per LV, but we include launch costs.
+#FIXME maybe we don't include launch costs.
 
     RCSTank1-2:
     fuelTank4-2:
@@ -421,6 +422,14 @@ advRocketry:
     solidBooster:
     solidBooster1-1:
     M55:
+    engineLargeSkipper: # RL-10
+        cost: 1800
+    LR87LH2Vac:  # total guess on price
+        cost: 6500
+    SXTLT80: #J-2
+        cost: 7500
+    liquidEngine1-2: #H-1 (early)
+        cost: 1150
 
 scienceTech:
 
@@ -546,6 +555,7 @@ advUnmanned:
 
 advScienceTech:
 
+#TL6
 experimentalRocketry:
 
 aerospaceTech:

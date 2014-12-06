@@ -40,7 +40,6 @@ namespace Contracts
         }
         protected override bool Generate()
 		{
-            Debug.Log("HSFOrbital meetreq");
             bool havePod = false;
             foreach (AvailablePart p in PartLoader.LoadedPartsList)
             {
@@ -54,7 +53,6 @@ namespace Contracts
             // so you should get this if you've reached orbit, even if you haven't researched any pods yet.
             if (!havePod && !ProgressTracking.Instance.NodeComplete("Kerbin", "Orbit")) // SQUAD Y U HARDCODE
                 return false;
-            Debug.Log("HSFOrbital met");
             // one at a time
             if (base.ContractState != State.Active)
             {
@@ -67,7 +65,6 @@ namespace Contracts
                     }
                 }
             }
-            Debug.Log("HSFOrbital gen");
 			prestige = Contract.ContractPrestige.Exceptional;
 
             AddParameter(new Contracts.Parameters.HSFOrbital(Planetarium.fetch.Home), null);
@@ -159,7 +156,6 @@ namespace Contracts.Parameters
 
 		protected void OnVesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> vs)
 		{
-            Debug.Log("HSF vessel sit change");
 			if (vs.to == Vessel.Situations.LANDED || vs.to == Vessel.Situations.SPLASHED)
 			    if (vs.from == Vessel.Situations.FLYING)
 				    if (vs.host.mainBody.isHomeWorld)

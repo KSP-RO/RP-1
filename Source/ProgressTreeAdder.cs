@@ -44,9 +44,9 @@ namespace RP0
             base.OnLoad(node);
             if ((object)ProgressTracking.Instance != null)
             {
-                OnAwake();
                 MethodInfo generate = ProgressTracking.Instance.GetType().GetMethod("generateAchievementsTree", BindingFlags.NonPublic | BindingFlags.Instance);
                 ProgressTracking.Instance.achievementTree = (ProgressTree)(generate.Invoke(ProgressTracking.Instance, null));
+                OnAwake();
                 if (node.HasNode("Progress"))
                 {
                     ProgressTracking.Instance.achievementTree.Load(node.GetNode("Progress"));

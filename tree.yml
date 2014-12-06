@@ -398,6 +398,9 @@ stability:
         entryCost: 1000
         cost: 15
 
+    microEngine:
+        cost: 100 # essentially a 1kN class linear RCS, but as an engine.
+
     # Early Probe cores -- yes this is expensive.
     # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?
     # Besides realism, how do we justify how expensive this is?
@@ -419,8 +422,6 @@ stability:
 advRocketry:
 # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
     liquidEngine:
-    solidBooster:
-    solidBooster1-1:
     M55:
     engineLargeSkipper: # RL-10
         cost: 1800
@@ -430,6 +431,8 @@ advRocketry:
         cost: 7500
     liquidEngine1-2: #H-1 (early)
         cost: 1150
+    vernierEngine: # 2kN thruster
+        cost: 150
 
 scienceTech:
 
@@ -485,9 +488,15 @@ electrics:
 spaceExploration:
 
 landing:
+    liquidEngine2-2: #LMDE
+        cost: 1500 # FIXME total guess, but with each LM about 9 mil...
+    liquidEngineMini: #LMAE
+        cost: 600 # ditto
 
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1.
+    radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
+    smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
 
 fuelSystems:
 
@@ -503,7 +512,8 @@ specializedControl:
 
 heavierRocketry:
 #TL4 Apollo Applications program, working N-1, etc.
-
+    toroidalAerospike: # J-2T (plug nozzle J-2)
+        cost: 9000 # J-2 is 8500
 
 specializedConstruction:
 
@@ -543,7 +553,9 @@ veryHeavyRocketry:
 #TL5 80s tech
     engineLargeSkipper_125m:
     liquidEngineMiniRescale:
-    solidBoosterSmall:
+    solidBoosterSmall: # right now, Castor 30. Change later?
+    solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
+    omsEngine:
 
 advancedMotors:
 
@@ -555,8 +567,9 @@ advUnmanned:
 
 advScienceTech:
 
-#TL6
+#TL6 90s tech
 experimentalRocketry:
+    solidBooster: # Castor 30XL
 
 aerospaceTech:
 

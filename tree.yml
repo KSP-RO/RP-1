@@ -299,16 +299,6 @@ basicRocketry:
 
     # Engines
 
-    SXTWaxWing: # Black Arrow kick motor
-        entryCost: 8000
-        cost: 500 # stage cost $1mil WHAT?
-
-    SXTBlackAdder: # Gamma 8 (Black Arrow main engine)
-        cost: 1200 # Stage cost 4m
-
-    SXTBlackAdder2: #Gamma 2 (Black Arrow upper stage engine)
-        cost: 600 # Stage cost $3m in 1970, but avionics probably a large part
-
     liquidEngine2: # X-405 (Vanguard main engine)
         cost: 800 # very expensive for its performance.
 
@@ -356,7 +346,13 @@ generalRocketry:
     # Castor 1 (Sergeant / M33) solid motor
     solidBooster1-1Small:
         cost: 290
+# Black Arrow engines (derivates of Black Knight engine, so can be early
+# see TL3 for Waxwing.
+    SXTBlackAdder: # Gamma 8 (Black Arrow main engine)
+        cost: 1200 # Stage cost 4m
 
+    SXTBlackAdder2: #Gamma 2 (Black Arrow upper stage engine)
+        cost: 600 # Stage cost $3m in 1970, but avionics probably a large part
 survivability:
 #First crewed capsules
     mk1pod:
@@ -433,7 +429,10 @@ advRocketry:
         cost: 1150
     vernierEngine: # 2kN thruster
         cost: 150
-
+# Waxwing should maybe even be TL3
+    SXTWaxWing: # Black Arrow kick motor
+        entryCost: 8000
+        cost: 500 # stage cost $1mil WHAT?
 scienceTech:
 
     # These things are placed here by default, but they're not a bad selection,

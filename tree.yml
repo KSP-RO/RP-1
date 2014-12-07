@@ -419,7 +419,8 @@ stability:
 
 advRocketry:
 # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
-    liquidEngine:
+    liquidEngine: #RD-58
+        cost: 800
     M55:
     engineLargeSkipper: # RL-10
         cost: 1800

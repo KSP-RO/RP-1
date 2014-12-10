@@ -435,6 +435,7 @@ advRocketry:
 # Waxwing should maybe even be TL3
     SXTWaxWing: # Black Arrow kick motor
         cost: 300
+
 scienceTech:
 
     # These things are placed here by default, but they're not a bad selection,
@@ -479,6 +480,12 @@ scienceTech:
 generalConstruction:
 
 flightControl:
+    linearRcs:
+        entryCost: 1500
+        cost: 25
+    RCSBlock:
+        entryCost: 2000
+        cost: 35
 
 advConstruction:
 
@@ -697,7 +704,7 @@ enhancedSurvivability:
     US_Wedge_Food:
     US_Wedge_Waste:
     US_Wedge_WasteWater:
-
+    #Gemini
 shortTermHabitation:
 
 ORPHANS:

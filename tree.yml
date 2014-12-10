@@ -422,12 +422,6 @@ advRocketry:
     liquidEngine: #RD-58
         cost: 800
     M55:
-    engineLargeSkipper: # RL-10
-        cost: 1800
-    LR87LH2Vac:  # total guess on price
-        cost: 6500
-    SXTLT80: #J-2
-        cost: 7500
     liquidEngine1-2: #H-1 (early)
         cost: 1150
     vernierEngine: # 2kN thruster
@@ -477,7 +471,14 @@ scienceTech:
     US_R90_Wedge_ScienceBay:
         cost: 10
 
+#now this is Hydrolox TL2
 generalConstruction:
+    engineLargeSkipper: # RL-10
+        cost: 1800
+    LR87LH2Vac:  # total guess on price
+        cost: 6500
+    SXTLT80: #J-2
+        cost: 7500
 
 flightControl:
     linearRcs:
@@ -487,19 +488,22 @@ flightControl:
         entryCost: 2000
         cost: 35
 
+#now this is Hydrolox TL3
 advConstruction:
 
 advFlightControl:
 
 electrics:
+    solarPanels5HiTech:
+        cost: 50
+    solarPanels4:
+        cost: 250
+    solarPanels2:
+        cost: 450
 
 spaceExploration:
 
 landing:
-    liquidEngine2-2: #LMDE
-        cost: 1500 # FIXME total guess, but with each LM about 9 mil...
-    liquidEngineMini: #LMAE
-        cost: 600 # ditto
 
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1.
@@ -526,6 +530,10 @@ heavierRocketry:
 specializedConstruction:
 
 advLanding:
+    liquidEngine2-2: #LMDE
+        cost: 1500 # FIXME total guess, but with each LM about 9 mil...
+    liquidEngineMini: #LMAE
+        cost: 600 # ditto
 
 supersonicFlight:
 

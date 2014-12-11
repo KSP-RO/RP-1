@@ -502,8 +502,14 @@ electrics:
         cost: 450
 
 spaceExploration:
+    Mark1-2Pod:
+        entryCost: 1000000
+        cost: 10000
 
 landing:
+    miniLandingLeg:
+        entryCost: 10000
+        cost: 100
 
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1.
@@ -513,6 +519,8 @@ heavyRocketry:
 fuelSystems:
 
 aerodynamicSystems:
+    Mark1Cockpit:
+    Mark2Cockpit:
 
 advExploration:
 
@@ -712,7 +720,16 @@ enhancedSurvivability:
     US_Wedge_Food:
     US_Wedge_Waste:
     US_Wedge_WasteWater:
-    #Gemini
+    #Gemini goes here
+    landerCabinSmall:
+        cost: 2000 # FIXME
+    2.5_Heatshield:
+        cost: 2500 # FIXME
+    Heatshield-2M:
+        cost: 2000 # FIXME
+    Heatshield-3M:
+        cost: 3000 # FIXME
+
 shortTermHabitation:
 
 ORPHANS:
@@ -726,14 +743,12 @@ ORPHANS:
 
     # DRE heatshields
     
-    2.5_Heatshield:
+    
     3.75_Heatshield:
     6.25_Heatshield:
 
     # RO Heatshields
     
-    Heatshield-2M:
-    Heatshield-3M:
     Heatshield-375M:
     Heatshield-4M:
     Heatshield-5M:

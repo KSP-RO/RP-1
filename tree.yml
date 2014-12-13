@@ -245,6 +245,14 @@ basicRocketry:
     rcsTankRadialLong:
     fuelTank_long:
 
+    # 6S Service modules
+    SerCom1m:
+    SerCom2:
+
+    # Structural thingamees
+    stackTriCoupler:
+    KAS.Pylon1:
+
     # New probe!
 
     SXTSputnik:
@@ -430,6 +438,9 @@ advRocketry:
     SXTWaxWing: # Black Arrow kick motor
         cost: 300
 
+    # TODO: Is there abetter place to put this?
+    radialDecoupler2:
+
 scienceTech:
 
     # These things are placed here by default, but they're not a bad selection,
@@ -470,6 +481,10 @@ scienceTech:
     # Science wedge (it's an empty compartment)
     US_R90_Wedge_ScienceBay:
         cost: 10
+
+    # Hexacore goes here because this node is about cool satellites,
+    # and the hexacore looks cool. :)
+    US_Wedge_C15_Hexacore:
 
 #now this is Hydrolox TL2
 generalConstruction:

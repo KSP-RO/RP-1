@@ -5,10 +5,10 @@ United States
 
 ###Science Experiments
 
-		* Temperature Scan
-		* Micrometeorite impact detector (movement)
-		* Micrometeorite impact detector (Trip wires)
-		* Geiger Counter
+		- Temperature Scan
+		- Micrometeorite impact detector (movement)
+		- Micrometeorite impact detector (Trip wires)
+		- Geiger Counter
 
 ###Cost
 
@@ -18,9 +18,9 @@ United States
 
 ###Science Experiments
 
-		* Temperature
-		* Barometer (measured high altitude orbital decay)
-		* Earth Measurer
+		- Temperature
+		- Barometer (measured high altitude orbital decay)
+		- Earth Measurer
 
 ###Cost
 
@@ -30,10 +30,10 @@ United States
 
 ###Science Experiments
 		
-		* InfraRed TV
-		* Geiger Counter
-		* Micrometiorite detector
-		* Magnetometer
+		- InfraRed TV
+		- Geiger Counter
+		- Micrometiorite detector
+		- Magnetometer
 
 ###Cost
 
@@ -43,8 +43,8 @@ United States
 
 ###Science Experiments
 
-		* Geiger Counter
-		* Photography equipment
+		- Geiger Counter
+		- Photography equipment
 		
 ###Cost
 
@@ -54,10 +54,10 @@ United States
 
 ###Science Experiments
 
-		* Solar Particle Analysis
-		* Magnetometer
-		* Geiger counter
-		* Micrometeorite detector
+		- Solar Particle Analysis
+		- Magnetometer
+		- Geiger counter
+		- Micrometeorite detector
 
 ###Cost
 
@@ -67,11 +67,11 @@ United States
 
 ###Science Experiments
 
-		* Geiger Counter
-		* Cosmic Ray measurer
-		* Geodesy
-		* Radio Wave changes
-		* Micrometeorite detector
+		- Geiger Counter
+		- Cosmic Ray measurer
+		- Geodesy
+		- Radio Wave changes
+		- Micrometeorite detector
 
 ###Cost
 
@@ -86,8 +86,8 @@ Soviet
 
 ###Science Experiments
 
-		* Barometer
-		* Radio Wave changes
+		- Barometer
+		- Radio Wave changes
 
 ###Cost
 
@@ -97,9 +97,9 @@ Soviet
 
 ###Science Experiments
 		
-		* UV Emissions
-		* X-Ray Emissions
-		* Live Mammal 
+		- UV Emissions
+		- X-Ray Emissions
+		- Live Mammal 
 
 ###Cost
 
@@ -109,11 +109,11 @@ Soviet
 
 ###Science Experiments
 
-		* Barometer
-		* Cosmic Ray
-		* Magnetometer
-		* Electrostatic
-		* Geiger Counter
+		- Barometer
+		- Cosmic Ray
+		- Magnetometer
+		- Electrostatic
+		- Geiger Counter
 		
 ###Cost
 
@@ -123,13 +123,13 @@ Soviet
 
 ###Science Experiments
 
-		* Magnetometer
-		* Geiger Counter
-		* Scintillation counter
-		* Micrometeorite detector
-		* Gas release experiment
-		* Nationalism social experiment
-		* Electromagnetic detector
+		- Magnetometer
+		- Geiger Counter
+		- Scintillation counter
+		- Micrometeorite detector
+		- Gas release experiment
+		- Nationalism social experiment
+		- Electromagnetic detector
 
 ###Cost
 
@@ -139,12 +139,12 @@ Soviet
 
 ###Science Experiments
 
-		* Magnetometer
-		* Geiger Counter
-		* Scintillation counter
-		* Micrometeorite detector
-		* Nationalism social experiment
-		* Electromagnetic detector
+		- Magnetometer
+		- Geiger Counter
+		- Scintillation counter
+		- Micrometeorite detector
+		- Nationalism social experiment
+		- Electromagnetic detector
 
 ###Cost
 
@@ -154,13 +154,13 @@ Soviet
 
 ###Science Experiments
 
-		* Magnetometer
-		* Geiger Counter
-		* Scintillation counter
-		* Micrometeorite detector
-		* Nationalism social experiment
-		* Electromagnetic detector
-		* Photography
+		- Magnetometer
+		- Geiger Counter
+		- Scintillation counter
+		- Micrometeorite detector
+		- Nationalism social experiment
+		- Electromagnetic detector
+		- Photography
 ###Cost
 
 		$?

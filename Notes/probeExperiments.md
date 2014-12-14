@@ -12,7 +12,7 @@ United States
 
 ###Cost
 
-		$?	
+$?	
 
 ##**Vanguard 1**
 

@@ -1,12 +1,12 @@
 [![Build Status](https://travis-ci.org/KSP-RO/RP-0.svg?branch=master)](https://travis-ci.org/KSP-RO/RP-0)
 
-Welcome to Realistic Progression Zero, the lightweight tech-tree for Kerbal Space Program's Realism Overhaul.
+Welcome to Realistic Progression Zero, the lightweight career addon for Kerbal Space Program's Realism Overhaul.
 
 RP-0 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-0 works with as many additional mods as possible; we use the Community Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a balanced fashion without them being requirements.
 
 RP-0 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0), and access the [source code on github](https://github.com/KSP-RO/RP-0). The [tech tree](https://github.com/KSP-RO/RP-0/blob/master/tree.yml) itself is designed to be particularly easy for humans to edit.
 
-When starting the game, we recommend "moderate" or "hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% to maintain balance.
+When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings, though you might want to keep science progression at a higher value than Hard's default. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% to maintain balance, since in real life the research programs and the setting up of factories costs much more than serial production.
 
 This top-post is jointly maintained by pjf and NathanKell.
 

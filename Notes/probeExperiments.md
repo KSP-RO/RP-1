@@ -86,8 +86,9 @@ Soviet
 
 ###Science Experiments
 
-- Barometer
-- Radio Wave changes
+- Barometer (It seems as if the atmosphere extends further than you thought)
+- Electron density measurements (The electrons in the ionosphere affect your ability to communicate with the probe)
+- Temperature (Space is really cold!)
 
 ###Cost
 
@@ -97,9 +98,11 @@ $?
 
 ###Science Experiments
 
-- UV Emissions
-- X-Ray Emissions
-- Live Mammal 
+- Spectrophotometer (The sun apears to be emitting both UV light and X-rays)
+- Geiger Counter (The probe notices some unusual concentrations of radiation, but the data is misplaced)
+- Live Mammal (Observations show that temperature control is important to extended crewed missions)
+- Temperature (The sun heats the spacecraft very quickly)
+- Barometer (Despite getting thinner, the atmosphere does not appear to end at this altitude)
 
 ###Cost
 
@@ -110,10 +113,10 @@ $?
 ###Science Experiments
 
 - Barometer
-- Cosmic Ray
-- Magnetometer
+- Spectrophotometer (The cosmic rays seem to contain unusually heavy nuclei)
+- Magnetometer 
 - Electrostatic
-- Geiger Counter
+- Geiger Counter (The probe seems to have found radiation belts, but the tape breaks)
 
 ###Cost
 

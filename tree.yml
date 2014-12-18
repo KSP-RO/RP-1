@@ -208,6 +208,20 @@ start:
     OscarDtank:
     OscarEtank:
 
+    # FASA flags. These are all free. Because they make the game more
+    # awesome.
+    FASAFlagPod:
+        entryCost: 0
+        cost: 0
+
+    FASAFlagPod2x:
+        entryCost: 0
+        cost: 0
+
+    FASAFlagPod4x:
+        entryCost: 0
+        cost: 0
+
     # Unsorted. Please sort and price me! ;)
 
     CanardController:

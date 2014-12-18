@@ -7,6 +7,7 @@ RP-0-*.zip
 *.suo
 *.user
 *.sln.docstates
+RP0.userprefs
 RealSolarSystem/Plugins/PluginData/
 
 # Build results

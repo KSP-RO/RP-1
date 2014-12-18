@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Reflection;
 using KSP;
 using KSPAchievements;
 
@@ -41,10 +42,15 @@ namespace RP0
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
-            OnAwake();
-            if ((object)ProgressTracking.Instance != null && node.HasNode("Progress"))
+            if ((object)ProgressTracking.Instance != null)
             {
-                ProgressTracking.Instance.achievementTree.Load(node.GetNode("Progress"));
+                MethodInfo generate = ProgressTracking.Instance.GetType().GetMethod("generateAchievementsTree", BindingFlags.NonPublic | BindingFlags.Instance);
+                ProgressTracking.Instance.achievementTree = (ProgressTree)(generate.Invoke(ProgressTracking.Instance, null));
+                OnAwake();
+                if (node.HasNode("Progress"))
+                {
+                    ProgressTracking.Instance.achievementTree.Load(node.GetNode("Progress"));
+                }
             }
         }
         public override void OnSave(ConfigNode node)

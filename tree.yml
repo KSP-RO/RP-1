@@ -827,12 +827,16 @@ antimatterPower:
 ultraHighEnergyPhysics:
 
 enhancedSurvivability:
-    # This comes after regular survivability, so let's add some cool tech here!
+    # Aka "Second-Gen Capsules"
    
+    # Extra survival modules, but not recyclers, they have
+    # their own 'recycling' node.
+
     US_Wedge_Carbon:
     US_Wedge_Food:
     US_Wedge_Waste:
     US_Wedge_WasteWater:
+
     #Gemini goes here
     landerCabinSmall:
         cost: 2000 # FIXME

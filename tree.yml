@@ -408,7 +408,38 @@ survivability:
     RC_cone_double:
         cost: 0
 
+#FASA
+# see above for Mercury sources/notes.
+#the 88mil and the 4.4mil apportioned 
+    FASAMercuryPod:
+        entryCost: 74600
+        cost: 3730
+    FASAMercruyCap2:
+        entryCost: 1000
+        cost: 50
+    FASA_Mercury_Eng:
+        entryCost: 1600
+        cost: 80
+    FASAMercuryDec:
+        entryCost: 200
+        cost: 10
+    FASA_Mercury_LES:
+        entryCost: 8000
+        cost: 400
+    FASA_Mercury_Parachute_Box: #FIXME RC has cost issues?
+        entryCost: 1600
+        cost: 80
+    FASAMercuryPodRCS:
+        entryCost: 1000
+        cost: 50
 
+    FASAMercruyCap: #old cap, unused by Merc.
+#        entryCost: 88000
+        cost: 50
+
+#    FASA_Mercury_LFEng:
+#        entryCost:
+#        cost:
 stability:
 #3-axis stability in orbit. CORONA etc.
 

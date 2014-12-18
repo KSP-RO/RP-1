@@ -367,9 +367,13 @@ generalRocketry:
         cost: 600
 
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
+    # Technically Atlas was ~2.5m per LV, but we include launch costs.
+    # FIXME maybe we don't include launch costs.
+
     RO-LR-89: &LR89
-        cost: 1000 # technically Atlas was ~2.5m per LV, but we include launch costs.
-#FIXME maybe we don't include launch costs.
+        cost: 1000 
+
+    FASAMercuryAtlasEngBooster: *LR89
 
     RCSTank1-2:
     fuelTank4-2:
@@ -380,6 +384,8 @@ generalRocketry:
     # LR-101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini: &LR101
         cost: 50
+
+    FASAMercuryAtlasVernierEngine: *LR101
 
     # Castor 1 (Sergeant / M33) solid motor
     solidBooster1-1Small:
@@ -398,12 +404,9 @@ generalRocketry:
     FASAMercuryFairing:
     FASAMercuryAtlasEngBooster:
     FASAMercuryAtlasVernierEngine:
-    
 
-    FASAMercuryAtlasEngBooster: *LR89
     FASAMercuryAtlasEng: #LR-105 sustainer
         cost: 700
-    FASAMercuryAtlasVernierEngine: *LR101
 
 # Black Arrow engines (derivates of Black Knight engine, so can be early
 # see TL3 for Waxwing.
@@ -416,9 +419,11 @@ generalRocketry:
 
 survivability:
 #First crewed capsules
-    mk1pod:
+    mk1pod: &mercury_pod
         entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
         cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
+
+    FASAMercuryPod: *mercury_pod
 
     # Heatshields
     
@@ -443,7 +448,6 @@ survivability:
     FASAGeminiDecDark125.Redstone:
     FASAGeminiDecDark125.Atlas:
     FASA_Mercury_Parachute_Box:
-    FASAMercuryPod:
     FASA_Mercury_Eng:
     FASAMercuryDec:
     FASAGeminiMiniSRB:
@@ -474,6 +478,10 @@ survivability:
     FASA_Mercury_Parachute_Box: #FIXME RC has cost issues?
         entryCost: 1600
         cost: 80
+
+    # TODO: So, we're going to need some balance here. The mercury RCS
+    # provides only a little more thrust than the half-thruster block,
+    # and yet it costs more than twice as much.
     FASAMercuryPodRCS:
         entryCost: 1000
         cost: 50
@@ -524,15 +532,25 @@ stability:
         cost: 1000
 
 advRocketry:
-# TL2 1960-65 tech or so. Gemini, Voskhod, etc.
+    # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
+    
     liquidEngine: #RD-58
         cost: 800
+
     M55:
+
     liquidEngine1-2: #H-1 (early)
         cost: 1150
-    vernierEngine: # 2kN thruster
-        cost: 150
-# Waxwing should maybe even be TL3
+
+    # TODO: This costs 7.5x as much as a half-block RCS, provide
+    # twice the thrust for three times the fuel, and can only thrust
+    # in a single direction. In other words, nobody would ever use
+    # this. Either the stock RCS needs to be more expensive, or stock
+    # RCS needs to *not* be able to run off NTO mixes 
+    
+    vernierEngine: # 2kN thruster cost: 150
+
+    # Waxwing should maybe even be TL3
     SXTWaxWing: # Black Arrow kick motor
         cost: 300
 
@@ -586,8 +604,12 @@ scienceTech:
 
 #now this is Hydrolox TL2
 generalConstruction:
-    engineLargeSkipper: # RL-10
+
+    engineLargeSkipper: &RL10
         cost: 1800
+
+    FASAApolloLFERL10: *RL10
+
     LR87LH2Vac:  # total guess on price
         cost: 6500
     SXTLT80: #J-2
@@ -860,7 +882,6 @@ ORPHANS:
 
     # DRE heatshields
     
-    
     3.75_Heatshield:
     6.25_Heatshield:
 
@@ -872,6 +893,11 @@ ORPHANS:
     Heatshield-10M:
     Heatshield-15M:
     Heatshield-25M:
+
+    # HALP! Where do these engines go?
+    
+    FASAAgena_Engine:       # Bell 8247
+    FASAGeminiLR91:         # Aerojet LR-91 Series
 
     # Let's build a truck!
     

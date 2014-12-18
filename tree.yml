@@ -449,6 +449,10 @@ survivability:
     FASAGeminiMiniSRB:
     FASAlaunchClampAtlas:    
 
+    # Apparently the launch tower is used for loading astronauts,
+    # so it should go here, right?
+    FASAlaunchTower:
+
 #FASA
 # see above for Mercury sources/notes.
 #the 88mil and the 4.4mil apportioned 
@@ -876,4 +880,26 @@ ORPHANS:
     SXTtruckrear:
     SXTtruckearSmall:
     SXTtruckmiddle:
+
+    # FASA has unbalancing experiments, let's not have that.
+    # These could be placed later on in the tech tree, but for
+    # now they're here.
+    
+    # Psh. You want a crew report? Send a kerbonaut.
+    FASAProbeCamera:
+
+    # Want to analyse soil? Bring some home.
+    FASAProbeLaser:
+
+    # Goo that's one millionth the weight? Nuh uh.
+    FASAGeminiSciRadmeter:
+
+    # FASA also reminds us a lot that space exploration was funded
+    # not because of a thirst for knowledge, but due to the threat
+    # of war. I'd like us to imagine more pleasant alternatives.
+
+    FASAICBMMIRV:
+    FASAICBMProbe:
+    FASAICBMSAS:
+    FASAICBMNosecone:
 

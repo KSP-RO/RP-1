@@ -353,7 +353,7 @@ generalRocketry:
         cost: 600
 
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
-    RO-LR-89:
+    RO-LR-89: &LR89
         cost: 1000 # technically Atlas was ~2.5m per LV, but we include launch costs.
 #FIXME maybe we don't include launch costs.
 
@@ -364,12 +364,18 @@ generalRocketry:
     fuelTank3-2:
 
     # LR-101 vernier (Thor/Jupiter/Atlas)
-    radialEngineMini:
+    radialEngineMini: &LR101
         cost: 50
 
     # Castor 1 (Sergeant / M33) solid motor
     solidBooster1-1Small:
         cost: 290
+
+    FASAMercuryAtlasEngBooster: *LR89
+    FASAMercuryAtlasEng: #LR-105 sustainer
+        cost: 700
+    FASAMercuryAtlasVernierEngine: *LR101
+
 # Black Arrow engines (derivates of Black Knight engine, so can be early
 # see TL3 for Waxwing.
     SXTBlackAdder: # Gamma 8 (Black Arrow main engine)

@@ -265,7 +265,7 @@ basicRocketry:
 
     # Structural thingamees
     stackTriCoupler:
-    KAS.Pylon1:
+    KAS_Pylon1:
 
     # New probe!
 
@@ -867,7 +867,13 @@ ORPHANS:
 
     # Let's build a truck!
     
-    SXTtruckcabinsmall:
-    SXTtruckcabin:
     SXTtruckbox:
+    SXTtruckfueltank:
+    SXTtruckcabin:
+    SXTtruckcabinsmall:
+    SXTtruckmiddleSmall:
+    SXTtruckfueltank:
     SXTtruckrear:
+    SXTtruckearSmall:
+    SXTtruckmiddle:
+

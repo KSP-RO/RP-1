@@ -40,10 +40,10 @@ start:
     # Starting science
 
     sensorThermometer:
-        cost: 9
+        cost: 8
 
     sensorBarometer:
-        cost: 20
+        cost: 8
 
     # What's this cool ampersand? It's a label. See below as to why we want that:
     longAntenna: &longAntenna
@@ -256,8 +256,15 @@ basicRocketry:
     # New probe!
 
     SXTSputnik:
+        cost: 10
+
+    FASAExplorerProbe:
+        cost: 30
 
     # !!SCIENCE!!
+
+    FASAProbeGeigerCounter:
+        cost: 15
 
     # Stock goo experiment
     GooExperiment:
@@ -317,17 +324,26 @@ basicRocketry:
         cost: 200 # nautix says .6mil, but doesn't say what-year dollars
        
     # Mercury/Redstone, including the Explorer probe and kickers. From FASA
-    FASA_Mercury_Redstone_Eng: 
+    FASA_Mercury_Redstone_Eng:
+        cost: 850
     FASAExplorer_LFTLong:
+        cost: 350
     FASAExplorerSgt:
-    FASAExplorerSgt11: 
+        cost: 5
+    FASAExplorerSgt11:
+        cost: 50
     FASAExplorerSgt3:
+        cost: 14
     FASAExplorerNosecone:
+        cost: 600
     FASAlaunchClamp125:
+        cost: 10
     FASAExplorerSgt11Dec:
+        cost: 20
     FASAExplorerSgt3Dec:
+        cost: 10
     FASAMercuryRedstoneFin:
-    
+        cost: 5
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:

@@ -358,6 +358,12 @@ basicRocketry:
         cost: 10
     FASAMercuryRedstoneFin:
         cost: 5
+    FASA_Mercury_LFT_Long: #FIXME Redstone costs
+        cost: 800
+    FASA_Mercury_LFT_Short:
+        cost: 400
+    FASAMercuryFairing:
+        cost: 15
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:
@@ -387,18 +393,12 @@ generalRocketry:
         
     #From FASA
     FASAMercuryAtlasEng:
-    FASA_Mercury_LFT_Long:
-    FASA_Mercury_LFT_Short:
     FASA_Atlas_LFT_Cone:
     FASA_Atlas_LFT_Cone2:
     FASAMercuryAtlasLFTLong:
     FASAAtlasSLV3A:
     FASAAtlasFMod:
-    FASAAtlasH:
-    FASAMercuryFairing:
-    FASAMercuryAtlasEngBooster:
-    FASAMercuryAtlasVernierEngine:
-    
+    FASAAtlasH:    
 
     FASAMercuryAtlasEngBooster: *LR89
     FASAMercuryAtlasEng: #LR-105 sustainer

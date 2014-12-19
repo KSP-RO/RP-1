@@ -359,9 +359,9 @@ basicRocketry:
     FASAMercuryRedstoneFin:
         cost: 5
     FASA_Mercury_LFT_Long: #FIXME Redstone costs
-        cost: 800
+        cost: 300
     FASA_Mercury_LFT_Short:
-        cost: 400
+        cost: 150
     FASAMercuryFairing:
         cost: 15
 

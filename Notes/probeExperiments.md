@@ -98,7 +98,7 @@ $?
 
 ###Science Experiments
 
-- Spectrophotometer (The sun apears to be emitting both UV light and X-rays)
+- Spectrophotometer (The sun appears to be emitting both UV light and X-rays)
 - Geiger Counter (The probe notices some unusual concentrations of radiation, but the data is misplaced)
 - Live Mammal (Observations show that temperature control is important to extended crewed missions)
 - Temperature (The sun heats the spacecraft very quickly)

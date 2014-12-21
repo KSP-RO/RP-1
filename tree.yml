@@ -465,6 +465,14 @@ survivability:
     FASAMercuryDec:
         entryCost: 200
         cost: 10
+    FASAGeminiDecDark125_Redstone:
+#        entryCost: 200
+        cost: 30
+    FASAGeminiDecDark125_Atlas:
+#        entryCost: 500
+        cost: 50
+    FASAMercuryMiniSRB:
+        cost: 2
     FASA_Mercury_LES:
         entryCost: 8000
         cost: 400
@@ -475,7 +483,9 @@ survivability:
     FASAMercuryPodRCS:
         entryCost: 1000
         cost: 17
-
+    RO_FASA_MercuryPodRCS:
+        entryCost: 500
+        cost: 12
     FASAMercruyCap: #old cap, unused by Merc.
 #        entryCost: 88000
         cost: 50

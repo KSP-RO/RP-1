@@ -419,12 +419,7 @@ generalRocketry:
 # but avionics probably a large part
 
 survivability:
-#First crewed capsules
-    mk1pod: *mercury_pod
-#        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
-#        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
-
-    FASAMercuryPod: *mercury_pod
+#Reentry
 
     # Heatshields
     
@@ -488,6 +483,12 @@ survivability:
 #    FASA_Mercury_LFEng:
 #        entryCost:
 #        cost:
+
+# Stock capsule
+    mk1pod: *mercury_pod
+#        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
+#        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
+
 stability:
 #3-axis stability in orbit. CORONA etc.
 

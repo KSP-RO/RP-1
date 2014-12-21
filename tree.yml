@@ -418,6 +418,11 @@ generalRocketry:
         cost: 300 # Stage cost $3m in 1970 (or was it 1985 dollars?),
 # but avionics probably a large part
 
+# FASA Agena (CORONA)
+
+    FASAAgena_Engine:
+        cost: 550
+
 survivability:
 #Reentry
 
@@ -538,6 +543,12 @@ stability:
     dmUSMat:
         cost: 1000
 
+# Agena (CORONA)
+    FASAAgenaAnt:
+        cost: 20
+    FASAAgenaProbe:
+        cost: 1000
+
 advRocketry:
     # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
     
@@ -559,6 +570,10 @@ advRocketry:
 
     # TODO: Is there abetter place to put this?
     radialDecoupler2:
+
+
+    FASAAgenaLFT: # Agena B/D tankage
+        cost: 50 # TODO compare to proc part
 
 scienceTech:
 
@@ -624,7 +639,11 @@ flightControl:
     RCSBlock:
         entryCost: 2000
         cost: 35
-
+    FASAAgenaDocking:
+#        entryCost: 2000
+        cost: 400
+    FASAAgena_Engine_FP: # for Agena B/D restartable engine
+        cost: 100
 #now this is Hydrolox TL3
 advConstruction:
 
@@ -898,7 +917,6 @@ ORPHANS:
 
     # HALP! Where do these engines go?
     
-    FASAAgena_Engine:       # Bell 8247
     FASAGeminiLR91:         # Aerojet LR-91 Series
 
     # Let's build a truck!

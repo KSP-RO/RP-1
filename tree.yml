@@ -420,9 +420,9 @@ generalRocketry:
 
 survivability:
 #First crewed capsules
-    mk1pod: &mercury_pod
-        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
-        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
+    mk1pod: *mercury_pod
+#        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
+#        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
 
     FASAMercuryPod: *mercury_pod
 
@@ -444,24 +444,21 @@ survivability:
         cost: 0
         
     #FASA Mercury things
-    FASAMercruyCap2:
     FASAGeminiDecDark125:
     FASAGeminiDecDark125.Redstone:
     FASAGeminiDecDark125.Atlas:
-    FASA_Mercury_Parachute_Box:
-    FASA_Mercury_Eng:
-    FASAMercuryDec:
     FASAGeminiMiniSRB:
     FASAlaunchClampAtlas:    
 
     # Apparently the launch tower is used for loading astronauts,
     # so it should go here, right?
     FASAlaunchTower:
+        cost: 10 #yeah, should really be expensive, but then who would use it?
 
-#FASA
+#FASA Mercury
 # see above for Mercury sources/notes.
 #the 88mil and the 4.4mil apportioned 
-    FASAMercuryPod:
+    FASAMercuryPod: &mercury_pod
         entryCost: 74600
         cost: 3730
     FASAMercruyCap2:
@@ -480,12 +477,9 @@ survivability:
         entryCost: 1600
         cost: 80
 
-    # TODO: So, we're going to need some balance here. The mercury RCS
-    # provides only a little more thrust than the half-thruster block,
-    # and yet it costs more than twice as much.
     FASAMercuryPodRCS:
         entryCost: 1000
-        cost: 50
+        cost: 17
 
     FASAMercruyCap: #old cap, unused by Merc.
 #        entryCost: 88000
@@ -511,8 +505,9 @@ stability:
         entryCost: 1000
         cost: 15
 
+
     microEngine:
-        cost: 100 # essentially a 1kN class linear RCS, but as an engine.
+        cost: 60 # essentially a 1kN class linear RCS, but as an engine.
 
     # Early Probe cores -- yes this is expensive.
     # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?
@@ -538,19 +533,15 @@ advRocketry:
     liquidEngine: #RD-58
         cost: 800
 
-    M55:
+    M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
+        cost: 2000 # TODO we *should* have references on this from BellComm studies
+# on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
 
     liquidEngine1-2: #H-1 (early)
         cost: 1150
-
-    # TODO: This costs 7.5x as much as a half-block RCS, provide
-    # twice the thrust for three times the fuel, and can only thrust
-    # in a single direction. In other words, nobody would ever use
-    # this. Either the stock RCS needs to be more expensive, or stock
-    # RCS needs to *not* be able to run off NTO mixes 
     
-    vernierEngine: # 2kN thruster cost: 150
-
+    vernierEngine:
+        cost: 25
     # Waxwing should maybe even be TL3
     SXTWaxWing: # Black Arrow kick motor
         cost: 300
@@ -618,8 +609,7 @@ generalConstruction:
 
 flightControl:
     linearRcs:
-        entryCost: 1500
-        cost: 25
+        cost: 15
     RCSBlock:
         entryCost: 2000
         cost: 35

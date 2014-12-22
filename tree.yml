@@ -280,15 +280,15 @@ basicRocketry:
         cost: 10
 
     FASAExplorerProbe:
-        cost: 50
+        cost: 158
 
     RP0probeVanguardXray:
-        cost: 40
+        cost: 120
 
     # !!SCIENCE!!
 
     FASAProbeGeigerCounter:
-        cost: 15
+        cost: 40
 
     # Stock goo experiment
     GooExperiment:

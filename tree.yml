@@ -68,6 +68,12 @@ start:
     KzResizableFairingBase:
     KzResizableFairingBaseRing:
 
+    #RO fairings
+    KzProcFairingSide1st:
+    KzProcFairingSide1stock:
+    KzProcFairingSide1us:
+    KzProcFairingSide2ger:
+
     # Nose Cones
 
     noseCone:

@@ -252,7 +252,7 @@ basicRocketry:
     batteryPack:
     batteryBankMini:
     ksp_r_largeBatteryPack:
-	
+
 
     # Tanks
 
@@ -280,10 +280,10 @@ basicRocketry:
         cost: 10
 
     FASAExplorerProbe:
-        cost: 30
+        cost: 50
 
     RP0probeVanguardXray:
-        cost: 25
+        cost: 40
 
     # !!SCIENCE!!
 

@@ -161,7 +161,7 @@ namespace Contracts.Parameters
 				    if (vs.host.mainBody.isHomeWorld)
 				    {
 					    VesselTripLog vesselTripLog = VesselTripLog.FromVessel(vs.host);
-					    if (vesselTripLog.Orbited.At(body))
+					    if (vesselTripLog.Log.HasEntry(FlightLog.EntryType.Orbit, bodyName))
                             base.SetComplete();
 				    }
 		}

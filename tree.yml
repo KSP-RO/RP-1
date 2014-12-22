@@ -650,7 +650,6 @@ flightControl:
         entryCost: 2000
         cost: 35
     FASAAgenaDocking:
-#        entryCost: 2000
         cost: 400
     FASAAgena_Engine_FP: # for Agena B/D restartable engine
         cost: 100

@@ -45,13 +45,13 @@ start:
     sensorBarometer:
         cost: 8
 
-    # What's this cool ampersand? It's a label. See below as to why we want that:
-    longAntenna: &longAntenna
+    longAntenna:
         cost: 5
         entryCost: 0
 
-    # Look! We can say this part is the same as some other part. Bam! No repetition.
-    SXTAntenna: *longAntenna
+    SXTAntenna:
+        cost: 1
+        entryCost: 0
 
     # Basic RemoteTech antenna, so things can get off the ground. :)
     RTShortAntenna1:

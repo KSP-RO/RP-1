@@ -339,7 +339,7 @@ basicRocketry:
     # Engines
 
     liquidEngine2: # X-405 (Vanguard main engine)
-        cost: 800 # very expensive for its performance.
+        cost: 750 # very expensive for its performance.
 
     RO-AJ10-Early: # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150

@@ -1,0 +1,9 @@
+VehicleAssemblyBuilding = 0.5
+TrackingStation = 0.4
+SpaceplaneHangar = 0.5
+Runway = 0.5
+ResearchAndDevelopment = 0.4
+MissionControl = 1.0
+LaunchPad = 1.0
+AstronautComplex = 1.5
+Administration = 0.5

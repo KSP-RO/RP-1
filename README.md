@@ -15,7 +15,7 @@ This top-post is jointly maintained by pjf and NathanKell.
 License: CC-BY-NC-SA-4.0
 
 Development thread: http://forum.kerbalspaceprogram.com/threads/99010
-Github Repo:  https://gihub.com/KSP-RO/RP-0
+Github Repo:  https://github.com/KSP-RO/RP-0
 
 We recommend installing via the CKAN, `ckan.exe install RP-0` on the command line, or just look for "Realistic Progression Zero" in the GUI.
 

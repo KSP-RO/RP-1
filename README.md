@@ -28,7 +28,7 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Procedural Fairings
 - Procedural Parts
 - Procedural Dynamics Procedural Wings
-- Ven's Stock Parts Revamp (not available on the CKAN yet)
+- Ven's Stock Parts Revamp
 
 **In Progress**
 - DMagic's Orbital Science

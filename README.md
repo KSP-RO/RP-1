@@ -23,6 +23,7 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Realism Overhaul and all its required mods
 - Community Tech Tree (and Tech Manager, to load it)
 - Lack's SXT (although only the engines have RO configs as of yet)
+- TweakScale
 
 **Recommended:**
 - Procedural Fairings
@@ -33,7 +34,6 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 **In Progress**
 - DMagic's Orbital Science
 - Universal Storage
-- TweakScale
 - FinePrint
 - Kerbal Construction Time
 - FASA

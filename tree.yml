@@ -117,6 +117,9 @@ start:
     winglet:
     winglet3:
     wingStrake:
+    B9_Aero_Wing_Procedural_TypeA:
+    B9_Aero_Wing_Procedural_TypeB:
+    B9_Aero_Wing_Procedural_TypeC:
 
     # Intakes
 
@@ -228,6 +231,20 @@ start:
         entryCost: 0
         cost: 0
 
+    # Launch Clamps/Towers
+    FASAlaunchClampAtlas:    
+        cost: 10
+    FASALaunchClampApollo:
+        cost: 10
+    launchClamp1:
+        cost: 10
+    FASAlaunchClamp125:
+        cost: 10
+    FASAlaunchClamp25:
+        cost: 10
+    FASAUmbilicalTower:
+        cost: 10
+
     # Unsorted. Please sort and price me! ;)
 
     CanardController:
@@ -237,8 +254,6 @@ start:
     radialEngineBody:
     SmallGearBay:
     KzThrustPlate:
-    launchClamp1:
-        cost: 10
     stackDecouplerMini:
         cost: 2
     radialDecoupler:
@@ -360,8 +375,6 @@ basicRocketry:
         cost: 14
     FASAExplorerNosecone:
         cost: 600
-    FASAlaunchClamp125:
-        cost: 10
     FASAExplorerSgt11Dec:
         cost: 20
     FASAExplorerSgt3Dec:
@@ -458,7 +471,6 @@ survivability:
     FASAGeminiDecDark125.Redstone:
     FASAGeminiDecDark125.Atlas:
     FASAGeminiMiniSRB:
-    FASAlaunchClampAtlas:    
 
     # Apparently the launch tower is used for loading astronauts,
     # so it should go here, right?

@@ -43,7 +43,7 @@ namespace Contracts
             bool havePod = false;
             foreach (AvailablePart p in PartLoader.LoadedPartsList)
             {
-                if (p.partPrefab.CrewCapacity > 0)
+                if (p.partPrefab.CrewCapacity > 0 && ResearchAndDevelopment.PartTechAvailable(p))
                 {
                     havePod = true;
                     break;

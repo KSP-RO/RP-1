@@ -73,7 +73,18 @@ start:
     KzProcFairingSide1stock:
     KzProcFairingSide1us:
     KzProcFairingSide2ger:
-
+    
+    #Blackhearts fairings textures
+    KzProcFairingAtlas:
+    KzProcFairingChina:
+    KzProcFairingConegg:
+    KzProcFairingJupiter:
+    KzProcFairingTitan:
+    
+    #Blackhearts KW fairings textures
+    KwProcFairingBase0_625:
+    KwzInterstageAdapter:
+    
     # Nose Cones
 
     noseCone:

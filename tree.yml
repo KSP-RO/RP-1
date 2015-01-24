@@ -457,6 +457,14 @@ generalRocketry:
     FASAAgena_Engine:
         cost: 550
 
+# AIES
+    liquidEngineprodulVR2:
+        entryCost: 20000
+        cost: 1000
+    liquidEngineorbit2:
+        entryCost: 20000
+        cost: 1000
+
 survivability:
 #Reentry
 
@@ -984,4 +992,102 @@ ORPHANS:
     FASAICBMProbe:
     FASAICBMSAS:
     FASAICBMNosecone:
+
+    # AIES
+    # Integratration is WIP.  These parts aren't done yet
+    cone05ra:
+    conenoseram:
+    Antennacomtec1:
+    Antennacomtec2:
+    Antennaesc:
+    Antennaexpatvr2:
+    AntennaDF2:
+    Dishcl1:
+    Dishmccomu:
+    dishcomlar1:
+    Dishomega2g:
+    Dishpcf:
+    explonpod:
+    investpod:
+    Maxurpod:
+    moduldesspod:
+    neptuno:
+    novapod:
+    orbitaiespod:
+    sondex2pod:
+    torpod:
+    UAEcubplate:
+    radr:
+    solarpaneles1:
+    solarPanelsfa:
+    solarPanelsond1:
+    solarPanelsuncat1:
+    solarPanelsfa2:
+    liquidEngineconstelacion:
+    dest5Engine:
+    engineexper05:
+    liquidEnginemogulmp1500:
+    galaxvr2:
+    enginelmodc:
+    microEngineex1sat:
+    microEngineSE1:
+    VR1vulcan:
+    fuelTank7k:
+    fuelTanklunderl:
+    fuelTanksuperior3:
+    fuelTanksul:
+    ms1RCSTank:
+    RCS125ra:
+    RCSTanka5a:
+    satpropt300FuelTank:
+    fuelTankmr1:
+    tank1300cl:
+    tankMER1:
+    tankMER6:
+    tankminsond:
+    tankorb1:
+    tanktoemv2:
+    rcsThrustermicrosn:
+    AIESrcsThrusrmt1:
+    AIESrcsThrusrom9:
+    advSascr3:
+    Sasdv4:
+    AccelerometerFGA:
+    PAPBarometer:
+    retinaGravimeter:
+    Thermometermt1:
+    basepunta1ur5:
+    basepuntv2r10:
+    sep1a1ur5:
+    t1000v4:
+    t1500v4:
+    t2000v4:
+    t3000r20c:
+    top100a1ur5:
+    top100a1ur5b:
+    top500a1ur5:
+    adapterrads:
+    ASDecoupler:
+    basef1sond:
+    baseinstrul8:
+    decoupvector:
+    decouplersv05:
+    decouplersvblack:
+    desacopladorsat1:
+    desacopladorsat2:
+    desacopladorsat3:
+    LRDecoupler:
+    Separatormultifs:
+    strutsoportec1:
+    saltguia:
+    batteryBAEr:
+    escaleralad1:
+    escalerar2s:
+    expendLandingLeg:
+    godLandingLeg2:
+    godLandingLeg:
+    legstrotLandingLeg:
+    xluzopl:
+    plommsLandingLeg:
+
 

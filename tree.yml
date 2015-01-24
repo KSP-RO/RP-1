@@ -592,12 +592,14 @@ stability:
 
     # AIES
     neptuno:
-        cost: 1000
+        entryCost: 10000
+        cost: 500
     explonpod:
-        cost: 1000
+        entryCost: 10000
+        cost: 500
     sondex2pod:
-        cost: 1200 # This one costs a bit more due to a larger tank
-        entryCost: 20000
+        cost: 600 # This one costs a bit more due to a larger tank
+        entryCost: 12000
 
 advRocketry:
     # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
@@ -672,7 +674,8 @@ scienceTech:
 
     # AIES
     Maxurpod:
-        cost: 2000
+        cost: 1200
+        entryCost: 25000
 
 #now this is Hydrolox TL2
 generalConstruction:

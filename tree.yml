@@ -457,7 +457,7 @@ generalRocketry:
     FASAAgena_Engine:
         cost: 550
 
-# AIES
+    # AIES
     liquidEngineprodulVR2:
         entryCost: 20000
         cost: 1000
@@ -590,6 +590,15 @@ stability:
     FASAAgenaProbe:
         cost: 1000
 
+    # AIES
+    neptuno:
+        cost: 1000
+    explonpod:
+        cost: 1000
+    sondex2pod:
+        cost: 1200 # This one costs a bit more due to a larger tank
+        entryCost: 20000
+
 advRocketry:
     # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
     
@@ -660,6 +669,10 @@ scienceTech:
     # Hexacore goes here because this node is about cool satellites,
     # and the hexacore looks cool. :)
     US_Wedge_C15_Hexacore:
+
+    # AIES
+    Maxurpod:
+        cost: 2000
 
 #now this is Hydrolox TL2
 generalConstruction:
@@ -1007,14 +1020,10 @@ ORPHANS:
     dishcomlar1:
     Dishomega2g:
     Dishpcf:
-    explonpod:
     investpod:
-    Maxurpod:
     moduldesspod:
-    neptuno:
     novapod:
     orbitaiespod:
-    sondex2pod:
     torpod:
     UAEcubplate:
     radr:

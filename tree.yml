@@ -73,7 +73,18 @@ start:
     KzProcFairingSide1stock:
     KzProcFairingSide1us:
     KzProcFairingSide2ger:
-
+    
+    #Blackhearts fairings textures
+    KzProcFairingAtlas:
+    KzProcFairingChina:
+    KzProcFairingConegg:
+    KzProcFairingJupiter:
+    KzProcFairingTitan:
+    
+    #Blackhearts KW fairings textures
+    KwProcFairingBase0_625:
+    KwzInterstageAdapter:
+    
     # Nose Cones
 
     noseCone:
@@ -468,8 +479,8 @@ survivability:
         
     #FASA Mercury things
     FASAGeminiDecDark125:
-    FASAGeminiDecDark125.Redstone:
-    FASAGeminiDecDark125.Atlas:
+    FASAGeminiDecDark125_Redstone:
+    FASAGeminiDecDark125_Atlas:
     FASAGeminiMiniSRB:
 
     # Apparently the launch tower is used for loading astronauts,
@@ -513,7 +524,7 @@ survivability:
     RO_FASA_MercuryPodRCS:
         entryCost: 500
         cost: 12
-    FASAMercruyCap: #old cap, unused by Merc.
+    FASAMercruyCap: #old cap, unused by Mercury.
 #        entryCost: 88000
         cost: 50
 

@@ -751,10 +751,11 @@ heavierRocketry:
 specializedConstruction:
 
 advLanding:
-    liquidEngine2-2: #LMDE
-        cost: 1500 # FIXME total guess, but with each LM about 9 mil...
-    liquidEngineMini: #LMAE
-        cost: 600 # ditto
+    # Squad
+    liquidEngine2-2: &LMDE
+        cost: 900
+    liquidEngineMini: &LMAE
+        cost: 550
     # AIES
     enginelmodc: *LMDE
     microEngineSE1: *LMAE

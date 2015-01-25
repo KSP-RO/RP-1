@@ -270,6 +270,13 @@ start:
     radialDecoupler:
         cost: 20
 
+    # AIES Fairings
+    sep1a1ur5:
+    basepunta1ur5:
+    top100a1ur5:
+    top100a1ur5b:
+    top500a1ur5:
+
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
 
@@ -398,6 +405,13 @@ basicRocketry:
         cost: 150
     FASAMercuryFairing:
         cost: 15
+
+    # AIES Fairings
+    basepuntv2r10:
+    t1000v4:
+    t1500v4:
+    t2000v4:
+    t3000r20c:
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:

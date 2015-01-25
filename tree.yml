@@ -754,6 +754,9 @@ advLanding:
         cost: 1500 # FIXME total guess, but with each LM about 9 mil...
     liquidEngineMini: #LMAE
         cost: 600 # ditto
+    # AIES
+    enginelmodc: *LMDE
+    microEngineSE1: *LMAE
 
 supersonicFlight:
 

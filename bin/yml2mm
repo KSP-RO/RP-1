@@ -74,6 +74,10 @@ foreach my $file (@ARGV) {
 
                 $changes .= "\t%$field = $custom_fields->{$field}\n";
             }
+            if ($tech ne "ORPHANS")
+            {
+                $changes .= "\tRP0conf = true\n";
+            }
 
             say {$out_fh} "\@PART[$part]:$DECORATION\n{\n$changes}";
         }

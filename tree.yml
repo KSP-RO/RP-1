@@ -36,6 +36,12 @@ start:
         cost: 0
     RC_radial:
         cost: 0
+    # Added the rest of the RealChute chutes.
+    RC_stack:
+        cost: 0
+    RC_cone_double:
+        cost: 0
+
 
     # Starting science
 
@@ -61,29 +67,47 @@ start:
     # Fairings
 
     KzInterstageAdapter2:
+        cost: 0.1
     KzProcFairingFuselage1:
+        cost: 0.1
     KzProcFairingFuselage2:
+        cost: 0.1
     KzProcFairingSide1:
+        cost: 0.1
     KzProcFairingSide2:
+        cost: 0.1
     KzResizableFairingBase:
+        cost: 0.1
     KzResizableFairingBaseRing:
+        cost: 0.1
 
     #RO fairings
     KzProcFairingSide1st:
+        cost: 0.1
     KzProcFairingSide1stock:
+        cost: 0.1
     KzProcFairingSide1us:
+        cost: 0.1
     KzProcFairingSide2ger:
+        cost: 0.1
     
     #Blackhearts fairings textures
     KzProcFairingAtlas:
+        cost: 0.1
     KzProcFairingChina:
+        cost: 0.1
     KzProcFairingConegg:
+        cost: 0.1
     KzProcFairingJupiter:
+        cost: 0.1
     KzProcFairingTitan:
+        cost: 0.1
     
     #Blackhearts KW fairings textures
     KwProcFairingBase0_625:
+        cost: 0.1
     KwzInterstageAdapter:
+        cost: 0.1
     
     # Nose Cones
 
@@ -96,18 +120,26 @@ start:
 
     airplaneTail:
     B9_Aero_Wing_ControlSurface_SH_4mProcedural:
+        cost: 0.1
     delta_small:
     deltaWing:
     elevon2:
     elevon3:
     LMiniAircaftTail:
     pCtrlSrf1:
+        cost: 0.1
     ProceduralAllMovingWing:
+        cost: 0.1
     Proceduralwing2:
+        cost: 0.1
     Proceduralwing2EndPiece:
+        cost: 0.1
     Proceduralwing4:
+        cost: 0.1
     ProceduralwingBac9:
+        cost: 0.1
     ProceduralwingSPP:
+        cost: 0.1
     R8winglet:
     smallCtrlSrf:
     StandardCtrlSrf:
@@ -446,7 +478,6 @@ generalRocketry:
         cost: 290
         
     #From FASA
-    FASAMercuryAtlasEng:
     FASA_Atlas_LFT_Cone:
     FASA_Atlas_LFT_Cone2:
     FASAMercuryAtlasLFTLong:
@@ -491,18 +522,9 @@ survivability:
     1.25_Heatshield:
         cost: 1000
 
-    # Added the more advanced parachutes here, since they're very useful for
-    # getting people down safely.
 
-    RC_stack:
-        cost: 0
-    RC_cone_double:
-        cost: 0
-        
     #FASA Mercury things
     FASAGeminiDecDark125:
-    FASAGeminiDecDark125_Redstone:
-    FASAGeminiDecDark125_Atlas:
     FASAGeminiMiniSRB:
 
     # Apparently the launch tower is used for loading astronauts,
@@ -741,9 +763,9 @@ heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1.
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
-    liquidEngineconstelacion: # Bit iffy on if this should be here or in heavierRocketry but I think here is good?
     
 fuelSystems:
+#staged combustion -- NK-15 here.
 
 aerodynamicSystems:
     Mark1Cockpit:
@@ -773,6 +795,9 @@ advLanding:
     # AIES
     enginelmodc: *LMDE
     microEngineSE1: *LMAE
+    #FASA
+    FASALM_AscentEngine: *LMAE
+    FASALM_DescentEngine: *LMDE
 
 supersonicFlight:
 
@@ -806,7 +831,7 @@ heavyAerodynamics:
 
 veryHeavyRocketry:
 #TL5 80s tech
-    engineLargeSkipper_125m:
+    engineLargeSkipper_125m: # Merlin
     liquidEngineMiniRescale:
     solidBoosterSmall: # right now, Castor 30. Change later?
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
@@ -861,6 +886,8 @@ advNuclearPropulsion:
 fusionRockets:
 
 giganticRocketry:
+#TL7 present day
+    liquidEngineconstelacion:
 
 colossalRocketry:
 

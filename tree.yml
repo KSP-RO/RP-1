@@ -503,12 +503,15 @@ generalRocketry:
         cost: 550
 
     # AIES
-    liquidEngineprodulVR2:
+    liquidEngineprodulVR2: &LR87
         entryCost: 20000
         cost: 1000
-    liquidEngineorbit2:
+    liquidEngineorbit2: &LR91
         entryCost: 20000
         cost: 1000
+    # FASA
+    FASAGeminiLR87Twin: *LR87
+    FASAGeminiLR91: *LR91
 
 survivability:
 #Reentry

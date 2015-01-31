@@ -297,6 +297,7 @@ start:
     radialEngineBody:
     SmallGearBay:
     KzThrustPlate:
+        cost: 0.1
     stackDecouplerMini:
         cost: 2
     radialDecoupler:

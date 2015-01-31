@@ -451,7 +451,7 @@ generalRocketry:
 
     # Blok E (Luna/Vostok), Blok L (Molniya) fourth stage engine
     liquidEngine3:
-        cost: 600
+        cost: 400
 
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     # Technically Atlas was ~2.5m per LV, but we include launch costs.
@@ -501,9 +501,10 @@ generalRocketry:
 # FASA Agena (CORONA)
 
     FASAAgena_Engine:
-        cost: 550
+        cost: 350
 
     # AIES
+    # Titan engines
     liquidEngineprodulVR2:
         entryCost: 20000
         cost: 1000
@@ -736,7 +737,7 @@ flightControl:
     FASAAgenaDocking:
         cost: 400
     FASAAgena_Engine_FP: # for Agena B/D restartable engine
-        cost: 100
+        cost: 300
 #now this is Hydrolox TL3
 advConstruction:
 
@@ -761,7 +762,8 @@ landing:
         cost: 100
 
 heavyRocketry:
-#TL3 Mid-late 60s tech. Saturn V, N-1.
+#TL3 Mid-late 60s tech. Saturn V, N-1 upper stage
+    # (lower stages are staged combustion--see fuelSystems below)
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
     

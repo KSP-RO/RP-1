@@ -503,15 +503,14 @@ generalRocketry:
     FASAAgena_Engine:
         cost: 350
 
-    # AIES
     # Titan engines
-    liquidEngineprodulVR2:
-        entryCost: 20000
-        cost: 1000
-    liquidEngineorbit2:
-        entryCost: 20000
-        cost: 1000
-
+    # AIES
+    liquidEngineprodulVR2: &LR87
+        cost: 1850
+    #FASA
+    FASAGeminiLR87Twin: *LR87
+    FASAGeminiLR91Mini:
+        cost: 450
 survivability:
 #Reentry
 
@@ -664,6 +663,10 @@ advRocketry:
 
     FASAAgenaLFT: # Agena B/D tankage
         cost: 50 # TODO compare to proc part
+    # Titan II upper stage
+    liquidEngineorbit2: &LR91
+        cost: 600
+    FASAGeminiLR91: *LR91
 
 scienceTech:
 
@@ -1019,10 +1022,6 @@ ORPHANS:
     Heatshield-10M:
     Heatshield-15M:
     Heatshield-25M:
-
-    # HALP! Where do these engines go?
-    
-    FASAGeminiLR91:         # Aerojet LR-91 Series
 
     # Let's build a truck!
     

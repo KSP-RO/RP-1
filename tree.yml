@@ -297,6 +297,7 @@ start:
     radialEngineBody:
     SmallGearBay:
     KzThrustPlate:
+        cost: 0.1
     stackDecouplerMini:
         cost: 2
     radialDecoupler:
@@ -450,7 +451,7 @@ generalRocketry:
 
     # Blok E (Luna/Vostok), Blok L (Molniya) fourth stage engine
     liquidEngine3:
-        cost: 600
+        cost: 400
 
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     # Technically Atlas was ~2.5m per LV, but we include launch costs.
@@ -500,16 +501,16 @@ generalRocketry:
 # FASA Agena (CORONA)
 
     FASAAgena_Engine:
-        cost: 550
+        cost: 350
 
+    # Titan engines
     # AIES
-    liquidEngineprodulVR2:
-        entryCost: 20000
-        cost: 1000
-    liquidEngineorbit2:
-        entryCost: 20000
-        cost: 1000
-
+    liquidEngineprodulVR2: &LR87
+        cost: 1850
+    #FASA
+    FASAGeminiLR87Twin: *LR87
+    FASAGeminiLR91Mini:
+        cost: 450
 survivability:
 #Reentry
 
@@ -662,6 +663,10 @@ advRocketry:
 
     FASAAgenaLFT: # Agena B/D tankage
         cost: 50 # TODO compare to proc part
+    # Titan II upper stage
+    liquidEngineorbit2: &LR91
+        cost: 600
+    FASAGeminiLR91: *LR91
 
 scienceTech:
 
@@ -735,7 +740,7 @@ flightControl:
     FASAAgenaDocking:
         cost: 400
     FASAAgena_Engine_FP: # for Agena B/D restartable engine
-        cost: 100
+        cost: 300
 #now this is Hydrolox TL3
 advConstruction:
 
@@ -760,7 +765,8 @@ landing:
         cost: 100
 
 heavyRocketry:
-#TL3 Mid-late 60s tech. Saturn V, N-1.
+#TL3 Mid-late 60s tech. Saturn V, N-1 upper stage
+    # (lower stages are staged combustion--see fuelSystems below)
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
     
@@ -1016,10 +1022,6 @@ ORPHANS:
     Heatshield-10M:
     Heatshield-15M:
     Heatshield-25M:
-
-    # HALP! Where do these engines go?
-    
-    FASAGeminiLR91:         # Aerojet LR-91 Series
 
     # Let's build a truck!
     

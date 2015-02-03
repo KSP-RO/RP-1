@@ -756,7 +756,7 @@ electrics:
 
 spaceExploration:
     Mark1-2Pod:
-        entryCost: 100000
+        entryCost: 10000
         cost: 10000
 
 landing:

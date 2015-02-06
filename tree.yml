@@ -108,7 +108,22 @@ start:
         cost: 0.1
     KwzInterstageAdapter:
         cost: 0.1
-    
+
+    proceduralTankRealFuels:
+        cost: 0.1
+    proceduralStructural:
+        cost: 0.1
+    proceduralSRBRealFuels:
+        cost: 0.1
+    proceduralTankTAC:
+        cost: 0.1
+    proceduralBattery:
+        cost: 0.1
+    proceduralNoseCone:
+        cost: 0.1
+    proceduralStackDecoupler:
+        cost: 0.1
+
     # Nose Cones
 
     noseCone:

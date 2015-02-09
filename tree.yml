@@ -787,6 +787,11 @@ heavyRocketry:
     # (lower stages are staged combustion--see fuelSystems below)
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
+
+    FASAApolloLFEF1: &F1
+        entryCost: 409361
+        cost: 20000
+    KW5mengineGriffonC: *F1
     
 fuelSystems:
 #staged combustion -- NK-15 here.

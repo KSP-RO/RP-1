@@ -664,7 +664,7 @@ advRocketry:
 # on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
 
     liquidEngine1-2: &H1 #H-1 (early)
-        cost: 1150 # think this should be closer to 1700
+        cost: 1700 # think this should be closer to 1700
         entryCost: 33750
     FASAApolloLFEH1: *H1
     KW2mengineMaverickV: *H1

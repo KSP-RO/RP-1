@@ -267,6 +267,11 @@ start:
         entryCost: 0
         cost: 6
 
+    # XLR11
+    FASAGemini4X800Mini:
+        entryCost: 0
+        cost: 50
+
     # Tanks
 
     SXTFuel625m:
@@ -418,6 +423,8 @@ basicRocketry:
     US_Radial_Oxygen: *basicWedge
 
     # Engines
+    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
+        entryCost: 60000
 
     liquidEngine2: # X-405 (Vanguard main engine)
         cost: 750 # very expensive for its performance.

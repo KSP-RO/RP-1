@@ -683,6 +683,9 @@ advRocketry:
         cost: 600
     FASAGeminiLR91: *LR91
 
+    FASASaturnUllage:
+        cost: 100
+
 scienceTech:
 
     # These things are placed here by default, but they're not a bad selection,

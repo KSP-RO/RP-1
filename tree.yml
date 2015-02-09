@@ -425,6 +425,7 @@ basicRocketry:
     # Engines
     NP_lfe_25m_Orbitalbertha_Mini: #XLR99
         entryCost: 60000
+        cost: 2500
 
     liquidEngine2: # X-405 (Vanguard main engine)
         cost: 750 # very expensive for its performance.

@@ -751,15 +751,15 @@ scienceTech:
 generalConstruction:
 
     engineLargeSkipper: &RL10
-        cost: 4000
-        entryCost: 80000
+        cost: 2000
+        entryCost: 40000
 
     FASAApolloLFERL10: *RL10
     KW1mengineWildCatV: *RL10
     
     KW1mengineMaverick1D: # RL10 priced seperately because its a pair of them
-        cost: 8000
-        entryCost: 80000
+        cost: 4000
+        entryCost: 40000
 
     LR87LH2Vac:  # total guess on price
         cost: 6500

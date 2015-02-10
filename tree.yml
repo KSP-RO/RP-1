@@ -671,8 +671,11 @@ advRocketry:
         cost: 2000 # TODO we *should* have references on this from BellComm studies
 # on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
 
-    liquidEngine1-2: #H-1 (early)
-        cost: 1150
+    liquidEngine1-2: &H1 #H-1 (early)
+        cost: 1700 # think this should be closer to 1700
+        entryCost: 33750
+    FASAApolloLFEH1: *H1
+    KW2mengineMaverickV: *H1
     
     vernierEngine:
         cost: 25
@@ -748,9 +751,15 @@ scienceTech:
 generalConstruction:
 
     engineLargeSkipper: &RL10
-        cost: 1800
+        cost: 2000
+        entryCost: 40000
 
     FASAApolloLFERL10: *RL10
+    KW1mengineWildCatV: *RL10
+    
+    KW1mengineMaverick1D: # RL10 priced seperately because its a pair of them
+        cost: 4000
+        entryCost: 40000
 
     LR87LH2Vac:  # total guess on price
         cost: 6500
@@ -795,6 +804,13 @@ heavyRocketry:
     # (lower stages are staged combustion--see fuelSystems below)
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
+
+    FASAApolloLFEF1: &F1
+        entryCost: 409361
+        cost: 20000
+    KW5mengineGriffonC:
+        entryCost: 409361
+        cost: 100000 # Costs more to buy because its 5 engines in one from KW
     
 fuelSystems:
 #staged combustion -- NK-15 here.

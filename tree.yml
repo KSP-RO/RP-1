@@ -776,6 +776,20 @@ flightControl:
         cost: 400
     FASAAgena_Engine_FP: # for Agena B/D restartable engine
         cost: 300
+# Gemini parts
+    FASAGeminiNoseCone2: # FASAGeminiNoseCone2White
+        entryCost: 50000
+        cost: 1000
+    FASAGeminiPod2RCS: # FC also FASAGeminiPod2RCSWhite
+        entryCost: 36000
+        cost: 720
+    FASAGeminiUtilitySasRcs: # FC
+        entryCost: 40000
+        cost: 800
+    FASA_Gemini_RCS_Thrusters: # FC
+        entryCost: 3000
+        cost: 60
+
 #now this is Hydrolox TL3
 advConstruction:
 
@@ -788,6 +802,10 @@ electrics:
         cost: 250
     solarPanels2:
         cost: 450
+    # Gemini SM - has a fuel cell
+    FASAGeminiUtilityPack:
+        entryCost: 178000
+        cost: 3560
 
 spaceExploration:
     Mark1-2Pod:
@@ -1031,7 +1049,7 @@ enhancedSurvivability:
     US_Wedge_Waste:
     US_Wedge_WasteWater:
 
-    #Gemini goes here
+    #Stock and DRE parts
     landerCabinSmall:
         cost: 2000 # FIXME
     2.5_Heatshield:
@@ -1040,6 +1058,29 @@ enhancedSurvivability:
         cost: 2000 # FIXME
     Heatshield-3M:
         cost: 3000 # FIXME
+
+    # FASA Gemini
+    # ~12m for the spacecraft, ~600 for research
+    # call it ~7m for the capsule, and 350 of the R&D
+    FASAGeminiNoseCone2Cap:
+        entryCost: 500
+        cost: 10
+    FASAGeminiAntenna:
+        entryCost: 5000
+        cost: 100
+    FASAGeminiParachute2D:
+        entryCost: 3000
+        cost: 60
+    FASAGeminiParachute2:
+        entryCost: 5500
+        cost: 110
+    FASAGeminiPod2: # FASAGeminiPod2White
+        entryCost: 270000
+        cost: 5400
+
+    # FASAGeminiNoseCone2, FASAGeminiPod2RCS / FASAGeminiUtilitySasRcs, FASA_Gemini_RCS_Thrusters
+    # all go to flight control
+    # Gemini SM - has a fuel cell - electrics
 
 shortTermHabitation:
 

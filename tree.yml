@@ -747,6 +747,17 @@ scienceTech:
         cost: 1200
         entryCost: 25000
 
+    # Salyut parts
+    almaz_sample_return:
+        entryCost: 3000
+        cost: 800
+    almaz_sr_dec:
+        entryCost: 2500
+        cost: 600
+    almaz_sr_para:
+        entryCost: 10000
+        cost: 1000
+
 #now this is Hydrolox TL2
 generalConstruction:
 
@@ -765,6 +776,10 @@ generalConstruction:
         cost: 6500
     SXTLT80: #J-2
         cost: 7500
+    # Soyuz parts
+    ok_tft:
+        entryCost: 25000
+        cost: 800
 
 flightControl:
     linearRcs:
@@ -790,10 +805,57 @@ flightControl:
         entryCost: 3000
         cost: 60
 
+    # Salyut parts
+    almaz_sr_retro:
+        entryCost: 1000
+        cost: 1000
+
+    # Soyuz parts
+    ok_sa_cap:
+        entryCost: 25000
+        cost: 800
+    ok_pao:
+        entryCost: 75000
+        cost: 2000
+    t_dp:
+        entryCost: 70000
+        cost: 2000
+    ok_dec:
+        entryCost: 7000
+        cost: 200
+    ok_hs:
+        entryCost: 30000
+        cost: 1000
+    t_pao:
+        entryCost: 55000
+        cost: 1500
+    rn_voskhod_airlock:
+        entryCost: 50000
+        cost: 1000
+    rn_voskhod_retro:
+        entryCost: 25000
+        cost: 800
+    rn_voskhod_retro_dec:
+        entryCost: 7000
+        cost: 200
+    rn_vostok_dec:
+        entryCost: 7000
+        cost: 200
+
 #now this is Hydrolox TL3
 advConstruction:
 
 advFlightControl:
+    # Salyut parts
+    salyut_asas:
+        entryCost: 80000
+        cost: 12500
+    s1_dp:
+        entryCost: 50000
+        cost: 8000
+    s6_dp:
+        entryCost: 50000
+        cost: 8000
 
 electrics:
     solarPanels5HiTech:
@@ -811,6 +873,19 @@ spaceExploration:
     Mark1-2Pod:
         entryCost: 1000000
         cost: 10000
+    # Salyut parts
+    almaz3-5:
+        entryCost: 150000
+        cost: 50000
+    salyut1-4:
+        entryCost: 145000
+        cost: 48000
+    salyut6:
+        entryCost: 160000
+        cost: 65000
+    salyut7:
+        entryCost: 170000
+        cost: 75000
 
 landing:
     miniLandingLeg:
@@ -842,6 +917,13 @@ advExploration:
 precisionEngineering:
 
 advElectrics:
+    # Salyut parts
+    almaz_pan_l:
+        entryCost: 30000
+        cost: 4000
+    almaz_pan_r:
+        entryCost: 30000
+        cost: 4000
 
 specializedControl:
 
@@ -880,6 +962,19 @@ ionPropulsion:
 largeElectrics:
 
 electronics:
+    # Soyuz parts
+    tg_sa:
+        entryCost: 70000
+        cost: 2000
+    s1_lsolar:
+        entryCost: 40000
+        cost: 1200
+    s1_rsolar:
+        entryCost: 40000
+        cost: 1200
+    7k_ok_lsolar:
+        entryCost: 70000
+        cost: 2000
 
 highAltitudeFlight:
 
@@ -1081,6 +1176,41 @@ enhancedSurvivability:
     # FASAGeminiNoseCone2, FASAGeminiPod2RCS / FASAGeminiUtilitySasRcs, FASA_Gemini_RCS_Thrusters
     # all go to flight control
     # Gemini SM - has a fuel cell - electrics
+    
+    # Soyuz parts
+    rn_vostok_sc:
+        entryCost: 50000
+        cost: 1800
+    rn_voskhod_sc:
+        entryCost: 55000
+        cost: 2000
+    ok_sa:
+        entryCost: 70000
+        cost: 2500
+    ok_para:
+        entryCost: 25000
+        cost: 800
+    rn_vostok_para:
+        entryCost: 18000
+        cost: 500
+    ok_bo_fem:
+        entryCost: 50000
+        cost: 1500
+    ok_bo_male:
+        entryCost: 50000
+        cost: 1500
+    t_af_bo:
+        entryCost: 60000
+        cost: 1800
+    t_bo:
+        entryCost: 60000
+        cost: 1800
+    tg_bo:
+        entryCost: 60000
+        cost: 1800
+    rn_vostok_tdu:
+        entryCost: 25000
+        cost: 1000
 
 shortTermHabitation:
 

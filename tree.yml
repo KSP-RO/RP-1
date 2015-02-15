@@ -427,10 +427,10 @@ basicRocketry:
         entryCost: 60000
         cost: 2500
 
-    liquidEngine2: # X-405 (Vanguard main engine)
-        cost: 750 # very expensive for its performance.
+    SXTX405: # X-405 (Vanguard main engine)
+    #    cost: 750 # very expensive for its performance.
 
-    RO-AJ10-Early: # (Vanguard/Able/[Early]Delta upper stage)
+    SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
 
     RO-X-248: #Vanguard/Able/Delta kick motor

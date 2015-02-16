@@ -330,20 +330,6 @@ start:
     top100a1ur5b:
     top500a1ur5:
 
-    # KW Rocketry Fairing Bases (Not expanded)
-    KW1mFairingBase:
-    KW1mFairingWall:
-    KW1mFairingCone:
-    KW2mFairingBase:
-    KW2mFairingWall:
-    KW2mFairingCone:
-    KW3mFairingBase:
-    KW3mFairingWall:
-    KW3mFairingCone:
-    KW5mFairingBase:
-    KW5mFairingWall:
-    KW5mFairingCone:
-
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
 
@@ -1365,6 +1351,8 @@ ORPHANS:
     plommsLandingLeg:
 
     # KW Rocketry
+    KW1mFairingBase:
+    KW2mFairingBase:
     KW2mSRBNoseCone:
     KW5mNoseCone:
     KWFin:
@@ -1379,39 +1367,45 @@ ORPHANS:
     KWRadBattSmallL:
     KWRadBattLargeS:
     KWRadBattLargeL:
-#    KW1mengineMaverick1D:
+    KW1mengineMaverick1D:
     KW1mengineVestaVR1:
-#    KW1mengineWildCatV:
+    KW1mengineWildCatV:
     KW2mengineGriffonG8D:
-#    KW2mengineMaverickV:
+    KW2mengineMaverickV:
     KW2mengineSPS:
     KW2mengineVestaVR9D:
     KW3mengineGriffonXX:
     KW3mengineTitanT1:
     KW3mengineWildcarXR:
-#    KW5mengineGriffonC:
+    KW5mengineGriffonC:
     KW5mengineTitanV:
-
-
     KW1mExpandedFairingBase:
     KW2mExpandedFairingBase:
     KW3mExpandedFairingBase:
+    KW3mFairingBase:
     KW3mExpandedFairingCone:
-    KW5mExpFairingWall:
+    KW3mFairingCone:
     KW5mExpFairingCone:
+    KW5mFairingCone:
     KW12mExpandedFairingCone:
     KW2mExpandedFairingCone:
-    KW1mExpandedFairingWall:
-    KW2mExpandedFairingWall:
-    KW3mExpandedFairingWall:
-    KW5mExpandedFairingBase:
-
+    KW1mFairingCone:
+    KW2mFairingCone:
     KW1mDecouplerShroud:
+    KW1mExpandedFairingWall:
+    KW1mFairingWall:
     KW2mDecouplerShroud:
+    KW2mExpandedFairingWall:
+    KW2mFairingWall:
     KW3mDecouplerShroud:
+    KW3mExpandedFairingWall:
+    KW3mFairingWall:
     KW5mDecouplerShroud:
-
     KW5x3AdapterShroud:
+    KW5mFairingBase:
+    KW5mExpandedFairingBase:
+    KW5mFairingWall:
+    KW5mExpFairingWall:
     KW1mtankL1:
     KW1mtankL2:
     KW1mtankL4:

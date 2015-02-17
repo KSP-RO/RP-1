@@ -868,6 +868,19 @@ electrics:
     FASAGeminiUtilityPack:
         entryCost: 178000
         cost: 3560
+    # Soyuz parts
+    tg_sa:
+        entryCost: 70000
+        cost: 2000
+    s1_lsolar:
+        entryCost: 40000
+        cost: 1200
+    s1_rsolar:
+        entryCost: 40000
+        cost: 1200
+    7k_ok_lsolar:
+        entryCost: 70000
+        cost: 2000
 
 spaceExploration:
     Mark1-2Pod:
@@ -962,19 +975,6 @@ ionPropulsion:
 largeElectrics:
 
 electronics:
-    # Soyuz parts
-    tg_sa:
-        entryCost: 70000
-        cost: 2000
-    s1_lsolar:
-        entryCost: 40000
-        cost: 1200
-    s1_rsolar:
-        entryCost: 40000
-        cost: 1200
-    7k_ok_lsolar:
-        entryCost: 70000
-        cost: 2000
 
 highAltitudeFlight:
 

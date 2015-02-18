@@ -844,6 +844,10 @@ flightControl:
 
 #now this is Hydrolox TL3
 advConstruction:
+    # Skylab
+    skylab-trs:
+        entryCost: 50000
+        cost: 3000
 
 advFlightControl:
     # Salyut parts
@@ -856,6 +860,16 @@ advFlightControl:
     s6_dp:
         entryCost: 50000
         cost: 8000
+    # Skylab
+    skylab_docking_cone:
+        entryCost: 100000
+        cost: 8000
+    skylab_trs_docking:
+        entryCost: 100000
+        cost: 8000
+    skylab_asas:
+        entryCost: 80000
+        cost: 12500
 
 electrics:
     solarPanels5HiTech:
@@ -899,6 +913,13 @@ spaceExploration:
     salyut7:
         entryCost: 170000
         cost: 75000
+    # Skylab
+    skylab:
+        entryCost: 275000
+        cost: 70000
+    skylab_unbroken:
+        entryCost: 290000
+        cost: 80000
 
 landing:
     miniLandingLeg:
@@ -924,7 +945,19 @@ fuelSystems:
 aerodynamicSystems:
     Mark1Cockpit:
     Mark2Cockpit:
-
+    # Skylab
+    fairing1:
+        entryCost: 40000
+        cost: 1000
+    fairing3:
+        entryCost: 40000
+        cost: 1000
+    mm_shield1:
+        entryCost: 50000
+        cost: 1200
+    mm_shield2:
+        entryCost: 50000
+        cost: 1200
 advExploration:
 
 precisionEngineering:
@@ -937,6 +970,13 @@ advElectrics:
     almaz_pan_r:
         entryCost: 30000
         cost: 4000
+    # Skylab
+    sl_left_panel:
+        entryCost: 60000
+        cost: 4200
+    sl_right_panel:
+        entryCost: 60000
+        cost: 4200
 
 specializedControl:
 

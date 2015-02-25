@@ -360,8 +360,12 @@ basicRocketry:
     fuelTank_long:
 
     # 6S Service modules
+    # These are just fancy bits of hull. I've made them cost
+    # a little less than decouplers of the same size.
     SerCom1m:
+        cost: 15
     SerCom2:
+        cost: 10
 
     # Structural thingamees
     stackTriCoupler:
@@ -690,9 +694,9 @@ advRocketry:
     SXTWaxWing: # Black Arrow kick motor
         cost: 300
 
-    # TODO: Is there abetter place to put this?
+    # TODO: Is there a better place to put this?
     radialDecoupler2:
-
+        cost: 30    # It's a decoupler (20) with a truss (10)
 
     FASAAgenaLFT: # Agena B/D tankage
         cost: 50 # TODO compare to proc part

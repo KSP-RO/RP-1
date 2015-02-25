@@ -445,7 +445,7 @@ basicRocketry:
        
     # Mercury/Redstone, including the Explorer probe and kickers. From FASA
     FASA_Mercury_Redstone_Eng:
-        cost: 850
+        cost: 800
     FASAExplorerLFTLong:
         cost: 350
     FASAExplorerSgt:
@@ -769,7 +769,7 @@ scienceTech:
 generalConstruction:
 
     engineLargeSkipper: &RL10
-        cost: 2000
+        cost: 1800
         entryCost: 40000
 
     FASAApolloLFERL10: *RL10

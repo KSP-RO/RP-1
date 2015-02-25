@@ -246,8 +246,13 @@ start:
     spotLight1:
     spotLight2:
 
-    # Engines
+    # Core for sounding rockets. Should not provide yaw/pitch/roll control
+    # and will not, once RT has that implemented.
+    RP0probeSounding0-3m:
+        entryCost: 0
+        cost: 1
 
+    # Engines
     sepMotor1:
         cost: 7
 
@@ -257,15 +262,17 @@ start:
         entryCost: 0
         cost: 3
 
-    RP0probeSounding0-3m:
-        entryCost: 0
-        cost: 1
-
     # modeled on the electronics of WAC Corporal / Aerobee
     # Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
     ROAerobeeSustainer:
         entryCost: 0
-        cost: 6
+        cost: 10
+
+    # WAC / Aerobee booster, thanks Agathorn!
+    TinyTim:
+        entryCost: 0
+        cost: 36
+
 
     # XLR11
     FASAGemini4X800Mini:

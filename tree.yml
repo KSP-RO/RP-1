@@ -113,8 +113,8 @@ start:
         cost: 0.1
     proceduralStructural:
         cost: 0.1
-    proceduralSRBRealFuels:
-        cost: 0.1
+    #proceduralSRBRealFuels: -- moved to later
+        #cost: 0.1
     proceduralTankTAC:
         cost: 0.1
     proceduralBattery:
@@ -703,6 +703,11 @@ advRocketry:
 
     FASASaturnUllage:
         cost: 100
+
+    # moved Proc SRB to here
+    proceduralSRBRealFuels:
+        cost: 0.1
+        entryCost: 50000
 
 scienceTech:
 

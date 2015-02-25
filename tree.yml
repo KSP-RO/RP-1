@@ -360,8 +360,12 @@ basicRocketry:
     fuelTank_long:
 
     # 6S Service modules
+    # These are just fancy bits of hull. I've made them cost
+    # a little less than decouplers of the same size.
     SerCom1m:
+        cost: 15
     SerCom2:
+        cost: 10
 
     # Structural thingamees
     stackTriCoupler:

@@ -407,11 +407,11 @@ basicRocketry:
 
     # Wedges are relatively expensive, because they've got to be
     # wired for interchangeable components.
-    US.c.Hub.QuadCore:
+    US_c_Hub_QuadCore:
         cost: 200
 
     # The decoupler is pretty cheap, because other decouplers are, too.
-    US.f.Dec.SafetyDecoupler125:
+    US_f_Dec_SafetyDecoupler125:
         cost: 10
 
     # This is a barometer and thermo in a single wedge. It looks cool. :)

@@ -193,6 +193,7 @@ start:
     # Structural
     
     smallHardpoint:
+        cost: 30    # Made up, but now less than most engines!
 
     # I can't figure out which of these is the smallest, but
     # I've made them all cheaper because an I-beam shouldn't cost
@@ -327,6 +328,8 @@ start:
         cost: 10
     FASAUmbilicalTower:
         cost: 10
+    SXTlaunchclamp1:
+        cost: 10
 
     # Unsorted. Please sort and price me! ;)
 
@@ -384,6 +387,7 @@ basicRocketry:
 
     # Structural thingamees
     stackTriCoupler:
+        cost: 50        # Made up, but not unreasonable
     KAS_Pylon1:
 
     # New probe!
@@ -572,9 +576,13 @@ survivability:
     1.25_Heatshield:
         cost: 1000
 
+    # Heatshield decoupler
+    decoupler_ftr_small:
+        cost: 30
 
     #FASA Mercury things
     FASAGeminiDecDark125:
+        cost: 30    # Totally made up, but balanced with other decouplers
     FASAGeminiMiniSRB:
 
     # Apparently the launch tower is used for loading astronauts,

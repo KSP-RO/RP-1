@@ -667,9 +667,13 @@ stability:
     probeCoreOcto2:
         cost: 1000
 
-    #Early solar -- again, expensive.
+    # Early solar -- again, expensive.
     solarPanels5:
         cost: 300
+
+    # 1/4 the size of solarPanels5, and so 1/4 the cost.
+    FASASolarMini:
+        cost: 75
 
     # What the hell is this supposed to be, anyway?
     science_module:

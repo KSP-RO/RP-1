@@ -289,13 +289,6 @@ start:
     OscarDtank:
     OscarEtank:
     SXTSmallFuselage:
-    FASAGeminiLFTCentar:
-    FASAGeminiLFTCentarCSM_D2:
-    FASAGeminiLFTCentarCSM_D3:
-    FASAGeminiLFTShort:
-    FASAExplorerLFTSmall:
-    FASAExplorerLFTMed:
-    FASAMercuryLFTShortLarge:
 
     # This is from EngineIgnitor. I *guess* it makes sense to put it
     # in the starting node...
@@ -1439,4 +1432,15 @@ ORPHANS:
     xluzopl:
     plommsLandingLeg:
 
+    # Here are a bunch of FASA tanks. Apparently some are fancy
+    # tanks that can't go in the start node, so they're out here in
+    # the cold crying with all the other parts that nobody loves.
+
+    FASAGeminiLFTCentar:
+    FASAGeminiLFTCentarCSM_D2:
+    FASAGeminiLFTCentarCSM_D3:
+    FASAGeminiLFTShort:
+    FASAExplorerLFTSmall:
+    FASAExplorerLFTMed:
+    FASAMercuryLFTShortLarge:
 

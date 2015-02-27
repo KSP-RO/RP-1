@@ -564,6 +564,7 @@ generalRocketry:
     FASAGeminiLR87Twin: *LR87
     FASAGeminiLR91Mini:
         cost: 450
+
 survivability:
 #Reentry
 
@@ -590,9 +591,10 @@ survivability:
     FASAlaunchTower:
         cost: 10 #yeah, should really be expensive, but then who would use it?
 
-#FASA Mercury
-# see above for Mercury sources/notes.
-#the 88mil and the 4.4mil apportioned 
+    # FASA Mercury
+    # see above for Mercury sources/notes.
+    # the 88mil and the 4.4mil apportioned 
+
     FASAMercuryPod: &mercury_pod
         entryCost: 74600
         cost: 3730
@@ -602,7 +604,7 @@ survivability:
     FASA_Mercury_Eng: &FASA_Mercury_Eng
         entryCost: 1600
         cost: 80
-    FASA_Mercury_LFEng: *FASA_Mercury_Eng
+
     FASAMercuryDec:
         entryCost: 200
         cost: 10
@@ -631,23 +633,22 @@ survivability:
 #        entryCost: 88000
         cost: 50
 
-#    FASA_Mercury_LFEng:
-#        entryCost:
-#        cost:
-
 # Stock capsule
     mk1pod: *mercury_pod
 #        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
 #        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
 
+## Stability and early probes ##
+
 stability:
-#3-axis stability in orbit. CORONA etc.
+
+    # 3-axis stability in orbit. CORONA etc.
 
     # RCS joy.
 
     RCSBoonExt:
-        # TODO: Make sure my costs are sane!
-        # TODO: PART NOT SUPPORTED BY RO!
+        # TODO: This needs costing, also maybe moved to a later
+        # node, since it seems pretty powerful.
 
     SquadRCSBlockHalf:
         entryCost: 2000 # breaks 20x rule because of avionics required
@@ -657,9 +658,11 @@ stability:
         entryCost: 1000
         cost: 15
 
-
     microEngine:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
+
+    # This is a fake engine, and essentially a big RCS thruster.
+    FASA_Mercury_LFEng: *FASA_Mercury_Eng
 
     # Early Probe cores -- yes this is expensive.
     # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?
@@ -941,6 +944,7 @@ electrics:
         entryCost: 70000
         cost: 2000
 
+# Third generation capsules, it would seem.
 spaceExploration:
     Mark1-2Pod:
         entryCost: 1000000

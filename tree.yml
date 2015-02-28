@@ -655,7 +655,10 @@ stability:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
 
     # This is a fake engine, and essentially a big RCS thruster.
-    FASA_Mercury_LFEng: *FASA_Mercury_Eng
+    # It's about 33% more powerful than the microEngine, so we cost it
+    # appropriately.
+    FASA_Mercury_LFEng: 
+        cost: 80
 
     # Early Probe cores -- yes this is expensive.
     # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?

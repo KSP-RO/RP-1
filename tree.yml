@@ -130,6 +130,7 @@ start:
     rocketNoseCone:
     standardNoseCone:
     SXTProtonlikeNoseCone:
+    proceduralConeLiquid:
 
     # Wings
 
@@ -192,6 +193,7 @@ start:
     # Structural
     
     smallHardpoint:
+        cost: 30    # Made up, but now less than most engines!
 
     # I can't figure out which of these is the smallest, but
     # I've made them all cheaper because an I-beam shouldn't cost
@@ -286,6 +288,11 @@ start:
     rcsTankMini:
     OscarDtank:
     OscarEtank:
+    SXTSmallFuselage:
+
+    # This is from EngineIgnitor. I *guess* it makes sense to put it
+    # in the starting node...
+    hypergolicFluidRadial:
 
     # FASA flags. These are all free. Because they make the game more
     # awesome.
@@ -314,6 +321,8 @@ start:
         cost: 10
     FASAUmbilicalTower:
         cost: 10
+    SXTlaunchclamp1:
+        cost: 10
 
     # Unsorted. Please sort and price me! ;)
 
@@ -329,6 +338,8 @@ start:
         cost: 2
     radialDecoupler:
         cost: 20
+    SXTTinyprop:
+    SXTMiniJet:
 
     # AIES Fairings
     sep1a1ur5:
@@ -360,11 +371,16 @@ basicRocketry:
     fuelTank_long:
 
     # 6S Service modules
+    # These are just fancy bits of hull. I've made them cost
+    # a little less than decouplers of the same size.
     SerCom1m:
+        cost: 15
     SerCom2:
+        cost: 10
 
     # Structural thingamees
     stackTriCoupler:
+        cost: 50        # Made up, but not unreasonable
     KAS_Pylon1:
 
     # New probe!
@@ -403,11 +419,11 @@ basicRocketry:
 
     # Wedges are relatively expensive, because they've got to be
     # wired for interchangeable components.
-    US.c.Hub.QuadCore:
+    US_c_Hub_QuadCore:
         cost: 200
 
     # The decoupler is pretty cheap, because other decouplers are, too.
-    US.f.Dec.SafetyDecoupler125:
+    US_f_Dec_SafetyDecoupler125:
         cost: 10
 
     # This is a barometer and thermo in a single wedge. It looks cool. :)
@@ -541,6 +557,7 @@ generalRocketry:
     FASAGeminiLR87Twin: *LR87
     FASAGeminiLR91Mini:
         cost: 450
+
 survivability:
 #Reentry
 
@@ -553,9 +570,13 @@ survivability:
     1.25_Heatshield:
         cost: 1000
 
+    # Heatshield decoupler
+    decoupler_ftr_small:
+        cost: 30
 
     #FASA Mercury things
     FASAGeminiDecDark125:
+        cost: 30    # Totally made up, but balanced with other decouplers
     FASAGeminiMiniSRB:
 
     # Apparently the launch tower is used for loading astronauts,
@@ -563,18 +584,20 @@ survivability:
     FASAlaunchTower:
         cost: 10 #yeah, should really be expensive, but then who would use it?
 
-#FASA Mercury
-# see above for Mercury sources/notes.
-#the 88mil and the 4.4mil apportioned 
+    # FASA Mercury
+    # see above for Mercury sources/notes.
+    # the 88mil and the 4.4mil apportioned 
+
     FASAMercuryPod: &mercury_pod
         entryCost: 74600
         cost: 3730
     FASAMercruyCap2:
         entryCost: 1000
         cost: 50
-    FASA_Mercury_Eng:
+    FASA_Mercury_Eng: &FASA_Mercury_Eng
         entryCost: 1600
         cost: 80
+
     FASAMercuryDec:
         entryCost: 200
         cost: 10
@@ -603,23 +626,22 @@ survivability:
 #        entryCost: 88000
         cost: 50
 
-#    FASA_Mercury_LFEng:
-#        entryCost:
-#        cost:
-
 # Stock capsule
     mk1pod: *mercury_pod
 #        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
 #        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
 
+## Stability and early probes ##
+
 stability:
-#3-axis stability in orbit. CORONA etc.
+
+    # 3-axis stability in orbit. CORONA etc.
 
     # RCS joy.
 
     RCSBoonExt:
-        # TODO: Make sure my costs are sane!
-        # TODO: PART NOT SUPPORTED BY RO!
+        # TODO: This needs costing, also maybe moved to a later
+        # node, since it seems pretty powerful.
 
     SquadRCSBlockHalf:
         entryCost: 2000 # breaks 20x rule because of avionics required
@@ -629,9 +651,14 @@ stability:
         entryCost: 1000
         cost: 15
 
-
     microEngine:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
+
+    # This is a fake engine, and essentially a big RCS thruster.
+    # It's about 33% more powerful than the microEngine, so we cost it
+    # appropriately.
+    FASA_Mercury_LFEng: 
+        cost: 80
 
     # Early Probe cores -- yes this is expensive.
     # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?
@@ -639,9 +666,13 @@ stability:
     probeCoreOcto2:
         cost: 1000
 
-    #Early solar -- again, expensive.
+    # Early solar -- again, expensive.
     solarPanels5:
         cost: 300
+
+    # 1/4 the size of solarPanels5, and so 1/4 the cost.
+    FASASolarMini:
+        cost: 75
 
     # What the hell is this supposed to be, anyway?
     science_module:
@@ -690,9 +721,9 @@ advRocketry:
     SXTWaxWing: # Black Arrow kick motor
         cost: 300
 
-    # TODO: Is there abetter place to put this?
+    # TODO: Is there a better place to put this?
     radialDecoupler2:
-
+        cost: 30    # It's a decoupler (20) with a truss (10)
 
     FASAAgenaLFT: # Agena B/D tankage
         cost: 50 # TODO compare to proc part
@@ -701,6 +732,7 @@ advRocketry:
         cost: 600
     FASAGeminiLR91: *LR91
 
+    # Srsly? $100 for these? The sep motors only cost 7.
     FASASaturnUllage:
         cost: 100
 
@@ -908,6 +940,7 @@ electrics:
         entryCost: 70000
         cost: 2000
 
+# Third generation capsules, it would seem.
 spaceExploration:
     Mark1-2Pod:
         entryCost: 1000000
@@ -1402,4 +1435,15 @@ ORPHANS:
     xluzopl:
     plommsLandingLeg:
 
+    # Here are a bunch of FASA tanks. Apparently some are fancy
+    # tanks that can't go in the start node, so they're out here in
+    # the cold crying with all the other parts that nobody loves.
+
+    FASAGeminiLFTCentar:
+    FASAGeminiLFTCentarCSM_D2:
+    FASAGeminiLFTCentarCSM_D3:
+    FASAGeminiLFTShort:
+    FASAExplorerLFTSmall:
+    FASAExplorerLFTMed:
+    FASAMercuryLFTShortLarge:
 

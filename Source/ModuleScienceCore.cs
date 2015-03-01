@@ -7,16 +7,23 @@ using UnityEngine;
 
 namespace RP0
 {
-    class ModuleScienceCore : PartModule
+    [KSPAddon(KSPAddon.Startup.Flight, false)]
+    class ScienceCoreControlLocker
     {
         public int vParts = -1;
+        public Vessel vessel = null;
         bool wasLocked = false;
         const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | ControlTypes.RCS;
         const string lockID = "ModuleScienceCore";
-
+        
         public bool ShouldLock()
         {
-            if (!HighLogic.LoadedSceneIsFlight || (object)vessel == null || FlightGlobals.ActiveVessel != vessel)
+            if (vessel != FlightGlobals.ActiveVessel)
+            {
+                vParts = -1;
+                vessel = FlightGlobals.ActiveVessel;
+            }
+            if ((object)vessel == null)
                 return false;
 
             if (vessel.Parts.Count != vParts)
@@ -31,26 +38,29 @@ namespace RP0
             }
             return wasLocked;
         }
+
         public void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight)
-                return;
             bool doLock = ShouldLock();
             if (doLock != wasLocked)
             {
                 if (wasLocked)
                     InputLockManager.RemoveControlLock(lockID);
                 else
-                {
-                    InputLockManager.RemoveControlLock(lockID); // in case another module had already set this.
                     InputLockManager.SetControlLock(lockmask, lockID);
-                }
                 wasLocked = doLock;
             }
         }
         public void OnDestroy()
         {
             InputLockManager.RemoveControlLock(lockID);
+        }
+    }
+    class ModuleScienceCore : PartModule
+    {
+        public override string GetInfo()
+        {
+            return "This part alone only allows limited command interaction; you will not be allowed full attitude control unless another command part without this module is attached.";
         }
     }
 }

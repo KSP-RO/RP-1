@@ -394,6 +394,11 @@ basicRocketry:
     RP0probeVanguardXray:
         cost: 120
 
+    # AVIONICS
+    # These make your rockets actually controllable.
+    RP0probeAvionics0-81m
+        cost: 200
+
     # !!SCIENCE!!
 
     FASAProbeGeigerCounter:

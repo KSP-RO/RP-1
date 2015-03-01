@@ -824,6 +824,10 @@ generalConstruction:
     ok_tft:
         entryCost: 25000
         cost: 800
+    # Apollo parts
+    FASAApollo_SM_Engine:
+        entryCost: 24500
+        cost: 700
 
 flightControl:
     linearRcs:
@@ -914,6 +918,19 @@ advFlightControl:
     skylab_asas:
         entryCost: 80000
         cost: 12500
+    # Apollo parts
+    FASAApollo_CM_Decoupler:
+        entryCost: 7000
+        cost: 200
+    FASAApollo_CM_HeatShield:
+        entryCost: 35000
+        cost: 1,000
+    FASAApollo_CM_RCS:
+        entryCost: 3500
+        cost: 100
+    FASAApolloAPS:
+        entryCost: 17500
+        cost: 500
 
 electrics:
     solarPanels5HiTech:
@@ -939,6 +956,16 @@ electrics:
     7k_ok_lsolar:
         entryCost: 70000
         cost: 2000
+    # Apollo parts
+    FASAApollo_SM_Dish:
+        entryCost: 35000
+        cost: 1000
+    FASAApollo_SM_Light:
+        entryCost: 1750
+        cost: 50
+    FASALM_Antenna:
+        entryCost: 17500
+        cost: 500
 
 # Third generation capsules, it would seem.
 spaceExploration:
@@ -965,6 +992,28 @@ spaceExploration:
     skylab_unbroken:
         entryCost: 290000
         cost: 80000
+    # Apollo parts
+    FASAApollo_CM:
+        entryCost: 350000
+        cost: 10000
+    FASAApollo_CM_parachutes:
+        entryCost: 35000
+        cost: 1000
+    FASAApollo_CM_Top:
+        entryCost: 70000
+        cost: 2000
+    FASAApollo_LES:
+        entryCost: 175000
+        cost: 5000
+    FASAApollo_SM:
+        entryCost: 350000
+        cost: 10000
+    FASALM_AscentStage:
+        entryCost: 280000
+        cost: 8000
+    FASALM_DescentStage:
+        entryCost: 280000
+        cost: 8000
 
 landing:
     miniLandingLeg:
@@ -983,6 +1032,37 @@ heavyRocketry:
     KW5mengineGriffonC:
         entryCost: 409361
         cost: 100000 # Costs more to buy because its 5 engines in one from KW
+    # Apollo parts
+    FASAApalloLFTF1Plate:
+        entryCost: 14000
+        cost: 400
+    FASAApalloLFTJ2:
+        entryCost: 14000
+        cost: 400
+    FASAApalloLFTJ25XPlate:
+        entryCost: 14000
+        cost: 400
+    FASAApalloLFTJ2Nova:
+        entryCost: 14000
+        cost: 400
+    FASAApalloLFTJ2Plate:
+        entryCost: 14000
+        cost: 400
+    FASAApalloLFTS1BStage1:
+        entryCost: 14000
+        cost: 400
+    FASAApalloLFTSVS1:
+        entryCost: 14000
+        cost: 400
+    FASAApalloLFTSVS2:
+        entryCost: 14000
+        cost: 400
+    FASAApolloLFEJ2:
+        entryCost: 630000
+        cost: 18000
+    FASAApolloLFEM1:
+        entryCost: 770000
+        cost: 22000
     
 fuelSystems:
 #staged combustion -- NK-15 here.
@@ -1003,6 +1083,22 @@ aerodynamicSystems:
     mm_shield2:
         entryCost: 50000
         cost: 1200
+    # Apollo parts
+    FASAApolloStrJ2Fairing:
+        entryCost: 17500
+        cost: 500
+    FASAFairingsApolloPlate375m:
+        entryCost: 14000
+        cost: 400
+    FASALM_DockingCone:
+        entryCost: 14000
+        cost: 400
+    FASAStrF1Fairing:
+        entryCost: 14000
+        cost: 400
+    FASAStrFairing3m4x:
+        entryCost: 14000
+        cost: 400
 advExploration:
 
 precisionEngineering:
@@ -1022,8 +1118,52 @@ advElectrics:
     sl_right_panel:
         entryCost: 60000
         cost: 4200
+    # Apollo parts
+    FASAALSEP_Device:
+        entryCost: 35,000
+        cost: 1000
+    FASAALSEP_Reflector:
+        entryCost: 35000
+        cost: 1000
+    FASAALSEP_Scanner:
+        entryCost: 35000
+        cost: 1000
 
 specializedControl:
+    # Apollo parts
+    FASAApollo_DockingDevice:
+        entryCost: 70000
+        cost: 2000
+    FASAApollo_SM_RCS:
+        entryCost: 3500
+        cost: 100
+    FASAApolloDecSV5m:
+        entryCost: 7000
+        cost: 200
+    FASAApolloIU:
+        entryCost: 21000
+        cost: 600
+    FASAApolloStrJ2StrJ23m5mDec:
+        entryCost: 3500
+        cost: 100
+    FASAApolloStrJ2StrJ23m5mDecNova:
+        entryCost: 3500
+        cost: 100
+    FASAApolloStrJ2StrJ25mDec:
+        entryCost: 3500
+        cost: 100
+    FASAApolloStrS1BPlate:
+        entryCost: 3500
+        cost: 100
+    FASAApolloStrS1BPlateNova:
+        entryCost: 3500
+        cost: 100
+    FASALM_DecouplerRing:
+        entryCost: 3500
+        cost: 100
+    FASALM_RCS:
+        entryCost: 10500
+        cost: 300
 
 heavierRocketry:
 #TL4 Apollo Applications program, working N-1, etc.
@@ -1044,6 +1184,28 @@ advLanding:
     #FASA
     FASALM_AscentEngine: *LMAE
     FASALM_DescentEngine: *LMDE
+    # Apollo parts
+    FASA_Apollo_Float_Ring:
+        entryCost: 28000
+        cost: 800
+    FASA_Apollo_Float_Round:
+        entryCost: 28000
+        cost: 800
+    FASALM_LandingLegs:
+        entryCost: 7000
+        cost: 200
+    FASALM_LandingLegsSA:
+        entryCost: 7000
+        cost: 200
+    FASALM_LandingLegStaircase:
+        entryCost: 7000
+        cost: 200
+    FASALM_OutputPlace:
+        entryCost: 7000
+        cost: 200
+    FASALM_StairCase:
+        entryCost: 7000
+        cost: 200
 
 supersonicFlight:
 

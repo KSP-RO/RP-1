@@ -566,6 +566,13 @@ generalRocketry:
     FASAGeminiLR91Mini:
         cost: 450
 
+    # *** Avionics
+    GuidanceEarly2m:
+        cost: 600
+
+    GuidanceEarly3m:
+        cost: 900
+
 survivability:
 #Reentry
 

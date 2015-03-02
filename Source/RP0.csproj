@@ -33,6 +33,8 @@
   <ItemGroup>
     <Compile Include="Contracts\HSFEarthOrbital.cs" />
     <Compile Include="Contracts\ProbeAltitudeRecord.cs" />
+    <Compile Include="ControlLocker.cs" />
+    <Compile Include="ModuleAvionics.cs" />
     <Compile Include="ModuleScienceCore.cs" />
     <Compile Include="ModuleShowInfo.cs" />
     <Compile Include="ProgressTreeAdder.cs" />

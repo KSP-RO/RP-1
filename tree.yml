@@ -959,6 +959,18 @@ electrics:
     FASAGeminiUtilityPack:
         entryCost: 178000
         cost: 3560
+
+    # This is a Mariner-level dish. Ten mariner probes cost $554m in 1960-1970s
+    # dollars, including R&D, manufacture, and launch costs. The average probe
+    # was $54m. If the cost is 1970s dollars, then that's $183m 1950s dollars,
+    # $0.8m for the dish feels right, it means an R&D cost of $16m, a little under
+    # 10% of the entire programme cost.
+    #
+    # Plus it balances nicely with existing antennae costs. ;)  -- PJF
+
+    RTShortDish2:
+        cost: 800
+
     # Soyuz parts
     tg_sa:
         entryCost: 70000

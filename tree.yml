@@ -397,7 +397,7 @@ basicRocketry:
     # AVIONICS
     # These make your rockets actually controllable.
     RP0probeAvionics0-81m:
-        cost: 200
+        cost: 300
 
     # !!SCIENCE!!
 
@@ -456,7 +456,7 @@ basicRocketry:
         cost: 2500
 
     SXTX405: # X-405 (Vanguard main engine)
-    #    cost: 750 # very expensive for its performance.
+        cost: 650 # very expensive for its performance.
 
     SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
@@ -476,7 +476,7 @@ basicRocketry:
     FASAExplorerSgt3:
         cost: 14
     FASAExplorerNosecone:
-        cost: 600
+        cost: 400
     FASAExplorerSgt11Dec:
         cost: 20
     FASAExplorerSgt3Dec:
@@ -500,9 +500,9 @@ basicRocketry:
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:
 
-    # Blok E (Luna/Vostok), Blok L (Molniya) fourth stage engine
+    # Blok E (Luna/Vostok)
     liquidEngine3:
-        cost: 400
+        cost: 350
 
     # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
     # Technically Atlas was ~2.5m per LV, but we include launch costs.
@@ -537,8 +537,11 @@ generalRocketry:
     FASAAtlasFMod:
     FASAAtlasH:
 
-    FASAMercuryAtlasEng: #LR-105 sustainer
-        cost: 700
+    #LR-105 sustainer
+    FASAMercuryAtlasEng: &LR105
+        cost: 600
+
+    liquidEngine: *LR105
 
 # Black Arrow engines (derivates of Black Knight engine, so can be early
 # see TL3 for Waxwing.
@@ -680,6 +683,7 @@ stability:
         cost: 75
 
     # What the hell is this supposed to be, anyway?
+    # NK: For now, it's Objekt D (Sputnik 3)
     science_module:
         cost: 1000
 
@@ -707,8 +711,8 @@ stability:
 advRocketry:
     # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
     
-    liquidEngine: #RD-58
-        cost: 800
+    liquidEngine2: #S1.5400(11D33) / RD-58
+        cost: 400
 
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
         cost: 2000 # TODO we *should* have references on this from BellComm studies

@@ -12,6 +12,8 @@
 # Don't have Perl? Try DWIM Perl!
 #
 #       http://dwimperl.com/
+#
+# Prices are in 1965 USD.
 
 start:
 #TL0. early tech. Sounding rockets, basic structural pieces and wings. Late 40s.
@@ -133,15 +135,17 @@ start:
     proceduralConeLiquid:
 
     # Wings
+    # I've made these all cheap. They're not rocket science. -- pjf.
 
-    airplaneTail:
+    airplaneTail: &stdwing
+        cost: 10
     B9_Aero_Wing_ControlSurface_SH_4mProcedural:
         cost: 0.1
-    delta_small:
-    deltaWing:
-    elevon2:
-    elevon3:
-    LMiniAircaftTail:
+    delta_small: *stdwing
+    deltaWing: *stdwing
+    elevon2: *stdwing
+    elevon3: *stdwing
+    LMiniAircaftTail: *stdwing
     pCtrlSrf1:
         cost: 0.1
     ProceduralAllMovingWing:
@@ -156,39 +160,40 @@ start:
         cost: 0.1
     ProceduralwingSPP:
         cost: 0.1
-    R8winglet:
-    smallCtrlSrf:
-    StandardCtrlSrf:
-    structuralWing:
-    structuralWing2:
-    structuralWing3:
-    structuralWing4:
-    sweptWing:
-    sweptWing1:
-    sweptWing2:
-    SXTWingSmall:
-    tailfin:
-    wingConnector:
-    wingConnector2:
-    wingConnector3:
-    wingConnector4:
-    wingConnector5:
-    winglet:
-    winglet3:
-    wingStrake:
-    B9_Aero_Wing_Procedural_TypeA:
-    B9_Aero_Wing_Procedural_TypeB:
-    B9_Aero_Wing_Procedural_TypeC:
+    R8winglet: *stdwing
+    smallCtrlSrf: *stdwing
+    StandardCtrlSrf: *stdwing
+    structuralWing: *stdwing
+    structuralWing2: *stdwing
+    structuralWing3: *stdwing
+    structuralWing4: *stdwing
+    sweptWing: *stdwing
+    sweptWing1: *stdwing
+    sweptWing2: *stdwing
+    SXTWingSmall: *stdwing
+    tailfin: *stdwing
+    wingConnector: *stdwing
+    wingConnector2: *stdwing
+    wingConnector3: *stdwing
+    wingConnector4: *stdwing
+    wingConnector5: *stdwing
+    winglet: *stdwing
+    winglet3: *stdwing
+    wingStrake: *stdwing
+    B9_Aero_Wing_Procedural_TypeA: *stdwing
+    B9_Aero_Wing_Procedural_TypeB: *stdwing
+    B9_Aero_Wing_Procedural_TypeC: *stdwing
 
-    # Intakes
+    # Intakes. Also cheap.
 
-    airScoop:
-    CircularIntake:
-    IntakeRadialLong:
-    LRadialAirIntake:
-    MK1IntakeFuselage:
-    SXTInlineAirIntake:
-    SXTInlineAirIntakeTiny:
+    airScoop: &stdintake
+        cost: 20
+    CircularIntake: *stdintake
+    IntakeRadialLong: *stdintake
+    LRadialAirIntake: *stdintake
+    MK1IntakeFuselage: *stdintake
+    SXTInlineAirIntake: *stdintake
+    SXTInlineAirIntakeTiny: *stdintake
 
     # Structural
     
@@ -217,10 +222,8 @@ start:
     structuralPanel2:
         cost: 20
 
-    # TODO: This used to cost more than most rockets.
-    # What should it cost?
     structuralPylon:
-        cost: 50
+        cost: 20
 
     strutConnector:
         cost: 5
@@ -232,6 +235,7 @@ start:
         cost: 7
 
     SXTSmallFuselage:
+        cost: 20
 
     trussAdapter:
         cost: 10
@@ -242,11 +246,14 @@ start:
     trussPiece3x:
         cost: 20
 
-    # Lights, ladders and things
+    # Lights, ladders and things. Going cheap!!
 
     ladder1:
+        cost: 10
     spotLight1:
+        cost: 10
     spotLight2:
+        cost: 10
 
     # Core for sounding rockets. Should not provide yaw/pitch/roll control
     # and will not, once RT has that implemented.
@@ -281,18 +288,25 @@ start:
         entryCost: 0
         cost: 50
 
-    # Tanks
+    # Tanks. Also cheap. They're tanks.
 
     SXTFuel625m:
+        cost: 30
     miniFuelTank:
+        cost: 30
     rcsTankMini:
+        cost: 30
     OscarDtank:
+        cost: 30
     OscarEtank:
+        cost: 30
     SXTSmallFuselage:
+        cost: 30
 
     # This is from EngineIgnitor. I *guess* it makes sense to put it
     # in the starting node...
     hypergolicFluidRadial:
+        cost: 30
 
     # FASA flags. These are all free. Because they make the game more
     # awesome.

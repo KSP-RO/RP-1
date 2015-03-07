@@ -129,10 +129,19 @@ start:
     # Nose Cones
 
     noseCone:
+        cost: 10
     rocketNoseCone:
+        cost: 10
     standardNoseCone:
+        cost: 10
     SXTProtonlikeNoseCone:
+        cost: 10
+
+    # This part will soon hide itself when the
+    # appropriate software releases are made.
+    # See GH #105 commentary.
     proceduralConeLiquid:
+        cost: 0.1
 
     # Wings
     # I've made these all cheap. They're not rocket science. -- pjf.

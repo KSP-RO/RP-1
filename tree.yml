@@ -822,8 +822,10 @@ scienceTech:
         cost: 10
 
     # Hexacore goes here because this node is about cool satellites,
-    # and the hexacore looks cool. :)
+    # and the hexacore looks cool. It has 50% more nodes than the
+    # QuadCore, and so has 50% higher cost.
     US_Wedge_C15_Hexacore:
+        cost: 300
 
     # AIES
     Maxurpod:

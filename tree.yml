@@ -894,6 +894,11 @@ flightControl:
         entryCost: 3000
         cost: 60
 
+    # This is a really crappy reaction wheel. It means players have a hope
+    # of not using their entire RCS reserves if using the RT flight computer.
+    
+    sasModule:
+
     # Salyut parts
     almaz_sr_retro:
         entryCost: 1000

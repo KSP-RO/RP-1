@@ -192,6 +192,10 @@ start:
     B9_Aero_Wing_Procedural_TypeA: *stdwing
     B9_Aero_Wing_Procedural_TypeB: *stdwing
     B9_Aero_Wing_Procedural_TypeC: *stdwing
+    SXTelevonSmall: *stdwing
+    SXTelevonSmallHalf: *stdwing
+    SXTelevonLarge: *stdwing
+    SXTelevonVeryLarge: *stdwing
 
     # Intakes. Also cheap.
 
@@ -1553,6 +1557,9 @@ ORPHANS:
     SXTtruckrear:
     SXTtruckearSmall:
     SXTtruckmiddle:
+
+    # Let's build a passenger jet
+    SXTradialWindow:
 
     # FASA has unbalancing experiments, let's not have that.
     # These could be placed later on in the tech tree, but for

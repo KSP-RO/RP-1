@@ -129,10 +129,19 @@ start:
     # Nose Cones
 
     noseCone:
+        cost: 10
     rocketNoseCone:
+        cost: 10
     standardNoseCone:
+        cost: 10
     SXTProtonlikeNoseCone:
+        cost: 10
+
+    # This part will soon hide itself when the
+    # appropriate software releases are made.
+    # See GH #105 commentary.
     proceduralConeLiquid:
+        cost: 0.1
 
     # Wings
     # I've made these all cheap. They're not rocket science. -- pjf.
@@ -183,6 +192,10 @@ start:
     B9_Aero_Wing_Procedural_TypeA: *stdwing
     B9_Aero_Wing_Procedural_TypeB: *stdwing
     B9_Aero_Wing_Procedural_TypeC: *stdwing
+    SXTelevonSmall: *stdwing
+    SXTelevonSmallHalf: *stdwing
+    SXTelevonLarge: *stdwing
+    SXTelevonVeryLarge: *stdwing
 
     # Intakes. Also cheap.
 
@@ -813,8 +826,10 @@ scienceTech:
         cost: 10
 
     # Hexacore goes here because this node is about cool satellites,
-    # and the hexacore looks cool. :)
+    # and the hexacore looks cool. It has 50% more nodes than the
+    # QuadCore, and so has 50% higher cost.
     US_Wedge_C15_Hexacore:
+        cost: 300
 
     # AIES
     Maxurpod:
@@ -882,6 +897,11 @@ flightControl:
     FASA_Gemini_RCS_Thrusters: # FC
         entryCost: 3000
         cost: 60
+
+    # This is a really crappy reaction wheel. It means players have a hope
+    # of not using their entire RCS reserves if using the RT flight computer.
+    
+    sasModule:
 
     # Salyut parts
     almaz_sr_retro:
@@ -1537,6 +1557,9 @@ ORPHANS:
     SXTtruckrear:
     SXTtruckearSmall:
     SXTtruckmiddle:
+
+    # Let's build a passenger jet
+    SXTradialWindow:
 
     # FASA has unbalancing experiments, let's not have that.
     # These could be placed later on in the tech tree, but for

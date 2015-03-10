@@ -33,7 +33,7 @@ namespace RP0
             // Do we need to update?
             if (vessel.Parts.Count != vParts)
             {
-                maxMass = -1f;
+                maxMass = 0f;
                 vesselMass = 0f;
                 vParts = vessel.Parts.Count;
                 for (int i = 0; i < vessel.Parts.Count; i++)
@@ -53,11 +53,7 @@ namespace RP0
                         bool avionicsHere = (vessel.Parts[i].Modules[j]) is ModuleAvionics;
                         avionics = avionics || avionicsHere;
                         if (avionicsHere)
-                        {
-                            float avionicsMass = ((ModuleAvionics)(vessel.Parts[i].Modules[j])).massLimit;
-                            if (avionicsMass > maxMass)
-                                maxMass = avionicsMass;
-                        }
+                            maxMass += ((ModuleAvionics)(vessel.Parts[i].Modules[j])).massLimit;
                     }
                     // switch based on modules
                     if (cmd && !science && !avionics) // unencumbered command module

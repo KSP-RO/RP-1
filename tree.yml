@@ -681,10 +681,6 @@ stability:
 
     # RCS joy.
 
-    RCSBoonExt:
-        # TODO: This needs costing, also maybe moved to a later
-        # node, since it seems pretty powerful.
-
     SquadRCSBlockHalf:
         entryCost: 2000 # breaks 20x rule because of avionics required
         cost: 20
@@ -1272,6 +1268,34 @@ advLanding:
 supersonicFlight:
 
 actuators:
+
+    # Costed at $160 spacebucks, as it's the cost of a decent thruster ($60)
+    # plus a boom ($100).
+    RCSBoonExt:
+        cost: 160
+
+    # Infernal Robotics parts.
+
+    AdjustableRailScaleable:
+        cost: 200
+    IRPistonScaleable:
+        cost: 200
+
+    GantryLargeScaleable: &gantry
+        cost: 300
+    GantryLargeScaleableVariant: *gantry
+
+    # Hinges.
+    IRHingeClosedScaleable2: &stdhinge
+        cost: 100
+    IRHingeOpenScaleable: *stdhinge
+    IRHingeTallScaleable: *stdhinge
+    IRHingeTallNDScaleable: *stdhinge
+
+    IR_RotatronScaleable:
+        cost: 200
+    TelescopeFullAScaleable:
+        cost: 200
 
 composites:
 

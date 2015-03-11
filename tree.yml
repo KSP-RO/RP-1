@@ -1317,6 +1317,8 @@ highAltitudeFlight:
 unmannedTech:
 
 largeControl:
+    # Early Control Moment Gyroscope, see #103
+    advSasModule:
 
 advMetalWorks:
 
@@ -1400,6 +1402,8 @@ advAerospaceComposites:
 expAircraftEngines:
 
 heavyControl:
+    # Control Moment Gyro, see #103
+    asasmodule1-2:
 
 subsonicFlight:
 

@@ -601,7 +601,7 @@ generalRocketry:
         cost: 900
 
 survivability:
-#Reentry
+    # Reentry
 
     # Heatshields
     
@@ -664,14 +664,14 @@ survivability:
     RO_FASA_MercuryPodRCS:
         entryCost: 500
         cost: 12
+    
+    # Yes, Mercruy is the correct spelling on this. :/
     FASAMercruyCap: #old cap, unused by Mercury.
 #        entryCost: 88000
         cost: 50
 
 # Stock capsule
     mk1pod: *mercury_pod
-#        entryCost: 88000 # 40m from below, plus assumed extra R&D from other programs
-#        cost: 4400 # source: _This New Ocean_ with recurring cost + amortized other costs.
 
 ## Stability and early probes ##
 
@@ -1379,8 +1379,10 @@ subsonicFlight:
 offworldManufacturing:
 
 orbitalSurveys:
+    SCANsat_Scanner2:
 
 advSurveys:
+    SCANsat_Scanner24:
 
 recycling:
 
@@ -1389,6 +1391,12 @@ recycling:
 
     # CO2 removal
     US_Wedge_Sabatier:
+
+    TacSabatierRecycler:
+    TacSabatierRecyclerLarge:
+
+    TacCarbonExtractor:
+    TacCarbonExtractorLarge:
 
 hydroponics:
 
@@ -1449,9 +1457,15 @@ enhancedSurvivability:
     # their own 'recycling' node.
 
     US_Wedge_Carbon:
-    US_Wedge_Food:
-    US_Wedge_Waste:
-    US_Wedge_WasteWater:
+    US_Wedge_Food: *basicWedge
+    US_Wedge_Waste: *basicWedge
+    US_Wedge_WasteWater: *basicWedge
+
+    TacLifeSupportMFTContainer:
+    TacLifeSupportMFTContainerSmall:
+
+    HexCanMFTLifeSupport:
+    HexCanMFTLifeSupportSmall:
 
     #Stock and DRE parts
     landerCabinSmall:

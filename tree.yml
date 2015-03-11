@@ -847,8 +847,7 @@ scienceTech:
         entryCost: 10000
         cost: 1000
 
-#now this is Hydrolox TL2
-generalConstruction:
+hydroloxTL2:
 
     engineLargeSkipper: &RL10
         cost: 1800
@@ -940,12 +939,16 @@ flightControl:
         entryCost: 7000
         cost: 200
 
-#now this is Hydrolox TL3
-advConstruction:
+hydroloxTL3:
     # Skylab
     skylab-trs:
         entryCost: 50000
         cost: 3000
+
+hydroloxTL4:
+hydroloxTL5:
+hydroloxTL6:
+hydroloxTL7:
 
 advFlightControl:
     # Salyut parts

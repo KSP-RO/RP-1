@@ -424,7 +424,9 @@ basicRocketry:
     # AVIONICS
     # These make your rockets actually controllable.
     RP0probeAvionics0-81m:
-        cost: 300
+        cost: 100
+    GuidanceEarly1m:
+        cost: 200
 
     # !!SCIENCE!!
 

@@ -50,10 +50,11 @@ namespace RP0
                     {
                         cmd = cmd || ((vessel.Parts[i].Modules[j]) is ModuleCommand);
                         science = science || ((vessel.Parts[i].Modules[j]) is ModuleScienceCore);
-                        bool avionicsHere = (vessel.Parts[i].Modules[j]) is ModuleAvionics;
-                        avionics = avionics || avionicsHere;
-                        if (avionicsHere)
+                        if ((vessel.Parts[i].Modules[j]) is ModuleAvionics)
+                        {
+                            avionics = true;
                             maxMass += ((ModuleAvionics)(vessel.Parts[i].Modules[j])).massLimit;
+                        }
                     }
                     // switch based on modules
                     if (cmd && !science && !avionics) // unencumbered command module

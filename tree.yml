@@ -453,9 +453,10 @@ basicRocketry:
     US_f_Dec_SafetyDecoupler125:
         cost: 10
 
-    # This is a barometer and thermo in a single wedge. It looks cool. :)
+    # This is a barometer, thermo and x-ray doohicky in a single wedge. It
+    # also looks cool. :)
     dmUSPresTemp:
-        cost: 30
+        cost: 50
 
     # US unlocks with fuel wedges; they're just cool looking tanks.
     # We're giving this an alias so we can have lots of wedges with the

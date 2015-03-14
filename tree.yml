@@ -460,9 +460,10 @@ basicRocketry:
     US_f_Dec_SafetyDecoupler125:
         cost: 10
 
-    # This is a barometer and thermo in a single wedge. It looks cool. :)
+    # This is a barometer, thermo and x-ray doohicky in a single wedge. It
+    # also looks cool. :)
     dmUSPresTemp:
-        cost: 30
+        cost: 50
 
     # US unlocks with fuel wedges; they're just cool looking tanks.
     # We're giving this an alias so we can have lots of wedges with the
@@ -1006,6 +1007,17 @@ electrics:
     RTShortDish2:
         cost: 800
 
+    # Radio and plasma wave antennae. Pretty much every probe to every
+    # planet ever had these. The tech isn't fancy or hard, and since this
+    # is the node at which we make interplanetary missions possible, it's
+    # where we should also have this basic tech available.
+    #
+    # Plus they look pretty darn cool.
+
+    rpwsAnt: &rpws
+        cost: 500
+    USRPWS: *rpws
+
     # Soyuz parts
     tg_sa:
         entryCost: 70000
@@ -1412,10 +1424,26 @@ subsonicFlight:
 offworldManufacturing:
 
 orbitalSurveys:
+
+    # $1k spacebucks is probably cheap for modern equipment,
+    # but we're balancing gameplay here. Each step up in scanner
+    # technology doubles the cost.
     SCANsat_Scanner2:
+        cost: 1000
+
+    # These are optical telescopes for observing the planet
+    # you're orbiting.
+    dmscope: &dmscope
+        cost: 500
+    dmUSScope: *dmscope
 
 advSurveys:
+
     SCANsat_Scanner24:
+        cost: 2000
+
+    # Maybe...
+    # dmImagingPlatform:
 
 recycling:
 
@@ -1431,6 +1459,7 @@ recycling:
     TacCarbonExtractor:
     TacCarbonExtractorLarge:
 
+# This is a bit of a weirdly placed node
 hydroponics:
 
 longTermHabitation:

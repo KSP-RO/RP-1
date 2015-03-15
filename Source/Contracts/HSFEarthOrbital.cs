@@ -158,7 +158,7 @@ namespace Contracts.Parameters
 		{
 			if (vs.to == Vessel.Situations.LANDED || vs.to == Vessel.Situations.SPLASHED)
 			    if (vs.from == Vessel.Situations.FLYING)
-				    if (vs.host.mainBody.isHomeWorld)
+				    if (vs.host.mainBody.isHomeWorld && vs.host.GetCrewCount() > 0)
 				    {
 					    VesselTripLog vesselTripLog = VesselTripLog.FromVessel(vs.host);
 					    if (vesselTripLog.Log.HasEntry(FlightLog.EntryType.Orbit, bodyName))

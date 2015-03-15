@@ -18,7 +18,6 @@ namespace RP0
         const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | 
             ControlTypes.RCS | ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
         const string lockID = "RP0ControlLocker";
-        public bool vesselAPEnabled = false;
 
         public bool ShouldLock()
         {
@@ -75,15 +74,11 @@ namespace RP0
         public void FixedUpdate()
         {
             bool doLock = ShouldLock();
-            if(!doLock)
-                vesselAPEnabled = vessel.Autopilot.Enabled;
             if (doLock != wasLocked)
             {
                 if (wasLocked)
                 {
                     InputLockManager.RemoveControlLock(lockID);
-                    if(vesselAPEnabled)
-                        vessel.Autopilot.Enable();
                 }
                 else
                 {

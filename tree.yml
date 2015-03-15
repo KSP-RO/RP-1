@@ -1105,6 +1105,10 @@ landing:
         entryCost: 10000
         cost: 100
 
+    # landing probe core
+    probeCoreOcto: # Surveyor
+        cost: 4000
+
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1 upper stage
     # (lower stages are staged combustion--see fuelSystems below)
@@ -1367,6 +1371,8 @@ hypersonicFlight:
 specializedElectrics:
 
 advUnmanned:
+    probeCoreCube: # modern satellite bus
+        cost: 15000 #FIXME
 
 advScienceTech:
 

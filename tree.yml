@@ -421,6 +421,13 @@ basicRocketry:
     RP0probeVanguardXray:
         cost: 120
 
+    # AVIONICS
+    # These make your rockets actually controllable.
+    RP0probeAvionics0-81m:
+        cost: 100
+    GuidanceEarly1m:
+        cost: 200
+
     # !!SCIENCE!!
 
     FASAProbeGeigerCounter:
@@ -589,6 +596,13 @@ generalRocketry:
     FASAGeminiLR91Mini:
         cost: 450
 
+    # *** Avionics
+    GuidanceEarly2m:
+        cost: 600
+
+    GuidanceEarly3m:
+        cost: 900
+
 survivability:
     # Reentry
 
@@ -690,7 +704,8 @@ stability:
     # Early Probe cores -- yes this is expensive.
     # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?
     # Besides realism, how do we justify how expensive this is?
-    probeCoreOcto2:
+    # With Avionics! :)
+    probeCoreOcto2: # a fictional "ultra-light" probe core
         cost: 1000
 
     # Early solar -- again, expensive.
@@ -713,8 +728,9 @@ stability:
 # Agena (CORONA)
     FASAAgenaAnt:
         cost: 20
-    FASAAgenaProbe:
-        cost: 1000
+    FASAAgenaProbe: &AgenaAvionics
+        cost: 800
+    RP0probeAvionics1-5m: *AgenaAvionics
 
     # AIES
     neptuno:
@@ -832,6 +848,7 @@ scienceTech:
         entryCost: 10000
         cost: 1000
 
+
 hydroloxTL2:
 
     engineLargeSkipper: &RL10
@@ -860,7 +877,11 @@ hydroloxTL2:
 
 flightControl:
     linearRcs:
+        entryCost: 900
         cost: 15
+    SXTRCSRack:
+        entryCost: 2000
+        cost: 45
     RCSBlock:
         entryCost: 2000
         cost: 35
@@ -924,6 +945,10 @@ flightControl:
         entryCost: 7000
         cost: 200
 
+    # Avionics and probe cores
+    SXTHECSRanger: # Ranger Block I / Mariner
+        cost: 1200
+
 hydroloxTL3:
     # Skylab
     skylab-trs:
@@ -969,6 +994,11 @@ advFlightControl:
     FASAApolloAPS:
         entryCost: 17500
         cost: 500
+    # Probe cores / Avionics
+    probeCoreHex: # Ranger Block III
+        cost: 1500
+    SXT375mProbe: # Early Saturn IU (3.9M, 1000t)
+        cost: 1500
 
 electrics:
     solarPanels5HiTech:
@@ -1081,6 +1111,10 @@ landing:
         entryCost: 10000
         cost: 100
 
+    # landing probe core
+    probeCoreOcto: # Surveyor
+        cost: 4000
+
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1 upper stage
     # (lower stages are staged combustion--see fuelSystems below)
@@ -1106,9 +1140,8 @@ heavyRocketry:
     FASAApalloLFTJ2Nova:
         entryCost: 14000
         cost: 400
-    FASAApalloLFTJ2Plate:
-        entryCost: 14000
-        cost: 400
+    FASAApalloLFTJ2Plate: # S-IVB stage
+        cost: 2500
     FASAApalloLFTS1BStage1:
         entryCost: 14000
         cost: 400
@@ -1200,10 +1233,9 @@ specializedControl:
         cost: 100
     FASAApolloDecSV5m:
         entryCost: 7000
-        cost: 200
-    FASAApolloIU:
-        entryCost: 21000
-        cost: 600
+        cost: 100
+    FASAApolloIU: &SaturnIU
+        cost: 2000
     FASAApolloStrJ2StrJ23m5mDec:
         entryCost: 3500
         cost: 100
@@ -1225,6 +1257,8 @@ specializedControl:
     FASALM_RCS:
         entryCost: 10500
         cost: 300
+    # Other Avionics
+    RP0probeAvionics66m: *SaturnIU
 
 heavierRocketry:
 #TL4 Apollo Applications program, working N-1, etc.
@@ -1343,6 +1377,8 @@ hypersonicFlight:
 specializedElectrics:
 
 advUnmanned:
+    probeCoreCube: # modern satellite bus
+        cost: 15000 #FIXME
 
 advScienceTech:
 

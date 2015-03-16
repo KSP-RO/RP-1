@@ -877,7 +877,11 @@ hydroloxTL2:
 
 flightControl:
     linearRcs:
+        entryCost: 900
         cost: 15
+    SXTRCSRack:
+        entryCost: 2000
+        cost: 45
     RCSBlock:
         entryCost: 2000
         cost: 35
@@ -992,6 +996,8 @@ advFlightControl:
         cost: 500
     # Probe cores / Avionics
     probeCoreHex: # Ranger Block III
+        cost: 1500
+    SXT375mProbe: # Early Saturn IU (3.9M, 1000t)
         cost: 1500
 
 electrics:

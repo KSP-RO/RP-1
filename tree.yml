@@ -154,7 +154,6 @@ start:
     deltaWing: *stdwing
     elevon2: *stdwing
     elevon3: *stdwing
-    LMiniAircaftTail: *stdwing
     pCtrlSrf1:
         cost: 0.1
     ProceduralAllMovingWing:
@@ -296,11 +295,6 @@ start:
         cost: 36
 
 
-    # XLR11
-    FASAGemini4X800Mini:
-        entryCost: 0
-        cost: 50
-
     # Tanks. Also cheap. They're tanks.
 
     SXTFuel625m:
@@ -359,13 +353,13 @@ start:
     nacelleBody:
     radialEngineBody:
     SmallGearBay:
+        cost: 2
     KzThrustPlate:
         cost: 0.1
     stackDecouplerMini:
         cost: 2
     radialDecoupler:
         cost: 20
-    SXTTinyprop:
     SXTMiniJet:
 
     # AIES Fairings
@@ -374,6 +368,15 @@ start:
     top100a1ur5:
     top100a1ur5b:
     top500a1ur5:
+
+    # Beechcraft Bonanza (SXT)
+    SXTTinyprop: # IO-550-B Engine
+        cost: 8
+    625mBonny: # Bonanza cabin
+        cost: 12
+    LMiniAircaftTail: # Bonanza tail fuselage
+        cost: 1
+
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
@@ -481,10 +484,6 @@ basicRocketry:
     US_Radial_Oxygen: *basicWedge
 
     # Engines
-    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
-        entryCost: 60000
-        cost: 2500
-
     SXTX405: # X-405 (Vanguard main engine)
         cost: 650 # very expensive for its performance.
 
@@ -1193,6 +1192,15 @@ aerodynamicSystems:
     FASAStrFairing3m4x:
         entryCost: 14000
         cost: 400
+    #Engines	
+    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
+        entryCost: 60000
+        cost: 2500
+    aje_j79:
+        cost: 220
+    aje_ramjet:
+        cost: 350
+
 advExploration:
 
 precisionEngineering:
@@ -1303,6 +1311,15 @@ advLanding:
         cost: 200
 
 supersonicFlight:
+    #Engines
+    B9_Engine_Jet_Turbojet: #YJ93-GE-3
+        cost: 800 # total guess
+    B9_Engine_Jet_Pod_Small: #JT8D-219
+        cost: 800 # total guess
+    JetEngine: #F100
+        cost: 1000 # total guess
+    turboFanEngine: #J58
+        cost: 1200 # total guess
 
 actuators:
 
@@ -1441,7 +1458,18 @@ heavyControl:
     # Control Moment Gyro, see #103
     asasmodule1-2:
 
+# Now Supersonic Flight
 subsonicFlight:
+    RP0Nose-Cockpit:
+        cost: 300
+    # XLR11
+    FASAGemini4X800Mini:
+        cost: 50
+    aje_j57: #J57-P21
+        cost: 180
+    aje_j85:
+        cost: 50
+
 
 offworldManufacturing:
 

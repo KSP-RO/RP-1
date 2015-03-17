@@ -484,10 +484,6 @@ basicRocketry:
     US_Radial_Oxygen: *basicWedge
 
     # Engines
-    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
-        entryCost: 60000
-        cost: 2500
-
     SXTX405: # X-405 (Vanguard main engine)
         cost: 650 # very expensive for its performance.
 
@@ -1196,6 +1192,15 @@ aerodynamicSystems:
     FASAStrFairing3m4x:
         entryCost: 14000
         cost: 400
+    #Engines	
+    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
+        entryCost: 60000
+        cost: 2500
+    aje_j79:
+        cost: 220
+    aje_ramjet:
+        cost: 350
+
 advExploration:
 
 precisionEngineering:
@@ -1306,6 +1311,15 @@ advLanding:
         cost: 200
 
 supersonicFlight:
+    #Engines
+    B9_Engine_Jet_Turbojet: #YJ93-GE-3
+        cost: 800 # total guess
+    B9_Engine_Jet_Pod_Small: #JT8D-219
+        cost: 800 # total guess
+    JetEngine: #F100
+        cost: 1000 # total guess
+    turboFanEngine: #J58
+        cost: 1200 # total guess
 
 actuators:
 
@@ -1453,6 +1467,8 @@ subsonicFlight:
         cost: 50
     aje_j57: #J57-P21
         cost: 180
+    aje_j85:
+        cost: 50
 
 
 offworldManufacturing:

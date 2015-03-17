@@ -74,4 +74,4 @@ Email: paul.j.fenwick (at) gmail (dot) com
 
 This Code of Conduct is distributed under a Creative Commons Attribution-ShareAlike license.
 
-The RP-0 Code of Conducted is based upon the [Citizen Code of Conduct](http://citizencodeofconduct.org/), Revision 2.0.
+The RP-0 Code of Conduct is based upon the [Citizen Code of Conduct](http://citizencodeofconduct.org/), Revision 2.0.

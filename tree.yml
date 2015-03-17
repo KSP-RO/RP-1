@@ -1451,6 +1451,8 @@ subsonicFlight:
     # XLR11
     FASAGemini4X800Mini:
         cost: 50
+    aje_j57: #J57-P21
+        cost: 180
 
 
 offworldManufacturing:

@@ -1156,6 +1156,11 @@ heavyRocketry:
     FASAApolloLFEM1:
         entryCost: 770000
         cost: 22000
+    # Bobcat's Soviet Engines -Need Costing-
+    RD171:
+    RD0120:
+    NK43:
+    NK33:
     
 fuelSystems:
 #staged combustion -- NK-15 here.
@@ -1272,6 +1277,8 @@ heavierRocketry:
 #TL4 Apollo Applications program, working N-1, etc.
     toroidalAerospike: # J-2T (plug nozzle J-2)
         cost: 9000 # J-2 is 8500
+    # Bobcat's Soviet Engines -Need Costing-
+    RD180:
 
 specializedConstruction:
 
@@ -1386,6 +1393,10 @@ veryHeavyRocketry:
     solidBoosterSmall: # right now, Castor 30. Change later?
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
     omsEngine:
+    # Bobcat's Soviet Engines -Need Costing-
+    RD191:
+    RD0146:
+    RD0124:
 
 advancedMotors:
 

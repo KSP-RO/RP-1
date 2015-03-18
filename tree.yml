@@ -1163,6 +1163,9 @@ heavyRocketry:
     
 fuelSystems:
 #staged combustion -- NK-15 here.
+    # Bobcat's Soviet Engines -Need Costing-
+    RD270:
+    RD270M:
 
 aerodynamicSystems:
     Mark1Cockpit:

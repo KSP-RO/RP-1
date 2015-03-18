@@ -957,7 +957,11 @@ hydroloxTL3:
 hydroloxTL4:
 hydroloxTL5:
 hydroloxTL6:
+    # Bobcat's Soviet Engines -Need Costing-
+    RD0120:
 hydroloxTL7:
+    # Bobcat's Soviet Engines -Need Costing-
+    RD0146:
 
 advFlightControl:
     # Salyut parts
@@ -1272,6 +1276,9 @@ heavierRocketry:
 #TL4 Apollo Applications program, working N-1, etc.
     toroidalAerospike: # J-2T (plug nozzle J-2)
         cost: 9000 # J-2 is 8500
+    # Bobcat's Soviet Engines -Need Costing-
+    NK43:
+    NK33:
 
 specializedConstruction:
 
@@ -1386,6 +1393,8 @@ veryHeavyRocketry:
     solidBoosterSmall: # right now, Castor 30. Change later?
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
     omsEngine:
+    # Bobcat's Soviet Engines -Need Costing-
+    RD171:
 
 advancedMotors:
 
@@ -1402,6 +1411,9 @@ advScienceTech:
 #TL6 90s tech
 experimentalRocketry:
     solidBooster: # Castor 30XL
+    # Bobcat's Soviet Engines -Need Costing-
+    RD180:
+    RD191:
 
 aerospaceTech:
 
@@ -1440,6 +1452,8 @@ fusionRockets:
 giganticRocketry:
 #TL7 present day
     liquidEngineconstelacion:
+    # Bobcat's Soviet Engines -Need Costing-
+    RD0124:
 
 colossalRocketry:
 

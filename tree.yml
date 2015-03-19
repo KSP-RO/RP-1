@@ -1319,7 +1319,8 @@ advLanding:
     FASALM_StairCase:
         entryCost: 7000
         cost: 200
-
+    RO_RLA_AJ260_FL:
+        cost:33081
 supersonicFlight:
     #Engines
     B9_Engine_Jet_Turbojet: #YJ93-GE-3

@@ -376,6 +376,12 @@ start:
         cost: 12
     LMiniAircaftTail: # Bonanza tail fuselage
         cost: 1
+    DoubleWasp-R280065W: # Prop Engine
+    ShvetsovM63: # Prop Engine
+    ShvetsovM82: # Prop Engine
+    MercuryIX: # Prop Engine
+    MercuryXV: # Prop Engine
+
 
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
@@ -539,7 +545,7 @@ generalRocketry:
 
     RO-LR-89: &LR89
         cost: 1000 
-
+     radr:  # booster
     FASAMercuryAtlasEngBooster: *LR89
 
     RCSTank1-2:
@@ -962,7 +968,8 @@ hydroloxTL6:
 hydroloxTL7:
     # Bobcat's Soviet Engines -Need Costing-
     RD0146:
-
+    engineexper05:
+    
 advFlightControl:
     # Salyut parts
     salyut_asas:
@@ -1397,8 +1404,8 @@ veryHeavyRocketry:
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
     omsEngine:
     # Bobcat's Soviet Engines -Need Costing-
-    RD171:
-
+    RD171: &RD-170_class
+    liquidEnginemogulmp1500: *RD-170_class
 advancedMotors:
 
 hypersonicFlight:
@@ -1417,7 +1424,8 @@ experimentalRocketry:
     # Bobcat's Soviet Engines -Need Costing-
     RD180:
     RD191:
-
+    galaxvr2:
+     
 aerospaceTech:
 
 experimentalElectrics:
@@ -1746,16 +1754,12 @@ ORPHANS:
     orbitaiespod:
     torpod:
     UAEcubplate:
-    radr:
     solarpaneles1:
     solarPanelsfa:
     solarPanelsond1:
     solarPanelsuncat1:
     solarPanelsfa2:
     dest5Engine:
-    engineexper05:
-    liquidEnginemogulmp1500:
-    galaxvr2:
     microEngineex1sat:
     fuelTank7k:
     fuelTanklunderl:

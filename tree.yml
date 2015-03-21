@@ -53,13 +53,34 @@ start:
     sensorBarometer:
         cost: 8
 
+    # Antennae
+
+    # 4Mm stock
     longAntenna:
         cost: 5
         entryCost: 0
 
+    # 3Mm AIES
+    Antennaexpatvr2:
+        cost: 4
+        entryCost: 0
+
+    # 2Mm AIES
+    Antennaesc:
+        cost: 3
+        entryCost: 0
+
+    # 1Mm AIES
+    AntennaDF2:
+        cost: 2
+        entryCost: 0
+
+    # 400km SXT
     SXTAntenna:
         cost: 1
         entryCost: 0
+
+    
 
     # Basic RemoteTech antenna, so things can get off the ground. :)
     RTShortAntenna1:
@@ -1732,9 +1753,6 @@ ORPHANS:
     conenoseram:
     Antennacomtec1:
     Antennacomtec2:
-    Antennaesc:
-    Antennaexpatvr2:
-    AntennaDF2:
     Dishcl1:
     Dishmccomu:
     dishcomlar1:

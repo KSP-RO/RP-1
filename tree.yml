@@ -188,9 +188,12 @@ start:
     winglet: *stdwing
     winglet3: *stdwing
     wingStrake: *stdwing
-    B9_Aero_Wing_Procedural_TypeA: *stdwing
-    B9_Aero_Wing_Procedural_TypeB: *stdwing
-    B9_Aero_Wing_Procedural_TypeC: *stdwing
+    B9_Aero_Wing_Procedural_TypeA:
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeB:
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeC:
+        cost: 0.1
     SXTelevonSmall: *stdwing
     SXTelevonSmallHalf: *stdwing
     SXTelevonLarge: *stdwing

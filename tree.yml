@@ -440,16 +440,14 @@ basicRocketry:
         cost: 40
 
     # Stock goo experiment
-    GooExperiment:
+    GooExperiment: &goo
         cost: 15
 
     # Goo in a can (stack mount)
-    SXTProbeGooo:
-        cost: 20
+    SXTProbeGooo: *goo
 
     # Goo as a science wedge (from DMagic Orbital Science)
-    dmUSGoo:
-        cost: 20
+    dmUSGoo: *goo
 
     # Decoupler
     stackDecoupler:

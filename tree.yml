@@ -384,8 +384,9 @@ start:
     ShvetsovM82: # Prop Engine
     MercuryIX: # Prop Engine
     MercuryXV: # Prop Engine
-
-
+    TwinCyclone-R2600-23: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
+    TwinCyclone-R2600-7: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
+    TwinWasp-R1830-94: # Prop Engine R-1830 had 173,618 made across all variants Date:1930-1951
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
@@ -499,6 +500,8 @@ basicRocketry:
 
     RO-X-248: #Vanguard/Able/Delta kick motor
         cost: 200 # nautix says .6mil, but doesn't say what-year dollars
+    KW2mengineSPS: # Engine used in the Apollo Service Module
+    FASAGeminiLFECentarTwin: # orbital taxi engine for various Titan III configurations
        
     # Mercury/Redstone, including the Explorer probe and kickers. From FASA
     FASA_Mercury_Redstone_Eng:
@@ -680,6 +683,7 @@ survivability:
 
 # Stock capsule
     mk1pod: *mercury_pod
+    625mBonny: #Fuselage section of the twin-turboprop aircraft produced by Beechcraft
 
 ## Stability and early probes ##
 
@@ -892,7 +896,7 @@ flightControl:
         cost: 35
     FASAAgenaDocking:
         cost: 400
-    FASAAgena_Engine_FP: # for Agena B/D restartable engine
+    FASAAgena_Engine_FP: &Agenaengins # for Agena B/D restartable engine
         cost: 300
 # Gemini parts
     FASAGeminiNoseCone2: # FASAGeminiNoseCone2White
@@ -907,6 +911,7 @@ flightControl:
     FASA_Gemini_RCS_Thrusters: # FC
         entryCost: 3000
         cost: 60
+     RLA_s_midengine: *Agenaengins # for Agena B/D restartable engine
 
     # This is a really crappy reaction wheel. It means players have a hope
     # of not using their entire RCS reserves if using the RT flight computer.
@@ -1009,6 +1014,7 @@ advFlightControl:
         cost: 1500
     SXT375mProbe: # Early Saturn IU (3.9M, 1000t)
         cost: 1500
+     FASAFairingNoseconeHalf_10m: #Saturn V 396" Fairing Half
 
 electrics:
     solarPanels5HiTech:
@@ -1167,7 +1173,9 @@ heavyRocketry:
     FASAApolloLFEM1:
         entryCost: 770000
         cost: 22000
-    
+    RO_RLA_AJ260_HL: # this was the devolpment SRB for the AJ-260-FL estamated cost at 2/3 of FL Date:1965
+        cost: 22054
+
 fuelSystems:
 #staged combustion -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing-
@@ -1206,6 +1214,7 @@ aerodynamicSystems:
     FASAStrFairing3m4x:
         entryCost: 14000
         cost: 400
+     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
     #Engines	
     NP_lfe_25m_Orbitalbertha_Mini: #XLR99
         entryCost: 60000
@@ -1214,6 +1223,7 @@ aerodynamicSystems:
         cost: 220
     aje_ramjet:
         cost: 350
+    RLA_resistojet: # may belong in later TL main propulsion of the ESA ATV
 
 advExploration:
 
@@ -1290,14 +1300,14 @@ heavierRocketry:
         cost: 9000 # J-2 is 8500
     # Bobcat's Soviet Engines -Need Costing-
     NK43:
-    NK33:
+    NK33: #parts produced ~100 the program was scraped and never flown
 
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm
     # (with thanks to @mcirish3)
     RO_RLA_AJ260_FL:
         cost: 33081
-
+    
 specializedConstruction:
 
 advLanding:
@@ -1410,22 +1420,31 @@ veryHeavyRocketry:
     solidBoosterSmall: # right now, Castor 30. Change later?
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
     omsEngine:
-
+    RLA_solid_m_upper: # ATK Orion 50
     # Bobcat's Soviet Engines -Need Costing-
     # Both of these are RF-170 class.
     RD171:
     liquidEnginemogulmp1500:
-
+     
 advancedMotors:
-
+    RD0120: #Early cryo engine
+    
 hypersonicFlight:
+    SXTOsaulNoseCockpitAn225: &An-124#Not actualy hypersonic but developed in the 80s
+        cost: 14167 #costed at 1/6th full aircraft cost average
+    SXTOsualRadCockpit: *An-124
+    SXTOsualHullLarge: *An-124
+    SXTOsualRadHull: *An-124
+    SXTOsualRadHullEnd: *An-124
+    SXTOsaulTail: *An-124
 
 specializedElectrics:
 
 advUnmanned:
     probeCoreCube: # modern satellite bus
         cost: 15000 #FIXME
-
+    dockingPort3:  # are we missing a node in Tl5?  Androgynous docking port
+    
 advScienceTech:
 
 #TL6 90s tech
@@ -1435,7 +1454,10 @@ experimentalRocketry:
     RD180:
     RD191:
     galaxvr2:
-     
+    RD0124: #Kerosene/LOx engine
+    KW1mengineVestaVR1: # Upper stage, pressure-fed engine
+    RLA_solid_s_upper:  # A small booster
+
 aerospaceTech:
 
 experimentalElectrics:
@@ -1449,10 +1471,14 @@ experimentalMotors:
 robotics:
 
 automation:
+    rpwsAnt: # RPWS Antenna
+    USRPWS: # RPWS Antenna Univ. Storage
 
 nanolathing:
    
 specializedScienceTech:
+    dmUSSolarParticles: #Solar Particle Collector Univ. Storage
+    dmSolarCollector: #Solar Particle Collector 
 
 nuclearPower:
 
@@ -1475,9 +1501,13 @@ giganticRocketry:
     liquidEngineconstelacion:
     # Bobcat's Soviet Engines -Need Costing-
     RD0124:
+    RD0146: # KB Khimavtomatiki RD-0146
 
 colossalRocketry:
-
+    RD191: # NPO Energomash RD-191
+    KWsrbGlobeX10L: &Shuttlebooster #ATK L.S.G. 5-Segment RSRM
+    MassiveBooster: *Shuttlebooster #ATK L.S.G. 5-Segment RSRM
+    
 fusionPower:
 
 exoticAlloys:
@@ -1492,7 +1522,8 @@ expAircraftEngines:
 heavyControl:
     # Control Moment Gyro, see #103
     asasmodule1-2:
-
+    ATV_RCS_back: # ATVs aft RCS thrusters
+     
 # Now Supersonic Flight
 subsonicFlight:
     RP0Nose-Cockpit:
@@ -1548,6 +1579,9 @@ recycling:
 hydroponics:
 
 longTermHabitation:
+    inflatoXL: #habitats designed by Bigelow Aerospace
+    inflato1: #habitats designed by Bigelow Aerospace
+    inflato2: #habitats designed by Bigelow Aerospace
 
 resourceUtilization:
 
@@ -1574,7 +1608,8 @@ advPVMaterials:
 electricalSystems:
 
 advIonPropulsion:
-
+    RLA_arcjet: # Alta XR-150 ResistoJet
+    
 plasmaPropulsion:
 
 experimentalIonPropulsion:

@@ -1292,6 +1292,12 @@ heavierRocketry:
     NK43:
     NK33:
 
+    # Ermergerd this thing is HUGE.
+    # Costing source http://www.astronautix.com/stages/260lidfl.htm
+    # (with thanks to @mcirish3)
+    RO_RLA_AJ260_FL:
+        cost: 33081
+
 specializedConstruction:
 
 advLanding:
@@ -1328,7 +1334,6 @@ advLanding:
     FASALM_StairCase:
         entryCost: 7000
         cost: 200
-
 supersonicFlight:
     #Engines
     B9_Engine_Jet_Turbojet: #YJ93-GE-3

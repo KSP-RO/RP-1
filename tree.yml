@@ -500,8 +500,6 @@ basicRocketry:
 
     RO-X-248: #Vanguard/Able/Delta kick motor
         cost: 200 # nautix says .6mil, but doesn't say what-year dollars
-    KW2mengineSPS: # Engine used in the Apollo Service Module
-    FASAGeminiLFECentarTwin: # orbital taxi engine for various Titan III configurations
        
     # Mercury/Redstone, including the Explorer probe and kickers. From FASA
     FASA_Mercury_Redstone_Eng:
@@ -592,7 +590,7 @@ generalRocketry:
 
 # FASA Agena (CORONA)
 
-    FASAAgena_Engine:
+    FASAAgena_Engine: &Agenaengins
         cost: 350
 
     # Titan engines
@@ -603,7 +601,7 @@ generalRocketry:
     FASAGeminiLR87Twin: *LR87
     FASAGeminiLR91Mini:
         cost: 450
-
+    FASATitanLR91Dec: # Aerojet LR-91 Decoupler
     # *** Avionics
     GuidanceEarly2m:
         cost: 600
@@ -683,8 +681,7 @@ survivability:
 
 # Stock capsule
     mk1pod: *mercury_pod
-    625mBonny: #Fuselage section of the twin-turboprop aircraft produced by Beechcraft
-
+    
 ## Stability and early probes ##
 
 stability:
@@ -896,8 +893,8 @@ flightControl:
         cost: 35
     FASAAgenaDocking:
         cost: 400
-    FASAAgena_Engine_FP: &Agenaengins # for Agena B/D restartable engine
-        cost: 300
+    FASAAgena_Engine_FP: *Agenaengins # for Agena B/D restartable engine flight pack
+        cost: 300    
 # Gemini parts
     FASAGeminiNoseCone2: # FASAGeminiNoseCone2White
         entryCost: 50000
@@ -911,8 +908,8 @@ flightControl:
     FASA_Gemini_RCS_Thrusters: # FC
         entryCost: 3000
         cost: 60
-     RLA_s_midengine: *Agenaengins # for Agena B/D restartable engine
-
+     RLA_s_midengine: *Agenaengins # for Agena B/D restartable engine 
+        
     # This is a really crappy reaction wheel. It means players have a hope
     # of not using their entire RCS reserves if using the RT flight computer.
     
@@ -1014,7 +1011,6 @@ advFlightControl:
         cost: 1500
     SXT375mProbe: # Early Saturn IU (3.9M, 1000t)
         cost: 1500
-     FASAFairingNoseconeHalf_10m: #Saturn V 396" Fairing Half
 
 electrics:
     solarPanels5HiTech:
@@ -1173,9 +1169,10 @@ heavyRocketry:
     FASAApolloLFEM1:
         entryCost: 770000
         cost: 22000
-    RO_RLA_AJ260_HL: # this was the devolpment SRB for the AJ-260-FL estamated cost at 2/3 of FL Date:1965
-        cost: 22054
-
+    
+    KW2mengineSPS: # Engine used in the Apollo Service Module
+    FASAGeminiLFECentarTwin: # orbital taxi engine for various Titan III configurations
+    
 fuelSystems:
 #staged combustion -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing-
@@ -1214,7 +1211,6 @@ aerodynamicSystems:
     FASAStrFairing3m4x:
         entryCost: 14000
         cost: 400
-     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
     #Engines	
     NP_lfe_25m_Orbitalbertha_Mini: #XLR99
         entryCost: 60000
@@ -1223,8 +1219,7 @@ aerodynamicSystems:
         cost: 220
     aje_ramjet:
         cost: 350
-    RLA_resistojet: # may belong in later TL main propulsion of the ESA ATV
-
+    
 advExploration:
 
 precisionEngineering:
@@ -1254,7 +1249,6 @@ advElectrics:
     FASAALSEP_Scanner:
         entryCost: 35000
         cost: 1000
-
     radr: #SNAP-19
 
 specializedControl:
@@ -1291,6 +1285,7 @@ specializedControl:
     FASALM_RCS:
         entryCost: 10500
         cost: 300
+    RLA_resistojet: # may belong in later TL main propulsion of the ESA ATV
     # Other Avionics
     RP0probeAvionics66m: *SaturnIU
 
@@ -1307,7 +1302,8 @@ heavierRocketry:
     # (with thanks to @mcirish3)
     RO_RLA_AJ260_FL:
         cost: 33081
-    
+    RO_RLA_AJ260_HL: # this was the devolpment SRB for the AJ-260-FL estamated cost at 2/3 of FL Date:1965
+        cost: 22054
 specializedConstruction:
 
 advLanding:
@@ -1344,6 +1340,7 @@ advLanding:
     FASALM_StairCase:
         entryCost: 7000
         cost: 200
+    FASAFairingNoseconeHalf_10m: #Saturn V 396" Fairing Half
 supersonicFlight:
     #Engines
     B9_Engine_Jet_Turbojet: #YJ93-GE-3
@@ -1421,6 +1418,7 @@ veryHeavyRocketry:
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
     omsEngine:
     RLA_solid_m_upper: # ATK Orion 50
+        cost: 893
     # Bobcat's Soviet Engines -Need Costing-
     # Both of these are RF-170 class.
     RD171:
@@ -1443,7 +1441,6 @@ specializedElectrics:
 advUnmanned:
     probeCoreCube: # modern satellite bus
         cost: 15000 #FIXME
-    dockingPort3:  # are we missing a node in Tl5?  Androgynous docking port
     
 advScienceTech:
 
@@ -1454,7 +1451,6 @@ experimentalRocketry:
     RD180:
     RD191:
     galaxvr2:
-    RD0124: #Kerosene/LOx engine
     KW1mengineVestaVR1: # Upper stage, pressure-fed engine
     RLA_solid_s_upper:  # A small booster
 
@@ -1865,4 +1861,5 @@ ORPHANS:
     FASAExplorerLFTSmall:
     FASAExplorerLFTMed:
     FASAMercuryLFTShortLarge:
-
+    #docking port
+    dockingPort3:  # Androgynous docking port

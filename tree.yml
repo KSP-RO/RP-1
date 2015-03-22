@@ -1243,6 +1243,7 @@ advElectrics:
     FASAALSEP_Scanner:
         entryCost: 35000
         cost: 1000
+
     radr: #SNAP-19
 
 specializedControl:

@@ -1243,7 +1243,7 @@ advElectrics:
     FASAALSEP_Scanner:
         entryCost: 35000
         cost: 1000
-     radr: #SNAP-19
+    radr: #SNAP-19
 
 specializedControl:
     # Apollo parts
@@ -1403,9 +1403,12 @@ veryHeavyRocketry:
     solidBoosterSmall: # right now, Castor 30. Change later?
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
     omsEngine:
+
     # Bobcat's Soviet Engines -Need Costing-
-    RD171: &RD-170_class
-    liquidEnginemogulmp1500: *RD-170_class
+    # Both of these are RF-170 class.
+    RD171:
+    liquidEnginemogulmp1500:
+
 advancedMotors:
 
 hypersonicFlight:

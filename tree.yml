@@ -209,9 +209,12 @@ start:
     winglet: *stdwing
     winglet3: *stdwing
     wingStrake: *stdwing
-    B9_Aero_Wing_Procedural_TypeA: *stdwing
-    B9_Aero_Wing_Procedural_TypeB: *stdwing
-    B9_Aero_Wing_Procedural_TypeC: *stdwing
+    B9_Aero_Wing_Procedural_TypeA:
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeB:
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeC:
+        cost: 0.1
     SXTelevonSmall: *stdwing
     SXTelevonSmallHalf: *stdwing
     SXTelevonLarge: *stdwing
@@ -397,6 +400,12 @@ start:
         cost: 12
     LMiniAircaftTail: # Bonanza tail fuselage
         cost: 1
+    DoubleWasp-R280065W: # Prop Engine
+    ShvetsovM63: # Prop Engine
+    ShvetsovM82: # Prop Engine
+    MercuryIX: # Prop Engine
+    MercuryXV: # Prop Engine
+
 
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
@@ -458,16 +467,14 @@ basicRocketry:
         cost: 40
 
     # Stock goo experiment
-    GooExperiment:
+    GooExperiment: &goo
         cost: 15
 
     # Goo in a can (stack mount)
-    SXTProbeGooo:
-        cost: 20
+    SXTProbeGooo: *goo
 
     # Goo as a science wedge (from DMagic Orbital Science)
-    dmUSGoo:
-        cost: 20
+    dmUSGoo: *goo
 
     # Decoupler
     stackDecoupler:
@@ -560,7 +567,6 @@ generalRocketry:
 
     RO-LR-89: &LR89
         cost: 1000 
-
     FASAMercuryAtlasEngBooster: *LR89
 
     RCSTank1-2:
@@ -1001,7 +1007,8 @@ hydroloxTL6:
 hydroloxTL7:
     # Bobcat's Soviet Engines -Need Costing-
     RD0146:
-
+    engineexper05:
+    
 advFlightControl:
     # Salyut parts
     salyut_asas:
@@ -1301,6 +1308,10 @@ advElectrics:
     RTLongDish2:
         cost: 1400
 
+    # RTGs
+
+    radr: #SNAP-19
+
 # NB: Electronics is for complicated things (comms, computers, etc)
 # Electrics is for power generation and storage.
 electronics:
@@ -1382,6 +1393,12 @@ heavierRocketry:
     NK43:
     NK33:
 
+    # Ermergerd this thing is HUGE.
+    # Costing source http://www.astronautix.com/stages/260lidfl.htm
+    # (with thanks to @mcirish3)
+    RO_RLA_AJ260_FL:
+        cost: 33081
+
 specializedConstruction:
 
 advLanding:
@@ -1418,7 +1435,6 @@ advLanding:
     FASALM_StairCase:
         entryCost: 7000
         cost: 200
-
 supersonicFlight:
     #Engines
     B9_Engine_Jet_Turbojet: #YJ93-GE-3
@@ -1493,8 +1509,11 @@ veryHeavyRocketry:
     solidBoosterSmall: # right now, Castor 30. Change later?
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
     omsEngine:
+
     # Bobcat's Soviet Engines -Need Costing-
+    # Both of these are RF-170 class.
     RD171:
+    liquidEnginemogulmp1500:
 
 advancedMotors:
 
@@ -1512,7 +1531,8 @@ experimentalRocketry:
     # Bobcat's Soviet Engines -Need Costing-
     RD180:
     RD191:
-
+    galaxvr2:
+     
 aerospaceTech:
 
 experimentalElectrics:
@@ -1827,16 +1847,12 @@ ORPHANS:
     orbitaiespod:
     torpod:
     UAEcubplate:
-    radr:
     solarpaneles1:
     solarPanelsfa:
     solarPanelsond1:
     solarPanelsuncat1:
     solarPanelsfa2:
     dest5Engine:
-    engineexper05:
-    liquidEnginemogulmp1500:
-    galaxvr2:
     microEngineex1sat:
     fuelTank7k:
     fuelTanklunderl:

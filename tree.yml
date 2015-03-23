@@ -893,7 +893,7 @@ flightControl:
         cost: 35
     FASAAgenaDocking:
         cost: 400
-    FASAAgena_Engine_FP: *Agenaengins # for Agena B/D restartable engine flight pack
+    FASAAgena_Engine_FP: # for Agena B/D restartable engine flight pack
         cost: 300    
 # Gemini parts
     FASAGeminiNoseCone2: # FASAGeminiNoseCone2White
@@ -1429,7 +1429,7 @@ advancedMotors:
     
 hypersonicFlight:
     SXTOsaulNoseCockpitAn225: &An-124#Not actualy hypersonic but developed in the 80s
-        cost: 14167 #costed at 1/6th full aircraft cost average
+        cost: 3257 #costed at 1/6th full aircraft cost 1986 deflated to 1963
     SXTOsualRadCockpit: *An-124
     SXTOsualHullLarge: *An-124
     SXTOsualRadHull: *An-124

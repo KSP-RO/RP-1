@@ -53,13 +53,34 @@ start:
     sensorBarometer:
         cost: 8
 
+    # Antennae
+
+    # 4Mm stock
     longAntenna:
         cost: 5
         entryCost: 0
 
+    # 3Mm AIES
+    Antennaexpatvr2:
+        cost: 4
+        entryCost: 0
+
+    # 2Mm AIES
+    Antennaesc:
+        cost: 3
+        entryCost: 0
+
+    # 1Mm AIES
+    AntennaDF2:
+        cost: 2
+        entryCost: 0
+
+    # 400km SXT
     SXTAntenna:
         cost: 1
         entryCost: 0
+
+    
 
     # Basic RemoteTech antenna, so things can get off the ground. :)
     RTShortAntenna1:
@@ -823,9 +844,27 @@ scienceTech:
         entryCost: 6000         # Player already has cells; what's to develop?
         cost: 3000
 
-    # DTS-M1
+    # DTS-M1, 400Mm antenna
     mediumDishAntenna:
         cost: 500
+
+    # AIES antennae with lower range than the DTS-M1
+    
+    # 9 Mm
+    Dishcl1:
+        cost: 25
+
+    # 16 Mm
+    Dishpcf:
+        cost: 50
+    
+    # 50 Mm
+    Antennacomtec1:
+        cost: 200
+
+    # 90 Mm
+    Antennacomtec2:
+        cost: 300
 
     # Science wedge (it's an empty compartment)
     US_R90_Wedge_ScienceBay:
@@ -1026,12 +1065,29 @@ electrics:
     # dollars, including R&D, manufacture, and launch costs. The average probe
     # was $54m. If the cost is 1970s dollars, then that's $183m 1950s dollars,
     # $0.8m for the dish feels right, it means an R&D cost of $16m, a little under
-    # 10% of the entire programme cost.
+    # 10% of the entire programme cost. 200Gm.
     #
     # Plus it balances nicely with existing antennae costs. ;)  -- PJF
 
     RTShortDish2:
         cost: 800
+
+    # These AIES Antennae have less range than the RTShortDish2, and
+    # so are available here, but at lesser cost. Since the DTS-M1 costs
+    # $500, and our RTShortDish2 costs $800, I've scaled between those
+    # points. -- PJF
+
+    # 40Gm dish
+    Dishmccomu:
+        cost: 500
+
+    # 60Gm dish
+    Dishomega2g:
+        cost: 600
+
+    # 130Gm dish
+    dishcomlar1:
+        cost: 700
 
     # Radio and plasma wave antennae. Pretty much every probe to every
     # planet ever had these. The tech isn't fancy or hard, and since this
@@ -1057,6 +1113,7 @@ electrics:
     7k_ok_lsolar:
         entryCost: 70000
         cost: 2000
+
     # Apollo parts
     FASAApollo_SM_Dish:
         entryCost: 35000
@@ -1245,7 +1302,51 @@ advElectrics:
         entryCost: 35000
         cost: 1000
 
+    # Antennae
+    
+    # 1Tm dish. Enough to talk to Saturn on a good day.
+    RTLongDish2:
+        cost: 1400
+
+    # RTGs
+
     radr: #SNAP-19
+
+# NB: Electronics is for complicated things (comms, computers, etc)
+# Electrics is for power generation and storage.
+electronics:
+
+    # 1.5Tm antenna. Enough to talk to Saturn on a bad day.
+    commDish:
+        cost: 1600
+
+    # 8Mm omni. 4x the cost of the 4Mm omni.
+    RTLongAntenna2:
+        cost: 20
+
+advScienceTech:
+
+    # 4Tm antenna. With the root range model, one of these on each
+    # end will get you to Pluto, even on a bad day.
+    RTGigaDish2:
+        cost: 2000
+
+experimentalScience:
+
+    # 8Tm antenna. One of these on each end will get you to Eris.
+    RTGigaDish1:
+        cost: 3000
+
+    # 10Mm omni, 1.5x cost of the 8Mm omni.
+    RTLongAntenna3:
+        cost: 30
+
+highEnergyScience:
+
+    # 25Tm antenna. Having one of these lets you get vodafone
+    # reception in outback Australia.
+    RO_gx256:
+        cost: 6000
 
 specializedControl:
     # Apollo parts
@@ -1385,8 +1486,6 @@ ionPropulsion:
 
 largeElectrics:
 
-electronics:
-
 highAltitudeFlight:
 
 unmannedTech:
@@ -1426,8 +1525,6 @@ advUnmanned:
     probeCoreCube: # modern satellite bus
         cost: 15000 #FIXME
 
-advScienceTech:
-
 #TL6 90s tech
 experimentalRocketry:
     solidBooster: # Castor 30XL
@@ -1441,8 +1538,6 @@ aerospaceTech:
 experimentalElectrics:
 
 experimentalAerodynamics:
-
-experimentalScience:
 
 experimentalMotors:
 
@@ -1584,8 +1679,6 @@ cuttingEdgeIonPropulsion:
 advPlasmaPropulsion:
 
 exoticReactions:
-
-highEnergyScience:
 
 orbitalMegastructures:
 
@@ -1748,16 +1841,6 @@ ORPHANS:
     # Integratration is WIP.  These parts aren't done yet
     cone05ra:
     conenoseram:
-    Antennacomtec1:
-    Antennacomtec2:
-    Antennaesc:
-    Antennaexpatvr2:
-    AntennaDF2:
-    Dishcl1:
-    Dishmccomu:
-    dishcomlar1:
-    Dishomega2g:
-    Dishpcf:
     investpod:
     moduldesspod:
     novapod:

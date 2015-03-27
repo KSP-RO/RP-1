@@ -53,7 +53,7 @@ namespace RP0
                         if ((vessel.Parts[i].Modules[j]) is ModuleAvionics)
                         {
                             avionics = true;
-                            maxMass += ((ModuleAvionics)(vessel.Parts[i].Modules[j])).massLimit;
+                            maxMass += ((ModuleAvionics)(vessel.Parts[i].Modules[j])).CurrentMassLimit;
                         }
                     }
                     // switch based on modules

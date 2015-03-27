@@ -73,17 +73,24 @@ namespace RP0
 
         public void FixedUpdate()
         {
+            if (!HighLogic.LoadedSceneIsFlight)
+            {
+                InputLockManager.RemoveControlLock(lockID);
+                return;
+            }
             bool doLock = ShouldLock();
             if (doLock != wasLocked)
             {
                 if (wasLocked)
                 {
                     InputLockManager.RemoveControlLock(lockID);
+                    ScreenMessages.PostScreenMessage("Avionics: Unlocking Controls", 3.0f);
                 }
                 else
                 {
                     InputLockManager.SetControlLock(lockmask, lockID);
                     vessel.Autopilot.Disable();
+                    ScreenMessages.PostScreenMessage("Insufficient Avionics, Locking Controls", 3.0f);
                 }
                 wasLocked = doLock;
             }

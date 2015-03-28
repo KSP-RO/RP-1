@@ -118,7 +118,7 @@ namespace RP0
                 if(resRate >= 0)
                 {
                     retStr += "\nCan be disabled, to lower command module wattage from " 
-                        + (enabledkW * 1000d).ToString("N0") + " W to " + (disabledkW * 1000d).ToString("N0") + " W.";
+                        + (enabledkW * 1000d).ToString("N1") + " W to " + (disabledkW * 1000d).ToString("N1") + " W.";
                 }
             }
             return retStr;

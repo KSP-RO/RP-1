@@ -424,7 +424,7 @@ basicRocketry:
 
     # New probe!
 
-    SXTSputnik:
+    SXTSputnik: &sputnik
         cost: 10
 
     FASAExplorerProbe:
@@ -432,6 +432,41 @@ basicRocketry:
 
     RP0probeVanguardXray:
         cost: 120
+
+    # RN_Soviet_Probes
+
+    sputnik1: *sputnik
+    sputnik2: *sputnik
+    sputnik3:
+        cost: 300
+
+    sputnik3_base: &sputnik_n_b
+        cost: 10
+    sputnik3_nosecone: *sputnik_n_b
+    sputnik2_base: *sputnik_n_b
+    sputnik2_nosecone: *sputnik_n_b
+    sputnik1_base: *sputnik_n_b
+    sputnik1_nosecone: *sputnik_n_b
+
+    # RN_R7
+
+    WING_R7:
+        cost: 10
+
+    r7_bvgd_engine:
+        cost: 700
+
+    r7_blok_a_engine:
+        cost: 680
+
+    r7_blok_bvgd_sput:
+        cost: 100
+
+    r7_blok_a_sput:
+        cost: 120
+
+    r7_vernier_engine_v_fg:
+        cost: 20
 
     # AVIONICS
     # These make your rockets actually controllable.
@@ -567,10 +602,11 @@ generalRocketry:
     #From FASA
     FASA_Atlas_LFT_Cone:
     FASA_Atlas_LFT_Cone2:
-    FASAMercuryAtlasLFTLong:
-    FASAAtlasSLV3A:
-    FASAAtlasFMod:
-    FASAAtlasH:
+    FASAMercuryAtlasLFTLong: &atlastank
+        cost: 400
+    FASAAtlasSLV3A: *atlastank
+    FASAAtlasFMod: *atlastank
+    FASAAtlasH: *atlastank
 
     #LR-105 sustainer
     FASAMercuryAtlasEng: &LR105
@@ -607,6 +643,7 @@ generalRocketry:
 
     GuidanceEarly3m:
         cost: 900
+
 
 survivability:
     # Reentry
@@ -1830,4 +1867,3 @@ ORPHANS:
     FASAExplorerLFTSmall:
     FASAExplorerLFTMed:
     FASAMercuryLFTShortLarge:
-

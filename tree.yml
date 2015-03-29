@@ -436,37 +436,9 @@ basicRocketry:
     # RN_Soviet_Probes
 
     sputnik1: *sputnik
-    sputnik2: *sputnik
-    sputnik3:
-        cost: 300
-
-    sputnik3_base: &sputnik_n_b
+    sputnik1_base: &sputnik_n_b
         cost: 10
-    sputnik3_nosecone: *sputnik_n_b
-    sputnik2_base: *sputnik_n_b
-    sputnik2_nosecone: *sputnik_n_b
-    sputnik1_base: *sputnik_n_b
     sputnik1_nosecone: *sputnik_n_b
-
-    # RN_R7
-
-    WING_R7:
-        cost: 10
-
-    r7_bvgd_engine:
-        cost: 700
-
-    r7_blok_a_engine:
-        cost: 680
-
-    r7_blok_bvgd_sput:
-        cost: 100
-
-    r7_blok_a_sput:
-        cost: 120
-
-    r7_vernier_engine_v_fg:
-        cost: 20
 
     # AVIONICS
     # These make your rockets actually controllable.
@@ -600,13 +572,19 @@ generalRocketry:
         cost: 290
         
     #From FASA
+
+    #below part is the Mercury - Atlas Launch Vehicle Fuel Tank
     FASA_Atlas_LFT_Cone:
+        cost: 380
+    #below part is the Atlas-E/F Fuel Tank, 1968 first use
     FASA_Atlas_LFT_Cone2:
-    FASAMercuryAtlasLFTLong: &atlastank
+    #below part is the Atlas SLV-3, 1966 first use. Lunar Orbiter
+    #nearly the same as LV-3 so the 2 can be used interchangeably
+    FASAMercuryAtlasLFTLong:
         cost: 400
-    FASAAtlasSLV3A: *atlastank
-    FASAAtlasFMod: *atlastank
-    FASAAtlasH: *atlastank
+    FASAAtlasSLV3A:
+    FASAAtlasFMod:
+    FASAAtlasH:
 
     #LR-105 sustainer
     FASAMercuryAtlasEng: &LR105
@@ -644,6 +622,36 @@ generalRocketry:
     GuidanceEarly3m:
         cost: 900
 
+    # Improved Sputniks
+    sputnik2:
+        cost: 100
+    sputnik3:
+        cost: 300
+
+    sputnik3_base: *sputnik_n_b
+    sputnik3_nosecone: *sputnik_n_b
+    sputnik2_base: *sputnik_n_b
+    sputnik2_nosecone: *sputnik_n_b
+
+    # RN_R7
+
+    WING_R7:
+        cost: 10
+
+    r7_bvgd_engine:
+        cost: 700
+
+    r7_blok_a_engine:
+        cost: 680
+
+    r7_blok_bvgd_sput:
+        cost: 100
+
+    r7_blok_a_sput:
+        cost: 120
+
+    r7_vernier_engine_v_fg:
+        cost: 20
 
 survivability:
     # Reentry

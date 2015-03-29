@@ -1483,8 +1483,6 @@ experimentalMotors:
 robotics:
 
 automation:
-    rpwsAnt: # RPWS Antenna
-    USRPWS: # RPWS Antenna Univ. Storage
 
 nanolathing:
    

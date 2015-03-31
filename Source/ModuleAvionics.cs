@@ -109,7 +109,7 @@ namespace RP0
         {
             string retStr = "This part allows control of vessels of ";
             if (massLimit < float.MaxValue)
-                retStr += "up to " + massLimit.ToString("N1") + " tons.";
+                retStr += "up to " + massLimit.ToString("N3") + " tons.";
             else
                 retStr += "any mass.";
             if(toggleable && disabledkW >= 0f)

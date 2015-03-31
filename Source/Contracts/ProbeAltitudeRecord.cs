@@ -107,7 +107,7 @@ namespace Contracts
 			{
 				prestige = Contract.ContractPrestige.Exceptional;
                 targetAltitude = (double)(Mathf.Ceil((float)(newTarget * 1.5f) / 10000f) * 10000f);
-                if (newTarget > (Planetarium.fetch.Home.sphereOfInfluence - Planetarium.fetch.Home.Radius) * 0.9f)
+                if (targetAltitude > (Planetarium.fetch.Home.sphereOfInfluence - Planetarium.fetch.Home.Radius) * 0.9f)
                     return false;
 			}
 			AddParameter(new Contracts.Parameters.ProbeAltitudeRecord(targetAltitude), null);

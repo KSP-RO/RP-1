@@ -590,8 +590,9 @@ generalRocketry:
 
 # FASA Agena (CORONA)
 
-    FASAAgena_Engine: &Agenaengins
+    FASAAgena_Engine: &AgenaEngine # Bell 8xxx engine for Agena
         cost: 350
+    RLA_s_midengine: *AgenaEngine
 
     # Titan engines
     # AIES
@@ -856,7 +857,8 @@ scienceTech:
 
 
 hydroloxTL2:
-
+    FASAGeminiLFTCentar: # Centaur A/B/C/D/D1 stage
+    
     engineLargeSkipper: &RL10
         cost: 1800
         entryCost: 40000
@@ -870,16 +872,14 @@ hydroloxTL2:
 
     LR87LH2Vac:  # total guess on price
         cost: 6500
-    SXTLT80: #J-2
+    SXTLT80: #J-2 &J2Engine
         cost: 7500
+    FASAApolloLFEJ2: *J2Engine
+    
     # Soyuz parts
     ok_tft:
         entryCost: 25000
         cost: 800
-    # Apollo parts
-    FASAApollo_SM_Engine:
-        entryCost: 24500
-        cost: 700
 
 flightControl:
     linearRcs:
@@ -893,7 +893,7 @@ flightControl:
         cost: 35
     FASAAgenaDocking:
         cost: 400
-    FASAAgena_Engine_FP: # for Agena B/D restartable engine flight pack
+    FASAAgena_Engine_FP: # flight pack (secondary propulsion system) for Agena B/D restartable engine
         cost: 300    
 # Gemini parts
     FASAGeminiNoseCone2: # FASAGeminiNoseCone2White
@@ -908,7 +908,6 @@ flightControl:
     FASA_Gemini_RCS_Thrusters: # FC
         entryCost: 3000
         cost: 60
-     RLA_s_midengine: *Agenaengins # for Agena B/D restartable engine 
         
     # This is a really crappy reaction wheel. It means players have a hope
     # of not using their entire RCS reserves if using the RT flight computer.
@@ -957,20 +956,29 @@ flightControl:
         cost: 1200
 
 hydroloxTL3:
+    FASAGeminiLFTCentarCSM_D2: # Centaur D2
     # Skylab
     skylab-trs:
         entryCost: 50000
         cost: 3000
 
+    
+
 hydroloxTL4:
+    FASAApolloLFEM1:
+        entryCost: 770000
+        cost: 22000
 hydroloxTL5:
+    RD0120: #Energia sustainer engine
+
 hydroloxTL6:
-    # Bobcat's Soviet Engines -Need Costing-
-    RD0120:
+
+
 hydroloxTL7:
     # Bobcat's Soviet Engines -Need Costing-
-    RD0146:
-    engineexper05:
+    RD0146: # KB Khimavtomatiki RD-0146
+    
+    engineexper05: #RL60
     
 advFlightControl:
     # Salyut parts
@@ -1163,15 +1171,16 @@ heavyRocketry:
     FASAApalloLFTSVS2:
         entryCost: 14000
         cost: 400
-    FASAApolloLFEJ2:
-        entryCost: 630000
-        cost: 18000
-    FASAApolloLFEM1:
-        entryCost: 770000
-        cost: 22000
+        
+        # Apollo parts
+    FASAApollo_SM_Engine: &ApolloSPS # Service Propulsion System
+        entryCost: 24500
+        cost: 700
+    KW2mengineSPS: *ApolloSPS
     
-    KW2mengineSPS: # Engine used in the Apollo Service Module
-    FASAGeminiLFECentarTwin: # orbital taxi engine for various Titan III configurations
+    FASAGeminiLFECentarTwin: # Transtage
+    
+    
     
 fuelSystems:
 #staged combustion -- NK-15 here.
@@ -1285,7 +1294,11 @@ specializedControl:
     FASALM_RCS:
         entryCost: 10500
         cost: 300
-    RLA_resistojet: # may belong in later TL main propulsion of the ESA ATV
+
+    RLA_resistojet: # Marquardt/Aerojet R4D-11.
+    # may belong in later TL main propulsion of the ESA ATV
+    # since it's an R4D, but a late-model one
+    
     # Other Avionics
     RP0probeAvionics66m: *SaturnIU
 
@@ -1302,8 +1315,10 @@ heavierRocketry:
     # (with thanks to @mcirish3)
     RO_RLA_AJ260_FL:
         cost: 33081
-    RO_RLA_AJ260_HL: # this was the devolpment SRB for the AJ-260-FL estamated cost at 2/3 of FL Date:1965
+    RO_RLA_AJ260_HL: # this was the devolpment SRB for the AJ-260-FL (half-length not full length)
+    # estimated cost at 2/3 of FL Date: 1965
         cost: 22054
+
 specializedConstruction:
 
 advLanding:
@@ -1351,6 +1366,14 @@ supersonicFlight:
         cost: 1000 # total guess
     turboFanEngine: #J58
         cost: 1200 # total guess
+    # An-225 bits, treating as generic widebody civilian craft
+    # total An-225 cost in funds: 19,500
+    SXTOsaulNoseCockpitAn225: 
+    SXTOsualRadCockpit: 
+    SXTOsualHullLarge:
+    SXTOsualRadHull:
+    SXTOsualRadHullEnd:
+    SXTOsaulTail:
 
 actuators:
 
@@ -1416,7 +1439,7 @@ veryHeavyRocketry:
     liquidEngineMiniRescale:
     solidBoosterSmall: # right now, Castor 30. Change later?
     solidBooster1-1: # Castor 120, FIXME maybe move to TL6?
-    omsEngine:
+    omsEngine: # AJ10-190 OME
     RLA_solid_m_upper: # ATK Orion 50
         cost: 893
     # Bobcat's Soviet Engines -Need Costing-
@@ -1425,16 +1448,8 @@ veryHeavyRocketry:
     liquidEnginemogulmp1500:
      
 advancedMotors:
-    RD0120: #Early cryo engine
     
 hypersonicFlight:
-    SXTOsaulNoseCockpitAn225: &An-124#Not actualy hypersonic but developed in the 80s
-        cost: 3257 #costed at 1/6th full aircraft cost 1986 deflated to 1963
-    SXTOsualRadCockpit: *An-124
-    SXTOsualHullLarge: *An-124
-    SXTOsualRadHull: *An-124
-    SXTOsualRadHullEnd: *An-124
-    SXTOsaulTail: *An-124
 
 specializedElectrics:
 
@@ -1449,10 +1464,11 @@ experimentalRocketry:
     solidBooster: # Castor 30XL
     # Bobcat's Soviet Engines -Need Costing-
     RD180:
-    RD191:
-    galaxvr2:
-    KW1mengineVestaVR1: # Upper stage, pressure-fed engine
-    RLA_solid_s_upper:  # A small booster
+    RD191: # NPO Energomash RD-191
+    
+    galaxvr2: # Aestus
+    KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
+    RLA_solid_s_upper:  # ATK Orion 38
 
 aerospaceTech:
 
@@ -1467,8 +1483,6 @@ experimentalMotors:
 robotics:
 
 automation:
-    rpwsAnt: # RPWS Antenna
-    USRPWS: # RPWS Antenna Univ. Storage
 
 nanolathing:
    
@@ -1497,10 +1511,8 @@ giganticRocketry:
     liquidEngineconstelacion:
     # Bobcat's Soviet Engines -Need Costing-
     RD0124:
-    RD0146: # KB Khimavtomatiki RD-0146
 
 colossalRocketry:
-    RD191: # NPO Energomash RD-191
     KWsrbGlobeX10L: &Shuttlebooster #ATK L.S.G. 5-Segment RSRM
     MassiveBooster: *Shuttlebooster #ATK L.S.G. 5-Segment RSRM
     
@@ -1854,12 +1866,11 @@ ORPHANS:
     # tanks that can't go in the start node, so they're out here in
     # the cold crying with all the other parts that nobody loves.
 
-    FASAGeminiLFTCentar:
-    FASAGeminiLFTCentarCSM_D2:
-    FASAGeminiLFTCentarCSM_D3:
+    FASAGeminiLFTCentarCSM_D3: # Centaur D3
     FASAGeminiLFTShort:
     FASAExplorerLFTSmall:
     FASAExplorerLFTMed:
     FASAMercuryLFTShortLarge:
+    
     #docking port
     dockingPort3:  # Androgynous docking port

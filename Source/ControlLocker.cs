@@ -113,7 +113,12 @@ namespace RP0
         {
             // toggle visibility
             if (GameSettings.MODIFIER_KEY.GetKey() && Input.GetKeyDown(key))
-                guiEnabled = !guiEnabled;
+            {
+                if (guiEnabled && showOnlyWarning && !isControlLocked)
+                    showOnlyWarning = false;
+                else
+                    guiEnabled = !guiEnabled;
+            }
 
             deltaTime += TimeWarp.deltaTime;
             if (deltaTime > UPDATEINTERVAL)

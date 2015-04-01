@@ -872,7 +872,7 @@ hydroloxTL2:
 
     LR87LH2Vac:  # total guess on price
         cost: 6500
-    SXTLT80: #J-2 &J2Engine
+    SXTLT80: &J2Engine #J-2 200klbf model
         cost: 7500
     FASAApolloLFEJ2: *J2Engine
     
@@ -1513,8 +1513,10 @@ giganticRocketry:
     RD0124:
 
 colossalRocketry:
-    KWsrbGlobeX10L: &Shuttlebooster #ATK L.S.G. 5-Segment RSRM
-    MassiveBooster: *Shuttlebooster #ATK L.S.G. 5-Segment RSRM
+#ATK L.S.G. 5-Segment RSRM
+    KWsrbGlobeX10L: &Shuttlebooster
+        cost: 8000 # reasonable guess, 6.87 for 4seg
+    MassiveBooster: *Shuttlebooster
     
 fusionPower:
 

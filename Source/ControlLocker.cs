@@ -124,9 +124,11 @@ namespace RP0
             if (deltaTime > UPDATEINTERVAL)
             {
                 deltaTime = 0;
-                List<Part> parts = EditorLogic.SortedShipList;
                 haveParts = false;
                 isControlLocked = false;
+                List<Part> parts = null;
+                if ((object)(EditorLogic.fetch.ship) != null)
+                    parts = EditorLogic.fetch.ship.Parts;
                 if (parts != null)
                 {
                     if (parts.Count > 0)

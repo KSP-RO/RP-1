@@ -89,7 +89,7 @@ namespace RP0
         // GUI
         static Rect windowPos = new Rect(500, 200, 0, 0);
         static bool guiEnabled = true;
-        bool haveParts = true;
+        bool haveParts = false;
         static bool showOnlyWarning = false;
 
         // settings
@@ -126,7 +126,7 @@ namespace RP0
                 deltaTime = 0;
                 List<Part> parts = EditorLogic.SortedShipList;
                 haveParts = false;
-                isControlLocked = true;
+                isControlLocked = false;
                 if (parts != null)
                 {
                     if (parts.Count > 0)
@@ -237,7 +237,7 @@ namespace RP0
 
         public void FixedUpdate()
         {
-            if (!HighLogic.LoadedSceneIsFlight)
+            if (!HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready)
             {
                 InputLockManager.RemoveControlLock(lockID);
                 return;
@@ -255,7 +255,7 @@ namespace RP0
                     InputLockManager.SetControlLock(lockmask, lockID);
                     vessel.Autopilot.Disable();
                     ScreenMessages.PostScreenMessage("Insufficient Avionics, Locking Controls (supports "
-                        + maxMass.ToString("N3") + "t, have " + vesselMass.ToString("N3") + "t)", 3.0f);
+                        + maxMass.ToString("N3") + "t, vessel " + vesselMass.ToString("N3") + "t)", 3.0f);
                 }
                 wasLocked = doLock;
             }

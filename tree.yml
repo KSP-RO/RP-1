@@ -1224,6 +1224,7 @@ heavyRocketry:
     KW2mengineSPS: *ApolloSPS
     
     FASAGeminiLFECentarTwin: # Transtage
+        cost: 4300
     
     
     

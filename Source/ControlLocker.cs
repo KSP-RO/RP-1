@@ -217,6 +217,8 @@ namespace RP0
         const string lockID = "RP0ControlLocker";
         float maxMass, vesselMass;
 
+        ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
+
         public bool ShouldLock()
         {
             if (vessel != FlightGlobals.ActiveVessel)
@@ -250,15 +252,16 @@ namespace RP0
                 if (wasLocked)
                 {
                     InputLockManager.RemoveControlLock(lockID);
-                    ScreenMessages.PostScreenMessage("Avionics: Unlocking Controls", 3.0f);
+                    message.message = "Avionics: Unlocking Controls";
                 }
                 else
                 {
                     InputLockManager.SetControlLock(lockmask, lockID);
                     vessel.Autopilot.Disable();
-                    ScreenMessages.PostScreenMessage("Insufficient Avionics, Locking Controls (supports "
-                        + maxMass.ToString("N3") + "t, vessel " + vesselMass.ToString("N3") + "t)", 3.0f);
+                    message.message = "Insufficient Avionics, Locking Controls (supports "
+                        + maxMass.ToString("N3") + "t, vessel " + vesselMass.ToString("N3") + "t)";
                 }
+                ScreenMessages.PostScreenMessage(message, true);
                 wasLocked = doLock;
             }
         }

@@ -50,10 +50,8 @@ namespace RP0
                 // if we count clamps, they can give control. If we don't, this works only if the part isn't a clamp.
                 if ((countClamps || !clamp) && cmd && !science && !avionics)
                     return false;
-
                 if (cmd && avionics) // check if need crew
                 {
-                    bool flag = true;
                     if (mC.minimumCrew > 0) // if we need crew
                     {
                         if (crewCount < 0) // see if we cached crew
@@ -64,14 +62,14 @@ namespace RP0
                                 crewCount = CMAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
                             else crewCount = 0; // or assume no crew (should never trip this)
                         }
-                        if (mC.minimumCrew < crewCount)
-                            flag = false;
+                        if (mC.minimumCrew > crewCount)
+                            avionics = false; // not operational
                     }
-                    if(flag)
-                        maxMass += partAvionicsMass;
                 }
+                if (avionics)
+                    maxMass += partAvionicsMass;
             }
-            if (maxMass >= vesselMass) // will only be reached if the best we have is avionics.
+            if (maxMass > vesselMass) // will only be reached if the best we have is avionics.
                 return false; // unlock if our max avionics mass is >= vessel mass
             // NOTE: we don't update for fuel burnt, because avionics needs to be able to handle the size
             // as well as the fuel.

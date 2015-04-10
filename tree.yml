@@ -1228,6 +1228,7 @@ heavyRocketry:
         entryCost: 24500
         cost: 700
     KW2mengineSPS: *ApolloSPS
+    ROAJ10-137: *ApolloSPS
     
     FASAGeminiLFECentarTwin: # Transtage
         cost: 4300

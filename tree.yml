@@ -117,8 +117,8 @@ start:
         cost: 0.1
     #proceduralSRBRealFuels: -- moved to later
         #cost: 0.1
-    proceduralTankTAC:
-        cost: 0.1
+    #proceduralTankTAC: -- moved to survivability
+        #cost: 0.1
     proceduralBattery:
         cost: 0.1
     proceduralNoseCone:
@@ -656,10 +656,16 @@ generalRocketry:
         cost: 20
 
 survivability:
+
+    # Life support
+
+    proceduralTankTAC:
+        cost: 0.1
+
     # Reentry
 
     # Heatshields
-    
+
     0625_Heatshield:	    
         cost: 300
     Heatshield-1M:

@@ -150,8 +150,8 @@ start:
         cost: 0.21 # Yes, really.
     B9_Aero_Wing_ControlSurface_SH_4mProcedural:
         cost: 0.1
-    delta_small: 20 # PWing
-    deltaWing: *stdwing
+    delta_small: 20 # PWing, 25 B9
+    deltaWing: 70 # PWing, 80 B9
     elevon2: *stdwing
     elevon3: *stdwing
     pCtrlSrf1:

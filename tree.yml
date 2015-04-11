@@ -147,7 +147,7 @@ start:
     # I've made these all cheap. They're not rocket science. -- pjf.
 
     airplaneTail: &stdwing
-        cost: 10
+        cost: 0.21 # Yes, really.
     B9_Aero_Wing_ControlSurface_SH_4mProcedural:
         cost: 0.1
     delta_small: *stdwing

@@ -169,15 +169,15 @@ start:
     ProceduralwingSPP:
         cost: 0.1
     R8winglet: 20
-    smallCtrlSrf: *stdwing
-    StandardCtrlSrf: *stdwing
-    structuralWing: *stdwing
-    structuralWing2: *stdwing
-    structuralWing3: *stdwing
-    structuralWing4: *stdwing
-    sweptWing: *stdwing
-    sweptWing1: *stdwing
-    sweptWing2: *stdwing
+    smallCtrlSrf: 10
+    StandardCtrlSrf: 25
+    structuralWing: 25
+    structuralWing2: 60
+    structuralWing3: 45
+    structuralWing4: 10
+    sweptWing: 145 # used 3 pwings, tried to approximate as closely as possible
+    sweptWing1: 55
+    sweptWing2: 140
     SXTWingSmall: *stdwing
     tailfin: *stdwing
     wingConnector: *stdwing

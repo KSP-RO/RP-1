@@ -152,8 +152,8 @@ start:
         cost: 0.1
     delta_small: 20
     deltaWing: 70
-    elevon2: *stdwing
-    elevon3: *stdwing
+    elevon2: 35
+    elevon3: 40
     pCtrlSrf1:
         cost: 0.1
     ProceduralAllMovingWing:
@@ -168,7 +168,7 @@ start:
         cost: 0.1
     ProceduralwingSPP:
         cost: 0.1
-    R8winglet: *stdwing
+    R8winglet: 20
     smallCtrlSrf: *stdwing
     StandardCtrlSrf: *stdwing
     structuralWing: *stdwing

@@ -178,14 +178,14 @@ start:
     sweptWing: 145 # used 3 pwings, tried to approximate as closely as possible
     sweptWing1: 55
     sweptWing2: 140
-    SXTWingSmall: *stdwing
-    tailfin: *stdwing
-    wingConnector: *stdwing
-    wingConnector2: *stdwing
-    wingConnector3: *stdwing
-    wingConnector4: *stdwing
-    wingConnector5: *stdwing
-    winglet: *stdwing
+    SXTWingSmall: 40
+    tailfin: 20 # approximate, since tailfin has extra bends
+    wingConnector: 50
+    wingConnector2: 140
+    wingConnector3: 45
+    wingConnector4: 15
+    wingConnector5: 40
+    winglet: 15 # kind of tricky since there's a curve here...
     winglet3: *stdwing
     wingStrake: *stdwing
     B9_Aero_Wing_Procedural_TypeA:

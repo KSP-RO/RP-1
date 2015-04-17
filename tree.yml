@@ -186,8 +186,8 @@ start:
     wingConnector4: 15
     wingConnector5: 40
     winglet: 15 # kind of tricky since there's a curve here...
-    winglet3: *stdwing
-    wingStrake: *stdwing
+    winglet3: 40 # approximate, since this is a wing + control surface
+    wingStrake: 5
     B9_Aero_Wing_Procedural_TypeA:
         cost: 0.1
     B9_Aero_Wing_Procedural_TypeB:

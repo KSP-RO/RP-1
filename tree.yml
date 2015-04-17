@@ -146,7 +146,7 @@ start:
     # Wings
     # I've made these all cheap. They're not rocket science. -- pjf.
 
-    airplaneTail: &stdwing
+    airplaneTail:
         cost: 0.21 # Yes, really.
     B9_Aero_Wing_ControlSurface_SH_4mProcedural:
         cost: 0.1

@@ -194,10 +194,11 @@ start:
         cost: 0.1
     B9_Aero_Wing_Procedural_TypeC:
         cost: 0.1
-    SXTelevonSmall: *stdwing
-    SXTelevonSmallHalf: *stdwing
-    SXTelevonLarge: *stdwing
-    SXTelevonVeryLarge: *stdwing
+    SXTelevonSmall: 25 # this and below using pCtrlSrf1
+    SXTelevonSmallHalf: 15
+    SXTelevonLarge: 115 # possibly (probably?) inaccurate due to anti-shock
+                        # bodies + different amounts of clipping into base
+    SXTelevonVeryLarge: 185 # same as SXTelevonLarge
 
     # Intakes. Also cheap.
 

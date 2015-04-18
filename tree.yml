@@ -146,14 +146,18 @@ start:
     # Wings
     # I've made these all cheap. They're not rocket science. -- pjf.
 
-    airplaneTail: &stdwing
-        cost: 10
+    airplaneTail:
+        cost: 0.21 # Yes, really.
     B9_Aero_Wing_ControlSurface_SH_4mProcedural:
         cost: 0.1
-    delta_small: *stdwing
-    deltaWing: *stdwing
-    elevon2: *stdwing
-    elevon3: *stdwing
+    delta_small:
+        cost: 20
+    deltaWing:
+        cost: 70
+    elevon2:
+        cost: 35
+    elevon3:
+        cost: 40
     pCtrlSrf1:
         cost: 0.1
     ProceduralAllMovingWing:
@@ -168,36 +172,61 @@ start:
         cost: 0.1
     ProceduralwingSPP:
         cost: 0.1
-    R8winglet: *stdwing
-    smallCtrlSrf: *stdwing
-    StandardCtrlSrf: *stdwing
-    structuralWing: *stdwing
-    structuralWing2: *stdwing
-    structuralWing3: *stdwing
-    structuralWing4: *stdwing
-    sweptWing: *stdwing
-    sweptWing1: *stdwing
-    sweptWing2: *stdwing
-    SXTWingSmall: *stdwing
-    tailfin: *stdwing
-    wingConnector: *stdwing
-    wingConnector2: *stdwing
-    wingConnector3: *stdwing
-    wingConnector4: *stdwing
-    wingConnector5: *stdwing
-    winglet: *stdwing
-    winglet3: *stdwing
-    wingStrake: *stdwing
+    R8winglet:
+        cost: 20
+    smallCtrlSrf:
+        cost: 10
+    StandardCtrlSrf:
+        cost: 25
+    structuralWing:
+        cost: 25
+    structuralWing2:
+        cost: 60
+    structuralWing3:
+        cost: 45
+    structuralWing4:
+        cost: 10
+    sweptWing:
+        cost: 145 # used 3 pwings, tried to approximate as closely as possible
+    sweptWing1:
+        cost: 55
+    sweptWing2:
+        cost: 140
+    SXTWingSmall:
+        cost: 40
+    tailfin:
+        cost: 20 # approximate, since tailfin has extra bends
+    wingConnector:
+        cost: 50
+    wingConnector2:
+        cost: 140
+    wingConnector3:
+        cost: 45
+    wingConnector4:
+        cost: 15
+    wingConnector5:
+        cost: 40
+    winglet:
+        cost: 15 # kind of tricky since there's a curve here...
+    winglet3:
+        cost: 40 # approximate, since this is a wing + control surface
+    wingStrake:
+        cost: 5
     B9_Aero_Wing_Procedural_TypeA:
         cost: 0.1
     B9_Aero_Wing_Procedural_TypeB:
         cost: 0.1
     B9_Aero_Wing_Procedural_TypeC:
         cost: 0.1
-    SXTelevonSmall: *stdwing
-    SXTelevonSmallHalf: *stdwing
-    SXTelevonLarge: *stdwing
-    SXTelevonVeryLarge: *stdwing
+    SXTelevonSmall:
+        cost: 25 # this and below using pCtrlSrf1
+    SXTelevonSmallHalf:
+        cost: 15
+    SXTelevonLarge:
+        cost: 115 # possibly (probably?) inaccurate due to anti-shock
+                  # bodies + different amounts of clipping into base
+    SXTelevonVeryLarge:
+        cost: 185 # same as SXTelevonLarge
 
     # Intakes. Also cheap.
 

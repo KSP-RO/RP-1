@@ -536,14 +536,16 @@ basicRocketry:
 
     RO-X-248: #Vanguard/Able/Delta kick motor
         cost: 200 # nautix says .6mil, but doesn't say what-year dollars
-       
+    
+    ROBabySergeant: &BabySergeant
+        cost: 5
+
     # Mercury/Redstone, including the Explorer probe and kickers. From FASA
     FASA_Mercury_Redstone_Eng:
         cost: 800
     FASAExplorerLFTLong:
         cost: 350
-    FASAExplorerSgt:
-        cost: 5
+    FASAExplorerSgt: *BabySergeant
     FASAExplorerSgt11:
         cost: 50
     FASAExplorerSgt3:

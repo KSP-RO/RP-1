@@ -940,7 +940,9 @@ scienceTech:
 
 hydroloxTL2:
     FASAGeminiLFTCentar: # Centaur A/B/C/D/D1 stage
-    
+        cost: 1201
+        entryCost: 15000
+   
     engineLargeSkipper: &RL10
         cost: 1800
         entryCost: 40000

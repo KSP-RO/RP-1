@@ -364,7 +364,7 @@ start:
     # Launch Clamps/Towers
     FASAlaunchClampAtlas:    
         cost: 10
-    FASALaunchClampApollo:
+    FASAlaunchClampApollo:
         cost: 10
     launchClamp1:
         cost: 10

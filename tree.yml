@@ -1403,6 +1403,10 @@ heavierRocketry:
     # estimated cost at 2/3 of FL Date: 1965
         cost: 22054
 
+generalConstruction:
+
+advConstruction:
+
 specializedConstruction:
 
 advLanding:

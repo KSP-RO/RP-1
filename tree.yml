@@ -1404,6 +1404,12 @@ heavierRocketry:
         cost: 22054
 
 generalConstruction:
+    # The MOL cargo sections are here, because it's totally
+    # fine to give players cargo bays early on, and they look cool. :)
+
+    FASAGeminiMOLEquip:
+    FASAGeminiMOLEquipCap:
+    FASAGeminiMOLEquipStack:
 
 advConstruction:
 

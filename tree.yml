@@ -1669,6 +1669,12 @@ recycling:
     TacCarbonExtractor:
     TacCarbonExtractorLarge:
 
+    TacWaterPurifier:
+    TacWaterPurifierLarge:
+
+    TacWaterSplitter:
+    TacWaterSplitterLarge:
+
 # This is a bit of a weirdly placed node
 hydroponics:
 
@@ -1739,9 +1745,11 @@ enhancedSurvivability:
 
     TacLifeSupportMFTContainer:
     TacLifeSupportMFTContainerSmall:
+    TacLifeSupportMFTContainerLarge:
 
     HexCanMFTLifeSupport:
     HexCanMFTLifeSupportSmall:
+    HexCanMFTLifeSupportLarge:
 
     #Stock and DRE parts
     landerCabinSmall:

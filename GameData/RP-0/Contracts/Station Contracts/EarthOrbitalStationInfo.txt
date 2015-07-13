@@ -1,7 +1,0 @@
-EarthOrbitalStationContract1: Launch core with at least 4 docking ports to LEO
-EarthOrbitalStationContract2: Dock a power supply to the station
-EarthOrbitalStationContract3: Dock a life support container to the station with 1 year of life support for 3 crew (NEEDS TACLS)
-EarthOrbitalStationContract4: Dock a habitation module to the station.
-EarthOrbitalStationContract5: Dock a expansion module what has at least 3 free docking ports to the station.
-EarthOrbitalStationContract6: Dock a PPD-12 Cupola to the station.
-EarthOrbitalStationContract7: Dock a re-entry pod with deorbit engines to the station.

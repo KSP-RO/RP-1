@@ -1,7 +1,0 @@
-OverallMultiplier = 25
-BuildEffect = 1
-InventoryEffect = 100
-ReconditioningEffect = 576
-MaxReconditioning = 13500000
-RolloutReconSplit = 0.5
-NodeModifier = 1

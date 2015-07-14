@@ -1,0 +1,2 @@
+WIP: Rewards need to be balanced to the new RP-0 tech tree, actual agencies, some descriptions are missing and some need overhaul, deadlines, plane contracts, overall more contracts.
+Contracts originally created FinnishGameBox AKA Shurikeeen

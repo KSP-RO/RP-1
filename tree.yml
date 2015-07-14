@@ -1,9 +1,7 @@
 # RP-0 tech tree.
 #
 # This tree is in YAML format.
-# 
-# Please *only* puts things in here if they should be moved from
-# their original positions.
+#
 #
 # You can convert it into ModuleManager directives by running:
 #

@@ -118,7 +118,7 @@ namespace RP0
                     guiEnabled = !guiEnabled;
             }
 
-            deltaTime += TimeWarp.deltaTime;
+            deltaTime += Time.deltaTime;
             if (deltaTime > UPDATEINTERVAL)
             {
                 deltaTime = 0;

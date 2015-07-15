@@ -302,6 +302,10 @@ start:
     RP0probeSounding0-3m:
         entryCost: 0
         cost: 1
+    # Core for V-2 stuff - early, heavy, but 20t avionics.
+    GuidanceStart1m:
+        entryCost: 0
+        cost: 300
 
     # Engines
     sepMotor1:
@@ -1099,6 +1103,8 @@ advFlightControl:
         cost: 1500
     SXT375mProbe: # Early Saturn IU (3.9M, 1000t)
         cost: 1500
+    GuidanceLate1m: # Later 1m guidance
+        cost: 200
 
 electrics:
     solarPanels5HiTech:

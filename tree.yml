@@ -394,7 +394,6 @@ start:
         cost: 2
     radialDecoupler:
         cost: 20
-    SXTMiniJet:
 
     # AIES Fairings
     sep1a1ur5:
@@ -410,6 +409,7 @@ start:
         cost: 12
     LMiniAircaftTail: # Bonanza tail fuselage
         cost: 1
+    # Prop engines
     DoubleWasp-R280065W: # Prop Engine
     ShvetsovM63: # Prop Engine
     ShvetsovM82: # Prop Engine
@@ -418,17 +418,39 @@ start:
     TwinCyclone-R2600-23: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
     TwinCyclone-R2600-7: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
     TwinWasp-R1830-94: # Prop Engine R-1830 had 173,618 made across all variants Date:1930-1951
+    
+    # Jet engines
+    aje_welland:
+        cost: 15
+    aje_nene:
+        cost: 25
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
 
-    # Batteries; since players already have service modules.
+    # Engines
+    SXTX405: # X-405 (Vanguard main engine)
+        cost: 650 # very expensive for its performance.
 
-    batteryPack:
-    batteryBankMini:
-    ksp_r_largeBatteryPack:
+    SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
+        cost: 150
 
+    RO-X-248: #Vanguard/Able/Delta kick motor
+        cost: 200 # nautix says .6mil, but doesn't say what-year dollars
+    
+    ROBabySergeant: &BabySergeant
+        cost: 5
 
+    # Redstone/Juno engine, kick motors (FASA)
+    FASA_Mercury_Redstone_Eng:
+        cost: 800
+    FASAExplorerSgt: *BabySergeant
+    FASAExplorerSgt11:
+        cost: 40
+    FASAExplorerSgt3:
+        cost: 12
+
+engineering101:
     # Tanks
 
     fuelTankSmallFlat:
@@ -453,9 +475,67 @@ basicRocketry:
     stackTriCoupler:
         cost: 50        # Made up, but not unreasonable
     KAS_Pylon1:
+    
+    # Decoupler
+    stackDecoupler:
+        cost: 10
 
-    # New probe!
+    # Universal Storage structural
 
+    # Wedges are relatively expensive, because they've got to be
+    # wired for interchangeable components.
+    US_c_Hub_QuadCore:
+        cost: 200
+
+    # The decoupler is pretty cheap, because other decouplers are, too.
+    US_f_Dec_SafetyDecoupler125:
+        cost: 10
+
+    # This is a barometer, thermo and x-ray doohicky in a single wedge. It
+    # also looks cool. :)
+    dmUSPresTemp:
+        cost: 50
+
+    # US unlocks with fuel wedges; they're just cool looking tanks.
+    # We're giving this an alias so we can have lots of wedges with the
+    # same price.
+    US_Wedge_Fuel: &basicWedge
+        cost: 20
+    
+    US_Wedge_Monoprop: *basicWedge
+    US_l_Wedge_Hydrogen: *basicWedge
+    US_m_Wedge_Oxygen: *basicWedge
+    US_q_Wedge_Water: *basicWedge
+
+    # This isn't a wedge, it's just yet another radial tank, and
+    # should be priced with whatever prices we use for those.
+    US_Radial_Oxygen: *basicWedge
+    
+    # Redstone/Juno (FASA)
+    FASAExplorerLFTLong:
+        cost: 350
+     FASAExplorerSgt11Dec:
+        cost: 20
+    FASAExplorerSgt3Dec:
+        cost: 10
+    FASAMercuryRedstoneFin:
+        cost: 5
+    FASA_Mercury_LFT_Long: #FIXME Redstone costs
+        cost: 300
+    FASA_Mercury_LFT_Short:
+        cost: 150
+    FASAMercuryFairing:
+        cost: 15
+
+    # AIES Fairings
+    basepuntv2r10:
+    t1000v4:
+    t1500v4:
+    t2000v4:
+    t3000r20c:
+
+earlyAvionics:
+    # Probes
     SXTSputnik: &sputnik
         cost: 10
 
@@ -493,86 +573,19 @@ basicRocketry:
 
     # Goo as a science wedge (from DMagic Orbital Science)
     dmUSGoo: *goo
-
-    # Decoupler
-    stackDecoupler:
-        cost: 10
-
-    # Universal Storage structural
-
-    # Wedges are relatively expensive, because they've got to be
-    # wired for interchangeable components.
-    US_c_Hub_QuadCore:
-        cost: 200
-
-    # The decoupler is pretty cheap, because other decouplers are, too.
-    US_f_Dec_SafetyDecoupler125:
-        cost: 10
-
-    # This is a barometer, thermo and x-ray doohicky in a single wedge. It
-    # also looks cool. :)
-    dmUSPresTemp:
-        cost: 50
-
-    # US unlocks with fuel wedges; they're just cool looking tanks.
-    # We're giving this an alias so we can have lots of wedges with the
-    # same price.
-    US_Wedge_Fuel: &basicWedge
-        cost: 20
     
-    US_Wedge_Monoprop: *basicWedge
-    US_l_Wedge_Hydrogen: *basicWedge
-    US_m_Wedge_Oxygen: *basicWedge
-    US_q_Wedge_Water: *basicWedge
-
-    # This isn't a wedge, it's just yet another radial tank, and
-    # should be priced with whatever prices we use for those.
-    US_Radial_Oxygen: *basicWedge
-
-    # Engines
-    SXTX405: # X-405 (Vanguard main engine)
-        cost: 650 # very expensive for its performance.
-
-    SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
-        cost: 150
-
-    RO-X-248: #Vanguard/Able/Delta kick motor
-        cost: 200 # nautix says .6mil, but doesn't say what-year dollars
-    
-    ROBabySergeant: &BabySergeant
-        cost: 5
-
-    # Mercury/Redstone, including the Explorer probe and kickers. From FASA
-    FASA_Mercury_Redstone_Eng:
-        cost: 800
-    FASAExplorerLFTLong:
-        cost: 350
-    FASAExplorerSgt: *BabySergeant
-    FASAExplorerSgt11:
-        cost: 50
-    FASAExplorerSgt3:
-        cost: 14
+    # Redstone/Juno and Explorer 1 (FASA)
     FASAExplorerNosecone:
         cost: 400
-    FASAExplorerSgt11Dec:
-        cost: 20
-    FASAExplorerSgt3Dec:
-        cost: 10
-    FASAMercuryRedstoneFin:
-        cost: 5
-    FASA_Mercury_LFT_Long: #FIXME Redstone costs
-        cost: 300
-    FASA_Mercury_LFT_Short:
-        cost: 150
-    FASAMercuryFairing:
-        cost: 15
+    
+    # Attitude jets    
+    RO_FASA_MercuryPodRCS:
+        entryCost: 500
+        cost: 12
+    RO_FASA_ExplorerRCS:
+        entryCost: 300
+        cost: 6
 
-    # AIES Fairings
-    basepuntv2r10:
-    t1000v4:
-    t1500v4:
-    t2000v4:
-    t3000r20c:
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:
@@ -581,46 +594,24 @@ generalRocketry:
     liquidEngine3:
         cost: 350
 
-    # LR-79/89 (Thor/Jupiter main engine, Atlas booster)
+    # LR79 (Thor/Jupiter main engine) Atlas booster)
     # Technically Atlas was ~2.5m per LV, but we include launch costs.
     # FIXME maybe we don't include launch costs.
 
     RO-LR-89: &LR89
-        cost: 1000 
+        cost: 1000
+    liquidEngine1-2: &LR79 # Also H-1 and so on
+        cost: 1000
+    
     FASAMercuryAtlasEngBooster: *LR89
 
-    RCSTank1-2:
-    fuelTank4-2:
-    fuelTank2-2:
-    fuelTank1-2:
-    fuelTank3-2:
-
-    # LR-101 vernier (Thor/Jupiter/Atlas)
+    # LR101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini: &LR101
         cost: 50
 
     FASAMercuryAtlasVernierEngine: *LR101
 
-    # Castor 1 (Sergeant / M33) solid motor
-    solidBooster1-1Small:
-        cost: 290
-        
-    #From FASA
-
-    #below part is the Mercury - Atlas Launch Vehicle Fuel Tank
-    FASA_Atlas_LFT_Cone:
-        cost: 380
-    #below part is the Atlas-E/F Fuel Tank, 1968 first use
-    FASA_Atlas_LFT_Cone2:
-    #below part is the Atlas SLV-3, 1966 first use. Lunar Orbiter
-    #nearly the same as LV-3 so the 2 can be used interchangeably
-    FASAMercuryAtlasLFTLong:
-        cost: 400
-    FASAAtlasSLV3A:
-    FASAAtlasFMod:
-    FASAAtlasH:
-
-    #LR-105 sustainer
+    #LR105 sustainer
     FASAMercuryAtlasEng: &LR105
         cost: 600
 
@@ -649,8 +640,64 @@ generalRocketry:
     FASAGeminiLR87Twin: *LR87
     FASAGeminiLR91Mini:
         cost: 450
+ 
+    # Raidernick R-7
+    r7_bvgd_engine:
+        cost: 700
+
+    r7_blok_a_engine:
+        cost: 680
+
+
+    r7_vernier_engine_v_fg:
+        cost: 20
+        
+    # X-15 engine
+    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
+        entryCost: 60000
+        cost: 2500
+
+basicConstruction:
+    batteryPack:
+    batteryBankMini:
+    ksp_r_largeBatteryPack:
+
+    # Tanks
+    RCSTank1-2:
+    fuelTank4-2:
+    fuelTank2-2:
+    fuelTank1-2:
+    fuelTank3-2:
+    
+    #below part is the Mercury - Atlas Launch Vehicle Fuel Tank
+    FASA_Atlas_LFT_Cone:
+        cost: 380
+    #below part is the Atlas-E/F Fuel Tank, 1968 first use
+    FASA_Atlas_LFT_Cone2:
+    #below part is the Atlas SLV-3, 1966 first use. Lunar Orbiter
+    #nearly the same as LV-3 so the 2 can be used interchangeably
+    FASAMercuryAtlasLFTLong:
+        cost: 400
+        
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
-    # *** Avionics
+    
+    sputnik3_base: *sputnik_n_b
+    sputnik3_nosecone: *sputnik_n_b
+    sputnik2_base: *sputnik_n_b
+    sputnik2_nosecone: *sputnik_n_b
+
+    # Raidernick R-7
+    WING_R7:
+        cost: 10
+
+    r7_blok_bvgd_sput:
+        cost: 100
+
+    r7_blok_a_sput:
+        cost: 120
+
+basicAvionics:
+     # *** Avionics
     GuidanceEarly2m:
         cost: 600
 
@@ -663,37 +710,18 @@ generalRocketry:
     sputnik3:
         cost: 300
 
-    sputnik3_base: *sputnik_n_b
-    sputnik3_nosecone: *sputnik_n_b
-    sputnik2_base: *sputnik_n_b
-    sputnik2_nosecone: *sputnik_n_b
-
-    # RN_R7
-
-    WING_R7:
-        cost: 10
-
-    r7_bvgd_engine:
-        cost: 700
-
-    r7_blok_a_engine:
-        cost: 680
-
-    r7_blok_bvgd_sput:
-        cost: 100
-
-    r7_blok_a_sput:
-        cost: 120
-
-    r7_vernier_engine_v_fg:
-        cost: 20
+basicSolids:
+    # Castor 1 (Sergeant / M33) solid motor
+    solidBooster1-1Small:
+        cost: 290
+    # Add Polaris and Scout parts here
+    
+    # moved Proc SRB to here
+    proceduralSRBRealFuels:
+        cost: 0.1
+        entryCost: 50000
 
 survivability:
-
-    # Life support
-
-    proceduralTankTAC:
-        cost: 0.1
 
     # Reentry
 
@@ -710,62 +738,6 @@ survivability:
     decoupler_ftr_small:
         cost: 30
 
-    #FASA Mercury things
-    FASAGeminiDecDark125:
-        cost: 30    # Totally made up, but balanced with other decouplers
-    FASAGeminiMiniSRB:
-
-    # Apparently the launch tower is used for loading astronauts,
-    # so it should go here, right?
-    FASAlaunchTower:
-        cost: 10 #yeah, should really be expensive, but then who would use it?
-
-    # FASA Mercury
-    # see above for Mercury sources/notes.
-    # the 88mil and the 4.4mil apportioned 
-
-    FASAMercuryPod: &mercury_pod
-        entryCost: 74600
-        cost: 3730
-    FASAMercruyCap2:
-        entryCost: 1000
-        cost: 50
-    FASA_Mercury_Eng: &FASA_Mercury_Eng
-        entryCost: 1600
-        cost: 80
-
-    FASAMercuryDec:
-        entryCost: 200
-        cost: 10
-    FASAGeminiDecDark125_Redstone:
-#        entryCost: 200
-        cost: 30
-    FASAGeminiDecDark125_Atlas:
-#        entryCost: 500
-        cost: 50
-    FASAMercuryMiniSRB:
-        cost: 2
-    FASA_Mercury_LES:
-        entryCost: 8000
-        cost: 400
-    FASA_Mercury_Parachute_Box: #FIXME RC has cost issues?
-        entryCost: 1600
-        cost: 80
-
-    FASAMercuryPodRCS:
-        entryCost: 1000
-        cost: 17
-    RO_FASA_MercuryPodRCS:
-        entryCost: 500
-        cost: 12
-    
-    # Yes, Mercruy is the correct spelling on this. :/
-    FASAMercruyCap: #old cap, unused by Mercury.
-#        entryCost: 88000
-        cost: 50
-
-# Stock capsule
-    mk1pod: *mercury_pod
     
 ## Stability and early probes ##
 
@@ -783,7 +755,7 @@ stability:
         entryCost: 1000
         cost: 15
 
-    microEngine:
+    microEngine: #FIXME move to Landing?
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
 
     # This is a fake engine, and essentially a big RCS thruster.
@@ -834,27 +806,20 @@ stability:
         cost: 600 # This one costs a bit more due to a larger tank
         entryCost: 12000
 
+fuelSystems:
+    liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
+        cost: 400 # also is the RD-58 as CONFIG upgrade.
+
 advRocketry:
     # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
-    
-    liquidEngine2: #S1.5400(11D33) / RD-58
-        cost: 400
-
-    M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
-        cost: 2000 # TODO we *should* have references on this from BellComm studies
-# on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
-
-    liquidEngine1-2: &H1 #H-1 (early)
+        
+    FASAApolloLFEH1: &H1
         cost: 1700 # think this should be closer to 1700
         entryCost: 33750
-    FASAApolloLFEH1: *H1
     KW2mengineMaverickV: *H1
     
     vernierEngine:
         cost: 25
-    # Waxwing should maybe even be TL3
-    SXTWaxWing: # Black Arrow kick motor
-        cost: 300
 
     # TODO: Is there a better place to put this?
     radialDecoupler2:
@@ -871,12 +836,16 @@ advRocketry:
     FASASaturnUllage:
         cost: 100
 
-    # moved Proc SRB to here
-    proceduralSRBRealFuels:
-        cost: 0.1
-        entryCost: 50000
+matureSolids:
+    M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
+        cost: 2000 # TODO we *should* have references on this from BellComm studies
+    # on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
+    
+     # Waxwing should maybe even be TL3
+    SXTWaxWing: # Black Arrow kick motor
+        cost: 300
 
-scienceTech:
+basicScience:
 
     # These things are placed here by default, but they're not a bad selection,
     # so let's get them costed out now...
@@ -1223,7 +1192,7 @@ landing:
 
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1 upper stage
-    # (lower stages are staged combustion--see fuelSystems below)
+    # (lower stages are staged combustion--see propulsionSystems below)
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
 
@@ -1270,7 +1239,7 @@ heavyRocketry:
     
     
     
-fuelSystems:
+propulsionSystems:
 #staged combustion -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing-
     RD270:
@@ -1279,6 +1248,7 @@ fuelSystems:
 aerodynamicSystems:
     Mark1Cockpit:
     Mark2Cockpit:
+    #FIXME why the bloody HECK did fairing parts get put here?
     # Skylab
     fairing1:
         entryCost: 40000
@@ -1309,9 +1279,6 @@ aerodynamicSystems:
         entryCost: 14000
         cost: 400
     #Engines	
-    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
-        entryCost: 60000
-        cost: 2500
     aje_j79:
         cost: 220
     aje_ramjet:
@@ -1644,11 +1611,15 @@ subsonicFlight:
     # XLR11
     FASAGemini4X800Mini:
         cost: 50
+
+# 50s afterburning jets
+aviation:
     aje_j57: #J57-P21
-        cost: 180
+        cost: 130
     aje_j85:
         cost: 50
-
+    aje_avon:
+        cost: 140
 
 offworldManufacturing:
 
@@ -1752,6 +1723,65 @@ antimatterPower:
 ultraHighEnergyPhysics:
 
 enhancedSurvivability:
+    # Apparently the launch tower is used for loading astronauts,
+    # so it should go here, right?
+    FASAlaunchTower:
+        cost: 10 #yeah, should really be expensive, but then who would use it?
+        
+    # Life support
+
+    proceduralTankTAC:
+        cost: 0.1
+    
+    #FASA Mercury things
+    FASAGeminiDecDark125:
+        cost: 30    # Totally made up, but balanced with other decouplers
+        
+    # FASA Mercury
+    # see above for Mercury sources/notes.
+    # the 88mil and the 4.4mil apportioned 
+
+    FASAMercuryPod: &mercury_pod
+        entryCost: 74600
+        cost: 3730
+    FASAMercruyCap2:
+        entryCost: 1000
+        cost: 50
+    FASA_Mercury_Eng: &FASA_Mercury_Eng
+        entryCost: 1600
+        cost: 80
+
+    FASAMercuryDec:
+        entryCost: 200
+        cost: 10
+    FASAGeminiDecDark125_Redstone:
+#        entryCost: 200
+        cost: 30
+    FASAGeminiDecDark125_Atlas:
+#        entryCost: 500
+        cost: 50
+    FASAMercuryMiniSRB:
+        cost: 2
+    FASA_Mercury_LES:
+        entryCost: 8000
+        cost: 400
+    FASA_Mercury_Parachute_Box: #FIXME RC has cost issues?
+        entryCost: 1600
+        cost: 80
+
+    FASAMercuryPodRCS:
+        entryCost: 1000
+        cost: 17
+    
+    # Yes, Mercruy is the correct spelling on this. :/
+    FASAMercruyCap: #old cap, unused by Mercury.
+#        entryCost: 88000
+        cost: 50
+
+# Stock capsule
+    mk1pod: *mercury_pod
+    
+simpleCommandModules:
     # Aka "Second-Gen Capsules"
    
     # Extra survival modules, but not recyclers, they have

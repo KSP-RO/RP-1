@@ -514,7 +514,7 @@ engineering101:
     # Redstone/Juno (FASA)
     FASAExplorerLFTLong:
         cost: 350
-     FASAExplorerSgt11Dec:
+    FASAExplorerSgt11Dec:
         cost: 20
     FASAExplorerSgt3Dec:
         cost: 10

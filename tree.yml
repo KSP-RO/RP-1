@@ -1041,6 +1041,11 @@ flightControl:
     SXTHECSRanger: # Ranger Block I / Mariner
         cost: 1200
 
+# TIER 4
+advFuelSystems: # TL3 solids
+    solidBoosterMAX: &UA1205
+        cost: 5320 # nautix Titan 3 - UA1205 stage, assume 1985 dollars
+
 hydroloxTL3:
     FASAGeminiLFTCentarCSM_D2: # Centaur D2
     # Skylab
@@ -1048,20 +1053,27 @@ hydroloxTL3:
         entryCost: 50000
         cost: 3000
 
-# TIER 4
-advFuelSystems: # TL3 solids
-    solidBoosterMAX: &UA1205
-        cost: 5320 # nautix Titan 3 - UA1205 stage, assume 1985 dollars
+
+# TIER 5
+largeVolumeContainment: # TL4 solids
+    FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
+        cost: 7218 # 24.36m nautix, assume 1985 dollars
 
 hydroloxTL4:
     FASAApolloLFEM1:
         entryCost: 770000
         cost: 22000
+# TIER 6
+highPerformanceFuelSystems: # TL5 solids
+    solidBooster_sm: # Star 48B (PAM-B) #FIMXE TL6 ? It's 1984 vintage so I guess TL5 is ok.
+        cost: 1203 # nautix 4.06m, assume 1985 dollars
+
 hydroloxTL5:
     RD0120: #Energia sustainer engine
     Ks25: &RS-25
         cost: 5700 # "40 million" assumed to be 2010 dollars
 
+# TIER 7
 hydroloxTL6:
 
 

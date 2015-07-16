@@ -459,7 +459,6 @@ engineering101:
     toroidalFuelTank:
     fuelTankSmall:
     radialRCSTank:
-    MK1Fuselage:
     RCSFuelTank:
     rcsTankRadialLong:
     fuelTank_long:
@@ -1300,6 +1299,8 @@ propulsionSystems:
 aerodynamicSystems:
     Mark1Cockpit:
     Mark2Cockpit:
+    MK1Fuselage:
+    Mk1FuselageStructural:
     #FIXME why the bloody HECK did fairing parts get put here?
     # Skylab
     fairing1:
@@ -1539,7 +1540,11 @@ largeElectrics:
 
 electronics:
 
-highAltitudeFlight:
+highAltitudeFlight: # Early Spaceplanes
+    RO-Mk1Cockpit:
+    RO-Mk1CockpitInline:
+    RO-Mk1Fuselage:
+    RO-Mk1FuselagePres:
 
 unmannedTech:
 

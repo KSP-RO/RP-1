@@ -434,9 +434,7 @@ basicRocketry:
 
     SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
-
-    RO-X-248: #Vanguard/Able/Delta kick motor
-        cost: 200 # nautix says .6mil, but doesn't say what-year dollars
+    # Altair moved to Basic Solids
     
     ROBabySergeant: &BabySergeant
         cost: 5
@@ -449,6 +447,9 @@ basicRocketry:
         cost: 40
     FASAExplorerSgt3:
         cost: 12
+
+    LVT15: #RD-103
+        cost: 850
 
 engineering101:
     # Tanks
@@ -533,6 +534,11 @@ engineering101:
     t1500v4:
     t2000v4:
     t3000r20c:
+    
+    ServiceBay_125:
+        cost: 200 # modeled on Univ Storage stuff above.
+    ServiceBay_250:
+        cost: 800 # 4x, which seems right for 8x the space but 4x the surface area
 
 earlyAvionics:
     # Probes
@@ -590,7 +596,7 @@ earlyAvionics:
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 generalRocketry:
 
-    # Blok E (Luna/Vostok)
+    # Blok E (Luna/Vostok) RD-0105/0109
     liquidEngine3:
         cost: 350
 
@@ -617,8 +623,9 @@ generalRocketry:
 
     liquidEngine: *LR105
 
-# Black Arrow engines (derivates of Black Knight engine, so can be early
-# see TL3 for Waxwing.
+# Black Arrow engines (derivates of Black Knight engine, so can be early,
+# despite Black Arrow being quite late).
+# see Mature Solids for Waxwing.
     SXTBlackAdder: # Gamma 8 (Black Arrow main engine)
         cost: 800 # Stage cost 4m (in what-year dollars?)
 
@@ -711,10 +718,14 @@ basicAvionics:
         cost: 300
 
 basicSolids:
-    # Castor 1 (Sergeant / M33) solid motor
+    # Castor I (Sergeant / M33) solid motor
     solidBooster1-1Small:
-        cost: 290
+        cost: 300 # nautix 1.01m assume 1985 dollars
+
     # Add Polaris and Scout parts here
+    
+    RO-X-248: #late-Vanguard/Able/Delta kick motor
+        cost: 170 # nautix says .6mil, but doesn't say what-year dollars, assume 1985.
     
     # moved Proc SRB to here
     proceduralSRBRealFuels:
@@ -754,6 +765,10 @@ stability:
     RCSBlockQuarter:
         entryCost: 1000
         cost: 15
+    
+    InlineRCS: # Gemini-like RCS trunk, but sized for Mk1 pod. VSR.
+        entryCost: 1000
+        cost: 40
 
     microEngine: #FIXME move to Landing?
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
@@ -832,18 +847,31 @@ advRocketry:
         cost: 600
     FASAGeminiLR91: *LR91
 
-    # Srsly? $100 for these? The sep motors only cost 7.
     FASASaturnUllage:
-        cost: 100
+        cost: 10
+        
+    #Astris
+    LargeOMS:
+        cost: 300
 
 matureSolids:
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
         cost: 2000 # TODO we *should* have references on this from BellComm studies
     # on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
     
-     # Waxwing should maybe even be TL3
+    RO-X-258: # Altair II
+        cost: 200 # 700k in 1985, nautix
+        
+    RT2: # Castor II
+        cost: 320 # unstated, should be about Castor I's cost.
+        
+    SXTCastor30: # Star 17, used on Atlas Agena D
+        cost: 172 # nautix 580k assume 1985 dollars
+    
+    # Waxwing (performance of an early-mid 60s kick motor, and I _think_ it was used before
+    # Black Arrow, so...let's place it here.)
     SXTWaxWing: # Black Arrow kick motor
-        cost: 300
+        cost: 300 # nautix 1 mil, assume 1985 dollars
 
 basicScience:
 
@@ -941,9 +969,14 @@ flightControl:
     SXTRCSRack:
         entryCost: 2000
         cost: 45
-    RCSBlock:
+    RCSBlock: &RCSBlock
         entryCost: 2000
         cost: 35
+    45DegreeRCS: *RCSBlock
+    HeavyRcs:
+        entryCost: 3000
+        cost: 60
+        
     FASAAgenaDocking:
         cost: 400
     FASAAgena_Engine_FP: # flight pack (secondary propulsion system) for Agena B/D restartable engine
@@ -1015,7 +1048,10 @@ hydroloxTL3:
         entryCost: 50000
         cost: 3000
 
-    
+# TIER 4
+advFuelSystems: # TL3 solids
+    solidBoosterMAX: &UA1205
+        cost: 5320 # nautix Titan 3 - UA1205 stage, assume 1985 dollars
 
 hydroloxTL4:
     FASAApolloLFEM1:
@@ -1023,6 +1059,8 @@ hydroloxTL4:
         cost: 22000
 hydroloxTL5:
     RD0120: #Energia sustainer engine
+    Ks25: &RS-25
+        cost: 5700 # "40 million" assumed to be 2010 dollars
 
 hydroloxTL6:
 
@@ -1196,7 +1234,7 @@ heavyRocketry:
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
 
-    FASAApolloLFEF1: &F1
+    FASAApolloLFEF1: &F-1
         entryCost: 409361
         cost: 20000
     KW5mengineGriffonC:
@@ -1236,6 +1274,8 @@ heavyRocketry:
     
     FASAGeminiLFECentarTwin: # Transtage
         cost: 4300
+        
+    Size3AdvancedEngine: *F-1
     
     
     

@@ -1301,6 +1301,7 @@ aerodynamicSystems:
     Mark2Cockpit:
     MK1Fuselage:
     Mk1FuselageStructural:
+    KerbCan: # 1-person crew section in 1.25m
     #FIXME why the bloody HECK did fairing parts get put here?
     # Skylab
     fairing1:
@@ -1545,6 +1546,7 @@ highAltitudeFlight: # Early Spaceplanes
     RO-Mk1CockpitInline:
     RO-Mk1Fuselage:
     RO-Mk1FuselagePres:
+    RO-Mk1CrewModule: # 3-person 2.1m crew section from VSR KerbCan
 
 unmannedTech:
 

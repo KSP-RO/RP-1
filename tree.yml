@@ -77,19 +77,19 @@ start:
     # Fairings
 
     KzInterstageAdapter2:
-        cost: 0.1
+        cost: 1
     KzProcFairingFuselage1:
-        cost: 0.1
+        cost: 1
     KzProcFairingFuselage2:
-        cost: 0.1
+        cost: 1
     KzProcFairingSide1:
-        cost: 0.1
+        cost: 1
     KzProcFairingSide2:
-        cost: 0.1
+        cost: 1
     KzResizableFairingBase:
-        cost: 0.1
+        cost: 1
     KzResizableFairingBaseRing:
-        cost: 0.1
+        cost: 1
 
     #RO fairings
     KzProcFairingSide1st:

@@ -6,7 +6,7 @@ RP-0 is a career mode for RealismOverhaul with minimal install requirements, and
 
 RP-0 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0), and access the [source code on github](https://github.com/KSP-RO/RP-0). The [tech tree](https://github.com/KSP-RO/RP-0/blob/master/tree.yml) itself is designed to be particularly easy for humans to edit.
 
-When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings, though you might want to keep science progression at a higher value than Hard's default. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production.
+When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production.
 
 This top-post is jointly maintained by pjf and NathanKell.
 
@@ -31,13 +31,12 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Procedural Fairings
 - Procedural Parts
 - B9 Procedural Wings
+- Kerbal Construction Time
 - TestFlight
 
 **In Progress**
 - DMagic's Orbital Science
 - Universal Storage
-- FinePrint
-- Kerbal Construction Time
 - FASA
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!

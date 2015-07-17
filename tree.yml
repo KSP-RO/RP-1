@@ -793,8 +793,8 @@ stability:
     FASASolarMini:
         cost: 75
 
-    # What the hell is this supposed to be, anyway?
-    # NK: For now, it's Objekt D (Sputnik 3)
+    
+    # Film return camera
     science_module:
         cost: 1000
 

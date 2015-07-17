@@ -50,6 +50,16 @@ start:
 
     sensorBarometer:
         cost: 8
+        
+    # Goo is now bio sample. That's not hard to do.
+    GooExperiment: &goo
+        cost: 100
+
+    # Goo in a can (stack mount)
+    SXTProbeGooo: *goo
+
+    # Goo as a science wedge (from DMagic Orbital Science)
+    dmUSGoo: *goo
 
     longAntenna:
         cost: 5
@@ -568,16 +578,9 @@ earlyAvionics:
 
     FASAProbeGeigerCounter:
         cost: 40
-
-    # Stock goo experiment
-    GooExperiment: &goo
-        cost: 15
-
-    # Goo in a can (stack mount)
-    SXTProbeGooo: *goo
-
-    # Goo as a science wedge (from DMagic Orbital Science)
-    dmUSGoo: *goo
+        
+    sensorAccelerometer: #it's now a micrometeorite detector.
+        cost: 40
     
     # Redstone/Juno and Explorer 1 (FASA)
     FASAExplorerNosecone:
@@ -749,11 +752,12 @@ survivability:
         cost: 30
 
     
-## Stability and early probes ##
+## 3-Axis Stability and early probes ##
 
 stability:
+    sensorGravimeter:
+        cost: 100 # includes fixed-stars sensors etc
 
-    # 3-axis stability in orbit. CORONA etc.
 
     # RCS joy.
 

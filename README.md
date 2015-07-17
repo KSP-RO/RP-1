@@ -23,13 +23,14 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Realism Overhaul and all its required mods
 - Community Tech Tree (and Tech Manager, to load it)
 - Lack's SXT (although only the engines have RO configs as of yet)
-- TweakScale
+- Ven's Stock Parts Revamp
+- Contract Configurator
+- Deadly Reentry (RO only recommends it. We require it.)
 
 **Recommended:**
 - Procedural Fairings
 - Procedural Parts
-- Procedural Dynamics Procedural Wings
-- Ven's Stock Parts Revamp
+- B9 Procedural Wings
 - TestFlight
 
 **In Progress**

@@ -25,6 +25,7 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Lack's SXT (although only the engines have RO configs as of yet)
 - Ven's Stock Parts Revamp
 - Contract Configurator
+- Custom Barn Kit
 - Deadly Reentry (RO only recommends it. We require it.)
 
 **Recommended:**

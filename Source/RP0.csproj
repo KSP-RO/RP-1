@@ -32,6 +32,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ControlLocker.cs" />
+    <Compile Include="DummyModules\Barometer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DummyModules\BioSample.cs" />
+    <Compile Include="DummyModules\DummyModule.cs" />
+    <Compile Include="DummyModules\FilmReturn.cs" />
+    <Compile Include="DummyModules\Geiger.cs" />
+    <Compile Include="DummyModules\MicrometeoriteEarly.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DummyModules\Perturbation.cs" />
+    <Compile Include="DummyModules\Thermoter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ModuleAvionics.cs" />
     <Compile Include="ModuleScienceCore.cs" />
     <Compile Include="ModuleShowInfo.cs" />

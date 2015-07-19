@@ -555,10 +555,10 @@ earlyAvionics:
         cost: 10
 
     FASAExplorerProbe:
-        cost: 158
+        cost: 158 // sourced
 
     RP0probeVanguardXray:
-        cost: 120
+        cost: 160 // guess at cost, given experiments it carried
 
     # RN_Soviet_Probes
 

@@ -579,7 +579,7 @@ earlyAvionics:
     FASAProbeGeigerCounter:
         cost: 40
         
-    sensorAccelerometer: #it's now a micrometeorite detector.
+    RP0sensorMicrometeorite:
         cost: 40
     
     # Redstone/Juno and Explorer 1 (FASA)

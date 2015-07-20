@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RP0.DummyModules
+namespace RP0.ModuleTags
 {
-    class DummyModuleThermometer : DummyModule
+    class ModuleTagAtmosphereAnalysis : ModuleTag
     {
         public override string GetInfo()
         {
-            return "Contains a thermometer";
+            return "Contains a atmospheric analysis equipment";
         }
     }
 }

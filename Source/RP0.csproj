@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ControlLocker.cs" />
+    <Compile Include="DummyModules\AtmosphereAnalysis.cs" />
     <Compile Include="DummyModules\Barometer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -43,7 +44,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DummyModules\Perturbation.cs" />
-    <Compile Include="DummyModules\Thermoter.cs">
+    <Compile Include="DummyModules\Thermometer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ModuleAvionics.cs" />

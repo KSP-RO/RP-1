@@ -5,11 +5,11 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagPerturbation : ModuleTag
+    class ModuleTagThermometer : ModuleTag
     {
         public override string GetInfo()
         {
-            return "Contains an orbital perturbation experiment";
+            return "Contains a thermometer";
         }
     }
 }

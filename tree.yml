@@ -604,12 +604,13 @@ generalRocketry:
     liquidEngine3:
         cost: 350
 
-    # LR79 (Thor/Jupiter main engine) Atlas booster)
-    # Technically Atlas was ~2.5m per LV, but we include launch costs.
-    # FIXME maybe we don't include launch costs.
+    # LR79 (Thor/Jupiter main engine, reworked as H-1)
+    # and LR89 (Atlas booster)
+    # Technically Atlas was ~2.6m per LV, so we're reducing LR89 costs.
+    # (the hard part is Atlas E was cheaper than Atlas D...)
 
     RO-LR-89: &LR89
-        cost: 1000
+        cost: 800
     liquidEngine1-2: &LR79 # Also H-1 and so on
         cost: 1000
     
@@ -647,9 +648,11 @@ generalRocketry:
     # AIES
     liquidEngineprodulVR2: &LR87
         cost: 1850
+        entryCost: 20000 # no source, but should be the same as LR89's more or less
+        
     #FASA
     FASAGeminiLR87Twin: *LR87
-    FASAGeminiLR91Mini:
+    FASAGeminiLR91Mini: # LR91-3, later versions on the LR91 part.
         cost: 450
  
     # Raidernick R-7

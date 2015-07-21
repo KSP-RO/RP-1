@@ -202,6 +202,8 @@ start:
         cost: 140
     SXTWingSmall:
         cost: 40
+    basicFin:
+        cost: 10
     tailfin:
         cost: 20 # approximate, since tailfin has extra bends
     wingConnector:

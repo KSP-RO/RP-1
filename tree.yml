@@ -1846,6 +1846,14 @@ enhancedSurvivability:
 #        entryCost: 88000
         cost: 50
 
+    # RN Vostok descent and service modules
+    rn_vostok_sc:
+        entryCost: 50000
+        cost: 1800
+    rn_vostok_tdu:
+        entryCost: 25000
+        cost: 1000
+
 # Stock capsule
     mk1pod: *mercury_pod
     
@@ -1902,9 +1910,6 @@ simpleCommandModules:
     # Gemini SM - has a fuel cell - electrics
     
     # Soyuz parts
-    rn_vostok_sc:
-        entryCost: 50000
-        cost: 1800
     rn_voskhod_sc:
         entryCost: 55000
         cost: 2000
@@ -1932,9 +1937,6 @@ simpleCommandModules:
     tg_bo:
         entryCost: 60000
         cost: 1800
-    rn_vostok_tdu:
-        entryCost: 25000
-        cost: 1000
 
 shortTermHabitation:
 

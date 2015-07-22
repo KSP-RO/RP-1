@@ -399,7 +399,11 @@ start:
     nacelleBody:
     radialEngineBody:
     SmallGearBay:
-        cost: 2
+        cost: 3
+    GearFixed:
+        cost: 1
+    GearFree:
+        cost: 1.5
     KzThrustPlate:
         cost: 0.1
     stackDecouplerMini:
@@ -1346,6 +1350,12 @@ aerodynamicSystems:
         cost: 220
     aje_ramjet:
         cost: 350
+        
+    #big landing gear
+    GearMedium:
+        cost: 10
+    GearLarge:
+        cost: 15
     
 advExploration:
 

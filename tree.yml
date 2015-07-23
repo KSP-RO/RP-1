@@ -647,6 +647,7 @@ generalRocketry:
     FASAAgena_Engine: &AgenaEngine # Bell 8xxx engine for Agena
         cost: 350
     RLA_s_midengine: *AgenaEngine
+    RO-AgenaEngine: *AgenaEngine
 
     # Titan engines
     # AIES

@@ -990,6 +990,11 @@ flightControl:
         entryCost: 3000
         cost: 60
         
+    # Stock docking ports
+    dockingPort3:  # 1m docking port (no crew if CLS installed)
+        entryCost: 32000
+        cost: 800
+        
     FASAAgenaDocking:
         cost: 400
     FASAAgena_Engine_FP: # flight pack (secondary propulsion system) for Agena B/D restartable engine
@@ -2095,7 +2100,4 @@ ORPHANS:
     FASAExplorerLFTSmall:
     FASAExplorerLFTMed:
     FASAMercuryLFTShortLarge:
-    
-    #docking port
-    dockingPort3:  # Androgynous docking port
 

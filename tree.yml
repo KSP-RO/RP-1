@@ -440,6 +440,9 @@ start:
         cost: 15
     aje_nene:
         cost: 25
+    RO-DerwentV:
+        entryCost: 0
+        cost: 18
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:

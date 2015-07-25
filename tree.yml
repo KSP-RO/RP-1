@@ -440,6 +440,9 @@ start:
         cost: 15
     aje_nene:
         cost: 25
+    RO-DerwentV:
+        entryCost: 0
+        cost: 18
 
 #TL 0/1: Vanguard, early-mid 50s tech. For now includes Black Arrow (FIXME)
 basicRocketry:
@@ -989,6 +992,11 @@ flightControl:
     HeavyRcs:
         entryCost: 3000
         cost: 60
+        
+    # Stock docking ports
+    dockingPort3:  # 1m docking port (no crew if CLS installed)
+        entryCost: 32000
+        cost: 800
         
     FASAAgenaDocking:
         cost: 400
@@ -2095,7 +2103,4 @@ ORPHANS:
     FASAExplorerLFTSmall:
     FASAExplorerLFTMed:
     FASAMercuryLFTShortLarge:
-    
-    #docking port
-    dockingPort3:  # Androgynous docking port
 

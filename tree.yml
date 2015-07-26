@@ -689,12 +689,6 @@ basicConstruction:
     #below part is the Mercury - Atlas Launch Vehicle Fuel Tank
     FASA_Atlas_LFT_Cone:
         cost: 380
-    #below part is the Atlas-E/F Fuel Tank, 1968 first use
-    FASA_Atlas_LFT_Cone2:
-    #below part is the Atlas SLV-3, 1966 first use. Lunar Orbiter
-    #nearly the same as LV-3 so the 2 can be used interchangeably
-    FASAMercuryAtlasLFTLong:
-        cost: 400
         
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
     
@@ -1315,10 +1309,20 @@ propulsionSystems:
 
 aerodynamicSystems:
     Mark1Cockpit:
+        entryCost: 40000 # 40 out of the 50mil for airframe development
+        cost: 4000 # Guessed from NASA 19670001999, 4 out of the 7.8m for airframe
     Mark2Cockpit:
     MK1Fuselage:
+        entryCost: 5000
+        cost: 500 # guessed from above
     Mk1FuselageStructural:
+        entryCost: 5000
+        cost: 500 # guessed from above
     KerbCan: # 1-person crew section in 1.25m
+        entryCost: 10000
+        cost: 1000
+    
+    
     #FIXME why the bloody HECK did fairing parts get put here?
     # Skylab
     fairing1:
@@ -1364,8 +1368,8 @@ aerodynamicSystems:
     #XLR99
     # X-15 engine
     NP_lfe_25m_Orbitalbertha_Mini: &XLR99
-        entryCost: 60000
-        cost: 2500
+        entryCost: 44000 # Source: NASA 19670001999 
+        cost: 1000
     RO-XLR99: *XLR99
 
     
@@ -1471,6 +1475,13 @@ generalConstruction:
         cost: 25
     FASAGeminiMOLEquipStack:
         cost: 100
+        
+    FASA_Atlas_LFT_Cone2: # Atlas E/F core
+        cost: 300 # cheaper than original
+    #below part is the Atlas SLV-3, 1966 first use. Lunar Orbiter
+    #nearly the same as LV-3 so the 2 can be used interchangeably
+    FASAMercuryAtlasLFTLong:
+        cost: 400
 
 advConstruction:
 

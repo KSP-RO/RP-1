@@ -243,7 +243,6 @@ start:
     airScoop: &stdintake
         cost: 20
     CircularIntake: *stdintake
-    IntakeRadialLong: *stdintake
     LRadialAirIntake: *stdintake
     MK1IntakeFuselage: *stdintake
     SXTInlineAirIntake: *stdintake
@@ -1307,6 +1306,7 @@ propulsionSystems:
     RD270:
     RD270M:
 
+# X-15 parts, Mach 2 engines
 aerodynamicSystems:
     Mark1Cockpit:
         entryCost: 40000 # 40 out of the 50mil for airframe development
@@ -1353,6 +1353,7 @@ aerodynamicSystems:
     FASAStrFairing3m4x:
         entryCost: 14000
         cost: 400
+
     #Engines	
     aje_j79:
         cost: 220
@@ -1371,6 +1372,10 @@ aerodynamicSystems:
         entryCost: 44000 # Source: NASA 19670001999 
         cost: 1000
     RO-XLR99: *XLR99
+    
+    #intakes
+    shockConeIntake:
+        cost: 60
 
     
 advExploration:
@@ -1722,6 +1727,13 @@ aviation:
         cost: 50
     aje_avon:
         cost: 140
+        
+    SXTRadialAirIntakeShockCone:
+        cost: 20
+    IntakeRadialLong:
+        cost: 10
+    ramAirIntake:
+        cost: 40
 
 offworldManufacturing:
 

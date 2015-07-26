@@ -673,11 +673,6 @@ generalRocketry:
 
     r7_vernier_engine_v_fg:
         cost: 20
-        
-    # X-15 engine
-    NP_lfe_25m_Orbitalbertha_Mini: #XLR99
-        entryCost: 60000
-        cost: 2500
 
 basicConstruction:
     batteryPack:
@@ -1365,6 +1360,14 @@ aerodynamicSystems:
         cost: 10
     GearLarge:
         cost: 15
+        
+    #XLR99
+    # X-15 engine
+    NP_lfe_25m_Orbitalbertha_Mini: &XLR99
+        entryCost: 60000
+        cost: 2500
+    RO-XLR99: *XLR99
+
     
 advExploration:
 
@@ -1696,8 +1699,9 @@ subsonicFlight:
     RP0Nose-Cockpit:
         cost: 300
     # XLR11
-    FASAGemini4X800Mini:
-        cost: 50
+    FASAGemini4X800Mini: &XLR11
+        cost: 150 # same as AJ10
+    SXTNK21BlockV: *XLR11
 
 # 50s afterburning jets
 aviation:

@@ -21,7 +21,7 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 
 **Requirements:**
 - Realism Overhaul and all its required mods
-- Community Tech Tree (and Tech Manager, to load it)
+- Community Tech Tree
 - Lack's SXT (although only the engines have RO configs as of yet)
 - Ven's Stock Parts Revamp
 - Contract Configurator

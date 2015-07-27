@@ -1535,6 +1535,8 @@ supersonicFlight:
         cost: 800 # total guess
     JetEngine: #F100
         cost: 1000 # total guess
+    aje_f404: #F404
+        cost: 600 # sourced from 145mil for 51 engines in 1995
     turboFanEngine: #J58
         cost: 1200 # total guess
     # An-225 bits, treating as generic widebody civilian craft
@@ -1719,11 +1721,11 @@ subsonicFlight:
         cost: 150 # same as AJ10
     SXTNK21BlockV: *XLR11
 
-# 50s afterburning jets
+# 50s afterburning jets, ramp intakes, etc.
 aviation:
     aje_j57: #J57-P21
         cost: 130
-    aje_j85:
+    aje_j85: #J85-something
         cost: 50
     aje_avon:
         cost: 140

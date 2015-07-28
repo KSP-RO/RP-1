@@ -644,6 +644,10 @@ generalRocketry:
         cost: 300 # Stage cost $3m in 1970 (or was it 1985 dollars?),
 # but avionics probably a large part
 
+    #Ablestar's engine, has restarts
+    SXTAJ10Mid:
+        cost: 250
+
 # FASA Agena (CORONA)
 
     FASAAgena_Engine: &AgenaEngine # Bell 8xxx engine for Agena

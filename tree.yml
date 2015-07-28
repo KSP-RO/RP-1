@@ -1328,6 +1328,8 @@ aerodynamicSystems:
         entryCost: 40000 # 40 out of the 50mil for airframe development
         cost: 4000 # Guessed from NASA 19670001999, 4 out of the 7.8m for airframe
     Mark2Cockpit:
+        entryCost: 40000
+        cost: 1000
     MK1Fuselage:
         entryCost: 5000
         cost: 500 # guessed from above
@@ -1503,6 +1505,16 @@ generalConstruction:
     #nearly the same as LV-3 so the 2 can be used interchangeably
     FASAMercuryAtlasLFTLong:
         cost: 400
+        
+    # Lunar heatshields
+    HeatShield0:
+    HeatShield1m:
+    HeatShield1: # 2m
+    HeatShield3m:
+    HeatShield2: # 4m
+    HeatShield3: # 5m
+    Heatshield-10M:
+    
 
 advConstruction:
 
@@ -2025,7 +2037,6 @@ ORPHANS:
     Heatshield-375M:
     Heatshield-4M:
     Heatshield-5M:
-    Heatshield-10M:
     Heatshield-15M:
     Heatshield-25M:
 

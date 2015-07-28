@@ -317,6 +317,15 @@ start:
     GuidanceStart1m:
         entryCost: 0
         cost: 300
+        
+    # RCS
+    # Attitude jets    
+    RO_FASA_MercuryPodRCS:
+        entryCost: 500 # ignored because start
+        cost: 12
+    RO_FASA_ExplorerRCS:
+        entryCost: 300 # ignored because start
+        cost: 6
 
     # Engines
     sepMotor1:
@@ -574,12 +583,29 @@ earlyAvionics:
     sputnik1_base: &sputnik_n_b
         cost: 10
     sputnik1_nosecone: *sputnik_n_b
+   
+    sputnik3_base: *sputnik_n_b
+    sputnik3_nosecone: *sputnik_n_b
+    sputnik2_base: *sputnik_n_b
+    sputnik2_nosecone: *sputnik_n_b
+
+    # Raidernick R-7
+    WING_R7:
+        cost: 10
+
+    r7_blok_bvgd_sput:
+        cost: 100
+
+    r7_blok_a_sput:
+        cost: 120
 
     # AVIONICS
     # These make your rockets actually controllable.
     RP0probeAvionics0-81m:
+        entryCost: 4000
         cost: 100
     GuidanceEarly1m:
+        entryCost: 6000
         cost: 200
 
     # !!SCIENCE!!
@@ -592,15 +618,8 @@ earlyAvionics:
     
     # Redstone/Juno and Explorer 1 (FASA)
     FASAExplorerNosecone:
-        cost: 400
-    
-    # Attitude jets    
-    RO_FASA_MercuryPodRCS:
-        entryCost: 500
-        cost: 12
-    RO_FASA_ExplorerRCS:
-        entryCost: 300
-        cost: 6
+        entryCost: 7000
+        cost: 250
 
 
 # TL1/2 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
@@ -694,29 +713,17 @@ basicConstruction:
         cost: 380
         
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
-    
-    sputnik3_base: *sputnik_n_b
-    sputnik3_nosecone: *sputnik_n_b
-    sputnik2_base: *sputnik_n_b
-    sputnik2_nosecone: *sputnik_n_b
-
-    # Raidernick R-7
-    WING_R7:
-        cost: 10
-
-    r7_blok_bvgd_sput:
-        cost: 100
-
-    r7_blok_a_sput:
-        cost: 120
+        cost: 5
 
 basicAvionics:
      # *** Avionics
     GuidanceEarly2m:
-        cost: 600
+        entryCost: 9000
+        cost: 300
 
     GuidanceEarly3m:
-        cost: 900
+        entryCost: 12000
+        cost: 400
 
     # Improved Sputniks
     sputnik2:
@@ -746,15 +753,18 @@ survivability:
     # Heatshields
 
     0625_Heatshield:	    
+        entryCost: 18000
         cost: 300
     Heatshield-1M:
-        cost: 600
+        entryCost: 19000
+        cost: 400
     1.25_Heatshield:
-        cost: 1000
+        entryCost: 20000
+        cost: 600
 
     # Heatshield decoupler
     decoupler_ftr_small:
-        cost: 30
+        cost: 5
 
     
 ## 3-Axis Stability and early probes ##
@@ -778,14 +788,14 @@ stability:
         entryCost: 1000
         cost: 40
 
-    microEngine: #FIXME move to Landing?
+    microEngine:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
 
     # This is a fake engine, and essentially a big RCS thruster.
-    # It's about 33% more powerful than the microEngine, so we cost it
+    # It's about double as powerful as the microEngine, so we cost it
     # appropriately.
     FASA_Mercury_LFEng: 
-        cost: 80
+        cost: 120
 
     # Early Probe cores -- yes this is expensive.
     # TODO: Given we already have the DontStayPutnik, why would we use the Octo2?
@@ -838,7 +848,7 @@ advRocketry:
         
     FASAApolloLFEH1: &H1
         cost: 1700 # think this should be closer to 1700
-        entryCost: 33750
+        entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
     
     vernierEngine:
@@ -908,11 +918,10 @@ basicScience:
         cost: 500
 
     # 40x the size of a small panel. Linear scaling would have this at 12000 ($12m!)
-    # Let's not do linear scaling. This sort of bulk purchase is only $3m, 25% of the
-    # linear scale.
+    # Let's not do linear scaling.
     aje_solarPanels:
-        entryCost: 6000         # Player already has cells; what's to develop?
-        cost: 3000
+        entryCost: 7000
+        cost: 400
 
     # DTS-M1
     mediumDishAntenna:
@@ -951,14 +960,14 @@ hydroloxTL2:
    
     engineLargeSkipper: &RL10
         cost: 1800
-        entryCost: 40000
+        entryCost: 60000
 
     FASAApolloLFERL10: *RL10
     KW1mengineWildCatV: *RL10
     
     KW1mengineMaverick1D: # RL10 priced seperately because its a pair of them
         cost: 4000
-        entryCost: 40000
+        entryCost: 60000
 
     LR87LH2Vac:  # total guess on price
         cost: 6500
@@ -988,8 +997,8 @@ flightControl:
         
     # Stock docking ports
     dockingPort3:  # 1m docking port (no crew if CLS installed)
-        entryCost: 32000
-        cost: 800
+        entryCost: 48000 # same as Gemini nosecone and Agena DP
+        cost: 700 # halfway between Agena docking and Gemini nosecone
         
     FASAAgenaDocking:
         cost: 400
@@ -1141,7 +1150,9 @@ advFlightControl:
 
 electrics:
     solarPanels5HiTech:
+        entryCost: 8000 # 2m above the original model
         cost: 50
+
     solarPanels4:
         cost: 250
     solarPanels2:
@@ -1863,7 +1874,7 @@ enhancedSurvivability:
     # the 88mil and the 4.4mil apportioned 
 
     FASAMercuryPod: &mercury_pod
-        entryCost: 74600
+        entryCost: 90600 # 74.6m plus 16000 for heat shielding
         cost: 3730
     FASAMercruyCap2:
         entryCost: 1000
@@ -1901,7 +1912,7 @@ enhancedSurvivability:
 
     # RN Vostok descent and service modules
     rn_vostok_sc:
-        entryCost: 50000
+        entryCost: 66000 # was 50m, +16m for heat shielding
         cost: 1800
     rn_vostok_tdu:
         entryCost: 25000
@@ -1933,11 +1944,13 @@ simpleCommandModules:
     landerCabinSmall:
         cost: 2000 # FIXME
     2.5_Heatshield:
-        cost: 2500 # FIXME
+        entryCost: 21000
+        cost: 1200 # FIXME
     Heatshield-2M:
-        cost: 2000 # FIXME
+        entryCost: 24000
+        cost: 800 # FIXME
     Heatshield-3M:
-        cost: 3000 # FIXME
+        cost: 1400 # FIXME
 
     # FASA Gemini
     # ~12m for the spacecraft, ~600 for research
@@ -1955,7 +1968,7 @@ simpleCommandModules:
         entryCost: 5500
         cost: 110
     FASAGeminiPod2: # FASAGeminiPod2White
-        entryCost: 270000
+        entryCost: 286000 # was 270m, +16m for shielding
         cost: 5400
 
     # FASAGeminiNoseCone2, FASAGeminiPod2RCS / FASAGeminiUtilitySasRcs, FASA_Gemini_RCS_Thrusters
@@ -1964,7 +1977,7 @@ simpleCommandModules:
     
     # Soyuz parts
     rn_voskhod_sc:
-        entryCost: 55000
+        entryCost: 71000 # was 55, +16 for shielding
         cost: 2000
     ok_sa:
         entryCost: 70000

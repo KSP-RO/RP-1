@@ -11,6 +11,8 @@ namespace RP0
 
         public double entryCost = 0d;
 
+        public double maxSubtraction = double.MaxValue;
+
         public AvailablePart ap;
 
         public Dictionary<string, double> entryCostMultipliers = new Dictionary<string, double>();
@@ -68,6 +70,10 @@ namespace RP0
                     entryCost = dtmp;
             }
 
+            if (node.HasValue("maxSubtraction"))
+                if (double.TryParse(node.GetValue("maxSubtraction"), out dtmp))
+                    maxSubtraction = dtmp;
+
             if (node.HasNode("entryCostMultipliers"))
                 LoadMultipliers(node.GetNode("entryCostMultipliers"));
 
@@ -78,16 +84,19 @@ namespace RP0
 
         protected double ModCost(double cost, double subtractMultipler = 1.0d)
         {
-            foreach (KeyValuePair<string, double> kvp in entryCostMultipliers)
-            {
-                if(EntryCostModifier.Instance.IsUnlocked(kvp.Key))
-                    cost *= kvp.Value;
-            }
-
+            double subtract = 0d;
             foreach (KeyValuePair<string, double> kvp in entryCostSubtractors)
             {
                 if (EntryCostModifier.Instance.IsUnlocked(kvp.Key))
-                    cost -= kvp.Value * subtractMultipler;
+                    subtract += kvp.Value * subtractMultipler;
+            }
+            subtract = Math.Min(maxSubtraction, subtract);
+            cost -= subtract;
+
+            foreach (KeyValuePair<string, double> kvp in entryCostMultipliers)
+            {
+                if (EntryCostModifier.Instance.IsUnlocked(kvp.Key))
+                    cost *= kvp.Value;
             }
             if (cost > 0d)
                 return cost;

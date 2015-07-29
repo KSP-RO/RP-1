@@ -289,7 +289,7 @@ start:
     #VSR strutcubes
     strutCubeSmall:
         cost: 4
-    strutCubeSmall:
+    strutCubeMedium:
         cost: 8
     strutCubeLarge:
         cost: 15

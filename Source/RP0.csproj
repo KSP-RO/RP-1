@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ControlLocker.cs" />
+    <Compile Include="EntryCosts\EntryCostDatabase.cs" />
     <Compile Include="EntryCosts\PartEntryCostHolder.cs" />
     <Compile Include="ModuleTag\AtmosphereAnalysis.cs" />
     <Compile Include="ModuleTag\Barometer.cs">

@@ -87,7 +87,7 @@ namespace RP0
             double subtract = 0d;
             foreach (KeyValuePair<string, double> kvp in entryCostSubtractors)
             {
-                if (EntryCostModifier.Instance.IsUnlocked(kvp.Key))
+                if (EntryCostModifier.IsUnlocked(kvp.Key))
                     subtract += kvp.Value * subtractMultipler;
             }
             subtract = Math.Min(maxSubtraction, subtract);
@@ -95,7 +95,7 @@ namespace RP0
 
             foreach (KeyValuePair<string, double> kvp in entryCostMultipliers)
             {
-                if (EntryCostModifier.Instance.IsUnlocked(kvp.Key))
+                if (EntryCostModifier.IsUnlocked(kvp.Key))
                     cost *= kvp.Value;
             }
             if (cost > 0d)

@@ -274,6 +274,9 @@ start:
 
     structuralPanel2:
         cost: 20
+        
+    Angledpanel: # VSR half 1x1
+        cost: 5
 
     structuralPylon:
         cost: 20
@@ -282,7 +285,14 @@ start:
         cost: 5
 
     strutCube:
-        cost: 5
+        cost: 2
+    #VSR strutcubes
+    strutCubeSmall:
+        cost: 4
+    strutCubeSmall:
+        cost: 8
+    strutCubeLarge:
+        cost: 15
 
     strutOcto:
         cost: 7

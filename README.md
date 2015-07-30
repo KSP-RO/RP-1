@@ -33,7 +33,6 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Procedural Parts
 - B9 Procedural Wings
 - Kerbal Construction Time
-- TestFlight
 
 **In Progress**
 - DMagic's Orbital Science

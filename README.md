@@ -39,5 +39,6 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - DMagic's Orbital Science
 - Universal Storage
 - FASA
+- Raidernick Soviet probes and rockets
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!

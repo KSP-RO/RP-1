@@ -484,6 +484,23 @@ basicRocketry:
         cost: 40
     FASAExplorerSgt3:
         cost: 12
+        
+    # Redstone/Juno (FASA) - really it's construction, but
+    # it's constructed with starting-node tech. So let's put it here.
+    FASAExplorerLFTLong:
+        cost: 350
+    FASAExplorerSgt11Dec:
+        cost: 20
+    FASAExplorerSgt3Dec:
+        cost: 10
+    FASAMercuryRedstoneFin:
+        cost: 5
+    FASA_Mercury_LFT_Long: #FIXME Redstone costs
+        cost: 300
+    FASA_Mercury_LFT_Short:
+        cost: 150
+    FASAMercuryFairing:
+        cost: 15
 
     LVT15: #RD-103
         cost: 850
@@ -547,22 +564,6 @@ engineering101:
     # This isn't a wedge, it's just yet another radial tank, and
     # should be priced with whatever prices we use for those.
     US_Radial_Oxygen: *basicWedge
-    
-    # Redstone/Juno (FASA)
-    FASAExplorerLFTLong:
-        cost: 350
-    FASAExplorerSgt11Dec:
-        cost: 20
-    FASAExplorerSgt3Dec:
-        cost: 10
-    FASAMercuryRedstoneFin:
-        cost: 5
-    FASA_Mercury_LFT_Long: #FIXME Redstone costs
-        cost: 300
-    FASA_Mercury_LFT_Short:
-        cost: 150
-    FASAMercuryFairing:
-        cost: 15
 
     # AIES Fairings
     basepuntv2r10:

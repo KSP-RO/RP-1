@@ -703,9 +703,11 @@ generalRocketry:
     r7_blok_a_engine:
         cost: 680
 
-
     r7_vernier_engine_v_fg:
         cost: 20
+
+    # R-7 main engines
+    KW2mengineGriffonG8D:
 
 basicConstruction:
     batteryPack:

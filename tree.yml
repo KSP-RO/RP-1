@@ -708,6 +708,7 @@ generalRocketry:
 
     # R-7 main engines
     KW2mengineGriffonG8D:
+        cost: 700
 
 basicConstruction:
     batteryPack:

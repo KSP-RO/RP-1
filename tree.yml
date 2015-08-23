@@ -1491,6 +1491,7 @@ heavierRocketry:
     # Bobcat's Soviet Engines -Need Costing-
     NK43:
     NK33: #parts produced ~100 the program was scraped and never flown
+    RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
 
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm

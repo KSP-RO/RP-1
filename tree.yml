@@ -621,8 +621,9 @@ earlyAvionics:
 
     # !!SCIENCE!!
 
-    FASAProbeGeigerCounter:
+    FASAProbeGeigerCounter: &GeigerCounter
         cost: 40
+    RP0sensorGeiger: *GeigerCounter
         
     RP0sensorMicrometeorite:
         cost: 40

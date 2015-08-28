@@ -1137,6 +1137,8 @@ hydroloxTL4:
     FASAApolloLFEM1:
         entryCost: 770000
         cost: 22000
+    RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
+
 # TIER 6
 largeVolumeContainment: # TL5 solids
     solidBooster_sm: # Star 48B (PAM-B) #FIMXE TL6 ? It's 1984 vintage so I guess TL5 is ok.

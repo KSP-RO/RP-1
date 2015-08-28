@@ -854,6 +854,7 @@ stability:
         cost: 600 # This one costs a bit more due to a larger tank
         entryCost: 12000
 
+# Staged Combustion TL2
 fuelSystems:
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
         cost: 400 # also is the RD-58 as CONFIG upgrade.
@@ -968,6 +969,23 @@ basicScience:
         entryCost: 10000
         cost: 1000
 
+    #Improved probes
+    SXTHECSRanger: # Ranger Block I / Mariner
+        cost: 1200
+        
+    #Scanning
+    # $1k spacebucks is probably cheap for modern equipment,
+    # but we're balancing gameplay here. Each step up in scanner
+    # technology doubles the cost.
+    SCANsat_Scanner2:
+        cost: 1000
+
+    # These are optical telescopes for observing the planet
+    # you're orbiting.
+    dmscope: &dmscope
+        cost: 500
+    dmUSScope: *dmscope
+
 
 hydroloxTL2:
     FASAGeminiLFTCentar: # Centaur A/B/C/D/D1 stage
@@ -1075,12 +1093,30 @@ flightControl:
         entryCost: 7000
         cost: 200
 
-    # Avionics and probe cores
-    SXTHECSRanger: # Ranger Block I / Mariner
-        cost: 1200
+    # Avionics
+
+miniaturization:
+    probeCoreHex: # Ranger Block III
+        cost: 1500
+
+    #Scanning
+    SCANsat_Scanner24:
+        cost: 2000
+
+    # Maybe...
+    # dmImagingPlatform:
+
+    landing:
+    miniLandingLeg:
+        entryCost: 10000
+        cost: 100
+
+    # landing probe core
+    probeCoreOcto: # Surveyor
+        cost: 4000
 
 # TIER 4
-advFuelSystems: # TL3 solids
+largeSolids: # TL3 solids
     solidBoosterMAX: &UA1205
         cost: 5320 # nautix Titan 3 - UA1205 stage, assume 1985 dollars
 
@@ -1093,7 +1129,7 @@ hydroloxTL3:
 
 
 # TIER 5
-largeVolumeContainment: # TL4 solids
+advFuelSystems: # TL4 solids
     FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
         cost: 7218 # 24.36m nautix, assume 1985 dollars
 
@@ -1102,7 +1138,7 @@ hydroloxTL4:
         entryCost: 770000
         cost: 22000
 # TIER 6
-highPerformanceFuelSystems: # TL5 solids
+largeVolumeContainment: # TL5 solids
     solidBooster_sm: # Star 48B (PAM-B) #FIMXE TL6 ? It's 1984 vintage so I guess TL5 is ok.
         cost: 1203 # nautix 4.06m, assume 1985 dollars
 
@@ -1112,6 +1148,7 @@ hydroloxTL5:
         cost: 5700 # "40 million" assumed to be 2010 dollars
 
 # TIER 7
+highPerformanceFuelSystems: # TL6 solids
 hydroloxTL6:
 
 
@@ -1155,9 +1192,7 @@ advFlightControl:
     FASAApolloAPS:
         entryCost: 17500
         cost: 500
-    # Probe cores / Avionics
-    probeCoreHex: # Ranger Block III
-        cost: 1500
+    # Avionics
     SXT375mProbe: # Early Saturn IU (3.9M, 1000t)
         cost: 1500
     GuidanceLate1m: # Later 1m guidance
@@ -1224,7 +1259,7 @@ electrics:
         cost: 500
 
 # Third generation capsules, it would seem.
-spaceExploration:
+commandModules:
     Mark1-2Pod:
         entryCost: 1000000
         cost: 10000
@@ -1271,14 +1306,10 @@ spaceExploration:
         entryCost: 280000
         cost: 8000
 
-landing:
-    miniLandingLeg:
-        entryCost: 10000
-        cost: 100
-
-    # landing probe core
-    probeCoreOcto: # Surveyor
-        cost: 4000
+#crewed landing
+spaceExploration:
+    landerCabinSmall:
+        cost: 2000 # FIXME
 
 heavyRocketry:
 #TL3 Mid-late 60s tech. Saturn V, N-1 upper stage
@@ -1785,28 +1816,6 @@ aviation:
 
 offworldManufacturing:
 
-orbitalSurveys:
-
-    # $1k spacebucks is probably cheap for modern equipment,
-    # but we're balancing gameplay here. Each step up in scanner
-    # technology doubles the cost.
-    SCANsat_Scanner2:
-        cost: 1000
-
-    # These are optical telescopes for observing the planet
-    # you're orbiting.
-    dmscope: &dmscope
-        cost: 500
-    dmUSScope: *dmscope
-
-advSurveys:
-
-    SCANsat_Scanner24:
-        cost: 2000
-
-    # Maybe...
-    # dmImagingPlatform:
-
 recycling:
 
     # Water Recycling System
@@ -1971,8 +1980,6 @@ simpleCommandModules:
     HexCanMFTLifeSupportLarge:
 
     #Stock and DRE parts
-    landerCabinSmall:
-        cost: 2000 # FIXME
     2.5_Heatshield:
         entryCost: 21000
         cost: 1200 # FIXME

@@ -1150,7 +1150,7 @@ hydroloxTL5:
 # TIER 7
 highPerformanceFuelSystems: # TL6 solids
 hydroloxTL6:
-    VR1vulcan:
+
 
 hydroloxTL7:
     # Bobcat's Soviet Engines -Need Costing-
@@ -1775,6 +1775,7 @@ colossalRocketry:
 fusionPower:
 
 exoticAlloys:
+    VR1vulcan:
 
 orbitalAssembly:
 

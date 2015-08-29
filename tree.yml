@@ -118,6 +118,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0.1
     KwzInterstageAdapter:
         cost: 0.1
+        
+    fairingSize1:
+        cost: 0.1
 
     proceduralTankRealFuels:
         cost: 0.1
@@ -312,11 +315,37 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # Lights, ladders and things. Going cheap!!
 
     ladder1:
+        cost: 1
+    telescopicLadder:
         cost: 10
+    telescopicLadderBay:
+        cost: 20
+
     spotLight1:
         cost: 10
     spotLight2:
         cost: 10
+    
+    #VSR
+    SmallSpotLight:
+        cost: 5
+    SmallPointLight:
+        cost: 5
+    SmallStripLight:
+        cost: 10
+        
+    # More ladders
+    SMLadderUtility:
+        cost: 10
+    MedLadderUtility:
+        cost: 20
+    LGLadderUtility:
+        cost: 40
+
+    MedLadder:
+        cost: 2
+    LongLadder:
+        cost: 3
 
     # Core for sounding rockets. Should not provide yaw/pitch/roll control
     # and will not, once RT has that implemented.
@@ -360,7 +389,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
 
     # Tanks. Also cheap. They're tanks.
-
+    SXTSmallFuselage:
+        cost: 20
     SXTFuel625m:
         cost: 30
     miniFuelTank:
@@ -428,6 +458,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 2
     radialDecoupler:
         cost: 20
+    #VSR mini decoupler
+    smallRadialDecoupler:
+        cost: 10
 
     # AIES Fairings
     sep1a1ur5:
@@ -584,6 +617,9 @@ engineering101:
         cost: 200 # modeled on Univ Storage stuff above.
     ServiceBay_250:
         cost: 800 # 4x, which seems right for 8x the space but 4x the surface area
+        
+    fairingSize2:
+        cost: 0.1
 
 earlyAvionics:
     # Probes
@@ -753,6 +789,9 @@ basicConstruction:
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
         cost: 5
     # FIXME other Titan II parts go here, with costing.
+    
+    fairingSize3:
+        cost: 0.1
 
 basicAvionics:
      # *** Avionics
@@ -899,6 +938,8 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 220
     aje_ramjet:
         cost: 350
+    aje_atar:
+        cost: 220 # FIXME same as J79 for now
         
     #big landing gear
     GearMedium:
@@ -1040,9 +1081,11 @@ hydroloxTL2:
         cost: 7500
     FASAApolloLFEJ2: *J2Engine
 
-fuelSystems:
+fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
         cost: 400 # also is the RD-58 as CONFIG upgrade.
+    # Bobcat's Soviet Engines -Need Costing-
+    RD0124: # in RD-0110 configuration
 
 matureSolids:
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
@@ -1085,12 +1128,26 @@ generalConstruction:
         
     # Lunar heatshields
     HeatShield0:
+        entryCost: 31000
+        cost: 500
     HeatShield1m:
+        entryCost: 32000
+        cost: 750
     HeatShield1: # 2m
+        entryCost: 33000
+        cost: 1500
     HeatShield3m:
+        entryCost: 34000
+        cost: 2250
     HeatShield2: # 4m
+        entryCost: 35000
+        cost: 3000
     HeatShield3: # 5m
+        entryCost: 36000
+        cost: 3600
     Heatshield-10M:
+        entryCost: 39000
+        cost: 7200
     
 
 basicScience:
@@ -1412,6 +1469,11 @@ electrics:
     FASALM_Antenna:
         entryCost: 17500
         cost: 500
+        
+    FuelCell:
+        cost: 1000 # FIXME guesses...
+    FuelCellArray:
+        cost: 2500 # FIXME, 2.5x above with 3x capacity.
 
 miniaturization:
     probeCoreHex: # Ranger Block III
@@ -1436,13 +1498,9 @@ miniaturization:
 supersonicFlight: # Advanced jet engines
     #Engines
     B9_Engine_Jet_Turbojet: #YJ93-GE-3
-        cost: 800 # total guess
+        cost: 800 # FIXME total guess
     B9_Engine_Jet_Pod_Small: #JT8D-219
         cost: 800 # total guess
-    JetEngine: #F100
-        cost: 1000 # total guess
-    aje_f404: #F404
-        cost: 600 # sourced from 145mil for 51 engines in 1995
     turboFanEngine: #J58
         cost: 1200 # total guess
     # An-225 bits, treating as generic widebody civilian craft
@@ -1468,10 +1526,10 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
 
     FASAApolloLFEF1: &F-1
         entryCost: 409361
-        cost: 20000
+        cost: 15000 # Source for the $20m figure???? For now reducing to 15mil
     KW5mengineGriffonC:
         entryCost: 409361
-        cost: 100000 # Costs more to buy because its 5 engines in one from KW
+        cost: 75000 # Costs more to buy because its 5 engines in one from KW
         
         # Apollo parts
     FASAApollo_SM_Engine: &ApolloSPS # Service Propulsion System
@@ -1564,7 +1622,7 @@ advConstruction:
     #Apollo
     FASAApollo_CM_HeatShield:
         entryCost: 35000
-        cost: 1,000
+        cost: 3000
         
     #Apollo/Saturn/Skylab fairings
     # Skylab
@@ -1653,43 +1711,23 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 1000000
         cost: 10000
     
-    # Salyut parts
-    almaz3-5:
-        entryCost: 150000
-        cost: 50000
-    salyut1-4:
-        entryCost: 145000
-        cost: 48000
-    salyut6:
-        entryCost: 160000
-        cost: 65000
-    salyut7:
-        entryCost: 170000
-        cost: 75000
-    # Skylab
-    skylab:
-        entryCost: 275000
-        cost: 70000
-    skylab_unbroken:
-        entryCost: 290000
-        cost: 80000
-    
     # Apollo parts
     FASAApollo_CM_Decoupler:
         entryCost: 7000
         cost: 200
     FASAApollo_CM:
         entryCost: 350000
-        cost: 10000
+        cost: 9000
     FASAApollo_CM_parachutes:
         entryCost: 35000
         cost: 1000
     FASAApollo_CM_Top:
         entryCost: 70000
-        cost: 2000
-    FASAApollo_LES:
+        cost: 1000
+    FASAApollo_LES: &ApolloLES
         entryCost: 175000
         cost: 5000
+    LaunchEscapeSystem: *ApolloLES
 
     FASA_Apollo_Float_Ring:
         entryCost: 28000
@@ -1703,6 +1741,9 @@ spaceExploration: #crewed landing
         cost: 2000 # FIXME
     mk2LanderCabin:
         cost: 4500 # FIXME
+        
+    landingLeg1:
+        cost: 120 #FIXME
     # LM
     FASALM_AscentStage:
         entryCost: 280000
@@ -1795,12 +1836,23 @@ advFuelSystems: # TL4 solids
     # estimated cost at 2/3 of FL Date: 1965
         cost: 22054
 
+specializedControl: # Tl4 avioncis
+
+heavyAerodynamics: #TL4 jets - Mature Turbofans
+    JetEngine: #F100
+        cost: 850 # FIXME total guess
+    aje_f404: #F404
+        cost: 600 # sourced from 145mil for 51 engines in 1995
+
 #TIER 4.5
 largeVolumeContainment: # TL4.5 solids
     FASA_RO_UA1563:
     FASA_RO_UA1564:
     # Shuttle SRB here (it's a 1980 or so design, but it uses mid-late 70s tech.)
 
+nuclearPropulsion:
+    nuclearEngine: # NERVA
+        cost: 25000 # FIXME total guess
 # TIER 6
 veryHeavyRocketry: #TL5 late 70s/80s tech
     engineLargeSkipper_125m: # Merlin A uses TL5 tech
@@ -1812,17 +1864,13 @@ stagedTL5:
     SXTKD170:
     RD171:
     liquidEnginemogulmp1500:
-    
 
 highPerformanceFuelSystems:
-    # Peacekeeper here
-    solidBoosterSmall: # right now, Castor 30. Change later?
+    solidBoosterSmall: # Castor 30B
     solidBooster1-1: # Castor 120
-    RLA_solid_m_upper: # ATK Orion 50
-        cost: 893
     solidBooster_sm: # Star 48B (PAM-B)
         cost: 1203 # nautix 4.06m, assume 1985 dollars
-        
+
 hydroloxTL5:
     #Energia sustainer engine
     RD0120: &RD-0120
@@ -1834,27 +1882,44 @@ hydroloxTL5:
         cost: 5700 # "40 million" assumed to be 2010 dollars
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
 
+experimentalAerodynamics: #TL5 jets
+    SXTKe90TurboJet: # Progress D-18T
+        cost: 1000 # FIXME total guess
+
+avionicsTL5:
+    APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
+
 # TIER 7
 experimentalRocketry: #TL6, late 80s/90s
     galaxvr2: # Aestus
     KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
+    Size2LFB: # Pyrios booster, technically TL7 but the engines are F-1s.
+        cost: 43000 # FIXME guess based off 2x F-1 + tankage.
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
     RD180:
     RD191: # NPO Energomash RD-191
 
-highPerformanceFuelSystems: # TL6 solids
+specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
     RLA_solid_s_upper:  # ATK Orion 38
+    RLA_solid_m_upper: # ATK Orion 50
+        cost: 893
 
 hydroloxTL6:
     VR1vulcan: #RS-68
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
 
+avionicsTL6:
+    RLA_resistojet: # Marquardt/Aerojet R4D-11.
+    dockingPortLarge: # CBM
+
 # TIER 8
 giganticRocketry: #TL7, present day
     liquidEngineMiniRescale: # Aestus II
+    Size3EngineCluster: # SLS core (4x RS-25D/E)
+        cost: 25000 # FIXME total guess based off RS-25 costs above.
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X
@@ -1865,26 +1930,25 @@ hydroloxTL7:
     engineexper05: #RL60
 
 stagedTL7:
-    # Bobcat's Soviet Engines -Need Costing-
-    RD0124:
+    # RD-0124 config here
 
 exoticFuelStorage: #TL7 solids
     #ATK L.S.G. 5-Segment RSRM
     KWsrbGlobeX10L: &Shuttlebooster
         cost: 8000 # reasonable guess, 6.87 for 4seg
     MassiveBooster: *Shuttlebooster
+avionicsTL7:
+    ParaDockingPort: # Let's assume it's NDS
+    dockingPort2: # NASA Docking System
+    dockingPortLateral: # same, lateral shielded.
+    dockingPort1: #same, shielded
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:
+    landingLeg1-2:
+        cost: 300 # FIXME
 
 precisionEngineering:
-
-specializedControl:
-    RLA_resistojet: # Marquardt/Aerojet R4D-11.
-    # may belong in later TL main propulsion of the ESA ATV
-    # since it's an R4D, but a late-model one
-    
-    
 
 specializedConstruction:
 
@@ -1919,8 +1983,6 @@ composites:
 
 fieldScience:
 
-nuclearPropulsion:
-
 ionPropulsion:
 
 largeElectrics:
@@ -1939,11 +2001,9 @@ advAerodynamics:
 
 metaMaterials:
 
-heavyAerodynamics:
+hypersonicFlight:
 
 advancedMotors:
-    
-hypersonicFlight:
 
 specializedElectrics:
     SXTsolarPanelhex:
@@ -1962,8 +2022,6 @@ advScienceTech:
 aerospaceTech:
 
 experimentalElectrics:
-
-experimentalAerodynamics:
 
 experimentalScience:
 
@@ -1996,7 +2054,7 @@ advNuclearPropulsion:
 fusionRockets:
 
 colossalRocketry:
-
+    RAPIER: # FIXME
     
 fusionPower:
 
@@ -2093,6 +2151,27 @@ antimatterPower:
 ultraHighEnergyPhysics:
 
 shortTermHabitation:
+    Large_Crewed_Lab:
+    # Salyut parts
+    almaz3-5:
+        entryCost: 150000
+        cost: 50000
+    salyut1-4:
+        entryCost: 145000
+        cost: 48000
+    salyut6:
+        entryCost: 160000
+        cost: 65000
+    salyut7:
+        entryCost: 170000
+        cost: 75000
+    # Skylab
+    skylab:
+        entryCost: 275000
+        cost: 70000
+    skylab_unbroken:
+        entryCost: 290000
+        cost: 80000
 
 ORPHANS:
 
@@ -2236,4 +2315,40 @@ ORPHANS:
     FASAExplorerLFTSmall: # Generic tank
     FASAExplorerLFTMed: # Generic tank
     FASAMercuryLFTShortLarge: # Generic tank
+    
+    proceduralHeatshield: # until it gets fixed and limited.
 
+    # More parachutes
+    parachuteSingle_drogue: # Ven's
+    radialDrogue: # Stock
+    
+    
+    # Put these here until they're RO-ized
+    PoodleM: # VSR small NTR
+    liquidEngineMiniTurbo: # VSR twin 48-7S
+    
+    # SXT stuff
+    HECS2_ProbeCore:
+    LprobeFoil:
+    SXTke111:
+    SXTBuzzard:
+    25mKossak:
+    SXTEntenteCordiale:
+    SXTmk3Cockpit52:
+    MEMLander:
+    SXTLander: # PPD-8 can
+    SXTMerlin66prop: # 3 blade
+    SXTPWR2800: # 4 blade
+    SXTNK12M:
+    SXTVernier885:
+    SXTOMS:
+    SXTKO211Dprop:
+    SXTKO211prop:
+    SXTKOPO4E:
+    SXTNERVA:
+    SXTNERVAB:
+    SXTMk2LinearAerospike:
+    MEMDescentMod:
+    SXTK1BaseLarge:
+    SXTK1Base5m:
+    SXTmk2SAScore:

@@ -147,14 +147,15 @@ namespace RP0
             if (systemEnabled)
             {
                 Events["ToggleEvent"].guiName = "Activate Avionics";
-                Events["Activate"].active = true;
+                Actions["ActivateAction"].active = true;
+                Actions["ShutdownAction"].active = false;
                 systemEnabled = false;
             }
             else
             {
                 Events["ToggleEvent"].guiName = "Shutdown Avionics";
-                Events["Shutdown"].active = true;
-                Events["Activate"].active = false;
+                Actions["ShutdownAction"].active = true;
+                Actions["ActivateAction"].active = false;
                 systemEnabled = true;
             }
             UpdateRate();

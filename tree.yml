@@ -1560,6 +1560,10 @@ hydroloxTL3:
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing-
+    NK33: # in NK-15 configuration
+    NK43: # in Nk-15V configuration
+    # NK15s were flown on the 4 N1 launches, from 1969 to 1972
+
     RD270:
     RD270M:
 
@@ -1818,8 +1822,7 @@ hydroloxTL4:
 
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
-    NK43:
-    NK33: #parts produced ~100 the program was scraped and never flown
+    # NK33 and NK43 config here, parts produced ~100 the program was scrapped and never flown
 
 advFuelSystems: # TL4 solids
     FASAGerminiSRB175_7Seg: #UA1206
@@ -1930,6 +1933,7 @@ hydroloxTL7:
     engineexper05: #RL60
 
 stagedTL7:
+    # AJ26-62 config here
     # RD-0124 config here
 
 exoticFuelStorage: #TL7 solids

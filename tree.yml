@@ -1486,7 +1486,7 @@ miniaturization:
     # Maybe...
     # dmImagingPlatform:
 
-    landing:
+landing:
     miniLandingLeg:
         entryCost: 10000
         cost: 100
@@ -1494,6 +1494,9 @@ miniaturization:
     # landing probe core
     probeCoreOcto: # Surveyor
         cost: 4000
+        
+    RO-SurveyorVernier:
+        cost: 30 # not a 4-way, but it throttles. 100lbf same as the RCSBlock tho.
 
 supersonicFlight: # Advanced jet engines
     #Engines

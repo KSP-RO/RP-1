@@ -2340,6 +2340,7 @@ ORPHANS:
     # SXT stuff
     HECS2_ProbeCore:
     LprobeFoil:
+    SXTClyde:
     SXTke111:
     SXTBuzzard:
     25mKossak:

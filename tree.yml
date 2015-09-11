@@ -772,8 +772,14 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
 basicConstruction:
     batteryPack:
+        entryCost: 10
+        cost: 2
     batteryBankMini:
+        entryCost: 60
+        cost: 14
     ksp_r_largeBatteryPack:
+        entryCost: 75
+        cost: 16
 
     # Tanks
     RCSTank1-2:

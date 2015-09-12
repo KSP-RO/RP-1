@@ -772,8 +772,11 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
 basicConstruction:
     batteryPack:
+        cost: 18
     batteryBankMini:
+        cost: 102
     ksp_r_largeBatteryPack:
+        cost: 124
 
     # Tanks
     RCSTank1-2:
@@ -1486,7 +1489,7 @@ miniaturization:
     # Maybe...
     # dmImagingPlatform:
 
-    landing:
+landing:
     miniLandingLeg:
         entryCost: 10000
         cost: 100
@@ -1494,6 +1497,9 @@ miniaturization:
     # landing probe core
     probeCoreOcto: # Surveyor
         cost: 4000
+        
+    RO-SurveyorVernier:
+        cost: 30 # not a 4-way, but it throttles. 100lbf same as the RCSBlock tho.
 
 supersonicFlight: # Advanced jet engines
     #Engines
@@ -2334,6 +2340,7 @@ ORPHANS:
     # SXT stuff
     HECS2_ProbeCore:
     LprobeFoil:
+    SXTClyde:
     SXTke111:
     SXTBuzzard:
     25mKossak:

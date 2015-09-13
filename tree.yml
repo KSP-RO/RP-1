@@ -476,6 +476,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 12
     LMiniAircaftTail: # Bonanza tail fuselage
         cost: 1
+    # SXT He-111 alike
+    SXTke111:
+        cost: 8
     # Prop engines
     DoubleWasp-R280065W: # Prop Engine
     ShvetsovM63: # Prop Engine
@@ -2341,7 +2344,6 @@ ORPHANS:
     HECS2_ProbeCore:
     LprobeFoil:
     SXTClyde:
-    SXTke111:
     SXTBuzzard:
     25mKossak:
     SXTEntenteCordiale:

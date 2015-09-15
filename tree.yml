@@ -745,7 +745,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
     FASAAgena_Engine: &AgenaEngine # Bell 8xxx engine for Agena
         cost: 350
-    RLA_s_midengine: *AgenaEngine
+    RLA_s_midengine: *AgenaEngine #FIXME mod changed
     RO-AgenaEngine: *AgenaEngine
 
     # Titan engines
@@ -1915,7 +1915,7 @@ stagedTL6:
 
 specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
-    RLA_solid_s_upper:  # ATK Orion 38
+    RLA_solid_s_upper:  # ATK Orion 38 FIXME mod changed
     RLA_solid_medium_upper: # ATK Orion 50
         cost: 893
 
@@ -1924,7 +1924,7 @@ hydroloxTL6:
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
 
 avionicsTL6:
-    RLA_resistojet: # Marquardt/Aerojet R4D-11.
+    RLA_resistojet: # Marquardt/Aerojet R4D-11. #FIXME mod changed
     dockingPortLarge: # CBM
 
 # TIER 8
@@ -2139,7 +2139,7 @@ advPVMaterials:
 electricalSystems:
 
 advIonPropulsion:
-    RLA_arcjet: # Alta XR-150 ResistoJet
+    RLA_arcjet: # Alta XR-150 ResistoJet FIXME mod changed
     
 plasmaPropulsion:
 

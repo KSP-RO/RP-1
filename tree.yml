@@ -1958,10 +1958,10 @@ highPerformanceFuelSystems:
         entryCost: 24060
     #Keeping these parts grouped since they only work together, guessed at costs
     ius_bottom: # 1st stage of Inertial Upper Stage
-        cost: 3200
+        cost: 2000
         entryCost: 12000
     ius_top: # 2nd stage of Inertial Upper Stage
-        cost: 3800
+        cost: 800
         entryCost: 15000
     ius_dec_fs: # 1st stage IUS decoupler
         cost: 200

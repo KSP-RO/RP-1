@@ -1936,7 +1936,9 @@ hydroloxTL7:
     # Bobcat's Soviet Engines -Need Costing-
     RD0146: # KB Khimavtomatiki RD-0146
     
-    engineexper05: #RL60
+    # Pratt & Whitney RL60
+    engineexper05: &RL60
+    RLA_mp_large_vac: *RL60
 
 stagedTL7:
     # AJ26-62 config here

@@ -1284,6 +1284,11 @@ basicScience:
     LgRadialSolarPanel:
         entryCost: 9000
         cost: 200
+        
+    # US Probes Integration
+    pioneer_6_7_8_9:
+        cost: 500
+        entryCost: 1500
 
 flightControl:
     # Costed at $160 spacebucks, as it's the cost of a decent thruster ($60)
@@ -2101,7 +2106,8 @@ unmannedTech:
     rn_magellan_scanner: 
         cost: 100
         entryCost: 1200
-    neo_ulysses: 5000
+    neo_ulysses:
+        cost: 5000
         entryCost: 51000
 
 largeControl:

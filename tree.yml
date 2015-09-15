@@ -1916,7 +1916,7 @@ stagedTL6:
 specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
     RLA_solid_s_upper:  # ATK Orion 38
-    RLA_solid_m_upper: # ATK Orion 50
+    RLA_solid_medium_upper: # ATK Orion 50
         cost: 893
 
 hydroloxTL6:

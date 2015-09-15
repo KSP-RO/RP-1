@@ -1922,6 +1922,7 @@ hydroloxTL6:
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
 
 avionicsTL6:
+    RLA_tiny_vac: # Marquardt/Aerojet R4D-11.
     dockingPortLarge: # CBM
 
 # TIER 8

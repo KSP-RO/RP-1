@@ -1907,20 +1907,6 @@ advFuelSystems: # TL4 solids
     FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
         cost: 7218 # 24.36m nautix, assume 1985 dollars
         
-    #US Probes Integration
-    #Keeping these parts grouped since they only work together, guessed at costs
-    ius_bottom: # 1st stage of Inertial Upper Stage
-        cost: 3200
-        entryCost: 12000
-    ius_top: # 2nd stage of Inertial Upper Stage
-        cost: 3800
-        entryCost: 15000
-    ius_dec_fs: # 1st stage IUS decoupler
-        cost: 200
-        entryCost: 1200
-    ius_dec_ss: # 2nd stage IUS decoupler
-        cost: 200
-        entryCost: 1200
     
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm
@@ -1970,6 +1956,19 @@ highPerformanceFuelSystems:
     pam_d: # Star 48B
         cost: 1203
         entryCost: 24060
+    #Keeping these parts grouped since they only work together, guessed at costs
+    ius_bottom: # 1st stage of Inertial Upper Stage
+        cost: 3200
+        entryCost: 12000
+    ius_top: # 2nd stage of Inertial Upper Stage
+        cost: 3800
+        entryCost: 15000
+    ius_dec_fs: # 1st stage IUS decoupler
+        cost: 200
+        entryCost: 1200
+    ius_dec_ss: # 2nd stage IUS decoupler
+        cost: 200
+        entryCost: 1200
 
 hydroloxTL5:
     #Energia sustainer engine

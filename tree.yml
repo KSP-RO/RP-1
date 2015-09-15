@@ -635,6 +635,18 @@ earlyAvionics:
     RP0probeVanguardXray:
         cost: 160 # guess at cost, given experiments it carried
 
+    # US Probes Integration        
+    pioneer_0_1_2:
+        cost: 170 # guess, priced higher than Explorer-1 given capabilities
+        entryCost: 600
+    pioneer1_booster:
+        cost: 30
+        entryCost: 100
+    p1_decoupler:
+        cost: 10
+        entryCost: 50
+        
+
     # RN_Soviet_Probes
 
     sputnik1: *sputnik
@@ -814,6 +826,24 @@ basicAvionics:
         cost: 100
     sputnik3:
         cost: 300
+        
+    # US Probes Integration   
+    pioneer_3_4:
+        cost: 210 # guess, priced higher than Pioneer 0/1/2
+        entryCost: 800
+    vanguard-1:
+        cost: 210
+        entryCost: 800
+    vanguard-2:
+        cost: 240
+        entryCost: 1000
+    vanguard-3:
+        cost: 260
+        entryCost: 1200
+    explorer_6:
+        cost: 220
+        entryCost: 1000
+
 
 basicSolids:
     # Castor I (Sergeant / M33) solid motor
@@ -885,6 +915,19 @@ stability:
     # With Avionics! :)
     probeCoreOcto2: # a fictional "ultra-light" probe core
         cost: 1000
+    
+    # US Probes Integration 
+    grab-1:
+        cost: 100 # estimate based on capabilites in game
+        entryCost: 800
+    tiros-1:
+        cost: 480 # estimate based on capabilites (included engine) in game
+        entryCost: 1250
+    transit2a:
+        cost: 140 # cost kept comparable with other low tech probes
+    pioneer_5:
+        cost: 360
+        entryCost: 1200
 
     # Early solar -- again, expensive.
     solarPanels5:
@@ -1503,6 +1546,21 @@ landing:
         
     RO-SurveyorVernier:
         cost: 30 # not a 4-way, but it throttles. 100lbf same as the RCSBlock tho.
+        
+    #US Probes Integration
+    # Keep these grouped together since they work as a kit
+    rn_surveyor3:
+        cost: 1400
+        entryCost: 4000
+    rn_surveyor_engines:
+        cost: 310
+        entryCost: 1800
+    rn_surveyor_retro:
+        cost: 180
+        entryCost: 1000
+    rn_surveyor_solar:
+        cost: 220
+        entryCost: 1200
 
 supersonicFlight: # Advanced jet engines
     #Engines
@@ -1817,6 +1875,11 @@ advElectrics:
         cost: 200
     1x3WPanels:
         cost: 450
+        
+    #US Probes integration
+    pioneer_10_11:
+        cost: 800
+        entryCost: 2000
 
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
@@ -1838,6 +1901,21 @@ advFuelSystems: # TL4 solids
         cost: 6250 # Guess from 1205 and 1207
     FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
         cost: 7218 # 24.36m nautix, assume 1985 dollars
+        
+    #US Probes Integration
+    #Keeping these parts grouped since they only work together, guessed at costs
+    ius_bottom: # 1st stage of Inertial Upper Stage
+        cost: 3200
+        entryCost: 12000
+    ius_top: # 2nd stage of Inertial Upper Stage
+        cost: 3800
+        entryCost: 15000
+    ius_dec_fs: # 1st stage IUS decoupler
+        cost: 200
+        entryCost: 1200
+    ius_dec_ss: # 2nd stage IUS decoupler
+        cost: 200
+        entryCost: 1200
     
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm
@@ -1882,6 +1960,11 @@ highPerformanceFuelSystems:
     solidBooster1-1: # Castor 120
     solidBooster_sm: # Star 48B (PAM-B)
         cost: 1203 # nautix 4.06m, assume 1985 dollars
+    
+    #US Probes Integration
+    pam_d: # Star 48B
+        cost: 1203
+        entryCost: 24060
 
 hydroloxTL5:
     #Energia sustainer engine
@@ -1962,6 +2045,13 @@ advExploration:
         cost: 300 # FIXME
 
 precisionEngineering:
+    #US Probes Integration
+    rn_voyager: 
+        cost: 800
+        entryCost: 10000
+    rn_vpam: # Payload assist module for Voyager
+        cost: 260
+        entryCost: 1000
 
 specializedConstruction:
 
@@ -2004,6 +2094,16 @@ electronics:
 
 unmannedTech:
 
+    #US Probes Integration
+    magellan:
+        cost: 5000
+        entryCost: 46000
+    rn_magellan_scanner: 
+        cost: 100
+        entryCost: 1200
+    neo_ulysses: 5000
+        entryCost: 51000
+
 largeControl:
     # Early Control Moment Gyroscope, see #103
     advSasModule:
@@ -2029,6 +2129,50 @@ specializedElectrics:
 advUnmanned:
     probeCoreCube: # modern satellite bus
         cost: 15000 #FIXME
+        
+largeUnmanned:
+    
+    #US Probes Integration
+    neo_ds1: # Deep space 1
+        cost: 15000
+        entryCost: 60000
+    rn_messenger: # Messenger Probe
+        cost: 15000
+        entryCost: 60000
+    neo_near: # NEAR probe
+        cost: 15000
+        entryCost: 60000
+    neo_stardust: # Stardust Probe
+        cost: 15000
+        entryCost: 60000
+    eos_terra: # Earth Observing Sat Terra
+        cost: 15000
+        entryCost: 60000
+    eos_terraalt: # Side solar panels for Terra
+        cost: 1200
+        entryCost: 8000
+    eos_aqua: # Earth Observing Sat Aqua
+        cost: 15000
+        entryCost: 60000
+    eos_aura: # Earth Observing Sat Aura
+        cost: 15000
+        entryCost: 60000
+        
+artificialintelligence: 
+
+    #US Probes Integration
+    neo_dawn:
+        cost: 20000
+        entryCost: 80000
+    neo_deepimpact:
+        cost: 20000
+        entryCost: 80000
+    rn_new_horizons: 
+        cost: 20000
+        entryCost: 80000
+    eos_tdrs:
+        cost: 20000
+        entryCost: 80000
     
 advScienceTech:
 

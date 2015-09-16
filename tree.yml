@@ -2050,12 +2050,12 @@ advExploration:
 
 precisionEngineering:
     #US Probes Integration
-    rn_voyager: 
-        cost: 800
-        entryCost: 10000
-    rn_vpam: # Payload assist module for Voyager
-        cost: 260
-        entryCost: 1000
+    rn_voyager: # 865 mil for Voyager 1+2, reduced to 212 mil to be reasonable with other probes…, 1/40th entrycost
+        cost: 2841
+        entryCost: 90921
+    rn_vpam: # Payload assist module for Voyager, increased entrycost to offset voyager probe costs
+        cost: 970
+        entryCost: 22729
 
 specializedConstruction:
 
@@ -2099,15 +2099,15 @@ electronics:
 unmannedTech:
 
     #US Probes Integration
-    magellan: # Price based on gao.gov figures, probe priced at 1/20th vs 1/40th of development for added cost for engine
+    magellan: # Price based on gao.gov figures, probe priced at 1/20th
         cost: 3448
         entryCost: 69778
     rn_magellan_scanner: 
         cost: 60
         entryCost: 1200
-    neo_ulysses:
-        cost: 5000
-        entryCost: 51000
+    neo_ulysses: # 207 mil per nasa, probe priced at 1/20th
+        cost: 2679
+        entryCost: 53596
     galileo_mb: # costs of project were 1.362 bil, due to other projects involved I reduced to half to keep in line
         cost: 4408
         entryCost: 176325
@@ -2160,45 +2160,45 @@ largeUnmanned:
     
     #US Probes Integration
     neo_ds1: # Deep space 1
-        cost: 15000
-        entryCost: 60000
+        cost: 1207
+        entryCost: 24139
     rn_messenger: # Messenger Probe
-        cost: 15000
-        entryCost: 60000
+        cost: 3775
+        entryCost: 75502
     neo_near: # NEAR probe, Wiki States 124.9 million for development, 1/15th cost of R&D for balance
         cost: 1131
         entryCost: 16972
     neo_stardust: # Stardust Probe
-        cost: 15000
-        entryCost: 60000
-    eos_terra: # Earth Observing Sat Terra
-        cost: 15000
-        entryCost: 60000
+        cost: 1894
+        entryCost: 37881
+    eos_terra: # Earth Observing Sat Terra - 1.3 bil per NASA, reduced to 712mil for gameplay/balance.. still expensive
+        cost: 6776
+        entryCost: 135536
     eos_terraalt: # Side solar panels for Terra
-        cost: 1200
-        entryCost: 8000
+        cost: 60
+        entryCost: 1200
     eos_aqua: # Earth Observing Sat Aqua
-        cost: 15000
-        entryCost: 60000
+        cost: 8404
+        entryCost: 168095
     eos_aura: # Earth Observing Sat Aura
-        cost: 15000
-        entryCost: 60000
+        cost: 6644
+        entryCost: 132892
         
 artificialintelligence: 
 
     #US Probes Integration
     neo_dawn:
-        cost: 20000
-        entryCost: 80000
-    neo_deepimpact:
-        cost: 20000
-        entryCost: 80000
+        cost: 3449
+        entryCost: 68995
+    neo_deepimpact: # cost based on 333 mil project costs and probe at 1/20th
+        cost: 2729
+        entryCost: 54595
     rn_new_horizons: 
-        cost: 20000
-        entryCost: 80000
+        cost: 5548
+        entryCost: 110975
     eos_tdrs:
-        cost: 20000
-        entryCost: 80000
+        cost: 4857
+        entryCost: 97159
     
 advScienceTech:
 

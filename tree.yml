@@ -1938,8 +1938,8 @@ hydroloxTL7:
     RD0146: # KB Khimavtomatiki RD-0146
     
     # Pratt & Whitney RL60
-    engineexper05: &RL60
-    RLA_mp_large_vac: *RL60
+    engineexper05:
+    RLA_mp_large_vac:
 
 stagedTL7:
     # AJ26-62 config here

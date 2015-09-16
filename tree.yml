@@ -636,15 +636,15 @@ earlyAvionics:
         cost: 160 # guess at cost, given experiments it carried
 
     # US Probes Integration        
-    pioneer_0_1_2:
-        cost: 170 # guess, priced higher than Explorer-1 given capabilities
-        entryCost: 3400
-    pioneer1_booster:
-        cost: 30
-        entryCost: 100
-    p1_decoupler:
-        cost: 10
-        entryCost: 50
+    vanguard-1:
+        cost: 210
+        entryCost: 4200
+    vanguard-2:
+        cost: 240
+        entryCost: 4800
+    vanguard-3:
+        cost: 260
+        entryCost: 5200
         
 
     # RN_Soviet_Probes
@@ -831,18 +831,18 @@ basicAvionics:
     pioneer_3_4:
         cost: 210 # guess, priced higher than Pioneer 0/1/2
         entryCost: 4200
-    vanguard-1:
-        cost: 210
-        entryCost: 4200
-    vanguard-2:
-        cost: 240
-        entryCost: 4800
-    vanguard-3:
-        cost: 260
-        entryCost: 5200
     explorer_6:
         cost: 220
         entryCost: 4400
+    pioneer_0_1_2:
+        cost: 170 # guess, priced higher than Explorer-1 given capabilities
+        entryCost: 3400
+    pioneer1_booster:
+        cost: 30
+        entryCost: 100
+    p1_decoupler:
+        cost: 10
+        entryCost: 50
 
 
 basicSolids:
@@ -1286,10 +1286,6 @@ basicScience:
         entryCost: 9000
         cost: 200
         
-    # US Probes Integration
-    pioneer_6_7_8_9:
-        cost: 500
-        entryCost: 10000
 
 flightControl:
     # Costed at $160 spacebucks, as it's the cost of a decent thruster ($60)
@@ -1540,6 +1536,11 @@ miniaturization:
 
     # Maybe...
     # dmImagingPlatform:
+    
+    # US Probes Integration
+    pioneer_6_7_8_9:
+        cost: 500
+        entryCost: 10000
 
 landing:
     miniLandingLeg:
@@ -2110,7 +2111,7 @@ unmannedTech:
         cost: 2679
         entryCost: 53596
     galileo_mb: # costs of project were 1.362 bil, due to other projects involved I reduced to half to keep in line
-        cost: 4408
+        cost: 8816
         entryCost: 176325
     galileo_aprobe_bot: # Bottom portion of Galileo
         cost: 60

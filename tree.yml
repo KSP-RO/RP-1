@@ -1964,10 +1964,10 @@ highPerformanceFuelSystems:
         cost: 800
         entryCost: 15000
     ius_dec_fs: # 1st stage IUS decoupler
-        cost: 200
+        cost: 60
         entryCost: 1200
     ius_dec_ss: # 2nd stage IUS decoupler
-        cost: 200
+        cost: 60
         entryCost: 1200
 
 hydroloxTL5:
@@ -2099,15 +2099,36 @@ electronics:
 unmannedTech:
 
     #US Probes Integration
-    magellan:
-        cost: 5000
-        entryCost: 46000
+    magellan: # Price based on gao.gov figures, probe priced at 1/20th vs 1/40th of development for added cost for engine
+        cost: 3448
+        entryCost: 69778
     rn_magellan_scanner: 
-        cost: 100
+        cost: 60
         entryCost: 1200
     neo_ulysses:
         cost: 5000
         entryCost: 51000
+    galileo_mb: # costs of project were 1.362 bil, due to other projects involved I reduced to half to keep in line
+        cost: 4408
+        entryCost: 176325
+    galileo_aprobe_bot: # Bottom portion of Galileo
+        cost: 60
+        entryCost: 1200
+    galileo_aprobe: # Atmospheric Probe
+        cost: 212
+        entryCost: 2240
+    galileo_hs_bot: # 3 part Galileo heatshield below
+        cost: 30
+        entryCost: 500
+    galileo_hs_mid: 
+        cost: 30
+        entryCost: 500
+    galileo_hs_top:
+        cost: 30
+        entryCost: 500
+    galileo_probe_hs_parachute: # Heatshield parachute
+        cost: 20
+        entryCost: 250
 
 largeControl:
     # Early Control Moment Gyroscope, see #103
@@ -2144,9 +2165,9 @@ largeUnmanned:
     rn_messenger: # Messenger Probe
         cost: 15000
         entryCost: 60000
-    neo_near: # NEAR probe
-        cost: 15000
-        entryCost: 60000
+    neo_near: # NEAR probe, Wiki States 124.9 million for development, 1/15th cost of R&D for balance
+        cost: 1131
+        entryCost: 16972
     neo_stardust: # Stardust Probe
         cost: 15000
         entryCost: 60000

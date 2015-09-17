@@ -525,7 +525,7 @@ subsonicFlight: # Now Supersonic Flight
     X1_Engine: *XLR11
     X1_Body:
         cost: 80 #FIXME
-    X1_Tail
+    X1_Tail:
         cost: 40 #ditto
 
 # TIER 1

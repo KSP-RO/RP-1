@@ -1654,6 +1654,18 @@ advConstruction:
     FASALM_DecouplerRing:
         entryCost: 3500
         cost: 100
+    ParaDockingPort: # Let's assume it's NDS
+        entryCost: 3500
+        cost: 400
+    dockingPort2: # NASA Docking System
+        entryCost: 3500
+         cost: 400
+    dockingPortLateral: # same, lateral shielded.
+        entryCost: 3500
+        cost: 400
+    dockingPort1: #same, shielded
+        entryCost: 3500
+        cost: 400
     
     #Apollo
     FASAApollo_CM_HeatShield:
@@ -1975,10 +1987,7 @@ exoticFuelStorage: #TL7 solids
         cost: 8000 # reasonable guess, 6.87 for 4seg
     MassiveBooster: *Shuttlebooster
 avionicsTL7:
-    ParaDockingPort: # Let's assume it's NDS
-    dockingPort2: # NASA Docking System
-    dockingPortLateral: # same, lateral shielded.
-    dockingPort1: #same, shielded
+
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:

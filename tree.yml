@@ -353,7 +353,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         entryCost: 0
         cost: 1
     # Core for V-2 stuff - early, heavy, but 20t avionics.
-    GuidanceStart1m:
+    GuidanceStart1m: &A4Guidance
         entryCost: 0
         cost: 300
         
@@ -478,7 +478,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 1
     # SXT He-111 alike
     SXTke111:
-        cost: 8
+        cost: 30
     # Prop engines
     DoubleWasp-R280065W: # Prop Engine
     ShvetsovM63: # Prop Engine
@@ -497,14 +497,36 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     RO-DerwentV:
         entryCost: 0
         cost: 18
+        
+    #Taerobee A-4/V-2/Bumper parts
+    # Note in mass production, the whole A-4 was only about 50-100 funds.
+    # But that's very, very unbalanced, and probably wrong to represent postwar costs anyway
+    Bumper_Control: *A4Guidance
+    Bumper_Nose:
+        entryCost: 0
+        cost: 30
+    Bumper_Body:
+        entryCost: 0
+        cost: 30
+    Bumper_Engine: &A4Engine
+        entryCost: 0
+        cost: 150
 
 subsonicFlight: # Now Supersonic Flight
-    RP0Nose-Cockpit:
+    RP0Nose-Cockpit: &X1Cockpit
         cost: 300
     # XLR11
     FASAGemini4X800Mini: &XLR11
         cost: 150 # same as AJ10
     SXTNK21BlockV: *XLR11
+    
+    #Taerobee X-1 parts
+    X1_Crew: *X1Cockpit
+    X1_Engine: *XLR11
+    X1_Body:
+        cost: 80 #FIXME
+    X1_Tail
+        cost: 40 #ditto
 
 # TIER 1
 basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines because they're late-50s vintage.
@@ -1004,7 +1026,7 @@ enhancedSurvivability: # Early capsules
         cost: 50
     FASAMercuryMiniSRB:
         cost: 2
-    FASA_Mercury_LES:
+    FASA_Mercury_LES: &MercuryLES
         entryCost: 8000
         cost: 400
     FASA_Mercury_Parachute_Box: #FIXME RC has cost issues?
@@ -1033,6 +1055,8 @@ enhancedSurvivability: # Early capsules
 
 # Stock capsule
     mk1pod: *mercury_pod
+    RO_mk1_LES: *MercuryLES
+
     
 # TIER 3
 advRocketry:

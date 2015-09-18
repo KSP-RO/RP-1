@@ -2191,7 +2191,7 @@ largeUnmanned:
         cost: 6644
         entryCost: 132892
         
-artificialintelligence: 
+artificialIntelligence: 
 
     #US Probes Integration
     neo_dawn:

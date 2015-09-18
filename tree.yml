@@ -2131,6 +2131,9 @@ unmannedTech:
     galileo_probe_hs_parachute: # Heatshield parachute
         cost: 20
         entryCost: 250
+    rn_galileo_scanner: # SCAN scanner for Galileo probe
+        cost: 200
+        entryCost: 2000
 
 largeControl:
     # Early Control Moment Gyroscope, see #103
@@ -2157,22 +2160,24 @@ specializedElectrics:
 advUnmanned:
     probeCoreCube: # modern satellite bus
         cost: 15000 #FIXME
-        
-largeUnmanned:
     
     #US Probes Integration
     neo_ds1: # Deep space 1
         cost: 1207
         entryCost: 24139
+    neo_stardust: # Stardust Probe
+        cost: 1894
+        entryCost: 37881
+        
+largeUnmanned:
+    
+    #US Probes Integration
     rn_messenger: # Messenger Probe
         cost: 3775
         entryCost: 75502
     neo_near: # NEAR probe, Wiki States 124.9 million for development, 1/15th cost of R&D for balance
         cost: 1131
         entryCost: 16972
-    neo_stardust: # Stardust Probe
-        cost: 1894
-        entryCost: 37881
     eos_terra: # Earth Observing Sat Terra - 1.3 bil per NASA, reduced to 712mil for gameplay/balance.. still expensive
         cost: 6776
         entryCost: 135536

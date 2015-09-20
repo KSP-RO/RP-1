@@ -736,6 +736,13 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     # Blok E (Luna/Vostok) RD-0105/0109
     liquidEngine3:
         cost: 350
+        
+    # RD-107 & RD-108. From SXT clones
+    R7_Core_Engine:
+        cost: 700
+
+    R7_Booster_Engine:
+        cost: 680
 
     # LR79 (Thor/Jupiter main engine, reworked as H-1)
     # and LR89 (Atlas booster)

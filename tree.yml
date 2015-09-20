@@ -1932,7 +1932,6 @@ advFuelSystems: # TL4 solids
     FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
         cost: 7218 # 24.36m nautix, assume 1985 dollars
         
-    
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm
     # (with thanks to @mcirish3)
@@ -2158,7 +2157,15 @@ unmannedTech:
     rn_galileo_scanner: # SCAN scanner for Galileo probe
         cost: 200
         entryCost: 2000
-
+    gdish_actual:
+        cost: 30
+        entryCost: 500
+    gdish_intended:
+        cost: 30
+        entryCost: 500
+    galileo_probe_parachute:
+        cost: 30
+        entryCost: 500
 largeControl:
     # Early Control Moment Gyroscope, see #103
     advSasModule:
@@ -2192,6 +2199,12 @@ advUnmanned:
     neo_stardust: # Stardust Probe
         cost: 1894
         entryCost: 37881
+    neo_stardust_collector:
+        cost: 30
+        entryCost: 500
+    neo_stardust_para:
+        cost: 30
+        entryCost: 500
         
 largeUnmanned:
     
@@ -2224,6 +2237,9 @@ artificialIntelligence:
     neo_deepimpact: # cost based on 333 mil project costs and probe at 1/20th
         cost: 2729
         entryCost: 54595
+    neo_deepimpact_impactor:
+        cost: 30
+        entryCost: 500
     rn_new_horizons: 
         cost: 5548
         entryCost: 110975

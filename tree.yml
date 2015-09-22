@@ -992,6 +992,10 @@ stability:
     sondex2pod:
         cost: 600 # This one costs a bit more due to a larger tank
         entryCost: 12000
+        
+    # Avionics
+    RP0probeAvionics1-4m:
+        cost: 175
 
 
 aerodynamicSystems: # X-15 parts, Mach 2 engines

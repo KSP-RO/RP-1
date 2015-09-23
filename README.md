@@ -35,6 +35,9 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Kerbal Construction Time
 - Taerobee
 
+**Supported**
+- Raidernick's US Probes
+
 **In Progress**
 - DMagic's Orbital Science
 - Universal Storage

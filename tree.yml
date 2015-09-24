@@ -1530,7 +1530,7 @@ simpleCommandModules: # Second gen capsules
     Tantares_Port_B:
         entryCost: 5000
         cost: 150
-	
+
 electrics:
     # Solar: Level 3 static, Level 2 moving
     # 40x the size of a small panel. Linear scaling would have this at 12000 ($12m!)

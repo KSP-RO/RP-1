@@ -1539,8 +1539,6 @@ simpleCommandModules: # Second gen capsules
     Tantares_Port_B:
         entryCost: 5000
         cost: 150
-        entryCost: 60000
-        cost: 1800
 	
 	
 electrics:

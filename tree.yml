@@ -812,6 +812,13 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     # R-7 main engines
     KW2mengineGriffonG8D:
         cost: 700
+    #Tantares R-7 & Vostok engine	
+    TLV_Engine_A:
+        cost: 700
+    Alto_Engine_A:
+        cost: 350
+    Alto_Engine_B:
+        cost: 25		
 
 basicConstruction:
     batteryPack:
@@ -838,6 +845,15 @@ basicConstruction:
     
     fairingSize3:
         cost: 0.1
+    #Tantares R-7 and Vostok tanks, FIXME prices
+    TLV_LFO_A:
+        cost: 120
+    TLV_LFO_B:
+        cost: 150
+    TLV_LFO_C:
+        cost: 150
+    Alto_LFO_A:
+        cost: 100
 
 basicAvionics:
      # *** Avionics
@@ -996,7 +1012,10 @@ stability:
     # Avionics
     RP0probeAvionics1-4m:
         cost: 175
-
+    #Vostok RCS
+    Almach_RCS_A:
+        entryCost: 1000
+        cost: 15
 
 aerodynamicSystems: # X-15 parts, Mach 2 engines
     Mark1Cockpit:
@@ -1111,7 +1130,22 @@ enhancedSurvivability: # Early capsules
 # Stock capsule
     mk1pod: *mercury_pod
     RO_mk1_LES: *MercuryLES
-
+    #Tantares Vostok
+    Vostok_Crew_A:
+        entryCost: 66000 # was 50m, +16m for heat shielding
+        cost: 1800
+    Vostok_Engine_A:
+        entryCost: 23500
+        cost: 850
+    Vostok_Decoupler_A:
+        entryCost: 500
+        cost: 50
+    Vostok_Service_A:
+        entryCost: 1000
+        cost: 100
+    Vostok_Parachute_A:
+        entryCost: 18000
+        cost: 500
     
 # TIER 3
 advRocketry:
@@ -1465,10 +1499,11 @@ simpleCommandModules: # Second gen capsules
     # all go to flight control
     # Gemini SM - has a fuel cell - electrics
     
-    # Soyuz parts
+    # Voskhod parts
     rn_voskhod_sc:
         entryCost: 71000 # was 55, +16 for shielding
         cost: 2000
+    #Soyuz parts
     ok_sa:
         entryCost: 70000
         cost: 2500
@@ -1488,9 +1523,26 @@ simpleCommandModules: # Second gen capsules
         entryCost: 60000
         cost: 1800
     tg_bo:
+    #Tantares Soyuz
+    Tantares_Crew_A:
+        entryCost: 70000
+        cost: 2500
+    Tantares_Parachute_A:
+        entryCost: 25000
+        cost: 800
+    Tantares_Orbital_A:
+        entryCost: 50000
+        cost: 1500
+    Tantares_Port_A:
+        entryCost: 5000
+        cost: 150
+    Tantares_Port_B:
+        entryCost: 5000
+        cost: 150
         entryCost: 60000
         cost: 1800
-
+	
+	
 electrics:
     # Solar: Level 3 static, Level 2 moving
     # 40x the size of a small panel. Linear scaling would have this at 12000 ($12m!)
@@ -1559,6 +1611,13 @@ electrics:
         cost: 1000 # FIXME guesses...
     FuelCellArray:
         cost: 2500 # FIXME, 2.5x above with 3x capacity.
+    #Tantares Soyuz
+    Tantares_Solar_B:
+        entryCost: 40000
+        cost: 1200
+    Tantares_Antenna_B:
+        entryCost: 35000
+        cost: 1000
 
 miniaturization:
     probeCoreHex: # Ranger Block III
@@ -1667,10 +1726,18 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
 hydroloxTL3:
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
-    # Bobcat's Soviet Engines -Need Costing-
-    NK33: # in NK-15 configuration
+    # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
+    NK33:	# in NK-15 configuration
+        cost: 670
     NK43: # in Nk-15V configuration
+        cost: 780
     # NK15s were flown on the 4 N1 launches, from 1969 to 1972
+
+    #Tantares N-1
+    LLV_Engine_A:	# in 28x NK-15 configuration
+        cost: 20100
+    LLV_Engine_B:	# in 8x NK-15V configuration
+        cost: 6240
 
     RD270:
     RD270M:

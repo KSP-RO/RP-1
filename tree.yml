@@ -809,7 +809,6 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
     # R-7 main engines
     KW2mengineGriffonG8D: *RD107
-        cost: 700
     #Tantares R-7 & Vostok engine	
     TLV_Engine_A: *RD107
     Alto_Engine_A: *VostokUpper

@@ -480,23 +480,54 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SXTke111:
         cost: 30
     # Prop engines
-    DoubleWasp-R280065W: # Prop Engine
+    SXTR280018WProp: #for F4U-4
+        cost: 23.7 # late war, for P-61, via Nash, see https://books.google.com/books?id=PerGbKxOPZYC&pg=PA73&lpg=PA73&dq=nash+kelvinator+aircraft+engine&source=bl&ots=0bowaYis6U&sig=MHQTtVTNkKWrlrYN66-GG18hytM&hl=en&ei=9jQ0TeSxJYOglAf6uJCHCg&sa=X&oi=book_result&ct=result&sqi=2#v=onepage&q=nash%20kelvinator%20aircraft%20engine&f=false
+    DoubleWasp-R280065W: # for P-61, slightly higher performance.
+        cost: 25 # vs above.
+    SXTPWR2800: # 63W, for P-47D
+        cost: 32 # tubos are expensive!
+    SXTR280021Prop: # -21, earlier turbo
+        cost: 27
+    
+    SXTKO211Dprop: #Jumo 211F
+        cost: 16 # total guess, but should be about the cost of an R-1820?
+        
+    SXT_Jumo213A:
+        cost: 20 # as above, guessing.
+    SXT_Jumo213E:
+        cost: 30 # ditto
+
+    SXTMerlin66prop:
+        cost: 20 # Guessed based off comparisons, early-War known Merlin cost.
+
+    SXTMerlin46Prop:
+        cost: 19
+        
     ShvetsovM63: # Prop Engine
     ShvetsovM82: # Prop Engine
     MercuryIX: # Prop Engine
     MercuryXV: # Prop Engine
     TwinCyclone-R2600-23: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
+        cost: 25 # guess
     TwinCyclone-R2600-7: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
+        cost: 20 #guess, balanced against 2800.
     TwinWasp-R1830-94: # Prop Engine R-1830 had 173,618 made across all variants Date:1930-1951
+        cost: 15 # guess, balanced against R1820.
     
+    # source for some engine prices http://www.warbirdsandairshows.com/Aircraft%20manufacturing/enginemanufacturewwii.htm
+    #V1710 - 33.3 before obsolete
+    #R2600 - 29 ^
+    #R1820 - 17.5
+    # Merlin (early) - 19 https://en.wikipedia.org/wiki/Rolls-Royce_Merlin#cite_note-1
+    # V1650 - 26 http://www.enginehistory.org/Packard/StatsAllPackardAero.pdf
     # Jet engines
     aje_welland:
-        cost: 15
+        cost: 30
     aje_nene:
-        cost: 25
+        cost: 50
     RO-DerwentV:
         entryCost: 0
-        cost: 18
+        cost: 36
         
     #Taerobee A-4/V-2/Bumper parts
     # Note in mass production, the whole A-4 was only about 50-100 funds.
@@ -1664,6 +1695,10 @@ supersonicFlight: # Advanced jet engines
         cost: 800 # total guess
     turboFanEngine: #J58
         cost: 1200 # total guess
+        
+    SXTPWPT6: #PT6A-27, probably
+        cost: 19 # based off a google for modern -27 prices.
+        
     # An-225 bits, treating as generic widebody civilian craft
     # total An-225 cost in funds: 19,500
     SXTOsaulNoseCockpitAn225: 
@@ -2080,6 +2115,7 @@ hydroloxTL5:
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
         cost: 1000 # FIXME total guess
+    SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
@@ -2607,8 +2643,6 @@ ORPHANS:
     legstrotLandingLeg:
     xluzopl:
     plommsLandingLeg:
-    
-    SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan
 
     # Here are a bunch of generic FASA tanks.
     
@@ -2638,12 +2672,9 @@ ORPHANS:
     SXTmk3Cockpit52:
     MEMLander:
     SXTLander: # PPD-8 can
-    SXTMerlin66prop: # 3 blade
-    SXTPWR2800: # 4 blade
     SXTNK12M:
     SXTVernier885:
     SXTOMS:
-    SXTKO211Dprop:
     SXTKO211prop:
     SXTKOPO4E:
     SXTNERVA:

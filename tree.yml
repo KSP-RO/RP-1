@@ -2155,6 +2155,22 @@ precisionEngineering:
         entryCost: 22729
 
 specializedConstruction:
+    ParaDockingPort: # Let's assume it's NDS
+    cost: 2000
+    entryCost: 26000
+    dockingPort2: # NASA Docking System
+    cost: 2000
+    entryCost: 26000
+    dockingPortLateral: # same, lateral shielded.
+    cost: 2000
+    entryCost: 26000
+    dockingPort1: #same, shielded
+    cost: 2000
+    entryCost: 26000
+    dockingPortLarge:
+    cost: 3400
+    entryCost: 35000
+    
 
 advLanding:
     

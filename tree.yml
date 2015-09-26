@@ -225,11 +225,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 40 # approximate, since this is a wing + control surface
     wingStrake:
         cost: 5
-    B9_Aero_Wing_Procedural_TypeA:
+    RO-B9ProcWing-Early:
         cost: 0.1
-    B9_Aero_Wing_Procedural_TypeB:
+    RO-B9ProcCS-Early:
         cost: 0.1
-    B9_Aero_Wing_Procedural_TypeC:
+    RO-B9ProcAMWing-Early:
         cost: 0.1
     SXTelevonSmall:
         cost: 25 # this and below using pCtrlSrf1
@@ -480,23 +480,54 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SXTke111:
         cost: 30
     # Prop engines
-    DoubleWasp-R280065W: # Prop Engine
+    SXTR280018WProp: #for F4U-4
+        cost: 23.7 # late war, for P-61, via Nash, see https://books.google.com/books?id=PerGbKxOPZYC&pg=PA73&lpg=PA73&dq=nash+kelvinator+aircraft+engine&source=bl&ots=0bowaYis6U&sig=MHQTtVTNkKWrlrYN66-GG18hytM&hl=en&ei=9jQ0TeSxJYOglAf6uJCHCg&sa=X&oi=book_result&ct=result&sqi=2#v=onepage&q=nash%20kelvinator%20aircraft%20engine&f=false
+    DoubleWasp-R280065W: # for P-61, slightly higher performance.
+        cost: 25 # vs above.
+    SXTPWR2800: # 63W, for P-47D
+        cost: 32 # tubos are expensive!
+    SXTR280021Prop: # -21, earlier turbo
+        cost: 27
+    
+    SXTKO211Dprop: #Jumo 211F
+        cost: 16 # total guess, but should be about the cost of an R-1820?
+        
+    SXT_Jumo213A:
+        cost: 20 # as above, guessing.
+    SXT_Jumo213E:
+        cost: 30 # ditto
+
+    SXTMerlin66prop:
+        cost: 20 # Guessed based off comparisons, early-War known Merlin cost.
+
+    SXTMerlin46Prop:
+        cost: 19
+        
     ShvetsovM63: # Prop Engine
     ShvetsovM82: # Prop Engine
     MercuryIX: # Prop Engine
     MercuryXV: # Prop Engine
     TwinCyclone-R2600-23: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
+        cost: 25 # guess
     TwinCyclone-R2600-7: # Prop Engine R-2600 had 87,579 made across all variants: total cost:$4,857,582.7 Date:1930-1940
+        cost: 20 #guess, balanced against 2800.
     TwinWasp-R1830-94: # Prop Engine R-1830 had 173,618 made across all variants Date:1930-1951
+        cost: 15 # guess, balanced against R1820.
     
+    # source for some engine prices http://www.warbirdsandairshows.com/Aircraft%20manufacturing/enginemanufacturewwii.htm
+    #V1710 - 33.3 before obsolete
+    #R2600 - 29 ^
+    #R1820 - 17.5
+    # Merlin (early) - 19 https://en.wikipedia.org/wiki/Rolls-Royce_Merlin#cite_note-1
+    # V1650 - 26 http://www.enginehistory.org/Packard/StatsAllPackardAero.pdf
     # Jet engines
     aje_welland:
-        cost: 15
+        cost: 30
     aje_nene:
-        cost: 25
+        cost: 50
     RO-DerwentV:
         entryCost: 0
-        cost: 18
+        cost: 36
         
     #Taerobee A-4/V-2/Bumper parts
     # Note in mass production, the whole A-4 was only about 50-100 funds.
@@ -511,6 +542,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     Bumper_Engine: &A4Engine
         entryCost: 0
         cost: 150
+    Bumper_Engine_Unclad: *A4Engine
+    Bumper_Fin:
+        entryCost: 0
+        cost: 5
 
 subsonicFlight: # Now Supersonic Flight
     RP0Nose-Cockpit: &X1Cockpit
@@ -685,7 +720,7 @@ earlyAvionics:
     WING_R7:
         cost: 10
 
-    r7_blok_bvgd_sput:
+    r7_blok_bvgd_sput: &R7Booster
         cost: 100
 
     r7_blok_a_sput:
@@ -729,19 +764,30 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
         cost: 10
     ramAirIntake:
         cost: 40
+        
+    # B9 wings
+    RO-B9ProcWing-Supersonic:
+        entryCost: 10000
+        cost: 0.1
+    RO-B9ProcCS-Supersonic:
+        entryCost: 10000
+        cost: 0.1
+    RO-B9ProcAMWing-Supersonic:
+        entryCost: 10000
+        cost: 0.1
 
 # TIER 2
 generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
 
     # Blok E (Luna/Vostok) RD-0105/0109
-    liquidEngine3:
+    liquidEngine3: &VostokUpper
         cost: 350
         
     # RD-107 & RD-108. From SXT clones
-    R7_Core_Engine:
+    R7_Core_Engine: &RD108
         cost: 700
 
-    R7_Booster_Engine:
+    R7_Booster_Engine: &RD107
         cost: 680
 
     # LR79 (Thor/Jupiter main engine, reworked as H-1)
@@ -800,18 +846,19 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 450
  
     # Raidernick R-7
-    r7_bvgd_engine:
-        cost: 700
+    r7_bvgd_engine: *RD107
 
-    r7_blok_a_engine:
-        cost: 680
+    r7_blok_a_engine: *RD108
 
-    r7_vernier_engine_v_fg:
+    r7_vernier_engine_v_fg: &R7Vernier
         cost: 20
 
     # R-7 main engines
-    KW2mengineGriffonG8D:
-        cost: 700
+    KW2mengineGriffonG8D: *RD107
+    #Tantares R-7 & Vostok engine	
+    TLV_Engine_A: *RD107
+    Alto_Engine_A: *VostokUpper
+    Alto_Engine_B: *R7Vernier		
 
 basicConstruction:
     batteryPack:
@@ -833,11 +880,21 @@ basicConstruction:
         cost: 380
         
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
-        cost: 5
+        cost: 75
     # FIXME other Titan II parts go here, with costing.
-    
+    FASAGeminiDecDark25_Titan3m:
+        cost: 75
+        
     fairingSize3:
         cost: 0.1
+    #Tantares R-7 and Vostok tanks
+    TLV_LFO_A:
+        cost: 50
+    TLV_LFO_B:
+        cost: 70
+    TLV_LFO_C: *R7Booster
+    Alto_LFO_A:
+        cost: 100
 
 basicAvionics:
      # *** Avionics
@@ -996,15 +1053,18 @@ stability:
     # Avionics
     RP0probeAvionics1-4m:
         cost: 175
-
+    #Vostok RCS
+    Almach_RCS_A:
+        entryCost: 1000
+        cost: 15
 
 aerodynamicSystems: # X-15 parts, Mach 2 engines
     Mark1Cockpit:
-        entryCost: 40000 # 40 out of the 50mil for airframe development
-        cost: 4000 # Guessed from NASA 19670001999, 4 out of the 7.8m for airframe
+        entryCost: 30000 # 30 out of the 50mil for airframe development
+        cost: 3000 # Guessed from NASA 19670001999, 3 out of the 7.8m for airframe
     Mark2Cockpit:
-        entryCost: 40000
-        cost: 1000
+        entryCost: 30000
+        cost: 2500
     MK1Fuselage:
         entryCost: 5000
         cost: 500 # guessed from above
@@ -1039,6 +1099,17 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     #intakes
     shockConeIntake:
         cost: 60
+        
+    # Wings
+    B9_Aero_Wing_Procedural_TypeA:
+        entryCost: 15000
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeB:
+        entryCost: 15000
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeC:
+        entryCost: 15000
+        cost: 0.1
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules
@@ -1098,20 +1169,31 @@ enhancedSurvivability: # Early capsules
         cost: 50
 
     # RN Vostok descent and service modules
-    rn_vostok_sc:
+    rn_vostok_sc: &VostokPod
         entryCost: 66000 # was 50m, +16m for heat shielding
         cost: 1800
     rn_vostok_tdu:
         entryCost: 25000
         cost: 1000
-    rn_vostok_para:
+    rn_vostok_para: &VostokParachute
         entryCost: 18000
         cost: 500
 
 # Stock capsule
     mk1pod: *mercury_pod
     RO_mk1_LES: *MercuryLES
-
+    #Tantares Vostok
+    Vostok_Crew_A: *VostokPod
+    Vostok_Engine_A:
+        entryCost: 23500
+        cost: 850
+    Vostok_Decoupler_A:
+        entryCost: 500
+        cost: 50
+    Vostok_Service_A:
+        entryCost: 1000
+        cost: 100
+    Vostok_Parachute_A: *VostokParachute
     
 # TIER 3
 advRocketry:
@@ -1465,10 +1547,11 @@ simpleCommandModules: # Second gen capsules
     # all go to flight control
     # Gemini SM - has a fuel cell - electrics
     
-    # Soyuz parts
+    # Voskhod parts
     rn_voskhod_sc:
         entryCost: 71000 # was 55, +16 for shielding
         cost: 2000
+    #Soyuz parts
     ok_sa:
         entryCost: 70000
         cost: 2500
@@ -1490,6 +1573,22 @@ simpleCommandModules: # Second gen capsules
     tg_bo:
         entryCost: 60000
         cost: 1800
+    #Tantares Soyuz
+    Tantares_Crew_A:
+        entryCost: 70000
+        cost: 2500
+    Tantares_Parachute_A:
+        entryCost: 25000
+        cost: 800
+    Tantares_Orbital_A:
+        entryCost: 50000
+        cost: 1500
+    Tantares_Port_A:
+        entryCost: 5000
+        cost: 150
+    Tantares_Port_B:
+        entryCost: 5000
+        cost: 150
 
 electrics:
     # Solar: Level 3 static, Level 2 moving
@@ -1559,6 +1658,13 @@ electrics:
         cost: 1000 # FIXME guesses...
     FuelCellArray:
         cost: 2500 # FIXME, 2.5x above with 3x capacity.
+    #Tantares Soyuz
+    Tantares_Solar_B:
+        entryCost: 40000
+        cost: 1200
+    Tantares_Antenna_B:
+        entryCost: 35000
+        cost: 1000
 
 miniaturization:
     probeCoreHex: # Ranger Block III
@@ -1611,6 +1717,10 @@ supersonicFlight: # Advanced jet engines
         cost: 800 # total guess
     turboFanEngine: #J58
         cost: 1200 # total guess
+        
+    SXTPWPT6: #PT6A-27, probably
+        cost: 19 # based off a google for modern -27 prices.
+        
     # An-225 bits, treating as generic widebody civilian craft
     # total An-225 cost in funds: 19,500
     SXTOsaulNoseCockpitAn225: 
@@ -1667,10 +1777,18 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
 hydroloxTL3:
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
-    # Bobcat's Soviet Engines -Need Costing-
-    NK33: # in NK-15 configuration
+    # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
+    NK33:	# in NK-15 configuration
+        cost: 670
     NK43: # in Nk-15V configuration
+        cost: 780
     # NK15s were flown on the 4 N1 launches, from 1969 to 1972
+
+    #Tantares N-1
+    LLV_Engine_A:	# in 28x NK-15 configuration
+        cost: 20100
+    LLV_Engine_B:	# in 8x NK-15V configuration
+        cost: 6240
 
     RD270:
     RD270M:
@@ -2027,6 +2145,7 @@ hydroloxTL5:
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
         cost: 1000 # FIXME total guess
+    SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
@@ -2555,8 +2674,6 @@ ORPHANS:
     legstrotLandingLeg:
     xluzopl:
     plommsLandingLeg:
-    
-    SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan
 
     # Here are a bunch of generic FASA tanks.
     
@@ -2586,12 +2703,9 @@ ORPHANS:
     SXTmk3Cockpit52:
     MEMLander:
     SXTLander: # PPD-8 can
-    SXTMerlin66prop: # 3 blade
-    SXTPWR2800: # 4 blade
     SXTNK12M:
     SXTVernier885:
     SXTOMS:
-    SXTKO211Dprop:
     SXTKO211prop:
     SXTKOPO4E:
     SXTNERVA:

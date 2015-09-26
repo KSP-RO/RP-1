@@ -2020,6 +2020,9 @@ hydroloxTL5:
     Ks25: &RS-25
         cost: 5700 # "40 million" assumed to be 2010 dollars
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
+    
+    KW3mengineWildcarXR: #HM7 engine for Ariane family
+        cost: 3000 # quite rough, going of 11.6 million for the stage in 1985 dollars
 
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T

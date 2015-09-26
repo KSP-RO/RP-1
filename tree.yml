@@ -225,11 +225,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 40 # approximate, since this is a wing + control surface
     wingStrake:
         cost: 5
-    B9_Aero_Wing_Procedural_TypeA:
+    RO-B9ProcWing-Early:
         cost: 0.1
-    B9_Aero_Wing_Procedural_TypeB:
+    RO-B9ProcCS-Early:
         cost: 0.1
-    B9_Aero_Wing_Procedural_TypeC:
+    RO-B9ProcAMWing-Early:
         cost: 0.1
     SXTelevonSmall:
         cost: 25 # this and below using pCtrlSrf1
@@ -764,6 +764,17 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
         cost: 10
     ramAirIntake:
         cost: 40
+        
+    # B9 wings
+    RO-B9ProcWing-Supersonic:
+        entryCost: 10000
+        cost: 0.1
+    RO-B9ProcCS-Supersonic:
+        entryCost: 10000
+        cost: 0.1
+    RO-B9ProcAMWing-Supersonic:
+        entryCost: 10000
+        cost: 0.1
 
 # TIER 2
 generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
@@ -1049,11 +1060,11 @@ stability:
 
 aerodynamicSystems: # X-15 parts, Mach 2 engines
     Mark1Cockpit:
-        entryCost: 40000 # 40 out of the 50mil for airframe development
-        cost: 4000 # Guessed from NASA 19670001999, 4 out of the 7.8m for airframe
+        entryCost: 30000 # 30 out of the 50mil for airframe development
+        cost: 3000 # Guessed from NASA 19670001999, 3 out of the 7.8m for airframe
     Mark2Cockpit:
-        entryCost: 40000
-        cost: 1000
+        entryCost: 30000
+        cost: 2500
     MK1Fuselage:
         entryCost: 5000
         cost: 500 # guessed from above
@@ -1088,6 +1099,17 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     #intakes
     shockConeIntake:
         cost: 60
+        
+    # Wings
+    B9_Aero_Wing_Procedural_TypeA:
+        entryCost: 15000
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeB:
+        entryCost: 15000
+        cost: 0.1
+    B9_Aero_Wing_Procedural_TypeC:
+        entryCost: 15000
+        cost: 0.1
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules

@@ -1924,8 +1924,10 @@ advElectrics:
 
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
-    toroidalAerospike: # J-2T (plug nozzle J-2)
+    toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
         cost: 9000 # J-2 is 8500
+    RLA_mp_large_spike: *J2T  
+  
 
 hydroloxTL4:
     FASAApolloLFEM1:
@@ -2010,6 +2012,9 @@ hydroloxTL5:
     RD0120: &RD-0120
         cost: 5000 # FIXME total guess
     SXTCommodore: *RD-0120
+    
+    KW3mengineGriffonXX: #four RD-0120s
+        cost: 20000 # FIXME
     
     # SSME / RS-24/5
     Ks25: &RS-25

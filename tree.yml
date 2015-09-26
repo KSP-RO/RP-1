@@ -2046,6 +2046,7 @@ specializedFuelStorage: # TL6 solids
         cost: 893
 
 hydroloxTL6:
+    KW3mengineTitanT1: #Vulcain 1/2
     VR1vulcan: #RS-68
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
 

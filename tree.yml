@@ -511,7 +511,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     Bumper_Engine: &A4Engine
         entryCost: 0
         cost: 150
-    Bumper_Engine_Unclad: *A4Engine
 
 subsonicFlight: # Now Supersonic Flight
     RP0Nose-Cockpit: &X1Cockpit

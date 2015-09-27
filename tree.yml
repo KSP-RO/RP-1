@@ -2160,6 +2160,7 @@ experimentalRocketry: #TL6, late 80s/90s
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
     RD180:
+        cost: 2700 
     RD191: # NPO Energomash RD-191
 
 specializedFuelStorage: # TL6 solids

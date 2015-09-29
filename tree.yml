@@ -2245,6 +2245,20 @@ composites:
 
 fieldScience:
 
+    #stock wheels, price = total guess
+    roverWheel2:
+        cost: 50
+        entryCost: 2000
+    roverWheel1:
+        cost: 100
+        entryCost: 4000
+    roverBody:
+        cost: 500
+        entryCost: 5000
+    seatExternalCmd:
+        cost: 25
+        entryCost: 500
+
 ionPropulsion:
 
 largeElectrics:
@@ -2309,6 +2323,9 @@ metaMaterials:
 hypersonicFlight:
 
 advancedMotors:
+    wheelMed:
+        cost: 125 #total guess
+        entryCost: 5000
 
 specializedElectrics:
     SXTsolarPanelhex:
@@ -2386,6 +2403,9 @@ experimentalElectrics:
 experimentalScience:
 
 experimentalMotors:
+    roverWheel3:
+        cost: 250 #total guess
+        entryCost: 10000
 
 robotics:
 

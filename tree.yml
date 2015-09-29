@@ -2460,6 +2460,9 @@ longTermHabitation:
     inflatoXL: #habitats designed by Bigelow Aerospace
     inflato1: #habitats designed by Bigelow Aerospace
     inflato2: #habitats designed by Bigelow Aerospace
+    crewCabin:
+        cost: 9000 # 2x bigger than mk2 lander can
+        entryCost: 180000
 
 resourceUtilization:
 
@@ -2511,6 +2514,12 @@ ultraHighEnergyPhysics:
 
 shortTermHabitation:
     Large_Crewed_Lab:
+        entryCost: 180000
+        cost: 9000 #the same as crewCabin
+    cupola:
+        entryCost: 40000
+        cost: 2000 #similar to mk1 lander, mk1 pod
+        
     # Salyut parts
     almaz3-5:
         entryCost: 150000

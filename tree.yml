@@ -2140,7 +2140,7 @@ hydroloxTL5:
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
     
     KW3mengineWildcarXR: #HM7 engine for Ariane family
-        cost: 3000 # quite rough, going of 11.6 million for the stage in 1985 dollars
+        cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
 
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T

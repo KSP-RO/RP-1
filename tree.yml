@@ -2381,6 +2381,20 @@ advScienceTech:
 
 aerospaceTech:
 
+    #SpacePlane Plus parts
+    mk2Cockpit.Standard:
+        cost: 9000 #2x bigger than Mk1 two-person
+        entryCost: 100000
+    mk2Cockpit.Inline
+        cost: 9000
+        entryCost: 100000
+    mk2CrewCabin
+        cost: 9000
+        entryCost: 90000
+    mk2DockingPort
+        cost: 1400 #2x bigger than dockingPort3 (1m)
+        entryCost: 96000
+
 experimentalElectrics:
 
 experimentalScience:

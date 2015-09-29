@@ -325,6 +325,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
     spotLight2:
         cost: 10
+    xluzopl: #AIES
+        cost: 1 
     
     #VSR
     SmallSpotLight:
@@ -454,6 +456,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 1.5
     KzThrustPlate:
         cost: 0.1
+    LRDecoupler: # AIES
+        cost: 20
     stackDecouplerMini:
         cost: 2
     radialDecoupler:
@@ -1686,6 +1690,10 @@ landing:
     miniLandingLeg:
         entryCost: 10000
         cost: 100
+        
+    expendLandingLeg: # AIES
+        entryCost: 10000
+        cost: 100
 
     # landing probe core
     probeCoreOcto: # Surveyor
@@ -1974,6 +1982,10 @@ spaceExploration: #crewed landing
         
     landingLeg1:
         cost: 120 #FIXME
+    legstrotLandingLeg: # AIES
+        cost: 120
+        entryCost: 2400
+    
     # LM
     FASALM_AscentStage:
         entryCost: 280000
@@ -2202,6 +2214,12 @@ avionicsTL7:
 advExploration:
     landingLeg1-2:
         cost: 300 # FIXME
+    godLandingLeg: # AIES
+        cost: 300
+        entryCost: 6000
+    godLandingleg2: # AIES
+        cost: 300
+        entryCost: 6000
 
 precisionEngineering:
     #US Probes Integration
@@ -2215,6 +2233,9 @@ precisionEngineering:
 specializedConstruction:
 
 advLanding:
+    plommsLandingLeg: # AIES
+        cost: 120
+        entryCost: 2400
     
 actuators:
 
@@ -2639,9 +2660,6 @@ ORPHANS:
     advSascr3:
     Sasdv4:
     AccelerometerFGA:
-    PAPBarometer:
-    retinaGravimeter:
-    Thermometermt1:
     adapterrads:
     ASDecoupler:
     basef1sond:
@@ -2652,19 +2670,12 @@ ORPHANS:
     desacopladorsat1:
     desacopladorsat2:
     desacopladorsat3:
-    LRDecoupler:
     Separatormultifs:
     strutsoportec1:
     saltguia:
     batteryBAEr:
     escaleralad1:
     escalerar2s:
-    expendLandingLeg:
-    godLandingLeg2:
-    godLandingLeg:
-    legstrotLandingLeg:
-    xluzopl:
-    plommsLandingLeg:
 
     # Here are a bunch of generic FASA tanks.
     

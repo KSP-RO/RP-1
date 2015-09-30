@@ -2256,7 +2256,7 @@ fieldScience:
         cost: 500
         entryCost: 5000
     seatExternalCmd:
-        cost: 25
+        cost: 250
         entryCost: 500
 
 ionPropulsion:

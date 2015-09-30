@@ -471,6 +471,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 2
     radialDecoupler:
         cost: 20
+    radialDecoupler1-2:
+        cost: 20
     #VSR mini decoupler
     smallRadialDecoupler:
         cost: 10
@@ -880,6 +882,11 @@ basicConstruction:
         cost: 102
     ksp_r_largeBatteryPack:
         cost: 124
+        
+    #radial attachment point - perfect for engine clusters
+    stackPoint1:
+        cost: 10 #shouldn't be much. it's just structural part
+        entryCost: 500
 
     # Tanks
     RCSTank1-2:
@@ -2291,10 +2298,18 @@ actuators:
         cost: 200
 
 composites:
+    #cost = total guess
+    stationHub:
+        cost: 100
+        entrycost: 2000
+    stationHubLarge:
+        cost: 200
+        entrycost: 4000
 
 fieldScience:
 
 ionPropulsion:
+    ionEngine: #stock ion engine
 
 largeElectrics:
 

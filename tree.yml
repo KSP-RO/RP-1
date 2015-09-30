@@ -2054,8 +2054,6 @@ hydroloxTL4:
         entryCost: 770000
         cost: 22000
     RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
-        entryCost: 60000 #the same as RL-10 (total guess)
-        cost: 2000
 
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
@@ -2097,8 +2095,6 @@ nuclearPropulsion:
 veryHeavyRocketry: #TL5 late 70s/80s tech
     engineLargeSkipper_125m: # Merlin A uses TL5 tech
     omsEngine: # AJ10-190 OME
-        cost: 350 #similar cost to Astris: hypergolic, 25kN engine (total guess)
-        entryCost: 6000
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -2178,8 +2174,6 @@ avionicsTL6:
 # TIER 8
 giganticRocketry: #TL7, present day
     liquidEngineMiniRescale: # Aestus II
-        cost: 700 # 2x bigger than AJ-190 OME, total guess
-        entryCost: 12000
     Size3EngineCluster: # SLS core (4x RS-25D/E)
         cost: 25000 # FIXME total guess based off RS-25 costs above.
 

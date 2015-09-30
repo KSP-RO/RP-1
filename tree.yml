@@ -2332,9 +2332,6 @@ specializedElectrics:
         cost: 1000
     largeSolarPanel:
         cost: 1500
-    rtg: #stock RTG
-        cost: 1000  #total guess , the same as large solar panel
-        entry cost: 30000
 
 advUnmanned:
     probeCoreCube: # modern satellite bus
@@ -2408,9 +2405,6 @@ experimentalMotors:
 robotics:
 
 automation:
-    mk2DroneCore:
-        cost: 500 #total guess
-        entryCost: 5000
 
 nanolathing:
    

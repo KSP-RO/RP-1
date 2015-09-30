@@ -1855,7 +1855,7 @@ advFlightControl:
     ok_pao: &SoyuzPAO
         entryCost: 75000
         cost: 2000
-    t_dp: &SoyuzDocking
+    t_dp: &SoyuzPortMale
         entryCost: 70000
         cost: 2000
     ok_dec: &SoyuzDecoupler
@@ -1870,7 +1870,7 @@ advFlightControl:
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
-    Tantares_Decoupler_A: *SoyuzPortMale
+    Tantares_Decoupler_A: *SoyuzDecoupler
     Tantares_RCS_A: #Same price as Apollo ones I guess
         entryCost: 3500
         cost: 100

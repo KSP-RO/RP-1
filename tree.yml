@@ -1761,7 +1761,11 @@ supersonicFlight: # Advanced jet engines
 
 highAltitudeFlight: # Early Spaceplanes
     RO-Mk1Cockpit:
+        entryCost: 60000 # 2x mark1cockpit
+        cost: 6000
     RO-Mk1CockpitInline:
+        entryCost: 60000 # 2x mark2cockpit
+        cost: 5000
     RO-Mk1Fuselage:
     RO-Mk1FuselagePres:
     RO-Mk1CrewModule: # 3-person 2.1m crew section from VSR KerbCan

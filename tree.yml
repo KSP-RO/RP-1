@@ -2301,6 +2301,14 @@ largeElectrics:
 electronics:
 
 unmannedTech:
+    
+    #AIES
+    novapod:
+        cost: 500 # the same as AS-4000 Satelite Bus
+        entryCost: 10000
+    torpod:
+        cost: 500 # the same as AS-4000 Satelite Bus
+        entryCost: 10000
 
     #US Probes Integration
     magellan: # Price based on gao.gov figures, probe priced at 1/20th
@@ -2369,7 +2377,10 @@ specializedElectrics:
 
 advUnmanned:
     probeCoreCube: # modern satellite bus
-        cost: 15000 #FIXME
+        cost: 500 #FIXME  now the same as AS-4000 Satelite bus 
+    UAEcubplate:
+        cost: 500 #based on AS-4000 Satelite bus from AIES
+        entryCost: 10000
     
     #US Probes Integration
     neo_ds1: # Deep space 1
@@ -2408,6 +2419,9 @@ largeUnmanned:
         entryCost: 132892
         
 artificialIntelligence: 
+    investpod: #first cubesats were launched in 2003
+        cost: 100 #total guess
+        entryCost: 10000
 
     #US Probes Integration
     neo_dawn:

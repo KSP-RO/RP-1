@@ -2042,8 +2042,10 @@ advElectrics:
 
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
-    toroidalAerospike: # J-2T (plug nozzle J-2)
+    toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
         cost: 9000 # J-2 is 8500
+    RLA_mp_large_spike: *J2T  
+  
 
 hydroloxTL4:
     FASAApolloLFEM1:
@@ -2129,10 +2131,16 @@ hydroloxTL5:
         cost: 5000 # FIXME total guess
     SXTCommodore: *RD-0120
     
+    KW3mengineGriffonXX: #four RD-0120s
+        cost: 20000 # FIXME
+    
     # SSME / RS-24/5
     Ks25: &RS-25
         cost: 5700 # "40 million" assumed to be 2010 dollars
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
+    
+    KW3mengineWildcarXR: #HM7 engine for Ariane family
+        cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
 
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
@@ -2152,6 +2160,7 @@ experimentalRocketry: #TL6, late 80s/90s
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
     RD180:
+        cost: 2700 
     RD191: # NPO Energomash RD-191
 
 specializedFuelStorage: # TL6 solids
@@ -2160,6 +2169,7 @@ specializedFuelStorage: # TL6 solids
         cost: 893
 
 hydroloxTL6:
+    KW3mengineTitanT1: #Vulcain 1/2
     VR1vulcan: #RS-68
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
 

@@ -562,6 +562,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         entryCost: 0
         cost: 5
 
+    Libra_Ladder_A:
+        cost: 1
+
 subsonicFlight: # Now Supersonic Flight
     RP0Nose-Cockpit: &X1Cockpit
         cost: 300
@@ -763,7 +766,12 @@ earlyAvionics:
     FASAExplorerNosecone:
         entryCost: 7000
         cost: 250
-
+    #Tantares R-7
+    TLV_LFO_A:
+        cost: 50
+    TLV_LFO_B:
+        cost: 70
+    TLV_LFO_C: *R7Booster
 
 aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
     aje_j57: #J57-P21
@@ -832,13 +840,16 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 # Black Arrow engines (derivatives of Black Knight engine, so can be early,
 # despite Black Arrow being quite late).
 # see Mature Solids for Waxwing.
-    SXTBlackAdder: # Gamma 8 (Black Arrow main engine)
-        cost: 800 # Stage cost 4m (in what-year dollars?)
+# Gamma 8 (Black Arrow main engine)
+    SXTBlackAdder: &Gamma8
+        cost: 500 # Stage cost 4m, nautix
 
-    SXTBlackAdder2: #Gamma 2 (Black Arrow upper stage engine)
-        cost: 300 # Stage cost $3m in 1970 (or was it 1985 dollars?),
+#Gamma 2 (Black Arrow upper stage engine)
+    SXTBlackAdder2: &Gamma2
+        cost: 200 # Stage cost $3m, nautix
 # but avionics probably a large part
-
+    NLV_ARRO_A: *Gamma8
+    NLV_Engine_B: *Gamma2
     #Ablestar's engine, has restarts
     SXTAJ10Mid:
         cost: 250
@@ -908,11 +919,6 @@ basicConstruction:
     fairingSize3:
         cost: 0.1
     #Tantares R-7 and Vostok tanks
-    TLV_LFO_A:
-        cost: 50
-    TLV_LFO_B:
-        cost: 70
-    TLV_LFO_C: *R7Booster
     Alto_LFO_A:
         cost: 100
 
@@ -1203,6 +1209,9 @@ enhancedSurvivability: # Early capsules
     rn_vostok_para: &VostokParachute
         entryCost: 18000
         cost: 500
+    rn_vostok_dec: &VostokDecoupler
+        entryCost: 7000
+        cost: 200
 
 # Stock capsule
     mk1pod: *mercury_pod
@@ -1212,13 +1221,14 @@ enhancedSurvivability: # Early capsules
     Vostok_Engine_A:
         entryCost: 23500
         cost: 850
-    Vostok_Decoupler_A:
-        entryCost: 500
-        cost: 50
+    Vostok_Decoupler_A: *VostokDecoupler
     Vostok_Service_A:
         entryCost: 1000
         cost: 100
-    Vostok_Parachute_A: *VostokParachute
+    Vostok_Mono_A:
+        entryCost: 1000
+        cost: 100
+    Almach_Parachute_A: *VostokParachute
     
 # TIER 3
 advRocketry:
@@ -1242,6 +1252,8 @@ advRocketry:
     liquidEngineorbit2: &LR91
         cost: 600
     FASAGeminiLR91: *LR91
+    #Europa launcher
+    NLV_Engine_A:
 
     FASASaturnUllage:
         cost: 10
@@ -1277,6 +1289,8 @@ fuelSystems: # Staged combustion, TL2
         cost: 400 # also is the RD-58 as CONFIG upgrade.
     # Bobcat's Soviet Engines -Need Costing-
     RD0124: # in RD-0110 configuration
+    ALV_Engine_A: #Proton first stage, 6x RD-253, first hypergolic staged combustion
+    ALV_Engine_B: #RD-210/211, Proton Second Stage
 
 matureSolids:
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
@@ -1458,7 +1472,8 @@ flightControl:
     FASAAgena_Engine_FP: # flight pack (secondary propulsion system) for Agena B/D restartable engine
         cost: 300    
 # Gemini parts
-    FASAGeminiNoseCone2: # FASAGeminiNoseCone2White
+# FASAGeminiNoseCone2White
+    FASAGeminiNoseCone2: &GeminiPort
         entryCost: 50000
         cost: 1000
     FASAGeminiPod2RCS: # FC also FASAGeminiPod2RCSWhite
@@ -1467,7 +1482,8 @@ flightControl:
     FASAGeminiUtilitySasRcs: # FC
         entryCost: 40000
         cost: 800
-    FASA_Gemini_RCS_Thrusters: # FC
+    #FC
+    FASA_Gemini_RCS_Thrusters: &GeminiRCS
         entryCost: 3000
         cost: 60
         
@@ -1476,35 +1492,6 @@ flightControl:
     
     sasModule:
 
-    # Salyut parts
-    almaz_sr_retro:
-        entryCost: 1000
-        cost: 1000
-
-    # Soyuz parts
-    ok_sa_cap:
-        entryCost: 25000
-        cost: 800
-    # Soyuz parts
-    ok_tft:
-        entryCost: 25000
-        cost: 800
-
-    ok_pao:
-        entryCost: 75000
-        cost: 2000
-    t_dp:
-        entryCost: 70000
-        cost: 2000
-    ok_dec:
-        entryCost: 7000
-        cost: 200
-    ok_hs:
-        entryCost: 30000
-        cost: 1000
-    t_pao:
-        entryCost: 55000
-        cost: 1500
     rn_voskhod_airlock:
         entryCost: 50000
         cost: 1000
@@ -1514,13 +1501,12 @@ flightControl:
     rn_voskhod_retro_dec:
         entryCost: 7000
         cost: 200
-    rn_vostok_dec:
-        entryCost: 7000
-        cost: 200
 
     # Avionics
     SXT375mProbe: # Early Saturn IU (3.9M, 1000t)
         cost: 1500
+    Spica_RCS_A: *GeminiRCS
+    Spica_Port_A: *GeminiPort
 
 simpleCommandModules: # Second gen capsules
     # Extra survival modules, but not recyclers, they have
@@ -1561,10 +1547,11 @@ simpleCommandModules: # Second gen capsules
     FASAGeminiParachute2D:
         entryCost: 3000
         cost: 60
-    FASAGeminiParachute2:
+    FASAGeminiParachute2: &GeminiChute
         entryCost: 5500
         cost: 110
-    FASAGeminiPod2: # FASAGeminiPod2White
+    # FASAGeminiPod2White
+    FASAGeminiPod2: &GeminiPod 
         entryCost: 286000 # was 270m, +16m for shielding
         cost: 5400
 
@@ -1573,47 +1560,13 @@ simpleCommandModules: # Second gen capsules
     # Gemini SM - has a fuel cell - electrics
     
     # Voskhod parts
-    rn_voskhod_sc:
+    rn_voskhod_sc: &VoskhodPod
         entryCost: 71000 # was 55, +16 for shielding
         cost: 2000
-    #Soyuz parts
-    ok_sa:
-        entryCost: 70000
-        cost: 2500
-    ok_para:
-        entryCost: 25000
-        cost: 800
-    ok_bo_fem:
-        entryCost: 50000
-        cost: 1500
-    ok_bo_male:
-        entryCost: 50000
-        cost: 1500
-    t_af_bo:
-        entryCost: 60000
-        cost: 1800
-    t_bo:
-        entryCost: 60000
-        cost: 1800
-    tg_bo:
-        entryCost: 60000
-        cost: 1800
-    #Tantares Soyuz
-    Tantares_Crew_A:
-        entryCost: 70000
-        cost: 2500
-    Tantares_Parachute_A:
-        entryCost: 25000
-        cost: 800
-    Tantares_Orbital_A:
-        entryCost: 50000
-        cost: 1500
-    Tantares_Port_A:
-        entryCost: 5000
-        cost: 150
-    Tantares_Port_B:
-        entryCost: 5000
-        cost: 150
+    Voskhod_Crew_A: *VoskhodPod
+    # Tantares Gemini
+    Spica_Crew_A: *GeminiPod
+    Spica_Parachute_A: *GeminiChute
 
 electrics:
     # Solar: Level 3 static, Level 2 moving
@@ -1629,10 +1582,10 @@ electrics:
         cost: 450
 
     # Gemini SM - has a fuel cell
-    FASAGeminiUtilityPack:
+    FASAGeminiUtilityPack: &GeminiSM
         entryCost: 178000
         cost: 3560
-
+    Spica_Engine_A: *GeminiSM
     # This is a Mariner-level dish. Ten mariner probes cost $554m in 1960-1970s
     # dollars, including R&D, manufacture, and launch costs. The average probe
     # was $54m. If the cost is 1970s dollars, then that's $183m 1950s dollars,
@@ -1665,7 +1618,7 @@ electrics:
     s1_rsolar:
         entryCost: 40000
         cost: 1200
-    7k_ok_lsolar:
+    7k_ok_lsolar: &SoyuzSolar
         entryCost: 70000
         cost: 2000
     # Apollo parts
@@ -1684,9 +1637,7 @@ electrics:
     FuelCellArray:
         cost: 2500 # FIXME, 2.5x above with 3x capacity.
     #Tantares Soyuz
-    Tantares_Solar_B:
-        entryCost: 40000
-        cost: 1200
+    Tantares_Solar_B: *SoyuzSolar
     Tantares_Antenna_B:
         entryCost: 35000
         cost: 1000
@@ -1701,6 +1652,9 @@ miniaturization:
 
     # Maybe...
     # dmImagingPlatform:
+    #Venera/Mars landers
+    Fomalhaut_Control_A:
+    Fomalhaut_Science_A:
     
     # US Probes Integration
     pioneer_6_7_8_9:
@@ -1737,6 +1691,9 @@ landing:
     rn_surveyor_solar:
         cost: 220
         entryCost: 4400
+    #LK Antennas
+    Libra_Antenna_A:
+    Libra_Antenna_B:
 
 supersonicFlight: # Advanced jet engines
     #Engines
@@ -1805,24 +1762,28 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     #FASA
     FASALM_AscentEngine: *LMAE
     FASALM_DescentEngine: *LMDE
+    #Tantares
+    Castor_LM_Engine: *LMDE
     
 
 hydroloxTL3:
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
-    NK33:	# in NK-15 configuration
+    NK33: # in NK-15 configuration
         cost: 670
     NK43: # in Nk-15V configuration
         cost: 780
     # NK15s were flown on the 4 N1 launches, from 1969 to 1972
 
     #Tantares N-1
-    LLV_Engine_A:	# in 28x NK-15 configuration
+    LLV_Engine_A: # in 28x NK-15 configuration
         cost: 20100
-    LLV_Engine_B:	# in 8x NK-15V configuration
+    LLV_Engine_B: # in 8x NK-15V configuration
         cost: 6240
 
+    ALV_Engine_C: #RD-213/214
+    Libra_Engine_: #Block D RD-58
     RD270:
     RD270M:
 
@@ -1920,13 +1881,18 @@ advConstruction:
         entryCost: 14000
         cost: 400
     FASAFairingNoseconeHalf_10m: #Saturn V 396" Fairing Half
+    #N1 parts
+    LLV_LFO_A: #Block A
+    LLV_LFO_B: #Block B
+    LLV_LFO_C: #Block V
+    LLV_LFO_D: #Block G
 
 advFlightControl:
     # Salyut parts
     salyut_asas:
         entryCost: 80000
         cost: 12500
-    s1_dp:
+    s1_dp: &SoyuzPortFemale
         entryCost: 50000
         cost: 8000
     s6_dp:
@@ -1968,6 +1934,46 @@ advFlightControl:
     FASAApolloIU: &SaturnIU
         cost: 2000
     RP0probeAvionics66m: *SaturnIU
+    # Salyut parts
+    almaz_sr_retro:
+        entryCost: 1000
+        cost: 1000
+
+    # Soyuz parts
+    ok_sa_cap:
+        entryCost: 25000
+        cost: 800
+    # Soyuz parts
+    ok_tft:
+        entryCost: 25000
+        cost: 800
+
+    ok_pao: &SoyuzPAO
+        entryCost: 75000
+        cost: 2000
+    t_dp: &SoyuzPortMale
+        entryCost: 70000
+        cost: 2000
+    ok_dec: &SoyuzDecoupler
+        entryCost: 7000
+        cost: 200
+    ok_hs:
+        entryCost: 30000
+        cost: 1000
+    t_pao:
+        entryCost: 55000
+        cost: 1500
+
+    Tantares_Engine_A: *SoyuzPAO
+    Tantares_Engine_B: *SoyuzPAO
+    Tantares_Decoupler_A: *SoyuzDecoupler
+    Tantares_RCS_A: #Same price as Apollo ones I guess
+        entryCost: 3500
+        cost: 100
+    Tantares_Port_A: *SoyuzPortMale
+    Tantares_Port_B: *SoyuzPortFemale
+    #N-1
+    Libra_LFO_B:
 
 commandModules: # Third generation capsules, it would seem.
     Mark1-2Pod:
@@ -1998,6 +2004,38 @@ commandModules: # Third generation capsules, it would seem.
     FASA_Apollo_Float_Round:
         entryCost: 28000
         cost: 800
+    #Soyuz parts
+    ok_sa: &SoyuzPod
+        entryCost: 70000
+        cost: 2500
+    ok_para: &SoyuzParachute
+        entryCost: 25000
+        cost: 800
+    ok_bo_fem:
+        entryCost: 50000
+        cost: 1500
+    ok_bo_male: &SoyuzOM
+        entryCost: 50000
+        cost: 1500
+    t_af_bo:
+        entryCost: 60000
+        cost: 1800
+    t_bo:
+        entryCost: 60000
+        cost: 1800
+    tg_bo: &ProgressBO
+        entryCost: 60000
+        cost: 1800
+    #Tantares Soyuz
+    TLV_LES: *ApolloLES
+    Tantares_Crew_A: *SoyuzPod
+    Tantares_Parachute_A: *SoyuzParachute
+    Tantares_Orbital_A: *SoyuzOM
+    Hamal_Orbital_A: *ProgressBO
+    #TKS VA
+    Alanir_Crew_A:
+    Alnair_Decoupler_A:
+    Alnair_Engine_A: *ApolloLES
 
 spaceExploration: #crewed landing
     landerCabinSmall:
@@ -2015,7 +2053,7 @@ spaceExploration: #crewed landing
     FASALM_AscentStage:
         entryCost: 280000
         cost: 8000
-    FASALM_DescentStage:
+    FASALM_DescentStage: &LMDescentTank
         entryCost: 280000
         cost: 8000
     FASALM_DockingCone:
@@ -2036,6 +2074,16 @@ spaceExploration: #crewed landing
     FASALM_StairCase:
         entryCost: 7000
         cost: 200
+    #Tantares LM Descent Stage
+    Castor_LM_Tank: *LMDescentTank
+    #Tantares LK
+    Libra_Crew_A:
+    Libra_RCS_A:
+    Libra_LFO_A:
+    Libra_Engine_A:
+    Libra_Leg_A:
+    Libra_Nesting_A:
+
 advElectrics:
     # Salyut parts
     almaz_pan_l:
@@ -2190,6 +2238,8 @@ experimentalAerodynamics: #TL5 jets
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
+    Hamal_Battery_A: #Advanced Progress Batteries
+    Hamal_Control_B: #Advanced Progress SA
 
 # TIER 7
 experimentalRocketry: #TL6, late 80s/90s
@@ -2379,6 +2429,12 @@ unmannedTech:
     galileo_probe_parachute:
         cost: 30
         entryCost: 500
+    #Fobos-Grunt
+    Agena_Control_A:
+    Agena_Solar_A:
+    Agena_Mono_A:
+    Agena_RCS_A:
+    Agena_Structure_A:
 largeControl:
     # Early Control Moment Gyroscope, see #103
     advSasModule:
@@ -2431,7 +2487,7 @@ advUnmanned:
     neo_stardust_para:
         cost: 30
         entryCost: 500
-        
+
 largeUnmanned:
     
     #US Probes Integration
@@ -2453,7 +2509,17 @@ largeUnmanned:
     eos_aura: # Earth Observing Sat Aura
         cost: 6644
         entryCost: 132892
-        
+    #ATV
+    Capella_Control_A:
+    Capella_Mono_A:
+    Capella_Engine_A:
+    Capella_Structure_A:
+    #Cygnus
+    Pollux_Control_A:
+    Pollux_Engine_A:
+    Pollux_Solar_A:
+    Pollux_RCS_A:
+
 artificialIntelligence: 
 
     #US Probes Integration
@@ -2529,7 +2595,7 @@ heavyControl:
     # Control Moment Gyro, see #103
     asasmodule1-2:
     ATV_RCS_back: # ATVs aft RCS thrusters
-     
+
 offworldManufacturing:
 
 recycling:
@@ -2635,6 +2701,7 @@ shortTermHabitation:
     salyut7:
         entryCost: 170000
         cost: 75000
+    Hamal_Orbital_B: #MRMs
     # Skylab
     skylab:
         entryCost: 275000
@@ -2807,3 +2874,23 @@ ORPHANS:
     SXTK1BaseLarge:
     SXTK1Base5m:
     SXTmk2SAScore:
+
+    Tantares_Habitation_A:
+    Tantares_DockingMechanism_A:
+    Tantares_DockingMechanism_B:
+    Tantares_Orbital_B:
+    Polaris_Crew_A:
+    Polaris_Engine_A:
+    Polaris_Heatshield_A:
+    Polaris_LFO_A:
+    Polaris_Orbital_A:
+    Polaris_Port_A:
+    Polaris_Solar_A:
+    Polaris_Structure_A:
+    CLV_Engine_A:
+    CLV_LFO_A:
+    CLV_SRB_A:
+    CLV_Nose_A:
+    PLV_Engine_A:
+    PLV_Engine_B:
+    PLV_LFO_A:

@@ -2244,6 +2244,7 @@ avionicsTL7:
     dockingPort2: # NASA Docking System
     dockingPortLateral: # same, lateral shielded.
     dockingPort1: #same, shielded
+    mk2DockingPort:
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:
@@ -2381,6 +2382,16 @@ largeControl:
 advMetalWorks:
 
 advAerodynamics:
+
+    mk2CrewCabin:  
+        cost: 7500
+        entryCost: 80000 
+    mk2Cockpit_Standard:
+        cost: 13000
+        entryCost: 130000
+    mk2Cockpit_Inline:
+        cost: 12000
+        entryCost: 130000
 
 metaMaterials:
 

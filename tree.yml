@@ -66,9 +66,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     # Goo as a science wedge (from DMagic Orbital Science)
     dmUSGoo: *goo
-    
-    # Goo from FASA
-    FASAGeminiSciRadmeter: *goo
 
     longAntenna:
         cost: 5
@@ -2356,10 +2353,8 @@ composites:
     #cost = total guess
     stationHub:
         cost: 100
-        entrycost: 2000
     stationHubLarge:
         cost: 200
-        entrycost: 4000
 
 fieldScience:
 

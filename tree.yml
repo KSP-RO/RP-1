@@ -1408,7 +1408,6 @@ flightControl:
     
     sasModule:
 
-
     rn_voskhod_airlock:
         entryCost: 50000
         cost: 1000
@@ -1853,7 +1852,7 @@ advFlightControl:
         entryCost: 25000
         cost: 800
 
-    ok_pao: $SoyuzPAO
+    ok_pao: &SoyuzPAO
         entryCost: 75000
         cost: 2000
     t_dp: &SoyuzDocking

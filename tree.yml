@@ -1877,10 +1877,6 @@ advFlightControl:
     Tantares_Port_A: *SoyuzPortMale
     Tantares_Port_B: *SoyuzPortFemale
     #N-1
-    LLV_LFO_A:
-    LLV_LFO_B:
-    LLV_LFO_C:
-    LLV_LFO_D:
     Libra_LFO_B:
 
 commandModules: # Third generation capsules, it would seem.

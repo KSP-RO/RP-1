@@ -47,9 +47,15 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     sensorThermometer:
         cost: 8
+    
+    Thermometermt1: # AIES
+        cost: 8
 
     sensorBarometer:
         cost: 8
+        
+    PAPBarometer:
+        cost: 8 # AIES 
         
     # Goo is now bio sample. That's not hard to do.
     GooExperiment: &goo
@@ -60,6 +66,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     # Goo as a science wedge (from DMagic Orbital Science)
     dmUSGoo: *goo
+    
+    # Goo from FASA
+    FASAGeminiSciRadmeter: *goo
 
     longAntenna:
         cost: 5
@@ -974,6 +983,10 @@ survivability: # 3-Axis Stability and early probes ##
 stability:
     sensorGravimeter:
         cost: 100 # includes fixed-stars sensors etc
+    
+    retinaGravimeter: # AIES
+        cost: 100
+        entryCost: 2000
 
 
     # RCS joy.
@@ -2546,6 +2559,9 @@ antimatterPower:
 ultraHighEnergyPhysics:
 
 shortTermHabitation:
+
+    FASAGeminiMOLSci:
+
     Large_Crewed_Lab:
     # Salyut parts
     almaz3-5:

@@ -2332,7 +2332,7 @@ advUnmanned:
     neo_stardust_para:
         cost: 30
         entryCost: 500
-        
+
 largeUnmanned:
     
     #US Probes Integration
@@ -2724,7 +2724,6 @@ ORPHANS:
     Tantares_DockingMechanism_A:
     Tantares_DockingMechanism_B:
     Tantares_Orbital_B:
-    Hamal_Control_B:
     Polaris_Crew_A:
     Polaris_Engine_A:
     Polaris_Heatshield_A:

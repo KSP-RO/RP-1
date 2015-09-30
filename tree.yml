@@ -932,8 +932,9 @@ basicAvionics:
 
 basicSolids:
     # Castor I (Sergeant / M33) solid motor
-    solidBooster1-1Small:
+    solidBooster1-1Small: &CastorI
         cost: 300 # nautix 1.01m assume 1985 dollars
+    FASADeltaCastorSrb: *CastorI
 
     # Add Polaris and Scout parts here
     
@@ -2081,7 +2082,11 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
 #TIER 4.5
 largeVolumeContainment: # TL4.5 solids
     FASA_RO_UA1563:
+        cost: 7000 # little less than UA1564
+        entryCost: 170000
     FASA_RO_UA1564:
+        cost: 8000 # the same as 5-segment RSRMV
+        entryCost: 200000
     # Shuttle SRB here (it's a 1980 or so design, but it uses mid-late 70s tech.)
 
 nuclearPropulsion:

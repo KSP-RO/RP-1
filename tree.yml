@@ -454,12 +454,22 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     elevon5:
     nacelleBody:
     radialEngineBody:
+    
+    #Landing gears
     SmallGearBay:
         cost: 3
     GearFixed:
         cost: 1
     GearFree:
         cost: 1.5
+    BD_Adj_LG_Side: # Bahamuto Adjustable Landing Gear
+        cost: 5
+    B9_Utility_Landing_Gear_HDG1AL:
+        cost: 3
+    B9_Utility_Landing_Gear_HDG1A:
+        cost: 3
+        
+        
     KzThrustPlate:
         cost: 0.1
     LRDecoupler: # AIES
@@ -1116,6 +1126,14 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 10
     GearLarge:
         cost: 15
+    BD_Adj_LG_Medium: # Bahamuto
+        cost: 10
+    BD_Adj_LG_Large:
+        cost: 15
+    B9_Utility_Landing_Gear_HDG2A:
+        cost: 10
+    B9_Utility_Landing_Gear_HDG2AL:
+        cost: 10
         
     #XLR99
     # X-15 engine
@@ -2325,6 +2343,10 @@ advLanding:
     plommsLandingLeg: # AIES
         cost: 120
         entryCost: 2400
+    B9_Utility_Leg_H50:
+        cost: 300
+    B9_Utility_Leg_H50P:
+        cost: 300
     
 actuators:
 

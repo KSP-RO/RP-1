@@ -2539,6 +2539,11 @@ artificialIntelligence:
 advScienceTech:
 
 aerospaceTech:
+    mk3Cockpit_Shuttle:
+        cost: 26000 # 2x bigger than mk2 cockpit standard
+    mk3CargoBayL:
+    mk3CargoBayM:
+    mk3CargoBayS:
 
 experimentalElectrics:
 

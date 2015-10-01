@@ -2183,9 +2183,10 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
     # RD-170/171
-    SXTKD170:
-    RD171:
-    liquidEnginemogulmp1500:
+    SXTKD170: &RD-170
+        cost: 5400 # 2x RD-180 cost. RD-180 is derived from the RD-170/171
+    RD171: *RD-170
+    liquidEnginemogulmp1500: *RD-170
 
 highPerformanceFuelSystems:
     solidBoosterSmall: # Castor 30B
@@ -2250,6 +2251,7 @@ stagedTL6:
     RD180:
         cost: 2700 
     RD191: # NPO Energomash RD-191
+        cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
 
 specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30

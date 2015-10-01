@@ -2033,6 +2033,10 @@ commandModules: # Third generation capsules, it would seem.
     Alanir_Crew_A:
     Alnair_Decoupler_A:
     Alnair_Engine_A: *ApolloLES
+    # FASA Gemini Pod White
+    FASAGeminiPod2White: &GeminiPodWhite
+        entryCost: 366000 # was 350m, +16m for shielding
+        cost: 6000
 
 spaceExploration: #crewed landing
     landerCabinSmall:

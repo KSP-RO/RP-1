@@ -2631,7 +2631,8 @@ longTermHabitation:
         cost: 20000 # 4-person, total guess
     centrifugeXL:
         cost: 30000 # 6-person, total guess
-    inflatoFlat: 9000 # 4-person so the price is the same as for crewCabin
+    inflatoFlat: 
+        cost: 9000 # 4-person so price is the same as for the crewCabin
     crewCabin:
         cost: 9000 # 2x bigger than mk2 lander can
         entryCost: 180000

@@ -2322,6 +2322,8 @@ precisionEngineering:
 specializedConstruction:
 
 advLanding:
+    BaseMount: # Habitat pack
+        cost: 800 # landing gear x4
     plommsLandingLeg: # AIES
         cost: 120
         entryCost: 2400
@@ -2620,8 +2622,16 @@ hydroponics:
 
 longTermHabitation:
     inflatoXL: #habitats designed by Bigelow Aerospace
+        cost: 40500 # 18-person s0 4.5x crewCabin
     inflato1: #habitats designed by Bigelow Aerospace
+        cost: 13500 # 6-person so 1.5x crewCabin
     inflato2: #habitats designed by Bigelow Aerospace
+        cost: 6750 # 3-person so 0.75x crewCabin
+    centrifuge1:
+        cost: 20000 # 4-person, total guess
+    centrifugeXL:
+        cost: 30000 # 6-person, total guess
+    inflatoFlat: 9000 # 4-person so the price is the same as for crewCabin
     crewCabin:
         cost: 9000 # 2x bigger than mk2 lander can
         entryCost: 180000

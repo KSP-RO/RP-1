@@ -1252,8 +1252,11 @@ advRocketry:
     #Europa launcher
     NLV_Engine_A:
 
-    FASASaturnUllage:
+    FASASaturnUllage: &SaturnUllage
         cost: 10
+    KWsrbUllage: *SaturnUllage
+    KWsrbGlobeV: # S-IC retro rocket
+        cost: 20
         
     #Astris
     LargeOMS:
@@ -2257,11 +2260,16 @@ specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
     RLA_solid_medium_upper: # ATK Orion 50
         cost: 893
+    RO_KWsrbGlobeI_GEM: # GEM40, first flight 1990
+    RO_KWsrbGlobeI_GEM46: # first flight 1998
+    RO_KWsrbGlobeI_GEM60: # first flight 2002
+    KWsrbGlobeVI: # AJ-60A, first flight 2002
 
 hydroloxTL6:
     KW3mengineTitanT1: #Vulcain 1/2
     VR1vulcan: #RS-68
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
+    KW2mengineVestaVR9D: # japanese LE-7A
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.

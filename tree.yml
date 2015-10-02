@@ -1138,6 +1138,12 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     B9_Aero_Wing_Procedural_TypeC:
         entryCost: 15000
         cost: 0.1
+        
+    # SXT
+    LMKIIIAircraftFusLong: # crew cabin, 17-person
+        cost: 3000 # total guess
+    LMkIIIAircraftFus: # crew cabin, 9-person
+        cost: 1500 # total guess
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules

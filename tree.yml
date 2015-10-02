@@ -2350,6 +2350,19 @@ actuators:
         cost: 200
     TelescopeFullAScaleable:
         cost: 200
+        
+    # It would be nice to put the parts below in the later nodes
+    # (because half of the tech tree is empty) but
+    # I can't see "advanced actuators" and "experimental actuators" in the tree.
+    # They appear in my in-game tech tree but not here.
+    IR_RotatronVTOLScaleable:
+        cost: 300
+    IR_Rotatronmk2Scaleable:
+        cost: 300
+    dockingwasher_stdScaleable:
+        cost: 300
+    dockingwasher_freeScaleable:
+        cost: 300
 
 composites:
     #cost = total guess

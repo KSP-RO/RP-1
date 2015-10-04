@@ -2240,11 +2240,15 @@ largeVolumeContainment: # TL4.5 solids
         cost: 8000 # the same as 5-segment RSRMV
         entryCost: 200000
     # Shuttle SRB here (it's a 1980 or so design, but it uses mid-late 70s tech.)
+    XSLSSRB: #Shuttle booster - Chaka Monkey
+        cost: 6870 #8000 for a 5-segment
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
         cost: 25000 # FIXME total guess
     NP_lfe_25m_NERVA: *NERVA # Nova Punch, the same as stock nuclear engine
+    nervaII_kerbscalexx: *NERVA # Chaka monkey, the same as stock nuclear engine
+    constellationBNTR:
     
 # TIER 6
 veryHeavyRocketry: #TL5 late 70s/80s tech
@@ -2295,6 +2299,7 @@ hydroloxTL5:
     # SSME / RS-24/5
     Ks25: &RS-25
         cost: 5700 # "40 million" assumed to be 2010 dollars
+    SLS_RS25: *RS-25 #Spice Launch System (Macollo)
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
     
     KW3mengineWildcarXR: #HM7 engine for Ariane family
@@ -2335,7 +2340,9 @@ specializedFuelStorage: # TL6 solids
 
 hydroloxTL6:
     KW3mengineTitanT1: #Vulcain 1/2
-    VR1vulcan: #RS-68
+    VR1vulcan: &RS-68 #RS-68
+    bahars68b: *RS-68
+    xbahars68bx: *RS-68
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     KW2mengineVestaVR9D: # japanese LE-7A
 
@@ -2371,6 +2378,9 @@ exoticFuelStorage: #TL7 solids
     KWsrbGlobeX10L: &Shuttlebooster
         cost: 8000 # reasonable guess, 6.87 for 4seg
     MassiveBooster: *Shuttlebooster
+    SLS_b1_SRB: *Shuttlebooster
+    SLS_DKSSRB: #dark knight booster from SpiceLaunchSystem (Macollo), 11% more thrust
+    
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
     dockingPort2: # NASA Docking System

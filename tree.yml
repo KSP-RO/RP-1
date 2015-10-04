@@ -1727,7 +1727,11 @@ highAltitudeFlight: # Early Spaceplanes
 # TIER 4
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
+        cost: 350 #total guess (similar to the other 50-100kN hypergolic engines)
+        entryCost: 15000
     smallRadialEngine: # R-36/Tsyklon upper stage vernier FIXME cost
+        cost: 60 #total guess, 3x bigger than Atlas verniers (5kN)
+        entryCost: 3000
 
     FASAApolloLFEF1: &F-1
         entryCost: 409361

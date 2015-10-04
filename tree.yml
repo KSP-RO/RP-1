@@ -2288,6 +2288,7 @@ hydroloxTL6:
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.
     dockingPortLarge: # CBM
+    IACBM125m: # CBM from FusTek
 
 # TIER 8
 giganticRocketry: #TL7, present day
@@ -2320,6 +2321,7 @@ avionicsTL7:
     dockingPortLateral: # same, lateral shielded.
     dockingPort1: #same, shielded
     mk2DockingPort:
+    IACBM25m: # enlarged CBM from FusTek 
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:

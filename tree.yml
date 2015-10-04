@@ -1258,6 +1258,10 @@ advRocketry:
     #Astris
     LargeOMS:
         cost: 300
+        
+    #Proton
+    rn_proton_blockd_v: # blok-DM2 vernier
+    rn_proton_vernier:  # 3rd stage vernier
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -1288,6 +1292,13 @@ fuelSystems: # Staged combustion, TL2
     RD0124: # in RD-0110 configuration
     ALV_Engine_A: #Proton first stage, 6x RD-253, first hypergolic staged combustion
     ALV_Engine_B: #RD-210/211, Proton Second Stage
+    
+    #Proton - RaiderNick
+    rn_proton_blockd:
+    rn_proton_rd0210:
+    rn_proton_rd0212:
+    rn_proton_rd253:
+    
 
 matureSolids:
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
@@ -1350,6 +1361,24 @@ generalConstruction:
     Heatshield-10M:
         entryCost: 39000
         cost: 7200
+    
+    #Proton - Raider Nick
+    rn_protonk_stg1: # first stage tank
+    rn_protonk_stg2: # second stage
+    rn_protonk_stg3: # third stage
+    rn_proton_stg3_adapt: # Proton-Salyut adapter
+    rn_proton_blockd_dec: # blok dm2 decoupler
+        cost: 75 # the same as for a procedural 100kg decoupler
+    rn_proton_blockd_dec_z: # blok dm2, zond decoupler
+        cost: 75
+    rn_protonk_stg3_decoupler: # 3rd stage decoupler
+    rn_salyut1_fairing: &protonFairing
+        cost: 20
+    rn_tks_fairing: *protonFairing
+    rn_zond_fairing: *protonFairing
+    rn_salyut467_fairing: *protonFairing
+    rn_almaz_fairing: *protonFairing
+    rn_salyut7_fairing: *protonFairing
     
 
 basicScience:

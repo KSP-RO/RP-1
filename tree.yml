@@ -2340,9 +2340,9 @@ specializedFuelStorage: # TL6 solids
 
 hydroloxTL6:
     KW3mengineTitanT1: #Vulcain 1/2
-    VR1vulcan: &RS-68 #RS-68
-    bahars68b: *RS-68
-    xbahars68bx: *RS-68
+    VR1vulcan: # RS-68
+    bahars68b: # RS-68
+    xbahars68bx: # RS-68
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     KW2mengineVestaVR9D: # japanese LE-7A
 

@@ -1594,6 +1594,8 @@ simpleCommandModules: # Second gen capsules
     # Tantares Gemini
     Spica_Crew_A: *GeminiPod
     Spica_Parachute_A: *GeminiChute
+    
+    rn_zond_les: #zond launch escape system
 
 electrics:
     # Solar: Level 3 static, Level 2 moving

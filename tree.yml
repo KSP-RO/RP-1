@@ -885,6 +885,15 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
     r7_vernier_engine_v_fg: &R7Vernier
         cost: 20
+    r7_vostok_blok_e_lunar:
+    r7_vostok_blok_e:
+    molniya_blockl:
+    blockl_vernier:
+    r7_vostok_blok_e_vernier:
+    r7_vernier_engine_v_fg:
+    blockl_ullage:
+    r7_blok_i_m: # Molniya Block-I
+    
 
     # R-7 main engines
     KW2mengineGriffonG8D: *RD107
@@ -928,6 +937,35 @@ basicConstruction:
     #Tantares R-7 and Vostok tanks
     Alto_LFO_A:
         cost: 100
+        
+    #RaiderNick - Vostok, Molniya, tanks, fairings, decouplers, adapters
+    r7_adapter_blok_e: #decoupler
+        cost: 100
+    r7_adapter_blok_e_m:
+        cost: 100
+    luna_fairing:
+        cost: 10
+    luna_base:
+        cost: 10
+    r7_adapter_blok_i_v: #decoupler
+        cost: 100
+    r7_adapter_blok_i_m:
+        cost: 100
+    r7_adapter_blok_i_iv2:
+        cost: 100
+    r7_vostok_fairing_r: &r7_fairing
+        cost: 20
+    r7_vostok_fairing_l: *r7_fairing
+    r7_voskhod_fairing_r: *r7_fairing
+    r7_voskhod_fairing_l: *r7_fairing
+    r7_blok_bvgd: # Vostok
+        cost: 100 # the same as for the R7-Sputnik bvgd tank
+    r7:blok_bvgd_m: # Molniya
+        cost: 100
+    r7_blok_a: # Vostok
+        cost: 120 # the same as for the R7-Sputnik blok a
+    r7_blok_a_molniya: # Molniya
+        cot: 120
 
 basicAvionics:
      # *** Avionics
@@ -1283,6 +1321,9 @@ advRocketry:
     #Proton
     rn_proton_blockd_v: # blok-DM2 vernier
     rn_proton_vernier:  # 3rd stage vernier
+    
+    #RaiderNick - Soyuz
+    r7_vernier_blok_i_s_fg:
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -1401,6 +1442,17 @@ generalConstruction:
     rn_salyut467_fairing: *protonFairing
     rn_almaz_fairing: *protonFairing
     rn_salyut7_fairing: *protonFairing
+    
+    #RaiderNick - Soyuz
+    r7_blok_a_soyuz:
+        cost: 120 # the same as for the R7-Sputnik blok a
+    r7_blok_bvgd_s:
+        cost: 100 # the same as for the R7-Sputnik bvgd
+    r7_soyuz_fairing: &soyuzFairing
+    cost: 20
+    r7_soyuz_fairing2: *soyuzFairing
+    r7_blok_i_fairing: *soyuzFairing
+    r7_blok_i_fairing_s: *soyuzFairing
     
 
 basicScience:
@@ -2029,6 +2081,7 @@ advFlightControl:
     t_pao:
         entryCost: 55000
         cost: 1500
+    r7_les: # Soyuz Launch Escape System
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
@@ -2351,6 +2404,7 @@ giganticRocketry: #TL7, present day
         cost: 25000 # FIXME total guess based off RS-25 costs above.
     merlin1D: # StarShine Industries
     merlin1D_vac:
+    fregat1: #Soyuz Fregat, first flight - 2000
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X

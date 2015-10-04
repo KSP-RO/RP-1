@@ -1372,6 +1372,7 @@ generalConstruction:
     rn_proton_blockd_dec_z: # blok dm2, zond decoupler
         cost: 75
     rn_protonk_stg3_decoupler: # 3rd stage decoupler
+    rn_protonk_stg3_decoupler_extended: #another 3rd stage decoupler
     rn_salyut1_fairing: &protonFairing
         cost: 20
     rn_tks_fairing: *protonFairing

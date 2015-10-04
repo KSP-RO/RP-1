@@ -2297,6 +2297,8 @@ giganticRocketry: #TL7, present day
     liquidEngineMiniRescale: # Aestus II
     Size3EngineCluster: # SLS core (4x RS-25D/E)
         cost: 25000 # FIXME total guess based off RS-25 costs above.
+    merlin1D: # StarShine Industries
+    merlin1D_vac:
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X

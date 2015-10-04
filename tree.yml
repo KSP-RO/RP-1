@@ -1908,6 +1908,18 @@ advConstruction:
     LLV_LFO_B: #Block B
     LLV_LFO_C: #Block V
     LLV_LFO_D: #Block G
+    
+    #KAS parts. Cost = little less than for Infernal Robotics parts
+    KAS_Hook_Anchor:
+        cost: 100
+    KAS_Hook_Harpoon:
+        cost: 100
+    KAS_Hook_Magnet:
+        cost: 100
+    KAS_Hook_Winch2:
+        cost: 100
+    KAS_Hook_Winch1:
+        cost: 100
 
 advFlightControl:
     # Salyut parts
@@ -2356,7 +2368,14 @@ precisionEngineering:
         entryCost: 22729
 
 specializedConstruction:
-
+    
+    # KAS parts. cost = little less than for Infernal robotics parts.
+    KAS_Strut1:
+        cost: 100
+    KAS_CPort1:
+        cost: 100
+    
+    
 advLanding:
     plommsLandingLeg: # AIES
         cost: 120

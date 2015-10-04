@@ -2475,6 +2475,18 @@ advAerodynamics:
     mk2Cockpit_Inline:
         cost: 12000
         entryCost: 130000
+    adapterSize2-Mk2:
+    mk2_1m_AdapterLong:
+    mk2SpacePlaneAdapter:
+    mk2_1m_Bicoupler:
+    mk2Fuselage:
+    mk2FuselageLongLFO:
+    mk2FuselageShortLiquid:
+    mk2FuselageShortMono:
+    mk2FuselageShortLFO:
+    mk2CargoBayS:
+    mk2CargoBayL:
+    
 
 metaMaterials:
 

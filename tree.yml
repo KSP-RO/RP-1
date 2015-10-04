@@ -965,7 +965,7 @@ basicConstruction:
     r7_blok_a: # Vostok
         cost: 120 # the same as for the R7-Sputnik blok a
     r7_blok_a_molniya: # Molniya
-        cot: 120
+        cost: 120
 
 basicAvionics:
      # *** Avionics
@@ -1449,7 +1449,7 @@ generalConstruction:
     r7_blok_bvgd_s:
         cost: 100 # the same as for the R7-Sputnik bvgd
     r7_soyuz_fairing: &soyuzFairing
-    cost: 20
+        cost: 20
     r7_soyuz_fairing2: *soyuzFairing
     r7_blok_i_fairing: *soyuzFairing
     r7_blok_i_fairing_s: *soyuzFairing

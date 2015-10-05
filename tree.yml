@@ -1751,6 +1751,7 @@ supersonicFlight: # Advanced jet engines
         cost: 800 # FIXME total guess
     B9_Engine_Jet_Pod_Small: #JT8D-219
         cost: 800 # total guess
+    aje_jt8d: #JT8D
     turboFanEngine: #J58
         cost: 1200 # total guess
         
@@ -2230,6 +2231,9 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
         cost: 850 # FIXME total guess
     aje_f404: #F404
         cost: 600 # sourced from 145mil for 51 engines in 1995
+    aje_d30: # Soloviev D-30F6 (with afterburner), first run: ~1970-75
+    aje_cf6: # CF6, first run: 1971
+    B9_Engine_Jet_Pod_Medium: # CFM56, first run: 1974
 
 #TIER 4.5
 largeVolumeContainment: # TL4.5 solids
@@ -2693,6 +2697,8 @@ fusionRockets:
 
 colossalRocketry:
     RAPIER: # FIXME
+    B9_Engine_SABRE_S:
+    B9_Engine_SABRE_M:
     
 fusionPower:
 
@@ -2702,7 +2708,8 @@ orbitalAssembly:
 
 advAerospaceComposites:
 
-expAircraftEngines:
+expAircraftEngines: #TL6 jets?
+    B9_Engine_Jet_Turbofan_F119: #F-119 (F-22 Raptor)
 
 heavyControl:
     # Control Moment Gyro, see #103

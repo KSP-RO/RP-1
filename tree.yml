@@ -631,10 +631,6 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     LVT15: #RD-103
         cost: 850
     
-    # Taerobee: 
-    # first launch-1948 so maybe move them to start node?
-    Bumper_Engine: # A-4 engine (with boattail)
-    Bumper_Engine_Unclad: 
 
 engineering101:
     # Tanks

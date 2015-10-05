@@ -1590,7 +1590,7 @@ simpleCommandModules: # Second gen capsules
     3_75_Heatshield: *Heatshield-375
     Heatshield-4M:
         cost: 1800 #FIXME, cheaper than lunar rated 4m heatshield
-    Heatshield-5M
+    Heatshield-5M:
         cost: 2100 #FIXME, cheaper than lunar rated 5m heatshield
 
     # FASA Gemini

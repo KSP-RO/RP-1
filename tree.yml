@@ -490,6 +490,16 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     top100a1ur5:
     top100a1ur5b:
     top500a1ur5:
+    
+    # KIS
+    KIS_guide: &KIS
+        entryCost: 0
+        cost: 1
+    KIS_electricScrewdriver: *KIS
+    KIS_wrench: *KIS
+    KIS_bomb1:
+        entrycost: 0
+        cost: 10
 
     # Beechcraft Bonanza (SXT)
     SXTTinyprop: # IO-550-B Engine
@@ -655,6 +665,9 @@ engineering101:
     stackTriCoupler:
         cost: 50        # Made up, but not unreasonable
     KAS_Pylon1:
+        cost: 20
+    kis_concreteBase1: #the same thing as KAS_Pylon1
+        cost: 20
     
     # Decoupler
     stackDecoupler:
@@ -1352,6 +1365,15 @@ generalConstruction:
         cost: 25
     FASAGeminiMOLEquipStack:
         cost: 100
+        
+    #KIS cargo section
+    KIS_Container1:
+        cost: 10 # capacity 1000l
+    KIS_Container2:
+        cost: 60 # capacity 6000l
+    KIS_Container3:
+        cost: 180 # capacity 18000l
+    
         
     FASA_Atlas_LFT_Cone2: # Atlas E/F core
         cost: 300 # cheaper than original

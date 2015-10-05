@@ -153,6 +153,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
     SXTProtonlikeNoseCone:
         cost: 10
+    pointyNoseConeA:
+        cost: 10
+    pointyNoseConeB:
+        cost: 10
 
     # This part will soon hide itself when the
     # appropriate software releases are made.

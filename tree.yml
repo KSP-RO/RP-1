@@ -888,10 +888,10 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
     # R-7 main engines
     KW2mengineGriffonG8D: *RD107
-    #Tantares R-7 & Vostok engine	
+    #Tantares R-7 & Vostok engine
     TLV_Engine_A: *RD107
     Alto_Engine_A: *VostokUpper
-    Alto_Engine_B: *R7Vernier		
+    Alto_Engine_B: *R7Vernier
 
 basicConstruction:
     batteryPack:
@@ -985,7 +985,7 @@ survivability: # 3-Axis Stability and early probes ##
 
     # Heatshields
 
-    0625_Heatshield:	    
+    0625_Heatshield:
         entryCost: 18000
         cost: 300
     Heatshield-1M:
@@ -1113,7 +1113,7 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         entryCost: 10000
         cost: 1000
     
-    #Engines	
+    #Engines
     aje_j79:
         cost: 220
     aje_ramjet:
@@ -1654,6 +1654,9 @@ electrics:
     #
     # Plus they look pretty darn cool.
 
+    rtg:
+        cost: 1000
+
     rpwsAnt: &rpws
         cost: 500
     USRPWS: *rpws
@@ -2191,6 +2194,16 @@ advElectrics:
         cost: 800
         entryCost: 14000
 
+    # Remote Tech
+    RTLongAntenna2:
+        cost: 600
+    RTLongAntenna3:
+        cost: 700
+    commDish:
+        cost: 1100
+    RTLongDish2:
+        cost: 1400
+
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
     toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
@@ -2482,6 +2495,9 @@ ionPropulsion:
     ionEngine: #stock ion engine
 
 largeElectrics:
+    # Remote Tech
+    RTGigaDish2:
+        cost: 1700
 
 electronics:
 
@@ -2582,6 +2598,9 @@ specializedElectrics:
         cost: 1000
     largeSolarPanel:
         cost: 1500
+    # Remote Tech
+    RTGigaDish1:
+        cost: 1900
 
 advUnmanned:
     probeCoreCube: # modern satellite bus

@@ -1598,6 +1598,8 @@ simpleCommandModules: # Second gen capsules
     FASAGeminiParachute2: &GeminiChute
         entryCost: 5500
         cost: 110
+    FASAGeminiPodLight:
+        cost: 10
     # FASAGeminiPod2White
     FASAGeminiPod2: &GeminiPod 
         entryCost: 286000 # was 270m, +16m for shielding
@@ -2801,6 +2803,12 @@ shortTermHabitation:
         entryCost: 40000
         cost: 2000 #similar to mk1 lander, mk1 pod
         
+    FASAGeminiBigG:
+    FASAGeminiBigGWhite:
+    FASAGeminiLES:
+    FASAGeminiNoseCone2Aero:
+    FASABigGeminiRetroModule:
+    
     # Salyut parts
     almaz3-5:
         entryCost: 150000

@@ -1025,6 +1025,11 @@ stability:
 
     microEngine:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
+    dest5Engine:
+        cost: 120 # 2kN
+    microEngineex1sat:
+        cost: 30 # 0.5kN
+    
 
     # This is a fake engine, and essentially a big RCS thruster.
     # It's about double as powerful as the microEngine, so we cost it
@@ -2907,8 +2912,6 @@ ORPHANS:
     solarPanelsond1:
     solarPanelsuncat1:
     solarPanelsfa2:
-    dest5Engine:
-    microEngineex1sat:
     fuelTank7k:
     fuelTanklunderl:
     fuelTanksuperior3:

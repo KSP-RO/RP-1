@@ -2720,8 +2720,8 @@ expAircraftEngines: #TL6 jets?
     K-35B: &F-135
         cost: 1850 # 13.75M (2015 USD)- http://www.bga-aeroweb.com/Engines/PW-F135.html
     razorMk1: *F-135
-    KFAN: &F-135liftfan # the lift fan installed with F-135 engine on F-35 aircraft
-    cyclone: *F-135liftfan
+    KFAN: # the lift fan installed with F-135 engine on F-35 aircraft
+    cyclone: # the lift fan installed with F-135 engine on F-35 aircraft
     bd125vectorjet: # Lyulka AL-41 (Sukhoi T-50), first run 2010
     
 

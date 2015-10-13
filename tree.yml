@@ -514,9 +514,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 27
     KAXradialR-2800-21: *R2800-21
     KAXradialR3350: # B-29, A-1 Skyraider
-        cost: 33 # little more than R-2800-63w
+        cost: 33 # little more than R-2800-63w (2700HP - more powerful)
     KAXradialProp: # R-2800-10W
-        cost: 22 #litle smaller than R-2800-10W
+        cost: 22 #litle less than R-2800-18W (2080HP)
     
     SXTKO211Dprop: #Jumo 211F
         cost: 16 # total guess, but should be about the cost of an R-1820?
@@ -1764,7 +1764,7 @@ supersonicFlight: # Advanced jet engines
     turboFanEngine: #J58
         cost: 1200 # total guess
         
-    SXTPWPT6: &PT6-A27 #PT6A-27, probably
+    SXTPWPT6: &PT6A-27 #PT6A-27, probably
         cost: 19 # based off a google for modern -27 prices.
     KAXsportprop: *PT6A-27
         

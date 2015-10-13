@@ -1749,9 +1749,8 @@ supersonicFlight: # Advanced jet engines
     #Engines
     B9_Engine_Jet_Turbojet: #YJ93-GE-3
         cost: 800 # FIXME total guess
-    B9_Engine_Jet_Pod_Small: #JT8D-219
-        cost: 800 # total guess
     aje_jt8d: #JT8D
+        cost: 800 # total guess
     turboFanEngine: #J58
         cost: 1200 # total guess
         
@@ -2233,7 +2232,13 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
         cost: 600 # sourced from 145mil for 51 engines in 1995
     aje_d30: # Soloviev D-30F6 (with afterburner), first run ~1970-75
     aje_cf6: # CF6, first run 1971
+        cost: 850 # 6.3M (2011 USD)- http://www.bga-aeroweb.com/Engines/General-Electric-CF6.html
     B9_Engine_Jet_Pod_Medium: # CFM56, first run 1974
+        cost: 1175 # 8.75m (2014 USD)- http://www.bga-aeroweb.com/Engines/CFM56-F108.html
+    B9_Engine_Jet_Pod_Small: #  General Electric TF-34, first run 1971
+        cost: 260 # 1.95M (2014 USD)- http://www.bga-aeroweb.com/Engines/General-Electric-TF34.html
+    B9_Engine_VA1: &RollsRoycePegasus11 #first run 1974
+    KAXjumpjet: *RollsRoycePegasus11
 
 #TIER 4.5
 largeVolumeContainment: # TL4.5 solids
@@ -2308,6 +2313,7 @@ experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
         cost: 1000 # FIXME total guess
     SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
+    Mk2TwinTurbojet: # Lyulka AL-31F (Su-27), first run 1981
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
@@ -2710,6 +2716,14 @@ advAerospaceComposites:
 
 expAircraftEngines: #TL6 jets?
     B9_Engine_Jet_Turbofan_F119: #F-119 (F-22 Raptor)
+        cost: 1350 #10.03M (2012 USD)- http://www.bga-aeroweb.com/Engines/PW-F119.html
+    K-35B: &F-135
+        cost: 1850 # 13.75M (2015 USD)- http://www.bga-aeroweb.com/Engines/PW-F135.html
+    razorMk1: *F-135
+    KFAN: &F-135liftfan # the lift fan installed with F-135 engine on F-35 aircraft
+    cyclone: *F-135liftfan
+    bd125vectorjet: # Lyulka AL-41 (Sukhoi T-50), first run: 2010
+    
 
 heavyControl:
     # Control Moment Gyro, see #103

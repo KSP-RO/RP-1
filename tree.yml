@@ -575,6 +575,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     Libra_Ladder_A:
         cost: 1
+    SXTradialWindow:
+        cost: 1
 
 subsonicFlight: # Now Supersonic Flight
     RP0Nose-Cockpit: &X1Cockpit
@@ -2861,8 +2863,6 @@ ORPHANS:
     SXTtruckearSmall:
     SXTtruckmiddle:
 
-    # Let's build a passenger jet
-    SXTradialWindow:
 
     # FASA has unbalancing experiments, let's not have that.
     # These could be placed later on in the tech tree, but for

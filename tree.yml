@@ -2237,8 +2237,8 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
         cost: 1175 # 8.75m (2014 USD)- http://www.bga-aeroweb.com/Engines/CFM56-F108.html
     B9_Engine_Jet_Pod_Small: #  General Electric TF-34, first run 1971
         cost: 260 # 1.95M (2014 USD)- http://www.bga-aeroweb.com/Engines/General-Electric-TF34.html
-    B9_Engine_VA1: &RollsRoycePegasus11 #first run 1974
-    KAXjumpjet: *RollsRoycePegasus11
+    B9_Engine_VA1: #Rolls-Royce Pegasus 11 first run 1974
+    KAXjumpjet: #Rolls-Royce Pegasus 11 first run 1974
 
 #TIER 4.5
 largeVolumeContainment: # TL4.5 solids

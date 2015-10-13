@@ -1819,6 +1819,12 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     #Tantares
     Castor_LM_Engine: *LMDE
     
+    # RaiderNick
+    rn_lk_lander_858: # RD-858
+    rn_lk_lander_859: # RD-859
+    
+    
+    
 
 hydroloxTL3:
 
@@ -2004,6 +2010,7 @@ advFlightControl:
     almaz_sr_retro:
         entryCost: 1000
         cost: 1000
+    rn_uda: # docking adapter for Apollo-Soyuz Test Project
 
     # Soyuz parts
     ok_sa_cap:
@@ -2029,6 +2036,11 @@ advFlightControl:
     t_pao:
         entryCost: 55000
         cost: 1500
+    
+    rn_zond_dec: *SoyuzDecoupler
+    
+    rn_lok_dec: *SoyuzDecoupler # decoupler for 7K-LOK service module
+    rn_lok_tdu: # 7K-LOK service module
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
@@ -2074,6 +2086,7 @@ commandModules: # Third generation capsules, it would seem.
     ok_sa: &SoyuzPod
         entryCost: 70000
         cost: 2500
+    rn_zond_sa: *SoyuzPod
     ok_para: &SoyuzParachute
         entryCost: 25000
         cost: 800
@@ -2092,6 +2105,10 @@ commandModules: # Third generation capsules, it would seem.
     tg_bo: &ProgressBO
         entryCost: 60000
         cost: 1800
+    rn_lok_sa: # 7K-LOK descent module
+    rn_lok_bo: # 7K-LOK orbital module
+    rn_lok_para: # parachutes
+    
     #Tantares Soyuz
     TLV_LES: *ApolloLES
     Tantares_Crew_A: *SoyuzPod
@@ -2149,6 +2166,10 @@ spaceExploration: #crewed landing
     Libra_Engine_A:
     Libra_Leg_A:
     Libra_Nesting_A:
+    
+    #RaiderNick - LK lander
+    rn_lk_lander: # LK Lander pod
+    rn_lk_lander_legs:
 
 advElectrics:
     # Salyut parts

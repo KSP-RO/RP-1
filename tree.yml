@@ -2336,6 +2336,7 @@ specializedFuelStorage: # TL6 solids
 hydroloxTL6:
     KW3mengineTitanT1: #Vulcain 1/2
     VR1vulcan: #RS-68
+        cost: 2850 # 20M (2010 USD) http://forum.nasaspaceflight.com/index.php?topic=19938.90;wap2
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     KW2mengineVestaVR9D: # japanese LE-7A
 

@@ -2314,6 +2314,7 @@ avionicsTL5:
 experimentalRocketry: #TL6, late 80s/90s
     galaxvr2: # Aestus
     KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
+        cost: 615 # 2.5M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     Size2LFB: # Pyrios booster, technically TL7 but the engines are F-1s.
         cost: 43000 # FIXME guess based off 2x F-1 + tankage.
 
@@ -2335,9 +2336,13 @@ specializedFuelStorage: # TL6 solids
 
 hydroloxTL6:
     KW3mengineTitanT1: #Vulcain 1/2
+        cost: 6400 # 50x less than development cost, but I think it is still too expensive
+        entryCost: 320000 # 1300M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     VR1vulcan: #RS-68
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     KW2mengineVestaVR9D: # japanese LE-7A
+        cost: 3840 # 50x less than development cost
+        entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.

@@ -2356,6 +2356,7 @@ giganticRocketry: #TL7, present day
         cost: 25000 # FIXME total guess based off RS-25 costs above.
     merlin1D: # StarShine Industries
     merlin1D_vac:
+    RO-Kestrel: # Falcon 1
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X

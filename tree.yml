@@ -1311,14 +1311,22 @@ fuelSystems: # Staged combustion, TL2
         cost: 400 # also is the RD-58 as CONFIG upgrade.
     # Bobcat's Soviet Engines -Need Costing-
     RD0124: # in RD-0110 configuration
-    ALV_Engine_A: #Proton first stage, 6x RD-253, first hypergolic staged combustion
-    ALV_Engine_B: #RD-210/211, Proton Second Stage
+    ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
+        cost: 3580
+    ALV_Engine_B: #RD-0210/0211, Proton Second Stage
+        cost: 1300
     
     #Proton - RaiderNick
     rn_proton_blockd:
     rn_proton_rd0210:
     rn_proton_rd0212:
     rn_proton_rd253:
+	
+    #Proton -- Stock
+    RO-RD-253:
+        cost: 515 #5400k USD 1965 * stage mass ratio (459t/705t) * engine price ratio (80% of the stage price) / engine amount (6 on first stage) 
+    RO-RD-0210:
+        cost: 300
     
 
 matureSolids:
@@ -2351,6 +2359,7 @@ giganticRocketry: #TL7, present day
         cost: 25000 # FIXME total guess based off RS-25 costs above.
     merlin1D: # StarShine Industries
     merlin1D_vac:
+    liquidEngineMiniTurbo: #Blue Origin BE-4
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X

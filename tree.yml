@@ -2235,9 +2235,9 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
         cost: 850 # FIXME total guess
     aje_f404: #F404
         cost: 600 # sourced from 145mil for 51 engines in 1995
-    25mKossak: # Boeing 737-100 cokpit, first flight: 1967 (earliest version 737-100)
+    25mKossak: # Boeing 737-100 cokpit, first flight 1967 (earliest version 737-100)
         cost: 1575 # 20% of the total B-737-100 price (32M-1989 USD = 7,87M-1965 USD, source: https://en.wikipedia.org/wiki/Boeing_737)
-    SXTEntenteCordiale: # Concorde cockpit, first flight: 1969
+    SXTEntenteCordiale: # Concorde cockpit, first flight 1969
         cost: 5320 # 20% of the total Concorde price (198M-2015 USD = 26,61M-1965 USD, source: https://en.wikipedia.org/wiki/Concorde)
 
 #TIER 4.5

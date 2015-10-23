@@ -1874,7 +1874,9 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
     Libra_Engine_B: #Block D RD-58
         cost: 1468 #80% of the stage
     RD270:
+        cost: 18000
     RD270M:
+        cost: 21600
 
     #Proton - RaiderNick
     rn_proton_blockd: #according to wiki, 1835k USD 1965 for the whole block

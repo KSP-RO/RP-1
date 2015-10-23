@@ -571,6 +571,17 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     Libra_Ladder_A:
         cost: 1
+        
+    #NEBULA decals:
+    Decal curved: &decals
+        entryCost: 0
+        cost: 1
+    Flat decal: *decals
+    Long decal 1x2: *decals
+    Long decal 1x4: *decals
+    Long decal 1x8: *decals
+    Long decal 2x16: *decals
+    Long decal 4x32: *decals
 
 subsonicFlight: # Now Supersonic Flight
     RP0Nose-Cockpit: &X1Cockpit

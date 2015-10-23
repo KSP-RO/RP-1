@@ -1311,14 +1311,21 @@ fuelSystems: # Staged combustion, TL2
         cost: 400 # also is the RD-58 as CONFIG upgrade.
     # Bobcat's Soviet Engines -Need Costing-
     RD0124: # in RD-0110 configuration
-    ALV_Engine_A: #Proton first stage, 6x RD-253, first hypergolic staged combustion
-    ALV_Engine_B: #RD-210/211, Proton Second Stage
+    ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
+        cost: 3580
+    ALV_Engine_B: #RD-0210/0211, Proton Second Stage
+        cost: 1300
     
     #Proton - RaiderNick
-    rn_proton_blockd:
-    rn_proton_rd0210:
-    rn_proton_rd0212:
-    rn_proton_rd253:
+    rn_proton_rd0210: &RD0210
+        cost: 300
+    rn_proton_rd0212: *RD0210
+    rn_proton_rd253: &RD253
+        cost: 515 #5400k USD 1965 * stage mass ratio (459t/705t) * engine price ratio (80% of the stage price) / engine amount (6 on first stage) 
+
+    #Proton -- Stock
+    RO-RD-253: *RD253
+    RO-RD-0210: *RD0210
     
 
 matureSolids:
@@ -1385,8 +1392,11 @@ generalConstruction:
     
     #Proton - Raider Nick
     rn_protonk_stg1: # first stage tank
-    rn_protonk_stg2: # second stage
-    rn_protonk_stg3: # third stage
+        cost: 716
+    rn_protonk_stg2: &ProtonS2
+        cost: 312
+    rn_protonk_stg3: &ProtonS3
+        cost: 72
     rn_proton_stg3_adapt: # Proton-Salyut adapter
     rn_proton_blockd_dec: # blok dm2 decoupler
         cost: 75 # the same as for a procedural 100kg decoupler
@@ -1401,6 +1411,12 @@ generalConstruction:
     rn_salyut467_fairing: *protonFairing
     rn_almaz_fairing: *protonFairing
     rn_salyut7_fairing: *protonFairing
+
+    #Proton - Tantares
+    ALV_Decoupler_A:
+        cost: 75 #same as proc decoupler
+    ALV_LFO_A: *ProtonS2
+    ALF_LFO_B: *ProtonS3
     
 
 basicScience:
@@ -1837,9 +1853,14 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
         cost: 6240
 
     ALV_Engine_C: #RD-213/214
-    Libra_Engine_: #Block D RD-58
+    Libra_Engine_B: #Block D RD-58
+        cost: 1468 #80% of the stage
     RD270:
     RD270M:
+
+    #Proton - RaiderNick
+    rn_proton_blockd: #according to wiki, 1835k USD 1965 for the whole block
+        cost: 1835
 
 largeSolids: # TL3 solids
     solidBoosterMAX: &UA1205
@@ -2040,6 +2061,7 @@ advFlightControl:
     Tantares_Port_B: *SoyuzPortFemale
     #N-1
     Libra_LFO_B:
+        cost: 367
 
 commandModules: # Third generation capsules, it would seem.
     Mark1-2Pod:
@@ -2351,6 +2373,7 @@ giganticRocketry: #TL7, present day
         cost: 25000 # FIXME total guess based off RS-25 costs above.
     merlin1D: # StarShine Industries
     merlin1D_vac:
+    liquidEngineMiniTurbo: #Blue Origin BE-4
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X

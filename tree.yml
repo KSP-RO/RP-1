@@ -2138,7 +2138,7 @@ spaceExploration: #crewed landing
         entryCost: 2400
     
     # LM
-    FASALM_AscentStage:
+    FASALM_AscentStage: &LMAscentStage
         entryCost: 280000
         cost: 8000
     FASALM_DescentStage: &LMDescentTank
@@ -2171,6 +2171,9 @@ spaceExploration: #crewed landing
     Libra_Engine_A:
     Libra_Leg_A:
     Libra_Nesting_A:
+    #SXT LEM
+    MEMLander: *LMAscentStage
+    MEMDescentMod: *LMDescentTank
 
 advElectrics:
     # Salyut parts
@@ -2996,7 +2999,6 @@ ORPHANS:
     25mKossak:
     SXTEntenteCordiale:
     SXTmk3Cockpit52:
-    MEMLander:
     SXTLander: # PPD-8 can
     SXTNK12M:
     SXTVernier885:
@@ -3006,7 +3008,6 @@ ORPHANS:
     SXTNERVA:
     SXTNERVAB:
     SXTMk2LinearAerospike:
-    MEMDescentMod:
     SXTK1BaseLarge:
     SXTK1Base5m:
     SXTmk2SAScore:

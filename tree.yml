@@ -153,6 +153,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
     SXTProtonlikeNoseCone:
         cost: 10
+    pointyNoseConeA:
+        cost: 10
+    pointyNoseConeB:
+        cost: 10
 
     # This part will soon hide itself when the
     # appropriate software releases are made.
@@ -570,6 +574,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 5
 
     Libra_Ladder_A:
+        cost: 1
+    SXTradialWindow:
         cost: 1
 
 subsonicFlight: # Now Supersonic Flight
@@ -2916,8 +2922,6 @@ ORPHANS:
     SXTtruckearSmall:
     SXTtruckmiddle:
 
-    # Let's build a passenger jet
-    SXTradialWindow:
 
     # FASA has unbalancing experiments, let's not have that.
     # These could be placed later on in the tech tree, but for

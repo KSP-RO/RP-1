@@ -1317,6 +1317,7 @@ fuelSystems: # Staged combustion, TL2
         cost: 400 # also is the RD-58 as CONFIG upgrade.
     # Bobcat's Soviet Engines -Need Costing-
     RD0124: # in RD-0110 configuration
+        cost: 400 # total guess
     ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
         cost: 3580
     ALV_Engine_B: #RD-0210/0211, Proton Second Stage
@@ -2438,6 +2439,7 @@ hydroloxTL7:
     
     # Bobcat's Soviet Engines -Need Costing-
     RD0146: # KB Khimavtomatiki RD-0146
+        cost: 2000 # same as for RL10
     
     # Pratt & Whitney RL60
     engineexper05:

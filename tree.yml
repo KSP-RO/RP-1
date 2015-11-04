@@ -2880,6 +2880,7 @@ ultraHighEnergyPhysics:
 shortTermHabitation:
 
     FASAGeminiMOLSci:
+        cost: 9000 # same as stock lab
 
     Large_Crewed_Lab:
         entryCost: 180000

@@ -1311,6 +1311,7 @@ hydroloxTL2:
     SXTLT80: &J2Engine #J-2 200klbf model
         cost: 7500
     FASAApolloLFEJ2: *J2Engine
+    KW5mengineTitanV: 37500 # 5x J2
 
 fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
@@ -2292,6 +2293,7 @@ advFuelSystems: # TL4 solids
         cost: 6250 # Guess from 1205 and 1207
     FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
         cost: 7218 # 24.36m nautix, assume 1985 dollars
+    KWsrbGlobeX10L: *UA1207
         
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm
@@ -2343,6 +2345,8 @@ highPerformanceFuelSystems:
     solidBooster1-1: # Castor 120
     solidBooster_sm: # Star 48B (PAM-B)
         cost: 1203 # nautix 4.06m, assume 1985 dollars
+    KWsrbGlobeI: #Castor 4A first flight 1982
+        cost: 800 # total guess
     
     #US Probes Integration
     pam_d: # Star 48B
@@ -2407,10 +2411,24 @@ specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
     RLA_solid_medium_upper: # ATK Orion 50
         cost: 893
+    RO_KWsrbGlobeI: # Castor 4 AXL first test 1992
+        cost: 1000 # total guess
     RO_KWsrbGlobeI_GEM: # GEM40, first flight 1990
+        cost: 900 # total guess
     RO_KWsrbGlobeI_GEM46: # first flight 1998
+        cost: 1200 # total guess
+    KWsrbGlobeX: # GEM 46
+        cost: 1200 # total guess
     RO_KWsrbGlobeI_GEM60: # first flight 2002
+        cost: 1800 # total guess
+    KWsrbGlobeX2: # GEM 60
+        cost: 1800 # total guess
     KWsrbGlobeVI: # AJ-60A, first flight 2002
+        cost: 2400 # total guess
+    KWsrbGlobeX10S: # SRMU (Titan IV B)
+        cost: 7350 # somewhat higher than UA-1207
+    KWsrbGlobeX10S: # EAP (Ariane 5)
+        cost: 6000 # total guess
 
 hydroloxTL6:
     KW3mengineTitanT1: #Vulcain 1/2
@@ -2449,9 +2467,8 @@ stagedTL7:
 
 exoticFuelStorage: #TL7 solids
     #ATK L.S.G. 5-Segment RSRM
-    KWsrbGlobeX10L: &Shuttlebooster
+    MassiveBooster:
         cost: 8000 # reasonable guess, 6.87 for 4seg
-    MassiveBooster: *Shuttlebooster
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
     dockingPort2: # NASA Docking System

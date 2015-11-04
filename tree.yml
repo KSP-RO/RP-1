@@ -2231,6 +2231,7 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
     aje_f404: #F404
         cost: 600 # sourced from 145mil for 51 engines in 1995
     aje_d30: # Soloviev D-30F6 (with afterburner), first run ~1970-75
+        cost: 1200 # total guess
     aje_cf6: # CF6, first run 1971
         cost: 850 # 6.3M (2011 USD)- http://www.bga-aeroweb.com/Engines/General-Electric-CF6.html
     B9_Engine_Jet_Pod_Medium: # CFM56, first run 1974
@@ -2238,7 +2239,9 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
     B9_Engine_Jet_Pod_Small: #  General Electric TF-34, first run 1971
         cost: 260 # 1.95M (2014 USD)- http://www.bga-aeroweb.com/Engines/General-Electric-TF34.html
     B9_Engine_VA1: #Rolls-Royce Pegasus 11 first run 1974
+        cost: 300 # total guess
     KAXjumpjet: #Rolls-Royce Pegasus 11 first run 1974
+        cost: 300 # total guess
 
 #TIER 4.5
 largeVolumeContainment: # TL4.5 solids
@@ -2314,6 +2317,7 @@ experimentalAerodynamics: #TL5 jets
         cost: 1000 # FIXME total guess
     SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
     Mk2TwinTurbojet: # Lyulka AL-31F (Su-27), first run 1981
+        cost: 900 # total guess
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
@@ -2723,6 +2727,7 @@ expAircraftEngines: #TL6 jets?
     KFAN: # the lift fan installed with F-135 engine on F-35 aircraft
     cyclone: # the lift fan installed with F-135 engine on F-35 aircraft
     bd125vectorjet: # Lyulka AL-41 (Sukhoi T-50), first run 2010
+        cost: 1300 # total guess
     
 
 heavyControl:

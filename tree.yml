@@ -2649,6 +2649,18 @@ advAerodynamics:
     mk2CargoBayS:
     mk2CargoBayL:
     
+    # B9
+    B9_Cockpit_MK2:
+        cost: 12000
+        entryCost: 130000
+    B9_Cockpit_S3:
+        cost: 6000
+        entryCost: 60000 
+    B9_Cockpit_S2:
+        cost: 13000
+        entryCost: 130000
+    
+    
 
 metaMaterials:
 
@@ -2742,6 +2754,10 @@ artificialIntelligence:
 advScienceTech:
 
 aerospaceTech:
+    B9_Cockpit_MK5:
+        cost: 19000
+    HL_Aero_Cockpit
+        cost: 25000
 
 experimentalElectrics:
 

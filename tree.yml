@@ -1311,7 +1311,8 @@ hydroloxTL2:
     SXTLT80: &J2Engine #J-2 200klbf model
         cost: 7500
     FASAApolloLFEJ2: *J2Engine
-    KW5mengineTitanV: 37500 # 5x J2
+    KW5mengineTitanV:
+        cost: 37500 # 5x J2
 
 fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine

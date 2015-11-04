@@ -2756,7 +2756,7 @@ advScienceTech:
 aerospaceTech:
     B9_Cockpit_MK5:
         cost: 19000
-    HL_Aero_Cockpit
+    HL_Aero_Cockpit:
         cost: 25000
 
 experimentalElectrics:

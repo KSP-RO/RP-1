@@ -1162,6 +1162,10 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     B9_Aero_Wing_Procedural_TypeC:
         entryCost: 15000
         cost: 0.1
+    
+    SXTNK12M:
+        cost: 200 # total guess
+            
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules
@@ -3055,7 +3059,6 @@ ORPHANS:
     SXTEntenteCordiale:
     SXTmk3Cockpit52:
     SXTLander: # PPD-8 can
-    SXTNK12M:
     SXTVernier885:
     SXTOMS:
     SXTKO211prop:

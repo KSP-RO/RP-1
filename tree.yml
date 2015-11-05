@@ -673,7 +673,7 @@ engineering101:
         cost: 10
     ASDecoupler:
         cost: 30
-    strutsoprtec1:
+    strutsoportec1:
         cost: 30
 
     # Universal Storage structural

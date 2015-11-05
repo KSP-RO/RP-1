@@ -2383,6 +2383,7 @@ experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
         cost: 1000 # FIXME total guess
     SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
+        cost: 93 # 700k USD? http://www.techeblog.com/index.php/tech-gadget/ebay-watch-189-000-williams-fj44-2a-jet-engine
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.

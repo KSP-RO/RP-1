@@ -2560,7 +2560,7 @@ fieldScience:
         entryCost: 500
 
 ionPropulsion:
-    ionEngine: #stock ion engine
+    ionEngine: #stock ion engine - NSTAR
 
 largeElectrics:
     # Remote Tech

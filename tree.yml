@@ -2502,7 +2502,9 @@ advLanding:
         cost: 300
     
 actuators:
-
+    
+    GrapplingDevice: # Advanced Grabbing Unit
+        cost: 200 # same as for the IR parts below
     # Infernal Robotics parts.
 
     AdjustableRailScaleable:

@@ -2435,13 +2435,16 @@ giganticRocketry: #TL7, present day
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X
+        cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
+        entryCost: 158860 # 1200M USD http://www.parabolicarc.com/2013/10/07/billion-dollar-j2x-engine-mothballed/
     
     # Bobcat's Soviet Engines -Need Costing-
     RD0146: # KB Khimavtomatiki RD-0146
     
     # Pratt & Whitney RL60
-    engineexper05:
-    RLA_mp_large_vac:
+    engineexper05: &RL60
+        cost: 2300 # total guess but shouldn't be more expensive than J-2X right?
+    RLA_mp_large_vac: *RL60
 
 stagedTL7:
     # AJ26-62 config here

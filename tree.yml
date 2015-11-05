@@ -1032,6 +1032,13 @@ stability:
     microEngine:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
 
+    rcsThrustermicrosn:
+        cost: 15
+    AIESrcsThrusrmt1:
+        cost: 12
+    AIESrcsThrusrom9:
+        cost: 20
+
     # This is a fake engine, and essentially a big RCS thruster.
     # It's about double as powerful as the microEngine, so we cost it
     # appropriately.

@@ -2282,7 +2282,9 @@ hydroloxTL4:
         entryCost: 770000
         cost: 22000
     RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
-    # look at links in comments
+        cost: 650
+        entryCost: 27750
+        
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
     # NK33 and NK43 config here, parts produced ~100 the program was scrapped and never flown

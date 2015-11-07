@@ -1,0 +1,38 @@
+// RL10/60 CECE
+@PART[XXxAres1J2-XHIGH]:AFTER[RealismOverhaul]
+{
+	@MODULE[ModuleEngineConfigs]
+	{
+		%configuration = RL10B-2
+		@CONFIG[RL10B-2]
+		{
+			%cost = 0
+			%techRequired = hydroloxTL7
+		}
+		@CONFIG[RL10C-1]
+		{
+			%cost = 700
+			%techRequired = hydroloxTL7
+		}
+		@CONFIG[CECE-Base]
+		{
+			%cost = -1500
+			%techRequired = hydroloxTL7
+		}
+		@CONFIG[CECE-High]
+		{
+			%cost = -1500
+			%techRequired = hydroloxTL7
+		}
+		@CONFIG[CECE-Methane]
+		{
+			%cost = -2500
+			%techRequired = hydroloxTL7
+		}
+		@CONFIG[RL-60-Base]
+		{
+			%cost = -3000
+			%techRequired = hydroloxTL7
+		}
+	}
+}

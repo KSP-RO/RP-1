@@ -2446,6 +2446,9 @@ hydroloxTL7:
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
         entryCost: 158860 # 1200M USD http://www.parabolicarc.com/2013/10/07/billion-dollar-j2x-engine-mothballed/
     
+    XXxAres1J2-XHIGH:
+        cost: 5300 # pretty high but it is RL10B-2 configuration (1800 + 3500)
+    
     # Bobcat's Soviet Engines -Need Costing-
     RD0146: # KB Khimavtomatiki RD-0146
         cost: 2000 # same as for RL10

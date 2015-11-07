@@ -618,19 +618,19 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 20
     B9_Utility_Light_A8_White:
         cost: 40
-    B9_Utility_Light_A1_Closed
+    B9_Utility_Light_A1_Closed:
         cost: 5
-    B9_Utility_Light_N1_White
+    B9_Utility_Light_N1_White:
         cost: 1
-    B9_Utility_Light_N1_Large_White
+    B9_Utility_Light_N1_Large_White:
         cost: 2
-    B9_Engine_Jet_Pod_Medium_PylonS
+    B9_Engine_Jet_Pod_Medium_PylonS:
         cost: 20
-    B9_Engine_Jet_Pod_Medium_PylonR
+    B9_Engine_Jet_Pod_Medium_PylonR:
         cost: 20
-    B9_Engine_Jet_Pod_Small_PylonS
+    B9_Engine_Jet_Pod_Small_PylonS:
         cost: 10
-    B9_Engine_Jet_Pod_Small_PylonR
+    B9_Engine_Jet_Pod_Small_PylonR:
         cost: 10
         
 

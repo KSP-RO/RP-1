@@ -2622,17 +2622,18 @@ hydroponics:
 
 longTermHabitation:
     inflatoXL: #habitats designed by Bigelow Aerospace
-        cost: 40500 # 18-person s0 4.5x crewCabin
+        cost: 66200 # BA-2100, 500mln USD
     inflato1: #habitats designed by Bigelow Aerospace
-        cost: 13500 # 6-person so 1.5x crewCabin
+        cost: 16550 # BA-330, 125mln USD
     inflato2: #habitats designed by Bigelow Aerospace
-        cost: 6750 # 3-person so 0.75x crewCabin
-    centrifuge1:
-        cost: 20000 # 4-person, total guess
+        cost: 8275 #Sundancer, reasonable guess, 2x less than BA-330
+    centrifuge1: 
+        cost: 20000 # ISS Centrifuge demo, 113mln USD
     centrifugeXL:
-        cost: 30000 # 6-person, total guess
+        cost: 48980 # reasonable guess
+        entryCost: 489820 # 3700mln USD
     inflatoFlat: 
-        cost: 9000 # 4-person so price is the same as for the crewCabin
+        cost: 9000 # fictional habitat, not from Bigelow 4-person so price is the same as for the crewCabin
     crewCabin:
         cost: 9000 # 2x bigger than mk2 lander can
         entryCost: 180000

@@ -2862,7 +2862,7 @@ longTermHabitation:
     KarmonyNodeMkIII_Adapter: *Monkeyhab # 3-person
     MonkeyPodMTVTypeR: *Monkeyhab # 3-person
     
-    MonkeySMA8FPodLANDERPs: &Monkeyhab2# 2-person
+    MonkeySMA8FPodLANDERPs: &Monkeyhab2 # 2-person
         cost: 5400
     TESTMODULEADAPTER: *Monkeyhab2 # 2-person
     XKarmonyStarModule_AdapterS6632: *Monkeyhab2  #2-person

@@ -2433,6 +2433,8 @@ avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.
     dockingPortLarge: # CBM
     IACBM125m: # CBM from FusTek
+    XIACBM1_25m:
+    LazTekDragon2Dock:
 
 # TIER 8
 giganticRocketry: #TL7, present day
@@ -2457,6 +2459,8 @@ hydroloxTL7:
     engineexper05: &RL60
         cost: 2300 # total guess but shouldn't be more expensive than J-2X right?
     RLA_mp_large_vac: *RL60
+    
+    XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
 
 stagedTL7:
     # AJ26-62 config here

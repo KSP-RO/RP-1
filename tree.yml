@@ -599,19 +599,19 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     B9_Structure_P1_Surface:
         cost: 10
     B9_Structure_P2_Surface:
-        cost: 40
+        cost: 20
     B9_Structure_P4_Surface:
-        cost: 160
+        cost: 40
     B9_Structure_P8_Surface:
-        cost: 640
+        cost: 80
     B9_Structure_P1_Surface_Half:
         cost: 5
     B9_Structure_P2_Surface_Half:
-        cost: 20
+        cost: 10
     B9_Structure_P4_Surface_Half:
-        cost: 80
+        cost: 20
     B9_Structure_P8_Surface_Half:
-        cost: 320
+        cost: 40
     B9_Utility_Light_A1_White:
         cost: 5
     B9_Utility_Light_A4_White:

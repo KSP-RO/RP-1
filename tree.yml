@@ -377,15 +377,24 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     RO_FASA_ExplorerRCS:
         entryCost: 300 # ignored because start
         cost: 6
+    B9_Control_RCS_Port_R1X:
+        cost: 6
+    B9_Control_RCS_Port_R1X1x:
+        cost: 12
 
     # Engines
     sepMotor1:
         cost: 7
+    B9_Engine_T2A_SRB:
+        cost: 7
+    
 
     # Small solid
     # This is from VSR; not all players will have it.
     SnubOtron:
         entryCost: 0
+        cost: 3
+    B9_Engine_T2_SRBS:
         cost: 3
 
     # modeled on the electronics of WAC Corporal / Aerobee
@@ -1028,7 +1037,7 @@ stability:
     InlineRCS: # Gemini-like RCS trunk, but sized for Mk1 pod. VSR.
         entryCost: 1000
         cost: 40
-
+    
     microEngine:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
 
@@ -1539,6 +1548,18 @@ flightControl:
     HeavyRcs:
         entryCost: 3000
         cost: 60
+    B9_Control_RCS_Port_R1:
+        cost: 35
+        entryCost: 1600
+    B9_Control_RCS_Port_R5:
+        cost: 90
+        entryCost: 3500
+    B9_Control_RCS_Port_R6:
+        cost: 90
+        entryCost: 3500
+    B9_Control_RCS_Port_R12:
+        cost: 180
+        entryCost: 5000
         
     # Stock docking ports
     dockingPort3:  # 1m docking port (no crew if CLS installed)
@@ -2882,6 +2903,13 @@ exoticReactions:
 highEnergyScience:
 
 orbitalMegastructures:
+    # 8kN RCS for very heavy things like interplanetary spaceships
+    B9_Structure_HX_S_RCS_F:
+        cost: 120
+        entryCost: 4000
+    B9_Structure_HX_S_RCS_L:
+        cost: 240
+        entryCost: 6000
 
 specializedPlasmaTech:
 

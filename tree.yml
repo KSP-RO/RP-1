@@ -2542,8 +2542,11 @@ aerospaceTech:
     mk3Cockpit_Shuttle:
         cost: 26000 # 2x bigger than mk2 cockpit standard
     mk3CargoBayL:
+        cost: 500
     mk3CargoBayM:
+        cost: 250
     mk3CargoBayS:
+        cost: 125
 
 experimentalElectrics:
 

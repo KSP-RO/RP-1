@@ -2628,7 +2628,7 @@ longTermHabitation:
     inflato2: #habitats designed by Bigelow Aerospace
         cost: 8275 #Sundancer, reasonable guess, 2x less than BA-330
     centrifuge1: 
-        cost: 20000 # ISS Centrifuge demo, 113mln USD
+        cost: 14960 # ISS Centrifuge demo, 113mln USD
     centrifugeXL:
         cost: 48980 # reasonable guess
         entryCost: 489820 # 3700mln USD

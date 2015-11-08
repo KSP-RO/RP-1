@@ -1550,13 +1550,14 @@ flightControl:
     FASAAgena_Engine_FP: # flight pack (secondary propulsion system) for Agena B/D restartable engine
         cost: 300    
 # Gemini parts
-# FASAGeminiNoseCone2White
     FASAGeminiNoseCone2: &GeminiPort
         entryCost: 50000
         cost: 1000
-    FASAGeminiPod2RCS: # FC also FASAGeminiPod2RCSWhite
+    FASAGeminiNoseCone2White: *GeminiPort
+    FASAGeminiPod2RCS: &GeminiPodRCS
         entryCost: 36000
         cost: 720
+    FASAGeminiPod2RCSWhite: *GeminiPodRCS
     FASAGeminiUtilitySasRcs: # FC
         entryCost: 40000
         cost: 800
@@ -1640,10 +1641,10 @@ simpleCommandModules: # Second gen capsules
         cost: 110
     FASAGeminiPodLight:
         cost: 10
-    # FASAGeminiPod2White
     FASAGeminiPod2: &GeminiPod 
         entryCost: 286000 # was 270m, +16m for shielding
         cost: 5400
+    FASAGeminiPod2White: *GeminiPod
 
     # FASAGeminiNoseCone2, FASAGeminiPod2RCS / FASAGeminiUtilitySasRcs, FASA_Gemini_RCS_Thrusters
     # all go to flight control

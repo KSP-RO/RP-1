@@ -2906,15 +2906,18 @@ shortTermHabitation:
     # 1bln USD (1970) for development cost and 75mln USD (1970) for the unit cost 
     # 812mln USD (1965) for development and 59mln USD (1965) for the unit cost 
     FASAGeminiBigG: &BigG
-        cost: 31000
-        entryCost: 475000
+        cost: 21000
+        entryCost: 285000
     FASAGeminiBigGWhite: *BigG
     FASAGeminiNoseCone2Aero:
         cost: 3000
         entryCost: 52000
     FASABigGeminiRetroModule:
-        cost: 19000
+        cost: 10000
         entryCost: 75000
+    FASABigGDock: # Service Module
+        cost: 19000
+        entryCost: 190000
     FASAGeminiLES: # pricing based on Apollo LES
         cost: 5000
         entryCost: 175000

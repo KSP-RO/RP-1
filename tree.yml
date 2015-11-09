@@ -2403,6 +2403,7 @@ experimentalAerodynamics: #TL5 jets
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
+        cost: 3500 #somewhat higher than for Apollo docking port
     Hamal_Battery_A: #Advanced Progress Batteries
     Hamal_Control_B: #Advanced Progress SA
 
@@ -2443,8 +2444,9 @@ hydroloxTL6:
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.
-    dockingPortLarge: # CBM
-    IACBM125m: # CBM from FusTek
+    dockingPortLarge: &CBM
+        cost: 4500 
+    IACBM125m: *CBM
 
 # TIER 8
 giganticRocketry: #TL7, present day
@@ -2480,11 +2482,17 @@ exoticFuelStorage: #TL7 solids
     MassiveBooster: *Shuttlebooster
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
+        cost: 3500 # somewhat higher than for Apollo docking port
     dockingPort2: # NASA Docking System
+        cost: 3500
     dockingPortLateral: # same, lateral shielded.
+        cost: 4000
     dockingPort1: #same, shielded
-    mk2DockingPort:
+        cost: 4000
+    mk2DockingPort: # NDS from stock SpacePlanes
+        cost: 4000
     IACBM25m: # enlarged CBM from FusTek 
+        cost: 5000
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:

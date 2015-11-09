@@ -2394,6 +2394,8 @@ hydroloxTL5:
         cost: 5700 # "40 million" assumed to be 2010 dollars
     km_ssme_STS: *RS-25
     km_ssme_rs25: *RS-25
+    km_ssme_rs25ss: *RS-25
+    km_ssme_rs25s: *RS-25
     
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
     

@@ -2699,8 +2699,9 @@ hypersonicFlight:
     CSSNose:
     CSSEngineMount:
     
+    STSAirlock: # CSS AirLock + APASport
     CSSAirlock:
-    STSAirlock:
+    APASport:
     
     BoosterSeparator:
     CSS_SRBDecoupler:
@@ -2718,6 +2719,12 @@ hypersonicFlight:
     CSSCtrlSrfLeft:
     CSSCtrlSrfRight:
     
+    CSSVStabilizer: # STSTAIL
+    STSTAIL:
+    
+    CSSVStabilizerCtrlSrf: #STSTAILCS
+    STSTAILCS:
+    
     STSGearLeft: &STSGear
         cost: 20 # based on the cost of stock landing gears
     STSGearRight: *STSGear
@@ -2728,7 +2735,6 @@ hypersonicFlight:
     
     STSChute:
     STSBodyFlap:
-    STSTAIL2:
     STSCAM:
         cost: 10
     
@@ -2741,12 +2747,8 @@ hypersonicFlight:
     
     Shuttle?Manipulator:
     
-    CSSVStabilizer:
-    CSSVStabilizerCtrlSrf:
-
-    APASport:
     Cone: # tailcone placed at the end of Shuttle's fuselage (Enterprise - Approach and landing tests)
-    
+    ETDoors:
 
 advancedMotors:
     wheelMed:

@@ -2890,6 +2890,28 @@ longTermHabitation:
     crewCabin:
         cost: 9000 # 2x bigger than mk2 lander can
         entryCost: 180000
+        
+    # Orion 
+    # development cost: $8.5-10.3 billion + $4.7 billion during the Constellation program. Let's assume $14 billion http://www.choicesarizona.org/dbe/sls.html
+    # 14000 mln USD = 1 853 000k USD (1965)
+    # unit cost: $ 1 billion http://www.thespacereview.com/article/2330/1
+    # 1000 mln USD = 132 380 USD (1965) for capsule, docking port, parachutes, service module with solar panels and LES
+    
+    XOrionPodX: &ORIONPOD
+        cost: 60000
+        entryCost: 750000
+    XOrionPodXbb31: *ORIONPOD
+    XLFTORIONLARGE: # service module
+        cost: 60000
+        entryCost: 750000
+    xOrionLES:
+        cost: 5000 # cost based on ApolloLES
+        entryCost: 175000 # cost based on ApolloLES
+    OrionDockingPortXx: &ORIONDOCKPORT
+        cost: 4000 # cost based on Apollo parts. Docking port + chutes + Apollo top
+        entryCost: 175000 # cost based on Apollo parts. Docking port + chutes + Apollo top
+    OrionDockingPortXWSTANDARDDOCKPORT: *ORIONDOCKPORT
+    
 
 resourceUtilization:
 

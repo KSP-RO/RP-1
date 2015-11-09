@@ -2257,6 +2257,7 @@ advElectrics:
         entryCost: 35000
         cost: 1000
     radr: #SNAP-19
+        cost: 800 # total guess
     
     solarPanels1:
         cost: 500

@@ -1466,6 +1466,8 @@ basicScience:
     # DTS-M1
     mediumDishAntenna:
         cost: 500
+    Dishcl1:
+        cost: 500 # range 0.4M km
 
     # Science wedge (it's an empty compartment)
     US_R90_Wedge_ScienceBay:
@@ -1688,6 +1690,8 @@ electrics:
 
     RTShortDish2:
         cost: 800
+    Dishpcf:
+        cost: 800 # range 300M km
 
     # Radio and plasma wave antennae. Pretty much every probe to every
     # planet ever had these. The tech isn't fancy or hard, and since this
@@ -2277,6 +2281,10 @@ advElectrics:
         cost: 1100
     RTLongDish2:
         cost: 1400
+    Dishmccomu:
+        cost: 1000 # range 800M km
+    Dishomega2g: 
+        cost: 950 # range 600M km
 
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
@@ -2585,6 +2593,8 @@ largeElectrics:
     # Remote Tech
     RTGigaDish2:
         cost: 1700
+    dishcomlar1:
+        cost: 1500 # range 2000M km
 
 electronics:
 
@@ -2992,11 +3002,6 @@ ORPHANS:
     Antennaesc:
     Antennaexpatvr2:
     AntennaDF2:
-    Dishcl1:
-    Dishmccomu:
-    dishcomlar1:
-    Dishomega2g:
-    Dishpcf:
     investpod:
     moduldesspod:
     novapod:

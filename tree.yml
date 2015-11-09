@@ -2327,6 +2327,9 @@ largeVolumeContainment: # TL4.5 solids
         cost: 8000 # the same as 5-segment RSRMV
         entryCost: 200000
     # Shuttle SRB here (it's a 1980 or so design, but it uses mid-late 70s tech.)
+    SRB2D: &STSbooster
+        cost: 6780
+    CSS_SSRB: *STSbooster
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
@@ -2337,6 +2340,13 @@ nuclearPropulsion:
 veryHeavyRocketry: #TL5 late 70s/80s tech
     engineLargeSkipper_125m: # Merlin A uses TL5 tech
     omsEngine: # AJ10-190 OME
+    STSOMSEngineLeft:
+    STSOMSEngineRight:
+    STSOMSEngine:
+    CSSOMSEngineLeft:
+    CSSOMSEngineRight:
+    CSSOMSEngine:
+    
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -2382,6 +2392,9 @@ hydroloxTL5:
     # SSME / RS-24/5
     Ks25: &RS-25
         cost: 5700 # "40 million" assumed to be 2010 dollars
+    km_ssme_STS: *RS-25
+    km_ssme_rs25: *RS-25
+    
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
     
     KW3mengineWildcarXR: #HM7 engine for Ariane family
@@ -2667,6 +2680,69 @@ advAerodynamics:
 metaMaterials:
 
 hypersonicFlight:
+
+    #Space Shuttle
+    # unit cost: 494 000k (USD, 1965) - orbiter only https://en.wikipedia.org/wiki/Space_Shuttle_Endeavour
+    # development cost: 10 360 000k (USD, 1965) http://www.thespacereview.com/article/2330/1, http://www.forbes.com/sites/carolpinchefsky/2012/04/18/5-horrifying-facts-you-didnt-know-about-the-space-shuttle/
+    
+    STS_ExTank: &ShuttleExTank
+        cost: 10330 # http://aeromaster.tripod.com/paper1.htm#Operation
+        entryCost: 195850 # http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
+    CSS_ExTank: *ShuttleExTank
+    
+    STSOrbiter: #cockpit and fuselage
+    CSSCrewCompartment:
+    CSSFuselage:
+    
+    CSSAirlock:
+    STSAirlock:
+    
+    BoosterSeparator:
+    CSS_SRBDecoupler:
+    
+    STS SRB Nose Cone:
+    Ares?SRB?Nose?Cone:
+    
+    STSWingRight:
+    STSWingLeft:
+    CSSWingRight:
+    CSSWingLeft:
+    
+    STSctrlSrfLeft:
+    STSctrlSrfRight:
+    CSSCtrlSrfLeft:
+    CSSCtrlSrfRight:
+    
+    STSGearLeft: &STSGear
+        cost: 20 # based on the cost of stock landing gears
+    STSGearRight: *STSGear
+    STSNoseGear: *STSGear
+    CSSGearLeft: *STSGear
+    CSSGearRight: *STSGear
+    CSSNoseGear: *STSGear
+    
+    STSChute:
+    STSBodyFlap:
+    STSTAIL2:
+    STSCAM:
+        cost: 10
+    
+    STSCanadarmP1:
+    STSCanadarmP2:
+    STSCanadarmP3:
+    STSCanadarmP4:
+    STSCanadarmP5:
+    STSCanadarmP6:
+    
+    Shuttle?Manipulator:
+    
+    CSSVStabilizer:
+    CSSVStabilizerCtrlSrf:
+    CSSForwardRCS:
+    CSSNose:
+    CSSEngineMount:
+    APASport:
+    
 
 advancedMotors:
     wheelMed:

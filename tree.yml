@@ -2692,9 +2692,12 @@ hypersonicFlight:
         entryCost: 195850 # http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     CSS_ExTank: *ShuttleExTank
     
-    STSOrbiter: #cockpit and fuselage
+    STSOrbiter: #crew compartment, fuselage, forwardRCS, CSSNose, Engine Mount
     CSSCrewCompartment:
     CSSFuselage:
+    CSSForwardRCS:
+    CSSNose:
+    CSSEngineMount:
     
     CSSAirlock:
     STSAirlock:
@@ -2740,10 +2743,9 @@ hypersonicFlight:
     
     CSSVStabilizer:
     CSSVStabilizerCtrlSrf:
-    CSSForwardRCS:
-    CSSNose:
-    CSSEngineMount:
+
     APASport:
+    Cone: # tailcone placed at the end of Shuttle's fuselage (Enterprise - Approach and landing tests)
     
 
 advancedMotors:

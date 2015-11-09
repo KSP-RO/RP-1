@@ -2357,9 +2357,12 @@ stagedTL5:
 
 highPerformanceFuelSystems:
     solidBoosterSmall: # Castor 30B
+        cost: 750 # total guess
     solidBooster1-1: # Castor 120
-    solidBooster_sm: # Star 48B (PAM-B)
+        cost: 10630 # (50M - 1994 USD) pretty expensive, even more than Shuttle booster, maybe make it little cheaper?  http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
+    solidBooster_sm: &STAR48B
         cost: 1203 # nautix 4.06m, assume 1985 dollars
+    KK_ATK_Star48B: *STAR48B
     
     #US Probes Integration
     pam_d: # Star 48B
@@ -2424,6 +2427,7 @@ stagedTL6:
 
 specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
+        cost: 1500 # total guess 2x more than Castor30B
     RLA_solid_medium_upper: # ATK Orion 50
         cost: 893
     RO_KWsrbGlobeI_GEM: # GEM40, first flight 1990

@@ -2612,7 +2612,9 @@ fieldScience:
         entryCost: 500
 
 ionPropulsion:
-    ionEngine: #stock ion engine
+    ionEngine: #stock ion engine - NSTAR
+        cost: 380 # 20x less than development cost
+        entryCost: 7600 # 50mln (2007 USD) http://esto.nasa.gov/conferences/nstc2007/papers/Manzella_David_D10P2_NSTC-07-0116.pdf
 
 largeElectrics:
     # Remote Tech

@@ -2849,16 +2849,24 @@ recycling:
     US_Wedge_Sabatier:
 
     TacSabatierRecycler:
+        cost: 1000 # total guess
     TacSabatierRecyclerLarge:
+        cost: 2000 # total guess
 
     TacCarbonExtractor:
+        cost: 500 # total guess
     TacCarbonExtractorLarge:
+        cost: 1000 # total guess
 
     TacWaterPurifier:
+        cost: 1500 # total guess
     TacWaterPurifierLarge:
+        cost: 3000 # total guess
 
     TacWaterSplitter:
+        cost: 500 # total guess
     TacWaterSplitterLarge:
+        cost: 1000 # total guess
 
 # This is a bit of a weirdly placed node
 hydroponics:

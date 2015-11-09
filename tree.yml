@@ -3097,3 +3097,6 @@ ORPHANS:
     PLV_Engine_A:
     PLV_Engine_B:
     PLV_LFO_A:
+    
+    #Radiator from Starwaster (HeatPump) Used to cool down cryogenic fuel tanks
+    RealFuels_radiator1:

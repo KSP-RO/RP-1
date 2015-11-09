@@ -2780,7 +2780,7 @@ fusionRockets:
 
 colossalRocketry:
     RAPIER: # FIXME
-        cost: 1200 # total guess
+        cost: 1900
     
 fusionPower:
 

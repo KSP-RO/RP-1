@@ -2454,6 +2454,27 @@ metaMaterials:
 
 hypersonicFlight:
 
+    mk3Cockpit_Shuttle:
+        cost: 26000 # 2x bigger than mk2 cockpit standard
+    mk3CargoBayL:
+        cost: 500
+    mk3CargoBayM:
+        cost: 250
+    mk3CargoBayS:
+        cost: 125
+    mk3FuselageLF_100:
+    mk3FuselageLFO_100:
+    mk3FuselageLF_50:
+    mk3FuselageLFO_50:
+    mk3FuselageLF_25:
+    mk3FuselageLFO_25:
+    mk3FuselageMONO:
+    noseConeAdapter:
+    adapterMk3-Size2:
+    adapterMk3-Size2Slant:
+    adapterMk3-Mk2:
+    adapterSize3-Mk3:
+
 advancedMotors:
     wheelMed:
         cost: 125 #total guess
@@ -2539,14 +2560,6 @@ artificialIntelligence:
 advScienceTech:
 
 aerospaceTech:
-    mk3Cockpit_Shuttle:
-        cost: 26000 # 2x bigger than mk2 cockpit standard
-    mk3CargoBayL:
-        cost: 500
-    mk3CargoBayM:
-        cost: 250
-    mk3CargoBayS:
-        cost: 125
 
 experimentalElectrics:
 

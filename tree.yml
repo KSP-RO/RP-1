@@ -2708,7 +2708,9 @@ fusionRockets:
 colossalRocketry:
     RAPIER: # FIXME
     B9_Engine_SABRE_S:
+        cost: 2750 # 150kN jet engine, 200 kN in rocket mode, cost much bigger than for the most expensive jet engines
     B9_Engine_SABRE_M:
+        cost: 11000 # 500kN jet engine, 1500kN in rocket mode
     
 fusionPower:
 

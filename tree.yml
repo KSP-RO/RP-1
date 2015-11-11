@@ -2114,8 +2114,9 @@ advFlightControl:
     
     rn_lok_dec: *SoyuzDecoupler # decoupler for 7K-LOK service module
     rn_lok_tdu: # 7K-LOK service module
-        cost: 3500 # little higher than for standard Soyuz service module
-
+        cost: 3500 # little higher than for standard Soyuz service module (this one has more powerful engine)
+        entryCost: 95000
+        
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
     Tantares_Decoupler_A: *SoyuzDecoupler
@@ -2181,7 +2182,8 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 60000
         cost: 1800
     rn_lok_sa: # 7K-LOK descent module
-        cost: 3750 # somewhat higher than for Soyuz descent module because this one is rated for lunar reentry
+        cost: 3500 # somewhat higher than for Soyuz descent module because this one is rated for lunar reentry
+        entryCost: 95000
     rn_lok_bo: *SoyuzOM 
     rn_lok_para: *SoyuzParachute
     

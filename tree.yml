@@ -1885,7 +1885,9 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     
     # RaiderNick
     rn_lk_lander_858: # RD-858
+        cost: 450 #19kn, 40% min throttle, cheaper than LMDE
     rn_lk_lander_859: # RD-859
+        cost: 450 #19kn, 40% min throttle, cheaper than LMDE
     
     
     
@@ -2112,6 +2114,7 @@ advFlightControl:
     
     rn_lok_dec: *SoyuzDecoupler # decoupler for 7K-LOK service module
     rn_lok_tdu: # 7K-LOK service module
+        cost: 3500 # little higher than for standard Soyuz service module
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
@@ -2178,8 +2181,9 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 60000
         cost: 1800
     rn_lok_sa: # 7K-LOK descent module
-    rn_lok_bo: # 7K-LOK orbital module
-    rn_lok_para: # parachutes
+        cost: 3750 # somewhat higher than for Soyuz descent module because this one is rated for lunar reentry
+    rn_lok_bo: *SoyuzOM 
+    rn_lok_para: *SoyuzParachute
     
     #Tantares Soyuz
     TLV_LES: *ApolloLES
@@ -2245,7 +2249,10 @@ spaceExploration: #crewed landing
     
     #RaiderNick - LK lander
     rn_lk_lander: # LK Lander pod
+        cost: 2000 # same as for stock 1-person lander
     rn_lk_lander_legs:
+        cost: 750 # landing legs + 32kN SRB
+    
     #SXT LEM
     MEMLander: *LMAscentStage
     MEMDescentMod: *LMDescentTank

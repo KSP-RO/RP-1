@@ -3121,6 +3121,13 @@ ORPHANS:
     # DRE heatshields
     
     6.25_Heatshield:
+    
+    # Chaka HIAD
+    XPC_Inflatableheatshield31X: # 10m
+    XPC_InflatableheatshieldLX: # 15m
+    PC_InflatableheatshieldLXX: # 20m
+    
+    FalconLowerGear:
 
     # Let's build a truck!
     

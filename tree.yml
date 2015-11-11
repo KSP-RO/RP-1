@@ -2773,7 +2773,7 @@ hypersonicFlight:
     CSS_SRBDecoupler: *ShuttleSRBdecoupler
     
     STS SRB Nose Cone: &ShuttleSRBNoseCone
-        cost: 350 # total guess
+        cost: 1250 # separator + parachute
     Ares?SRB?Nose?Cone: *ShuttleSRBNoseCone
     
     STSWingRight: &STSwing

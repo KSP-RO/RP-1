@@ -1106,9 +1106,10 @@ stability:
     neptuno:
         entryCost: 10000
         cost: 500
-    explonpod:
+    explonpod: &explonpod
         entryCost: 10000
         cost: 500
+    UAEcubplate: *explonpod # it's practically the same thing
     sondex2pod:
         cost: 600 # This one costs a bit more due to a larger tank
         entryCost: 12000
@@ -3171,7 +3172,6 @@ ORPHANS:
     novapod:
     orbitaiespod:
     torpod:
-    UAEcubplate:
     solarpaneles1:
     solarPanelsfa:
     solarPanelsond1:

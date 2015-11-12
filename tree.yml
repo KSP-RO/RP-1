@@ -884,15 +884,21 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     r7_blok_a_engine: *RD108
 
     r7_vernier_engine_v_fg: &R7Vernier
-        cost: 20
+        cost: 20 
     r7_vostok_blok_e_lunar:
+        cost: 535 # 350 for the engine (exactly like stock one) + 35 for the tank + 150 for the avionics (12t)
     r7_vostok_blok_e:
+        cost: 520 # 350 for the engine (exactly like stock one) + 20 for the tank (poor mass ratio) + 150 for the avionics (12t)
     molniya_blockl:
+        cost: 575 # 400 for the engine (little more powerful than blok e) + 25 for the tank + 150 for the avionics (12t)
     blockl_vernier:
+        cost: 20 # 6kN
     r7_vostok_blok_e_vernier:
-    r7_vernier_engine_v_fg:
+        cost: 2 # 0.42kN
     blockl_ullage:
+        cost: 8 # 10kN, solid fuel
     r7_blok_i_m: # Molniya Block-I
+        cost: 714 # 400 for the engine (exactly like RD-0110 from Soviet engines) + 114 for the tank + 200 for the avionics (30t)
     
 
     # R-7 main engines
@@ -1324,6 +1330,10 @@ advRocketry:
     
     #RaiderNick - Soyuz
     r7_vernier_blok_i_s_fg:
+        cost: 20 # 6kN
+    r7_blok_i_m:
+        cost: 714 # 400 for the engine (exactly like RD-0110 from Soviet engines) + 114 for the tank + 200 for the avionics (30t)
+    
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -2081,7 +2091,9 @@ advFlightControl:
     t_pao:
         entryCost: 55000
         cost: 1500
-    r7_les: # Soyuz Launch Escape System
+    r7_les: # Soyuz Launch Escape System, cost = half of the Apollo LES
+        cost: 2500
+        entrycost: 87500
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
@@ -2405,6 +2417,7 @@ giganticRocketry: #TL7, present day
     merlin1D: # StarShine Industries
     merlin1D_vac:
     fregat1: #Soyuz Fregat, first flight - 2000
+        cost: 250 # 140 for the engine (40% of the blok e because less thrust) + 30 for the tank + 80 for the avionics (12t - modern = cheaper)
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X

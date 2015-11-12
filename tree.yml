@@ -1181,6 +1181,14 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     B9_Aero_Wing_Procedural_TypeC:
         entryCost: 15000
         cost: 0.1
+        
+    # SXT, B737-100 price is 7870k USD(1965)
+    LMKIIIAircraftFusLong: # crew cabin, 17-person
+        cost: 500
+    LMkIIIAircraftFus: # crew cabin, 9-person
+        cost: 250
+    LMkIIAircaftTail:
+        cost: 200
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules

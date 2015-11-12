@@ -2208,6 +2208,8 @@ commandModules: # Third generation capsules, it would seem.
 spaceExploration: #crewed landing
     landerCabinSmall:
         cost: 2000 # FIXME
+    FASA_Gemini_Lander_Pod:
+        cost: 2000 # 1-person lander cabin, same cost as for the 1-person landerCabinSmall 
     mk2LanderCabin:
         cost: 4500 # FIXME
         

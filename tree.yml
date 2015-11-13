@@ -1165,6 +1165,11 @@ stability:
 
     microEngine:
         cost: 60 # essentially a 1kN class linear RCS, but as an engine.
+    dest5Engine:
+        cost: 120 # 2kN
+    microEngineex1sat:
+        cost: 30 # 0.5kN
+    
 
     rcsThrustermicrosn:
         cost: 15
@@ -2741,6 +2746,7 @@ giganticRocketry: #TL7, present day
         cost: 25000 # FIXME total guess based off RS-25 costs above.
     merlin1D: # StarShine Industries
     merlin1D_vac:
+    RO-Kestrel: # Falcon 1
 
     liquidEngineMiniTurbo: #Blue Origin BE-4
 
@@ -3502,8 +3508,6 @@ ORPHANS:
     torpod:
     solarPanelsond1:
     solarPanelsuncat1:
-    dest5Engine:
-    microEngineex1sat:
     fuelTank7k:
     fuelTanklunderl:
     fuelTanksuperior3:

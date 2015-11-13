@@ -2670,7 +2670,7 @@ advExploration:
     godLandingLeg: # AIES
         cost: 300
         entryCost: 6000
-    godLandingleg2: # AIES
+    godLandingLeg2: # AIES
         cost: 300
         entryCost: 6000
 

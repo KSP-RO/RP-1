@@ -1853,13 +1853,21 @@ supersonicFlight: # Advanced jet engines
         
     # An-225 bits, treating as generic widebody civilian craft
     # total An-225 cost in funds: 19,500
-    SXTOsaulNoseCockpitAn225: 
-    SXTOsualRadCockpit: 
+    SXTOsaulNoseCockpitAn225:
+        cost: 3980
+    SXTOsualRadCockpit:
+        cost: 3500
     SXTOsualHullLarge:
+        cost: 180    
     SXTOsualRadHull:
+        cost: 120
     SXTOsualRadHullEnd:
+        cost: 120
     SXTOsaulTail:
-
+        cost: 200
+    #6000 for engines, about 7000 for procedural wings, cockpit 3980, also 7x180 (Hull large) + 7x120 (Rad Hull) + 120 (Rad Hull end) + 200 (tail) + 100 (landing gears) = 19500
+    
+    
 highAltitudeFlight: # Early Spaceplanes
     RO-Mk1Cockpit:
         entryCost: 60000 # 2x mark1cockpit

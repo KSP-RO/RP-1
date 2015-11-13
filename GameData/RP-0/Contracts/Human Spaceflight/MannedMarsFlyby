@@ -1,0 +1,71 @@
+CONTRACT_TYPE
+{
+	name = first_MarsFlybyCrewed
+	group = HumanContracts
+	
+	title = Manned Mars Flyby
+	
+	description = Design, build, and launch a crewed spacecraft into martian space (with a periapsis under 30000km), use gravity assist and return safely to Earth. Note that once you commit to going to the Mars, you have to follow through: this contract has a deadline, and you'll suffer quite the penalty to your budget and prestige if you don't succeed. Make sure you have time to research everything you'll need!
+	
+	synopsis = Send a human being into martian space and return safely.
+	
+	completedMessage = Crew alive and well after the mission--congratulations! The interviews will go on for months!
+	deadline = 7300 // 5 years
+	minExpiry = 0
+	maxExpiry = 0
+	maxCompletions = 1
+	maxSimultaneous = 1
+	cancellable = false
+	declinable = false
+	autoAccept = false
+	prestige = Significant
+	
+	targetBody = Mars
+	
+	// reward block - this is doable with Saturn V rocket which costs about 200000
+	advanceFunds = 900000.0
+	rewardReputation = 300.0
+	rewardFunds = 550000.0
+	failureReputation = 300.0
+	failureFunds = 1450000.0	
+	
+	REQUIREMENT
+	{
+		name = CompleteContract
+		type = CompleteContract
+		contractType = HSFLandingMoon1Repeatable
+	}
+	PARAMETER
+	{
+		name = vesselGroup
+		type = VesselParameterGroup
+		title = Crewed Mars
+		define = martianOrbitalCrewedSpacecraft
+		
+		PARAMETER
+		{
+			name = NewVessel
+			type = NewVessel
+		}
+		PARAMETER
+		{
+			name = HasCrew
+			type = HasCrew
+			minCrew = 3
+		}
+		PARAMETER
+		{
+			name = ReachMars
+			type = ReachState
+			targetBody = Mars
+			maxAltitude = 30000000
+			disableOnStateChange = true
+		}
+		PARAMETER
+		{
+			name = ReturnHome
+			type = ReturnHome
+			completeInSequence = true
+		}				
+	}
+}

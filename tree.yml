@@ -521,6 +521,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # SXT He-111 alike
     SXTke111:
         cost: 30
+    SXTBuzzard: # Junkers Ju-87 cockpit? https://upload.wikimedia.org/wikipedia/commons/9/94/Junkers_Ju_87B-2_Stuka.svg
+        cost: 30 # same as for He-111
     # Prop engines
     SXTR280018WProp: &R2800-18W #for F4U-4
         cost: 23.7 # late war, for P-61, via Nash, see https://books.google.com/books?id=PerGbKxOPZYC&pg=PA73&lpg=PA73&dq=nash+kelvinator+aircraft+engine&source=bl&ots=0bowaYis6U&sig=MHQTtVTNkKWrlrYN66-GG18hytM&hl=en&ei=9jQ0TeSxJYOglAf6uJCHCg&sa=X&oi=book_result&ct=result&sqi=2#v=onepage&q=nash%20kelvinator%20aircraft%20engine&f=false
@@ -1272,7 +1274,10 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     KerbCan: # 1-person crew section in 1.25m
         entryCost: 10000
         cost: 1000
-    
+
+    SXTmk3Cockpit52: #B-52
+        cost: 2265 # 20% of the total B-52 price (53.4M-1998 USD = 11,33M-1965 USD, source: http://www.bga-aeroweb.com/Defense/B-52-Stratofortress.html)
+
     #Engines
     aje_j79:
         cost: 220
@@ -2592,6 +2597,10 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
         cost: 300 # total guess
     KAXjumpjet: #Rolls-Royce Pegasus 11 first run 1974
         cost: 300 # total guess
+    25mKossak: # Boeing 737-100 cokpit, first flight 1967 (earliest version 737-100)
+        cost: 1575 # 20% of the total B-737-100 price (32M-1989 USD = 7,87M-1965 USD, source: https://en.wikipedia.org/wiki/Boeing_737)
+    SXTEntenteCordiale: # Concorde cockpit, first flight 1969
+        cost: 5320 # 20% of the total Concorde price (198M-2015 USD = 26,61M-1965 USD, source: https://en.wikipedia.org/wiki/Concorde)
 
 #TIER 4.5
 largeVolumeContainment: # TL4.5 solids
@@ -3576,10 +3585,6 @@ ORPHANS:
     HECS2_ProbeCore:
     LprobeFoil:
     SXTClyde:
-    SXTBuzzard:
-    25mKossak:
-    SXTEntenteCordiale:
-    SXTmk3Cockpit52:
     SXTLander: # PPD-8 can
     SXTNK12M:
     SXTVernier885:

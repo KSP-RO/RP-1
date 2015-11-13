@@ -2493,13 +2493,14 @@ nuclearPropulsion:
 # TIER 6
 veryHeavyRocketry: #TL5 late 70s/80s tech
     engineLargeSkipper_125m: # Merlin A uses TL5 tech
-    omsEngine: # AJ10-190 OME
-    STSOMSEngineLeft:
-    STSOMSEngineRight:
-    STSOMSEngine:
-    CSSOMSEngineLeft:
-    CSSOMSEngineRight:
-    CSSOMSEngine:
+    omsEngine: &AJ10-190OME
+        cost: 400 # little bigger than for Astris
+    STSOMSEngineLeft: *AJ10-190OME
+    STSOMSEngineRight: *AJ10-190OME
+    STSOMSEngine: *AJ10-190OME
+    CSSOMSEngineLeft: *AJ10-190OME
+    CSSOMSEngineRight: *AJ10-190OME
+    CSSOMSEngine: *AJ10-190OME
     
 
 stagedTL5:
@@ -2867,44 +2868,65 @@ hypersonicFlight:
     #Space Shuttle
     # unit cost: 494 000k (USD, 1965) - orbiter only https://en.wikipedia.org/wiki/Space_Shuttle_Endeavour
     # development cost: 10 360 000k (USD, 1965) http://www.thespacereview.com/article/2330/1, http://www.forbes.com/sites/carolpinchefsky/2012/04/18/5-horrifying-facts-you-didnt-know-about-the-space-shuttle/
-    
+    # without the cost of 6 orbiters development cost will be about 7 360 000k (USD, 1965) - including SRB, ExTank, RS-25
     STS_ExTank: &ShuttleExTank
         cost: 10330 # http://aeromaster.tripod.com/paper1.htm#Operation
         entryCost: 195850 # http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     CSS_ExTank: *ShuttleExTank
     
     STSOrbiter: #crew compartment, fuselage, forwardRCS, CSSNose, Engine Mount
+        cost: 450000
+        entryCost: 6450000
     CSSCrewCompartment:
+        cost: 255300
+        entryCost: 3659300
     CSSFuselage:
+        cost: 95000
+        entryCost: 1361700
     CSSForwardRCS:
+        cost: 2500
+        entryCost: 35800
     CSSNose:
+        cost: 2200
+        entryCost: 31500
     CSSEngineMount:
+        cost: 95000
+        entryCost: 1361700
     
-    STSAirlock: # CSS AirLock + APASport
     CSSAirlock:
+        cost: 3000 # total guess
     APASport:
+        cost: 3500 # same as for the APAS 89-95
+    STSAirlock: # CSS AirLock + APASport
+        cost: 6500
     
-    BoosterSeperator:
-    CSS_SRBDecoupler:
+    BoosterSeperator: &ShuttleSRBdecoupler
+        cost: 100 # little bigger than for stock decouplers 
+    CSS_SRBDecoupler: *ShuttleSRBdecoupler
     
-    STS SRB Nose Cone:
-    Ares?SRB?Nose?Cone:
+    STS SRB Nose Cone: &ShuttleSRBNoseCone
+        cost: 1250 # separator + parachute
+    Ares?SRB?Nose?Cone: *ShuttleSRBNoseCone
     
-    STSWingRight:
-    STSWingLeft:
-    CSSWingRight:
-    CSSWingLeft:
+    STSWingRight: &STSwing
+        cost: 800 # based on the cost of the similar procedural wing (rated for LEO reentries)
+    STSWingLeft: *STSwing
+    CSSWingRight: *STSwing
+    CSSWingLeft: *STSwing
     
-    STSctrlSrfLeft:
-    STSctrlSrfRight:
-    CSSCtrlSrfLeft:
-    CSSCtrlSrfRight:
+    STSctrlSrfLeft: &STSctrlSrf
+        cost: 400 # based on the cost of the similar procedural wing (rated for LEO reentries)
+    STSctrlSrfRight: *STSctrlSrf
+    CSSCtrlSrfLeft: *STSctrlSrf
+    CSSCtrlSrfRight: *STSctrlSrf
     
-    CSSVStabilizer: # STSTAIL
-    STSTAIL:
+    CSSVStabilizer: &STSTAIL
+        cost: 550 # based on the cost of the similar procedural wing (rated for LEO reentries)
+    STSTAIL: *STSTAIL
     
-    CSSVStabilizerCtrlSrf: #STSTAILCS
-    STSTAILCS:
+    CSSVStabilizerCtrlSrf: &STSTAILCS
+        cost: 350 # based on the cost of the similar procedural wing (rated for LEO reentries)
+    STSTAILCS: *STSTAILCS
     
     STSGearLeft: &STSGear
         cost: 20 # based on the cost of stock landing gears
@@ -2914,22 +2936,30 @@ hypersonicFlight:
     CSSGearRight: *STSGear
     CSSNoseGear: *STSGear
     
-    STSChute:
+    STSChute: &STSchute
+        cost: 1000 # same as for the Apollo
+    parachuteDrogue2: *STSchute
+    
     STSBodyFlap:
+        cost: 350 # based on the cost of the similar procedural wing (rated for LEO reentries)
     STSCAM:
         cost: 10
     
-    STSCanadarmP1:
-    STSCanadarmP2:
-    STSCanadarmP3:
-    STSCanadarmP4:
-    STSCanadarmP5:
-    STSCanadarmP6:
+    #Canadarm - cost similar to the parts from Infernal Robotics
+    STSCanadarmP1: &Canadarm
+        cost: 100
+    STSCanadarmP2: *Canadarm
+    STSCanadarmP3: *Canadarm
+    STSCanadarmP4: *Canadarm
+    STSCanadarmP5: *Canadarm
+    STSCanadarmP6: *Canadarm
     
     Shuttle?Manipulator:
     
     Cone: # tailcone placed at the end of Shuttle's fuselage (Enterprise - Approach and landing tests)
+        cost: 300 # total guess
     ETDoors:
+        cost: 10 # total guess
 
 advancedMotors:
     wheelMed:

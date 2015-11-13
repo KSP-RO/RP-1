@@ -2807,7 +2807,9 @@ fusionRockets:
 colossalRocketry:
     RAPIER: # FIXME
     B9_Engine_SABRE_Intake_S:
+        cost: 300 # total guess
     B9_Engine_SABRE_Intake_M:
+        cost: 600 # total guess
     
 fusionPower:
 

@@ -508,7 +508,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     KIS_electricScrewdriver: *KIS
     KIS_wrench: *KIS
     KIS_bomb1:
-        entrycost: 0
+        entryCost: 0
         cost: 10
 
     # Beechcraft Bonanza (SXT)
@@ -982,8 +982,6 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 2 # 0.42kN
     blockl_ullage:
         cost: 8 # 10kN, solid fuel
-    r7_blok_i_m: # Molniya Block-I
-        cost: 714 # 400 for the engine (exactly like RD-0110 from Soviet engines) + 114 for the tank + 200 for the avionics (30t)
     
 
     # R-7 main engines
@@ -1434,8 +1432,6 @@ advRocketry:
     #RaiderNick - Soyuz
     r7_vernier_blok_i_s_fg:
         cost: 20 # 6kN
-    r7_blok_i_m:
-        cost: 714 # 400 for the engine (exactly like RD-0110 from Soviet engines) + 114 for the tank + 200 for the avionics (30t)
     
 
         # Staged Combustion TL2
@@ -1470,6 +1466,9 @@ fuelSystems: # Staged combustion, TL2
         cost: 3580
     ALV_Engine_B: #RD-0210/0211, Proton Second Stage
         cost: 1300
+        
+    r7_blok_i_m: # Molniya Block-I
+        cost: 714 # 400 for the engine (exactly like RD-0110 from Soviet engines) + 114 for the tank + 200 for the avionics (30t)
     
     #Proton - RaiderNick
     rn_proton_rd0210: &RD0210
@@ -1739,7 +1738,7 @@ flightControl:
     FASAICBMMIRV: # 9MT nuclear warhead
         cost: 16000 # expensive so fortunately no one will use it
     FASAICBMSAS: # this is just a decoupler, not sure why is SAS in the title
-        cot: 125 # similar to the other decouplers
+        cost: 125 # similar to the other decouplers
         
     # This is a really crappy reaction wheel. It means players have a hope
     # of not using their entire RCS reserves if using the RT flight computer.
@@ -2305,7 +2304,7 @@ advFlightControl:
 
     r7_les: # Soyuz Launch Escape System, cost = half of the Apollo LES
         cost: 2500
-        entrycost: 87500
+        entryCost: 87500
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
@@ -3475,11 +3474,8 @@ ORPHANS:
     novapod:
     orbitaiespod:
     torpod:
-    solarpaneles1:
-    solarPanelsfa:
     solarPanelsond1:
     solarPanelsuncat1:
-    solarPanelsfa2:
     dest5Engine:
     microEngineex1sat:
     fuelTank7k:

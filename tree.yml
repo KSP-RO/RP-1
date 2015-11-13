@@ -1332,6 +1332,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 250
     LMkIIAircaftTail:
         cost: 200
+    
+    SXTNK12M:
+        cost: 400 # total guess
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules
@@ -3605,7 +3608,6 @@ ORPHANS:
     LprobeFoil:
     SXTClyde:
     SXTLander: # PPD-8 can
-    SXTNK12M:
     SXTVernier885:
     SXTOMS:
     SXTKO211prop:

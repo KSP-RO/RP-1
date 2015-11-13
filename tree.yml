@@ -2078,6 +2078,12 @@ advConstruction:
         entryCost: 3500
         cost: 100
     
+    # SXT N!
+    SXTK1Decoupler:
+        cost: 250
+    SXTK1Decoupler2:
+        cost: 500
+    
     #Apollo
     FASAApollo_CM_HeatShield:
         entryCost: 35000
@@ -3193,6 +3199,21 @@ exoticReactions:
 highEnergyScience:
 
 orbitalMegastructures:
+    # MTV parts
+    SXTMTVGirderBasic:
+        cost: 320
+    SXTMTVGirderOpenSmall:
+        cost: 165
+    SXTMTVGirderOpenMedium:
+        cost: 330
+    SXTMTVGirderOpen:
+        cost: 660
+    SXTMTVGirder:
+        cost: 990
+    coperniTrussLong:
+        cost: 1390
+    coperniTrussShort:
+        cost: 565
 
 specializedPlasmaTech:
 

@@ -2805,6 +2805,7 @@ giganticRocketry: #TL7, present day
     
     RO-Kestrel: # Falcon 1
     liquidEngineMiniTurbo: #Blue Origin BE-4
+        cost: 2700 # same as for RD-180 - we don't have proper data yet but I think that 2700 is a good starting point
 
     fregat1: #Soyuz Fregat, first flight - 2000
         cost: 250 # 140 for the engine (40% of the blok e because less thrust) + 30 for the tank + 80 for the avionics (12t - modern = cheaper)

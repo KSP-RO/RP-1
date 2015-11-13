@@ -522,14 +522,21 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SXTke111:
         cost: 30
     # Prop engines
-    SXTR280018WProp: #for F4U-4
+    SXTR280018WProp: &R2800-18W #for F4U-4
         cost: 23.7 # late war, for P-61, via Nash, see https://books.google.com/books?id=PerGbKxOPZYC&pg=PA73&lpg=PA73&dq=nash+kelvinator+aircraft+engine&source=bl&ots=0bowaYis6U&sig=MHQTtVTNkKWrlrYN66-GG18hytM&hl=en&ei=9jQ0TeSxJYOglAf6uJCHCg&sa=X&oi=book_result&ct=result&sqi=2#v=onepage&q=nash%20kelvinator%20aircraft%20engine&f=false
+    KAXradialR-2800-18W: *R2800-18W
     DoubleWasp-R280065W: # for P-61, slightly higher performance.
         cost: 25 # vs above.
-    SXTPWR2800: # 63W, for P-47D
+    SXTPWR2800: &R2800-63W # 63W, for P-47D
         cost: 32 # tubos are expensive!
-    SXTR280021Prop: # -21, earlier turbo
+    KAXradialR-2800-63W: *R2800-63W
+    SXTR280021Prop: &R2800-21 # -21, earlier turbo
         cost: 27
+    KAXradialR-2800-21: *R2800-21
+    KAXradialR3350: # B-29, A-1 Skyraider
+        cost: 33 # little more than R-2800-63w (2700HP - more powerful)
+    KAXradialProp: # R-2800-10W
+        cost: 22 #litle less than R-2800-18W (2080HP)
     
     SXTKO211Dprop: #Jumo 211F
         cost: 16 # total guess, but should be about the cost of an R-1820?
@@ -1273,6 +1280,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 350
     aje_atar:
         cost: 220 # FIXME same as J79 for now
+    aje_r3350: # R-3350 duplex-cyclone turbo-compound 1950s-60s
+        cost: 45 # turbosupercharged, 3500HP so little more expensive than R-2800 and R-3350
+    KAXkueyEngine: # Bell UH-1 Huey rotor
         
     #big landing gear
     GearMedium:
@@ -2003,8 +2013,9 @@ supersonicFlight: # Advanced jet engines
     turboFanEngine: #J58
         cost: 1200 # total guess
         
-    SXTPWPT6: #PT6A-27, probably
+    SXTPWPT6: &PT6A-27 #PT6A-27, probably
         cost: 19 # based off a google for modern -27 prices.
+    KAXsportprop: *PT6A-27
         
     # An-225 bits, treating as generic widebody civilian craft
     # total An-225 cost in funds: 19,500
@@ -2683,6 +2694,10 @@ experimentalAerodynamics: #TL5 jets
     SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
     Mk2TwinTurbojet: # Lyulka AL-31F (Su-27), first run 1981
         cost: 900 # total guess
+    
+    #props
+    KAXturboprop: # Rolls-Royce AE-2100 first run 1990 or later so maybe move to TL6 jets?
+        cost: 415 # 3.1M (2014 USD)- http://www.bga-aeroweb.com/Engines/Rolls-Royce-AE-2100.html
 
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.

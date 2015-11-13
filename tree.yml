@@ -1614,6 +1614,9 @@ basicScience:
     solarPanels5HiTech:
         entryCost: 8000 # 2m above the original model
         cost: 50
+    solarpaneles1:
+        entryCost: 16000
+        cost: 100
         
     LgRadialSolarPanel:
         entryCost: 9000
@@ -1768,10 +1771,17 @@ electrics:
     aje_solarPanels:
         entryCost: 10000
         cost: 400
+    solarPanelsfa:
+        entryCost: 5000
+        cost: 200
 
     solarPanels4:
         cost: 250
     solarPanels2:
+        cost: 450
+    solarpanelsuncat1:
+        cost: 225
+    solarPanelsfa2:
         cost: 450
 
     # Gemini SM - has a fuel cell
@@ -2380,6 +2390,8 @@ advElectrics:
         cost: 200
     1x3WPanels:
         cost: 450
+    solarPanelSond1:
+        cost: 100
         
     #US Probes integration
     pioneer_10_11:

@@ -1644,7 +1644,9 @@ simpleCommandModules: # Second gen capsules
     FASAGeminiPod2: &GeminiPod 
         entryCost: 286000 # was 270m, +16m for shielding
         cost: 5400
-    FASAGeminiPod2White: *GeminiPod
+    FASAGeminiPod2White:
+        entryCost: 316000
+        cost: 6000
 
     # FASAGeminiNoseCone2, FASAGeminiPod2RCS / FASAGeminiUtilitySasRcs, FASA_Gemini_RCS_Thrusters
     # all go to flight control

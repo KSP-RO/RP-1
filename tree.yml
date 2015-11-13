@@ -2456,6 +2456,8 @@ hypersonicFlight:
 
     mk3Cockpit_Shuttle:
         cost: 26000 # 2x bigger than mk2 cockpit standard
+    mk3CrewCabin:
+        cost: 19000 # much higher than for Mk2crewCabin
     mk3CargoBayL:
         cost: 500
     mk3CargoBayM:

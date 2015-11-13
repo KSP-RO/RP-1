@@ -2578,11 +2578,16 @@ largeVolumeContainment: # TL4.5 solids
     SRB2D: &STSbooster
         cost: 6780
     CSS_SSRB: *STSbooster
+    XSLSSRB: #Shuttle booster - Chaka Monkey
+        cost: 6870 #8000 for a 5-segment
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
         cost: 25000 # FIXME total guess
     NP_lfe_25m_NERVA: *NERVA # Nova Punch, the same as stock nuclear engine
+    nervaII_kerbscalexx: *NERVA # Chaka monkey, the same as stock nuclear engine
+    constellationBNTR:
+        cost: 8200 # 67kN, much cheaper, but not cheaper than RL10
     
 # TIER 6
 veryHeavyRocketry: #TL5 late 70s/80s tech
@@ -2649,6 +2654,8 @@ hydroloxTL5:
     km_ssme_rs25ss: *RS-25
     km_ssme_rs25s: *RS-25
     
+    SLS_RS25: *RS-25 #Spice Launch System (Macollo)
+    
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
     
     KW3mengineWildcarXR: #HM7 engine for Ariane family
@@ -2697,8 +2704,13 @@ hydroloxTL6:
     KW3mengineTitanT1: #Vulcain 1/2
         cost: 6400 # 50x less than development cost, but I think it is still too expensive
         entryCost: 320000 # 1300M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
-    VR1vulcan: #RS-68
+
+    #RS-68
+    VR1vulcan: &RS-68
         cost: 2850 # 20M (2010 USD) http://forum.nasaspaceflight.com/index.php?topic=19938.90;wap2
+    bahars68b: *RS-68
+    xbahars68bx: *RS-68
+    
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     KW2mengineVestaVR9D: # japanese LE-7A
         cost: 3840 # 50x less than development cost
@@ -2751,6 +2763,9 @@ exoticFuelStorage: #TL7 solids
     KWsrbGlobeX10L: &Shuttlebooster
         cost: 8000 # reasonable guess, 6.87 for 4seg
     MassiveBooster: *Shuttlebooster
+    SLS_b1_SRB: *Shuttlebooster
+    SLS_DKSSRB: #dark knight booster from SpiceLaunchSystem (Macollo), 11% more thrust
+    
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
         cost: 3500 # somewhat higher than for Apollo docking port

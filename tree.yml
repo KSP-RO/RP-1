@@ -2793,13 +2793,17 @@ giganticRocketry: #TL7, present day
         cost: 700 # total guess
     Size3EngineCluster: # SLS core (4x RS-25D/E)
         cost: 25000 # FIXME total guess based off RS-25 costs above.
-    merlin1D: # StarShine Industries
+        
+    # SPACEX ENGINES
+    # StarShine Industries Merlin
+    merlin1D: &Merlin1D
         cost: 175 # 1,3M (2014 USD) http://space.stackexchange.com/questions/4388/what-are-the-costs-of-the-various-different-engines-in-current-use
-    merlin1D_vac:
+    LazTekFalcon9EngineCenter: *Merlin1D
+    merlin1D_vac: &Merlin1DVac
         cost: 200 # little bigger than Merlin 1D 
+    LazTekMerlin1dVacuumEngine: *Merlin1DVac
     
     RO-Kestrel: # Falcon 1
-
     liquidEngineMiniTurbo: #Blue Origin BE-4
 
     fregat1: #Soyuz Fregat, first flight - 2000
@@ -3376,6 +3380,24 @@ longTermHabitation:
         entryCost: 175000 # cost based on Apollo parts. Docking port + chutes + Apollo top
     OrionDockingPortXWSTANDARDDOCKPORT: *ORIONDOCKPORT
     
+    # Dragon V2
+    # development cost about 2700 mln USD http://spaceflightnow.com/news/n1405/29dragonv2/#.Vj0XBr-jAs0
+    # 2700 mln USD = 359,26 mln 1965 USD 
+    # unit cost 140mln USD per one flight (20mln per one seat) including Falcon 9 rocket (50mln) so 90mln? http://www.extremetech.com/extreme/183349-spacex-unveils-dragon-v2-the-worlds-first-commercial-manned-reusable-spaceship
+    # 90 mln USD = 11,98 mln 1965 USD 
+    LazTekDragonV2:
+        cost: 7375
+        entryCost: 227000 # about 63% of total development cost
+    LazTekDragonV2Trunk:
+        cost: 3688
+        entryCost: 113500 # about 31,5% of total development cost
+    LazTekSuperDracos:
+        cost: 125 # total guess
+    LazTekDragonV2Chute:
+        cost: 500 #2x less than Apollo chutes, total guess
+        entryCost: 17500 #2x less than Apollo chutes,  about 5% of total development cost (359260)
+    DragonLadder:
+        cost: 10
 
 resourceUtilization:
 

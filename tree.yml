@@ -593,6 +593,62 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 1
     SXTradialWindow:
         cost: 1
+        
+    
+    # B9 parts:
+    B9_Structure_R0_Railing:
+        cost: 1
+    B9_Structure_R1_Railing:
+        cost: 2
+    B9_Structure_R2_Railing:
+        cost: 4
+    B9_Structure_R4_Railing:
+        cost: 8
+    B9_Structure_L1_Ladder:
+        cost: 5
+    B9_Structure_L2_Ladder:
+        cost: 10
+    B9_Structure_L4_Ladder:
+        cost: 20
+    B9_Structure_L8_Ladder:
+        cost: 40
+    B9_Structure_P1_Surface:
+        cost: 10
+    B9_Structure_P2_Surface:
+        cost: 20
+    B9_Structure_P4_Surface:
+        cost: 40
+    B9_Structure_P8_Surface:
+        cost: 80
+    B9_Structure_P1_Surface_Half:
+        cost: 5
+    B9_Structure_P2_Surface_Half:
+        cost: 10
+    B9_Structure_P4_Surface_Half:
+        cost: 20
+    B9_Structure_P8_Surface_Half:
+        cost: 40
+    B9_Utility_Light_A1_White:
+        cost: 5
+    B9_Utility_Light_A4_White:
+        cost: 20
+    B9_Utility_Light_A8_White:
+        cost: 40
+    B9_Utility_Light_A1_Closed:
+        cost: 5
+    B9_Utility_Light_N1_White:
+        cost: 1
+    B9_Utility_Light_N1_Large_White:
+        cost: 2
+    B9_Engine_Jet_Pod_Medium_PylonS:
+        cost: 20
+    B9_Engine_Jet_Pod_Medium_PylonR:
+        cost: 20
+    B9_Engine_Jet_Pod_Small_PylonS:
+        cost: 10
+    B9_Engine_Jet_Pod_Small_PylonR:
+        cost: 10
+        
 
 subsonicFlight: # Now Supersonic Flight
     RP0Nose-Cockpit: &X1Cockpit

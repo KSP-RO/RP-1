@@ -1669,6 +1669,15 @@ flightControl:
         entryCost: 3000
         cost: 60
         
+    FASAICBMnosecone:
+        cost: 50
+    FASAICBMProbe: # guidance unit
+        cost: 300 # similar to other guidance units
+    FASAICBMMIRV: # 9MT nuclear warhead
+        cost: 16000 # expensive so fortunately no one will use it
+    FASAICBMSAS: # this is just a decoupler, not sure why is SAS in the title
+        cot: 125 # similar to the other decouplers
+        
     # This is a really crappy reaction wheel. It means players have a hope
     # of not using their entire RCS reserves if using the RT flight computer.
     
@@ -1748,6 +1757,8 @@ simpleCommandModules: # Second gen capsules
     FASAGeminiPod2: &GeminiPod 
         entryCost: 286000 # was 270m, +16m for shielding
         cost: 5400
+    FASAGeminiMiniSRB: # small retro solid motor
+        cost: 6 # 3x bigger than MercuryMiniSRB
 
     # FASAGeminiNoseCone2, FASAGeminiPod2RCS / FASAGeminiUtilitySasRcs, FASA_Gemini_RCS_Thrusters
     # all go to flight control
@@ -1984,6 +1995,8 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     #FASA
     FASALM_AscentEngine: *LMAE
     FASALM_DescentEngine: *LMDE
+    FASA_Gemini_Lander_Eng: # engine for landers, smaller than LMDE
+        cost: 450 # 2 times cheaper than Apollo
     #Tantares
     Castor_LM_Engine: *LMDE
     
@@ -2305,6 +2318,8 @@ commandModules: # Third generation capsules, it would seem.
 spaceExploration: #crewed landing
     landerCabinSmall:
         cost: 2000 # FIXME
+    FASA_Gemini_Lander_Pod:
+        cost: 2000 # 1-person lander cabin, same cost as for the 1-person landerCabinSmall 
     mk2LanderCabin:
         cost: 4500 # FIXME
         
@@ -2316,6 +2331,10 @@ spaceExploration: #crewed landing
     FASAGeminiLegsX1: &GeminiLeg
         cost: 90
     FASAGeminiLegsX1white: *GeminiLeg
+    FASA_Gemini_Lander_Leg_Part:
+        cost: 90
+    FASA_Gemini_Lander_Legs: # 4 landing legs so 4x more expensive
+        cost: 360
     
     
     # LM
@@ -3348,15 +3367,6 @@ ORPHANS:
 
     # Goo that's one millionth the weight? Nuh uh.
     FASAGeminiSciRadmeter:
-
-    # FASA also reminds us a lot that space exploration was funded
-    # not because of a thirst for knowledge, but due to the threat
-    # of war. I'd like us to imagine more pleasant alternatives.
-
-    FASAICBMMIRV:
-    FASAICBMProbe:
-    FASAICBMSAS:
-    FASAICBMNosecone:
 
     # AIES
     # Integratration is WIP.  These parts aren't done yet

@@ -3068,6 +3068,8 @@ artificialIntelligence:
 advScienceTech:
 
 aerospaceTech:
+    bahaMk2LightningCockpit: #cockpit for F-22 or F-35
+        cost: 4500 # 20% of the total F-22 cost (148.7 mln USD 2007)
 
 experimentalElectrics:
 

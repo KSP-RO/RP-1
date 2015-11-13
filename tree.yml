@@ -2760,7 +2760,10 @@ giganticRocketry: #TL7, present day
     Size3EngineCluster: # SLS core (4x RS-25D/E)
         cost: 25000 # FIXME total guess based off RS-25 costs above.
     merlin1D: # StarShine Industries
+        cost: 175 # 1,3M (2014 USD) http://space.stackexchange.com/questions/4388/what-are-the-costs-of-the-various-different-engines-in-current-use
     merlin1D_vac:
+        cost: 200 # little bigger than Merlin 1D 
+    
     RO-Kestrel: # Falcon 1
 
     liquidEngineMiniTurbo: #Blue Origin BE-4

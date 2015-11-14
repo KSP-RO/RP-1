@@ -2782,6 +2782,8 @@ stagedTL6:
         cost: 2700 
     RD191: # NPO Energomash RD-191
         cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
+    XKosmos_Angara_RD-275KX: # RD-275, Proton M first stage
+        cost: 515 # same as RD-253
 
 specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
@@ -2828,6 +2830,8 @@ avionicsTL6:
     dockingPortLarge: &CBM
         cost: 4500 
     IACBM125m: *CBM
+    XIACBM1_25m: *CBM
+    LazTekDragon2Dock: *CBM
 
 # TIER 8
 giganticRocketry: #TL7, present day
@@ -2852,6 +2856,7 @@ giganticRocketry: #TL7, present day
     fregat1: #Soyuz Fregat, first flight - 2000
         cost: 250 # 140 for the engine (40% of the blok e because less thrust) + 30 for the tank + 80 for the avionics (12t - modern = cheaper)
 
+    CHAKAOME: # AJ10-190 for Orion
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X
@@ -2869,6 +2874,8 @@ hydroloxTL7:
     engineexper05: &RL60
         cost: 2300 # total guess but shouldn't be more expensive than J-2X right?
     RLA_mp_large_vac: *RL60
+    
+    XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
 
 stagedTL7:
     # AJ26-62 config here
@@ -2981,6 +2988,8 @@ composites:
         cost: 100
     stationHubLarge:
         cost: 200
+    ICPSAdapterx2:
+        cost: 100
 
 fieldScience:
 
@@ -2994,6 +3003,9 @@ fieldScience:
     roverBody:
         cost: 500
         entryCost: 5000
+    xLERroverbodyx:
+        cost: 750
+        entryCost: 7500
     seatExternalCmd:
         cost: 250
         entryCost: 500
@@ -3445,6 +3457,21 @@ longTermHabitation:
         entryCost: 17500 #2x less than Apollo chutes,  about 5% of total development cost (359260)
     DragonLadder:
         cost: 10
+    
+    # Chaka monkey habitats - fictional   
+    MonkeyPodAirlock: &Monkeyhab # 3-person
+        cost: 8000
+    MonkeyPodADAPTER: *Monkeyhab # 3-person
+    MonkeyPodpsADAPTER: *Monkeyhab # 3-person
+    MonkeyPodLanderPs: *Monkeyhab # 3-person
+    MonkeyPodLanderPS: *Monkeyhab # 3-person
+    KarmonyNodeMkIII_Adapter: *Monkeyhab # 3-person
+    MonkeyPodMTVTypeR: *Monkeyhab # 3-person
+    
+    MonkeySMA8FPodLANDERPs: &Monkeyhab2 # 2-person
+        cost: 5400
+    TESTMODULEADAPTER: *Monkeyhab2 # 2-person
+    XKarmonyStarModule_AdapterS6632: *Monkeyhab2  #2-person
 
 resourceUtilization:
 
@@ -3461,6 +3488,10 @@ specializedScienceTech:
 longTermScienceTech:
 
 scientificOutposts:
+    MonkeyPodOrionTypeS22: # 6-person
+        cost: 16000
+    SHABLANDER-SLR: # 8-person
+        cost: 21600
 
 advSolarTech:
 
@@ -3525,9 +3556,10 @@ shortTermHabitation:
     Large_Crewed_Lab:
         entryCost: 180000
         cost: 9000 #the same as crewCabin
-    cupola:
+    cupola: &cupola
         entryCost: 40000
         cost: 2000 #similar to mk1 lander, mk1 pod
+    XKupolaObsModuleEXPANDEDX: *cupola 
         
     # Gemini Big G
     # 1bln USD (1970) for development cost and 75mln USD (1970) for the unit cost 

@@ -5,7 +5,7 @@ CONTRACT_TYPE
 	
 	title = Manned Mars Flyby
 	
-	description = Design, build, and launch a crewed spacecraft into martian space (with a periapsis under 30000km), use gravity assist and return safely to Earth. Note that once you commit to going to the Mars, you have to follow through: this contract has a deadline, and you'll suffer quite the penalty to your budget and prestige if you don't succeed. Make sure you have time to research everything you'll need!
+	description = Design, build, and launch a crewed spacecraft into martian space (with a periapsis under 30000km) and return safely to Earth (hint: you can use Mars gravity assist). Note that once you commit to going to the Mars, you have to follow through: this contract has a deadline, and you'll suffer quite the penalty to your budget and prestige if you don't succeed. Make sure you have time to research everything you'll need!
 	
 	synopsis = Send a human being into martian space and return safely.
 	

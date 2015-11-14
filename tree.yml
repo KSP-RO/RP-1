@@ -807,9 +807,9 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
     B9_Aero_Intake_DSIX:
         cost: 20
     B9_Aero_Intake_RBM:
-        cost: 20
+        cost: 32
     B9_Aero_Intake_RNM:
-        cost: 20
+        cost: 32
     B9_Engine_VA1_Intake:
         cost: 20
         

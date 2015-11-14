@@ -2693,12 +2693,19 @@ advAerodynamics:
     B9_Cockpit_MK2_Nosecone_ASAS: # nosecone with science instruments
         cost: 50
     B9_Cargo_M2_Body_B:
+        cost: 25
     B9_Cockpit_MK2_Body_Cargo_2m:
+        cost: 20
     B9_Cockpit_MK2_Body_Cargo_5m:
+        cost: 50
     B9_Cockpit_S2_Body_Cargo_2m:
+        cost: 27
     B9_Cockpit_S2_Body_Cargo_6m:
+        cost: 80
     B9_Cockpit_S2_BodyLarge_Cargo_2m:
+        cost: 50
     B9_Cockpit_S2_BodyLarge_Cargo_6m:
+        cost: 150
     
     
     # B9 tanks:
@@ -2838,9 +2845,13 @@ aerospaceTech:
     HL_Aero_Cockpit:
         cost: 25000
     B9_Aero_HL_Body_Cargo_A:
+        cost: 85
     B9_Aero_HL_Body_Cargo_B:
+        cost: 170
     B9_Aero_HL_Body_Cargo_C:
+        cost: 340
     B9_Aero_HL_Body_Cargo_Tail_Wide:
+        cost: 300
     
     B9_Aero_HL_Adapter_Front:
     B9_Aero_HL_Body_Structure_1m_U:

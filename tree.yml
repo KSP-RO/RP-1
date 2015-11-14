@@ -260,6 +260,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     MK1IntakeFuselage: *stdintake
     SXTInlineAirIntake: *stdintake
     SXTInlineAirIntakeTiny: *stdintake
+    B9_Aero_Intake_Mount: *stdintake
+    B9_Aero_Intake_CLR: *stdintake
 
     # Structural
     
@@ -919,6 +921,16 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
         cost: 10
     ramAirIntake:
         cost: 40
+    B9_Aero_Intake_DSI:
+        cost: 20
+    B9_Aero_Intake_DSIX:
+        cost: 20
+    B9_Aero_Intake_RBM:
+        cost: 32
+    B9_Aero_Intake_RNM:
+        cost: 32
+    B9_Engine_VA1_Intake:
+        cost: 20
         
     # B9 wings
     RO-B9ProcWing-Supersonic:
@@ -3337,10 +3349,17 @@ fusionRockets:
 
 colossalRocketry:
     RAPIER: # FIXME
+
     B9_Engine_SABRE_S:
         cost: 2750 # 150kN jet engine, 200 kN in rocket mode, cost much bigger than for the most expensive jet engines
     B9_Engine_SABRE_M:
         cost: 11000 # 500kN jet engine, 1500kN in rocket mode
+
+    B9_Engine_SABRE_Intake_S:
+        cost: 300 # total guess
+    B9_Engine_SABRE_Intake_M:
+        cost: 600 # total guess
+
     
 fusionPower:
 

@@ -2634,6 +2634,7 @@ nuclearPropulsion:
 # TIER 6
 veryHeavyRocketry: #TL5 late 70s/80s tech
     engineLargeSkipper_125m: # Merlin A uses TL5 tech
+        cost: 175 # same as for Merlin 1D from Starshine Industries
     omsEngine: &AJ10-190OME
         cost: 400 # little bigger than for Astris
     STSOMSEngineLeft: *AJ10-190OME

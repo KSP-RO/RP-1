@@ -2780,7 +2780,7 @@ fusionRockets:
 
 colossalRocketry:
     RAPIER: # FIXME
-        cost: 3800
+        cost: 4800
     
 fusionPower:
 

@@ -749,6 +749,17 @@ engineering101:
     RCSFuelTank:
     rcsTankRadialLong:
     fuelTank_long:
+    
+    #AIES decouplers - they have similar sizes, about 1,25 - 2,5m
+    decoupvector:
+    decouplersv05:
+    decouplersvblack:
+    desacopladorsat1:
+    desacopladorsat2:
+    desacopladorsat3:
+    Separatormultifs:
+    conenoseram:
+        cost: 30
 
     # 6S Service modules
     # These are just fancy bits of hull. I've made them cost
@@ -1255,6 +1266,8 @@ stability:
         entryCost: 10000
         cost: 500
     UAEcubplate: *explonpod # it's practically the same thing
+    novapod: *explonpod
+    torpod: *explonpod
     sondex2pod:
         cost: 600 # This one costs a bit more due to a larger tank
         entryCost: 12000
@@ -1432,6 +1445,13 @@ enhancedSurvivability: # Early capsules
         entryCost: 1000
         cost: 100
     Almach_Parachute_A: *VostokParachute
+    
+    moduldesspod: # 1-person descent module
+        cost: 1800 # same as for Vostok
+        entryCost: 66000
+    orbitaiespod: # 1-person orbital module
+        cost: 1500 # total guess
+        entryCost: 52000
     
 # TIER 3
 advRocketry:
@@ -3043,6 +3063,10 @@ unmannedTech:
     Agena_Mono_A:
     Agena_RCS_A:
     Agena_Structure_A:
+    
+    investpod: # cubesat
+        cost: 5
+
 largeControl:
     # Early Control Moment Gyroscope, see #103
     advSasModule:
@@ -3599,19 +3623,11 @@ ORPHANS:
     # AIES
     # Integratration is WIP.  These parts aren't done yet
     cone05ra:
-    conenoseram:
     Antennacomtec1:
     Antennacomtec2:
     Antennaesc:
     Antennaexpatvr2:
     AntennaDF2:
-    investpod:
-    moduldesspod:
-    novapod:
-    orbitaiespod:
-    torpod:
-    solarPanelsond1:
-    solarPanelsuncat1:
     fuelTank7k:
     fuelTanklunderl:
     fuelTanksuperior3:
@@ -3633,13 +3649,6 @@ ORPHANS:
     adapterrads:
     basef1sond:
     baseinstrul8:
-    decoupvector:
-    decouplersv05:
-    decouplersvblack:
-    desacopladorsat1:
-    desacopladorsat2:
-    desacopladorsat3:
-    Separatormultifs:
 
     # Here are a bunch of generic FASA tanks.
     

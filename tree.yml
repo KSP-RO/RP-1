@@ -263,7 +263,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     
     B9_Aero_Intake_Mount:
         cost: 10
-    B9_Engine_VS1_Nosecone
+    B9_Engine_VS1_Nosecone:
         cost: 10
 
     # Structural
@@ -2645,7 +2645,7 @@ advAerodynamics:
     mk2Cockpit_Inline:
         cost: 12000
         entryCost: 130000
-    mk2DroneCore
+    mk2DroneCore:
         cost: 2000
     adapterSize2-Mk2:
     mk2_1m_AdapterLong:
@@ -2717,7 +2717,7 @@ advAerodynamics:
     B9_Adapter_SM1:
     B9_Adapter_SM2:
     B9_Adapter_SM3:
-    B9_Adapter_LM3;
+    B9_Adapter_LM3:
     B9_Adapter_Y1:
     B9_Aero_T2_Tail:
     B9_Cargo_M2_Adapter:

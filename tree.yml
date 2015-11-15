@@ -2460,10 +2460,13 @@ hypersonicFlight:
         cost: 15000 # much higher than for Mk2crewCabin
     mk3CargoBayL:
         cost: 10000
+        entryCost: 200000
     mk3CargoBayM:
         cost: 5000
+        entryCost: 200000
     mk3CargoBayS:
         cost: 2500
+        entryCost: 200000
     mk3FuselageLF_100:
     mk3FuselageLFO_100:
     mk3FuselageLF_50:

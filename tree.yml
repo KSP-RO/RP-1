@@ -488,8 +488,12 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 1
     GearFree:
         cost: 1.5
-    BD_Adj_LG_Side: # Bahamuto Adjustable Landing Gear
+    BD_Adj_LG_Side_Early: # Bahamuto Adjustable Landing Gear
         cost: 5
+    BD_Adj_LG_Medium_Early:
+        cost: 8
+    BD_Adj_LG_Medium_Early:
+        cost: 10
     B9_Utility_Landing_Gear_HDG1AL:
         cost: 3
     B9_Utility_Landing_Gear_HDG1A:
@@ -947,6 +951,13 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
     RO-B9ProcAMWing-Supersonic:
         entryCost: 10000
         cost: 0.1
+        
+    BD_Adj_LG_Side_Supersonic: # Bahamuto Adjustable Landing Gear
+        cost: 10
+    BD_Adj_LG_Medium_Supersonic:
+        cost: 13
+    BD_Adj_LG_Medium_Supersonic:
+        cost: 16
 
 # TIER 2
 generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
@@ -1333,10 +1344,12 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 10
     GearLarge:
         cost: 15
-    BD_Adj_LG_Medium: # Bahamuto
-        cost: 10
-    BD_Adj_LG_Large:
+    BD_Adj_LG_Side: # rated for LEO reentries
         cost: 15
+    BD_Adj_LG_Medium: # rated for LEO reentries
+        cost: 20
+    BD_Adj_LG_Large: # rated for LEO reentries
+        cost: 25
     B9_Utility_Landing_Gear_HDG2A:
         cost: 10
     B9_Utility_Landing_Gear_HDG2AL:

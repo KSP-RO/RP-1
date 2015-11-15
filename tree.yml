@@ -3106,14 +3106,11 @@ advMetalWorks:
 advAerodynamics:
 
     mk2CrewCabin:  
-        cost: 7500
-        entryCost: 80000 
+        cost: 6000
     mk2Cockpit_Standard:
-        cost: 13000
-        entryCost: 130000
+        cost: 15000
     mk2Cockpit_Inline:
-        cost: 12000
-        entryCost: 130000
+        cost: 14000
     adapterSize2-Mk2:
     mk2_1m_AdapterLong:
     mk2SpacePlaneAdapter:
@@ -3125,6 +3122,7 @@ advAerodynamics:
     mk2FuselageShortLFO:
     mk2CargoBayS:
     mk2CargoBayL:
+    `   cost: 5000
     
 
 metaMaterials:

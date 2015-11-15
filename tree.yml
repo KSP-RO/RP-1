@@ -3121,7 +3121,11 @@ advAerodynamics:
     mk2FuselageShortMono:
     mk2FuselageShortLFO:
     mk2CargoBayS:
+        cost: 1250
+        entryCost: 100000
     mk2CargoBayL:
+        cost: 2500 
+        entryCost: 100000
     
 
 metaMaterials:

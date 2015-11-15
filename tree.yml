@@ -262,6 +262,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SXTInlineAirIntakeTiny: *stdintake
     B9_Aero_Intake_Mount: *stdintake
     B9_Aero_Intake_CLR: *stdintake
+    
+    B9_Aero_Intake_Mount:
+        cost: 10
+    B9_Engine_VS1_Nosecone:
+        cost: 10
 
     # Structural
     
@@ -2888,6 +2893,9 @@ hydroloxTL7:
     RD0146: # KB Khimavtomatiki RD-0146
         cost: 2000 # same as for RL10
     
+    B9_Engine_L2_Atlas: # CECE-Base
+        cost: 3800 # based on the CECE-BASE config for FASA RL10
+    
     # Pratt & Whitney RL60
     engineexper05: &RL60
         cost: 2300 # total guess but shouldn't be more expensive than J-2X right?
@@ -3111,6 +3119,8 @@ advAerodynamics:
         cost: 15000
     mk2Cockpit_Inline:
         cost: 14000
+    mk2DroneCore:
+        cost: 2000
     adapterSize2-Mk2:
     mk2_1m_AdapterLong:
     mk2SpacePlaneAdapter:
@@ -3126,6 +3136,94 @@ advAerodynamics:
     mk2CargoBayL:
         cost: 2500 
         entryCost: 100000
+    
+    # B9
+    B9_Cockpit_MK2:
+        cost: 14000
+    B9_Cockpit_M27:
+        cost: 14000
+    B9_Cockpit_S3:
+        cost: 9000
+    B9_Cockpit_S2:
+        cost: 15000
+    B9_Cockpit_MK2_Body_Crew_2m: # 4-person
+        cost: 6000
+    B9_Cockpit_S2_Body_Crew: # 6-person
+        cost: 9000
+    B9_Cockpit_S2_Body_Crew_6m: # 12-person
+        cost: 12000
+    B9_Cockpit_D25: #unmanned
+        cost: 2000
+    B9_Cockpit_MK1_Control_ACU: #unmanned
+        cost: 2000
+        
+    B9_Adapter_C125:
+        cost: 50
+    B9_Cockpit_MK2_Nosecone: # nosecone
+        cost: 25
+    B9_Cockpit_MK2_Nosecone_ASAS: # nosecone with science instruments
+        cost: 50
+    B9_Cargo_M2_Body_B:
+        cost: 250
+        entryCost: 65000
+    B9_Cockpit_MK2_Body_Cargo_2m:
+        cost: 200
+        entryCost: 65000
+    B9_Cockpit_MK2_Body_Cargo_5m:
+        cost: 500
+        entryCost: 75000
+    B9_Cockpit_S2_Body_Cargo_2m:
+        cost: 500
+        entryCost: 75000
+    B9_Cockpit_S2_Body_Cargo_6m:
+        cost: 1500
+        entryCost: 750000
+    B9_Cockpit_S2_BodyLarge_Cargo_2m:
+        cost: 1300
+        entryCost: 100000
+    B9_Cockpit_S2_BodyLarge_Cargo_6m:
+        cost: 4000
+        entryCost: 100000
+    
+    
+    # B9 tanks:
+    B9_Cockpit_MK2_Body_RCS_05m:
+    B9_Cockpit_MK2_Body_2m:
+    B9_Cockpit_MK2_Body_5m:
+    B9_Cockpit_MK2_Adapter:
+    B9_Cockpit_MK2_Adapter_M125:
+    B9_Cockpit_MK2_Adapter_M125_2:
+    B9_Cockpit_MK2_Bicoupler:
+    B9_Cockpit_MK2_Bicoupler_S:
+    B9_Cockpit_MK2_Body_2m:
+    B9_Cockpit_MK2_Body_RCS_05m:
+    B9_Cockpit_MK2_Body_5m:
+    B9_Cockpit_MK2_Tail:
+    B9_Adapter_SM1:
+    B9_Adapter_SM2:
+    B9_Adapter_SM3:
+    B9_Adapter_LM3:
+    B9_Adapter_Y1:
+    B9_Aero_T2_Tail:
+    B9_Cargo_M2_Adapter:
+    B9_Cargo_M2_Separator:
+    B9_Cockpit_MK1_Junction:
+    B9_Cockpit_MK1_Tail:
+    B9_Cockpit_MK1_Body_5m:
+    B9_Cockpit_MK1_Body_2m:
+    B9_Cockpit_S2_Adapter:
+    B9_Cockpit_S2_Body_RCS:
+    B9_Cockpit_S2_Body:
+    B9_Cockpit_S2_Body_05m:
+    B9_Cockpit_S2_Body_6m:
+    B9_Cockpit_S2_Body_Tail:
+    B9_Cockpit_S2_BodyLarge:
+    B9_Cockpit_S2_BodyLarge_Back_EngineMount1:
+    B9_Cockpit_S2_BodyLarge_Back_EngineMount2:
+    B9_Cockpit_S2_BodyLarge_Back:
+    B9_Cockpit_S2_BodyLarge_Front:
+    B9_Cockpit_S2_BodyLarge_Front2:
+    B9_Structure_PA_Adapter:
     
 
 metaMaterials:
@@ -3343,6 +3441,35 @@ advScienceTech:
 aerospaceTech:
     bahaMk2LightningCockpit: #cockpit for F-22 or F-35
         cost: 4500 # 20% of the total F-22 cost (148.7 mln USD 2007)
+    B9_Cockpit_MK5:
+        cost: 32000
+    HL_Aero_Cockpit:
+        cost: 40000
+    B9_Aero_HL_Body_Cargo_A:
+        cost: 1250
+        entryCost: 200000
+    B9_Aero_HL_Body_Cargo_B:
+        cost: 2500
+        entryCost: 200000
+    B9_Aero_HL_Body_Cargo_C:
+        cost: 5000
+        entryCost: 200000
+    B9_Aero_HL_Body_Cargo_Tail_Wide:
+        cost: 4500
+        entryCost: 200000
+    
+    B9_Aero_HL_Adapter_Front:
+    B9_Aero_HL_Body_Structure_1m_U:
+    B9_Aero_HL_Adapter_2m_Side:
+    B9_Aero_HL_Body_Structure_2m:
+    B9_Aero_HL_Body_Structure_2m_A:
+    B9_Aero_HL_Body_Structure_05m:
+    B9_Aero_HL_Body_Structure_6m:
+    B9_Aero_HL_Body_Tail_8m:
+    B9_Aero_HL_Adapter_MK4:
+    B9_Aero_HL_Extension_A:
+    B9_Aero_HL_Extension_B1:
+    B9_Aero_HL_Extension_C:
 
 experimentalElectrics:
 
@@ -3590,7 +3717,42 @@ orbitalMegastructures:
     B9_Structure_HX_S_RCS_L:
         cost: 240
         entryCost: 6000
-
+    
+    # huge B9 tanks
+    B9_Structure_HX_S_2:
+    B9_Structure_HX_S_8:
+    B9_Structure_HX0_E:
+    B9_Structure_HX0_S:
+    B9_Structure_HX1_A_375:
+    B9_Structure_HX1_A_375B:
+    B9_Structure_HX1_A_375C:
+    B9_Structure_HX1_A_LLL:
+    B9_Structure_HX1_A_P:
+    B9_Structure_HX1_A_SD:
+    B9_Structure_HX1_A_S0:
+    B9_Structure_HX1_E1:
+    B9_Structure_HX1_S_T:
+    B9_Structure_HX1_U:
+    B9_Structure_HX1_U_S:
+    B9_Structure_HX2_A_375:
+    B9_Structure_HX2_A_S1_A:
+    B9_Structure_HX2_A_S1_B:
+    B9_Structure_HX2_U:
+    B9_Structure_HX4_A_375:
+    B9_Structure_HX4_A_HX1_A:
+    B9_Structure_HX4_A_HX2_A:
+    B9_Structure_HX4_A_HX2_B:
+    B9_Structure_HX4_H:
+    B9_Structure_HX4_U:
+    B9_Structure_HX2_A_HX1_A:
+    B9_Structure_HX1_S_HS:
+    B9_Structure_HX1_S_H3:
+    B9_Structure_HX1_S_H4:
+    B9_Structure_HX1_S_H6:
+    B9_Structure_HX1_H:
+    B9_Structure_HX2_H:
+    B9_Structure_HX1_SAS:
+    
 specializedPlasmaTech:
 
 powerTransmission:

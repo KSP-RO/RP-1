@@ -3236,23 +3236,22 @@ metaMaterials:
 
 hypersonicFlight:
     #Space Shuttle
-    # unit cost: 494 000k (USD, 1965) - orbiter only https://en.wikipedia.org/wiki/Space_Shuttle_Endeavour
-    # development cost: 10 360 000k (USD, 1965) http://www.thespacereview.com/article/2330/1, http://www.forbes.com/sites/carolpinchefsky/2012/04/18/5-horrifying-facts-you-didnt-know-about-the-space-shuttle/
-    # without the cost of 6 orbiters development cost will be about 7 360 000k (USD, 1965) - including SRB, ExTank, RS-25
+    # unit cost: 381mln USD (1965) - orbiter only http://www.nasa.gov/centers/kennedy/about/information/shuttle_faq.html
+    # development cost: 33617mln USD (2006) = 5252mln USD (1965) http://www.astronautix.com/articles/costhing.htm
     STS_ExTank: &ShuttleExTank
         cost: 10330 # http://aeromaster.tripod.com/paper1.htm#Operation
         entryCost: 195850 # http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     CSS_ExTank: *ShuttleExTank
     
     STSOrbiter: #crew compartment, fuselage, forwardRCS, CSSNose, Engine Mount
-        cost: 450000
-        entryCost: 6450000
+        cost: 347000
+        entryCost: 4602000
     CSSCrewCompartment:
-        cost: 255300
-        entryCost: 3659300
+        cost: 196000
+        entryCost: 2631300
     CSSFuselage:
-        cost: 95000
-        entryCost: 1361700
+        cost: 73000
+        entryCost: 952000
     CSSForwardRCS:
         cost: 2500
         entryCost: 35800
@@ -3260,8 +3259,8 @@ hypersonicFlight:
         cost: 2200
         entryCost: 31500
     CSSEngineMount:
-        cost: 95000
-        entryCost: 1361700
+        cost: 73000
+        entryCost: 952000
     
     CSSAirlock:
         cost: 3000 # total guess

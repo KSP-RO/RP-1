@@ -3131,7 +3131,6 @@ advAerodynamics:
 metaMaterials:
 
 hypersonicFlight:
-
     #Space Shuttle
     # unit cost: 494 000k (USD, 1965) - orbiter only https://en.wikipedia.org/wiki/Space_Shuttle_Endeavour
     # development cost: 10 360 000k (USD, 1965) http://www.thespacereview.com/article/2330/1, http://www.forbes.com/sites/carolpinchefsky/2012/04/18/5-horrifying-facts-you-didnt-know-about-the-space-shuttle/
@@ -3227,6 +3226,32 @@ hypersonicFlight:
         cost: 300 # total guess
     ETDoors:
         cost: 10 # total guess
+
+    mk3Cockpit_Shuttle:
+        cost: 40000
+    mk3CrewCabin:
+        cost: 15000 # much higher than for Mk2crewCabin
+    mk3CargoBayL:
+        cost: 10000
+        entryCost: 200000
+    mk3CargoBayM:
+        cost: 5000
+        entryCost: 200000
+    mk3CargoBayS:
+        cost: 2500
+        entryCost: 200000
+    mk3FuselageLF_100:
+    mk3FuselageLFO_100:
+    mk3FuselageLF_50:
+    mk3FuselageLFO_50:
+    mk3FuselageLF_25:
+    mk3FuselageLFO_25:
+    mk3FuselageMONO:
+    noseConeAdapter:
+    adapterMk3-Size2:
+    adapterMk3-Size2Slant:
+    adapterMk3-Mk2:
+    adapterSize3-Mk3:
 
 advancedMotors:
     wheelMed:

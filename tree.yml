@@ -2586,7 +2586,7 @@ advElectrics:
         cost: 4200
     # Apollo parts
     FASAALSEP_Device:
-        entryCost: 35,000
+        entryCost: 35000
         cost: 1000
     FASAALSEP_Reflector:
         entryCost: 35000
@@ -2887,6 +2887,7 @@ giganticRocketry: #TL7, present day
     LazTekMerlin1dVacuumEngine: *Merlin1DVac
     
     RO-Kestrel: # Falcon 1
+        cost: 40 # 31kN, kerolox
     liquidEngineMiniTurbo: #Blue Origin BE-4
         cost: 2700 # same as for RD-180 - we don't have proper data yet but I think that 2700 is a good starting point
 
@@ -2894,6 +2895,7 @@ giganticRocketry: #TL7, present day
         cost: 250 # 140 for the engine (40% of the blok e because less thrust) + 30 for the tank + 80 for the avionics (12t - modern = cheaper)
 
     CHAKAOME: # AJ10-190 for Orion
+        cost: 400 # same as for AJ10-190 OME
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X
@@ -2916,6 +2918,7 @@ hydroloxTL7:
     RLA_mp_large_vac: *RL60
     
     XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
+        cost: 40
 
 stagedTL7:
     # AJ26-62 config here
@@ -2927,6 +2930,7 @@ exoticFuelStorage: #TL7 solids
         cost: 8000 # reasonable guess, 6.87 for 4seg
     SLS_b1_SRB: *Shuttlebooster
     SLS_DKSSRB: #dark knight booster from SpiceLaunchSystem (Macollo), 11% more thrust
+        cost: 8400
 
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS

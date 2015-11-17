@@ -624,15 +624,15 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 1
         
     #NEBULA decals:
-    Decal curved: &decals
+    Decal?curved: &decals
         entryCost: 0
         cost: 1
-    Flat decal: *decals
-    Long decal 1x2: *decals
-    Long decal 1x4: *decals
-    Long decal 1x8: *decals
-    Long decal 2x16: *decals
-    Long decal 4x32: *decals
+    Flat?decal: *decals
+    Long?decal?1x2: *decals
+    Long?decal?1x4: *decals
+    Long?decal?1x8: *decals
+    Long?decal?2x16: *decals
+    Long?decal?4x32: *decals
         
     
     # B9 parts:
@@ -3290,7 +3290,7 @@ hypersonicFlight:
         cost: 100 # little bigger than for stock decouplers 
     CSS_SRBDecoupler: *ShuttleSRBdecoupler
     
-    STS SRB Nose Cone: &ShuttleSRBNoseCone
+    STS?SRB?Nose?Cone: &ShuttleSRBNoseCone
         cost: 1250 # separator + parachute
     Ares?SRB?Nose?Cone: *ShuttleSRBNoseCone
     

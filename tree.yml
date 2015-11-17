@@ -3525,7 +3525,8 @@ advNuclearPropulsion:
 fusionRockets:
 
 colossalRocketry:
-    RAPIER: # FIXME
+    RAPIER:
+        cost: 4800 # 175kN jet, 250kN rocket. But Methalox, so cheaper.
 
     B9_Engine_SABRE_S:
         cost: 6750 # 150kN jet engine, 200 kN in rocket mode, cost much bigger than for the most expensive jet engines
@@ -3536,7 +3537,6 @@ colossalRocketry:
         cost: 300 # total guess
     B9_Engine_SABRE_Intake_M:
         cost: 600 # total guess
-
     
 fusionPower:
 

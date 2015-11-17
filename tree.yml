@@ -930,7 +930,7 @@ earlyAvionics:
 aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
     aje_j57: #J57-P21
         cost: 130
-    aje_j85: #J85-something
+    miniJetEngine: #J85-something
         cost: 50
     aje_avon:
         cost: 140
@@ -1360,6 +1360,8 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     #Engines
     aje_j79:
         cost: 220
+    aje_j75: # first run 1955
+        cost: 223 # 210 000 USD (1960) https://www.flightglobal.com/pdfarchive/view/1960/1960%20-%200385.html
     aje_ramjet:
         cost: 350
     aje_atar:
@@ -2694,14 +2696,15 @@ advFuelSystems: # TL4 solids
 specializedControl: # Tl4 avioncis
 
 heavyAerodynamics: #TL4 jets - Mature Turbofans
-    JetEngine: #F100
+    turboJet: #F100
         cost: 850 # FIXME total guess
     aje_f404: #F404
         cost: 600 # sourced from 145mil for 51 engines in 1995
     aje_d30: # Soloviev D-30F6 (with afterburner), first run ~1970-75
         cost: 1200 # total guess
-    aje_cf6: # CF6, first run 1971
+    aje_cf6: &CF6
         cost: 850 # 6.3M (2011 USD)- http://www.bga-aeroweb.com/Engines/General-Electric-CF6.html
+    turboFanSize2: *CF6
     B9_Engine_Jet_Pod_Medium: # CFM56, first run 1974
         cost: 1175 # 8.75m (2014 USD)- http://www.bga-aeroweb.com/Engines/CFM56-F108.html
     B9_Engine_Jet_Pod_Small: #  General Electric TF-34, first run 1971
@@ -2820,9 +2823,12 @@ experimentalAerodynamics: #TL5 jets
     SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
         cost: 93 # 700k USD? http://www.techeblog.com/index.php/tech-gadget/ebay-watch-189-000-williams-fj44-2a-jet-engine
 
-    Mk2TwinTurbojet: # Lyulka AL-31F (Su-27), first run 1981
+    Mk2TwinTurbojet: # 2x Lyulka AL-31F (Su-27), first run 1981
         cost: 900 # total guess
-    
+    aje_al31: # 1x Lyulka AL-31F
+        cost: 450
+    JetEngine: # CF34-3B, developed from TF-34, same thrust, first run 1982
+        cost: 260 # same as TF-34
     #props
     KAXturboprop: # Rolls-Royce AE-2100 first run 1990 or later so maybe move to TL6 jets?
         cost: 415 # 3.1M (2014 USD)- http://www.bga-aeroweb.com/Engines/Rolls-Royce-AE-2100.html

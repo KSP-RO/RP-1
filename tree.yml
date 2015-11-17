@@ -1655,8 +1655,8 @@ generalConstruction:
         cost: 312
     rn_protonk_stg3: &ProtonS3
         cost: 72
-	rn_proton_stg1_adapt: #1/2 interstage adapter 
-	rn_proton_stg2_adapt: #2/3 interstage adapter
+    rn_proton_stg1_adapt: #1/2 interstage adapter 
+    rn_proton_stg2_adapt: #2/3 interstage adapter
     rn_proton_stg3_adapt: # Proton-Salyut adapter
     rn_proton_blockd_dec: # blok dm2 decoupler
         cost: 75 # the same as for a procedural 100kg decoupler
@@ -1942,7 +1942,7 @@ simpleCommandModules: # Second gen capsules
     rn_voskhod_sc: &VoskhodPod
         entryCost: 71000 # was 55, +16 for shielding
         cost: 2000
-	rn_voskhod_para:
+    rn_voskhod_para:
     Voskhod_Crew_A: *VoskhodPod
 	
     # Tantares Gemini
@@ -2016,9 +2016,9 @@ electrics:
     7k_ok_lsolar: &SoyuzSolar
         entryCost: 70000
         cost: 2000
-	7k_ok_lsolar: *SoyuzSolar
-	rn_7k_astp_lsolar:
-	rn_7k_astp_rsolar:
+    7k_ok_lsolar: *SoyuzSolar
+    rn_7k_astp_lsolar:
+    rn_7k_astp_rsolar:
     # Apollo parts
     FASAApollo_SM_Dish:
         entryCost: 35000
@@ -2491,7 +2491,7 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 95000
     rn_lok_bo: *SoyuzOM 
     rn_lok_para: *SoyuzParachute
-	rn_r7_les_okt: #LES Tower for Soyuz OK and T
+    rn_r7_les_okt: #LES Tower for Soyuz OK and T
     rn_astp_bo:
 	
     #Tantares Soyuz

@@ -437,6 +437,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 30
     SXTSmallFuselage:
         cost: 30
+        
+    # AIES tanks
+    tankminsond:
+    satpropt300FuelTank:
+    tanktoemv2:
 
     # This is from EngineIgnitor. I *guess* it makes sense to put it
     # in the starting node...
@@ -761,6 +766,12 @@ engineering101:
     rcsTankRadialLong:
     fuelTank_long:
     
+    # AIES tanks
+    tankorb1:
+    tankMER1:
+    tankMER6:
+    tank1300cl:
+    
     #AIES decouplers - they have similar sizes, about 1,25 - 2,5m
     decoupvector:
     decouplersv05:
@@ -1080,6 +1091,24 @@ basicConstruction:
     fuelTank2-2:
     fuelTank1-2:
     fuelTank3-2:
+    
+    # AIES RCS tanks
+    ms1RCSTank:
+    RCS125ra:
+    RCSTanka5a:
+    
+    # AIES tanks
+    fuelTank7k:
+    fuelTanklunderl:
+    fuelTanksuperior3:
+    fuelTanksul:
+    fuelTankmr1:
+    adapterrads:
+    
+    basef1sond:
+        cost: 25
+    baseinstrul8:
+        cost: 25
     
     #below part is the Mercury - Atlas Launch Vehicle Fuel Tank
     FASA_Atlas_LFT_Cone:
@@ -3896,25 +3925,7 @@ ORPHANS:
     Antennaesc:
     Antennaexpatvr2:
     AntennaDF2:
-    fuelTank7k:
-    fuelTanklunderl:
-    fuelTanksuperior3:
-    fuelTanksul:
-    ms1RCSTank:
-    RCS125ra:
-    RCSTanka5a:
-    satpropt300FuelTank:
-    fuelTankmr1:
-    tank1300cl:
-    tankMER1:
-    tankMER6:
-    tankminsond:
-    tankorb1:
-    tanktoemv2:
     AccelerometerFGA:
-    adapterrads:
-    basef1sond:
-    baseinstrul8:
 
     # Here are a bunch of generic FASA tanks.
     

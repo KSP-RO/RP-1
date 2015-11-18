@@ -1944,7 +1944,7 @@ simpleCommandModules: # Second gen capsules
         cost: 2000
     rn_voskhod_para:
     Voskhod_Crew_A: *VoskhodPod
-	
+
     # Tantares Gemini
     Spica_Crew_A: *GeminiPod
     Spica_Parachute_A: *GeminiChute

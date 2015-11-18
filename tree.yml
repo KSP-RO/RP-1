@@ -1148,7 +1148,7 @@ basicConstruction:
     r7_voskhod_fairing_l: *r7_fairing
     r7_blok_bvgd: # Vostok
         cost: 100 # the same as for the R7-Sputnik bvgd tank
-    r7:blok_bvgd_m: # Molniya
+    r7_blok_bvgd_m: # Molniya
         cost: 100
     r7_blok_a: # Vostok
         cost: 120 # the same as for the R7-Sputnik blok a
@@ -1686,6 +1686,8 @@ generalConstruction:
         cost: 312
     rn_protonk_stg3: &ProtonS3
         cost: 72
+    rn_proton_stg1_adapt: #1/2 interstage adapter
+    rn_proton_stg2_adapt: #2/3 interstage adapter
     rn_proton_stg3_adapt: # Proton-Salyut adapter
     rn_proton_blockd_dec: # blok dm2 decoupler
         cost: 75 # the same as for a procedural 100kg decoupler
@@ -1971,6 +1973,7 @@ simpleCommandModules: # Second gen capsules
     rn_voskhod_sc: &VoskhodPod
         entryCost: 71000 # was 55, +16 for shielding
         cost: 2000
+    rn_voskhod_para:
     Voskhod_Crew_A: *VoskhodPod
     # Tantares Gemini
     Spica_Crew_A: *GeminiPod
@@ -2036,15 +2039,16 @@ electrics:
     tg_sa:
         entryCost: 70000
         cost: 2000
-    s1_lsolar:
+    s1_lsolar: &SalyutSolar
         entryCost: 40000
         cost: 1200
-    s1_rsolar:
-        entryCost: 40000
-        cost: 1200
+    s1_rsolar: *SalyutSolar
     7k_ok_lsolar: &SoyuzSolar
         entryCost: 70000
         cost: 2000
+    7k_ok_rsolar: *SoyuzSolar
+    rn_7k_astp_lsolar:
+    rn_7k_astp_rsolar:
     # Apollo parts
     FASAApollo_SM_Dish:
         entryCost: 35000
@@ -2517,6 +2521,8 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 95000
     rn_lok_bo: *SoyuzOM 
     rn_lok_para: *SoyuzParachute
+    rn_astp_bo:
+    rn_r7_les_okt: #LES Tower for Soyuz OK and T
     
     #Tantares Soyuz
     TLV_LES: *ApolloLES

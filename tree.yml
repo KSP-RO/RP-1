@@ -437,6 +437,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 30
     SXTSmallFuselage:
         cost: 30
+        
+    # AIES tanks
+    tankminsond:
+    satpropt300FuelTank:
+    tanktoemv2:
 
     # This is from EngineIgnitor. I *guess* it makes sense to put it
     # in the starting node...
@@ -624,15 +629,15 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 1
         
     #NEBULA decals:
-    Decal curved: &decals
+    Decal?curved: &decals
         entryCost: 0
         cost: 1
-    Flat decal: *decals
-    Long decal 1x2: *decals
-    Long decal 1x4: *decals
-    Long decal 1x8: *decals
-    Long decal 2x16: *decals
-    Long decal 4x32: *decals
+    Flat?decal: *decals
+    Long?decal?1x2: *decals
+    Long?decal?1x4: *decals
+    Long?decal?1x8: *decals
+    Long?decal?2x16: *decals
+    Long?decal?4x32: *decals
         
     
     # B9 parts:
@@ -760,6 +765,12 @@ engineering101:
     RCSFuelTank:
     rcsTankRadialLong:
     fuelTank_long:
+    
+    # AIES tanks
+    tankorb1:
+    tankMER1:
+    tankMER6:
+    tank1300cl:
     
     #AIES decouplers - they have similar sizes, about 1,25 - 2,5m
     decoupvector:
@@ -919,7 +930,7 @@ earlyAvionics:
 aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
     aje_j57: #J57-P21
         cost: 130
-    aje_j85: #J85-something
+    miniJetEngine: #J85-something
         cost: 50
     aje_avon:
         cost: 140
@@ -1081,6 +1092,24 @@ basicConstruction:
     fuelTank1-2:
     fuelTank3-2:
     
+    # AIES RCS tanks
+    ms1RCSTank:
+    RCS125ra:
+    RCSTanka5a:
+    
+    # AIES tanks
+    fuelTank7k:
+    fuelTanklunderl:
+    fuelTanksuperior3:
+    fuelTanksul:
+    fuelTankmr1:
+    adapterrads:
+    
+    basef1sond:
+        cost: 25
+    baseinstrul8:
+        cost: 25
+    
     #below part is the Mercury - Atlas Launch Vehicle Fuel Tank
     FASA_Atlas_LFT_Cone:
         cost: 380
@@ -1119,7 +1148,7 @@ basicConstruction:
     r7_voskhod_fairing_l: *r7_fairing
     r7_blok_bvgd: # Vostok
         cost: 100 # the same as for the R7-Sputnik bvgd tank
-    r7_blok_bvgd_m: # Molniya
+    r7:blok_bvgd_m: # Molniya
         cost: 100
     r7_blok_a: # Vostok
         cost: 120 # the same as for the R7-Sputnik blok a
@@ -1331,6 +1360,8 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     #Engines
     aje_j79:
         cost: 220
+    aje_j75: # first run 1955
+        cost: 223 # 210 000 USD (1960) https://www.flightglobal.com/pdfarchive/view/1960/1960%20-%200385.html
     aje_ramjet:
         cost: 350
     aje_atar:
@@ -1655,8 +1686,6 @@ generalConstruction:
         cost: 312
     rn_protonk_stg3: &ProtonS3
         cost: 72
-    rn_proton_stg1_adapt: #1/2 interstage adapter 
-    rn_proton_stg2_adapt: #2/3 interstage adapter
     rn_proton_stg3_adapt: # Proton-Salyut adapter
     rn_proton_blockd_dec: # blok dm2 decoupler
         cost: 75 # the same as for a procedural 100kg decoupler
@@ -1942,9 +1971,7 @@ simpleCommandModules: # Second gen capsules
     rn_voskhod_sc: &VoskhodPod
         entryCost: 71000 # was 55, +16 for shielding
         cost: 2000
-    rn_voskhod_para:
     Voskhod_Crew_A: *VoskhodPod
-
     # Tantares Gemini
     Spica_Crew_A: *GeminiPod
     Spica_Parachute_A: *GeminiChute
@@ -2009,16 +2036,15 @@ electrics:
     tg_sa:
         entryCost: 70000
         cost: 2000
-    s1_lsolar: &SalyutSolar
+    s1_lsolar:
         entryCost: 40000
         cost: 1200
-    s1_rsolar: *SalyutSolar
+    s1_rsolar:
+        entryCost: 40000
+        cost: 1200
     7k_ok_lsolar: &SoyuzSolar
         entryCost: 70000
         cost: 2000
-    7k_ok_lsolar: *SoyuzSolar
-    rn_7k_astp_lsolar:
-    rn_7k_astp_rsolar:
     # Apollo parts
     FASAApollo_SM_Dish:
         entryCost: 35000
@@ -2491,9 +2517,7 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 95000
     rn_lok_bo: *SoyuzOM 
     rn_lok_para: *SoyuzParachute
-    rn_r7_les_okt: #LES Tower for Soyuz OK and T
-    rn_astp_bo:
-	
+    
     #Tantares Soyuz
     TLV_LES: *ApolloLES
     Tantares_Crew_A: *SoyuzPod
@@ -2593,7 +2617,7 @@ advElectrics:
         cost: 4200
     # Apollo parts
     FASAALSEP_Device:
-        entryCost: 35,000
+        entryCost: 35000
         cost: 1000
     FASAALSEP_Reflector:
         entryCost: 35000
@@ -2672,14 +2696,15 @@ advFuelSystems: # TL4 solids
 specializedControl: # Tl4 avioncis
 
 heavyAerodynamics: #TL4 jets - Mature Turbofans
-    JetEngine: #F100
+    turboJet: #F100
         cost: 850 # FIXME total guess
     aje_f404: #F404
         cost: 600 # sourced from 145mil for 51 engines in 1995
     aje_d30: # Soloviev D-30F6 (with afterburner), first run ~1970-75
         cost: 1200 # total guess
-    aje_cf6: # CF6, first run 1971
+    aje_cf6: &CF6
         cost: 850 # 6.3M (2011 USD)- http://www.bga-aeroweb.com/Engines/General-Electric-CF6.html
+    turboFanSize2: *CF6
     B9_Engine_Jet_Pod_Medium: # CFM56, first run 1974
         cost: 1175 # 8.75m (2014 USD)- http://www.bga-aeroweb.com/Engines/CFM56-F108.html
     B9_Engine_Jet_Pod_Small: #  General Electric TF-34, first run 1971
@@ -2798,9 +2823,12 @@ experimentalAerodynamics: #TL5 jets
     SXTMiniJet: # RR-Williams FJ44, 1990 small turbofan. Maybe should be TL6?
         cost: 93 # 700k USD? http://www.techeblog.com/index.php/tech-gadget/ebay-watch-189-000-williams-fj44-2a-jet-engine
 
-    Mk2TwinTurbojet: # Lyulka AL-31F (Su-27), first run 1981
+    Mk2TwinTurbojet: # 2x Lyulka AL-31F (Su-27), first run 1981
         cost: 900 # total guess
-    
+    aje_al31: # 1x Lyulka AL-31F
+        cost: 450
+    JetEngine: # CF34-3B, developed from TF-34, same thrust, first run 1982
+        cost: 260 # same as TF-34
     #props
     KAXturboprop: # Rolls-Royce AE-2100 first run 1990 or later so maybe move to TL6 jets?
         cost: 415 # 3.1M (2014 USD)- http://www.bga-aeroweb.com/Engines/Rolls-Royce-AE-2100.html
@@ -2894,6 +2922,7 @@ giganticRocketry: #TL7, present day
     LazTekMerlin1dVacuumEngine: *Merlin1DVac
     
     RO-Kestrel: # Falcon 1
+        cost: 40 # 31kN, kerolox
     liquidEngineMiniTurbo: #Blue Origin BE-4
         cost: 2700 # same as for RD-180 - we don't have proper data yet but I think that 2700 is a good starting point
 
@@ -2901,6 +2930,7 @@ giganticRocketry: #TL7, present day
         cost: 250 # 140 for the engine (40% of the blok e because less thrust) + 30 for the tank + 80 for the avionics (12t - modern = cheaper)
 
     CHAKAOME: # AJ10-190 for Orion
+        cost: 400 # same as for AJ10-190 OME
 
 hydroloxTL7:
     liquidEngineconstelacion: # J-2X
@@ -2923,6 +2953,7 @@ hydroloxTL7:
     RLA_mp_large_vac: *RL60
     
     XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
+        cost: 40
 
 stagedTL7:
     # AJ26-62 config here
@@ -2934,6 +2965,7 @@ exoticFuelStorage: #TL7 solids
         cost: 8000 # reasonable guess, 6.87 for 4seg
     SLS_b1_SRB: *Shuttlebooster
     SLS_DKSSRB: #dark knight booster from SpiceLaunchSystem (Macollo), 11% more thrust
+        cost: 8400
 
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
@@ -3293,7 +3325,7 @@ hypersonicFlight:
         cost: 100 # little bigger than for stock decouplers 
     CSS_SRBDecoupler: *ShuttleSRBdecoupler
     
-    STS SRB Nose Cone: &ShuttleSRBNoseCone
+    STS?SRB?Nose?Cone: &ShuttleSRBNoseCone
         cost: 1250 # separator + parachute
     Ares?SRB?Nose?Cone: *ShuttleSRBNoseCone
     
@@ -3532,7 +3564,8 @@ advNuclearPropulsion:
 fusionRockets:
 
 colossalRocketry:
-    RAPIER: # FIXME
+    RAPIER:
+        cost: 4800 # 175kN jet, 250kN rocket. But Methalox, so cheaper.
 
     B9_Engine_SABRE_S:
         cost: 6750 # 150kN jet engine, 200 kN in rocket mode, cost much bigger than for the most expensive jet engines
@@ -3543,7 +3576,6 @@ colossalRocketry:
         cost: 300 # total guess
     B9_Engine_SABRE_Intake_M:
         cost: 600 # total guess
-
     
 fusionPower:
 
@@ -3899,25 +3931,7 @@ ORPHANS:
     Antennaesc:
     Antennaexpatvr2:
     AntennaDF2:
-    fuelTank7k:
-    fuelTanklunderl:
-    fuelTanksuperior3:
-    fuelTanksul:
-    ms1RCSTank:
-    RCS125ra:
-    RCSTanka5a:
-    satpropt300FuelTank:
-    fuelTankmr1:
-    tank1300cl:
-    tankMER1:
-    tankMER6:
-    tankminsond:
-    tankorb1:
-    tanktoemv2:
     AccelerometerFGA:
-    adapterrads:
-    basef1sond:
-    baseinstrul8:
 
     # Here are a bunch of generic FASA tanks.
     

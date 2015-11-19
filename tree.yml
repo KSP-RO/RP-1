@@ -262,6 +262,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SXTInlineAirIntakeTiny: *stdintake
     B9_Aero_Intake_Mount: *stdintake
     B9_Aero_Intake_CLR: *stdintake
+    miniIntake: *stdintake
     
     B9_Aero_Intake_Mount:
         cost: 10
@@ -436,6 +437,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     OscarEtank:
         cost: 30
     SXTSmallFuselage:
+        cost: 30
+    miniFuselage:
         cost: 30
         
     # AIES tanks
@@ -3418,6 +3421,7 @@ hypersonicFlight:
     adapterMk3-Size2Slant:
     adapterMk3-Mk2:
     adapterSize3-Mk3:
+    adapterEngines:
 
 advancedMotors:
     wheelMed:

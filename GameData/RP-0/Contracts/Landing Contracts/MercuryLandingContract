@@ -36,7 +36,7 @@ CONTRACT_TYPE
 		minCrew = 0
 		maxCrew = 0
 	}
-	// lots of requirments here but this is late game contract and I want to make sure that it will not appear too soon.
+	// lots of requirements here but this is late game contract and I want to make sure that it will not appear too soon.
 	REQUIREMENT
 	{
 		name = CompleteContract

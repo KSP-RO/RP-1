@@ -748,8 +748,6 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
         cost: 300
     FASA_Mercury_LFT_Short:
         cost: 150
-    FASAMercuryFairing:
-        cost: 15
 
     LVT15: #RD-103
         cost: 850
@@ -1113,6 +1111,8 @@ basicConstruction:
     #below part is the Mercury - Atlas Launch Vehicle Fuel Tank
     FASA_Atlas_LFT_Cone:
         cost: 380
+    FASAMercuryFairing:
+        cost: 15
         
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
         cost: 75
@@ -1654,6 +1654,8 @@ generalConstruction:
     #below part is the Atlas SLV-3, 1966 first use. Lunar Orbiter
     #nearly the same as LV-3 so the 2 can be used interchangeably
     FASAMercuryAtlasLFTLong:
+        cost: 400
+    FASAAtlasLV3C:
         cost: 400
         
     # Lunar heatshields
@@ -2301,7 +2303,12 @@ advConstruction:
         entryCost: 3500
         cost: 100
     
-    # SXT N!
+    FASAAtlasSLV3A:
+        cost: 450
+    FASAAtlasSLV3C:
+        cost: 450
+
+		# SXT N!
     SXTK1Decoupler:
         cost: 250
     SXTK1Decoupler2:
@@ -2678,6 +2685,7 @@ hydroloxTL4:
     RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
         cost: 650
         entryCost: 27750
+    FASAGeminiLFTCentarCSM_T: # Centaur D5 for Atlas V
         
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
@@ -2942,6 +2950,7 @@ hydroloxTL7:
     liquidEngineconstelacion: # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
         entryCost: 158860 # 1200M USD http://www.parabolicarc.com/2013/10/07/billion-dollar-j2x-engine-mothballed/
+    FASAGeminiLFTCentarCSM_D5: # Centaur D5 for Atlas V
     
     XXxAres1J2-XHIGH:
         cost: 5300 # pretty high but it is RL10B-2 configuration (1800 + 3500)
@@ -3014,6 +3023,8 @@ specializedConstruction:
         cost: 100
     KAS_CPort1:
         cost: 100
+    FASAAtlasH:
+        cost: 500
     
     
 advLanding:

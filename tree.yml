@@ -2302,13 +2302,12 @@ advConstruction:
     FASALM_DecouplerRing:
         entryCost: 3500
         cost: 100
-    
     FASAAtlasSLV3A:
         cost: 450
     FASAAtlasSLV3C:
         cost: 450
     
-		# SXT N!
+    # SXT N!
     SXTK1Decoupler:
         cost: 250
     SXTK1Decoupler2:

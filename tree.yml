@@ -1582,6 +1582,9 @@ hydroloxTL2:
     SXTLT80: &J2Engine #J-2 200klbf model
         cost: 7500
     FASAApolloLFEJ2: *J2Engine
+    NP_lfe_375m_K2X: *J2Engine
+    NP_lfe_125m_K2XEngine: *J2Engine
+    
     KW5mengineTitanV:
         cost: 37500 # 5x J2
 
@@ -1609,6 +1612,8 @@ fuelSystems: # Staged combustion, TL2
     #Proton -- Stock
     RO-RD-253: *RD253
     RO-RD-0210: *RD0210
+    
+    NP_lfe_125m_BearcatSingle: *RD253
     
 
 matureSolids:
@@ -2183,9 +2188,10 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     FASAApolloLFEF1: &F-1
         entryCost: 409361
         cost: 15000 # Source for the $20m figure???? For now reducing to 15mil
-    KW5mengineGriffonC:
+    KW5mengineGriffonC: &5xF-1
         entryCost: 409361
         cost: 75000 # Costs more to buy because its 5 engines in one from KW
+    NP_lfe_5m_Bearcat5x: *5xF-1
         
         # Apollo parts
     FASAApollo_SM_Engine: &ApolloSPS # Service Propulsion System
@@ -2221,7 +2227,9 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     rn_lk_lander_859: # RD-859
         cost: 450 #19kn, 40% min throttle, cheaper than LMDE
     
-    
+    # Ariane booster. Uses 60s tech, developed in 70s.
+    RO_Viking_Vac: # Viking/Vikas, Ariane 1, 2, 3, 4 second stage, developed in 70s
+    RO_viking_SL: # Viking/Vikas, Ariane 1, 2, 3, 4 first stage (booster), developed in 70s
     
 
 hydroloxTL3:
@@ -2679,7 +2687,8 @@ advElectrics:
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
     toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
         cost: 9000 # J-2 is 8500
-    RLA_mp_large_spike: *J2T  
+    RLA_mp_large_spike: *J2T 
+    NP_lfe_125m_AerospikeEngine: *J2T
   
 
 hydroloxTL4:
@@ -2694,6 +2703,7 @@ hydroloxTL4:
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
     # NK33 and NK43 config here, parts produced ~100 the program was scrapped and never flown
+    NP_lfe_25m_4x800Engine: # RD-264, Dnepr first stage, first run 1969-73
 
 advFuelSystems: # TL4 solids
     FASAGerminiSRB175_7Seg: #UA1206
@@ -2748,8 +2758,8 @@ largeVolumeContainment: # TL4.5 solids
     SRB2D: &STSbooster
         cost: 6780
     CSS_SSRB: *STSbooster
-    XSLSSRB: #Shuttle booster - Chaka Monkey
-        cost: 6870 #8000 for a 5-segment
+    XSLSSRB: *STSbooster
+    NP_SRB_2_5m_AdvSRB4: *STSbooster
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
@@ -2780,6 +2790,9 @@ stagedTL5:
         cost: 5400 # 2x RD-180 cost. RD-180 is derived from the RD-170/171
     RD171: *RD-170
     liquidEnginemogulmp1500: *RD-170
+    
+    NP_srb_radialbooster: # Energia liquid booster (RD-170 + tank)
+    NP_lfe_125m_RMA3: #RD-0256, Dnepr second stage, first flight 1983-89
 
 highPerformanceFuelSystems:
     solidBoosterSmall: # Castor 30B
@@ -2816,9 +2829,12 @@ hydroloxTL5:
     RD0120: &RD-0120
         cost: 5000 # FIXME total guess
     SXTCommodore: *RD-0120
+    NP_lfe_25m_Orbitalbertha: *RD-0120
     
-    KW3mengineGriffonXX: #four RD-0120s
+    KW3mengineGriffonXX: &4xRD-0120 #four RD-0120s
         cost: 20000 # FIXME
+        entryCost: 100000 # same as for single RD-0120
+    NP_lfe_375m_EnergiaQuad: *4xRD-0120
     
     # SSME / RS-24/5
     Ks25: &RS-25
@@ -2828,7 +2844,13 @@ hydroloxTL5:
     km_ssme_rs25ss: *RS-25
     km_ssme_rs25s: *RS-25
     SSME: *RS-25
-    SLS_RS25: *RS-25 #Spice Launch System (Macollo)
+    NP_lfe_25m_BroncoSingle: *RS-25
+    #Spice Launch System (Macollo)
+    SLS_RS25: *RS-25
+    
+    NP_lfe_375m_Bearcat3x: # 3x RS-25
+        cost: 17100
+        entryCost: 114000 # same as for single RS-25
     
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
     
@@ -2863,8 +2885,9 @@ experimentalRocketry: #TL6, late 80s/90s
         cost: 550 # total guess
     KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
         cost: 615 # 2.5M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
-    Size2LFB: # Pyrios booster, technically TL7 but the engines are F-1s.
+    Size2LFB: &Pyrios # Pyrios booster, technically TL7 but the engines are F-1s.
         cost: 43000 # FIXME guess based off 2x F-1 + tankage.
+    NP_lfb_25m_Adv: *Pyrios
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
@@ -2927,8 +2950,10 @@ avionicsTL6:
 giganticRocketry: #TL7, present day
     liquidEngineMiniRescale: # Aestus II
         cost: 700 # total guess
-    Size3EngineCluster: # SLS core (4x RS-25D/E)
+    Size3EngineCluster: &SLSCore # SLS core (4x RS-25D/E)
         cost: 25000 # FIXME total guess based off RS-25 costs above.
+        entryCost: 114000 # same as for single RS-25
+    NP_lfe_5m_AdvHL: *SLSCore
         
     # SPACEX ENGINES
     # StarShine Industries Merlin
@@ -2983,6 +3008,7 @@ exoticFuelStorage: #TL7 solids
     MassiveBooster: &Shuttlebooster
         cost: 8000 # reasonable guess, 6.87 for 4seg
     SLS_b1_SRB: *Shuttlebooster
+    NP_SRB_2_5m_AdvSRB5: *Shuttlebooster
     SLS_DKSSRB: #dark knight booster from SpiceLaunchSystem (Macollo), 11% more thrust
         cost: 8400
 

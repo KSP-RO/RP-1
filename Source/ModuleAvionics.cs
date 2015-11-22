@@ -28,6 +28,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public bool systemEnabled = true;
 
+        [KSPField]
+        public string techRequired = "";
+
         protected ModuleResource commandChargeResource = null;
         protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
@@ -37,7 +40,7 @@ namespace RP0
         {
             get
             {
-                if (currentlyEnabled)
+                if (currentlyEnabled && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
                     return massLimit;
                 else
                     return 0f;
@@ -121,6 +124,8 @@ namespace RP0
                         + (enabledkW * 1000d).ToString("N1") + " W to " + (disabledkW * 1000d).ToString("N1") + " W.";
                 }
             }
+            if (!string.IsNullOrEmpty(techRequired))
+                retStr += "\nNote: requires technology unlock to function.";
             return retStr;
         }
 

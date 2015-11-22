@@ -262,6 +262,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SXTInlineAirIntakeTiny: *stdintake
     B9_Aero_Intake_Mount: *stdintake
     B9_Aero_Intake_CLR: *stdintake
+    miniIntake: *stdintake
     
     B9_Aero_Intake_Mount:
         cost: 10
@@ -436,6 +437,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     OscarEtank:
         cost: 30
     SXTSmallFuselage:
+        cost: 30
+    miniFuselage:
         cost: 30
         
     # AIES tanks
@@ -2164,6 +2167,8 @@ highAltitudeFlight: # Early Spaceplanes
     RO-Mk1FuselagePres:
     RO-Mk1CrewModule: # 3-person 2.1m crew section from VSR KerbCan
         cost: 3000
+    MK1CrewCabin:
+        cost: 4000
 # TIER 4
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
@@ -2815,7 +2820,7 @@ hydroloxTL5:
     km_ssme_rs25: *RS-25
     km_ssme_rs25ss: *RS-25
     km_ssme_rs25s: *RS-25
-    
+    SSME: *RS-25
     SLS_RS25: *RS-25 #Spice Launch System (Macollo)
     
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
@@ -3401,6 +3406,9 @@ hypersonicFlight:
     mk3CargoBayS:
         cost: 2500
         entryCost: 200000
+    mk3CargoRamp:
+        cost: 3300
+        entryCost: 200000
     mk3FuselageLF_100:
     mk3FuselageLFO_100:
     mk3FuselageLF_50:
@@ -3413,6 +3421,7 @@ hypersonicFlight:
     adapterMk3-Size2Slant:
     adapterMk3-Mk2:
     adapterSize3-Mk3:
+    adapterEngines:
 
 advancedMotors:
     wheelMed:

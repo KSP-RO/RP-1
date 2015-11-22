@@ -3435,6 +3435,12 @@ specializedElectrics:
         cost: 1000
     largeSolarPanel:
         cost: 1500
+        
+    solarpanels-curved01: # 0.21 ec/s
+        cost: 200
+    solarpanel-curved-25-1: # 1.34 ec/s
+        cost: 800
+    
     # Remote Tech
     RTGigaDish1:
         cost: 1900
@@ -3544,6 +3550,26 @@ aerospaceTech:
     B9_Aero_HL_Extension_C:
 
 experimentalElectrics:
+    solarpanel-curved-375-1: # 0.09 ec/s
+        cost: 150
+    solarpanel-curved-deploying-25-1: # 0.61 ec/s
+        cost: 450
+    solarpanel-deploying-circular-1: # 1.49 ec/s
+        cost: 870
+    solarpanel-deploying-1x4-1: # 1.19 ec/s
+        cost: 770
+    solarpanel-deploying-1x3-1: # 0.68 ec/s
+        cost: 550 
+    solarpanel-deploying-1x4-2: # 1.52 ec/s
+        cost: 880
+    solarpanel-deploying-1x5-1: # 2.5 ec/s
+        cost: 1500
+    solarpanel-deploying-1x5-2: # 3.75 ec/s
+        cost: 2250
+    solarpanel-static-truss-1: # 0.42 ec/s
+        cost: 300
+    solarpanel-static-truss-2: # 0.21 ec/s
+        cost: 150
 
 experimentalScience:
 
@@ -3750,8 +3776,18 @@ cuttingEdgeSolarTech:
 
 advPVMaterials:
 
-electricalSystems:
-
+electricalSystems: # assume High Tech Electrical system from new tech tree
+    solarpanel-deploying-2x1-2: # 12.32 ec/s
+        cost: 7000
+    solarpanel-deploying-2x3-1: # 15.53 ec/s
+        cost: 8800
+    solarpanel-deploying-2x1-1: # 11.42 ec/s
+        cost: 6500
+    solarpanels-blanket-2: # 34.2 ec/s
+        cost: 14000
+    solarpanel-blanket-1: # 199.9 ec/s
+        cost: 57000
+    
 advIonPropulsion:
     
 plasmaPropulsion:

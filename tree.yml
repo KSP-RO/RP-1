@@ -1102,15 +1102,6 @@ basicConstruction:
     fairingSize3:
         cost: 0.1
 
-    #Tantares R-7 and Vostok tanks
-    TLV_LFO_A:
-        cost: 50
-    TLV_LFO_B:
-        cost: 70
-    TLV_LFO_C: *R7Booster
-    Alto_LFO_A:
-        cost: 100
-
     #RaiderNick - R-7, Vostok, Molniya, tanks, fairings, decouplers, adapters
     sputnik1_base: &sputnik_n_b
         cost: 10
@@ -1152,6 +1143,15 @@ basicConstruction:
         cost: 120 # the same as for the R7-Sputnik blok a
     r7_blok_a_molniya: # Molniya
         cost: 120
+
+    #Tantares R-7 and Vostok tanks
+    TLV_LFO_A:
+        cost: 50
+    TLV_LFO_B:
+        cost: 70
+    TLV_LFO_C: *R7Booster
+    Alto_LFO_A:
+        cost: 100
 
 basicAvionics:
      # *** Avionics

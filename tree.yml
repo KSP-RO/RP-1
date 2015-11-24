@@ -1533,6 +1533,10 @@ advRocketry:
     radialDecoupler2:
         cost: 30    # It's a decoupler (20) with a truss (10)
 
+    FASAStrS1BWing:
+        cost: 50
+    FASAApalloLFTS1BStage1:
+        cost: 1800
     FASAAgenaLFT: # Agena B/D tankage
         cost: 50 # TODO compare to proc part
     # Titan II upper stage
@@ -1579,14 +1583,6 @@ hydroloxTL2:
 
     LR87LH2Vac:  # total guess on price
         cost: 6500
-    SXTLT80: &J2Engine #J-2 200klbf model
-        cost: 7500
-    FASAApolloLFEJ2: *J2Engine
-    NP_lfe_375m_K2X: *J2Engine
-    NP_lfe_125m_K2XEngine: *J2Engine
-    
-    KW5mengineTitanV:
-        cost: 37500 # 5x J2
 
 fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
@@ -2234,6 +2230,15 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
 
 hydroloxTL3:
 
+    SXTLT80: &J2Engine #J-2 200klbf model
+        cost: 7500
+    FASAApolloLFEJ2: *J2Engine
+    NP_lfe_375m_K2X: *J2Engine
+    NP_lfe_125m_K2XEngine: *J2Engine
+    
+    KW5mengineTitanV:
+        cost: 37500 # 5x J2
+
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
     NK33: # in NK-15 configuration
@@ -2285,9 +2290,6 @@ advConstruction:
         cost: 400
     FASAApalloLFTJ2Plate: # S-IVB stage
         cost: 2500
-    FASAApalloLFTS1BStage1:
-        entryCost: 14000
-        cost: 400
     FASAApalloLFTSVS1:
         entryCost: 14000
         cost: 400

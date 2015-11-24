@@ -2015,7 +2015,7 @@ electrics:
     FASAGeminiUtilityPack: &GeminiSM
         entryCost: 178000
         cost: 3560
-    FASAGeminiEngineFuel2:
+    FASAGeminiEngineFuel2: *GeminiSM
     FASAGeminiEngineFuelDescent:
     Spica_Engine_A: *GeminiSM
     # This is a Mariner-level dish. Ten mariner probes cost $554m in 1960-1970s

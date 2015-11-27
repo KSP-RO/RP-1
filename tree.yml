@@ -1227,6 +1227,9 @@ survivability: # 3-Axis Stability and early probes ##
     # Heatshield decoupler
     decoupler_ftr_small:
         cost: 5
+    
+    FASAProbeParachute: # small parachute for the probes
+        cost: 40
 
     
 stability:
@@ -1892,6 +1895,8 @@ flightControl:
     
     sasModule:
         cost: 2500  # total guess
+    RadialReactionWheel:
+        cost: 2500 # same as above
 
     rn_voskhod_airlock:
         entryCost: 50000
@@ -2383,6 +2388,9 @@ advConstruction:
         cost: 100
     KAS_Hook_Winch1:
         cost: 100
+        
+    fuelLine:
+        cost: 150
 
 advFlightControl:
     # Salyut parts

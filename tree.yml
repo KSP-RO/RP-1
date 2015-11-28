@@ -1895,8 +1895,6 @@ flightControl:
     
     sasModule:
         cost: 2500  # total guess
-    RadialReactionWheel:
-        cost: 2500 # same as above
 
     rn_voskhod_airlock:
         entryCost: 50000

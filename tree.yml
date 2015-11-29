@@ -1302,6 +1302,8 @@ stability:
     FASASolarMini:
         cost: 75
 
+    RTShortDish2: # early small dish, CommGEO
+        cost: 400
     
     # Film return camera
     science_module:
@@ -1755,11 +1757,18 @@ basicScience:
 
     LgRadialSolarPanel:
         entryCost: 9000
-        cost: 400 
+        cost: 400
 
-    # DTS-M1
-    mediumDishAntenna:
-        cost: 500
+    HighGainAntenna: # AsteroidDay, looks somewhat mariner-like
+        cost: 400
+    # This is a Mariner-level dish. Ten mariner probes cost $554m in 1960-1970s
+    # dollars, including R&D, manufacture, and launch costs. The average probe
+    # was $54m. If the cost is 1970s dollars, then that's $183m 1950s dollars,
+    # $0.8m for the dish feels right, it means an R&D cost of $16m, a little under
+    # 10% of the entire programme cost.
+    #
+    # Plus it balances nicely with existing antennae costs. ;)  -- PJF
+
     Dishcl1:
         cost: 500 # range 0.4M km
 
@@ -2014,18 +2023,15 @@ electrics:
     FASAGeminiEngineFuel2: *GeminiSM
     FASAGeminiEngineFuelDescent:
     Spica_Engine_A: *GeminiSM
-    # This is a Mariner-level dish. Ten mariner probes cost $554m in 1960-1970s
-    # dollars, including R&D, manufacture, and launch costs. The average probe
-    # was $54m. If the cost is 1970s dollars, then that's $183m 1950s dollars,
-    # $0.8m for the dish feels right, it means an R&D cost of $16m, a little under
-    # 10% of the entire programme cost.
-    #
-    # Plus it balances nicely with existing antennae costs. ;)  -- PJF
 
-    RTShortDish2:
-        cost: 800
     Dishpcf:
         cost: 800 # range 300M km
+
+    rtg:
+        cost: 1000
+
+    RTLongDish2: # Pioneer10/11; should be same node as RTGs, really
+        cost: 400
 
     # Radio and plasma wave antennae. Pretty much every probe to every
     # planet ever had these. The tech isn't fancy or hard, and since this
@@ -2034,12 +2040,12 @@ electrics:
     #
     # Plus they look pretty darn cool.
 
-    rtg:
-        cost: 1000
-
     rpwsAnt: &rpws
         cost: 500
     USRPWS: *rpws
+
+    RTLongAntenna2: #Communotron32, 16Mm nominal
+        cost: 600
 
     # Soyuz parts
     tg_sa:
@@ -2107,7 +2113,11 @@ landing:
     # landing probe core
     probeCoreOcto: # Surveyor
         cost: 4000
-        
+
+    HECS2_ProbeCore: # AsteroidDay
+        cost: 4000
+
+
     RO-SurveyorVernier:
         cost: 30 # not a 4-way, but it throttles. 100lbf same as the RCSBlock tho.
         
@@ -2672,14 +2682,12 @@ advElectrics:
         entryCost: 14000
 
     # Remote Tech
-    RTLongAntenna2:
-        cost: 600
-    RTLongAntenna3:
-        cost: 700
-    commDish:
-        cost: 1100
-    RTLongDish2:
-        cost: 1400
+    RTGigaDish2: # Voyager class, "infinite" range
+        cost: 1000
+
+    mediumDishAntenna: # DTS-M1, ultimate short-range & inner planets
+        cost: 500
+
     Dishmccomu:
         cost: 1000 # range 800M km
     Dishomega2g: 
@@ -3144,9 +3152,7 @@ ionPropulsion:
         entryCost: 7600 # 50mln (2007 USD) http://esto.nasa.gov/conferences/nstc2007/papers/Manzella_David_D10P2_NSTC-07-0116.pdf
 
 largeElectrics:
-    # Remote Tech
-    RTGigaDish2:
-        cost: 1700
+
     dishcomlar1:
         cost: 1500 # range 2000M km
 
@@ -3480,8 +3486,11 @@ specializedElectrics:
         cost: 800
     
     # Remote Tech
-    RTGigaDish1:
+    RTGigaDish1: # very large folding dish
         cost: 1900
+
+    commDish: # Comm88, stock folding dish ->Galileo
+        cost: 1100
 
 advUnmanned:
     probeCoreCube: # modern satellite bus
@@ -3840,6 +3849,9 @@ exoticReactions:
 
 highEnergyScience:
 
+    RTLongAntenna3: # currently no use
+        cost: 700
+
 orbitalMegastructures:
     # MTV parts
     SXTMTVGirderBasic:
@@ -4040,7 +4052,6 @@ ORPHANS:
     PoodleM: # VSR small NTR
     
     # SXT stuff
-    HECS2_ProbeCore:
     LprobeFoil:
     SXTClyde:
     SXTLander: # PPD-8 can

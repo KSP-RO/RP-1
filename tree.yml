@@ -1393,7 +1393,7 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 10
     B9_Utility_Landing_Gear_HDG2AL:
         cost: 10
-    KAXheavygear
+    KAXheavygear:
         cost: 15
         
     #XLR99

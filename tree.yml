@@ -1393,6 +1393,8 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 10
     B9_Utility_Landing_Gear_HDG2AL:
         cost: 10
+    KAXheavygear
+        cost: 15
         
     #XLR99
     # X-15 engine
@@ -1426,6 +1428,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     
     SXTNK12M:
         cost: 400 # total guess
+    
+    airbrake1: # stock airbrake
+        cost: 50
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules
@@ -1531,6 +1536,9 @@ advRocketry:
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
     
+    FASADeltaMB3LFE: # MB-3-3, first flight 1964
+        cost: 1450 # didn't find any real number but MB-3-3 is quite similar to H-1, same isp, little bigger TWR and 20% less thrust. So I think 1450 seems reasonable
+    
     vernierEngine:
         cost: 25
 
@@ -1628,8 +1636,9 @@ matureSolids:
     RT2: # Castor II
         cost: 320 # unstated, should be about Castor I's cost.
         
-    SXTCastor30: # Star 17, used on Atlas Agena D
+    SXTCastor30: &Star17 # Star 17, used on Atlas Agena D
         cost: 172 # nautix 580k assume 1985 dollars
+    KK_ATK_Star17A: *Star17
     
     # Waxwing (performance of an early-mid 60s kick motor, and I _think_ it was used before
     # Black Arrow, so...let's place it here.)
@@ -2326,7 +2335,9 @@ advConstruction:
         cost: 450
     FASAAtlasSLV3C:
         cost: 450
-    
+    FASASaturnSLA: # spacecraft lunar module adapter - base
+        cost: 150
+        
     # SXT N!
     SXTK1Decoupler:
         cost: 250
@@ -3214,6 +3225,8 @@ unmannedTech:
     
     investpod: # cubesat
         cost: 5
+    avionicsNoseCone:
+        cost: 200 # comparable with other guidance units
 
 largeControl:
     # Early Control Moment Gyroscope, see #103

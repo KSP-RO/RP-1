@@ -592,6 +592,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 20 #guess, balanced against 2800.
     TwinWasp-R1830-94: # Prop Engine R-1830 had 173,618 made across all variants Date:1930-1951
         cost: 15 # guess, balanced against R1820.
+    KAXelectricprop:
+        cost: 10 # electric propeller engine, 300hp
     
     # source for some engine prices http://www.warbirdsandairshows.com/Aircraft%20manufacturing/enginemanufacturewwii.htm
     #V1710 - 33.3 before obsolete

@@ -2708,7 +2708,6 @@ hydroloxTL4:
     RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
         cost: 650
         entryCost: 27750
-    FASAGeminiLFTCentarCSM_T: # Centaur D5 for Atlas V
         
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
@@ -2863,7 +2862,6 @@ hydroloxTL5:
         cost: 17100
         entryCost: 114000 # same as for single RS-25
     
-    FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
     
     KW3mengineWildcarXR: #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
@@ -2944,7 +2942,6 @@ hydroloxTL6:
     bahars68b: *RS-68
     xbahars68bx: *RS-68
     
-    FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     KW2mengineVestaVR9D: # japanese LE-7A
         cost: 3840 # 50x less than development cost
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
@@ -2990,7 +2987,6 @@ hydroloxTL7:
     liquidEngineconstelacion: # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
         entryCost: 158860 # 1200M USD http://www.parabolicarc.com/2013/10/07/billion-dollar-j2x-engine-mothballed/
-    FASAGeminiLFTCentarCSM_D5: # Centaur D5 for Atlas V
     
     XXxAres1J2-XHIGH:
         cost: 5300 # pretty high but it is RL10B-2 configuration (1800 + 3500)
@@ -3064,8 +3060,6 @@ specializedConstruction:
         cost: 100
     KAS_CPort1:
         cost: 100
-    FASAAtlasH:
-        cost: 500
     
     
 advLanding:
@@ -3224,6 +3218,8 @@ largeControl:
         cost: 2500 # total guess
 
 advMetalWorks:
+    FASAAtlasH:
+        cost: 500
 
 advAerodynamics:
 
@@ -3631,6 +3627,7 @@ robotics:
 automation:
 
 nanolathing:
+    FASAGeminiLFTCentarCSM_T: #  Centaur-T for Titan IV
    
 specializedScienceTech:
     dmUSSolarParticles: #Solar Particle Collector Univ. Storage
@@ -3669,8 +3666,10 @@ colossalRocketry:
 fusionPower:
 
 exoticAlloys:
+    FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
 
 orbitalAssembly:
+    FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
 
 advAerospaceComposites:
 
@@ -3912,6 +3911,8 @@ orbitalMegastructures:
     B9_Structure_HX1_H:
     B9_Structure_HX2_H:
     B9_Structure_HX1_SAS:
+
+    FASAGeminiLFTCentarCSM_D5: # Centaur D5 for Atlas V
     
 specializedPlasmaTech:
 

@@ -2714,6 +2714,7 @@ precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
     # NK33 and NK43 config here, parts produced ~100 the program was scrapped and never flown
     NP_lfe_25m_4x800Engine: # RD-264, Dnepr first stage, first run 1969-73
+    SXTK1BaseLarge:
 
 advFuelSystems: # TL4 solids
     FASAGerminiSRB175_7Seg: #UA1206
@@ -4062,7 +4063,6 @@ ORPHANS:
     SXTNERVA:
     SXTNERVAB:
     SXTMk2LinearAerospike:
-    SXTK1BaseLarge:
     SXTK1Base5m:
     SXTmk2SAScore:
     SXT8FuelTank:

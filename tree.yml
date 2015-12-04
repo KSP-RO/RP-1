@@ -4065,6 +4065,10 @@ ORPHANS:
     SXTK1BaseLarge:
     SXTK1Base5m:
     SXTmk2SAScore:
+    SXT8FuelTank:
+    SXT16FuelTank:
+    SXT32FuelTank:
+    
 
     Tantares_Habitation_A:
     Tantares_DockingMechanism_A:
@@ -4085,3 +4089,7 @@ ORPHANS:
     PLV_Engine_A:
     PLV_Engine_B:
     PLV_LFO_A:
+    
+    # Vens
+    RT1:
+    Size2MedEngine: # will probably be an R-7 engine

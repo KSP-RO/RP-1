@@ -1668,7 +1668,7 @@ generalConstruction:
     HeatShield0:
         entryCost: 31000
         cost: 500
-    HeatShield1m:
+    Heatshield1m:
         entryCost: 32000
         cost: 750
     HeatShield1: # 2m

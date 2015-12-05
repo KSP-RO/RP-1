@@ -880,24 +880,6 @@ earlyAvionics:
     # RN_Soviet_Probes
 
     sputnik1: *sputnik
-    sputnik1_base: &sputnik_n_b
-        cost: 10
-    sputnik1_nosecone: *sputnik_n_b
-   
-    sputnik3_base: *sputnik_n_b
-    sputnik3_nosecone: *sputnik_n_b
-    sputnik2_base: *sputnik_n_b
-    sputnik2_nosecone: *sputnik_n_b
-
-    # Raidernick R-7
-    WING_R7:
-        cost: 10
-
-    r7_blok_bvgd_sput: &R7Booster
-        cost: 100
-
-    r7_blok_a_sput:
-        cost: 120
 
     # AVIONICS
     # These make your rockets actually controllable.
@@ -921,12 +903,6 @@ earlyAvionics:
     FASAExplorerNosecone:
         entryCost: 7000
         cost: 250
-    #Tantares R-7
-    TLV_LFO_A:
-        cost: 50
-    TLV_LFO_B:
-        cost: 70
-    TLV_LFO_C: *R7Booster
 
 aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
     aje_j57: #J57-P21
@@ -1129,11 +1105,21 @@ basicConstruction:
         
     fairingSize3:
         cost: 0.1
-    #Tantares R-7 and Vostok tanks
-    Alto_LFO_A:
+
+    #RaiderNick - R-7, Vostok, Molniya, tanks, fairings, decouplers, adapters
+    sputnik1_base: &sputnik_n_b
+        cost: 10
+    sputnik1_nosecone: *sputnik_n_b  
+    sputnik3_base: *sputnik_n_b
+    sputnik3_nosecone: *sputnik_n_b
+    sputnik2_base: *sputnik_n_b
+    sputnik2_nosecone: *sputnik_n_b
+    WING_R7:
+        cost: 10
+    r7_blok_bvgd_sput: &R7Booster
         cost: 100
-        
-    #RaiderNick - Vostok, Molniya, tanks, fairings, decouplers, adapters
+    r7_blok_a_sput:
+        cost: 120	
     r7_adapter_blok_e: #decoupler
         cost: 100
     r7_adapter_blok_e_m:
@@ -1161,6 +1147,15 @@ basicConstruction:
         cost: 120 # the same as for the R7-Sputnik blok a
     r7_blok_a_molniya: # Molniya
         cost: 120
+
+    #Tantares R-7 and Vostok tanks
+    TLV_LFO_A:
+        cost: 50
+    TLV_LFO_B:
+        cost: 70
+    TLV_LFO_C: *R7Booster
+    Alto_LFO_A:
+        cost: 100
 
 basicAvionics:
      # *** Avionics

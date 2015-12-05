@@ -1116,6 +1116,10 @@ basicConstruction:
         cost: 380
     FASAMercuryFairing:
         cost: 15
+    TitanIUpper:
+        cost: 237 # estimated based on proc+premium Atlas pays for Avionics
+    FASAGeminiLFTTitan1:
+        cost: 144 # est based on proc
         
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
         cost: 75

@@ -1653,7 +1653,6 @@ generalConstruction:
     KIS_Container3:
         cost: 180 # capacity 18000l
     
-        
     FASA_Atlas_LFT_Cone2: # Atlas E/F core
         cost: 300 # cheaper than original
     #below part is the Atlas SLV-3, 1966 first use. Lunar Orbiter
@@ -1662,6 +1661,11 @@ generalConstruction:
         cost: 400
     FASAAtlasLV3C:
         cost: 400
+        
+    FASAGeminiLFTLong:
+        cost: 187 # same as proc
+    FASAGeminiLFTMed:
+        cost: 250
         
     # Lunar heatshields
     HeatShield0:

@@ -32,6 +32,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0
     parachuteLarge:
         cost: 0
+    FASAProbeParachute: # small parachute for the probes
+        cost: 40
     RC_cone:
         cost: 0
     RC_radial:
@@ -996,6 +998,8 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 800
     liquidEngine1-2: &LR79 # Also H-1 and so on
         cost: 1000
+    FASADeltaMB3LFE: # MB-3-3, first flight 1964
+        cost: 1100
     
     FASAMercuryAtlasEngBooster: *LR89
 
@@ -1229,9 +1233,6 @@ survivability: # 3-Axis Stability and early probes ##
     # Heatshield decoupler
     decoupler_ftr_small:
         cost: 5
-    
-    FASAProbeParachute: # small parachute for the probes
-        cost: 40
 
     
 stability:
@@ -1535,9 +1536,6 @@ advRocketry:
         cost: 1700 # think this should be closer to 1700
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
-    
-    FASADeltaMB3LFE: # MB-3-3, first flight 1964
-        cost: 1450 # didn't find any real number but MB-3-3 is quite similar to H-1, same isp, little bigger TWR and 20% less thrust. So I think 1450 seems reasonable
     
     vernierEngine:
         cost: 25

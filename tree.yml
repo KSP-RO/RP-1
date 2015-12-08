@@ -2565,7 +2565,7 @@ commandModules: # Third generation capsules, it would seem.
     Tantares_Orbital_A: *SoyuzOM
     Hamal_Orbital_A: *ProgressBO
     #TKS VA
-    Alanir_Crew_A:
+    Alnair_Crew_A:
     Alnair_Decoupler_A:
     Alnair_Engine_A: *ApolloLES
     

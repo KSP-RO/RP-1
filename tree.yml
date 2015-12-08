@@ -3497,6 +3497,11 @@ specializedElectrics:
         cost: 200
     solarpanel-curved-25-1: # 1.34 ec/s
         cost: 800
+
+    SXTDepolyRTGI: &GPHS-RTG
+        cost: 524 # 20x less than development cost
+        entryCost: 10480 # 65mln USD http://www.lpi.usra.edu/opag/nh2_final_report.pdf
+    SXTDepolyRTGII: *GPHS-RTG, #shielded
     
     # Remote Tech
     RTGigaDish1:

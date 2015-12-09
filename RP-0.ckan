@@ -17,6 +17,7 @@
         { "name" : "SXT" },
         { "name" : "ProceduralFairings" },
         { "name" : "CommunityTechTree" }
+        { "name" : "AsteroidDay" }
     ],
     "recommends" : [
         { "name" : "ProceduralDyanmics" },

@@ -1664,6 +1664,8 @@ generalConstruction:
         
     FASAGeminiLFTLong:
         cost: 187 # same as proc
+    FASAGeminiLFTLongIF:
+        cost: 200
     FASAGeminiLFTMed:
         cost: 250
         

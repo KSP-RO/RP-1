@@ -1538,6 +1538,8 @@ advRocketry:
         cost: 50
     FASAApalloLFTS1BStage1:
         cost: 1800
+    FASA_SIB:
+        cost: 1800
     FASAAgenaLFT: # Agena B/D tankage
         cost: 50 # TODO compare to proc part
     # Titan II upper stage

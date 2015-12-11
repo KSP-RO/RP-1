@@ -2301,16 +2301,10 @@ largeSolids: # TL3 solids
         cost: 50 # FIXME guess
 advConstruction:
     # Saturn parts
-    FASAApalloLFTF1Plate:
-        entryCost: 14000
-        cost: 400
     FASAApalloLFTJ2:
         entryCost: 14000
         cost: 400
     FASAApalloLFTJ25XPlate:
-        entryCost: 14000
-        cost: 400
-    FASAApalloLFTJ2Nova:
         entryCost: 14000
         cost: 400
     FASAApalloLFTJ2Plate: # S-IVB stage
@@ -2327,16 +2321,10 @@ advConstruction:
     FASAApolloStrJ2StrJ23m5mDec:
         entryCost: 3500
         cost: 100
-    FASAApolloStrJ2StrJ23m5mDecNova:
-        entryCost: 3500
-        cost: 100
     FASAApolloStrJ2StrJ25mDec:
         entryCost: 3500
         cost: 100
     FASAApolloStrS1BPlate:
-        entryCost: 3500
-        cost: 100
-    FASAApolloStrS1BPlateNova:
         entryCost: 3500
         cost: 100
     FASALM_DecouplerRing:
@@ -3074,6 +3062,20 @@ precisionEngineering:
         entryCost: 22729
 
 specializedConstruction:
+    
+    # FASA Nova Parts
+    FASAApolloStrJ2StrJ23m5mDecNova:
+        entryCost: 3500
+        cost: 100
+    FASAApalloLFTJ2Nova:
+        entryCost: 14000
+        cost: 400
+    FASAApolloStrS1BPlateNova:
+        entryCost: 3500
+        cost: 100
+    FASAApalloLFTF1Plate:
+        entryCost: 14000
+        cost: 400
     
     # KAS parts. cost = little less than for Infernal robotics parts.
     KAS_Strut1:

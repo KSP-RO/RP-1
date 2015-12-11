@@ -32,6 +32,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0
     parachuteLarge:
         cost: 0
+    FASAProbeParachute: # small parachute for the probes
+        cost: 40
     RC_cone:
         cost: 0
     RC_radial:
@@ -592,6 +594,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 20 #guess, balanced against 2800.
     TwinWasp-R1830-94: # Prop Engine R-1830 had 173,618 made across all variants Date:1930-1951
         cost: 15 # guess, balanced against R1820.
+    KAXelectricprop:
+        cost: 10 # electric propeller engine, 300hp
     
     # source for some engine prices http://www.warbirdsandairshows.com/Aircraft%20manufacturing/enginemanufacturewwii.htm
     #V1710 - 33.3 before obsolete
@@ -970,6 +974,8 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 800
     liquidEngine1-2: &LR79 # Also H-1 and so on
         cost: 1000
+    FASADeltaMB3LFE: # MB-3-3, first flight 1964
+        cost: 1100
     
     FASAMercuryAtlasEngBooster: *LR89
 
@@ -1389,6 +1395,8 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 10
     B9_Utility_Landing_Gear_HDG2AL:
         cost: 10
+    KAXheavygear:
+        cost: 15
         
     #XLR99
     # X-15 engine
@@ -1422,6 +1430,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     
     SXTNK12M:
         cost: 400 # total guess
+    
+    airbrake1: # stock airbrake
+        cost: 50
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules
@@ -1624,8 +1635,9 @@ matureSolids:
     RT2: # Castor II
         cost: 320 # unstated, should be about Castor I's cost.
         
-    SXTCastor30: # Star 17, used on Atlas Agena D
+    SXTCastor30: &Star17 # Star 17, used on Atlas Agena D
         cost: 172 # nautix 580k assume 1985 dollars
+    KK_ATK_Star17A: *Star17
     
     # Waxwing (performance of an early-mid 60s kick motor, and I _think_ it was used before
     # Black Arrow, so...let's place it here.)
@@ -2334,7 +2346,9 @@ advConstruction:
         cost: 450
     FASAAtlasSLV3C:
         cost: 450
-    
+    FASASaturnSLA: # spacecraft lunar module adapter - base
+        cost: 150
+        
     # SXT N!
     SXTK1Decoupler:
         cost: 250
@@ -2396,6 +2410,9 @@ advConstruction:
         cost: 100
     KAS_Hook_Winch1:
         cost: 100
+        
+    fuelLine:
+        cost: 150
 
 advFlightControl:
     # Salyut parts
@@ -3210,6 +3227,8 @@ unmannedTech:
     
     investpod: # cubesat
         cost: 5
+    avionicsNoseCone:
+        cost: 200 # comparable with other guidance units
 
 largeControl:
     # Early Control Moment Gyroscope, see #103
@@ -3484,6 +3503,11 @@ specializedElectrics:
         cost: 200
     solarpanel-curved-25-1: # 1.34 ec/s
         cost: 800
+
+    SXTDepolyRTGI: &GPHS-RTG
+        cost: 524 # 20x less than development cost
+        entryCost: 10480 # 65mln USD http://www.lpi.usra.edu/opag/nh2_final_report.pdf
+    SXTDepolyRTGII: *GPHS-RTG #shielded
     
     # Remote Tech
     RTGigaDish1: # very large folding dish

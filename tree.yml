@@ -3010,7 +3010,7 @@ hydroloxTL7:
     cryoengine-25-2: *J2X
     
     XXxAres1J2-XHIGH:
-        cost: 5300 # pretty high but it is RL10B-2 configuration (1800 + 3500)
+        cost: 3800 # RL10B-2 configuration (1800 + 2000)
     cryoengine-125-2: # RL10B-2
         cost: 3800 # 1800 for base RL10 + 2000 of B-2 config
     

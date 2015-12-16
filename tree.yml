@@ -3245,7 +3245,7 @@ largeControl:
     advSascr3: # AIES
         cost: 2500 # total guess
 
-advMetalWorks:
+advMetalworks:
     FASAAtlasH:
         cost: 500
 

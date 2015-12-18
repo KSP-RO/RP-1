@@ -23,20 +23,26 @@ namespace RP0
                 bool cmd = false, science = false, avionics = false, clamp = false;
                 float partAvionicsMass = 0f;
                 ModuleCommand mC = null;
+                PartModule m;
                 for (int j = 0; j < parts[i].Modules.Count; j++)
                 {
-                    if (parts[i].Modules[j] is ModuleCommand)
+                    m = parts[i].Modules[j];
+
+                    if (m is KerbalEVA)
+                        return false;
+
+                    if (m is ModuleCommand)
                     {
                         cmd = true;
-                        mC = parts[i].Modules[j] as ModuleCommand;
+                        mC = m as ModuleCommand;
                     }
-                    science |= parts[i].Modules[j] is ModuleScienceCore;
-                    if ((parts[i].Modules[j]) is ModuleAvionics)
+                    science |= m is ModuleScienceCore;
+                    if (m is ModuleAvionics)
                     {
                         avionics = true;
-                        partAvionicsMass += (parts[i].Modules[j] as ModuleAvionics).CurrentMassLimit;
+                        partAvionicsMass += (m as ModuleAvionics).CurrentMassLimit;
                     }
-                    if(parts[i].Modules[j] is LaunchClamp)
+                    if(m is LaunchClamp)
                     {
                         clamp = true;
                         partMass = 0f;

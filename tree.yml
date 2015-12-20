@@ -708,7 +708,6 @@ subsonicFlight: # Now Supersonic Flight
     # XLR11
     FASAGemini4X800Mini: &XLR11
         cost: 150 # same as AJ10
-    SXTNK21BlockV: *XLR11
     
     #Taerobee X-1 parts
     X1_Crew: *X1Cockpit
@@ -2275,6 +2274,8 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
     NK43: # in Nk-15V configuration
         cost: 780
     # NK15s were flown on the 4 N1 launches, from 1969 to 1972
+    
+    SXTNK21BlockV: # NK-21, later NK-31, for Blok V
 
     #Tantares N-1
     LLV_Engine_A: # in 28x NK-15 configuration

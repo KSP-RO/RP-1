@@ -990,7 +990,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
     liquidEngine: *LR105
 
-    FASAGeminiLR91: *LR91
+    FASAGeminiLR91: #*LR91
 
 # Black Arrow engines (derivatives of Black Knight engine, so can be early,
 # despite Black Arrow being quite late).
@@ -2798,7 +2798,7 @@ largeVolumeContainment: # TL4.5 solids
     KK_ATK_Castor4: # Castor4 by ATK
         cost: 361
         entryCost: 7224
-    RO_KWsrbGlobeI_4: # Castor4 by KW Rocketry
+    RO_KWsrbGlobeI_Castor4: # Castor4 by KW Rocketry
         cost: 361
         entryCost: 7224
 

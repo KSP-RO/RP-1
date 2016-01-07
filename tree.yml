@@ -3025,13 +3025,6 @@ giganticRocketry: #TL7, present day
     CHAKAOME: # AJ10-190 for Orion
         cost: 400 # same as for AJ10-190 OME
 
-    #RS-68
-    VR1vulcan: &RS-68
-        cost: 2850 # 20M (2010 USD) http://forum.nasaspaceflight.com/index.php?topic=19938.90;wap2
-    bahars68b: *RS-68
-    xbahars68bx: *RS-68
-    cryoengine-375-1: *RS-68
-
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
@@ -3057,6 +3050,13 @@ hydroloxTL7:
     
     XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
         cost: 40
+    #RS-68
+    VR1vulcan: &RS-68
+        cost: 2850 # 20M (2010 USD) http://forum.nasaspaceflight.com/index.php?topic=19938.90;wap2
+    bahars68b: *RS-68
+    xbahars68bx: *RS-68
+    cryoengine-375-1: *RS-68
+
 
 stagedTL7:
     # AJ26-62 config here

@@ -2796,6 +2796,9 @@ nuclearPropulsion:
 veryHeavyRocketry: #TL5 late 70s/80s tech
     engineLargeSkipper_125m: # Merlin A uses TL5 tech
         cost: 175 # same as for Merlin 1D from Starshine Industries
+    RO-Kestrel: # Falcon 1
+        cost: 40 # 31kN, kerolox
+    
     omsEngine: &AJ10-190OME
         cost: 400 # little bigger than for Astris
     STSOMSEngineLeft: *AJ10-190OME
@@ -2993,8 +2996,6 @@ giganticRocketry: #TL7, present day
         cost: 200 # little bigger than Merlin 1D 
     LazTekMerlin1dVacuumEngine: *Merlin1DVac
     
-    RO-Kestrel: # Falcon 1
-        cost: 40 # 31kN, kerolox
     liquidEngineMiniTurbo: #Blue Origin BE-4
         cost: 2700 # same as for RD-180 - we don't have proper data yet but I think that 2700 is a good starting point
 

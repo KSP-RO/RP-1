@@ -2977,6 +2977,13 @@ hydroloxTL6:
         entryCost: 320000 # 1300M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     cryoengine-125-1: *Vulcain
     
+    #RS-68
+    VR1vulcan: &RS-68
+        cost: 2850 # 20M (2010 USD) http://forum.nasaspaceflight.com/index.php?topic=19938.90;wap2
+    bahars68b: *RS-68
+    xbahars68bx: *RS-68
+    cryoengine-375-1: *RS-68
+
     KW2mengineVestaVR9D: # 2X japanese LE-7A
         cost: 3840 # 50x less than development cost
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
@@ -3050,13 +3057,6 @@ hydroloxTL7:
     
     XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
         cost: 40
-    #RS-68
-    VR1vulcan: &RS-68
-        cost: 2850 # 20M (2010 USD) http://forum.nasaspaceflight.com/index.php?topic=19938.90;wap2
-    bahars68b: *RS-68
-    xbahars68bx: *RS-68
-    cryoengine-375-1: *RS-68
-
 
 stagedTL7:
     # AJ26-62 config here

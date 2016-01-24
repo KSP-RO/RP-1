@@ -2103,7 +2103,18 @@ electrics:
     FASALM_Antenna:
         entryCost: 17500
         cost: 500
-        
+
+    #OLDD Apollo parts.
+    Apollo_SM_Dish:
+        entryCost: 35000
+        cost: 1000
+    Apollo_SM_Light:
+        entryCost: 1750
+        cost: 50
+    LM_Antenna:
+        entryCost: 17500
+        cost: 500
+
     FuelCell:
         cost: 1000 # FIXME guesses...
     FuelCellArray:
@@ -2265,7 +2276,12 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     # Ariane booster. Uses 60s tech, developed in 70s.
     RO_Viking_Vac: # Viking/Vikas, Ariane 1, 2, 3, 4 second stage, developed in 70s
     RO_viking_SL: # Viking/Vikas, Ariane 1, 2, 3, 4 first stage (booster), developed in 70s
-    
+
+    #OLDD Apollo parts. Same as FASA.
+    F1engine: *F-1
+    Apollo_SM_Engine: *ApolloSPS
+    LM_AscentEngine: *LMAE
+    LM_DescentEngine: *LMDE
 
 hydroloxTL3:
 
@@ -2277,6 +2293,9 @@ hydroloxTL3:
     
     KW5mengineTitanV:
         cost: 37500 # 5x J2
+
+    #OLDD Apollo parts. Same as FASA.
+    J2engine: *J2Engine
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
@@ -2344,12 +2363,12 @@ advConstruction:
     FASAApolloStrS1BPlate:
         entryCost: 3500
         cost: 100
-    FASALM_DecouplerRing:
+    FASALM_DecouplerRing: &LMDecoupler
         entryCost: 3500
         cost: 100
     FASAAtlasSLV3A:
         cost: 450
-    FASASaturnSLA: # spacecraft lunar module adapter - base
+    FASASaturnSLA: &ApolloSLA # spacecraft lunar module adapter - base
         cost: 150
         
     # SXT N!
@@ -2359,13 +2378,13 @@ advConstruction:
         cost: 500
     
     #Apollo
-    FASAApollo_CM_HeatShield:
+    FASAApollo_CM_HeatShield: &ApolloHeatshield
         entryCost: 35000
         cost: 3000
         
     #Apollo/Saturn/Skylab fairings
     # Skylab
-    fairing1:
+    fairing1: &SkylabFairing
         entryCost: 40000
         cost: 1000
     fairing3:
@@ -2401,7 +2420,16 @@ advConstruction:
     LLV_LFO_B: #Block B
     LLV_LFO_C: #Block V
     LLV_LFO_D: #Block G
-    
+
+    #OLDD Apollo parts. Same as FASA.
+    S-V_SkyLabFairing: *SkylabFairing
+    Apollo_CM_HeatShield: *ApolloHeatshield
+    SLA: *ApolloSLA
+    LM_Interstage: *LMDecoupler
+    S-V_Table:
+        entryCost: 150000
+        cost: 12000
+
     #KAS parts. Cost = little less than for Infernal Robotics parts
     KAS_Hook_Anchor:
         cost: 100
@@ -2439,22 +2467,22 @@ advFlightControl:
         entryCost: 80000
         cost: 12500
     # Apollo parts
-    FASAApollo_CM_RCS:
+    FASAApollo_CM_RCS: &ApolloCMRCS
         entryCost: 3500
         cost: 100
     FASAApolloAPS:
         entryCost: 17500
         cost: 500
-    FASAApollo_DockingDevice:
+    FASAApollo_DockingDevice: &ApolloDockingDevice
         entryCost: 70000
         cost: 2000
-    FASAApollo_SM_RCS:
+    FASAApollo_SM_RCS: &ApolloSMRCS
         entryCost: 3500
         cost: 100
-    FASAApollo_SM:
+    FASAApollo_SM: &ApolloSM
         entryCost: 350000
         cost: 10000
-    FASALM_RCS:
+    FASALM_RCS: &ApolloLMRCS
         entryCost: 10500
         cost: 300
 
@@ -2521,22 +2549,65 @@ advFlightControl:
     Libra_LFO_B:
         cost: 367
 
+    #OLDD Apollo parts. Same as FASA.
+    Apollo_DockingDevice: *ApolloDockingDevice
+    Apollo_CM_RCS: *ApolloCMRCS
+    Apollo_SM: *ApolloSM
+    Apollo_SM_RCS: *ApolloSMRCS
+    LM_RCS: *ApolloLMRCS
+    S-1CenginesMount:
+        entryCost: 14000
+        cost: 400
+    S-1C:
+        entryCost: 14000
+        cost: 400
+    S-1Cdecoupler:
+        entryCost: 3500
+        cost: 100
+    S-1Cinterstage:
+        entryCost: 7000
+        cost: 100
+    S-1CsepSRB:
+        entryCost: 1700
+        cost: 15
+    S-II:
+        entryCost: 28000
+        cost: 800
+    S-IIsepSRB:
+        entryCost: 1000
+        cost: 7
+    S-II_ullageSRB:
+        entryCost: 1000
+        cost: 7
+    S-IIinterstage:
+        entryCost: 3500
+        cost: 100
+    S-IVB_ullageSRB:
+        entryCost: 1000
+        cost: 7
+    S-IVB:
+        entryCost: 35000
+        cost: 2500
+    S-IVB_InstrumentUnit:
+        entryCost: 3500
+        cost: 2000
+
 commandModules: # Third generation capsules, it would seem.
     Mark1-2Pod:
         entryCost: 1000000
         cost: 10000
     
     # Apollo parts
-    FASAApollo_CM_Decoupler:
+    FASAApollo_CM_Decoupler: &ApolloDecouplerCM
         entryCost: 7000
         cost: 200
-    FASAApollo_CM:
+    FASAApollo_CM: &ApolloCM
         entryCost: 350000
         cost: 9000
-    FASAApollo_CM_parachutes:
+    FASAApollo_CM_parachutes: &ApolloParachutes
         entryCost: 35000
         cost: 1000
-    FASAApollo_CM_Top:
+    FASAApollo_CM_Top: &ApolloParachuteCover
         entryCost: 70000
         cost: 1000
     FASAApollo_LES: &ApolloLES
@@ -2596,6 +2667,13 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 316000
         cost: 6000
 
+    #OLDD Apollo parts. Same as FASA.
+    Apollo_LES: *ApolloLES
+    Apollo_CM_Top: *ApolloParachuteCover
+    Apollo_CM_parachutes: *ApolloParachutes
+    Apollo_CM: *ApolloCM
+    Apollo_CM_Decoupler: *ApolloDecouplerCM
+
 spaceExploration: #crewed landing
     landerCabinSmall:
         cost: 2000 # FIXME
@@ -2625,22 +2703,22 @@ spaceExploration: #crewed landing
     FASALM_DescentStage: &LMDescentTank
         entryCost: 280000
         cost: 8000
-    FASALM_DockingCone:
+    FASALM_DockingCone: &LMDockingDevice
         entryCost: 14000
         cost: 400
-    FASALM_LandingLegs:
+    FASALM_LandingLegs: &LMLandingLegNormal
         entryCost: 7000
         cost: 200
-    FASALM_LandingLegsSA:
+    FASALM_LandingLegsSA: &LMLandingLegSensor
         entryCost: 7000
         cost: 200
-    FASALM_LandingLegStaircase:
+    FASALM_LandingLegStaircase: &LMLandingLegStep
         entryCost: 7000
         cost: 200
-    FASALM_OutputPlace:
+    FASALM_OutputPlace: &LMOutputStep
         entryCost: 7000
         cost: 200
-    FASALM_StairCase:
+    FASALM_StairCase: &LMStaircase
         entryCost: 7000
         cost: 200
     #Tantares LM Descent Stage
@@ -2663,6 +2741,16 @@ spaceExploration: #crewed landing
     MEMLander: *LMAscentStage
     MEMDescentMod: *LMDescentTank
 
+    #OLDD Apollo parts. Same as FASA.
+    LM_DockingCone: *LMDockingDevice
+    LM_AscentStage: *LMAscentStage
+    LM_DescentStage: *LMDescentTank
+    LM_LandingLegs: *LMLandingLegNormal
+    LM_LandingLegsSA: *LMLandingLegSensor
+    LM_OutputPlace: *LMOutputStep
+    LM_LandingLegStaircase: *LMLandingLegStep
+    LM_StairCase: *LMStaircase
+
 advElectrics:
     # Salyut parts
     almaz_pan_l:
@@ -2679,18 +2767,29 @@ advElectrics:
         entryCost: 60000
         cost: 4200
     # Apollo parts
-    FASAALSEP_Device:
+    FASAALSEP_Device: &ALSEPSeismometer
         entryCost: 35000
         cost: 1000
-    FASAALSEP_Reflector:
+    FASAALSEP_Reflector: &ALSEPReflector
         entryCost: 35000
         cost: 1000
-    FASAALSEP_Scanner:
+    FASAALSEP_Scanner: &ALSEPSpectrometer
         entryCost: 35000
         cost: 1000
     radr: #SNAP-19
         cost: 800 # total guess
-    
+
+    #OLDD Apollo parts. Same as FASA.
+    LM_ALSEPcase:
+        entryCost: 5
+        cost: 1
+    LM_RoverBox:
+        entryCost: 7
+        cost: 2
+    ALSEP_Device: *ALSEPSeismometer
+    ALSEP_Reflector: *ALSEPReflector
+    ALSEP_Scanner: *ALSEPSpectrometer
+
     solarPanels1:
         cost: 500
     solarPanels3:

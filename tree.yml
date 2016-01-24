@@ -990,6 +990,11 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
     liquidEngine: *LR105
 
+    # Titan II upper stage
+    liquidEngineorbit2: &LR91
+        cost: 600
+    FASAGeminiLR91: *LR91
+
 # Black Arrow engines (derivatives of Black Knight engine, so can be early,
 # despite Black Arrow being quite late).
 # see Mature Solids for Waxwing.
@@ -1104,6 +1109,10 @@ basicConstruction:
         
     FASATitanLR91Dec: # Aerojet LR-91 Decoupler
         cost: 75
+    FASAGeminiLFTLong:
+        cost: 187 # same as proc
+    FASAGeminiLFTMed:
+        cost: 250
     # FIXME other Titan II parts go here, with costing.
     FASAGeminiDecDark25_Titan3m:
         cost: 75
@@ -1172,6 +1181,10 @@ basicAvionics:
         entryCost: 12000
         cost: 400
 
+    FASADeltaAv0:
+        entryCost: 2500
+        cost: 100
+
     # Improved Sputniks
     sputnik2:
         cost: 100
@@ -1197,15 +1210,13 @@ basicAvionics:
 
 
 basicSolids:
-    # Castor I (Sergeant / M33) solid motor
-    solidBooster1-1Small: &CastorI
-        cost: 300 # nautix 1.01m assume 1985 dollars
-    FASADeltaCastorSrb: *CastorI
-
     # Add Polaris and Scout parts here
     
     RO-X-248: #late-Vanguard/Able/Delta kick motor
         cost: 170 # nautix says .6mil, but doesn't say what-year dollars, assume 1985.
+    
+    RO-X-258: # Altair II
+        cost: 200 # 700k in 1985, nautix
     
     # moved Proc SRB to here
     proceduralSRBRealFuels:
@@ -1550,12 +1561,9 @@ advRocketry:
         cost: 1800
     FASA_SIB:
         cost: 1800
-    FASAAgenaLFT: # Agena B/D tankage
-        cost: 50 # TODO compare to proc part
-    # Titan II upper stage
-    liquidEngineorbit2: &LR91
-        cost: 600
-    FASAGeminiLR91: *LR91
+    FASAGeminiLFECentarTwin: # Transtage 
+        cost: 4300
+
     #Europa launcher
     NLV_Engine_A:
 
@@ -1630,12 +1638,6 @@ matureSolids:
         cost: 2000 # TODO we *should* have references on this from BellComm studies
     # on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
     
-    RO-X-258: # Altair II
-        cost: 200 # 700k in 1985, nautix
-        
-    RT2: # Castor II
-        cost: 320 # unstated, should be about Castor I's cost.
-        
     SXTCastor30: &Star17 # Star 17, used on Atlas Agena D
         cost: 172 # nautix 580k assume 1985 dollars
     KK_ATK_Star17A: *Star17
@@ -1644,6 +1646,14 @@ matureSolids:
     # Black Arrow, so...let's place it here.)
     SXTWaxWing: # Black Arrow kick motor
         cost: 300 # nautix 1 mil, assume 1985 dollars
+
+    # Castor I (Sergeant / M33) solid motor
+    solidBooster1-1Small: &CastorI
+        cost: 300 # nautix 1.01m assume 1985 dollars
+    FASADeltaCastorSrb: *CastorI
+
+    FASAGerminiSRB175_5Seg: # UA1204 
+        cost: 4600 # Guess from 1205 and 1207 
 
 generalConstruction:
     # The MOL cargo sections are here, because it's totally
@@ -1657,6 +1667,14 @@ generalConstruction:
         cost: 25
     FASAGeminiMOLEquipStack:
         cost: 100
+    FASAAgenaLFT: # Agena B/D tankage
+        cost: 50 # TODO compare to proc part
+    FASAGeminiLFTLonger:
+        cost: 243
+        entryCost: 4860
+    FASAGeminiMOLEquipStack:
+        cost: 265
+        entryCost: 5275
         
     #KIS cargo section
     KIS_Container1:
@@ -1675,12 +1693,8 @@ generalConstruction:
     FASAAtlasLV3C:
         cost: 400
         
-    FASAGeminiLFTLong:
-        cost: 187 # same as proc
     FASAGeminiLFTLongIF:
         cost: 200
-    FASAGeminiLFTMed:
-        cost: 250
         
     # Lunar heatshields
     HeatShield0:
@@ -2224,9 +2238,6 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     KW2mengineSPS: *ApolloSPS
     ROAJ10-137: *ApolloSPS
     
-    FASAGeminiLFECentarTwin: # Transtage
-        cost: 4300
-        
     Size3AdvancedEngine: *F-1
     
     # Squad
@@ -2300,10 +2311,11 @@ largeSolids: # TL3 solids
         cost: 5320 # nautix Titan 3 - UA1205 stage, assume 1985 dollars
     FASAGerminiSRB175: *UA1205
     FASAGerminiSRB175White: *UA1205
-    FASAGerminiSRB175_5Seg: # UA1204
-        cost: 4600 # Guess from 1205 and 1207
     FASAGerminiSRBInlineSep:
         cost: 50 # FIXME guess
+    RT2: # Castor II
+        cost: 320 # unstated, should be about Castor I's cost.
+
 advConstruction:
     # Saturn parts
     FASAApalloLFTJ2:
@@ -2336,8 +2348,6 @@ advConstruction:
         entryCost: 3500
         cost: 100
     FASAAtlasSLV3A:
-        cost: 450
-    FASAAtlasSLV3C:
         cost: 450
     FASASaturnSLA: # spacecraft lunar module adapter - base
         cost: 150
@@ -2454,6 +2464,9 @@ advFlightControl:
     FASAApolloIU: &SaturnIU
         cost: 2000
     RP0probeAvionics66m: *SaturnIU
+    FASADeltaAv1:
+        entryCost: 5000
+        cost: 200
     # Salyut parts
     almaz_sr_retro:
         entryCost: 1000
@@ -2712,6 +2725,8 @@ heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
         cost: 9000 # J-2 is 8500
     RLA_mp_large_spike: *J2T 
     NP_lfe_125m_AerospikeEngine: *J2T
+    SXTAJ10Adv: 
+        cost: 350
   
 
 hydroloxTL4:
@@ -2729,12 +2744,6 @@ precisionPropulsion:
     SXTK1BaseLarge:
 
 advFuelSystems: # TL4 solids
-    FASAGerminiSRB175_7Seg: #UA1206
-        cost: 6250 # Guess from 1205 and 1207
-    FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
-        cost: 7218 # 24.36m nautix, assume 1985 dollars
-    KWsrbGlobeX10L: *UA1207
-        
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm
     # (with thanks to @mcirish3)
@@ -2745,6 +2754,9 @@ advFuelSystems: # TL4 solids
         cost: 22054
 
 specializedControl: # Tl4 avioncis
+    FASADeltaAv2:
+        entryCost: 10000
+        cost: 400
 
 heavyAerodynamics: #TL4 jets - Mature Turbofans
     turboJet: #F100
@@ -2783,6 +2795,12 @@ largeVolumeContainment: # TL4.5 solids
     CSS_SSRB: *STSbooster
     XSLSSRB: *STSbooster
     NP_SRB_2_5m_AdvSRB4: *STSbooster
+    KK_ATK_Castor4: # Castor4 by ATK
+        cost: 361
+        entryCost: 7224
+    RO_KWsrbGlobeI_Castor4: # Castor4 by KW Rocketry
+        cost: 361
+        entryCost: 7224
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
@@ -2828,10 +2846,20 @@ highPerformanceFuelSystems:
     solidBooster_sm: &STAR48B
         cost: 1203 # nautix 4.06m, assume 1985 dollars
     KK_ATK_Star48B: *STAR48B
+    KK_ATK_Castor4A: # Castor4A by ATK
+        cost: 640
+        entryCost: 12020
 
     KWsrbGlobeI: #Castor 4A first flight 1982
-        cost: 601 # http://www.astronautix.com/stages/castor4a.htm
-    
+        cost: 640
+        entryCost: 12020
+
+    FASAGerminiSRB175_7Seg: #UA1206
+        cost: 6250 # Guess from 1205 and 1207
+    FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
+        cost: 7218 # 24.36m nautix, assume 1985 dollars
+    KWsrbGlobeX10L: *UA1207
+
     #US Probes Integration
     pam_d: # Star 48B
         cost: 1203
@@ -2931,22 +2959,19 @@ specializedFuelStorage: # TL6 solids
         cost: 893
     RO_KWsrbGlobeI: # Castor 4 AXL first test 1992
         cost: 1000 # total guess
-    RO_KWsrbGlobeI_GEM: # GEM40, first flight 1990
-        cost: 900 # total guess
-    RO_KWsrbGlobeI_GEM46: # first flight 1998
-        cost: 1200 # total guess
-    KWsrbGlobeX: # GEM 46
-        cost: 1200 # total guess
-    RO_KWsrbGlobeI_GEM60: # first flight 2002
-        cost: 1800 # total guess
-    KWsrbGlobeX2: # GEM 60
-        cost: 1800 # total guess
-    KWsrbGlobeVI: # AJ-60A, first flight 2002
-        cost: 2400 # total guess
     KWsrbGlobeX10S: # SRMU (Titan IV B)
         cost: 7350 # somewhat higher than UA-1207
     KWsrbGlobeX10S: # EAP (Ariane 5)
         cost: 6000 # total guess
+    KK_ATK_GEM40: # GEM40 by KW Rocketry
+        cost: 900
+        entryCost: 18000
+    KK_ATK_GEM40AL: # GEM40-AL by KW Rocketry
+        cost: 900
+        entryCost: 18000
+    RO_KWsrbGlobeI_GEM: # GEM40, first flight 1990
+        cost: 900
+        entryCost: 18000
 
 hydroloxTL6:
     #Vulcain 1/2
@@ -2954,14 +2979,14 @@ hydroloxTL6:
         cost: 6400 # 50x less than development cost, but I think it is still too expensive
         entryCost: 320000 # 1300M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     cryoengine-125-1: *Vulcain
-
+    
     #RS-68
     VR1vulcan: &RS-68
         cost: 2850 # 20M (2010 USD) http://forum.nasaspaceflight.com/index.php?topic=19938.90;wap2
     bahars68b: *RS-68
     xbahars68bx: *RS-68
     cryoengine-375-1: *RS-68
-    
+
     KW2mengineVestaVR9D: # 2X japanese LE-7A
         cost: 3840 # 50x less than development cost
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
@@ -2977,6 +3002,9 @@ avionicsTL6:
     IACBM125m: *CBM
     XIACBM1_25m: *CBM
     LazTekDragon2Dock: *CBM
+    FASADeltaAv3:
+        cost: 600
+        entryCost: 15000
 
 # TIER 8
 giganticRocketry: #TL7, present day
@@ -3043,6 +3071,24 @@ exoticFuelStorage: #TL7 solids
     NP_SRB_2_5m_AdvSRB5: *Shuttlebooster
     SLS_DKSSRB: #dark knight booster from SpiceLaunchSystem (Macollo), 11% more thrust
         cost: 8400
+    KWsrbGlobeX: # GEM 46
+        cost: 1200 # total guess
+        entryCost: 24000
+    RO_KWsrbGlobeI_GEM46: # first flight 1998
+        cost: 1200 # total guess
+        entryCost: 24000
+    KWsrbGlobeX2: # GEM 60 by KW Rocketry
+        cost: 1800 # total guess
+    RO_KWsrbGlobeI_GEM60: # first flight 2002
+        cost: 1800 # total guess
+    KK_ATK_GEM46AL: # GEM46-AL by ATK
+        cost: 1000
+        entryCost: 24000
+    KK_ATK_GEM46: # GEM46 by ATK
+        cost: 1000
+        entryCost: 24000
+    KWsrbGlobeVI: # AJ-60A, first flight 2002
+        cost: 2400 # total guess
 
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
@@ -3057,6 +3103,9 @@ avionicsTL7:
         cost: 4000
     IACBM25m: # enlarged CBM from FusTek 
         cost: 5000
+    FASADeltaAv4:
+        cost: 1200
+        entryCost: 30000
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:
@@ -3093,6 +3142,8 @@ specializedConstruction:
     FASAApalloLFTF1Plate:
         entryCost: 14000
         cost: 400
+    FASAAtlasSLV3C:
+        entryCost: 450
     
     # KAS parts. cost = little less than for Infernal robotics parts.
     KAS_Strut1:
@@ -3259,8 +3310,6 @@ largeControl:
         cost: 2500 # total guess
 
 advMetalworks:
-    FASAAtlasH:
-        cost: 500
 
 advAerodynamics:
 
@@ -3673,7 +3722,8 @@ robotics:
 automation:
 
 nanolathing:
-    FASAGeminiLFTCentarCSM_T: #  Centaur-T for Titan IV
+    FASAAtlasH:
+        cost: 500
    
 specializedScienceTech:
     dmUSSolarParticles: #Solar Particle Collector Univ. Storage
@@ -3713,9 +3763,17 @@ fusionPower:
 
 exoticAlloys:
     FASAGeminiLFTCentarCSM_D2: # Centaur D2 for Atlas II
+    FASAAtlasII: # Atlas II tank
+        cost: 750
+        entryCost: 15000
+    FASAGeminiLFTCentarCSM_T: #  Centaur-T for Titan IV
+    FASAGeminiLFT_TitanIV: # Atlas II tank 
+        cost: 300
+        entryCost: 5000
 
 orbitalAssembly:
     FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
+    FASAGeminiLFTCentarCSM_D5: # Centaur D5 for Atlas V
 
 advAerospaceComposites:
 
@@ -3957,8 +4015,6 @@ orbitalMegastructures:
     B9_Structure_HX1_H:
     B9_Structure_HX2_H:
     B9_Structure_HX1_SAS:
-
-    FASAGeminiLFTCentarCSM_D5: # Centaur D5 for Atlas V
     
 specializedPlasmaTech:
 

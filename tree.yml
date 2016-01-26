@@ -4036,6 +4036,8 @@ shortTermHabitation:
         entryCost: 40000
         cost: 2000 #similar to mk1 lander, mk1 pod
     XKupolaObsModuleEXPANDEDX: *cupola 
+    SXTSPKTRCabin: # crew module, 2-person
+        cost: 4500 # half of the 4-person Hitchhiker storage container
         
     # Gemini Big G
     # 1bln USD (1970) for development cost and 75mln USD (1970) for the unit cost 

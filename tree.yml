@@ -1609,7 +1609,7 @@ fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
         cost: 400 # also is the RD-58 as CONFIG upgrade.
     # Bobcat's Soviet Engines -Need Costing-
-    RD0124: # in RD-0110 configuration
+    RD0124: # in RD-0110 configuration - FIXME is this actually gas generator?
         cost: 400 # total guess
     ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
         cost: 3580
@@ -1631,6 +1631,12 @@ fuelSystems: # Staged combustion, TL2
     RO-RD-0210: *RD0210
     
     NP_lfe_125m_BearcatSingle: *RD253
+    
+    #NK-9, via BobCat clones.
+    NK9:
+        cost: 450 # FIXME guess based on NK-15 and RD-253
+    NK9V:
+        cost: 500 # as above
     
 
 matureSolids:
@@ -2306,6 +2312,7 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # NK15s were flown on the 4 N1 launches, from 1969 to 1972
     
     SXTNK21BlockV: # NK-21, later NK-31, for Blok V
+        cost: 2000 # 4x NK-9V, FIXME guess based off NK-9V based off 9 based off NK-15 and RD-253
 
     #Tantares N-1
     LLV_Engine_A: # in 28x NK-15 configuration

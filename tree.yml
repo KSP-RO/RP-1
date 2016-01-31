@@ -2598,6 +2598,9 @@ advFlightControl:
     S-IVB_InstrumentUnit:
         entryCost: 3500
         cost: 2000
+        
+    # Generic Apollo-sized docking port
+    RO-ApolloDockingPort: *ApolloDockingDevice
 
 commandModules: # Third generation capsules, it would seem.
     Mark1-2Pod:
@@ -2680,6 +2683,12 @@ commandModules: # Third generation capsules, it would seem.
     Apollo_CM_parachutes: *ApolloParachutes
     Apollo_CM: *ApolloCM
     Apollo_CM_Decoupler: *ApolloDecouplerCM
+    
+    #VSR VA
+    # prices guess based off Soyuz, Gemini, Apollo
+    MK2VApod:
+        entryCost: 6000000
+        cost: 8000
 
 spaceExploration: #crewed landing
     landerCabinSmall:

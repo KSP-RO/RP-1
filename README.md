@@ -37,11 +37,43 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 
 **Supported**
 - Raidernick's US Probes
+- FASA
+- AIES
+- Soviet engines
+- B9 Aerospace
+- Habitat Pack
+- Space Shuttle by Mike NZ
+- Space Shuttle by Dragon1
+- SCAN SAT
+- Infernal Robotics
+- KAS
+- KIS
+- Bahamuto Adjustable Landing Gear
+- Bahamuto mk2 Lightning Cockpit
+- Raidernick's Soviet rockets
+- Raidernick's US Probes
+- Raidernick's 7K-LOK
+- Raidernick's Soyuz, Salyut
+- Raidernick's Skylab
+- TAC Life Support
+- Starshine Merlin engines
+- Remote Tech
+- NearFuture Solar panels
 
 **In Progress**
 - DMagic's Orbital Science
 - Universal Storage
-- FASA
 - Raidernick Soviet probes and rockets
+- LazTek SpaceX 
+- Chaka Monkey 
+- KW Rocketry
+- KAX 
+- Spice Launch System 
+- Constellation Essentials 
+- FusTek
+- Nova Punch
+- Tantares
+- Cryogenic Engines
+- Asteroid Day
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!

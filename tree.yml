@@ -1581,6 +1581,10 @@ advRocketry:
     rn_proton_blockd_v: # blok-DM2 vernier
     rn_proton_vernier:  # 3rd stage vernier
     
+    # Molniya/Vostok/Soyuz second stage. This really shouldn't be an alt config of the RD0124 but a new part.
+    RD0124: # in RD-0110 configuration, which maybe should be TL3 anyway.
+        cost: 400 # total guess
+    
     #RaiderNick - Soyuz
     r7_vernier_blok_i_s_fg:
         cost: 20 # 6kN
@@ -1608,9 +1612,6 @@ hydroloxTL2:
 fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
         cost: 400 # also is the RD-58 as CONFIG upgrade.
-    # Bobcat's Soviet Engines -Need Costing-
-    RD0124: # in RD-0110 configuration - FIXME is this actually gas generator?
-        cost: 400 # total guess
     ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
         cost: 3580
     ALV_Engine_B: #RD-0210/0211, Proton Second Stage

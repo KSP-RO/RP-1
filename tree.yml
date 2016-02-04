@@ -2688,7 +2688,7 @@ commandModules: # Third generation capsules, it would seem.
     #VSR VA
     # prices guess based off Soyuz, Gemini, Apollo
     MK2VApod:
-        entryCost: 6000000
+        entryCost: 600000
         cost: 8000
 
 spaceExploration: #crewed landing

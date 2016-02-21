@@ -2232,6 +2232,17 @@ highAltitudeFlight: # Early Spaceplanes
         cost: 3000
     MK1CrewCabin:
         cost: 4000
+        
+        
+# TIER 3.5
+shortTermHabitation
+    SXTCrewCabSSP10:
+        entryCost: 200000
+        cost: 5000
+    SXTCrewCabSSP20:
+        entryCost: 230000
+        cost: 10000
+
 # TIER 4
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
@@ -2690,6 +2701,29 @@ commandModules: # Third generation capsules, it would seem.
     MK2VApod:
         entryCost: 600000
         cost: 8000
+        
+    # Gemini Big G
+    # 1bln USD (1970) for development cost and 75mln USD (1970) for the unit cost 
+    # 812mln USD (1965) for development and 59mln USD (1965) for the unit cost 
+    FASAGeminiBigG: &BigG
+        cost: 41000
+        entryCost: 462000
+    FASAGeminiBigGWhite: *BigG
+    FASAGeminiNoseCone2Aero:
+        cost: 300
+        entryCost: 5200
+    FASABigGeminiRetroModule:
+        cost: 3000
+        entryCost: 50000
+    FASABigGDock: # Service Module
+        cost: 9000
+        entryCost: 90000
+    FASAGeminiLES: # pricing based on Apollo LES
+        cost: 5000
+        entryCost: 175000
+    FASA_BigGeminiParachute2:
+        cost: 1000 # based on the Apollo main parachute
+        entryCost: 35000
 
 spaceExploration: #crewed landing
     landerCabinSmall:
@@ -3233,6 +3267,17 @@ advExploration:
     godLandingLeg2: # AIES
         cost: 300
         entryCost: 6000
+        
+    # move advLanding/heavyLanding legs here
+    BaseMount: # Habitat pack
+        cost: 800 # landing gear x4
+    plommsLandingLeg: # AIES
+        cost: 120
+        entryCost: 2400
+    B9_Utility_Leg_H50:
+        cost: 300
+    B9_Utility_Leg_H50P:
+        cost: 300
 
 precisionEngineering:
     #US Probes Integration
@@ -3271,15 +3316,6 @@ specializedConstruction:
     
     
 advLanding:
-    BaseMount: # Habitat pack
-        cost: 800 # landing gear x4
-    plommsLandingLeg: # AIES
-        cost: 120
-        entryCost: 2400
-    B9_Utility_Leg_H50:
-        cost: 300
-    B9_Utility_Leg_H50P:
-        cost: 300
     
 actuators:
     
@@ -3719,6 +3755,48 @@ advUnmanned:
     neo_stardust_para:
         cost: 30
         entryCost: 500
+        
+heavyCommandModules: # 80s-90s
+specializedCommandModules: # modern?
+    # Orion 
+    # development cost: $8.5-10.3 billion + $4.7 billion during the Constellation program. Let's assume $14 billion http://www.choicesarizona.org/dbe/sls.html
+    # 14000 mln USD = 1 853 000k USD (1965)
+    # unit cost: $ 1 billion http://www.thespacereview.com/article/2330/1
+    # 1000 mln USD = 132 380 USD (1965) for capsule, docking port, parachutes, service module with solar panels and LES
+    
+    XOrionPodX: &ORIONPOD
+        cost: 60000
+        entryCost: 750000
+    XOrionPodXbb31: *ORIONPOD
+    XLFTORIONLARGE: # service module
+        cost: 60000
+        entryCost: 750000
+    xOrionLES:
+        cost: 5000 # cost based on ApolloLES
+        entryCost: 175000 # cost based on ApolloLES
+    OrionDockingPortXx: &ORIONDOCKPORT
+        cost: 4000 # cost based on Apollo parts. Docking port + chutes + Apollo top
+        entryCost: 175000 # cost based on Apollo parts. Docking port + chutes + Apollo top
+    OrionDockingPortXWSTANDARDDOCKPORT: *ORIONDOCKPORT
+    
+    # Dragon V2
+    # development cost about 2700 mln USD http://spaceflightnow.com/news/n1405/29dragonv2/#.Vj0XBr-jAs0
+    # 2700 mln USD = 359,26 mln 1965 USD 
+    # unit cost 140mln USD per one flight (20mln per one seat) including Falcon 9 rocket (50mln) so 90mln? http://www.extremetech.com/extreme/183349-spacex-unveils-dragon-v2-the-worlds-first-commercial-manned-reusable-spaceship
+    # 90 mln USD = 11,98 mln 1965 USD 
+    LazTekDragonV2:
+        cost: 7375
+        entryCost: 227000 # about 63% of total development cost
+    LazTekDragonV2Trunk:
+        cost: 3688
+        entryCost: 113500 # about 31,5% of total development cost
+    LazTekSuperDracos:
+        cost: 125 # total guess
+    LazTekDragonV2Chute:
+        cost: 500 #2x less than Apollo chutes, total guess
+        entryCost: 17500 #2x less than Apollo chutes,  about 5% of total development cost (359260)
+    DragonLadder:
+        cost: 10
 
 largeUnmanned:
     
@@ -3960,49 +4038,6 @@ longTermHabitation:
         entryCost: 489820 # 3700mln USD
     inflatoFlat: 
         cost: 9000 # fictional habitat, not from Bigelow 4-person so price is the same as for the crewCabin
-    crewCabin:
-        cost: 9000 # 2x bigger than mk2 lander can
-        entryCost: 180000
-        
-    # Orion 
-    # development cost: $8.5-10.3 billion + $4.7 billion during the Constellation program. Let's assume $14 billion http://www.choicesarizona.org/dbe/sls.html
-    # 14000 mln USD = 1 853 000k USD (1965)
-    # unit cost: $ 1 billion http://www.thespacereview.com/article/2330/1
-    # 1000 mln USD = 132 380 USD (1965) for capsule, docking port, parachutes, service module with solar panels and LES
-    
-    XOrionPodX: &ORIONPOD
-        cost: 60000
-        entryCost: 750000
-    XOrionPodXbb31: *ORIONPOD
-    XLFTORIONLARGE: # service module
-        cost: 60000
-        entryCost: 750000
-    xOrionLES:
-        cost: 5000 # cost based on ApolloLES
-        entryCost: 175000 # cost based on ApolloLES
-    OrionDockingPortXx: &ORIONDOCKPORT
-        cost: 4000 # cost based on Apollo parts. Docking port + chutes + Apollo top
-        entryCost: 175000 # cost based on Apollo parts. Docking port + chutes + Apollo top
-    OrionDockingPortXWSTANDARDDOCKPORT: *ORIONDOCKPORT
-    
-    # Dragon V2
-    # development cost about 2700 mln USD http://spaceflightnow.com/news/n1405/29dragonv2/#.Vj0XBr-jAs0
-    # 2700 mln USD = 359,26 mln 1965 USD 
-    # unit cost 140mln USD per one flight (20mln per one seat) including Falcon 9 rocket (50mln) so 90mln? http://www.extremetech.com/extreme/183349-spacex-unveils-dragon-v2-the-worlds-first-commercial-manned-reusable-spaceship
-    # 90 mln USD = 11,98 mln 1965 USD 
-    LazTekDragonV2:
-        cost: 7375
-        entryCost: 227000 # about 63% of total development cost
-    LazTekDragonV2Trunk:
-        cost: 3688
-        entryCost: 113500 # about 31,5% of total development cost
-    LazTekSuperDracos:
-        cost: 125 # total guess
-    LazTekDragonV2Chute:
-        cost: 500 #2x less than Apollo chutes, total guess
-        entryCost: 17500 #2x less than Apollo chutes,  about 5% of total development cost (359260)
-    DragonLadder:
-        cost: 10
     
     # Chaka monkey habitats - fictional   
     MonkeyPodAirlock: &Monkeyhab # 3-person
@@ -4142,43 +4177,24 @@ antimatterPower:
 
 ultraHighEnergyPhysics:
 
-shortTermHabitation:
-
+earlyStations:
     FASAGeminiMOLSci:
+        entryCost: 540000
         cost: 9000 # same as stock lab
 
     Large_Crewed_Lab:
-        entryCost: 180000
-        cost: 9000 #the same as crewCabin
+        entryCost: 540000
+        cost: 9000
     cupola: &cupola
-        entryCost: 40000
+        entryCost: 80000
         cost: 2000 #similar to mk1 lander, mk1 pod
+    crewCabin:
+        cost: 9000
+        entryCost: 360000
     XKupolaObsModuleEXPANDEDX: *cupola 
     SXTSPKTRCabin: # crew module, 2-person
-        cost: 4500 # half of the 4-person Hitchhiker storage container
-        
-    # Gemini Big G
-    # 1bln USD (1970) for development cost and 75mln USD (1970) for the unit cost 
-    # 812mln USD (1965) for development and 59mln USD (1965) for the unit cost 
-    FASAGeminiBigG: &BigG
-        cost: 21000
-        entryCost: 285000
-    FASAGeminiBigGWhite: *BigG
-    FASAGeminiNoseCone2Aero:
-        cost: 3000
-        entryCost: 52000
-    FASABigGeminiRetroModule:
-        cost: 10000
-        entryCost: 75000
-    FASABigGDock: # Service Module
-        cost: 19000
-        entryCost: 190000
-    FASAGeminiLES: # pricing based on Apollo LES
+        cost: 300000
         cost: 5000
-        entryCost: 175000
-    FASA_BigGeminiParachute2:
-        cost: 1000 # based on the Apollo main parachute
-        entryCost: 35000
     
     # Salyut parts
     almaz3-5:

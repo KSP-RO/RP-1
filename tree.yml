@@ -2235,7 +2235,7 @@ highAltitudeFlight: # Early Spaceplanes
         
         
 # TIER 3.5
-shortTermHabitation
+shortTermHabitation:
     SXTCrewCabSSP10:
         entryCost: 200000
         cost: 5000

@@ -1791,9 +1791,6 @@ basicScience:
     # "balanced" cost. It'd be great if KSP had a way to cheapen part costs the
     # longer you have them.
 
-    SCANsat_Scanner:
-        cost: 500
-
     LgRadialSolarPanel:
         entryCost: 9000
         cost: 400
@@ -1840,13 +1837,6 @@ basicScience:
     #Improved probes
     SXTHECSRanger: # Ranger Block I / Mariner
         cost: 1200
-        
-    #Scanning
-    # $1k spacebucks is probably cheap for modern equipment,
-    # but we're balancing gameplay here. Each step up in scanner
-    # technology doubles the cost.
-    SCANsat_Scanner2:
-        cost: 1000
 
     # These are optical telescopes for observing the planet
     # you're orbiting.
@@ -2131,14 +2121,14 @@ electrics:
     Tantares_Antenna_B:
         entryCost: 35000
         cost: 1000
+        
+    # SCANSat basic radar sat
+    SCANsat_Scanner:
+        cost: 500
 
 miniaturization:
     probeCoreHex: # Ranger Block III
         cost: 1500
-
-    #Scanning
-    SCANsat_Scanner24:
-        cost: 2000
 
     # Maybe...
     # dmImagingPlatform:
@@ -2871,6 +2861,13 @@ advElectrics:
         cost: 1000 # range 800M km
     Dishomega2g: 
         cost: 950 # range 600M km
+        
+    #Scanning
+    # $1k spacebucks is probably cheap for modern equipment,
+    # but we're balancing gameplay here. Each step up in scanner
+    # technology doubles the cost.
+    SCANsat_Scanner2:
+        cost: 1000
 
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
@@ -3399,6 +3396,11 @@ largeElectrics:
         cost: 1500 # range 2000M km
 
 electronics:
+    #Scanning
+    SCANsat_Scanner24:
+        cost: 2000
+    SCANsat_Scanner32:
+        cost: 500
 
 unmannedTech:
 
@@ -3919,6 +3921,8 @@ experimentalMotors:
 robotics:
 
 automation:
+    SCANsat_Tracker: #GPS receiver
+        cost: 500
 
 nanolathing:
     FASAAtlasH:

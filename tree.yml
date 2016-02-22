@@ -2242,6 +2242,9 @@ shortTermHabitation:
     SXTCrewCabSSP20:
         entryCost: 230000
         cost: 10000
+    L25mSci:
+        entryCost: 200000
+        cost: 6000
 
 # TIER 4
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.

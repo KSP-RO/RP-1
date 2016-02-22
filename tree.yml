@@ -716,6 +716,24 @@ subsonicFlight: # Now Supersonic Flight
         cost: 80 #FIXME
     X1_Tail:
         cost: 40 #ditto
+        
+    # B9 wings
+    RO-B9ProcWing-Supersonic:
+        entryCost: 10000
+        cost: 0.1
+    RO-B9ProcCS-Supersonic:
+        entryCost: 10000
+        cost: 0.1
+    RO-B9ProcAMWing-Supersonic:
+        entryCost: 10000
+        cost: 0.1
+        
+    BD_Adj_LG_Side_Supersonic: # Bahamuto Adjustable Landing Gear
+        cost: 10
+    BD_Adj_LG_Medium_Supersonic:
+        cost: 13
+    BD_Adj_LG_Large_Supersonic:
+        cost: 16
 
 # TIER 1
 basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines because they're late-50s vintage.
@@ -931,24 +949,6 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
         cost: 32
     B9_Engine_VA1_Intake:
         cost: 20
-        
-    # B9 wings
-    RO-B9ProcWing-Supersonic:
-        entryCost: 10000
-        cost: 0.1
-    RO-B9ProcCS-Supersonic:
-        entryCost: 10000
-        cost: 0.1
-    RO-B9ProcAMWing-Supersonic:
-        entryCost: 10000
-        cost: 0.1
-        
-    BD_Adj_LG_Side_Supersonic: # Bahamuto Adjustable Landing Gear
-        cost: 10
-    BD_Adj_LG_Medium_Supersonic:
-        cost: 13
-    BD_Adj_LG_Large_Supersonic:
-        cost: 16
 
 # TIER 2
 generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.

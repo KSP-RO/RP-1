@@ -2796,20 +2796,6 @@ spaceExploration: #crewed landing
     LM_StairCase: *LMStaircase
 
 advElectrics:
-    # Salyut parts
-    almaz_pan_l:
-        entryCost: 30000
-        cost: 4000
-    almaz_pan_r:
-        entryCost: 30000
-        cost: 4000
-    # Skylab
-    sl_left_panel:
-        entryCost: 60000
-        cost: 4200
-    sl_right_panel:
-        entryCost: 60000
-        cost: 4200
     # Apollo parts
     FASAALSEP_Device: &ALSEPSeismometer
         entryCost: 35000
@@ -3391,6 +3377,23 @@ ionPropulsion:
         entryCost: 7600 # 50mln (2007 USD) http://esto.nasa.gov/conferences/nstc2007/papers/Manzella_David_D10P2_NSTC-07-0116.pdf
 
 largeElectrics:
+    # Salyut parts
+    almaz_pan_l:
+        entryCost: 30000
+        cost: 4000
+    almaz_pan_r:
+        entryCost: 30000
+        cost: 4000
+    # Skylab
+    sl_left_panel:
+        entryCost: 60000
+        cost: 4200
+    sl_right_panel:
+        entryCost: 60000
+        cost: 4200
+        
+    largeSolarPanelEarly:
+        cost: 800
 
     dishcomlar1:
         cost: 1500 # range 2000M km

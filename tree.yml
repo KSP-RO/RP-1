@@ -2961,6 +2961,8 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
     CSSOMSEngineLeft: *AJ10-190OME
     CSSOMSEngineRight: *AJ10-190OME
     CSSOMSEngine: *AJ10-190OME
+    KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
+        cost: 615 # 2.5M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     
 
 stagedTL5:
@@ -3073,8 +3075,6 @@ avionicsTL5:
 experimentalRocketry: #TL6, late 80s/90s
     galaxvr2: # Aestus
         cost: 550 # total guess
-    KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
-        cost: 615 # 2.5M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     Size2LFB: &Pyrios # Pyrios booster, technically TL7 but the engines are F-1s.
         cost: 43000 # FIXME guess based off 2x F-1 + tankage.
     NP_lfb_25m_Adv: *Pyrios

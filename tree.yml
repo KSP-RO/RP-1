@@ -964,7 +964,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     R7_Booster_Engine: &RD107
         cost: 680
 
-    # LR79 (Thor/Jupiter main engine, reworked as H-1)
+    # LR79 (Thor/Jupiter main engine)
     # and LR89 (Atlas booster)
     # Technically Atlas was ~2.6m per LV, so we're reducing LR89 costs.
     # (the hard part is Atlas E was cheaper than Atlas D...)
@@ -1547,9 +1547,7 @@ advRocketry:
         cost: 1700 # think this should be closer to 1700
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
-    
-    vernierEngine:
-        cost: 25
+    RO-H1-RS27: &H1
 
     # TODO: Is there a better place to put this?
     radialDecoupler2:
@@ -1866,6 +1864,9 @@ flightControl:
     linearRcs:
         entryCost: 900
         cost: 15
+    vernierEngine:
+        entryCost: 700
+        cost: 10
     SXTRCSRack:
         entryCost: 2000
         cost: 45

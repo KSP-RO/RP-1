@@ -1581,9 +1581,9 @@ advRocketry:
     rn_proton_blockd_v: # blok-DM2 vernier
     rn_proton_vernier:  # 3rd stage vernier
     
-    # Molniya/Vostok/Soyuz second stage. This really shouldn't be an alt config of the RD0124 but a new part.
-    RD0124: # in RD-0110 configuration, which maybe should be TL3 anyway.
-        cost: 400 # total guess
+    # Molniya/Vostok/Soyuz second stage.
+    RD0110:
+        cost: 400 # guess based on other engines of the era
     
     #RaiderNick - Soyuz
     r7_vernier_blok_i_s_fg:
@@ -3197,7 +3197,8 @@ hydroloxTL7:
 
 stagedTL7:
     # AJ26-62 config here
-    # RD-0124 config here
+    RD0124:
+        cost: 1200 # total guess
 
 exoticFuelStorage: #TL7 solids
     #ATK L.S.G. 5-Segment RSRM

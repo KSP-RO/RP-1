@@ -3744,6 +3744,9 @@ specializedElectrics:
     # Remote Tech
     RTGigaDish1: # very large folding dish
         cost: 1900
+        
+    RO_gx256: # 40Tm
+        cost: 2150
 
     commDish: # Comm88, stock folding dish ->Galileo
         cost: 1100

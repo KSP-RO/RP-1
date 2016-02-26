@@ -3750,7 +3750,7 @@ specializedElectrics:
 
 advUnmanned:
     probeCoreCube: # modern satellite bus
-        cost: 15000 #FIXME
+        cost: 1000 #FIXME
     
     #US Probes Integration
     neo_ds1: # Deep space 1

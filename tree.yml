@@ -1405,7 +1405,7 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 10
     B9_Utility_Landing_Gear_HDG2AL:
         cost: 10
-    KAXheavygear:
+    KAXheavyGear:
         cost: 15
         
     #XLR99
@@ -2041,7 +2041,7 @@ electrics:
         cost: 250
     solarPanels2:
         cost: 450
-    solarpanelsuncat1:
+    solarPanelsuncat1:
         cost: 225
     solarPanelsfa2:
         cost: 450
@@ -2829,7 +2829,7 @@ advElectrics:
         cost: 200
     1x3WPanels:
         cost: 450
-    solarPanelSond1:
+    solarPanelsond1:
         cost: 100
         
     #US Probes integration

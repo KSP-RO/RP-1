@@ -76,6 +76,14 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SXTAntenna:
         cost: 1
         entryCost: 0
+        
+    AntennaDF2:
+        cost: 1
+        entryCost: 0 
+        
+    Antennaesc:
+        cost: 4
+        entryCost: 0
 
     # Basic RemoteTech antenna, so things can get off the ground. :)
     RTShortAntenna1:
@@ -158,6 +166,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     pointyNoseConeA:
         cost: 10
     pointyNoseConeB:
+        cost: 10
+    cone05ra:
         cost: 10
 
     # This part will soon hide itself when the
@@ -2056,6 +2066,9 @@ electrics:
 
     Dishpcf:
         cost: 800 # range 300M km
+    
+    Antennacomtec1:
+        cost: 500 # range 150M km
 
     rtg:
         cost: 1000
@@ -2076,6 +2089,9 @@ electrics:
 
     RTLongAntenna2: #Communotron32, 16Mm nominal
         cost: 600
+    
+    Antennaexpatvr2: #omni, 10Mm
+        cost: 300
 
     # Soyuz parts
     tg_sa:
@@ -2848,6 +2864,8 @@ advElectrics:
         cost: 1000 # range 800M km
     Dishomega2g: 
         cost: 950 # range 600M km
+    Antennacomtec2
+        cost: 900 # range 500M km
         
     #Scanning
     # $1k spacebucks is probably cheap for modern equipment,
@@ -4278,12 +4296,6 @@ ORPHANS:
 
     # AIES
     # Integratration is WIP.  These parts aren't done yet
-    cone05ra:
-    Antennacomtec1:
-    Antennacomtec2:
-    Antennaesc:
-    Antennaexpatvr2:
-    AntennaDF2:
     AccelerometerFGA:
 
     # Here are a bunch of generic FASA tanks.

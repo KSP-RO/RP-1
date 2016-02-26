@@ -577,6 +577,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 20 # as above, guessing.
     SXT_Jumo213E:
         cost: 30 # ditto
+    SXTJ213: #Jumo213E
+        cost: 30
 
     SXTMerlin66prop:
         cost: 20 # Guessed based off comparisons, early-War known Merlin cost.

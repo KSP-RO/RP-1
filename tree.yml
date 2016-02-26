@@ -2864,7 +2864,7 @@ advElectrics:
         cost: 1000 # range 800M km
     Dishomega2g: 
         cost: 950 # range 600M km
-    Antennacomtec2
+    Antennacomtec2:
         cost: 900 # range 500M km
         
     #Scanning

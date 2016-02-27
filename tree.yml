@@ -3557,11 +3557,17 @@ advAerodynamics:
         
     # B9 mk1, mk2 cargo bays
     B9_Body_Mk2_Cargo_Bay_2m:
-    B9_Body_Mk2_Cargo_Bay_200m:
+        cost: 200
+        entryCost: 65000    
     B9_Body_Mk2_Cargo_Bay_1m:
+        cost: 100
+        entryCost: 65000
     B9_Body_Mk1_Cargo_Bay_100m:
+        cost: 50
+        entryCost: 45000
     B9_Body_Mk1_Cargo_Bay_050m:
-
+        cost: 25
+        entryCost: 45000
     B9_Cargo_M2_Body_B:
         cost: 250
         entryCost: 65000

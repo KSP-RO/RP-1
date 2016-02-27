@@ -1377,6 +1377,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     KerbCan: # 1-person crew section in 1.25m
         entryCost: 10000
         cost: 1000
+    MK1Cargobay:
+        cost: 50
+        entryCost: 10000
 
     SXTmk3Cockpit52: #B-52
         cost: 2265 # 20% of the total B-52 price (53.4M-1998 USD = 11,33M-1965 USD, source: http://www.bga-aeroweb.com/Defense/B-52-Stratofortress.html)
@@ -2227,6 +2230,9 @@ highAltitudeFlight: # Early Spaceplanes
         cost: 3000
     MK1CrewCabin:
         cost: 4000
+    RO-MK1Cargobay
+        cost: 200
+        entryCost: 60000
         
         
 # TIER 3.5

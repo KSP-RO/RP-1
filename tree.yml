@@ -2230,9 +2230,9 @@ highAltitudeFlight: # Early Spaceplanes
         cost: 3000
     MK1CrewCabin:
         cost: 4000
-    RO-MK1Cargobay
+    RO-MK1Cargobay:
         cost: 200
-        entryCost: 60000
+        entryCost: 45000
         
         
 # TIER 3.5

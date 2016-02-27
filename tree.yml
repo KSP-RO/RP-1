@@ -541,6 +541,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         entryCost: 0
         cost: 10
 
+    # DHC-3 Otter cockpit, first flight 1951
+    SXTClyde:
+        cost: 20 # little higher than Bonanza cabin
+
     # Beechcraft Bonanza (SXT)
     SXTTinyprop: # IO-550-B Engine
         cost: 8

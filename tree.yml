@@ -3717,6 +3717,7 @@ hypersonicFlight:
     adapterMk3-Mk2:
     adapterSize3-Mk3:
     adapterEngines:
+        cost: 100 # just a structural part without a tank
 
 advancedMotors:
     wheelMed:

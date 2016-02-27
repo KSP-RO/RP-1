@@ -3277,6 +3277,8 @@ precisionEngineering:
         entryCost: 22729
     sensorAtmosphere: # The Gas Chromatograph - Mass Spectrometer (GC-MS), used in the Viking Program (1976), Venera 11 (1978), Pioneer-Venus, Cassini-Huygens
         cost: 1500 # total guess, comparable with pricing for SCAN-SAT instruments
+    SXTsciencenosecone: # GC-MS
+        cost: 1500 # same as GC-MS above
         
 specializedConstruction:
     

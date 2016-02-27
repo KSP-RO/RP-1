@@ -704,6 +704,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
     B9_Engine_Jet_Pod_Small_PylonR:
         cost: 10
+    B9_Utility_InfoDrive: # action group editor
+        cost: 1
         
 
 subsonicFlight: # Now Supersonic Flight
@@ -1255,7 +1257,9 @@ stability:
     retinaGravimeter: # AIES
         cost: 100
         entryCost: 2000
-
+    
+    B9_Control_ACU: # gravimeter, temperature, barometer
+        cost: 116
 
     # RCS joy.
 
@@ -1884,13 +1888,19 @@ flightControl:
     B9_Control_RCS_Port_R1:
         cost: 35
         entryCost: 1600
-    B9_Control_RCS_Port_R5:
+    B9_Control_RCS_Port_S1:
+        cost: 35
+        entryCost: 1600
+    B9_Control_RCS_Block_R5:
         cost: 90
         entryCost: 3500
-    B9_Control_RCS_Port_R6:
+    B9_Control_RCS_Block_R6:
         cost: 90
         entryCost: 3500
-    B9_Control_RCS_Port_R12:
+    B9_Control_RCS_Block_R12:
+        cost: 180
+        entryCost: 5000
+    B9_Control_RCS_Block_S5:
         cost: 180
         entryCost: 5000
         
@@ -3283,6 +3293,8 @@ precisionEngineering:
         cost: 1500 # total guess, comparable with pricing for SCAN-SAT instruments
     SXTsciencenosecone: # GC-MS
         cost: 1500 # same as GC-MS above
+    B9_Cockpit_MK2_Nosecone_Science: # GC-MS
+        cost: 1500
         
 specializedConstruction:
     
@@ -3474,6 +3486,8 @@ largeControl:
     # Early Control Moment Gyroscope, see #103
     advSasModule:
         cost: 5000 # total guess
+    B9_Cockpit_MK1_Control_SAS:
+        cost: 5000 # the same thing as advSasModule
     Sasdv4: # AIES
         cost: 3250 # total guess
     advSascr3: # AIES
@@ -3491,6 +3505,8 @@ advAerodynamics:
         cost: 14000
     mk2DroneCore:
         cost: 2000
+    B9_Body_Mk2_SAS_050m:
+        cost: 2000 # same as mk2Dronecore above - almost the same thing
     adapterSize2-Mk2:
     mk2_1m_AdapterLong:
     mk2SpacePlaneAdapter:
@@ -3512,6 +3528,10 @@ advAerodynamics:
         cost: 14000
     B9_Cockpit_M27:
         cost: 14000
+    B9_Body_Mk2_Cockpit:
+        cost: 14000
+    B9_Body_Mk2_Cockpit_Intake:
+        cost: 14050
     B9_Cockpit_S3:
         cost: 9000
     B9_Cockpit_S2:
@@ -3533,6 +3553,15 @@ advAerodynamics:
         cost: 25
     B9_Cockpit_MK2_Nosecone_ASAS: # nosecone with science instruments
         cost: 50
+        
+        
+    # B9 mk1, mk2 cargo bays
+    B9_Body_Mk2_Cargo_Bay_2m:
+    B9_Body_Mk2_Cargo_Bay_200m:
+    B9_Body_Mk2_Cargo_Bay_1m:
+    B9_Body_Mk1_Cargo_Bay_100m:
+    B9_Body_Mk1_Cargo_Bay_050m:
+
     B9_Cargo_M2_Body_B:
         cost: 250
         entryCost: 65000
@@ -3557,6 +3586,24 @@ advAerodynamics:
     
     
     # B9 tanks:
+    B9_Body_Adapter_Mk2_125m_Bicoupler:
+    B9_Body_Adapter_Mk2_125m_Short:
+    B9_Body_Adapter_Mk2_125m_Shroud:
+    B9_Body_Adapter_Mk2_125m_Long:
+    B9_Body_Adapter_Mk2_Mk2_Rot:
+    B9_Body_Adapter_Mk2_250m_Short:
+    B9_Body_Mk1_Fuselage_100m:
+    B9_Body_Mk1_Fuselage_050m:
+    B9_Body_Mk1_Fuselage_025m:
+    B9_Body_Mk1_Fuselage_400m:
+    B9_Body_Mk1_Fuselage_200m:
+    B9_Body_Mk1_Nosecone_Long:
+    B9_Body_Mk1_Nosecone_Short:
+    B9_Body_Mk2_Nosecone_Long:
+    B9_Body_Mk2_Nosecone_Short:
+    B9_Body_Mk2_Fuselage_1m:
+    B9_Body_Mk2_Fuselage_2m:
+    B9_Body_Mk2_Fuselage_050m:
     B9_Cockpit_MK2_Body_RCS_05m:
     B9_Cockpit_MK2_Body_2m:
     B9_Cockpit_MK2_Body_5m:
@@ -3899,6 +3946,7 @@ aerospaceTech:
     B9_Aero_HL_Extension_A:
     B9_Aero_HL_Extension_B1:
     B9_Aero_HL_Extension_C:
+    B9_Aero_HL_Body_SAS_05m:
 
 experimentalElectrics:
     solarpanel-curved-375-1: # 0.09 ec/s
@@ -4007,6 +4055,10 @@ heavyControl:
     # Control Moment Gyro, see #103
     asasmodule1-2:
         cost: 10000 # total guess
+    B9_Cockpit_MK2_Control_SAS:
+        cost: 10000 # the same thing as asasmodule1-2
+    B9_Cockpit_S2_Control_SAS:
+        cost: 10000 # the same thing as asasmodule1-2
     ATV_RCS_back: # ATVs aft RCS thrusters
 
 offworldManufacturing:

@@ -4001,6 +4001,8 @@ expAircraftEngines: #TL6 jets?
     cyclone: # the lift fan installed with F-135 engine on F-35 aircraft
     bd125vectorjet: # Lyulka AL-41 (Sukhoi T-50), first run 2010
         cost: 1300 # total guess
+    aje_GEnx: # first run 2006
+        cost: 1728 # http://www.deagel.com/Turbofan-Engines/GEnx-1B64_a001388001.aspx -almost the same as GEnx_287
     
 
 heavyControl:

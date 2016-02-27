@@ -4037,6 +4037,8 @@ recycling:
 hydroponics:
 
 longTermHabitation:
+    InflatableHAB: # Bigelow-like habitat, crew capacity - 8
+        cost: 20700 # BA-330 x 1,25
     inflatoXL: #habitats designed by Bigelow Aerospace
         cost: 66200 # BA-2100, 500mln USD
     inflato1: #habitats designed by Bigelow Aerospace

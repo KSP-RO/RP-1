@@ -2553,6 +2553,9 @@ advFlightControl:
     r7_les: # Soyuz Launch Escape System, cost = half of the Apollo LES
         cost: 2500
         entryCost: 87500
+    SoyuzHeatshield: # costs = 1/3 of the Apollo heatshield
+        cost: 1000
+        entryCost: 11700
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
@@ -2655,6 +2658,7 @@ commandModules: # Third generation capsules, it would seem.
     ok_bo_male: &SoyuzOM
         entryCost: 50000
         cost: 1500
+    orbitalorb: *SoyuzOM
     t_af_bo:
         entryCost: 60000
         cost: 1800
@@ -3073,6 +3077,8 @@ experimentalAerodynamics: #TL5 jets
 avionicsTL5:
     APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
         cost: 3500 #somewhat higher than for Apollo docking port
+    STSAPASport:
+        cost: 3500 # same as above
     Hamal_Battery_A: #Advanced Progress Batteries
     Hamal_Control_B: #Advanced Progress SA
 
@@ -3231,6 +3237,10 @@ exoticFuelStorage: #TL7 solids
         entryCost: 24000
     KWsrbGlobeVI: # AJ-60A, first flight 2002
         cost: 2400 # total guess
+    RO_KWsrbGlobeI_GEM63:
+        cost: 2400 # based on the costs above
+    RO_KWsrbGlobeI_GEM63XL:
+        cost: 2500 # based on the costs above
 
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS

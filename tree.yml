@@ -2947,9 +2947,10 @@ nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
         cost: 25000 # FIXME total guess
     NP_lfe_25m_NERVA: *NERVA # Nova Punch, the same as stock nuclear engine
-    nervaII_kerbscalexx: *NERVA # Chaka monkey, the same as stock nuclear engine
+    nervaII_kerbscalexx: # Chaka monkey, 67kN after RO update
+        cost: 8200
     constellationBNTR:
-        cost: 8200 # 67kN, much cheaper, but not cheaper than RL10
+        cost: 13500 # 111kN after RO update
     
 # TIER 6
 veryHeavyRocketry: #TL5 late 70s/80s tech

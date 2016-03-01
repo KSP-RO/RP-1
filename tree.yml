@@ -567,7 +567,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     KAXradialR-2800-21: *R2800-21
     KAXradialR3350: # B-29, A-1 Skyraider
         cost: 33 # little more than R-2800-63w (2700HP - more powerful)
-    KAXradialProp: # R-2800-10W
+    KAXradialprop: # R-2800-10W
         cost: 22 #litle less than R-2800-18W (2080HP)
     
     SXTKO211Dprop: #Jumo 211F
@@ -3098,7 +3098,7 @@ specializedFuelStorage: # TL6 solids
         cost: 1000 # total guess
     KWsrbGlobeX10S: # SRMU (Titan IV B)
         cost: 7350 # somewhat higher than UA-1207
-    KWsrbGlobeX10S: # EAP (Ariane 5)
+    KWsrbGlobeX5: # EAP (Ariane 5)
         cost: 6000 # total guess
     KK_ATK_GEM40: # GEM40 by KW Rocketry
         cost: 900

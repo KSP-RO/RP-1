@@ -2061,12 +2061,6 @@ electrics:
     Dishpcf:
         cost: 800 # range 300M km
 
-    rtg:
-        cost: 1000
-
-    RTLongDish2: # Pioneer10/11; should be same node as RTGs, really
-        cost: 400
-
     # Radio and plasma wave antennae. Pretty much every probe to every
     # planet ever had these. The tech isn't fancy or hard, and since this
     # is the node at which we make interplanetary missions possible, it's
@@ -2813,6 +2807,12 @@ advElectrics:
         cost: 1000
     radr: #SNAP-19
         cost: 800 # total guess
+        
+    rtg:
+        cost: 1000
+
+    RTLongDish2: # Pioneer10/11; should be same node as RTGs, really
+        cost: 400
 
     #OLDD Apollo parts. Same as FASA.
     LM_ALSEPcase:

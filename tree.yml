@@ -387,6 +387,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         
     # RCS
     # Attitude jets    
+    RO_linearRcs_tenth:
+        entryCost: 200 # ignored because start
+        cost: 4
     RO_FASA_MercuryPodRCS:
         entryCost: 500 # ignored because start
         cost: 12
@@ -1262,7 +1265,10 @@ stability:
 
 
     # RCS joy.
-
+    SquadRCSBlockTenth:
+        entryCost: 800
+        cost: 10
+        
     SquadRCSBlockHalf:
         entryCost: 2000 # breaks 20x rule because of avionics required
         cost: 20

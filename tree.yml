@@ -1084,6 +1084,9 @@ basicConstruction:
     fuelTank1-2:
     fuelTank3-2:
     
+    FASAAgenaLFT_b:
+        cost: 50 # compare to proc part costs
+    
     # AIES RCS tanks
     ms1RCSTank:
     RCS125ra:
@@ -1339,6 +1342,9 @@ stability:
     FASAAgenaProbe: &AgenaAvionics
         cost: 800
     RP0probeAvionics1-5m: *AgenaAvionics
+    
+    FASAAgena_Engine_FP_b: # flight pack (secondary propulsion system) for Agena B restartable engine
+        cost: 300
 
     # AIES
     neptuno:
@@ -1677,7 +1683,7 @@ generalConstruction:
         cost: 25
     FASAGeminiMOLEquipStack:
         cost: 100
-    FASAAgenaLFT: # Agena B/D tankage
+    FASAAgenaLFT: # Agena D tankage
         cost: 50 # TODO compare to proc part
     FASAGeminiLFTLonger:
         cost: 243
@@ -1902,8 +1908,10 @@ flightControl:
         
     FASAAgenaDocking:
         cost: 400
-    FASAAgena_Engine_FP: # flight pack (secondary propulsion system) for Agena B/D restartable engine
-        cost: 300    
+    FASAAgena_Engine_FP: # flight pack (3-axis control system) for Agena D restartable engine
+        cost: 250
+    FASAAgena_Engine_FP_d: # ahistoric (with-SPS) Agena D pack
+        cost: 300
 # Gemini parts
     FASAGeminiNoseCone2: &GeminiPort
         entryCost: 50000

@@ -582,7 +582,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         
     SXT_Jumo213A:
         cost: 20 # as above, guessing.
-    SXT213:
+    SXTJ213:
         cost: 30 # ditto
 
     SXTMerlin66prop:

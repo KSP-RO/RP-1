@@ -2265,6 +2265,11 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
         cost: 60 #total guess, 3x bigger than Atlas verniers (5kN)
         entryCost: 3000
 
+    # H-1/RS-27 engine (clone of RO LR79).
+    RO-H1-RS27: &H-1
+        cost: 700
+        entryCost: 33750
+
     FASAApolloLFEF1: &F-1
         entryCost: 409361
         cost: 15000 # Source for the $20m figure???? For now reducing to 15mil

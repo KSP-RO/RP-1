@@ -1356,20 +1356,6 @@ stability:
     
     FASAAgena_Engine_FP_b: # flight pack (secondary propulsion system) for Agena B restartable engine
         cost: 300
-
-    # AIES
-    neptuno:
-        entryCost: 10000
-        cost: 500
-    explonpod: &explonpod
-        entryCost: 10000
-        cost: 500
-    UAEcubplate: *explonpod # it's practically the same thing
-    novapod: *explonpod
-    torpod: *explonpod
-    sondex2pod:
-        cost: 600 # This one costs a bit more due to a larger tank
-        entryCost: 12000
         
     # Avionics
     RP0probeAvionics1-4m:
@@ -1840,11 +1826,6 @@ basicScience:
     # QuadCore, and so has 50% higher cost.
     US_Wedge_C15_Hexacore:
         cost: 300
-
-    # AIES
-    Maxurpod:
-        cost: 1200
-        entryCost: 25000
 
     # Salyut parts
     almaz_sample_return:
@@ -3835,6 +3816,20 @@ specializedElectrics:
 advUnmanned:
     probeCoreCube: # modern satellite bus
         cost: 15000 #FIXME
+
+    # AIES
+    explonpod: &explonpod
+        entryCost: 10000
+        cost: 500
+    UAEcubplate: *explonpod # it's practically the same thing
+    novapod: *explonpod
+    torpod: *explonpod
+    sondex2pod:
+        cost: 600 # This one costs a bit more due to a larger tank
+        entryCost: 12000
+    Maxurpod:
+        cost: 1200
+        entryCost: 25000
     
     #US Probes Integration
     neo_ds1: # Deep space 1

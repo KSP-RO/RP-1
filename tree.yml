@@ -967,6 +967,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     # RD-107 & RD-108. From SXT clones
     R7_Core_Engine: &RD108
         cost: 700
+    Size2MedEngine: *RD108
 
     R7_Booster_Engine: &RD107
         cost: 680

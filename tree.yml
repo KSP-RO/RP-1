@@ -996,7 +996,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
 
     # Titan II upper stage - hypergolic
     liquidEngineorbit2: &LR91
-        entryCost = 29000 # just to equalize between regular 91 and buying the config
+        entryCost: 29000 # just to equalize between regular 91 and buying the config
         cost: 450 # same as regular, because the -5 config costs 150
     FASAGeminiLR91: *LR91
 
@@ -4314,7 +4314,6 @@ ORPHANS:
     
     # SXT stuff
     LprobeFoil:
-    SXTClyde:
     SXTLander: # PPD-8 can
     SXTVernier885:
     SXTOMS:

@@ -574,7 +574,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     KAXradialR-2800-21: *R2800-21
     KAXradialR3350: # B-29, A-1 Skyraider
         cost: 33 # little more than R-2800-63w (2700HP - more powerful)
-    KAXradialProp: # R-2800-10W
+    KAXradialprop: # R-2800-10W
         cost: 22 #litle less than R-2800-18W (2080HP)
     
     SXTKO211Dprop: #Jumo 211F
@@ -1422,7 +1422,7 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 10
     B9_Utility_Landing_Gear_HDG2AL:
         cost: 10
-    KAXheavygear:
+    KAXheavyGear:
         cost: 15
         
     #XLR99
@@ -1448,9 +1448,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         cost: 0.1
         
     # SXT, B737-100 price is 7870k USD(1965)
-    LMKIIIAircraftFusLong: # crew cabin, 17-person
+    LMKIIIAircaftFusLong: # crew cabin, 17-person
         cost: 500
-    LMkIIIAircraftFus: # crew cabin, 9-person
+    LMkIIIAircaftFus: # crew cabin, 9-person
         cost: 250
     LMkIIAircaftTail:
         cost: 200
@@ -2060,7 +2060,7 @@ electrics:
         cost: 250
     solarPanels2:
         cost: 450
-    solarpanelsuncat1:
+    solarPanelsuncat1:
         cost: 225
     solarPanelsfa2:
         cost: 450
@@ -2848,7 +2848,7 @@ advElectrics:
         cost: 200
     1x3WPanels:
         cost: 450
-    solarPanelSond1:
+    solarPanelsond1:
         cost: 100
         
     #US Probes integration
@@ -3117,7 +3117,7 @@ specializedFuelStorage: # TL6 solids
         cost: 1000 # total guess
     KWsrbGlobeX10S: # SRMU (Titan IV B)
         cost: 7350 # somewhat higher than UA-1207
-    KWsrbGlobeX10S: # EAP (Ariane 5)
+    KWsrbGlobeX5: # EAP (Ariane 5)
         cost: 6000 # total guess
     KK_ATK_GEM40: # GEM40 by KW Rocketry
         cost: 900

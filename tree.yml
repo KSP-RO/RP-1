@@ -2662,6 +2662,7 @@ commandModules: # Third generation capsules, it would seem.
     ok_bo_male: &SoyuzOM
         entryCost: 50000
         cost: 1500
+    orbitalorb: *SoyuzOM
     t_af_bo:
         entryCost: 60000
         cost: 1800
@@ -3084,8 +3085,9 @@ experimentalAerodynamics: #TL5 jets
         cost: 415 # 3.1M (2014 USD)- http://www.bga-aeroweb.com/Engines/Rolls-Royce-AE-2100.html
 
 avionicsTL5:
-    APAS89-95: # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
+    APAS89-95: &APAS # Yes it's from Shuttle-MIR, but it's right for Shuttle era.
         cost: 3500 #somewhat higher than for Apollo docking port
+    STSAPASport: *APAS
     Hamal_Battery_A: #Advanced Progress Batteries
     Hamal_Control_B: #Advanced Progress SA
 
@@ -3244,6 +3246,10 @@ exoticFuelStorage: #TL7 solids
         entryCost: 24000
     KWsrbGlobeVI: # AJ-60A, first flight 2002
         cost: 2400 # total guess
+    RO_KWsrbGlobeI_GEM63:
+        cost: 2400 # based on the costs above
+    RO_KWsrbGlobeI_GEM63XL:
+        cost: 2500 # based on the costs above
 
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS

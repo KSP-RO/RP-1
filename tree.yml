@@ -4152,7 +4152,7 @@ longTermHabitation:
         cost: 13500 # crewcabin x 1,5
         entryCost: 390000
     SXTDLK83EHabitat: # 8-person
-        cost: 18000 # crewcabin x 2
+        cost: 49500
         entryCost: 420000
 
     # Chaka monkey habitats - fictional   

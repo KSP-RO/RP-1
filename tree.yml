@@ -4313,6 +4313,7 @@ earlyStations:
         cost: 5000
     
     # Salyut parts
+    # Salyut parts
     almaz3-5:
         entryCost: 150000
         cost: 50000
@@ -4446,4 +4447,3 @@ ORPHANS:
     
     # Vens
     RT1:
-    Size2MedEngine: # will probably be an R-7 engine

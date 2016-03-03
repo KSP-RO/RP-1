@@ -1379,10 +1379,10 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         entryCost: 5000
         cost: 500 # guessed from above
     KerbCan: # 1-person crew section in 1.25m
-        entryCost: 10000
+        entryCost: 15000
         cost: 1000
     MK1Cargobay:
-        cost: 50
+        cost: 500
         entryCost: 10000
 
     SXTmk3Cockpit52: #B-52
@@ -2226,14 +2226,20 @@ highAltitudeFlight: # Early Spaceplanes
         entryCost: 180000
         cost: 9000
     RO-Mk1Fuselage:
+        entryCost: 45000
+        cost: 1000
     RO-Mk1FuselagePres:
+        entryCost: 45000
+        cost: 1000
     RO-Mk1CrewModule: # 3-person 2.1m crew section from VSR KerbCan
+        entryCost: 60000
         cost: 3000
     MK1CrewCabin:
+        entryCost: 60000
         cost: 4000
     RO-MK1Cargobay:
-        cost: 200
-        entryCost: 45000
+        entryCost: 50000
+        cost: 2000
         
         
 # TIER 3.5
@@ -4290,11 +4296,11 @@ ultraHighEnergyPhysics:
 earlyStations:
     FASAGeminiMOLSci:
         entryCost: 540000
-        cost: 9000 # same as stock lab
+        cost: 35000 # same as stock lab
 
     Large_Crewed_Lab:
         entryCost: 540000
-        cost: 9000
+        cost: 35000
     cupola: &cupola
         entryCost: 80000
         cost: 2000 #similar to mk1 lander, mk1 pod

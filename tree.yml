@@ -4154,7 +4154,13 @@ longTermHabitation:
         entryCost: 489820 # 3700mln USD
     inflatoFlat: 
         cost: 9000 # fictional habitat, not from Bigelow 4-person so price is the same as for the crewCabin
-    
+    STXCANIOT: # 6-person
+        cost: 13500 # crewcabin x 1,5
+        entryCost: 390000
+    SXTDLK83EHabitat: # 8-person
+        cost: 49500
+        entryCost: 420000
+
     # Chaka monkey habitats - fictional   
     MonkeyPodAirlock: &Monkeyhab # 3-person
         cost: 8000

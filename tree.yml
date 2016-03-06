@@ -1041,23 +1041,23 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 450
  
     # Raidernick R-7
-    r7_bvgd_engine: *RD107
+    rn_r7_bvgd_engine: *RD107
 
-    r7_blok_a_engine: *RD108
+    rn_r7_blok_a_engine: *RD108
 
-    r7_vernier_engine_v_fg: &R7Vernier
+    rn_r7_vernier_engine_v_fg: &R7Vernier
         cost: 20 
-    r7_vostok_blok_e_lunar:
+    rn_r7_vostok_blok_e_lunar:
         cost: 535 # 350 for the engine (exactly like stock one) + 35 for the tank + 150 for the avionics (12t)
-    r7_vostok_blok_e:
+    rn_r7_vostok_blok_e:
         cost: 520 # 350 for the engine (exactly like stock one) + 20 for the tank (poor mass ratio) + 150 for the avionics (12t)
-    molniya_blockl:
+    rn_molniya_blockl:
         cost: 575 # 400 for the engine (little more powerful than blok e) + 25 for the tank + 150 for the avionics (12t)
-    blockl_vernier:
+    rn_blockl_vernier:
         cost: 20 # 6kN
-    r7_vostok_blok_e_vernier:
+    rn_r7_vostok_blok_e_vernier:
         cost: 2 # 0.42kN
-    blockl_ullage:
+    rn_blockl_ullage:
         cost: 8 # 10kN, solid fuel
     
 
@@ -1142,31 +1142,30 @@ basicConstruction:
     sputnik3_nosecone: *sputnik_n_b
     sputnik2_base: *sputnik_n_b
     sputnik2_nosecone: *sputnik_n_b
-    WING_R7:
+    rn_WING_R7:
         cost: 10
     r7_blok_bvgd_sput: &R7Booster
         cost: 100
     r7_blok_a_sput:
         cost: 120	
-    r7_adapter_blok_e: #decoupler
+    rn_r7_adapter_blok_e: #decoupler
         cost: 100
-    r7_adapter_blok_e_m:
+    rn_r7_adapter_blok_e_m:
         cost: 100
-    luna_fairing:
+    rn_luna_fairing:
         cost: 10
-    luna_base:
+    rn_luna_base:
         cost: 10
-    r7_adapter_blok_i_v: #decoupler
+    rn_r7_adapter_blok_i_v: #decoupler
         cost: 100
-    r7_adapter_blok_i_m:
+    rn_r7_adapter_blok_i_m:
         cost: 100
-    r7_adapter_blok_i_iv2:
+    rn_r7_adapter_blok_i_iv2:
         cost: 100
-    r7_vostok_fairing_r: &r7_fairing
+    rn_r7_vostok_fairing_r: &r7_fairing
         cost: 20
-    r7_vostok_fairing_l: *r7_fairing
-    r7_voskhod_fairing_r: *r7_fairing
-    r7_voskhod_fairing_l: *r7_fairing
+    rn_r7_voskhod_fairing_r: *r7_fairing
+    rn_r7_voskhod_fairing_l: *r7_fairing
     r7_blok_bvgd: # Vostok
         cost: 100 # the same as for the R7-Sputnik bvgd tank
     r7_blok_bvgd_m: # Molniya
@@ -1595,7 +1594,7 @@ advRocketry:
         cost: 400 # guess based on other engines of the era
     
     #RaiderNick - Soyuz
-    r7_vernier_blok_i_s_fg:
+    rn_r7_vernier_blok_i_s_fg:
         cost: 20 # 6kN
     
 
@@ -1770,11 +1769,11 @@ generalConstruction:
         cost: 120 # the same as for the R7-Sputnik blok a
     r7_blok_bvgd_s:
         cost: 100 # the same as for the R7-Sputnik bvgd
-    r7_soyuz_fairing: &soyuzFairing
+    rn_r7_soyuz_fairing: &soyuzFairing
         cost: 20
-    r7_soyuz_fairing2: *soyuzFairing
-    r7_blok_i_fairing: *soyuzFairing
-    r7_blok_i_fairing_s: *soyuzFairing
+    rn_r7_soyuz_fairing2: *soyuzFairing
+    rn_r7_blok_i_fairing: *soyuzFairing
+    rn_r7_blok_i_fairing_s: *soyuzFairing
     
 
 basicScience:

@@ -4049,9 +4049,13 @@ advNuclearPower:
 nuclearSupport:
 
 improvedNuclearPropulsion:
-
+    SXTNERVAB:
+        cost: 75000
+        entrycost: 750000 //lower than original Nerva since it's just an evolution
 advNuclearPropulsion:
-
+    SXTNERVA:
+        cost: 28000 //still lower thrust than the NERVA but higher ISP
+        entrycost: 1500000 //expensive bi-modal developpement, no sources
 fusionRockets:
 
 colossalRocketry:

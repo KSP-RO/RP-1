@@ -4051,11 +4051,14 @@ nuclearSupport:
 improvedNuclearPropulsion:
     SXTNERVAB:
         cost: 75000
-        entrycost: 750000 //lower than original Nerva since it's just an evolution
+        # entry cost: original NTRs subtract. No sources.
+        entryCost: 2000000
 advNuclearPropulsion:
     SXTNERVA:
-        cost: 28000 //still lower thrust than the NERVA but higher ISP
-        entrycost: 1500000 //expensive bi-modal developpement, no sources
+        # still lower thrust than the NERVA but higher ISP
+        cost: 28000
+        # expensive bi-modal developpement, no sources. Original NTR subtracts.
+        entryCost: 2500000
 fusionRockets:
 
 colossalRocketry:
@@ -4430,8 +4433,6 @@ ORPHANS:
     SXTOMS:
     SXTKO211prop:
     SXTKOPO4E:
-    SXTNERVA:
-    SXTNERVAB:
     SXTMk2LinearAerospike:
     SXTK1Base5m:
     SXTmk2SAScore:

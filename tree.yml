@@ -1691,6 +1691,9 @@ generalConstruction:
     FASAGeminiMOLEquipStack:
         cost: 265
         entryCost: 5275
+    FASAGeminiLFTMedWhite:
+        cost: 265
+        entryCost: 5275
         
     #KIS cargo section
     KIS_Container1:

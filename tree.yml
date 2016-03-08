@@ -2405,7 +2405,10 @@ advConstruction:
         cost: 450
     FASASaturnSLA: &ApolloSLA # spacecraft lunar module adapter - base
         cost: 150
-        
+    roverWheel1:
+        cost: 100
+        entryCost: 4000    
+		
     # SXT N!
     SXTK1Decoupler:
         cost: 250
@@ -2762,8 +2765,9 @@ spaceExploration: #crewed landing
         cost: 90
     FASA_Gemini_Lander_Legs: # 4 landing legs so 4x more expensive
         cost: 360
-    
-    
+    roverWheel2:
+        cost: 50
+        entryCost: 2000  
     # LM
     FASALM_AscentStage: &LMAscentStage
         entryCost: 280000
@@ -3399,12 +3403,6 @@ composites:
 fieldScience:
 
     #stock wheels, price = total guess
-    roverWheel2:
-        cost: 50
-        entryCost: 2000
-    roverWheel1:
-        cost: 100
-        entryCost: 4000
     roverBody:
         cost: 500
         entryCost: 5000

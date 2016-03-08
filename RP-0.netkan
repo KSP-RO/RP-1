@@ -2,7 +2,7 @@
     "spec_version" : "v1.4",
     "identifier" : "RP-0",
     "name"       : "Realistic Progression Zero",
-    "abstract"   : "Realistic Progression Zero - The lightweight Realism Overhaul tech tree",
+    "abstract"   : "Realistic Progression Zero - Career for Realism Overhaul",
     "license"    : "CC-BY-4.0",
     "author"     : "RP-0 Group",
     "$kref"      : "#/ckan/github/KSP-RO/RP-0",

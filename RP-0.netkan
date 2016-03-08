@@ -21,6 +21,7 @@
     ],
     "recommends" : [
         { "name" : "KerbalConstructionTime" },
+        { "name" : "AdjustableLandingGear" },
         { "name" : "Taerobee" },
         { "name" : "KerbalRenamer" },
         { "name" : "ShipManifest" },

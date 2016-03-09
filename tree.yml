@@ -2158,7 +2158,11 @@ landing:
     expendLandingLeg: # AIES
         entryCost: 10000
         cost: 100
-
+    
+    SXTAirbagSmall: #SXT
+        entryCost: 15000
+        cost: 150
+    
     # landing probe core
     probeCoreOcto: # Surveyor
         cost: 4000
@@ -2702,6 +2706,9 @@ spaceExploration: #crewed landing
     FASA_Gemini_Lander_Legs: # 4 landing legs so 4x more expensive
         cost: 360
     
+    SXTAirbag:
+        entryCost: 20000
+        cost: 200
     
     # LM
     FASALM_AscentStage: &LMAscentStage

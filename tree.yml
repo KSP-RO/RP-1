@@ -2744,6 +2744,15 @@ commandModules: # Third generation capsules, it would seem.
     FASA_BigGeminiParachute2:
         cost: 1000 # based on the Apollo main parachute
         entryCost: 35000
+    FASAGeminiBigGDock:
+        entryCost: 90000
+        cost: 9000
+    FASAGeminiBigGDec:
+        entryCost: 3000
+        cost: 150
+    FASAGeminiBigGDockExt:
+        entryCost: 7000 # based on the Apollo docking device
+        cost: 2000
 
 spaceExploration: #crewed landing
     landerCabinSmall:

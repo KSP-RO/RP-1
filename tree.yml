@@ -4071,6 +4071,12 @@ advNuclearPropulsion:
         cost: 28000
         # expensive bi-modal developpement, no sources. Original NTR subtracts.
         entryCost: 2500000
+    nervaII_kerbscalexx: # Chaka monkey, 67kN after RO update
+        cost: 16200
+        entryCost: 1750000
+    constellationBNTR:
+        cost: 21500 # 111kN after RO update
+        entryCost: 1750000
 fusionRockets:
 
 colossalRocketry:

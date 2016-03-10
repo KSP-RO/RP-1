@@ -23,6 +23,7 @@
         { "name" : "KerbalConstructionTime" },
         { "name" : "AdjustableLandingGear" },
         { "name" : "Taerobee" },
+        { "name" : "SCANsat" },
         { "name" : "KerbalRenamer" },
         { "name" : "ShipManifest" },
         { "name" : "TestFlight" },

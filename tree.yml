@@ -1558,7 +1558,7 @@ advRocketry:
         cost: 1700 # think this should be closer to 1700
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
-    RO-H1-RS27: &H1
+    RO-H1-RS27: *H1
 
     # TODO: Is there a better place to put this?
     radialDecoupler2:

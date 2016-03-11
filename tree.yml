@@ -980,31 +980,28 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     # (the hard part is Atlas E was cheaper than Atlas D...)
 
     RO-LR-89: &LR89
-        cost: 800
-    liquidEngine1-2: &LR79 # Also H-1 and so on
-        cost: 1000
-    FASADeltaMB3LFE: # MB-3-3, first flight 1964
-        cost: 1100
+        cost: 750
+    liquidEngine1-2: &LR79
+        cost: 650
     
-    FASAMercuryAtlasEngBooster: *LR89
-
     # LR101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini: &LR101
         cost: 50
-
+        
+        
+    FASADeltaMB3LFE: *LR79
+    FASAMercuryAtlasEngBooster: *LR89
     FASAMercuryAtlasVernierEngine: *LR101
 
+    
+
+    
+
     #LR105 sustainer
-    FASAMercuryAtlasEng: &LR105
-        cost: 600
+    liquidEngine: &LR105
+        cost: 550
 
-    liquidEngine: *LR105
-
-    # Titan II upper stage - hypergolic
-    liquidEngineorbit2: &LR91
-        entryCost: 29000 # just to equalize between regular 91 and buying the config
-        cost: 450 # same as regular, because the -5 config costs 150
-    FASAGeminiLR91: *LR91
+    FASAMercuryAtlasEng: *LR105
 
 # Black Arrow engines (derivatives of Black Knight engine, so can be early,
 # despite Black Arrow being quite late).
@@ -1032,13 +1029,18 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     # Titan engines
     # AIES
     liquidEngineprodulVR2: &LR87
-        cost: 1850
-        entryCost: 20000 # no source, but should be the same as LR89's more or less
-        
+        cost: 1550
+        entryCost: 16000 # no source, but should be the same as LR89's more or less
     #FASA
     FASAGeminiLR87Twin: *LR87
+    
+    # Titan upper stage
     FASAGeminiLR91Mini: # LR91-3, later versions on the LR91 part.
         cost: 450
+    liquidEngineorbit2: &LR91
+        cost: 450
+    FASAGeminiLR91: *LR91
+    
  
     # Raidernick R-7
     r7_bvgd_engine: *RD107
@@ -1558,7 +1560,7 @@ advRocketry:
         cost: 1700 # think this should be closer to 1700
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
-    RO-H1-RS27: &H1
+    RO-H1-RS27: *H1
 
     # TODO: Is there a better place to put this?
     radialDecoupler2:

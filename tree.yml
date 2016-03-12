@@ -1230,9 +1230,11 @@ basicSolids:
     
     RO-X-248: #late-Vanguard/Able/Delta kick motor
         cost: 170 # nautix says .6mil, but doesn't say what-year dollars, assume 1985.
-    
-    RO-X-258: # Altair II
-        cost: 200 # 700k in 1985, nautix
+        
+    # Castor I (Sergeant / M33) solid motor
+    solidBooster1-1Small: &CastorI
+        cost: 300 # nautix 1.01m assume 1985 dollars
+    FASADeltaCastorSrb: *CastorI
     
     # moved Proc SRB to here
     proceduralSRBRealFuels:
@@ -1656,6 +1658,9 @@ matureSolids:
         cost: 2000 # TODO we *should* have references on this from BellComm studies
     # on Saturn IB-based INTs (as to how much the M55 really did cost in serial production.)
     
+    RO-X-258: # Altair II
+        cost: 200 # 700k in 1985, nautix
+    
     SXTCastor30: &Star17 # Star 17, used on Atlas Agena D
         cost: 172 # nautix 580k assume 1985 dollars
     KK_ATK_Star17A: *Star17
@@ -1664,14 +1669,6 @@ matureSolids:
     # Black Arrow, so...let's place it here.)
     SXTWaxWing: # Black Arrow kick motor
         cost: 300 # nautix 1 mil, assume 1985 dollars
-
-    # Castor I (Sergeant / M33) solid motor
-    solidBooster1-1Small: &CastorI
-        cost: 300 # nautix 1.01m assume 1985 dollars
-    FASADeltaCastorSrb: *CastorI
-
-    FASAGerminiSRB175_5Seg: # UA1204 
-        cost: 4600 # Guess from 1205 and 1207 
 
 generalConstruction:
     # The MOL cargo sections are here, because it's totally
@@ -2366,12 +2363,16 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
         cost: 1835
 
 largeSolids: # TL3 solids
+    FASAGerminiSRB175_5Seg: # UA1204 
+        cost: 4600 # Guess from 1205 and 1207 
+        
     solidBoosterMAX: &UA1205
         cost: 5320 # nautix Titan 3 - UA1205 stage, assume 1985 dollars
     FASAGerminiSRB175: *UA1205
     FASAGerminiSRB175White: *UA1205
     FASAGerminiSRBInlineSep:
         cost: 50 # FIXME guess
+
     RT2: # Castor II
         cost: 320 # unstated, should be about Castor I's cost.
 

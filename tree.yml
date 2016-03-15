@@ -3849,17 +3849,14 @@ advUnmanned:
 
     # AIES
     explonpod: &explonpod
-        entryCost: 10000
-        cost: 500
+        cost: 15000
     UAEcubplate: *explonpod # it's practically the same thing
     novapod: *explonpod
     torpod: *explonpod
+    neptuno: *explonpod 
     sondex2pod:
-        cost: 600 # This one costs a bit more due to a larger tank
-        entryCost: 12000
-    Maxurpod:
-        cost: 1200
-        entryCost: 25000
+        cost: 15100 # This one costs a bit more due to a larger tank
+    Maxurpod: *explonpod
     
     #US Probes Integration
     neo_ds1: # Deep space 1

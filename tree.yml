@@ -2988,12 +2988,6 @@ nuclearPropulsion:
         cost: 25000
         entryCost: 1750000 # https://www.fas.org/sgp/othergov/doe/lanl/la-ur-85-2442.pdf - page 17
     NP_lfe_25m_NERVA: *NERVA # Nova Punch, the same as stock nuclear engine
-    nervaII_kerbscalexx: # Chaka monkey, 67kN after RO update
-        cost: 16200
-        entryCost: 1750000
-    constellationBNTR:
-        cost: 21500 # 111kN after RO update
-        entryCost: 1750000
     
 # TIER 6
 veryHeavyRocketry: #TL5 late 70s/80s tech
@@ -4074,6 +4068,12 @@ advNuclearPropulsion:
         cost: 28000
         # expensive bi-modal developpement, no sources. Original NTR subtracts.
         entryCost: 2500000
+    nervaII_kerbscalexx: # Chaka monkey, 67kN after RO update
+        cost: 16200
+        entryCost: 1750000
+    constellationBNTR:
+        cost: 21500 # 111kN after RO update
+        entryCost: 1750000
 fusionRockets:
 
 colossalRocketry:

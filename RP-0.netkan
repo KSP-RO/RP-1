@@ -28,7 +28,6 @@
         { "name" : "ShipManifest" },
         { "name" : "TestFlight" },
         { "name" : "ConnectedLivingSpace" },
-        { "name" : "FilterExtensions" },
         { "name" : "HangarExtender" },
         { "name" : "KSP-AVC" },
         { "name" : "MechJeb2" },

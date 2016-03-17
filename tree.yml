@@ -320,9 +320,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     strutOcto:
         cost: 7
 
-    SXTSmallFuselage:
-        cost: 20
-
     trussAdapter:
         cost: 10
 
@@ -429,8 +426,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
 
     # Tanks. Also cheap. They're tanks.
-    SXTSmallFuselage:
-        cost: 20
     SXTFuel625m:
         cost: 30
     miniFuelTank:
@@ -440,10 +435,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     OscarDtank:
         cost: 30
     OscarEtank:
-        cost: 30
-    SXTSmallFuselage:
-        cost: 30
-    miniFuselage:
         cost: 30
         
     # AIES tanks
@@ -1380,8 +1371,14 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
         entryCost: 5000
         cost: 500 # guessed from above
     Mk1FuselageStructural:
+        entryCost: 5500
+        cost: 600 # guessed from above
+    miniFuselage:
+        entryCost: 4500
+        cost: 75
+    SXTSmallFuselage:
         entryCost: 5000
-        cost: 500 # guessed from above
+        cost: 100
     KerbCan: # 1-person crew section in 1.25m
         entryCost: 15000
         cost: 1000

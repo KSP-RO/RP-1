@@ -2264,6 +2264,9 @@ shortTermHabitation:
 
 # TIER 4
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
+    SXTAJ10Adv: # as Transtage's AJ10-138, later unlocks to AJ10-118F/K
+        cost: 300
+        
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
         cost: 350 #total guess (similar to the other 50-100kN hypergolic engines)
         entryCost: 15000
@@ -2910,8 +2913,6 @@ heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
         cost: 9000 # J-2 is 8500
     RLA_mp_large_spike: *J2T 
     NP_lfe_125m_AerospikeEngine: *J2T
-    SXTAJ10Adv: 
-        cost: 350
   
 
 hydroloxTL4:

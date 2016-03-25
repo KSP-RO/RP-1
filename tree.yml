@@ -1777,6 +1777,7 @@ generalConstruction:
     
 
 basicScience:
+    # In Game 'Improved Instrumentation'
 
     # These things are placed here by default, but they're not a bad selection,
     # so let's get them costed out now...
@@ -1798,6 +1799,14 @@ basicScience:
     # These are also cheap in modern dollars, so we're going for a similar
     # "balanced" cost. It'd be great if KSP had a way to cheapen part costs the
     # longer you have them.
+    
+    Fomalhaut_Control_A:
+        cost: 4300
+    # Venera lander core
+    
+    Fomalhaut_Science_A:
+        cost: 200
+    # Venera coil antenna. mass 150kg vs. Venus capable Mariner ant 25kg
 
     LgRadialSolarPanel:
         entryCost: 9000

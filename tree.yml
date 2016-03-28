@@ -1143,8 +1143,6 @@ basicConstruction:
         cost: 120	
     rn_r7_adapter_blok_e: #decoupler
         cost: 100
-    rn_r7_adapter_blok_e_m:
-        cost: 100
     rn_luna_fairing:
         cost: 10
     rn_luna_base:
@@ -1153,7 +1151,7 @@ basicConstruction:
         cost: 100
     rn_r7_adapter_blok_i_m:
         cost: 100
-    rn_r7_adapter_blok_i_iv2:
+    rn_r7_adapter_blok_iv2:
         cost: 100
     rn_r7_vostok_fairing_r: &r7_fairing
         cost: 20

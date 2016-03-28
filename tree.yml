@@ -2152,9 +2152,6 @@ miniaturization:
 
     # Maybe...
     # dmImagingPlatform:
-    #Venera/Mars landers
-    Fomalhaut_Control_A:
-    Fomalhaut_Science_A:
     
     # US Probes Integration
     pioneer_6_7_8_9:

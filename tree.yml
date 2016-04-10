@@ -1542,6 +1542,7 @@ enhancedSurvivability: # Early capsules
         entryCost: 1000
         cost: 100
     Almach_Parachute_A: *VostokParachute
+    Almach_Parachute_B: *VostokParachute
     
     moduldesspod: # 1-person descent module
         cost: 1800 # same as for Vostok
@@ -2096,7 +2097,7 @@ electrics:
         cost: 600
 
     # Soyuz parts
-    tg_sa:
+    tg_sa: &soyuzsm1
         entryCost: 70000
         cost: 2000
     s1_lsolar: &SalyutSolar
@@ -2109,6 +2110,9 @@ electrics:
     7k_ok_rsolar: *SoyuzSolar
     rn_7k_astp_lsolar:
     rn_7k_astp_rsolar:
+    
+    Tantares_Engine_A: *soyuzsm1
+    
     # Apollo parts
     FASAApollo_SM_Dish:
         entryCost: 35000

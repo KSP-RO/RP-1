@@ -3001,14 +3001,14 @@ largeVolumeContainment: # TL4.5 solids
         cost: 361
         entryCost: 7224
     FREP80: #Vega first stage
-        cost: 4000 #Vega launch cost: 32M
-        entryCost: 20000 #Avio invested 76M for P80
+        cost: 2280 #Vega launch cost: 25M euros alone so $3,79M (1965). P80+Zefiro23+Zefiro9 = $3,54M (1965) assuming the rest is fairings + avionics
+        entryCost: 12000 #Avio invested 76M euros for P80
     FREZEFIRO23: #Vega second stage
-        cost: 2500
-        entryCost: 15000
+        cost: 810
+        entryCost: 8000 #guessed
     FREZEFIRO9: #Vega third stage
-        cost: 1500
-        entryCost: 10000
+        cost: 450
+        entryCost: 4500 #guessed
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA

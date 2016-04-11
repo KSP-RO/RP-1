@@ -3000,6 +3000,15 @@ largeVolumeContainment: # TL4.5 solids
     RO_KWsrbGlobeI_Castor4: # Castor4 by KW Rocketry
         cost: 361
         entryCost: 7224
+    FREP80: #Vega first stage
+        cost: 4000 #Vega launch cost: 32M
+        entryCost: 20000 #Avio invested 76M for P80
+    FREZEFIRO23: #Vega second stage
+        cost: 2500
+        entryCost: 15000
+    FREZEFIRO9: #Vega third stage
+        cost: 1500
+        entryCost: 10000
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA

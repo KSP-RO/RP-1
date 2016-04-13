@@ -16,6 +16,7 @@ release: $(ZIPFILE)
 
 $(TREE): $(TREE_SRC)
 	bin/yml2mm
+	bin/makeversion
 
 $(ZIPFILE): $(TREE)
 	zip -r $(ZIPFILE) README.md LICENSE.md GameData

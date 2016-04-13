@@ -1,0 +1,97 @@
+#!/usr/bin/perl -w
+use 5.010;
+use strict;
+use warnings;
+use autodie;
+use FindBin qw($Bin);
+use Hash::Util qw(lock_keys);
+use IPC::System::Simple qw(capturex);
+use File::Spec ();
+use JSON::PP;
+
+# Makes an RP-0.version file based upon existing git tags.
+# License: Same as RP-0 itself.
+
+# Grab our extended version info from git.
+my $raw_version = eval { capturex(qw(git describe --tags --long)) };
+
+if (not $raw_version) {
+    die "Failed to obtain version info from git; cannot build AVC .version file: $@";
+};
+
+# Grab our KSP target from the RP-0.netkan file
+my $ksp_version = get_ksp_target(File::Spec->catdir($Bin,"../RP-0.netkan"));
+
+my $version = parse_version($raw_version);
+
+my $version_file = File::Spec->catdir($Bin,"../GameData/RP-0/RP-0.version");
+
+my $json = JSON::PP->new->pretty;
+
+open(my $version_fh, ">", $version_file);
+
+print {$version_fh} $json->encode({
+    NAME => "Realistic Progression Zero",
+    URL  => "https://raw.githubusercontent.com/KSP-RO/RP-0/master/GameData/RP-0/RP-0.version",
+    DOWNLOAD => "https://github.com/KSP-RO/RP-0/releases",
+    GITHUB => {
+        USERNAME => "KSP-RO",
+        REPOSITORY => "RP-0",
+        ALLOW_PRE_RELEASE => JSON::PP::false
+    },
+    VERSION => $version,
+    KSP_VERSION => $ksp_version,
+});
+
+sub parse_version {
+    my ($raw_version) = @_;
+
+    # Hash init.
+    my %version;
+    
+    # This is just typo protection.
+    # These are all in shouty-caps because that's what
+    # KSP-AVC expects.
+    lock_keys(%version, qw(MAJOR MINOR PATCH BUILD));
+
+    @version{qw/MAJOR MINOR BUILD/} = $raw_version =~ m{
+        v           # Leading 'v'
+        (\d+)       # Major
+        \.          # Dot
+        (\d+)       # Minor
+        -           # Dash from `git describe --long --tags`
+        (\d+)       # Build (distance from tag)
+    }gsx;
+
+    if (not defined $version{MAJOR}) {
+        die "Cannot parse `$raw_version` as a version string";
+    }
+
+    # We don't have a three-part version, so patch is always zero.
+    $version{PATCH} = 0;
+
+    return \%version;
+}
+
+sub get_ksp_target {
+    my ($netkan_file) = @_;
+    open(my $netkan_fh, '<', $netkan_file);
+
+    my $raw_version = do {
+        local $/;   # Slurp mode
+        JSON::PP->new->decode(<$netkan_fh>)->{ksp_version};
+    };
+
+    my %ksp_version;
+    lock_keys(%ksp_version, qw(MAJOR MINOR PATCH));
+
+    @ksp_version{qw(MAJOR MINOR PATCH)} = $raw_version =~ m{
+        (\d+)\.(\d+)\.(\d+)
+    }msx;
+
+    if (not defined $ksp_version{MAJOR}) {
+        die "Cannot parse KSP version: $raw_version"
+    };
+
+    return \%ksp_version;
+}

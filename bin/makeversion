@@ -12,6 +12,11 @@ use JSON::PP;
 # Makes an RP-0.version file based upon existing git tags.
 # License: Same as RP-0 itself.
 
+my $VERSION_TEMPLATE = File::Spec->catdir($Bin,"../RP-0.version.in");
+my $json = JSON::PP->new->pretty;
+
+my $avc_info = read_avc_tempalte($VERSION_TEMPLATE);
+
 # Grab our extended version info from git.
 my $raw_version = eval { capturex(qw(git describe --tags --long)) };
 
@@ -19,29 +24,19 @@ if (not $raw_version) {
     die "Failed to obtain version info from git; cannot build AVC .version file: $@";
 };
 
-# Grab our KSP target from the RP-0.netkan file
-my $ksp_version = get_ksp_target(File::Spec->catdir($Bin,"../RP-0.netkan"));
+# Add our version info
+$avc_info->{VERSION} = parse_version($raw_version);
 
-my $version = parse_version($raw_version);
-
+# Write our file
 my $version_file = File::Spec->catdir($Bin,"../GameData/RP-0/RP-0.version");
-
-my $json = JSON::PP->new->pretty;
 
 open(my $version_fh, ">", $version_file);
 
-print {$version_fh} $json->encode({
-    NAME => "Realistic Progression Zero",
-    URL  => "https://raw.githubusercontent.com/KSP-RO/RP-0/master/GameData/RP-0/RP-0.version",
-    DOWNLOAD => "https://github.com/KSP-RO/RP-0/releases",
-    GITHUB => {
-        USERNAME => "KSP-RO",
-        REPOSITORY => "RP-0",
-        ALLOW_PRE_RELEASE => JSON::PP::false
-    },
-    VERSION => $version,
-    KSP_VERSION => $ksp_version,
-});
+print {$version_fh} $json->encode($avc_info);
+
+close($version_fh);
+
+# Done!
 
 sub parse_version {
     my ($raw_version) = @_;
@@ -73,25 +68,18 @@ sub parse_version {
     return \%version;
 }
 
-sub get_ksp_target {
-    my ($netkan_file) = @_;
-    open(my $netkan_fh, '<', $netkan_file);
+sub read_avc_tempalte {
+    my ($file) = @_;
 
-    my $raw_version = do {
-        local $/;   # Slurp mode
-        JSON::PP->new->decode(<$netkan_fh>)->{ksp_version};
-    };
+    open(my $fh, '<', $file);
 
-    my %ksp_version;
-    lock_keys(%ksp_version, qw(MAJOR MINOR PATCH));
+    local $/;   # Slurp mode
 
-    @ksp_version{qw(MAJOR MINOR PATCH)} = $raw_version =~ m{
-        (\d+)\.(\d+)\.(\d+)
-    }msx;
+    my $raw = <$fh>;
 
-    if (not defined $ksp_version{MAJOR}) {
-        die "Cannot parse KSP version: $raw_version"
-    };
+    # Remove comments
+    $raw =~ s{^\s*#.*}{}mg;
 
-    return \%ksp_version;
+    # Parse and return
+    return JSON::PP->new->decode($raw);
 }

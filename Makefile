@@ -7,7 +7,6 @@ PROJ_NAME = $(shell basename `pwd`)
 TREE_SRC := tree.yml
 TREE := GameData/RP-0/Tree.cfg
 
-AVC_SRC := RP-0.version.in
 AVC := GameData/RP-0/RP-0.version
 
 VERSION := $(shell git describe --tags)
@@ -21,8 +20,14 @@ release: $(ZIPFILE)
 $(TREE): $(TREE_SRC)
 	bin/yml2mm
 
-$(AVC): $(AVC_SRC)
+# Always rebuild AVC files, because it depends upon
+# git version info, which Make can't comprehend.
+$(AVC): FORCE
 	bin/makeversion
 
 $(ZIPFILE): $(TREE) $(AVC)
 	zip -r $(ZIPFILE) README.md LICENSE.md GameData
+
+# This is a magic target that forces anything that
+# depends upon it to run.
+FORCE:

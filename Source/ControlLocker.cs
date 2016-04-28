@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using KSP;
 using UnityEngine;
+using KSP.UI;
 
 
 namespace RP0
@@ -287,7 +288,7 @@ namespace RP0
                     message.message = "Insufficient Avionics, Locking Controls (supports "
                         + maxMass.ToString("N3") + "t, vessel " + vesselMass.ToString("N3") + "t)";
                 }
-                ScreenMessages.PostScreenMessage(message, true);
+                ScreenMessages.PostScreenMessage(message);
                 FlightLogger.eventLog.Add("[" + ControlLockerUtils.FormatTime(vessel.missionTime) + "] "
                                               + message.message);
                 wasLocked = doLock;

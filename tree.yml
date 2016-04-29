@@ -2929,12 +2929,16 @@ heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
   
 
 hydroloxTL4:
-    FASAApolloLFEM1:
+    FASAApolloLFEM1: &M-1
         entryCost: 770000
         cost: 22000
+    Vodorod_M1: *M-1
+    
     RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
         cost: 650
         entryCost: 27750
+    
+    Vodorod_RD57: # RD-57 engine, development ended in mid 1970s, 105 engines built
         
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-

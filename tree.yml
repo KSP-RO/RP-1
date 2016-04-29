@@ -2097,9 +2097,6 @@ electrics:
         cost: 600
 
     # Soyuz parts
-    tg_sa: &soyuzsm1
-        entryCost: 70000
-        cost: 2000
     s1_lsolar: &SalyutSolar
         entryCost: 40000
         cost: 1200
@@ -2110,9 +2107,7 @@ electrics:
     7k_ok_rsolar: *SoyuzSolar
     rn_7k_astp_lsolar:
     rn_7k_astp_rsolar:
-    
-    Tantares_Engine_A: *soyuzsm1
-    
+        
     # Apollo parts
     FASAApollo_SM_Dish:
         entryCost: 35000
@@ -2594,6 +2589,8 @@ advFlightControl:
     r7_les: # Soyuz Launch Escape System, cost = half of the Apollo LES
         cost: 2500
         entryCost: 87500
+
+    tg_sa: *SoyuzPAO
 
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO

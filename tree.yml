@@ -1628,6 +1628,8 @@ advRocketry:
 hydroloxTL2:
     FASAGeminiLFTCentar: # Centaur A/B/C/D/D1 stage
         cost: 1201 # no cited research cost tho
+    FASAGeminiLFTCentarCSM_D1T: # Centaur D-1T stage
+        cost: 1301 # included a slight increase from the standard Centaur to account for the extra insulation
    
     engineLargeSkipper: &RL10
         cost: 1300 # lowered based off Centaur costs on Titan IIIE via http://www.astronautix.com/articles/costhing.htm
@@ -4122,7 +4124,6 @@ exoticAlloys:
         entryCost: 5000
 
 orbitalAssembly:
-    FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     FASAGeminiLFTCentarCSM_D5: # Centaur D5 for Atlas V
 
 advAerospaceComposites:

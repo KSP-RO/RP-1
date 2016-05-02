@@ -2724,7 +2724,7 @@ commandModules: # Third generation capsules, it would seem.
     TLV_LES: *ApolloLES
     Tantares_Crew_A: *SoyuzPod
     Tantares_Parachute_A: *SoyuzParachute
-    Tantares_Orbital_A: *SoyuzOM
+    Tantares_Habitation_A: *SoyuzOM
     Hamal_Orbital_A: *ProgressBO
     #TKS VA
     Alnair_Crew_A:
@@ -4476,7 +4476,7 @@ ORPHANS:
     SXT32FuelTank:
     
 
-    Tantares_Habitation_A:
+    Tantares_Orbital_A:
     Tantares_DockingMechanism_A:
     Tantares_DockingMechanism_B:
     Tantares_Orbital_B:

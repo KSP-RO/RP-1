@@ -1,0 +1,85 @@
+#!/usr/bin/perl -w
+use 5.010;
+use strict;
+use warnings;
+use autodie;
+use FindBin qw($Bin);
+use Hash::Util qw(lock_keys);
+use IPC::System::Simple qw(capturex);
+use File::Spec ();
+use JSON::PP;
+
+# Makes an RP-0.version file based upon existing git tags.
+# License: Same as RP-0 itself.
+
+my $VERSION_TEMPLATE = File::Spec->catdir($Bin,"../RP-0.version.in");
+my $json = JSON::PP->new->pretty;
+
+my $avc_info = read_avc_tempalte($VERSION_TEMPLATE);
+
+# Grab our extended version info from git.
+my $raw_version = eval { capturex(qw(git describe --tags --long)) };
+
+if (not $raw_version) {
+    die "Failed to obtain version info from git; cannot build AVC .version file: $@";
+};
+
+# Add our version info
+$avc_info->{VERSION} = parse_version($raw_version);
+
+# Write our file
+my $version_file = File::Spec->catdir($Bin,"../GameData/RP-0/RP-0.version");
+
+open(my $version_fh, ">", $version_file);
+
+print {$version_fh} $json->encode($avc_info);
+
+close($version_fh);
+
+# Done!
+
+sub parse_version {
+    my ($raw_version) = @_;
+
+    # Hash init.
+    my %version;
+    
+    # This is just typo protection.
+    # These are all in shouty-caps because that's what
+    # KSP-AVC expects.
+    lock_keys(%version, qw(MAJOR MINOR PATCH BUILD));
+
+    @version{qw/MAJOR MINOR BUILD/} = $raw_version =~ m{
+        v           # Leading 'v'
+        (\d+)       # Major
+        \.          # Dot
+        (\d+)       # Minor
+        -           # Dash from `git describe --long --tags`
+        (\d+)       # Build (distance from tag)
+    }gsx;
+
+    if (not defined $version{MAJOR}) {
+        die "Cannot parse `$raw_version` as a version string";
+    }
+
+    # We don't have a three-part version, so patch is always zero.
+    $version{PATCH} = 0;
+
+    return \%version;
+}
+
+sub read_avc_tempalte {
+    my ($file) = @_;
+
+    open(my $fh, '<', $file);
+
+    local $/;   # Slurp mode
+
+    my $raw = <$fh>;
+
+    # Remove comments
+    $raw =~ s{^\s*#.*}{}mg;
+
+    # Parse and return
+    return JSON::PP->new->decode($raw);
+}

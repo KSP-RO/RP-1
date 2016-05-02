@@ -1246,6 +1246,30 @@ survivability: # 3-Axis Stability and early probes ##
     1.25_Heatshield:
         entryCost: 20000
         cost: 600
+    #Stock and DRE parts
+    Heatshield-15M:
+        entryCost: 20000
+        cost: 700
+    2.5_Heatshield: &Heatshield-25
+        entryCost: 21000
+        cost: 800
+    Heatshield-25M: *Heatshield-25
+    Heatshield-2M:
+        entryCost: 21000
+        cost: 800
+    Heatshield-3M:
+        entryCost: 22000
+        cost: 1000
+    Heatshield-375M: &Heatshield-375
+        entryCost: 22000
+        cost: 1100
+    3_75_Heatshield: *Heatshield-375
+    Heatshield-4M:
+        entryCost: 25000
+        cost: 1500
+    Heatshield-5M:
+        entryCost: 30000
+        cost: 1700
 
     # Heatshield decoupler
     decoupler_ftr_small:
@@ -1604,6 +1628,8 @@ advRocketry:
 hydroloxTL2:
     FASAGeminiLFTCentar: # Centaur A/B/C/D/D1 stage
         cost: 1201 # no cited research cost tho
+    FASAGeminiLFTCentarCSM_D1T: # Centaur D-1T stage
+        cost: 1301 # included a slight increase from the standard Centaur to account for the extra insulation
    
     engineLargeSkipper: &RL10
         cost: 1300 # lowered based off Centaur costs on Titan IIIE via http://www.astronautix.com/articles/costhing.htm
@@ -1990,26 +2016,6 @@ simpleCommandModules: # Second gen capsules
     HexCanMFTLifeSupportSmall:
     HexCanMFTLifeSupportLarge:
 
-    #Stock and DRE parts
-    Heatshield-15M:
-        cost: 700 # FIXME
-    2.5_Heatshield: &Heatshield-25
-        entryCost: 21000
-        cost: 1200 # FIXME
-    Heatshield-25M: *Heatshield-25
-    Heatshield-2M:
-        entryCost: 24000
-        cost: 800 # FIXME
-    Heatshield-3M:
-        cost: 1400 # FIXME
-    Heatshield-375M: &Heatshield-375
-        cost: 1500 #FIXME, cheaper than lunar rated 3m heatshield
-    3_75_Heatshield: *Heatshield-375
-    Heatshield-4M:
-        cost: 1800 #FIXME, cheaper than lunar rated 4m heatshield
-    Heatshield-5M:
-        cost: 2100 #FIXME, cheaper than lunar rated 5m heatshield
-
     # FASA Gemini
     # ~12m for the spacecraft, ~600 for research
     # call it ~7m for the capsule, and 350 of the R&D
@@ -2097,9 +2103,6 @@ electrics:
         cost: 600
 
     # Soyuz parts
-    tg_sa: &soyuzsm1
-        entryCost: 70000
-        cost: 2000
     s1_lsolar: &SalyutSolar
         entryCost: 40000
         cost: 1200
@@ -2110,9 +2113,7 @@ electrics:
     7k_ok_rsolar: *SoyuzSolar
     rn_7k_astp_lsolar:
     rn_7k_astp_rsolar:
-    
-    Tantares_Engine_A: *soyuzsm1
-    
+        
     # Apollo parts
     FASAApollo_SM_Dish:
         entryCost: 35000
@@ -2595,6 +2596,8 @@ advFlightControl:
         cost: 2500
         entryCost: 87500
 
+    tg_sa: *SoyuzPAO
+
     Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
     Tantares_Decoupler_A: *SoyuzDecoupler
@@ -2718,7 +2721,7 @@ commandModules: # Third generation capsules, it would seem.
     TLV_LES: *ApolloLES
     Tantares_Crew_A: *SoyuzPod
     Tantares_Parachute_A: *SoyuzParachute
-    Tantares_Orbital_A: *SoyuzOM
+    Tantares_Habitation_A: *SoyuzOM
     Hamal_Orbital_A: *ProgressBO
     #TKS VA
     Alnair_Crew_A:
@@ -2929,12 +2932,16 @@ heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
   
 
 hydroloxTL4:
-    FASAApolloLFEM1:
+    FASAApolloLFEM1: &M-1
         entryCost: 770000
         cost: 22000
+    Vodorod_M1: *M-1
+    
     RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
         cost: 650
         entryCost: 27750
+    
+    Vodorod_RD57: # RD-57 engine, development ended in mid 1970s, 105 engines built
         
 precisionPropulsion:
     # Bobcat's Soviet Engines -Need Costing-
@@ -4118,7 +4125,6 @@ exoticAlloys:
         entryCost: 5000
 
 orbitalAssembly:
-    FASAGeminiLFTCentarCSM_D3: # Centaur D3 for Atlas III
     FASAGeminiLFTCentarCSM_D5: # Centaur D5 for Atlas V
 
 advAerospaceComposites:
@@ -4471,7 +4477,7 @@ ORPHANS:
     SXT32FuelTank:
     
 
-    Tantares_Habitation_A:
+    Tantares_Orbital_A:
     Tantares_DockingMechanism_A:
     Tantares_DockingMechanism_B:
     Tantares_Orbital_B:

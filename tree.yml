@@ -1246,6 +1246,30 @@ survivability: # 3-Axis Stability and early probes ##
     1.25_Heatshield:
         entryCost: 20000
         cost: 600
+    #Stock and DRE parts
+    Heatshield-15M:
+        entryCost: 20000
+        cost: 700
+    2.5_Heatshield: &Heatshield-25
+        entryCost: 21000
+        cost: 800
+    Heatshield-25M: *Heatshield-25
+    Heatshield-2M:
+        entryCost: 21000
+        cost: 800
+    Heatshield-3M:
+        entryCost: 22000
+        cost: 1000
+    Heatshield-375M: &Heatshield-375
+        entryCost: 22000
+        cost: 1100
+    3_75_Heatshield: *Heatshield-375
+    Heatshield-4M:
+        entryCost: 25000
+        cost: 1500
+    Heatshield-5M:
+        entryCost: 30000
+        cost: 1700
 
     # Heatshield decoupler
     decoupler_ftr_small:
@@ -1989,26 +2013,6 @@ simpleCommandModules: # Second gen capsules
     HexCanMFTLifeSupport:
     HexCanMFTLifeSupportSmall:
     HexCanMFTLifeSupportLarge:
-
-    #Stock and DRE parts
-    Heatshield-15M:
-        cost: 700 # FIXME
-    2.5_Heatshield: &Heatshield-25
-        entryCost: 21000
-        cost: 1200 # FIXME
-    Heatshield-25M: *Heatshield-25
-    Heatshield-2M:
-        entryCost: 24000
-        cost: 800 # FIXME
-    Heatshield-3M:
-        cost: 1400 # FIXME
-    Heatshield-375M: &Heatshield-375
-        cost: 1500 #FIXME, cheaper than lunar rated 3m heatshield
-    3_75_Heatshield: *Heatshield-375
-    Heatshield-4M:
-        cost: 1800 #FIXME, cheaper than lunar rated 4m heatshield
-    Heatshield-5M:
-        cost: 2100 #FIXME, cheaper than lunar rated 5m heatshield
 
     # FASA Gemini
     # ~12m for the spacecraft, ~600 for research

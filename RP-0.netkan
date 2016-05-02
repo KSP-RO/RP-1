@@ -17,7 +17,6 @@
         { "name" : "DeadlyReentry" },
         { "name" : "VenStockRevamp" },
         { "name" : "CommunityTechTree" },
-        { "name" : "AsteroidDay" }
     ],
     "recommends" : [
         { "name" : "KerbalConstructionTime" },
@@ -59,6 +58,22 @@
             "version" : "<= v0.33",
             "override" : {
                 "ksp_version" : "0.90"
+            }
+        },
+        {
+            "version" : [">= v0.41", "<= v0.47"],
+            "override" : {
+                "depends": [
+                    { "name": "ModuleManager" },
+                    { "name": "RealismOverhaul" },
+                    { "name": "SXT" },
+                    { "name": "ContractConfigurator" },
+                    { "name": "CustomBarnKit" },
+                    { "name": "DeadlyReentry" },
+                    { "name": "VenStockRevamp" },
+                    { "name": "CommunityTechTree" },
+                    { "name": "AsteroidDay" }
+                ]
             }
         }
     ]

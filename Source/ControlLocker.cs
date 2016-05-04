@@ -16,6 +16,10 @@ namespace RP0
             int crewCount = -1;
             maxMass = vesselMass = 0f;
             Part p;
+
+            if (parts == null || parts.Count <= 0)
+                return false;
+
             for (int i = parts.Count - 1; i >= 0; --i)
             {
                 p = parts[i];
@@ -72,7 +76,7 @@ namespace RP0
                             if (HighLogic.LoadedSceneIsFlight) // get from vessel
                                 crewCount = p.vessel.GetCrewCount();
                             else if (HighLogic.LoadedSceneIsEditor) // or crew manifest
-                                crewCount = CMAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
+                                crewCount = CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
                             else crewCount = 0; // or assume no crew (should never trip this)
                         }
                         if (mC.minimumCrew > crewCount)

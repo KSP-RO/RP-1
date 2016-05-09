@@ -2954,6 +2954,9 @@ hydroloxTL4:
     Vodorod_RD57: # RD-57 engine, development ended in mid 1970s, 105 engines built
         
 precisionPropulsion:
+    FRERD843: #RD-843, late and tiny rocket engine used on Vega
+        entryCost: 8000 #guessed to be balanced
+        cost: 200
     # Bobcat's Soviet Engines -Need Costing-
     # NK33 and NK43 config here, parts produced ~100 the program was scrapped and never flown
     NP_lfe_25m_4x800Engine: # RD-264, Dnepr first stage, first run 1969-73
@@ -3017,6 +3020,15 @@ largeVolumeContainment: # TL4.5 solids
     RO_KWsrbGlobeI_Castor4: # Castor4 by KW Rocketry
         cost: 361
         entryCost: 7224
+    FREP80: #Vega first stage
+        cost: 2280 #Vega launch cost: 25M euros alone so $3,79M (1965). P80+Zefiro23+Zefiro9 = $3,54M (1965) assuming the rest is fairings + avionics
+        entryCost: 12000 #Avio invested 76M euros for P80
+    FREZEFIRO23: #Vega second stage
+        cost: 810
+        entryCost: 8000 #guessed
+    FREZEFIRO9: #Vega third stage
+        cost: 450
+        entryCost: 4500 #guessed
 
 nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA

@@ -1120,6 +1120,8 @@ basicConstruction:
         cost: 187 # same as proc
     FASAGeminiLFTMed:
         cost: 250
+    FASAGeminiROTitanIIGLVUpper:
+        cost: 270
     # FIXME other Titan II parts go here, with costing.
     FASAGeminiDecDark25_Titan3m:
         cost: 75

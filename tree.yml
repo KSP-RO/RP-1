@@ -1060,6 +1060,13 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     TLV_Engine_A: *RD107
     Alto_Engine_A: *VostokUpper
     Alto_Engine_B: *R7Vernier
+    
+    FREVIKINGEARLY: #Viking 2/2B
+        cost: 550 #Ariane 1-1 first stage: $14.5M
+        entryCost: 30000
+    FREVIKINGUPPER: #Viking 4/4B
+        cost: 1000
+        entryCost: 45000
 
 basicConstruction:
     batteryPack:
@@ -1623,6 +1630,9 @@ advRocketry:
     rn_r7_vernier_blok_i_s_fg:
         cost: 20 # 6kN
     
+    FREVIKINGLOWER: #Viking 5C/6
+        cost: 380 #$10M for Ariane 4L stage, 4 engines
+        entryCost: 35000
 
         # Staged Combustion TL2
 hydroloxTL2:

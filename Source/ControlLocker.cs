@@ -92,16 +92,6 @@ namespace RP0
             // Otherwise, we lock yaw/pitch/roll.
             return true;
         }
-
-        public static string FormatTime(double time)
-        {
-            int iTime = (int)time % 3600;
-            int seconds = iTime % 60;
-            int minutes = (iTime / 60) % 60;
-            int hours = (iTime / 3600);
-            return hours.ToString("D2")
-                + ":" + minutes.ToString("D2") + ":" + seconds.ToString("D2");
-        }
     }
     /// <summary>
     /// This class will display a warning in the editor when there is insufficient avionics
@@ -293,8 +283,7 @@ namespace RP0
                         + maxMass.ToString("N3") + "t, vessel " + vesselMass.ToString("N3") + "t)";
                 }
                 ScreenMessages.PostScreenMessage(message);
-                FlightLogger.eventLog.Add("[" + ControlLockerUtils.FormatTime(vessel.missionTime) + "] "
-                                              + message.message);
+                FlightLogger.fetch.LogEvent(message.message);
                 wasLocked = doLock;
             }
         }

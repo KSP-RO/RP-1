@@ -6,8 +6,9 @@
     "license"    : "CC-BY-4.0",
     "author"     : "RP-0 Group",
     "$kref"      : "#/ckan/github/KSP-RO/RP-0",
-    "ksp_version" : "1.0.5",
-    "release_status" : "development",
+    "$vref"      : "#/ckan/ksp-avc",
+    "x_netkan_force_v": true,
+    "release_status" : "stable",
     "depends" : [
         { "name" : "ModuleManager" } ,
         { "name" : "RealismOverhaul" },

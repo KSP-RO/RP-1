@@ -1655,6 +1655,10 @@ hydroloxTL2:
     LR87LH2Vac:  # 80% of the J-2 in the J-2's normal config.
         cost: 2000
         entryCost: 75000
+        
+    FRELE5: #From FRE
+        cost: 3500 #assuming 30M stage cost in 1992 so about 15M engine cost (guessed)
+        entryCost: 75000
 
 fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine

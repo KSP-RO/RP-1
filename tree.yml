@@ -170,7 +170,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # I've made these all cheap. They're not rocket science. -- pjf.
 
     airplaneTail:
-        cost: 0.21 # Yes, really.
+        cost: 5
+    airplaneTailB:
+        cost: 5
     B9_Aero_Wing_ControlSurface_SH_4mProcedural:
         cost: 0.1
     delta_small:
@@ -488,6 +490,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     #Landing gears
     SmallGearBay:
         cost: 3
+    GearSmall:
+        cost: 6
     GearFixed:
         cost: 1
     GearFree:

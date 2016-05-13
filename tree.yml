@@ -1671,8 +1671,7 @@ hydroloxTL2:
         entryCost: 75000
         
     # SSTU: 
-    SSTU-SC-ENG-RL10A-3: 
-        cost:           #
+    SSTU-SC-ENG-RL10A-3: *RL10 # basic RL10 per config, ignore the name
 
 fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
@@ -3146,6 +3145,10 @@ hydroloxTL5:
         entryCost: 100000 # same as for single RD-0120
     NP_lfe_375m_EnergiaQuad: *4xRD-0120
     
+    # SSTU: 
+    SSTU-SC-ENG-RL10A-4:
+        cost: 2300
+    
     # SSME / RS-24/5
     Ks25: &RS-25
         cost: 5700 # "40 million" assumed to be 2010 dollars
@@ -3254,6 +3257,8 @@ hydroloxTL6:
         
     # SSTU
     SSTU-SC-ENG-RS-68: *RS-68
+    SSTU-SC-ENG-RL10A-5: 
+        cost: 2500
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.
@@ -3335,6 +3340,8 @@ hydroloxTL7:
         
      # SSTU
     SSTU-SC-ENG-J-2X: *J2X
+    SSTU-SC-ENG-RL10B-2:
+        cost: 3800
 
 stagedTL7:
     # AJ26-62 config here

@@ -1632,7 +1632,7 @@ advRocketry:
     rn_proton_vernier:  # 3rd stage vernier
     
     # Molniya/Vostok/Soyuz second stage.
-    RD0110:
+    RD0110: &RD-0110
         cost: 400 # guess based on other engines of the era
     
     #RaiderNick - Soyuz
@@ -1644,8 +1644,7 @@ advRocketry:
         entryCost: 35000
         
      # SSTU
-    SSTU-SC-ENG-RD-0110:
-        cost: 400 # just copied above estimation :^)
+    SSTU-SC-ENG-RD-0110: *RD-0110
 
         # Staged Combustion TL2
 hydroloxTL2:

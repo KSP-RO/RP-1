@@ -35,6 +35,7 @@
     <Compile Include="EntryCosts\EntryCostDatabase.cs" />
     <Compile Include="EntryCosts\PartEntryCostHolder.cs" />
     <Compile Include="ModuleAvionicsModifier.cs" />
+    <Compile Include="ModuleRangeSafety.cs" />
     <Compile Include="ModuleTag\AtmosphereAnalysis.cs" />
     <Compile Include="ModuleTag\Barometer.cs">
       <SubType>Code</SubType>

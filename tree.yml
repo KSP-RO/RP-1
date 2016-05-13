@@ -1645,6 +1645,8 @@ advRocketry:
         
      # SSTU
     SSTU-SC-ENG-H1: *H1
+    SSTU-SC-ENG-RD-0110:
+        cost: 400 # just copied above estimation :^)
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -3159,6 +3161,9 @@ hydroloxTL5:
     
     KW3mengineWildcarXR: #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
+        
+    # SSTU
+    SSTU-SC-ENG-RS-25: *RS-25
 
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
@@ -3242,6 +3247,9 @@ hydroloxTL6:
     cryoengine-25-1: # LE-7/LE-7A
         cost: 1920  # Half the cost of dual model above
         entryCost: 192000 
+        
+    # SSTU
+    SSTU-SC-ENG-RS-68: *RS-68
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.
@@ -3280,7 +3288,21 @@ giganticRocketry: #TL7, present day
 
     CHAKAOME: # AJ10-190 for Orion
         cost: 400 # same as for AJ10-190 OME
-
+        
+    # SSTU
+    # F-1B pricing unclear, engine got never built, so copied values from F-1
+    SSTU-SC-ENG-F1B: &F-1B
+        entryCost: 409361
+        cost: 5000
+        
+    SSTU-SC-ENG-Merlin-1D: *Merlin1D
+    SSTU-SC-ENG-Merlin-1DV: *Merlin1DVac
+    # Merlin/a/b/c also preliminarily use the d's pricing
+    SSTU-SC-ENG-Merlin-1A: *Merlin1D
+    SSTU-SC-ENG-Merlin-1C: *Merlin1D
+    SSTU-SC-ENG-Merlin-1CV: *Merlin1DVac
+        
+        
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg

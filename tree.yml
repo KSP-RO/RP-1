@@ -2155,7 +2155,7 @@ electrics:
     FuelCellArray:
         cost: 2500 # FIXME, 2.5x above with 3x capacity.
 
-    #Universal Storage fuel cell, similar size as the stock single fuel cell.
+    #Universal Storage fuel cell, similar to the stock single fuel cell.
     US_1P110_Wedge_Fuelcell:
         cost: 1000
 

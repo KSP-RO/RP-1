@@ -1071,7 +1071,12 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
         entryCost: 45000
-
+        
+    # RD-107 & RD-108 From SSTU
+        SSTU-SC-ENG-RD-108A: *RD108
+        SSTU-SC-ENG-RD-107A: *RD107
+        SSTU-SC-ENG-RD-107X: *RD107
+    
 basicConstruction:
     batteryPack:
         cost: 18
@@ -1637,6 +1642,9 @@ advRocketry:
     FREVIKINGLOWER: #Viking 5C/6
         cost: 380 #$10M for Ariane 4L stage, 4 engines
         entryCost: 35000
+        
+     # SSTU
+    SSTU-SC-ENG-H1: *H1
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -2349,6 +2357,10 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     Apollo_SM_Engine: *ApolloSPS
     LM_AscentEngine: *LMAE
     LM_DescentEngine: *LMDE
+    
+    # SSTU
+    SSTU-SC-ENG-AJ10-137: *ApolloSPS
+    SSTU-SC-ENG-F1: *F-1
 
 hydroloxTL3:
 
@@ -2364,6 +2376,9 @@ hydroloxTL3:
 
     #OLDD Apollo parts. Same as FASA.
     J2engine: *J2Engine
+    
+     # SSTU
+    SSTU-SC-ENG-J-2: *J2Engine
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
@@ -3058,6 +3073,8 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
     KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
         cost: 615 # 2.5M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     
+        # SSTU
+    SSTU-SC-ENG-AJ10-190: *AJ10-190OME
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3289,6 +3306,9 @@ hydroloxTL7:
     
     XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
         cost: 40
+        
+     # SSTU
+    SSTU-SC-ENG-J-2X: *J2X
 
 stagedTL7:
     # AJ26-62 config here

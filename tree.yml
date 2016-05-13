@@ -1644,7 +1644,6 @@ advRocketry:
         entryCost: 35000
         
      # SSTU
-    SSTU-SC-ENG-H1: *H1
     SSTU-SC-ENG-RD-0110:
         cost: 400 # just copied above estimation :^)
 

@@ -3138,10 +3138,6 @@ hydroloxTL5:
     
     KW3mengineWildcarXR: #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
-
-    FRELE5: #From FRE
-        cost: 3500 #assuming 30M stage cost in 1992 so about 15M engine cost
-        entryCost: 75000
         
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
@@ -3289,6 +3285,10 @@ hydroloxTL7:
     
     XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
         cost: 40
+        
+    FRELE5: #From FRE
+        cost: 3500 #assuming 30M stage cost in 1992 so about 15M engine cost
+        entryCost: 75000
 
 stagedTL7:
     # AJ26-62 config here

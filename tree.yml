@@ -3144,7 +3144,7 @@ hydroloxTL5:
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
         
     FRELE5: #From FRE
-        cost: 3500 #assuming 30M stage cost in 1992 so about 15M engine cost
+        cost: 1600 #assuming 30M stage cost in 1992 so about 15M engine cost
         entryCost: 75000
         
 experimentalAerodynamics: #TL5 jets

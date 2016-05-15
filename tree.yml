@@ -783,15 +783,19 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
 engineering101:
     # Tanks
 
-    fuelTankSmallFlat:
-    fuelTank:
+    fuelTankSmallFlat: # 500L tank, comp. to fasa_mercury_lft_short (528L)
+        cost: 150
+    fuelTank: # 2kL tank
+        cost: 170
     toroidalFuelTank:
-    fuelTankSmall:
+    fuelTankSmall: # 1kL tank
+        cost: 160
     radialRCSTank:
     RCSFuelTank: #larger version of rcsTankMini
         cost: 60
     rcsTankRadialLong:
-    fuelTank_long:
+    fuelTank_long: # 4kL tank
+        cost: 180
     
     # AIES tanks
     tankorb1:

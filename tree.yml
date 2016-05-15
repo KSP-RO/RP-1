@@ -3229,6 +3229,10 @@ hydroloxTL6:
     cryoengine-25-1: # LE-7/LE-7A
         cost: 1920  # Half the cost of dual model above
         entryCost: 192000 
+        
+    FRELE7:
+        cost: 1920  #same cost as cryoengine-25-1
+        entryCost: 192000 
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.

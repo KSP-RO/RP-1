@@ -2954,7 +2954,19 @@ advElectrics:
     # technology doubles the cost.
     SCANsat_Scanner2:
         cost: 1000
-
+        
+    #SSTU - prices are generic costing, mind they do not account for the integrated equipment
+    SSTU-SC-B-BPC: *ApolloLES       # Apollo LES
+    SSTU-SC-B-CM: *ApolloCM        # A CM
+    SSTU-SC-B-SM: *ApolloSM        # A SM
+    
+    SSTU-SC-A-BPC:              # soyuz SAS
+        cost: 2500              # half apollo LES, estimation taken from tantares
+    SSTU-SC-A-OM:   *SoyuzOM
+    SSTU-SC-A-DM:   *SoyuzPOD
+    SSTU-SC-A-SM:
+    
+    
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
     toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
@@ -3986,7 +3998,7 @@ specializedCommandModules: # modern?
         cost: 60000
         entryCost: 750000
     XOrionPodXbb31: *ORIONPOD
-    XLFTORIONLARGE: # service module
+    XLFTORIONLARGE: &ORIONSM # service module
         cost: 60000
         entryCost: 750000
     xOrionLES:
@@ -4015,6 +4027,11 @@ specializedCommandModules: # modern?
         entryCost: 17500 #2x less than Apollo chutes,  about 5% of total development cost (359260)
     DragonLadder:
         cost: 10
+        
+    # SSTU  - generic pricing, does not account for integrated equipment
+    SSTU-SC-C-BPC: *ApolloLES         # Orion LES, cost stolen from apollo :^)
+    SSTU-SC-C-CM: *ORIONPOD
+    SSTU-SC-C-SM: *ORIONSM
 
 largeUnmanned:
     

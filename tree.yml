@@ -2809,7 +2809,18 @@ commandModules: # Third generation capsules, it would seem.
     FASAGeminiBigGDockExt:
         entryCost: 7000 # based on the Apollo docking device
         cost: 2000
-
+        
+        #SSTU - prices are generic costing, mind they do not account for the integrated equipment
+    SSTU-SC-B-BPC: *ApolloLES       # Apollo LES
+    SSTU-SC-B-CM: *ApolloCM        # A CM
+    SSTU-SC-B-SM: *ApolloSM        # A SM
+    
+    SSTU-SC-A-BPC:              # soyuz SAS
+        cost: 2500              # half apollo LES, estimation taken from tantares
+    SSTU-SC-A-OM:   *SoyuzOM
+    SSTU-SC-A-DM:   *SoyuzPod
+    SSTU-SC-A-SM:
+    
 spaceExploration: #crewed landing
     landerCabinSmall:
         cost: 2000 # FIXME
@@ -2956,17 +2967,6 @@ advElectrics:
     SCANsat_Scanner2:
         cost: 1000
         
-    #SSTU - prices are generic costing, mind they do not account for the integrated equipment
-    SSTU-SC-B-BPC: *ApolloLES       # Apollo LES
-    SSTU-SC-B-CM: *ApolloCM        # A CM
-    SSTU-SC-B-SM: *ApolloSM        # A SM
-    
-    SSTU-SC-A-BPC:              # soyuz SAS
-        cost: 2500              # half apollo LES, estimation taken from tantares
-    SSTU-SC-A-OM:   *SoyuzOM
-    SSTU-SC-A-DM:   *SoyuzPod
-    SSTU-SC-A-SM:
-    
     
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.

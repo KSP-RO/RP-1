@@ -2964,7 +2964,7 @@ advElectrics:
     SSTU-SC-A-BPC:              # soyuz SAS
         cost: 2500              # half apollo LES, estimation taken from tantares
     SSTU-SC-A-OM:   *SoyuzOM
-    SSTU-SC-A-DM:   *SoyuzPOD
+    SSTU-SC-A-DM:   *SoyuzPod
     SSTU-SC-A-SM:
     
     
@@ -3091,7 +3091,8 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
     
         # SSTU
     SSTU-SC-ENG-AJ10-190: *AJ10-190OME
-    SSTU-SC-ENG-Merlin-1A: *Merlin1D
+    SSTU-SC-ENG-Merlin-1A: 
+        cost: 175
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-

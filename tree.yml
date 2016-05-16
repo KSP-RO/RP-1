@@ -559,6 +559,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 30
     SXTBuzzard: # Junkers Ju-87 cockpit? https://upload.wikimedia.org/wikipedia/commons/9/94/Junkers_Ju_87B-2_Stuka.svg
         cost: 30 # same as for He-111
+    Interceptor?Cockpit:
+        cost: 60
     # Prop engines
     SXTR280018WProp: &R2800-18W #for F4U-4
         cost: 23.7 # late war, for P-61, via Nash, see https://books.google.com/books?id=PerGbKxOPZYC&pg=PA73&lpg=PA73&dq=nash+kelvinator+aircraft+engine&source=bl&ots=0bowaYis6U&sig=MHQTtVTNkKWrlrYN66-GG18hytM&hl=en&ei=9jQ0TeSxJYOglAf6uJCHCg&sa=X&oi=book_result&ct=result&sqi=2#v=onepage&q=nash%20kelvinator%20aircraft%20engine&f=false
@@ -960,6 +962,9 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
         cost: 32
     B9_Engine_VA1_Intake:
         cost: 20
+        
+    Trainer?Cockpit: # F-104 like
+        cost: 200
 
 # TIER 2
 generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.

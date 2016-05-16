@@ -3215,6 +3215,17 @@ experimentalRocketry: #TL6, late 80s/90s
     Size2LFB: &Pyrios # Pyrios booster, technically TL7 but the engines are F-1s.
         cost: 43000 # FIXME guess based off 2x F-1 + tankage.
     NP_lfb_25m_Adv: *Pyrios
+    
+    # SSTU
+    # F-1B pricing unclear, engine got never built, so copied values from F-1
+    SSTU-SC-ENG-F1B: &F-1B
+        entryCost: 409361
+        cost: 5000
+    # Merlin Engines use D/Dvac pricing
+    SSTU-SC-ENG-Merlin-1C:
+        cost: 175
+    SSTU-SC-ENG-Merlin-1CV: 
+        cost: 200
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3312,16 +3323,10 @@ giganticRocketry: #TL7, present day
         cost: 400 # same as for AJ10-190 OME
         
     # SSTU
-    # F-1B pricing unclear, engine got never built, so copied values from F-1
-    SSTU-SC-ENG-F1B: &F-1B
-        entryCost: 409361
-        cost: 5000
-        
     SSTU-SC-ENG-Merlin-1D: *Merlin1D
     SSTU-SC-ENG-Merlin-1DV: *Merlin1DVac
     # Merlin/a/b/c also preliminarily use the d's pricing
-    SSTU-SC-ENG-Merlin-1C: *Merlin1D
-    SSTU-SC-ENG-Merlin-1CV: *Merlin1DVac
+
         
         
 hydroloxTL7:

@@ -1645,6 +1645,7 @@ advRocketry:
         
      # SSTU
     SSTU-SC-ENG-RD-0110: *RD-0110
+    SSTU-SC-ENG-H1: *H1
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -3352,6 +3353,8 @@ hydroloxTL7:
     SSTU-SC-ENG-J-2X: *J2X
     SSTU-SC-ENG-RL10B-2:
         cost: 1300 # +2000 for config
+    SSTU-SC-ENG-Vinci:
+        cost: 6000 # arbitrary estimation; cheaper than 2xRL10-B2 (2x3300), according to nasa SLS upper stage study
 
 stagedTL7:
     # AJ26-62 config here

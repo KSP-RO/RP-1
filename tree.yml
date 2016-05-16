@@ -3078,6 +3078,7 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
     
         # SSTU
     SSTU-SC-ENG-AJ10-190: *AJ10-190OME
+    SSTU-SC-ENG-Merlin-1A: *Merlin1D
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3305,7 +3306,6 @@ giganticRocketry: #TL7, present day
     SSTU-SC-ENG-Merlin-1D: *Merlin1D
     SSTU-SC-ENG-Merlin-1DV: *Merlin1DVac
     # Merlin/a/b/c also preliminarily use the d's pricing
-    SSTU-SC-ENG-Merlin-1A: *Merlin1D
     SSTU-SC-ENG-Merlin-1C: *Merlin1D
     SSTU-SC-ENG-Merlin-1CV: *Merlin1DVac
         

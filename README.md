@@ -74,6 +74,5 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Nova Punch
 - Tantares
 - Cryogenic Engines
-- Asteroid Day
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!

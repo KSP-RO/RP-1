@@ -3194,7 +3194,7 @@ hydroloxTL5:
         entryCost: 114000 # same as for single RS-25
     
     
-    KW3mengineWildcarXR: #HM7 engine for Ariane family
+    KW3mengineWildcatXR: #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
         
 

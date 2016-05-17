@@ -790,16 +790,20 @@ engineering101:
     # Tanks
 
     # within a deviation of 24L(4percent) this tank matches the performance of the fasa one
-    fuelTankSmallFlat:
-        cost: 150
-        
-    fuelTank:
+    fuelTankSmallFlat: # 500L tank, comp. to fasa_mercury_lft_short (528L)
+        cost: 1
+    fuelTank: # 2kL tank
+        cost: 1
     toroidalFuelTank:
-    fuelTankSmall:
+        cost: 1
+    fuelTankSmall: # 1kL tank
+        cost: 1
     radialRCSTank:
-    RCSFuelTank:
+    RCSFuelTank: #larger version of rcsTankMini
+        cost: 1
     rcsTankRadialLong:
-    fuelTank_long:
+    fuelTank_long: # 4kL tank
+        cost: 1
     
     # AIES tanks
     tankorb1:
@@ -1100,11 +1104,16 @@ basicConstruction:
         entryCost: 500
 
     # Tanks
-    RCSTank1-2:
-    fuelTank4-2:
-    fuelTank2-2:
-    fuelTank1-2:
-    fuelTank3-2:
+    RCSTank1-2: # fully insulated 4,7kL tank, -> more expensive than normal 4,7kl tank
+        cost: 5
+    fuelTank4-2: # 4kl cryogenic tank similar to RCSTank1-2
+        cost: 1
+    fuelTank2-2: # 8kl cryogenic tank
+        cost: 1
+    fuelTank1-2: # 16kl cryogenic tank, juno 1 is 24kl non-cryo with decoupler at 350, so being moderately cheaper makes sense
+        cost: 1
+    fuelTank3-2: # 32kl cryogenic tank
+        cost: 1
     
     FASAAgenaLFT_b:
         cost: 50 # compare to proc part costs

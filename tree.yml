@@ -2835,6 +2835,7 @@ commandModules: # Third generation capsules, it would seem.
     SSTU-SC-A-OM:   *SoyuzOM
     SSTU-SC-A-DM:   *SoyuzPod
     SSTU-SC-A-SM:
+        cost: 4000              # arbitrary pricing, roughly orienting on larger apollo SM
     
 spaceExploration: #crewed landing
     landerCabinSmall:

@@ -183,6 +183,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 35
     elevon3:
         cost: 40
+    elevon5:
+        cost: 50
+
     pCtrlSrf1:
         cost: 0.1
     ProceduralAllMovingWing:
@@ -254,6 +257,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
                   # bodies + different amounts of clipping into base
     SXTelevonVeryLarge:
         cost: 185 # same as SXTelevonLarge
+    
+    CanardController: # comparable to basic tail fin
+        cost: 20
+    AdvancedCanard: # similar to the normal canard  
+        cost: 20
 
     # Intakes. Also cheap.
 
@@ -480,10 +488,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
 
     # Unsorted. Please sort and price me! ;)
-
-    CanardController:
-    AdvancedCanard:
-    elevon5:
     nacelleBody:
     radialEngineBody:
     
@@ -555,6 +559,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 30
     SXTBuzzard: # Junkers Ju-87 cockpit? https://upload.wikimedia.org/wikipedia/commons/9/94/Junkers_Ju_87B-2_Stuka.svg
         cost: 30 # same as for He-111
+    Interceptor?Cockpit:
+        cost: 60
     # Prop engines
     SXTR280018WProp: &R2800-18W #for F4U-4
         cost: 23.7 # late war, for P-61, via Nash, see https://books.google.com/books?id=PerGbKxOPZYC&pg=PA73&lpg=PA73&dq=nash+kelvinator+aircraft+engine&source=bl&ots=0bowaYis6U&sig=MHQTtVTNkKWrlrYN66-GG18hytM&hl=en&ei=9jQ0TeSxJYOglAf6uJCHCg&sa=X&oi=book_result&ct=result&sqi=2#v=onepage&q=nash%20kelvinator%20aircraft%20engine&f=false
@@ -783,7 +789,10 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
 engineering101:
     # Tanks
 
+    # within a deviation of 24L(4percent) this tank matches the performance of the fasa one
     fuelTankSmallFlat:
+        cost: 150
+        
     fuelTank:
     toroidalFuelTank:
     fuelTankSmall:
@@ -953,6 +962,9 @@ aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
         cost: 32
     B9_Engine_VA1_Intake:
         cost: 20
+        
+    Trainer?Cockpit: # F-104 like
+        cost: 200
 
 # TIER 2
 generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7, etc.
@@ -1988,7 +2000,10 @@ flightControl:
     FASAGeminiUtilitySasRcs: # FC
         entryCost: 40000
         cost: 800
-    FASAGeminiSasRcs:
+    FASAGeminiSasRcs: # fictional part, about the same efficiency as FASAGeminiPod2RCSWhite, but no 
+                      # tank included, thrusters are 4 times larger as is the part. add price of larger rcs thrusters
+        entryCost: 36000
+        cost: 900
     #FC
     FASA_Gemini_RCS_Thrusters: &GeminiRCS
         entryCost: 3000
@@ -3182,9 +3197,16 @@ hydroloxTL5:
     KW3mengineWildcarXR: #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
         
+<<<<<<< HEAD
     # SSTU
     SSTU-SC-ENG-RS-25: *RS-25
 
+=======
+    FRELE5: #From FRE
+        cost: 3500 #assuming 30M stage cost in 1992 so about 15M engine cost
+        entryCost: 75000
+        
+>>>>>>> refs/remotes/KSP-RO/master
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
         cost: 1000 # FIXME total guess

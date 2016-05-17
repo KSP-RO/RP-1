@@ -18,6 +18,7 @@
         { "name" : "DeadlyReentry" },
         { "name" : "VenStockRevamp" },
         { "name" : "CommunityTechTree" },
+        { "name" : "RealSolarSystem" }
     ],
     "recommends" : [
         { "name" : "KerbalConstructionTime" },
@@ -43,7 +44,8 @@
         { "name" : "TACLS" },
         { "name" : "TACLS-Config-RealismOverhaul" },
         { "name" : "TextureReplacer" },
-        { "name" : "Toolbar" }
+        { "name" : "Toolbar" },
+        { "name" : "KSCSwitcher" }
     ],
     "conflicts" : [
         { "name" : "CrowdSourcedScience" }

@@ -3144,7 +3144,7 @@ hydroloxTL5:
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
         
     FRELE5: #From FRE
-        cost: 3500 #assuming 30M stage cost in 1992 so about 15M engine cost
+        cost: 2650 #assuming 30M stage cost in 1992 so about 10M engine cost
         entryCost: 75000
         
 experimentalAerodynamics: #TL5 jets
@@ -3223,16 +3223,14 @@ hydroloxTL6:
     cryoengine-375-1: *RS-68
 
     KW2mengineVestaVR9D: # 2X japanese LE-7A
-        cost: 3840 # 50x less than development cost
+        cost: 12450
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
 
-    cryoengine-25-1: # LE-7/LE-7A
-        cost: 1920  # Half the cost of dual model above
+    cryoengine-25-1: *LE7 # LE-7/LE-7A
+        cost: 6210  # Half the cost of dual model above
         entryCost: 192000 
         
-    FRELE7:
-        cost: 1920  #same cost as cryoengine-25-1
-        entryCost: 192000 
+    FRELE7: &LE7
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.

@@ -3223,7 +3223,7 @@ hydroloxTL6:
     cryoengine-375-1: *RS-68
 
     KW2mengineVestaVR9D: # 2X japanese LE-7A
-        cost: 12450
+        cost: 12420
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
 
     cryoengine-25-1: *LE7 # LE-7/LE-7A

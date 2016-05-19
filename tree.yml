@@ -3010,7 +3010,7 @@ hydroloxTL4:
     Vodorod_RD57: # RD-57 engine, development ended in mid 1970s, 105 engines built
     
     #SSTU
-    SSTU-SC-ENG-ENG-M1-RO: *M-1
+    SSTU-SC-ENG-M1-RO: *M-1
         
 precisionPropulsion:
     FRERD843: #RD-843, late and tiny rocket engine used on Vega

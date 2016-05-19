@@ -437,7 +437,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     # Tanks. Also cheap. They're tanks.
     SXTFuel625m:
-        cost: 30
+        cost: 30    # 250 volume works out to 0.12 per cubic meter of volume
     miniFuelTank:
         cost: 30
     rcsTankMini:
@@ -449,8 +449,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         
     # AIES tanks
     tankminsond:
+        cost: 12    # based on 0.12 funds per cubic meter of volume
     satpropt300FuelTank:
+        cost: 12    # based on 0.12 funds per cubic meter of volume
     tanktoemv2:
+        cost: 108   # based on 0.12 funds per cubic meter of volume
 
     # This is from EngineIgnitor. I *guess* it makes sense to put it
     # in the starting node...
@@ -793,16 +796,20 @@ engineering101:
     # Tanks
 
     # within a deviation of 24L(4percent) this tank matches the performance of the fasa one
-    fuelTankSmallFlat:
-        cost: 150
-        
-    fuelTank:
+    fuelTankSmallFlat: # 500L tank, comp. to fasa_mercury_lft_short (528L)
+        cost: 1
+    fuelTank: # 2kL tank
+        cost: 1
     toroidalFuelTank:
-    fuelTankSmall:
+        cost: 1
+    fuelTankSmall: # 1kL tank
+        cost: 1
     radialRCSTank:
-    RCSFuelTank:
+    RCSFuelTank: #larger version of rcsTankMini
+        cost: 1
     rcsTankRadialLong:
-    fuelTank_long:
+    fuelTank_long: # 4kL tank
+        cost: 1
     
     # AIES tanks
     tankorb1:
@@ -1109,11 +1116,16 @@ basicConstruction:
         entryCost: 500
 
     # Tanks
-    RCSTank1-2:
-    fuelTank4-2:
-    fuelTank2-2:
-    fuelTank1-2:
-    fuelTank3-2:
+    RCSTank1-2: # fully insulated 4,7kL tank, -> more expensive than normal 4,7kl tank
+        cost: 5
+    fuelTank4-2: # 4kl cryogenic tank similar to RCSTank1-2
+        cost: 1
+    fuelTank2-2: # 8kl cryogenic tank
+        cost: 1
+    fuelTank1-2: # 16kl cryogenic tank, juno 1 is 24kl non-cryo with decoupler at 350, so being moderately cheaper makes sense
+        cost: 1
+    fuelTank3-2: # 32kl cryogenic tank
+        cost: 1
     
     FASAAgenaLFT_b:
         cost: 50 # compare to proc part costs
@@ -3212,7 +3224,7 @@ hydroloxTL5:
 
 
     FRELE5: #From FRE
-        cost: 3500 #assuming 30M stage cost in 1992 so about 15M engine cost
+        cost: 2650 #assuming 30M stage cost in 1992 so about 10M engine cost
         entryCost: 75000
         
 
@@ -3303,17 +3315,21 @@ hydroloxTL6:
     cryoengine-375-1: *RS-68
 
     KW2mengineVestaVR9D: # 2X japanese LE-7A
-        cost: 3840 # 50x less than development cost
+        cost: 12420
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
 
-    cryoengine-25-1: # LE-7/LE-7A
-        cost: 1920  # Half the cost of dual model above
+    cryoengine-25-1: &LE7 # LE-7/LE-7A
+        cost: 6210  # Half the cost of dual model above
         entryCost: 192000 
         
+
     # SSTU
     SSTU-SC-ENG-RS-68: *RS-68
     SSTU-SC-ENG-RL10A-5: 
         cost: 1300 # + 1200 for config
+
+
+    FRELE7: *LE7
 
 avionicsTL6:
     RLA_tiny_vac: # Marquardt/Aerojet R4D-11.

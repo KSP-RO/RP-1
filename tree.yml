@@ -752,7 +752,7 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     SXTX405: # X-405 (Vanguard main engine)
         cost: 650 # very expensive for its performance.
 
-    SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
+    SXTAJ10: &AJ10early # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
     # Altair moved to Basic Solids
     
@@ -785,6 +785,9 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
 
     LVT15: #RD-103
         cost: 850
+    
+    #SSTU
+    SSTU-AJ10-CustomEarly: *AJ10early
 
 engineering101:
     # Tanks
@@ -1024,7 +1027,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     NLV_ARRO_A: *Gamma8
     NLV_Engine_B: *Gamma2
     #Ablestar's engine, has restarts
-    SXTAJ10Mid:
+    SXTAJ10Mid: &AJ10mid
         cost: 250
 
 # FASA Agena (CORONA)
@@ -1088,6 +1091,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     SSTU-SC-ENG-RD-108A: *RD108
     SSTU-SC-ENG-RD-107A: *RD107
     SSTU-SC-ENG-RD-107X: *RD107
+    SSTU-AJ10-CustomMid: *AJ10mid
     
 basicConstruction:
     batteryPack:
@@ -2318,7 +2322,7 @@ shortTermHabitation:
 
 # TIER 4
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
-    SXTAJ10Adv: # as Transtage's AJ10-138, later unlocks to AJ10-118F/K
+    SXTAJ10Adv: &AJ10adv # as Transtage's AJ10-138, later unlocks to AJ10-118F/K
         cost: 300
         
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
@@ -2380,6 +2384,7 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     # SSTU
     SSTU-SC-ENG-AJ10-137: *ApolloSPS
     SSTU-SC-ENG-F1: *F-1
+    SSTU-AJ10-CustomAdvanced: *AJ10adv
 
 hydroloxTL3:
 

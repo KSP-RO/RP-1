@@ -532,10 +532,47 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # AIES Fairings
     sep1a1ur5:
     basepunta1ur5:
+        cost: 0.07
     top100a1ur5:
+        cost: 0.975
     top100a1ur5b:
+        cost: 1.125
     top500a1ur5:
-    
+        cost: 1.5
+    topb1:
+        cost: 0.3
+
+    # KW Fairing Bases
+    KW1mExpandedFairingBase:
+        cost: 2.3
+    KW2mExpandedFairingBase:
+        cost: 7.5
+    KW1mFairingBase:
+        cost: 1.8
+    KW2mFairingBase:
+        cost: 6
+    # KW Fairings
+    KW12mExpandedFairingCone:
+        cost: 0.9
+    KW2mExpandedFairingCone:
+        cost: 2.7
+    KW1mFairingCone:
+        cost: 0.75
+    KW2mFairingCone:
+        cost: 2.1
+    KW1mDecouplerShroud:
+        cost: 1.23
+    KW1mExpandedFairingWall:
+        cost: 0.525
+    KW1mFairingWall:
+        cost: 0.45
+    KW2mDecouplerShroud:
+        cost: 8.955
+    KW2mExpandedFairingWall:
+        cost: 1.5
+    KW2mFairingWall:
+        cost: 1.2
+
     # KIS
     KIS_guide: &KIS
         entryCost: 0
@@ -882,10 +919,30 @@ engineering101:
 
     # AIES Fairings
     basepuntv2r10:
+        cost: 1.8
     t1000v4:
+        cost: 1.8765
     t1500v4:
+        cost: 2.552
     t2000v4:
+        cost: 3.303
     t3000r20c:
+
+    # KW Fairings
+    KW3mExpandedFairingBase:
+        cost: 15
+    KW3mFairingBase:
+        cost: 12.2
+    KW3mExpandedFairingCone:
+        cost: 3.18
+    KW3mFairingCone:
+        cost: 2.55
+    KW3mDecouplerShroud:
+        cost: 27.78
+    KW3mExpandedFairingWall:
+        cost: 1.8
+    KW3mFairingWall:
+        cost: 1.5
     
     ServiceBay_125:
         cost: 200 # modeled on Univ Storage stuff above.
@@ -1211,6 +1268,24 @@ basicConstruction:
     TLV_LFO_C: *R7Booster
     Alto_LFO_A:
         cost: 100
+
+    # KW Fairings
+    KW5mExpFairingCone:
+        cost: 4.245
+    KW5mFairingCone:
+        cost: 3.405
+    KW5mDecouplerShroud:
+        cost: 34.575
+    KW5x3AdapterShroud:
+        cost: 39.75
+    KW5mFairingBase:
+        cost: 45
+    KW5mExpandedFairingBase:
+        cost: 54
+    KW5mFairingWall:
+        cost: 0.75
+    KW5mExpFairingWall:
+        cost: 0.75
 
 basicAvionics:
      # *** Avionics

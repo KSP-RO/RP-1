@@ -3373,10 +3373,10 @@ giganticRocketry: #TL7, present day
         cost: 400 # same as for AJ10-190 OME
         
     FRERUTHERFORD:
-        cost: 210 #$5M for the whole vehicle, 10 engines
+        cost: 21 #$5M for the whole vehicle, 10 engines
         entryCost: 55000
     FRERUTHERFORDVAC:
-        cost: 260
+        cost: 26
         entryCost: 60000
 
 hydroloxTL7:

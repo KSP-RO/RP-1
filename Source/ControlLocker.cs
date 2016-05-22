@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using KSP;
 using UnityEngine;
+using KSP.UI;
 
 
 namespace RP0
@@ -14,19 +15,25 @@ namespace RP0
         {
             int crewCount = -1;
             maxMass = vesselMass = 0f;
-            for (int i = 0; i < parts.Count; i++)
+            Part p;
+
+            if (parts == null || parts.Count <= 0)
+                return false;
+
+            for (int i = parts.Count - 1; i >= 0; --i)
             {
+                p = parts[i];
                 // add up mass
-                float partMass = parts[i].mass + parts[i].GetResourceMass();
+                float partMass = p.mass + p.GetResourceMass();
 
                 // get modules
                 bool cmd = false, science = false, avionics = false, clamp = false;
                 float partAvionicsMass = 0f;
                 ModuleCommand mC = null;
                 PartModule m;
-                for (int j = 0; j < parts[i].Modules.Count; j++)
+                for (int j = p.Modules.Count - 1; j >= 0; --j)
                 {
-                    m = parts[i].Modules[j];
+                    m = p.Modules[j];
 
                     if (m is KerbalEVA)
                         return false;
@@ -42,10 +49,14 @@ namespace RP0
                         avionics = true;
                         partAvionicsMass += (m as ModuleAvionics).CurrentMassLimit;
                     }
-                    if(m is LaunchClamp)
+                    if (m is LaunchClamp)
                     {
                         clamp = true;
                         partMass = 0f;
+                    }
+                    if (m is ModuleAvionicsModifier)
+                    {
+                        partMass *= (m as ModuleAvionicsModifier).multiplier;
                     }
                 }
                 vesselMass += partMass; // done after the clamp check
@@ -63,9 +74,9 @@ namespace RP0
                         if (crewCount < 0) // see if we cached crew
                         {
                             if (HighLogic.LoadedSceneIsFlight) // get from vessel
-                                crewCount = parts[i].vessel.GetCrewCount();
+                                crewCount = p.vessel.GetCrewCount();
                             else if (HighLogic.LoadedSceneIsEditor) // or crew manifest
-                                crewCount = CMAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
+                                crewCount = CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
                             else crewCount = 0; // or assume no crew (should never trip this)
                         }
                         if (mC.minimumCrew > crewCount)
@@ -77,21 +88,9 @@ namespace RP0
             }
             if (maxMass > vesselMass) // will only be reached if the best we have is avionics.
                 return false; // unlock if our max avionics mass is >= vessel mass
-            // NOTE: we don't update for fuel burnt, because avionics needs to be able to handle the size
-            // as well as the fuel.
 
             // Otherwise, we lock yaw/pitch/roll.
             return true;
-        }
-
-        public static string FormatTime(double time)
-        {
-            int iTime = (int)time % 3600;
-            int seconds = iTime % 60;
-            int minutes = (iTime / 60) % 60;
-            int hours = (iTime / 3600);
-            return hours.ToString("D2")
-                + ":" + minutes.ToString("D2") + ":" + seconds.ToString("D2");
         }
     }
     /// <summary>
@@ -116,12 +115,15 @@ namespace RP0
         bool isControlLocked = false;
         float maxMass, vesselMass;
 
+        static public ControlLockerEditor fetch;
+
         public void Start()
         {
             //config = KSP.IO.PluginConfiguration.CreateForType<ControlLockerEditor>
             enabled = true;
             //config.load();
             //windowPos = config.GetValue<Rect>
+            fetch = this;
         }
         public void Update()
         {
@@ -230,6 +232,9 @@ namespace RP0
             ControlTypes.RCS | ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
         const string lockID = "RP0ControlLocker";
         float maxMass, vesselMass;
+        double lastUT = -1d;
+
+        const double updateFrequency = 1d; // run a check every second, unless staging.
 
         ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
@@ -245,15 +250,17 @@ namespace RP0
                 return false;
 
             // Do we need to update?
-            if (vessel.Parts.Count != vParts)
+            double cTime = Planetarium.GetUniversalTime();
+            if (vessel.Parts.Count != vParts || cTime > lastUT + updateFrequency)
             {
+                lastUT = cTime;
                 vParts = vessel.Parts.Count;
                 return ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
             }
             return wasLocked;
         }
 
-        public void FixedUpdate()
+        public void Update()
         {
             if (!HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready)
             {
@@ -275,9 +282,8 @@ namespace RP0
                     message.message = "Insufficient Avionics, Locking Controls (supports "
                         + maxMass.ToString("N3") + "t, vessel " + vesselMass.ToString("N3") + "t)";
                 }
-                ScreenMessages.PostScreenMessage(message, true);
-                FlightLogger.eventLog.Add("[" + ControlLockerUtils.FormatTime(vessel.missionTime) + "] "
-                                              + message.message);
+                ScreenMessages.PostScreenMessage(message);
+                FlightLogger.fetch.LogEvent(message.message);
                 wasLocked = doLock;
             }
         }

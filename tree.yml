@@ -438,11 +438,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     rn_aerobee150_eng:
         entryCost: 0
         cost: 10
-		
+
     rn_aerobee150_eng1:
         entryCost: 0
         cost: 10
-		
+
     rn_aerobee350_eng:
         entryCost: 0
         cost: 40
@@ -450,11 +450,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     rn_aerobee150_srb:
         entryCost: 0
         cost: 36
-		
+
     rn_aerobee170_srb:
         entryCost: 0
         cost: 67
-		
+
     rn_aerobee300_srb:
         entryCost: 0
         cost: 12
@@ -849,7 +849,7 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
 
     LVT15: #RD-103
         cost: 850
-		
+
     #  Raidernick Juno/Thor/Vanguard engine, kick motors (RN)
     rn_s3:
         cost: 650
@@ -1395,7 +1395,7 @@ basicSolids:
     solidBooster1-1Small: &CastorI
         cost: 300 # nautix 1.01m assume 1985 dollars
     FASADeltaCastorSrb: *CastorI
-	
+
     # Raidernick Solids
     rn_thor_castor:
         cost: 300
@@ -1867,7 +1867,7 @@ matureSolids:
     SXTCastor30: &Star17 # Star 17, used on Atlas Agena D
         cost: 172 # nautix 580k assume 1985 dollars
     KK_ATK_Star17A: *Star17
-	
+
     # Raidernick Solids
 
     rn_thor_altair_e1_2: # Altair II

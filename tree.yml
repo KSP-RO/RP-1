@@ -2060,6 +2060,10 @@ basicScience:
     SXTHECSRanger: # Ranger Block I / Mariner
         cost: 1200
 
+    #Raidernick Mariner/Ranger
+    rn_mariner1_2:
+        cost: 1200
+
     # These are optical telescopes for observing the planet
     # you're orbiting.
     dmscope: &dmscope
@@ -2378,6 +2382,9 @@ landing:
     rn_surveyor_engines:
         cost: 310
         entryCost: 6200
+    rn_surveyor_s_engine:
+        cost: 103
+        entryCost: 2066
     rn_surveyor_retro:
         cost: 180
         entryCost: 3600
@@ -2700,7 +2707,7 @@ advFlightControl:
         entryCost: 50000
         cost: 8000
     # Skylab
-    skylab_docking_cone:
+    FASALM_DockingConern:
         entryCost: 100000
         cost: 8000
     skylab_trs_docking:
@@ -3239,6 +3246,9 @@ stagedTL5:
     
     NP_srb_radialbooster: # Energia liquid booster (RD-170 + tank)
     NP_lfe_125m_RMA3: #RD-0256, Dnepr second stage, first flight 1983-89
+	
+    # Raidernick Zenit Engines
+    rn_zenit_rd171: *RD-170
 
 highPerformanceFuelSystems:
     solidBoosterSmall: # Castor 30B
@@ -4569,7 +4579,7 @@ earlyStations:
         cost: 5000
     
     # Salyut parts
-    # Salyut parts
+    # Skylab parts
     almaz3-5:
         entryCost: 150000
         cost: 50000
@@ -4587,9 +4597,9 @@ earlyStations:
     skylab:
         entryCost: 275000
         cost: 70000
-    skylab_unbroken:
-        entryCost: 290000
-        cost: 80000
+    rn_skylab_telescope:
+        entryCost: 15000
+        cost: 10000
 
 ORPHANS:
 

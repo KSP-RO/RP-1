@@ -858,7 +858,7 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
         cost: 40
     rn_junoii_sgt_3:
         cost: 12
-    rn_s3_vernier: &LR101
+    rn_s3_vernier: *LR101
         cost: 50
     rn_lr79:
         cost: 600

@@ -792,7 +792,7 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     SXTX405: # X-405 (Vanguard main engine)
         cost: 650 # very expensive for its performance.
 
-    SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
+    SXTAJ10: &AJ10early # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
     # Altair moved to Basic Solids
     
@@ -825,6 +825,9 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
 
     LVT15: #RD-103
         cost: 850
+    
+    #SSTU
+    SSTU-AJ10-CustomEarly: *AJ10early
 
 engineering101:
     # Tanks
@@ -1088,7 +1091,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     NLV_ARRO_A: *Gamma8
     NLV_Engine_B: *Gamma2
     #Ablestar's engine, has restarts
-    SXTAJ10Mid:
+    SXTAJ10Mid: &AJ10mid
         cost: 250
 
 # FASA Agena (CORONA)
@@ -1147,7 +1150,13 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
         entryCost: 45000
-
+        
+    # RD-107 & RD-108 From SSTU
+    SSTU-SC-ENG-RD-108A: *RD108
+    SSTU-SC-ENG-RD-107A: *RD107
+    SSTU-SC-ENG-RD-107X: *RD107
+    SSTU-AJ10-CustomMid: *AJ10mid
+    
 basicConstruction:
     batteryPack:
         cost: 18
@@ -1726,7 +1735,7 @@ advRocketry:
     rn_proton_vernier:  # 3rd stage vernier
     
     # Molniya/Vostok/Soyuz second stage.
-    RD0110:
+    RD0110: &RD-0110
         cost: 400 # guess based on other engines of the era
     
     #RaiderNick - Soyuz
@@ -1736,6 +1745,10 @@ advRocketry:
     FREVIKINGLOWER: #Viking 5C/6
         cost: 380 #$10M for Ariane 4L stage, 4 engines
         entryCost: 35000
+        
+     # SSTU
+    SSTU-SC-ENG-RD-0110: *RD-0110
+    SSTU-SC-ENG-H1: *H1
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -1758,6 +1771,9 @@ hydroloxTL2:
     LR87LH2Vac:  # 80% of the J-2 in the J-2's normal config.
         cost: 2000
         entryCost: 75000
+        
+    # SSTU: 
+    SSTU-SC-ENG-RL10A-3: *RL10 # basic RL10 per config, ignore the name
 
 fuelSystems: # Staged combustion, TL2
     liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
@@ -2393,7 +2409,7 @@ shortTermHabitation:
 
 # TIER 4
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
-    SXTAJ10Adv: # as Transtage's AJ10-138, later unlocks to AJ10-118F/K
+    SXTAJ10Adv: &AJ10adv # as Transtage's AJ10-138, later unlocks to AJ10-118F/K
         cost: 300
         
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
@@ -2451,6 +2467,11 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     Apollo_SM_Engine: *ApolloSPS
     LM_AscentEngine: *LMAE
     LM_DescentEngine: *LMDE
+    
+    # SSTU
+    SSTU-SC-ENG-AJ10-137: *ApolloSPS
+    SSTU-SC-ENG-F1: *F-1
+    SSTU-AJ10-CustomAdvanced: *AJ10adv
 
 hydroloxTL3:
 
@@ -2466,6 +2487,9 @@ hydroloxTL3:
 
     #OLDD Apollo parts. Same as FASA.
     J2engine: *J2Engine
+    
+     # SSTU
+    SSTU-SC-ENG-J-2: *J2Engine
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
@@ -2892,7 +2916,18 @@ commandModules: # Third generation capsules, it would seem.
     FASAGeminiBigGDockExt:
         entryCost: 7000 # based on the Apollo docking device
         cost: 2000
-
+        
+        #SSTU - prices are generic costing, mind they do not account for the integrated equipment
+    SSTU-SC-B-BPC: *ApolloLES       # Apollo LES
+    SSTU-SC-B-CM: *ApolloCM        # A CM
+    SSTU-SC-B-SM: *ApolloSM        # A SM
+    
+    SSTU-SC-A-BPC:              # soyuz SAS
+        cost: 2500              # half apollo LES, estimation taken from tantares
+    SSTU-SC-A-OM:   *SoyuzOM
+    SSTU-SC-A-DM:   *SoyuzPod
+    SSTU-SC-A-SM:   *SoyuzPAO
+    
 spaceExploration: #crewed landing
     landerCabinSmall:
         cost: 2000 # FIXME
@@ -3038,7 +3073,8 @@ advElectrics:
     # technology doubles the cost.
     SCANsat_Scanner2:
         cost: 1000
-
+        
+    
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
     toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
@@ -3058,6 +3094,9 @@ hydroloxTL4:
         entryCost: 27750
     
     Vodorod_RD57: # RD-57 engine, development ended in mid 1970s, 105 engines built
+    
+    #SSTU
+    SSTU-SC-ENG-M1-RO: *M-1
         
 precisionPropulsion:
     FRERD843: #RD-843, late and tiny rocket engine used on Vega
@@ -3160,6 +3199,10 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
     KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
         cost: 615 # 2.5M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     
+        # SSTU
+    SSTU-SC-ENG-AJ10-190: *AJ10-190OME
+    SSTU-SC-ENG-Merlin-1A: 
+        cost: 175
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3225,6 +3268,10 @@ hydroloxTL5:
         entryCost: 100000 # same as for single RD-0120
     NP_lfe_375m_EnergiaQuad: *4xRD-0120
     
+    # SSTU: 
+    SSTU-SC-ENG-RL10A-4:
+        cost: 1300 # +1000 for config
+    
     # SSME / RS-24/5
     Ks25: &RS-25
         cost: 5700 # "40 million" assumed to be 2010 dollars
@@ -3242,13 +3289,19 @@ hydroloxTL5:
         entryCost: 114000 # same as for single RS-25
     
     
-    KW3mengineWildcarXR: #HM7 engine for Ariane family
+    KW3mengineWildcatXR: #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
         
+
+    # SSTU
+    SSTU-SC-ENG-RS-25: *RS-25
+
+
     FRELE5: #From FRE
         cost: 2650 #assuming 30M stage cost in 1992 so about 10M engine cost
         entryCost: 75000
         
+
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
         cost: 1000 # FIXME total guess
@@ -3279,6 +3332,17 @@ experimentalRocketry: #TL6, late 80s/90s
     Size2LFB: &Pyrios # Pyrios booster, technically TL7 but the engines are F-1s.
         cost: 43000 # FIXME guess based off 2x F-1 + tankage.
     NP_lfb_25m_Adv: *Pyrios
+    
+    # SSTU
+    # F-1B pricing unclear, engine got never built, so copied values from F-1
+    SSTU-SC-ENG-F1B: &F-1B
+        entryCost: 409361
+        cost: 5000
+    # Merlin Engines use D/Dvac pricing
+    SSTU-SC-ENG-Merlin-1C:
+        cost: 175
+    SSTU-SC-ENG-Merlin-1CV: 
+        cost: 200
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3332,6 +3396,13 @@ hydroloxTL6:
         cost: 6210  # Half the cost of dual model above
         entryCost: 192000 
         
+
+    # SSTU
+    SSTU-SC-ENG-RS-68: *RS-68
+    SSTU-SC-ENG-RL10A-5: 
+        cost: 1300 # + 1200 for config
+
+
     FRELE7: *LE7
 
 avionicsTL6:
@@ -3371,7 +3442,14 @@ giganticRocketry: #TL7, present day
 
     CHAKAOME: # AJ10-190 for Orion
         cost: 400 # same as for AJ10-190 OME
+        
+    # SSTU
+    SSTU-SC-ENG-Merlin-1D: *Merlin1D
+    SSTU-SC-ENG-Merlin-1DV: *Merlin1DVac
+    # Merlin/a/b/c also preliminarily use the d's pricing
 
+        
+        
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
@@ -3397,6 +3475,13 @@ hydroloxTL7:
     
     XKosmos_TKS_RD-0225_EngineLANDERS: # Kestrel 1B Retro
         cost: 40
+        
+     # SSTU
+    SSTU-SC-ENG-J-2X: *J2X
+    SSTU-SC-ENG-RL10B-2:
+        cost: 1300 # +2000 for config
+    SSTU-SC-ENG-Vinci:
+        cost: 4800 # arbitrary estimation; cheaper than 2xRL10-B2 (2x3300), according to nasa SLS upper stage study
 
 stagedTL7:
     # AJ26-62 config here
@@ -4043,7 +4128,7 @@ specializedCommandModules: # modern?
         cost: 60000
         entryCost: 750000
     XOrionPodXbb31: *ORIONPOD
-    XLFTORIONLARGE: # service module
+    XLFTORIONLARGE: &ORIONSM # service module
         cost: 60000
         entryCost: 750000
     xOrionLES:
@@ -4072,6 +4157,11 @@ specializedCommandModules: # modern?
         entryCost: 17500 #2x less than Apollo chutes,  about 5% of total development cost (359260)
     DragonLadder:
         cost: 10
+        
+    # SSTU  - generic pricing, does not account for integrated equipment
+    SSTU-SC-C-BPC: *ApolloLES         # Orion LES, cost stolen from apollo :^)
+    SSTU-SC-C-CM: *ORIONPOD
+    SSTU-SC-C-SM: *ORIONSM
 
 largeUnmanned:
     

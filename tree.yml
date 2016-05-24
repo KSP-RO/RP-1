@@ -872,11 +872,11 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
         cost: 600
     rn_x405_vernier: # X-405 (Vanguard vernier engine)
         cost: 25
-    rn_thor_altair: &BabySergeant
+    rn_thor_altair: *BabySergeant
         cost: 5
-    rn_thor_altair_e1: &BabySergeant
+    rn_thor_altair_e1: *BabySergeant
         cost: 5
-    rn_thor_altair_e1_1: &BabySergeant
+    rn_thor_altair_e1_1: *BabySergeant
         cost: 5
 
 engineering101:

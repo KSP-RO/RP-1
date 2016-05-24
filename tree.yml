@@ -863,11 +863,8 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     rn_x405_vernier: # X-405 (Vanguard vernier engine)
         cost: 25
     rn_thor_altair: *BabySergeant
-        cost: 5
     rn_thor_altair_e1: *BabySergeant
-        cost: 5
     rn_thor_altair_e1_1: *BabySergeant
-        cost: 5
 
 engineering101:
     # Tanks
@@ -1111,13 +1108,11 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     rn_s3:
         cost: 650
     rn_s3_vernier: *LR101
-        cost: 50
     rn_lr79:
         cost: 600
     rn_lr79_tp:
         cost: 50
     rn_lr79_vernier: *LR101
-        cost: 50
 
     
 

@@ -3246,7 +3246,7 @@ stagedTL5:
     
     NP_srb_radialbooster: # Energia liquid booster (RD-170 + tank)
     NP_lfe_125m_RMA3: #RD-0256, Dnepr second stage, first flight 1983-89
-	
+
     # Raidernick Zenit Engines
     rn_zenit_rd171: *RD-170
 

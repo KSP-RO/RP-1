@@ -851,21 +851,11 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
         cost: 850
 
     #  Raidernick Juno/Thor/Vanguard engine, kick motors (RN)
-    rn_s3:
-        cost: 650
     rn_junoii_sgt: *BabySergeant
     rn_junoii_sgt_11:
         cost: 40
     rn_junoii_sgt_3:
         cost: 12
-    rn_s3_vernier: *LR101
-        cost: 50
-    rn_lr79:
-        cost: 600
-    rn_lr79_tp:
-        cost: 50
-    rn_lr79_vernier: *LR101
-        cost: 50
     rn_aj10_37: # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
     rn_x405: # X-405 (Vanguard main engine)
@@ -1117,7 +1107,17 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FASAMercuryAtlasEngBooster: *LR89
     FASAMercuryAtlasVernierEngine: *LR101
 
-    
+     #Raidernick
+    rn_s3:
+        cost: 650
+    rn_s3_vernier: *LR101
+        cost: 50
+    rn_lr79:
+        cost: 600
+    rn_lr79_tp:
+        cost: 50
+    rn_lr79_vernier: *LR101
+        cost: 50
 
     
 

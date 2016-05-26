@@ -2863,11 +2863,18 @@ commandModules: # Third generation capsules, it would seem.
     Tantares_Parachute_A: *SoyuzParachute
     Tantares_Habitation_A: *SoyuzOM
     Hamal_Orbital_A: *ProgressBO
+    
+    #VSR VA
+    # prices guess based off Soyuz, Gemini, Apollo
+    MK2VApod: &VACapsule
+        entryCost: 600000
+        cost: 8000
+    
     #TKS VA
-    Alnair_Crew_A:
+    Alnair_Crew_A: *VACapsule
     Alnair_Decoupler_A:
     Alnair_Engine_A: *ApolloLES
-    
+     
     FASAGeminiPod2White:
         entryCost: 316000
         cost: 6000
@@ -2879,12 +2886,6 @@ commandModules: # Third generation capsules, it would seem.
     Apollo_CM: *ApolloCM
     Apollo_CM_Decoupler: *ApolloDecouplerCM
     
-    #VSR VA
-    # prices guess based off Soyuz, Gemini, Apollo
-    MK2VApod:
-        entryCost: 600000
-        cost: 8000
-        
     # Gemini Big G
     # 1bln USD (1970) for development cost and 75mln USD (1970) for the unit cost 
     # 812mln USD (1965) for development and 59mln USD (1965) for the unit cost 

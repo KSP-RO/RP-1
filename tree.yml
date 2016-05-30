@@ -1809,7 +1809,9 @@ hydroloxTL2:
 
     FASAApolloLFERL10: *RL10
     KW1mengineWildCatV: *RL10
-    
+    rn_gex430: # GE X430, based off rl10 prices since no info known
+        cost: 2500
+
     KW1mengineMaverick1D: # RL10 priced seperately because its a pair of them
         cost: 2600
         entryCost: 60000

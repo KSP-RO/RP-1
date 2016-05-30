@@ -489,6 +489,16 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
     SXTlaunchclamp1:
         cost: 10
+    # RSB Towers
+    RSBclamp01:
+        cost: 10
+    RSBclamp02:
+        cost: 10
+    RSBtowerDelta:
+        cost: 10
+    RSBtowerDelta2:
+        cost: 10
+
 
     # Unsorted. Please sort and price me! ;)
     nacelleBody:

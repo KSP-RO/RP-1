@@ -3213,7 +3213,7 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
         # SSTU
     SSTU-SC-ENG-AJ10-190: *AJ10-190OME
     SSTU-SC-ENG-Merlin-1A: 
-        cost: 175
+        cost: 205
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3351,13 +3351,13 @@ experimentalRocketry: #TL6, late 80s/90s
         cost: 5000
     # Merlin Engines use D/Dvac pricing
     SSTU-SC-ENG-Merlin-1B:
-        cost: 165
+        cost: 195
     SSTU-SC-ENG-Merlin-1BV: 
-        cost: 190
+        cost: 220
     SSTU-SC-ENG-Merlin-1C:
-        cost: 175
+        cost: 185
     SSTU-SC-ENG-Merlin-1CV: 
-        cost: 200
+        cost: 210
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-

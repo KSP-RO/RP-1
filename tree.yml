@@ -1109,6 +1109,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FASAAgena_Engine: &AgenaEngine # Bell 8xxx engine for Agena
         cost: 350
     RO-AgenaEngine: *AgenaEngine
+    SSTU-SC-ENG-LR81: *AgenaEngine
 
     # Titan engines
     # AIES
@@ -3349,6 +3350,10 @@ experimentalRocketry: #TL6, late 80s/90s
         entryCost: 409361
         cost: 5000
     # Merlin Engines use D/Dvac pricing
+    SSTU-SC-ENG-Merlin-1B:
+        cost: 165
+    SSTU-SC-ENG-Merlin-1BV: 
+        cost: 190
     SSTU-SC-ENG-Merlin-1C:
         cost: 175
     SSTU-SC-ENG-Merlin-1CV: 

@@ -1143,10 +1143,10 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     
     FREVIKINGEARLY: #Viking 2/2B
         cost: 550 #Ariane 1-1 first stage: $14.5M
-        entryCost: 30000
+        entryCost: 15000 #was too high compared to other engines (gameplay feedback)
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
-        entryCost: 45000
+        entryCost: 20000
 
 basicConstruction:
     batteryPack:
@@ -1735,7 +1735,7 @@ advRocketry:
     
     FREVIKINGLOWER: #Viking 5C/6
         cost: 380 #$10M for Ariane 4L stage, 4 engines
-        entryCost: 35000
+        entryCost: 18000
 
         # Staged Combustion TL2
 hydroloxTL2:

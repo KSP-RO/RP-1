@@ -489,7 +489,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
     SXTlaunchclamp1:
         cost: 10
-    
+
     # Unsorted. Please sort and price me! ;)
     nacelleBody:
     radialEngineBody:
@@ -1147,7 +1147,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
         entryCost: 45000
-    
+
 basicConstruction:
     batteryPack:
         cost: 18
@@ -2892,7 +2892,7 @@ commandModules: # Third generation capsules, it would seem.
     FASAGeminiBigGDockExt:
         entryCost: 7000 # based on the Apollo docking device
         cost: 2000
-    
+
 spaceExploration: #crewed landing
     landerCabinSmall:
         cost: 2000 # FIXME

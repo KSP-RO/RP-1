@@ -1109,7 +1109,6 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FASAAgena_Engine: &AgenaEngine # Bell 8xxx engine for Agena
         cost: 350
     RO-AgenaEngine: *AgenaEngine
-    SSTU-SC-ENG-LR81: *AgenaEngine
 
     # Titan engines
     # AIES
@@ -3213,8 +3212,7 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
         # SSTU
     SSTU-SC-ENG-AJ10-190: *AJ10-190OME
     SSTU-SC-ENG-Merlin-1A: 
-        cost: 205
-        entryCost: 17050 #https://www.quora.com/unanswered/How-much-did-SpaceX-spend-developing-the-Merlin-1A-engine-for-Falcon-1
+        cost: 175
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3351,18 +3349,10 @@ experimentalRocketry: #TL6, late 80s/90s
         entryCost: 409361
         cost: 5000
     # Merlin Engines use D/Dvac pricing
-    SSTU-SC-ENG-Merlin-1B:
-        cost: 195
-        entryCost: 20000 #guessed, a bit more than Merlin 1A
-    SSTU-SC-ENG-Merlin-1BV: 
-        cost: 220
-        entryCost: 22000
     SSTU-SC-ENG-Merlin-1C:
-        cost: 185
-        entryCost: 26000 #regenerative cooling = more expensive
+        cost: 175
     SSTU-SC-ENG-Merlin-1CV: 
-        cost: 210
-        entryCost: 28000
+        cost: 200
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3449,11 +3439,9 @@ giganticRocketry: #TL7, present day
     # StarShine Industries Merlin
     merlin1D: &Merlin1D
         cost: 175 # 1,3M (2014 USD) http://space.stackexchange.com/questions/4388/what-are-the-costs-of-the-various-different-engines-in-current-use
-        entryCost: 32000
     LazTekFalcon9EngineCenter: *Merlin1D
     merlin1D_vac: &Merlin1DVac
         cost: 200 # little bigger than Merlin 1D 
-        entryCost: 34000
     LazTekMerlin1dVacuumEngine: *Merlin1DVac
     
     liquidEngineMiniTurbo: #Blue Origin BE-4
@@ -3470,8 +3458,14 @@ giganticRocketry: #TL7, present day
     SSTU-SC-ENG-Merlin-1DV: *Merlin1DVac
     # Merlin/a/b/c also preliminarily use the d's pricing
 
-        
-        
+    #FRE
+    FRERUTHERFORD: 
+        cost: 21
+        entryCost: 15000
+    FRERUTHERFORDVAC:
+        cost: 28
+        entryCost: 20000
+    
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg

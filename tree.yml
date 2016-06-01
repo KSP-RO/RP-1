@@ -792,7 +792,7 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     SXTX405: # X-405 (Vanguard main engine)
         cost: 650 # very expensive for its performance.
 
-    SXTAJ10: &AJ10early # (Vanguard/Able/[Early]Delta upper stage)
+    SXTAJ10: # (Vanguard/Able/[Early]Delta upper stage)
         cost: 150
     # Altair moved to Basic Solids
     

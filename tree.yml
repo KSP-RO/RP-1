@@ -760,6 +760,28 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 10
     B9_Utility_InfoDrive: # action group editor
         cost: 1
+
+    # Hullcams..they don't affect gameplay
+    aerocam:
+        cost: 0
+    hc_booster:
+        cost: 0
+    hc_kazzelblad:
+        cost: 0
+    hc_launchcam:
+        cost: 0
+    hc_navcam:
+        cost: 0
+    hc_nightvision:
+        cost: 0
+    hc_wideangle:
+        cost: 0
+    hc_scicam:
+        cost: 0
+    hullcam_hubbazoot:
+        cost: 0
+    MSIKerbPro:
+        cost: 0
         
 
 subsonicFlight: # Now Supersonic Flight

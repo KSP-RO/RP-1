@@ -3379,8 +3379,8 @@ advExploration:
 
     #Universal Storage MMU:
     US_3R310_EVA_EVAX:
-        cost: 5000
-        entryCost: 33750
+        cost: 4500
+        entryCost: 22460
 
 precisionEngineering:
     #US Probes Integration

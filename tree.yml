@@ -2014,7 +2014,7 @@ simpleCommandModules: # Second gen capsules
     # Extra survival modules, but not recyclers, they have
     # their own 'recycling' node.
 
-    US_1R310_Wedge_CarbonDioxide:
+    US_1R310_Wedge_CarbonDioxide: *basicWedge
     US_1R320_Wedge_Food: *basicWedge
     US_1R350_Wedge_Waste: *basicWedge
     US_1R370_Wedge_WasteWater: *basicWedge
@@ -2449,7 +2449,7 @@ advConstruction:
     FASASaturnSLA: &ApolloSLA # spacecraft lunar module adapter - base
         cost: 150
         
-    # SXT N!
+    # SXT N1
     SXTK1Decoupler:
         cost: 250
     SXTK1Decoupler2:
@@ -2522,6 +2522,11 @@ advConstruction:
         
     fuelLine:
         cost: 150
+
+    #Universal Storage OctoCore
+    US_1C20_Wedge_Octocore:
+        cost: 400
+        entryCost: 1750
 
 advFlightControl:
     # Salyut parts
@@ -3370,6 +3375,11 @@ advExploration:
     B9_Utility_Leg_H50P:
         cost: 300
 
+    #Universal Storage MMU:
+    US_3R310_EVA_EVAX:
+        cost: 5000
+        entryCost: 33750
+
 precisionEngineering:
     #US Probes Integration
     rn_voyager: # 865 mil for Voyager 1+2, reduced to 212 mil to be reasonable with other probes…, 1/40th entrycost
@@ -4190,9 +4200,18 @@ recycling:
 
     # Water Recycling System
     US_1P140_Wedge_WRS:
+        cost: 250
+        entryCost: 20000
 
     # CO2 removal
     US_1P130_Wedge_Sabatier:
+        cost: 500
+        entryCost: 22000
+
+    # Water splitter
+    US_1P120_Wedge_Elektron:
+        cost: 250
+        entryCost: 20000
 
     TacSabatierRecycler:
         cost: 1000 # total guess

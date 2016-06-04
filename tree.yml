@@ -1868,6 +1868,8 @@ basicScience:
     # Science wedge (it's an empty compartment)
     US_1M110_Wedge_ScienceBay:
         cost: 10
+    # KIS wedge (empty by default)
+        cost: 12
 
     # Hexacore goes here because this node is about cool satellites,
     # and the hexacore looks cool. It has 50% more nodes than the

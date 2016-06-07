@@ -1458,6 +1458,10 @@ survivability: # 3-Axis Stability and early probes ##
     Heatshield-5M:
         entryCost: 30000
         cost: 1700
+    
+    #SSTU Procedural Heat Shield
+    SSTU-SC-GEN-MHS:
+        cost: 0
 
     # Heatshield decoupler
     decoupler_ftr_small:

@@ -144,6 +144,14 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0.1
     proceduralStackDecoupler:
         cost: 0.1
+        
+    #SSTU Procedural stuff
+	SSTU-SC-TANK-MFT-A: #not excalty the same curve as PP, but roughly accurate for medium sized tanks (using the "4" tank model)
+		cost: 100
+	SSTU-SC-TANK-MFT-B:
+		cost: 100
+	SSTU-SC-GEN-PDC: #still 5 times more expensive than PP decoupler
+	SSTU-SC-GEN-RBDC:
 
     # Nose Cones
 
@@ -886,6 +894,23 @@ engineering101:
     tankMER6:
     tank1300cl:
     
+    #SSTU tanks
+	SSTU-SC-TANK-MFT-D:
+		entryCost: 1000
+		cost: 100
+	SSTU-SC-TANK-MFT-R:
+		entryCost: 300 #small radial modular tank
+		cost: 50 #designed for smaller size = should be aligned for smaller volume with PP
+	SSTU-SC-TANK-MFT-L: #Lander tanks
+		entryCost: 500
+		cost: 75 #Ballon tanks, designed for smaller volumes
+	SSTU-SC-TANK-MUS-CB:
+		entryCost: 800
+		cost: 90 #less structures
+	SSTU-SC-TANK-MUS-ST:
+		entryCost: 800
+		cost: 90 #less structures
+		
     #AIES decouplers - they have similar sizes, about 1,25 - 2,5m
     decoupvector:
     decouplersv05:

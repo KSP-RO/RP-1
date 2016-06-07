@@ -3594,7 +3594,7 @@ avionicsTL7:
 avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
         cost: 3500 # somewhat higher than for Apollo docking port
-    dockingPort2: &NASADockingSystem
+    dockingPort2: &NASADockingDevice
         cost: 3500
     dockingPortLateral: # same, lateral shielded.
         cost: 4000
@@ -3607,7 +3607,7 @@ avionicsTL7:
     FASADeltaAv4:
         cost: 1200
         entryCost: 30000
-    SSTU-SC-GEN-DP-1P: *NASADockingSystem
+    SSTU-SC-GEN-DP-1P: *NASADockingDevice
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:

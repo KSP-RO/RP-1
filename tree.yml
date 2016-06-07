@@ -1181,19 +1181,14 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         entryCost: 15000 #was too high compared to other engines (gameplay feedback)
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
-<<<<<<< HEAD
-        entryCost: 45000
+        entryCost: 20000
         
     # RD-107 & RD-108 From SSTU
     SSTU-SC-ENG-RD-108A: *RD108
     SSTU-SC-ENG-RD-107A: *RD107
     SSTU-SC-ENG-RD-107X: *RD107
     SSTU-AJ10-CustomMid: *AJ10mid
-    
-=======
-        entryCost: 20000
 
->>>>>>> origin/master
 basicConstruction:
     batteryPack:
         cost: 18

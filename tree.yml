@@ -154,6 +154,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0
     SSTU-SC-GEN-RBDC:
         cost: 0
+    SSTU-SC-GEN-FR-N:
+       cost: 0
+    SSTU-SC-GEN-FR-W:
+       cost: 0
 
     # Nose Cones
 
@@ -896,22 +900,28 @@ engineering101:
     tankMER6:
     tank1300cl:
     
-    #SSTU (tanks)
+    #SSTU tanks
     SSTU-SC-TANK-MFT-D:
         entryCost: 1000
         cost: 100
-    SSTU-SC-TANK-MFT-R:
-        entryCost: 300 #small radial modular tank
-        cost: 50 #designed for smaller size = should be aligned for smaller volume with PP
+    SSTU-SC-TANK-MFT-R: #small radial tank
+        entryCost: 300
+        cost: 50 
     SSTU-SC-TANK-MFT-L: #Lander tanks
         entryCost: 500
-        cost: 75 #Ballon tanks, designed for smaller volumes
-    SSTU-SC-TANK-MUS-CB:
+        cost: 75
+    SSTU-SC-TANK-MUS-CB: #less structures
         entryCost: 800
-        cost: 90 #less structures
-    SSTU-SC-TANK-MUS-ST:
+        cost: 90 
+    SSTU-SC-TANK-MUS-ST: #less structures
         entryCost: 800
-        cost: 90 #less structures
+        cost: 90 
+    SSTU-SC-GEN-IPA-N:
+        cost: 0
+    SSTU-SC-GEN-IPA-W:
+        cost: 0
+    SSTU-SC-GEN-ISDC:
+        cost: 0
         
     #AIES decouplers - they have similar sizes, about 1,25 - 2,5m
     decoupvector:
@@ -2743,6 +2753,8 @@ advFlightControl:
     FASALM_RCS: &ApolloLMRCS
         entryCost: 10500
         cost: 300
+    #SSTU Apollo Docking 
+    SSTU-SC-GEN-DP-0P: *ApolloDockingDevice
 
     # Avionics
     GuidanceLate1m: # Later 1m guidance
@@ -3579,9 +3591,10 @@ exoticFuelStorage: #TL7 solids
         cost: 2500 # based on the costs above
 
 avionicsTL7:
+avionicsTL7:
     ParaDockingPort: # Let's assume it's NDS
         cost: 3500 # somewhat higher than for Apollo docking port
-    dockingPort2: # NASA Docking System
+    dockingPort2: &NASADockingSystem
         cost: 3500
     dockingPortLateral: # same, lateral shielded.
         cost: 4000
@@ -3594,6 +3607,7 @@ avionicsTL7:
     FASADeltaAv4:
         cost: 1200
         entryCost: 30000
+    SSTU-SC-GEN-DP-1P: *NASADockingSystem
 
 #FIXME HERE BE DRAGONS (below this point)
 advExploration:

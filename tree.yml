@@ -910,7 +910,7 @@ engineering101:
     SSTU-SC-TANK-MUS-ST:
         entryCost: 800
         cost: 90 #less structures
-		
+        
     #AIES decouplers - they have similar sizes, about 1,25 - 2,5m
     decoupvector:
     decouplersv05:

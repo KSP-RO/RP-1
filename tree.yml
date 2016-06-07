@@ -1146,9 +1146,10 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     
     FREVIKINGEARLY: #Viking 2/2B
         cost: 550 #Ariane 1-1 first stage: $14.5M
-        entryCost: 30000
+        entryCost: 15000 #was too high compared to other engines (gameplay feedback)
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
+<<<<<<< HEAD
         entryCost: 45000
         
     # RD-107 & RD-108 From SSTU
@@ -1157,6 +1158,10 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     SSTU-SC-ENG-RD-107X: *RD107
     SSTU-AJ10-CustomMid: *AJ10mid
     
+=======
+        entryCost: 20000
+
+>>>>>>> origin/master
 basicConstruction:
     batteryPack:
         cost: 18
@@ -1744,11 +1749,15 @@ advRocketry:
     
     FREVIKINGLOWER: #Viking 5C/6
         cost: 380 #$10M for Ariane 4L stage, 4 engines
+<<<<<<< HEAD
         entryCost: 35000
         
      # SSTU
     SSTU-SC-ENG-RD-0110: *RD-0110
     SSTU-SC-ENG-H1: *H1
+=======
+        entryCost: 18000
+>>>>>>> origin/master
 
         # Staged Combustion TL2
 hydroloxTL2:
@@ -3198,11 +3207,14 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
     CSSOMSEngine: *AJ10-190OME
     KW1mengineVestaVR1: # AJ10-118K vacuum engine for Delta II
         cost: 615 # 2.5M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
+<<<<<<< HEAD
     
         # SSTU
     SSTU-SC-ENG-AJ10-190: *AJ10-190OME
     SSTU-SC-ENG-Merlin-1A: 
         cost: 175
+=======
+>>>>>>> origin/master
 
 stagedTL5:
     # Bobcat's Soviet Engines -Need Costing-
@@ -3291,16 +3303,22 @@ hydroloxTL5:
     
     KW3mengineWildcatXR: #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
+<<<<<<< HEAD
         
 
     # SSTU
     SSTU-SC-ENG-RS-25: *RS-25
 
+=======
+>>>>>>> origin/master
 
     FRELE5: #From FRE
         cost: 2650 #assuming 30M stage cost in 1992 so about 10M engine cost
         entryCost: 75000
+<<<<<<< HEAD
         
+=======
+>>>>>>> origin/master
 
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
@@ -3395,6 +3413,7 @@ hydroloxTL6:
     cryoengine-25-1: &LE7 # LE-7/LE-7A
         cost: 6210  # Half the cost of dual model above
         entryCost: 192000 
+<<<<<<< HEAD
         
 
     # SSTU
@@ -3402,6 +3421,8 @@ hydroloxTL6:
     SSTU-SC-ENG-RL10A-5: 
         cost: 1300 # + 1200 for config
 
+=======
+>>>>>>> origin/master
 
     FRELE7: *LE7
 
@@ -3442,6 +3463,7 @@ giganticRocketry: #TL7, present day
 
     CHAKAOME: # AJ10-190 for Orion
         cost: 400 # same as for AJ10-190 OME
+<<<<<<< HEAD
         
     # SSTU
     SSTU-SC-ENG-Merlin-1D: *Merlin1D
@@ -3450,6 +3472,17 @@ giganticRocketry: #TL7, present day
 
         
         
+=======
+
+    #FRE
+    FRERUTHERFORD: 
+        cost: 21
+        entryCost: 15000
+    FRERUTHERFORDVAC:
+        cost: 28
+        entryCost: 20000
+    
+>>>>>>> origin/master
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg

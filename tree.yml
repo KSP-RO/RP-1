@@ -3435,7 +3435,7 @@ hydroloxTL6:
     SSTU-SC-ENG-RS-68: *RS-68
     SSTU-SC-ENG-RL10A-5: 
         cost: 1300 # + 1200 for config
-		
+        
     FRELE7: *LE7
 
 avionicsTL6:

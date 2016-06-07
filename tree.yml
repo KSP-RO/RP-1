@@ -151,7 +151,9 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     SSTU-SC-TANK-MFT-B:
         cost: 100
     SSTU-SC-GEN-PDC: #still 5 times more expensive than PP decoupler
+        cost: 0
     SSTU-SC-GEN-RBDC:
+        cost: 0
 
     # Nose Cones
 

@@ -1178,17 +1178,17 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     
     FREVIKINGEARLY: #Viking 2/2B
         cost: 550 #Ariane 1-1 first stage: $14.5M
-        entryCost: 30000
+        entryCost: 15000 #was too high compared to other engines (gameplay feedback)
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
-        entryCost: 45000
+        entryCost: 20000
         
     # RD-107 & RD-108 From SSTU
     SSTU-SC-ENG-RD-108A: *RD108
     SSTU-SC-ENG-RD-107A: *RD107
     SSTU-SC-ENG-RD-107X: *RD107
     SSTU-AJ10-CustomMid: *AJ10mid
-    
+
 basicConstruction:
     batteryPack:
         cost: 18
@@ -3328,11 +3328,9 @@ hydroloxTL5:
     # SSTU
     SSTU-SC-ENG-RS-25: *RS-25
 
-
     FRELE5: #From FRE
         cost: 2650 #assuming 30M stage cost in 1992 so about 10M engine cost
         entryCost: 75000
-        
 
 experimentalAerodynamics: #TL5 jets
     SXTKe90TurboJet: # Progress D-18T
@@ -3427,14 +3425,12 @@ hydroloxTL6:
     cryoengine-25-1: &LE7 # LE-7/LE-7A
         cost: 6210  # Half the cost of dual model above
         entryCost: 192000 
-        
 
     # SSTU
     SSTU-SC-ENG-RS-68: *RS-68
     SSTU-SC-ENG-RL10A-5: 
         cost: 1300 # + 1200 for config
-
-
+        
     FRELE7: *LE7
 
 avionicsTL6:
@@ -3480,8 +3476,14 @@ giganticRocketry: #TL7, present day
     SSTU-SC-ENG-Merlin-1DV: *Merlin1DVac
     # Merlin/a/b/c also preliminarily use the d's pricing
 
-        
-        
+    #FRE
+    FRERUTHERFORD: 
+        cost: 21
+        entryCost: 15000
+    FRERUTHERFORDVAC:
+        cost: 28
+        entryCost: 20000
+    
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg

@@ -1667,6 +1667,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
     
     airbrake1: # stock airbrake
         cost: 50
+        
+    Mk1?S39?Cockpit: # F-4 etc
+        cost: 350
 
 # TIER 2.5
 enhancedSurvivability: # Early capsules

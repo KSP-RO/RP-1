@@ -925,12 +925,8 @@ engineering101:
 
     # Wedges are relatively expensive, because they've got to be
     # wired for interchangeable components.
-    US_c_Hub_QuadCore:
+    US_1C10_Wedge_Quadcore:
         cost: 200
-
-    # The decoupler is pretty cheap, because other decouplers are, too.
-    US_f_Dec_SafetyDecoupler125:
-        cost: 10
 
     # This is a barometer, thermo and x-ray doohicky in a single wedge. It
     # also looks cool. :)
@@ -940,17 +936,18 @@ engineering101:
     # US unlocks with fuel wedges; they're just cool looking tanks.
     # We're giving this an alias so we can have lots of wedges with the
     # same price.
-    US_Wedge_Fuel: &basicWedge
+    US_1R210_Wedge_Liquidfuel: &basicWedge
         cost: 20
     
-    US_Wedge_Monoprop: *basicWedge
-    US_l_Wedge_Hydrogen: *basicWedge
-    US_m_Wedge_Oxygen: *basicWedge
-    US_q_Wedge_Water: *basicWedge
+    US_1R220_Wedge_Monoprop: *basicWedge
+    US_1R330_Wedge_Hydrogen: *basicWedge
+    US_1R340_Wedge_Oxygen: *basicWedge
+    US_1R360_Wedge_Water: *basicWedge
 
-    # This isn't a wedge, it's just yet another radial tank, and
+    # These are not wedges, they are just radial tanks and
     # should be priced with whatever prices we use for those.
-    US_Radial_Oxygen: *basicWedge
+    US_2R340_Radial_Oxygen: *basicWedge
+    US_Radial_R30_Water: *basicWedge
 
     # AIES Fairings
     basepuntv2r10:
@@ -2016,13 +2013,15 @@ basicScience:
         cost: 500 # range 0.4M km
 
     # Science wedge (it's an empty compartment)
-    US_R90_Wedge_ScienceBay:
+    US_1M110_Wedge_ScienceBay:
         cost: 10
+    # KIS wedge (empty by default)
+        cost: 12
 
     # Hexacore goes here because this node is about cool satellites,
     # and the hexacore looks cool. It has 50% more nodes than the
     # QuadCore, and so has 50% higher cost.
-    US_Wedge_C15_Hexacore:
+    US_1C15_Wedge_Hexacore:
         cost: 300
 
     # Salyut parts
@@ -2167,10 +2166,13 @@ simpleCommandModules: # Second gen capsules
     # Extra survival modules, but not recyclers, they have
     # their own 'recycling' node.
 
-    US_Wedge_Carbon:
-    US_Wedge_Food: *basicWedge
-    US_Wedge_Waste: *basicWedge
-    US_Wedge_WasteWater: *basicWedge
+    US_1R310_Wedge_CarbonDioxide: *basicWedge
+    US_1R320_Wedge_Food: *basicWedge
+    US_1R350_Wedge_Waste: *basicWedge
+    US_1R370_Wedge_WasteWater: *basicWedge
+
+    # Universal Storage radial life support storage tanks.
+    US_Radial_R40_Food: *basicWedge
 
     TacLifeSupportMFTContainer:
     TacLifeSupportMFTContainerSmall:
@@ -2304,6 +2306,11 @@ electrics:
         cost: 1000 # FIXME guesses...
     FuelCellArray:
         cost: 2500 # FIXME, 2.5x above with 3x capacity.
+
+    #Universal Storage fuel cell, similar to the stock single fuel cell.
+    US_1P110_Wedge_Fuelcell:
+        cost: 1000
+
     #Tantares Soyuz
     Tantares_Solar_B: *SoyuzSolar
     Tantares_Antenna_B:
@@ -2602,7 +2609,7 @@ advConstruction:
     FASASaturnSLA: &ApolloSLA # spacecraft lunar module adapter - base
         cost: 150
         
-    # SXT N!
+    # SXT N1
     SXTK1Decoupler:
         cost: 250
     SXTK1Decoupler2:
@@ -2675,6 +2682,11 @@ advConstruction:
         
     fuelLine:
         cost: 150
+
+    #Universal Storage OctoCore
+    US_1C20_Wedge_Octocore:
+        cost: 400
+        entryCost: 1750
 
 advFlightControl:
     # Salyut parts
@@ -3593,6 +3605,11 @@ advExploration:
     B9_Utility_Leg_H50P:
         cost: 300
 
+    #Universal Storage MMU:
+    US_3R310_EVA_EVAX:
+        cost: 4500
+        entryCost: 22460
+
 precisionEngineering:
     #US Probes Integration
     rn_voyager: # 865 mil for Voyager 1+2, reduced to 212 mil to be reasonable with other probes…, 1/40th entrycost
@@ -4417,10 +4434,19 @@ offworldManufacturing:
 recycling:
 
     # Water Recycling System
-    US_Wedge_WRS:
+    US_1P140_Wedge_WRS:
+        cost: 250
+        entryCost: 20000
 
     # CO2 removal
-    US_Wedge_Sabatier:
+    US_1P130_Wedge_Sabatier:
+        cost: 500
+        entryCost: 22000
+
+    # Water splitter
+    US_1P120_Wedge_Elektron:
+        cost: 250
+        entryCost: 20000
 
     TacSabatierRecycler:
         cost: 1000 # total guess

@@ -2554,8 +2554,8 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     SSTU-AJ10-CustomAdvanced: *AJ10adv
     
     FREVIKINGLOWER: #Viking 5C/6
-    cost: 380 #$10M for Ariane 4L stage, 4 engines
-    entryCost: 35000
+        cost: 380 #$10M for Ariane 4L stage, 4 engines
+        entryCost: 35000
 
 hydroloxTL3:
 

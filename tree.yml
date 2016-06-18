@@ -1132,6 +1132,10 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FASADeltaMB3LFE: *LR79
     FASAMercuryAtlasEngBooster: *LR89
     FASAMercuryAtlasVernierEngine: *LR101
+    FASAE1: &E1
+        entryCost: 16000
+        cost: 1200
+    RO-E1: *E1
 
     
 

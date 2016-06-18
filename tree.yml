@@ -1132,10 +1132,6 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FASADeltaMB3LFE: *LR79
     FASAMercuryAtlasEngBooster: *LR89
     FASAMercuryAtlasVernierEngine: *LR101
-    FASAE1: &E1
-        entryCost: 16000
-        cost: 1200
-    RO-E1: *E1
 
     
 
@@ -1781,6 +1777,11 @@ advRocketry:
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
     RO-H1-RS27: *H1
+
+    FASAE1: &E1
+        entryCost: 16000
+        cost: 1200
+    RO-E1: *E1
 
     # TODO: Is there a better place to put this?
     radialDecoupler2:

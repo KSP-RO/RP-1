@@ -3350,7 +3350,7 @@ highPerformanceFuelSystems:
 
 hydroloxTL5:
     #Energia sustainer engine
-    RD0120: &RD-0120
+    RD0120_StockVersion: &RD-0120
         cost: 5000 # FIXME total guess
     SXTCommodore: *RD-0120
     NP_lfe_25m_Orbitalbertha: *RD-0120
@@ -3567,7 +3567,7 @@ hydroloxTL7:
         cost: 3800 # 1800 for base RL10 + 2000 of B-2 config
     
     # Bobcat's Soviet Engines -Need Costing-
-    RD0146: # KB Khimavtomatiki RD-0146
+    RD0146_StockVersion: # KB Khimavtomatiki RD-0146
         cost: 2000 # same as for RL10
     
     B9_Engine_L2_Atlas: # CECE-Base
@@ -3590,7 +3590,7 @@ hydroloxTL7:
 
 stagedTL7:
     # AJ26-62 config here
-    RD0124:
+    RD0124_StockVersion:
         cost: 1200 # total guess
 
 exoticFuelStorage: #TL7 solids

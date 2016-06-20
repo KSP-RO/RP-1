@@ -1771,6 +1771,11 @@ advRocketry:
     KW2mengineMaverickV: *H1
     RO-H1-RS27: *H1
 
+    FASAE1: &E1
+        entryCost: 16000
+        cost: 1200
+    RO-E1: *E1
+
     # TODO: Is there a better place to put this?
     radialDecoupler2:
         cost: 30    # It's a decoupler (20) with a truss (10)

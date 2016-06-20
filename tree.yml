@@ -71,16 +71,16 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     longAntenna:
         cost: 5
-        entryCost: 0
+        # entryCost: 0
 
     SXTAntenna:
         cost: 1
-        entryCost: 0
+        # entryCost: 0
 
     # Basic RemoteTech antenna, so things can get off the ground. :)
     RTShortAntenna1:
         cost: 2
-        entryCost: 0
+        # entryCost: 0
 
     # Fairings
 
@@ -399,11 +399,11 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # Core for sounding rockets. Should not provide yaw/pitch/roll control
     # and will not, once RT has that implemented.
     RP0probeSounding0-3m:
-        entryCost: 0
+        # entryCost: 0
         cost: 1
     # Core for V-2 stuff - early, heavy, but 20t avionics.
     GuidanceStart1m: &A4Guidance
-        entryCost: 0
+        # entryCost: 0
         cost: 300
         
     # RCS
@@ -432,7 +432,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # Small solid
     # This is from VSR; not all players will have it.
     SnubOtron:
-        entryCost: 0
+        # entryCost: 0
         cost: 3
     B9_Engine_T2_SRBS:
         cost: 3
@@ -440,12 +440,12 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # modeled on the electronics of WAC Corporal / Aerobee
     # Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
     ROAerobeeSustainer:
-        entryCost: 0
+        # entryCost: 0
         cost: 10
 
     # WAC / Aerobee booster, thanks Agathorn!
     TinyTim:
-        entryCost: 0
+        # entryCost: 0
         cost: 36
 
 
@@ -477,15 +477,15 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # FASA flags. These are all free. Because they make the game more
     # awesome.
     FASAFlagPod:
-        entryCost: 0
+        # entryCost: 0
         cost: 0
 
     FASAFlagPod2x:
-        entryCost: 0
+        # entryCost: 0
         cost: 0
 
     FASAFlagPod4x:
-        entryCost: 0
+        # entryCost: 0
         cost: 0
 
     # Launch Clamps/Towers
@@ -599,12 +599,12 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     # KIS
     KIS_guide: &KIS
-        entryCost: 0
+        # entryCost: 0
         cost: 1
     KIS_electricScrewdriver: *KIS
     KIS_wrench: *KIS
     KIS_bomb1:
-        entryCost: 0
+        # entryCost: 0
         cost: 10
 
     # DHC-3 Otter cockpit, first flight 1951
@@ -681,7 +681,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     aje_nene:
         cost: 50
     RO-DerwentV:
-        entryCost: 0
+        # entryCost: 0
         cost: 36
         
     #Taerobee A-4/V-2/Bumper parts
@@ -689,17 +689,17 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     # But that's very, very unbalanced, and probably wrong to represent postwar costs anyway
     Bumper_Control: *A4Guidance
     Bumper_Nose:
-        entryCost: 0
+        # entryCost: 0
         cost: 30
     Bumper_Body:
-        entryCost: 0
+        # entryCost: 0
         cost: 30
     Bumper_Engine: &A4Engine
-        entryCost: 0
+        # entryCost: 0
         cost: 150
     Bumper_Engine_Unclad: *A4Engine
     Bumper_Fin:
-        entryCost: 0
+        # entryCost: 0
         cost: 5
 
     Libra_Ladder_A:
@@ -709,7 +709,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         
     #NEBULA decals:
     Decal?curved: &decals
-        entryCost: 0
+        # entryCost: 0
         cost: 1
     Flat?decal: *decals
     Long?decal?1x2: *decals

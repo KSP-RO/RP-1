@@ -1772,8 +1772,8 @@ advRocketry:
     RO-H1-RS27: *H1
 
     FASAE1: &E1
-        entryCost: 16000
-        cost: 1200
+        entryCost: 60000 # more expensive than the known cost of the H-1, but again, modifiers.
+        cost: 1300
     RO-E1: *E1
 
     # TODO: Is there a better place to put this?

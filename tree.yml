@@ -2891,6 +2891,11 @@ advFlightControl:
         
     # Generic Apollo-sized docking port
     RO-ApolloDockingPort: *ApolloDockingDevice
+    
+    Vega_Engine_A: #S5.66 Salyut 1 engine
+    Vega_Engine_B: #S5.66
+    Alnair_Engine_B: # RD-0225, Almaz propulsion
+
 
 commandModules: # Third generation capsules, it would seem.
     Mark1-2Pod:
@@ -2969,7 +2974,10 @@ commandModules: # Third generation capsules, it would seem.
     #TKS VA
     Alnair_Crew_A: *VACapsule
     Alnair_Decoupler_A:
-    Alnair_Engine_A: *ApolloLES
+    Alnair_Engine_A: #solid propellant de-orbit engine for TKS
+    Alnair_LES_A: #FIXME: same cost as Apollo LES for now
+        entryCost: 175000
+        cost: 5000
      
     FASAGeminiPod2White:
         entryCost: 316000
@@ -3028,6 +3036,8 @@ commandModules: # Third generation capsules, it would seem.
 spaceExploration: #crewed landing
     landerCabinSmall:
         cost: 2000 # FIXME
+    landerCabinMedium:
+        cost: 3000 # FIXME
     FASA_Gemini_Lander_Pod:
         cost: 2000 # 1-person lander cabin, same cost as for the 1-person landerCabinSmall 
     mk2LanderCabin:
@@ -3218,6 +3228,8 @@ specializedControl: # Tl4 avioncis
     FASADeltaAv2:
         entryCost: 10000
         cost: 400
+
+    Alnair_Engine_C: #KRD-442 FGB propulsion module engine
 
 heavyAerodynamics: #TL4 jets - Mature Turbofans
     turboJet: #F100
@@ -3420,6 +3432,9 @@ avionicsTL5:
     STSAPASport: *APAS
     Hamal_Battery_A: #Advanced Progress Batteries
     Hamal_Control_B: #Advanced Progress SA
+    
+    Vega_Engine_C: #S5.79
+    
 
 # TIER 7
 experimentalRocketry: #TL6, late 80s/90s

@@ -1071,6 +1071,23 @@ earlyAvionics:
         entryCost: 7000
         cost: 250
 
+    # Smart Parts (These are more Quality of Life things really, so keep them cheap)
+    kb-fuel-breaker1: &smartpart
+        entryCost: 100
+        cost: 10
+    kb-fuel-breaker-15: *smartpart
+    kb-fuel-breaker-2: *smartpart
+    kb-fuel-breaker-3: *smartpart
+    FuelController: *smartpart
+    km_smart_alt_low: *smartpart
+    km_smart_fuel: *smartpart
+    km_prox_sensor: *smartpart
+    km_smart_radio: *smartpart
+    km_smart_time: *smartpart
+    km_valve: *smartpart
+    km_valve2: *smartpart
+
+
 aviation: # Mature Supersonic Flight: 50s afterburning jets, ramp intakes, etc.
     aje_j57: #J57-P21
         cost: 130

@@ -3591,6 +3591,12 @@ giganticRocketry: #TL7, present day
     FRERUTHERFORDVAC:
         cost: 28
         entryCost: 20000
+    FREFRE1:
+        cost: 36
+        entryCost: 10000 #pressure-fed = relatively simple to developp
+    FREFRE2:
+        cost: 350 #assuming that the short nozzle combustor is less expensive than the long nozzle
+        entryCost: 30000 #aerospike, near-future tech
     
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X

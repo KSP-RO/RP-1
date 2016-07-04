@@ -448,6 +448,30 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         # entryCost: 0
         cost: 36
 
+    # Raidernick Aerobee
+    rn_aerobee150_eng:
+        entryCost: 0
+        cost: 10
+
+    rn_aerobee150_eng1:
+        entryCost: 0
+        cost: 10
+
+    rn_aerobee350_eng:
+        entryCost: 0
+        cost: 40
+
+    rn_aerobee150_srb:
+        entryCost: 0
+        cost: 36
+
+    rn_aerobee170_srb:
+        entryCost: 0
+        cost: 67
+
+    rn_aerobee300_srb:
+        entryCost: 0
+        cost: 12
 
     # Tanks. Also cheap. They're tanks.
     SXTFuel625m:
@@ -875,6 +899,22 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     #SSTU
     SSTU-AJ10-CustomEarly: *AJ10early
 
+    #  Raidernick Juno/Thor/Vanguard engine, kick motors (RN)
+    rn_junoii_sgt: *BabySergeant
+    rn_junoii_sgt_11:
+        cost: 40
+    rn_junoii_sgt_3:
+        cost: 12
+    rn_aj10_37: # (Vanguard/Able/[Early]Delta upper stage)
+        cost: 150
+    rn_x405: # X-405 (Vanguard main engine)
+        cost: 600
+    rn_x405_vernier: # X-405 (Vanguard vernier engine)
+        cost: 25
+    rn_thor_altair: *BabySergeant
+    rn_thor_altair_e1: *BabySergeant
+    rn_thor_altair_e1_1: *BabySergeant
+
 engineering101:
     # Tanks
 
@@ -1150,7 +1190,15 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FASAMercuryAtlasEngBooster: *LR89
     FASAMercuryAtlasVernierEngine: *LR101
 
-    
+     #Raidernick
+    rn_s3:
+        cost: 650
+    rn_s3_vernier: *LR101
+    rn_lr79:
+        cost: 600
+    rn_lr79_tp:
+        cost: 50
+    rn_lr79_vernier: *LR101
 
     
 
@@ -1176,6 +1224,13 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     #Ablestar's engine, has restarts
     SXTAJ10Mid: &AJ10mid
         cost: 250
+
+    # Raidernick Ablestar's engine, has restarts
+    rn_aj10_104:
+        cost: 250
+    rn_thor_star37d:
+        cost: 180
+        entryCost: 3600
 
 # FASA Agena (CORONA)
 
@@ -1421,6 +1476,10 @@ basicSolids:
     solidBooster1-1Small: &CastorI
         cost: 300 # nautix 1.01m assume 1985 dollars
     FASADeltaCastorSrb: *CastorI
+
+    # Raidernick Solids
+    rn_thor_castor:
+        cost: 300
     
     # moved Proc SRB to here
     proceduralSRBRealFuels:
@@ -1855,7 +1914,9 @@ hydroloxTL2:
 
     FASAApolloLFERL10: *RL10
     KW1mengineWildCatV: *RL10
-    
+    rn_gex430: # GE X430, based off rl10 prices since no info known
+        cost: 2500
+
     KW1mengineMaverick1D: # RL10 priced seperately because its a pair of them
         cost: 2600
         entryCost: 60000
@@ -1911,6 +1972,15 @@ matureSolids:
     SXTCastor30: &Star17 # Star 17, used on Atlas Agena D
         cost: 172 # nautix 580k assume 1985 dollars
     KK_ATK_Star17A: *Star17
+
+    # Raidernick Solids
+
+    rn_thor_altair_e1_2: # Altair II
+        cost: 200
+    rn_thor_altair_e2: # Altair II
+        cost: 200
+    rn_thor_star20:
+        cost: 172
     
     # Waxwing (performance of an early-mid 60s kick motor, and I _think_ it was used before
     # Black Arrow, so...let's place it here.)
@@ -2100,6 +2170,10 @@ basicScience:
 
     #Improved probes
     SXTHECSRanger: # Ranger Block I / Mariner
+        cost: 1200
+
+    #Raidernick Mariner/Ranger
+    rn_mariner1_2:
         cost: 1200
 
     # These are optical telescopes for observing the planet
@@ -2428,6 +2502,9 @@ landing:
     rn_surveyor_engines:
         cost: 310
         entryCost: 6200
+    rn_surveyor_s_engine:
+        cost: 103
+        entryCost: 2066
     rn_surveyor_retro:
         cost: 180
         entryCost: 3600
@@ -2767,7 +2844,7 @@ advFlightControl:
         entryCost: 50000
         cost: 8000
     # Skylab
-    skylab_docking_cone:
+    FASALM_DockingConern:
         entryCost: 100000
         cost: 8000
     skylab_trs_docking:
@@ -3341,6 +3418,9 @@ stagedTL5:
     
     NP_srb_radialbooster: # Energia liquid booster (RD-170 + tank)
     NP_lfe_125m_RMA3: #RD-0256, Dnepr second stage, first flight 1983-89
+
+    # Raidernick Zenit Engines
+    rn_zenit_rd171: *RD-170
 
 highPerformanceFuelSystems:
     solidBoosterSmall: # Castor 30B
@@ -4749,7 +4829,7 @@ earlyStations:
         cost: 5000
     
     # Salyut parts
-    # Salyut parts
+    # Skylab parts
     almaz3-5:
         entryCost: 150000
         cost: 50000
@@ -4767,9 +4847,9 @@ earlyStations:
     skylab:
         entryCost: 275000
         cost: 70000
-    skylab_unbroken:
-        entryCost: 290000
-        cost: 80000
+    rn_skylab_telescope:
+        entryCost: 15000
+        cost: 10000
 
 ORPHANS:
 

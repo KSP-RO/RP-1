@@ -46,6 +46,7 @@
         { "name" : "TextureReplacer" },
         { "name" : "Toolbar" },
         { "name" : "KSCSwitcher" }
+	{ "name" : "RealSolarSystemExpanded" }
     ],
     "conflicts" : [
         { "name" : "CrowdSourcedScience" }

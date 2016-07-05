@@ -448,31 +448,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         # entryCost: 0
         cost: 36
 
-    # Raidernick Aerobee
-    rn_aerobee150_eng:
-        entryCost: 0
-        cost: 10
-
-    rn_aerobee150_eng1:
-        entryCost: 0
-        cost: 10
-
-    rn_aerobee350_eng:
-        entryCost: 0
-        cost: 40
-
-    rn_aerobee150_srb:
-        entryCost: 0
-        cost: 36
-
-    rn_aerobee170_srb:
-        entryCost: 0
-        cost: 67
-
-    rn_aerobee300_srb:
-        entryCost: 0
-        cost: 12
-
     # Tanks. Also cheap. They're tanks.
     SXTFuel625m:
         cost: 30    # 250 volume works out to 0.12 per cubic meter of volume
@@ -911,9 +886,29 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
         cost: 600
     rn_x405_vernier: # X-405 (Vanguard vernier engine)
         cost: 25
-    rn_thor_altair: *BabySergeant
-    rn_thor_altair_e1: *BabySergeant
-    rn_thor_altair_e1_1: *BabySergeant
+        
+        
+    # Raidernick Aerobee parts
+    # Raidernick Aerobee
+    rn_aerobee150_eng:
+        # entryCost: 0
+        cost: 10
+
+    rn_aerobee150_eng1:
+        # entryCost: 0
+        cost: 10
+
+    rn_aerobee150_srb:
+        # entryCost: 0
+        cost: 36
+
+    rn_aerobee170_srb:
+        # entryCost: 0
+        cost: 67
+
+    rn_aerobee300_srb:
+        # entryCost: 0
+        cost: 12
 
 engineering101:
     # Tanks
@@ -1199,6 +1194,10 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     rn_lr79_tp:
         cost: 50
     rn_lr79_vernier: *LR101
+    
+    rn_aerobee350_eng:
+        # entryCost: 0
+        cost: 40
 
     
 
@@ -1228,9 +1227,6 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     # Raidernick Ablestar's engine, has restarts
     rn_aj10_104:
         cost: 250
-    rn_thor_star37d:
-        cost: 180
-        entryCost: 3600
 
 # FASA Agena (CORONA)
 
@@ -1469,8 +1465,12 @@ basicAvionics:
 basicSolids:
     # Add Polaris and Scout parts here
     
-    RO-X-248: #late-Vanguard/Able/Delta kick motor
+    RO-X-248: &Altair #Altair I - late-Vanguard/Able/Delta kick motor
         cost: 170 # nautix says .6mil, but doesn't say what-year dollars, assume 1985.
+
+    rn_thor_altair: *Altair
+    rn_thor_altair_e1: *Altair
+    rn_thor_altair_e1_1: *Altair
         
     # Castor I (Sergeant / M33) solid motor
     solidBooster1-1Small: &CastorI
@@ -2727,6 +2727,10 @@ largeSolids: # TL3 solids
 
     RT2: # Castor II
         cost: 320 # unstated, should be about Castor I's cost.
+        
+    rn_thor_star37d:
+        cost: 180
+        entryCost: 3600
 
 advConstruction:
     # Saturn parts

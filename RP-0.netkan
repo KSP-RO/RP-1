@@ -43,8 +43,7 @@
         { "name" : "TACLS" },
         { "name" : "TACLS-Config-RealismOverhaul" },
         { "name" : "TextureReplacer" },
-        { "name" : "Toolbar" },
-        { "name" : "KSCSwitcher" }
+        { "name" : "Toolbar" }
     ],
     "conflicts" : [
         { "name" : "CrowdSourcedScience" }

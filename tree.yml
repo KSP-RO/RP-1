@@ -3610,7 +3610,7 @@ experimentalRocketry: #TL6, late 80s/90s
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
-    RD180_StockVersion: %RD180
+    RD180_StockVersion: &RD180
         cost: 2700
     RSBengineRD180: *RD180 # Real Scale Boosters RD-180 engine
 
@@ -3631,7 +3631,7 @@ specializedFuelStorage: # TL6 solids
 
     KWsrbGlobeX5: &EAP # EAP (Ariane 5)
         cost: 6000 # total guess
-    RSBengineArianeVSRB: *EAP
+    RSBengineArianeVSRB: *EAP # Real Scale Boosters EAP SRM
 
     KK_ATK_GEM40: &GEM40 # GEM40 by KW Rocketry
         cost: 900

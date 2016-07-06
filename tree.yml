@@ -3395,7 +3395,7 @@ largeVolumeContainment: # TL4.5 solids
     CSS_SSRB: *STSbooster
     XSLSSRB: *STSbooster
     NP_SRB_2_5m_AdvSRB4: *STSbooster
-    RSBengineSTSSRB: * STSbooster # Real Scale Boosters 4 - Segment RSRM
+    RSBengineSTSSRB: *STSbooster # Real Scale Boosters 4 - Segment RSRM
 
     KK_ATK_Castor4: # Castor4 by ATK
         cost: 361

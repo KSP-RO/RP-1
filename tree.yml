@@ -3339,6 +3339,7 @@ precisionPropulsion:
 
     #RS-27/A engine.
     RSBengineRS27A: &RS27 # Real Scale Boosters RS-27/A engine
+        cost: 1850
 
 advFuelSystems: # TL4 solids
     # Ermergerd this thing is HUGE.

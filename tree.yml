@@ -1853,7 +1853,7 @@ advRocketry:
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
     RO-H1-RS27: *H1
-    RSBengineH1: *H-1 # Real Scale Boosters H-1 engine
+    RSBengineH1: *H1 # Real Scale Boosters H-1 engine
 
     FASAE1: &E1
         entryCost: 60000 # more expensive than the known cost of the H-1, but again, modifiers.

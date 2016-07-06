@@ -1179,7 +1179,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     # LR101 vernier (Thor/Jupiter/Atlas)
     radialEngineMini: &LR101
         cost: 50
-        
+    RSBengineLR101: *LR101 # Real Scale Boosters LR101 vernier engine
         
     FASADeltaMB3LFE: *LR79
     FASAMercuryAtlasEngBooster: *LR89
@@ -1234,6 +1234,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 350
     RO-AgenaEngine: *AgenaEngine
     SSTU-SC-ENG-LR81: *AgenaEngine
+    RSBengineXLR81: *AgenaEngine # Real Scale Boosters XLR-81 engine
 
     # Titan engines
     # AIES
@@ -1845,12 +1846,14 @@ enhancedSurvivability: # Early capsules
 # TIER 3
 advRocketry:
     # TL2 1960-65 tech or so. Gemini, Voskhod, etc.
-        
+
+    # Saturn I/IB H-1 engine.
     FASAApolloLFEH1: &H1
         cost: 1050
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
     RO-H1-RS27: *H1
+    RSBengineH1: *H-1 # Real Scale Boosters H-1 engine
 
     FASAE1: &E1
         entryCost: 60000 # more expensive than the known cost of the H-1, but again, modifiers.
@@ -1901,6 +1904,11 @@ advRocketry:
     FREVIKINGUPPER: #Viking 4/4B
         cost: 1000
         entryCost: 20000
+
+    # Vikas series. Developed from the European Viking engine program.
+    RSBengineVikas: &Vikas # Real Scale Boosters Vikas engine (temporary cost values based on the Viking)
+        cost: 500
+        entryCost: 8000
         
      # SSTU
     SSTU-SC-ENG-RD-0110: *RD-0110
@@ -1916,13 +1924,15 @@ hydroloxTL2:
     engineLargeSkipper: &RL10
         cost: 1300 # lowered based off Centaur costs on Titan IIIE via http://www.astronautix.com/articles/costhing.htm
         entryCost: 60000
-
     FASAApolloLFERL10: *RL10
     KW1mengineWildCatV: *RL10
-    rn_gex430: # GE X430, based off rl10 prices since no info known
+    RSBengineRL10A3: *RL10 # Real Scale Boosters RL10-A/C engine
+    RSBengineRL10A42: *RL10 # Real Scale Boosters RL10-A/C engine
+
+    rn_gex430: # GE X430, based off RL10 prices since no info known
         cost: 2500
 
-    KW1mengineMaverick1D: # RL10 priced seperately because its a pair of them
+    KW1mengineMaverick1D: # RL10 priced separately because its a pair of them
         cost: 2600
         entryCost: 60000
 
@@ -2600,6 +2610,7 @@ shortTermHabitation:
 heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
     SXTAJ10Adv: &AJ10adv # as Transtage's AJ10-138, later unlocks to AJ10-118F/K
         cost: 300
+    RSBengineAJ10-118K: *AJ10adv
         
     radialLiquidEngine1-2: # R-36/Tsyklon vernier FIXME cost
         cost: 350 #total guess (similar to the other 50-100kN hypergolic engines)
@@ -2615,7 +2626,9 @@ heavyRocketry: #TL3 Mid-late 60s tech. F-1, H-1 uprated, etc.
         entryCost: 409361
         cost: 25000 # Costs more to buy because its 5 engines in one from KW
     NP_lfe_5m_Bearcat5x: *5xF-1
-        
+    RSBengineF1: *F-1 # Real Scale Boosters F-1/A engine
+    RSBengineF1A: *F-1 # Real Scale Boosters F-1A engine
+
         # Apollo parts
     FASAApollo_SM_Engine: &ApolloSPS # Service Propulsion System
         entryCost: 24500
@@ -2675,6 +2688,7 @@ hydroloxTL3:
     FASAApolloLFEJ2: *J2Engine
     NP_lfe_375m_K2X: *J2Engine
     NP_lfe_125m_K2XEngine: *J2Engine
+    RSBengineJ2: *J2Engine # Real Scale Boosters J-2 engine
     
     KW5mengineTitanV:
         cost: 12500 # 5x J2
@@ -3305,7 +3319,7 @@ hydroloxTL4:
         cost: 22000
     Vodorod_M1: *M-1
     
-    RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where cancelled
+    RO_KVD1: #engine was tested in early 1970s as the RD-56, never flown as later N1 designs where canceled
         cost: 650
         entryCost: 27750
     
@@ -3323,17 +3337,20 @@ precisionPropulsion:
     NP_lfe_25m_4x800Engine: # RD-264, Dnepr first stage, first run 1969-73
     SXTK1BaseLarge:
 
+    #RS-27/A engine.
+    RSBengineRS27A: &RS27 # Real Scale Boosters RS-27/A engine
+
 advFuelSystems: # TL4 solids
     # Ermergerd this thing is HUGE.
     # Costing source http://www.astronautix.com/stages/260lidfl.htm
     # (with thanks to @mcirish3)
     RO_RLA_AJ260_FL:
         cost: 33081
-    RO_RLA_AJ260_HL: # this was the devolpment SRB for the AJ-260-FL (half-length not full length)
+    RO_RLA_AJ260_HL: # This was the development SRB for the AJ-260-FL (half-length not full length)
     # estimated cost at 2/3 of FL Date: 1965
         cost: 22054
 
-specializedControl: # Tl4 avioncis
+specializedControl: # Tl4 avionics
     FASADeltaAv2:
         entryCost: 10000
         cost: 400
@@ -3358,7 +3375,7 @@ heavyAerodynamics: #TL4 jets - Mature Turbofans
         cost: 300 # total guess
     KAXjumpjet: #Rolls-Royce Pegasus 11 first run 1974
         cost: 300 # total guess
-    25mKossak: # Boeing 737-100 cokpit, first flight 1967 (earliest version 737-100)
+    25mKossak: # Boeing 737-100 cockpit, first flight 1967 (earliest version 737-100)
         cost: 1575 # 20% of the total B-737-100 price (32M-1989 USD = 7,87M-1965 USD, source: https://en.wikipedia.org/wiki/Boeing_737)
     SXTEntenteCordiale: # Concorde cockpit, first flight 1969
         cost: 5320 # 20% of the total Concorde price (198M-2015 USD = 26,61M-1965 USD, source: https://en.wikipedia.org/wiki/Concorde)
@@ -3377,6 +3394,8 @@ largeVolumeContainment: # TL4.5 solids
     CSS_SSRB: *STSbooster
     XSLSSRB: *STSbooster
     NP_SRB_2_5m_AdvSRB4: *STSbooster
+    RSBengineSTSSRB: * STSbooster # Real Scale Boosters 4 - Segment RSRM
+
     KK_ATK_Castor4: # Castor4 by ATK
         cost: 361
         entryCost: 7224
@@ -3438,10 +3457,14 @@ stagedTL5:
     rn_zenit_rd171: *RD-170
 
 highPerformanceFuelSystems:
-    solidBoosterSmall: # Castor 30B
+    solidBoosterSmall: &Castor30 # Castor 30B
         cost: 750 # total guess
-    solidBooster1-1: # Castor 120
+    RSBengineCastor30: *Castor30 # Real Scale Boosters Castor 30 SRM
+
+    solidBooster1-1: &Castor120 # Castor 120
         cost: 10630 # (50M - 1994 USD) pretty expensive, even more than Shuttle booster, maybe make it little cheaper?  http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
+    RSBengineCastor120: *Castor120 # Real Scale Boosters Castor 120 SRM
+
     solidBooster_sm: &STAR48B
         cost: 1203 # nautix 4.06m, assume 1985 dollars
     KK_ATK_Star48B: *STAR48B
@@ -3503,17 +3526,21 @@ hydroloxTL5:
     km_ssme_rs25s: *RS-25
     SSME: *RS-25
     NP_lfe_25m_BroncoSingle: *RS-25
+
     #Spice Launch System (Macollo)
     SLS_RS25: *RS-25
+
+    # Real Scale Boosters RS-25 engine
+    RSBengineRS25: *RS-25
     
     NP_lfe_375m_Bearcat3x: # 3x RS-25
         cost: 17100
         entryCost: 114000 # same as for single RS-25
     
     
-    KW3mengineWildcatXR: #HM7 engine for Ariane family
+    KW3mengineWildcatXR: &HM7 #HM7 engine for Ariane family
         cost: 1200 # quite rough, going of 11.6 million for the stage in 1985 dollars
-        
+    RSBengineHM7B: *HM7 # Real Scale Boosters HM7B engine
 
     # SSTU
     SSTU-SC-ENG-RS-25: *RS-25
@@ -3565,6 +3592,8 @@ experimentalRocketry: #TL6, late 80s/90s
     SSTU-SC-ENG-F1B: &F-1B
         entryCost: 409361
         cost: 5000
+    RSBengineF1B: *F-1B # Real Scale Boosters F-1B engine
+
     # Merlin Engines use D/Dvac pricing
     SSTU-SC-ENG-Merlin-1B:
         cost: 195
@@ -3581,8 +3610,10 @@ experimentalRocketry: #TL6, late 80s/90s
 
 stagedTL6:
     # Bobcat's Soviet Engines -Need Costing-
-    RD180_StockVersion:
-        cost: 2700 
+    RD180_StockVersion: %RD180
+        cost: 2700
+    RSBengineRD180: *RD180 # Real Scale Boosters RD-180 engine
+
     RD191_StockVersion: # NPO Energomash RD-191
         cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
     XKosmos_Angara_RD-275KX: # RD-275, Proton M first stage
@@ -3597,17 +3628,17 @@ specializedFuelStorage: # TL6 solids
         cost: 1000 # total guess
     KWsrbGlobeX10S: # SRMU (Titan IV B)
         cost: 7350 # somewhat higher than UA-1207
-    KWsrbGlobeX5: # EAP (Ariane 5)
+
+    KWsrbGlobeX5: &EAP # EAP (Ariane 5)
         cost: 6000 # total guess
-    KK_ATK_GEM40: # GEM40 by KW Rocketry
+    RSBengineArianeVSRB: *EAP
+
+    KK_ATK_GEM40: &GEM40 # GEM40 by KW Rocketry
         cost: 900
         entryCost: 18000
-    KK_ATK_GEM40AL: # GEM40-AL by KW Rocketry
-        cost: 900
-        entryCost: 18000
-    RO_KWsrbGlobeI_GEM: # GEM40, first flight 1990
-        cost: 900
-        entryCost: 18000
+    KK_ATK_GEM40AL: *GEM40 # GEM40-AL by KW Rocketry
+    RO_KWsrbGlobeI_GEM: *GEM40 # GEM40, first flight 1990
+    RSBdelta2srm: *GEM40 #Real Scale Boosters GEM-40
 
 hydroloxTL6:
     #Vulcain 1/2
@@ -3615,6 +3646,7 @@ hydroloxTL6:
         cost: 6400 # 50x less than development cost, but I think it is still too expensive
         entryCost: 320000 # 1300M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     cryoengine-125-1: *Vulcain
+    RSBengineVulcain2: *Vulcain # Real Scale Boosters Vulcain engine
     
     #RS-68
     VR1vulcan: &RS-68
@@ -3622,8 +3654,9 @@ hydroloxTL6:
     bahars68b: *RS-68
     xbahars68bx: *RS-68
     cryoengine-375-1: *RS-68
+    RSBengineRS68: *RS-68 # Real Scale Boosters RS-68 engine
 
-    KW2mengineVestaVR9D: # 2X japanese LE-7A
+    KW2mengineVestaVR9D: # 2X Japanese LE-7A
         cost: 12420
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
 
@@ -3702,11 +3735,12 @@ hydroloxTL7:
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
         entryCost: 158860 # 1200M USD http://www.parabolicarc.com/2013/10/07/billion-dollar-j2x-engine-mothballed/
     cryoengine-25-2: *J2X
+    RSBengineJ2X: *J2X # Real Scale Boosters J-2X engine
     
-    XXxAres1J2-XHIGH:
-        cost: 3800 # RL10B-2 configuration (1800 + 2000)
-    cryoengine-125-2: # RL10B-2
-        cost: 3800 # 1800 for base RL10 + 2000 of B-2 config
+    XXxAres1J2-XHIGH: &RL10B
+        cost: 3800 # RL10B-2 configuration (1800 for base RL10 + 2000 of B-2 config)
+    cryoengine-125-2: *RL10B # CryoEngines RL10B-2
+    RSBengineRL10B2: *RL10B # Real Scale Boosters RL10-B/CECE engine
     
     # Bobcat's Soviet Engines -Need Costing-
     RD0146_StockVersion: # KB Khimavtomatiki RD-0146
@@ -3741,26 +3775,37 @@ exoticFuelStorage: #TL7 solids
         cost: 8000 # reasonable guess, 6.87 for 4seg
     SLS_b1_SRB: *Shuttlebooster
     NP_SRB_2_5m_AdvSRB5: *Shuttlebooster
+    RSBengineAresSRB: *Shuttlebooster # Real Scale Boosters 5 - Segment RSRM
+
     SLS_DKSSRB: #dark knight booster from SpiceLaunchSystem (Macollo), 11% more thrust
         cost: 8400
-    KWsrbGlobeX: # GEM 46
+
+    # GEM-46 SRM.
+
+    KWsrbGlobeX: &GEM46 # GEM 46
         cost: 1200 # total guess
         entryCost: 24000
-    RO_KWsrbGlobeI_GEM46: # first flight 1998
-        cost: 1200 # total guess
-        entryCost: 24000
-    KWsrbGlobeX2: # GEM 60 by KW Rocketry
+    RO_KWsrbGlobeI_GEM46: *GEM46 # first flight 1998
+    KK_ATK_GEM46AL: *GEM46 # GEM46-AL by ATK
+    KK_ATK_GEM46: *GEM46 # GEM46 by ATK
+    RSBdelta3srm: *GEM46 # Real Scale Boosters GEM-46 LDXL
+    RSBdelta3srmG: *GEM46 # Real Scale Boosters GEM-46 LDXL-TVC
+
+    # GEM-60 SRM.
+
+    KWsrbGlobeX2: &GEM60 # GEM 60 by KW Rocketry
         cost: 1800 # total guess
-    RO_KWsrbGlobeI_GEM60: # first flight 2002
-        cost: 1800 # total guess
-    KK_ATK_GEM46AL: # GEM46-AL by ATK
-        cost: 1000
-        entryCost: 24000
-    KK_ATK_GEM46: # GEM46 by ATK
-        cost: 1000
-        entryCost: 24000
-    KWsrbGlobeVI: # AJ-60A, first flight 2002
+    RO_KWsrbGlobeI_GEM60: *GEM60 # first flight 2002
+    RSBdeltaIVsrm: *GEM60 # Real Scale Boosters GEM-60
+
+    # AJ-60A SRM.
+
+    KWsrbGlobeVI: &AJ60A # AJ-60A, first flight 2002
         cost: 2400 # total guess
+    RSBengineAtlasSRB: *AJ60A # Real Scale Boosters AJ-60A
+
+    # GEM-63 SRM.
+
     RO_KWsrbGlobeI_GEM63:
         cost: 2400 # based on the costs above
     RO_KWsrbGlobeI_GEM63XL:

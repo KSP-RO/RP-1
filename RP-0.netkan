@@ -37,15 +37,13 @@
         { "name" : "ProceduralFairings-ForEverything" },
         { "name" : "ProceduralParts" },
         { "name" : "RCSBuildAid" },
-        { "name" : "RealSolarSystem" },
         { "name" : "KSCSwitcher" },
         { "name" : "RemoteTech" },
         { "name" : "SemiSaturatableRW" },
         { "name" : "TACLS" },
         { "name" : "TACLS-Config-RealismOverhaul" },
         { "name" : "TextureReplacer" },
-        { "name" : "Toolbar" },
-        { "name" : "KSCSwitcher" }
+        { "name" : "Toolbar" }
     ],
     "conflicts" : [
         { "name" : "CrowdSourcedScience" }

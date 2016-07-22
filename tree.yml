@@ -1243,15 +1243,19 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         entryCost: 16000 # no source, but should be the same as LR89's more or less
     #FASA
     FASAGeminiLR87Twin: *LR87
-    
+    rn_lr87_11: *LR87
+
     # Titan upper stage
     FASAGeminiLR91Mini: # LR91-3, later versions on the LR91 part.
         cost: 450
     liquidEngineorbit2: &LR91
         cost: 450
     FASAGeminiLR91: *LR91
-    
- 
+    rn_lr91_11:
+        cost: 400
+    rn_lr91_11_tp:
+        cost: 50
+
     # Raidernick R-7
     rn_r7_bvgd_engine: *RD107
 
@@ -2745,6 +2749,7 @@ largeSolids: # TL3 solids
     rn_thor_star37d:
         cost: 180
         entryCost: 3600
+    rn_ua1205: *UA1205
 
 advConstruction:
     # Saturn parts
@@ -3477,7 +3482,7 @@ highPerformanceFuelSystems:
         cost: 640
         entryCost: 12020
 
-    FASAGerminiSRB175_7Seg: #UA1206
+    FASAGerminiSRB175_7Seg: &UA1206
         cost: 6250 # Guess from 1205 and 1207
     FASA_RO_UA1207: &UA1207 # UA1207 7-seg SRM
         cost: 7218 # 24.36m nautix, assume 1985 dollars
@@ -3487,6 +3492,9 @@ highPerformanceFuelSystems:
     pam_d: # Star 48B
         cost: 1203
         entryCost: 24060
+    rn_ua1207: *UA1207
+    rn_ua1206: *UA1206
+
     #Keeping these parts grouped since they only work together, guessed at costs
     ius_bottom: # 1st stage of Inertial Upper Stage
         cost: 2000

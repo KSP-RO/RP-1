@@ -86,6 +86,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     KzInterstageAdapter2:
         cost: 1
+    KzFlatAdapter:
+        cost: 1
     KzProcFairingFuselage1:
         cost: 1
     KzProcFairingFuselage2:
@@ -3047,6 +3049,8 @@ commandModules: # Third generation capsules, it would seem.
         entryCost: 175000
         cost: 5000
     LaunchEscapeSystem: *ApolloLES
+    ShieldCapLarge: # BPC from Ven's
+        cost: 500
 
     FASA_Apollo_Float_Ring:
         entryCost: 28000

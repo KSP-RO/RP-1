@@ -2007,6 +2007,10 @@ matureSolids:
     # Black Arrow, so...let's place it here.)
     SXTWaxWing: # Black Arrow kick motor
         cost: 300 # nautix 1 mil, assume 1985 dollars
+        
+        
+    sepMotorLarge:
+        cost: 40
 
 generalConstruction:
     # The MOL cargo sections are here, because it's totally

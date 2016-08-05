@@ -1937,6 +1937,8 @@ hydroloxTL2:
 
     rn_gex430: # GE X430, based off RL10 prices since no info known
         cost: 2500
+    rn_centaurt_rl10_l: *RL10
+    rn_centaurt_rl10_r: *RL10
 
     KW1mengineMaverick1D: # RL10 priced separately because its a pair of them
         cost: 2600
@@ -2755,7 +2757,12 @@ largeSolids: # TL3 solids
     rn_thor_star37d:
         cost: 180
         entryCost: 3600
-    rn_ua1205: *UA1205
+    rn_ua1205:
+        cost: 5120
+    rn_ua1205_nc:
+        cost: 100
+    rn_ua1205_dec:
+        cost: 100
 
 advConstruction:
     # Saturn parts
@@ -3500,8 +3507,18 @@ highPerformanceFuelSystems:
     pam_d: # Star 48B
         cost: 1203
         entryCost: 24060
-    rn_ua1207: *UA1207
-    rn_ua1206: *UA1206
+    rn_ua1207:
+        cost: 7018
+    rn_ua1206:
+        cost: 6050
+    rn_ua1207_nc:
+        cost: 100
+    rn_ua1206_nc:
+        cost: 100
+    rn_ua1207_dec:
+        cost: 100
+    rn_ua1206_dec:
+        cost: 100
 
     #Keeping these parts grouped since they only work together, guessed at costs
     ius_bottom: # 1st stage of Inertial Upper Stage
@@ -3656,6 +3673,12 @@ specializedFuelStorage: # TL6 solids
     KK_ATK_GEM40AL: *GEM40 # GEM40-AL by KW Rocketry
     RO_KWsrbGlobeI_GEM: *GEM40 # GEM40, first flight 1990
     RSBdelta2srm: *GEM40 #Real Scale Boosters GEM-40
+
+    # RN SRMU
+    rn_srmu_mb:
+        cost: 7150
+    rn_srmu_nc:
+        cost: 7150
 
 hydroloxTL6:
     #Vulcain 1/2

@@ -3676,9 +3676,9 @@ specializedFuelStorage: # TL6 solids
 
     # RN SRMU
     rn_srmu_mb:
-        cost: 7150
+        cost: 7200
     rn_srmu_nc:
-        cost: 7150
+        cost: 150
 
 hydroloxTL6:
     #Vulcain 1/2

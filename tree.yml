@@ -2303,7 +2303,7 @@ flightControl:
     FASAICBMProbe: # guidance unit
         cost: 300 # similar to other guidance units
     FASAICBMMIRV: # 9MT nuclear warhead
-        cost: 16000 # expensive so fortunately no one will use it
+        cost: 1 # cheap: useless part shouldn't stand in the way of just purchasing all parts in the node
     FASAICBMSAS: # this is just a decoupler, not sure why is SAS in the title
         cost: 125 # similar to the other decouplers
         

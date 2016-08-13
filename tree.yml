@@ -3322,7 +3322,6 @@ advElectrics:
     
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
-  
 
 hydroloxTL4:
     FASAApolloLFEM1: &M-1

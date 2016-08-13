@@ -134,6 +134,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     proceduralTankRealFuels:
         cost: 0.1
+    proceduralCrewTube:
+        cost: 0.1
     proceduralStructural:
         cost: 0.1
     #proceduralSRBRealFuels: -- moved to later
@@ -3320,10 +3322,6 @@ advElectrics:
     
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
-    toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
-        cost: 9000 # J-2 is 8500
-    RLA_mp_large_spike: *J2T 
-    NP_lfe_125m_AerospikeEngine: *J2T
   
 
 hydroloxTL4:
@@ -3340,6 +3338,11 @@ hydroloxTL4:
     
     #SSTU
     SSTU-SC-ENG-M1-RO: *M-1
+    
+    toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
+        cost: 9000 # J-2 is 8500
+    RLA_mp_large_spike: *J2T 
+    NP_lfe_125m_AerospikeEngine: *J2T
         
 precisionPropulsion:
     FRERD843: #RD-843, late and tiny rocket engine used on Vega
@@ -4937,6 +4940,10 @@ earlyStations:
     rn_skylab_telescope:
         entryCost: 15000
         cost: 10000
+        
+    SXTISSHabISK30: # SXT Skylab OWS - lab + hab section
+        entryCost: 200000
+        cost: 50000 # a portion of the total
 
 ORPHANS:
 

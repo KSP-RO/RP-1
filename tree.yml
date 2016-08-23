@@ -2976,8 +2976,8 @@ advFlightControl:
     Tantares_RCS_A: #Same price as Apollo ones I guess
         entryCost: 3500
         cost: 100
-    Tantares_Port_A: *SoyuzPortMale
-    Tantares_Port_B: *SoyuzPortFemale
+    Tantares_DockingMechanism_A: *SoyuzPortMale
+    Tantares_DockingMechanism_B: *SoyuzPortFemale
     #N-1
     Libra_LFO_B:
         cost: 367
@@ -5033,8 +5033,6 @@ ORPHANS:
     
 
     Tantares_Orbital_A:
-    Tantares_DockingMechanism_A:
-    Tantares_DockingMechanism_B:
     Tantares_Orbital_B:
     Polaris_Crew_A:
     Polaris_Engine_A:

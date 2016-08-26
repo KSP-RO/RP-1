@@ -134,6 +134,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     proceduralTankRealFuels:
         cost: 0.1
+    proceduralCrewTube:
+        cost: 0.1
     proceduralStructural:
         cost: 0.1
     #proceduralSRBRealFuels: -- moved to later
@@ -2305,7 +2307,7 @@ flightControl:
     FASAICBMProbe: # guidance unit
         cost: 300 # similar to other guidance units
     FASAICBMMIRV: # 9MT nuclear warhead
-        cost: 16000 # expensive so fortunately no one will use it
+        cost: 1 # cheap: useless part shouldn't stand in the way of just purchasing all parts in the node
     FASAICBMSAS: # this is just a decoupler, not sure why is SAS in the title
         cost: 125 # similar to the other decouplers
         
@@ -2981,8 +2983,8 @@ advFlightControl:
     Tantares_RCS_A: #Same price as Apollo ones I guess
         entryCost: 3500
         cost: 100
-    Tantares_Port_A: *SoyuzPortMale
-    Tantares_Port_B: *SoyuzPortFemale
+    Tantares_DockingMechanism_A: *SoyuzPortMale
+    Tantares_DockingMechanism_B: *SoyuzPortFemale
     #N-1
     Libra_LFO_B:
         cost: 367
@@ -3327,11 +3329,6 @@ advElectrics:
     
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
-    toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
-        cost: 9000 # J-2 is 8500
-    RLA_mp_large_spike: *J2T 
-    NP_lfe_125m_AerospikeEngine: *J2T
-  
 
 hydroloxTL4:
     FASAApolloLFEM1: &M-1
@@ -3347,6 +3344,11 @@ hydroloxTL4:
     
     #SSTU
     SSTU-SC-ENG-M1-RO: *M-1
+    
+    toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
+        cost: 9000 # J-2 is 8500
+    RLA_mp_large_spike: *J2T 
+    NP_lfe_125m_AerospikeEngine: *J2T
         
 precisionPropulsion:
     FRERD843: #RD-843, late and tiny rocket engine used on Vega
@@ -4960,6 +4962,10 @@ earlyStations:
     rn_skylab_telescope:
         entryCost: 15000
         cost: 10000
+        
+    SXTISSHabISK30: # SXT Skylab OWS - lab + hab section
+        entryCost: 200000
+        cost: 50000 # a portion of the total
 
 ORPHANS:
 
@@ -5050,8 +5056,6 @@ ORPHANS:
     
 
     Tantares_Orbital_A:
-    Tantares_DockingMechanism_A:
-    Tantares_DockingMechanism_B:
     Tantares_Orbital_B:
     Polaris_Crew_A:
     Polaris_Engine_A:

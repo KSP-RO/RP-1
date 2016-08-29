@@ -2730,6 +2730,10 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
         cost: 20100
     LLV_Engine_B: # in 8x NK-15V configuration
         cost: 6240
+    LLV_Engine_C: # in 4x NK-31 configuration
+        cost: 2000
+    LLV_Engine_D: # in 1x NK-19 configuration
+        cost: 450
 
     ALV_Engine_C: #RD-213/214
     Libra_Engine_B: #Block D RD-58
@@ -2847,6 +2851,8 @@ advConstruction:
     LLV_LFO_B: #Block B
     LLV_LFO_C: #Block V
     LLV_LFO_D: #Block G
+    LLV_Decoupler_A: #Block A/B decoupler
+    LLV_Decoupler_B: #Block B/V decoupler
 
     #OLDD Apollo parts. Same as FASA.
     S-V_SkyLabFairing: *SkylabFairing

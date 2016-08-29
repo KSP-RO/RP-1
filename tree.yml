@@ -1904,6 +1904,8 @@ advRocketry:
     # Molniya/Vostok/Soyuz second stage.
     RD0110: &RD-0110
         cost: 400 # guess based on other engines of the era
+
+    TLV_Engine_B: *RD-0110
     
     #RaiderNick - Soyuz
     rn_r7_vernier_blok_i_s_fg:

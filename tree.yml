@@ -2114,7 +2114,7 @@ generalConstruction:
     ALV_Decoupler_A:
         cost: 75 #same as proc decoupler
     ALV_LFO_A: *ProtonS2
-    ALF_LFO_B: *ProtonS3
+    ALV_LFO_B: *ProtonS3
     
     #RaiderNick - Soyuz
     r7_blok_a_soyuz:

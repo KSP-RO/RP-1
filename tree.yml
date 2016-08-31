@@ -2973,8 +2973,8 @@ advFlightControl:
 
     tg_sa: *SoyuzPAO
 
-    Tantares_Engine_A: *SoyuzPAO
     Tantares_Engine_B: *SoyuzPAO
+    Tantares_Engine_C: *SoyuzPAO
     Tantares_Decoupler_A: *SoyuzDecoupler
     Tantares_RCS_A: #Same price as Apollo ones I guess
         entryCost: 3500
@@ -3375,6 +3375,7 @@ specializedControl: # Tl4 avionics
         cost: 400
 
     Alnair_Engine_C: #KRD-442 FGB propulsion module engine
+    Tantares_Engine_A: *SoyuzPAO
 
 heavyAerodynamics: #TL4 jets - Mature Turbofans
     turboJet: #F100

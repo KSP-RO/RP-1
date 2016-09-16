@@ -1831,6 +1831,9 @@ enhancedSurvivability: # Early capsules
     RO_mk1_LES: *MercuryLES
     #Tantares Vostok
     Vostok_Crew_A: *VostokPod
+    Vostok_Antenna_A:
+        entryCost: 100
+        cost: 5
     Vostok_Engine_A:
         entryCost: 23500
         cost: 850

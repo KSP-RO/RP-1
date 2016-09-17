@@ -3233,6 +3233,7 @@ spaceExploration: #crewed landing
     Libra_RCS_A:
     Libra_LFO_A:
     Libra_Engine_A:
+        cost: 900 # combined RD-858 and RD-859
     Libra_Leg_A:
     Libra_Nesting_A:
     

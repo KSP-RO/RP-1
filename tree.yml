@@ -3436,6 +3436,7 @@ nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
         cost: 25000
         entryCost: 1750000 # https://www.fas.org/sgp/othergov/doe/lanl/la-ur-85-2442.pdf - page 17
+    Castor_Nerva: *NERVA
     NP_lfe_25m_NERVA: *NERVA # Nova Punch, the same as stock nuclear engine
     
 # TIER 6
@@ -3733,6 +3734,9 @@ giganticRocketry: #TL7, present day
 
     CHAKAOME: # AJ10-190 for Orion
         cost: 400 # same as for AJ10-190 OME
+        
+    RLA_small_ntr: #RS-88 bantam engine
+        cost: 82 #400,000 1995 dollars, "Development of the Bantam Family of Aerojet Rocketdyne Commercial Rocket Engines"
         
     # SSTU
     SSTU-SC-ENG-Merlin-1D: *Merlin1D

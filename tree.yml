@@ -3477,6 +3477,13 @@ stagedTL5:
     RD171_StockVersion: *RD-170
     liquidEnginemogulmp1500: *RD-170
     
+    RD180_StockVersion: &RD180
+        cost: 2700
+    RSBengineRD180: *RD180 # Real Scale Boosters RD-180 engine
+
+    RD191_StockVersion: # NPO Energomash RD-191
+        cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
+    
     NP_srb_radialbooster: # Energia liquid booster (RD-170 + tank)
     NP_lfe_125m_RMA3: #RD-0256, Dnepr second stage, first flight 1983-89
 
@@ -3639,13 +3646,6 @@ experimentalRocketry: #TL6, late 80s/90s
         entryCost: 28000
 
 stagedTL6:
-    # Bobcat's Soviet Engines -Need Costing-
-    RD180_StockVersion: &RD180
-        cost: 2700
-    RSBengineRD180: *RD180 # Real Scale Boosters RD-180 engine
-
-    RD191_StockVersion: # NPO Energomash RD-191
-        cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
     XKosmos_Angara_RD-275KX: # RD-275, Proton M first stage
         cost: 515 # same as RD-253
 

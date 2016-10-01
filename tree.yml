@@ -1377,10 +1377,39 @@ basicConstruction:
     sputnik2_nosecone: *sputnik_n_b
     rn_WING_R7:
         cost: 10
-    r7_blok_bvgd_sput: &R7Booster
+
+    rn_r7_blok_a: &R7Core # Semyorka 8K71
+        cost: 120   
+    rn_r7_blok_a_2: *R7Core # Sputnik-PS 8K71PS
+    rn_r7_blok_a_3: *R7Core # Sputnik 8A91
+    rn_r7_blok_a_4: *R7Core # Vostok-Luna/Vostok-L/Vostok-K 8K72
+    rn_r7_blok_a_5: *R7Core # Semyorka 8K74
+    rn_r7_blok_a_6: *R7Core # Molniya 8K78, Polyot 11A59, Voskhod 11A57
+    rn_r7_blok_a_7: *R7Core # Vostok-2 8A92
+    rn_r7_blok_a_8: *R7Core # Molniya-M 8K78M/Soyuz-L 11A511L
+    rn_r7_blok_a_9: *R7Core # Vostok-2M 11A92M
+    rn_r7_blok_a_10: *R7Core # Soyuz-Vostok 11A510/Soyuz 11A511
+    rn_r7_blok_a_11: *R7Core # Soyuz-U 11A511U
+    rn_r7_blok_a_12: *R7Core # Soyuz-U2 11A511U2
+    rn_r7_blok_a_13: *R7Core # Soyuz-FG 11A511U-FG
+    rn_r7_blok_a_14: *R7Core # Soyuz-2.1a 14A14A/Soyuz-2.1b 14A
+
+    rn_r7_blok_bvgd: &R7Booster # Semyorka 8K71
         cost: 100
-    r7_blok_a_sput:
-        cost: 120	
+    rn_r7_blok_bvgd_2: *R7Booster # Sputnik-PS 8K71PS
+    rn_r7_blok_bvgd_3: *R7Booster # Sputnik 8A91
+    rn_r7_blok_bvgd_4: *R7Booster # Vostok-Luna/Vostok-L/Vostok-K 8K72
+    rn_r7_blok_bvgd_5: *R7Booster # Semyorka 8K74
+    rn_r7_blok_bvgd_6: *R7Booster # Molniya 8K78/Polyot 11A59/Voskhod 11A57
+    rn_r7_blok_bvgd_7: *R7Booster # Vostok-2 8A92
+    rn_r7_blok_bvgd_8: *R7Booster # Molniya-M 8K78M/Soyuz-L 11A511L
+    rn_r7_blok_bvgd_9: *R7Booster # Vostok-2M 11A92M
+    rn_r7_blok_bvgd_10: *R7Booster # Soyuz-Vostok 11A510/Soyuz 11A511
+    rn_r7_blok_bvgd_11: *R7Booster # Soyuz-U 11A511U
+    rn_r7_blok_bvgd_12: *R7Booster # Soyuz-U2 11A511U2
+    rn_r7_blok_bvgd_13: *R7Booster # Soyuz-FG 11A511U-FG
+    rn_r7_blok_bvgd_14: *R7Booster # Soyuz-2.1a 14A14A/Soyuz-2.1b 14A
+    
     rn_r7_adapter_blok_e: #decoupler
         cost: 100
     rn_luna_fairing:
@@ -1397,14 +1426,6 @@ basicConstruction:
         cost: 20
     rn_r7_voskhod_fairing_r: *r7_fairing
     rn_r7_voskhod_fairing_l: *r7_fairing
-    r7_blok_bvgd: # Vostok
-        cost: 100 # the same as for the R7-Sputnik bvgd tank
-    r7_blok_bvgd_m: # Molniya
-        cost: 100
-    r7_blok_a: # Vostok
-        cost: 120 # the same as for the R7-Sputnik blok a
-    r7_blok_a_molniya: # Molniya
-        cost: 120
 
     #Tantares R-7 and Vostok tanks
     TLV_LFO_A:

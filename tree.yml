@@ -1285,6 +1285,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     KW2mengineGriffonG8D: *RD107
     #Tantares R-7 & Vostok engine
     TLV_Engine_A: *RD107
+    TLV_Vernier: *R7Vernier
     Alto_Engine_A: *VostokUpper
     Alto_Engine_B: *R7Vernier
         

@@ -1285,6 +1285,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     KW2mengineGriffonG8D: *RD107
     #Tantares R-7 & Vostok engine
     TLV_Engine_A: *RD107
+    TLV_Vernier: *R7Vernier
     Alto_Engine_A: *VostokUpper
     Alto_Engine_B: *R7Vernier
         
@@ -1377,39 +1378,10 @@ basicConstruction:
     sputnik2_nosecone: *sputnik_n_b
     rn_WING_R7:
         cost: 10
-
-    rn_r7_blok_a: &R7Core # Semyorka 8K71
-        cost: 120   
-    rn_r7_blok_a_2: *R7Core # Sputnik-PS 8K71PS
-    rn_r7_blok_a_3: *R7Core # Sputnik 8A91
-    rn_r7_blok_a_4: *R7Core # Vostok-Luna/Vostok-L/Vostok-K 8K72
-    rn_r7_blok_a_5: *R7Core # Semyorka 8K74
-    rn_r7_blok_a_6: *R7Core # Molniya 8K78, Polyot 11A59, Voskhod 11A57
-    rn_r7_blok_a_7: *R7Core # Vostok-2 8A92
-    rn_r7_blok_a_8: *R7Core # Molniya-M 8K78M/Soyuz-L 11A511L
-    rn_r7_blok_a_9: *R7Core # Vostok-2M 11A92M
-    rn_r7_blok_a_10: *R7Core # Soyuz-Vostok 11A510/Soyuz 11A511
-    rn_r7_blok_a_11: *R7Core # Soyuz-U 11A511U
-    rn_r7_blok_a_12: *R7Core # Soyuz-U2 11A511U2
-    rn_r7_blok_a_13: *R7Core # Soyuz-FG 11A511U-FG
-    rn_r7_blok_a_14: *R7Core # Soyuz-2.1a 14A14A/Soyuz-2.1b 14A
-
-    rn_r7_blok_bvgd: &R7Booster # Semyorka 8K71
+    r7_blok_bvgd_sput: &R7Booster
         cost: 100
-    rn_r7_blok_bvgd_2: *R7Booster # Sputnik-PS 8K71PS
-    rn_r7_blok_bvgd_3: *R7Booster # Sputnik 8A91
-    rn_r7_blok_bvgd_4: *R7Booster # Vostok-Luna/Vostok-L/Vostok-K 8K72
-    rn_r7_blok_bvgd_5: *R7Booster # Semyorka 8K74
-    rn_r7_blok_bvgd_6: *R7Booster # Molniya 8K78/Polyot 11A59/Voskhod 11A57
-    rn_r7_blok_bvgd_7: *R7Booster # Vostok-2 8A92
-    rn_r7_blok_bvgd_8: *R7Booster # Molniya-M 8K78M/Soyuz-L 11A511L
-    rn_r7_blok_bvgd_9: *R7Booster # Vostok-2M 11A92M
-    rn_r7_blok_bvgd_10: *R7Booster # Soyuz-Vostok 11A510/Soyuz 11A511
-    rn_r7_blok_bvgd_11: *R7Booster # Soyuz-U 11A511U
-    rn_r7_blok_bvgd_12: *R7Booster # Soyuz-U2 11A511U2
-    rn_r7_blok_bvgd_13: *R7Booster # Soyuz-FG 11A511U-FG
-    rn_r7_blok_bvgd_14: *R7Booster # Soyuz-2.1a 14A14A/Soyuz-2.1b 14A
-    
+    r7_blok_a_sput:
+        cost: 120	
     rn_r7_adapter_blok_e: #decoupler
         cost: 100
     rn_luna_fairing:
@@ -1426,6 +1398,14 @@ basicConstruction:
         cost: 20
     rn_r7_voskhod_fairing_r: *r7_fairing
     rn_r7_voskhod_fairing_l: *r7_fairing
+    r7_blok_bvgd: # Vostok
+        cost: 100 # the same as for the R7-Sputnik bvgd tank
+    r7_blok_bvgd_m: # Molniya
+        cost: 100
+    r7_blok_a: # Vostok
+        cost: 120 # the same as for the R7-Sputnik blok a
+    r7_blok_a_molniya: # Molniya
+        cost: 120
 
     #Tantares R-7 and Vostok tanks
     TLV_LFO_A:
@@ -1433,6 +1413,8 @@ basicConstruction:
     TLV_LFO_B:
         cost: 70
     TLV_LFO_C: *R7Booster
+    TLV_LFO_D:
+        cost: 260 # 60 for the tank + 200 for avionics (30t)
     Alto_LFO_A:
         cost: 100
 
@@ -1925,6 +1907,8 @@ advRocketry:
     # Molniya/Vostok/Soyuz second stage.
     RD0110: &RD-0110
         cost: 400 # guess based on other engines of the era
+
+    TLV_Engine_B: *RD-0110
     
     #RaiderNick - Soyuz
     rn_r7_vernier_blok_i_s_fg:
@@ -3354,6 +3338,14 @@ advElectrics:
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
 
+# Raidernick Dnepr
+    rn_dnepr1_ts: # RD-864 Dnepr 3rd stage engine + fuel tank + avionics; late 70s; not sure what is the best place for it
+        cost: 510 # guess, using 3rd stage mass ration of 0.12, added 100 for avionics; launch cost is about 3500k in 1965
+        entryCost: 10200
+    rn_dnepr1_rd0255_vernier: # RD-0257 Dnepr 2nd stage verier engine, flown in 81 but I feel justified putting it here
+        cost: 50
+        entryCost: 1000
+
 hydroloxTL4:
     FASAApolloLFEM1: &M-1
         entryCost: 770000
@@ -3380,6 +3372,12 @@ precisionPropulsion:
         cost: 200
     # Bobcat's Soviet Engines -Need Costing-
     # NK33 and NK43 config here, parts produced ~100 the program was scrapped and never flown
+
+    # Raidernick Dnepr 
+    rn_dnepr1_rd264: # RD-264 Dnepr 1st stage engine, late 60s early 70s; four of these make an engine module
+      cost: 445 # guess, using 1st stage mass ratio of 0.67 and attributing approx. 3/4 of value to engine; launch cost is about 3500k in 1965
+      entryCost: 35600 #
+
     NP_lfe_25m_4x800Engine: # RD-264, Dnepr first stage, first run 1969-73
     SXTK1BaseLarge:
 
@@ -3396,6 +3394,11 @@ advFuelSystems: # TL4 solids
     RO_RLA_AJ260_HL: # This was the development SRB for the AJ-260-FL (half-length not full length)
     # estimated cost at 2/3 of FL Date: 1965
         cost: 22054
+
+    # Raidernick Dnepr
+    rn_dnepr1_ejector_cap: # Explosive Charge, black powder mortar
+        cost: 10 # made up
+        entryCost: 2000
 
 specializedControl: # Tl4 avionics
     FASADeltaAv2:
@@ -3503,6 +3506,12 @@ stagedTL5:
 
     # Raidernick Zenit Engines
     rn_zenit_rd171: *RD-170
+
+    # Raidernick Dnepr
+    # Technically RD-0256 was developed in mid 80 but Dnepr was deployed in 75 with RD-0228. So for gameplay maybe move it back a node?
+    rn_dnepr1_rd0255: # RD-0256, Dnepr 2nd stage engine, mid 80s
+      cost: 550 # guess; using 2nd stage mass ratio of 0.21 and attributing 3/4 of stage value to engine; launch cost is about 3500k in 1965
+      entryCost: 11000
 
 highPerformanceFuelSystems:
     solidBoosterSmall: &Castor30 # Castor 30B
@@ -3946,6 +3955,38 @@ specializedConstruction:
         cost: 100
     KAS_CPort1:
         cost: 100
+
+    # Raidernick Dnepr
+    rn_dnepr1_fs: # 1st Stage Fuel Tank
+        cost: 300 # made up to fit overal price, less than PP tank but stiil feel like it is too much
+        entryCost: 6600
+    rn_dnepr1_ss: # 2nd Stage Fuel Tank
+        cost: 75 # see note for first stage
+        entryCost: 1500
+    rn_dnepr1_slides: # Silo Braces
+        cost: 5 # made up, just bits of metal
+        entryCost: 100
+    rn_dnepr1_silo_tube: # Transport and Launch Container
+        cost: 10 # made up
+        entryCost: 2000
+    rn_dnepr1_ejector: # Ejection Support
+        cost: 5 # made up, some hardware
+        entryCost: 100
+    rn_dnepr1_fairing_base: # Payload Decoupler
+        cost: 20 # made up
+        entryCost: 400
+    rn_dnepr1_fairing_base2: # Extended Payload Decoupler
+        cost: 25 # made up
+        entryCost: 500
+    rn_dnepr1_fairing: # Fairing
+        cost: 15 # made up
+        entryCost: 300
+    rn_dnepr1_interstage:
+        cost: 40 # made up, PP decoupler prices get insane
+        entryCost: 800
+    rn_dnepr1_interstage2:
+        cost: 40 # made up
+        entryCost: 800
     
     
 advLanding:

@@ -2339,6 +2339,10 @@ flightControl:
     Spica_RCS_A: *GeminiRCS
     Spica_Port_A: *GeminiPort
 
+    RP0probeAvionics3-05m:  # Centaur A,B,C,D astrionics (3.05 meters, 45 tonnes limit).
+        cost: 1100          # Based on the cost of the FASA Centaur stage.
+        entryCost: 30000    # Same multiplier (20 to 30) used for the other avionics rings.
+
 simpleCommandModules: # Second gen capsules
     # Extra survival modules, but not recyclers, they have
     # their own 'recycling' node.

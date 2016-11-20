@@ -3648,7 +3648,7 @@ stagedTL6:
     RD180_StockVersion: &RD180  # Bobcat's Soviet Engines -Need Costing-
         cost: 2700
     RSBengineRD180: *RD180      # Real Scale Boosters RD-180 engine.
-    BahaRd180: * *RD180         # BahamutoD Atlas V.
+    BahaRd180: *RD180           # BahamutoD Atlas V.
 
     RD191_StockVersion: # NPO Energomash RD-191
         cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.

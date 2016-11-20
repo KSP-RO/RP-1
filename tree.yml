@@ -110,6 +110,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0.1
     KzProcFairingSide2ger:
         cost: 0.1
+
+    # RO fairing bases.
+    KzFlatAdapter:
+        cost: 0.1
     
     #Blackhearts fairings textures
     KzProcFairingAtlas:

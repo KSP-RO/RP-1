@@ -109,8 +109,8 @@ namespace RP0
         }
         public void UpdateCost()
         {
-            if (ap != null)
-                ap.entryCost = (int)EntryCost();
+			if (ap != null)
+				ap.SetEntryCost((int)EntryCost());
         }
         #endregion
     }

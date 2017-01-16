@@ -46,28 +46,30 @@ namespace RP0
                     return 0f;
             }
         }
-        #endregion
+		#endregion
 
-        #region Utility methods
-        protected double ResourceRate()
-        {
-            if (part.Modules.Contains("ModuleCommand"))
-            {
-                ModuleCommand mC = (ModuleCommand)part.Modules["ModuleCommand"];
-                foreach(ModuleResource r in mC.resHandler.inputResources)
-                {
-                    if(r.name.Equals("ElectricCharge"))
-                    {
-                        commandChargeResource = r;
-                        if (enabledkW < 0)
-                            enabledkW = (float)r.rate;
-                        return r.rate;
-                    }
-                }
-            }
-            return -1;
-        }
-        protected void UpdateRate()
+		#region Utility methods
+		protected double ResourceRate()
+		{
+			ModuleCommand mC = part.FindModuleImplementing<ModuleCommand>();
+
+			if (mC != null)
+			{
+				foreach (ModuleResource r in mC.resHandler.inputResources)
+				{
+					if (r.id == PartResourceLibrary.ElectricityHashcode)
+					{
+						commandChargeResource = r;
+						if (enabledkW < 0)
+							enabledkW = (float)r.rate;
+						return r.rate;
+					}
+				}
+			}
+			return -1;
+		}
+
+		protected void UpdateRate()
         {
             if ((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled)
             {

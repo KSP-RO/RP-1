@@ -3743,7 +3743,7 @@ giganticRocketry: #TL7, present day
     fregat1: #Soyuz Fregat, first flight - 2000
         cost: 250 # 140 for the engine (40% of the blok e because less thrust) + 30 for the tank + 80 for the avionics (12t - modern = cheaper)
 
-    CHAKAOME: # AJ10-190 for Orion
+    CHAKAOME2: # AJ10-190 for Orion
         cost: 400 # same as for AJ10-190 OME
         
     # SSTU
@@ -4465,13 +4465,19 @@ specializedCommandModules: # modern?
     XLFTORIONLARGE: &ORIONSM # service module
         cost: 60000
         entryCost: 750000
-    xOrionLES:
+    XOrionLES:
         cost: 5000 # cost based on ApolloLES
         entryCost: 175000 # cost based on ApolloLES
     OrionDockingPortXx: &ORIONDOCKPORT
         cost: 4000 # cost based on Apollo parts. Docking port + chutes + Apollo top
         entryCost: 175000 # cost based on Apollo parts. Docking port + chutes + Apollo top
     OrionDockingPortXWSTANDARDDOCKPORT: *ORIONDOCKPORT
+    xparachuteRadialx:
+        cost: 1000 # stolen from Apollo
+        entryCost: 35000 # stolen from Apollo
+    xparachuteRadial2x:
+        cost: 1000 # stolen from Apollo
+        entryCost: 35000 # stolen from Apollo
     
     # Dragon V2
     # development cost about 2700 mln USD http://spaceflightnow.com/news/n1405/29dragonv2/#.Vj0XBr-jAs0

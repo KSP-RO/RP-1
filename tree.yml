@@ -3651,6 +3651,8 @@ stagedTL6:
 
     RD191_StockVersion: # NPO Energomash RD-191
         cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
+    XKosmos_Angara_RD-275KX: # RD-275, Proton M first stage
+        cost: 515 # same as RD-253
 
 specializedFuelStorage: # TL6 solids
     solidBooster: # Castor 30XL, it's an evolution of Castor 30
@@ -3769,7 +3771,6 @@ hydroloxTL7:
         entryCost: 158860 # 1200M USD http://www.parabolicarc.com/2013/10/07/billion-dollar-j2x-engine-mothballed/
     cryoengine-25-2: *J2X
     RSBengineJ2X: *J2X # Real Scale Boosters J-2X engine
-    XKosmos_Angara_RD-275KX: *J2X
     
     XXxAres1J2-XHIGH: &RL10B
         cost: 3800 # RL10B-2 configuration (1800 for base RL10 + 2000 of B-2 config)

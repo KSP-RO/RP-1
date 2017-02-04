@@ -74,10 +74,6 @@
       <HintPath>..\..\..\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KSPUtil">
-      <HintPath>..\..\..\Managed\KSPUtil.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>

@@ -2400,6 +2400,11 @@ simpleCommandModules: # Second gen capsules
     
     rn_zond_les: #zond launch escape system
 
+    # K2 Command Pod (Gemini - alike).
+    K2Pod:
+        entryCost: 322000
+        cost: 6120
+
 electrics:
     # Solar: Level 3 static, Level 2 moving
     # 40x the size of a small panel. Linear scaling would have this at 12000 ($12m!)

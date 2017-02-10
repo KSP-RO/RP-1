@@ -1863,7 +1863,7 @@ advRocketry:
 
     # Saturn I/IB H-1 engine.
     FASAApolloLFEH1: &H1
-        cost: 1050
+        cost: 750
         entryCost: 53750 # 33750 + 20,000 from LR79
     KW2mengineMaverickV: *H1
     RO-H1-RS27: *H1

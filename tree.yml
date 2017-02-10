@@ -2765,16 +2765,18 @@ largeSolids: # TL3 solids
         cost: 5320 # nautix Titan 3 - UA1205 stage, assume 1985 dollars. Confirmed via http://www.astronautix.com/articles/costhing.htm
     FASAGerminiSRB175: *UA1205
     FASAGerminiSRB175White: *UA1205
+    rn_ua1205: *UA1205
+
     FASAGerminiSRBInlineSep:
         cost: 50 # FIXME guess
 
     RT2: # Castor II
         cost: 320 # unstated, should be about Castor I's cost.
         
-    rn_thor_star37d:
+    rn_thor_star37d: &Star37
         cost: 180
         entryCost: 3600
-    rn_ua1205: *UA1205
+    RO-STAR-37: *Star37
 
 advConstruction:
     # Saturn parts
@@ -3434,12 +3436,12 @@ largeVolumeContainment: # TL4.5 solids
     NP_SRB_2_5m_AdvSRB4: *STSbooster
     RSBengineSTSSRB: *STSbooster # Real Scale Boosters 4 - Segment RSRM
 
-    KK_ATK_Castor4: # Castor4 by ATK
+    KK_ATK_Castor4: &CastorIV           # Castor 4 by ATK Pack.
         cost: 361
         entryCost: 7224
-    RO_KWsrbGlobeI_Castor4: # Castor4 by KW Rocketry
-        cost: 361
-        entryCost: 7224
+    RO_KWsrbGlobeI_Castor4: *CastorIV   # Castor 4 by KW Rocketry.
+    RT1: *CastorIV                      # Castor 4 by Realism Overhaul.
+
     FREP80: #Vega first stage
         cost: 2280 #Vega launch cost: 25M euros alone so $3,79M (1965). P80+Zefiro23+Zefiro9 = $3,54M (1965) assuming the rest is fairings + avionics
         entryCost: 12000 #Avio invested 76M euros for P80

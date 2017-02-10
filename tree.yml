@@ -3644,10 +3644,11 @@ experimentalRocketry: #TL6, late 80s/90s
         entryCost: 28000
 
 stagedTL6:
-    # Bobcat's Soviet Engines -Need Costing-
-    RD180_StockVersion: &RD180
+
+    RD180_StockVersion: &RD180  # Bobcat's Soviet Engines -Need Costing-
         cost: 2700
-    RSBengineRD180: *RD180 # Real Scale Boosters RD-180 engine
+    RSBengineRD180: *RD180      # Real Scale Boosters RD-180 engine.
+    BahaRd180: *RD180           # BahamutoD Atlas V.
 
     RD191_StockVersion: # NPO Energomash RD-191
         cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
@@ -3835,9 +3836,10 @@ exoticFuelStorage: #TL7 solids
 
     # AJ-60A SRM.
 
-    KWsrbGlobeVI: &AJ60A # AJ-60A, first flight 2002
-        cost: 2400 # total guess
-    RSBengineAtlasSRB: *AJ60A # Real Scale Boosters AJ-60A
+    KWsrbGlobeVI: &AJ60A        # AJ-60A, first flight 2002
+        cost: 2400              # Total guess
+    RSBengineAtlasSRB: *AJ60A   # Real Scale Boosters AJ-60A
+    atlasvSrb: *AJ60A           # BahamutoD Atlas V.
 
     # GEM-63 SRM.
 

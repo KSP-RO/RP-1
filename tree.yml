@@ -2434,7 +2434,6 @@ electrics:
         entryCost: 178000
         cost: 3560
     FASAGeminiEngineFuel2: *GeminiSM
-    FASAGeminiEngineFuelDescent:
     Spica_Engine_A: *GeminiSM
 
     Dishpcf:
@@ -2539,6 +2538,9 @@ landing:
     HECS2_ProbeCore: # AsteroidDay
         cost: 4000
 
+    FASAGeminiEngFuelDescent: # 20% more then GeminiSM (guess)
+        entryCost: 213600
+        cost: 4272
 
     RO-SurveyorVernier:
         cost: 30 # not a 4-way, but it throttles. 100lbf same as the RCSBlock tho.

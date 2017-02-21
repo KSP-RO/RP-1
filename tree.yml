@@ -1908,11 +1908,18 @@ advRocketry:
     RD0110: &RD-0110
         cost: 400 # guess based on other engines of the era
 
+    # RealEngines RD-0110.
+    RD0110engine: *RD-0110
+
+    # Tantares LV RD-0110.
     TLV_Engine_B: *RD-0110
     
     #RaiderNick - Soyuz
-    rn_r7_vernier_blok_i_s_fg:
+    rn_r7_vernier_blok_i_s_fg: &RD0110Vernier
         cost: 20 # 6kN
+
+    # RealEngines RD-0110 vernier.
+    STEERING_MOTOR_RD0110engine: *RD0110Vernier
 
     FREVIKINGEARLY: #Viking 2/2B
         cost: 550 #Ariane 1-1 first stage: $14.5M
@@ -1960,8 +1967,15 @@ hydroloxTL2:
     SSTU-SC-ENG-RL10A-3: *RL10 # basic RL10 per config, ignore the name
 
 fuelSystems: # Staged combustion, TL2
-    liquidEngine2: #S1.5400(11D33), world's first staged-combustion engine
-        cost: 400 # also is the RD-58 as CONFIG upgrade.
+
+    # S1.5400(11D33), world's first staged-combustion engine.
+    # Also the RD-58 as an engine config upgrade.
+    liquidEngine2: &11D33
+        cost: 400
+
+    # RealEngines RD-58.
+    RD58: *11D33
+
     ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
         cost: 3580
     ALV_Engine_B: #RD-0210/0211, Proton Second Stage
@@ -1970,25 +1984,28 @@ fuelSystems: # Staged combustion, TL2
     r7_blok_i_m: # Molniya Block-I
         cost: 714 # 400 for the engine (exactly like RD-0110 from Soviet engines) + 114 for the tank + 200 for the avionics (30t)
     
-    #Proton - RaiderNick
+    # Proton - RaiderNick
     rn_proton_rd0210: &RD0210
         cost: 300
     rn_proton_rd0212: *RD0210
     rn_proton_rd253: &RD253
         cost: 515 #5400k USD 1965 * stage mass ratio (459t/705t) * engine price ratio (80% of the stage price) / engine amount (6 on first stage) 
 
-    #Proton -- Stock
+    # Proton -- Stock
     RO-RD-253: *RD253
     RO-RD-0210: *RD0210
-    
+
+    # NovaPunch RD-253.
     NP_lfe_125m_BearcatSingle: *RD253
+
+    # RealEngines RD-253.
+    RD275: *RD-253
     
-    #NK-9, via BobCat clones.
+    # NK-9, via BobCat clones.
     NK9:
         cost: 450 # FIXME guess based on NK-15 and RD-253
     NK9V:
         cost: 500 # as above
-    
 
 matureSolids:
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)
@@ -2731,13 +2748,21 @@ hydroloxTL3:
     SSTU-SC-ENG-J-2: *J2Engine
 
 propulsionSystems: #staged combustion TL3 -- NK-15 here.
+
     # Bobcat's Soviet Engines -Need Costing- WIP costing approximation using data from Yuri Sovetkin (600k-700k SUR for one engine manufacturing with 1USD of 1965 = 0.9 RUR)
-    NK33_StockVersion: # in NK-15 configuration
+    NK33_StockVersion: &NK33 # in NK-15 configuration
         cost: 670
+
+    # RealEngines NK-33.
+    NK33engine: *NK33
+
     NK43_StockVersion: # in Nk-15V configuration
         cost: 780
     # NK15s were flown on the 4 N1 launches, from 1969 to 1972
-    
+
+    # RealEngines NK-43.
+    NK43engine: *NK43
+
     SXTNK21BlockV: # NK-21, later NK-31, for Blok V
         cost: 2000 # 4x NK-9V, FIXME guess based off NK-9V based off 9 based off NK-15 and RD-253
 
@@ -3059,7 +3084,6 @@ advFlightControl:
     Vega_Engine_B: #S5.66
     Alnair_Engine_B: # RD-0225, Almaz propulsion
 
-
 commandModules: # Third generation capsules, it would seem.
     Mark1-2Pod:
         entryCost: 1000000
@@ -3188,7 +3212,7 @@ commandModules: # Third generation capsules, it would seem.
         cost: 2000
         
         #SSTU - prices are generic costing, mind they do not account for the integrated equipment
-    SSTU-SC-B-BPC: *ApolloLES       # Apollo LES
+    SSTU-SC-B-BPC: *ApolloLES      # Apollo LES
     SSTU-SC-B-CM: *ApolloCM        # A CM
     SSTU-SC-B-SM: *ApolloSM        # A SM
     
@@ -3489,18 +3513,37 @@ veryHeavyRocketry: #TL5 late 70s/80s tech
         entryCost: 17050 #https://www.quora.com/unanswered/How-much-did-SpaceX-spend-developing-the-Merlin-1A-engine-for-Falcon-1
 
 stagedTL5:
-    # Bobcat's Soviet Engines -Need Costing-
-    # RD-170/171
+
+    # SXT RD-170/171.
     SXTKD170: &RD-170
         cost: 5400 # 2x RD-180 cost. RD-180 is derived from the RD-170/171
+
+    # Bobcat's Soviet Engines -Need Costing-
     RD171_StockVersion: *RD-170
+
+    # AIES Aerospace RD-170/171.
     liquidEnginemogulmp1500: *RD-170
-    
-    NP_srb_radialbooster: # Energia liquid booster (RD-170 + tank)
+
+    # RealEngines RD-170/171.
+    rd170engine: *RD-170
+
+    # NovaPunch Energia liquid booster (RD-170 + tank) 
+    NP_srb_radialbooster:
+
+    # NovaPunch RD-0256
     NP_lfe_125m_RMA3: #RD-0256, Dnepr second stage, first flight 1983-89
 
-    # Raidernick Zenit Engines
+    # Raidernick Zenit Engines.
     rn_zenit_rd171: *RD-170
+
+    # RealEngines RD-120 engine.
+    RD120:
+
+    # RealEngines RD-8 vernier engine (for RD-120).
+    RD8:
+
+    # RealEngines Zenit upper stage (RG-1 propellant tank + RD-8 vernier engine).
+    RD120attachment_styleZenit2st:
 
 highPerformanceFuelSystems:
     solidBoosterSmall: &Castor30 # Castor 30B
@@ -3512,7 +3555,7 @@ highPerformanceFuelSystems:
     RSBengineCastor120: *Castor120 # Real Scale Boosters Castor 120 SRM
 
     solidBooster_sm: &STAR48B
-        cost: 1203 # nautix 4.06m, assume 1985 dollars
+        cost: 1203 # Astronautix 4.06m, assume 1985 dollars
     KK_ATK_Star48B: *STAR48B
     KK_ATK_Castor4A: # Castor4A by ATK
         cost: 640
@@ -3550,13 +3593,23 @@ highPerformanceFuelSystems:
         entryCost: 1200
 
 hydroloxTL5:
-    #Energia sustainer engine
+
+    #Energia sustainer engine (BobCat Soviet Engine Pack). 
     RD0120_StockVersion: &RD-0120
         cost: 5000 # FIXME total guess
+
+    # SXT RD-0120.
     SXTCommodore: *RD-0120
+
+    # NovaPunch RD-0120.
     NP_lfe_25m_Orbitalbertha: *RD-0120
+
+    # Cryogenic Engines pack RD-0120.
     cryoengine-375-2: *RD-0120
-    
+
+    # RealEngines RD-0120.
+    rd0120: *RD-0120
+
     KW3mengineGriffonXX: &4xRD-0120 #four RD-0120s
         cost: 20000 # FIXME
         entryCost: 100000 # same as for single RD-0120
@@ -3626,7 +3679,9 @@ avionicsTL5:
     Hamal_Control_B: #Advanced Progress SA
     
     Vega_Engine_C: #S5.79
-    
+
+    # RealEngines S5.92 engine.
+    S5_92:
 
 # TIER 7
 experimentalRocketry: #TL6, late 80s/90s
@@ -3659,14 +3714,22 @@ experimentalRocketry: #TL6, late 80s/90s
 
 stagedTL6:
 
-    RD180_StockVersion: &RD180  # Bobcat's Soviet Engines -Need Costing-
+    # Bobcat's Soviet Engines -Need Costing-
+    RD180_StockVersion: &RD180
         cost: 2700
     RSBengineRD180: *RD180      # Real Scale Boosters RD-180 engine.
     BahaRd180: *RD180           # BahamutoD Atlas V.
 
-    RD191_StockVersion: # NPO Energomash RD-191
+    # RealEngines RD-180.
+    rd180engine: *RD180
+
+    RD191_StockVersion: &RD-191 # NPO Energomash RD-191
         cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
-    XKosmos_Angara_RD-275KX: # RD-275, Proton M first stage
+
+    # RealEngines RD-191.
+    rd191engine: *RD-191
+
+    XKosmos_Angara_RD-275KX: &RD-275 # RD-275, Proton M first stage
         cost: 515 # same as RD-253
 
 specializedFuelStorage: # TL6 solids
@@ -3779,7 +3842,10 @@ giganticRocketry: #TL7, present day
     FREFRE2:
         cost: 350 #assuming that the short nozzle combustor is less expensive than the long nozzle
         entryCost: 30000 #aerospike, near-future tech
-    
+
+    # RealEngines RD-0110R engine.
+    NK33attachment:
+
 hydroloxTL7:
     liquidEngineconstelacion: &J2X # J-2X
         cost: 3310 # 25M USD Erik Seedhouse - Lunar Outpost: The Challenges of Establishing a Human Settlement on the Moon http://i.imgur.com/lnqO6om.jpg
@@ -3793,9 +3859,12 @@ hydroloxTL7:
     RSBengineRL10B2: *RL10B # Real Scale Boosters RL10-B/CECE engine
     
     # Bobcat's Soviet Engines -Need Costing-
-    RD0146_StockVersion: # KB Khimavtomatiki RD-0146
+    RD0146_StockVersion: &RD-0146 # KB Khimavtomatiki RD-0146
         cost: 2000 # same as for RL10
-    
+
+    # RealEngines RD-0146.
+    RD0146engine: *RD-0146
+
     B9_Engine_L2_Atlas: # CECE-Base
         cost: 3800 # based on the CECE-BASE config for FASA RL10
     
@@ -3815,9 +3884,13 @@ hydroloxTL7:
         cost: 4800 # arbitrary estimation; cheaper than 2xRL10-B2 (2x3300), according to nasa SLS upper stage study
 
 stagedTL7:
-    # AJ26-62 config here
-    RD0124_StockVersion:
+
+    # AJ26-62 config here.
+    RD0124_StockVersion: &RD-0124
         cost: 1200 # total guess
+
+    # RealEngines RD-0124.
+    RD0124engine: *RD-0124
 
 exoticFuelStorage: #TL7 solids
     #ATK L.S.G. 5-Segment RSRM
@@ -3946,8 +4019,7 @@ specializedConstruction:
         cost: 100
     KAS_CPort1:
         cost: 100
-    
-    
+
 advLanding:
     
 actuators:
@@ -5041,7 +5113,7 @@ ORPHANS:
     FASAGeminiSciRadmeter:
 
     # AIES
-    # Integratration is WIP.  These parts aren't done yet
+    # Integration is WIP. These parts aren't done yet
     cone05ra:
     Antennacomtec1:
     Antennacomtec2:

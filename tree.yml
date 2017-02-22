@@ -1237,7 +1237,9 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     FASAAgena_Engine: &AgenaEngine # Bell 8xxx engine for Agena
         cost: 350
     RO-AgenaEngine: *AgenaEngine
-    SSTU-SC-ENG-LR81: *AgenaEngine
+    SSTU-SC-ENG-LR81: *AgenaEngine #deprecated but still there
+    SSTU-SC-ENG-LR81-8048: *AgenaEngine
+    SSTU-SC-ENG-LR81-8096: *AgenaEngine
     RSBengineXLR81: *AgenaEngine # Real Scale Boosters XLR-81 engine
 
     # Titan engines

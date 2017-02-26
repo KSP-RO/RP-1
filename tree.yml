@@ -1978,7 +1978,7 @@ fuelSystems: # Staged combustion, TL2
 
     ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
         cost: 3580
-    ALV_Engine_B: #RD-0210/0211, Proton Second Stage
+    ALV_Engine_B:   #RD-0210/0211, Proton Second Stage
         cost: 1300
         
     r7_blok_i_m: # Molniya Block-I
@@ -2005,7 +2005,7 @@ fuelSystems: # Staged combustion, TL2
     NP_lfe_125m_BearcatSingle: *RD253
 
     # RealEngines RD-253 engine.
-    RD275: *RD-253
+    RD275: *RD253
     
     # NK-9, via BobCat clones.
     NK9:

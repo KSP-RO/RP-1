@@ -1909,7 +1909,7 @@ advRocketry:
         cost: 400 # guess based on other engines of the era
 
     # RealEngines RD-0110.
-    RD0110engine: *RD-0110
+    RD0110: *RD-0110
 
     # Tantares LV RD-0110.
     TLV_Engine_B: *RD-0110
@@ -1995,10 +1995,16 @@ fuelSystems: # Staged combustion, TL2
     RO-RD-253: *RD253
     RO-RD-0210: *RD0210
 
+    # RealEngines RD-0210 engine.
+    RD0210: *RD0210
+
+    # RealEngines RD-0212 engine.
+    RD0212: &RD0212
+
     # NovaPunch RD-253.
     NP_lfe_125m_BearcatSingle: *RD253
 
-    # RealEngines RD-253.
+    # RealEngines RD-253 engine.
     RD275: *RD-253
     
     # NK-9, via BobCat clones.
@@ -3539,7 +3545,7 @@ stagedTL5:
     # RealEngines RD-120 engine.
     RD120:
 
-    # RealEngines RD-8 vernier engine (for RD-120).
+    # RealEngines RD-805 engine.
     RD8:
 
     # RealEngines Zenit upper stage (RG-1 propellant tank + RD-8 vernier engine).
@@ -3607,7 +3613,7 @@ hydroloxTL5:
     # Cryogenic Engines pack RD-0120.
     cryoengine-375-2: *RD-0120
 
-    # RealEngines RD-0120.
+    # RealEngines RD-0120 engine.
     rd0120: *RD-0120
 
     KW3mengineGriffonXX: &4xRD-0120 #four RD-0120s
@@ -3677,11 +3683,15 @@ avionicsTL5:
     STSAPASport: *APAS
     Hamal_Battery_A: #Advanced Progress Batteries
     Hamal_Control_B: #Advanced Progress SA
-    
-    Vega_Engine_C: #S5.79
+
+    # Tantares S5.79 engine.
+    Vega_Engine_C: &S5-79
 
     # RealEngines S5.92 engine.
-    S5_92:
+    S5_92fversion: &S5-92
+
+    # RealEngines S5.98M engine.
+    S5_98M: &S5-98M
 
 # TIER 7
 experimentalRocketry: #TL6, late 80s/90s
@@ -3726,7 +3736,7 @@ stagedTL6:
     RD191_StockVersion: &RD-191 # NPO Energomash RD-191
         cost: 1350 # half of the RD-180 cost. Both are derived from the RD-170/171.
 
-    # RealEngines RD-191.
+    # RealEngines RD-191 engine.
     rd191engine: *RD-191
 
     XKosmos_Angara_RD-275KX: &RD-275 # RD-275, Proton M first stage
@@ -3983,10 +3993,10 @@ advExploration:
 
 precisionEngineering:
     #US Probes Integration
-    rn_voyager: # 865 mil for Voyager 1+2, reduced to 212 mil to be reasonable with other probes…, 1/40th entrycost
+    rn_voyager: # 865 mil for Voyager 1+2, reduced to 212 mil to be reasonable with other probes…, 1/40th entry cost.
         cost: 2841
         entryCost: 90921
-    rn_vpam: # Payload assist module for Voyager, increased entrycost to offset voyager probe costs
+    rn_vpam: # Payload assist module for Voyager, increased entry cost to offset voyager probe costs
         cost: 970
         entryCost: 22729
     sensorAtmosphere: # The Gas Chromatograph - Mass Spectrometer (GC-MS), used in the Viking Program (1976), Venera 11 (1978), Pioneer-Venus, Cassini-Huygens
@@ -3995,7 +4005,7 @@ precisionEngineering:
         cost: 1500 # same as GC-MS above
     B9_Cockpit_MK2_Nosecone_Science: # GC-MS
         cost: 1500
-        
+
 specializedConstruction:
     
     # FASA Nova Parts
@@ -4019,6 +4029,9 @@ specializedConstruction:
         cost: 100
     KAS_CPort1:
         cost: 100
+
+    # RealEngines RD-0120 engine mount.
+    RD0120CAP:
 
 advLanding:
     

@@ -2762,7 +2762,7 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
     # RealEngines NK-33.
     NK33engine: *NK33
 
-    NK43_StockVersion: # in Nk-15V configuration
+    NK43_StockVersion: &NK43 # in Nk-15V configuration
         cost: 780
     # NK15s were flown on the 4 N1 launches, from 1969 to 1972
 

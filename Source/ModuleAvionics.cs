@@ -73,7 +73,8 @@ namespace RP0
 		{
 			if (part.protoModuleCrew.Count > 0)
 			{
-				currentlyEnabled = true;
+				currentlyEnabled = systemEnabled = true;
+				
 				commandChargeResource.rate = currentWatts = enabledkW;
 				ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
 			}
@@ -92,7 +93,7 @@ namespace RP0
 			currentWatts *= 1000f;
 		}
 
-		private void setActionsAndGui()
+		private void SetActionsAndGui()
 		{
 			Events["ToggleEvent"].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
 			Actions["ActivateAction"].active = !systemEnabled;
@@ -119,7 +120,7 @@ namespace RP0
                 Actions["ActivateAction"].active =
                 Actions["ShutdownAction"].active = toggleable;
 
-			setActionsAndGui();
+			SetActionsAndGui();
         }
 
         public override string GetInfo()
@@ -164,8 +165,8 @@ namespace RP0
 		public void ToggleEvent()
 		{
 			systemEnabled = !systemEnabled;
-			setActionsAndGui();
 			UpdateRate();
+			SetActionsAndGui();
 		}
 
         [KSPAction("Toggle Avionics")]

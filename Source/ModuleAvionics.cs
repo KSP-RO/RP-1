@@ -35,13 +35,18 @@ namespace RP0
         protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
 
+		protected virtual float getInternalMassLimit()
+		{
+			return massLimit;
+		}
+
         // returns current limit, based on enabled/disabled
         public float CurrentMassLimit
         {
             get
             {
                 if (currentlyEnabled && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
-                    return massLimit;
+                    return getInternalMassLimit();
                 else
                     return 0f;
             }

@@ -2777,6 +2777,9 @@ largeSolids: # TL3 solids
 
     FASAGerminiSRBInlineSep:
         cost: 50 # FIXME guess
+        
+    FASAFairingNosecone_3mSRB: # 120inch SRB aerocone w/sep motor
+        cost: 50 # FIXME guess
 
     RT2: # Castor II
         cost: 320 # unstated, should be about Castor I's cost.

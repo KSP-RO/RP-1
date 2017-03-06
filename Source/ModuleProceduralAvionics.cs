@@ -153,7 +153,15 @@ namespace RP0
 
 		private float CalculateNewMass()
 		{
-			return proceduralMassLimit / CurrentProceduralAvionicsConfig.tonnageToMassRatio;
+			if (CurrentProceduralAvionicsConfig != null)
+			{
+				return proceduralMassLimit / CurrentProceduralAvionicsConfig.tonnageToMassRatio;
+			}
+			else
+			{
+				UnityEngine.Debug.Log("[ProcAvi] - Cannot compute mass yet");
+				return 0;
+			}
 		}
 
 		private float CalculateCost()

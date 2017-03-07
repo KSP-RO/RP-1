@@ -185,9 +185,16 @@ namespace RP0
 			{
 				proceduralMassLimitEdit = (UI_FloatEdit)Fields["proceduralMassLimit"].uiControlEditor;
 			}
-
-			var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
-			proceduralMassLimitEdit.maxValue = maxAvionicsMass * currentProceduralAvionicsConfig.tonnageToMassRatio;
+			if (CurrentProceduralAvionicsConfig != null)
+			{
+				var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
+				proceduralMassLimitEdit.maxValue = maxAvionicsMass * CurrentProceduralAvionicsConfig.tonnageToMassRatio;
+			}
+			else
+			{
+				Log("Cannot update max value yet");
+				proceduralMassLimitEdit.maxValue = float.MaxValue;
+			}
 		}
 
 		private void VerifyPart()

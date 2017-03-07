@@ -129,19 +129,18 @@ namespace RP0
 
 		public void LoadAvionicsConfigs(ConfigNode node)
 		{
-			var proceduralAvionicsConfigList = new List<ProceduralAvionicsConfig>();
 			proceduralAvionicsConfigs = new Dictionary<string, ProceduralAvionicsConfig>();
 			foreach (ConfigNode tNode in node.GetNodes("AVIONICSCONFIG"))
 			{
 				ProceduralAvionicsConfig config = new ProceduralAvionicsConfig();
 				config.Load(tNode);
-				proceduralAvionicsConfigList.Add(config);
+				proceduralAvionicsConfigs.Add(config.name, config);
 				Log("Loaded AvionicsConfg: " + config.name);
 			}
 
-			proceduralAvionicsConfigsSerialized = ObjectSerializer.Serialize(proceduralAvionicsConfigList);
+			List<ProceduralAvionicsConfig> configList = proceduralAvionicsConfigs.Values.ToList();
+			proceduralAvionicsConfigsSerialized = ObjectSerializer.Serialize(configList);
 			Log("Serialized configs");
-
 		}
 
 		private void UpdateCurrentConfig()
@@ -213,6 +212,7 @@ namespace RP0
 			}
 		}
 
+		// Using reflection to see if this is a procedural part (that way, we don't need to have procedur parts as a dependency
 		private float GetCurrentVolume()
 		{
 			float currentShapeVolume = float.MaxValue;

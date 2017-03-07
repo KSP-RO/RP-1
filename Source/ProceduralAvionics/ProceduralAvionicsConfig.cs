@@ -6,13 +6,24 @@ using System.Text;
 namespace RP0.ProceduralAvionics
 {
 	[Serializable]
-	class ProceduralAvionicsConfig:IConfigNode
+	class ProceduralAvionicsConfig : IConfigNode
 	{
 		[Persistent]
 		public string name;
 
 		[Persistent]
 		public float tonnageToMassRatio = 10; // default is 10 tons of control to one ton of part mass.  A higher number is more efficient.
+
+		[Persistent]
+		public string currentTechNodeName;
+
+		public ProceduralAvionicsTechNode CurrentTechNode
+		{
+			get
+			{
+				return TechNodes[currentTechNodeName];
+			}
+		}	
 
 		public byte[] techNodesSerialized;
 
@@ -23,16 +34,7 @@ namespace RP0.ProceduralAvionics
 			{
 				if (techNodes == null)
 				{
-
-					ProceduralAvionicsUtils.Log("TechNode deserialization needed");
-					techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
-					List<ProceduralAvionicsTechNode> techNodeList = ObjectSerializer.Deserialize<List<ProceduralAvionicsTechNode>>(techNodesSerialized);
-					foreach (var item in techNodeList)
-					{
-						ProceduralAvionicsUtils.Log("Deserialized " + item.name);
-						techNodes.Add(item.name, item);
-					}
-					ProceduralAvionicsUtils.Log("Deserialized " + techNodes.Count + " techNodes");
+					InitializeTechNodes();
 				}
 				return techNodes;
 			}
@@ -40,7 +42,9 @@ namespace RP0.ProceduralAvionics
 
 		public void Load(ConfigNode node)
 		{
+			ProceduralAvionicsUtils.Log("Loading Config nodes");
 			ConfigNode.LoadObjectFromConfig(this, node);
+			techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
 			if (name == null)
 			{
 				name = node.GetValue("name");
@@ -68,6 +72,19 @@ namespace RP0.ProceduralAvionics
 		public void Save(ConfigNode node)
 		{
 			ConfigNode.CreateConfigFromObject(this, node);
+		}
+
+		public void InitializeTechNodes()
+		{
+			ProceduralAvionicsUtils.Log("TechNode deserialization needed");
+			techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
+			List<ProceduralAvionicsTechNode> techNodeList = ObjectSerializer.Deserialize<List<ProceduralAvionicsTechNode>>(techNodesSerialized);
+			foreach (var item in techNodeList)
+			{
+				ProceduralAvionicsUtils.Log("Deserialized " + item.name);
+				techNodes.Add(item.name, item);
+			}
+			ProceduralAvionicsUtils.Log("Deserialized " + techNodes.Count + " techNodes");
 		}
 	}
 }

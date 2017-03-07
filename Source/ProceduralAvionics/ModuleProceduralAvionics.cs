@@ -29,10 +29,22 @@ namespace RP0.ProceduralAvionics
 		public string avionicsConfigName;
 		private string oldAvionicsConfigName;
 
+		// This is the tech level that this avionics module is locked in at.
+		[KSPField]
+		public string savedTechLevel;
+
 		// The currently selected avionics config
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig
 		{
 			get { return currentProceduralAvionicsConfig; }
+		}
+
+		public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode
+		{
+			get
+			{
+				return CurrentProceduralAvionicsConfig.CurrentTechNode;
+			}
 		}
 
 		protected override float getInternalMassLimit()
@@ -42,6 +54,7 @@ namespace RP0.ProceduralAvionics
 
 		private ProceduralAvionicsConfig currentProceduralAvionicsConfig;
 		private UI_FloatEdit proceduralMassLimitEdit;
+		private bool needsTechInit = true;
 
 		[SerializeField]
 		public byte[] proceduralAvionicsConfigsSerialized; //public so it will persist from loading to using it
@@ -116,14 +129,6 @@ namespace RP0.ProceduralAvionics
 				}
 				ProceduralAvionicsUtils.Log("Deserialized " + proceduralAvionicsConfigs.Count + " configs");
 
-				BaseField avionicsConfigField = Fields["avionicsConfigName"];
-				avionicsConfigField.guiActiveEditor = true;
-				UI_ChooseOption range = (UI_ChooseOption)avionicsConfigField.uiControlEditor;
-				range.options = proceduralAvionicsConfigs.Keys.ToArray();
-
-				avionicsConfigName = proceduralAvionicsConfigs.Keys.First();
-
-				ProceduralAvionicsUtils.Log("Defaulted config to " + avionicsConfigName);
 			}
 		}
 
@@ -134,6 +139,7 @@ namespace RP0.ProceduralAvionics
 			{
 				ProceduralAvionicsConfig config = new ProceduralAvionicsConfig();
 				config.Load(tNode);
+				config.InitializeTechNodes();
 				proceduralAvionicsConfigs.Add(config.name, config);
 				ProceduralAvionicsUtils.Log("Loaded AvionicsConfg: " + config.name);
 			}
@@ -152,6 +158,7 @@ namespace RP0.ProceduralAvionics
 			ProceduralAvionicsUtils.Log("Setting config to " + avionicsConfigName);
 			currentProceduralAvionicsConfig = proceduralAvionicsConfigs[avionicsConfigName];
 			oldAvionicsConfigName = avionicsConfigName;
+			savedTechLevel = CurrentProceduralAvionicsTechNode.name; //TODO: where should we use this?
 		}
 		#endregion
 
@@ -160,7 +167,7 @@ namespace RP0.ProceduralAvionics
 		{
 			if (CurrentProceduralAvionicsConfig != null)
 			{
-				return proceduralMassLimit / CurrentProceduralAvionicsConfig.tonnageToMassRatio;
+				return proceduralMassLimit / CurrentProceduralAvionicsConfig.CurrentTechNode.tonnageToMassRatio;
 			}
 			else
 			{
@@ -185,16 +192,99 @@ namespace RP0.ProceduralAvionics
 			{
 				proceduralMassLimitEdit = (UI_FloatEdit)Fields["proceduralMassLimit"].uiControlEditor;
 			}
+
+			if (needsTechInit)
+			{
+				InitializeTechLimits();
+				UpdateSliders();
+			}
+
 			if (CurrentProceduralAvionicsConfig != null)
 			{
 				var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
-				proceduralMassLimitEdit.maxValue = maxAvionicsMass * CurrentProceduralAvionicsConfig.tonnageToMassRatio;
+				proceduralMassLimitEdit.maxValue = maxAvionicsMass * CurrentProceduralAvionicsConfig.CurrentTechNode.tonnageToMassRatio;
 			}
 			else
 			{
 				ProceduralAvionicsUtils.Log("Cannot update max value yet");
 				proceduralMassLimitEdit.maxValue = float.MaxValue;
 			}
+		}
+
+		private void UpdateSliders()
+		{
+			BaseField avionicsConfigField = Fields["avionicsConfigName"];
+			avionicsConfigField.guiActiveEditor = true;
+			UI_ChooseOption range = (UI_ChooseOption)avionicsConfigField.uiControlEditor;
+			range.options = proceduralAvionicsConfigs.Keys.ToArray();
+
+			avionicsConfigName = proceduralAvionicsConfigs.Keys.First();
+
+			ProceduralAvionicsUtils.Log("Defaulted config to " + avionicsConfigName);
+		}
+
+		private void InitializeTechLimits()
+		{
+			if (HighLogic.CurrentGame == null)
+			{
+				return;
+			}
+			if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER && HighLogic.CurrentGame.Mode != Game.Modes.SCIENCE_SANDBOX)
+			{
+				foreach (var config in proceduralAvionicsConfigs.Values)
+				{
+					config.currentTechNodeName = GetBestTechConfig(config.TechNodes, false).name;
+				}
+			}
+			else
+			{
+				if (ResearchAndDevelopment.Instance == null)
+				{
+					return;
+				}
+
+				var unsupportedConfigs = new List<string>();
+				foreach (var config in proceduralAvionicsConfigs.Values)
+				{
+					var bestConfig = GetBestTechConfig(config.TechNodes, true);
+					if (bestConfig == null)
+					{
+						unsupportedConfigs.Add(config.name);
+					}
+					else
+					{
+						config.currentTechNodeName = GetBestTechConfig(config.TechNodes, true).name;
+					}
+				}
+
+				//remove configs not yet unlocked
+				foreach (var unsupportedConfigName in unsupportedConfigs)
+				{
+					proceduralAvionicsConfigs.Remove(unsupportedConfigName);
+				}
+
+			}
+			needsTechInit = false;
+		}
+
+		private ProceduralAvionicsTechNode GetBestTechConfig(Dictionary<String, ProceduralAvionicsTechNode> techNodes, bool limitToCurrentTech)
+		{
+			if (techNodes == null)
+			{
+				return null;
+			}
+			ProceduralAvionicsTechNode bestTechNode = null;
+			foreach (var techNode in techNodes.Values)
+			{
+				if (bestTechNode == null || techNode.tonnageToMassRatio > bestTechNode.tonnageToMassRatio)
+				{
+					if (!limitToCurrentTech || ResearchAndDevelopment.GetTechnologyState(techNode.name) == RDTech.State.Available)
+					{ 
+						bestTechNode = techNode;
+					}
+				}
+			}
+			return bestTechNode;
 		}
 
 		private void VerifyPart()

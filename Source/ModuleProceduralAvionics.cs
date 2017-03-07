@@ -160,7 +160,7 @@ namespace RP0
 		{
 			if (CurrentProceduralAvionicsConfig != null)
 			{
-				return proceduralMassLimit * CurrentProceduralAvionicsConfig.tonnageToMassRatio;
+				return proceduralMassLimit / CurrentProceduralAvionicsConfig.tonnageToMassRatio;
 			}
 			else
 			{
@@ -187,7 +187,7 @@ namespace RP0
 			}
 
 			var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
-			proceduralMassLimitEdit.maxValue = maxAvionicsMass;
+			proceduralMassLimitEdit.maxValue = maxAvionicsMass * currentProceduralAvionicsConfig.tonnageToMassRatio;
 		}
 
 		private void VerifyPart()

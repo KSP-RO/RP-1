@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace RP0
+namespace RP0.ProceduralAvionics
 {
 	class ModuleProceduralAvionics : ModuleAvionics, IPartMassModifier, IPartCostModifier
 	{
@@ -18,7 +18,7 @@ namespace RP0
 
 		// This controls how much the current part can control (in metric tons)
 		[KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "T"),
-		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.1f, sigFigs = 1, unit = "T")]
+		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 2, unit = "T")]
 		public float proceduralMassLimit = 1;
 		private float oldProceduralMassLimit = 1;
 
@@ -61,7 +61,7 @@ namespace RP0
 			}
 			catch (Exception ex)
 			{
-				Log("OnLoad exception: " + ex);
+				ProceduralAvionicsUtils.Log("OnLoad exception: " + ex);
 				throw;
 			}
 		}
@@ -106,15 +106,15 @@ namespace RP0
 		{
 			if (proceduralAvionicsConfigs == null && proceduralAvionicsConfigsSerialized != null)
 			{
-				Log("deserialization needed");
+				ProceduralAvionicsUtils.Log("ConficNode Deserialization needed");
 				proceduralAvionicsConfigs = new Dictionary<string, ProceduralAvionicsConfig>();
 				List<ProceduralAvionicsConfig> proceduralAvionicsConfigList = ObjectSerializer.Deserialize<List<ProceduralAvionicsConfig>>(proceduralAvionicsConfigsSerialized);
 				foreach (var item in proceduralAvionicsConfigList)
 				{
-					Log("deserialized " + item.name);
+					ProceduralAvionicsUtils.Log("Deserialized " + item.name);
 					proceduralAvionicsConfigs.Add(item.name, item);
 				}
-				Log("deserialized " + proceduralAvionicsConfigs.Count + " configs");
+				ProceduralAvionicsUtils.Log("Deserialized " + proceduralAvionicsConfigs.Count + " configs");
 
 				BaseField avionicsConfigField = Fields["avionicsConfigName"];
 				avionicsConfigField.guiActiveEditor = true;
@@ -123,7 +123,7 @@ namespace RP0
 
 				avionicsConfigName = proceduralAvionicsConfigs.Keys.First();
 
-				Log("Defaulted config to " + avionicsConfigName);
+				ProceduralAvionicsUtils.Log("Defaulted config to " + avionicsConfigName);
 			}
 		}
 
@@ -135,12 +135,12 @@ namespace RP0
 				ProceduralAvionicsConfig config = new ProceduralAvionicsConfig();
 				config.Load(tNode);
 				proceduralAvionicsConfigs.Add(config.name, config);
-				Log("Loaded AvionicsConfg: " + config.name);
+				ProceduralAvionicsUtils.Log("Loaded AvionicsConfg: " + config.name);
 			}
 
 			List<ProceduralAvionicsConfig> configList = proceduralAvionicsConfigs.Values.ToList();
 			proceduralAvionicsConfigsSerialized = ObjectSerializer.Serialize(configList);
-			Log("Serialized configs");
+			ProceduralAvionicsUtils.Log("Serialized configs");
 		}
 
 		private void UpdateCurrentConfig()
@@ -149,7 +149,7 @@ namespace RP0
 			{
 				return;
 			}
-			Log("Setting config to " + avionicsConfigName);
+			ProceduralAvionicsUtils.Log("Setting config to " + avionicsConfigName);
 			currentProceduralAvionicsConfig = proceduralAvionicsConfigs[avionicsConfigName];
 			oldAvionicsConfigName = avionicsConfigName;
 		}
@@ -164,7 +164,7 @@ namespace RP0
 			}
 			else
 			{
-				Log("Cannot compute mass yet");
+				ProceduralAvionicsUtils.Log("Cannot compute mass yet");
 				return 0;
 			}
 		}
@@ -192,7 +192,7 @@ namespace RP0
 			}
 			else
 			{
-				Log("Cannot update max value yet");
+				ProceduralAvionicsUtils.Log("Cannot update max value yet");
 				proceduralMassLimitEdit.maxValue = float.MaxValue;
 			}
 		}
@@ -203,19 +203,19 @@ namespace RP0
 			{
 				return;
 			}
-			Log("verifying part");
+			ProceduralAvionicsUtils.Log("verifying part");
 
 			var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
-			Log("new mass would be " + CalculateNewMass() + ", max avionics mass is " + maxAvionicsMass);
+			ProceduralAvionicsUtils.Log("new mass would be " + CalculateNewMass() + ", max avionics mass is " + maxAvionicsMass);
 			if (maxAvionicsMass < CalculateNewMass())
 			{
 				proceduralMassLimit = oldProceduralMassLimit;
-				Log("resetting part");
+				ProceduralAvionicsUtils.Log("resetting part");
 			}
 			else
 			{
 				oldProceduralMassLimit = proceduralMassLimit;
-				Log("part verified");
+				ProceduralAvionicsUtils.Log("part verified");
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace RP0
 				var moduleType = module.GetType();
 				if (moduleType.FullName == "ProceduralParts.ProceduralPart")
 				{
-					//Log("Procedural Parts detected"); //This would spam the logs unless we do some old/current caching
+					//ProceduralAvionicsUtils.Log("Procedural Parts detected"); //This would spam the logs unless we do some old/current caching
 					var reflectedShape = moduleType.GetProperty("CurrentShape").GetValue(module, null);
 					currentShapeVolume = (float)reflectedShape.GetType().GetProperty("Volume").GetValue(reflectedShape, null);
 				}
@@ -237,10 +237,6 @@ namespace RP0
 			return currentShapeVolume;
 		}
 
-		private void Log(string message)
-		{
-			UnityEngine.Debug.Log("[ProcAvi] - " + message);
-		}
 		#endregion
 	}
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RP0
+namespace RP0.ProceduralAvionics
 {
 	[Serializable]
-	class ProceduralAvionicsConfig:IConfigNode
+	class ProceduralAvionicsTechNode:IConfigNode
 	{
 		[Persistent]
 		public string name;

@@ -75,6 +75,7 @@
     <Compile Include="ModuleShowInfo.cs" />
     <Compile Include="EntryCosts\EntryCostModifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\KSPUtils.cs" />
     <Compile Include="Utilities\ObjectSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,9 +87,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Games\Steam\steamapps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="ProceduralParts">
-      <HintPath>..\..\ProceduralParts.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>

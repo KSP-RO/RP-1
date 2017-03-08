@@ -1238,6 +1238,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 350
     RO-AgenaEngine: *AgenaEngine
     SSTU-SC-ENG-LR81: *AgenaEngine
+    SSTU-SC-ENG-LR81-8048: *AgenaEngine
     RSBengineXLR81: *AgenaEngine # Real Scale Boosters XLR-81 engine
 
     # Titan engines
@@ -1950,8 +1951,10 @@ advRocketry:
      # SSTU
     SSTU-SC-ENG-RD-0110: *RD-0110
     SSTU-SC-ENG-H1: *H1
+    SSTU-SC-ENG-LR81-8096:
+        cost: 350 #+ 250 for config
 
-        # Staged Combustion TL2
+
 hydroloxTL2:
     FASAGeminiLFTCentar: # Centaur A/B/C/D/D1 stage
         cost: 1201 # no cited research cost tho
@@ -4558,6 +4561,9 @@ specializedCommandModules: # modern?
     SSTU-SC-C-BPC: *ApolloLES         # Orion LES, cost stolen from apollo :^)
     SSTU-SC-C-CM: *ORIONPOD
     SSTU-SC-C-SM: *ORIONSM
+    SSTU-SC-ENG-SuperDraco:
+        cost: 62 # total guess from laztek above.
+    
 
 largeUnmanned:
     

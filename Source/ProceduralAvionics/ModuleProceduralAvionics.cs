@@ -29,9 +29,8 @@ namespace RP0.ProceduralAvionics
 		public string avionicsConfigName;
 		private string oldAvionicsConfigName;
 
-		// This is the tech level that this avionics module is locked in at.
-		[KSPField]
-		public string savedTechLevel;
+		[KSPField(isPersistant = true)]
+		public float tonnageToMassRatio;
 
 		// The currently selected avionics config
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig
@@ -88,6 +87,8 @@ namespace RP0.ProceduralAvionics
 				UpdateCurrentConfig();
 				VerifyPart();
 				//TODO: change resource rate (we might need to make a ModuleProceduralCommand)
+
+				SetInternalKSPFields();
 			}
 			base.Update();
 		}
@@ -158,13 +159,16 @@ namespace RP0.ProceduralAvionics
 			ProceduralAvionicsUtils.Log("Setting config to " + avionicsConfigName);
 			currentProceduralAvionicsConfig = proceduralAvionicsConfigs[avionicsConfigName];
 			oldAvionicsConfigName = avionicsConfigName;
-			savedTechLevel = CurrentProceduralAvionicsTechNode.name; //TODO: where should we use this?
 		}
 		#endregion
 
 		#region part attribute calculations
 		private float CalculateNewMass()
 		{
+			if (HighLogic.LoadedSceneIsFlight)
+			{
+				return proceduralMassLimit / tonnageToMassRatio;
+			}
 			if (CurrentProceduralAvionicsConfig != null)
 			{
 				return proceduralMassLimit / CurrentProceduralAvionicsConfig.CurrentTechNode.tonnageToMassRatio;
@@ -208,6 +212,10 @@ namespace RP0.ProceduralAvionics
 			{
 				ProceduralAvionicsUtils.Log("Cannot update max value yet");
 				proceduralMassLimitEdit.maxValue = float.MaxValue;
+			}
+			if (proceduralMassLimit > proceduralMassLimitEdit.maxValue)
+			{
+				proceduralMassLimit = proceduralMassLimitEdit.maxValue;
 			}
 		}
 
@@ -325,6 +333,11 @@ namespace RP0.ProceduralAvionics
 				}
 			}
 			return currentShapeVolume;
+		}
+
+		private void SetInternalKSPFields()
+		{
+			tonnageToMassRatio = CurrentProceduralAvionicsConfig.CurrentTechNode.tonnageToMassRatio;
 		}
 
 		#endregion

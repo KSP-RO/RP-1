@@ -12,9 +12,6 @@ namespace RP0.ProceduralAvionics
 		public string name;
 
 		[Persistent]
-		public float tonnageToMassRatio = 10; // default is 10 tons of control to one ton of part mass.  A higher number is more efficient.
-
-		[Persistent]
 		public string currentTechNodeName;
 
 		public ProceduralAvionicsTechNode CurrentTechNode

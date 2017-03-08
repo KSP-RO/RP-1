@@ -35,10 +35,10 @@ namespace RP0
         protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
 
-		protected virtual float getInternalMassLimit()
-		{
-			return massLimit;
-		}
+        protected virtual float getInternalMassLimit()
+        {
+            return massLimit;
+        }
 
         // returns current limit, based on enabled/disabled
         public float CurrentMassLimit

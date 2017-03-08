@@ -215,6 +215,7 @@ namespace RP0.ProceduralAvionics
 			}
 			if (proceduralMassLimit > proceduralMassLimitEdit.maxValue)
 			{
+				ProceduralAvionicsUtils.Log("Lowering procedural mass limit to new max value of " + proceduralMassLimitEdit.maxValue);
 				proceduralMassLimit = proceduralMassLimitEdit.maxValue;
 			}
 		}

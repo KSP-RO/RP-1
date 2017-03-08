@@ -2844,6 +2844,8 @@ advConstruction:
         cost: 100
     FASAAtlasSLV3A:
         cost: 450
+    FASAAtlasSLV3C:
+        entryCost: 450
     FASASaturnSLA: &ApolloSLA # spacecraft lunar module adapter - base
         cost: 150
         
@@ -3969,8 +3971,6 @@ specializedConstruction:
     FASAApalloLFTF1Plate:
         entryCost: 14000
         cost: 400
-    FASAAtlasSLV3C:
-        entryCost: 450
     
     # KAS parts. cost = little less than for Infernal robotics parts.
     KAS_Strut1:

@@ -26,6 +26,18 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public float costPerControlledTon = 1;
 
+
+		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
+		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
+		[Persistent]
+		public float enabledProceduralKw = 1;
+
+		// If postitive, this will enable the abilty to put avioniccs on standby.
+		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
+		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
+		[Persistent]
+		public float disabledProceduralKw = -1;
+
 		public void Load(ConfigNode node)
 		{
 			ConfigNode.LoadObjectFromConfig(this, node);

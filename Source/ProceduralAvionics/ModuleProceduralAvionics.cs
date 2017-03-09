@@ -30,8 +30,21 @@ namespace RP0.ProceduralAvionics
 		public string avionicsConfigName;
 		private string oldAvionicsConfigName;
 
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Percent Utilization")]
+		public string utilizationDisplay;
+
+
 		[KSPField(isPersistant = true)]
 		public float tonnageToMassRatio;
+
+		[KSPField(isPersistant = true)]
+		public float costPerControlledTon;
+
+		[KSPField(isPersistant = true)]
+		public float enabledProceduralKw;
+
+		[KSPField(isPersistant = true)]
+		public float disabledProceduralKw;
 
 		// The currently selected avionics config
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig
@@ -87,9 +100,9 @@ namespace RP0.ProceduralAvionics
 				UpdateMaxValues();
 				UpdateCurrentConfig();
 				VerifyPart();
-				//TODO: change resource rate (we might need to make a ModuleProceduralCommand)
 
 				SetInternalKSPFields();
+				SetBaseResourceRates();
 			}
 			base.Update();
 		}
@@ -189,10 +202,50 @@ namespace RP0.ProceduralAvionics
 			return massPercentage * GetCurrentVolume() * maxDensityOfAvionics;
 		}
 
-		private float CalculateCost()
+		private float CalculateCost() {
+
+			if (HighLogic.LoadedSceneIsFlight)
+			{
+				return DoCostCalculation();
+			}
+			if (CurrentProceduralAvionicsConfig != null)
+			{
+				costPerControlledTon = CurrentProceduralAvionicsConfig.CurrentTechNode.costPerControlledTon;
+				return DoCostCalculation();
+			}
+			else
+			{
+				Log("Cannot compute cost yet");
+				return 0;
+			}
+		}
+
+		private float DoCostCalculation()
 		{
-			//TODO: define
-			return proceduralMassLimit * 100;
+			float controllablePercentage = GetControllableUtilizationPercentage();
+			float costPercentage = controllablePercentage * controllablePercentage;
+			return costPerControlledTon * 4 * costPercentage * proceduralMassLimit;
+		}
+
+		private void SetBaseResourceRates()
+		{
+			float resourceRatePercentage = GetControllableUtilizationPercentage() + 0.5f;
+			this.enabledkW = enabledProceduralKw * resourceRatePercentage;
+			this.disabledkW = disabledProceduralKw * resourceRatePercentage;
+			this.toggleable = (disabledProceduralKw > 0);
+			ModuleCommand mC = part.FindModuleImplementing<ModuleCommand>();
+
+			if (mC != null)
+			{
+				foreach (ModuleResource r in mC.resHandler.inputResources)
+				{
+					if (r.id == PartResourceLibrary.ElectricityHashcode)
+					{
+						commandChargeResource = r;
+						r.rate = enabledkW;
+					}
+				}
+			}
 		}
 		#endregion
 
@@ -367,7 +420,11 @@ namespace RP0.ProceduralAvionics
 
 		private void SetInternalKSPFields()
 		{
-			tonnageToMassRatio = CurrentProceduralAvionicsConfig.CurrentTechNode.tonnageToMassRatio;
+			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
+			tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
+			costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
+			enabledProceduralKw = CurrentProceduralAvionicsTechNode.enabledProceduralKw;
+			disabledProceduralKw = CurrentProceduralAvionicsTechNode.disabledProceduralKw;
 		}
 
 		#endregion

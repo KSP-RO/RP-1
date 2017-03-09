@@ -35,10 +35,25 @@ namespace RP0
         protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
 
-        protected virtual float getInternalMassLimit()
+        protected virtual float GetInternalMassLimit()
         {
             return massLimit;
         }
+
+		protected virtual float GetEnabledkW()
+		{
+			return enabledkW;
+		}
+
+		protected virtual float GetDisabledkW()
+		{
+			return disabledkW;
+		}
+
+		protected virtual bool GetToggleable()
+		{
+			return toggleable;
+		}
 
         // returns current limit, based on enabled/disabled
         public float CurrentMassLimit
@@ -46,7 +61,7 @@ namespace RP0
             get
             {
                 if (currentlyEnabled && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
-                    return getInternalMassLimit();
+                    return GetInternalMassLimit();
                 else
                     return 0f;
             }
@@ -65,7 +80,7 @@ namespace RP0
 					if (r.id == PartResourceLibrary.ElectricityHashcode)
 					{
 						commandChargeResource = r;
-						if (enabledkW < 0)
+						if (GetEnabledkW() < 0)
 							enabledkW = (float)r.rate;
 						return r.rate;
 					}
@@ -80,7 +95,7 @@ namespace RP0
 			{
 				currentlyEnabled = systemEnabled = true;
 				
-				commandChargeResource.rate = currentWatts = enabledkW;
+				commandChargeResource.rate = currentWatts = GetEnabledkW();
 				ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
 			}
 			else
@@ -88,11 +103,11 @@ namespace RP0
 				currentlyEnabled = !((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled);
 				if (currentlyEnabled)
 				{
-					commandChargeResource.rate = currentWatts = enabledkW;
+					commandChargeResource.rate = currentWatts = GetEnabledkW();
 				}
 				else
 				{
-					commandChargeResource.rate = currentWatts = disabledkW;
+					commandChargeResource.rate = currentWatts = GetDisabledkW();
 				}
 			}
 			currentWatts *= 1000f;
@@ -110,7 +125,7 @@ namespace RP0
         public void Start()
         {
             // check then bind to ModuleCommand
-            if (toggleable && disabledkW >= 0f && ResourceRate() >= 0)
+            if (GetToggleable() && GetDisabledkW() >= 0f && ResourceRate() >= 0)
                 UpdateRate();
             else
             {
@@ -123,7 +138,7 @@ namespace RP0
                 Events["ToggleEvent"].guiActiveEditor = 
                 Actions["ToggleAction"].active =
                 Actions["ActivateAction"].active =
-                Actions["ShutdownAction"].active = toggleable;
+                Actions["ShutdownAction"].active = GetToggleable();
 
 			SetActionsAndGui();
         }
@@ -135,13 +150,13 @@ namespace RP0
                 retStr += "up to " + massLimit.ToString("N3") + " tons.";
             else
                 retStr += "any mass.";
-            if(toggleable && disabledkW >= 0f)
+            if(GetToggleable() && GetDisabledkW() >= 0f)
             {
                 double resRate = ResourceRate();
                 if(resRate >= 0)
                 {
                     retStr += "\nCan be disabled, to lower command module wattage from " 
-                        + (enabledkW * 1000d).ToString("N1") + " W to " + (disabledkW * 1000d).ToString("N1") + " W.";
+                        + (GetEnabledkW() * 1000d).ToString("N1") + " W to " + (GetDisabledkW() * 1000d).ToString("N1") + " W.";
                 }
             }
             if (!string.IsNullOrEmpty(techRequired))
@@ -156,7 +171,7 @@ namespace RP0
 
             // Automatic mode switch
             bool isWarping = (TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f);
-            if (toggleable && isWarping != wasWarping)
+            if (GetToggleable() && isWarping != wasWarping)
             {
                 // Maybe do a screenmessage here?
                 UpdateRate();

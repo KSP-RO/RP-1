@@ -30,10 +30,6 @@ namespace RP0.ProceduralAvionics
 		public string avionicsConfigName;
 		private string oldAvionicsConfigName;
 
-		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Percent Utilization")]
-		public string utilizationDisplay;
-
-
 		[KSPField(isPersistant = true)]
 		public float tonnageToMassRatio;
 
@@ -45,6 +41,9 @@ namespace RP0.ProceduralAvionics
 
 		[KSPField(isPersistant = true)]
 		public float disabledProceduralKw;
+
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Percent Utilization")]
+		public string utilizationDisplay;
 
 		// The currently selected avionics config
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig
@@ -60,9 +59,24 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		protected override float getInternalMassLimit()
+		protected override float GetInternalMassLimit()
 		{
 			return proceduralMassLimit;
+		}
+
+		protected override float GetEnabledkW()
+		{
+			return enabledProceduralKw * GetResourceRatePercentage(); 
+		}
+
+		protected override float GetDisabledkW()
+		{
+			return disabledProceduralKw * GetResourceRatePercentage();
+		}
+
+		protected override bool GetToggleable()
+		{
+			return disabledProceduralKw > 0;
 		}
 
 		private ProceduralAvionicsConfig currentProceduralAvionicsConfig;
@@ -102,7 +116,6 @@ namespace RP0.ProceduralAvionics
 				VerifyPart();
 
 				SetInternalKSPFields();
-				SetBaseResourceRates();
 			}
 			base.Update();
 		}
@@ -227,25 +240,9 @@ namespace RP0.ProceduralAvionics
 			return costPerControlledTon * 4 * costPercentage * proceduralMassLimit;
 		}
 
-		private void SetBaseResourceRates()
+		private float GetResourceRatePercentage()
 		{
-			float resourceRatePercentage = GetControllableUtilizationPercentage() + 0.5f;
-			this.enabledkW = enabledProceduralKw * resourceRatePercentage;
-			this.disabledkW = disabledProceduralKw * resourceRatePercentage;
-			this.toggleable = (disabledProceduralKw > 0);
-			ModuleCommand mC = part.FindModuleImplementing<ModuleCommand>();
-
-			if (mC != null)
-			{
-				foreach (ModuleResource r in mC.resHandler.inputResources)
-				{
-					if (r.id == PartResourceLibrary.ElectricityHashcode)
-					{
-						commandChargeResource = r;
-						r.rate = enabledkW;
-					}
-				}
-			}
+			return GetControllableUtilizationPercentage() + 0.5f;
 		}
 		#endregion
 

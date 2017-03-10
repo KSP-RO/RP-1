@@ -224,3 +224,4 @@ I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpus
 
 > There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
 
+> It's also worth noting that the maximum size of a Procedural Part can be setup by using ProcPart TECHNODES in the `ProceduralPart` MODULE, however we have cleared those out.

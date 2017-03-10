@@ -216,11 +216,11 @@ I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpus
 
  - Create a new line, copying the line above it to get all the formulas.
      - Note: You should only need to edit the values in the blue columns.
- - Take a look at the parts mass, cost, and controllable mass.  Put those in columns B, C, and D respectively.
+ - Take a look at the parts mass, cost, and controllable mass.  Put those in columns and D, E, and F respectively.
  - Create a part roughly the same size and shape of an existing avionics module unlocked in that tech node.
-     - Take note of its volume.  Enter this in column E of the spreadsheet. (Note: the KSP UI normally shows liters, but in the spreadsheets it's kiloliters.)
-     - Slide the utilization slider down to 0, and take note of its empty weight and empty cost.  Put those in columns F and G respectivly.
- - Column H, I, and J now contain values for `tonnageToMassRatio`, `costPerControlledTon`, and `standardAvionicsDensity`.  `enabledProceduralKw` and  `disabledProceduralKw` should be the same values as the requirements for the part you're trying to clone
+     - Take note of its volume.  Enter this in column G of the spreadsheet. (Note: the KSP UI normally shows liters, but in the spreadsheets it's kiloliters.)
+     - Slide the utilization slider down to 0, and take note of its empty weight and empty cost.  Put those in columns H and I respectivly.
+ - Column J, J, and L now contain values for `tonnageToMassRatio`, `costPerControlledTon`, and `standardAvionicsDensity`.  `enabledProceduralKw` and  `disabledProceduralKw` should be the same values as the requirements for the part you're trying to clone
 
 > There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
 

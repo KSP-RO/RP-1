@@ -66,11 +66,13 @@ namespace RP0.ProceduralAvionics
 
 		protected override float GetEnabledkW()
 		{
+			Log("Enabled avioncis: " + enabledProceduralKw * GetResourceRatePercentage()); 
 			return enabledProceduralKw * GetResourceRatePercentage(); 
 		}
 
 		protected override float GetDisabledkW()
 		{
+			Log("Disabled avioncis: " + disabledProceduralKw * GetResourceRatePercentage()); 
 			return disabledProceduralKw * GetResourceRatePercentage();
 		}
 
@@ -147,7 +149,7 @@ namespace RP0.ProceduralAvionics
 		{
 			if (proceduralAvionicsConfigs == null && proceduralAvionicsConfigsSerialized != null)
 			{
-				Log("ConficNode Deserialization needed");
+				Log("ConfigNode Deserialization needed");
 				proceduralAvionicsConfigs = new Dictionary<string, ProceduralAvionicsConfig>();
 				List<ProceduralAvionicsConfig> proceduralAvionicsConfigList = ObjectSerializer.Deserialize<List<ProceduralAvionicsConfig>>(proceduralAvionicsConfigsSerialized);
 				foreach (var item in proceduralAvionicsConfigList)

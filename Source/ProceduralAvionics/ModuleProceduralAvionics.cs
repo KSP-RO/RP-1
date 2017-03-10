@@ -11,11 +11,7 @@ namespace RP0.ProceduralAvionics
 	class ModuleProceduralAvionics : ModuleAvionics, IPartMassModifier, IPartCostModifier
 	{
 
-		#region KSPFields and class variables
-		// This limits how the weight of the avionics equipment per space of volume
-		// Metric tons / cubic meter, defaults to roughly 1/3 the density of aluminum
-		[KSPField]
-		public float maxDensityOfAvionics = 1f;
+		#region KSPFields, overrides, and class variables
 
 		// This controls how much the current part can control (in metric tons)
 		[KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "T"),
@@ -29,6 +25,9 @@ namespace RP0.ProceduralAvionics
 		[KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Configuration"), UI_ChooseOption(scene = UI_Scene.Editor)]
 		public string avionicsConfigName;
 		private string oldAvionicsConfigName;
+
+		[KSPField(isPersistant = true)]
+		public float maxDensityOfAvionics;
 
 		[KSPField(isPersistant = true)]
 		public float tonnageToMassRatio;
@@ -59,6 +58,11 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
+		private float GetCurrentDensity()
+		{
+			return maxDensityOfAvionics;
+		}
+
 		protected override float GetInternalMassLimit()
 		{
 			return proceduralMassLimit;
@@ -79,6 +83,11 @@ namespace RP0.ProceduralAvionics
 		protected override bool GetToggleable()
 		{
 			return disabledProceduralKw > 0;
+		}
+
+		protected override string GetTonnageString()
+		{
+            return "This part can be configured to allow control of vessels up to any mass.";
 		}
 
 		private ProceduralAvionicsConfig currentProceduralAvionicsConfig;
@@ -200,7 +209,9 @@ namespace RP0.ProceduralAvionics
 			}
 			if (CurrentProceduralAvionicsConfig != null)
 			{
-				tonnageToMassRatio = CurrentProceduralAvionicsConfig.CurrentTechNode.tonnageToMassRatio;
+				//Standard density is 4/3s of maximum density
+				maxDensityOfAvionics = (CurrentProceduralAvionicsTechNode.standardAvionicsDensity * 4) / 3;
+				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
 				return DoMassCalculation();
 			}
 			else
@@ -214,7 +225,7 @@ namespace RP0.ProceduralAvionics
 		{
 			float controllablePercentage = GetControllableUtilizationPercentage();
 			float massPercentage = (-1 * controllablePercentage * controllablePercentage) + (2 * controllablePercentage);
-			return massPercentage * GetCurrentVolume() * maxDensityOfAvionics;
+			return massPercentage * GetCurrentVolume() * GetCurrentDensity();
 		}
 
 		private float CalculateCost() {

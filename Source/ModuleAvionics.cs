@@ -148,13 +148,19 @@ namespace RP0
             SetActionsAndGui();
         }
 
-        public override string GetInfo()
+        protected virtual string GetTonnageString()
         {
             string retStr = "This part allows control of vessels of ";
             if (massLimit < float.MaxValue)
                 retStr += "up to " + massLimit.ToString("N3") + " tons.";
             else
                 retStr += "any mass.";
+            return retStr;
+        }
+
+        public override string GetInfo()
+        {
+            string retStr = GetTonnageString();
             if(GetToggleable() && GetDisabledkW() >= 0f)
             {
                 double resRate = ResourceRate();

@@ -76,3 +76,151 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Cryogenic Engines
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!
+
+
+Procedural Avionics
+=========
+
+Procedural Avionics is an addition to RP-0 which allows you to build custom avionics units, instead of relying on pre-build avionics (think Procedural Parts, except for avionics).  In fact, Procedural Avionics was built on top of Procedural Parts, we just took the Procedural Battery that RP-0 had and added a scalable avionics unit inside of it.
+
+###Tonnage
+In RP-0, avionics units have a maximum amount of mass they can control.  When using a procedural avionics part, you'll notice it had a tonnage slider.  Sliding this slider increases the amount of mass this part can control.  The maximum amount of mass it can control is limited by two things:
+
+ - Part Efficiency
+ - Part Volume
+ - Configuration (more on this later)
+
+Efficiency is limited by tech level.  Volume is limited by part size and shape.
+
+>In the GUI, you'll see a Percent Utilization field in the editor.  It's not always the best idea to just max out the avionics slider, more on that later.
+
+###Configuration
+Procedural Avionics can have different configurations.  For instance, booster avionics might not be toggleable, use a lot of power, but be fairly light (for the amount of mass they can control), while probeCore avionics would be more efficient power wise, but a bit heavier (due to their robustness).  Upper stages might lie somewhere in the middle.
+
+###Optimal Utilization Percentages
+
+As part utilization goes up, so do part cost and part weight.  However, these do not rise at the same rates.  Consider this example: as you try to fit more avionics controls into the same amount of space, you should probably invest some effort into making those controls smaller and more efficient.  The smaller and more efficient you try to make those parts, the more they cost (and the higher the cost per controllable ton).  However, since these parts are more efficient, while your overall part mass continues to rise, your mass per controllable ton actually decreases.  Because of this, we actually get two different "curves", a mass curve, and a cost curve:
+
+ - mass curve: -x^2 + 2x  (as utilization goes up, additional mass needed per controllable mass goes down)
+ - cost curve: x^2  (as utilization goes up, cost rises exponentially)
+
+Because the actual efficiency of a part depends on its utilization, we run into a problem when trying to configure these parts.  Thus, we'll define a "sweet spot" of 50% utilization.  If a part is 50% utilized, then their cost/controllable ton and mass/controllable ton will be what's in the configs.  Bringing the utilization up to 100% (and reduce the volume accordingly, so you're still controlling the same amount of mass), and you should find your part mass decreased by about 1/3, but your cost to be 4x as much.
+
+>It is worth noting that the mass and cost curves here only define the mass of the avionics module portion of the part.  As these parts by default also contain batteries, there is additional mass and cost dependant on the size of the part.
+
+###Electric charge consumption
+
+Electric charge consumption is not nearly as complicated, as it scales linearly with utilization.  At 0% utilization (I don't know why you would ever choose that), power consumption is 50% of its rated (sweet spot) value.  50% utilization consumes 100% of rated value, and 100% utilization consumes 150%.  This is true for both the active and inactive power drain rates.
+
+### Tech Node Config
+Let's take a look at a sample MM config for procedural avionics.  I'll annotate what things mean inline.
+
+    MODULE
+    {
+        name = ModuleProceduralAvionics
+
+        AVIONICSCONFIG  # A Procedural Avionics unit can have 
+                        # multiple AVIONICSCONFIG nodes
+        {
+            name = booster  # The name of this config
+
+            TECHLIMIT  # We'll define our efficiencies per tech level 
+                       # Sandbox play will pick the best TECHLIMIT per AVIONICSCONFIG
+                       
+            {
+                name = start                # This is the name of the technology that
+                                            # should be unlocked for this to be
+                                            # available.
+                                           
+                tonnageToMassRatio = 10     # This is how efficient this node is mass 
+                                            # wise at 50% utilization. A higher number 
+                                            # here is more efficient. More than 50%
+                                            # utilization will cause this to be
+                                            # effectively higher too.
+                                           
+                costPerControlledTon = 10   # This is how much the avionics portion of 
+                                            # this part costs at 50% utilization.
+                                            # Lower is better. This goes up exponentially
+                                            # as utilization goes up. 
+                                            
+                enabledProceduralKw = 8     # This is the power drain when this part is
+                                            # active, again at 50% utilization.
+
+                standardAvionicsDensity = 6 # This helps make procedural avionics
+                                            # match up to their in-game counterparts.
+                                            # It's pretty much part mass / part volume.
+                                            #
+                                            # Another note about this value: generally, 
+                                            # it has no effect on performance efficiency,
+                                            # since this just ties the weight of avionics
+                                            # to the size of the part. In the end, 
+                                            # avionics is still dependant on part mass.
+                                            
+            }
+            TECHLIMIT  # An example of another, more efficient 
+                       # tech node for the same config
+            {
+                name = engineering101
+                tonnageToMassRatio = 12
+                costPerControlledTon = 9
+                enabledProceduralKw = 5
+                standardAvionicsDensity = 5
+            }
+        }
+        AVIONICSCONFIG  # A second config
+        {
+            name = upperStage
+
+            TECHLIMIT
+            {
+                name = engineering101  # Notice there is no node with the name of "start"
+                                       # This will cause the upperStage config not to be
+                                       # unlocked until later in the gameplay
+                                       
+                tonnageToMassRatio = 6
+                costPerControlledTon = 10
+                enabledProceduralKw = 5
+                standardAvionicsDensity = 5
+            }
+        }
+        AVIONICSCONFIG
+        {
+            name = probeCore
+
+            TECHLIMIT
+            {
+                name = start
+                tonnageToMassRatio = 2
+                costPerControlledTon = 20
+                enabledProceduralKw = 2
+                disabledProceduralKw = 0.1  # Here we have a new node.  This controls
+                                            # power drain when the part is disabled.
+                                            # this worked the same way as
+                                            # enabledProceduralKw
+                standardAvionicsDensity = 5
+            }
+            TECHLIMIT
+            {
+                name = engineering101
+                tonnageToMassRatio = 3
+                costPerControlledTon = 20
+                enabledProceduralKw = 1
+                disabledProceduralKw = 0.05
+                standardAvionicsDensity = 5
+            }
+        }
+    }
+
+###Building your own TECHLIMIT nodes
+I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpuszH_nUbWlTXZzfOMzsy-uhUNh016eNu0WL8x6qvU/edit#gid=1101913381) that you can copy and use as a scratchpad to help you configure tech nodes.  I'll give a manual walkthrough of what I would expect someone to do here, and I have created a few nodes at the top of the spreadsheet for some early existing parts.
+
+ - Create a new line, copying the line above it to get all the formulas.
+     - Note: You should only need to edit the values in the blue columns.
+ - Take a look at the parts mass, cost, and controllable mass.  Put those in columns B, C, and D respectively.
+ - Create a part roughly the same size and shape of an existing avionics module unlocked in that tech node.
+     - Take note of its volume.  Enter this in column E of the spreadsheet. (Note: the KSP UI normally shows liters, but in the spreadsheets it's kiloliters.)
+     - Slide the utilization slider down to 0, and take note of its empty weight and empty cost.  Put those in columns F and G respectivly.
+ - Column H, I, and J now contain values for `tonnageToMassRatio`, `costPerControlledTon`, and `standardAvionicsDensity`.  `enabledProceduralKw` and  `disabledProceduralKw` should be the same values as the requirements for the part you're trying to clone
+
+> There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
+

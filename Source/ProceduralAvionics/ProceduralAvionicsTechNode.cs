@@ -38,6 +38,10 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public float disabledProceduralKw = -1;
 
+		//This is the overall density of this avionics unit at 50% utilization.  This can be tweaked to help match up historical avionics units with their proper sizes.
+		[Persistent]
+		public float standardAvionicsDensity = 1f;
+
 		public void Load(ConfigNode node)
 		{
 			ConfigNode.LoadObjectFromConfig(this, node);

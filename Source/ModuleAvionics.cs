@@ -70,19 +70,35 @@ namespace RP0
 		}
 
 		protected void UpdateRate()
-        {
-            if ((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled)
-            {
-                currentlyEnabled = false;
-                commandChargeResource.rate = currentWatts = disabledkW;
-            }
-            else
-            {
-                currentlyEnabled = true;
-                commandChargeResource.rate = currentWatts = enabledkW;
-            }
-            currentWatts *= 1000f;
-        }
+		{
+			if (part.protoModuleCrew.Count > 0)
+			{
+				currentlyEnabled = systemEnabled = true;
+				
+				commandChargeResource.rate = currentWatts = enabledkW;
+				ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
+			}
+			else
+			{
+				currentlyEnabled = !((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled);
+				if (currentlyEnabled)
+				{
+					commandChargeResource.rate = currentWatts = enabledkW;
+				}
+				else
+				{
+					commandChargeResource.rate = currentWatts = disabledkW;
+				}
+			}
+			currentWatts *= 1000f;
+		}
+
+		private void SetActionsAndGui()
+		{
+			Events["ToggleEvent"].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
+			Actions["ActivateAction"].active = !systemEnabled;
+			Actions["ShutdownAction"].active = systemEnabled;
+		}
         #endregion
 
         #region Overrides
@@ -104,10 +120,7 @@ namespace RP0
                 Actions["ActivateAction"].active =
                 Actions["ShutdownAction"].active = toggleable;
 
-            if(systemEnabled)
-                Events["ToggleEvent"].guiName = "Shutdown Avionics";
-            else
-                Events["ToggleEvent"].guiName = "Activate Avionics";
+			SetActionsAndGui();
         }
 
         public override string GetInfo()
@@ -145,28 +158,17 @@ namespace RP0
             }
             wasWarping = isWarping;
         }
-        #endregion
+		#endregion
 
-        #region Actions and Events
-        [KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Shutdown Avionics")]
-        public void ToggleEvent()
-        {
-            if (systemEnabled)
-            {
-                Events["ToggleEvent"].guiName = "Activate Avionics";
-                Actions["ActivateAction"].active = true;
-                Actions["ShutdownAction"].active = false;
-                systemEnabled = false;
-            }
-            else
-            {
-                Events["ToggleEvent"].guiName = "Shutdown Avionics";
-                Actions["ShutdownAction"].active = true;
-                Actions["ActivateAction"].active = false;
-                systemEnabled = true;
-            }
-            UpdateRate();
-        }
+		#region Actions and Events
+		[KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Shutdown Avionics")]
+		public void ToggleEvent()
+		{
+			systemEnabled = !systemEnabled;
+			UpdateRate();
+			SetActionsAndGui();
+		}
+
         [KSPAction("Toggle Avionics")]
         public void ToggleAction(KSPActionParam param)
         {
@@ -187,7 +189,6 @@ namespace RP0
             ToggleEvent();
         }
         #endregion
-
 
     }
 }

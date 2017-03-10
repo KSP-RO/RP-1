@@ -87,7 +87,7 @@ namespace RP0.ProceduralAvionics
 
 		protected override string GetTonnageString()
 		{
-            return "This part can be configured to allow control of vessels up to any mass.";
+			return "This part can be configured to allow control of vessels up to any mass.";
 		}
 
 		private ProceduralAvionicsConfig currentProceduralAvionicsConfig;

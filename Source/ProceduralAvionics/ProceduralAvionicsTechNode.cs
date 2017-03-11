@@ -30,13 +30,13 @@ namespace RP0.ProceduralAvionics
 		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
 		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
 		[Persistent]
-		public float enabledProceduralKw = 1;
+		public float enabledProceduralW= 1;
 
 		// If postitive, this will enable the abilty to put avioniccs on standby.
 		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
 		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
 		[Persistent]
-		public float disabledProceduralKw = -1;
+		public float disabledProceduralW = -1;
 
 		//This is the overall density of this avionics unit at 50% utilization.  This can be tweaked to help match up historical avionics units with their proper sizes.
 		[Persistent]

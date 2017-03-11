@@ -36,13 +36,16 @@ namespace RP0.ProceduralAvionics
 		public float costPerControlledTon;
 
 		[KSPField(isPersistant = true)]
-		public float enabledProceduralKw;
+		public float enabledProceduralW;
 
 		[KSPField(isPersistant = true)]
-		public float disabledProceduralKw;
+		public float disabledProceduralW;
 
 		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Percent Utilization")]
 		public string utilizationDisplay;
+
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Power Requirements")]
+		public string powerRequirementsDisplay;
 
 		// The currently selected avionics config
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig
@@ -70,19 +73,17 @@ namespace RP0.ProceduralAvionics
 
 		protected override float GetEnabledkW()
 		{
-			Log("Enabled avioncis: " + enabledProceduralKw * GetResourceRatePercentage()); 
-			return enabledProceduralKw * GetResourceRatePercentage(); 
+			return enabledProceduralW * GetResourceRateMultiplier() * proceduralMassLimit;
 		}
 
 		protected override float GetDisabledkW()
 		{
-			Log("Disabled avioncis: " + disabledProceduralKw * GetResourceRatePercentage()); 
-			return disabledProceduralKw * GetResourceRatePercentage();
+			return disabledProceduralW * GetResourceRateMultiplier() * proceduralMassLimit;
 		}
 
 		protected override bool GetToggleable()
 		{
-			return disabledProceduralKw > 0;
+			return disabledProceduralW > 0;
 		}
 
 		protected override string GetTonnageString()
@@ -253,9 +254,9 @@ namespace RP0.ProceduralAvionics
 			return costPerControlledTon * 4 * costPercentage * proceduralMassLimit;
 		}
 
-		private float GetResourceRatePercentage()
+		private float GetResourceRateMultiplier()
 		{
-			return GetControllableUtilizationPercentage() + 0.5f;
+			return (GetControllableUtilizationPercentage() + .5f)/1000;
 		}
 		#endregion
 
@@ -263,6 +264,12 @@ namespace RP0.ProceduralAvionics
 		private float GetControllableUtilizationPercentage()
 		{
 			return proceduralMassLimit / (GetCurrentVolume() * maxDensityOfAvionics * tonnageToMassRatio * 2);
+		}
+
+		private float GetMaximumControllableTonnage()
+		{
+			var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
+			return maxAvionicsMass * tonnageToMassRatio * 2;
 		}
 
 		private void UpdateMaxValues()
@@ -282,8 +289,8 @@ namespace RP0.ProceduralAvionics
 
 			if (CurrentProceduralAvionicsConfig != null)
 			{
-				var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
-				proceduralMassLimitEdit.maxValue = maxAvionicsMass * CurrentProceduralAvionicsConfig.CurrentTechNode.tonnageToMassRatio * 2;
+				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
+				proceduralMassLimitEdit.maxValue = GetMaximumControllableTonnage();
 			}
 			else
 			{
@@ -430,11 +437,20 @@ namespace RP0.ProceduralAvionics
 
 		private void SetInternalKSPFields()
 		{
-			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
 			tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
 			costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
-			enabledProceduralKw = CurrentProceduralAvionicsTechNode.enabledProceduralKw;
-			disabledProceduralKw = CurrentProceduralAvionicsTechNode.disabledProceduralKw;
+			enabledProceduralW = CurrentProceduralAvionicsTechNode.enabledProceduralW;
+			disabledProceduralW = CurrentProceduralAvionicsTechNode.disabledProceduralW;
+
+			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
+
+			string powerCosumption = "\nEnabled: " + String.Format("{0:0.##}", GetEnabledkW()) + " kW";
+			if (GetDisabledkW() > 0)
+			{
+				powerCosumption += "\nDisabled: " + String.Format("{0:0.##}", GetDisabledkW()) + " kW";
+			}
+
+			powerRequirementsDisplay = powerCosumption; 
 		}
 
 		#endregion

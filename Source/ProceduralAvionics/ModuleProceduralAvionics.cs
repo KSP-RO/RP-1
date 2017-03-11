@@ -73,12 +73,12 @@ namespace RP0.ProceduralAvionics
 
 		protected override float GetEnabledkW()
 		{
-			return enabledProceduralW * GetResourceRateMultiplier() * proceduralMassLimit;
+			return enabledProceduralW * GetResourceRateMultiplier() * GetMaximumControllableTonnage() / 2;
 		}
 
 		protected override float GetDisabledkW()
 		{
-			return disabledProceduralW * GetResourceRateMultiplier() * proceduralMassLimit;
+			return disabledProceduralW * GetResourceRateMultiplier() * GetMaximumControllableTonnage() / 2;
 		}
 
 		protected override bool GetToggleable()
@@ -256,7 +256,7 @@ namespace RP0.ProceduralAvionics
 
 		private float GetResourceRateMultiplier()
 		{
-			return (GetControllableUtilizationPercentage() + .5f)/1000;
+			return (GetControllableUtilizationPercentage() + .5f) / 1000;
 		}
 		#endregion
 
@@ -444,10 +444,10 @@ namespace RP0.ProceduralAvionics
 
 			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
 
-			string powerCosumption = "\nEnabled: " + String.Format("{0:0.##}", GetEnabledkW()) + " kW";
+			string powerCosumption = String.Format("{0:0.##}", GetEnabledkW()) + " kW";
 			if (GetDisabledkW() > 0)
 			{
-				powerCosumption += "\nDisabled: " + String.Format("{0:0.##}", GetDisabledkW()) + " kW";
+				powerCosumption += " / " + String.Format("{0:0.##}", GetDisabledkW()) + " kW";
 			}
 
 			powerRequirementsDisplay = powerCosumption; 

@@ -115,6 +115,7 @@ Electric charge consumption is not nearly as complicated, as it scales linearly 
 ### Tech Node Config
 Let's take a look at a sample MM config for procedural avionics.  I'll annotate what things mean inline.
 
+
     MODULE
     {
         name = ModuleProceduralAvionics
@@ -124,29 +125,32 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
         {
             name = booster  # The name of this config
 
-            TECHLIMIT  # We'll define our efficiencies per tech level 
+            TECHLIMIT  # Guidance Unit (Starting), 1m
+                       # We'll define our efficiencies per tech level 
                        # Sandbox play will pick the best TECHLIMIT per AVIONICSCONFIG
-                       
+                       # We generally try to add a comment saying what this confic
+                       # was created from (in this case, the first Guidance Unit)
             {
                 name = start                # This is the name of the technology that
                                             # should be unlocked for this to be
                                             # available.
-                                           
-                tonnageToMassRatio = 10     # This is how efficient this node is mass 
+                                            
+                tonnageToMassRatio = 26.13  # This is how efficient this node is mass 
                                             # wise at 50% utilization. A higher number 
                                             # here is more efficient. More than 50%
                                             # utilization will cause this to be
                                             # effectively higher too.
-                                           
-                costPerControlledTon = 10   # This is how much the avionics portion of 
+                                            
+                costPerControlledTon = 13   # This is how much the avionics portion of 
                                             # this part costs at 50% utilization.
                                             # Lower is better. This goes up exponentially
                                             # as utilization goes up. 
                                             
-                enabledProceduralKw = 8     # This is the power drain when this part is
-                                            # active, again at 50% utilization.
-
-                standardAvionicsDensity = 6 # This helps make procedural avionics
+                enabledProceduralW = 150    # This is the power drain per controllable 
+                                            # ton when this part is active, 
+                                            # again at 50% utilization.
+                                            
+                standardAvionicsDensity = 5 # This helps make procedural avionics
                                             # match up to their in-game counterparts.
                                             # It's pretty much part mass / part volume.
                                             #
@@ -155,58 +159,66 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                             # since this just ties the weight of avionics
                                             # to the size of the part. In the end, 
                                             # avionics is still dependant on part mass.
-                                            
             }
-            TECHLIMIT  # An example of another, more efficient 
-                       # tech node for the same config
+            TECHLIMIT # Guidance Unit (Early), 1m
+                      # An example of another, more efficient 
+                      # tech node for the same config
             {
-                name = engineering101
-                tonnageToMassRatio = 12
-                costPerControlledTon = 9
-                enabledProceduralKw = 5
-                standardAvionicsDensity = 5
+                name = earlyAvionics
+                tonnageToMassRatio = 104.16
+                costPerControlledTon = 3.8
+                enabledProceduralW = 6.666
+                standardAvionicsDensity = 2.7504
+            }
+            TECHLIMIT # Guidance Unit (Early), 2m, 3m average
+            {
+                name = basicAvionics
+                tonnageToMassRatio = 940
+                costPerControlledTon = .53
+                enabledProceduralW = 5.81
+                standardAvionicsDensity = 0.083
             }
         }
-        AVIONICSCONFIG  # A second config
+        AVIONICSCONFIG # A second config
         {
             name = upperStage
 
-            TECHLIMIT
+            TECHLIMIT # Able Avionics Package
             {
-                name = engineering101  # Notice there is no node with the name of "start"
-                                       # This will cause the upperStage config not to be
-                                       # unlocked until later in the gameplay
-                                       
-                tonnageToMassRatio = 6
-                costPerControlledTon = 10
-                enabledProceduralKw = 5
-                standardAvionicsDensity = 5
+                name = earlyAvionics             # Notice there is no node with the name 
+                                                 # of "start".  This will cause the 
+                                                 # upperStage config not to be
+                                                 # unlocked until later in the gameplay
+                tonnageToMassRatio = 52.8169
+                costPerControlledTon = 4.8
+                enabledProceduralW = 30
+                standardAvionicsDensity = 0.2279
+            }
+            TECHLIMIT # Agena Avionics Package, with some fudged stats
+            {
+                name = stability
+                tonnageToMassRatio = 108
+                costPerControlledTon = 23
+                enabledProceduralW = 15.625
+                disabledProceduralW = 0.625    # Here we have a new node.  This controls
+                                               # power drain when the part is disabled.
+                                               # this worked the same way as
+                                               # enabledProceduralW
+                standardAvionicsDensity = 0.07
             }
         }
         AVIONICSCONFIG
         {
             name = probeCore
 
-            TECHLIMIT
+            TECHLIMIT # Ranger Block I Core
             {
-                name = start
-                tonnageToMassRatio = 2
-                costPerControlledTon = 20
-                enabledProceduralKw = 2
-                disabledProceduralKw = 0.1  # Here we have a new node.  This controls
-                                            # power drain when the part is disabled.
-                                            # this worked the same way as
-                                            # enabledProceduralKw
-                standardAvionicsDensity = 5
-            }
-            TECHLIMIT
-            {
-                name = engineering101
-                tonnageToMassRatio = 3
-                costPerControlledTon = 20
-                enabledProceduralKw = 1
-                disabledProceduralKw = 0.05
-                standardAvionicsDensity = 5
+                name = basicScience
+                tonnageToMassRatio = 4.327
+                costPerControlledTon = 4425
+                enabledProceduralW = 116.66
+                disabledProceduralW = 2.666
+                standardAvionicsDensity = 0.416
             }
         }
     }
@@ -217,11 +229,13 @@ I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpus
  - Create a new line, copying the line above it to get all the formulas.
      - Note: You should only need to edit the values in the blue columns.
  - Take a look at the parts mass, cost, and controllable mass.  Put those in columns and D, E, and F respectively.
+ - Columns G and H should be what the avionics unit drain is (in kW)
  - Create a part roughly the same size and shape of an existing avionics module unlocked in that tech node.
      - Take note of its volume.  Enter this in column G of the spreadsheet. (Note: the KSP UI normally shows liters, but in the spreadsheets it's kiloliters.)
-     - Slide the utilization slider down to 0, and take note of its empty weight and empty cost.  Put those in columns H and I respectivly.
- - Column J, J, and L now contain values for `tonnageToMassRatio`, `costPerControlledTon`, and `standardAvionicsDensity`.  `enabledProceduralKw` and  `disabledProceduralKw` should be the same values as the requirements for the part you're trying to clone
+     - Slide the utilization slider down to 0, and take note of its empty weight and empty cost.  Put those in columns H and I respectively.
+ - Columns L-P should now contain values for `tonnageToMassRatio`, `costPerControlledTon`, `standardAvionicsDensity`, `enabledProceduralW` and  `disabledProceduralW` 
 
 > There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
 
 > It's also worth noting that the maximum size of a Procedural Part can be setup by using ProcPart TECHNODES in the `ProceduralPart` MODULE, however we have cleared those out.
+

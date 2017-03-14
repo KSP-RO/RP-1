@@ -90,7 +90,7 @@ In RP-0, avionics units have a maximum amount of mass they can control.  When us
  - Part Volume
  - Configuration (more on this later)
 
-Efficiency is limited by tech level.  Volume is limited by part size and shape.
+Efficiency is limited by tech level.  Volume is limited by part size and shape.  Tonnage can further be limited by setting the appropriate values in the configuration.
 
 >In the GUI, you'll see a Percent Utilization field in the editor.  It's not always the best idea to just max out the avionics slider, more on that later.
 
@@ -159,6 +159,18 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                             # since this just ties the weight of avionics
                                             # to the size of the part. In the end, 
                                             # avionics is still dependant on part mass.
+
+                minimumTonnage = 15         # No matter what values you have set elsewhere,
+                                            # this is the minimum amout of control you can
+                                            # set this part to.
+                                            # This prevents you from using ultra-small booster
+                                            # units as probe cores.
+
+                maximumTonnage = 40         # No matter what values you have set elsewhere,
+                                            # this is the maximum amout of control you can
+                                            # set this part to.
+                                            # This prevents you from using unrealistic 
+                                            # sized avioncs units early on.
             }
             TECHLIMIT # Guidance Unit (Early), 1m
                       # An example of another, more efficient 
@@ -169,6 +181,9 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 costPerControlledTon = 3.8
                 enabledProceduralW = 6.666
                 standardAvionicsDensity = 2.7504
+                minimumTonnage = 15
+                maximumTonnage = 90         # Notice minimumTonnage stayed the same,
+                                            # while we've increased maximumTonnage
             }
             TECHLIMIT # Guidance Unit (Early), 2m, 3m average
             {
@@ -177,6 +192,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 costPerControlledTon = .53
                 enabledProceduralW = 5.81
                 standardAvionicsDensity = 0.083
+                minimumTonnage = 15
+                maximumTonnage = 600
             }
         }
         AVIONICSCONFIG # A second config
@@ -193,6 +210,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 costPerControlledTon = 4.8
                 enabledProceduralW = 30
                 standardAvionicsDensity = 0.2279
+                minimumTonnage = 3
+                maximumTonnage = 10
             }
             TECHLIMIT # Agena Avionics Package, with some fudged stats
             {
@@ -205,6 +224,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                                # this worked the same way as
                                                # enabledProceduralW
                 standardAvionicsDensity = 0.07
+                minimumTonnage = 3
+                maximumTonnage = 10
             }
         }
         AVIONICSCONFIG
@@ -219,6 +240,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 enabledProceduralW = 116.66
                 disabledProceduralW = 2.666
                 standardAvionicsDensity = 0.416
+                minimumTonnage = 0
+                maximumTonnage = 0.5
             }
         }
     }
@@ -234,6 +257,7 @@ I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpus
      - Take note of its volume.  Enter this in column G of the spreadsheet. (Note: the KSP UI normally shows liters, but in the spreadsheets it's kiloliters.)
      - Slide the utilization slider down to 0, and take note of its empty weight and empty cost.  Put those in columns H and I respectively.
  - Columns L-P should now contain values for `tonnageToMassRatio`, `costPerControlledTon`, `standardAvionicsDensity`, `enabledProceduralW` and  `disabledProceduralW` 
+ - For setting `minimumTonnage` and `maximumTonnage`, I generally halve and double the values defined for the existing avionics part.
 
 > There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
 

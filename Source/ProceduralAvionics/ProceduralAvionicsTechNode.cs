@@ -38,9 +38,18 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public float disabledProceduralW = -1;
 
-		//This is the overall density of this avionics unit at 50% utilization.  This can be tweaked to help match up historical avionics units with their proper sizes.
+		// This is the overall density of this avionics unit at 50% utilization.  This can be tweaked to help match up historical avionics units with their proper sizes.
 		[Persistent]
 		public float standardAvionicsDensity = 1f;
+
+
+		// This is the least amout of mass this avionics unit can be configured to control.  Set this to prevent unrealistic scaled down avionics units.
+		[Persistent]
+		public float minimumTonnage = 0;
+
+		// This is the largest amout of mass this avionics unit can be configured to control.  Set this to prevent unrealistic supersized avionics units.
+		[Persistent]
+		public float maximumTonnage = float.MaxValue;
 
 		public void Load(ConfigNode node)
 		{

@@ -41,6 +41,12 @@ namespace RP0.ProceduralAvionics
 		[KSPField(isPersistant = true)]
 		public float disabledProceduralW;
 
+		[KSPField(isPersistant = true)]
+		public float minimumTonnage;
+
+		[KSPField(isPersistant = true)]
+		public float maximumTonnage;
+
 		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Percent Utilization")]
 		public string utilizationDisplay;
 
@@ -237,7 +243,7 @@ namespace RP0.ProceduralAvionics
 			}
 			if (CurrentProceduralAvionicsConfig != null)
 			{
-				costPerControlledTon = CurrentProceduralAvionicsConfig.CurrentTechNode.costPerControlledTon;
+				costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
 				return DoCostCalculation();
 			}
 			else
@@ -269,7 +275,13 @@ namespace RP0.ProceduralAvionics
 		private float GetMaximumControllableTonnage()
 		{
 			var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
-			return maxAvionicsMass * tonnageToMassRatio * 2;
+			var maxForVolume = maxAvionicsMass * tonnageToMassRatio * 2;
+			return Math.Min(maxForVolume, maximumTonnage);
+		}
+
+		private float GetMinimumControllableTonnage()
+		{
+			return minimumTonnage;
 		}
 
 		private void UpdateMaxValues()
@@ -291,11 +303,13 @@ namespace RP0.ProceduralAvionics
 			{
 				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
 				proceduralMassLimitEdit.maxValue = GetMaximumControllableTonnage();
+				proceduralMassLimitEdit.minValue = GetMinimumControllableTonnage();
 			}
 			else
 			{
 				Log("Cannot update max value yet");
 				proceduralMassLimitEdit.maxValue = float.MaxValue;
+				proceduralMassLimitEdit.minValue = 0;
 			}
 			if (proceduralMassLimit > proceduralMassLimitEdit.maxValue)
 			{
@@ -441,6 +455,9 @@ namespace RP0.ProceduralAvionics
 			costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
 			enabledProceduralW = CurrentProceduralAvionicsTechNode.enabledProceduralW;
 			disabledProceduralW = CurrentProceduralAvionicsTechNode.disabledProceduralW;
+
+			minimumTonnage = CurrentProceduralAvionicsTechNode.minimumTonnage;
+			maximumTonnage = CurrentProceduralAvionicsTechNode.maximumTonnage;
 
 			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
 

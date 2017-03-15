@@ -240,8 +240,9 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 enabledProceduralW = 116.66
                 disabledProceduralW = 2.666
                 standardAvionicsDensity = 0.416
-                minimumTonnage = 0
-                maximumTonnage = 0.5
+
+                # Since probeCores should be the least mass efficient, we probably don't
+                # need to add any restrictions on min/max tonnage
             }
         }
     }

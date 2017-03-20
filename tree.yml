@@ -1238,6 +1238,7 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 350
     RO-AgenaEngine: *AgenaEngine
     SSTU-SC-ENG-LR81: *AgenaEngine
+    SSTU-SC-ENG-LR81-8048: *AgenaEngine
     RSBengineXLR81: *AgenaEngine # Real Scale Boosters XLR-81 engine
 
     # Titan engines
@@ -1936,8 +1937,10 @@ advRocketry:
      # SSTU
     SSTU-SC-ENG-RD-0110: *RD-0110
     SSTU-SC-ENG-H1: *H1
+    SSTU-SC-ENG-LR81-8096:
+        cost: 350 #+ 250 for config
 
-        # Staged Combustion TL2
+
 hydroloxTL2:
     FASAGeminiLFTCentar: # Centaur A/B/C/D/D1 stage
         cost: 1201 # no cited research cost tho
@@ -1954,6 +1957,8 @@ hydroloxTL2:
 
     rn_gex430: # GE X430, based off RL10 prices since no info known
         cost: 2500
+    rn_centaurt_rl10_l: *RL10
+    rn_centaurt_rl10_r: *RL10
 
     KW1mengineMaverick1D: # RL10 priced separately because its a pair of them
         cost: 2600
@@ -2806,6 +2811,9 @@ largeSolids: # TL3 solids
 
     FASAGerminiSRBInlineSep:
         cost: 50 # FIXME guess
+        
+    FASAFairingNosecone_3mSRB: # 120inch SRB aerocone w/sep motor
+        cost: 50 # FIXME guess
 
     RT2: # Castor II
         cost: 320 # unstated, should be about Castor I's cost.
@@ -2814,6 +2822,12 @@ largeSolids: # TL3 solids
         cost: 180
         entryCost: 3600
     RO-STAR-37: *Star37
+    rn_ua1205:
+        cost: 5120
+    rn_ua1205_nc:
+        cost: 100
+    rn_ua1205_dec:
+        cost: 100
 
 advConstruction:
     # Saturn parts
@@ -2848,6 +2862,8 @@ advConstruction:
         cost: 100
     FASAAtlasSLV3A:
         cost: 450
+    FASAAtlasSLV3C:
+        entryCost: 450
     FASASaturnSLA: &ApolloSLA # spacecraft lunar module adapter - base
         cost: 150
         
@@ -3382,6 +3398,14 @@ advElectrics:
 # TIER 5
 heavierRocketry: #TL4 Apollo Applications program, N1F, etc.
 
+# Raidernick Dnepr
+    rn_dnepr1_ts: # RD-864 Dnepr 3rd stage engine + fuel tank + avionics; late 70s; not sure what is the best place for it
+        cost: 510 # guess, using 3rd stage mass ration of 0.12, added 100 for avionics; launch cost is about 3500k in 1965
+        entryCost: 10200
+    rn_dnepr1_rd0255_vernier: # RD-0257 Dnepr 2nd stage verier engine, flown in 81 but I feel justified putting it here
+        cost: 50
+        entryCost: 1000
+
 hydroloxTL4:
     FASAApolloLFEM1: &M-1
         entryCost: 770000
@@ -3408,6 +3432,12 @@ precisionPropulsion:
         cost: 200
     # Bobcat's Soviet Engines -Need Costing-
     # NK33 and NK43 config here, parts produced ~100 the program was scrapped and never flown
+
+    # Raidernick Dnepr 
+    rn_dnepr1_rd264: # RD-264 Dnepr 1st stage engine, late 60s early 70s; four of these make an engine module
+      cost: 445 # guess, using 1st stage mass ratio of 0.67 and attributing approx. 3/4 of value to engine; launch cost is about 3500k in 1965
+      entryCost: 35600 #
+
     NP_lfe_25m_4x800Engine: # RD-264, Dnepr first stage, first run 1969-73
     SXTK1BaseLarge:
 
@@ -3424,6 +3454,11 @@ advFuelSystems: # TL4 solids
     RO_RLA_AJ260_HL: # This was the development SRB for the AJ-260-FL (half-length not full length)
     # estimated cost at 2/3 of FL Date: 1965
         cost: 22054
+
+    # Raidernick Dnepr
+    rn_dnepr1_ejector_cap: # Explosive Charge, black powder mortar
+        cost: 10 # made up
+        entryCost: 2000
 
 specializedControl: # Tl4 avionics
     FASADeltaAv2:
@@ -3492,6 +3527,7 @@ nuclearPropulsion:
     nuclearEngine: &NERVA # NERVA
         cost: 25000
         entryCost: 1750000 # https://www.fas.org/sgp/othergov/doe/lanl/la-ur-85-2442.pdf - page 17
+    Castor_Nerva: *NERVA
     NP_lfe_25m_NERVA: *NERVA # Nova Punch, the same as stock nuclear engine
     
 # TIER 6
@@ -3541,7 +3577,7 @@ stagedTL5:
 
     # Raidernick Zenit Engines.
     rn_zenit_rd171: *RD-170
-
+    
     # RealEngines RD-120 engine.
     RD120:
 
@@ -3550,6 +3586,12 @@ stagedTL5:
 
     # RealEngines Zenit upper stage (RG-1 propellant tank + RD-8 vernier engine).
     RD120attachment_styleZenit2st:
+
+    # Raidernick Dnepr
+    # Technically RD-0256 was developed in mid 80 but Dnepr was deployed in 75 with RD-0228. So for gameplay maybe move it back a node?
+    rn_dnepr1_rd0255: # RD-0256, Dnepr 2nd stage engine, mid 80s
+      cost: 550 # guess; using 2nd stage mass ratio of 0.21 and attributing 3/4 of stage value to engine; launch cost is about 3500k in 1965
+      entryCost: 11000
 
 highPerformanceFuelSystems:
     solidBoosterSmall: &Castor30 # Castor 30B
@@ -3581,8 +3623,18 @@ highPerformanceFuelSystems:
     pam_d: # Star 48B
         cost: 1203
         entryCost: 24060
-    rn_ua1207: *UA1207
-    rn_ua1206: *UA1206
+    rn_ua1207:
+        cost: 7018
+    rn_ua1206:
+        cost: 6050
+    rn_ua1207_nc:
+        cost: 100
+    rn_ua1206_nc:
+        cost: 100
+    rn_ua1207_dec:
+        cost: 100
+    rn_ua1206_dec:
+        cost: 100
 
     #Keeping these parts grouped since they only work together, guessed at costs
     ius_bottom: # 1st stage of Inertial Upper Stage
@@ -3763,6 +3815,12 @@ specializedFuelStorage: # TL6 solids
     RO_KWsrbGlobeI_GEM: *GEM40 # GEM40, first flight 1990
     RSBdelta2srm: *GEM40 #Real Scale Boosters GEM-40
 
+    # RN SRMU
+    rn_srmu_mb:
+        cost: 7200
+    rn_srmu_nc:
+        cost: 150
+
 hydroloxTL6:
     #Vulcain 1/2
     KW3mengineTitanT1: &Vulcain
@@ -3833,6 +3891,9 @@ giganticRocketry: #TL7, present day
 
     CHAKAOME2: # AJ10-190 for Orion
         cost: 400 # same as for AJ10-190 OME
+        
+    RLA_small_ntr: #RS-88 bantam engine
+        cost: 82 #400,000 1995 dollars, "Development of the Bantam Family of Aerojet Rocketdyne Commercial Rocket Engines"
         
     # SSTU
     SSTU-SC-ENG-Merlin-1D: *Merlin1D
@@ -4021,8 +4082,6 @@ specializedConstruction:
     FASAApalloLFTF1Plate:
         entryCost: 14000
         cost: 400
-    FASAAtlasSLV3C:
-        entryCost: 450
     
     # KAS parts. cost = little less than for Infernal robotics parts.
     KAS_Strut1:
@@ -4033,6 +4092,38 @@ specializedConstruction:
     # RealEngines RD-0120 engine mount.
     RD0120CAP:
 
+    # Raidernick Dnepr
+    rn_dnepr1_fs: # 1st Stage Fuel Tank
+        cost: 300 # made up to fit overal price, less than PP tank but stiil feel like it is too much
+        entryCost: 6600
+    rn_dnepr1_ss: # 2nd Stage Fuel Tank
+        cost: 75 # see note for first stage
+        entryCost: 1500
+    rn_dnepr1_slides: # Silo Braces
+        cost: 5 # made up, just bits of metal
+        entryCost: 100
+    rn_dnepr1_silo_tube: # Transport and Launch Container
+        cost: 10 # made up
+        entryCost: 2000
+    rn_dnepr1_ejector: # Ejection Support
+        cost: 5 # made up, some hardware
+        entryCost: 100
+    rn_dnepr1_fairing_base: # Payload Decoupler
+        cost: 20 # made up
+        entryCost: 400
+    rn_dnepr1_fairing_base2: # Extended Payload Decoupler
+        cost: 25 # made up
+        entryCost: 500
+    rn_dnepr1_fairing: # Fairing
+        cost: 15 # made up
+        entryCost: 300
+    rn_dnepr1_interstage:
+        cost: 40 # made up, PP decoupler prices get insane
+        entryCost: 800
+    rn_dnepr1_interstage2:
+        cost: 40 # made up
+        entryCost: 800
+    
 advLanding:
     
 actuators:
@@ -4615,6 +4706,9 @@ specializedCommandModules: # modern?
     SSTU-SC-C-BPC: *ApolloLES         # Orion LES, cost stolen from apollo :^)
     SSTU-SC-C-CM: *ORIONPOD
     SSTU-SC-C-SM: *ORIONSM
+    SSTU-SC-ENG-SuperDraco:
+        cost: 62 # total guess from laztek above.
+    
 
 largeUnmanned:
     

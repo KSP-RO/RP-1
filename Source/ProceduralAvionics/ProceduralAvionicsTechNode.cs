@@ -42,7 +42,6 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public float standardAvionicsDensity = 1f;
 
-
 		// This is the least amout of mass this avionics unit can be configured to control.  Set this to prevent unrealistic scaled down avionics units.
 		[Persistent]
 		public float minimumTonnage = 0;
@@ -50,6 +49,10 @@ namespace RP0.ProceduralAvionics
 		// This is the largest amout of mass this avionics unit can be configured to control.  Set this to prevent unrealistic supersized avionics units.
 		[Persistent]
 		public float maximumTonnage = float.MaxValue;
+
+		// This is the service level of the SAS part module
+		[Persistent]
+		public int SASServiceLevel = 0;
 
 		public void Load(ConfigNode node)
 		{

@@ -47,6 +47,9 @@ namespace RP0.ProceduralAvionics
 		[KSPField(isPersistant = true)]
 		public float maximumTonnage;
 
+		[KSPField(isPersistant = true)]
+		public int SASServiceLevel = -1;
+
 		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Percent Utilization")]
 		public string utilizationDisplay;
 
@@ -63,7 +66,10 @@ namespace RP0.ProceduralAvionics
 		{
 			get
 			{
-				return CurrentProceduralAvionicsConfig.CurrentTechNode;
+				if (CurrentProceduralAvionicsConfig != null) {
+					return CurrentProceduralAvionicsConfig.CurrentTechNode;
+				}
+				return null;
 			}
 		}
 
@@ -134,6 +140,9 @@ namespace RP0.ProceduralAvionics
 				VerifyPart();
 
 				SetInternalKSPFields();
+			}
+			else {
+				SetSASServiceLevel();
 			}
 			base.Update();
 		}
@@ -459,6 +468,8 @@ namespace RP0.ProceduralAvionics
 			minimumTonnage = CurrentProceduralAvionicsTechNode.minimumTonnage;
 			maximumTonnage = CurrentProceduralAvionicsTechNode.maximumTonnage;
 
+			SASServiceLevel = CurrentProceduralAvionicsTechNode.SASServiceLevel;
+
 			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
 
 			string powerCosumption = String.Format("{0:0.##}", GetEnabledkW()) + " kW";
@@ -468,6 +479,23 @@ namespace RP0.ProceduralAvionics
 			}
 
 			powerRequirementsDisplay = powerCosumption; 
+		}
+
+		// creating a field for this so we don't need to look it up every update
+		private ModuleSAS sasModule = null;
+		private void SetSASServiceLevel()
+		{
+			if (SASServiceLevel >= 0) {
+				if (sasModule == null) {
+					sasModule = part.FindModuleImplementing<ModuleSAS>();
+				}
+				if (sasModule != null) {
+					if (sasModule.SASServiceLevel != SASServiceLevel) {
+						sasModule.SASServiceLevel = SASServiceLevel;
+						Log("Setting SAS service level to " + SASServiceLevel);
+					}
+				}
+			}
 		}
 
 		#endregion

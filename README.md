@@ -171,6 +171,10 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                             # set this part to.
                                             # This prevents you from using unrealistic 
                                             # sized avioncs units early on.
+
+                SASServiceLevel = 0         # The service level of the built in SAS Module.
+                                            # All procedural avionics units have SAS modules,
+                                            # this value can range from 0-3
             }
             TECHLIMIT # Guidance Unit (Early), 1m
                       # An example of another, more efficient 
@@ -184,6 +188,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 minimumTonnage = 15
                 maximumTonnage = 90         # Notice minimumTonnage stayed the same,
                                             # while we've increased maximumTonnage
+                SASServiceLevel = 0
             }
             TECHLIMIT # Guidance Unit (Early), 2m, 3m average
             {
@@ -194,6 +199,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 standardAvionicsDensity = 0.083
                 minimumTonnage = 15
                 maximumTonnage = 600
+                SASServiceLevel = 1
             }
         }
         AVIONICSCONFIG # A second config
@@ -212,6 +218,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 standardAvionicsDensity = 0.2279
                 minimumTonnage = 3
                 maximumTonnage = 10
+                SASServiceLevel = 0
             }
             TECHLIMIT # Agena Avionics Package, with some fudged stats
             {
@@ -226,6 +233,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 standardAvionicsDensity = 0.07
                 minimumTonnage = 3
                 maximumTonnage = 10
+                SASServiceLevel = 3
             }
         }
         AVIONICSCONFIG
@@ -240,6 +248,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 enabledProceduralW = 116.66
                 disabledProceduralW = 2.666
                 standardAvionicsDensity = 0.416
+                SASServiceLevel = 1
 
                 # Since probeCores should be the least mass efficient, we probably don't
                 # need to add any restrictions on min/max tonnage
@@ -257,8 +266,9 @@ I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpus
  - Create a part roughly the same size and shape of an existing avionics module unlocked in that tech node.
      - Take note of its volume.  Enter this in column G of the spreadsheet. (Note: the KSP UI normally shows liters, but in the spreadsheets it's kiloliters.)
      - Slide the utilization slider down to 0, and take note of its empty weight and empty cost.  Put those in columns H and I respectively.
- - Columns L-P should now contain values for `tonnageToMassRatio`, `costPerControlledTon`, `standardAvionicsDensity`, `enabledProceduralW` and  `disabledProceduralW` 
+ - Columns L-P should now contain values for `tonnageToMassRatio`, `costPerControlledTon`, `standardAvionicsDensity`, `enabledProceduralW` and  `disabledProceduralW`
  - For setting `minimumTonnage` and `maximumTonnage`, I generally halve and double the values defined for the existing avionics part.
+ - For setting `SASServiceLevel`, I just use the value already present in the `ModuleSAS` already on this part.
 
 > There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
 

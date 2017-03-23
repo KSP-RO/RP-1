@@ -35,108 +35,139 @@ namespace RP0
         protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
 
+        protected virtual float GetInternalMassLimit()
+        {
+            return massLimit;
+        }
+
+        protected virtual float GetEnabledkW()
+        {
+            return enabledkW;
+        }
+
+        protected virtual float GetDisabledkW()
+        {
+            return disabledkW;
+        }
+
+        protected virtual bool GetToggleable()
+        {
+            return toggleable;
+        }
+
         // returns current limit, based on enabled/disabled
         public float CurrentMassLimit
         {
             get
             {
                 if (currentlyEnabled && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
-                    return massLimit;
+                    return GetInternalMassLimit();
                 else
                     return 0f;
             }
         }
-		#endregion
+        #endregion
 
-		#region Utility methods
-		protected double ResourceRate()
-		{
-			ModuleCommand mC = part.FindModuleImplementing<ModuleCommand>();
+        #region Utility methods
+        protected double ResourceRate()
+        {
+            ModuleCommand mC = part.FindModuleImplementing<ModuleCommand>();
 
-			if (mC != null)
-			{
-				foreach (ModuleResource r in mC.resHandler.inputResources)
-				{
-					if (r.id == PartResourceLibrary.ElectricityHashcode)
-					{
-						commandChargeResource = r;
-						if (enabledkW < 0)
-							enabledkW = (float)r.rate;
-						return r.rate;
-					}
-				}
-			}
-			return -1;
-		}
+            if (mC != null)
+            {
+                foreach (ModuleResource r in mC.resHandler.inputResources)
+                {
+                    if (r.id == PartResourceLibrary.ElectricityHashcode)
+                    {
+                        commandChargeResource = r;
+                        if (GetEnabledkW() < 0)
+                        {
+                            enabledkW = (float)r.rate;
+                        }
+                        else
+                        {
+                            r.rate = GetEnabledkW();
+                        }
+                        return r.rate;
+                    }
+                }
+            }
+            return -1;
+        }
 
-		protected void UpdateRate()
-		{
-			if (part.protoModuleCrew.Count > 0)
-			{
-				currentlyEnabled = systemEnabled = true;
-				
-				commandChargeResource.rate = currentWatts = enabledkW;
-				ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
-			}
-			else
-			{
-				currentlyEnabled = !((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled);
-				if (currentlyEnabled)
-				{
-					commandChargeResource.rate = currentWatts = enabledkW;
-				}
-				else
-				{
-					commandChargeResource.rate = currentWatts = disabledkW;
-				}
-			}
-			currentWatts *= 1000f;
-		}
+        protected void UpdateRate()
+        {
+            if (part.protoModuleCrew.Count > 0)
+            {
+                currentlyEnabled = systemEnabled = true;
+                
+                commandChargeResource.rate = currentWatts = GetEnabledkW();
+                ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
+            }
+            else
+            {
+                currentlyEnabled = !((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled);
+                if (currentlyEnabled)
+                {
+                    commandChargeResource.rate = currentWatts = GetEnabledkW();
+                }
+                else
+                {
+                    commandChargeResource.rate = currentWatts = GetDisabledkW();
+                }
+            }
+            currentWatts *= 1000f;
+        }
 
-		private void SetActionsAndGui()
-		{
-			Events["ToggleEvent"].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
-			Actions["ActivateAction"].active = !systemEnabled;
-			Actions["ShutdownAction"].active = systemEnabled;
-		}
+        private void SetActionsAndGui()
+        {
+            Events["ToggleEvent"].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
+            Actions["ActivateAction"].active = !systemEnabled;
+            Actions["ShutdownAction"].active = systemEnabled;
+        }
         #endregion
 
         #region Overrides
         public void Start()
         {
-            // check then bind to ModuleCommand
-            if (toggleable && disabledkW >= 0f && ResourceRate() >= 0)
-                UpdateRate();
-            else
-            {
+        // check then bind to ModuleCommand
+            if (ResourceRate() <= 0f || !GetToggleable() || GetDisabledkW() <= 0f) {
                 toggleable = false;
                 currentlyEnabled = true; // just in case
             }
+            //We want to call UpdateRate all the time to capture anything from proceduralAvionics
+            UpdateRate();
 
             Fields["currentWatts"].guiActive = 
                 Events["ToggleEvent"].guiActive =
                 Events["ToggleEvent"].guiActiveEditor = 
                 Actions["ToggleAction"].active =
                 Actions["ActivateAction"].active =
-                Actions["ShutdownAction"].active = toggleable;
+                Actions["ShutdownAction"].active = GetToggleable();
 
-			SetActionsAndGui();
+            SetActionsAndGui();
         }
 
-        public override string GetInfo()
+        protected virtual string GetTonnageString()
         {
             string retStr = "This part allows control of vessels of ";
             if (massLimit < float.MaxValue)
                 retStr += "up to " + massLimit.ToString("N3") + " tons.";
             else
                 retStr += "any mass.";
-            if(toggleable && disabledkW >= 0f)
+            return retStr;
+        }
+
+        public override string GetInfo()
+        {
+            string retStr = GetTonnageString();
+            if(GetToggleable() && GetDisabledkW() >= 0f)
             {
                 double resRate = ResourceRate();
                 if(resRate >= 0)
                 {
                     retStr += "\nCan be disabled, to lower command module wattage from " 
-                        + (enabledkW * 1000d).ToString("N1") + " W to " + (disabledkW * 1000d).ToString("N1") + " W.";
+                        + (GetEnabledkW() * 1000d).ToString("N1") + " W to " + (GetDisabledkW() * 1000d).ToString("N1") + " W.";
                 }
             }
             if (!string.IsNullOrEmpty(techRequired))
@@ -151,23 +182,23 @@ namespace RP0
 
             // Automatic mode switch
             bool isWarping = (TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f);
-            if (toggleable && isWarping != wasWarping)
+            if (GetToggleable() && isWarping != wasWarping)
             {
                 // Maybe do a screenmessage here?
                 UpdateRate();
             }
             wasWarping = isWarping;
         }
-		#endregion
+        #endregion
 
-		#region Actions and Events
-		[KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Shutdown Avionics")]
-		public void ToggleEvent()
-		{
-			systemEnabled = !systemEnabled;
-			UpdateRate();
-			SetActionsAndGui();
-		}
+        #region Actions and Events
+        [KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Shutdown Avionics")]
+        public void ToggleEvent()
+        {
+            systemEnabled = !systemEnabled;
+            UpdateRate();
+            SetActionsAndGui();
+        }
 
         [KSPAction("Toggle Avionics")]
         public void ToggleAction(KSPActionParam param)

@@ -148,6 +148,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0.1
     proceduralStackDecoupler:
         cost: 0.1
+    proceduralAvionics:
+        cost: 0.1
         
     #SSTU Procedural stuff
     SSTU-SC-TANK-MFT-A: #not excalty the same curve as PP, but roughly accurate for medium sized tanks (around 20*5m)

@@ -83,7 +83,7 @@ Procedural Avionics
 
 Procedural Avionics is an addition to RP-0 which allows you to build custom avionics units, instead of relying on pre-build avionics (think Procedural Parts, except for avionics).  In fact, Procedural Avionics was built on top of Procedural Parts, we just took the Procedural Battery that RP-0 had and added a scalable avionics unit inside of it.
 
-###Tonnage
+### Tonnage
 In RP-0, avionics units have a maximum amount of mass they can control.  When using a procedural avionics part, you'll notice it had a tonnage slider.  Sliding this slider increases the amount of mass this part can control.  The maximum amount of mass it can control is limited by two things:
 
  - Part Efficiency
@@ -94,10 +94,10 @@ Efficiency is limited by tech level.  Volume is limited by part size and shape. 
 
 >In the GUI, you'll see a Percent Utilization field in the editor.  It's not always the best idea to just max out the avionics slider, more on that later.
 
-###Configuration
+### Configuration
 Procedural Avionics can have different configurations.  For instance, booster avionics might not be toggleable, use a lot of power, but be fairly light (for the amount of mass they can control), while probeCore avionics would be more efficient power wise, but a bit heavier (due to their robustness).  Upper stages might lie somewhere in the middle.
 
-###Optimal Utilization Percentages
+### Optimal Utilization Percentages
 
 As part utilization goes up, so do part cost and part weight.  However, these do not rise at the same rates.  Consider this example: as you try to fit more avionics controls into the same amount of space, you should probably invest some effort into making those controls smaller and more efficient.  The smaller and more efficient you try to make those parts, the more they cost (and the higher the cost per controllable ton).  However, since these parts are more efficient, while your overall part mass continues to rise, your mass per controllable ton actually decreases.  Because of this, we actually get two different "curves", a mass curve, and a cost curve:
 
@@ -108,7 +108,7 @@ Because the actual efficiency of a part depends on its utilization, we run into 
 
 >It is worth noting that the mass and cost curves here only define the mass of the avionics module portion of the part.  As these parts by default also contain batteries, there is additional mass and cost dependant on the size of the part.
 
-###Electric charge consumption
+### Electric charge consumption
 
 Electric charge consumption is not nearly as complicated, as it scales linearly with utilization.  At 0% utilization (I don't know why you would ever choose that), power consumption is 50% of its rated (sweet spot) value.  50% utilization consumes 100% of rated value, and 100% utilization consumes 150%.  This is true for both the active and inactive power drain rates.
 
@@ -256,7 +256,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
         }
     }
 
-###Building your own TECHLIMIT nodes
+### Building your own TECHLIMIT nodes
 I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpuszH_nUbWlTXZzfOMzsy-uhUNh016eNu0WL8x6qvU/edit#gid=1101913381) that you can copy and use as a scratchpad to help you configure tech nodes.  I'll give a manual walkthrough of what I would expect someone to do here, and I have created a few nodes at the top of the spreadsheet for some early existing parts.
 
  - Create a new line, copying the line above it to get all the formulas.

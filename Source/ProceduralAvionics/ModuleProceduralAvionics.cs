@@ -340,9 +340,11 @@ namespace RP0.ProceduralAvionics
 			UI_ChooseOption range = (UI_ChooseOption)avionicsConfigField.uiControlEditor;
 			range.options = proceduralAvionicsConfigs.Keys.ToArray();
 
-			avionicsConfigName = proceduralAvionicsConfigs.Keys.First();
+			if (String.IsNullOrEmpty(avionicsConfigName)) {
+				avionicsConfigName = proceduralAvionicsConfigs.Keys.First();
+				Log("Defaulted config to " + avionicsConfigName);
+			}
 
-			Log("Defaulted config to " + avionicsConfigName);
 		}
 
 		private void InitializeTechLimits()

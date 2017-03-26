@@ -245,7 +245,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 name = basicScience
                 tonnageToMassRatio = 4.327
                 costPerControlledTon = 4425
-                enabledProceduralW = 116.66
+                enabledProceduralW = 166.66
                 disabledProceduralW = 2.666
                 standardAvionicsDensity = 0.416
                 SASServiceLevel = 1
@@ -258,6 +258,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
 
 ### Building your own TECHLIMIT nodes
 I have created a spreadsheet [here](https://docs.google.com/spreadsheets/d/1lpuszH_nUbWlTXZzfOMzsy-uhUNh016eNu0WL8x6qvU/edit#gid=1101913381) that you can copy and use as a scratchpad to help you configure tech nodes.  I'll give a manual walkthrough of what I would expect someone to do here, and I have created a few nodes at the top of the spreadsheet for some early existing parts.
+
+Feel free to update the spreadsheet and create PRs to add new nodes.  An example PR can be found [here](https://github.com/KSP-RO/RP-0/pull/626).
 
  - Create a new line, copying the line above it to get all the formulas.
      - Note: You should only need to edit the values in the blue columns.

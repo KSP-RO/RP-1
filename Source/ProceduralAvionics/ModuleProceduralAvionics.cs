@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
@@ -12,6 +13,10 @@ namespace RP0.ProceduralAvionics
 	{
 
 		#region KSPFields, overrides, and class variables
+
+
+		const string kwFormat = "{0:0.##}"; 
+		const string wFormat = "{0:0}"; 
 
 		// This controls how much the current part can control (in metric tons)
 		[KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "T"),
@@ -335,9 +340,11 @@ namespace RP0.ProceduralAvionics
 			UI_ChooseOption range = (UI_ChooseOption)avionicsConfigField.uiControlEditor;
 			range.options = proceduralAvionicsConfigs.Keys.ToArray();
 
-			avionicsConfigName = proceduralAvionicsConfigs.Keys.First();
+			if (String.IsNullOrEmpty(avionicsConfigName)) {
+				avionicsConfigName = proceduralAvionicsConfigs.Keys.First();
+				Log("Defaulted config to " + avionicsConfigName);
+			}
 
-			Log("Defaulted config to " + avionicsConfigName);
 		}
 
 		private void InitializeTechLimits()
@@ -472,13 +479,24 @@ namespace RP0.ProceduralAvionics
 
 			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
 
-			string powerCosumption = String.Format("{0:0.##}", GetEnabledkW()) + " kW";
-			if (GetDisabledkW() > 0)
-			{
-				powerCosumption += " / " + String.Format("{0:0.##}", GetDisabledkW()) + " kW";
+			StringBuilder powerConsumptionBuilder = StringBuilderCache.Acquire();
+			if (GetEnabledkW() >= 0.1) {
+				powerConsumptionBuilder.AppendFormat(kwFormat, GetEnabledkW()).Append(" kW");
+			}
+			else {
+				powerConsumptionBuilder.AppendFormat(wFormat, GetEnabledkW() * 1000).Append(" W");
+			}
+			if (GetDisabledkW() > 0) {
+				powerConsumptionBuilder.Append(" /");
+				if (GetDisabledkW() >= 0.1) {
+					powerConsumptionBuilder.AppendFormat(kwFormat, GetDisabledkW()).Append(" kW");
+				}
+				else {
+					powerConsumptionBuilder.AppendFormat(wFormat, GetDisabledkW() * 1000).Append(" W");
+				}
 			}
 
-			powerRequirementsDisplay = powerCosumption; 
+			powerRequirementsDisplay = powerConsumptionBuilder.ToStringAndRelease(); 
 		}
 
 		// creating a field for this so we don't need to look it up every update

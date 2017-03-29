@@ -300,7 +300,7 @@ namespace RP0.ProceduralAvionics
 
 		private void UpdateMaxValues()
 		{
-			//update mass limit value slider
+			// update mass limit value slider
 
 			if (proceduralMassLimitEdit == null)
 			{
@@ -318,6 +318,12 @@ namespace RP0.ProceduralAvionics
 				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
 				proceduralMassLimitEdit.maxValue = GetMaximumControllableTonnage();
 				proceduralMassLimitEdit.minValue = GetMinimumControllableTonnage();
+
+				// Set big and small slider increments to be 1% and 10%
+				var procMassDelta = proceduralMassLimitEdit.maxValue - proceduralMassLimitEdit.minValue;
+				proceduralMassLimitEdit.incrementSlide = procMassDelta / 1000;
+				proceduralMassLimitEdit.incrementSmall = procMassDelta / 100;
+				proceduralMassLimitEdit.incrementLarge = procMassDelta / 10;
 			}
 			else
 			{

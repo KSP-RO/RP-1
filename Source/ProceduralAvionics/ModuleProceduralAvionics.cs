@@ -319,9 +319,9 @@ namespace RP0.ProceduralAvionics
 				proceduralMassLimitEdit.maxValue = GetMaximumControllableTonnage();
 				proceduralMassLimitEdit.minValue = GetMinimumControllableTonnage();
 
-				// Set big and small slider increments to be 1% and 10%
+				// Set slide, small, and large slider increments to be 0.025%, 1%, and 10%
 				var procMassDelta = proceduralMassLimitEdit.maxValue - proceduralMassLimitEdit.minValue;
-				proceduralMassLimitEdit.incrementSlide = procMassDelta / 1000;
+				proceduralMassLimitEdit.incrementSlide = procMassDelta / 4000;
 				proceduralMassLimitEdit.incrementSmall = procMassDelta / 100;
 				proceduralMassLimitEdit.incrementLarge = procMassDelta / 10;
 			}

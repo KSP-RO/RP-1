@@ -97,7 +97,11 @@ namespace RP0
 
         protected void UpdateRate()
         {
-            if (part.protoModuleCrew.Count > 0)
+			if (commandChargeResource == null) {
+				UnityEngine.Debug.Log("[RP-0] - Can't change rate with no commandChargeResource");
+				return;
+			}
+            if (part.protoModuleCrew != null && part.protoModuleCrew.Count > 0)
             {
                 currentlyEnabled = systemEnabled = true;
                 

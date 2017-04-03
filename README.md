@@ -253,6 +253,17 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 # Since probeCores should be the least mass efficient, we probably don't
                 # need to add any restrictions on min/max tonnage
             }
+            TECHLIMIT # Ranger Block III Core
+            {
+                name = miniaturization
+                tonnageToMassRatio = 8
+                costPerControlledTon = 2550
+                enabledProceduralW = 133.33
+                disabledProceduralW = 2.5
+                standardAvionicsDensity = 0.28
+                SASServiceLevel = 1
+                hasScienceContainer = true      # This enables the ModularScienceContainer
+            }
         }
     }
 

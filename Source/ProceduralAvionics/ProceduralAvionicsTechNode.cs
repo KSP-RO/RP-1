@@ -54,6 +54,10 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public int SASServiceLevel = 0;
 
+		// Controls whether or not this part has a science return container 
+		[Persistent]
+		public bool hasScienceContainer = false;
+
 		public void Load(ConfigNode node)
 		{
 			ConfigNode.LoadObjectFromConfig(this, node);

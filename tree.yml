@@ -3298,6 +3298,14 @@ spaceExploration: #crewed landing
     FASALM_StairCase: &LMStaircase
         entryCost: 7000
         cost: 200
+        
+    MEMDescentMod: # with descent engine
+        cost: 8950
+        entryCost: 299000
+    MEMLander: # with ascent engine and docking cone
+        cost: 8950
+        entryCost: 305000
+        
     #Tantares LM Descent Stage
     Castor_LM_Tank: *LMDescentTank
     #Tantares LK

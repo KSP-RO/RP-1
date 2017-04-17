@@ -5280,3 +5280,11 @@ ORPHANS:
     PLV_Engine_A:
     PLV_Engine_B:
     PLV_LFO_A:
+    
+    # stock radiators:
+    radPanelSm:
+    radPanelLg:
+    foldingRadSmall:
+    foldingRadMed:
+    foldingRadLarge:
+    

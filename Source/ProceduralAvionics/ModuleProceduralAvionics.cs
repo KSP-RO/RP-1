@@ -14,7 +14,6 @@ namespace RP0.ProceduralAvionics
 
 		#region KSPFields, overrides, and class variables
 
-
 		const string kwFormat = "{0:0.##}";
 		const string wFormat = "{0:0}";
 
@@ -63,6 +62,12 @@ namespace RP0.ProceduralAvionics
 
 		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Power Requirements")]
 		public string powerRequirementsDisplay;
+
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Mass")]
+		public string massDisplay;
+
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Cost")]
+		public string costDisplay;
 
 		// The currently selected avionics config
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig {
@@ -468,6 +473,8 @@ namespace RP0.ProceduralAvionics
 			}
 
 			powerRequirementsDisplay = powerConsumptionBuilder.ToStringAndRelease();
+
+			UpdateCostAndMassDisplays();
 		}
 
 		// creating a field for this so we don't need to look it up every update
@@ -502,6 +509,74 @@ namespace RP0.ProceduralAvionics
 			}
 			Log("Setting science container to ", (hasScienceContainer ? "enabled." : "disabled."));
 			scienceContainerFiltered = true;
+		}
+
+		bool ppFieldsHidden = false;
+		string TCSmoduleName = "TankContentSwitcher";
+		string PPModuleName = "ProceduralPart";
+		private void UpdateCostAndMassDisplays()
+		{
+			if (!ppFieldsHidden) {
+				ppFieldsHidden = HideField(TCSmoduleName, "massDisplay") && HideField(TCSmoduleName , "volumeDisplay");
+			}
+
+			float baseCost = GetBaseCost();
+			float baseMass = GetBaseMass();
+			massDisplay = MathUtils.FormatMass(baseMass + GetModuleMass(0, ModifierStagingSituation.CURRENT));
+			costDisplay = (baseCost + GetModuleCost(0, ModifierStagingSituation.CURRENT)).ToString();
+		}
+
+		private bool HideField(string moduleName, string fieldName)
+		{
+			var field = GetBaseField(moduleName, fieldName);
+			if (field == null) {
+				Log("Field ", fieldName, " not found");
+				return false;
+			}
+			field.guiActive = false;
+			field.guiActiveEditor = false;
+			return true;
+		}
+
+		private BaseField GetBaseField(string moduleName, string fieldName)
+		{
+			PartModule module = this;
+			if (!String.IsNullOrEmpty(moduleName)) {
+				module = part.Modules[moduleName];
+				if (module == null) {
+					Log("Module ", moduleName, " not found");
+				}
+			}
+			return module.Fields[fieldName];
+		}
+
+		// Base cost comes from ProceduralPart
+		private float GetBaseCost()
+		{
+			var ppModule = part.Modules[PPModuleName];
+			if (ppModule != null) {
+				var ppMassModule = (IPartCostModifier)ppModule;
+				return ppMassModule.GetModuleCost(0, ModifierStagingSituation.CURRENT);
+			}
+			else {
+				Log("Module ", PPModuleName, " not found");
+			}
+			return 0;
+		}
+
+		// Base mass comes from TankContentSwitcher
+		private float GetBaseMass()
+		{
+			var tcsModule = part.Modules[TCSmoduleName];
+			if (tcsModule != null) {
+				var tcsMassModule = (IPartMassModifier)tcsModule;
+				return tcsMassModule.GetModuleMass(0, ModifierStagingSituation.CURRENT);
+
+			}
+			else {
+				Log("Module ", TCSmoduleName, " not found");
+			}
+			return 0;
 		}
 
 		#endregion

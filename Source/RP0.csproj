@@ -78,6 +78,7 @@
     <Compile Include="ProceduralAvionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\KSPUtils.cs" />
+    <Compile Include="Utilities\MathUtils.cs" />
     <Compile Include="Utilities\ObjectSerializer.cs" />
   </ItemGroup>
   <ItemGroup>

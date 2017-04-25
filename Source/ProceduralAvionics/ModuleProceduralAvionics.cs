@@ -14,7 +14,6 @@ namespace RP0.ProceduralAvionics
 
 		#region KSPFields, overrides, and class variables
 
-
 		const string kwFormat = "{0:0.##}";
 		const string wFormat = "{0:0}";
 
@@ -518,18 +517,18 @@ namespace RP0.ProceduralAvionics
 		private void UpdateCostAndMassDisplays()
 		{
 			if (!ppFieldsHidden) {
-				ppFieldsHidden = hideField(TCSmoduleName, "massDisplay") && hideField(TCSmoduleName , "volumeDisplay");
+				ppFieldsHidden = HideField(TCSmoduleName, "massDisplay") && HideField(TCSmoduleName , "volumeDisplay");
 			}
 
-			float baseCost = getBaseCost();
-			float baseMass = getBaseMass();
+			float baseCost = GetBaseCost();
+			float baseMass = GetBaseMass();
 			massDisplay = MathUtils.FormatMass(baseMass + GetModuleMass(0, ModifierStagingSituation.CURRENT));
 			costDisplay = (baseCost + GetModuleCost(0, ModifierStagingSituation.CURRENT)).ToString();
 		}
 
-		private bool hideField(string moduleName, string fieldName)
+		private bool HideField(string moduleName, string fieldName)
 		{
-			var field = getBaseField(moduleName, fieldName);
+			var field = GetBaseField(moduleName, fieldName);
 			if (field == null) {
 				Log("Field ", fieldName, " not found");
 				return false;
@@ -539,7 +538,7 @@ namespace RP0.ProceduralAvionics
 			return true;
 		}
 
-		private BaseField getBaseField(string moduleName, string fieldName)
+		private BaseField GetBaseField(string moduleName, string fieldName)
 		{
 			PartModule module = this;
 			if (!String.IsNullOrEmpty(moduleName)) {
@@ -552,7 +551,7 @@ namespace RP0.ProceduralAvionics
 		}
 
 		// Base cost comes from ProceduralPart
-		private float getBaseCost()
+		private float GetBaseCost()
 		{
 			var ppModule = part.Modules[PPModuleName];
 			if (ppModule != null) {
@@ -566,7 +565,7 @@ namespace RP0.ProceduralAvionics
 		}
 
 		// Base mass comes from TankContentSwitcher
-		private float getBaseMass()
+		private float GetBaseMass()
 		{
 			var tcsModule = part.Modules[TCSmoduleName];
 			if (tcsModule != null) {

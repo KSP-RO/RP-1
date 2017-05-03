@@ -156,3 +156,6 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+
+# KSP RP-0 Tree.cfg
+GameData/RP-0/Tree.cfg

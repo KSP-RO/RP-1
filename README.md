@@ -92,7 +92,7 @@ In RP-0, avionics units have a maximum amount of mass they can control.  When us
 
 Efficiency is limited by tech level.  Volume is limited by part size and shape.  Tonnage can further be limited by setting the appropriate values in the configuration.
 
->In the GUI, you'll see a Percent Utilization field in the editor.  It's not always the best idea to just max out the avionics slider, more on that later.
+>In the GUI, you'll see a Percent Utilization field in the editor that ranges from 0% - 200%.  It's not always the best idea to just max out the avionics slider, more on that later.
 
 ### Configuration
 Procedural Avionics can have different configurations.  For instance, booster avionics might not be toggleable, use a lot of power, but be fairly light (for the amount of mass they can control), while probeCore avionics would be more efficient power wise, but a bit heavier (due to their robustness).  Upper stages might lie somewhere in the middle.
@@ -104,13 +104,13 @@ As part utilization goes up, so do part cost and part weight.  However, these do
  - mass curve: -x^2 + 2x  (as utilization goes up, additional mass needed per controllable mass goes down)
  - cost curve: x^2  (as utilization goes up, cost rises exponentially)
 
-Because the actual efficiency of a part depends on its utilization, we run into a problem when trying to configure these parts.  Thus, we'll define a "sweet spot" of 50% utilization.  If a part is 50% utilized, then their cost/controllable ton and mass/controllable ton will be what's in the configs.  Bringing the utilization up to 100% (and reduce the volume accordingly, so you're still controlling the same amount of mass), and you should find your part mass decreased by about 1/3, but your cost to be 4x as much.
+Because the actual efficiency of a part depends on its utilization, we run into a problem when trying to configure these parts.  Thus, we'll define a "sweet spot" of 100% utilization.  If a part is 100% utilized, then their cost/controllable ton and mass/controllable ton will be what's in the configs.  Bringing the utilization up to 200% (and reduce the volume accordingly, so you're still controlling the same amount of mass), and you should find your part mass decreased by about 1/3, but your cost to be 4x as much.
 
 >It is worth noting that the mass and cost curves here only define the mass of the avionics module portion of the part.  As these parts by default also contain batteries, there is additional mass and cost dependant on the size of the part.
 
 ### Electric charge consumption
 
-Electric charge consumption is not nearly as complicated, as it scales linearly with utilization.  At 0% utilization (I don't know why you would ever choose that), power consumption is 50% of its rated (sweet spot) value.  50% utilization consumes 100% of rated value, and 100% utilization consumes 150%.  This is true for both the active and inactive power drain rates.
+Electric charge consumption is not nearly as complicated, as it scales linearly with utilization.  At 0% utilization (I don't know why you would ever choose that), power consumption is 50% of its rated (sweet spot) value.  100% utilization consumes 100% of rated value, and 200% utilization consumes 150%.  This is true for both the active and inactive power drain rates.
 
 ### Tech Node Config
 Let's take a look at a sample MM config for procedural avionics.  I'll annotate what things mean inline.
@@ -136,19 +136,19 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                             # available.
                                             
                 tonnageToMassRatio = 26.13  # This is how efficient this node is mass 
-                                            # wise at 50% utilization. A higher number 
-                                            # here is more efficient. More than 50%
+                                            # wise at 100% utilization. A higher number 
+                                            # here is more efficient. More than 100%
                                             # utilization will cause this to be
                                             # effectively higher too.
                                             
                 costPerControlledTon = 13   # This is how much the avionics portion of 
-                                            # this part costs at 50% utilization.
+                                            # this part costs at 100% utilization.
                                             # Lower is better. This goes up exponentially
                                             # as utilization goes up. 
                                             
                 enabledProceduralW = 150    # This is the power drain per controllable 
                                             # ton when this part is active, 
-                                            # again at 50% utilization.
+                                            # again at 100% utilization.
                                             
                 standardAvionicsDensity = 5 # This helps make procedural avionics
                                             # match up to their in-game counterparts.

@@ -137,7 +137,7 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		public new void Update()
+		public void FixedUpdate()
 		{
 			if (HighLogic.LoadedSceneIsEditor) {
 				DeserializeObjects();
@@ -151,7 +151,6 @@ namespace RP0.ProceduralAvionics
 				SetSASServiceLevel();
 				SetScienceContainer();
 			}
-			base.Update();
 		}
 
 		public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)

@@ -453,7 +453,7 @@ namespace RP0.ProceduralAvionics
 			SASServiceLevel = CurrentProceduralAvionicsTechNode.SASServiceLevel;
 			hasScienceContainer = CurrentProceduralAvionicsTechNode.hasScienceContainer;
 
-			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
+			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 200);
 
 			StringBuilder powerConsumptionBuilder = StringBuilderCache.Acquire();
 			if (GetEnabledkW() >= 0.1) {

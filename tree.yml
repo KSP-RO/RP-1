@@ -4737,7 +4737,9 @@ largeUnmanned:
     Capella_Control_A:
     Capella_Mono_A:
     Capella_Engine_A:
+    Capella_Solar_A:
     Capella_Structure_A:
+    Capella_Structure_B:
     #Cygnus
     Pollux_Control_A:
     Pollux_Engine_A:

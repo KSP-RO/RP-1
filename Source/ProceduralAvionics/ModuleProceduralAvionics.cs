@@ -137,7 +137,7 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		public new void Update()
+		public void FixedUpdate()
 		{
 			if (HighLogic.LoadedSceneIsEditor) {
 				DeserializeObjects();
@@ -151,7 +151,6 @@ namespace RP0.ProceduralAvionics
 				SetSASServiceLevel();
 				SetScienceContainer();
 			}
-			base.Update();
 		}
 
 		public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)
@@ -453,7 +452,7 @@ namespace RP0.ProceduralAvionics
 			SASServiceLevel = CurrentProceduralAvionicsTechNode.SASServiceLevel;
 			hasScienceContainer = CurrentProceduralAvionicsTechNode.hasScienceContainer;
 
-			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
+			utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 200);
 
 			StringBuilder powerConsumptionBuilder = StringBuilderCache.Acquire();
 			if (GetEnabledkW() >= 0.1) {

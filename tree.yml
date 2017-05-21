@@ -688,10 +688,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     RO-DerwentV:
         # entryCost: 0
         cost: 36
-        
+
     #Taerobee A-4/V-2/Bumper parts
     # Note in mass production, the whole A-4 was only about 50-100 funds.
-    # But that's very, very unbalanced, and probably wrong to represent postwar costs anyway
+    # But that's very, very unbalanced, and probably wrong to represent postwar costs anyway.
     Bumper_Control: *A4Guidance
     Bumper_Nose:
         # entryCost: 0
@@ -706,6 +706,13 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     Bumper_Fin:
         # entryCost: 0
         cost: 5
+
+    # RD-100 engine (and it's early variants).
+    # Same as the A-4 engine.
+    LVT15: *A4Engine
+
+    # RealEngines RD-100 engine.
+    rd100: *A4Engine
 
     Libra_Ladder_A:
         cost: 1
@@ -722,7 +729,6 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     Long?decal?1x8: *decals
     Long?decal?2x16: *decals
     Long?decal?4x32: *decals
-        
     
     # B9 parts:
     B9_Structure_R0_Railing:
@@ -874,9 +880,6 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     FASA_Mercury_LFT_Short:
         cost: 150
 
-    LVT15: #RD-103
-        cost: 850
-    
     #SSTU
     SSTU-AJ10-CustomEarly: *AJ10early
 
@@ -1169,8 +1172,14 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 700
     Size2MedEngine: *RD108
 
+    # RealEngines RD-108 engine.
+    RD108: *RD108
+
     R7_Booster_Engine: &RD107
         cost: 680
+
+    # RealEngines RD-107 engine.
+    RD107: *RD107
 
     # LR79 (Thor/Jupiter main engine)
     # and LR89 (Atlas booster)
@@ -3962,8 +3971,13 @@ stagedTL7:
     RD0124_StockVersion: &RD-0124
         cost: 1200 # total guess
 
-    # RealEngines RD-0124.
+    # RealEngines RD-0124 and RD-0124A (dual) engines.
+    # This RD-0124A is the Sunkar variant, featuring two RD-0124A engines in
+    # the form factor of one. So, approximately double the cost.
     RD0124engine: *RD-0124
+
+    RD0124Aengine:
+        cost: 2500
 
 exoticFuelStorage: #TL7 solids
     #ATK L.S.G. 5-Segment RSRM

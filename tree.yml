@@ -494,18 +494,23 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0
 
     # Launch Clamps/Towers
-    FASAlaunchClampAtlas:    
+    FASAlaunchClampAtlas: &FASAlaunchClampAtlas     
         cost: 10
-    FASAlaunchClampApollo:
+    BDB_FASAlaunchClampAtlas: *FASAlaunchClampAtlas #From Bluedog Design Bureau
+    FASAlaunchClampApollo: &FASAlaunchClampApollo
         cost: 10
+    BDB_FASAlaunchClampApollo: *FASAlaunchClampApollo #From Bluedog Design Bureau
     launchClamp1:
         cost: 10
-    FASAlaunchClamp125:
+    FASAlaunchClamp125: &FASAlaunchClamp125
         cost: 10
-    FASAlaunchClamp25:
+    BDB_FASAlaunchClamp125: *FASAlaunchClamp125 #From Bluedog Design Bureau
+    FASAlaunchClamp25: &FASAlaunchClamp25
         cost: 10
-    FASAUmbilicalTower:
+    BDB_FASAlaunchClamp25: *FASAlaunchClamp25 #From Bluedog Design Bureau
+    FASAUmbilicalTower: &FASAUmbilicalTower
         cost: 10
+    BDB_FASAUmbilicalTower: *FASAUmbilicalTower #From Bluedog Design Bureau
     SXTlaunchclamp1:
         cost: 10
     # RSB Towers
@@ -918,6 +923,10 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     rn_aerobee300_srb:
         # entryCost: 0
         cost: 12
+        
+    #Bluedog Design Bureau
+    bluedog_Diamant_Vexin:
+        cost: 80
 
 engineering101:
     # Tanks
@@ -1774,8 +1783,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
 enhancedSurvivability: # Early capsules
     # Apparently the launch tower is used for loading astronauts,
     # so it should go here, right?
-    FASAlaunchTower:
+    FASAlaunchTower: &FASAlaunchTower
         cost: 10 #yeah, should really be expensive, but then who would use it?
+    BDB_FASAlaunchTower: *FASAlaunchTower #From Bluedog Design Burea
         
     # Life support
 
@@ -3455,6 +3465,7 @@ precisionPropulsion:
     #RS-27/A engine.
     RSBengineRS27A: &RS27 # Real Scale Boosters RS-27/A engine
         cost: 1850
+    
 
 advFuelSystems: # TL4 solids
     # Ermergerd this thing is HUGE.

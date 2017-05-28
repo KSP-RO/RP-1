@@ -2101,7 +2101,7 @@ matureSolids:
 
     #BDB diamant BP4 2nd stage SRB
     bluedog_Diamant_Rita:
-    cost: 400
+        cost: 400
 
 generalConstruction:
     # The MOL cargo sections are here, because it's totally

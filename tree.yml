@@ -1,4 +1,4 @@
-# RP-0 tech tree.
+﻿# RP-0 tech tree.
 #
 # This tree is in YAML format.
 #
@@ -924,9 +924,37 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
         # entryCost: 0
         cost: 12
         
-    #Bluedog Design Bureau
-    bluedog_Diamant_Vexin:
+    #Bluedog Design Bureau diamant
+    bluedog_Diamant_Vexin: # while diamant is a mid 60's rocket, the tech compares with rockets like redstone, total cost is correct, engine costs are estimated from comparison with similar engines
+        # entryCost: 0
+        cost: 80 
+        #price is for sounding rocket vesta config, +650 for Vexin
+
+    bluedog_Diamant_Fin:
+        # entryCost: 0
+        cost: 5
+
+    bluedog_Diamant_TankA:
+        # entryCost: 0
+        cost: 100
+
+    bluedog_Diamant_TankB:
+        # entryCost: 0
+        cost: 50
+
+    bluedog_Diamant_Rubis:
+        # entryCost: 0
         cost: 80
+
+    bluedog_Diamant_Topaze:
+        # entryCost: 0
+        cost: 400
+
+    bluedog_Diamant_Adapter: 
+        # entryCost: 0
+        cost: 30
+     
+
 
 engineering101:
     # Tanks
@@ -1402,7 +1430,7 @@ basicConstruction:
     r7_blok_bvgd_sput: &R7Booster
         cost: 100
     r7_blok_a_sput:
-        cost: 120	
+        cost: 120    
     rn_r7_adapter_blok_e: #decoupler
         cost: 100
     rn_luna_fairing:
@@ -2002,7 +2030,7 @@ fuelSystems: # Staged combustion, TL2
     # RealEngines RD-58.
     RD58: *11D33
 
-    ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
+    ALV_Engine_A:    #Proton first stage, 6x RD-253, first hypergolic staged combustion
         cost: 3580
     ALV_Engine_B:   #RD-0210/0211, Proton Second Stage
         cost: 1300
@@ -2070,6 +2098,10 @@ matureSolids:
         
     sepMotorLarge:
         cost: 40
+
+    #BDB diamant BP4 2nd stage SRB
+    bluedog_Diamant_Rita:
+    cost: 400
 
 generalConstruction:
     # The MOL cargo sections are here, because it's totally

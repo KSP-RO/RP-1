@@ -411,6 +411,8 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     GuidanceStart1m: &A4Guidance
         # entryCost: 0
         cost: 300
+    GuidanceStart4m:
+        cost: 1000
         
     # RCS
     # Attitude jets    
@@ -841,6 +843,9 @@ subsonicFlight: # Now Supersonic Flight
         cost: 13
     BD_Adj_LG_Large_Supersonic:
         cost: 16
+        
+    a10rocketengine:
+        cost: 1000
 
 # TIER 1
 basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines because they're late-50s vintage.

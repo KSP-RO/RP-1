@@ -240,7 +240,7 @@ namespace RP0.ProceduralAvionics
 		{
 			float controllablePercentage = GetControllableUtilizationPercentage();
 			float massPercentage = (-1 * controllablePercentage * controllablePercentage) + (2 * controllablePercentage);
-			return massPercentage * GetCurrentVolume() * GetCurrentDensity();
+			return massPercentage * cachedVolume * GetCurrentDensity();
 		}
 
 		private float CalculateCost()
@@ -275,12 +275,12 @@ namespace RP0.ProceduralAvionics
 		#region private utiliy functions
 		private float GetControllableUtilizationPercentage()
 		{
-			return proceduralMassLimit / (GetCurrentVolume() * maxDensityOfAvionics * tonnageToMassRatio * 2);
+			return proceduralMassLimit / (cachedVolume * maxDensityOfAvionics * tonnageToMassRatio * 2);
 		}
 
 		private float GetMaximumControllableTonnage()
 		{
-			var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
+			var maxAvionicsMass = cachedVolume * maxDensityOfAvionics;
 			var maxForVolume = maxAvionicsMass * tonnageToMassRatio * 2;
 			return Math.Min(maxForVolume, maximumTonnage);
 		}
@@ -398,7 +398,7 @@ namespace RP0.ProceduralAvionics
 			}
 			Log("verifying part");
 
-			var maxAvionicsMass = GetCurrentVolume() * maxDensityOfAvionics;
+			var maxAvionicsMass = cachedVolume * maxDensityOfAvionics;
 			Log("new mass would be ", CalculateNewMass().ToString(), ", max avionics mass is ", maxAvionicsMass.ToString());
 			if (maxAvionicsMass < CalculateNewMass()) {
 				proceduralMassLimit = oldProceduralMassLimit;
@@ -410,33 +410,17 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		private float cachedVolume = 0;
+		private float cachedVolume = float.MaxValue;
 
-		// Using reflection to see if this is a procedural part (that way, we don't need to have procedur parts as a dependency
-		private float GetCurrentVolume()
-		{
-			// Volume won't change in flight, so we'll cache this, so we're not using reflection all the time
-			if (HighLogic.LoadedSceneIsFlight && cachedVolume > 0) {
-				return cachedVolume;
+		[KSPEvent]
+		public void OnPartVolumeChanged(BaseEventData eventData) {
+			try {
+				cachedVolume = (float)eventData.Get<double>("newTotalVolume");
+				//Log("cached total volume set from eventData: ", cachedVolume.ToString());
 			}
-
-			// Honestly, if you're not using procedural parts, then this is going to do some really funky things.
-			// It's going to look like you have all this room to put stuff in, and thus aren't really worried
-			// about "efficiency".  Your cost will be low, but your mass will be a lot higher than it would be expected.
-			float currentShapeVolume = float.MaxValue;
-
-			foreach (var module in part.Modules) {
-				var moduleType = module.GetType();
-				if (moduleType.FullName == "ProceduralParts.ProceduralPart") {
-					// This would spam the logs unless we do some old/current caching.
-					//Log("Procedural Parts detected"); 
-					var reflectedShape = moduleType.GetProperty("CurrentShape").GetValue(module, null);
-					currentShapeVolume = (float)reflectedShape.GetType().GetProperty("Volume").GetValue(reflectedShape, null);
-				}
+			catch (Exception ex) {
+				Log("error getting changed volume: ", ex.ToString());
 			}
-
-			cachedVolume = currentShapeVolume;
-			return currentShapeVolume;
 		}
 
 		private void SetInternalKSPFields()
@@ -516,7 +500,7 @@ namespace RP0.ProceduralAvionics
 		private void UpdateCostAndMassDisplays()
 		{
 			if (!ppFieldsHidden) {
-				ppFieldsHidden = HideField(TCSmoduleName, "massDisplay") && HideField(TCSmoduleName , "volumeDisplay");
+				ppFieldsHidden = HideField(TCSmoduleName, "massDisplay") && HideField(TCSmoduleName, "volumeDisplay");
 			}
 
 			float baseCost = GetBaseCost();

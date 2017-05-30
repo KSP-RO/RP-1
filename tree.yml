@@ -449,7 +449,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
     taerobee_control: *AerobeeCore
     
     taerobee_nosecone:
-        cost: 0.25
+        cost: 1
         
     taerobee_largeFin:
         cost: 0.15
@@ -461,10 +461,10 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 16
         
     taerobee_parachute:
-        cost: 3
+        cost: 30
         
     taerobee_sustainerTank_3:
-        cost: 3
+        cost: 40
         
     taerobee_despin:
         cost: 0.25

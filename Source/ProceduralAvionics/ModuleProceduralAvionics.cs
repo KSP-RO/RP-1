@@ -366,6 +366,9 @@ namespace RP0.ProceduralAvionics
 				proceduralMassLimitEdit.incrementSlide = largeIncFloat / 4000;
 				proceduralMassLimitEdit.incrementSmall = largeIncFloat / 100;
 				proceduralMassLimitEdit.incrementLarge = largeIncFloat / 10;
+
+				//There's some weirdness going on here that makes the slider not match up with min and max values, 
+				//but it's so small i don't think i need to investigate it further
 			}
 			else {
 				Log("Cannot update max value yet, CurrentProceduralAvionicsConfig is null");

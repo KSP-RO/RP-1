@@ -475,6 +475,7 @@ namespace RP0.ProceduralAvionics
 			try {
 				cachedVolume = (float)eventData.Get<double>("newTotalVolume");
 				//Log("cached total volume set from eventData: ", cachedVolume.ToString());
+				UIChanged(null, null);
 			}
 			catch (Exception ex) {
 				Log("error getting changed volume: ", ex.ToString());

@@ -1922,7 +1922,7 @@ advRocketry:
     rn_proton_vernier:  # 3rd stage vernier
     
     # Molniya/Vostok/Soyuz second stage.
-    RD0110: &RD-0110
+    RO-BobCat-RD0110: &RD-0110
         cost: 400 # guess based on other engines of the era
 
     # RealEngines RD-0110.
@@ -2029,9 +2029,9 @@ fuelSystems: # Staged combustion, TL2
     RD275: *RD253
     
     # NK-9, via BobCat clones.
-    NK9:
+    RO-BobCat-NK9:
         cost: 450 # FIXME guess based on NK-15 and RD-253
-    NK9V:
+    RO-BobCat-NK9V:
         cost: 500 # as above
 
 matureSolids:
@@ -2806,9 +2806,9 @@ propulsionSystems: #staged combustion TL3 -- NK-15 here.
     ALV_Engine_C: #RD-213/214
     Libra_Engine_B: #Block D RD-58
         cost: 1468 #80% of the stage
-    RD270:
+    RO-BobCat-RD270:
         cost: 6500 # 1.3x F-1
-    RD270M:
+    RO-BobCat-RD270M:
         cost: 8500
 
     #Proton - RaiderNick

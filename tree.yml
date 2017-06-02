@@ -4715,7 +4715,7 @@ specializedCommandModules: # modern?
     LazTekDragonV2Trunk:
         cost: 3688
         entryCost: 113500 # about 31,5% of total development cost
-    LazTekSuperDracos: &SuperDraco
+    LazTekSuperDracos: &SuperDracoDouble
         cost: 125 # total guess
     LazTekDragonV2Chute:
         cost: 500 #2x less than Apollo chutes, total guess
@@ -4727,11 +4727,11 @@ specializedCommandModules: # modern?
     SSTU-SC-C-BPC: *ApolloLES         # Orion LES, cost stolen from apollo :^)
     SSTU-SC-C-CM: *ORIONPOD
     SSTU-SC-C-SM: *ORIONSM
-    SSTU-SC-ENG-SuperDraco:
+    SSTU-SC-ENG-SuperDraco: &SuperDracoSingle
         cost: 62 # total guess from laztek above.
 
     # RealEngines SuperDraco engine:
-    SuperDrago: *SuperDraco
+    SuperDrago: *SuperDracoDouble
 
 largeUnmanned:
     

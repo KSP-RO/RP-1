@@ -274,7 +274,6 @@ namespace RP0.ProceduralAvionics
 				return DoMassCalculation();
 			}
 			else {
-				Log("Cannot compute mass yet");
 				return 0;
 			}
 		}
@@ -297,7 +296,6 @@ namespace RP0.ProceduralAvionics
 				return DoCostCalculation();
 			}
 			else {
-				Log("Cannot compute cost yet");
 				return 0;
 			}
 		}
@@ -471,11 +469,13 @@ namespace RP0.ProceduralAvionics
 		[KSPEvent]
 		public void OnPartVolumeChanged(BaseEventData eventData)
 		{
-			Log("OnPartVolumeChanged called");
+			//Log("OnPartVolumeChanged called");
 			try {
 				cachedVolume = (float)eventData.Get<double>("newTotalVolume");
 				//Log("cached total volume set from eventData: ", cachedVolume.ToString());
-				UIChanged(null, null);
+				if (proceduralAvionicsConfigs != null) {
+					UIChanged(null, null);
+				}
 			}
 			catch (Exception ex) {
 				Log("error getting changed volume: ", ex.ToString());

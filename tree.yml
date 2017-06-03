@@ -1,4 +1,4 @@
-# RP-0 tech tree.
+﻿# RP-0 tech tree.
 #
 # This tree is in YAML format.
 #
@@ -496,18 +496,23 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 0
 
     # Launch Clamps/Towers
-    FASAlaunchClampAtlas:    
+    FASAlaunchClampAtlas: &FASAlaunchClampAtlas     
         cost: 10
-    FASAlaunchClampApollo:
+    BDB_FASAlaunchClampAtlas: *FASAlaunchClampAtlas #From Bluedog Design Bureau
+    FASAlaunchClampApollo: &FASAlaunchClampApollo
         cost: 10
+    BDB_FASAlaunchClampApollo: *FASAlaunchClampApollo #From Bluedog Design Bureau
     launchClamp1:
         cost: 10
-    FASAlaunchClamp125:
+    FASAlaunchClamp125: &FASAlaunchClamp125
         cost: 10
-    FASAlaunchClamp25:
+    BDB_FASAlaunchClamp125: *FASAlaunchClamp125 #From Bluedog Design Bureau
+    FASAlaunchClamp25: &FASAlaunchClamp25
         cost: 10
-    FASAUmbilicalTower:
+    BDB_FASAlaunchClamp25: *FASAlaunchClamp25 #From Bluedog Design Bureau
+    FASAUmbilicalTower: &FASAUmbilicalTower
         cost: 10
+    BDB_FASAUmbilicalTower: *FASAUmbilicalTower #From Bluedog Design Bureau
     SXTlaunchclamp1:
         cost: 10
     # RSB Towers
@@ -923,6 +928,38 @@ basicRocketry: #TL0: Vanguard, early-mid 50s tech. Includes Black Arrow engines 
     rn_aerobee300_srb:
         # entryCost: 0
         cost: 12
+        
+    #Bluedog Design Bureau diamant
+    bluedog_Diamant_Vexin: # while diamant is a mid 60's rocket, the tech compares with rockets like redstone, total cost is correct, engine costs are estimated from comparison with similar engines
+        # entryCost: 0
+        cost: 80 
+        #price is for sounding rocket vesta config, +650 for Vexin
+
+    bluedog_Diamant_Fin:
+        # entryCost: 0
+        cost: 5
+
+    bluedog_Diamant_TankA:
+        # entryCost: 0
+        cost: 100
+
+    bluedog_Diamant_TankB:
+        # entryCost: 0
+        cost: 50
+
+    bluedog_Diamant_Rubis:
+        # entryCost: 0
+        cost: 80
+
+    bluedog_Diamant_Topaze:
+        # entryCost: 0
+        cost: 400
+
+    bluedog_Diamant_Adapter: 
+        # entryCost: 0
+        cost: 30
+     
+
 
 engineering101:
     # Tanks
@@ -1398,7 +1435,7 @@ basicConstruction:
     r7_blok_bvgd_sput: &R7Booster
         cost: 100
     r7_blok_a_sput:
-        cost: 120	
+        cost: 120    
     rn_r7_adapter_blok_e: #decoupler
         cost: 100
     rn_luna_fairing:
@@ -1779,8 +1816,9 @@ aerodynamicSystems: # X-15 parts, Mach 2 engines
 enhancedSurvivability: # Early capsules
     # Apparently the launch tower is used for loading astronauts,
     # so it should go here, right?
-    FASAlaunchTower:
+    FASAlaunchTower: &FASAlaunchTower
         cost: 10 #yeah, should really be expensive, but then who would use it?
+    BDB_FASAlaunchTower: *FASAlaunchTower #From Bluedog Design Burea
         
     # Life support
 
@@ -1997,7 +2035,7 @@ fuelSystems: # Staged combustion, TL2
     # RealEngines RD-58.
     RD58: *11D33
 
-    ALV_Engine_A:	#Proton first stage, 6x RD-253, first hypergolic staged combustion
+    ALV_Engine_A:    #Proton first stage, 6x RD-253, first hypergolic staged combustion
         cost: 3580
     ALV_Engine_B:   #RD-0210/0211, Proton Second Stage
         cost: 1300
@@ -2065,6 +2103,10 @@ matureSolids:
         
     sepMotorLarge:
         cost: 40
+
+    #BDB diamant BP4 2nd stage SRB
+    bluedog_Diamant_Rita:
+    cost: 400
 
 generalConstruction:
     # The MOL cargo sections are here, because it's totally
@@ -3460,6 +3502,7 @@ precisionPropulsion:
     #RS-27/A engine.
     RSBengineRS27A: &RS27 # Real Scale Boosters RS-27/A engine
         cost: 1850
+    
 
 advFuelSystems: # TL4 solids
     # Ermergerd this thing is HUGE.

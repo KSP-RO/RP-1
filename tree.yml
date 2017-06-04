@@ -1257,6 +1257,12 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 550
 
     FASAMercuryAtlasEng: *LR105
+    
+    bluedog_atlasBooster: *LR89
+    bluedog_atlasSustainer: *LR105
+    bluedog_atlasVernier: *LR101
+    
+    SHIP_LR_71: *LR79
 
 # Black Arrow engines (derivatives of Black Knight engine, so can be early,
 # despite Black Arrow being quite late).
@@ -1921,6 +1927,7 @@ advRocketry:
         entryCost: 60000 # more expensive than the known cost of the H-1, but again, modifiers.
         cost: 1300
     RO-E1: *E1
+    SHIP_E1: *E1
 
     # TODO: Is there a better place to put this?
     radialDecoupler2:

@@ -282,7 +282,7 @@ namespace RP0.ProceduralAvionics
 			if (HighLogic.LoadedSceneIsFlight) {
 				return DoMassCalculation();
 			}
-			if (CurrentProceduralAvionicsConfig != null) {
+			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
 				//Standard density is 4/3s of maximum density
 				//Log("Current Tech node standard density: ", CurrentProceduralAvionicsTechNode.standardAvionicsDensity.ToString());
 				maxDensityOfAvionics = (CurrentProceduralAvionicsTechNode.standardAvionicsDensity * 4) / 3;
@@ -307,7 +307,7 @@ namespace RP0.ProceduralAvionics
 			if (HighLogic.LoadedSceneIsFlight) {
 				return DoCostCalculation();
 			}
-			if (CurrentProceduralAvionicsConfig != null) {
+			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
 				costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
 				return DoCostCalculation();
 			}
@@ -360,7 +360,7 @@ namespace RP0.ProceduralAvionics
 				proceduralMassLimitEdit = (UI_FloatEdit)Fields["proceduralMassLimit"].uiControlEditor;
 			}
 
-			if (CurrentProceduralAvionicsConfig != null) {
+			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
 
 				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
 				proceduralMassLimitEdit.maxValue = GetMaximumControllableTonnage();

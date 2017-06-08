@@ -4741,7 +4741,7 @@ specializedCommandModules: # modern?
     xparachuteRadial2x:
         cost: 1000 # stolen from Apollo
         entryCost: 35000 # stolen from Apollo
-    
+
     # Dragon V2
     # development cost about 2700 mln USD http://spaceflightnow.com/news/n1405/29dragonv2/#.Vj0XBr-jAs0
     # 2700 mln USD = 359,26 mln 1965 USD 
@@ -4753,21 +4753,23 @@ specializedCommandModules: # modern?
     LazTekDragonV2Trunk:
         cost: 3688
         entryCost: 113500 # about 31,5% of total development cost
-    LazTekSuperDracos:
+    LazTekSuperDracos: &SuperDracoDouble
         cost: 125 # total guess
     LazTekDragonV2Chute:
         cost: 500 #2x less than Apollo chutes, total guess
         entryCost: 17500 #2x less than Apollo chutes,  about 5% of total development cost (359260)
     DragonLadder:
         cost: 10
-        
+
     # SSTU  - generic pricing, does not account for integrated equipment
     SSTU-SC-C-BPC: *ApolloLES         # Orion LES, cost stolen from apollo :^)
     SSTU-SC-C-CM: *ORIONPOD
     SSTU-SC-C-SM: *ORIONSM
-    SSTU-SC-ENG-SuperDraco:
+    SSTU-SC-ENG-SuperDraco: &SuperDracoSingle
         cost: 62 # total guess from laztek above.
-    
+
+    # RealEngines SuperDraco engine:
+    SuperDrago: *SuperDracoDouble
 
 largeUnmanned:
     

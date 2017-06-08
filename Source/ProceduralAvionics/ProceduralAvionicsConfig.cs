@@ -6,7 +6,7 @@ using System.Text;
 namespace RP0.ProceduralAvionics
 {
 	[Serializable]
-	class ProceduralAvionicsConfig : IConfigNode
+	public class ProceduralAvionicsConfig : IConfigNode
 	{
 		[Persistent]
 		public string name;
@@ -18,7 +18,10 @@ namespace RP0.ProceduralAvionics
 		{
 			get
 			{
-				return TechNodes[currentTechNodeName];
+				if (currentTechNodeName != null && TechNodes.ContainsKey(currentTechNodeName)) {
+					return TechNodes[currentTechNodeName];
+				}
+				return null;
 			}
 		}	
 

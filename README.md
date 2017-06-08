@@ -135,6 +135,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                             # should be unlocked for this to be
                                             # available.
                                             
+                unlockCost = 0              # This node is free
+
                 tonnageToMassRatio = 26.13  # This is how efficient this node is mass 
                                             # wise at 100% utilization. A higher number 
                                             # here is more efficient. More than 100%
@@ -181,6 +183,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                       # tech node for the same config
             {
                 name = earlyAvionics
+                unlockCost = 9000           # This node costs 9000 funds
                 tonnageToMassRatio = 104.16
                 costPerControlledTon = 3.8
                 enabledProceduralW = 6.666
@@ -193,6 +196,10 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
             TECHLIMIT # Guidance Unit (Early), 2m, 3m average
             {
                 name = basicAvionics
+                unlockCost = 15000          # This node costs 15000 funds
+                                            # However, if you've purchased the previous node(s),
+                                            # it would only cost 6000 funds
+
                 tonnageToMassRatio = 940
                 costPerControlledTon = .53
                 enabledProceduralW = 5.81
@@ -212,6 +219,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                                  # of "start".  This will cause the 
                                                  # upperStage config not to be
                                                  # unlocked until later in the gameplay
+
+                unlockCost = 6000
                 tonnageToMassRatio = 52.8169
                 costPerControlledTon = 4.8
                 enabledProceduralW = 30
@@ -223,6 +232,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
             TECHLIMIT # Agena Avionics Package, with some fudged stats
             {
                 name = stability
+                unlockCost = 24000
                 tonnageToMassRatio = 108
                 costPerControlledTon = 23
                 enabledProceduralW = 15.625
@@ -243,6 +253,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
             TECHLIMIT # Ranger Block I Core
             {
                 name = basicScience
+                unlockCost = 36000
                 tonnageToMassRatio = 4.327
                 costPerControlledTon = 4425
                 enabledProceduralW = 166.66
@@ -256,6 +267,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
             TECHLIMIT # Ranger Block III Core
             {
                 name = miniaturization
+                unlockCost = 45000
                 tonnageToMassRatio = 8
                 costPerControlledTon = 2550
                 enabledProceduralW = 133.33
@@ -282,6 +294,7 @@ Feel free to update the spreadsheet and create PRs to add new nodes.  An example
  - Columns L-P should now contain values for `tonnageToMassRatio`, `costPerControlledTon`, `standardAvionicsDensity`, `enabledProceduralW` and  `disabledProceduralW`
  - For setting `minimumTonnage` and `maximumTonnage`, I generally halve and double the values defined for the existing avionics part.
  - For setting `SASServiceLevel`, I just use the value already present in the `ModuleSAS` already on this part.
+ - For setting `unlockCost`, I usually just use 1.5x the unlock price of the non-procedural version
 
 > There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
 

@@ -6,10 +6,13 @@ using System.Text;
 namespace RP0.ProceduralAvionics
 {
 	[Serializable]
-	class ProceduralAvionicsTechNode:IConfigNode
+	public class ProceduralAvionicsTechNode : IConfigNode
 	{
 		[Persistent]
 		public string name;
+
+		[Persistent]
+		public int unlockCost;
 
 		// A higher number here is more efficient.  This is the number of controllable tons per ton of avionics mass at 50% of the maximum controllable tonnage.  
 		// This actual ratio will be higher if closer to the maximum, and lower if farther away, however, as we get closer to our maximum, 
@@ -30,7 +33,7 @@ namespace RP0.ProceduralAvionics
 		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
 		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
 		[Persistent]
-		public float enabledProceduralW= 1;
+		public float enabledProceduralW = 1;
 
 		// If postitive, this will enable the abilty to put avioniccs on standby.
 		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
@@ -58,11 +61,16 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public bool hasScienceContainer = false;
 
+		public bool IsAvailable {
+			get {
+				return ResearchAndDevelopment.GetTechnologyState(name) == RDTech.State.Available;
+			}
+		}
+
 		public void Load(ConfigNode node)
 		{
 			ConfigNode.LoadObjectFromConfig(this, node);
-			if (name == null)
-			{
+			if (name == null) {
 				name = node.GetValue("name");
 			}
 		}

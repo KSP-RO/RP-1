@@ -18,5 +18,6 @@ namespace RP0.ProceduralAvionics
 			}
 			UnityEngine.Debug.Log(builder.ToStringAndRelease());
 		}
+
 	}
 }

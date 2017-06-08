@@ -116,7 +116,7 @@ namespace RP0.ProceduralAvionics
 		{
 			ProceduralAvionicsUtils.Log("Unlocking ", techNodeName, " for ", avionicsConfigName);
 			if (!unlockedTech.ContainsKey(avionicsConfigName)) {
-				ProceduralAvionicsUtils.Log("Unlocking for the fist time");
+				ProceduralAvionicsUtils.Log("Unlocking for the first time");
 				unlockedTech.Add(avionicsConfigName, techNodeName);
 			}
 			else {

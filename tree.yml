@@ -1203,6 +1203,8 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     liquidEngine3: &VostokUpper
         cost: 350
         
+    RO-RealEngines-RD0105: *VostokUpper
+        
     # RD-107 & RD-108. From SXT clones
     R7_Core_Engine: &RD108
         cost: 700

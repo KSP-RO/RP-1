@@ -2067,10 +2067,13 @@ fuelSystems: # Staged combustion, TL2
     RD275: *RD253
     
     # NK-9, via BobCat clones.
-    RO-BobCat-NK9:
+    RO-BobCat-NK9: &NK9
         cost: 450 # FIXME guess based on NK-15 and RD-253
-    RO-BobCat-NK9V:
+    RO-BobCat-NK9V: &NK9V
         cost: 500 # as above
+        
+    RO-RealEngines-NK9: *NK9
+    RO-RealEngines-NK9V: *NK9V
 
 matureSolids:
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)

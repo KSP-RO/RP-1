@@ -159,10 +159,8 @@ namespace RP0.ProceduralAvionics
 			UpdateConfigSliders();
 			BindUIChangeCallbacks();
 
-
 			UpdateMaxValues();
 			UpdateCurrentConfig();
-			VerifyPart();
 
 			Log("Setting internal ksp fields");
 			SetInternalKSPFields();
@@ -176,27 +174,29 @@ namespace RP0.ProceduralAvionics
 		private void BindUIChangeCallbacks()
 		{
 			if (!callbacksBound) {
-				string[] editorNames = new string[] { "proceduralMassLimit", "avionicsConfigName" };
-				foreach (var editorName in editorNames) {
-					Fields[editorName].uiControlEditor.onFieldChanged += UIChanged;
-				}
+				Fields["proceduralMassLimit"].uiControlEditor.onFieldChanged += MassLimitChanged;
+				Fields["avionicsConfigName"].uiControlEditor.onFieldChanged += AvionicsConfigChanged;
 				callbacksBound = true;
 			}
 
 		}
 
-		private void UIChanged(BaseField arg1, object arg2)
+		private void MassLimitChanged(BaseField arg1, object arg2)
 		{
-			UIChanged();
+			SetInternalKSPFields();
 		}
 
-		private void UIChanged()
+		private void AvionicsConfigChanged(BaseField arg1, object arg2)
 		{
+			AvionicsConfigChanged();
+		}
+
+		private void AvionicsConfigChanged()
+		{
+			SetMinVolume();
 			GetInternalMassLimit(); //reset within bounds
 			UpdateMaxValues();
 			UpdateCurrentConfig();
-			VerifyPart();
-			SetMinVolume();
 
 			SetInternalKSPFields();
 		}
@@ -405,36 +405,6 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		private void VerifyPart()
-		{
-			if (GetInternalMassLimit() == oldProceduralMassLimit) {
-				return;
-			}
-			//Log("verifying part");
-
-			//Log("Volume: ", cachedVolume.ToString());
-
-			//This has a side effect of setting maxDensityOfAvionics, so we need to call that first
-			CalculateNewMass();
-			SetMinVolume(true);
-			oldProceduralMassLimit = GetInternalMassLimit();
-
-			/* do we even need this?
-			//Log("maxDensityOfAvionics: ", maxDensityOfAvionics.ToString());
-			var maxAvionicsMass = cachedVolume * maxDensityOfAvionics;
-			//Log("new mass would be ", CalculateNewMass().ToString(), ", max avionics mass is ", maxAvionicsMass.ToString());
-			if (maxAvionicsMass < CalculateNewMass()) {
-				proceduralMassLimit = oldProceduralMassLimit;
-				Log("resetting part");
-			}
-			else {
-				oldProceduralMassLimit = GetInternalMassLimit();
-				Log("part verified");
-			}
-			SetMinVolume(true);
-			*/
-		}
-
 		private float cachedVolume = float.MaxValue;
 
 		[KSPEvent]
@@ -446,7 +416,7 @@ namespace RP0.ProceduralAvionics
 				//Log("cached total volume set from eventData: ", cachedVolume.ToString());
 				Log("volume changed to ", cachedVolume.ToString(), ", updating UI");
 				SetMinVolume();
-				UIChanged();
+				AvionicsConfigChanged();
 			}
 			catch (Exception ex) {
 				Log("error getting changed volume: ", ex.ToString());
@@ -635,6 +605,7 @@ namespace RP0.ProceduralAvionics
 					int unlockCost = GetUnlockCost(guiAvionicsConfigName, techNode);
 					if (unlockCost == 0) {
 						if (GUILayout.Button("Switch to " + BuildTechName(techNode))) {
+							UpdateConfigSliders();
 							currentlyDisplayedConfigs.currentTechNodeName = techNode.name;
 							currentProceduralAvionicsConfig = currentlyDisplayedConfigs;
 							avionicsConfigName = guiAvionicsConfigName;
@@ -677,8 +648,8 @@ namespace RP0.ProceduralAvionics
 
 			if (GUI.changed) {
 				Log("Configuration window changed, updating part window");
-				UIChanged();
-				RefreshPartWindow();
+				SetMinVolume(true);
+				AvionicsConfigChanged();
 			}
 
 			GUI.DragWindow();

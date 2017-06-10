@@ -74,7 +74,9 @@
     <Compile Include="ModuleScienceCore.cs" />
     <Compile Include="ModuleShowInfo.cs" />
     <Compile Include="EntryCosts\EntryCostModifier.cs" />
+    <Compile Include="ProceduralAvionics\ProceduralAvionicsTechManager.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsTechNode.cs" />
+    <Compile Include="ProceduralAvionics\ProceduralAvionicsUnlockedNodes.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\KSPUtils.cs" />

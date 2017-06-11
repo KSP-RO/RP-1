@@ -1994,6 +1994,7 @@ advRocketry:
     SSTU-SC-ENG-RD-0110: *RD-0110
     SSTU-SC-ENG-H1: *H1
     SSTU-SC-ENG-LR81-8096:
+        entryCost: 15000
         cost: 350 #+ 250 for config
 
 

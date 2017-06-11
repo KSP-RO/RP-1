@@ -2048,7 +2048,8 @@ fuelSystems: # Staged combustion, TL2
     # Proton - RaiderNick
     rn_proton_rd0210: &RD0210
         cost: 300
-    rn_proton_rd0212: *RD0210
+    rn_proton_rd0212: &RD0212
+        cost: 300 # like 0210
     rn_proton_rd253: &RD253
         cost: 515 #5400k USD 1965 * stage mass ratio (459t/705t) * engine price ratio (80% of the stage price) / engine amount (6 on first stage) 
 
@@ -2060,7 +2061,7 @@ fuelSystems: # Staged combustion, TL2
     RD0210: *RD0210
 
     # RealEngines RD-0212 engine.
-    RD0212: &RD0212
+    RD0212: *RD0212
 
     # NovaPunch RD-253.
     NP_lfe_125m_BearcatSingle: *RD253

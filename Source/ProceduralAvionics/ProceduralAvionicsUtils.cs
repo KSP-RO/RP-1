@@ -5,18 +5,21 @@ using System.Text;
 
 namespace RP0.ProceduralAvionics
 {
-	class ProceduralAvionicsUtils
+	static class ProceduralAvionicsUtils
 	{
+		private static bool ENABLED = false;
 
 		private const string logPreix = "[ProcAvi] - ";
 		public static void Log(params string[] message)
 		{
-			var builder = StringBuilderCache.Acquire();
-			builder.Append(logPreix);
-			foreach (string part in message) {
-				builder.Append(part);
+			if (ENABLED) {
+				var builder = StringBuilderCache.Acquire();
+				builder.Append(logPreix);
+				foreach (string part in message) {
+					builder.Append(part);
+				}
+				UnityEngine.Debug.Log(builder.ToStringAndRelease());
 			}
-			UnityEngine.Debug.Log(builder.ToStringAndRelease());
 		}
 
 	}

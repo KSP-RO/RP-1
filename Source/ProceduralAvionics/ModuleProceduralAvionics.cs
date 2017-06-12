@@ -22,7 +22,6 @@ namespace RP0.ProceduralAvionics
 		[KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "T"),
 		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 2, unit = "T")]
 		public float proceduralMassLimit = 0;
-		private float oldProceduralMassLimit = 0;
 
 		// We can have multiple configurations of avionics, for example: 
 		//    boosters can have a high EC usage, but lower cost and mass
@@ -99,12 +98,12 @@ namespace RP0.ProceduralAvionics
 			var min = GetMinimumControllableTonnage();
 			bool changed = false;
 			if (proceduralMassLimit > (max * FLOAT_ERROR_ALLOWANCE)) {
-				//Log("Resetting procedural mass limit to max of ", max.ToString(), ", was ", proceduralMassLimit.ToString());
+				Log("Resetting procedural mass limit to max of ", max.ToString(), ", was ", proceduralMassLimit.ToString());
 				proceduralMassLimit = max;
 				changed = true;
 			}
 			if ((proceduralMassLimit * FLOAT_ERROR_ALLOWANCE) < min) {
-				//Log("Resetting procedural mass limit to min of ", min.ToString(), ", was ", proceduralMassLimit.ToString());
+				Log("Resetting procedural mass limit to min of ", min.ToString(), ", was ", proceduralMassLimit.ToString());
 				proceduralMassLimit = min;
 				changed = true;
 			}
@@ -178,11 +177,12 @@ namespace RP0.ProceduralAvionics
 				Fields["avionicsConfigName"].uiControlEditor.onFieldChanged += AvionicsConfigChanged;
 				callbacksBound = true;
 			}
-
 		}
 
 		private void MassLimitChanged(BaseField arg1, object arg2)
 		{
+			Log("Mass limit changed");
+			SetMinVolume();
 			SetInternalKSPFields();
 		}
 
@@ -202,32 +202,41 @@ namespace RP0.ProceduralAvionics
 		}
 
 
+		private float cachedMinVolue = float.MaxValue;
 		public void SetMinVolume(bool forceUpdate = false)
 		{
-			float minVolume = minimumTonnage / (2 * tonnageToMassRatio * maxDensityOfAvionics);
+			Log("Setting min volume");
+			float minVolume = proceduralMassLimit / (2 * tonnageToMassRatio * maxDensityOfAvionics);
 			if (float.IsNaN(minVolume)) {
 				return;
 			}
+			Log("min volume sholud be ", minVolume.ToString());
+			cachedMinVolue = minVolume;
+
+			PartModule ppModule = null;
+			Type ppModuleType = null;
+			foreach (PartModule module in part.Modules) {
+				var moduleType = module.GetType();
+				if (moduleType.FullName == "ProceduralParts.ProceduralPart") {
+					ppModule = module;
+					ppModuleType = moduleType;
+					ppModuleType.GetField("volumeMin").SetValue(ppModule, minVolume);
+					Log("Applied min volume");
+				}
+			}
 			//Log("minVolume: ", minVolume.ToString());
+			Log("Comparing against cached volume of ", cachedVolume.ToString());
 			if (forceUpdate || minVolume > (cachedVolume * FLOAT_ERROR_ALLOWANCE)) { // adding a buffer for floating point errors
 				if (!forceUpdate) {
-					Log("cachedVolume too high: ", cachedVolume.ToString());
+					Log("cachedVolume too low: ", cachedVolume.ToString());
 				}
 				//here we'll need to use reflection to update our part to have a min volume
-				foreach (var module in part.Modules) {
-					var moduleType = module.GetType();
-					if (moduleType.FullName == "ProceduralParts.ProceduralPart") {
-						// This would spam the logs unless we do some old/current caching.
-						//Log("Procedural Parts detected"); 
-
-						moduleType.GetField("volumeMin").SetValue(module, minVolume);
-
-						var reflectedShape = moduleType.GetProperty("CurrentShape").GetValue(module, null);
-						reflectedShape.GetType().GetMethod("ForceNextUpdate").Invoke(reflectedShape, new object[] { });
-						Log("Volume fixed, refreshing part window");
-						RefreshPartWindow();
-					}
+				if (ppModule != null) {
+					var reflectedShape = ppModuleType.GetProperty("CurrentShape").GetValue(ppModule, null);
+					reflectedShape.GetType().GetMethod("ForceNextUpdate").Invoke(reflectedShape, new object[] { });
+					Log("Volume fixed, refreshing part window");
 				}
+				RefreshPartWindow();
 			}
 		}
 
@@ -412,10 +421,16 @@ namespace RP0.ProceduralAvionics
 		{
 			//Log("OnPartVolumeChanged called");
 			try {
-				cachedVolume = (float)eventData.Get<double>("newTotalVolume");
+				float volume = (float)eventData.Get<double>("newTotalVolume");
+				Log("volume changed to ", volume.ToString());
+				if (volume < cachedMinVolue) {
+					Log("volume of ", volume.ToString(), " is less than expected min volume of ", cachedMinVolue.ToString(), "expecting another update");
+					RefreshPartWindow();
+					//assuming the part will be resized
+					return;
+				}
+				cachedVolume = volume;
 				//Log("cached total volume set from eventData: ", cachedVolume.ToString());
-				Log("volume changed to ", cachedVolume.ToString(), ", updating UI");
-				SetMinVolume();
 				AvionicsConfigChanged();
 			}
 			catch (Exception ex) {

@@ -404,7 +404,7 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
 
     # Core for sounding rockets. Should not provide yaw/pitch/roll control
     # and will not, once RT has that implemented.
-    RP0probeSounding0-3m:
+    RP0probeSounding0-3m: &AerobeeCore
         # entryCost: 0
         cost: 1
     # Core for V-2 stuff - early, heavy, but 20t avionics.
@@ -446,15 +446,46 @@ start: #TL-1 early tech. Sounding rockets, basic structural pieces and wings. La
         cost: 3
 
     # modeled on the electronics of WAC Corporal / Aerobee
+    taerobee_control: *AerobeeCore
+    
+    taerobee_nosecone:
+        cost: 1
+        
+    taerobee_largeFin:
+        cost: 0.15
+        
+    taerobee_smallFin:
+        cost: 0.1
+        
+    taerobee_science:
+        cost: 16
+        
+    taerobee_parachute:
+        cost: 30
+        
+    taerobee_sustainerTank_3:
+        cost: 40
+        
+    taerobee_despin:
+        cost: 0.25
+        
+    taerobee_decoupler:
+        cost: 0.25
+    
     # Early Aerojet engine, used on WAC Corporal and Aerobee. Very small and low efficency.
-    ROAerobeeSustainer:
+    ROAerobeeSustainer: &AerobeeSustainer
         # entryCost: 0
         cost: 10
+        
+    taerobee_aerobee: *AerobeeSustainer
 
     # WAC / Aerobee booster, thanks Agathorn!
-    TinyTim:
+    TinyTim: &TinyTim
         # entryCost: 0
         cost: 36
+        
+    taerobee_TinyTim: #FIXME move to new early-solids node
+        cost: 70
 
     # Tanks. Also cheap. They're tanks.
     SXTFuel625m:
@@ -1172,6 +1203,8 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
     liquidEngine3: &VostokUpper
         cost: 350
         
+    RO-RealEngines-RD0105: *VostokUpper
+        
     # RD-107 & RD-108. From SXT clones
     R7_Core_Engine: &RD108
         cost: 700
@@ -1226,6 +1259,12 @@ generalRocketry: # TL1 Late 1950s/1960 tech, first real orbital LVs. Atlas, R-7,
         cost: 550
 
     FASAMercuryAtlasEng: *LR105
+    
+    bluedog_atlasBooster: *LR89
+    bluedog_atlasSustainer: *LR105
+    bluedog_atlasVernier: *LR101
+    
+    SHIP_LR_71: *LR79
 
 # Black Arrow engines (derivatives of Black Knight engine, so can be early,
 # despite Black Arrow being quite late).
@@ -1890,6 +1929,7 @@ advRocketry:
         entryCost: 60000 # more expensive than the known cost of the H-1, but again, modifiers.
         cost: 1300
     RO-E1: *E1
+    SHIP_E1: *E1
 
     # TODO: Is there a better place to put this?
     radialDecoupler2:
@@ -1954,6 +1994,7 @@ advRocketry:
     SSTU-SC-ENG-RD-0110: *RD-0110
     SSTU-SC-ENG-H1: *H1
     SSTU-SC-ENG-LR81-8096:
+        entryCost: 15000
         cost: 350 #+ 250 for config
 
 
@@ -2008,7 +2049,8 @@ fuelSystems: # Staged combustion, TL2
     # Proton - RaiderNick
     rn_proton_rd0210: &RD0210
         cost: 300
-    rn_proton_rd0212: *RD0210
+    rn_proton_rd0212: &RD0212
+        cost: 300 # like 0210
     rn_proton_rd253: &RD253
         cost: 515 #5400k USD 1965 * stage mass ratio (459t/705t) * engine price ratio (80% of the stage price) / engine amount (6 on first stage) 
 
@@ -2020,7 +2062,7 @@ fuelSystems: # Staged combustion, TL2
     RD0210: *RD0210
 
     # RealEngines RD-0212 engine.
-    RD0212: &RD0212
+    RD0212: *RD0212
 
     # NovaPunch RD-253.
     NP_lfe_125m_BearcatSingle: *RD253
@@ -2029,10 +2071,13 @@ fuelSystems: # Staged combustion, TL2
     RD275: *RD253
     
     # NK-9, via BobCat clones.
-    RO-BobCat-NK9:
+    RO-BobCat-NK9: &NK9
         cost: 450 # FIXME guess based on NK-15 and RD-253
-    RO-BobCat-NK9V:
+    RO-BobCat-NK9V: &NK9V
         cost: 500 # as above
+        
+    RO-RealEngines-NK9: *NK9
+    RO-RealEngines-NK9V: *NK9V
 
 matureSolids:
     M55: # Minuteman I first stage (aka M55 aka TX-55 aka Tu-122)

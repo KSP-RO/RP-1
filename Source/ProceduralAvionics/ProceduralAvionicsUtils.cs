@@ -22,5 +22,17 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
+		public static void Log(params object[] parts)
+		{
+			if (ENABLED) {
+				var builder = StringBuilderCache.Acquire();
+				builder.Append(logPreix);
+				foreach (string part in parts) {
+					builder.Append(part.ToString());
+				}
+				UnityEngine.Debug.Log(builder.ToStringAndRelease());
+			}
+		}
+
 	}
 }

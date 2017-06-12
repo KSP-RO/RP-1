@@ -99,12 +99,12 @@ namespace RP0.ProceduralAvionics
 			var min = GetMinimumControllableTonnage();
 			bool changed = false;
 			if (proceduralMassLimit > (max * FLOAT_ERROR_ALLOWANCE)) {
-				Log("Resetting procedural mass limit to max of ", max.ToString(), ", was ", proceduralMassLimit.ToString());
+				Log("Resetting procedural mass limit to max of ", max, ", was ", proceduralMassLimit);
 				proceduralMassLimit = max;
 				changed = true;
 			}
 			if ((proceduralMassLimit * FLOAT_ERROR_ALLOWANCE) < min) {
-				Log("Resetting procedural mass limit to min of ", min.ToString(), ", was ", proceduralMassLimit.ToString());
+				Log("Resetting procedural mass limit to min of ", min, ", was ", proceduralMassLimit);
 				proceduralMassLimit = min;
 				changed = true;
 			}
@@ -148,7 +148,7 @@ namespace RP0.ProceduralAvionics
 				}
 			}
 			catch (Exception ex) {
-				Log("OnLoad exception: ", ex.ToString());
+				Log("OnLoad exception: ", ex.Message);
 				throw;
 			}
 		}
@@ -206,12 +206,12 @@ namespace RP0.ProceduralAvionics
 		private float cachedMinVolue = float.MaxValue;
 		public void SetMinVolume(bool forceUpdate = false)
 		{
-			Log("Setting min volume for proceduralMassLimit of ", proceduralMassLimit.ToString());
+			Log("Setting min volume for proceduralMassLimit of ", proceduralMassLimit);
 			float minVolume = proceduralMassLimit / (2 * tonnageToMassRatio * maxDensityOfAvionics);
 			if (float.IsNaN(minVolume)) {
 				return;
 			}
-			Log("min volume sholud be ", minVolume.ToString());
+			Log("min volume sholud be ", minVolume);
 			cachedMinVolue = minVolume;
 
 			PartModule ppModule = null;
@@ -225,11 +225,11 @@ namespace RP0.ProceduralAvionics
 					Log("Applied min volume");
 				}
 			}
-			//Log("minVolume: ", minVolume.ToString());
-			Log("Comparing against cached volume of ", cachedVolume.ToString());
+			//Log("minVolume: ", minVolume);
+			Log("Comparing against cached volume of ", cachedVolume);
 			if (forceUpdate || minVolume > (cachedVolume * FLOAT_ERROR_ALLOWANCE)) { // adding a buffer for floating point errors
 				if (!forceUpdate) {
-					Log("cachedVolume too low: ", cachedVolume.ToString());
+					Log("cachedVolume too low: ", cachedVolume);
 				}
 				//here we'll need to use reflection to update our part to have a min volume
 				if (ppModule != null) {
@@ -295,7 +295,7 @@ namespace RP0.ProceduralAvionics
 			}
 			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
 				//Standard density is 4/3s of maximum density
-				//Log("Current Tech node standard density: ", CurrentProceduralAvionicsTechNode.standardAvionicsDensity.ToString());
+				//Log("Current Tech node standard density: ", CurrentProceduralAvionicsTechNode.standardAvionicsDensity);
 				maxDensityOfAvionics = (CurrentProceduralAvionicsTechNode.standardAvionicsDensity * 4) / 3;
 				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
 				return DoMassCalculation();
@@ -344,10 +344,10 @@ namespace RP0.ProceduralAvionics
 		private float GetControllableUtilizationPercentage()
 		{
 			/*
-			Log("Internal mass limit: ", GetInternalMassLimit().ToString());
-			Log("cachedVolume: ", cachedVolume.ToString());
-			Log("maxDensityOfAvionics: ", maxDensityOfAvionics.ToString());
-			Log("tonnageToMassRatio: ", tonnageToMassRatio.ToString());
+			Log("Internal mass limit: ", GetInternalMassLimit());
+			Log("cachedVolume: ", cachedVolume);
+			Log("maxDensityOfAvionics: ", maxDensityOfAvionics);
+			Log("tonnageToMassRatio: ", tonnageToMassRatio);
 			*/
 			return GetInternalMassLimit() / (cachedVolume * maxDensityOfAvionics * tonnageToMassRatio * 2);
 		}
@@ -371,7 +371,7 @@ namespace RP0.ProceduralAvionics
 		private void ResetTo100()
 		{
 			float value = cachedVolume * maxDensityOfAvionics * tonnageToMassRatio;
-			Log("100% utilization calculated as ", value.ToString());
+			Log("100% utilization calculated as ", value);
 			proceduralMassLimit = value;
 		}
 
@@ -436,20 +436,20 @@ namespace RP0.ProceduralAvionics
 			Log("OnPartVolumeChanged called");
 			try {
 				float volume = (float)eventData.Get<double>("newTotalVolume");
-				Log("volume changed to ", volume.ToString());
+				Log("volume changed to ", volume);
 				if (volume * FLOAT_ERROR_ALLOWANCE < cachedMinVolue && cachedMinVolue != float.MaxValue) {
-					Log("volume of ", volume.ToString(), " is less than expected min volume of ", cachedMinVolue.ToString(), " expecting another update");
+					Log("volume of ", volume, " is less than expected min volume of ", cachedMinVolue, " expecting another update");
 					RefreshPartWindow();
 					//assuming the part will be resized
 					return;
 				}
-				Log("setting cachedVolume to ", volume.ToString());
+				Log("setting cachedVolume to ", volume);
 				cachedVolume = volume;
-				//Log("cached total volume set from eventData: ", cachedVolume.ToString());
+				//Log("cached total volume set from eventData: ", cachedVolume);
 				AvionicsConfigChanged();
 			}
 			catch (Exception ex) {
-				Log("error getting changed volume: ", ex.ToString());
+				Log("error getting changed volume: ", ex);
 			}
 		}
 
@@ -504,7 +504,7 @@ namespace RP0.ProceduralAvionics
 				if (sasModule != null) {
 					if (sasModule.SASServiceLevel != SASServiceLevel) {
 						sasModule.SASServiceLevel = SASServiceLevel;
-						Log("Setting SAS service level to ", SASServiceLevel.ToString());
+						Log("Setting SAS service level to ", SASServiceLevel);
 					}
 				}
 			}

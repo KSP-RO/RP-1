@@ -190,6 +190,7 @@ namespace RP0.ProceduralAvionics
 		private void AvionicsConfigChanged(BaseField arg1, object arg2)
 		{
 			AvionicsConfigChanged();
+			ResetTo100();
 		}
 
 		private void AvionicsConfigChanged()
@@ -283,7 +284,6 @@ namespace RP0.ProceduralAvionics
 				ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
 			oldAvionicsConfigName = avionicsConfigName;
 			SetMinVolume(true);
-			ResetTo100();
 		}
 		#endregion
 

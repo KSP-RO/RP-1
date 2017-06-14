@@ -27,7 +27,7 @@ namespace RP0.ProceduralAvionics
 			if (ENABLED) {
 				var builder = StringBuilderCache.Acquire();
 				builder.Append(logPreix);
-				foreach (string part in parts) {
+				foreach (object part in parts) {
 					builder.Append(part.ToString());
 				}
 				UnityEngine.Debug.Log(builder.ToStringAndRelease());

@@ -3885,7 +3885,7 @@ specializedFuelStorage: # TL6 solids
 hydroloxTL6:
     #Vulcain 1/2
     KW3mengineTitanT1: &Vulcain
-        cost: 6400 # 50x less than development cost, but I think it is still too expensive
+        cost: 1600
         entryCost: 320000 # 1300M (1990 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
     cryoengine-125-1: *Vulcain
     RSBengineVulcain2: *Vulcain # Real Scale Boosters Vulcain engine
@@ -3899,11 +3899,11 @@ hydroloxTL6:
     RSBengineRS68: *RS-68 # Real Scale Boosters RS-68 engine
 
     KW2mengineVestaVR9D: # 2X Japanese LE-7A
-        cost: 12420
+        cost: 2800
         entryCost: 192000 # 781M (1991 USD) http://www.lr.tudelft.nl/en/organisation/departments/space-engineering/space-systems-engineering/expertise-areas/space-propulsion/design-of-elements/cost/
 
     cryoengine-25-1: &LE7 # LE-7/LE-7A
-        cost: 6210  # Half the cost of dual model above
+        cost: 1400  # Half the cost of dual model above
         entryCost: 192000 
 
     # SSTU

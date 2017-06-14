@@ -655,12 +655,13 @@ namespace RP0.ProceduralAvionics
 							// but just in case...
 							if (Funding.Instance.Funds >= unlockCost) {
 								Funding.Instance.AddFunds(-unlockCost, TransactionReasons.RnDPartPurchase);
-								ProceduralAvionicsTechManager
-									.SetMaxUnlockedTech(guiAvionicsConfigName, techNode.name);
 							}
 							else {
 								switchedConfig = false;
 							}
+						}
+						if (switchedConfig) {
+							ProceduralAvionicsTechManager.SetMaxUnlockedTech(guiAvionicsConfigName, techNode.name);
 						}
 
 					}
@@ -717,7 +718,12 @@ namespace RP0.ProceduralAvionics
 			if (techNode.maximumTonnage != float.MaxValue) {
 				sbuilder.Append(String.Format("{0:N}", techNode.maximumTonnage));
 			}
-			sbuilder.Append("T");
+			if (sbuilder.Length == 0) {
+				return "Unlimited";
+			}
+			else {
+				sbuilder.Append("T");
+			}
 			return sbuilder.ToStringAndRelease();
 		}
 
@@ -736,7 +742,7 @@ namespace RP0.ProceduralAvionics
 
 		private string BuildCostString(int cost)
 		{
-			if (cost == 0) {
+			if (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) {
 				return String.Empty;
 			}
 			return " (" + String.Format("{0:N}", cost) + ")";

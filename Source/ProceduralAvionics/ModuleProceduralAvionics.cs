@@ -631,7 +631,10 @@ namespace RP0.ProceduralAvionics
 					continue;
 				}
 				if (techNode == CurrentProceduralAvionicsTechNode) {
-					GUILayout.Label("Current Config: " + BuildTechName(techNode));
+					GUILayout.Label("Current Config: " + techNode.name);
+					GUILayout.Label("Supported Tonnage: " + BuildTonnageString(techNode));
+					GUILayout.Label("SAS Level: " + techNode.SASServiceLevel.ToString());
+					GUILayout.Label("Storage Container: " + (techNode.hasScienceContainer ? "Yes" : "No"));
 				}
 				else {
 					bool switchedConfig = false;
@@ -678,7 +681,7 @@ namespace RP0.ProceduralAvionics
 				ResetTo100();
 				RefreshPartWindow();
 			}
-			if (GUILayout.Button("close")) {
+			if (GUILayout.Button("Close")) {
 				showGUI = false;
 			}
 
@@ -691,22 +694,44 @@ namespace RP0.ProceduralAvionics
 			sbuilder.Append(techNode.name);
 			if (techNode.maximumTonnage != float.MaxValue || techNode.minimumTonnage != 0) {
 				sbuilder.Append(" [");
-				if (techNode.minimumTonnage != 0) {
-					sbuilder.Append(String.Format("{0:N}", techNode.minimumTonnage));
-					if (techNode.maximumTonnage != float.MaxValue) {
-						sbuilder.Append("-");
-					}
-					else {
-						sbuilder.Append("+");
-					}
-				}
-				if (techNode.maximumTonnage != float.MaxValue) {
-					sbuilder.Append(String.Format("{0:N}", techNode.maximumTonnage));
-				}
-				sbuilder.Append("T]");
+				sbuilder.Append(BuildTonnageString(techNode));
+				sbuilder.Append("]");
 			}
+			sbuilder.Append(BuildSasAndScienceString(techNode));
 
 			return sbuilder.ToStringAndRelease();
+		}
+
+		private static string BuildTonnageString(ProceduralAvionicsTechNode techNode)
+		{
+			StringBuilder sbuilder = StringBuilderCache.Acquire();
+			if (techNode.minimumTonnage != 0) {
+				sbuilder.Append(String.Format("{0:N}", techNode.minimumTonnage));
+				if (techNode.maximumTonnage != float.MaxValue) {
+					sbuilder.Append("-");
+				}
+				else {
+					sbuilder.Append("+");
+				}
+			}
+			if (techNode.maximumTonnage != float.MaxValue) {
+				sbuilder.Append(String.Format("{0:N}", techNode.maximumTonnage));
+			}
+			sbuilder.Append("T");
+			return sbuilder.ToStringAndRelease();
+		}
+
+		private static string BuildSasAndScienceString(ProceduralAvionicsTechNode techNode)
+		{
+			StringBuilder sbuilder = StringBuilderCache.Acquire();
+			sbuilder.Append(" {SAS: ");
+			sbuilder.Append(techNode.SASServiceLevel);
+			if (techNode.hasScienceContainer) {
+				sbuilder.Append(", SC");
+			}
+			sbuilder.Append("}");
+
+			return sbuilder.ToString();
 		}
 
 		private string BuildCostString(int cost)

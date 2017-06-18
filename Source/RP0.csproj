@@ -48,6 +48,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DifficultyPresets.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsConfig.cs" />
     <Compile Include="ControlLocker.cs" />
     <Compile Include="EntryCosts\EntryCostDatabase.cs" />

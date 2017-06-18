@@ -7,22 +7,29 @@ using KSP;
 
 namespace RP0
 {
-    class ModuleShowInfo : PartModule
+    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
+    class DifficultyPresetChanger : MonoBehaviour
     {
-        public override string GetInfo()
+        public void Awake()
         {
-            string tmp = "";
-            try
+            ConfigNode paramsNode = GameDatabase.Instance.GetConfigNode("GAMEPARAMETERS");
+            if (paramsNode == null)
+                return;
+
+            foreach (ConfigNode n in paramsNode.nodes)
             {
-                tmp += "Part name: " + part.name;
-                // throws - tmp += "\nTech Required: " + part.partInfo.TechRequired;
-                // throws - tmp += "\nEntry Cost: " + part.partInfo.entryCost;
+                try
+                {
+                    GameParameters.Preset preset = (GameParameters.Preset)Enum.Parse(typeof(GameParameters.Preset), n.name);
+
+                    GameParameters p;
+                    if (GameParameters.DifficultyPresets.TryGetValue(preset, out p))
+                    {
+                        p.Load(n);
+                    }
+                }
+                catch { }
             }
-            catch (Exception e)
-            {
-                Debug.Log("**RP0 error getting info, exception " + e);
-            }
-            return tmp;
         }
     }
 }

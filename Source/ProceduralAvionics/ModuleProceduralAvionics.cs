@@ -168,7 +168,8 @@ namespace RP0.ProceduralAvionics
 			Log("Default config to use: ", config);
 
 			if (String.IsNullOrEmpty(avionicsTechLevel)) {
-				avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(config);
+				avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(
+					String.IsNullOrEmpty(avionicsConfigName) ? config : avionicsConfigName);
 				Log("No tech level set, using ", avionicsTechLevel);
 			}
 

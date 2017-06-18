@@ -12,24 +12,26 @@ namespace RP0
     {
         public void Awake()
         {
-            ConfigNode paramsNode = GameDatabase.Instance.GetConfigNode("GAMEPARAMETERS");
+            ConfigNode paramsNode = null;
+            foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("GAMEPARAMETERS"))
+                paramsNode = n;
+
             if (paramsNode == null)
-                return;
-
-            foreach (ConfigNode n in paramsNode.nodes)
             {
-                try
-                {
-                    GameParameters.Preset preset = (GameParameters.Preset)Enum.Parse(typeof(GameParameters.Preset), n.name);
-
-                    GameParameters p;
-                    if (GameParameters.DifficultyPresets.TryGetValue(preset, out p))
-                    {
-                        p.Load(n);
-                    }
-                }
-                catch { }
+                Debug.LogError("[RP-0]: Could not find GAMEPARAMETERS node.");
+                return;
             }
+
+            GameParameters.SetDifficultyPresets();
+
+            foreach (KeyValuePair<GameParameters.Preset, GameParameters> kvp in GameParameters.DifficultyPresets)
+            {
+                ConfigNode n = paramsNode.GetNode(kvp.Key.ToString());
+                if (n != null)
+                    kvp.Value.Load(n);
+            }
+
+            Debug.Log("[RP-0]: Reset difficulty presets.");
         }
     }
 }

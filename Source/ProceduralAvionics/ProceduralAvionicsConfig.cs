@@ -11,8 +11,7 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public string name;
 
-		[Persistent]
-		public string currentTechNodeName;
+		public string currentTechNodeName; 
 
 		public ProceduralAvionicsTechNode CurrentTechNode
 		{

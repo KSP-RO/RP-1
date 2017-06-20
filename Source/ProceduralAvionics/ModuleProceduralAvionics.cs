@@ -31,6 +31,9 @@ namespace RP0.ProceduralAvionics
 		private string oldAvionicsConfigName;
 
 		[KSPField(isPersistant = true)]
+		public string avionicsTechLevel;
+
+		[KSPField(isPersistant = true)]
 		public float maxDensityOfAvionics;
 
 		[KSPField(isPersistant = true)]
@@ -93,7 +96,7 @@ namespace RP0.ProceduralAvionics
 			var max = GetMaximumControllableTonnage();
 			if (max == 0) {
 				//Sounds like we're not yet initiaziled, let's not change anything
-				Log("no max");
+				//Log("no max");
 				return proceduralMassLimit;
 			}
 			var min = GetMinimumControllableTonnage();
@@ -143,7 +146,9 @@ namespace RP0.ProceduralAvionics
 		public override void OnLoad(ConfigNode node)
 		{
 			try {
+				Log("OnLoad called");
 				if (GameSceneFilter.AnyInitializing.IsLoaded()) {
+					Log("Loading Avionics Configs");
 					ProceduralAvionicsTechManager.LoadAvionicsConfigs(node);
 				}
 			}
@@ -153,18 +158,37 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
+		private bool started = false;
 		public new void Start()
 		{
 			Log("Start called");
+			started = true;
+
+			string config = ProceduralAvionicsTechManager.GetPurchasedConfigs()[0];
+			Log("Default config to use: ", config);
+
+			if (String.IsNullOrEmpty(avionicsTechLevel)) {
+				avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(
+					String.IsNullOrEmpty(avionicsConfigName) ? config : avionicsConfigName);
+				Log("No tech level set, using ", avionicsTechLevel);
+			}
+
+			if (String.IsNullOrEmpty(avionicsConfigName)) {
+				Log("No config set, using ", config);
+				avionicsConfigName = config;
+			}
+
 			UpdateConfigSliders();
 			BindUIChangeCallbacks();
 
 			UpdateMaxValues();
 			UpdateCurrentConfig();
 
-			Log("Setting internal ksp fields");
 			SetInternalKSPFields();
-			Log("Done setting internal ksp fields");
+
+			if (cachedEventData != null) {
+				OnPartVolumeChanged(cachedEventData);
+			}
 
 			base.Start();
 			Log("Start finished");
@@ -189,6 +213,8 @@ namespace RP0.ProceduralAvionics
 
 		private void AvionicsConfigChanged(BaseField arg1, object arg2)
 		{
+			avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
+
 			AvionicsConfigChanged();
 			ResetTo100();
 		}
@@ -282,6 +308,8 @@ namespace RP0.ProceduralAvionics
 			Log("Setting config to ", avionicsConfigName);
 			currentProceduralAvionicsConfig =
 				ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
+			Log("Setting tech node to ", avionicsTechLevel);
+			currentProceduralAvionicsConfig.currentTechNodeName = avionicsTechLevel;
 			oldAvionicsConfigName = avionicsConfigName;
 			SetMinVolume(true);
 		}
@@ -343,12 +371,6 @@ namespace RP0.ProceduralAvionics
 		#region private utiliy functions
 		private float GetControllableUtilizationPercentage()
 		{
-			/*
-			Log("Internal mass limit: ", GetInternalMassLimit());
-			Log("cachedVolume: ", cachedVolume);
-			Log("maxDensityOfAvionics: ", maxDensityOfAvionics);
-			Log("tonnageToMassRatio: ", tonnageToMassRatio);
-			*/
 			return GetInternalMassLimit() / (cachedVolume * maxDensityOfAvionics * tonnageToMassRatio * 2);
 		}
 
@@ -429,11 +451,17 @@ namespace RP0.ProceduralAvionics
 		}
 
 		private float cachedVolume = float.MaxValue;
+		private BaseEventData cachedEventData = null;
 
 		[KSPEvent]
 		public void OnPartVolumeChanged(BaseEventData eventData)
 		{
 			Log("OnPartVolumeChanged called");
+			if (!started) {
+				Log("Not yet started, returning");
+				cachedEventData = eventData;
+				return;
+			}
 			try {
 				float volume = (float)eventData.Get<double>("newTotalVolume");
 				Log("volume changed to ", volume);
@@ -456,6 +484,8 @@ namespace RP0.ProceduralAvionics
 		private void SetInternalKSPFields()
 		{
 			Log("Setting internal KSP fields");
+			Log("avionics tech level: ", avionicsTechLevel);
+
 			tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
 			costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
 			enabledProceduralW = CurrentProceduralAvionicsTechNode.enabledProceduralW;
@@ -624,9 +654,6 @@ namespace RP0.ProceduralAvionics
 			ProceduralAvionicsConfig currentlyDisplayedConfigs =
 				ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(guiAvionicsConfigName);
 			foreach (ProceduralAvionicsTechNode techNode in currentlyDisplayedConfigs.TechNodes.Values) {
-				if (!ProceduralAvionicsTechManager.TechIsEnabled) {
-					continue;
-				}
 				if (!techNode.IsAvailable) {
 					continue;
 				}
@@ -668,6 +695,7 @@ namespace RP0.ProceduralAvionics
 					if (switchedConfig) {
 						Log("Configuration window changed, updating part window");
 						UpdateConfigSliders();
+						avionicsTechLevel = techNode.name;
 						currentlyDisplayedConfigs.currentTechNodeName = techNode.name;
 						currentProceduralAvionicsConfig = currentlyDisplayedConfigs;
 						avionicsConfigName = guiAvionicsConfigName;

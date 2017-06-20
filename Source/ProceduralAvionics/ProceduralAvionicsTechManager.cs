@@ -54,11 +54,6 @@ namespace RP0.ProceduralAvionics
 					}
 				}
 			}
-
-			//now, we can set the defaults to the higest unlocked
-			foreach (string configName in unlockedTech.Keys) {
-				allTechNodes.Find(tn => tn.name == configName).currentTechNodeName = unlockedTech[configName];
-			}
 		}
 
 		#endregion
@@ -75,23 +70,24 @@ namespace RP0.ProceduralAvionics
 
 		public static List<string> GetAvailableConfigs()
 		{
+			ProceduralAvionicsUtils.Log("Getting Available configs, procedural avionics has ", allTechNodes.Count, " nodes loaded");
 			List<string> availableConfigs = new List<string>();
-			if (TechIsEnabled) {
-				foreach (var config in allTechNodes) {
-					if (config.TechNodes.Values.Where(node => node.IsAvailable).Count() > 0) {
-						availableConfigs.Add(config.name);
-					}
+			foreach (var config in allTechNodes) {
+				if (!TechIsEnabled || (config.TechNodes.Values.Where(node => node.IsAvailable).Count() > 0)) {
+					availableConfigs.Add(config.name);
 				}
-			}
-			else {
-				availableConfigs = allTechNodes.Select(item => item.name).ToList();
 			}
 			return availableConfigs;
 		}
 
 		public static List<string> GetPurchasedConfigs()
 		{
-			return unlockedTech.Keys.ToList();
+			if (TechIsEnabled) {
+				return unlockedTech.Keys.ToList();
+			}
+			else {
+				return allTechNodes.Select(node => node.name).ToList();
+			}
 		}
 
 		internal static object GetUnlockedTechState()
@@ -110,9 +106,7 @@ namespace RP0.ProceduralAvionics
 			return state;
 		}
 
-		internal static void SetMaxUnlockedTech(
-			string avionicsConfigName,
-			string techNodeName)
+		internal static void SetMaxUnlockedTech( string avionicsConfigName, string techNodeName)
 		{
 			ProceduralAvionicsUtils.Log("Unlocking ", techNodeName, " for ", avionicsConfigName);
 			if (!unlockedTech.ContainsKey(avionicsConfigName)) {
@@ -127,6 +121,11 @@ namespace RP0.ProceduralAvionics
 
 		internal static string GetMaxUnlockedTech(string avionicsConfigName)
 		{
+			if (!TechIsEnabled) {
+				var techNodesForConfig = allTechNodes.Where(config => config.name == avionicsConfigName).FirstOrDefault();
+				int maxCost = techNodesForConfig.TechNodes.Values.Max(node => node.unlockCost);
+				return techNodesForConfig.TechNodes.Values.Where(node => node.unlockCost == maxCost).FirstOrDefault().name;
+			}
 			if (unlockedTech.ContainsKey(avionicsConfigName)) {
 				return unlockedTech[avionicsConfigName];
 			}
@@ -137,7 +136,5 @@ namespace RP0.ProceduralAvionics
 		{
 			return allTechNodes.Where(config => config.name == configName).FirstOrDefault();
 		}
-
-
 	}
 }

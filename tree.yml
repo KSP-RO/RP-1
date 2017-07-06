@@ -3483,7 +3483,7 @@ hydroloxTL4:
     SSTU-SC-ENG-M1-RO: *M-1
     
     toroidalAerospike: &J2T # J-2T (plug nozzle J-2)
-        cost: 9000 # J-2 is 8500
+        cost: 3300 # J-2 is 2500
     RLA_mp_large_spike: *J2T 
     NP_lfe_125m_AerospikeEngine: *J2T
         

@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="DifficultyPresets.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />
+    <Compile Include="ModuleTag\Habitable.cs" />
     <Compile Include="ModuleTag\Toxic.cs" />
     <Compile Include="ModuleTag\Reentry.cs" />
     <Compile Include="ModuleTag\Instruments.cs" />

@@ -49,6 +49,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DifficultyPresets.cs" />
+    <Compile Include="ModuleTag\EngineLiquidPF.cs" />
+    <Compile Include="ModuleTag\Toxic.cs" />
+    <Compile Include="ModuleTag\Reentry.cs" />
+    <Compile Include="ModuleTag\Instruments.cs" />
+    <Compile Include="ModuleTag\HumanRated.cs" />
+    <Compile Include="ModuleTag\Avionics.cs" />
+    <Compile Include="ModuleTag\Nuclear.cs" />
+    <Compile Include="ModuleTag\EngineLiquidTurbo.cs" />
+    <Compile Include="ModuleTag\EngineSolid.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsConfig.cs" />
     <Compile Include="ControlLocker.cs" />
     <Compile Include="EntryCosts\EntryCostDatabase.cs" />

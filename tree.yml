@@ -3486,6 +3486,12 @@ hydroloxTL4:
         cost: 9000 # J-2 is 8500
     RLA_mp_large_spike: *J2T 
     NP_lfe_125m_AerospikeEngine: *J2T
+    
+    SXTLT80: &HG-3
+        cost: 3175
+        entryCost: 127000
+    SHIP_HG_3_SL: *HG-3
+    SHIP_HG_3_VAC: *HG-3
         
 precisionPropulsion:
     FRERD843: #RD-843, late and tiny rocket engine used on Vega

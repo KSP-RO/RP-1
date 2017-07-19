@@ -9,7 +9,7 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            return "Contains a radioactive elements";
+            return "Contains radioactive elements";
         }
     }
 }

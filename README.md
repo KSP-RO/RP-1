@@ -101,8 +101,9 @@ Procedural Avionics can have different configurations.  For instance, booster av
 
 As part utilization goes up, so do part cost and part weight.  However, these do not rise at the same rates.  Consider this example: as you try to fit more avionics controls into the same amount of space, you should probably invest some effort into making those controls smaller and more efficient.  The smaller and more efficient you try to make those parts, the more they cost (and the higher the cost per controllable ton).  However, since these parts are more efficient, while your overall part mass continues to rise, your mass per controllable ton actually decreases.  Because of this, we actually get two different "curves", a mass curve, and a cost curve:
 
- - mass curve: -x^2 + 2x  (as utilization goes up, additional mass needed per controllable mass goes down)
+ - mass curve: -(x^2) + 2x  (as utilization goes up, additional mass needed per controllable mass goes down)
  - cost curve: x^2  (as utilization goes up, cost rises exponentially)
+>Note that while utilization is normally displayed as a range between 0-200%, the above formulas treat utilization as 0-100%
 
 Because the actual efficiency of a part depends on its utilization, we run into a problem when trying to configure these parts.  Thus, we'll define a "sweet spot" of 100% utilization.  If a part is 100% utilized, then their cost/controllable ton and mass/controllable ton will be what's in the configs.  Bringing the utilization up to 200% (and reduce the volume accordingly, so you're still controlling the same amount of mass), and you should find your part mass decreased by about 1/3, but your cost to be 4x as much.
 

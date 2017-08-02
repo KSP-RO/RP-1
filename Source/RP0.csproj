@@ -51,6 +51,7 @@
     <Compile Include="DifficultyPresets.cs" />
     <Compile Include="ModuleTag\DecreaseB.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />
+    <Compile Include="ModuleTag\Decoupler.cs" />
     <Compile Include="ModuleTag\Habitable.cs" />
     <Compile Include="ModuleTag\DecreaseA.cs" />
     <Compile Include="ModuleTag\Toxic.cs" />

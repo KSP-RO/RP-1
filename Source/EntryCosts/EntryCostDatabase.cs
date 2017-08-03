@@ -73,19 +73,19 @@ namespace RP0
 
         #region Helpers
         // from RF
-        public static string GetPartName(Part part)
+        protected static string GetPartName(Part part)
         {
             if (part.partInfo != null)
                 return GetPartName(part.partInfo);
             return GetPartName(part.name);
         }
 
-        public static string GetPartName(AvailablePart ap)
+        protected static string GetPartName(AvailablePart ap)
         {
             return GetPartName(ap.name);
         }
 
-        public static string GetPartName(string partName)
+        protected static string GetPartName(string partName)
         {
             partName = partName.Replace(".", "-");
             return partName.Replace("_", "-");
@@ -98,6 +98,10 @@ namespace RP0
             return unlocks.Contains(name) || RealFuels.RFUpgradeManager.Instance.ConfigUnlocked(name);
         }
 
+        public static void SetUnlocked(AvailablePart ap)
+        {
+            SetUnlocked(GetPartName(ap));
+        }
         public static void SetUnlocked(string name)
         {
             // RF's current unlock system doesn't allow checking unlock status.
@@ -108,6 +112,13 @@ namespace RP0
                 RealFuels.RFUpgradeManager.Instance.SetConfigUnlock(name, true);
 
             unlocks.Add(name); // add regardless
+
+            PartEntryCostHolder h;
+            if (holders.TryGetValue(name, out h))
+            {
+                foreach (string s in h.children)
+                    SetUnlocked(s);
+            }
         }
 
         public static int GetCost(string name)
@@ -122,6 +133,7 @@ namespace RP0
         public static void UpdateEntryCost(AvailablePart ap)
         {
             string name = GetPartName(ap);
+
             PartEntryCostHolder h;
             if (holders.TryGetValue(name, out h))
                 ap.SetEntryCost(h.GetCost());

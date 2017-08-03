@@ -40,6 +40,7 @@ namespace RP0
         #region Methods
         public void onPartPurchased(AvailablePart ap)
         {
+            EntryCostDatabase.SetUnlocked(ap);
             UpdatePartEntryCosts();
         }
         public void UpdatePartEntryCosts()
@@ -47,15 +48,11 @@ namespace RP0
             for (int a = PartLoader.LoadedPartsList.Count - 1; a >= 0; --a)
             {
                 AvailablePart ap = PartLoader.LoadedPartsList[a];
-                if (ap == null)
-                {
+
+                if (ap == null || ap.partPrefab == null)
                     continue;
-                }
-                Part part = ap.partPrefab;
-                if (part != null)
-                {
-                    EntryCostDatabase.UpdateEntryCost(ap);
-                }
+
+                EntryCostDatabase.UpdateEntryCost(ap);
             }
         }
         #endregion

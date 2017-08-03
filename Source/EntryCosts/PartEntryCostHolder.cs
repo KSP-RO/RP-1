@@ -11,7 +11,7 @@ namespace RP0
 
         public int cost = 0;
 
-        public List<string> children;
+        public List<string> children = new List<string>();
         #endregion
 
         #region Constructors
@@ -20,10 +20,14 @@ namespace RP0
             this.name = name;
 
             int tmp;
-            if (int.TryParse(val, out tmp))
-                cost = tmp;
-            else
-                children = new List<string>(val.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries));
+            string[] split = val.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in split)
+            {
+                if (int.TryParse(s, out tmp))
+                    cost += tmp;
+                else
+                    children.Add(s);
+            }
         }
         #endregion
 
@@ -35,9 +39,8 @@ namespace RP0
 
             int c = cost;
 
-            if (children != null)
-                foreach (string s in children)
-                    c += EntryCostDatabase.GetCost(name);
+            foreach (string s in children)
+                c += EntryCostDatabase.GetCost(s);
 
             return c;
         }

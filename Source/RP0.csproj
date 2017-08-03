@@ -107,6 +107,10 @@
       <HintPath>..\..\..\..\..\..\Games\Steam\steamapps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RealFuels">
+      <HintPath>..\..\..\..\..\..\Games\Tree_122\GameData\RealFuels\Plugins\RealFuels.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>

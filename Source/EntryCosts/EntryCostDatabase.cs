@@ -9,20 +9,9 @@ namespace RP0
     public class EntryCostDatabase
     {
         #region Fields
-        public static Dictionary<string, PartEntryCostHolder> partlist = null;
-        #region Instance
-        private static EntryCostDatabase _instance = null;
-        public static EntryCostDatabase Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new EntryCostDatabase();
-
-                return _instance;
-            }
-        }
-        #endregion
+        protected static Dictionary<string, PartEntryCostHolder> holders = null;
+        protected static Dictionary<string, AvailablePart> nameToPart = null;
+        protected static HashSet<string> unlocks = null;
         #endregion
 
         #region Setup
@@ -30,22 +19,20 @@ namespace RP0
         {
             Initialize();
         }
-        public void Initialize()
+        public static void Initialize()
         {
-            if (partlist == null)
-            {
-                partlist = new Dictionary<string, PartEntryCostHolder>();
+            if (nameToPart == null)
                 FillPartList();
-            }
+
+            if (holders == null)
+                FillHolders();
+
+            if (unlocks == null)
+                unlocks = new HashSet<string>();
         }
-        public void FillPartList()
+        protected static void FillPartList()
         {
-            // precalc our node dictionary
-            Dictionary<string, ConfigNode> partnodes = new Dictionary<string, ConfigNode>();
-            foreach (ConfigNode node in GameDatabase.Instance.GetConfigNodes("ENTRYCOSTMODS"))
-                foreach (ConfigNode n in node.GetNodes("PART"))
-                    if (n.HasValue("name"))
-                        partnodes[n.GetValue("name")] = n;
+            nameToPart = new Dictionary<string, AvailablePart>();
 
             // now fill our dictionary of parts
             if (PartLoader.Instance == null || PartLoader.LoadedPartsList == null)
@@ -53,7 +40,7 @@ namespace RP0
                 Debug.LogError("*RP-0 EC: ERROR: Partloader instance null or list null!");
                 return;
             }
-            for (int a = PartLoader.LoadedPartsList.Count - 1; a >= 0; --a)
+            for (int a = PartLoader.LoadedPartsList.Count; a-- > 0;)
             {
                 AvailablePart ap = PartLoader.LoadedPartsList[a];
                 if (ap == null)
@@ -63,10 +50,22 @@ namespace RP0
                 Part part = ap.partPrefab;
                 if (part != null)
                 {
-                    ConfigNode partnode = null;
                     string name = GetPartName(ap);
-                    if (partnodes.TryGetValue(name, out partnode))
-                        partlist[name] = new PartEntryCostHolder(partnode, ap);
+                    nameToPart[name] = ap;
+                }
+            }
+        }
+
+        protected static void FillHolders()
+        {
+            holders = new Dictionary<string, PartEntryCostHolder>();
+
+            foreach (ConfigNode node in GameDatabase.Instance.GetConfigNodes("ENTRYCOSTMODS"))
+            {
+                foreach (ConfigNode.Value v in node.values)
+                {
+                    PartEntryCostHolder p = new PartEntryCostHolder(v.name, v.value);
+                    holders[p.name] = p;
                 }
             }
         }
@@ -85,10 +84,68 @@ namespace RP0
         {
             return GetPartName(ap.name);
         }
+
         public static string GetPartName(string partName)
         {
             partName = partName.Replace(".", "-");
             return partName.Replace("_", "-");
+        }
+        #endregion
+
+        #region Interface
+        public static bool IsUnlocked(string name)
+        {
+            return unlocks.Contains(name) || RealFuels.RFUpgradeManager.Instance.ConfigUnlocked(name);
+        }
+
+        public static void SetUnlocked(string name)
+        {
+            // RF's current unlock system doesn't allow checking unlock status.
+            // HOWEVER if a name is not in the database, ConfigUnlocked returns true.
+            // That means we can know a config is present and locked by that
+            // returning false. So we take advantage.
+            if (!RealFuels.RFUpgradeManager.Instance.ConfigUnlocked(name))
+                RealFuels.RFUpgradeManager.Instance.SetConfigUnlock(name, true);
+
+            unlocks.Add(name); // add regardless
+        }
+
+        public static int GetCost(string name)
+        {
+            PartEntryCostHolder h;
+            if (holders.TryGetValue(name, out h))
+                return h.GetCost();
+
+            return 0;
+        }
+
+        public static void UpdateEntryCost(AvailablePart ap)
+        {
+            string name = GetPartName(ap);
+            PartEntryCostHolder h;
+            if (holders.TryGetValue(name, out h))
+                ap.SetEntryCost(h.GetCost());
+        }
+
+        public static void Save(ConfigNode node)
+        {
+            foreach (string s in unlocks)
+            {
+                node.AddValue(s, true);
+            }
+        }
+
+        public static void Load(ConfigNode node)
+        {
+            unlocks.Clear();
+
+            if (node == null)
+                return;
+
+            foreach (ConfigNode.Value v in node.values)
+            {
+                unlocks.Add(v.name);
+            }
         }
         #endregion
     }
@@ -98,7 +155,7 @@ namespace RP0
     {
         public void Start()
         {
-            EntryCostDatabase.Instance.Initialize();
+            EntryCostDatabase.Initialize();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace RP0
         {
             base.OnAwake();
             
-            EntryCostDatabase.Instance.Initialize(); // should not be needed though.
+            EntryCostDatabase.Initialize(); // should not be needed though.
 
             GameEvents.OnPartPurchased.Add(new EventData<AvailablePart>.OnEvent(onPartPurchased));
         }
@@ -26,11 +26,14 @@ namespace RP0
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
+            EntryCostDatabase.Load(node.GetNode("Unlocks"));
             UpdatePartEntryCosts();
         }
         public override void OnSave(ConfigNode node)
         {
             base.OnSave(node);
+            EntryCostDatabase.Save(node.AddNode("Unlocks"));
+            
         }
         #endregion
 
@@ -51,31 +54,9 @@ namespace RP0
                 Part part = ap.partPrefab;
                 if (part != null)
                 {
-                    string name = EntryCostDatabase.GetPartName(ap);
-                    PartEntryCostHolder ec;
-                    if (EntryCostDatabase.partlist.TryGetValue(name, out ec))
-                        ec.UpdateCost();
+                    EntryCostDatabase.UpdateEntryCost(ap);
                 }
             }
-        }
-        public static double PartEntryCost(string partName)
-        {
-            PartEntryCostHolder ec = null;
-            if (EntryCostDatabase.partlist.TryGetValue(partName, out ec))
-                return ec.EntryCost();
-
-            Debug.LogError("*RP-0 EC: ERROR: entry cost modifier for " + partName + " does not exist!");
-            return 0d;
-        }
-
-        public static bool IsUnlocked(string partname)
-        {
-            PartEntryCostHolder partEC = null;
-            if (ResearchAndDevelopment.Instance != null)
-                if (EntryCostDatabase.partlist.TryGetValue(partname, out partEC))
-                    return ResearchAndDevelopment.PartModelPurchased(partEC.ap);
-
-            return false;
         }
         #endregion
     }

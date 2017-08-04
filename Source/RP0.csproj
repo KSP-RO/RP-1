@@ -64,8 +64,6 @@
     <Compile Include="ModuleTag\EngineSolid.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsConfig.cs" />
     <Compile Include="ControlLocker.cs" />
-    <Compile Include="EntryCosts\EntryCostDatabase.cs" />
-    <Compile Include="EntryCosts\PartEntryCostHolder.cs" />
     <Compile Include="ModuleAvionicsModifier.cs" />
     <Compile Include="ProceduralAvionics\ModuleProceduralAvionics.cs" />
     <Compile Include="ModuleRangeSafety.cs" />
@@ -87,7 +85,6 @@
     <Compile Include="ModuleAvionics.cs" />
     <Compile Include="ModuleScienceCore.cs" />
     <Compile Include="ModuleShowInfo.cs" />
-    <Compile Include="EntryCosts\EntryCostModifier.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsTechManager.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsTechNode.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsUnlockedNodes.cs" />
@@ -105,10 +102,6 @@
     <Reference Include="Assembly-CSharp-firstpass, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Games\Steam\steamapps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RealFuels">
-      <HintPath>..\..\..\..\..\..\Games\Tree_122\GameData\RealFuels\Plugins\RealFuels.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">

@@ -90,7 +90,7 @@
     <Compile Include="ProceduralAvionics\ProceduralAvionicsUnlockedNodes.cs" />
     <Compile Include="ProceduralAvionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tooling\ModuleToolingy.cs" />
+    <Compile Include="Tooling\ModuleTooling.cs" />
     <Compile Include="Tooling\ToolingDatabase.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />

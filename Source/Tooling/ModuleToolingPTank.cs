@@ -27,7 +27,10 @@ namespace RP0
             len = 0f;
 
             if (procTank == null)
+            {
+                Debug.LogError("[ModuleTooling]: Could not find proc part to bind to");
                 return;
+            }
 
             string newName = procTank.Fields["shapeName"].GetValue<string>(procTank);
             if (newName != shapeName || procShape == null)
@@ -53,7 +56,10 @@ namespace RP0
                 }
 
                 if (procShape == null)
+                {
+                    Debug.LogError("[ModuleTooling]: Could not find proc SHAPE to bind to");
                     return;
+                }
 
                 if (cone)
                 {
@@ -62,14 +68,23 @@ namespace RP0
                 }
                 else
                 {
-                    diam1 = procShape.Fields["Diameter"];
+                    diam1 = procShape.Fields["diameter"];
                     diam2 = null;
                 }
 
                 length = procShape.Fields["length"];
             }
             else if (procShape == null)
+            {
+                Debug.LogError("[ModuleTooling]: Lost proc SHAPE to bind to");
                 return;
+            }
+
+            if (diam1 == null || length == null)
+            {
+                Debug.LogError("[ModuleTooling]: Could not bind to procpart fields");
+                return;
+            }
 
             if (cone)
                 diam = Math.Max(diam1.GetValue<float>(procShape), diam2.GetValue<float>(procShape));

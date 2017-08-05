@@ -29,6 +29,8 @@ namespace RP0
         // d^2, d^1, l^1, 1
         public Vector4 lengthToolingCost = new Vector4(500f, 2000f, 200f, 100f);
 
+        protected BaseEvent tEvent;
+
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Tank")]
         public virtual void ToolingEvent()
         {
@@ -81,16 +83,25 @@ namespace RP0
         {
             base.OnLoad(node);
 
-            Events["ToolingEvent"].guiActiveEditor = IsUnlocked();
-            Events["ToolingEvent"].guiName = toolingName;
+            tEvent = Events["ToolingEvent"];
+
+            tEvent.guiActiveEditor = IsUnlocked();
+            tEvent.guiName = toolingName;
         }
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (IsUnlocked())
+            if (!HighLogic.LoadedSceneIsEditor)
                 return 0f;
 
-            float cost = part.partInfo.cost;
+            if (IsUnlocked())
+            {
+                tEvent.guiActiveEditor = false;
+                return 0f;
+            }
+            tEvent.guiActiveEditor = true;
+
+            /*float cost = part.partInfo.cost;
             float baseCost = cost;
 
             for (int i = part.Modules.Count; i-- > 0;)
@@ -106,7 +117,9 @@ namespace RP0
                 cost += c.GetModuleCost(baseCost, ModifierStagingSituation.CURRENT);
             }
 
-            return cost;
+            return cost * untooledMultiplier;*/
+
+            return GetToolingCost() * ((1f / 50f) * 0.25f) * untooledMultiplier;
         }
 
         public ModifierChangeWhen GetModuleCostChangeWhen()

@@ -64,6 +64,7 @@ namespace RP0
                                         {
                                             Funding.Instance.AddFunds(-toolingCost, TransactionReasons.RnDPartPurchase);
                                             PurchaseTooling();
+                                            GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
                                             Events["ToolingEvent"].guiActiveEditor = false;
                                         }
                                     }, 140.0f, 30.0f, true),
@@ -78,6 +79,13 @@ namespace RP0
         public abstract void PurchaseTooling();
 
         public abstract bool IsUnlocked();
+
+        public override void OnAwake()
+        {
+            base.OnAwake();
+
+            tEvent = Events["ToolingEvent"];
+        }
 
         public override void OnLoad(ConfigNode node)
         {

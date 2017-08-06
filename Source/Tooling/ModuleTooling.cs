@@ -57,7 +57,7 @@ namespace RP0
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(
                             "Tooling has not yet been set up for this part. It will cost " + toolingCost.ToString("N0") + " funds.",
-                            "ModuleManager",
+                            "Tooling Purchase",
                             HighLogic.UISkin,
                             new Rect(0.5f, 0.5f, 150f, 60f),
                             new DialogGUIFlexibleSpace(),

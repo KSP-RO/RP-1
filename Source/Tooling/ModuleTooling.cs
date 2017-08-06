@@ -23,11 +23,11 @@ namespace RP0
 
         [KSPField]
         // d^2, d^1, 1
-        public Vector3 diameterToolingCost = new Vector3(6000f, 12000f, 500f);
+        public Vector3 diameterToolingCost = new Vector3(3000f, 6000f, 250f);
 
         [KSPField]
         // d^2, d^1, l^1, 1
-        public Vector4 lengthToolingCost = new Vector4(500f, 2000f, 200f, 100f);
+        public Vector4 lengthToolingCost = new Vector4(250f, 1000f, 100f, 50f);
 
         protected BaseEvent tEvent;
 

@@ -29,13 +29,19 @@ namespace RP0
         // d^2, d^1, l^1, 1
         public Vector4 lengthToolingCost = new Vector4(250f, 1000f, 100f, 50f);
 
+        [KSPField]
+        public float minDiameter = 0f;
+
         protected BaseEvent tEvent;
 
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Tank")]
         public virtual void ToolingEvent()
         {
             if (IsUnlocked())
+            {
+                tEvent.guiActiveEditor = false;
                 return;
+            }
 
             float toolingCost = GetToolingCost();
             bool canAfford = true;

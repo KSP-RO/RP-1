@@ -118,6 +118,9 @@ namespace RP0
         {
             float d, l;
             GetDimensions(out d, out l);
+            if (d < minDiameter)
+                return true;
+
             return ToolingDatabase.HasTooling(toolingType, d, l) == ToolingDatabase.ToolingLevel.Full;
         }
     }

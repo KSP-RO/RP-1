@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace RP0
 {
-    class ModuleToolingPTank : ModuleTooling
+    class ModuleToolingPTank : ModuleToolingDiamLen
     {
         protected PartModule procTank, procShape;
         protected string shapeName = string.Empty;
@@ -21,7 +21,7 @@ namespace RP0
 
             procTank = part.Modules["ProceduralPart"];
         }
-        protected void GetDimensions(out float diam, out float len)
+        protected override void GetDimensions(out float diam, out float len)
         {
             diam = 0f;
             len = 0f;
@@ -94,34 +94,6 @@ namespace RP0
                 diam = diam1.GetValue<float>(procShape);
 
             len = length.GetValue<float>(procShape);
-        }
-
-        public override float GetToolingCost()
-        {
-            float d, l;
-            GetDimensions(out d, out l);
-            float cost = lengthToolingCost.x * d * d + lengthToolingCost.y * d + lengthToolingCost.z * l + lengthToolingCost.w;
-            if (ToolingDatabase.HasTooling(toolingType, d, l) == ToolingDatabase.ToolingLevel.None)
-                cost += diameterToolingCost.x * d * d + diameterToolingCost.y * d + diameterToolingCost.z;
-
-            return cost;
-        }
-
-        public override void PurchaseTooling()
-        {
-            float d, l;
-            GetDimensions(out d, out l);
-            ToolingDatabase.UnlockTooling(toolingType, d, l);
-        }
-
-        public override bool IsUnlocked()
-        {
-            float d, l;
-            GetDimensions(out d, out l);
-            if (d < minDiameter)
-                return true;
-
-            return ToolingDatabase.HasTooling(toolingType, d, l) == ToolingDatabase.ToolingLevel.Full;
         }
     }
 }

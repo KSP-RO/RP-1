@@ -34,7 +34,7 @@ namespace RP0
 
         protected BaseEvent tEvent;
 
-        [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Tank")]
+        [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Item")]
         public virtual void ToolingEvent()
         {
             if (IsUnlocked())

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using KSP;
+﻿using System.Collections.Generic;
+using System.Collections;
+using UniLinq;
 using UnityEngine;
 
 namespace RP0
@@ -30,6 +28,10 @@ namespace RP0
 
         [KSPField]
         public string techRequired = "";
+
+        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Set to Debris"),
+            UI_Toggle(disabledText = "Never", enabledText = "On Stage", affectSymCounterparts = UI_Scene.Editor)]
+        public bool setToDebrisOnStage = false;
 
         protected ModuleResource commandChargeResource = null;
         protected bool wasWarping = false;
@@ -129,9 +131,66 @@ namespace RP0
             Actions["ActivateAction"].active = !systemEnabled;
             Actions["ShutdownAction"].active = systemEnabled;
         }
+
+        protected void StageActivated(int stage)
+        {
+            if (setToDebrisOnStage)
+                StartCoroutine(CheckRenameDebris());
+        }
+
+        protected IEnumerator CheckRenameDebris()
+        {
+            bool rename = true;
+            yield return new WaitForSeconds(1f);
+            if (vessel != FlightGlobals.ActiveVessel)
+            {
+                Part p;
+                PartModule pm;
+                ModuleAvionics am;
+                for (int i = vessel.Parts.Count; i-- > 0;)
+                {
+                    p = vessel.Parts[i];
+                    if (p == part)
+                        continue;
+
+                    bool hasCommand = false;
+                    bool allAvionicsDebris = true;
+                    bool noAvionics = true;
+                    for (int j = p.Modules.Count; j-- > 0;)
+                    {
+                        pm = p.Modules[j];
+                        if (pm is ModuleCommand)
+                        {
+                            hasCommand = true;
+                        }
+                        else if (pm is ModuleAvionics)
+                        {
+                            noAvionics = false;
+                            am = pm as ModuleAvionics;
+                            if (!am.setToDebrisOnStage)
+                                allAvionicsDebris = false;
+                        }
+                    }
+                    if (hasCommand && (noAvionics || !allAvionicsDebris))
+                    {
+                        rename = false;
+                        break;
+                    }
+                }
+
+                if (rename)
+                    vessel.vesselType = VesselType.Debris;
+            }
+        }
         #endregion
 
         #region Overrides
+        public override void OnAwake()
+        {
+            base.OnAwake();
+            GameEvents.onStageActivate.Add(StageActivated);
+        }
+
         public void Start()
         {
         // check then bind to ModuleCommand
@@ -150,6 +209,11 @@ namespace RP0
                 Actions["ShutdownAction"].active = GetToggleable();
 
             SetActionsAndGui();
+        }
+
+        protected void OnDestroy()
+        {
+            GameEvents.onStageActivate.Remove(StageActivated);
         }
 
         protected virtual string GetTonnageString()

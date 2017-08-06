@@ -48,10 +48,12 @@ namespace RP0
                         break;
                     case "Fillet Cylinder":
                         procShape = part.Modules["ProceduralShapePill"];
+                        cone = false;
                         break;
 
                     default: // "Cylinder"
                         procShape = part.Modules["ProceduralShapeCylinder"];
+                        cone = false;
                         break;
                 }
 

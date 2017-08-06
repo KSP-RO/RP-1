@@ -24,6 +24,9 @@ namespace RP0
 
         protected int countAvailable, countAssigned, countKIA;
 
+        [KSPField(isPersistant = true)]
+        public bool firstLoad = true;
+
         #region Instance
 
         private static CrewHandler _instance = null;
@@ -67,12 +70,6 @@ namespace RP0
             retirees.Clear();
             foreach (ConfigNode.Value v in node.GetNode("RETIREES").values)
                 retirees.Add(v.value);
-
-            foreach (ProtoCrewMember pcm in HighLogic.CurrentGame.CrewRoster.Crew)
-            {
-                if ((pcm.rosterStatus == ProtoCrewMember.RosterStatus.Assigned || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available) && !kerbalRetireTimes.ContainsKey(pcm.name))
-                    OnCrewHired(pcm, 0);
-            }
         }
 
         public override void OnSave(ConfigNode node)
@@ -90,6 +87,39 @@ namespace RP0
 
         public void Update()
         {
+            if (HighLogic.CurrentGame == null || HighLogic.CurrentGame.CrewRoster == null)
+                return;
+
+            // Catch earlies
+            if (firstLoad)
+            {
+                firstLoad = false;
+                List<string> newHires = new List<string>();
+
+                foreach (ProtoCrewMember pcm in HighLogic.CurrentGame.CrewRoster.Crew)
+                {
+                    if ((pcm.rosterStatus == ProtoCrewMember.RosterStatus.Assigned || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available) && !kerbalRetireTimes.ContainsKey(pcm.name))
+                    {
+                        newHires.Add(pcm.name);
+                        OnCrewHired(pcm, int.MinValue);
+                    }
+                }
+                if (newHires.Count > 0)
+                {
+                    string msgStr = "Crew will retire as follows:";
+                    foreach (string s in newHires)
+                        msgStr += "\n" + s + ", no earlier than " + KSPUtil.PrintDate(kerbalRetireTimes[s], false);
+
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                                        new Vector2(0.5f, 0.5f),
+                                                        "Initial Retirement Date",
+                                                        msgStr,
+                                                        "OK",
+                                                        false,
+                                                        HighLogic.UISkin);
+                }
+            }
+
             // Retirements
             double time = Planetarium.GetUniversalTime();
             foreach (KeyValuePair<string, double> kvp in kerbalRetireTimes)
@@ -340,13 +370,16 @@ namespace RP0
         {
             double retireTime = Planetarium.GetUniversalTime() + GetServiceTime(pcm);
             kerbalRetireTimes[pcm.name] = retireTime;
-            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                                    new Vector2(0.5f, 0.5f),
-                                                    "Crew Retirement Date",
-                                                    pcm.name + " will retire no earlier than " + KSPUtil.PrintDate(retireTime, false),
-                                                    "OK",
-                                                    false,
-                                                    HighLogic.UISkin);
+            if (idx != int.MinValue)
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                                        new Vector2(0.5f, 0.5f),
+                                                        "Initial Retirement Date",
+                                                        pcm.name + " will retire no earlier than " + KSPUtil.PrintDate(retireTime, false),
+                                                        "OK",
+                                                        false,
+                                                        HighLogic.UISkin);
+            }
 
         }
 

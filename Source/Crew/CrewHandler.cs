@@ -67,6 +67,12 @@ namespace RP0
             retirees.Clear();
             foreach (ConfigNode.Value v in node.GetNode("RETIREES").values)
                 retirees.Add(v.value);
+
+            foreach (ProtoCrewMember pcm in HighLogic.CurrentGame.CrewRoster.Crew)
+            {
+                if ((pcm.rosterStatus == ProtoCrewMember.RosterStatus.Assigned || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available) && !kerbalRetireTimes.ContainsKey(pcm.name))
+                    OnCrewHired(pcm, 0);
+            }
         }
 
         public override void OnSave(ConfigNode node)

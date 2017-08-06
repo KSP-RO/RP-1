@@ -9,29 +9,29 @@ namespace RP0
 {
     public class ToolingDiameter
     {
-        public double diameter;
+        public float diameter;
 
-        public List<double> lengths;
+        public List<float> lengths;
 
-        public ToolingDiameter(double d)
+        public ToolingDiameter(float d)
         {
             diameter = d;
-            lengths = new List<double>();
+            lengths = new List<float>();
         }
 
-        public ToolingDiameter(double d, double l)
+        public ToolingDiameter(float d, float l)
         {
             diameter = d;
-            lengths = new List<double>();
+            lengths = new List<float>();
             lengths.Add(l);
         }
     }
     public class ToolingDatabase
     {
-        protected static double comparisonEpsilonHigh = 1.04d;
-        protected static double comparisonEpsilonLow = 0.96d;
+        protected static float comparisonEpsilonHigh = 1.04f;
+        protected static float comparisonEpsilonLow = 0.96f;
 
-        protected static int EpsilonCompare(double a, double b)
+        protected static int EpsilonCompare(float a, float b)
         {
             if (a > b * comparisonEpsilonLow && a < b * comparisonEpsilonHigh)
                 return 0;
@@ -41,7 +41,7 @@ namespace RP0
 
         protected static Dictionary<string, List<ToolingDiameter>> toolings = new Dictionary<string, List<ToolingDiameter>>();
 
-        protected static int DiamIndex(double diam, List<ToolingDiameter> lst, out int min)
+        protected static int DiamIndex(float diam, List<ToolingDiameter> lst, out int min)
         {
             min = 0;
             int max = lst.Count - 1;
@@ -68,7 +68,7 @@ namespace RP0
             return -1;
         }
 
-        protected static int LengthIndex(double length, List<double> lst, out int min)
+        protected static int LengthIndex(float length, List<float> lst, out int min)
         {
             min = 0;
             int max = lst.Count - 1;
@@ -102,7 +102,7 @@ namespace RP0
             Full = 2
         };
 
-        public static ToolingLevel HasTooling(string type, double diam, double len)
+        public static ToolingLevel HasTooling(string type, float diam, float len)
         {
             //Debug.Log("[Tooling]: Looking for " + type + ", " + diam + " x " + len);
 
@@ -137,7 +137,7 @@ namespace RP0
             return ToolingLevel.None;
         }
 
-        public static bool UnlockTooling(string type, double diam, double len)
+        public static bool UnlockTooling(string type, float diam, float len)
         {
             //Debug.Log("[Tooling]: Purchasing " + type + ", " + diam + " x " + len);
 
@@ -195,7 +195,7 @@ namespace RP0
 
                 foreach (ConfigNode n in c.GetNodes("DIAMETER"))
                 {
-                    double tmp = 0d;
+                    float tmp = 0f;
                     if (!n.TryGetValue("diameter", ref tmp))
                         continue;
 
@@ -204,7 +204,7 @@ namespace RP0
                     ConfigNode len = n.GetNode("LENGTHS");
                     if (len != null)
                         foreach (ConfigNode.Value v in len.values)
-                            if (double.TryParse(v.value, out tmp))
+                            if (float.TryParse(v.value, out tmp))
                                 d.lengths.Add(tmp);
 
                     lst.Add(d);

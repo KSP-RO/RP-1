@@ -52,6 +52,8 @@
     <Compile Include="ModuleTag\DecreaseB.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />
     <Compile Include="ModuleTag\Decoupler.cs" />
+    <Compile Include="ModuleTag\TankServiceModule.cs" />
+    <Compile Include="ModuleTag\TankBalloon.cs" />
     <Compile Include="ModuleTag\Habitable.cs" />
     <Compile Include="ModuleTag\DecreaseA.cs" />
     <Compile Include="ModuleTag\Toxic.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="ProceduralAvionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tooling\ModuleTooling.cs" />
+    <Compile Include="Tooling\ModuleToolingGeneric.cs" />
     <Compile Include="Tooling\ToolingDatabase.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />

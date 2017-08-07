@@ -24,7 +24,6 @@ namespace RP0
 
         protected int countAvailable, countAssigned, countKIA;
 
-        [KSPField(isPersistant = true)]
         public bool firstLoad = true;
 
         #region Instance

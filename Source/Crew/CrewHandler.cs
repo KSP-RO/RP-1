@@ -284,7 +284,7 @@ namespace RP0
                     }
                 }
                 double multiplier = 1d;
-                double constant = 0d;
+                double constant = 0.5d;
                 if (hasSpace)
                 {
                     multiplier += 2d;

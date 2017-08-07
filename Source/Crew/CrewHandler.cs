@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using KSP;
 using UnityEngine;
+using System.Reflection;
 
 namespace RP0
 {
@@ -24,7 +25,9 @@ namespace RP0
 
         protected int countAvailable, countAssigned, countKIA;
 
-        public bool firstLoad = true;
+        protected bool firstLoad = true;
+
+        protected FieldInfo cliTooltip;
 
         #region Instance
 
@@ -56,6 +59,8 @@ namespace RP0
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Add(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
+
+            cliTooltip = typeof(KSP.UI.CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         public override void OnLoad(ConfigNode node)
@@ -160,11 +165,11 @@ namespace RP0
 
 
             // UI fixing
-            /*if (inAC)
+            if (inAC)
             {
                 if (astronautComplex == null)
                 {
-                    KSP.UI.Screens.AstronautComplex[] mbs = Resources.FindObjectsOfTypeAll<KSP.UI.Screens.AstronautComplex>();
+                    KSP.UI.Screens.AstronautComplex[] mbs = GameObject.FindObjectsOfType<KSP.UI.Screens.AstronautComplex>();
                     int maxCount = -1;
                     foreach (KSP.UI.Screens.AstronautComplex c in mbs)
                     {
@@ -193,15 +198,45 @@ namespace RP0
                         KSP.UI.CrewListItem cli = u.listItem.GetComponent<KSP.UI.CrewListItem>();
                         if (cli != null)
                         {
-                            ProtoCrewMember pcm = cli.GetCrewRef();
-                            double retTime;
-                            if(kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
+                            AddRetireTime(cli);
+                        }
+                    }
+
+                    foreach (KSP.UI.UIListData<KSP.UI.UIListItem> u in astronautComplex.ScrollListAssigned)
+                    {
+                        KSP.UI.CrewListItem cli = u.listItem.GetComponent<KSP.UI.CrewListItem>();
+                        if (cli != null)
+                        {
+                            AddRetireTime(cli);
+                        }
+                    }
+
+                    foreach (KSP.UI.UIListData<KSP.UI.UIListItem> u in astronautComplex.ScrollListKia)
+                    {
+                        KSP.UI.CrewListItem cli = u.listItem.GetComponent<KSP.UI.CrewListItem>();
+                        if (cli != null)
+                        {
+                            if (retirees.Contains(cli.GetName()))
                             {
-                                cli.SetTooltip(
+                                cli.SetLabel("Retired");
+                                cli.MouseoverEnabled = false;
+                            }
                         }
                     }
                 }
-            }*/
+            }
+        }
+
+        protected void AddRetireTime(KSP.UI.CrewListItem cli)
+        {
+            ProtoCrewMember pcm = cli.GetCrewRef();
+            double retTime;
+            if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
+            {
+                cli.SetTooltip(pcm);
+                KSP.UI.TooltipTypes.TooltipController_CrewAC ttc = cliTooltip.GetValue(cli) as KSP.UI.TooltipTypes.TooltipController_CrewAC;
+                ttc.descriptionString += "\n\nRetires no earlier than " + KSPUtil.PrintDate(retTime, false);
+            }
         }
 
         public void OnDestroy()

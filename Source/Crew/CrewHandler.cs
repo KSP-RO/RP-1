@@ -117,7 +117,8 @@ namespace RP0
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                         new Vector2(0.5f, 0.5f),
                                                         "Initial Retirement Date",
-                                                        msgStr,
+                                                        msgStr
+                                                        + "\n(Retirement will be delayed the more intersting flights they fly.)",
                                                         "OK",
                                                         false,
                                                         HighLogic.UISkin);
@@ -227,18 +228,6 @@ namespace RP0
             }
         }
 
-        protected void AddRetireTime(KSP.UI.CrewListItem cli)
-        {
-            ProtoCrewMember pcm = cli.GetCrewRef();
-            double retTime;
-            if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
-            {
-                cli.SetTooltip(pcm);
-                KSP.UI.TooltipTypes.TooltipController_CrewAC ttc = cliTooltip.GetValue(cli) as KSP.UI.TooltipTypes.TooltipController_CrewAC;
-                ttc.descriptionString += "\n\nRetires no earlier than " + KSPUtil.PrintDate(retTime, false);
-            }
-        }
-
         public void OnDestroy()
         {
             GameEvents.OnVesselRecoveryRequested.Remove(VesselRecoveryRequested);
@@ -263,7 +252,7 @@ namespace RP0
             astronautComplex = null;
         }
 
-        public void VesselRecoveryRequested(Vessel v)
+        protected void VesselRecoveryRequested(Vessel v)
         {
             double elapsedTime = v.missionTime;
             List<string> retirementChanges = new List<string>();
@@ -409,7 +398,8 @@ namespace RP0
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                         new Vector2(0.5f, 0.5f),
                                                         "Initial Retirement Date",
-                                                        pcm.name + " will retire no earlier than " + KSPUtil.PrintDate(retireTime, false),
+                                                        pcm.name + " will retire no earlier than " + KSPUtil.PrintDate(retireTime, false)
+                                                        + "\n(Retirement will be delayed the more intersting flights they fly.)",
                                                         "OK",
                                                         false,
                                                         HighLogic.UISkin);
@@ -420,6 +410,18 @@ namespace RP0
         protected double GetServiceTime(ProtoCrewMember pcm)
         {
             return 86400d * 365d * (5d + pcm.courage * 3d + (1d - pcm.stupidity));
+        }
+
+        protected void AddRetireTime(KSP.UI.CrewListItem cli)
+        {
+            ProtoCrewMember pcm = cli.GetCrewRef();
+            double retTime;
+            if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
+            {
+                cli.SetTooltip(pcm);
+                KSP.UI.TooltipTypes.TooltipController_CrewAC ttc = cliTooltip.GetValue(cli) as KSP.UI.TooltipTypes.TooltipController_CrewAC;
+                ttc.descriptionString += "\n\nRetires no earlier than " + KSPUtil.PrintDate(retTime, false);
+            }
         }
 
         #endregion

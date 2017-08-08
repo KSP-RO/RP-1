@@ -13,10 +13,14 @@ namespace RP0
     {
         #region Fields
 
-        protected double nextUpdate = -1d;
-        protected double lastUpdate = 0d;
+        [KSPField(isPersistant = true)]
+        public double nextUpdate = -1d;
+        [KSPField(isPersistant = true)]
+        public double lastUpdate = 0d;
+
         protected double updateInterval = 3600d;
-        protected bool wasWarpingHigh = false;
+
+        protected bool wasWarpingHigh = true;
 
         public double kctBuildRate = 0;
         public double kctResearcRate = 0;

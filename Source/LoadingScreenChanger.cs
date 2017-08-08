@@ -59,7 +59,7 @@ namespace RP0
                 }
             }
             int tC = textures.Count;
-            float screenTime = 180f / (float)tC;
+            float screenTime = Mathf.Round(180f / (float)tC);
             System.Random random = new System.Random();
             if (tC > 0)
             {
@@ -82,7 +82,7 @@ namespace RP0
                 }
 
                 origState.screens = new Texture2D[] { textures[0] };
-                origState.displayTime = 2400f;
+                origState.displayTime = screenTime;
 
                 LoadingScreen.Instance.Screens[LoadingScreen.Instance.Screens.Count - 1].displayTime = 2400f;
 

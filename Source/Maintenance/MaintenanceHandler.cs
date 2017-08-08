@@ -34,8 +34,8 @@ namespace RP0
         public int[] kctPadCounts = new int[10];
 
         protected double facilityLevelCostMult = 0.00001d;
-        protected double kctBPMult = 2740d;
-        protected double kctResearchMult = 50000000d / 86400d;
+        protected double kctBPMult = 20d;
+        protected double kctResearchMult = 150d * 86400d;
         protected double nautYearlyUpkeepAdd = 5000d;
         protected double nautYearlyUpkeepBase = 500d;
 
@@ -164,7 +164,7 @@ namespace RP0
                 * (nautYearlyUpkeepBase
                 + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)
                     * nautYearlyUpkeepAdd))
-                * (1d / (86400d * 365d));
+                * (1d / 365d);
 
             double kctBPUpkeep = kctBuildRate * kctBPMult;
             double kctRDUpkeep = kctResearcRate * kctResearchMult;

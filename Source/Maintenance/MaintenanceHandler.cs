@@ -15,6 +15,7 @@ namespace RP0
 
         [KSPField(isPersistant = true)]
         public double nextUpdate = -1d;
+
         [KSPField(isPersistant = true)]
         public double lastUpdate = 0d;
 
@@ -69,9 +70,9 @@ namespace RP0
 
         public void Update()
         {
-            if (HighLogic.CurrentGame == null || !FlightGlobals.ready)
+            if (HighLogic.CurrentGame == null)
                 return;
-
+            
             if (skipOne)
             {
                 skipOne = false;
@@ -83,12 +84,13 @@ namespace RP0
                 skipTwo = false;
                 return;
             }
+
             if (skipThree)
             {
                 skipThree = false;
                 return;
             }
-
+            
             if (facilityLevels.Count == 0)
             {
                 foreach (Upgradeables.UpgradeableFacility facility in GameObject.FindObjectsOfType<Upgradeables.UpgradeableFacility>())
@@ -107,7 +109,7 @@ namespace RP0
                 else
                     return;
             }
-
+            
             Upgradeables.UpgradeableFacility.UpgradeLevel[] levels;
             double facilityUpkeep = 0d;
 
@@ -178,6 +180,7 @@ namespace RP0
             if (TimeWarp.CurrentRate <= 100f)
             {
                 wasWarpingHigh = false;
+
                 if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
@@ -185,8 +188,8 @@ namespace RP0
                                                         "Maintenance",
                                                         "We are paying the following maintenance costs per day/year:\nFacilities: "
                                                         + facilityUpkeep.ToString("N0") + "/" + (facilityUpkeep * 365d).ToString("N0")
-                                                        + "\nIntegration / Pad Support Teams: " + (kctBPUpkeep).ToString("N0") + "/" + (kctBPUpkeep*365d).ToString("N0")
-                                                        + "\nResarch Teams:" + (kctRDUpkeep).ToString("N0") + "/" + (kctRDUpkeep* 365d).ToString("N0")
+                                                        + "\nIntegration / Pad Support Teams: " + (kctBPUpkeep).ToString("N0") + "/" + (kctBPUpkeep*365d).ToString("N0") + " - BP/s " + kctBuildRate.ToString("N3")
+                                                        + "\nResarch Teams:" + (kctRDUpkeep).ToString("N0") + "/" + (kctRDUpkeep* 365d).ToString("N0") + " - R/s " + kctResearcRate.ToString()
                                                         + "\nAstronauts:" + (nautUpkeep).ToString("N0") + "/" + (nautUpkeep* 365d).ToString("N0"),
                                                         "OK",
                                                         true,

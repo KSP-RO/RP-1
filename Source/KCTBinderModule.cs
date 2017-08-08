@@ -22,7 +22,7 @@ namespace RP0
 
         protected void Update()
         {
-            if (HighLogic.CurrentGame == null || !FlightGlobals.ready)
+            if (HighLogic.CurrentGame == null || KerbalConstructionTime.KerbalConstructionTime.instance == null)
                 return;
 
             if (skipOne)
@@ -36,9 +36,6 @@ namespace RP0
                 skipTwo = false;
                 return;
             }
-
-            if (KerbalConstructionTime.KerbalConstructionTime.instance == null)
-                return;
 
             if (MaintenanceHandler.Instance == null)
                 return;

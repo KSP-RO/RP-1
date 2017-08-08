@@ -59,7 +59,7 @@ namespace RP0
                 }
             }
             int tC = textures.Count;
-            float screenTime = Mathf.Round(240f / tC);
+            float screenTime = 180f / (float)tC;
             System.Random random = new System.Random();
             if (tC > 0)
             {

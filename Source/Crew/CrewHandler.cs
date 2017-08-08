@@ -153,7 +153,7 @@ namespace RP0
                         {
                             toRemove.Add(kvp.Key);
                             retirees.Add(kvp.Key);
-                            pcm.rosterStatus = ProtoCrewMember.RosterStatus.Missing;
+                            pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
 
 
                             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),

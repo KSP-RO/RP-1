@@ -355,7 +355,7 @@ namespace RP0
                 double retTime;
                 if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
                 {
-                    double offset = constant * 86400d * 100d / (1 + curFlight * curFlight);
+                    double offset = constant * 86400d * 100d / (1 + curFlight * curFlight) * (0.8d + (1d - pcm.stupidity) * 0.6d);
                     if (offset > 0d)
                     {
                         retTime += offset;

@@ -16,10 +16,26 @@ namespace RP0
         protected double nextTime = -1d;
         protected double checkInterval = 0.5d;
         protected int[] padCounts = new int[10];
+
+        protected bool skipOne = true;
+        protected bool skipTwo = true;
+
         protected void Update()
         {
-            if (HighLogic.CurrentGame == null)
+            if (HighLogic.CurrentGame == null || !FlightGlobals.ready)
                 return;
+
+            if (skipOne)
+            {
+                skipOne = false;
+                return;
+            }
+
+            if (skipTwo)
+            {
+                skipTwo = false;
+                return;
+            }
 
             if (KerbalConstructionTime.KerbalConstructionTime.instance == null)
                 return;

@@ -20,7 +20,13 @@ namespace RP0
 
         protected double updateInterval = 3600d;
 
-        protected bool wasWarpingHigh = true;
+        protected bool wasWarpingHigh = false;
+
+        protected static bool firstLoad = true;
+
+        protected bool skipOne = true;
+        protected bool skipTwo = true;
+        protected bool skipThree = true;
 
         public double kctBuildRate = 0;
         public double kctResearcRate = 0;
@@ -63,8 +69,25 @@ namespace RP0
 
         public void Update()
         {
-            if (HighLogic.CurrentGame == null)
+            if (HighLogic.CurrentGame == null || !FlightGlobals.ready)
                 return;
+
+            if (skipOne)
+            {
+                skipOne = false;
+                return;
+            }
+
+            if (skipTwo)
+            {
+                skipTwo = false;
+                return;
+            }
+            if (skipThree)
+            {
+                skipThree = false;
+                return;
+            }
 
             if (facilityLevels.Count == 0)
             {
@@ -79,6 +102,8 @@ namespace RP0
             {
                 if (wasWarpingHigh && TimeWarp.CurrentRate <= 100f)
                     wasWarpingHigh = false;
+                else if (firstLoad)
+                    firstLoad = false;
                 else
                     return;
             }

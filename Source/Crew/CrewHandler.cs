@@ -29,6 +29,9 @@ namespace RP0
 
         protected FieldInfo cliTooltip;
 
+        protected double nextUpdate = -1d;
+        protected double updateInterval = 1d;
+
         #region Instance
 
         private static CrewHandler _instance = null;
@@ -127,43 +130,47 @@ namespace RP0
 
             // Retirements
             double time = Planetarium.GetUniversalTime();
-            foreach (KeyValuePair<string, double> kvp in kerbalRetireTimes)
+            if (nextUpdate < time)
             {
-                ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[kvp.Key];
-                if(pcm == null)
-                    toRemove.Add(kvp.Key);
-                else
+                nextUpdate = time + updateInterval;
+
+                foreach (KeyValuePair<string, double> kvp in kerbalRetireTimes)
                 {
-                    if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Available)
-                    {
-                        if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Assigned)
-                            toRemove.Add(kvp.Key);
-
-                        continue;
-                    }
-
-                    if (time > kvp.Value)
-                    {
+                    ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[kvp.Key];
+                    if (pcm == null)
                         toRemove.Add(kvp.Key);
-                        retirees.Add(kvp.Key);
-                        pcm.rosterStatus = ProtoCrewMember.RosterStatus.Missing;
+                    else
+                    {
+                        if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Available)
+                        {
+                            if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Assigned)
+                                toRemove.Add(kvp.Key);
+
+                            continue;
+                        }
+
+                        if (time > kvp.Value)
+                        {
+                            toRemove.Add(kvp.Key);
+                            retirees.Add(kvp.Key);
+                            pcm.rosterStatus = ProtoCrewMember.RosterStatus.Missing;
 
 
-                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                                    new Vector2(0.5f, 0.5f),
-                                                    "Crew Retirement",
-                                                    kvp.Key + " has retired.",
-                                                    "OK",
-                                                    true,
-                                                    HighLogic.UISkin);
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                                        new Vector2(0.5f, 0.5f),
+                                                        "Crew Retirement",
+                                                        kvp.Key + " has retired.",
+                                                        "OK",
+                                                        true,
+                                                        HighLogic.UISkin);
+                        }
                     }
                 }
+                foreach (string s in toRemove)
+                    kerbalRetireTimes.Remove(s);
+
+                toRemove.Clear();
             }
-            foreach (string s in toRemove)
-                kerbalRetireTimes.Remove(s);
-
-            toRemove.Clear();
-
 
             // UI fixing
             if (inAC)

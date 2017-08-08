@@ -67,6 +67,13 @@ namespace RP0
                 Debug.LogError("[RP-0]: No screens found in RP-0/PluginData/Screens!");
             }
 
+            // Try to jigger the unity random thing.
+
+            for (int i = (int)((new System.Random()).NextDouble() * 100d); i-- > 0;)
+            {
+                UnityEngine.Random.Range(0, 10);
+            }
+
             GameObject.Destroy(this);
 
             done = true;

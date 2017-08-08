@@ -23,7 +23,7 @@ namespace RP0
         public int[] kctPadCounts = new int[10];
 
         protected double facilityLevelCostMult = 0.00001d;
-        protected double kctBPMult = 1000000d;
+        protected double kctBPMult = 2740d;
         protected double kctResearchMult = 50000000d / 86400d;
         protected double nautYearlyUpkeepAdd = 5000d;
         protected double nautYearlyUpkeepBase = 500d;

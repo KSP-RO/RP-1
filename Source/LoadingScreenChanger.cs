@@ -10,10 +10,18 @@ using System.Reflection;
 
 namespace RP0
 {
+    public class DummyLoadingSystem : LoadingSystem
+    {
+        public override bool IsReady()
+        {
+            return true;
+        }
+    }
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     class LoadingScreenChanger : MonoBehaviour
     {
-        bool done = false;
+        protected bool done = false;
+
         protected void Awake()
         {
             DontDestroyOnLoad(this);
@@ -29,9 +37,7 @@ namespace RP0
 
             Debug.Log("[RP-0]: Replacing loading screens.");
 
-            LoadingScreen.LoadingScreenState state = LoadingScreen.Instance.Screens[1];
-            DatabaseLoaderTexture_DDS loader = new DatabaseLoaderTexture_DDS();
-            MethodInfo reader = typeof(DatabaseLoaderTexture_DDS).GetMethod("Read", BindingFlags.NonPublic | BindingFlags.Instance);
+            LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[1];
 
             List<Texture2D> textures = new List<Texture2D>();
             DirectoryInfo di = new DirectoryInfo(KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Screens");
@@ -52,13 +58,35 @@ namespace RP0
                     }
                 }
             }
-            if (textures.Count > 0)
+            int tC = textures.Count;
+            float screenTime = Mathf.Round(240f / tC);
+            System.Random random = new System.Random();
+            if (tC > 0)
             {
-                state.screens = textures.ToArray();
+                for (int i = tC - 1; i-- > 0;)
+                {
+                    int idx = random.Next(0, textures.Count);
+                    LoadingScreen.LoadingScreenState state = new LoadingScreen.LoadingScreenState();
+                    state.fadeInTime = origState.fadeInTime;
+                    state.fadeOutTime = origState.fadeOutTime;
+                    state.displayTime = screenTime;
+                    state.tips = origState.tips;
+                    state.tipTime = origState.tipTime;
+                    state.screens = new Texture2D[] { textures[idx] };
+
+                    LoadingScreen.Instance.Screens.Add(state);
+
+                    textures.RemoveAt(idx);
+
+                    LoadingScreen.Instance.loaders.Add(LoadingScreen.Instance.gameObject.AddComponent<DummyLoadingSystem>());
+                }
+
+                origState.screens = new Texture2D[] { textures[0] };
+                origState.displayTime = 2400f;
+
+                LoadingScreen.Instance.Screens[LoadingScreen.Instance.Screens.Count - 1].displayTime = 2400f;
 
                 string msgStr = "[RP-0]: Loading screens replaced.";
-                foreach (Texture2D t in state.screens)
-                    msgStr += "\n" + t.name;
 
                 Debug.Log(msgStr);
             }

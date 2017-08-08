@@ -33,9 +33,9 @@ namespace RP0
         public double kctResearcRate = 0;
         public int[] kctPadCounts = new int[10];
 
-        protected double facilityLevelCostMult = 0.00001d;
+        protected double facilityLevelCostMult = 0.0000005d;
         protected double kctBPMult = 20d;
-        protected double kctResearchMult = 150d * 86400d;
+        protected double kctResearchMult = 100d * 86400d;
         protected double nautYearlyUpkeepAdd = 5000d;
         protected double nautYearlyUpkeepBase = 500d;
 
@@ -186,11 +186,11 @@ namespace RP0
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                         new Vector2(0.5f, 0.5f),
                                                         "Maintenance",
-                                                        "We are paying the following maintenance costs per day/year:\nFacilities: "
-                                                        + facilityUpkeep.ToString("N0") + "/" + (facilityUpkeep * 365d).ToString("N0")
-                                                        + "\nIntegration / Pad Support Teams: " + (kctBPUpkeep).ToString("N0") + "/" + (kctBPUpkeep*365d).ToString("N0") + " - BP/s " + kctBuildRate.ToString("N3")
-                                                        + "\nResarch Teams:" + (kctRDUpkeep).ToString("N0") + "/" + (kctRDUpkeep* 365d).ToString("N0") + " - R/s " + kctResearcRate.ToString()
-                                                        + "\nAstronauts:" + (nautUpkeep).ToString("N0") + "/" + (nautUpkeep* 365d).ToString("N0"),
+                                                        "We are paying the following maintenance costs per day/year:\nFacilities:                                  "
+                                                        + facilityUpkeep.ToString("N0") + " / " + (facilityUpkeep * 365d).ToString("N0")
+                                                        + "\nIntegration / Launch Teams: " + (kctBPUpkeep).ToString("N0") + " / " + (kctBPUpkeep*365d).ToString("N0")
+                                                        + "\nResarch Teams:                       " + (kctRDUpkeep).ToString("N0") + " / " + (kctRDUpkeep* 365d).ToString("N0")
+                                                        + "\nAstronauts:                             " + (nautUpkeep).ToString("N0") + " / " + (nautUpkeep* 365d).ToString("N0"),
                                                         "OK",
                                                         true,
                                                         HighLogic.UISkin);

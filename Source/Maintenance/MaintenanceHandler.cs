@@ -29,17 +29,18 @@ namespace RP0
         protected bool skipTwo = true;
         protected bool skipThree = true;
 
-        public double kctBuildRate = 0;
-        public double kctResearcRate = 0;
-        public int[] kctPadCounts = new int[10];
+        public double kctResearchRate = 0;
+        public const int padLevels = 10;
+        public int[] kctPadCounts = new int[padLevels];
 
-        protected double facilityLevelCostMult = 0.0000005d;
-        protected double kctBPMult = 20d;
+        public double facilityLevelCostMult = 0.0000005d;
+        public double kctBPMult = 20d;
         protected double kctResearchMult = 100d * 86400d;
         protected double nautYearlyUpkeepAdd = 5000d;
         protected double nautYearlyUpkeepBase = 500d;
 
         protected Dictionary<SpaceCenterFacility, Upgradeables.UpgradeableFacility.UpgradeLevel[]> facilityLevels = new Dictionary<SpaceCenterFacility, Upgradeables.UpgradeableFacility.UpgradeLevel[]>();
+        public Dictionary<string, double> kctBuildRates = new Dictionary<string, double>();
 
         #region Instance
 
@@ -56,6 +57,30 @@ namespace RP0
 
         #endregion
 
+        #region Component costs
+
+        public double[] padCosts = new double[padLevels];
+        public double padCost = 0d;
+        public double runwayCost = 0d;
+        public double vabCost = 0d;
+        public double sphCost = 0d;
+        public double rndCost = 0d;
+        public double mcCost = 0d;
+        public double tsCost = 0d;
+        public double acCost = 0d;
+        public double facilityUpkeep { get {
+            return padCost + runwayCost + vabCost + sphCost + rndCost + mcCost + tsCost + acCost;
+        }}
+        public double integrationUpkeep { get {
+            return kctBuildRates.Values.Sum() * kctBPMult;
+        }}
+        public double researchUpkeep = 0d;
+        public double nautYearlyUpkeep = 0d;
+        public double nautUpkeep = 0d;
+        public double totalUpkeep = 0d;
+
+        #endregion
+
         #region Overrides and Monobehaviour methods
 
         public override void OnAwake()
@@ -66,6 +91,64 @@ namespace RP0
                 GameObject.Destroy(_instance);
             }
             _instance = this;
+        }
+
+        public void updateUpkeep()
+        {
+            Upgradeables.UpgradeableFacility.UpgradeLevel[] levels;
+
+            // Pad
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.LaunchPad, out levels))
+            {
+                if (kctResearchRate > 0d)
+                {
+                    int lC = levels.Length;
+                    for (int i = 0; i < padLevels; i++)
+                    {
+                        padCosts[i] = 0d;
+                        if (i < lC)
+                            padCosts[i] = facilityLevelCostMult * kctPadCounts[i] * levels[i].levelCost;
+                    }
+                    padCost = padCosts.Sum();
+                }
+                else
+                    padCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (levels.Length + 0.05f))].levelCost;
+            }
+
+            // Runway
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.Runway, out levels))
+                runwayCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (levels.Length + 0.05f))].levelCost;
+
+            //VAB
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out levels))
+                vabCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (levels.Length + 0.05f))].levelCost;
+
+            //SPH
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out levels))
+                sphCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (levels.Length + 0.05f))].levelCost;
+
+            //RnD
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out levels))
+                rndCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (levels.Length + 0.05f))].levelCost;
+
+            // MC
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.MissionControl, out levels))
+                mcCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (levels.Length + 0.05f))].levelCost;
+
+            // TS
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.TrackingStation, out levels))
+                tsCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (levels.Length + 0.05f))].levelCost;
+            
+            // AC
+            if (facilityLevels.TryGetValue(SpaceCenterFacility.AstronautComplex, out levels))
+                acCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (levels.Length + 0.05f))].levelCost;
+
+            nautYearlyUpkeep = nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * nautYearlyUpkeepAdd);
+            nautUpkeep = HighLogic.CurrentGame.CrewRoster.GetActiveCrewCount() * nautYearlyUpkeep * (1d / 365d);
+
+            researchUpkeep = kctResearchRate * kctResearchMult;
+
+            totalUpkeep = facilityUpkeep + integrationUpkeep + researchUpkeep + nautUpkeep;
         }
 
         public void Update()
@@ -110,66 +193,7 @@ namespace RP0
                     return;
             }
             
-            Upgradeables.UpgradeableFacility.UpgradeLevel[] levels;
-            double facilityUpkeep = 0d;
-
-            // Pad
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.LaunchPad, out levels))
-            {
-                if (kctResearcRate > 0d)
-                {
-                    int lC = levels.Length - 1;
-                    for (int i = kctPadCounts.Length; i-- > 0;)
-                    {
-                        if (i > lC)
-                            continue;
-
-                        facilityUpkeep += facilityLevelCostMult * levels[i].levelCost;
-                    }
-                }
-                else
-                    facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (levels.Length + 0.05f))].levelCost;
-            }
-
-            // Runway
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.Runway, out levels))
-                facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (levels.Length + 0.05f))].levelCost;
-
-            //VAB
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out levels))
-                facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (levels.Length + 0.05f))].levelCost;
-
-            //SPH
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out levels))
-                facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (levels.Length + 0.05f))].levelCost;
-
-            //RnD
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out levels))
-                facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (levels.Length + 0.05f))].levelCost;
-
-            // MC
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.MissionControl, out levels))
-                facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (levels.Length + 0.05f))].levelCost;
-
-            // TS
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.TrackingStation, out levels))
-                facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (levels.Length + 0.05f))].levelCost;
-            
-            // AC
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.AstronautComplex, out levels))
-                facilityUpkeep += facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (levels.Length + 0.05f))].levelCost;
-
-
-            double nautUpkeep = HighLogic.CurrentGame.CrewRoster.GetActiveCrewCount()
-                * (nautYearlyUpkeepBase
-                + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)
-                    * nautYearlyUpkeepAdd))
-                * (1d / 365d);
-
-            double kctBPUpkeep = kctBuildRate * kctBPMult;
-            double kctRDUpkeep = kctResearcRate * kctResearchMult;
-
-            double totalUpkeep = facilityUpkeep + kctBPUpkeep + kctRDUpkeep + nautUpkeep;
+            updateUpkeep();
 
             double timePassed = time - lastUpdate;
 
@@ -188,8 +212,8 @@ namespace RP0
                                                         "Maintenance",
                                                         "We are paying the following maintenance costs per day/year:\nFacilities:                                  "
                                                         + facilityUpkeep.ToString("N0") + " / " + (facilityUpkeep * 365d).ToString("N0")
-                                                        + "\nIntegration / Launch Teams: " + (kctBPUpkeep).ToString("N0") + " / " + (kctBPUpkeep*365d).ToString("N0")
-                                                        + "\nResarch Teams:                       " + (kctRDUpkeep).ToString("N0") + " / " + (kctRDUpkeep* 365d).ToString("N0")
+                                                        + "\nIntegration / Launch Teams: " + (integrationUpkeep).ToString("N0") + " / " + (integrationUpkeep*365d).ToString("N0")
+                                                        + "\nResarch Teams:                       " + (researchUpkeep).ToString("N0") + " / " + (researchUpkeep* 365d).ToString("N0")
                                                         + "\nAstronauts:                             " + (nautUpkeep).ToString("N0") + " / " + (nautUpkeep* 365d).ToString("N0"),
                                                         "OK",
                                                         true,

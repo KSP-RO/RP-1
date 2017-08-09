@@ -204,21 +204,6 @@ namespace RP0
             if (TimeWarp.CurrentRate <= 100f)
             {
                 wasWarpingHigh = false;
-
-                if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                                        new Vector2(0.5f, 0.5f),
-                                                        "Maintenance",
-                                                        "We are paying the following maintenance costs per day/year:\nFacilities:                                  "
-                                                        + facilityUpkeep.ToString("N0") + " / " + (facilityUpkeep * 365d).ToString("N0")
-                                                        + "\nIntegration / Launch Teams: " + (integrationUpkeep).ToString("N0") + " / " + (integrationUpkeep*365d).ToString("N0")
-                                                        + "\nResarch Teams:                       " + (researchUpkeep).ToString("N0") + " / " + (researchUpkeep* 365d).ToString("N0")
-                                                        + "\nAstronauts:                             " + (nautUpkeep).ToString("N0") + " / " + (nautUpkeep* 365d).ToString("N0"),
-                                                        "OK",
-                                                        true,
-                                                        HighLogic.UISkin);
-                }
                 nextUpdate = time + updateInterval;
             }
             else

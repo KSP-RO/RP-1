@@ -81,7 +81,10 @@ namespace RP0
         public void OnGUI()
         {
             if (guiEnabled)
+            {
                 windowPos = GUILayout.Window("RP0Maintenance".GetHashCode(), windowPos, DrawWindow, "Maintenance Costs");
+                Crew.CrewHandler.Instance.fsGUI.SetGUIPositions(Crew.CrewHandler.Instance.fsGUI.DrawGUIs);
+            }
         }
 
         private enum tabs { SUMMARY, Facilities, Integration, Astronauts };
@@ -335,6 +338,18 @@ namespace RP0
                 GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.nautUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
             } finally {
+                GUILayout.EndHorizontal();
+            }
+
+            // Training
+            GUILayout.BeginHorizontal();
+            try
+            {
+                if (toggleButton("Training", RP0.Crew.CrewHandler.Instance.fsGUI.showMain))
+                    RP0.Crew.CrewHandler.Instance.fsGUI.showMain = !RP0.Crew.CrewHandler.Instance.fsGUI.showMain;
+            }
+            finally
+            {
                 GUILayout.EndHorizontal();
             }
         }

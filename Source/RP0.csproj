@@ -48,6 +48,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Crew\ActiveCourse.cs" />
+    <Compile Include="Crew\CourseTemplate.cs" />
+    <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
     <Compile Include="Crew\CrewHandler.cs" />
     <Compile Include="LoadingScreenChanger.cs" />

@@ -6,7 +6,7 @@ using KSP;
 using UnityEngine;
 using System.Reflection;
 
-namespace RP0
+namespace RP0.Crew
 {
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class CrewHandler : ScenarioModule
@@ -29,8 +29,21 @@ namespace RP0
 
         protected FieldInfo cliTooltip;
 
-        protected double nextUpdate = -1d;
-        protected double updateInterval = 1d;
+        [KSPField(isPersistant = true)]
+        public double nextUpdate = -1d;
+
+        [KSPField(isPersistant = true)]
+        public double lastUpdate = 0d;
+
+        protected double updateInterval = 86400d;
+
+
+
+        public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
+        public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
+        public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
+
+        public FSGUI fsGUI = new FSGUI();
 
         #region Instance
 
@@ -64,6 +77,9 @@ namespace RP0
             GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
 
             cliTooltip = typeof(KSP.UI.CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            FindAllCourseConfigs(); //find all applicable configs
+            GenerateOfferedCourses(); //turn the configs into offered courses
         }
 
         public override void OnLoad(ConfigNode node)
@@ -77,6 +93,25 @@ namespace RP0
             retirees.Clear();
             foreach (ConfigNode.Value v in node.GetNode("RETIREES").values)
                 retirees.Add(v.value);
+
+            ConfigNode FSData = node.GetNode("FlightSchoolData");
+
+            if (FSData == null)
+                return;
+
+            //load all the active courses
+            ActiveCourses.Clear();
+            foreach (ConfigNode courseNode in FSData.GetNodes("ACTIVE_COURSE"))
+            {
+                try
+                {
+                    ActiveCourses.Add(new ActiveCourse(courseNode));
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+            }
         }
 
         public override void OnSave(ConfigNode node)
@@ -90,6 +125,15 @@ namespace RP0
             n = node.AddNode("RETIREES");
             foreach (string s in retirees)
                 n.AddValue("retiree", s);
+
+            ConfigNode FSData = new ConfigNode("FlightSchoolData");
+            //save all the active courses
+            foreach (ActiveCourse course in ActiveCourses)
+            {
+                ConfigNode courseNode = course.AsConfigNode();
+                FSData.AddNode("ACTIVE_COURSE", courseNode);
+            }
+            node.AddNode("FlightSchoolData", FSData);
         }
 
         public void Update()
@@ -133,6 +177,8 @@ namespace RP0
             if (nextUpdate < time)
             {
                 nextUpdate = time + updateInterval;
+                double delta = time - lastUpdate;
+                lastUpdate = time;
 
                 foreach (KeyValuePair<string, double> kvp in kerbalRetireTimes)
                 {
@@ -149,27 +195,46 @@ namespace RP0
                             continue;
                         }
 
+                        if (pcm.inactive)
+                            continue;
+
                         if (time > kvp.Value)
                         {
                             toRemove.Add(kvp.Key);
                             retirees.Add(kvp.Key);
                             pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
-
-
-                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                                        new Vector2(0.5f, 0.5f),
-                                                        "Crew Retirement",
-                                                        kvp.Key + " has retired.",
-                                                        "OK",
-                                                        true,
-                                                        HighLogic.UISkin);
                         }
                     }
                 }
-                foreach (string s in toRemove)
-                    kerbalRetireTimes.Remove(s);
+                if (toRemove.Count > 0)
+                {
+                    string msgStr = "The following retirements have occurred:\n";
+                    foreach (string s in toRemove)
+                    {
+                        kerbalRetireTimes.Remove(s);
+                        msgStr += "\n" + s;
+                    }
 
-                toRemove.Clear();
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                                        new Vector2(0.5f, 0.5f),
+                                                        "Crew Retirement",
+                                                        msgStr,
+                                                        "OK",
+                                                        true,
+                                                        HighLogic.UISkin);
+
+                    toRemove.Clear();
+                }
+
+                for (int i = 0; i < ActiveCourses.Count; i++)
+                {
+                    ActiveCourse course = ActiveCourses[i];
+                    if (course.ProgressTime(delta)) //returns true when the course completes
+                    {
+                        ActiveCourses.RemoveAt(i);
+                        i--;
+                    }
+                }
             }
 
             // UI fixing
@@ -434,6 +499,33 @@ namespace RP0
                 KSP.UI.TooltipTypes.TooltipController_CrewAC ttc = cliTooltip.GetValue(cli) as KSP.UI.TooltipTypes.TooltipController_CrewAC;
                 ttc.descriptionString += "\n\nRetires no earlier than " + KSPUtil.PrintDate(retTime, false);
             }
+        }
+
+        protected void FindAllCourseConfigs()
+        {
+            CourseTemplates.Clear();
+            //find all configs and save them
+            foreach (ConfigNode course in GameDatabase.Instance.GetConfigNodes("FS_COURSE"))
+            {
+                CourseTemplates.Add(new CourseTemplate(course));
+            }
+            Debug.Log("[FS] Found " + CourseTemplates.Count + " courses.");
+            //fire an event to let other mods add their configs
+        }
+
+        protected void GenerateOfferedCourses() //somehow provide some variable options here?
+        {
+            //convert the saved configs to course offerings
+            foreach (CourseTemplate template in CourseTemplates)
+            {
+                CourseTemplate duplicate = new CourseTemplate(template.sourceNode, true); //creates a duplicate so the initial template is preserved
+                duplicate.PopulateFromSourceNode();
+                if (duplicate.Available)
+                    OfferedCourses.Add(duplicate);
+            }
+
+            Debug.Log("[FS] Offering " + OfferedCourses.Count + " courses.");
+            //fire an event to let other mods add available courses (where they can pass variables through then)
         }
 
         #endregion

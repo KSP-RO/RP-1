@@ -52,6 +52,8 @@
     <Compile Include="Crew\CrewHandler.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="DifficultyPresets.cs" />
+    <Compile Include="Maintenance\MaintenanceWindow.cs" />
+    <Compile Include="ModuleUnpressurizedCockpit.cs" />
     <Compile Include="ModuleTag\DecreaseB.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />
     <Compile Include="ModuleTag\Decoupler.cs" />

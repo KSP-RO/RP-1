@@ -207,6 +207,11 @@ namespace RP0
                         if (cli != null)
                         {
                             AddRetireTime(cli);
+                            if (cli.GetCrewRef().inactive)
+                            {
+                                cli.MouseoverEnabled = false;
+                                cli.SetLabel("Recovering");
+                            }
                         }
                     }
 

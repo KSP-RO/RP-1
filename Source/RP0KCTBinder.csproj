@@ -63,6 +63,7 @@
     </Reference>
     <Reference Include="KerbalConstructionTime">
       <HintPath>..\..\..\..\..\..\Games\RO_122\GameData\KerbalConstructionTime\plugins\KerbalConstructionTime.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>

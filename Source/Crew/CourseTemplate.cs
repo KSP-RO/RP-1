@@ -27,7 +27,7 @@ namespace RP0.Crew
 
         public string[] classes = { }; //which classes can take this course (empty == all)
         public int minLevel = 0; //minimum kerbal level required to take the course
-        public int maxLevel = 5; //max kerbal level allowed to take the course
+        public int maxLevel = 99; //max kerbal level allowed to take the course
 
         public int seatMax = -1; //maximum number of kerbals allowed in the course at once
         public int seatMin = 0; //minimum number of kerbals required to start the course

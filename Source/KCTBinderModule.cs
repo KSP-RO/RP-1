@@ -20,6 +20,28 @@ namespace RP0
         protected bool skipOne = true;
         protected bool skipTwo = true;
 
+        public override void OnAwake()
+        {
+            base.OnAwake();
+
+            KCT_GUI.UseAvailabilityChecker = true;
+            KCT_GUI.AvailabilityChecker = CheckCrewForPart;
+        }
+
+        public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)
+        {
+            if (EntryCostStorage.GetCost(partName) == 1)
+                return true;
+
+            for (int i = pcm.flightLog.Entries.Count; i-- > 0;)
+            {
+                FlightLog.Entry e = pcm.flightLog.Entries[i];
+                if (e.type == "TRAINING_proficiency" && e.target == partName)
+                    return true;
+            }
+            return false;
+        }
+
         protected void Update()
         {
             if (HighLogic.CurrentGame == null || KerbalConstructionTime.KerbalConstructionTime.instance == null)

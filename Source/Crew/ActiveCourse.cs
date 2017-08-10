@@ -10,6 +10,7 @@ namespace RP0.Crew
         public List<ProtoCrewMember> Students = new List<ProtoCrewMember>();
 
         public double elapsedTime = 0;
+        public double startTime = 0d;
         public bool Started = false, Completed = false;
 
 
@@ -30,6 +31,7 @@ namespace RP0.Crew
             ConfigNode node = new ConfigNode("ACTIVE_COURSE");
             node.AddValue("id", id);
             node.AddValue("name", name);
+            node.AddValue("startTime", startTime);
             node.AddValue("elapsedTime", elapsedTime);
             node.AddValue("Started", Started);
             node.AddValue("Completed", Completed);
@@ -45,6 +47,7 @@ namespace RP0.Crew
 
         public void FromConfigNode(ConfigNode node)
         {
+            node.TryGetValue("startTime", ref startTime);
             node.TryGetValue("elapsedTime", ref elapsedTime);
             node.TryGetValue("Started", ref Started);
             node.TryGetValue("Completed", ref Completed);
@@ -103,16 +106,18 @@ namespace RP0.Crew
             RemoveStudent(HighLogic.CurrentGame.CrewRoster[student]);
         }
 
-        public bool ProgressTime(double dT)
+        public bool ProgressTime(double curT)
         {
             if (!Started)
                 return false;
             if (!Completed)
-            { 
-                elapsedTime += dT;
-                Completed = elapsedTime >= time;
+            {
+                UnityEngine.Debug.Log("Course " + id + " applying " + curT);
+                elapsedTime = curT - startTime;
+                Completed = curT > startTime + time;
                 if (Completed) //we finished the course!
                 {
+                    UnityEngine.Debug.Log("Course " + id + " COMPLETE");
                     CompleteCourse();
                 }
             }

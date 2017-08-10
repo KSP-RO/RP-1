@@ -34,7 +34,7 @@ namespace RP0.Crew
 
             GUILayout.BeginVertical(GUILayout.Width(250)); //offered/active list
             int oldStatus = offeredActiveToolbar;
-            offeredActiveToolbar = GUILayout.Toolbar(offeredActiveToolbar, new string[] { "Offered", "Active" });
+            offeredActiveToolbar = GUILayout.Toolbar(offeredActiveToolbar, new string[] { "Proficiencies", "Active Training" });
             if (offeredActiveToolbar != oldStatus)
             {
                 selectedCourse = null;
@@ -44,7 +44,7 @@ namespace RP0.Crew
             {
                 foreach (CourseTemplate template in CrewHandler.Instance.OfferedCourses)
                 {
-                    if (GUILayout.Button(template.id + " - " + template.name))
+                    if (GUILayout.Button(template.name))
                     {
                         selectedCourse = new ActiveCourse(template);
                     }
@@ -54,7 +54,7 @@ namespace RP0.Crew
             {
                 foreach (ActiveCourse course in CrewHandler.Instance.ActiveCourses)
                 {
-                    if (GUILayout.Button(course.id + " - " + course.name)) //show percent complete?
+                    if (GUILayout.Button(course.name)) //show percent complete?
                     {
                         selectedCourse = course;
                     }
@@ -70,7 +70,7 @@ namespace RP0.Crew
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.FlexibleSpace();
-                    GUILayout.Label(selectedCourse.id + " - " + selectedCourse.name);
+                    GUILayout.Label(selectedCourse.name);
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
@@ -144,7 +144,7 @@ namespace RP0.Crew
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.FlexibleSpace();
-                    GUILayout.Label(selectedCourse.id + " - " + selectedCourse.name);
+                    GUILayout.Label(selectedCourse.name);
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 

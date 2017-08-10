@@ -32,10 +32,7 @@ namespace RP0.Crew
         [KSPField(isPersistant = true)]
         public double nextUpdate = -1d;
 
-        [KSPField(isPersistant = true)]
-        public double lastUpdate = 0d;
-
-        protected double updateInterval = 86400d;
+        protected double updateInterval = 3600d;
 
 
 
@@ -75,6 +72,7 @@ namespace RP0.Crew
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Add(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
+            GameEvents.OnPartPurchased.Add(new EventData<AvailablePart>.OnEvent(onPartPurchased));
 
             cliTooltip = typeof(KSP.UI.CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -177,8 +175,6 @@ namespace RP0.Crew
             if (nextUpdate < time)
             {
                 nextUpdate = time + updateInterval;
-                double delta = time - lastUpdate;
-                lastUpdate = time;
 
                 foreach (KeyValuePair<string, double> kvp in kerbalRetireTimes)
                 {
@@ -226,13 +222,12 @@ namespace RP0.Crew
                     toRemove.Clear();
                 }
 
-                for (int i = 0; i < ActiveCourses.Count; i++)
+                for (int i = ActiveCourses.Count; i-- > 0;)
                 {
                     ActiveCourse course = ActiveCourses[i];
-                    if (course.ProgressTime(delta)) //returns true when the course completes
+                    if (course.ProgressTime(time)) //returns true when the course completes
                     {
                         ActiveCourses.RemoveAt(i);
-                        i--;
                     }
                 }
             }
@@ -311,6 +306,7 @@ namespace RP0.Crew
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Remove(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Remove(ACDespawn);
+            GameEvents.OnPartPurchased.Remove(new EventData<AvailablePart>.OnEvent(onPartPurchased));
         }
 
         #endregion
@@ -524,8 +520,43 @@ namespace RP0.Crew
                     OfferedCourses.Add(duplicate);
             }
 
+            foreach (AvailablePart ap in PartLoader.LoadedPartsList)
+            {
+                if (ap.partPrefab.CrewCapacity > 0 /*&& ap.TechRequired != "start"*/)
+                {
+                    if (ResearchAndDevelopment.PartModelPurchased(ap))
+                    {
+                        OfferedCourses.Add(GenerateCourseForPart(ap));
+                    }
+                }
+            }
+
             Debug.Log("[FS] Offering " + OfferedCourses.Count + " courses.");
             //fire an event to let other mods add available courses (where they can pass variables through then)
+        }
+
+        protected CourseTemplate GenerateCourseForPart(AvailablePart ap)
+        {
+            ConfigNode n = new ConfigNode("FS_COURSE");
+            {
+                n.AddValue("id", "prof_" + ap.name);
+                n.AddValue("name", ap.title);
+                n.AddValue("time", 3600d + EntryCostStorage.GetCost(ap.name) * 5177d);
+
+                ConfigNode r = n.AddNode("REWARD");
+                r.AddValue("XPAmt", "1");
+                ConfigNode l = r.AddNode("FLIGHTLOG");
+                l.AddValue("0", "TRAINING_proficiency," + ap.name);
+            }
+            CourseTemplate c = new CourseTemplate(n);
+            c.PopulateFromSourceNode();
+
+            return c;
+        }
+
+        protected void onPartPurchased(AvailablePart ap)
+        {
+            OfferedCourses.Add(GenerateCourseForPart(ap));
         }
 
         #endregion

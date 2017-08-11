@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagGeiger : ModuleTag
+    public class ModuleTagGeiger : ModuleTag
     {
         public override string GetInfo()
         {

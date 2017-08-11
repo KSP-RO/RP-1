@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagFilmReturn : ModuleTag
+    public class ModuleTagFilmReturn : ModuleTag
     {
         public override string GetInfo()
         {

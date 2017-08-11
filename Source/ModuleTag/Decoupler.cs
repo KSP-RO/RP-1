@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagDecoupler : ModuleTag
+    public class ModuleTagDecoupler : ModuleTag
     {
         public override string GetInfo()
         {

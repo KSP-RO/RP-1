@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagTankBalloon : ModuleTag
+    public class ModuleTagTankBalloon : ModuleTag
     {
         public override string GetInfo()
         {

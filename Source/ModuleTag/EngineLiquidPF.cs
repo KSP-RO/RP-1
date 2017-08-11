@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagEngineLiquidPF : ModuleTag
+    public class ModuleTagEngineLiquidPF : ModuleTag
     {
         public override string GetInfo()
         {

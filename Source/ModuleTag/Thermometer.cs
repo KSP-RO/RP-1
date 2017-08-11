@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagThermometer : ModuleTag
+    public class ModuleTagThermometer : ModuleTag
     {
         public override string GetInfo()
         {

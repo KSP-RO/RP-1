@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagBioSample : ModuleTag
+    public class ModuleTagBioSample : ModuleTag
     {
         public override string GetInfo()
         {

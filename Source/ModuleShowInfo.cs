@@ -7,7 +7,7 @@ using KSP;
 
 namespace RP0
 {
-    class ModuleShowInfo : PartModule
+    public class ModuleShowInfo : PartModule
     {
         public override string GetInfo()
         {

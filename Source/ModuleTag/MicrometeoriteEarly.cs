@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RP0.ModuleTags
 {
-    class ModuleTagMicrometeoriteEarly : ModuleTag
+    public class ModuleTagMicrometeoriteEarly : ModuleTag
     {
         public override string GetInfo()
         {

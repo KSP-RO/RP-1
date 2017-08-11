@@ -7,7 +7,7 @@ using KSP;
 
 namespace RP0
 {
-    class ModuleUnpressurizedCockpit : PartModule
+    public class ModuleUnpressurizedCockpit : PartModule
     {
         [KSPField]
         public double crewDeathChance = 0.04d;

@@ -8,7 +8,7 @@ using KSP;
 namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
-    class DifficultyPresetChanger : MonoBehaviour
+    public class DifficultyPresetChanger : MonoBehaviour
     {
         public void Awake()
         {

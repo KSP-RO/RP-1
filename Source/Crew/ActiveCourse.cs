@@ -76,32 +76,38 @@ namespace RP0.Crew
             if (!((student.type == (ProtoCrewMember.KerbalType.Crew) && (seatMax <= 0 || Students.Count < seatMax) && !student.inactive && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && student.experienceLevel >= minLevel &&
                 student.experienceLevel <= maxLevel && (classes.Length == 0 || classes.Contains(student.trait)) && !Students.Contains(student))))
                 return false;
-            if (preReqs != null)
+
+            int pCount = preReqs.GetLength(0);
+            int cCount = conflicts.GetLength(0);
+            if (pCount > 0 || cCount > 0)
             {
-                int pCount = preReqs.GetLength(0);
-                if (pCount > 0)
+                for (int i = pCount; i-- > 0;)
+                    pChecker[i] = true;
+
+                int needCount = pCount;
+
+                for (int entryIdx = student.flightLog.Count; entryIdx-- > 0 && needCount > 0;)
                 {
-                    for (int i = pCount; i-- > 0;)
-                        pChecker[i] = true;
+                    FlightLog.Entry e = student.flightLog.Entries[entryIdx];
 
-                    int needCount = pCount;
-
-                    for (int entryIdx = student.flightLog.Count; entryIdx-- > 0 && needCount > 0;)
+                    for (int preIdx = pCount; preIdx-- > 0;)
                     {
-                        FlightLog.Entry e = student.flightLog.Entries[entryIdx];
-
-                        for (int preIdx = pCount; preIdx-- > 0;)
+                        if (pChecker[preIdx] && (e.type == preReqs[preIdx, 0] && (string.IsNullOrEmpty(preReqs[preIdx, 1]) || e.target == preReqs[preIdx, 1])))
                         {
-                            if (pChecker[preIdx] && (e.type == preReqs[preIdx, 0] && (string.IsNullOrEmpty(preReqs[preIdx, 1]) || e.target == preReqs[preIdx, 1])))
-                            {
-                                pChecker[preIdx] = false;
-                                --needCount;
-                            }
+                            pChecker[preIdx] = false;
+                            --needCount;
                         }
                     }
-                    if (needCount > 0)
-                        return false;
+
+                    for (int conIdx = cCount; conIdx-- > 0;)
+                    {
+                        if (e.type == conflicts[conIdx, 0] && (string.IsNullOrEmpty(conflicts[conIdx, 1]) || e.target == conflicts[conIdx, 1]))
+                            return false;
+                    }
                 }
+
+                if (needCount > 0)
+                    return false;
             }
             return true;
         }
@@ -183,7 +189,7 @@ namespace RP0.Crew
                             string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             student.flightLog.AddEntry(s[0], s.Length == 1 ? null : s[1]);
                             if (expiration > 0d)
-                                exp.entries.Add(s[0]);
+                                exp.entries.Add(v.value);
                         }
 
                         if (expiration > 0d)

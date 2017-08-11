@@ -28,6 +28,34 @@ namespace RP0.Crew
                 Load(node);
             }
 
+            public bool Compare(int idx, FlightLog.Entry e)
+            {
+                string str = entries[idx];
+                int tyLen = (string.IsNullOrEmpty(e.type) ? 0 : e.type.Length);
+                int tgLen = (string.IsNullOrEmpty(e.target ) ? 0 : e.target.Length);
+                int iC = str.Length;
+                if (iC != 1 + tyLen + tgLen)
+                    return false;
+                int i = 0;
+                for (; i < tyLen; ++i)
+                {
+                    if (str[i] != e.type[i])
+                        return false;
+                }
+
+                if (str[i] != ',')
+                    return false;
+                ++i;
+                for (int j = 0; j < tgLen && i < iC; ++j)
+                {
+                    if (str[i] != e.target[j])
+                        return false;
+                    ++i;
+                }
+
+                return true;
+            }
+
             public void Load(ConfigNode node)
             {
                 foreach (ConfigNode.Value v in node.values)
@@ -279,25 +307,6 @@ namespace RP0.Crew
                         }
                     }
                 }
-                if (toRemove.Count > 0)
-                {
-                    string msgStr = "The following retirements have occurred:\n";
-                    foreach (string s in toRemove)
-                    {
-                        kerbalRetireTimes.Remove(s);
-                        msgStr += "\n" + s;
-                    }
-
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                                        new Vector2(0.5f, 0.5f),
-                                                        "Crew Retirement",
-                                                        msgStr,
-                                                        "OK",
-                                                        true,
-                                                        HighLogic.UISkin);
-
-                    toRemove.Clear();
-                }
 
                 for (int i = ActiveCourses.Count; i-- > 0;)
                 {
@@ -321,12 +330,13 @@ namespace RP0.Crew
                                 int eC = e.entries.Count;
                                 if (eC == 0)
                                     break;
-
+                                FlightLog.Entry ent = pcm.flightLog[j];
                                 for (int k = eC; k-- > 0;)
                                 {
-                                    if (pcm.flightLog[j].type == e.entries[k])
+                                    if (e.Compare(k, ent))
                                     {
-                                        pcm.flightLog[j].type = "expired_" + pcm.flightLog[j].type;
+                                        ScreenMessages.PostScreenMessage(pcm.name + ": Expired: " + GetPrettyCourseName(ent.type) + ent.target);
+                                        ent.type = "expired_" + ent.type;
                                         e.entries.RemoveAt(k);
                                     }
                                 }
@@ -334,6 +344,27 @@ namespace RP0.Crew
                         }
                         expireTimes.RemoveAt(i);
                     }
+                }
+
+                // TODO remove from courses? Except I think they won't retire if inactive either so that's ok.
+                if (toRemove.Count > 0)
+                {
+                    string msgStr = "The following retirements have occurred:\n";
+                    foreach (string s in toRemove)
+                    {
+                        kerbalRetireTimes.Remove(s);
+                        msgStr += "\n" + s;
+                    }
+
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                                        new Vector2(0.5f, 0.5f),
+                                                        "Crew Retirement",
+                                                        msgStr,
+                                                        "OK",
+                                                        true,
+                                                        HighLogic.UISkin);
+
+                    toRemove.Clear();
                 }
             }
 
@@ -695,6 +726,8 @@ namespace RP0.Crew
             n.AddValue("expiration", 4d * 86400d * 365d);
             n.AddValue("expirationUseStupid", true);
 
+            n.AddValue("conflicts", "TRAINING_proficiency:" + name);
+
             ConfigNode r = n.AddNode("REWARD");
             r.AddValue("XPAmt", "1");
             ConfigNode l = r.AddNode("FLIGHTLOG");
@@ -729,6 +762,7 @@ namespace RP0.Crew
             n.AddValue("expiration", 120d * 86400d);
 
             n.AddValue("preReqs", "TRAINING_proficiency:" + name);
+            n.AddValue("conflicts", "TRAINING_mission:" + name);
 
             ConfigNode r = n.AddNode("REWARD");
             ConfigNode l = r.AddNode("FLIGHTLOG");
@@ -742,6 +776,19 @@ namespace RP0.Crew
         protected void onPartPurchased(AvailablePart ap)
         {
             AddPartCourses(ap);
+        }
+
+        protected string GetPrettyCourseName(string str)
+        {
+            switch (str)
+            {
+                case "TRAINING_proficiency":
+                    return "Proficiency with ";
+                case "TRAINING_mission":
+                    return "Mission training for ";
+                default:
+                    return "Training for ";
+            }
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace RP0.Crew
         public string[] activePreReqs = { }; //prereqs that must not be expired
         public string[,] preReqs = { }; //prereqs that must be taken, but can be expired
         public bool[] pChecker = { }; // prereq checker;
-        public string[] conflicts = { }; //course IDs that cannot be taken while this course is not expired
+        public string[,] conflicts = { }; //course IDs that cannot be taken while this course is not expired
 
         public double time = 0; //how much time the course takes (in seconds)
         public bool timeUseStupid = false;
@@ -95,14 +95,30 @@ namespace RP0.Crew
                     else
                         preReqs[i, 1] = string.Empty;
                 }
-
             }
 
             tmpStr = source.GetValue("conflicts");
             if (!string.IsNullOrEmpty(tmpStr))
-                conflicts = tmpStr.Split(',');
+            {
+                string[] split1 = tmpStr.Split(',');
+                int iC = split1.Length;
+                conflicts = new string[iC, 2];
+
+                for (int i = 0; i < iC; ++i)
+                {
+                    string[] split2 = split1[i].Split(':');
+                    conflicts[i, 0] = split2[0];
+                    if (split2.Length > 1)
+                        conflicts[i, 1] = split2[1];
+                    else
+                        conflicts[i, 1] = string.Empty;
+                }
+            }
 
             source.TryGetValue("time", ref time);
+            source.TryGetValue("timeUseStupid", ref timeUseStupid);
+            source.TryGetValue("expiration", ref expiration);
+            source.TryGetValue("expirationUseStupid", ref expirationUseStupid);
 
             source.TryGetValue("required", ref required);
 
@@ -166,6 +182,14 @@ namespace RP0.Crew
                 maxStupid = Math.Max(pcm.stupidity, maxStupid);
 
             return time * (0.5d + maxStupid);
+        }
+
+        public double GetExpiration(ProtoCrewMember pcm)
+        {
+            if (pcm == null || !expirationUseStupid)
+                return expiration;
+
+            return expiration * (1.5d - pcm.stupidity);
         }
     }
 }

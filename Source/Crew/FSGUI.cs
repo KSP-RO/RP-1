@@ -75,8 +75,9 @@ namespace RP0.Crew
                     GUILayout.EndHorizontal();
 
                     GUILayout.Label(selectedCourse.description);
+                    double endTime = selectedCourse.GetTime(selectedCourse.Students) + Planetarium.GetUniversalTime();
 
-                    GUILayout.Label("Course ends: " + KSPUtil.PrintDate(selectedCourse.GetTime(selectedCourse.Students) + Planetarium.GetUniversalTime(), true));
+                    GUILayout.Label("Course ends: " + KSPUtil.PrintDate(endTime, true));
 
                     //select the kerbals. Two lists, the current Students and the available ones
                     GUILayout.BeginHorizontal();
@@ -91,6 +92,8 @@ namespace RP0.Crew
                             selectedCourse.Students.RemoveAt(i);
                             --i;
                         }
+                        if (selectedCourse.expiration > 0d)
+                            GUILayout.Label("Will expire: " + KSPUtil.PrintDate(endTime + selectedCourse.GetExpiration(student), false));
 
                     }
                     GUILayout.EndScrollView();

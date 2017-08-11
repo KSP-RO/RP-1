@@ -18,16 +18,21 @@ namespace RP0.Crew
         public bool Available = true; //Whether the course is currently being offered
 
         public string[] activePreReqs = { }; //prereqs that must not be expired
-        public string[] preReqs = { }; //prereqs that must be taken, but can be expired
+        public string[,] preReqs = { }; //prereqs that must be taken, but can be expired
+        public bool[] pChecker = { }; // prereq checker;
         public string[] conflicts = { }; //course IDs that cannot be taken while this course is not expired
 
         public double time = 0; //how much time the course takes (in seconds)
+        public bool timeUseStupid = false;
         public bool required = false; //whether the course is required for the kerbal to be usable
         public RepeatMode repeatable = RepeatMode.NEVER; //whether the course can be repeated
 
         public string[] classes = { }; //which classes can take this course (empty == all)
         public int minLevel = 0; //minimum kerbal level required to take the course
         public int maxLevel = 99; //max kerbal level allowed to take the course
+
+        public double expiration = 0d;
+        public bool expirationUseStupid = false;
 
         public int seatMax = -1; //maximum number of kerbals allowed in the course at once
         public int seatMin = 0; //minimum number of kerbals required to start the course
@@ -75,7 +80,23 @@ namespace RP0.Crew
 
             tmpStr = source.GetValue("preReqs");
             if (!string.IsNullOrEmpty(tmpStr))
-                preReqs = tmpStr.Split(',');
+            {
+                string[] split1 = tmpStr.Split(',');
+                int iC = split1.Length;
+                preReqs = new string[iC, 2];
+                pChecker = new bool[iC];
+
+                for (int i = 0; i < iC; ++i)
+                {
+                    string[] split2 = split1[i].Split(':');
+                    preReqs[i, 0] = split2[0];
+                    if (split2.Length > 1)
+                        preReqs[i, 1] = split2[1];
+                    else
+                        preReqs[i, 1] = string.Empty;
+                }
+
+            }
 
             tmpStr = source.GetValue("conflicts");
             if (!string.IsNullOrEmpty(tmpStr))
@@ -123,7 +144,7 @@ namespace RP0.Crew
             logStr += "\nID: " + id;
             logStr += "\nName: " + name;
             logStr += "\nAvailable: " + Available;
-            logStr += "\nprereqs: " + preReqs.Length;
+            logStr += "\nprereqs: " + preReqs.GetLength(0);
             logStr += "\ntime: " + time;
             logStr += "\nrepeatable: " + repeatable;
             logStr += "\nXP: " + rewardXP;
@@ -133,6 +154,18 @@ namespace RP0.Crew
                     logStr += "\n" + v.value;
 
             UnityEngine.Debug.Log(logStr);*/
+        }
+
+        public double GetTime(List<ProtoCrewMember> students)
+        {
+            if (students == null || !timeUseStupid)
+                return time;
+
+            double maxStupid = 0d;
+            foreach (ProtoCrewMember pcm in students)
+                maxStupid = Math.Max(pcm.stupidity, maxStupid);
+
+            return time * (0.5d + maxStupid);
         }
     }
 }

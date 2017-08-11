@@ -73,8 +73,37 @@ namespace RP0.Crew
 
         public bool MeetsStudentReqs(ProtoCrewMember student)
         {
-            return (student.type == (ProtoCrewMember.KerbalType.Crew) && (seatMax <= 0 || Students.Count < seatMax) && !student.inactive && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && student.experienceLevel >= minLevel &&
-                student.experienceLevel <= maxLevel && (classes.Length == 0 || classes.Contains(student.trait)) && !Students.Contains(student));
+            if (!((student.type == (ProtoCrewMember.KerbalType.Crew) && (seatMax <= 0 || Students.Count < seatMax) && !student.inactive && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && student.experienceLevel >= minLevel &&
+                student.experienceLevel <= maxLevel && (classes.Length == 0 || classes.Contains(student.trait)) && !Students.Contains(student))))
+                return false;
+            if (preReqs != null)
+            {
+                int pCount = preReqs.GetLength(0);
+                if (pCount > 0)
+                {
+                    for (int i = pCount; i-- > 0;)
+                        pChecker[i] = true;
+
+                    int needCount = pCount;
+
+                    for (int entryIdx = student.flightLog.Count; entryIdx-- > 0 && needCount > 0;)
+                    {
+                        FlightLog.Entry e = student.flightLog.Entries[entryIdx];
+
+                        for (int preIdx = pCount; preIdx-- > 0;)
+                        {
+                            if (pChecker[preIdx] && (e.type == preReqs[preIdx, 0] && (string.IsNullOrEmpty(preReqs[preIdx, 1]) || e.target == preReqs[preIdx, 1])))
+                            {
+                                pChecker[preIdx] = false;
+                                --needCount;
+                            }
+                        }
+                    }
+                    if (needCount > 0)
+                        return false;
+                }
+            }
+            return true;
         }
         public void AddStudent(ProtoCrewMember student)
         {
@@ -112,12 +141,10 @@ namespace RP0.Crew
                 return false;
             if (!Completed)
             {
-                UnityEngine.Debug.Log("Course " + id + " applying " + curT);
                 elapsedTime = curT - startTime;
-                Completed = curT > startTime + time;
+                Completed = curT > startTime + GetTime(Students);
                 if (Completed) //we finished the course!
                 {
-                    UnityEngine.Debug.Log("Course " + id + " COMPLETE");
                     CompleteCourse();
                 }
             }
@@ -141,11 +168,26 @@ namespace RP0.Crew
                     if (RewardLog != null)
                     {
                         student.flightLog.AddFlight();
+                        CrewHandler.TrainingExpiration exp = null;
+                        if (expiration > 0d)
+                        {
+                            exp = new CrewHandler.TrainingExpiration();
+                            exp.pcmName = student.name;
+                            exp.expiration = expiration;
+                            if (expirationUseStupid)
+                                exp.expiration *= (1.5d - student.stupidity);
+                        }
+
                         foreach (ConfigNode.Value v in RewardLog.values)
                         {
                             string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             student.flightLog.AddEntry(s[0], s.Length == 1 ? null : s[1]);
+                            if (expiration > 0d)
+                                exp.entries.Add(s[0]);
                         }
+
+                        if (expiration > 0d)
+                            CrewHandler.Instance.AddExpiration(exp);
                     }
                 }
             }
@@ -172,7 +214,7 @@ namespace RP0.Crew
             Started = true;
 
             foreach (ProtoCrewMember student in Students)
-                student.SetInactive(time + 1d);
+                student.SetInactive(GetTime(Students) + 1d);
 
             return true;
             //fire an event

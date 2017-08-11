@@ -35,71 +35,80 @@ namespace RP0
             if (LoadingScreen.Instance.Screens.Count < 2)
                 return;
 
-            Debug.Log("[RP-0]: Replacing loading screens.");
-
-            LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[1];
-
-            List<Texture2D> textures = new List<Texture2D>();
-            DirectoryInfo di = new DirectoryInfo(KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Screens");
-            foreach (FileInfo fi in di.GetFiles())
+            try
             {
-                if (fi.FullName.ToLowerInvariant().EndsWith(".dds"))
+
+                Debug.Log("[RP-0]: Replacing loading screens.");
+
+                LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[1];
+
+                List<Texture2D> textures = new List<Texture2D>();
+
+                DirectoryInfo di = new DirectoryInfo(KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Screens");
+                foreach (FileInfo fi in di.GetFiles())
                 {
-                    Debug.Log("Loading " + fi.FullName);
-                    try
+                    if (fi.FullName.ToLowerInvariant().EndsWith(".dds"))
                     {
-                        Texture2D t = LoadDDS(fi.FullName);
-                        if (t != null)
-                            textures.Add(t);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogError("[RP-0]: Exception loading " + fi.FullName + ":\n" + e);
+                        Debug.Log("Loading " + fi.FullName);
+                        try
+                        {
+                            Texture2D t = LoadDDS(fi.FullName);
+                            if (t != null)
+                                textures.Add(t);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError("[RP-0]: Exception loading " + fi.FullName + ":\n" + e);
+                        }
                     }
                 }
-            }
-            int tC = textures.Count;
-            float screenTime = Mathf.Round(240f / (float)tC);
-            System.Random random = new System.Random();
-            if (tC > 0)
-            {
-                for (int i = tC - 1; i-- > 0;)
+                int tC = textures.Count;
+                float screenTime = Mathf.Round(240f / (float)tC);
+                System.Random random = new System.Random();
+                if (tC > 0)
                 {
-                    int idx = random.Next(0, textures.Count);
-                    LoadingScreen.LoadingScreenState state = new LoadingScreen.LoadingScreenState();
-                    state.fadeInTime = origState.fadeInTime;
-                    state.fadeOutTime = origState.fadeOutTime;
-                    state.displayTime = screenTime;
-                    state.tips = origState.tips;
-                    state.tipTime = origState.tipTime;
-                    state.screens = new Texture2D[] { textures[idx] };
+                    for (int i = tC - 1; i-- > 0;)
+                    {
+                        int idx = random.Next(0, textures.Count);
+                        LoadingScreen.LoadingScreenState state = new LoadingScreen.LoadingScreenState();
+                        state.fadeInTime = origState.fadeInTime;
+                        state.fadeOutTime = origState.fadeOutTime;
+                        state.displayTime = screenTime;
+                        state.tips = origState.tips;
+                        state.tipTime = origState.tipTime;
+                        state.screens = new Texture2D[] { textures[idx] };
 
-                    LoadingScreen.Instance.Screens.Add(state);
+                        LoadingScreen.Instance.Screens.Add(state);
 
-                    textures.RemoveAt(idx);
+                        textures.RemoveAt(idx);
 
-                    LoadingScreen.Instance.loaders.Add(LoadingScreen.Instance.gameObject.AddComponent<DummyLoadingSystem>());
+                        LoadingScreen.Instance.loaders.Add(LoadingScreen.Instance.gameObject.AddComponent<DummyLoadingSystem>());
+                    }
+
+                    origState.screens = new Texture2D[] { textures[0] };
+                    origState.displayTime = screenTime;
+
+                    LoadingScreen.Instance.Screens[LoadingScreen.Instance.Screens.Count - 1].displayTime = 2400f;
+
+                    string msgStr = "[RP-0]: Loading screens replaced.";
+
+                    Debug.Log(msgStr);
+                }
+                else
+                {
+                    Debug.LogError("[RP-0]: No screens found in RP-0/PluginData/Screens!");
                 }
 
-                origState.screens = new Texture2D[] { textures[0] };
-                origState.displayTime = screenTime;
+                // Try to jigger the unity random thing.
 
-                LoadingScreen.Instance.Screens[LoadingScreen.Instance.Screens.Count - 1].displayTime = 2400f;
-
-                string msgStr = "[RP-0]: Loading screens replaced.";
-
-                Debug.Log(msgStr);
+                for (int i = (int)((new System.Random()).NextDouble() * 100d); i-- > 0;)
+                {
+                    UnityEngine.Random.Range(0, 10);
+                }
             }
-            else
+            catch (Exception e)
             {
-                Debug.LogError("[RP-0]: No screens found in RP-0/PluginData/Screens!");
-            }
-
-            // Try to jigger the unity random thing.
-
-            for (int i = (int)((new System.Random()).NextDouble() * 100d); i-- > 0;)
-            {
-                UnityEngine.Random.Range(0, 10);
+                Debug.LogError("Patching failed: " + e);
             }
 
             GameObject.Destroy(this);

@@ -34,7 +34,7 @@ namespace RP0.Crew
 
             GUILayout.BeginVertical(GUILayout.Width(250)); //offered/active list
             int oldStatus = offeredActiveToolbar;
-            offeredActiveToolbar = GUILayout.Toolbar(offeredActiveToolbar, new string[] { "Proficiencies", "Active Training" });
+            offeredActiveToolbar = GUILayout.Toolbar(offeredActiveToolbar, new string[] { "Training Offered", "Active Training" });
             if (offeredActiveToolbar != oldStatus)
             {
                 selectedCourse = null;
@@ -76,7 +76,7 @@ namespace RP0.Crew
 
                     GUILayout.Label(selectedCourse.description);
 
-                    GUILayout.Label("Course length: " + KSPUtil.PrintDateDelta(selectedCourse.time, true));
+                    GUILayout.Label("Course ends: " + KSPUtil.PrintDate(selectedCourse.GetTime(selectedCourse.Students) + Planetarium.GetUniversalTime(), true));
 
                     //select the kerbals. Two lists, the current Students and the available ones
                     GUILayout.BeginHorizontal();
@@ -149,9 +149,9 @@ namespace RP0.Crew
                     GUILayout.EndHorizontal();
 
                     GUILayout.Label(selectedCourse.description);
-
-                    GUILayout.Label("Time remaining: "+KSPUtil.PrintDateDelta(selectedCourse.time-selectedCourse.elapsedTime, true));
-                    GUILayout.Label(Math.Round(100*selectedCourse.elapsedTime/selectedCourse.time, 1) + "% complete");
+                    double t = selectedCourse.GetTime(selectedCourse.Students);
+                    GUILayout.Label("End date: "+KSPUtil.PrintDate(t + selectedCourse.startTime, true));
+                    GUILayout.Label(Math.Round(100*selectedCourse.elapsedTime/t, 1) + "% complete");
 
                     //scroll list of all students
                     GUILayout.Label("Students:");

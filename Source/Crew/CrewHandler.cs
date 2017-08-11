@@ -11,6 +11,55 @@ namespace RP0.Crew
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class CrewHandler : ScenarioModule
     {
+        #region TrainingExpiration
+
+        public class TrainingExpiration : IConfigNode
+        {
+            public string pcmName;
+
+            public List<string> entries = new List<string>();
+
+            public double expiration;
+
+            public TrainingExpiration() { }
+
+            public TrainingExpiration(ConfigNode node)
+            {
+                Load(node);
+            }
+
+            public void Load(ConfigNode node)
+            {
+                foreach (ConfigNode.Value v in node.values)
+                {
+                    switch (v.name)
+                    {
+                        case "pcmName":
+                            pcmName = v.value;
+                            break;
+                        case "expiration":
+                            double.TryParse(v.value, out expiration);
+                            break;
+
+                        default:
+                        case "entry":
+                            entries.Add(v.value);
+                            break;
+                    }
+                }
+            }
+
+            public void Save(ConfigNode node)
+            {
+                node.AddValue("pcmName", pcmName);
+                node.AddValue("expiration", expiration);
+                foreach (string s in entries)
+                    node.AddValue("entry", s);
+            }
+        }
+
+        #endregion
+
         #region Fields
 
         protected Dictionary<string, double> kerbalRetireTimes = new Dictionary<string, double>();
@@ -18,6 +67,8 @@ namespace RP0.Crew
         protected HashSet<string> retirees = new HashSet<string>();
 
         protected static HashSet<string> toRemove = new HashSet<string>();
+
+        protected List<TrainingExpiration> expireTimes = new List<TrainingExpiration>();
 
         protected bool inAC = false;
 
@@ -39,6 +90,8 @@ namespace RP0.Crew
         public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
+        protected HashSet<string> partSynsHandled = new HashSet<string>();
+        protected TrainingDatabase trainingDatabase = new TrainingDatabase();
 
         public FSGUI fsGUI = new FSGUI();
 
@@ -85,12 +138,30 @@ namespace RP0.Crew
             base.OnLoad(node);
 
             kerbalRetireTimes.Clear();
-            foreach (ConfigNode.Value v in node.GetNode("RETIRETIMES").values)
-                kerbalRetireTimes[v.name] = double.Parse(v.value);
+            ConfigNode n = node.GetNode("RETIRETIMES");
+            if (n != null)
+            {
+                foreach (ConfigNode.Value v in n.values)
+                    kerbalRetireTimes[v.name] = double.Parse(v.value);
+            }
 
             retirees.Clear();
-            foreach (ConfigNode.Value v in node.GetNode("RETIREES").values)
-                retirees.Add(v.value);
+            n = node.GetNode("RETIREES");
+            if (n != null)
+            {
+                foreach (ConfigNode.Value v in n.values)
+                    retirees.Add(v.value);
+            }
+
+            expireTimes.Clear();
+            n = node.GetNode("EXPIRATIONS");
+            if (n != null)
+            {
+                foreach (ConfigNode eN in n.nodes)
+                {
+                    expireTimes.Add(new TrainingExpiration(eN));
+                }
+            }
 
             ConfigNode FSData = node.GetNode("FlightSchoolData");
 
@@ -110,6 +181,8 @@ namespace RP0.Crew
                     Debug.LogException(ex);
                 }
             }
+
+            TrainingDatabase.Initialize();
         }
 
         public override void OnSave(ConfigNode node)
@@ -123,6 +196,10 @@ namespace RP0.Crew
             n = node.AddNode("RETIREES");
             foreach (string s in retirees)
                 n.AddValue("retiree", s);
+
+            n = node.AddNode("EXPIRATIONS");
+            foreach (TrainingExpiration e in expireTimes)
+                e.Save(n.AddNode("Expiration"));
 
             ConfigNode FSData = new ConfigNode("FlightSchoolData");
             //save all the active courses
@@ -230,6 +307,34 @@ namespace RP0.Crew
                         ActiveCourses.RemoveAt(i);
                     }
                 }
+
+                for (int i = expireTimes.Count; i-- > 0;)
+                {
+                    TrainingExpiration e = expireTimes[i];
+                    if (time > e.expiration)
+                    {
+                        ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[e.pcmName];
+                        if (pcm != null)
+                        {
+                            for (int j = pcm.flightLog.Entries.Count; j-- > 0;)
+                            {
+                                int eC = e.entries.Count;
+                                if (eC == 0)
+                                    break;
+
+                                for (int k = eC; k-- > 0;)
+                                {
+                                    if (pcm.flightLog[j].type == e.entries[k])
+                                    {
+                                        pcm.flightLog[j].type = "expired_" + pcm.flightLog[j].type;
+                                        e.entries.RemoveAt(k);
+                                    }
+                                }
+                            }
+                        }
+                        expireTimes.RemoveAt(i);
+                    }
+                }
             }
 
             // UI fixing
@@ -307,6 +412,15 @@ namespace RP0.Crew
             GameEvents.onGUIAstronautComplexSpawn.Remove(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Remove(ACDespawn);
             GameEvents.OnPartPurchased.Remove(new EventData<AvailablePart>.OnEvent(onPartPurchased));
+        }
+
+        #endregion
+
+        #region Interfaces
+
+        public void AddExpiration(TrainingExpiration e)
+        {
+            expireTimes.Add(e);
         }
 
         #endregion
@@ -532,7 +646,7 @@ namespace RP0.Crew
             Debug.Log("[FS] Found " + CourseTemplates.Count + " courses.");
             //fire an event to let other mods add their configs
         }
-
+        
         protected void GenerateOfferedCourses() //somehow provide some variable options here?
         {
             //convert the saved configs to course offerings
@@ -550,7 +664,12 @@ namespace RP0.Crew
                 {
                     if (ResearchAndDevelopment.PartModelPurchased(ap))
                     {
-                        OfferedCourses.Add(GenerateCourseForPart(ap));
+                        string name = TrainingDatabase.SynonymReplace(ap.name);
+                        if (!partSynsHandled.Contains(ap.name))
+                        {
+                            partSynsHandled.Add(name);
+                            AddPartCourses(ap);
+                        }
                     }
                 }
             }
@@ -559,28 +678,70 @@ namespace RP0.Crew
             //fire an event to let other mods add available courses (where they can pass variables through then)
         }
 
-        protected CourseTemplate GenerateCourseForPart(AvailablePart ap)
+        protected void AddPartCourses(AvailablePart ap)
+        {
+            GenerateCourseProf(ap);
+            GenerateCourseMission(ap);
+        }
+
+        protected void GenerateCourseProf(AvailablePart ap)
         {
             ConfigNode n = new ConfigNode("FS_COURSE");
-            {
-                n.AddValue("id", "prof_" + ap.name);
-                n.AddValue("name", ap.title);
-                n.AddValue("time", 3600d + EntryCostStorage.GetCost(ap.name) * 5177d);
+            string name = TrainingDatabase.SynonymReplace(ap.name);
 
-                ConfigNode r = n.AddNode("REWARD");
-                r.AddValue("XPAmt", "1");
-                ConfigNode l = r.AddNode("FLIGHTLOG");
-                l.AddValue("0", "TRAINING_proficiency," + ap.name);
-            }
+            n.AddValue("id", "prof_" + name);
+            n.AddValue("name", "Proficiency: " + name);
+            n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400d));
+            n.AddValue("expiration", 4d * 86400d * 365d);
+            n.AddValue("expirationUseStupid", true);
+
+            ConfigNode r = n.AddNode("REWARD");
+            r.AddValue("XPAmt", "1");
+            ConfigNode l = r.AddNode("FLIGHTLOG");
+            l.AddValue("0", "TRAINING_proficiency," + name);
+
             CourseTemplate c = new CourseTemplate(n);
             c.PopulateFromSourceNode();
+            OfferedCourses.Add(c);
 
-            return c;
+            ConfigNode n2 = n.CreateCopy();
+            n2.SetValue("id", "profR_" + name);
+            n2.SetValue("name", "Refresher: " + name);
+            n2.SetValue("time", 1d + TrainingDatabase.GetTime(name) * 86400d * 0.25d);
+            n2.AddValue("preReqs", "expired_TRAINING_proficiency:" + name);
+            r = n2.GetNode("REWARD");
+            r.SetValue("XPAmt", "0");
+
+            c = new CourseTemplate(n2);
+            c.PopulateFromSourceNode();
+            OfferedCourses.Add(c);
+        }
+
+        protected void GenerateCourseMission(AvailablePart ap)
+        {
+            ConfigNode n = new ConfigNode("FS_COURSE");
+            string name = TrainingDatabase.SynonymReplace(ap.name);
+
+            n.AddValue("id", "msn_" + name);
+            n.AddValue("name", "Mission: " + name);
+            n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "_Mission") * 86400d);
+            n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
+            n.AddValue("expiration", 120d * 86400d);
+
+            n.AddValue("preReqs", "TRAINING_proficiency:" + name);
+
+            ConfigNode r = n.AddNode("REWARD");
+            ConfigNode l = r.AddNode("FLIGHTLOG");
+            l.AddValue("0", "TRAINING_mission," + name);
+
+            CourseTemplate c = new CourseTemplate(n);
+            c.PopulateFromSourceNode();
+            OfferedCourses.Add(c);
         }
 
         protected void onPartPurchased(AvailablePart ap)
         {
-            OfferedCourses.Add(GenerateCourseForPart(ap));
+            AddPartCourses(ap);
         }
 
         #endregion

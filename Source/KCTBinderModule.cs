@@ -33,11 +33,26 @@ namespace RP0
             if (EntryCostStorage.GetCost(partName) == 1)
                 return true;
 
+            partName = Crew.TrainingDatabase.SynonymReplace(partName);
+
+            int lastFlight = pcm.flightLog.Last().flight;
+            bool lacksMission = true;
             for (int i = pcm.flightLog.Entries.Count; i-- > 0;)
             {
                 FlightLog.Entry e = pcm.flightLog.Entries[i];
-                if (e.type == "TRAINING_proficiency" && e.target == partName)
-                    return true;
+                if (lacksMission)
+                {
+                    if (e.flight < lastFlight)
+                        return false;
+
+                    if (e.type == "TRAINING_mission" && e.target == partName)
+                        lacksMission = false;
+                }
+                else
+                {
+                    if (e.type == "TRAINING_proficiency" && e.target == partName)
+                        return true;
+                }
             }
             return false;
         }

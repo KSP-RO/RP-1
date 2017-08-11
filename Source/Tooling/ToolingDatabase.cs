@@ -185,6 +185,10 @@ namespace RP0
         public static void Load(ConfigNode node)
         {
             toolings.Clear();
+
+            if (node == null)
+                return;
+
             foreach (ConfigNode c in node.GetNodes("TYPE"))
             {
                 string type = c.GetValue("type");

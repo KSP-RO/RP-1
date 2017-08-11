@@ -58,6 +58,7 @@
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="DifficultyPresets.cs" />
     <Compile Include="Maintenance\MaintenanceWindow.cs" />
+    <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
     <Compile Include="ModuleTag\DecreaseB.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />
@@ -121,6 +122,10 @@
     <Reference Include="Assembly-CSharp-firstpass, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Games\Steam\steamapps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ModularFlightIntegrator">
+      <HintPath>..\..\..\..\..\..\Games\RO_122\GameData\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">

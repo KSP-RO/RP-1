@@ -402,7 +402,7 @@ namespace RP0.Crew
                         KSP.UI.CrewListItem cli = u.listItem.GetComponent<KSP.UI.CrewListItem>();
                         if (cli != null)
                         {
-                            AddRetireTime(cli);
+                            FixTooltip(cli);
                             if (cli.GetCrewRef().inactive)
                             {
                                 cli.MouseoverEnabled = false;
@@ -416,7 +416,7 @@ namespace RP0.Crew
                         KSP.UI.CrewListItem cli = u.listItem.GetComponent<KSP.UI.CrewListItem>();
                         if (cli != null)
                         {
-                            AddRetireTime(cli);
+                            FixTooltip(cli);
                         }
                     }
 
@@ -630,7 +630,7 @@ namespace RP0.Crew
             return 86400d * 365d * (5d + pcm.courage * 3d + (1d - pcm.stupidity));
         }
 
-        protected void AddRetireTime(KSP.UI.CrewListItem cli)
+        protected void FixTooltip(KSP.UI.CrewListItem cli)
         {
             ProtoCrewMember pcm = cli.GetCrewRef();
             double retTime;
@@ -787,7 +787,7 @@ namespace RP0.Crew
                 case "TRAINING_mission":
                     return "Mission training for ";
                 default:
-                    return "Training for ";
+                    return string.Empty;
             }
         }
 

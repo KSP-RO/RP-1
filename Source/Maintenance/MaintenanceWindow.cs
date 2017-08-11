@@ -12,6 +12,7 @@ namespace RP0
         static bool guiEnabled = true;
         private ApplicationLauncherButton button;
         private GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
+        private Vector2 nautListScroll = new Vector2();
 
         protected void Awake()
         {
@@ -325,6 +326,12 @@ namespace RP0
                 GUILayout.Label(String.Format("Corps: {0:N0} astronauts", nautCount), HighLogic.Skin.label, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
+            }
+            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(280), GUILayout.Height(144));
+            try {
+                RP0.Crew.CrewHandler.Instance.nautList();
+            } finally {
+                GUILayout.EndScrollView();
             }
             GUILayout.BeginHorizontal();
             try {

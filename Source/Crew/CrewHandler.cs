@@ -354,20 +354,24 @@ namespace RP0.Crew
                 // TODO remove from courses? Except I think they won't retire if inactive either so that's ok.
                 if (toRemove.Count > 0)
                 {
-                    string msgStr = "The following retirements have occurred:\n";
+                    string msgStr = string.Empty;
                     foreach (string s in toRemove)
                     {
                         kerbalRetireTimes.Remove(s);
-                        msgStr += "\n" + s;
+                        if (HighLogic.CurrentGame.CrewRoster[s] != null)
+                            msgStr += "\n" + s;
                     }
+                    if (!string.IsNullOrEmpty(msgStr))
+                    {
 
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                                        new Vector2(0.5f, 0.5f),
-                                                        "Crew Retirement",
-                                                        msgStr,
-                                                        "OK",
-                                                        true,
-                                                        HighLogic.UISkin);
+                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                                            new Vector2(0.5f, 0.5f),
+                                                            "Crew Retirement",
+                                                            "The following retirements have occurred:\n" + msgStr,
+                                                            "OK",
+                                                            true,
+                                                            HighLogic.UISkin);
+                    }
 
                     toRemove.Clear();
                 }

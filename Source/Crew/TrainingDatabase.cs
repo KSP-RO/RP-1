@@ -96,7 +96,7 @@ namespace RP0.Crew
         public static double GetTime(string name)
         {
             ClearTracker();
-            return _GetTime(name);
+            return _GetTime(Sanitize(name));
         }
         protected static double _GetTime(string name)
         {
@@ -121,6 +121,7 @@ namespace RP0.Crew
 
         public static string SynonymReplace(string name)
         {
+            name = Sanitize(name);
             TrainingHolder h;
             if (holders.TryGetValue(name, out h))
             {
@@ -131,7 +132,12 @@ namespace RP0.Crew
             }
             return name;
         }
-        
+
+        protected static string Sanitize(string partName)
+        {
+            partName = partName.Replace(".", "-");
+            return partName.Replace("_", "-");
+        }
 
         public static void ClearTracker()
         {

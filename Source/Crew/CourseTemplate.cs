@@ -174,7 +174,7 @@ namespace RP0.Crew
 
         public double GetTime(List<ProtoCrewMember> students)
         {
-            if (students == null || !timeUseStupid)
+            if (students == null || students.Count == 0 || !timeUseStupid)
                 return time;
 
             double averageStupid = 0d;

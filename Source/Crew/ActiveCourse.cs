@@ -182,6 +182,7 @@ namespace RP0.Crew
                             exp.expiration = expiration;
                             if (expirationUseStupid)
                                 exp.expiration *= (1.5d - student.stupidity);
+                            exp.expiration += Planetarium.GetUniversalTime();
                         }
 
                         foreach (ConfigNode.Value v in RewardLog.values)

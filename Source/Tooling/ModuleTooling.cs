@@ -126,25 +126,7 @@ namespace RP0
             }
             tEvent.guiActiveEditor = true;
 
-            /*float cost = part.partInfo.cost;
-            float baseCost = cost;
-
-            for (int i = part.Modules.Count; i-- > 0;)
-            {
-                PartModule m = part.Modules[i];
-                if (m is ModuleTooling)
-                    continue;
-
-                IPartCostModifier c = m as IPartCostModifier;
-                if (c == null)
-                    continue;
-
-                cost += c.GetModuleCost(baseCost, ModifierStagingSituation.CURRENT);
-            }
-
-            return cost * untooledMultiplier;*/
-
-            return GetToolingCost() * ((1f / 50f) * 0.25f) * untooledMultiplier;
+            return GetToolingCost() * untooledMultiplier;
         }
 
         public ModifierChangeWhen GetModuleCostChangeWhen()

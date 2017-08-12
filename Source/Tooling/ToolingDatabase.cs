@@ -48,7 +48,6 @@ namespace RP0
             do
             {
                 int mid = (min + max) / 2;
-                Debug.Log("[ModuleTooling]: For diam " + diam + ", " + min + ", " + max + ", " + mid + ", count " + lst.Count);
                 switch (EpsilonCompare(diam, lst[mid].diameter))
                 {
                     case 0:
@@ -75,7 +74,6 @@ namespace RP0
             do
             {
                 int mid = (min + max) / 2;
-                Debug.Log("[ModuleTooling]: For diam " + length + ", " + min + ", " + max + ", " + mid + ", count " + lst.Count);
                 switch (EpsilonCompare(length, lst[mid]))
                 {
                     case 0:
@@ -104,8 +102,6 @@ namespace RP0
 
         public static ToolingLevel HasTooling(string type, float diam, float len)
         {
-            //Debug.Log("[Tooling]: Looking for " + type + ", " + diam + " x " + len);
-
             List<ToolingDiameter> lst;
             if (toolings.TryGetValue(type, out lst))
             {
@@ -115,23 +111,14 @@ namespace RP0
                 int tmp;
                 int dIndex = DiamIndex(diam, lst, out tmp);
                 if (dIndex == -1)
-                {
-                    //Debug.Log("Not found");
                     return ToolingLevel.None;
-                }
 
                 int lIndex = LengthIndex(len, lst[dIndex].lengths, out tmp);
 
                 if (lIndex == -1)
-                {
-                    //Debug.Log("Found diameter");
                     return ToolingLevel.Diameter;
-                }
                 else
-                {
-                    //Debug.Log("Found tooling");
                     return ToolingLevel.Full;
-                }
             }
 
             return ToolingLevel.None;
@@ -139,8 +126,6 @@ namespace RP0
 
         public static bool UnlockTooling(string type, float diam, float len)
         {
-            //Debug.Log("[Tooling]: Purchasing " + type + ", " + diam + " x " + len);
-
             List<ToolingDiameter> lst;
             if (!toolings.TryGetValue(type, out lst))
             {
@@ -161,7 +146,6 @@ namespace RP0
                 {
                     ToolingDiameter d = new ToolingDiameter(diam, len);
                     lst.Insert(insertionIdx, d);
-                    //Debug.Log("Inserting new diameter and length");
                     return true;
                 }
 
@@ -169,13 +153,11 @@ namespace RP0
 
                 if (lIndex != -1)
                 {
-                    //Debug.Log("Purchased already!!!");
                     return false;
                 }
                 else
                 {
                     lst[dIndex].lengths.Insert(insertionIdx, len);
-                    //Debug.Log("Inserting new length");
                     return true;
                 }
             }

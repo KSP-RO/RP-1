@@ -81,21 +81,7 @@
     <Compile Include="Avionics\ModuleAvionicsModifier.cs" />
     <Compile Include="Avionics\ModuleProceduralAvionics.cs" />
     <Compile Include="ModuleRangeSafety.cs" />
-    <Compile Include="ModuleTag\AtmosphereAnalysis.cs" />
-    <Compile Include="ModuleTag\Barometer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ModuleTag\BioSample.cs" />
     <Compile Include="ModuleTag\DummyModule.cs" />
-    <Compile Include="ModuleTag\FilmReturn.cs" />
-    <Compile Include="ModuleTag\Geiger.cs" />
-    <Compile Include="ModuleTag\MicrometeoriteEarly.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ModuleTag\Perturbation.cs" />
-    <Compile Include="ModuleTag\Thermometer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Avionics\ModuleAvionics.cs" />
     <Compile Include="Avionics\ModuleScienceCore.cs" />
     <Compile Include="ModuleShowInfo.cs" />

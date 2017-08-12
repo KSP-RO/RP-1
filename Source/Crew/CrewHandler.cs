@@ -90,6 +90,8 @@ namespace RP0.Crew
 
         #region Fields
 
+        public CrewHandlerSettings settings = new CrewHandlerSettings();
+
         protected Dictionary<string, double> kerbalRetireTimes = new Dictionary<string, double>();
 
         protected HashSet<string> retirees = new HashSet<string>();
@@ -164,6 +166,9 @@ namespace RP0.Crew
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
+
+            foreach (ConfigNode stg in GameDatabase.Instance.GetConfigNodes("CREWHANDLERSETTINGS"))
+                settings.Load(stg);
 
             kerbalRetireTimes.Clear();
             ConfigNode n = node.GetNode("RETIRETIMES");
@@ -461,7 +466,7 @@ namespace RP0.Crew
         protected void ACSpawn()
         {
             inAC = true;
-            countAvailable = countKIA = 0;
+            countAvailable = countKIA = -1;
         }
 
         protected void ACDespawn()
@@ -529,44 +534,45 @@ namespace RP0.Crew
                 double constant = 0.5d;
                 if (hasSpace)
                 {
-                    multiplier += 2d;
-                    constant += 2d;
+                    multiplier += settings.recSpace.x;
+                    constant += settings.recSpace.y;
                 }
                 if (hasOrbit)
                 {
-                    multiplier += 5d;
-                    constant += 10d;
+                    multiplier += settings.recOrbit.x;
+                    constant += settings.recOrbit.y;
                 }
                 if (hasOther)
                 {
-                    multiplier += 10d;
-                    constant += 10d;
+                    multiplier += settings.recOtherBody.x;
+                    constant += settings.recOtherBody.y;
                 }
                 if (hasEVA)
                 {
-                    multiplier += 15d;
-                    constant += 20d;
+                    multiplier += settings.recEVA.x;
+                    constant += settings.recEVA.y;
                 }
                 if (hasEVAOther)
                 {
-                    multiplier += 20d;
-                    constant += 25d;
+                    multiplier += settings.recEVAOther.x;
+                    constant += settings.recEVAOther.y;
                 }
                 if (hasOrbitOther)
                 {
-                    multiplier += 15d;
-                    constant += 10d;
+                    multiplier += settings.recOrbitOther.x;
+                    constant += settings.recOrbitOther.y;
                 }
                 if (hasLandOther)
                 {
-                    multiplier += 30d;
-                    constant += 30d;
+                    multiplier += settings.recLandOther.x;
+                    constant += settings.recLandOther.y;
                 }
 
                 double retTime;
                 if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
                 {
-                    double offset = constant * 86400d * 100d / (1 + curFlight * curFlight) * (0.8d + (1d - pcm.stupidity) * 0.6d);
+                    double offset = constant * 86400d * settings.retireOffsetBaseMult / (1 + Math.Pow(Math.Max(curFlight + settings.retireOffsetFlightNumOffset, 0d), settings.retireOffsetFlightNumPow)
+                        * UtilMath.Lerp(settings.retireOffsetStupidMin, settings.retireOffsetStupidMax, pcm.stupidity));
                     if (offset > 0d)
                     {
                         retTime += offset;
@@ -627,7 +633,9 @@ namespace RP0.Crew
 
         protected double GetServiceTime(ProtoCrewMember pcm)
         {
-            return 86400d * 365d * (5d + pcm.courage * 3d + (1d - pcm.stupidity));
+            return 86400d * 365d * (settings.retireBaseYears
+                + UtilMath.Lerp(settings.retireCourageMin, settings.retireCourageMax, pcm.courage)
+                + UtilMath.Lerp(settings.retireStupidMin, settings.retireStupidMax, pcm.stupidity));
         }
 
         protected void FixTooltip(KSP.UI.CrewListItem cli)
@@ -770,13 +778,13 @@ namespace RP0.Crew
             n.AddValue("id", "prof_" + name);
             n.AddValue("name", "Proficiency: " + name);
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400d));
-            n.AddValue("expiration", 4d * 86400d * 365d);
+            n.AddValue("expiration", settings.trainingProficiencyExpirationYears * 86400d * 365d);
             n.AddValue("expirationUseStupid", true);
 
             n.AddValue("conflicts", "TRAINING_proficiency:" + name);
 
             ConfigNode r = n.AddNode("REWARD");
-            r.AddValue("XPAmt", "1");
+            r.AddValue("XPAmt", settings.trainingProficiencyXP);
             ConfigNode l = r.AddNode("FLIGHTLOG");
             l.AddValue("0", "TRAINING_proficiency," + name);
 
@@ -787,7 +795,7 @@ namespace RP0.Crew
             ConfigNode n2 = n.CreateCopy();
             n2.SetValue("id", "profR_" + name);
             n2.SetValue("name", "Refresher: " + name);
-            n2.SetValue("time", 1d + TrainingDatabase.GetTime(name) * 86400d * 0.25d);
+            n2.SetValue("time", 1d + TrainingDatabase.GetTime(name) * 86400d * settings.trainingProficiencyRefresherTimeMult);
             n2.AddValue("preReqs", "expired_TRAINING_proficiency:" + name);
             r = n2.GetNode("REWARD");
             r.SetValue("XPAmt", "0");
@@ -805,8 +813,9 @@ namespace RP0.Crew
             n.AddValue("id", "msn_" + name);
             n.AddValue("name", "Mission: " + name);
             n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "_Mission") * 86400d);
+            n.AddValue("timeUseStupid", true);
             n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
-            n.AddValue("expiration", 120d * 86400d);
+            n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);
 
             n.AddValue("preReqs", "TRAINING_proficiency:" + name);
             n.AddValue("conflicts", "TRAINING_mission:" + name);

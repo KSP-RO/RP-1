@@ -181,7 +181,9 @@ namespace RP0.Crew
                             exp.pcmName = student.name;
                             exp.expiration = expiration;
                             if (expirationUseStupid)
-                                exp.expiration *= (1.5d - student.stupidity);
+                                exp.expiration *= UtilMath.Lerp(CrewHandler.Instance.settings.trainingProficiencyStupidMin,
+                                    CrewHandler.Instance.settings.trainingProficiencyStupidMax,
+                                    student.stupidity);
                             exp.expiration += Planetarium.GetUniversalTime();
                         }
 

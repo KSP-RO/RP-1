@@ -177,11 +177,14 @@ namespace RP0.Crew
             if (students == null || !timeUseStupid)
                 return time;
 
-            double maxStupid = 0d;
-            foreach (ProtoCrewMember pcm in students)
-                maxStupid = Math.Max(pcm.stupidity, maxStupid);
+            double averageStupid = 0d;
+            int sC = students.Count;
+            for(int i = sC; i-- > 0;)
+                averageStupid += students[i].stupidity;
 
-            return time * (0.5d + maxStupid);
+            averageStupid /= sC;
+
+            return time * UtilMath.Lerp(CrewHandler.Instance.settings.trainingMissionStupidMin, CrewHandler.Instance.settings.trainingMissionStupidMax, averageStupid);
         }
 
         public double GetExpiration(ProtoCrewMember pcm)

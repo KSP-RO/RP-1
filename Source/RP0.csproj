@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Crew\ActiveCourse.cs" />
     <Compile Include="Crew\CourseTemplate.cs" />
+    <Compile Include="Crew\CrewHandlerData.cs" />
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="EntryCostStorage.cs" />

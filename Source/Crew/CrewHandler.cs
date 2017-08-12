@@ -639,7 +639,54 @@ namespace RP0.Crew
                 cli.SetTooltip(pcm);
                 KSP.UI.TooltipTypes.TooltipController_CrewAC ttc = cliTooltip.GetValue(cli) as KSP.UI.TooltipTypes.TooltipController_CrewAC;
                 ttc.descriptionString += "\n\nRetires no earlier than " + KSPUtil.PrintDate(retTime, false);
+
+                // Training
+                HashSet<string> expiredProfs = new HashSet<string>();
+                bool found = false;
+                string trainingStr = "\n\nTraining:";
+                foreach (FlightLog.Entry ent in pcm.flightLog.Entries)
+                {
+                    string pretty = GetPrettyCourseName(ent.type);
+                    if (!string.IsNullOrEmpty(pretty))
+                    {
+                        found = true;
+
+                        if (ent.type == "expired_TRAINING_proficiency")
+                            expiredProfs.Add(ent.target);
+                        else
+                        {
+                            trainingStr += "\n  " + pretty + ent.target;
+                            double exp = GetExpiration(pcm.name, ent);
+                            if (exp > 0d)
+                                trainingStr += ". Expires " + KSPUtil.PrintDate(exp, false);
+                        }
+                    }
+                }
+                if (expiredProfs.Count > 0)
+                    trainingStr += "\n  Expired proficiencies:";
+                foreach (string s in expiredProfs)
+                    trainingStr += "\n    " + s;
+
+                if (found)
+                    ttc.descriptionString += trainingStr;
             }
+        }
+        protected double GetExpiration(string pcmName, FlightLog.Entry ent)
+        {
+            for (int i = expireTimes.Count; i-- > 0;)
+            {
+                TrainingExpiration e = expireTimes[i];
+                if (e.pcmName == pcmName)
+                {
+                    for (int j = e.entries.Count; j-- > 0;)
+                    {
+                        if (e.Compare(j, ent))
+                            return e.expiration;
+                    }
+                }
+            }
+
+            return 0d;
         }
 
         /* UI: display list of retirement NET dates.  Called from MaintenanceWindow */
@@ -784,8 +831,12 @@ namespace RP0.Crew
             {
                 case "TRAINING_proficiency":
                     return "Proficiency with ";
+                case "expired_TRAINING_proficiency":
+                    return "(Expired) Proficiency with ";
                 case "TRAINING_mission":
                     return "Mission training for ";
+                /*case "expired_TRAINING_mission":
+                    return "(Expired) Mission training for ";*/
                 default:
                     return string.Empty;
             }

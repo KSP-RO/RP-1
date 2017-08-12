@@ -24,7 +24,7 @@ namespace RP0
         public string toolingName = "Tool Tank";
 
         [KSPField]
-        public float untooledMultiplier = 10f;
+        public float untooledMultiplier = 0.25f;
 
         [KSPField]
         public float finalToolingCostMultiplier = 1f;

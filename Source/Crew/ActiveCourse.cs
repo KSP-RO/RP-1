@@ -220,6 +220,8 @@ namespace RP0.Crew
 
             Started = true;
 
+            startTime = Planetarium.GetUniversalTime();
+
             foreach (ProtoCrewMember student in Students)
                 student.SetInactive(GetTime(Students) + 1d);
 

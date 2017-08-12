@@ -13,6 +13,14 @@ namespace RP0
         public string toolingType = "TankStarting";
 
         [KSPField]
+        public string costReducers = string.Empty;
+
+        [KSPField]
+        public float costReductionMult = 0.5f;
+
+        public List<string> reducers = new List<string>();
+
+        [KSPField]
         public string toolingName = "Tool Tank";
 
         [KSPField]
@@ -101,6 +109,9 @@ namespace RP0
 
             tEvent.guiActiveEditor = IsUnlocked();
             tEvent.guiName = toolingName;
+
+            if (!string.IsNullOrEmpty(costReducers))
+                reducers = new List<string>(costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)

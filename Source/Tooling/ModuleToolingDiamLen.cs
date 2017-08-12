@@ -17,7 +17,18 @@ namespace RP0
             GetDimensions(out d, out l);
             float cost = lengthToolingCost.x * d * d + lengthToolingCost.y * d + lengthToolingCost.z * l + lengthToolingCost.w;
             if (ToolingDatabase.HasTooling(toolingType, d, l) == ToolingDatabase.ToolingLevel.None)
-                cost += diameterToolingCost.x * d * d + diameterToolingCost.y * d + diameterToolingCost.z;
+            {
+                float mult = 1f;
+                foreach (string s in reducers)
+                {
+                    if (ToolingDatabase.HasTooling(s, d, l) > ToolingDatabase.ToolingLevel.None)
+                    {
+                        mult = costReductionMult;
+                        break;
+                    }
+                }
+                cost += mult * (diameterToolingCost.x * d * d + diameterToolingCost.y * d + diameterToolingCost.z);
+            }
 
             return cost * finalToolingCostMultiplier;
         }

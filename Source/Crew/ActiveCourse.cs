@@ -87,9 +87,9 @@ namespace RP0.Crew
 
                 int needCount = pCount;
 
-                for (int entryIdx = student.flightLog.Count; entryIdx-- > 0 && (needCount > 0 || cCount > 0);)
+                for (int entryIdx = student.careerLog.Count; entryIdx-- > 0 && (needCount > 0 || cCount > 0);)
                 {
-                    FlightLog.Entry e = student.flightLog.Entries[entryIdx];
+                    FlightLog.Entry e = student.careerLog.Entries[entryIdx];
 
                     for (int preIdx = pCount; preIdx-- > 0 && needCount > 0;)
                     {
@@ -169,12 +169,11 @@ namespace RP0.Crew
                     if (student == null)
                         continue;
 
-                    if (rewardXP != 0)
-                        student.ExtraExperience += rewardXP;
-
                     if (RewardLog != null)
                     {
-                        student.flightLog.AddFlight();
+                        if (student.flightLog.Count > 0)
+                            student.ArchiveFlightLog();
+
                         CrewHandler.TrainingExpiration exp = null;
                         if (expiration > 0d)
                         {
@@ -192,6 +191,7 @@ namespace RP0.Crew
                         {
                             string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             student.flightLog.AddEntry(s[0], s.Length == 1 ? null : s[1]);
+                            student.ArchiveFlightLog();
                             if (expiration > 0d)
                                 exp.entries.Add(v.value);
                         }
@@ -199,6 +199,9 @@ namespace RP0.Crew
                         if (expiration > 0d)
                             CrewHandler.Instance.AddExpiration(exp);
                     }
+
+                    if (rewardXP != 0)
+                        student.ExtraExperience += rewardXP;
                 }
             }
 

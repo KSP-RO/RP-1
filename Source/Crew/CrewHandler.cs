@@ -330,12 +330,12 @@ namespace RP0.Crew
                         ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[e.pcmName];
                         if (pcm != null)
                         {
-                            for (int j = pcm.flightLog.Entries.Count; j-- > 0;)
+                            for (int j = pcm.careerLog.Entries.Count; j-- > 0;)
                             {
                                 int eC = e.entries.Count;
                                 if (eC == 0)
                                     break;
-                                FlightLog.Entry ent = pcm.flightLog[j];
+                                FlightLog.Entry ent = pcm.careerLog[j];
                                 for (int k = eC; k-- > 0;)
                                 {
                                     if (e.Compare(k, ent))
@@ -496,8 +496,8 @@ namespace RP0.Crew
                 bool hasOther = false;
                 bool hasOrbitOther = false;
                 bool hasLandOther = false;
-                int curFlight = pcm.flightLog.Last().flight;
-                foreach (FlightLog.Entry e in pcm.flightLog.Entries)
+                int curFlight = pcm.careerLog.Last().flight;
+                foreach (FlightLog.Entry e in pcm.careerLog.Entries)
                 {
                     if (e.flight != curFlight)
                         continue;
@@ -665,8 +665,8 @@ namespace RP0.Crew
             HashSet<string> expiredProfs = new HashSet<string>();
             bool found = false;
             string trainingStr = "\n\nTraining:";
-            int lastFlight = pcm.flightLog.Last() == null ? 0 : pcm.flightLog.Last().flight;
-            foreach (FlightLog.Entry ent in pcm.flightLog.Entries)
+            int lastFlight = pcm.careerLog.Last() == null ? 0 : pcm.careerLog.Last().flight;
+            foreach (FlightLog.Entry ent in pcm.careerLog.Entries)
             {
                 string pretty = GetPrettyCourseName(ent.type);
                 if (!string.IsNullOrEmpty(pretty))

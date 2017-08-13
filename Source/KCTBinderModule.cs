@@ -39,15 +39,15 @@ namespace RP0
 
             partName = Crew.TrainingDatabase.SynonymReplace(partName);
 
-            FlightLog.Entry ent = pcm.flightLog.Last();
+            FlightLog.Entry ent = pcm.careerLog.Last();
             if (ent == null)
                 return false;
 
             int lastFlight = ent.flight;
             bool lacksMission = true;
-            for (int i = pcm.flightLog.Entries.Count; i-- > 0;)
+            for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
             {
-                FlightLog.Entry e = pcm.flightLog.Entries[i];
+                FlightLog.Entry e = pcm.careerLog.Entries[i];
                 if (lacksMission)
                 {
                     if (e.flight < lastFlight)

@@ -656,6 +656,7 @@ namespace RP0.Crew
                 HashSet<string> expiredProfs = new HashSet<string>();
                 bool found = false;
                 string trainingStr = "\n\nTraining:";
+                int lastFlight = pcm.flightLog.Last() == null ? 0 : pcm.flightLog.Last().flight;
                 foreach (FlightLog.Entry ent in pcm.flightLog.Entries)
                 {
                     string pretty = GetPrettyCourseName(ent.type);
@@ -667,6 +668,9 @@ namespace RP0.Crew
                             expiredProfs.Add(ent.target);
                         else
                         {
+                            if (ent.type == "TRAINING_mission" && ent.flight != lastFlight)
+                                continue;
+
                             trainingStr += "\n  " + pretty + ent.target;
                             double exp = GetExpiration(pcm.name, ent);
                             if (exp > 0d)

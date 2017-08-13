@@ -92,7 +92,7 @@ namespace RP0.Crew
 
         public CrewHandlerSettings settings = new CrewHandlerSettings();
 
-        protected Dictionary<string, double> kerbalRetireTimes = new Dictionary<string, double>();
+        public Dictionary<string, double> kerbalRetireTimes = new Dictionary<string, double>();
 
         protected HashSet<string> retirees = new HashSet<string>();
 

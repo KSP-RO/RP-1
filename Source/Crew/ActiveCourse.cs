@@ -142,6 +142,23 @@ namespace RP0.Crew
             RemoveStudent(HighLogic.CurrentGame.CrewRoster[student]);
         }
 
+        public double GetTime()
+        {
+            return GetTime(Students);
+        }
+
+        /* Returns time at which this course will complete */
+        public double CompletionTime()
+        {
+            double start, length;
+            if (Started)
+                start = startTime;
+            else
+                start = Planetarium.GetUniversalTime();
+            length = GetTime();
+            return start + length;
+        }
+
         public bool ProgressTime(double curT)
         {
             if (!Started)

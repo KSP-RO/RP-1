@@ -415,6 +415,20 @@ namespace RP0.Crew
                             if (cli.GetCrewRef().inactive)
                             {
                                 cli.MouseoverEnabled = false;
+                                bool notTraining = true;
+                                for (int i = ActiveCourses.Count; i-- > 0 && notTraining;)
+                                {
+                                    foreach (ProtoCrewMember pcm in ActiveCourses[i].Students)
+                                    {
+                                        if (pcm == cli.GetCrewRef())
+                                        {
+                                            notTraining = false;
+                                            cli.SetLabel("Training, done " + KSPUtil.PrintDate(ActiveCourses[i].startTime + ActiveCourses[i].GetTime(ActiveCourses[i].Students), false));
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(notTraining)
                                 cli.SetLabel("Recovering");
                             }
                         }

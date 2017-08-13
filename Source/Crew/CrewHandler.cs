@@ -653,40 +653,53 @@ namespace RP0.Crew
                 ttc.descriptionString += "\n\nRetires no earlier than " + KSPUtil.PrintDate(retTime, false);
 
                 // Training
-                HashSet<string> expiredProfs = new HashSet<string>();
-                bool found = false;
-                string trainingStr = "\n\nTraining:";
-                int lastFlight = pcm.flightLog.Last() == null ? 0 : pcm.flightLog.Last().flight;
-                foreach (FlightLog.Entry ent in pcm.flightLog.Entries)
-                {
-                    string pretty = GetPrettyCourseName(ent.type);
-                    if (!string.IsNullOrEmpty(pretty))
-                    {
-                        found = true;
 
-                        if (ent.type == "expired_TRAINING_proficiency")
-                            expiredProfs.Add(ent.target);
-                        else
-                        {
-                            if (ent.type == "TRAINING_mission" && ent.flight != lastFlight)
-                                continue;
-
-                            trainingStr += "\n  " + pretty + ent.target;
-                            double exp = GetExpiration(pcm.name, ent);
-                            if (exp > 0d)
-                                trainingStr += ". Expires " + KSPUtil.PrintDate(exp, false);
-                        }
-                    }
-                }
-                if (expiredProfs.Count > 0)
-                    trainingStr += "\n  Expired proficiencies:";
-                foreach (string s in expiredProfs)
-                    trainingStr += "\n    " + s;
-
-                if (found)
+                string trainingStr = GetTrainingString(pcm);
+                if (!string.IsNullOrEmpty(trainingStr))
                     ttc.descriptionString += trainingStr;
             }
         }
+
+        protected string GetTrainingString(ProtoCrewMember pcm)
+        {
+            HashSet<string> expiredProfs = new HashSet<string>();
+            bool found = false;
+            string trainingStr = "\n\nTraining:";
+            int lastFlight = pcm.flightLog.Last() == null ? 0 : pcm.flightLog.Last().flight;
+            foreach (FlightLog.Entry ent in pcm.flightLog.Entries)
+            {
+                string pretty = GetPrettyCourseName(ent.type);
+                if (!string.IsNullOrEmpty(pretty))
+                {
+                    if (ent.type == "expired_TRAINING_proficiency")
+                    {
+                        found = true;
+                        expiredProfs.Add(ent.target);
+                    }
+                    else
+                    {
+                        if (ent.type == "TRAINING_mission" && ent.flight != lastFlight)
+                            continue;
+
+                        found = true;
+                        trainingStr += "\n  " + pretty + ent.target;
+                        double exp = GetExpiration(pcm.name, ent);
+                        if (exp > 0d)
+                            trainingStr += ". Expires " + KSPUtil.PrintDate(exp, false);
+                    }
+                }
+            }
+            if (expiredProfs.Count > 0)
+                trainingStr += "\n  Expired proficiencies:";
+            foreach (string s in expiredProfs)
+                trainingStr += "\n    " + s;
+
+            if (found)
+                return trainingStr;
+            else
+                return string.Empty;
+        }
+
         protected double GetExpiration(string pcmName, FlightLog.Entry ent)
         {
             for (int i = expireTimes.Count; i-- > 0;)

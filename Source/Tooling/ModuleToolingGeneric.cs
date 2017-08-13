@@ -55,14 +55,16 @@ namespace RP0
             if (diameter == null)
             {
                 diameter = pm.Fields[diamField];
+
                 if (diameter == null)
+                {
                     Debug.LogError("[ModuleTooling]: Could not bind to field: " + diamField + " on " + partModuleName);
-                return;
+                    return;
+                }
             }
 
             if(useLength && length == null)
             {
-
                 length = pm.Fields[lenField];
 
                 if (length == null)

@@ -46,8 +46,10 @@ namespace RP0
 
 
                 if (baseRad == null)
+                {
                     Debug.LogError("[ModuleTooling]: Could not bind to fields in PF module");
-                return;
+                    return;
+                }
             }
             float baseRadF, maxRadF, cylEndF, sideThicknessF, inlineHeightF, noseHeightRatioF;
             baseRadF = baseRad.GetValue<float>(pm);

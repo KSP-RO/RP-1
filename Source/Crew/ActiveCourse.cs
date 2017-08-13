@@ -73,8 +73,9 @@ namespace RP0.Crew
 
         public bool MeetsStudentReqs(ProtoCrewMember student)
         {
-            if (!((student.type == (ProtoCrewMember.KerbalType.Crew) && (seatMax <= 0 || Students.Count < seatMax) && !student.inactive && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && student.experienceLevel >= minLevel &&
-                student.experienceLevel <= maxLevel && (classes.Length == 0 || classes.Contains(student.trait)) && !Students.Contains(student))))
+            if (!((student.type == (ProtoCrewMember.KerbalType.Crew) && (seatMax <= 0 || Students.Count < seatMax) && !student.inactive 
+                && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && student.experienceLevel >= minLevel && student.experienceLevel <= maxLevel 
+                && (classes.Length == 0 || classes.Contains(student.trait)) && !Students.Contains(student))))
                 return false;
 
             int pCount = preReqs.GetLength(0);
@@ -86,11 +87,11 @@ namespace RP0.Crew
 
                 int needCount = pCount;
 
-                for (int entryIdx = student.flightLog.Count; entryIdx-- > 0 && needCount > 0;)
+                for (int entryIdx = student.flightLog.Count; entryIdx-- > 0 && (needCount > 0 || cCount > 0);)
                 {
                     FlightLog.Entry e = student.flightLog.Entries[entryIdx];
 
-                    for (int preIdx = pCount; preIdx-- > 0;)
+                    for (int preIdx = pCount; preIdx-- > 0 && needCount > 0;)
                     {
                         if (pChecker[preIdx] && (e.type == preReqs[preIdx, 0] && (string.IsNullOrEmpty(preReqs[preIdx, 1]) || e.target == preReqs[preIdx, 1])))
                         {

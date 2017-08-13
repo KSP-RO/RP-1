@@ -30,12 +30,20 @@ namespace RP0
 
         public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)
         {
+            // lolwut. But just in case.
+            if (pcm == null)
+                return false;
+
             if (EntryCostStorage.GetCost(partName) == 1)
                 return true;
 
             partName = Crew.TrainingDatabase.SynonymReplace(partName);
 
-            int lastFlight = pcm.flightLog.Last().flight;
+            FlightLog.Entry ent = pcm.flightLog.Last();
+            if (ent == null)
+                return false;
+
+            int lastFlight = ent.flight;
             bool lacksMission = true;
             for (int i = pcm.flightLog.Entries.Count; i-- > 0;)
             {
@@ -45,11 +53,17 @@ namespace RP0
                     if (e.flight < lastFlight)
                         return false;
 
+                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
+                        continue;
+
                     if (e.type == "TRAINING_mission" && e.target == partName)
                         lacksMission = false;
                 }
                 else
                 {
+                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
+                        continue;
+
                     if (e.type == "TRAINING_proficiency" && e.target == partName)
                         return true;
                 }

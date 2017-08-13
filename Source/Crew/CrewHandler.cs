@@ -816,7 +816,7 @@ namespace RP0.Crew
 
             n.AddValue("id", "msn_" + name);
             n.AddValue("name", "Mission: " + name);
-            n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "_Mission") * 86400d);
+            n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "-Mission") * 86400d);
             n.AddValue("timeUseStupid", true);
             n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
             n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);

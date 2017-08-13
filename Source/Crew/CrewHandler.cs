@@ -428,8 +428,8 @@ namespace RP0.Crew
                                         }
                                     }
                                 }
-                                if(notTraining)
-                                cli.SetLabel("Recovering");
+                                if (notTraining)
+                                    cli.SetLabel("Recovering");
                             }
                         }
                     }

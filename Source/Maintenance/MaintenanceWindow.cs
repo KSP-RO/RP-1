@@ -9,7 +9,7 @@ namespace RP0
     {
         // GUI
         static Rect windowPos = new Rect(500, 240, 0, 0);
-        static bool guiEnabled = true;
+        static bool guiEnabled = false;
         private ApplicationLauncherButton button;
         private GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
         private Vector2 nautListScroll = new Vector2();

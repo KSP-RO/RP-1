@@ -134,6 +134,7 @@ namespace RP0.Crew
                 {
                     UnityEngine.Debug.Log("[FS] Kerbal removed from in-progress class!");
                     //TODO: Assign partial rewards, based on what the REWARD nodes think
+                    student.inactive = false;
                 }
             }
         }

@@ -660,7 +660,7 @@ namespace RP0.Crew
             }
         }
 
-        protected string GetTrainingString(ProtoCrewMember pcm)
+        public string GetTrainingString(ProtoCrewMember pcm)
         {
             HashSet<string> expiredProfs = new HashSet<string>();
             bool found = false;

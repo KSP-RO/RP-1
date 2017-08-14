@@ -718,30 +718,6 @@ namespace RP0.Crew
             return 0d;
         }
 
-        /* UI: display list of retirement NET dates.  Called from MaintenanceWindow */
-        public void nautList()
-        {
-            GUILayout.BeginHorizontal();
-            try {
-                GUILayout.Space(40);
-                GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(120));
-                GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(80));
-            } finally {
-                GUILayout.EndHorizontal();
-            }
-            foreach (string name in kerbalRetireTimes.Keys) {
-                GUILayout.BeginHorizontal();
-                try {
-                    GUILayout.Space(40);
-                    double rt = kerbalRetireTimes[name];
-                    GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(120));
-                    GUILayout.Label(KSPUtil.PrintDate(rt, false), HighLogic.Skin.label, GUILayout.Width(80));
-                } finally {
-                    GUILayout.EndHorizontal();
-                }
-            }
-        }
-
         protected void FindAllCourseConfigs()
         {
             CourseTemplates.Clear();

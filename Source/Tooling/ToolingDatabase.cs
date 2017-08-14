@@ -39,7 +39,7 @@ namespace RP0
             return a.CompareTo(b);
         }
 
-        protected static Dictionary<string, List<ToolingDiameter>> toolings = new Dictionary<string, List<ToolingDiameter>>();
+        public static Dictionary<string, List<ToolingDiameter>> toolings = new Dictionary<string, List<ToolingDiameter>>();
 
         protected static int DiamIndex(float diam, List<ToolingDiameter> lst, out int min)
         {

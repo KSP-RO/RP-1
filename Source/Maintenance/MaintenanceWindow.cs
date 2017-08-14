@@ -9,7 +9,7 @@ namespace RP0
     {
         // GUI
         static Rect windowPos = new Rect(500, 240, 0, 0);
-        static bool guiEnabled = true;
+        static bool guiEnabled = false;
         private ApplicationLauncherButton button;
         private GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
         private Vector2 nautListScroll = new Vector2();
@@ -310,6 +310,29 @@ namespace RP0
             }
         }
 
+        private void nautList()
+        {
+            GUILayout.BeginHorizontal();
+            try {
+                GUILayout.Space(40);
+                GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(120));
+                GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(80));
+            } finally {
+                GUILayout.EndHorizontal();
+            }
+            foreach (string name in Crew.CrewHandler.Instance.kerbalRetireTimes.Keys) {
+                GUILayout.BeginHorizontal();
+                try {
+                    GUILayout.Space(40);
+                    double rt = Crew.CrewHandler.Instance.kerbalRetireTimes[name];
+                    GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(120));
+                    GUILayout.Label(KSPUtil.PrintDate(rt, false), HighLogic.Skin.label, GUILayout.Width(80));
+                } finally {
+                    GUILayout.EndHorizontal();
+                }
+            }
+        }
+
         private void astronautsTab()
         {
             GUILayout.BeginHorizontal();
@@ -329,7 +352,7 @@ namespace RP0
             }
             nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(280), GUILayout.Height(144));
             try {
-                RP0.Crew.CrewHandler.Instance.nautList();
+                nautList();
             } finally {
                 GUILayout.EndScrollView();
             }

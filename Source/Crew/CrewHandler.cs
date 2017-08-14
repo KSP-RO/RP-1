@@ -92,7 +92,7 @@ namespace RP0.Crew
 
         public CrewHandlerSettings settings = new CrewHandlerSettings();
 
-        protected Dictionary<string, double> kerbalRetireTimes = new Dictionary<string, double>();
+        public Dictionary<string, double> kerbalRetireTimes = new Dictionary<string, double>();
 
         protected HashSet<string> retirees = new HashSet<string>();
 
@@ -674,7 +674,7 @@ namespace RP0.Crew
             }
         }
 
-        protected string GetTrainingString(ProtoCrewMember pcm)
+        public string GetTrainingString(ProtoCrewMember pcm)
         {
             HashSet<string> expiredProfs = new HashSet<string>();
             bool found = false;
@@ -730,30 +730,6 @@ namespace RP0.Crew
             }
 
             return 0d;
-        }
-
-        /* UI: display list of retirement NET dates.  Called from MaintenanceWindow */
-        public void nautList()
-        {
-            GUILayout.BeginHorizontal();
-            try {
-                GUILayout.Space(40);
-                GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(120));
-                GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(80));
-            } finally {
-                GUILayout.EndHorizontal();
-            }
-            foreach (string name in kerbalRetireTimes.Keys) {
-                GUILayout.BeginHorizontal();
-                try {
-                    GUILayout.Space(40);
-                    double rt = kerbalRetireTimes[name];
-                    GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(120));
-                    GUILayout.Label(KSPUtil.PrintDate(rt, false), HighLogic.Skin.label, GUILayout.Width(80));
-                } finally {
-                    GUILayout.EndHorizontal();
-                }
-            }
         }
 
         protected void FindAllCourseConfigs()

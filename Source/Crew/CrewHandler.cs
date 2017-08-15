@@ -28,11 +28,10 @@ namespace RP0.Crew
                 Load(node);
             }
 
-            public bool Compare(int idx, FlightLog.Entry e)
+            public static bool Compare(string str, FlightLog.Entry e)
             {
-                string str = entries[idx];
                 int tyLen = (string.IsNullOrEmpty(e.type) ? 0 : e.type.Length);
-                int tgLen = (string.IsNullOrEmpty(e.target ) ? 0 : e.target.Length);
+                int tgLen = (string.IsNullOrEmpty(e.target) ? 0 : e.target.Length);
                 int iC = str.Length;
                 if (iC != 1 + tyLen + tgLen)
                     return false;
@@ -54,6 +53,11 @@ namespace RP0.Crew
                 }
 
                 return true;
+            }
+
+            public bool Compare(int idx, FlightLog.Entry e)
+            {
+                return Compare(entries[idx], e);
             }
 
             public void Load(ConfigNode node)
@@ -807,9 +811,13 @@ namespace RP0.Crew
             n2.SetValue("id", "profR_" + name);
             n2.SetValue("name", "Refresher: " + name);
             n2.SetValue("time", 1d + TrainingDatabase.GetTime(name) * 86400d * settings.trainingProficiencyRefresherTimeMult);
-            n2.AddValue("preReqs", "expired_TRAINING_proficiency:" + name);
+            n2.AddValue("preReqsAny", "expired_TRAINING_proficiency:" + name + ",TRAINING_proficiency:" + name);
+            n2.RemoveValue("conflicts");
+
             r = n2.GetNode("REWARD");
             r.SetValue("XPAmt", "0");
+            ConfigNode exp = r.AddNode("EXPIRELOG");
+            exp.AddValue("0", "TRAINING_proficiency," + name);
 
             c = new CourseTemplate(n2);
             c.PopulateFromSourceNode();
@@ -860,6 +868,32 @@ namespace RP0.Crew
                 default:
                     return string.Empty;
             }
+        }
+
+        public bool RemoveExpiration(string pcmName, string entry)
+        {
+            for (int i = expireTimes.Count; i-- > 0;)
+            {
+                TrainingExpiration e = expireTimes[i];
+
+                if (e.pcmName != pcmName)
+                    continue;
+
+                for (int j = e.entries.Count; j-- > 0;)
+                {
+                    if (e.entries[j] == entry)
+                    {
+                        e.entries.RemoveAt(j);
+
+                        if (e.entries.Count == 0)
+                            expireTimes.RemoveAt(i);
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         #endregion

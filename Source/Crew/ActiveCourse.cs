@@ -79,35 +79,45 @@ namespace RP0.Crew
                 return false;
 
             int pCount = preReqs.GetLength(0);
+            int pACount = preReqsAny.GetLength(0);
             int cCount = conflicts.GetLength(0);
-            if (pCount > 0 || cCount > 0)
+            if (pCount > 0 || cCount > 0 || pACount > 0)
             {
                 for (int i = pCount; i-- > 0;)
                     pChecker[i] = true;
 
                 int needCount = pCount;
+                bool needAnyStill = pACount > 0;
 
-                for (int entryIdx = student.careerLog.Count; entryIdx-- > 0 && (needCount > 0 || cCount > 0);)
+                for (int entryIdx = student.careerLog.Count; entryIdx-- > 0 && (needCount > 0 || cCount > 0 || needAnyStill);)
                 {
                     FlightLog.Entry e = student.careerLog.Entries[entryIdx];
 
+                    string tgt = string.IsNullOrEmpty(e.target) ? string.Empty : e.target;
+
                     for (int preIdx = pCount; preIdx-- > 0 && needCount > 0;)
                     {
-                        if (pChecker[preIdx] && (e.type == preReqs[preIdx, 0] && (string.IsNullOrEmpty(preReqs[preIdx, 1]) || e.target == preReqs[preIdx, 1])))
+                        if (pChecker[preIdx] && (e.type == preReqs[preIdx, 0] && tgt == preReqs[preIdx, 1]))
                         {
                             pChecker[preIdx] = false;
                             --needCount;
                         }
                     }
 
+                    for (int anyIdx = pACount; anyIdx-- > 0 && needAnyStill;)
+                    {
+                        if (e.type == preReqsAny[anyIdx, 0] && tgt == preReqsAny[anyIdx, 1])
+                            needAnyStill = false;
+                    }
+
                     for (int conIdx = cCount; conIdx-- > 0;)
                     {
-                        if (e.type == conflicts[conIdx, 0] && (string.IsNullOrEmpty(conflicts[conIdx, 1]) || e.target == conflicts[conIdx, 1]))
+                        if (e.type == conflicts[conIdx, 0] && tgt == conflicts[conIdx, 1])
                             return false;
                     }
                 }
 
-                if (needCount > 0)
+                if (needCount > 0 || needAnyStill)
                     return false;
             }
             return true;
@@ -186,6 +196,23 @@ namespace RP0.Crew
                 {
                     if (student == null)
                         continue;
+
+                    if (ExpireLog != null)
+                    {
+                        foreach (ConfigNode.Value v in ExpireLog.values)
+                        {
+                            for (int i = student.careerLog.Count; i-- > 0;)
+                            {
+                                FlightLog.Entry e = student.careerLog.Entries[i];
+                                if (CrewHandler.TrainingExpiration.Compare(v.value, e))
+                                {
+                                    e.type = "expired_" + e.type;
+                                    CrewHandler.Instance.RemoveExpiration(student.name, v.value);
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
                     if (RewardLog != null)
                     {

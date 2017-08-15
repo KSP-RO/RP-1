@@ -1,98 +1,21 @@
 ﻿using System;
 using UnityEngine;
-using KSP.UI.Screens;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
-    class MaintenanceWindow : MonoBehaviour
+    class MaintenanceGUI : UIBase
     {
-        // GUI
-        static Rect windowPos = new Rect(500, 240, 0, 0);
-        static bool guiEnabled = false;
-        private ApplicationLauncherButton button;
-        private GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
         private Vector2 nautListScroll = new Vector2(), toolingTypesScroll = new Vector2();
+        private TopWindow parent;
 
-        protected void Awake()
+        public MaintenanceGUI(TopWindow parent) : base()
         {
-            rightLabel = new GUIStyle(HighLogic.Skin.label);
-            rightLabel.alignment = TextAnchor.MiddleRight;
-            boldLabel = new GUIStyle(HighLogic.Skin.label);
-            boldLabel.fontStyle = FontStyle.Bold;
-            boldRightLabel = new GUIStyle(rightLabel);
-            boldRightLabel.fontStyle = FontStyle.Bold;
-            pressedButton = new GUIStyle(HighLogic.Skin.button);
-            pressedButton.normal = pressedButton.active;
-            try {
-                GameEvents.onGUIApplicationLauncherReady.Add(this.OnGuiAppLauncherReady);
-            } catch (Exception ex) {
-                Debug.LogError("RP0 failed to register MaintenanceWindow.OnGuiAppLauncherReady");
-                Debug.LogException(ex);
-            }
+            this.parent = parent;
         }
 
-        private void ShowWindow()
-        {
-            guiEnabled = true;
-        }
-        private void HideWindow()
-        {
-            guiEnabled = false;
-        }
-
-        private void OnSceneChange(GameScenes s)
-        {
-            if (s != GameScenes.SPACECENTER)
-                HideWindow();
-        }
-
-        private void OnGuiAppLauncherReady()
-        {
-            if (HighLogic.CurrentGame.Mode != global::Game.Modes.CAREER)
-                return;
-            try {
-                button = ApplicationLauncher.Instance.AddModApplication(
-                    ShowWindow,
-                    HideWindow,
-                    null,
-                    null,
-                    null,
-                    null,
-                    ApplicationLauncher.AppScenes.SPACECENTER,
-                    GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
-                GameEvents.onGameSceneLoadRequested.Add(this.OnSceneChange);
-            } catch (Exception ex) {
-                Debug.LogError("RP0 failed to register MaintenanceWindow");
-                Debug.LogException(ex);
-            }
-        }
-
-        public void OnDestroy()
-        {
-            try {
-                GameEvents.onGUIApplicationLauncherReady.Remove(this.OnGuiAppLauncherReady);
-                if (button != null)
-                    ApplicationLauncher.Instance.RemoveModApplication(button);
-            } catch (Exception ex) {
-                Debug.LogException(ex);
-            }
-        }
-
-        public void OnGUI()
-        {
-            if (guiEnabled)
-            {
-                windowPos = GUILayout.Window("RP0Maintenance".GetHashCode(), windowPos, DrawWindow, "Maintenance Costs");
-                Crew.CrewHandler.Instance.fsGUI.SetGUIPositions(Crew.CrewHandler.Instance.fsGUI.DrawGUIs);
-            }
-        }
-
-        private enum tabs { SUMMARY, Facilities, Integration, Astronauts, Tooling, ToolingType };
-        private tabs currentTab;
-        private string currentToolingType;
         private enum per { DAY, MONTH, YEAR };
         private per displayPer = per.YEAR;
+        public string currentToolingType;
 
         private double perFactor { get {
             switch (displayPer) {
@@ -112,32 +35,6 @@ namespace RP0
             return "N0";
         }}
 
-        private bool toggleButton(string text, bool selected)
-        {
-            return GUILayout.Button(text, selected ? pressedButton : HighLogic.Skin.button);
-        }
-
-        private void tabSelector()
-        {
-            GUILayout.BeginHorizontal();
-            try {
-                if (toggleButton("SUMMARY", currentTab == tabs.SUMMARY))
-                    currentTab = tabs.SUMMARY;
-                if (toggleButton("Facilities", currentTab == tabs.Facilities))
-                    currentTab = tabs.Facilities;
-                if (toggleButton("Integration", currentTab == tabs.Integration))
-                    currentTab = tabs.Integration;
-                if (toggleButton("Astronauts", currentTab == tabs.Astronauts))
-                    currentTab = tabs.Astronauts;
-                if (toggleButton("Tooling", currentTab == tabs.Tooling)) {
-                    currentTab = tabs.Tooling;
-                    currentToolingType = null;
-                }
-            } finally {
-                GUILayout.EndHorizontal();
-            }
-        }
-
         private void perSelector()
         {
             GUILayout.BeginHorizontal();
@@ -153,7 +50,7 @@ namespace RP0
             }
         }
 
-        private void summaryTab()
+        public void summaryTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -200,7 +97,7 @@ namespace RP0
             }
         }
 
-        private void facilitiesTab()
+        public void facilitiesTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -286,7 +183,7 @@ namespace RP0
             }
         }
 
-        private void integrationTab()
+        public void integrationTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -338,7 +235,7 @@ namespace RP0
             }
         }
 
-        private void astronautsTab()
+        public void astronautsTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -389,7 +286,7 @@ namespace RP0
             }
         }
 
-        private void toolingTab()
+        public void toolingTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -410,7 +307,7 @@ namespace RP0
                     counter++;
                     if (GUILayout.Button(type)) {
                         currentToolingType = type;
-                        currentTab = tabs.ToolingType;
+                        parent.currentTab = UIBase.tabs.ToolingType;
                     }
                 }
             } finally {
@@ -442,7 +339,7 @@ namespace RP0
             }
         }
 
-        private void toolingTypeTab()
+        public void toolingTypeTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -462,47 +359,6 @@ namespace RP0
                 }
             } finally {
                 GUILayout.EndScrollView();
-            }
-        }
-
-        public void DrawWindow(int windowID)
-        {
-            try {
-                GUILayout.BeginVertical();
-                try {
-                    /* If totalUpkeep is zero, we probably haven't calculated the upkeeps yet, so recalculate now */
-                    if (MaintenanceHandler.Instance.totalUpkeep == 0d)
-                        MaintenanceHandler.Instance.updateUpkeep();
-
-                    tabSelector();
-                    switch (currentTab) {
-                    case tabs.SUMMARY:
-                        summaryTab();
-                        break;
-                    case tabs.Facilities:
-                        facilitiesTab();
-                        break;
-                    case tabs.Integration:
-                        integrationTab();
-                        break;
-                    case tabs.Astronauts:
-                        astronautsTab();
-                        break;
-                    case tabs.Tooling:
-                        toolingTab();
-                        break;
-                    case tabs.ToolingType:
-                        toolingTypeTab();
-                        break;
-                    default: // can't happen
-                        break;
-                    }
-                } finally {
-                    GUILayout.FlexibleSpace();
-                    GUILayout.EndVertical();
-                }
-            } finally {
-                GUI.DragWindow();
             }
         }
     }

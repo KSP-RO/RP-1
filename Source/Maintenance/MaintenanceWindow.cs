@@ -12,7 +12,7 @@ namespace RP0
         static bool guiEnabled = false;
         private ApplicationLauncherButton button;
         private GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
-        private Vector2 nautListScroll = new Vector2();
+        private Vector2 nautListScroll = new Vector2(), toolingTypesScroll = new Vector2();
 
         protected void Awake()
         {
@@ -88,8 +88,9 @@ namespace RP0
             }
         }
 
-        private enum tabs { SUMMARY, Facilities, Integration, Astronauts };
+        private enum tabs { SUMMARY, Facilities, Integration, Astronauts, Tooling, ToolingType };
         private tabs currentTab;
+        private string currentToolingType;
         private enum per { DAY, MONTH, YEAR };
         private per displayPer = per.YEAR;
 
@@ -128,6 +129,10 @@ namespace RP0
                     currentTab = tabs.Integration;
                 if (toggleButton("Astronauts", currentTab == tabs.Astronauts))
                     currentTab = tabs.Astronauts;
+                if (toggleButton("Tooling", currentTab == tabs.Tooling)) {
+                    currentTab = tabs.Tooling;
+                    currentToolingType = null;
+                }
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -384,6 +389,82 @@ namespace RP0
             }
         }
 
+        private void toolingTab()
+        {
+            GUILayout.BeginHorizontal();
+            try {
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("Tooling Types", HighLogic.Skin.label);
+                GUILayout.FlexibleSpace();
+            } finally {
+                GUILayout.EndHorizontal();
+            }
+            int counter = 0;
+            GUILayout.BeginHorizontal();
+            try {
+                foreach (string type in ToolingDatabase.toolings.Keys) {
+                    if (counter % 3 == 0 && counter != 0) {
+                        GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal();
+                    }
+                    counter++;
+                    if (GUILayout.Button(type)) {
+                        currentToolingType = type;
+                        currentTab = tabs.ToolingType;
+                    }
+                }
+            } finally {
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        private void toolingTypesHeading()
+        {
+            GUILayout.BeginHorizontal();
+            try {
+                GUILayout.Label("Diameter", HighLogic.Skin.label, GUILayout.Width(80));
+                GUILayout.Label("×", HighLogic.Skin.label);
+                GUILayout.Label("Length", rightLabel, GUILayout.Width(80));
+            } finally {
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        private void toolingTypeRow(float diameter, float length)
+        {
+            GUILayout.BeginHorizontal();
+            try {
+                GUILayout.Label(diameter.ToString("F2") + "m", HighLogic.Skin.label, GUILayout.Width(80));
+                GUILayout.Label("×", HighLogic.Skin.label);
+                GUILayout.Label(length.ToString("F2") + "m", rightLabel, GUILayout.Width(80));
+            } finally {
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        private void toolingTypeTab()
+        {
+            GUILayout.BeginHorizontal();
+            try {
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("Toolings for type "+currentToolingType, HighLogic.Skin.label);
+                GUILayout.FlexibleSpace();
+            } finally {
+                GUILayout.EndHorizontal();
+            }
+            toolingTypesHeading();
+            toolingTypesScroll = GUILayout.BeginScrollView(toolingTypesScroll, GUILayout.Width(200), GUILayout.Height(240));
+            try {
+                foreach (ToolingDiameter td in ToolingDatabase.toolings[currentToolingType]) {
+                    foreach (float length in td.lengths) {
+                        toolingTypeRow(td.diameter, length);
+                    }
+                }
+            } finally {
+                GUILayout.EndScrollView();
+            }
+        }
+
         public void DrawWindow(int windowID)
         {
             try {
@@ -406,6 +487,12 @@ namespace RP0
                         break;
                     case tabs.Astronauts:
                         astronautsTab();
+                        break;
+                    case tabs.Tooling:
+                        toolingTab();
+                        break;
+                    case tabs.ToolingType:
+                        toolingTypeTab();
                         break;
                     default: // can't happen
                         break;

@@ -8,55 +8,12 @@ using UnityEngine;
 
 namespace RP0.Crew
 {
-    public class FSGUI
+    public class FSGUI : UIBase
     {
-        public bool showMain = false;
-        public Rect MainGUIPos = new Rect(200, 200, 540, 360);
-        public void SetGUIPositions(GUI.WindowFunction OnWindow)
-        {
-            if (showMain) MainGUIPos = GUILayout.Window(7349, MainGUIPos, DrawMainGUI, "Training");
-        }
-
-        public void DrawGUIs(int windowID)
-        {
-            if (showMain) DrawMainGUI(windowID);
-        }
-
-        private enum tabs { Summary, Courses, NewCourse, Naut };
-        private tabs currentTab = tabs.Summary;
-        ActiveCourse selectedCourse = null;
-        ProtoCrewMember selectedNaut = null;
-        Vector2 nautListScroll = new Vector2();
-        private GUIStyle rightLabel, boldLabel, pressedButton;
+        private ActiveCourse selectedCourse = null;
+        private ProtoCrewMember selectedNaut = null;
+        private Vector2 nautListScroll = new Vector2();
         private Dictionary<ProtoCrewMember, ActiveCourse> activeMap = new Dictionary<ProtoCrewMember, ActiveCourse>();
-
-        public FSGUI()
-        {
-            rightLabel = new GUIStyle(HighLogic.Skin.label);
-            rightLabel.alignment = TextAnchor.MiddleRight;
-            boldLabel = new GUIStyle(HighLogic.Skin.label);
-            boldLabel.fontStyle = FontStyle.Bold;
-            pressedButton = new GUIStyle(HighLogic.Skin.button);
-            pressedButton.normal = pressedButton.active;
-        }
-
-        private bool toggleButton(string text, bool selected, params GUILayoutOption[] options)
-        {
-            return GUILayout.Button(text, selected ? pressedButton : HighLogic.Skin.button, options);
-        }
-
-        private void tabSelector()
-        {
-            GUILayout.BeginHorizontal();
-            try {
-                if (toggleButton("Summary", currentTab == tabs.Summary))
-                    currentTab = tabs.Summary;
-                if (toggleButton("Courses", currentTab == tabs.Courses))
-                    currentTab = tabs.Courses;
-            } finally {
-                GUILayout.EndHorizontal();
-            }
-        }
 
         protected void nautListHeading()
         {
@@ -109,7 +66,7 @@ namespace RP0.Crew
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
-        protected void nautListRow(ProtoCrewMember student)
+        protected void nautListRow(tabs currentTab, ProtoCrewMember student)
         {
             GUIStyle style = HighLogic.Skin.label;
             ActiveCourse currentCourse = null;
@@ -129,9 +86,8 @@ namespace RP0.Crew
                         else
                             selectedCourse.AddStudent(student);
                     }
-                } else if (currentTab == tabs.Summary) {
+                } else if (currentTab == tabs.Training) {
                     if (GUILayout.Button(student.name, GUILayout.Width(96))) {
-                        currentTab = tabs.Naut;
                         selectedNaut = student;
                     }
                 } else {
@@ -171,8 +127,9 @@ namespace RP0.Crew
             }
         }
 
-        protected void summaryTab()
+        private void summaryBody(tabs currentTab)
         {
+            updateActiveMap();
             nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(480), GUILayout.Height(144));
             try {
                 nautListHeading();
@@ -180,29 +137,37 @@ namespace RP0.Crew
                 {
                     ProtoCrewMember student = HighLogic.CurrentGame.CrewRoster[i];
                     if (student.type == ProtoCrewMember.KerbalType.Crew)
-                        nautListRow(student);
+                        nautListRow(currentTab, student);
                 }
             } finally {
                 GUILayout.EndScrollView();
             }
         }
 
+        public tabs summaryTab()
+        {
+            selectedCourse = null;
+            selectedNaut = null;
+            summaryBody(tabs.Training);
+            return selectedNaut == null ? tabs.Training : tabs.Naut;
+        }
+
         protected void courseSelector()
         {
             foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
-                if (GUILayout.Button(course.name)) {
+                if (GUILayout.Button(course.name))
                     selectedCourse = new ActiveCourse(course);
-                    currentTab = tabs.NewCourse;
-                }
             }
         }
 
-        protected void coursesTab()
+        public tabs coursesTab()
         {
+            selectedCourse = null;
             courseSelector();
+            return selectedCourse == null ? tabs.Courses : tabs.NewCourse;
         }
 
-        protected void newCourseTab()
+        public tabs newCourseTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -213,7 +178,7 @@ namespace RP0.Crew
                 GUILayout.EndHorizontal();
             }
             GUILayout.Label(selectedCourse.description);
-            summaryTab();
+            summaryBody(tabs.NewCourse);
             if (selectedCourse.seatMax > 0)
                 GUILayout.Label(selectedCourse.seatMax - selectedCourse.Students.Count + " remaining seat(s).");
             if (selectedCourse.seatMin > selectedCourse.Students.Count)
@@ -224,13 +189,14 @@ namespace RP0.Crew
                 if (selectedCourse.StartCourse()) {
                     CrewHandler.Instance.ActiveCourses.Add(selectedCourse);
                     selectedCourse = null;
-                    currentTab = tabs.Summary;
                 }
             }
+            return selectedCourse == null ? tabs.Training : tabs.NewCourse;
         }
 
-        protected void nautTab()
+        public void nautTab()
         {
+            updateActiveMap();
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.FlexibleSpace();
@@ -276,39 +242,6 @@ namespace RP0.Crew
                 foreach (ProtoCrewMember student in course.Students) {
                     activeMap[student] = course;
                 }
-            }
-        }
-
-        protected void DrawMainGUI(int windowID)
-        {
-            updateActiveMap();
-            try {
-                GUILayout.BeginVertical();
-                try {
-                    tabSelector();
-                    switch (currentTab) {
-                    case tabs.Summary:
-                        selectedCourse = null;
-                        summaryTab();
-                        break;
-                    case tabs.Courses:
-                        coursesTab();
-                        break;
-                    case tabs.NewCourse:
-                        newCourseTab();
-                        break;
-                    case tabs.Naut:
-                        nautTab();
-                        break;
-                    default: // can't happen
-                        break;
-                    }
-                } finally {
-                    GUILayout.FlexibleSpace();
-                    GUILayout.EndVertical();
-                }
-            } finally {
-                GUI.DragWindow();
             }
         }
     }

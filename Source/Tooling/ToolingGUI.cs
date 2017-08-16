@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RP0
@@ -6,6 +7,7 @@ namespace RP0
     public class ToolingGUI : UIBase
     {
         private Vector2 toolingTypesScroll = new Vector2();
+        private static HashSet<string> untooledParts = new HashSet<string>();
         public string currentToolingType;
 
         public tabs toolingTab()
@@ -33,6 +35,29 @@ namespace RP0
                 }
             } finally {
                 GUILayout.EndHorizontal();
+            }
+
+            untooledParts.Clear();
+            if (HighLogic.LoadedSceneIsEditor && EditorLogic.fetch != null && EditorLogic.fetch.ship != null && EditorLogic.fetch.ship.Parts.Count > 0) {
+                for (int i = EditorLogic.fetch.ship.Parts.Count; i-- > 0;) {
+                    Part p = EditorLogic.fetch.ship.Parts[i];
+                    for (int j = p.Modules.Count; j-- > 0;) {
+                        PartModule m = p.Modules[j];
+                        ModuleTooling mT;
+                        if (m is ModuleTooling && !((mT = (m as ModuleTooling)).IsUnlocked())) {
+                            if (m is ModuleToolingDiamLen) {
+                                untooledParts.Add(p.partInfo.title + " (" + mT.toolingType + ") " + (m as ModuleToolingDiamLen).GetDimensions());
+                            } else {
+                                untooledParts.Add(p.partInfo.title + " (" + mT.toolingType + ")");
+                            }
+                        }
+                    }
+                }
+                if(untooledParts.Count > 0) {
+                    GUILayout.Label("Untooled Parts:", HighLogic.Skin.label);
+                    foreach (string s in untooledParts)
+                        GUILayout.Label(s, HighLogic.Skin.label);
+                }
             }
             return currentToolingType == null ? tabs.Tooling : tabs.ToolingType;
         }

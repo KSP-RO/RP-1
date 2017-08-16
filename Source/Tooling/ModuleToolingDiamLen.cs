@@ -11,6 +11,13 @@ namespace RP0
     {
         protected abstract void GetDimensions(out float diam, out float len);
 
+        public virtual string GetDimensions()
+        {
+            float d, l;
+            GetDimensions(out d, out l);
+            return d.ToString("F2") + "m x " + l.ToString("F2") + "m";
+        }
+
         public override float GetToolingCost()
         {
             float d, l;

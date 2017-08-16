@@ -58,7 +58,6 @@
     <Compile Include="Crew\CrewHandler.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="DifficultyPresets.cs" />
-    <Compile Include="Maintenance\MaintenanceWindow.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
     <Compile Include="ModuleTag\DecreaseB.cs" />
@@ -100,6 +99,12 @@
     <Compile Include="Utilities\KSPUtils.cs" />
     <Compile Include="Utilities\MathUtils.cs" />
     <Compile Include="Utilities\ObjectSerializer.cs" />
+    <Compile Include="Maintenance\MaintenanceGUI.cs" />
+    <Compile Include="UI\TopWindow.cs" />
+    <Compile Include="UI\UIBase.cs" />
+    <Compile Include="UI\UIHolder.cs" />
+    <Compile Include="Tooling\ToolingGUI.cs" />
+    <Compile Include="Avionics\AvionicsGUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">

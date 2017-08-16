@@ -4,11 +4,11 @@ using KSP.UI.Screens;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
+    [KSPAddon(KSPAddon.Startup.FlightEditorAndKSC, false)]
     class UIHolder : MonoBehaviour
     {
         // GUI
-        static bool guiEnabled = false;
+        private bool guiEnabled = false;
         private ApplicationLauncherButton button;
         private TopWindow tw = new TopWindow();
 
@@ -33,13 +33,13 @@ namespace RP0
 
         private void OnSceneChange(GameScenes s)
         {
-            if (s != GameScenes.SPACECENTER)
+            if (s == GameScenes.FLIGHT)
                 HideWindow();
         }
 
         private void OnGuiAppLauncherReady()
         {
-            if (HighLogic.CurrentGame.Mode != global::Game.Modes.CAREER)
+            if (HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
                 return;
             try {
                 button = ApplicationLauncher.Instance.AddModApplication(
@@ -49,7 +49,7 @@ namespace RP0
                     null,
                     null,
                     null,
-                    ApplicationLauncher.AppScenes.SPACECENTER,
+                    ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
                     GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
                 GameEvents.onGameSceneLoadRequested.Add(this.OnSceneChange);
             } catch (Exception ex) {

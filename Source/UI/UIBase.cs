@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using KSP.UI.Screens;
 
 namespace RP0
 {
@@ -18,11 +19,34 @@ namespace RP0
             pressedButton.normal = pressedButton.active;
         }
 
-        public enum tabs { SUMMARY, Facilities, Integration, Astronauts, Tooling, ToolingType };
+        public enum tabs { Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, Training, Courses, NewCourse, Naut, Avionics };
 
-        public bool toggleButton(string text, bool selected)
+        protected bool showTab(tabs tab)
         {
-            return GUILayout.Button(text, selected ? pressedButton : HighLogic.Skin.button);
+            switch (tab) {
+                case tabs.Maintenance:
+                case tabs.Facilities:
+                case tabs.Integration:
+                    return HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
+                case tabs.Tooling:
+                case tabs.ToolingType:
+                    return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
+                case tabs.Avionics:
+                    return HighLogic.LoadedSceneIsEditor;
+                case tabs.Astronauts:
+                    return HighLogic.LoadedScene == GameScenes.SPACECENTER;
+                case tabs.Training:
+                case tabs.Courses:
+                case tabs.NewCourse:
+                case tabs.Naut:
+                default:
+                    return true;
+            }
+        }
+
+        public bool toggleButton(string text, bool selected, params GUILayoutOption[] options)
+        {
+            return GUILayout.Button(text, selected ? pressedButton : HighLogic.Skin.button, options);
         }
     }
 }

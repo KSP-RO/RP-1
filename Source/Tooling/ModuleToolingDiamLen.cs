@@ -15,7 +15,10 @@ namespace RP0
         {
             float d, l;
             GetDimensions(out d, out l);
-            return d.ToString("F2") + "m x " + l.ToString("F2") + "m";
+            if (l != 0f)
+                return d.ToString("F2") + "m x " + l.ToString("F2") + "m";
+            else
+                return d.ToString("F2") + "m";
         }
 
         public override float GetToolingCost()

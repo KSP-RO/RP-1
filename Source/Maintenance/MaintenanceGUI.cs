@@ -191,7 +191,7 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((rate * MaintenanceHandler.Instance.kctBPMult * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                    GUILayout.Label((rate * MaintenanceHandler.Instance.settings.kctBPMult * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }

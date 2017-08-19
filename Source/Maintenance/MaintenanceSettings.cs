@@ -16,13 +16,13 @@ namespace RP0
         public double kctBPMult = 20d;
 
         [Persistent]
-        protected double kctResearchMult = 100d * 86400d;
+        public double kctResearchMult = 100d * 86400d;
 
         [Persistent]
-        protected double nautYearlyUpkeepAdd = 5000d;
+        public double nautYearlyUpkeepAdd = 5000d;
 
         [Persistent]
-        protected double nautYearlyUpkeepBase = 500d;
+        public double nautYearlyUpkeepBase = 500d;
 
         public void Load(ConfigNode node)
         {

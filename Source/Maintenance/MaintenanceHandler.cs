@@ -32,12 +32,6 @@ namespace RP0
         public const int padLevels = 10;
         public int[] kctPadCounts = new int[padLevels];
 
-        public double facilityLevelCostMult = 0.0000005d;
-        public double kctBPMult = 20d;
-        protected double kctResearchMult = 100d * 86400d;
-        protected double nautYearlyUpkeepAdd = 5000d;
-        protected double nautYearlyUpkeepBase = 500d;
-
         protected Dictionary<SpaceCenterFacility, Upgradeables.UpgradeableFacility.UpgradeLevel[]> facilityLevels = new Dictionary<SpaceCenterFacility, Upgradeables.UpgradeableFacility.UpgradeLevel[]>();
         public Dictionary<string, double> kctBuildRates = new Dictionary<string, double>();
 
@@ -74,7 +68,7 @@ namespace RP0
             double tmp = 0d;
             foreach (double d in kctBuildRates.Values)
                 tmp += d;
-            return tmp * kctBPMult;
+            return tmp * settings.kctBPMult;
         }}
         public double researchUpkeep = 0d;
         public double nautYearlyUpkeep = 0d;
@@ -119,48 +113,48 @@ namespace RP0
                     {
                         padCosts[i] = 0d;
                         if (i < lC)
-                            padCosts[i] = facilityLevelCostMult * kctPadCounts[i] * levels[i].levelCost;
+                            padCosts[i] = settings.facilityLevelCostMult * kctPadCounts[i] * levels[i].levelCost;
                     }
                     padCost = 0;
                     for (int i = padLevels; i-- > 0;)
                         padCost += padCosts[i];
                 }
                 else
-                    padCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (levels.Length + 0.05f))].levelCost;
+                    padCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (levels.Length + 0.05f))].levelCost;
             }
 
             // Runway
             if (facilityLevels.TryGetValue(SpaceCenterFacility.Runway, out levels))
-                runwayCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (levels.Length + 0.05f))].levelCost;
+                runwayCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (levels.Length + 0.05f))].levelCost;
 
             //VAB
             if (facilityLevels.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out levels))
-                vabCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (levels.Length + 0.05f))].levelCost;
+                vabCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (levels.Length + 0.05f))].levelCost;
 
             //SPH
             if (facilityLevels.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out levels))
-                sphCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (levels.Length + 0.05f))].levelCost;
+                sphCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (levels.Length + 0.05f))].levelCost;
 
             //RnD
             if (facilityLevels.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out levels))
-                rndCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (levels.Length + 0.05f))].levelCost;
+                rndCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (levels.Length + 0.05f))].levelCost;
 
             // MC
             if (facilityLevels.TryGetValue(SpaceCenterFacility.MissionControl, out levels))
-                mcCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (levels.Length + 0.05f))].levelCost;
+                mcCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (levels.Length + 0.05f))].levelCost;
 
             // TS
             if (facilityLevels.TryGetValue(SpaceCenterFacility.TrackingStation, out levels))
-                tsCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (levels.Length + 0.05f))].levelCost;
+                tsCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (levels.Length + 0.05f))].levelCost;
             
             // AC
             if (facilityLevels.TryGetValue(SpaceCenterFacility.AstronautComplex, out levels))
-                acCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (levels.Length + 0.05f))].levelCost;
+                acCost = settings.facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (levels.Length + 0.05f))].levelCost;
 
-            nautYearlyUpkeep = nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * nautYearlyUpkeepAdd);
+            nautYearlyUpkeep = settings.nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * settings.nautYearlyUpkeepAdd);
             nautUpkeep = HighLogic.CurrentGame.CrewRoster.GetActiveCrewCount() * nautYearlyUpkeep * (1d / 365d);
 
-            researchUpkeep = kctResearchRate * kctResearchMult;
+            researchUpkeep = kctResearchRate * settings.kctResearchMult;
 
             totalUpkeep = facilityUpkeep + integrationUpkeep + researchUpkeep + nautUpkeep;
         }

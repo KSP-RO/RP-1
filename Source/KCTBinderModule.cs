@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using KerbalConstructionTime;
@@ -15,7 +14,8 @@ namespace RP0
 
         protected double nextTime = -1d;
         protected double checkInterval = 0.5d;
-        protected int[] padCounts = new int[10];
+        protected const int padLevels = 10;
+        protected int[] padCounts = new int[padLevels];
 
         protected bool skipOne = true;
         protected bool skipTwo = true;
@@ -76,14 +76,14 @@ namespace RP0
             if (HighLogic.CurrentGame == null || KerbalConstructionTime.KerbalConstructionTime.instance == null)
                 return;
 
-            if (skipOne)
-            {
-                skipOne = false;
-                return;
-            }
-
             if (skipTwo)
             {
+                if (skipOne)
+                {
+                    skipOne = false;
+                    return;
+                }
+
                 skipTwo = false;
                 return;
             }
@@ -103,14 +103,23 @@ namespace RP0
             foreach (KCT_KSC ksc in KCT_GameStates.KSCs)
             {
                 double buildRate = 0d;
+
                 for (int i = ksc.VABRates.Count; i-- > 0;)
                     buildRate += Math.Max(0d, ksc.VABRates[i] + BuildRateOffset);
+
                 for (int i = ksc.SPHRates.Count; i-- > 0;)
                     buildRate += Math.Max(0d, ksc.SPHRates[i] + BuildRateOffset);
+
                 if (buildRate > 0.001d)
                     MaintenanceHandler.Instance.kctBuildRates[ksc.KSCName] = buildRate;
+
+
                 for (int i = ksc.LaunchPads.Count; i-- > 0;)
-                    ++padCounts[ksc.LaunchPads[i].level];
+                {
+                    int lvl = ksc.LaunchPads[i].level;
+                    if (lvl >= 0 && lvl < padLevels)
+                        ++padCounts[lvl];
+                }
             }
             double RDRate = KCT_MathParsing.ParseNodeRateFormula(10, 0, false);
 

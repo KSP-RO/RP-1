@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using KSP;
 using UnityEngine;
@@ -8,7 +7,7 @@ using System.Reflection;
 
 namespace RP0
 {
-    [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
+    [KSPScenario((ScenarioCreationOptions)120, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class MaintenanceHandler : ScenarioModule
     {
         #region Fields
@@ -72,12 +71,17 @@ namespace RP0
             return padCost + runwayCost + vabCost + sphCost + rndCost + mcCost + tsCost + acCost;
         }}
         public double integrationUpkeep { get {
-            return kctBuildRates.Values.Sum() * kctBPMult;
+            double tmp = 0d;
+            foreach (double d in kctBuildRates.Values)
+                tmp += d;
+            return tmp * kctBPMult;
         }}
         public double researchUpkeep = 0d;
         public double nautYearlyUpkeep = 0d;
         public double nautUpkeep = 0d;
         public double totalUpkeep = 0d;
+
+        public MaintenanceSettings settings = new MaintenanceSettings();
 
         #endregion
 
@@ -91,6 +95,14 @@ namespace RP0
                 GameObject.Destroy(_instance);
             }
             _instance = this;
+        }
+
+        public override void OnLoad(ConfigNode node)
+        {
+            base.OnLoad(node);
+
+            foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
+                settings.Load(n);
         }
 
         public void updateUpkeep()
@@ -109,7 +121,9 @@ namespace RP0
                         if (i < lC)
                             padCosts[i] = facilityLevelCostMult * kctPadCounts[i] * levels[i].levelCost;
                     }
-                    padCost = padCosts.Sum();
+                    padCost = 0;
+                    for (int i = padLevels; i-- > 0;)
+                        padCost += padCosts[i];
                 }
                 else
                     padCost = facilityLevelCostMult * levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (levels.Length + 0.05f))].levelCost;
@@ -155,21 +169,21 @@ namespace RP0
         {
             if (HighLogic.CurrentGame == null)
                 return;
-            
-            if (skipOne)
-            {
-                skipOne = false;
-                return;
-            }
-
-            if (skipTwo)
-            {
-                skipTwo = false;
-                return;
-            }
 
             if (skipThree)
             {
+                if (skipTwo)
+                {
+                    if (skipOne)
+                    {
+                        skipOne = false;
+                        return;
+                    }
+
+                    skipTwo = false;
+                    return;
+                }
+
                 skipThree = false;
                 return;
             }

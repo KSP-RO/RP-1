@@ -13,6 +13,9 @@ namespace RP0
         public double facilityLevelCostMult = 0.0000005d;
 
         [Persistent]
+        public double facilityLevelCostPow = 1d;
+
+        [Persistent]
         public double kctBPMult = 20d;
 
         [Persistent]

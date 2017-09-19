@@ -35,7 +35,7 @@ namespace RP0.Crew
             options[0] = new DialogGUIFlexibleSpace();
             options[1] = new DialogGUIButton("Yes", () => { course.RemoveStudent(student); });
             options[2] = new DialogGUIButton("No", () => { });
-            MultiOptionDialog diag = new MultiOptionDialog("Are you sure you want "+student.name+ " to drop this course?", "Drop Course?",
+            MultiOptionDialog diag = new MultiOptionDialog("ConfirmStudentDropCourse", "Are you sure you want "+student.name+ " to drop this course?", "Drop Course?",
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
@@ -58,7 +58,7 @@ namespace RP0.Crew
                 msg.AppendLine();
                 msg.Append(stud.name);
             }
-            MultiOptionDialog diag = new MultiOptionDialog(msg.ToStringAndRelease(), "Stop Course?",
+            MultiOptionDialog diag = new MultiOptionDialog("ConfirmCancelCourse", msg.ToStringAndRelease(), "Stop Course?",
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),

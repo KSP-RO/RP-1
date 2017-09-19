@@ -63,6 +63,7 @@ namespace RP0
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(
+                            "ConfirmToolingPurchase",
                             "Tooling has not yet been set up for this part. It will cost " + toolingCost.ToString("N0") + " funds.",
                             "Tooling Purchase",
                             HighLogic.UISkin,

@@ -451,10 +451,10 @@ namespace RP0.ProceduralAvionics
 		}
 
 		private float cachedVolume = float.MaxValue;
-		private BaseEventData cachedEventData = null;
+		private BaseEventDetails cachedEventData = null;
 
 		[KSPEvent]
-		public void OnPartVolumeChanged(BaseEventData eventData)
+		public void OnPartVolumeChanged(BaseEventDetails eventData)
 		{
 			Log("OnPartVolumeChanged called");
 			if (!started) {

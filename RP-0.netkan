@@ -1,0 +1,50 @@
+{
+    "spec_version" : "v1.4",
+    "identifier" : "RP-0",
+    "name"       : "Realistic Progression Zero",
+    "abstract"   : "Realistic Progression Zero - Career for Realism Overhaul",
+    "license"    : "CC-BY-4.0",
+    "author"     : "RP-0 Group",
+    "$kref"      : "#/ckan/github/KSP-RO/RP-0",
+    "$vref"      : "#/ckan/ksp-avc",
+    "x_netkan_force_v": true,
+    "release_status" : "stable",
+    "depends" : [
+        { "name" : "ModuleManager" } ,
+        { "name" : "RealismOverhaul" },
+        { "name" : "SXTContinued" },
+        { "name" : "ContractConfigurator" },
+        { "name" : "CustomBarnKit" },
+        { "name" : "DeadlyReentry" },
+        { "name" : "VenStockRevamp" },
+        { "name" : "CommunityTechTree" },
+        { "name" : "KerbalConstructionTime" },
+        { "name" : "RealSolarSystem" }
+    ],
+    "recommends" : [
+        { "name" : "AdjustableLandingGear" },
+        { "name" : "Taerobee" },
+        { "name" : "SCANsat" },
+        { "name" : "KerbalRenamer" },
+        { "name" : "ShipManifest" },
+        { "name" : "TestFlight" },
+        { "name" : "ConnectedLivingSpace" },
+        { "name" : "HangarExtender" },
+        { "name" : "KSP-AVC" },
+        { "name" : "MechJeb2" },
+        { "name" : "B9-PWings-Fork" },
+        { "name" : "ProceduralFairings" },
+        { "name" : "ProceduralFairings-ForEverything" },
+        { "name" : "ProceduralParts" },
+        { "name" : "RCSBuildAid" },
+        { "name" : "KSCSwitcher" },
+        { "name" : "RemoteTech" },
+        { "name" : "SemiSaturatableRW" },
+        { "name" : "TACLS" },
+        { "name" : "TextureReplacer" },
+        { "name" : "Toolbar" }
+    ],
+    "conflicts" : [
+        { "name" : "CrowdSourcedScience" }
+    ]
+}

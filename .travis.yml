@@ -2,7 +2,7 @@ language: c
 
 install:
     - sudo apt-get update
-    - sudo apt-get install zip libyaml-libyaml-perl
+    - sudo apt-get install zip libyaml-libyaml-perl libipc-system-simple-perl
 
 script: make release
 

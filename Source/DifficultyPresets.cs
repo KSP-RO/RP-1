@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP;
@@ -8,7 +7,7 @@ using KSP;
 namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
-    class DifficultyPresetChanger : MonoBehaviour
+    public class DifficultyPresetChanger : MonoBehaviour
     {
         public void Awake()
         {

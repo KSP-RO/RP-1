@@ -34,3 +34,6 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.55.0.0")]
 [assembly: AssemblyFileVersion("0.55.0.0")]
+
+[assembly: KSPAssembly("RP-0", 0, 55)]
+[assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]

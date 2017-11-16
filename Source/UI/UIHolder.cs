@@ -39,6 +39,8 @@ namespace RP0
 
         private void OnGuiAppLauncherReady()
         {
+            if (HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
+                return;
             try {
                 button = ApplicationLauncher.Instance.AddModApplication(
                     ShowWindow,

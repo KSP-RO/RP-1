@@ -20,7 +20,7 @@ namespace RP0.ProceduralAvionics
 
 		// This controls how much the current part can control (in metric tons)
 		[KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "T"),
-		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 2, unit = "T")]
+		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "T")]
 		public float proceduralMassLimit = 0;
 
 		// We can have multiple configurations of avionics, for example: 

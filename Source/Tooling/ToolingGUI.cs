@@ -102,7 +102,7 @@ namespace RP0
                             GUILayout.Label(uP.toolingCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
                             float untooledCost = uP.toolingCost * uP.untooledMultiplier;
                             GUILayout.Label(untooledCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
-                            GUILayout.Label(uP.totalCost - untooledCost + "f", rightLabel, GUILayout.Width(72));
+                            GUILayout.Label((uP.totalCost - untooledCost).ToString("N0") + "f", rightLabel, GUILayout.Width(72));
                         } finally {
                             GUILayout.EndHorizontal();
                         }

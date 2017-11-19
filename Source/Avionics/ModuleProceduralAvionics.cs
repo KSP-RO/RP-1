@@ -636,7 +636,7 @@ namespace RP0.ProceduralAvionics
 		public void OnGUI()
 		{
 			if (showGUI) {
-				windowRect = GUI.Window(GetInstanceID(), windowRect, WindowFunction, "Configure Procedural Avionics");
+				windowRect = GUILayout.Window(GetInstanceID(), windowRect, WindowFunction, "Configure Procedural Avionics");
 			}
 		}
 

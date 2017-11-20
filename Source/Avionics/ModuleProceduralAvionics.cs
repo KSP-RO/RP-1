@@ -79,7 +79,7 @@ namespace RP0.ProceduralAvionics
 
 		public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode {
 			get {
-				if (avionicsTechLevel != null && CurrentProceduralAvionicsConfig.TechNodes.ContainsKey(avionicsTechLevel))
+				if (CurrentProceduralAvionicsConfig != null && avionicsTechLevel != null && CurrentProceduralAvionicsConfig.TechNodes.ContainsKey(avionicsTechLevel))
 				{
 					return CurrentProceduralAvionicsConfig.TechNodes[avionicsTechLevel];
 				}

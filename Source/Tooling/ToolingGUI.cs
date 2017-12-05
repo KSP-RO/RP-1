@@ -130,9 +130,9 @@ namespace RP0
         {
             GUILayout.BeginHorizontal();
             try {
-                GUILayout.Label(diameter.ToString("F2") + "m", HighLogic.Skin.label, GUILayout.Width(80));
+                GUILayout.Label(diameter.ToString("F3") + "m", HighLogic.Skin.label, GUILayout.Width(80));
                 GUILayout.Label("×", HighLogic.Skin.label);
-                GUILayout.Label(length.ToString("F2") + "m", rightLabel, GUILayout.Width(80));
+                GUILayout.Label(length.ToString("F3") + "m", rightLabel, GUILayout.Width(80));
             } finally {
                 GUILayout.EndHorizontal();
             }

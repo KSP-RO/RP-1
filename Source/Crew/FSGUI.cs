@@ -13,6 +13,7 @@ namespace RP0.Crew
         private ProtoCrewMember selectedNaut = null;
         private Vector2 nautListScroll = new Vector2();
         private Dictionary<ProtoCrewMember, ActiveCourse> activeMap = new Dictionary<ProtoCrewMember, ActiveCourse>();
+        private Vector2 courseSelectorScroll = new Vector2();
 
         protected void nautListHeading()
         {
@@ -153,9 +154,14 @@ namespace RP0.Crew
 
         protected void courseSelector()
         {
-            foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
-                if (GUILayout.Button(course.name))
-                    selectedCourse = new ActiveCourse(course);
+            courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(480), GUILayout.Height(144));
+            try {
+                foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
+                    if (GUILayout.Button(course.name))
+                        selectedCourse = new ActiveCourse(course);
+                }
+            } finally {
+                GUILayout.EndScrollView();
             }
         }
 

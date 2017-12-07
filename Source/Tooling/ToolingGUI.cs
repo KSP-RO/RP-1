@@ -10,6 +10,7 @@ namespace RP0
             public string name;
             public float toolingCost;
             public float untooledMultiplier;
+            public float totalCost;
         };
         private Vector2 toolingTypesScroll = new Vector2(), untooledTypesScroll = new Vector2();
         private double deltaTime = 0d;
@@ -46,6 +47,7 @@ namespace RP0
                             }
                             uP.toolingCost = mT.GetToolingCost();
                             uP.untooledMultiplier = mT.untooledMultiplier;
+                            uP.totalCost = p.GetModuleCosts(p.partInfo.cost) + p.partInfo.cost;
                             untooledParts.Add(uP);
                         }
                     }
@@ -87,10 +89,11 @@ namespace RP0
                     GUILayout.Label("Untooled Parts:", HighLogic.Skin.label, GUILayout.Width(312));
                     GUILayout.Label("Tooling cost", rightLabel, GUILayout.Width(72));
                     GUILayout.Label("Untooled", rightLabel, GUILayout.Width(72));
+                    GUILayout.Label("Tooled", rightLabel, GUILayout.Width(72));
                 } finally {
                     GUILayout.EndHorizontal();
                 }
-                untooledTypesScroll = GUILayout.BeginScrollView(untooledTypesScroll, GUILayout.Height(144), GUILayout.Width(500));
+                untooledTypesScroll = GUILayout.BeginScrollView(untooledTypesScroll, GUILayout.Height(144), GUILayout.Width(572));
                 try {
                     foreach (untooledPart uP in untooledParts) {
                         GUILayout.BeginHorizontal();
@@ -99,6 +102,7 @@ namespace RP0
                             GUILayout.Label(uP.toolingCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
                             float untooledCost = uP.toolingCost * uP.untooledMultiplier;
                             GUILayout.Label(untooledCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
+                            GUILayout.Label((uP.totalCost - untooledCost).ToString("N0") + "f", rightLabel, GUILayout.Width(72));
                         } finally {
                             GUILayout.EndHorizontal();
                         }
@@ -126,9 +130,9 @@ namespace RP0
         {
             GUILayout.BeginHorizontal();
             try {
-                GUILayout.Label(diameter.ToString("F2") + "m", HighLogic.Skin.label, GUILayout.Width(80));
+                GUILayout.Label(diameter.ToString("F3") + "m", HighLogic.Skin.label, GUILayout.Width(80));
                 GUILayout.Label("×", HighLogic.Skin.label);
-                GUILayout.Label(length.ToString("F2") + "m", rightLabel, GUILayout.Width(80));
+                GUILayout.Label(length.ToString("F3") + "m", rightLabel, GUILayout.Width(80));
             } finally {
                 GUILayout.EndHorizontal();
             }

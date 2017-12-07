@@ -11,19 +11,6 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public string name;
 
-		public string currentTechNodeName; 
-
-		public ProceduralAvionicsTechNode CurrentTechNode
-		{
-			get
-			{
-				if (currentTechNodeName != null && TechNodes.ContainsKey(currentTechNodeName)) {
-					return TechNodes[currentTechNodeName];
-				}
-				return null;
-			}
-		}	
-
 		public byte[] techNodesSerialized;
 
 		private Dictionary<String, ProceduralAvionicsTechNode> techNodes;

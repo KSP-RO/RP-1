@@ -79,8 +79,9 @@ namespace RP0.ProceduralAvionics
 
 		public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode {
 			get {
-				if (CurrentProceduralAvionicsConfig != null) {
-					return CurrentProceduralAvionicsConfig.CurrentTechNode;
+				if (CurrentProceduralAvionicsConfig != null && avionicsTechLevel != null && CurrentProceduralAvionicsConfig.TechNodes.ContainsKey(avionicsTechLevel))
+				{
+					return CurrentProceduralAvionicsConfig.TechNodes[avionicsTechLevel];
 				}
 				return null;
 			}
@@ -309,7 +310,6 @@ namespace RP0.ProceduralAvionics
 			currentProceduralAvionicsConfig =
 				ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
 			Log("Setting tech node to ", avionicsTechLevel);
-			currentProceduralAvionicsConfig.currentTechNodeName = avionicsTechLevel;
 			oldAvionicsConfigName = avionicsConfigName;
 			SetMinVolume(true);
 		}
@@ -636,7 +636,7 @@ namespace RP0.ProceduralAvionics
 		public void OnGUI()
 		{
 			if (showGUI) {
-				windowRect = GUI.Window(GetInstanceID(), windowRect, WindowFunction, "Configure Procedural Avionics");
+				windowRect = GUILayout.Window(GetInstanceID(), windowRect, WindowFunction, "Configure Procedural Avionics");
 			}
 		}
 
@@ -696,7 +696,6 @@ namespace RP0.ProceduralAvionics
 						Log("Configuration window changed, updating part window");
 						UpdateConfigSliders();
 						avionicsTechLevel = techNode.name;
-						currentlyDisplayedConfigs.currentTechNodeName = techNode.name;
 						currentProceduralAvionicsConfig = currentlyDisplayedConfigs;
 						avionicsConfigName = guiAvionicsConfigName;
 						AvionicsConfigChanged();

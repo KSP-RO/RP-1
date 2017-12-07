@@ -230,13 +230,16 @@ namespace RP0
 
         public void astronautsTab()
         {
-            GUILayout.BeginHorizontal();
-            try {
-                GUILayout.Label("Astronaut costs (per ", HighLogic.Skin.label);
-                perSelector();
-                GUILayout.Label(")", HighLogic.Skin.label);
-            } finally {
-                GUILayout.EndHorizontal();
+            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            {
+                GUILayout.BeginHorizontal();
+                try {
+                    GUILayout.Label("Astronaut costs (per ", HighLogic.Skin.label);
+                    perSelector();
+                    GUILayout.Label(")", HighLogic.Skin.label);
+                } finally {
+                    GUILayout.EndHorizontal();
+                }
             }
             GUILayout.BeginHorizontal();
             try {
@@ -251,19 +254,22 @@ namespace RP0
             } finally {
                 GUILayout.EndScrollView();
             }
-            GUILayout.BeginHorizontal();
-            try {
-                GUILayout.Label("Cost per astronaut", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.nautYearlyUpkeep * perFactor / 365d).ToString(perFormat), rightLabel, GUILayout.Width(160));
-            } finally {
-                GUILayout.EndHorizontal();
-            }
-            GUILayout.BeginHorizontal();
-            try {
-                GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.nautUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
-            } finally {
-                GUILayout.EndHorizontal();
+            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            {
+                GUILayout.BeginHorizontal();
+                try {
+                    GUILayout.Label("Cost per astronaut", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.nautYearlyUpkeep * perFactor / 365d).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                } finally {
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.BeginHorizontal();
+                try {
+                    GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.nautUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                } finally {
+                    GUILayout.EndHorizontal();
+                }
             }
         }
     }

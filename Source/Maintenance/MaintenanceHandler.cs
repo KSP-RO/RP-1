@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RP0
 {
-    [KSPScenario((ScenarioCreationOptions)120, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
+    [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class MaintenanceHandler : ScenarioModule
     {
         #region Fields

@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace RP0.Crew
 {
-    [KSPScenario((ScenarioCreationOptions)120, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
+    [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class CrewHandler : ScenarioModule
     {
         #region TrainingExpiration

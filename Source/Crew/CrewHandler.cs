@@ -516,6 +516,9 @@ namespace RP0.Crew
                 int curFlight = pcm.careerLog.Last().flight;
                 foreach (FlightLog.Entry e in pcm.careerLog.Entries)
                 {
+                    if (e.type == "TRAINING_mission")
+                        SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
+
                     if (e.flight != curFlight)
                         continue;
 
@@ -733,6 +736,27 @@ namespace RP0.Crew
             }
 
             return 0d;
+        }
+
+        protected bool SetExpiration(string pcmName, FlightLog.Entry ent, double expirationUT)
+        {
+            for (int i = expireTimes.Count; i-- > 0;)
+            {
+                TrainingExpiration e = expireTimes[i];
+                if (e.pcmName == pcmName)
+                {
+                    for (int j = e.entries.Count; j-- > 0;)
+                    {
+                        if (e.Compare(j, ent))
+                        {
+                            e.expiration = expirationUT;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         protected void FindAllCourseConfigs()

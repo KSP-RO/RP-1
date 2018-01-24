@@ -57,7 +57,6 @@
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
     <Compile Include="Crew\CrewHandler.cs" />
-    <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="DifficultyPresets.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
@@ -118,7 +117,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ModularFlightIntegrator">
-      <HintPath>..\..\..\..\..\..\Games\RO_122\GameData\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Games\RO_131\GameData\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">

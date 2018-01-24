@@ -274,6 +274,7 @@ namespace RP0.Crew
 
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                         new Vector2(0.5f, 0.5f),
+                                                        "InitialRetirementDateNotification",
                                                         "Initial Retirement Date",
                                                         msgStr
                                                         + "\n(Retirement will be delayed the more intersting flights they fly.)",
@@ -369,6 +370,7 @@ namespace RP0.Crew
 
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                             new Vector2(0.5f, 0.5f),
+                                                            "CrewRetirementNotification",
                                                             "Crew Retirement",
                                                             "The following retirements have occurred:\n" + msgStr,
                                                             "OK",
@@ -629,6 +631,7 @@ namespace RP0.Crew
 
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                         new Vector2(0.5f, 0.5f),
+                                                        "CrewUpdateNotification",
                                                         "Crew Updates",
                                                         msgStr,
                                                         "OK",
@@ -645,6 +648,7 @@ namespace RP0.Crew
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                         new Vector2(0.5f, 0.5f),
+                                                        "InitialRetirementDateNotification",
                                                         "Initial Retirement Date",
                                                         pcm.name + " will retire no earlier than " + KSPUtil.PrintDate(retireTime, false)
                                                         + "\n(Retirement will be delayed the more intersting flights they fly.)",

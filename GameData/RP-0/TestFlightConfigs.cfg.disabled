@@ -4,7 +4,7 @@
 
 //prevents experiment being used until repaired
 // FIXME only applies to the first experiment found.
-zDisabled@PART[z]:HAS[@MODULE[ModuleScienceExperiment],!MODULE[ModuleCommand],!MODULE[TestFlightCore]]:AFTER[zTestFlight]
+@PART[z]:HAS[@MODULE[ModuleScienceExperiment],!MODULE[ModuleCommand],!MODULE[TestFlightCore]]:AFTER[zTestFlight]
 {
 	%MODULE[TestFlightInterop]
 	{
@@ -58,7 +58,8 @@ zDisabled@PART[z]:HAS[@MODULE[ModuleScienceExperiment],!MODULE[ModuleCommand],!M
 		}
 	}
 }
-zDisabled@PART[z]:HAS[@MODULE[ModuleRTAntenna],!MODULE[ModuleCommand],!MODULE[TestFlightCore]]:AFTER[zTestFlight]
+
+@PART[z]:HAS[@MODULE[ModuleRTAntenna],!MODULE[ModuleCommand],!MODULE[TestFlightCore]]:AFTER[zTestFlight]
 {
 	%MODULE[TestFlightInterop]
 	{

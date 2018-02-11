@@ -26,7 +26,6 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.SpaceCentre, true)]
     public class RP0ThermoChanger : MonoBehaviour
     {
-        static CelestialBody body = null;
         public void Start()
         {
             print("Registering RP-0 overrides with ModularFlightIntegrator");

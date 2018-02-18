@@ -71,13 +71,14 @@ namespace RP0.ProceduralAvionics
 		public static List<string> GetAvailableConfigs()
 		{
 			ProceduralAvionicsUtils.Log("Getting Available configs, procedural avionics has ", allTechNodes.Count, " nodes loaded");
-			List<string> availableConfigs = new List<string>();
-			foreach (var config in allTechNodes) {
-				if (!TechIsEnabled || (config.TechNodes.Values.Where(node => node.IsAvailable).Count() > 0)) {
-					availableConfigs.Add(config.name);
-				}
+			if (!TechIsEnabled)
+			{
+				return allTechNodes.Slinq().Select(config => config.name).ToList();
 			}
-			return availableConfigs;
+			return allTechNodes.Slinq()
+				.Where(config => config.TechNodes.Values.Slinq().Any(node => node.IsAvailable))
+				.Select(config => config.name)
+				.ToList();
 		}
 
 		public static List<string> GetPurchasedConfigs()

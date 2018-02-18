@@ -1,10 +1,10 @@
 ﻿//Taken from ProceduralParts
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 //using DeftTech.DuckTyping;
 using UnityEngine;
+using Smooth.Slinq;
 
 
 
@@ -92,7 +92,7 @@ namespace KSPAPIExtensions
 			if (uiPartActionWindows == null)
 				return null;
 
-			return uiPartActionWindows.FirstOrDefault(window => window != null && window.part == part);
+			return uiPartActionWindows.Slinq().Where((window, prt) => window != null & window.part == prt, part).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -188,7 +188,7 @@ namespace KSPAPIExtensions
 				return true;
 
 			if (TestFlag(relation, PartRelationship.Symmetry))
-				return other.symmetryCounterparts.Any(sym => part == sym);
+				return other.symmetryCounterparts.Slinq().Any((sym, prt) => sym == prt, part);
 			return false;
 		}
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using Smooth.Slinq;
 
 namespace RP0.ProceduralAvionics
 {
@@ -45,7 +45,7 @@ namespace RP0.ProceduralAvionics
 					ProceduralAvionicsUtils.Log("Loaded TechNode: " + techNode.name);
 				}
 
-				List<ProceduralAvionicsTechNode> techNodeList = techNodes.Values.ToList();
+				List<ProceduralAvionicsTechNode> techNodeList = techNodes.Values.Slinq().ToList();
 				techNodesSerialized = ObjectSerializer.Serialize(techNodeList);
 				ProceduralAvionicsUtils.Log("Serialized TechNodes");
 			}

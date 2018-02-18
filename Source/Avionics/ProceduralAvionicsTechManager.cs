@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using Smooth.Slinq;
 
 namespace RP0.ProceduralAvionics
 {
@@ -48,7 +48,7 @@ namespace RP0.ProceduralAvionics
 				if (!unlockedTech.ContainsKey(config.name)) {
 					//We don't have max level for this config, should we?
 					ProceduralAvionicsTechNode freeTech = 
-						config.TechNodes.Values.Where(techNode => techNode.unlockCost == 0).FirstOrDefault();
+						config.TechNodes.Values.Slinq().FirstOrDefault(techNode => techNode.unlockCost == 0);
 					if (freeTech != null) {
 						unlockedTech.Add(config.name, freeTech.name);
 					}
@@ -83,11 +83,9 @@ namespace RP0.ProceduralAvionics
 		public static List<string> GetPurchasedConfigs()
 		{
 			if (TechIsEnabled) {
-				return unlockedTech.Keys.ToList();
+				return unlockedTech.Keys.Slinq().ToList();
 			}
-			else {
-				return allTechNodes.Select(node => node.name).ToList();
-			}
+			return allTechNodes.Slinq().Select(node => node.name).ToList();
 		}
 
 		internal static object GetUnlockedTechState()
@@ -122,9 +120,9 @@ namespace RP0.ProceduralAvionics
 		internal static string GetMaxUnlockedTech(string avionicsConfigName)
 		{
 			if (!TechIsEnabled) {
-				var techNodesForConfig = allTechNodes.Where(config => config.name == avionicsConfigName).FirstOrDefault();
-				int maxCost = techNodesForConfig.TechNodes.Values.Max(node => node.unlockCost);
-				return techNodesForConfig.TechNodes.Values.Where(node => node.unlockCost == maxCost).FirstOrDefault().name;
+				var techNodesForConfig = GetProceduralAvionicsConfig(avionicsConfigName);
+				int maximumCost = techNodesForConfig.TechNodes.Values.Slinq().Select(node => node.unlockCost).Max();
+				return techNodesForConfig.TechNodes.Values.Slinq().Where((node, maxCost) => node.unlockCost == maxCost, maximumCost).First().name;
 			}
 			if (unlockedTech.ContainsKey(avionicsConfigName)) {
 				return unlockedTech[avionicsConfigName];
@@ -134,7 +132,7 @@ namespace RP0.ProceduralAvionics
 
 		public static ProceduralAvionicsConfig GetProceduralAvionicsConfig(string configName)
 		{
-			return allTechNodes.Where(config => config.name == configName).FirstOrDefault();
+			return allTechNodes.Slinq().Where((config, name) => config.name == name, configName).FirstOrDefault();
 		}
 	}
 }

@@ -6,21 +6,22 @@
     "license"    : "CC-BY-4.0",
     "author"     : "RP-0 Group",
     "$kref"      : "#/ckan/github/KSP-RO/RP-0",
-    "ksp_version" : "1.0.5",
-    "release_status" : "development",
+    "$vref"      : "#/ckan/ksp-avc",
+    "x_netkan_force_v": true,
+    "release_status" : "stable",
     "depends" : [
         { "name" : "ModuleManager" } ,
         { "name" : "RealismOverhaul" },
-        { "name" : "SXT" },
+        { "name" : "SXTContinued" },
         { "name" : "ContractConfigurator" },
         { "name" : "CustomBarnKit" },
         { "name" : "DeadlyReentry" },
         { "name" : "VenStockRevamp" },
         { "name" : "CommunityTechTree" },
-        { "name" : "AsteroidDay" }
+        { "name" : "KerbalConstructionTime" },
+        { "name" : "RealSolarSystem" }
     ],
     "recommends" : [
-        { "name" : "KerbalConstructionTime" },
         { "name" : "AdjustableLandingGear" },
         { "name" : "Taerobee" },
         { "name" : "SCANsat" },
@@ -36,30 +37,14 @@
         { "name" : "ProceduralFairings-ForEverything" },
         { "name" : "ProceduralParts" },
         { "name" : "RCSBuildAid" },
-        { "name" : "RealSolarSystem" },
         { "name" : "KSCSwitcher" },
         { "name" : "RemoteTech" },
         { "name" : "SemiSaturatableRW" },
         { "name" : "TACLS" },
-        { "name" : "TACLS-Config-RealismOverhaul" },
         { "name" : "TextureReplacer" },
         { "name" : "Toolbar" }
     ],
     "conflicts" : [
         { "name" : "CrowdSourcedScience" }
-    ],
-    "install" : [
-        {
-            "file"       : "GameData/RP-0",
-            "install_to" : "GameData"
-        }
-    ],
-    "x_netkan_override" : [
-        {
-            "version" : "<= v0.33",
-            "override" : {
-                "ksp_version" : "0.90"
-            }
-        }
     ]
 }

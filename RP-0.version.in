@@ -1,0 +1,19 @@
+# Lines starting with a hash are removed before this file is parsed as JSON.
+# `VERSION` is added automatically by bin/makeversion
+
+{
+    "NAME"     : "Realistic Progression Zero",
+    "URL"      : "https://raw.githubusercontent.com/KSP-RO/RP-0/master/GameData/RP-0/RP-0.version",
+    "DOWNLOAD" : "https://github.com/KSP-RO/RP-0/releases",
+    "HOMEPAGE"  : "http://forum.kerbalspaceprogram.com/index.php?/topic/162117-122-realistic-progression-zero-rp-0-lightweight-realismoverhaul-career-v054-june-15/",
+    "GITHUB" : {
+        "USERNAME"          : "KSP-RO",
+        "REPOSITORY"        : "RP-0",
+        "ALLOW_PRE_RELEASE" : false
+    },
+    "KSP_VERSION" : {
+        "MAJOR": "1",
+        "MINOR": "2",
+        "PATCH": "2"
+    }
+}

@@ -30,42 +30,106 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ControlLocker.cs" />
-    <Compile Include="EntryCosts\EntryCostDatabase.cs" />
-    <Compile Include="EntryCosts\PartEntryCostHolder.cs" />
-    <Compile Include="ModuleAvionicsModifier.cs" />
-    <Compile Include="ModuleTag\AtmosphereAnalysis.cs" />
-    <Compile Include="ModuleTag\Barometer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ModuleTag\BioSample.cs" />
+    <Compile Include="Crew\ActiveCourse.cs" />
+    <Compile Include="Crew\CourseTemplate.cs" />
+    <Compile Include="Crew\CrewHandlerSettings.cs" />
+    <Compile Include="Crew\TrainingDatabase.cs" />
+    <Compile Include="Crew\FSGUI.cs" />
+    <Compile Include="EntryCostStorage.cs" />
+    <Compile Include="LoadingScreenChanger.cs" />
+    <Compile Include="Maintenance\MaintenanceSettings.cs" />
+    <Compile Include="Maintenance\MaintenanceHandler.cs" />
+    <Compile Include="Crew\CrewHandler.cs" />
+    <Compile Include="DifficultyPresets.cs" />
+    <Compile Include="ModuleNonReentryRated.cs" />
+    <Compile Include="ModuleUnpressurizedCockpit.cs" />
+    <Compile Include="ModuleTag\DecreaseB.cs" />
+    <Compile Include="ModuleTag\EngineLiquidPF.cs" />
+    <Compile Include="ModuleTag\Decoupler.cs" />
+    <Compile Include="ModuleTag\TankServiceModule.cs" />
+    <Compile Include="ModuleTag\TankBalloon.cs" />
+    <Compile Include="ModuleTag\Habitable.cs" />
+    <Compile Include="ModuleTag\DecreaseA.cs" />
+    <Compile Include="ModuleTag\Toxic.cs" />
+    <Compile Include="ModuleTag\Reentry.cs" />
+    <Compile Include="ModuleTag\Instruments.cs" />
+    <Compile Include="ModuleTag\HumanRated.cs" />
+    <Compile Include="ModuleTag\Avionics.cs" />
+    <Compile Include="ModuleTag\Nuclear.cs" />
+    <Compile Include="ModuleTag\EngineLiquidTurbo.cs" />
+    <Compile Include="ModuleTag\EngineSolid.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsConfig.cs" />
+    <Compile Include="Avionics\ControlLocker.cs" />
+    <Compile Include="Avionics\ModuleAvionicsModifier.cs" />
+    <Compile Include="Avionics\ModuleProceduralAvionics.cs" />
+    <Compile Include="ModuleRangeSafety.cs" />
     <Compile Include="ModuleTag\DummyModule.cs" />
-    <Compile Include="ModuleTag\FilmReturn.cs" />
-    <Compile Include="ModuleTag\Geiger.cs" />
-    <Compile Include="ModuleTag\MicrometeoriteEarly.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ModuleTag\Perturbation.cs" />
-    <Compile Include="ModuleTag\Thermometer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ModuleAvionics.cs" />
-    <Compile Include="ModuleScienceCore.cs" />
+    <Compile Include="Avionics\ModuleAvionics.cs" />
+    <Compile Include="Avionics\ModuleScienceCore.cs" />
     <Compile Include="ModuleShowInfo.cs" />
-    <Compile Include="EntryCosts\EntryCostModifier.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsTechManager.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsTechNode.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsUnlockedNodes.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
+    <Compile Include="Tooling\ModuleTooling.cs" />
+    <Compile Include="Tooling\ModuleToolingPFSide.cs" />
+    <Compile Include="Tooling\ModuleToolingGeneric.cs" />
+    <Compile Include="Tooling\ToolingDatabase.cs" />
+    <Compile Include="Tooling\ToolingScenario.cs" />
+    <Compile Include="Tooling\ModuleToolingPTank.cs" />
+    <Compile Include="Utilities\KSPUtils.cs" />
+    <Compile Include="Utilities\MathUtils.cs" />
+    <Compile Include="Utilities\ObjectSerializer.cs" />
+    <Compile Include="Maintenance\MaintenanceGUI.cs" />
+    <Compile Include="UI\TopWindow.cs" />
+    <Compile Include="UI\UIBase.cs" />
+    <Compile Include="UI\UIHolder.cs" />
+    <Compile Include="Tooling\ToolingGUI.cs" />
+    <Compile Include="Avionics\AvionicsGUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\..\Games\KSP_090clean\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Games\Steam\steamapps\common\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ModularFlightIntegrator">
+      <HintPath>..\..\..\..\..\..\Games\RO_131\GameData\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\..\Games\KSP_090clean\KSP_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

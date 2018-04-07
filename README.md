@@ -1,39 +1,52 @@
 [![Build Status](https://travis-ci.org/KSP-RO/RP-0.svg?branch=master)](https://travis-ci.org/KSP-RO/RP-0)
 
-Welcome to Realistic Progression Zero, the lightweight career addon for Kerbal Space Program's Realism Overhaul.
+Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Space Program's Realism Overhaul.
 
-RP-0 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-0 works with as many additional mods as possible; we use the Community Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a balanced fashion without them being requirements.
+RP-1 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-1 works with as many additional mods as possible; we use a fresh fully icon rebuilt Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a historical fashion.  Right now a good number of nodes lack much in the way of parts allowing for placement of balanced historically appropriate parts in those nodes. 
 
-RP-0 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0), and access the [source code on github](https://github.com/KSP-RO/RP-0). The [tech tree](https://github.com/KSP-RO/RP-0/blob/master/tree.yml) itself is designed to be particularly easy for humans to edit.
+RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/tree/Developmental), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/Developmental). The [tech tree](https://github.com/KSP-RO/RP-0/blob/Developmental/Note/RP-0%20Official%20Parts%20Tech%20Tree%20Spreadsheet%20Instructions.pdf) itself is designed to be somewhat simple for humans to edit. When doing so focus on accuracy. If you can not reputably cite the information it may be suspect. A good source for reference material is the NASA NTRS system. Systems that have actually flown are always preferable to notional systems.
 
-When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production.
+When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production. 
 
-This top-post is jointly maintained by pjf and NathanKell.
+Tooling: Tooling costs significantly adjust the play cost of craft. As you adjust tank sizes wait till the end of craft saving to tool the tanks so you do not waste funds. 
+Maintenance: A small cost of the infrastructure and wage cost is rolled into play. This puts a minimal drag on program growth.
+KCT Integration: KCT is heavily integrated and using the RP-0 Settings is important. Make sure you have lower rated launch pads availble and don't just focus on one maximum upgraded pad for all use. This will lower costs and rollout times if you use the smallest pad needed for the craft launched. There are 7 levels of pad and R&D.
+Crew Training: Each 'naut needs to be proficient and mission trained to fly on a craft. Proficiency training will end after a time and mission training is good for one mission and is then lost after recovery.
+Crew readiness and retirement: After each recovery crew are on leave for a short time. Each crew also has a retirement date that rolls forward after each mission.
+Contracts: Many contracts leading through a rough historical path are available. One contract will add a beginning node of parts that are available from the start but you may not want cluttering the VAB/SPH. Parts in this node have a purchase price of 1 fund and this contract will auto-complete seconds after leaving the mission control the first time.
+Tree: A massive tree orginized along a historical frame. Two gating tech patchs (Material Science, and Electronics) limit what nodes are available in a general sense. Most nodes have custom icons usually taken from the profile of relavent hardware from the node. Using KCT the nodes will have an orange interior when purchased with points and the normal purchased colors after KCT delay times pass.
+Part Tags: launch costs are significanlty affected by the types of systems on the craft. For instance toxic hypergolics require special handling and disposal. So a solid rocket motor driven craft may at first glance seem more expensive but my indeed be less costly due to reduce launch costs.
+Engine Variations: Many engine variations are available and purchased via the Engine GUI. In the Tech tree these will appear and may have some variable cost however this cost is not real and purchasing this "Part" will have no cost or impact whether it is purchased when looking in the Engine GUI.
+
+
+This top-post is jointly maintained by pjf and NathanKell and many others.
 
 ---
 
 License: CC-BY-NC-SA-4.0
 
 Development thread: http://forum.kerbalspaceprogram.com/threads/103196
-Github Repo:  https://github.com/KSP-RO/RP-0
-
-We recommend installing via the CKAN, `ckan.exe install RP-0` on the command line, or just look for "Realistic Progression Zero" in the GUI.
+Github Repo:  https://github.com/KSP-RO/RP-0  Development Branch
 
 **Requirements:**
 - Realism Overhaul and all its required mods
-- Community Tech Tree
-- Lack's SXT (although only the engines have RO configs as of yet)
-- Ven's Stock Parts Revamp
+- Lack's SXT (Needed for engines and science other parts are supported but not required)
+- Ven's Stock Parts Revamp (Needed mainly for engines and science parts)
 - Contract Configurator
 - Custom Barn Kit
 - Deadly Reentry (RO only recommends it. We require it.)
+- DMagic's Orbital Science (Science Parts)
+- Procedural Parts (Tanks)
+- Kerbal Construction Time (Infrastructure)
 
 **Recommended:**
 - Procedural Fairings
-- Procedural Parts
 - B9 Procedural Wings
-- Kerbal Construction Time
 - Taerobee
+- SCAN SAT
+- TAC Life Support
+- Remote Tech
+- KSC Switcher
 
 **Supported**
 - Raidernick's US Probes
@@ -44,7 +57,6 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Habitat Pack
 - Space Shuttle by Mike NZ
 - Space Shuttle by Dragon1
-- SCAN SAT
 - Infernal Robotics
 - KAS
 - KIS
@@ -55,13 +67,10 @@ We recommend installing via the CKAN, `ckan.exe install RP-0` on the command lin
 - Raidernick's 7K-LOK
 - Raidernick's Soyuz, Salyut
 - Raidernick's Skylab
-- TAC Life Support
 - Starshine Merlin engines
-- Remote Tech
 - NearFuture Solar panels
 
 **In Progress**
-- DMagic's Orbital Science
 - Universal Storage
 - Raidernick Soviet probes and rockets
 - LazTek SpaceX 

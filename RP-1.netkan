@@ -1,11 +1,11 @@
 {
     "spec_version" : "v1.4",
-    "identifier" : "RP-0",
-    "name"       : "Realistic Progression Zero",
-    "abstract"   : "Realistic Progression Zero - Career for Realism Overhaul",
+    "identifier" : "RP-1",
+    "name"       : "Realistic Progression One",
+    "abstract"   : "Realistic Progression One - Career for Realism Overhaul",
     "license"    : "CC-BY-4.0",
     "author"     : "RP-0 Group",
-    "$kref"      : "#/ckan/github/KSP-RO/RP-0",
+    "$kref"      : "#/ckan/github/KSP-RO/RP-0/tree/Developmental/",
     "$vref"      : "#/ckan/ksp-avc",
     "x_netkan_force_v": true,
     "release_status" : "stable",
@@ -17,7 +17,6 @@
         { "name" : "CustomBarnKit" },
         { "name" : "DeadlyReentry" },
         { "name" : "VenStockRevamp" },
-        { "name" : "CommunityTechTree" },
         { "name" : "KerbalConstructionTime" },
         { "name" : "RealSolarSystem" }
     ],
@@ -46,5 +45,6 @@
     ],
     "conflicts" : [
         { "name" : "CrowdSourcedScience" }
+        { "name" : "Realistic Progression Zero" }
     ]
 }

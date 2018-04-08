@@ -40,6 +40,7 @@ Github Repo:  https://github.com/KSP-RO/RP-0  Development Branch
 - Kerbal Construction Time (Infrastructure)
 
 **Recommended:**
+- Adjustable Landing Gear
 - Procedural Fairings
 - B9 Procedural Wings
 - Taerobee
@@ -47,6 +48,16 @@ Github Repo:  https://github.com/KSP-RO/RP-0  Development Branch
 - TAC Life Support
 - Remote Tech
 - KSC Switcher
+- Kerbal Renamer
+- Ship Manifest
+- Test Flight
+- Connected Living Space
+- Hanger Extender Extended
+- KSP-AVC
+- MechJeb2
+- SemiSaturatableRW
+- Toolbar
+
 
 **Supported**
 - Raidernick's US Probes

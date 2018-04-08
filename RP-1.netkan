@@ -19,6 +19,8 @@
         { "name" : "VenStockRevamp" },
         { "name" : "KerbalConstructionTime" },
         { "name" : "RealSolarSystem" }
+        { "name" : "ProceduralParts" },
+        { "name" : "DMagicOrbitalScience" }
     ],
     "recommends" : [
         { "name" : "AdjustableLandingGear" },
@@ -45,6 +47,6 @@
     ],
     "conflicts" : [
         { "name" : "CrowdSourcedScience" }
-        { "name" : "Realistic Progression Zero" }
+        { "name" : "RP-0" }
     ]
 }

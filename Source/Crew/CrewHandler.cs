@@ -97,6 +97,8 @@ namespace RP0.Crew
 
         public Dictionary<string, double> kerbalRetireTimes = new Dictionary<string, double>();
 
+        public bool retirementEnabled = true;
+
         protected HashSet<string> retirees = new HashSet<string>();
 
         protected static HashSet<string> toRemove = new HashSet<string>();
@@ -159,6 +161,8 @@ namespace RP0.Crew
             GameEvents.onGUIAstronautComplexSpawn.Add(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
             GameEvents.OnPartPurchased.Add(new EventData<AvailablePart>.OnEvent(onPartPurchased));
+            GameEvents.OnGameSettingsApplied.Add(LoadSettings);
+            GameEvents.onGameStateLoad.Add(LoadSettings);
 
             cliTooltip = typeof(KSP.UI.CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -290,29 +294,32 @@ namespace RP0.Crew
             {
                 nextUpdate = time + updateInterval;
 
-                foreach (KeyValuePair<string, double> kvp in kerbalRetireTimes)
+                if (retirementEnabled)
                 {
-                    ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[kvp.Key];
-                    if (pcm == null)
-                        toRemove.Add(kvp.Key);
-                    else
+                    foreach (KeyValuePair<string, double> kvp in kerbalRetireTimes)
                     {
-                        if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Available)
-                        {
-                            if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Assigned)
-                                toRemove.Add(kvp.Key);
-
-                            continue;
-                        }
-
-                        if (pcm.inactive)
-                            continue;
-
-                        if (time > kvp.Value)
-                        {
+                        ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[kvp.Key];
+                        if (pcm == null)
                             toRemove.Add(kvp.Key);
-                            retirees.Add(kvp.Key);
-                            pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
+                        else
+                        {
+                            if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Available)
+                            {
+                                if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Assigned)
+                                    toRemove.Add(kvp.Key);
+
+                                continue;
+                            }
+
+                            if (pcm.inactive)
+                                continue;
+
+                            if (time > kvp.Value)
+                            {
+                                toRemove.Add(kvp.Key);
+                                retirees.Add(kvp.Key);
+                                pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
+                            }
                         }
                     }
                 }
@@ -471,6 +478,8 @@ namespace RP0.Crew
             GameEvents.onGUIAstronautComplexSpawn.Remove(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Remove(ACDespawn);
             GameEvents.OnPartPurchased.Remove(new EventData<AvailablePart>.OnEvent(onPartPurchased));
+            GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
+            GameEvents.onGameStateLoad.Remove(LoadSettings);
         }
 
         #endregion
@@ -496,6 +505,16 @@ namespace RP0.Crew
         {
             inAC = false;
             astronautComplex = null;
+        }
+
+        protected void LoadSettings(ConfigNode n)
+        {
+            LoadSettings();
+        }
+
+        protected void LoadSettings()
+        {
+            retirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
         }
 
         protected void VesselRecoveryRequested(Vessel v)
@@ -620,9 +639,8 @@ namespace RP0.Crew
                 {
                     msgStr += s;
                 }
-
-
-                if (retirementChanges.Count > 0)
+                
+                if (retirementEnabled && retirementChanges.Count > 0)
                 {
                     msgStr += "\n\nThe following retirement changes have occurred:";
                     foreach (string s in retirementChanges)
@@ -644,7 +662,8 @@ namespace RP0.Crew
         {
             double retireTime = Planetarium.GetUniversalTime() + GetServiceTime(pcm);
             kerbalRetireTimes[pcm.name] = retireTime;
-            if (idx != int.MinValue)
+
+            if (retirementEnabled && idx != int.MinValue)
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                         new Vector2(0.5f, 0.5f),
@@ -656,7 +675,6 @@ namespace RP0.Crew
                                                         false,
                                                         HighLogic.UISkin);
             }
-
         }
 
         protected double GetServiceTime(ProtoCrewMember pcm)
@@ -670,7 +688,7 @@ namespace RP0.Crew
         {
             ProtoCrewMember pcm = cli.GetCrewRef();
             double retTime;
-            if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
+            if (retirementEnabled && kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
             {
                 cli.SetTooltip(pcm);
                 KSP.UI.TooltipTypes.TooltipController_CrewAC ttc = cliTooltip.GetValue(cli) as KSP.UI.TooltipTypes.TooltipController_CrewAC;

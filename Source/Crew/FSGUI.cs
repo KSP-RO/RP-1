@@ -109,9 +109,13 @@ namespace RP0.Crew
                 GUILayout.Label(course, GUILayout.Width(96));
                 GUILayout.Label(complete, GUILayout.Width(80));
                 if (CrewHandler.Instance.kerbalRetireTimes.ContainsKey(student.name))
-                    retires = KSPUtil.PrintDate(CrewHandler.Instance.kerbalRetireTimes[student.name], false);
+                {
+                    retires = CrewHandler.Instance.retirementEnabled ? KSPUtil.PrintDate(CrewHandler.Instance.kerbalRetireTimes[student.name], false) : "(n/a)";
+                }
                 else
+                {
                     retires = "(unknown)";
+                }
                 GUILayout.Label(retires, GUILayout.Width(80));
                 if (currentCourse != null) {
                     if (currentCourse.seatMin > 1) {
@@ -213,7 +217,7 @@ namespace RP0.Crew
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label(String.Format("{0} {1:D}", selectedNaut.trait, selectedNaut.experienceLevel.ToString()));
-                if (CrewHandler.Instance.kerbalRetireTimes.ContainsKey(selectedNaut.name)) {
+                if (CrewHandler.Instance.retirementEnabled && CrewHandler.Instance.kerbalRetireTimes.ContainsKey(selectedNaut.name)) {
                     GUILayout.Space(8);
                     GUILayout.Label(String.Format("Retires NET {0}", KSPUtil.PrintDate(CrewHandler.Instance.kerbalRetireTimes[selectedNaut.name], false)),
                                     rightLabel);

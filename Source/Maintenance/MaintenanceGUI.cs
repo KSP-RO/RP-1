@@ -221,7 +221,7 @@ namespace RP0
                     GUILayout.Space(40);
                     double rt = Crew.CrewHandler.Instance.kerbalRetireTimes[name];
                     GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(120));
-                    GUILayout.Label(KSPUtil.PrintDate(rt, false), HighLogic.Skin.label, GUILayout.Width(80));
+                    GUILayout.Label(Crew.CrewHandler.Instance.retirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(80));
                 } finally {
                     GUILayout.EndHorizontal();
                 }

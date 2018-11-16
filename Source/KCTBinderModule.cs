@@ -34,7 +34,9 @@ namespace RP0
             if (pcm == null)
                 return false;
 
-            if (EntryCostStorage.GetCost(partName) == 1)
+            bool requireTraining = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled;
+
+            if (!requireTraining || EntryCostStorage.GetCost(partName) == 1)
                 return true;
 
             partName = Crew.TrainingDatabase.SynonymReplace(partName);

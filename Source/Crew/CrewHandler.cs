@@ -811,7 +811,7 @@ namespace RP0.Crew
                     if (ResearchAndDevelopment.PartModelPurchased(ap))
                     {
                         string name = TrainingDatabase.SynonymReplace(ap.name);
-                        if (!partSynsHandled.Contains(ap.name))
+                        if (!partSynsHandled.Contains(name))
                         {
                             partSynsHandled.Add(name);
                             AddPartCourses(ap);

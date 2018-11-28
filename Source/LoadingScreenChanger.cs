@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
+using System.IO;
 using System.Text;
 using UnityEngine;
-using KSP;
-using System.IO;
-using System.Reflection;
 
 namespace RP0
 {
@@ -39,7 +36,6 @@ namespace RP0
 
             try
             {
-
                 Debug.Log("[RP-0]: Replacing loading screens.");
 
                 LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[1];
@@ -65,11 +61,11 @@ namespace RP0
                     }
                 }
                 int tC = textures.Count;
-                //float screenTime = Mathf.Round(240f / (float)tC);
-                System.Random random = new System.Random();
                 if (tC > 0)
                 {
-                    LoadingScreen.Instance.Screens[1].screens = textures.ToArray();
+                    LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[1];
+                    sc.screens = textures.ToArray();
+                    sc.displayTime = 12;    // Default value is 4 which causes the images to switch too quickly
 
                     string msgStr = "[RP-0]: Loading screens replaced.";
 
@@ -79,17 +75,10 @@ namespace RP0
                 {
                     Debug.LogError("[RP-0]: No screens found in RP-0/PluginData/Screens!");
                 }
-
-                // Try to jigger the unity random thing.
-
-                for (int i = (int)((new System.Random()).NextDouble() * 100d); i-- > 0;)
-                {
-                    UnityEngine.Random.Range(0, 10);
-                }
             }
             catch (Exception e)
             {
-                Debug.LogError("Patching failed: with error " + error + ", exception " + e);
+                Debug.LogError("[RP-0]: Patching failed: with error " + error + ", exception " + e);
             }
 
             GameObject.Destroy(this);

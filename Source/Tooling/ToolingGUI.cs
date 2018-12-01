@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Smooth.Slinq;
 
 namespace RP0
 {
@@ -109,6 +110,50 @@ namespace RP0
                     }
                 } finally {
                     GUILayout.EndScrollView();
+                }
+                GUILayout.BeginHorizontal();
+                try {
+                    GUILayout.Label("Total vessel cost if all parts are tooled: " + (EditorLogic.fetch.ship.GetShipCosts(out _, out _) - EditorLogic.fetch.ship.parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).Select(mt => mt.GetModuleCost(mt.part.partInfo.cost, ModifierStagingSituation.CURRENT)).Sum()));
+                } finally {
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.BeginHorizontal();
+                try {
+                if (GUILayout.Button("just tool it all, fer crissakes"))
+                {
+                    var totalToolingCost = untooledParts.Slinq().Select(up => up.toolingCost).Sum();
+                    bool canAfford = Funding.Instance.Funds >= totalToolingCost;
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                        new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog(
+                            "ConfirmAllToolingsPurchase",
+                            "Tooling for all untooled parts will cost " + totalToolingCost.ToString("N0") + " funds.",
+                            "Tooling Purchase",
+                            HighLogic.UISkin,
+                            new Rect(0.5f, 0.5f, 150f, 60f),
+                            new DialogGUIFlexibleSpace(),
+                            new DialogGUIVerticalLayout(
+                                new DialogGUIFlexibleSpace(),
+                                new DialogGUIButton(canAfford ? "Purchase All Toolings" : "Can't Afford",
+                                    () =>
+                                    {
+                                        if (canAfford)
+                                        {
+                                            Funding.Instance.AddFunds(-totalToolingCost, TransactionReasons.RnDPartPurchase);
+                                            EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).ForEach(mt => {
+                                                mt.PurchaseTooling();
+                                                mt.Events["ToolingEvent"].guiActiveEditor = false;
+                                                });
+                                            GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
+                                        }
+                                    }, 140.0f, 30.0f, true),
+                                new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
+                                )),
+                        false,
+                        HighLogic.UISkin);
+                }
+                } finally {
+                    GUILayout.EndHorizontal();
                 }
             }
             return currentToolingType == null ? tabs.Tooling : tabs.ToolingType;

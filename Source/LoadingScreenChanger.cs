@@ -65,7 +65,7 @@ namespace RP0
                 {
                     LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[1];
                     sc.screens = textures.ToArray();
-                    sc.displayTime = 12;    // Default value is 4 which causes the images to switch too quickly
+                    sc.displayTime = 8;    // Default value is 4 which causes the images to switch too quickly
 
                     string msgStr = "[RP-0]: Loading screens replaced.";
 

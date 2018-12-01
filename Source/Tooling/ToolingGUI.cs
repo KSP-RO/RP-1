@@ -119,7 +119,7 @@ namespace RP0
                 }
                 GUILayout.BeginHorizontal();
                 try {
-                if (GUILayout.Button("just tool it all, fer crissakes"))
+                if (GUILayout.Button("Tool All"))
                 {
                     var totalToolingCost = untooledParts.Slinq().Select(up => up.toolingCost).Sum();
                     bool canAfford = Funding.Instance.Funds >= totalToolingCost;

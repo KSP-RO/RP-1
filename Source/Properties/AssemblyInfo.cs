@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KSP-RO")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright ©  2014 CC-BY-NC-SA 4.0")]
+[assembly: AssemblyCopyright("Copyright ©  2014-2018 CC-BY-NC-SA 4.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

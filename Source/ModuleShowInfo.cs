@@ -15,7 +15,7 @@ namespace RP0
             {
                 tmp += "Part name: " + part.name;
                 // throws - tmp += "\nTech Required: " + part.partInfo.TechRequired;
-                // throws - tmp += "\nEntry Cost: " + part.partInfo.entryCost;
+                // tmp += "\nEntry Cost: " + part.partInfo.entryCost;
             }
             catch (Exception e)
             {

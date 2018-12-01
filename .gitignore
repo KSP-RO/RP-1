@@ -9,6 +9,7 @@ GameData/RP-0/RP-0.version
 *.suo
 *.user
 *.sln.docstates
+.vs/
 RP0.userprefs
 RealSolarSystem/Plugins/PluginData/
 

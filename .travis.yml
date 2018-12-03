@@ -14,7 +14,7 @@ deploy:
   api_key:
     secure: sB3nXTDnZgr4o1Wk7NZaQZNTyfknolA7rJ90TqwSx1/kvg0Xc6/7CBAVqtndW0ivkF0CV8AT32Jc3tGPBdfArMGcljFuiHyuYFEUmA2qcIDNcdUD+hdF1Jq5HKjUiEuqTf012s1fi9WyNwsZSBSxSckwP6K9y1huxpYPLRYuQ9Q=
   file_glob: true
-  file: RP-0-*.zip
+  file: RP-1-*.zip
   on:
     repo: KSP-RO/RP-0
     tags: true

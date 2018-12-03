@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP;
 
 namespace RP0
 {
-    class ModuleShowInfo : PartModule
+    public class ModuleShowInfo : PartModule
     {
         public override string GetInfo()
         {
@@ -16,7 +15,7 @@ namespace RP0
             {
                 tmp += "Part name: " + part.name;
                 // throws - tmp += "\nTech Required: " + part.partInfo.TechRequired;
-                // throws - tmp += "\nEntry Cost: " + part.partInfo.entryCost;
+                // tmp += "\nEntry Cost: " + part.partInfo.entryCost;
             }
             catch (Exception e)
             {

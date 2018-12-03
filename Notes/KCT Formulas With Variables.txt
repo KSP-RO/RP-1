@@ -1,0 +1,41 @@
+KCT_Preset_Formula
+    {
+			NodeFormula = (((4.75+(0.025*((min([N],30)^2)+min([N],30)))+(max(0,([N]-30))*1.5)) / 86400 / 365) * sign(-[I]) * (1+([R] * 0.25))) // 5 science/year, + 0.05 to 1.5 sci per upgrade (levels at 30), only one rate, and 1/1.25/1.5x etc from R&D upgrades.
+            UpgradeFundsFormula = 30000
+            UpgradeScienceFormula = -1
+			ResearchFormula = -1
+			// The effective part formula sets the total Cost of the parts that is used by both the BuildRate and RolloutCosts
+			EffectivePartFormula = [PV]*[MV]*(min([C]/([I] + ([B]*(max([U]*0.125,1)+1))), [C]))
+            ProceduralPartFormula = [MV] * ((([C]-[A]) + ([A]*10/max([I],1))) / max([B]*(max([U]*0.125,1)+1),1))
+            BPFormula = (500 + ([E]*20))*[O]*1.5
+            KSCUpgradeFormula = (([C]*0.2)^(0.75))*200*[O]
+            ReconditioningFormula = abs([RE]-[S])*([BP] * (0.7 + (([SN]^0.5)*0.05) + (([SP]^0.5)*0.05)) * (([L]+4)^2) * 0.00012)*2*[O]
+            BuildRateFormula = (1+([L]*0.25))*((([I]+1)*((0.00125*((min([N],15)^2)+min([N],15)))+(max(0,([N]-15))*0.05))) + max(0.05-[I], 0))*sign([L]-[I])
+            UpgradeResetFormula = -1
+            InventorySaleFormula = 0
+			RolloutCostFormula = (((([L]+1)^2.5)*200)-180) + ([BP] * (0.7 + (([SN]^0.5)*0.05) + (([SP]^0.5)*0.05)) * (([L]+12)^1.2) * 0.00011)
+			NewLaunchPadCostFormula = 25000*(0.75 + ([N]^1.25)*.25)
+    }
+
+	
+PART FORMULAS
+C = Base Cost of the Part
+c = Dry cost of the Part (no fuel)
+M = Wet Mass
+m = Dry Mass
+U = Scrapyard Hook (Buildcount)
+u = Scrapyard Hook (Partcount in storage)
+O = Overall Multiplier
+I = Inventory Effect (if active)
+B = Build Effect
+PV = Part Variables
+MV = Module Variables
+
+BUILD RATE FORMULAS
+E = Total Effective Cost
+BP = Build Points
+L = Launch Site Level
+SN = Num Stages
+SP = Num Stage Parts
+SC = Stage Part Cost
+

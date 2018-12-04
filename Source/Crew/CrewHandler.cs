@@ -1,96 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using KSP;
-using UnityEngine;
 using System.Reflection;
+using UnityEngine;
 
 namespace RP0.Crew
 {
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class CrewHandler : ScenarioModule
     {
-        #region TrainingExpiration
-
-        public class TrainingExpiration : IConfigNode
-        {
-            public string pcmName;
-
-            public List<string> entries = new List<string>();
-
-            public double expiration;
-
-            public TrainingExpiration() { }
-
-            public TrainingExpiration(ConfigNode node)
-            {
-                Load(node);
-            }
-
-            public static bool Compare(string str, FlightLog.Entry e)
-            {
-                int tyLen = (string.IsNullOrEmpty(e.type) ? 0 : e.type.Length);
-                int tgLen = (string.IsNullOrEmpty(e.target) ? 0 : e.target.Length);
-                int iC = str.Length;
-                if (iC != 1 + tyLen + tgLen)
-                    return false;
-                int i = 0;
-                for (; i < tyLen; ++i)
-                {
-                    if (str[i] != e.type[i])
-                        return false;
-                }
-
-                if (str[i] != ',')
-                    return false;
-                ++i;
-                for (int j = 0; j < tgLen && i < iC; ++j)
-                {
-                    if (str[i] != e.target[j])
-                        return false;
-                    ++i;
-                }
-
-                return true;
-            }
-
-            public bool Compare(int idx, FlightLog.Entry e)
-            {
-                return Compare(entries[idx], e);
-            }
-
-            public void Load(ConfigNode node)
-            {
-                foreach (ConfigNode.Value v in node.values)
-                {
-                    switch (v.name)
-                    {
-                        case "pcmName":
-                            pcmName = v.value;
-                            break;
-                        case "expiration":
-                            double.TryParse(v.value, out expiration);
-                            break;
-
-                        default:
-                        case "entry":
-                            entries.Add(v.value);
-                            break;
-                    }
-                }
-            }
-
-            public void Save(ConfigNode node)
-            {
-                node.AddValue("pcmName", pcmName);
-                node.AddValue("expiration", expiration);
-                foreach (string s in entries)
-                    node.AddValue("entry", s);
-            }
-        }
-
-        #endregion
-
         #region Fields
 
         public CrewHandlerSettings settings = new CrewHandlerSettings();
@@ -102,8 +19,6 @@ namespace RP0.Crew
         protected HashSet<string> retirees = new HashSet<string>();
 
         protected static HashSet<string> toRemove = new HashSet<string>();
-
-        protected List<TrainingExpiration> expireTimes = new List<TrainingExpiration>();
 
         protected bool inAC = false;
 
@@ -119,9 +34,7 @@ namespace RP0.Crew
         public double nextUpdate = -1d;
 
         protected double updateInterval = 3600d;
-
-
-
+        
         public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
@@ -193,16 +106,6 @@ namespace RP0.Crew
                     retirees.Add(v.value);
             }
 
-            expireTimes.Clear();
-            n = node.GetNode("EXPIRATIONS");
-            if (n != null)
-            {
-                foreach (ConfigNode eN in n.nodes)
-                {
-                    expireTimes.Add(new TrainingExpiration(eN));
-                }
-            }
-
             ConfigNode FSData = node.GetNode("FlightSchoolData");
 
             if (FSData == null)
@@ -236,11 +139,7 @@ namespace RP0.Crew
             n = node.AddNode("RETIREES");
             foreach (string s in retirees)
                 n.AddValue("retiree", s);
-
-            n = node.AddNode("EXPIRATIONS");
-            foreach (TrainingExpiration e in expireTimes)
-                e.Save(n.AddNode("Expiration"));
-
+            
             ConfigNode FSData = new ConfigNode("FlightSchoolData");
             //save all the active courses
             foreach (ActiveCourse course in ActiveCourses)
@@ -330,35 +229,6 @@ namespace RP0.Crew
                     if (course.ProgressTime(time)) //returns true when the course completes
                     {
                         ActiveCourses.RemoveAt(i);
-                    }
-                }
-
-                for (int i = expireTimes.Count; i-- > 0;)
-                {
-                    TrainingExpiration e = expireTimes[i];
-                    if (time > e.expiration)
-                    {
-                        ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[e.pcmName];
-                        if (pcm != null)
-                        {
-                            for (int j = pcm.careerLog.Entries.Count; j-- > 0;)
-                            {
-                                int eC = e.entries.Count;
-                                if (eC == 0)
-                                    break;
-                                FlightLog.Entry ent = pcm.careerLog[j];
-                                for (int k = eC; k-- > 0;)
-                                {
-                                    if (e.Compare(k, ent))
-                                    {
-                                        ScreenMessages.PostScreenMessage(pcm.name + ": Expired: " + GetPrettyCourseName(ent.type) + ent.target);
-                                        ent.type = "expired_" + ent.type;
-                                        e.entries.RemoveAt(k);
-                                    }
-                                }
-                            }
-                        }
-                        expireTimes.RemoveAt(i);
                     }
                 }
 
@@ -484,15 +354,6 @@ namespace RP0.Crew
 
         #endregion
 
-        #region Interfaces
-
-        public void AddExpiration(TrainingExpiration e)
-        {
-            expireTimes.Add(e);
-        }
-
-        #endregion
-
         #region Methods
 
         protected void ACSpawn()
@@ -537,9 +398,6 @@ namespace RP0.Crew
                 int curFlight = pcm.careerLog.Last().flight;
                 foreach (FlightLog.Entry e in pcm.careerLog.Entries)
                 {
-                    if (e.type == "TRAINING_mission")
-                        SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
-
                     if (e.flight != curFlight)
                         continue;
 
@@ -704,81 +562,25 @@ namespace RP0.Crew
 
         public string GetTrainingString(ProtoCrewMember pcm)
         {
-            HashSet<string> expiredProfs = new HashSet<string>();
             bool found = false;
             string trainingStr = "\n\nTraining:";
-            int lastFlight = pcm.careerLog.Last() == null ? 0 : pcm.careerLog.Last().flight;
             foreach (FlightLog.Entry ent in pcm.careerLog.Entries)
             {
                 string pretty = GetPrettyCourseName(ent.type);
                 if (!string.IsNullOrEmpty(pretty))
                 {
-                    if (ent.type == "expired_TRAINING_proficiency")
-                    {
-                        found = true;
-                        expiredProfs.Add(ent.target);
-                    }
-                    else
-                    {
-                        if (ent.type == "TRAINING_mission" && ent.flight != lastFlight)
-                            continue;
+                    if (ent.type != "TRAINING_proficiency")
+                        continue;
 
-                        found = true;
-                        trainingStr += "\n  " + pretty + ent.target;
-                        double exp = GetExpiration(pcm.name, ent);
-                        if (exp > 0d)
-                            trainingStr += ". Expires " + KSPUtil.PrintDate(exp, false);
-                    }
+                    found = true;
+                    trainingStr += "\n  " + pretty + ent.target;
                 }
             }
-            if (expiredProfs.Count > 0)
-                trainingStr += "\n  Expired proficiencies:";
-            foreach (string s in expiredProfs)
-                trainingStr += "\n    " + s;
 
             if (found)
                 return trainingStr;
             else
                 return string.Empty;
-        }
-
-        protected double GetExpiration(string pcmName, FlightLog.Entry ent)
-        {
-            for (int i = expireTimes.Count; i-- > 0;)
-            {
-                TrainingExpiration e = expireTimes[i];
-                if (e.pcmName == pcmName)
-                {
-                    for (int j = e.entries.Count; j-- > 0;)
-                    {
-                        if (e.Compare(j, ent))
-                            return e.expiration;
-                    }
-                }
-            }
-
-            return 0d;
-        }
-
-        protected bool SetExpiration(string pcmName, FlightLog.Entry ent, double expirationUT)
-        {
-            for (int i = expireTimes.Count; i-- > 0;)
-            {
-                TrainingExpiration e = expireTimes[i];
-                if (e.pcmName == pcmName)
-                {
-                    for (int j = e.entries.Count; j-- > 0;)
-                    {
-                        if (e.Compare(j, ent))
-                        {
-                            e.expiration = expirationUT;
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
         }
 
         protected void FindAllCourseConfigs()
@@ -827,7 +629,6 @@ namespace RP0.Crew
         protected void AddPartCourses(AvailablePart ap)
         {
             GenerateCourseProf(ap);
-            GenerateCourseMission(ap);
         }
 
         protected void GenerateCourseProf(AvailablePart ap)
@@ -838,8 +639,6 @@ namespace RP0.Crew
             n.AddValue("id", "prof_" + name);
             n.AddValue("name", "Proficiency: " + name);
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400d));
-            n.AddValue("expiration", settings.trainingProficiencyExpirationYears * 86400d * 365d);
-            n.AddValue("expirationUseStupid", true);
 
             n.AddValue("conflicts", "TRAINING_proficiency:" + name);
 
@@ -847,46 +646,6 @@ namespace RP0.Crew
             r.AddValue("XPAmt", settings.trainingProficiencyXP);
             ConfigNode l = r.AddNode("FLIGHTLOG");
             l.AddValue("0", "TRAINING_proficiency," + name);
-
-            CourseTemplate c = new CourseTemplate(n);
-            c.PopulateFromSourceNode();
-            OfferedCourses.Add(c);
-
-            ConfigNode n2 = n.CreateCopy();
-            n2.SetValue("id", "profR_" + name);
-            n2.SetValue("name", "Refresher: " + name);
-            n2.SetValue("time", 1d + TrainingDatabase.GetTime(name) * 86400d * settings.trainingProficiencyRefresherTimeMult);
-            n2.AddValue("preReqsAny", "expired_TRAINING_proficiency:" + name + ",TRAINING_proficiency:" + name);
-            n2.RemoveValue("conflicts");
-
-            r = n2.GetNode("REWARD");
-            r.SetValue("XPAmt", "0");
-            ConfigNode exp = r.AddNode("EXPIRELOG");
-            exp.AddValue("0", "TRAINING_proficiency," + name);
-
-            c = new CourseTemplate(n2);
-            c.PopulateFromSourceNode();
-            OfferedCourses.Add(c);
-        }
-
-        protected void GenerateCourseMission(AvailablePart ap)
-        {
-            ConfigNode n = new ConfigNode("FS_COURSE");
-            string name = TrainingDatabase.SynonymReplace(ap.name);
-
-            n.AddValue("id", "msn_" + name);
-            n.AddValue("name", "Mission: " + name);
-            n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "-Mission") * 86400d);
-            n.AddValue("timeUseStupid", true);
-            n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
-            n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);
-
-            n.AddValue("preReqs", "TRAINING_proficiency:" + name);
-            n.AddValue("conflicts", "TRAINING_mission:" + name);
-
-            ConfigNode r = n.AddNode("REWARD");
-            ConfigNode l = r.AddNode("FLIGHTLOG");
-            l.AddValue("0", "TRAINING_mission," + name);
 
             CourseTemplate c = new CourseTemplate(n);
             c.PopulateFromSourceNode();
@@ -904,41 +663,9 @@ namespace RP0.Crew
             {
                 case "TRAINING_proficiency":
                     return "Proficiency with ";
-                case "expired_TRAINING_proficiency":
-                    return "(Expired) Proficiency with ";
-                case "TRAINING_mission":
-                    return "Mission training for ";
-                /*case "expired_TRAINING_mission":
-                    return "(Expired) Mission training for ";*/
                 default:
                     return string.Empty;
             }
-        }
-
-        public bool RemoveExpiration(string pcmName, string entry)
-        {
-            for (int i = expireTimes.Count; i-- > 0;)
-            {
-                TrainingExpiration e = expireTimes[i];
-
-                if (e.pcmName != pcmName)
-                    continue;
-
-                for (int j = e.entries.Count; j-- > 0;)
-                {
-                    if (e.entries[j] == entry)
-                    {
-                        e.entries.RemoveAt(j);
-
-                        if (e.entries.Count == 0)
-                            expireTimes.RemoveAt(i);
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
 
         #endregion

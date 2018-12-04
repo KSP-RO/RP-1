@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UniLinq;
-using System.Text;
 
 namespace RP0.Crew
 {
@@ -12,8 +11,7 @@ namespace RP0.Crew
         public double elapsedTime = 0;
         public double startTime = 0d;
         public bool Started = false, Completed = false;
-
-
+        
         public ActiveCourse(CourseTemplate template)
         {
             sourceNode = template.sourceNode;
@@ -122,6 +120,7 @@ namespace RP0.Crew
             }
             return true;
         }
+
         public void AddStudent(ProtoCrewMember student)
         {
             if (seatMax <= 0 || Students.Count < seatMax)
@@ -130,6 +129,7 @@ namespace RP0.Crew
                     Students.Add(student);
             }
         }
+
         public void AddStudent(string student)
         {
             AddStudent(HighLogic.CurrentGame.CrewRoster[student]);
@@ -148,6 +148,7 @@ namespace RP0.Crew
                 }
             }
         }
+
         public void RemoveStudent(string student)
         {
             RemoveStudent(HighLogic.CurrentGame.CrewRoster[student]);
@@ -188,7 +189,6 @@ namespace RP0.Crew
 
         public void CompleteCourse()
         {
-
             //assign rewards to all kerbals and set them to free
             if (Completed)
             {
@@ -196,53 +196,18 @@ namespace RP0.Crew
                 {
                     if (student == null)
                         continue;
-
-                    if (ExpireLog != null)
-                    {
-                        foreach (ConfigNode.Value v in ExpireLog.values)
-                        {
-                            for (int i = student.careerLog.Count; i-- > 0;)
-                            {
-                                FlightLog.Entry e = student.careerLog.Entries[i];
-                                if (CrewHandler.TrainingExpiration.Compare(v.value, e))
-                                {
-                                    e.type = "expired_" + e.type;
-                                    CrewHandler.Instance.RemoveExpiration(student.name, v.value);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
+                    
                     if (RewardLog != null)
                     {
                         if (student.flightLog.Count > 0)
                             student.ArchiveFlightLog();
-
-                        CrewHandler.TrainingExpiration exp = null;
-                        if (expiration > 0d)
-                        {
-                            exp = new CrewHandler.TrainingExpiration();
-                            exp.pcmName = student.name;
-                            exp.expiration = expiration;
-                            if (expirationUseStupid)
-                                exp.expiration *= UtilMath.Lerp(CrewHandler.Instance.settings.trainingProficiencyStupidMin,
-                                    CrewHandler.Instance.settings.trainingProficiencyStupidMax,
-                                    student.stupidity);
-                            exp.expiration += Planetarium.GetUniversalTime();
-                        }
-
+                        
                         foreach (ConfigNode.Value v in RewardLog.values)
                         {
                             string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             student.flightLog.AddEntry(s[0], s.Length == 1 ? null : s[1]);
                             student.ArchiveFlightLog();
-                            if (expiration > 0d)
-                                exp.entries.Add(v.value);
                         }
-
-                        if (expiration > 0d)
-                            CrewHandler.Instance.AddExpiration(exp);
                     }
 
                     if (rewardXP != 0)

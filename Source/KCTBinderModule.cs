@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using KerbalConstructionTime;
 
 namespace RP0
@@ -45,30 +42,11 @@ namespace RP0
             if (ent == null)
                 return false;
 
-            int lastFlight = ent.flight;
-            bool lacksMission = true;
             for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
             {
                 FlightLog.Entry e = pcm.careerLog.Entries[i];
-                if (lacksMission)
-                {
-                    if (e.flight < lastFlight)
-                        return false;
-
-                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
-                        continue;
-
-                    if (e.type == "TRAINING_mission" && e.target == partName)
-                        lacksMission = false;
-                }
-                else
-                {
-                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
-                        continue;
-
-                    if (e.type == "TRAINING_proficiency" && e.target == partName)
-                        return true;
-                }
+                if (e.type == "TRAINING_proficiency" && e.target == partName)
+                    return true;
             }
             return false;
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace RP0.Crew
 {
@@ -29,16 +27,12 @@ namespace RP0.Crew
         public string[] classes = { }; //which classes can take this course (empty == all)
         public int minLevel = 0; //minimum kerbal level required to take the course
         public int maxLevel = 99; //max kerbal level allowed to take the course
-
-        public double expiration = 0d;
-        public bool expirationUseStupid = false;
-
+        
         public int seatMax = -1; //maximum number of kerbals allowed in the course at once
         public int seatMin = 0; //minimum number of kerbals required to start the course
         
         public int rewardXP = 0; //pure XP reward
         public ConfigNode RewardLog = null; //the flight log to insert
-        public ConfigNode ExpireLog = null; // expire all these on complete
 
         public CourseTemplate(ConfigNode source)
         {
@@ -130,8 +124,6 @@ namespace RP0.Crew
 
             source.TryGetValue("time", ref time);
             source.TryGetValue("timeUseStupid", ref timeUseStupid);
-            source.TryGetValue("expiration", ref expiration);
-            source.TryGetValue("expirationUseStupid", ref expirationUseStupid);
 
             source.TryGetValue("required", ref required);
 
@@ -162,7 +154,6 @@ namespace RP0.Crew
             if (r != null)
             {
                 RewardLog = r.GetNode("FLIGHTLOG");
-                ExpireLog = r.GetNode("EXPIRELOG");
                 r.TryGetValue("XPAmt", ref rewardXP);
             }
         }
@@ -180,14 +171,6 @@ namespace RP0.Crew
             averageStupid /= sC;
 
             return time * UtilMath.Lerp(CrewHandler.Instance.settings.trainingMissionStupidMin, CrewHandler.Instance.settings.trainingMissionStupidMax, averageStupid);
-        }
-
-        public double GetExpiration(ProtoCrewMember pcm)
-        {
-            if (pcm == null || !expirationUseStupid)
-                return expiration;
-
-            return expiration * (1.5d - pcm.stupidity);
         }
     }
 }

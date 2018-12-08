@@ -19,7 +19,7 @@
         { "name" : "VenStockRevamp" },
         { "name" : "KerbalConstructionTime" },
         { "name" : "RealSolarSystem" },
-		{ "name" : "DMagicOrbitalScience" }
+        { "name" : "DMagicOrbitalScience" }
     ],
     "recommends" : [
 		{ "name" : "B9-PWings-Modified" },
@@ -43,7 +43,8 @@
 		{ "name" : "TACLS" },
 		{ "name" : "TestFlight" },
 		{ "name" : "TextureReplacerReplaced" },
-		{ "name" : "Toolbar" }
+		{ "name" : "Toolbar" },
+    { "name" : "WasdEditorCameraContinued" }
     ],	
 	"suggests"   : [
 		{ "name" : "BluedogDB" },

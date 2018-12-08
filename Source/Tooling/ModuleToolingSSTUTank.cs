@@ -72,7 +72,7 @@ namespace RP0
             }
             else
             {
-                Debug.LogError("[ModuleTooling]: Could not find SSTU part to bind to");
+                Debug.LogError("[ModuleTooling]: Could not find SSTU MFT part to bind to");
                 return;
             }
         }

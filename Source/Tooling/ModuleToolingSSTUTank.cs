@@ -15,12 +15,14 @@ namespace RP0
         public override void OnAwake()
         {
             base.OnAwake();
-            SSTUTank = part.Modules["SSTUModularPart"];
+            // ******* 1.4+ SSTUTank = part.Modules["SSTUModularPart"];
+            SSTUTank = part.Modules["SSTUModularFuelTank"];
         }
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
-            SSTUTank = part.Modules["SSTUModularPart"];
+            // ******* 1.4+ SSTUTank = part.Modules["SSTUModularPart"];
+            SSTUTank = part.Modules["SSTUModularFuelTank"];
         }
         protected override void GetDimensions(out float diam, out float len)
         {
@@ -32,13 +34,15 @@ namespace RP0
                 Debug.LogError("[ModuleTooling]: Could not find SSTU part to bind to");
                 return;
             }
-            
+
             // Get diameter from part field and convert to Float
-            diam1 = SSTUTank.Fields["currentDiameter"];
+            // ******* 1.4+ diam1 = SSTUTank.Fields["currentDiameter"];
+            diam1 = SSTUTank.Fields["currentTankDiameter"];
             diam = diam1.GetValue<float>(SSTUTank);
-            
+
             // Get core size from part field and convert to String
-            string coreStr = SSTUTank.Fields["currentCore"].GetValue<string>(SSTUTank);
+            // ******* 1.4+ string coreStr = SSTUTank.Fields["currentCore"].GetValue<string>(SSTUTank);
+            string coreStr = SSTUTank.Fields["currentTankType"].GetValue<string>(SSTUTank);
             Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Core: {coreStr}");
 
             /* SSTU Modular Tanks are actually separate models and these are the 4 common models that

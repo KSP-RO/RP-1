@@ -12,7 +12,7 @@ use JSON::PP;
 # Makes an RP-0.version file based upon existing git tags.
 # License: Same as RP-0 itself.
 
-my $VERSION_TEMPLATE = File::Spec->catdir($Bin,"../RP-0.version.in");
+my $VERSION_TEMPLATE = File::Spec->catdir($Bin,"../RP-1.version.in");
 my $json = JSON::PP->new->pretty;
 
 my $avc_info = read_avc_tempalte($VERSION_TEMPLATE);
@@ -28,7 +28,7 @@ if (not $raw_version) {
 $avc_info->{VERSION} = parse_version($raw_version);
 
 # Write our file
-my $version_file = File::Spec->catdir($Bin,"../GameData/RP-0/RP-0.version");
+my $version_file = File::Spec->catdir($Bin,"../GameData/RP-0/RP-1.version");
 
 open(my $version_fh, ">", $version_file);
 

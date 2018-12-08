@@ -427,8 +427,8 @@ namespace RP0.ProceduralAvionics
                 // which is used for ensuring the min and max values in GetInternalMassLimit().
 
                 proceduralMassLimitEdit.incrementSlide = proceduralMassLimitEdit.minValue * (FLOAT_ERROR_ALLOWANCE - 1f);
-				proceduralMassLimitEdit.incrementSmall = largeIncFloat / 100;
-				proceduralMassLimitEdit.incrementLarge = largeIncFloat / 10;
+				        proceduralMassLimitEdit.incrementSmall = largeIncFloat / 100;
+				        proceduralMassLimitEdit.incrementLarge = largeIncFloat / 10;
 			}
 			else {
 				Log("Cannot update max value yet, CurrentProceduralAvionicsConfig is null");

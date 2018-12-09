@@ -44,7 +44,7 @@
 		{ "name" : "TestFlight" },
 		{ "name" : "TextureReplacerReplaced" },
 		{ "name" : "Toolbar" },
-    { "name" : "WasdEditorCameraContinued" }
+		{ "name" : "WasdEditorCameraContinued" }
     ],	
 	"suggests"   : [
 		{ "name" : "BluedogDB" },

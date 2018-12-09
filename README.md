@@ -1,10 +1,8 @@
-[![Build Status](https://travis-ci.org/KSP-RO/RP-0.svg?branch=master)](https://travis-ci.org/KSP-RO/RP-0)
-
 Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Space Program's Realism Overhaul.
 
 RP-1 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-1 works with as many additional mods as possible; we use a fresh fully icon rebuilt Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a historical fashion.  Right now a good number of nodes lack much in the way of parts allowing for placement of balanced historically appropriate parts in those nodes. 
 
-RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/tree/Developmental), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/Developmental). The [tech tree](https://github.com/KSP-RO/RP-0/blob/Developmental/Note/RP-0%20Official%20Parts%20Tech%20Tree%20Spreadsheet%20Instructions.pdf) itself is designed to be somewhat simple for humans to edit. When doing so focus on accuracy. If you can not reputably cite the information it may be suspect. A good source for reference material is the NASA NTRS system. Systems that have actually flown are always preferable to notional systems.
+RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/tree/Developmental), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/Developmental). 
 
 When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production. 
 
@@ -29,71 +27,53 @@ Development thread: http://forum.kerbalspaceprogram.com/threads/103196
 Github Repo:  https://github.com/KSP-RO/RP-0  Development Branch
 
 **Requirements:**
-- Realism Overhaul and all its required mods
-- Lack's SXT (Needed for engines and science other parts are supported but not required)
-- Ven's Stock Parts Revamp (Needed mainly for engines and science parts)
+- Realism Overhaul and all of its required mods (including Real Solar System)
+- Module Manager
+- SXT Continued (Needed for engines)
 - Contract Configurator
 - Custom Barn Kit
-- Deadly Reentry (RO only recommends it. We require it.)
-- DMagic's Orbital Science (Science Parts)
-- Procedural Parts (Tanks)
-- Kerbal Construction Time (Infrastructure)
+- Deadly Reentry
+- Ven's Stock Revamp (Needed for engines)
+- Kerbal Construction Time (Infrastructure, Build Time, Rollout Costs)
+- DMagic Orbital Science (Science parts)
 
-**Recommended:**
-- Adjustable Landing Gear
-- Procedural Fairings
+**Highly Recommended:**
 - B9 Procedural Wings
-- Taerobee
-- SCAN SAT
-- TAC Life Support
-- Remote Tech
-- KSC Switcher
-- Kerbal Renamer
-- Ship Manifest
-- Test Flight
 - Connected Living Space
-- Hanger Extender Extended
+- Hangar Extender
+- Janitors Closet
+- Kerbal Alarm Clock
+- Kerbal Engineer
+- KRASH
+- KSCSwitcher
 - KSP-AVC
-- MechJeb2
-- SemiSaturatableRW
+- MechJeb
+- Procedural Fairings
+- Procedural Parts
+- RCS Build Aid
+- RemoteTech
+- SCANsat
+- Science Alert
+- Science Situation Info (tells you what science parts work where)
+- Stage Recovery
+- Ship Manifest
+- TAC Life Support
+- Test Flight
+- Texture Replacer
 - Toolbar
+- WASD Editor
 
-
-**Supported**
-- Raidernick's US Probes
+**Suggested Mods**
+- Raidernick's Mods (especially US Probes and Soviet Probes)
 - FASA
-- AIES
-- Soviet engines
-- B9 Aerospace
-- Habitat Pack
-- Space Shuttle by Mike NZ
-- Space Shuttle by Dragon1
-- Infernal Robotics
-- KAS
-- KIS
-- Bahamuto Adjustable Landing Gear
-- Bahamuto mk2 Lightning Cockpit
-- Raidernick's Soviet rockets
-- Raidernick's US Probes
-- Raidernick's 7K-LOK
-- Raidernick's Soyuz, Salyut
-- Raidernick's Skylab
-- Starshine Merlin engines
-- NearFuture Solar panels
-
-**In Progress**
-- Universal Storage
-- Raidernick Soviet probes and rockets
-- LazTek SpaceX 
-- Chaka Monkey 
-- KW Rocketry
-- KAX 
-- Spice Launch System 
-- Constellation Essentials 
-- FusTek
-- Nova Punch
-- Tantares
-- Cryogenic Engines
+- Kerbal Renamer
+- kOS
+- Real Engines
+- Real Scale Boosters
+- Bluedog Design Bureau
+- Soviet Engine Pack
+- Taerobee
+- Waypoint Manager
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!
 
@@ -318,6 +298,3 @@ Feel free to update the spreadsheet and create PRs to add new nodes.  An example
  - For setting `unlockCost`, I usually just use 1.5x the unlock price of the non-procedural version
 
 > There are many cases where you have more than one avionics unit per tech node.  This may be because they should be in two different configs.  If there is more that one for the same config, I would suggest averaging their values.
-
-> It's also worth noting that the maximum size of a Procedural Part can be setup by using ProcPart TECHNODES in the `ProceduralPart` MODULE, however we have cleared those out.
-

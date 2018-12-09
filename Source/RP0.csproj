@@ -94,6 +94,7 @@
     <Compile Include="Tooling\ModuleTooling.cs" />
     <Compile Include="Tooling\ModuleToolingPFSide.cs" />
     <Compile Include="Tooling\ModuleToolingGeneric.cs" />
+    <Compile Include="Tooling\ModuleToolingSSTUTank.cs" />
     <Compile Include="Tooling\ToolingDatabase.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />

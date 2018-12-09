@@ -23,8 +23,8 @@ This top-post is jointly maintained by pjf and NathanKell and many others.
 
 License: CC-BY-NC-SA-4.0
 
-Development thread: http://forum.kerbalspaceprogram.com/threads/103196
-Github Repo:  https://github.com/KSP-RO/RP-0  Development Branch
+Release Thread: https://forum.kerbalspaceprogram.com/index.php?/topic/162117-122-realistic-progression-zero-rp-0-lightweight-realismoverhaul-career-v054-june-15/&
+Github Repo:  https://github.com/KSP-RO/RP-0  
 
 **Requirements:**
 - Realism Overhaul and all of its required mods (including Real Solar System)

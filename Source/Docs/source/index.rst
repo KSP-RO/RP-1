@@ -1,16 +1,5 @@
 .. _index:
 
-.. toctree::
-  :maxdepth: 5
-  :caption: Features
-  
-  /features/techTree
-  /features/science
-  /features/tooling
-  /features/maintenance
-  /features/crewHandling
-  /features/facilities
-
 Realistic Progression One (RP-1)
 ================================
 
@@ -31,8 +20,11 @@ What is New?
 ------------
 
 A lot has changed from RP-0 and this is a concise list of some of the
-biggest changes. Click on each link to go to the corresponding page
-that has much more detail on each feature.
+biggest changes. The first thing to understand is that RP-1 is a very different
+experience from RP-0. This is the reason we decided on the name change, it is
+basically the equivalent of a sequel. There are new game mechanics that you will have
+to learn all over again, so please RTFM and learn what is new. Click on each link to
+go to the corresponding page that has much more detail on each feature.
 
 * :doc:`/features/techTree` — Custom tech tree specifically designed for RP-1
 * :doc:`/features/science` — All new science parts that encoruage multiple missions
@@ -41,7 +33,38 @@ that has much more detail on each feature.
 * :doc:`/features/crewHandling` — Crew needs to train before taking on missions and will retire if not used
 * :doc:`/features/facilities` — Facility upgrades have been overhahuled
 
-
+.. toctree::
+	:maxdepth: 2
+	:caption: Features
+  
+	/features/techTree
+	/features/science
+	/features/tooling
+	/features/maintenance
+	/features/crewHandling
+	/features/facilities
+  
+.. toctree::
+	:maxdepth: 2
+	:caption: Information
+  
+	/installation
+	/info/gettingStarted
+	/info/mods
+	/info/tips
+	/info/faq
+	/info/links
+	
+.. toctree::
+	:maxdepth: 2
+	:caption: Gameplay
+  
+	/game/comms
+	/game/entryCosts
+	/game/fuelTanks
+	/game/KCT
+	/game/lifeSupport
+	/game/testFlight
 
 Indices and tables
 ==================

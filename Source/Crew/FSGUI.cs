@@ -20,7 +20,7 @@ namespace RP0.Crew
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("", GUILayout.Width(24));
-                GUILayout.Label("Name", boldLabel, GUILayout.Width(96));
+                GUILayout.Label("Name", boldLabel, GUILayout.Width(144));
                 GUILayout.Label("Course", boldLabel, GUILayout.Width(96));
                 GUILayout.Label("Complete", boldLabel, GUILayout.Width(80));
                 GUILayout.Label("Retires NET", boldLabel, GUILayout.Width(80));
@@ -80,18 +80,18 @@ namespace RP0.Crew
             try {
                 GUILayout.Label(String.Format("{0} {1}", student.trait.Substring(0, 1), student.experienceLevel), GUILayout.Width(24));
                 if (currentCourse == null && selectedCourse != null && (selectedForCourse || selectedCourse.MeetsStudentReqs(student))) {
-                    if (toggleButton(student.name, selectedForCourse, GUILayout.Width(96))) {
+                    if (toggleButton(student.name, selectedForCourse, GUILayout.Width(144))) {
                         if (selectedForCourse)
                             selectedCourse.RemoveStudent(student);
                         else
                             selectedCourse.AddStudent(student);
                     }
                 } else if (currentTab == tabs.Training) {
-                    if (GUILayout.Button(student.name, GUILayout.Width(96))) {
+                    if (GUILayout.Button(student.name, GUILayout.Width(144))) {
                         selectedNaut = student;
                     }
                 } else {
-                    GUILayout.Label(student.name, GUILayout.Width(96));
+                    GUILayout.Label(student.name, GUILayout.Width(144));
                 }
                 string course, complete, retires;
                 if (currentCourse == null) {
@@ -134,7 +134,8 @@ namespace RP0.Crew
         private void summaryBody(tabs currentTab)
         {
             updateActiveMap();
-            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(480), GUILayout.Height(144));
+            float scrollHeight = currentTab == tabs.Training ? 420 : 305;
+            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(480), GUILayout.Height(scrollHeight));
             try {
                 nautListHeading();
                 for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; i++)
@@ -158,7 +159,7 @@ namespace RP0.Crew
 
         protected void courseSelector()
         {
-            courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(480), GUILayout.Height(144));
+            courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(480), GUILayout.Height(430));
             try {
                 foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
                     if (GUILayout.Button(course.name))

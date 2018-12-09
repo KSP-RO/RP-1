@@ -94,7 +94,7 @@ namespace RP0
                 } finally {
                     GUILayout.EndHorizontal();
                 }
-                untooledTypesScroll = GUILayout.BeginScrollView(untooledTypesScroll, GUILayout.Height(144), GUILayout.Width(572));
+                untooledTypesScroll = GUILayout.BeginScrollView(untooledTypesScroll, GUILayout.Height(204), GUILayout.Width(572));
                 try {
                     foreach (untooledPart uP in untooledParts) {
                         GUILayout.BeginHorizontal();
@@ -113,7 +113,8 @@ namespace RP0
                 }
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label("Total vessel cost if all parts are tooled: " + (EditorLogic.fetch.ship.GetShipCosts(out _, out _) - EditorLogic.fetch.ship.parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).Select(mt => mt.GetModuleCost(mt.part.partInfo.cost, ModifierStagingSituation.CURRENT)).Sum()));
+                    float toolAllCost = EditorLogic.fetch.ship.GetShipCosts(out _, out _) - EditorLogic.fetch.ship.parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).Select(mt => mt.GetModuleCost(mt.part.partInfo.cost, ModifierStagingSituation.CURRENT)).Sum();
+                    GUILayout.Label("Total vessel cost if all parts are tooled: " + toolAllCost.ToString("N0"));
                 } finally {
                     GUILayout.EndHorizontal();
                 }

@@ -22,7 +22,6 @@
         { "name" : "DMagicOrbitalScience" }
     ],
     "recommends" : [
-		{ "name" : "B9-PWings-Modified" },
 		{ "name" : "ConnectedLivingSpace" },
 		{ "name" : "HangarExtender" },
 		{ "name" : "JanitorsCloset" },

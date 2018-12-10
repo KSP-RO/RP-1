@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Smooth.Slinq;
 
@@ -16,7 +15,7 @@ namespace RP0
         private Vector2 toolingTypesScroll = new Vector2(), untooledTypesScroll = new Vector2();
         private double deltaTime = 0d;
         private const double UPDATEINTERVAL = 0.25d;
-        private static HashSet<untooledPart> untooledParts = new HashSet<untooledPart>();
+        private List<untooledPart> untooledParts = new List<untooledPart>();
         public string currentToolingType;
 
         private void MaybeUpdate()

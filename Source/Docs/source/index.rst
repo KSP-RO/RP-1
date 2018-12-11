@@ -39,7 +39,7 @@ go to the corresponding page that has much more detail on each feature.
 
 .. toctree::
 	:maxdepth: 2
-	:caption: Features
+	:caption: New Features
 	:hidden:
   
 	/features/crewHandling
@@ -68,6 +68,7 @@ go to the corresponding page that has much more detail on each feature.
 	:hidden:
   
 	/game/comms
+    /game/engines
 	/game/entryCosts
 	/game/fuelTanks
 	/game/KCT

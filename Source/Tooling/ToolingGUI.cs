@@ -121,7 +121,18 @@ namespace RP0
                 try {
                 if (GUILayout.Button("Tool All"))
                 {
-                    var totalToolingCost = untooledParts.Slinq().Select(up => up.toolingCost).Sum();
+                    var untooledParts = EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq())
+                                                                            .Where(mt => !mt.IsUnlocked());
+                    var uniqueUntooledParts = new List<ModuleTooling>();
+                    untooledParts.ForEach(mt1 =>
+                    {
+                        if (!uniqueUntooledParts.Exists(mt2 => ModuleTooling.IsSame(mt1, mt2)))
+                        {
+                            uniqueUntooledParts.Add(mt1);
+                        }
+                    });
+
+                    var totalToolingCost = uniqueUntooledParts.Slinq().Select(up => up.GetToolingCost()).Sum();
                     bool canAfford = Funding.Instance.Funds >= totalToolingCost;
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
@@ -140,10 +151,12 @@ namespace RP0
                                         if (canAfford)
                                         {
                                             Funding.Instance.AddFunds(-totalToolingCost, TransactionReasons.RnDPartPurchase);
-                                            EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).ForEach(mt => {
+                                            uniqueUntooledParts.ForEach(mt => {
                                                 mt.PurchaseTooling();
+                                            });
+                                            untooledParts.ForEach(mt => {
                                                 mt.Events["ToolingEvent"].guiActiveEditor = false;
-                                                });
+                                            });
                                             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
                                         }
                                     }, 140.0f, 30.0f, true),

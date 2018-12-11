@@ -133,5 +133,31 @@ namespace RP0
         {
             return ModifierChangeWhen.FIXED;
         }
+
+        /// <summary>
+        /// Checks whether two toolings are considered the same by checking their types and dimensions (if applicable).
+        /// Dimension comparison is done with an error margin of 4%.
+        /// </summary>
+        /// <param name="a">Tooling 1</param>
+        /// <param name="b">Tooling 2</param>
+        /// <returns>True if toolings match</returns>
+        public static bool IsSame(ModuleTooling a, ModuleTooling b)
+        {
+            if (a.toolingType != b.toolingType) return false;
+
+            if (a is ModuleToolingDiamLen || b is ModuleToolingDiamLen)
+            {
+                var d1 = a as ModuleToolingDiamLen;
+                var d2 = b as ModuleToolingDiamLen;
+                if (d1 == null || d2 == null) return false;
+
+                d1.GetDimensions(out float diam1, out float len1);
+                d2.GetDimensions(out float diam2, out float len2);
+
+                return ToolingDatabase.IsSameSize(diam1, len1, diam2, len2);
+            }
+
+            return true;
+        }
     }
 }

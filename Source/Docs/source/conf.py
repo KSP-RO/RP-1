@@ -26,7 +26,7 @@ author = u'KSP-RO Team'
 # The short X.Y version
 version = u''
 # The full version, including alpha/beta/rc tags
-release = u'v0.6'
+release = u'v1.00'
 
 
 # -- General configuration ---------------------------------------------------
@@ -96,6 +96,7 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_logo = "_static/rp1-logo.png"
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

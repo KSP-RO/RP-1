@@ -26,27 +26,34 @@ basically the equivalent of a sequel. There are new game mechanics that you will
 to learn all over again, so please RTFM and learn what is new. Click on each link to
 go to the corresponding page that has much more detail on each feature.
 
-* :doc:`/features/techTree` — Custom tech tree specifically designed for RP-1
+* :doc:`/features/crewHandling` — Crew needs to train before taking on missions and will retire if not used.
+* :doc:`/features/facilities` — Facility upgrades have been overhahuled and the Launchpads and R&D can now be upgraded to Level 7.
+* :doc:`/features/maintenance` — Each facility and astronaut have a recurring cost for upkeep.
+* :doc:`/features/rollout` — Rollout costs include things like integration, assembly, workforce and rollout of the rocket prior to it launching.
 * :doc:`/features/science` — All new science parts that encoruage multiple missions
+* :doc:`/features/techTree` — Custom tech tree specifically designed for RP-1
 * :doc:`/features/tooling` — Simulates the "tooling" costs associated with setting up new production lines
-* :doc:`/features/maintenance` — Each facility and astronaut have a recurring cost for upkeep
-* :doc:`/features/crewHandling` — Crew needs to train before taking on missions and will retire if not used
-* :doc:`/features/facilities` — Facility upgrades have been overhahuled
+
+
+
 
 .. toctree::
 	:maxdepth: 2
 	:caption: Features
+	:hidden:
   
-	/features/techTree
-	/features/science
-	/features/tooling
-	/features/maintenance
 	/features/crewHandling
 	/features/facilities
+	/features/maintenance
+	/features/rollout
+	/features/science
+	/features/techTree
+	/features/tooling	
   
 .. toctree::
 	:maxdepth: 2
 	:caption: Information
+	:hidden:
   
 	/installation
 	/info/gettingStarted
@@ -58,6 +65,7 @@ go to the corresponding page that has much more detail on each feature.
 .. toctree::
 	:maxdepth: 2
 	:caption: Gameplay
+	:hidden:
   
 	/game/comms
 	/game/entryCosts
@@ -65,11 +73,19 @@ go to the corresponding page that has much more detail on each feature.
 	/game/KCT
 	/game/lifeSupport
 	/game/testFlight
+	
+.. toctree::
+	:maxdepth: 2
+	:caption: Documentation
+	:hidden:
+	
+	/doc/changelog
+	/doc/contributing
+	/doc/license	
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 

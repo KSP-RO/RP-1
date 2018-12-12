@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Smooth.Slinq;
 
@@ -16,7 +15,7 @@ namespace RP0
         private Vector2 toolingTypesScroll = new Vector2(), untooledTypesScroll = new Vector2();
         private double deltaTime = 0d;
         private const double UPDATEINTERVAL = 0.25d;
-        private static HashSet<untooledPart> untooledParts = new HashSet<untooledPart>();
+        private List<untooledPart> untooledParts = new List<untooledPart>();
         public string currentToolingType;
 
         private void MaybeUpdate()
@@ -94,7 +93,7 @@ namespace RP0
                 } finally {
                     GUILayout.EndHorizontal();
                 }
-                untooledTypesScroll = GUILayout.BeginScrollView(untooledTypesScroll, GUILayout.Height(144), GUILayout.Width(572));
+                untooledTypesScroll = GUILayout.BeginScrollView(untooledTypesScroll, GUILayout.Height(204), GUILayout.Width(572));
                 try {
                     foreach (untooledPart uP in untooledParts) {
                         GUILayout.BeginHorizontal();
@@ -113,7 +112,8 @@ namespace RP0
                 }
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label("Total vessel cost if all parts are tooled: " + (EditorLogic.fetch.ship.GetShipCosts(out _, out _) - EditorLogic.fetch.ship.parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).Select(mt => mt.GetModuleCost(mt.part.partInfo.cost, ModifierStagingSituation.CURRENT)).Sum()));
+                    float toolAllCost = EditorLogic.fetch.ship.GetShipCosts(out _, out _) - EditorLogic.fetch.ship.parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).Select(mt => mt.GetModuleCost(mt.part.partInfo.cost, ModifierStagingSituation.CURRENT)).Sum();
+                    GUILayout.Label("Total vessel cost if all parts are tooled: " + toolAllCost.ToString("N0"));
                 } finally {
                     GUILayout.EndHorizontal();
                 }

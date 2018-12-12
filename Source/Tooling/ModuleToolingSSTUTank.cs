@@ -67,11 +67,7 @@ namespace RP0
                 else if (coreStr.Contains("7-0")) { len = diam * 7.0f; }
                 else if (coreStr.Contains("7-5")) { len = diam * 7.5f; }
                 else if (coreStr.Contains("8-0")) { len = diam * 8.0f; }
-                else
-                {
-                    Debug.LogError("[ModuleTooling]: Could not find SSTU size that was correct");
-                    return;
-                }
+                else ( len = diam * 0.25f; }
                 Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Size: Diameter = {diam}, Length = {len}");
             }
             else

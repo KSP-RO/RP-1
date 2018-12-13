@@ -122,17 +122,10 @@ namespace RP0
                 if (GUILayout.Button("Tool All"))
                 {
                     var untooledParts = EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq())
-                                                                            .Where(mt => !mt.IsUnlocked());
-                    var uniqueUntooledParts = new List<ModuleTooling>();
-                    untooledParts.ForEach(mt1 =>
-                    {
-                        if (!uniqueUntooledParts.Exists(mt2 => ModuleTooling.IsSame(mt1, mt2)))
-                        {
-                            uniqueUntooledParts.Add(mt1);
-                        }
-                    });
+                                                                            .Where(mt => !mt.IsUnlocked())
+                                                                            .ToList();
 
-                    var totalToolingCost = uniqueUntooledParts.Slinq().Select(up => up.GetToolingCost()).Sum();
+                    float totalToolingCost = ModuleTooling.PurchaseToolingBatch(untooledParts, isSimulation: true);
                     bool canAfford = Funding.Instance.Funds >= totalToolingCost;
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
@@ -150,11 +143,9 @@ namespace RP0
                                     {
                                         if (canAfford)
                                         {
-                                            Funding.Instance.AddFunds(-totalToolingCost, TransactionReasons.RnDPartPurchase);
-                                            uniqueUntooledParts.ForEach(mt => {
-                                                mt.PurchaseTooling();
-                                            });
-                                            untooledParts.ForEach(mt => {
+                                            ModuleTooling.PurchaseToolingBatch(untooledParts);
+                                            untooledParts.ForEach(mt =>
+                                            {
                                                 mt.Events["ToolingEvent"].guiActiveEditor = false;
                                             });
                                             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);

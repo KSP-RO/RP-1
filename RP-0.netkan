@@ -23,7 +23,7 @@
     ],
     "recommends" : [
 		{ "name" : "ConnectedLivingSpace" },
-		{ "name" : "HangarExtender" },
+		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "JanitorsCloset" },
 		{ "name" : "KerbalAlarmClock" },
 		{ "name" : "KRASH" },
@@ -32,7 +32,7 @@
 		{ "name" : "MechJeb2" },
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
-		{ "name" : "RCSBuildAid" },
+		{ "name" : "RCSBuildAidCont" },
 		{ "name" : "RemoteTech" },
 		{ "name" : "SCANsat" },
 		{ "name" : "ScienceAlert" },

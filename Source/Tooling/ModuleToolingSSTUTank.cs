@@ -24,7 +24,8 @@ namespace RP0
             // ******* 1.4+ SSTUTank = part.Modules["SSTUModularPart"];
             SSTUTank = part.Modules["SSTUModularFuelTank"];
         }
-        protected override void GetDimensions(out float diam, out float len)
+
+        public override void GetDimensions(out float diam, out float len)
         {
             diam = 0f;
             len = 0f;

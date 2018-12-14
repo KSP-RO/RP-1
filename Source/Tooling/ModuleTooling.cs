@@ -133,5 +133,81 @@ namespace RP0
         {
             return ModifierChangeWhen.FIXED;
         }
+
+        /// <summary>
+        /// Use for purchasing multiple toolings at once. Does it's best to determine the best order to buy them so that the cost would be minimal.
+        /// Also deducuts the funds required for purchase. 
+        /// Has an option for running a simulation to calculate the accurate cost of toolings while the tooling DB and funds are left untouched.
+        /// </summary>
+        /// <param name="toolingColl">Collection of toolings to purchase.</param>
+        /// <param name="isSimulation">Whether to simulate the purchase to get the accurate cost of all toolings.</param>
+        /// <returns>Total cost of all the toolings purchased.</returns>
+        public static float PurchaseToolingBatch(List<ModuleTooling> toolingColl, bool isSimulation = false)
+        {
+            ConfigNode toolingBackup = null;
+            if (isSimulation)
+            {
+                toolingBackup = new ConfigNode();
+                ToolingDatabase.Save(toolingBackup);
+            }
+
+            float totalCost = 0;
+            try
+            {
+                // Currently all cost reducers are applied correctly when the tooling types are first sorted in alphabetical order
+                toolingColl.Sort((mt1, mt2) => mt1.toolingType.CompareTo(mt2.toolingType));
+
+                //TODO: find the most optimal order to purchase toolings that have diameter and length.
+                //      If there are diameters 2.9; 3 and 3.1 only 3 needs to be purchased and others will fit inside the stretch margin.
+
+                toolingColl.ForEach(mt =>
+                {
+                    if (mt.IsUnlocked()) return;
+
+                    totalCost += mt.GetToolingCost();
+                    mt.PurchaseTooling();
+                });
+
+                if (totalCost > 0 && !isSimulation)
+                {
+                    Funding.Instance.AddFunds(-totalCost, TransactionReasons.RnDPartPurchase);
+                }
+            }
+            finally
+            {
+                if (isSimulation)
+                {
+                    ToolingDatabase.Load(toolingBackup);
+                }
+            }
+
+            return totalCost;
+        }
+
+        /// <summary>
+        /// Checks whether two toolings are considered the same by checking their types and dimensions (if applicable).
+        /// Dimension comparison is done with an error margin of 4%.
+        /// </summary>
+        /// <param name="a">Tooling 1</param>
+        /// <param name="b">Tooling 2</param>
+        /// <returns>True if toolings match</returns>
+        public static bool IsSame(ModuleTooling a, ModuleTooling b)
+        {
+            if (a.toolingType != b.toolingType) return false;
+
+            if (a is ModuleToolingDiamLen || b is ModuleToolingDiamLen)
+            {
+                var d1 = a as ModuleToolingDiamLen;
+                var d2 = b as ModuleToolingDiamLen;
+                if (d1 == null || d2 == null) return false;
+
+                d1.GetDimensions(out float diam1, out float len1);
+                d2.GetDimensions(out float diam2, out float len2);
+
+                return ToolingDatabase.IsSameSize(diam1, len1, diam2, len2);
+            }
+
+            return true;
+        }
     }
 }

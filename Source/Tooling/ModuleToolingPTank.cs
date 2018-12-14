@@ -20,7 +20,8 @@ namespace RP0
 
             procTank = part.Modules["ProceduralPart"];
         }
-        protected override void GetDimensions(out float diam, out float len)
+
+        public override void GetDimensions(out float diam, out float len)
         {
             diam = 0f;
             len = 0f;

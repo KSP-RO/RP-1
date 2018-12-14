@@ -99,6 +99,19 @@ namespace RP0
             Full = 2
         };
 
+        /// <summary>
+        /// Compares two tooling sizes and checks whether their diameter and length are within a predefined epsilon (currently 4%).
+        /// </summary>
+        /// <param name="diam1">Diameter of tooling 1</param>
+        /// <param name="len1">Length of tooling 1</param>
+        /// <param name="diam2">Diameter of tooling 2</param>
+        /// <param name="len2">Length of tooling 2</param>
+        /// <returns>True if the two tooling sizes are considered the same.</returns>
+        public static bool IsSameSize(float diam1, float len1, float diam2, float len2)
+        {
+            return EpsilonCompare(diam1, diam2) == 0 && EpsilonCompare(len1, len2) == 0;
+        }
+
         public static ToolingLevel HasTooling(string type, float diam, float len)
         {
             List<ToolingDiameter> lst;

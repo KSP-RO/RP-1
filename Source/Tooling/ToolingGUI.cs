@@ -121,7 +121,11 @@ namespace RP0
                 try {
                 if (GUILayout.Button("Tool All"))
                 {
-                    var totalToolingCost = untooledParts.Slinq().Select(up => up.toolingCost).Sum();
+                    var untooledParts = EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq())
+                                                                            .Where(mt => !mt.IsUnlocked())
+                                                                            .ToList();
+
+                    float totalToolingCost = ModuleTooling.PurchaseToolingBatch(untooledParts, isSimulation: true);
                     bool canAfford = Funding.Instance.Funds >= totalToolingCost;
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
@@ -139,11 +143,11 @@ namespace RP0
                                     {
                                         if (canAfford)
                                         {
-                                            Funding.Instance.AddFunds(-totalToolingCost, TransactionReasons.RnDPartPurchase);
-                                            EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).ForEach(mt => {
-                                                mt.PurchaseTooling();
+                                            ModuleTooling.PurchaseToolingBatch(untooledParts);
+                                            untooledParts.ForEach(mt =>
+                                            {
                                                 mt.Events["ToolingEvent"].guiActiveEditor = false;
-                                                });
+                                            });
                                             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
                                         }
                                     }, 140.0f, 30.0f, true),

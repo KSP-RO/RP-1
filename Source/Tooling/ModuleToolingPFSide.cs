@@ -23,7 +23,8 @@ namespace RP0
             base.OnLoad(node);
             pm = part.Modules["ProceduralFairingSide"];
         }
-        protected override void GetDimensions(out float diam, out float len)
+
+        public override void GetDimensions(out float diam, out float len)
         {
             diam = 0f;
             len = 0f;

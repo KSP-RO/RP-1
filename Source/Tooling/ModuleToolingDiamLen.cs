@@ -8,7 +8,7 @@ namespace RP0
 {
     public abstract class ModuleToolingDiamLen : ModuleTooling
     {
-        protected abstract void GetDimensions(out float diam, out float len);
+        public abstract void GetDimensions(out float diam, out float len);
 
         public virtual string GetDimensions()
         {

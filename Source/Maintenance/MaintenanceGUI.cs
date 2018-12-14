@@ -209,8 +209,8 @@ namespace RP0
         {
             GUILayout.BeginHorizontal();
             try {
-                GUILayout.Space(40);
-                GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(120));
+                GUILayout.Space(20);
+                GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(144));
                 GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(80));
             } finally {
                 GUILayout.EndHorizontal();
@@ -218,9 +218,9 @@ namespace RP0
             foreach (string name in Crew.CrewHandler.Instance.kerbalRetireTimes.Keys) {
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Space(40);
+                    GUILayout.Space(20);
                     double rt = Crew.CrewHandler.Instance.kerbalRetireTimes[name];
-                    GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(120));
+                    GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(144));
                     GUILayout.Label(Crew.CrewHandler.Instance.retirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(80));
                 } finally {
                     GUILayout.EndHorizontal();
@@ -248,7 +248,7 @@ namespace RP0
             } finally {
                 GUILayout.EndHorizontal();
             }
-            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(280), GUILayout.Height(144));
+            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(280), GUILayout.Height(320));
             try {
                 nautList();
             } finally {

@@ -1,0 +1,25 @@
+[
+    {
+        "name": "ISRU_RTG_100",
+        "title": "ISRU_RTG_100",
+        "description": "ISRU_RTG_100",
+        "mod": "Real ISRU",
+        "cost": "",
+        "entry_cost": "103600",
+        "category": "NUCLEAR",
+        "info": "RTG",
+        "year": "2014",
+        "technology": "modernNuclearPower",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": false,
+        "orphan": true,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

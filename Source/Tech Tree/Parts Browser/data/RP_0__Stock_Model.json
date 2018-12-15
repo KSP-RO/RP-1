@@ -1,0 +1,52 @@
+[
+    {
+        "name": "science_module",
+        "title": "Early Film Camera",
+        "description": "The Early Film Camera is used to take photographs of Earth from space. This is a very early camera and lacks resolution in the images. Historically, these were flown on V-2 Rockets.\\nThe photos cannot be transmitted and must be returned for further study. Level 1 Photograph Experiment. Can gather 20% of Photography Science. You can store up to 3 different photos before you need to return them to Earth.",
+        "mod": "RP-0 (Stock Model)",
+        "cost": "250",
+        "entry_cost": "1",
+        "category": "SCIENCE",
+        "info": "Photography",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "PHOTO-1/4",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    },
+    {
+        "name": "sensorAtmosphere",
+        "title": "Gas Chromatograph-Mass Spectrometer (GC/MS)",
+        "description": "The Gas Chromatograph-Mass Spectrometer (GC-MS) is an analytical instrument used for identification of multiple different substances in a selected gas sample, capable of detecting even trace amounts of them. Ideal of analyzing the atmospheric composition of unknown environments. Mass spectrometry is an analytical technique that ionizes chemical species and sorts the ions based on their mass-to-charge ratio. Historically, these simple experiments were flown on interplanetary crafts including the Mars Viking Lander and Cassini.\\nLevel 4 Mass Spectrometry Experiment Device. Can gather 100% of Mass Spectrometry Science.",
+        "mod": "RP-0 (Stock Model)",
+        "cost": "2000",
+        "entry_cost": "2500",
+        "category": "SCIENCE",
+        "info": "Mass Spectrometry",
+        "year": "1975",
+        "technology": "deepSpaceScience",
+        "era": "06-STATION",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "MS-4/4",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "2500,RO-QuadropoleMassSpectrometer",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    }
+]

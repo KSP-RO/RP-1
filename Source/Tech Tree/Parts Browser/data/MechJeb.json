@@ -1,0 +1,25 @@
+[
+    {
+        "name": "mumech_MJ2_Pod",
+        "title": "Self Contained Probe",
+        "description": "After many years spent on research, our scientists still couldn't explain why Jebediah Kerman was such a good pilot, so we decided to make a mechanical copy of his brain to help pilot our ships. This is an unmanned pod version of MechJeb, designed to save the life of the brave Kerbals who volunteer to test new crafts. Plume configured by RealPlume.",
+        "mod": "MechJeb",
+        "cost": "",
+        "entry_cost": "250000",
+        "category": "AVIONICS",
+        "info": "Probe",
+        "year": "2011",
+        "technology": "modernAvionics",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "X-47",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

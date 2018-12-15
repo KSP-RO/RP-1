@@ -1,0 +1,24 @@
+{% extends "browser/layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+  <h2 class="text-center">Recent Part Updates</h2>
+  {% if parts %}
+    <div class="parts">
+      <ul>
+        {% for part in parts %}
+          <div class="row">
+            <div class="offset-sm-2 col-sm-8">
+              <li>
+                <a href="/{{ part.slug }}" title="{{ part.title }}">{{ part.title }} <span>&nbsp; by {{ part.author_name }}</span></a>
+              </li>
+            </div>
+          </div>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <p class="empty text-center">There are no posts to view.</p>
+  {% endif %}
+{% endblock %}

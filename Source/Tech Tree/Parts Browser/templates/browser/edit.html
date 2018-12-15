@@ -1,0 +1,22 @@
+{% extends "browser/layout.html" %}
+
+{% block title %}{{ part.title }}{% endblock %}
+
+{% block body %}
+  <h2 class="text-center">Edit Part</h2>
+  <div class="row">
+    <div class="offset-sm-2 col-sm-8">
+      <form method="post">
+        <div class="form-group">
+          <label for="title">Part Title</label>
+          <input class="form-control" id="title" type="text" name="title" value="{{ part.title }}" required>
+        </div>
+        <div class="form-group">
+          <label for="title">Part Id</label>
+          <input class="form-control" id="id" type="text" name="id" value="{{ part.id }}" required>
+        </div>
+        <button class="btn btn-primary submit-btn" type="submit">Update</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

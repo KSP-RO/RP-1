@@ -1,0 +1,25 @@
+[
+    {
+        "name": "B9_Engine_Jet_Turbofan_F119",
+        "title": "Pratt & Whitney F119-PW-100 Turbofan",
+        "description": "",
+        "mod": "B9 Aerospace",
+        "cost": "6000",
+        "entry_cost": "130000",
+        "category": "FLIGHT",
+        "info": "",
+        "year": "1990",
+        "technology": "refinedTurbofans",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "F-22 Raptor",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

@@ -1,0 +1,556 @@
+{% extends "browser/layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+  <div id="commands"><button onclick="generateConfigs()">Generate Configs</button></div></br>
+  <div id="parts_table"></div>
+    <script>
+    Fancy.loadModule('form');
+    var form = null, grid = null;
+    document.addEventListener("DOMContentLoaded", function() {
+        grid = new FancyGrid({
+            title: 'RP-0 Parts',
+            renderTo: 'parts_table',
+            selModel: 'cells',
+            striped: true,
+            width: '1850',
+            height: 'fit',
+            nativeScroller: true,
+            data: {
+              proxy: {
+                url: '/api/part_data'
+              }
+            },
+            defaults: {
+              type: 'string',
+              flex: 1,  
+              sortable: true,
+              ellipsis: false,
+              filter: {
+                header: true,
+                emptyText: 'Filter'
+              }
+            },
+            expander: {
+                tpl: [
+                '<div style="float: left;">',
+                  '<br/><b>Info:</b> {info}',
+                  '<br/><b>Description:</b> {description}',
+                '</div>'
+              ].join(""),
+              },
+            paging: {
+              pageSize: 15,
+              pageSizeData: [5, 10, 15, 20, 25, 50, 100, 500, 1000]
+            },
+            columns: [{
+                    type: 'expand',
+                    locked: true
+                },{
+                  index: 'name',
+                  title: 'Name',
+                  width: 200
+                }, {
+                  index: 'title',
+                  title: 'Title',
+                  type: 'text',
+                  width: 250
+                }, {
+                  index: 'mod',
+                  title: 'Mod',
+                  width: 175,
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/mod'
+                    }
+                  }
+                }, {
+                  index: 'cost',
+                  title: 'Cost',
+                  width: 65,
+                  type: 'number'
+                }, {
+                  index: 'entry_cost',
+                  title: 'Entry Cost',
+                  width: 75,
+                  type: 'number'
+                }, {
+                  index: 'ro',
+                  title: 'RO',
+                  width: 40,
+                  type: 'checkbox'
+                }, {
+                  index: 'rp0',
+                  title: 'RP-0',
+                  width: 40,
+                  type: 'checkbox'
+                }, {
+                  index: 'rp0_conf',
+                  title: 'RP-0 Conf',
+                  width: 75,
+                  type: 'checkbox'
+                }, {
+                  index: 'category',
+                  title: 'Category',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/category'
+                    }
+                  }
+                }, {
+                  index: 'year',
+                  title: 'Year',
+                  width: 45
+                }, {
+                  index: 'orphan',
+                  title: 'Orphan',
+                  width: 65,
+                  type: 'checkbox'
+                }, {
+                  index: 'upgrade',
+                  title: 'Upgrade',
+                  width: 65,
+                  type: 'checkbox'
+                }, {
+                  index: 'entry_cost_mods',
+                  title: 'Entry Cost Mods'
+                }, {
+                  index: 'identical_part_name',
+                  title: 'Identical Part'
+                }, {
+                  index: 'engine_config',
+                  title: 'Engine Config',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/engine_config'
+                    }
+                  }
+                }, {
+                  index: 'era',
+                  title: 'Era',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/era'
+                    }
+                  }
+                }, {
+                  index: 'technology',
+                  title: 'Technology',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/technology'
+                    }
+                  }
+                }, {
+                  index: 'module_tags',
+                  title: 'Module Tags',
+                  multiSelect: true,
+                  itemCheckBox: true,
+                  type: 'text',
+                  autoHeight: true,
+                  displayKey: 'tag',
+                  valueKey: 'tag',
+                  data: [
+                        {index: 0, tag: 'Avionics'},
+                        {index: 1, tag: 'DecreaseA'},
+                        {index: 2, tag: 'DecreaseB'},
+                        {index: 3, tag: 'EngineLiquidPF'},
+                        {index: 4, tag: 'EngineLiquidTurbo'},
+                        {index: 5, tag: 'EngineSolid'},
+                        {index: 6, tag: 'Habitable'},
+                        {index: 7, tag: 'HumanRated'},
+                        {index: 8, tag: 'Instruments'},
+                        {index: 9, tag: 'Nuclear'},
+                        {index: 10, tag: 'Reentry'},
+                        {index: 11, tag: 'Toxic'},
+                        {index: 12, tag: 'Decoupler'},
+                        {index: 13, tag: 'Hydrolox'},
+                        {index: 14, tag: 'TankBalloon'},
+                        {index: 15, tag: 'TankServiceModule'},
+                        {index: 16, tag: 'NonReentryRated'},
+                        {index: 17, tag: 'UnpressurizedCockpit'},
+                    ],
+                  width: 200
+                }, {
+                  type: 'action',
+                  width: 50,
+                  filter: false,
+                  items: [{
+                      cls: "pill",
+                      text: 'Edit',
+                      handler: function(grid, o){
+                        showEditForm(o.data);
+                      }
+                  }]
+                }]
+        });
+        
+
+        var comboData = [
+            {index: 0, country: 'USA'},
+            {index: 1, country: 'Canada'}
+        ];
+         
+        form = new FancyForm({
+            title: 'Edit Part',
+            width: 700,
+            height: 900,
+            window: true,
+            scrollable: false,
+            model: true,
+            draggable: true,
+            inputWidth: 525,
+            labelWidth: 175,
+            url: 'submit.php',
+            params: {
+                param1: 1,
+                param2: 'string'
+            },
+            method: 'POST',
+            defaults: {
+                type: 'string',     
+                inputWidth: 525,
+            },
+            items: [
+                {
+                    label: 'Name',
+                    disabled: true,
+                    emptyText: 'Name',
+                    name: 'name'
+                },{
+                    label: 'Title',
+                    emptyText: 'Title',
+                    name: 'title',
+                    valid: {
+                        type: 'title',
+                        blank: false,
+                        blankText: 'Required'
+                    }
+
+                },{
+                    label: 'Description',
+                    emptyText: 'Description',
+                    name: 'description',
+                    type: "textarea"
+                }, {
+                    type: 'combo',
+                    label: 'Mod',
+                    blank: false,
+                    blankText: 'Required',
+                    name: 'mod',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/mod'
+                        }
+                    },
+                    displayKey: 'mod',
+                    valueKey: 'mod'
+                },{
+                    label: 'Cost',
+                    emptyText: 'Cost',
+                    name: 'cost',
+                    valid: {
+                        type: 'notnan',
+                        text: 'Must be a number'
+                    }
+                },{
+                    label: 'Entry Cost',
+                    emptyText: 'Entry Cost',
+                    name: 'entry_cost',
+                    valid: {
+                        type: 'notnan',
+                        text: 'Must be a number'
+                    }
+                }, {
+                    type: 'combo',
+                    label: 'Category',
+                    blank: false,
+                    blankText: 'Required',
+                    name: 'category',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/category'
+                        }
+                    },
+                    displayKey: 'category',
+                    valueKey: 'category'
+                },{
+                    label: 'Info',
+                    emptyText: 'Info',
+                    name: 'info'
+                },{
+                    label: 'Year',
+                    emptyText: 'Year',
+                    name: 'year',
+                    valid: {
+                        type: 'notnan',
+                        text: 'Must be a number'
+                    }
+                }, {
+                    type: 'combo',
+                    label: 'Technology',
+                    name: 'technology',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/technology'
+                        }
+                    },
+                    displayKey: 'technology',
+                    valueKey: 'technology'
+                }, {
+                    type: 'combo',
+                    label: 'Era',
+                    name: 'era',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/era'
+                        }
+                    },
+                    displayKey: 'era',
+                    valueKey: 'era'
+                }, {
+                    label: 'RO',
+                    type: 'checkbox',
+                    name: 'ro'
+                },{
+                    label: 'RP-0',
+                    type: 'checkbox',
+                    name: 'rp0'
+                },{
+                    label: 'Orphan',
+                    type: 'checkbox',
+                    name: 'orphan'
+                },{
+                    label: 'RP-0 conf',
+                    type: 'checkbox',
+                    name: 'rp0_conf'
+                }, {
+                    type: 'combo',
+                    label: 'Spacecraft',
+                    name: 'spacecraft',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/spacecraft'
+                        }
+                    },
+                    displayKey: 'spacecraft',
+                    valueKey: 'spacecraft'
+                },{
+                    type: 'combo',
+                    label: 'Engine Config',
+                    emptyText: 'Engine Config',
+                    name: 'engine_config',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/engine_config'
+                        }
+                    },
+                    displayKey: 'engine_config',
+                    valueKey: 'engine_config'
+                },{
+                    label: 'Upgrade',
+                    type: 'checkbox',
+                    name: 'upgrade'
+                },{
+                    label: 'Entry Cost Modifier',
+                    emptyText: 'Entry Cost Modifier',
+                    name: 'entry_cost_mods'
+                },{
+                    label: 'Identical Part Id',
+                    emptyText: 'Identical Part Id',
+                    name: 'identical_part_name'
+                }, {
+                    type: 'combo',
+                    label: 'Module Tags',
+                    name: 'module_tags',
+                    multiSelect: true,
+                    itemCheckBox: true,
+                    displayKey: "tag",
+                    valueKey: "tag",
+                    data: [
+                        {index: 0, tag: 'Avionics'},
+                        {index: 1, tag: 'DecreaseA'},
+                        {index: 2, tag: 'DecreaseB'},
+                        {index: 3, tag: 'EngineLiquidPF'},
+                        {index: 4, tag: 'EngineLiquidTurbo'},
+                        {index: 5, tag: 'EngineSolid'},
+                        {index: 6, tag: 'Habitable'},
+                        {index: 7, tag: 'HumanRated'},
+                        {index: 8, tag: 'Instruments'},
+                        {index: 9, tag: 'Nuclear'},
+                        {index: 10, tag: 'Reentry'},
+                        {index: 11, tag: 'Toxic'},
+                        {index: 12, tag: 'Decoupler'},
+                        {index: 13, tag: 'Hydrolox'},
+                        {index: 14, tag: 'TankBalloon'},
+                        {index: 15, tag: 'TankServiceModule'},
+                        {index: 16, tag: 'NonReentryRated'},
+                        {index: 17, tag: 'UnpressurizedCockpit'},
+                    ]
+                }
+            ],
+            buttons: [{
+                text: 'Cancel',
+                handler: function(){
+                    console.log(form.get());
+                    console.log(form.get('name'));
+                    form.clear();
+                    form.hide();
+                }
+            },{
+                text: 'Queue Changes',
+                handler: function(){
+                    console.log('submit');
+                    if (form.valid()) {
+                        changeSet = getChanges(form.previousData, form.get());
+                        if (Object.keys(changeSet).length > 0) {
+                            addChangeSet(form.get().name, form.get().title, form.get().mod, form.get().id, changeSet);
+                        }
+                        form.clear();
+                        form.hide();
+                    }
+                }
+            }]
+        });
+    });
+    
+    function showEditForm(data) {
+        form.set(data);
+        form.previousData = data;
+        form.previousData['module_tags'] = data['module_tags'].slice();
+        form.show();
+    }
+    
+    function getChanges(prev, now) {
+        var changes = {};
+        for (var prop in now) {
+          if (prop !== 'id') {
+            if (prop == 'module_tags' && !compareArrays(now[prop],prev[prop])) {
+                changes[prop] = {"new": now[prop], "old": prev[prop]};
+            } else {
+                if (!prev || prev[prop] !== now[prop]) {
+                    if (typeof now[prop] == "object") {
+                        1;
+                    } else {
+                        changes[prop] = {"new": now[prop], "old": prev[prop]};
+                    }
+                }
+            }
+          }
+        }
+        return changes;
+    }
+    
+    function compareArrays(arr1, arr2) {
+        return $(arr1).not(arr2).length == 0 && $(arr2).not(arr1).length == 0
+    };
+    
+    var queuedChanges = {};
+    
+    function addChangeSet(name, title, mod, row_id, changeSet) {
+        key = row_id;
+        queuedChanges[key] = {row_id: row_id, name: name, title: title, mod: mod, changes: changeSet};
+        drawQueuedChanges();
+        updateTable(changeSet, row_id, false);
+    }
+    
+    function drawQueuedChanges() {
+        if (Object.keys(queuedChanges).length > 0) {
+            html="These changes are only staged locally, click commit to update the underlying json data.  If you refresh your browser they will be lost.<br/><br/><table class='blueTable'><tr><th>&nbsp;</th><th>Part Name - Title</th><th>Mod</th><th>Field</th><th>Old Value</th><th>New Value</th></tr>";
+            $.map( Object.keys(queuedChanges), function( row_id ) {
+                html+="<tr><td>" + getCancelButton(row_id) + "</td><td>" + queuedChanges[row_id].name + " - " + queuedChanges[row_id].title + "</td><td>" + queuedChanges[row_id].mod + "</td><td colspan='3'>&nbsp;</td></tr>";
+                $.map( Object.keys(queuedChanges[row_id].changes), function( field_name ) {
+                    html+="<tr><td colspan='3'>&nbsp;</td><td>" + field_name + "</td><td>" + 
+                        queuedChanges[row_id].changes[field_name]["old"] + "</td><td>" + 
+                        queuedChanges[row_id].changes[field_name]["new"] + "</td></tr>";
+                });
+            });
+            html += "</table><br/><button onclick='cancelAllChanges()'>Cancel All Changes</button> &nbsp; <button onclick='commitChanges()'>Commit Changes to JSON Files</button>";
+            $("#queued_changes").html(html);
+            $("#queued_changes").show();
+        } else {
+            $("#queued_changes").html("");
+            $("#queued_changes").hide();
+        }
+
+    }
+    
+    function updateTable(changeSet, row_id, revert) {
+        $.map( Object.keys(changeSet), function( field_name ) {
+            value = changeSet[field_name][(revert ? "old" : "new")];
+            grid.setById(row_id, field_name, value);
+        });
+        
+        grid.update();
+    }
+    
+    function getCancelButton(row_id) {
+        return "<button class='cancelButton' info='Cancel this change' onclick='cancelChange(\"" + row_id + "\", true)'>X</button>";
+    }
+    
+    function cancelChange(row_id, shouldConfirm) {
+        if (!shouldConfirm || confirm("Are you sure you want to cancel this change?")) {
+            updateTable(queuedChanges[row_id].changes, row_id, true);
+            delete queuedChanges[row_id];
+            drawQueuedChanges();
+        }
+    }
+    
+    function cancelAllChanges() {
+        if (confirm("Are you sure you want to cancel all queued changes?")) {
+            $.map( Object.keys(queuedChanges), function( row_id ) {
+                cancelChange(row_id, false);
+            });
+        }
+    }
+    
+    function generateConfigs() {
+        if (confirm("Are you sure you want to generate the configs? (any queued changes at the bottom will not currently be included)")) {
+            $.get("api/generate_all_configs", function( data ) {
+                if (data == "true") {
+                    alert( "Configs successfully generated in /output folder." );
+                } else {
+                    alert("Config generation failed.");
+                }
+            });
+        }
+    }
+    
+    function commitChanges() {
+        if (confirm('Are you sure you want to commit changes to JSON files?')) {
+            $.ajax({
+                url: 'api/commit_changes',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "queued_changes": queuedChanges
+                }),
+                dataType: 'json',
+                success: function() {
+                    alert( "Changes successfully committed to JSON files.");
+                    queuedChanges = {};
+                    drawQueuedChanges();
+                }
+            });
+        }
+    }
+  </script>
+  <br/><br/>
+  <div id="queued_changes" style='display:none;'></div>
+{% endblock %}

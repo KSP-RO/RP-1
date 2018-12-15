@@ -1,0 +1,50 @@
+[
+    {
+        "name": "rn_mirdockingmodule",
+        "title": "MIR Docking Module",
+        "description": "The docking module was designed to help simplify Space Shuttle dockings to Mir. Before the first shuttle docking mission (STS-71), the Kristall module had to be tediously moved to ensure sufficient clearance between Atlantis and Mir's solar arrays. With the addition of the docking module, enough clearance was provided without the need to relocate Kristall. It had two identical APAS-89 docking ports, one attached to the distal port of Kristall with the other available for shuttle docking. (Missing entryCost field)",
+        "mod": "RN Misc",
+        "cost": "600",
+        "entry_cost": "1",
+        "category": "RCS",
+        "info": "Docking",
+        "year": "1986",
+        "technology": "standardDockingPorts",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Mir",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "rn_spacelab",
+        "title": "Spacelab Module",
+        "description": "Spacelab module for the Space Shuttle.",
+        "mod": "RN Misc",
+        "cost": "15000",
+        "entry_cost": "25000",
+        "category": "SCIENCE",
+        "info": "Other",
+        "year": "1983",
+        "technology": "scienceExploration",
+        "era": "07-SPCPLANES",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Shuttle Spacelab",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    }
+]

@@ -11,6 +11,7 @@ namespace RP0
         protected PartModule SSTUTank;
 
         protected BaseField diam1;
+        protected BaseField scale;
 
         public override void OnAwake()
         {
@@ -18,12 +19,14 @@ namespace RP0
             // ******* 1.4+ SSTUTank = part.Modules["SSTUModularPart"];
             SSTUTank = part.Modules["SSTUModularFuelTank"];
         }
+        /* Removing as I believe it is causing a lot of slowdowns and log spam
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
             // ******* 1.4+ SSTUTank = part.Modules["SSTUModularPart"];
             SSTUTank = part.Modules["SSTUModularFuelTank"];
         }
+        */
 
         public override void GetDimensions(out float diam, out float len)
         {
@@ -52,26 +55,19 @@ namespace RP0
              * represent the different models and are multipliers on the Diameter for the Length of the tank. */
             if (coreStr.Contains("MFT-A-") || coreStr.Contains("MFT-B-") || coreStr.Contains("MFT-C-") || coreStr.Contains("MFT-CF-"))
             {
-                curLen = float(coreStr.replace('-','.')) * diam
-                
-                if (coreStr.Contains("0-5")) { len = diam * 0.5f; }
-                else if (coreStr.Contains("1-0")) { len = diam; }
-                else if (coreStr.Contains("1-5")) { len = diam * 1.5f; }
-                else if (coreStr.Contains("2-0")) { len = diam * 2.0f; }
-                else if (coreStr.Contains("2-5")) { len = diam * 2.5f; }
-                else if (coreStr.Contains("3-0")) { len = diam * 3.0f; }
-                else if (coreStr.Contains("3-5")) { len = diam * 3.5f; }
-                else if (coreStr.Contains("4-0")) { len = diam * 4.0f; }
-                else if (coreStr.Contains("4-5")) { len = diam * 4.5f; }
-                else if (coreStr.Contains("5-0")) { len = diam * 5.0f; }
-                else if (coreStr.Contains("5-5")) { len = diam * 5.5f; }
-                else if (coreStr.Contains("6-0")) { len = diam * 6.0f; }
-                else if (coreStr.Contains("6-5")) { len = diam * 6.5f; }
-                else if (coreStr.Contains("7-0")) { len = diam * 7.0f; }
-                else if (coreStr.Contains("7-5")) { len = diam * 7.5f; }
-                else if (coreStr.Contains("8-0")) { len = diam * 8.0f; }
-                else { len = diam * 0.25f; }
-                Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Size: Diameter = {diam}, Length = {len}");
+                if (coreStr.Contains("0-3")) { len = diam * 0.25f; }
+                else if (coreStr.Contains("0-7")) { len = diam * 0.75f; }
+                else
+                {
+                    string coreSwap = coreStr.Replace('-', '.');
+                    string coreMult = coreSwap.Substring(coreSwap.Length - 3);                    
+                    float lenMult = float.Parse(coreMult);
+                    float curLen = lenMult * diam;
+                    scale = SSTUTank.Fields["currentTankVerticalScale"];
+                    float vScale = scale.GetValue<float>(SSTUTank);
+                    len = curLen * vScale;
+                }
+                // Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Size: Diameter = {diam}, Length = {len}");
             }
             else
             {

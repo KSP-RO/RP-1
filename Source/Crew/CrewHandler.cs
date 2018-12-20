@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using KSP;
 using UnityEngine;
 using System.Reflection;
 
@@ -525,6 +523,10 @@ namespace RP0.Crew
 
             double UT = Planetarium.GetUniversalTime();
 
+            // When flight duration was too short, mission training should not be set as expired.
+            // This can happen when an on-the-pad failure occurs and the vessel is recovered.
+            if (elapsedTime < settings.minFlightDurationSecondsForTrainingExpire) return;
+
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
                 bool hasSpace = false;
@@ -704,7 +706,6 @@ namespace RP0.Crew
 
         public string GetTrainingString(ProtoCrewMember pcm)
         {
-            HashSet<string> expiredProfs = new HashSet<string>();
             bool found = false;
             string trainingStr = "\n\nTraining:";
             int lastFlight = pcm.careerLog.Last() == null ? 0 : pcm.careerLog.Last().flight;
@@ -713,28 +714,21 @@ namespace RP0.Crew
                 string pretty = GetPrettyCourseName(ent.type);
                 if (!string.IsNullOrEmpty(pretty))
                 {
-                    if (ent.type == "expired_TRAINING_proficiency")
+                    if (ent.type == "TRAINING_proficiency")
                     {
-                        found = true;
-                        expiredProfs.Add(ent.target);
-                    }
-                    else
-                    {
-                        if (ent.type == "TRAINING_mission" && ent.flight != lastFlight)
-                            continue;
-
                         found = true;
                         trainingStr += "\n  " + pretty + ent.target;
+                    }
+                    else if (ent.type == "TRAINING_mission")
+                    {
                         double exp = GetExpiration(pcm.name, ent);
                         if (exp > 0d)
-                            trainingStr += ". Expires " + KSPUtil.PrintDate(exp, false);
+                        {
+                            trainingStr += "\n  " + pretty + ent.target + ". Expires " + KSPUtil.PrintDate(exp, false);
+                        }
                     }
                 }
             }
-            if (expiredProfs.Count > 0)
-                trainingStr += "\n  Expired proficiencies:";
-            foreach (string s in expiredProfs)
-                trainingStr += "\n    " + s;
 
             if (found)
                 return trainingStr;
@@ -742,7 +736,7 @@ namespace RP0.Crew
                 return string.Empty;
         }
 
-        protected double GetExpiration(string pcmName, FlightLog.Entry ent)
+        public double GetExpiration(string pcmName, FlightLog.Entry ent)
         {
             for (int i = expireTimes.Count; i-- > 0;)
             {
@@ -838,8 +832,6 @@ namespace RP0.Crew
             n.AddValue("id", "prof_" + name);
             n.AddValue("name", "Proficiency: " + name);
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400d));
-            n.AddValue("expiration", settings.trainingProficiencyExpirationYears * 86400d * 365d);
-            n.AddValue("expirationUseStupid", true);
 
             n.AddValue("conflicts", "TRAINING_proficiency:" + name);
 
@@ -849,22 +841,6 @@ namespace RP0.Crew
             l.AddValue("0", "TRAINING_proficiency," + name);
 
             CourseTemplate c = new CourseTemplate(n);
-            c.PopulateFromSourceNode();
-            OfferedCourses.Add(c);
-
-            ConfigNode n2 = n.CreateCopy();
-            n2.SetValue("id", "profR_" + name);
-            n2.SetValue("name", "Refresher: " + name);
-            n2.SetValue("time", 1d + TrainingDatabase.GetTime(name) * 86400d * settings.trainingProficiencyRefresherTimeMult);
-            n2.AddValue("preReqsAny", "expired_TRAINING_proficiency:" + name + ",TRAINING_proficiency:" + name);
-            n2.RemoveValue("conflicts");
-
-            r = n2.GetNode("REWARD");
-            r.SetValue("XPAmt", "0");
-            ConfigNode exp = r.AddNode("EXPIRELOG");
-            exp.AddValue("0", "TRAINING_proficiency," + name);
-
-            c = new CourseTemplate(n2);
             c.PopulateFromSourceNode();
             OfferedCourses.Add(c);
         }
@@ -904,8 +880,6 @@ namespace RP0.Crew
             {
                 case "TRAINING_proficiency":
                     return "Proficiency with ";
-                case "expired_TRAINING_proficiency":
-                    return "(Expired) Proficiency with ";
                 case "TRAINING_mission":
                     return "Mission training for ";
                 /*case "expired_TRAINING_mission":

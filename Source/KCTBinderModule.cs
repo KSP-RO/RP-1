@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using KerbalConstructionTime;
+using RP0.Crew;
 
 namespace RP0
 {
@@ -39,27 +37,26 @@ namespace RP0
             if (!requireTraining || EntryCostStorage.GetCost(partName) == 1)
                 return true;
 
-            partName = Crew.TrainingDatabase.SynonymReplace(partName);
+            partName = TrainingDatabase.SynonymReplace(partName);
 
             FlightLog.Entry ent = pcm.careerLog.Last();
             if (ent == null)
                 return false;
 
-            int lastFlight = ent.flight;
             bool lacksMission = true;
             for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
             {
                 FlightLog.Entry e = pcm.careerLog.Entries[i];
                 if (lacksMission)
                 {
-                    if (e.flight < lastFlight)
-                        return false;
-
                     if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
                         continue;
 
                     if (e.type == "TRAINING_mission" && e.target == partName)
-                        lacksMission = false;
+                    {
+                        double exp = CrewHandler.Instance.GetExpiration(pcm.name, e);
+                        lacksMission = exp == 0d || exp < Planetarium.GetUniversalTime();
+                    }
                 }
                 else
                 {

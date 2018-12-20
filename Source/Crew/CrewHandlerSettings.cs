@@ -20,13 +20,16 @@ namespace RP0.Crew
         public double retireBaseYears = 5d, retireCourageMin = 0d, retireCourageMax = 3d, retireStupidMin = 1d, retireStupidMax = 0d;
 
         [Persistent]
-        public double trainingProficiencyExpirationYears = 4d, trainingProficiencyStupidMin = 1.5d, trainingProficiencyStupidMax = 0.5d, trainingProficiencyRefresherTimeMult = 0.25d;
+        public double trainingProficiencyStupidMin = 1.5d, trainingProficiencyStupidMax = 0.5d, trainingProficiencyRefresherTimeMult = 0.25d;
 
         [Persistent]
         public int trainingProficiencyXP = 1;
 
         [Persistent]
         public double trainingMissionExpirationDays = 120d, trainingMissionStupidMin = 0.5d, trainingMissionStupidMax = 1.5d;
+
+        [Persistent]
+        public double minFlightDurationSecondsForTrainingExpire = 30d;
 
 
         public void Load(ConfigNode node)

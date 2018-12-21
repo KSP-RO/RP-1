@@ -106,7 +106,7 @@ namespace RP0
         }
 
         // Nose Type = currentNoseType      Mount = currentMountType
-        public Dictionary<string, float> noseMountDict = new Dictionary<string, float>()
+        protected static Dictionary<string, float> noseMountDict = new Dictionary<string, float>()
         {
             {"Adapter-1-2-Flat", 0.09f},
             {"Adapter-1-2-Short", 0.5f },

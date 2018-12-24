@@ -16,11 +16,11 @@ namespace RP0.ProceduralAvionics
 
 		const string kwFormat = "{0:0.##}";
 		const string wFormat = "{0:0}";
-		const float FLOAT_ERROR_ALLOWANCE = 1.002F;
+        const float FLOAT_TOLERANCE = 1.001f;
 
-		// This controls how much the current part can control (in metric tons)
-		[KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "T"),
-		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "T")]
+        // This controls how much the current part can control (in metric tons)
+        [KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
+		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "\u2009t")]
 		public float proceduralMassLimit = 0;
 
 		// We can have multiple configurations of avionics, for example: 
@@ -102,12 +102,12 @@ namespace RP0.ProceduralAvionics
 			}
 			var min = GetMinimumControllableTonnage();
 			bool changed = false;
-			if (proceduralMassLimit > (max * FLOAT_ERROR_ALLOWANCE)) {
+			if (proceduralMassLimit > max * FLOAT_TOLERANCE) {
 				Log("Resetting procedural mass limit to max of ", max, ", was ", proceduralMassLimit);
 				proceduralMassLimit = max;
 				changed = true;
 			}
-			if ((proceduralMassLimit * FLOAT_ERROR_ALLOWANCE) < min) {
+			if (proceduralMassLimit * FLOAT_TOLERANCE < min) {
 				Log("Resetting procedural mass limit to min of ", min, ", was ", proceduralMassLimit);
 				proceduralMassLimit = min;
 				changed = true;
@@ -231,7 +231,7 @@ namespace RP0.ProceduralAvionics
 		}
 
 
-		private float cachedMinVolue = float.MaxValue;
+		private float cachedMinVolume = float.MaxValue;
 		public void SetMinVolume(bool forceUpdate = false)
 		{
 			Log("Setting min volume for proceduralMassLimit of ", proceduralMassLimit);
@@ -239,8 +239,8 @@ namespace RP0.ProceduralAvionics
 			if (float.IsNaN(minVolume)) {
 				return;
 			}
-			Log("min volume sholud be ", minVolume);
-			cachedMinVolue = minVolume;
+			Log("min volume should be ", minVolume);
+			cachedMinVolume = minVolume;
 
 			PartModule ppModule = null;
 			Type ppModuleType = null;
@@ -253,9 +253,9 @@ namespace RP0.ProceduralAvionics
 					Log("Applied min volume");
 				}
 			}
-			//Log("minVolume: ", minVolume);
+			Log("minVolume: ", minVolume);
 			Log("Comparing against cached volume of ", cachedVolume);
-			if (forceUpdate || minVolume > (cachedVolume * FLOAT_ERROR_ALLOWANCE)) { // adding a buffer for floating point errors
+			if (forceUpdate || minVolume > cachedVolume) { // adding a buffer for floating point errors
 				if (!forceUpdate) {
 					Log("cachedVolume too low: ", cachedVolume);
 				}
@@ -377,12 +377,12 @@ namespace RP0.ProceduralAvionics
 		private float GetMaximumControllableTonnage()
 		{
 			var maxAvionicsMass = cachedVolume * maxDensityOfAvionics;
-			var maxForVolume = UtilMath.RoundToPlaces(maxAvionicsMass * tonnageToMassRatio * 2, 2);
+			var maxForVolume = FloorToSliderIncrement(maxAvionicsMass * tonnageToMassRatio * 2);
 			var maxControllableTonnage = Math.Min(maxForVolume, maximumTonnage);
 			return maxControllableTonnage;
 		}
 
-		private float GetMinimumControllableTonnage()
+        private float GetMinimumControllableTonnage()
 		{
 			if (CurrentProceduralAvionicsTechNode != null) {
 				return CurrentProceduralAvionicsTechNode.minimumTonnage;
@@ -405,39 +405,65 @@ namespace RP0.ProceduralAvionics
 				proceduralMassLimitEdit = (UI_FloatEdit)Fields["proceduralMassLimit"].uiControlEditor;
 			}
 
-			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
+            if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
+            {
 
-				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
-				proceduralMassLimitEdit.maxValue = GetMaximumControllableTonnage();
-				proceduralMassLimitEdit.minValue = GetMinimumControllableTonnage();
+                tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
+                proceduralMassLimitEdit.maxValue = CeilingToSmallIncrement(GetMaximumControllableTonnage());
+                proceduralMassLimitEdit.minValue = 0;
 
-				// Set slide, small, and large slider increments to be (at most) 0.025%, 1%, and 10%
-				var procMassDelta = proceduralMassLimitEdit.maxValue - proceduralMassLimitEdit.minValue;
+                var procMassDelta = proceduralMassLimitEdit.maxValue - proceduralMassLimitEdit.minValue;
 
-				//we'll start at a large incerement of 1, and work up from there
-				int largeIncrement = 1;
-				while (largeIncrement < procMassDelta) {
-					largeIncrement *= 2;
-				}
-
-				float largeIncFloat = (float)largeIncrement;
-
-                // There's some weirdness going on here that makes the slider not match up with min and max values.
-                // Because of that, need to ensure that this difference does not get larger than FLOAT_ERROR_ALLOWANCE 
-                // which is used for ensuring the min and max values in GetInternalMassLimit().
-
-                proceduralMassLimitEdit.incrementSlide = proceduralMassLimitEdit.minValue * (FLOAT_ERROR_ALLOWANCE - 1f);
-				        proceduralMassLimitEdit.incrementSmall = largeIncFloat / 100;
-				        proceduralMassLimitEdit.incrementLarge = largeIncFloat / 10;
-			}
-			else {
-				Log("Cannot update max value yet, CurrentProceduralAvionicsConfig is null");
-				proceduralMassLimitEdit.maxValue = float.MaxValue;
-				proceduralMassLimitEdit.minValue = 0;
-			}
+                proceduralMassLimitEdit.incrementSmall = GetSmallIncrement(procMassDelta);
+                proceduralMassLimitEdit.incrementLarge = proceduralMassLimitEdit.incrementSmall * 10;
+                proceduralMassLimitEdit.incrementSlide = GetSliderIncrement(procMassDelta);
+                proceduralMassLimitEdit.sigFigs = GetSigFigs(procMassDelta);
+            }
+            else
+            {
+                Log("Cannot update max value yet, CurrentProceduralAvionicsConfig is null");
+                proceduralMassLimitEdit.maxValue = float.MaxValue;
+                proceduralMassLimitEdit.minValue = 0;
+            }
 		}
 
-		private void UpdateConfigSliders()
+        private int GetSigFigs(float value)
+        {
+            var smallIncrementExponent = GetSmallIncrementExponent(value);
+            return Math.Max(1 - (int)smallIncrementExponent, 0);
+        }
+
+        private float CeilingToSmallIncrement(float value)
+        {
+            var smallIncrement = GetSmallIncrement(value);
+            return (float) Math.Ceiling(value / smallIncrement) * smallIncrement;
+        }
+
+        private float FloorToSliderIncrement(float value)
+        {
+            float sliderIncrement = GetSliderIncrement(value);
+            return (float) Math.Floor(value / sliderIncrement) * sliderIncrement;
+        }
+
+        private float GetSliderIncrement(float value)
+        {
+            var smallIncrement = GetSmallIncrement(value);
+            return Math.Min(smallIncrement / 10, 1f);
+        }
+
+        private float GetSmallIncrement(float value)
+        {
+            var exponent = GetSmallIncrementExponent(value);
+            return (float) Math.Pow(10, exponent);
+        }
+
+        private double GetSmallIncrementExponent(float procMassDelta)
+        {
+            var log = Math.Log(procMassDelta, 10);
+            return Math.Max(Math.Floor(log - 1.3), -2);
+        }
+
+        private void UpdateConfigSliders()
 		{
 			Log("Updating Config Slider");
 			BaseField avionicsConfigField = Fields["avionicsConfigName"];
@@ -466,8 +492,8 @@ namespace RP0.ProceduralAvionics
 			try {
 				float volume = (float)eventData.Get<double>("newTotalVolume");
 				Log("volume changed to ", volume);
-				if (volume * FLOAT_ERROR_ALLOWANCE < cachedMinVolue && cachedMinVolue != float.MaxValue) {
-					Log("volume of ", volume, " is less than expected min volume of ", cachedMinVolue, " expecting another update");
+				if (volume * FLOAT_TOLERANCE < cachedMinVolume && cachedMinVolume != float.MaxValue) {
+					Log("volume of ", volume, " is less than expected min volume of ", cachedMinVolume, " expecting another update");
 					RefreshPartWindow();
 					//assuming the part will be resized
 					return;

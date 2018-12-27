@@ -146,7 +146,7 @@ namespace RP0
             // TS
             if (facilityLevels.TryGetValue(SpaceCenterFacility.TrackingStation, out levels))
                 tsCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
-            
+
             // AC
             if (facilityLevels.TryGetValue(SpaceCenterFacility.AstronautComplex, out levels))
                 acCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
@@ -181,14 +181,6 @@ namespace RP0
                 skipThree = false;
                 return;
             }
-            
-            if (facilityLevels.Count == 0)
-            {
-                foreach (Upgradeables.UpgradeableFacility facility in GameObject.FindObjectsOfType<Upgradeables.UpgradeableFacility>())
-                {
-                    facilityLevels[(SpaceCenterFacility)Enum.Parse(typeof(SpaceCenterFacility), facility.name)] = facility.UpgradeLevels;
-                }
-            }
 
             double time = Planetarium.GetUniversalTime();
             if (nextUpdate > time)
@@ -200,7 +192,15 @@ namespace RP0
                 else
                     return;
             }
-            
+
+            if (facilityLevels.Count == 0)
+            {
+                foreach (Upgradeables.UpgradeableFacility facility in GameObject.FindObjectsOfType<Upgradeables.UpgradeableFacility>())
+                {
+                    facilityLevels[(SpaceCenterFacility)Enum.Parse(typeof(SpaceCenterFacility), facility.name)] = facility.UpgradeLevels;
+                }
+            }
+
             updateUpkeep();
 
             double timePassed = time - lastUpdate;

@@ -14,7 +14,7 @@
             renderTo: 'parts_table',
             selModel: 'cells',
             striped: true,
-            width: '1850',
+            //width: '1850',
             height: 'fit',
             nativeScroller: true,
             data: {
@@ -50,18 +50,18 @@
                 },{
                   index: 'name',
                   title: 'Name',
-                  width: 200
+                  //width: 150
                 }, {
                   index: 'title',
                   title: 'Title',
                   type: 'text',
-                  width: 250
+                  //width: 150
                 }, {
                   index: 'mod',
                   title: 'Mod',
-                  width: 175,
+                  //width: 150,
                   type: 'combo',
-                  multiSelect: false,
+                  multiSelect: true,
                   itemCheckBox: true,
                   data: {
                     proxy: {
@@ -71,33 +71,28 @@
                 }, {
                   index: 'cost',
                   title: 'Cost',
-                  width: 65,
+                  //width: 65,
                   type: 'number'
                 }, {
                   index: 'entry_cost',
                   title: 'Entry Cost',
-                  width: 75,
+                  //width: 75,
                   type: 'number'
                 }, {
                   index: 'ro',
                   title: 'RO',
-                  width: 40,
-                  type: 'checkbox'
-                }, {
-                  index: 'rp0',
-                  title: 'RP-0',
-                  width: 40,
+                  //width: 40,
                   type: 'checkbox'
                 }, {
                   index: 'rp0_conf',
                   title: 'RP-0 Conf',
-                  width: 75,
+                  //width: 75,
                   type: 'checkbox'
                 }, {
                   index: 'category',
                   title: 'Category',
                   type: 'combo',
-                  multiSelect: false,
+                  multiSelect: true,
                   itemCheckBox: true,
                   data: {
                     proxy: {
@@ -107,28 +102,37 @@
                 }, {
                   index: 'year',
                   title: 'Year',
-                  width: 45
+                  //width: 45
                 }, {
                   index: 'orphan',
                   title: 'Orphan',
-                  width: 65,
+                  //width: 60,
                   type: 'checkbox'
                 }, {
                   index: 'upgrade',
                   title: 'Upgrade',
-                  width: 65,
+                  //width: 65,
                   type: 'checkbox'
                 }, {
                   index: 'entry_cost_mods',
-                  title: 'Entry Cost Mods'
+                  title: 'Entry Cost Mods',
+                  //width: 120
                 }, {
                   index: 'identical_part_name',
-                  title: 'Identical Part'
+                  title: 'Identical Part',
+                  type: 'combo',
+                  multiSelect: true,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/identical_part_name'
+                    }
+                  }
                 }, {
                   index: 'engine_config',
                   title: 'Engine Config',
                   type: 'combo',
-                  multiSelect: false,
+                  multiSelect: true,
                   itemCheckBox: true,
                   data: {
                     proxy: {
@@ -136,14 +140,14 @@
                     }
                   }
                 }, {
-                  index: 'era',
-                  title: 'Era',
+                  index: 'spacecraft',
+                  title: 'Spacecraft',
                   type: 'combo',
-                  multiSelect: false,
+                  multiSelect: true,
                   itemCheckBox: true,
                   data: {
                     proxy: {
-                      url: '/api/unique_values_for_column/era'
+                      url: '/api/unique_values_for_column/spacecraft'
                     }
                   }
                 }, {
@@ -186,10 +190,10 @@
                         {index: 16, tag: 'NonReentryRated'},
                         {index: 17, tag: 'UnpressurizedCockpit'},
                     ],
-                  width: 200
+                  //width: 150
                 }, {
                   type: 'action',
-                  width: 50,
+                  //width: 50,
                   filter: false,
                   items: [{
                       cls: "pill",
@@ -229,6 +233,12 @@
             },
             items: [
                 {
+                    label: 'Id',
+                    emptyText: 'Id',
+                    name: 'id',
+                    type: 'hidden',
+                    inputWidth: 150
+                },{
                     label: 'Name',
                     disabled: true,
                     emptyText: 'Name',

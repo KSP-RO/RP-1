@@ -388,7 +388,7 @@
         "spacecraft": "",
         "engine_config": "AJ10_Early",
         "upgrade": true,
-        "entry_cost_mods": "1000, AJ10-142",
+        "entry_cost_mods": "1000, AJ10-138",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -457,7 +457,7 @@
         "spacecraft": "",
         "engine_config": "AJ10_Adv",
         "upgrade": false,
-        "entry_cost_mods": "5000",
+        "entry_cost_mods": "3000, AJ10-118E",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -480,7 +480,7 @@
         "spacecraft": "Delta K",
         "engine_config": "AJ10_Adv",
         "upgrade": true,
-        "entry_cost_mods": "15000",
+        "entry_cost_mods": "5000, AJ10-118F",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -503,7 +503,7 @@
         "spacecraft": "Apollo",
         "engine_config": "AJ10_137",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "5000, AJ10_138",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -526,7 +526,7 @@
         "spacecraft": "",
         "engine_config": "AJ10_138",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "5000, AJ10-101A",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -572,7 +572,7 @@
         "spacecraft": "Shuttle",
         "engine_config": "AJ10_190",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "10000, AJ10-137",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3819,7 +3819,7 @@
         "spacecraft": "",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "12000",
+        "entry_cost_mods": "5000, Model8096",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3842,7 +3842,7 @@
         "spacecraft": "",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "25000",
+        "entry_cost_mods": "5000, Model8096-39",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3865,8 +3865,8 @@
         "spacecraft": "Shuttle (after Challenger)",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "35000",
-        "identical_part_name": "",
+        "entry_cost_mods": "",
+        "identical_part_name": "15000, Model8096A",
         "module_tags": []
     },
     {
@@ -8222,7 +8222,7 @@
         "spacecraft": "Agena D",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "20000, XLR81-BA-7",
+        "entry_cost_mods": "Model8096",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8245,7 +8245,7 @@
         "spacecraft": "Gemini ATV",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "50000, XLR11-BA-11",
+        "entry_cost_mods": "30000, Model8096",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8268,7 +8268,7 @@
         "spacecraft": "Agena A",
         "engine_config": "Agena",
         "upgrade": false,
-        "entry_cost_mods": "12000, Navaho-PhaseIII-TP",
+        "entry_cost_mods": "Model8048",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8291,7 +8291,7 @@
         "spacecraft": "Agena B",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "10000, PumpReignition, XLR81-BA-5",
+        "entry_cost_mods": "Model8081, PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },

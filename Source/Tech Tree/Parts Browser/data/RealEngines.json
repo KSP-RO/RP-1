@@ -18,7 +18,7 @@
         "spacecraft": "Redstone",
         "engine_config": "NAA75_110",
         "upgrade": false,
-        "entry_cost_mods": "A-6",
+        "entry_cost_mods": "5000, HydyneFuel",
         "identical_part_name": "A-6",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -43,7 +43,7 @@
         "spacecraft": "AJ10 (Mid)",
         "engine_config": "AJ10_Mid",
         "upgrade": false,
-        "entry_cost_mods": "AJ10-104",
+        "entry_cost_mods": "25000, AJ10-101A",
         "identical_part_name": "AJ10 (Mid)",
         "module_tags": [
             "EngineLiquidPF",
@@ -69,7 +69,7 @@
         "spacecraft": "Apollo",
         "engine_config": "AJ10_137",
         "upgrade": false,
-        "entry_cost_mods": "AJ10-137",
+        "entry_cost_mods": "5000, AJ10_138",
         "identical_part_name": "AJ10-137",
         "module_tags": [
             "Reentry"
@@ -94,7 +94,7 @@
         "spacecraft": "Shuttle",
         "engine_config": "AJ10_190",
         "upgrade": false,
-        "entry_cost_mods": "AJ10-190",
+        "entry_cost_mods": "10000, AJ10-137",
         "identical_part_name": "AJ10-190",
         "module_tags": []
     },
@@ -117,7 +117,7 @@
         "spacecraft": "AJ10 (Early)",
         "engine_config": "AJ10_Early",
         "upgrade": false,
-        "entry_cost_mods": "AJ10-37",
+        "entry_cost_mods": "8000, AJ10-27",
         "identical_part_name": "AJ10 (Early)",
         "module_tags": [
             "EngineLiquidPF",
@@ -143,7 +143,7 @@
         "spacecraft": "Saturn V (J-2)",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "J-2-200klbf",
+        "entry_cost_mods": "30000, J-2-200klbf",
         "identical_part_name": "J-2",
         "module_tags": [
             "EngineLiquidTurbo",

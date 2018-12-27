@@ -10,9 +10,6 @@ namespace RP0
     {
         protected PartModule SSTUTank;
 
-        protected BaseField diam1;
-        protected BaseField scale;
-
         public override void OnAwake()
         {
             base.OnAwake();
@@ -28,10 +25,10 @@ namespace RP0
         }
         */
 
-        public override void GetDimensions(out float diam, out float len)
+        public override void GetDimensions(out float diameter, out float length)
         {
-            diam = 0f;
-            len = 0f;
+            diameter = 0f;
+            length = 0f;
 
             if (SSTUTank == null)
             {
@@ -41,9 +38,13 @@ namespace RP0
 
             // Get diameter from part field and convert to Float
             // ******* 1.4+ diam1 = SSTUTank.Fields["currentDiameter"];
-            diam1 = SSTUTank.Fields["currentTankDiameter"];
-            diam = diam1.GetValue<float>(SSTUTank);
+            diameter = SSTUTank.Fields["currentTankDiameter"].GetValue<float>(SSTUTank);
+            length = diameter * GetLengthMultiplier();
+            // Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Size: Diameter = {diam}, Length = {len}");
+        }
 
+        private float GetLengthMultiplier()
+        {
             // Get core size from part field and convert to String
             // ******* 1.4+ string coreStr = SSTUTank.Fields["currentCore"].GetValue<string>(SSTUTank);
             string coreStr = SSTUTank.Fields["currentTankType"].GetValue<string>(SSTUTank);
@@ -52,61 +53,72 @@ namespace RP0
             string noseType = SSTUTank.Fields["currentNoseType"].GetValue<string>(SSTUTank);
             string mountType = SSTUTank.Fields["currentMountType"].GetValue<string>(SSTUTank);
 
-            float baseLen=0f, noseLen=0f, mountLen=0f;
+            var baseMultiplier = GetBaseLengthMultiplier(coreStr);
+            var noseMultiplier = GetNoseMountLengthMultiplier(noseType);
+            var mountMultiplier = GetNoseMountLengthMultiplier(mountType);
 
-            /* SSTU Modular Tanks are actually separate models and these are the 4 common models that
-             * are simple cylinders. We first look for the beginning 7 characters of the string
-             * and once we find those, we look for the remaining 3 characters. These characters
-             * represent the different models and are multipliers on the Diameter for the Length of the tank. */
-            if (coreStr.Contains("MFT-A-") || coreStr.Contains("MFT-B-") || coreStr.Contains("MFT-C-") || coreStr.Contains("MFT-CF-"))
-            {
-                if (coreStr.Contains("0-3")) { len = diam * 0.25f; }
-                else if (coreStr.Contains("0-7")) { len = diam * 0.75f; }
-                else
-                {
-                    string coreSwap = coreStr.Replace('-', '.');
-                    string coreMult = coreSwap.Substring(coreSwap.Length - 3);                    
-                    float lenMult = float.Parse(coreMult);
-                    float curLen = lenMult * diam;
-                    scale = SSTUTank.Fields["currentTankVerticalScale"];
-                    float vScale = scale.GetValue<float>(SSTUTank);
-                    baseLen = curLen * vScale;
-                }
-                // Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Size: Diameter = {diam}, Length = {len}");
-
-                // Add the size of the mount and the size of the nosecone to the overall length
-                if (noseMountDict.ContainsKey(noseType) || noseMountDict.ContainsKey(mountType))
-                {
-                    if (noseMountDict.ContainsKey(noseType))
-                    {
-                        float mult = noseMountDict[noseType];
-                        noseLen = diam * mult;
-                    }
-
-                    if (noseMountDict.ContainsKey(mountType))
-                    {
-                        float mult = noseMountDict[mountType];
-                        mountLen = diam * mult;
-                    }
-                }
-                else
-                {
-                    noseLen = 0;
-                    mountLen = 0;
-                }
-
-                len = baseLen + noseLen + mountLen;
-
-            }
-            else
-            {
-                Debug.LogError("[ModuleTooling]: Could not find SSTU MFT part to bind to");
-                return;
-            }
+            return baseMultiplier + noseMultiplier + mountMultiplier;
         }
 
+        private float GetBaseLengthMultiplier(string coreStr)
+        {
+            // SSTU Modular Tanks are actually separate models and these are the 4 common models that are simple cylinders.
+            if (coreStr.Contains("MFT-A-") || coreStr.Contains("MFT-B-") || coreStr.Contains("MFT-C-") || coreStr.Contains("MFT-CF-"))
+            {
+                return GetStandardTankBaseLengthMultiplier(coreStr);
+            }
+            if (coreStr.Contains("MFT-D-"))
+            {
+                return GetBoosterBaseLengthMultiplier(coreStr);
+            }
+
+            Debug.LogError("[ModuleTooling]: Unknown Tank: " + coreStr);
+            return 0;
+        }
+
+        private float GetBoosterBaseLengthMultiplier(string coreStr)
+        {
+            return _boosterLengthDict[coreStr];
+        }
+
+        private float GetStandardTankBaseLengthMultiplier(string coreStr)
+        {
+            /* We first look for the beginning 7 characters of the string
+             * and once we find those, we look for the remaining 3 characters. These characters
+             * represent the different models and are multipliers on the Diameter for the Length of the tank. */
+            if (coreStr.Contains("0-3")) { return 0.25f; }
+            else if (coreStr.Contains("0-7")) { return 0.75f; }
+
+            var scale = SSTUTank.Fields["currentTankVerticalScale"].GetValue<float>(SSTUTank);
+            return ParseLengthMultiplier(coreStr) * scale;
+        }
+
+        private static float ParseLengthMultiplier(string coreStr)
+        {
+            string coreSwap = coreStr.Replace('-', '.');
+            string coreMult = coreSwap.Substring(coreSwap.Length - 3);
+            return float.Parse(coreMult);
+        }
+
+        private static float GetNoseMountLengthMultiplier(string noseType)
+        {
+            if (!noseMountDict.ContainsKey(noseType))
+            {
+                return 0;
+            }
+            return noseMountDict[noseType];
+        }
+
+        private static Dictionary<string, float> _boosterLengthDict = new Dictionary<string, float>()
+        {
+            {"MFT-D-1-0", 4.7f},
+            {"MFT-D-2-0", 5.5f},
+            {"MFT-D-3-0", 6.25f},
+            {"MFT-D-4-0", 7f}
+        };
+
         // Nose Type = currentNoseType      Mount = currentMountType
-        protected static Dictionary<string, float> noseMountDict = new Dictionary<string, float>()
+        private static Dictionary<string, float> noseMountDict = new Dictionary<string, float>()
         {
             {"Adapter-1-2-Flat", 0.09f},
             {"Adapter-1-2-Short", 0.5f },
@@ -176,7 +188,5 @@ namespace RP0
             {"Adapter-Soyuz3", 4.304f },
             {"Adapter-Soyuz4", 3.608f }
         };
-
-
     }
 }

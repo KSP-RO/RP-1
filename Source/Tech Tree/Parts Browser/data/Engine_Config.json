@@ -89,7 +89,7 @@
         "spacecraft": "N1 Block A (1st Stage)",
         "engine_config": "N1_BlockA",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -112,7 +112,7 @@
         "spacecraft": "N1F Block A (1st Stage)",
         "engine_config": "N1_BlockA",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-33",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -135,7 +135,7 @@
         "spacecraft": "N1 Block V (3rd stage)",
         "engine_config": "N1_BlockV",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-21",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -158,7 +158,7 @@
         "spacecraft": "N1F Block V (3rd stage)",
         "engine_config": "N1_BlockV",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-39",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -181,7 +181,7 @@
         "spacecraft": "N1 Block B (2nd Stage)",
         "engine_config": "N1_BlockB",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15V",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -204,7 +204,7 @@
         "spacecraft": "N1F Block B (2nd Stage)",
         "engine_config": "N1_BlockB",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-43",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -664,7 +664,7 @@
         "spacecraft": "Antares-100",
         "engine_config": "NK33",
         "upgrade": true,
-        "entry_cost_mods": "20000",
+        "entry_cost_mods": "10000, NK-33",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3980,7 +3980,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK15-SubFam",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4003,7 +4003,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4026,7 +4026,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK15-SubFam, NK-Vacuum",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4049,7 +4049,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15V",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4072,7 +4072,7 @@
         "spacecraft": "N1 Block G",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-9V, NK-Throttling, 5000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4095,7 +4095,7 @@
         "spacecraft": "N1 Block V",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-21",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4118,7 +4118,7 @@
         "spacecraft": "N1F Block G",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-19, NK-Reign",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4141,7 +4141,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": true,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "10000, NK-15",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4164,7 +4164,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": false,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "NK-33",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4187,7 +4187,7 @@
         "spacecraft": "N1F Block V",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "10000, NK-19",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4210,7 +4210,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": true,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "10000, NK-15V",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4233,7 +4233,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": false,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "NK-43",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4256,7 +4256,7 @@
         "spacecraft": "GR-1",
         "engine_config": "NK9",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK9-SubFam",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4348,7 +4348,7 @@
         "spacecraft": "GR-1",
         "engine_config": "NK9V",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK9-SubFam, NK-Vacuum",
         "identical_part_name": "",
         "module_tags": []
     },

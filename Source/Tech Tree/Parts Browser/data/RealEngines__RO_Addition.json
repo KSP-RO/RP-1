@@ -153,7 +153,7 @@
         "description": "Kerolox gas generator vacuum engine which served in R-7 upper stages (Luna, Vostok). The RD-0105 was designed for Luna launches; it was the first upper stage for the R-7 series and was reused for uncrewed Vostok tests. An enhanced version, the RD-0109, was used for crewed Vostok launches. Diameter: [2.56 m]. Plume configured by RealPlume.",
         "mod": "RealEngines (RO Addition)",
         "cost": "250",
-        "entry_cost": "7000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1958",

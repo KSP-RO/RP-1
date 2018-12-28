@@ -54,7 +54,7 @@ def generate_engine_tree(parts):
             engine_configs += generate_engine_config(part)
             if 'upgrade' in part and part['upgrade'] is True:
                 part_upgrades += generate_part_upgrade_config(part)
-    text_file = open("output/TREE-Engines.cfg", "w")
+    text_file = open("output/TREE-Engines.cfg", "w", newline='\n')
     text_file.write(tree_engine_header)
     text_file.write(engine_configs)
     text_file.write(tree_engine_mid)

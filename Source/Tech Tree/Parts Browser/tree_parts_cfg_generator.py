@@ -31,7 +31,7 @@ def generate_parts_tree(parts):
         if part['name'] is not None and len(part['name']) > 0:
             if part['mod'] != 'Engine_Config' and not part['orphan']:
                 part_configs += generate_part_config(part)
-    text_file = open("output/TREE-Parts.cfg", "w")
+    text_file = open("output/TREE-Parts.cfg", "w", newline='\n')
     text_file.write(tree_parts_header)
     text_file.write(part_configs)
     text_file.close()

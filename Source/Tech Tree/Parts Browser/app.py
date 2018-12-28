@@ -3,6 +3,7 @@ import json
 
 from flask import jsonify
 from part_data import PartData
+from tech_mapping import TechMapping
 from flask import Flask, g
 from flask import Blueprint, abort, g, render_template, redirect, request, url_for
 from slugify import slugify
@@ -13,6 +14,9 @@ from ecm_parts_cfg_generator import generate_ecm_parts
 from identical_parts_cfg_generator import generate_identical_parts
 
 part_data = PartData()
+tech_mapping = TechMapping()
+
+tech_mapping.validate_current(part_data.parts)
 
 def create_app(test_config=None):
 
@@ -49,18 +53,26 @@ def create_app(test_config=None):
         sorted_values = list(part_data.unique_values_for_columns[column_name])
         sorted_values.sort()
         return jsonify({"data": sorted_values})
+    @app.route('/api/tech_mapping/<category>/<year>')
+    def get_tech_mapping(category, year):
+        return tech_mapping.get_tech_by_category_and_year(category, year)
     @app.route('/api/combo_options/<column_name>')
     def combo_options(column_name):
-        sorted_values = list(part_data.unique_values_for_columns[column_name])
-        sorted_values.sort()
-        return jsonify({"data": list(map(lambda x: {column_name: x}, sorted_values))})
+        if column_name != 'year':
+            sorted_values = list(part_data.unique_values_for_columns[column_name])
+            sorted_values.sort()
+            return jsonify({"data": list(map(lambda x: {column_name: x}, sorted_values))})
+        else:
+            sorted_values = list(tech_mapping.unique_years)
+            sorted_values.sort()
+            return jsonify({"data": list(map(lambda x: {column_name: x}, sorted_values))})
     
     @app.route('/api/export_to_json')
     def export_to_json():
         for mod in part_data.unique_values_for_columns['mod']:
             parts_for_mod = list(filter(lambda x: x['mod'] == mod, part_data.parts))
             parts_for_mod.sort(key=lambda x: x['name'] if x['name'] is not None and len(x['name']) > 0 else x['title'] )
-            text_file = open("data/" + make_safe_filename(mod)  + ".json", "w")
+            text_file = open("data/" + make_safe_filename(mod)  + ".json", "w", newline='\n')
             text_file.write(json.dumps(parts_for_mod, indent=4, separators=(',', ': ')))
             text_file.close()
         return "true"
@@ -102,9 +114,21 @@ def create_app(test_config=None):
     def commit_changes():
         queued_changes = request.get_json()
         for row_id in queued_changes['queued_changes']:
+            new_part = False
             part = part_data.get_part_by_name(queued_changes['queued_changes'][row_id]['name'])
+            # if the part can't be found, we assume it's a new part
+            if part is None:
+                part = {}
+                new_part = True
+            # if the mod isn't set, that is almost certainly because we're 
+            # adding to a new mod, need to set it from the new_mod field
+            if 'mod' in queued_changes['queued_changes'][row_id]['changes'] and queued_changes['queued_changes'][row_id]['changes']['mod']['new'] == "":
+                queued_changes['queued_changes'][row_id]['changes']['mod']['new'] = queued_changes['queued_changes'][row_id]['changes']['new_mod']['new']
             for field_name in queued_changes['queued_changes'][row_id]['changes']:
-                part[field_name] = queued_changes['queued_changes'][row_id]['changes'][field_name]['new']
+                if field_name not in ['mod_type', 'new_mod']:
+                    part[field_name] = queued_changes['queued_changes'][row_id]['changes'][field_name]['new']
+            if new_part:
+                part_data.add_new_part(part)
         export_to_json()
         return "true"
     

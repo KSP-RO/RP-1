@@ -26,7 +26,7 @@ def generate_ecm_engines(parts):
                 # for purposes I don't full understand, we replace all '.' and '_' characters with '-'
                 # and '?' with ' '.  That's what the downstream code expects for whatever reason.
                 ecm_configs += module_part_config_template.substitute(name=part['name'].replace('_','-').replace('.','-').replace('?',' '), ecm=part['entry_cost_mods'])
-    text_file = open("output/ECM-Engines.cfg", "w")
+    text_file = open("output/ECM-Engines.cfg", "w", newline='\n')
     text_file.write(tree_ecm_engines_header)
     text_file.write(ecm_configs)
     text_file.write(tree_ecm_engines_footer)

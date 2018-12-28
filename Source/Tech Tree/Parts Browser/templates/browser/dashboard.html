@@ -3,18 +3,22 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-  <div id="commands"><button onclick="generateConfigs()">Generate Configs</button></div></br>
+  <div id="commands"><button onclick="generateConfigs()">Generate Configs</button> &nbsp; <button onclick="addNewPart()">Add New Part</button></div></br>
   <div id="parts_table"></div>
     <script>
     Fancy.loadModule('form');
     var form = null, grid = null;
     document.addEventListener("DOMContentLoaded", function() {
+        initialize();
+    });
+
+    function initialize() {
         grid = new FancyGrid({
             title: 'RP-0 Parts',
             renderTo: 'parts_table',
             selModel: 'cells',
             striped: true,
-            //width: '1850',
+            width: '1850',
             height: 'fit',
             nativeScroller: true,
             data: {
@@ -50,18 +54,23 @@
                 },{
                   index: 'name',
                   title: 'Name',
-                  //width: 150
+                  width: 200
                 }, {
                   index: 'title',
                   title: 'Title',
                   type: 'text',
-                  //width: 150
+                  width: 250
+                }, {
+                  index: 'is_new_part',
+                  type: 'text',
+                  hidden: true,
+                  value: false
                 }, {
                   index: 'mod',
                   title: 'Mod',
-                  //width: 150,
+                  width: 175,
                   type: 'combo',
-                  multiSelect: true,
+                  multiSelect: false,
                   itemCheckBox: true,
                   data: {
                     proxy: {
@@ -71,28 +80,33 @@
                 }, {
                   index: 'cost',
                   title: 'Cost',
-                  //width: 65,
+                  width: 65,
                   type: 'number'
                 }, {
                   index: 'entry_cost',
                   title: 'Entry Cost',
-                  //width: 75,
+                  width: 75,
                   type: 'number'
                 }, {
                   index: 'ro',
                   title: 'RO',
-                  //width: 40,
+                  width: 40,
+                  type: 'checkbox'
+                }, {
+                  index: 'rp0',
+                  title: 'RP-0',
+                  width: 40,
                   type: 'checkbox'
                 }, {
                   index: 'rp0_conf',
                   title: 'RP-0 Conf',
-                  //width: 75,
+                  width: 75,
                   type: 'checkbox'
                 }, {
                   index: 'category',
                   title: 'Category',
                   type: 'combo',
-                  multiSelect: true,
+                  multiSelect: false,
                   itemCheckBox: true,
                   data: {
                     proxy: {
@@ -102,37 +116,36 @@
                 }, {
                   index: 'year',
                   title: 'Year',
-                  //width: 45
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: 'api/unique_values_for_column/year'
+                    }
+                  },
+                  width: 70
                 }, {
                   index: 'orphan',
                   title: 'Orphan',
-                  //width: 60,
+                  width: 65,
                   type: 'checkbox'
                 }, {
                   index: 'upgrade',
                   title: 'Upgrade',
-                  //width: 65,
+                  width: 65,
                   type: 'checkbox'
                 }, {
                   index: 'entry_cost_mods',
-                  title: 'Entry Cost Mods',
-                  //width: 120
+                  title: 'Entry Cost Mods'
                 }, {
                   index: 'identical_part_name',
-                  title: 'Identical Part',
-                  type: 'combo',
-                  multiSelect: true,
-                  itemCheckBox: true,
-                  data: {
-                    proxy: {
-                      url: '/api/unique_values_for_column/identical_part_name'
-                    }
-                  }
+                  title: 'Identical Part'
                 }, {
                   index: 'engine_config',
                   title: 'Engine Config',
                   type: 'combo',
-                  multiSelect: true,
+                  multiSelect: false,
                   itemCheckBox: true,
                   data: {
                     proxy: {
@@ -140,14 +153,14 @@
                     }
                   }
                 }, {
-                  index: 'spacecraft',
-                  title: 'Spacecraft',
+                  index: 'era',
+                  title: 'Era',
                   type: 'combo',
-                  multiSelect: true,
+                  multiSelect: false,
                   itemCheckBox: true,
                   data: {
                     proxy: {
-                      url: '/api/unique_values_for_column/spacecraft'
+                      url: '/api/unique_values_for_column/era'
                     }
                   }
                 }, {
@@ -190,33 +203,27 @@
                         {index: 16, tag: 'NonReentryRated'},
                         {index: 17, tag: 'UnpressurizedCockpit'},
                     ],
-                  //width: 150
+                  width: 200
                 }, {
                   type: 'action',
-                  //width: 50,
+                  width: 50,
                   filter: false,
                   items: [{
                       cls: "pill",
                       text: 'Edit',
                       handler: function(grid, o){
-                        showEditForm(o.data);
+                        showEditForm(o.data, false);
                       }
                   }]
                 }]
         });
-        
-
-        var comboData = [
-            {index: 0, country: 'USA'},
-            {index: 1, country: 'Canada'}
-        ];
          
         form = new FancyForm({
             title: 'Edit Part',
             width: 700,
-            height: 900,
+            height: "fit",
             window: true,
-            scrollable: false,
+            scrollable: true,
             model: true,
             draggable: true,
             inputWidth: 525,
@@ -258,11 +265,40 @@
                     emptyText: 'Description',
                     name: 'description',
                     type: "textarea"
+                },{
+                    type: 'radio',
+                    label: 'Existing Mod or New Mod',
+                    name: 'mod_type',
+                    value: 'existing',
+                    items: [{
+                      text: 'Existing Mod',
+                      value: 'existing'
+                    },{
+                      text: 'New Mod',
+                      value: 'new'
+                    }],
+                    events: [{
+                      change: function(){
+                        if (form) {
+                            if (this.get() == "new") {
+                                form.getItem('new_mod').enable();
+                                form.getItem('mod').disable();
+                            } else {
+                                form.getItem('new_mod').disable();
+                                form.getItem('mod').enable();
+                            }
+                        }
+                      }
+                    }]
+                }, {
+                    type: 'string',
+                    label: 'New Mod Name',
+                    disabled: true,
+                    name: 'new_mod',
+                    emptyText: 'New Mod Name'
                 }, {
                     type: 'combo',
                     label: 'Mod',
-                    blank: false,
-                    blankText: 'Required',
                     name: 'mod',
                     data: {
                         proxy: {
@@ -290,8 +326,6 @@
                 }, {
                     type: 'combo',
                     label: 'Category',
-                    blank: false,
-                    blankText: 'Required',
                     name: 'category',
                     data: {
                         proxy: {
@@ -299,30 +333,42 @@
                         }
                     },
                     displayKey: 'category',
-                    valueKey: 'category'
+                    valueKey: 'category',
+                    events: [{
+                      change: function(){
+                        if (form) {
+                            updateTechField();
+                        }
+                      }
+                    }],
+                    vtype: 'notempty'
                 },{
                     label: 'Info',
                     emptyText: 'Info',
                     name: 'info'
                 },{
-                    label: 'Year',
-                    emptyText: 'Year',
-                    name: 'year',
-                    valid: {
-                        type: 'notnan',
-                        text: 'Must be a number'
-                    }
-                }, {
                     type: 'combo',
-                    label: 'Technology',
-                    name: 'technology',
+                    label: 'Year',
+                    name: 'year',
                     data: {
                         proxy: {
-                          url: 'api/combo_options/technology'
+                          url: 'api/combo_options/year'
                         }
                     },
-                    displayKey: 'technology',
-                    valueKey: 'technology'
+                    displayKey: 'year',
+                    valueKey: 'year',
+                    events: [{
+                      change: function(){
+                        if (form) {
+                            updateTechField();
+                        }
+                      }
+                    }],
+                    vtype: 'notempty'
+                }, {
+                    label: 'Technology',
+                    name: 'technology',
+                    disabled: true
                 }, {
                     type: 'combo',
                     label: 'Era',
@@ -438,9 +484,16 @@
                 }
             }]
         });
-    });
+    }
     
-    function showEditForm(data) {
+    function showEditForm(data, isCreate) {
+        data['mod_type'] = 'existing';
+        if (isCreate) {
+            form.getItem('name').enable();
+            data['id'] = "new_part_" + Math.random();
+        } else {
+            form.getItem('name').disable();
+        }
         form.set(data);
         form.previousData = data;
         form.previousData['module_tags'] = data['module_tags'].slice();
@@ -486,9 +539,11 @@
             $.map( Object.keys(queuedChanges), function( row_id ) {
                 html+="<tr><td>" + getCancelButton(row_id) + "</td><td>" + queuedChanges[row_id].name + " - " + queuedChanges[row_id].title + "</td><td>" + queuedChanges[row_id].mod + "</td><td colspan='3'>&nbsp;</td></tr>";
                 $.map( Object.keys(queuedChanges[row_id].changes), function( field_name ) {
-                    html+="<tr><td colspan='3'>&nbsp;</td><td>" + field_name + "</td><td>" + 
-                        queuedChanges[row_id].changes[field_name]["old"] + "</td><td>" + 
-                        queuedChanges[row_id].changes[field_name]["new"] + "</td></tr>";
+                    if (field_name != "new_mod") {
+                        html+="<tr><td colspan='3'>&nbsp;</td><td>" + field_name + "</td><td>" + 
+                            queuedChanges[row_id].changes[field_name]["old"] + "</td><td>" + 
+                            queuedChanges[row_id].changes[field_name]["new"] + "</td></tr>";
+                    }
                 });
             });
             html += "</table><br/><button onclick='cancelAllChanges()'>Cancel All Changes</button> &nbsp; <button onclick='commitChanges()'>Commit Changes to JSON Files</button>";
@@ -502,10 +557,37 @@
     }
     
     function updateTable(changeSet, row_id, revert) {
-        $.map( Object.keys(changeSet), function( field_name ) {
-            value = changeSet[field_name][(revert ? "old" : "new")];
-            grid.setById(row_id, field_name, value);
-        });
+        if (grid.getById(row_id)) {
+            $.map( Object.keys(changeSet), function( field_name ) {
+                value = changeSet[field_name][(revert ? "old" : "new")];
+                grid.setById(row_id, field_name, value);
+            });    
+        } else {
+            // it's a new item.  if we're reverting, we want to remove it, otherwise, add it
+            if (!revert) {
+                newItem = {}
+                $.map( Object.keys(changeSet), function( field_name ) {
+                    if (field_name != 'id' && field_name != 'mod_type') {
+                        value = changeSet[field_name]["new"];
+                        newItem[field_name] = value;
+                    }
+                });
+                // if the mod isn't set, we are almost certainly adding a new mod
+                if (newItem['mod'] == "") {
+                    newItem['mod'] = newItem['new_mod'];
+                }
+                // make sure we keep track that this is a new part
+                newItem['is_new_part'] = true;
+                grid.add(newItem);
+            } else {
+                items = grid.findItem('name', changeSet['name']["new"]);
+                if (items.length == 1) {
+                    grid.remove(items[0]['id']);
+                } else {
+                    alert('Multiple items have the same name, I suggest you abort this mission and reload.');
+                }
+            }
+        }
         
         grid.update();
     }
@@ -553,12 +635,41 @@
                 }),
                 dataType: 'json',
                 success: function() {
-                    alert( "Changes successfully committed to JSON files.");
+                    form.destroy();
+                    grid.destroy();
+                    initialize();
                     queuedChanges = {};
                     drawQueuedChanges();
+                    alert( "Changes successfully committed to JSON files.");
                 }
             });
         }
+    }
+
+    function updateTechField() {
+        category = form.get('category');
+        year = form.get('year');
+        $.get("/api/tech_mapping/" + escape(category) + "/" + escape(year), function( tech ) {
+            if (tech != "not found") {
+                form.set('technology', tech);
+            } else {
+                form.set('technology', '');
+            }
+        });
+    }
+
+    function addNewPart() {
+        showEditForm({module_tags: []}, true);
+    }
+    
+    function showNewMods() {
+        form.getItem('new_mod').enable();
+        form.getItem('mod').disable();
+    }
+
+    function showExistingMods() {
+        form.getItem('new_mod').disable();
+        form.getItem('mod').enable();
     }
   </script>
   <br/><br/>

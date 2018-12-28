@@ -1,5 +1,5 @@
 # RP-0-Parts-Browser
-This is a browser/editor application for the RP-0 parts list (converted to json files per mod)  that can also generate the needed configs from it.
+This is a browser/editor application for the RP-0 parts list (converted to json files per mod)  that can also generate the needed configs from it, created by [@mattwrobel](https://github.com/mattwrobel)
 
 To get it working:
    1. It uses Python 3, so that needs to be installed.

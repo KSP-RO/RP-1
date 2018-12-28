@@ -32,7 +32,14 @@ class PartData:
         for part in self.parts:
             if part["name"] == name:
                 return part
-        print('Did not find part, sadface.')
+        return None
+
+    def add_new_part(self, new_part):
+        print(f'Adding new part with name: {new_part["name"]}')
+        # add the part to the data
+        self.parts.append(new_part)
+        # reindex the columns
+        self.index_columns()
         return None
     
     def __init__(self):

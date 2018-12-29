@@ -2683,7 +2683,7 @@
         "description": "Booster launch clamp for the Titan IV rocket. Place under each booster.",
         "mod": "RN US Rockets",
         "cost": "1",
-        "entry_cost": "0",
+        "entry_cost": "1",
         "category": "MATERIALS",
         "info": "Launch Clamp",
         "year": "0",

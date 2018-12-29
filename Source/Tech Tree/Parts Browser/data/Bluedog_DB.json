@@ -1773,6 +1773,31 @@
         ]
     },
     {
+        "name": "bluedog_Vega_Engine",
+        "title": "X-405H",
+        "description": "Engine for proposed Vega stage for NASA Atlas-Vega LV. Superceded by Atlas-Agena once NASA became aware of the USAF's Agena stage.",
+        "mod": "Bluedog DB",
+        "cost": "100",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "X405",
+        "upgrade": false,
+        "entry_cost_mods": "X-405H",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "bluedog_ableEngine",
         "title": "AJ10 Series (Early)",
         "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This is the original Vanguard second stage / Able / Delta configuration, without restart capability. Plume configured by RealPlume.",

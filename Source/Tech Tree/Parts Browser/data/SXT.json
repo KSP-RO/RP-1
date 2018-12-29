@@ -48,7 +48,8 @@
         "identical_part_name": "",
         "module_tags": [
             "Habitable",
-            "UnpressurizedCockpit"
+            "UnpressurizedCockpit",
+            "NonReentryRated"
         ]
     },
     {
@@ -430,7 +431,7 @@
         "spacecraft": "Vanguard 2",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, avioincsProbesEarly, Geiger, IonMass, Micrometeorite",
+        "entry_cost_mods": "1000, avionicsProbesEarly, Geiger, IonMass, Micrometeorite",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",

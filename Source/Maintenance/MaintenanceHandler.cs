@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using KSP;
 using UnityEngine;
-using System.Reflection;
+using Upgradeables;
 
 namespace RP0
 {
@@ -32,7 +31,7 @@ namespace RP0
         public const int padLevels = 10;
         public int[] kctPadCounts = new int[padLevels];
 
-        protected Dictionary<SpaceCenterFacility, Upgradeables.UpgradeableFacility.UpgradeLevel[]> facilityLevels = new Dictionary<SpaceCenterFacility, Upgradeables.UpgradeableFacility.UpgradeLevel[]>();
+        protected static Dictionary<SpaceCenterFacility, float[]> facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
         public Dictionary<string, double> kctBuildRates = new Dictionary<string, double>();
 
         #region Instance
@@ -97,59 +96,64 @@ namespace RP0
 
             foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
                 settings.Load(n);
+
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+            {
+                EnsureFacilityLvlCostsLoaded();
+            }
         }
 
         public void updateUpkeep()
         {
-            Upgradeables.UpgradeableFacility.UpgradeLevel[] levels;
+            float[] costs;
 
             // Pad
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.LaunchPad, out levels))
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out costs))
             {
                 if (kctResearchRate > 0d)
                 {
-                    int lC = levels.Length;
+                    int lC = costs.Length;
                     for (int i = 0; i < padLevels; i++)
                     {
                         padCosts[i] = 0d;
                         if (i < lC)
-                            padCosts[i] = settings.facilityLevelCostMult * kctPadCounts[i] * Math.Pow(levels[i].levelCost, settings.facilityLevelCostPow);
+                            padCosts[i] = settings.facilityLevelCostMult * kctPadCounts[i] * Math.Pow(costs[i], settings.facilityLevelCostPow);
                     }
                     padCost = 0;
                     for (int i = padLevels; i-- > 0;)
                         padCost += padCosts[i];
                 }
                 else
-                    padCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+                    padCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
             }
 
             // Runway
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.Runway, out levels))
-                runwayCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.Runway, out costs))
+                runwayCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
 
             //VAB
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out levels))
-                vabCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out costs))
+                vabCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
 
             //SPH
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out levels))
-                sphCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
+                sphCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
 
             //RnD
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out levels))
-                rndCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out costs))
+                rndCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
 
             // MC
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.MissionControl, out levels))
-                mcCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.MissionControl, out costs))
+                mcCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
 
             // TS
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.TrackingStation, out levels))
-                tsCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.TrackingStation, out costs))
+                tsCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
 
             // AC
-            if (facilityLevels.TryGetValue(SpaceCenterFacility.AstronautComplex, out levels))
-                acCost = settings.facilityLevelCostMult * Math.Pow(levels[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (levels.Length - 0.95f))].levelCost, settings.facilityLevelCostPow);
+            if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out costs))
+                acCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
 
             nautYearlyUpkeep = settings.nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * settings.nautYearlyUpkeepAdd);
             nautUpkeep = HighLogic.CurrentGame.CrewRoster.GetActiveCrewCount() * nautYearlyUpkeep * (1d / 365d);
@@ -193,14 +197,7 @@ namespace RP0
                     return;
             }
 
-            if (facilityLevels.Count == 0)
-            {
-                foreach (Upgradeables.UpgradeableFacility facility in GameObject.FindObjectsOfType<Upgradeables.UpgradeableFacility>())
-                {
-                    facilityLevels[(SpaceCenterFacility)Enum.Parse(typeof(SpaceCenterFacility), facility.name)] = facility.UpgradeLevels;
-                }
-            }
-
+            EnsureFacilityLvlCostsLoaded();
             updateUpkeep();
 
             double timePassed = time - lastUpdate;
@@ -227,5 +224,24 @@ namespace RP0
         }
 
         #endregion
+
+        private void EnsureFacilityLvlCostsLoaded()
+        {
+            if (facilityLevelCosts.Count == 0)
+            {
+                // Facility level upgrade costs should be loaded only once. These do not change and are actually unavailable 
+                // when outside HomePlanet's SOI and also in the tracking station in some cases.
+                foreach (UpgradeableFacility facility in FindObjectsOfType<UpgradeableFacility>())
+                {
+                    var costArr = new float[facility.UpgradeLevels.Length];
+                    for (int i = 0; i < facility.UpgradeLevels.Length; i++)
+                    {
+                        costArr[i] = facility.UpgradeLevels[i].levelCost;
+                    }
+                    facilityLevelCosts[(SpaceCenterFacility)Enum.Parse(typeof(SpaceCenterFacility), facility.name)] = costArr;
+                }
+                Debug.Log($"[RP-0] Updated facilityLevelsCosts, count: {facilityLevelCosts.Count}");
+            }
+        }
     }
 }

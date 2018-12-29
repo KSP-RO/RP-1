@@ -24,6 +24,9 @@ module_part_config_template = Template("""
 module_tag_template = Template("""
     MODULE
     { name = ModuleTag${module_tag} }""")
+module_template = Template("""
+    MODULE
+    { name = Module${module_tag} }""")
 
 def generate_parts_tree(parts):
     part_configs = ""
@@ -39,7 +42,10 @@ def generate_parts_tree(parts):
 def generate_part_config(part):
     module_tags = ''
     for module_tag in part['module_tags']:
-        module_tags += module_tag_template.substitute(module_tag=module_tag)
+        if module_tag in ['NonReentryRated','UnpressurizedCockpit']:
+            module_tags += module_template.substitute(module_tag=module_tag)
+        else:
+            module_tags += module_tag_template.substitute(module_tag=module_tag)
     if len(module_tags) > 0:
         module_tags = "\n" + module_tags + "\n"
     return module_part_config_template.substitute(name=part['name'], mod=part['mod'], technology=part['technology'], cost=part['cost'], entry_cost=part['entry_cost'], rp0_conf=str(part['rp0_conf']).lower(), module_tags=module_tags)

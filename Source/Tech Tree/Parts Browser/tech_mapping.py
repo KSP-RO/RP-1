@@ -62,13 +62,14 @@ class TechMapping:
 
     def validate_current(self, parts):
         for part in parts:
-            name = part['name']
-            tech_required = part['technology']
-            category = part['category']
-            year = part['year']
-            expected_tech = self.tech_map[category][year]
-            if tech_required != expected_tech:
-                print(f"Tech mismatch for {name} - {category} - {year} expected: {expected_tech} actual: {tech_required}")
+            name = part['name'] if 'name' in part else ''
+            tech_required = part['technology'] if 'technology' in part else ''
+            category = part['category'] if 'category' in part else ''
+            year = part['year'] if 'year' in part else ''
+            if category in self.tech_map:
+                expected_tech = self.tech_map[category][year]
+                if tech_required != expected_tech:
+                    print(f"Tech mismatch for {name} - {category} - {year} expected: {expected_tech} actual: {tech_required}")
                 
             
             

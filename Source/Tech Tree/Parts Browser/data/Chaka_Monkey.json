@@ -1168,7 +1168,7 @@
         "description": "A high thrust engine designed for use with storable propellants. In use with the Proton series of rockets. Diameter: [2.0 m]. Plume configured by RealPlume.",
         "mod": "Chaka Monkey",
         "cost": "515",
-        "entry_cost": "10300",
+        "entry_cost": "0",
         "category": "STAGED",
         "info": "",
         "year": "1966",

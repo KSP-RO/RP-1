@@ -6,9 +6,19 @@ using UnityEngine;
 
 namespace RP0
 {
-    public abstract class ModuleToolingDiamLen : ModuleTooling
+    public class ModuleToolingDiamLen : ModuleTooling
     {
-        public abstract void GetDimensions(out float diam, out float len);
+        [KSPField]
+        public float partDiameter;
+
+        [KSPField]
+        public float partLength;
+
+        public virtual void GetDimensions(out float diam, out float len)
+        {
+            diam = partDiameter;
+            len = partLength;
+        }
 
         public virtual string GetDimensions()
         {

@@ -616,7 +616,7 @@
         if (confirm("Are you sure you want to generate the configs? (any queued changes at the bottom will not currently be included)")) {
             $.get("api/generate_all_configs", function( data ) {
                 if (data == "true") {
-                    alert( "Configs successfully generated in /output folder." );
+                    alert( "Configs successfully generated." );
                 } else {
                     alert("Config generation failed.");
                 }

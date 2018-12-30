@@ -33,7 +33,7 @@ def generate_identical_parts(parts):
             sorted_parts.sort()
             identical_part_configs += identical_part_template.substitute(name=name, identical_parts=",".join(sorted_parts))
     
-    text_file = open("output/identicalParts.cfg", "w", newline='\n')
+    text_file = open("../../../GameData/RP-0/Tree/identicalParts.cfg", "w", newline='\n')
     text_file.write(identical_parts_header)
     text_file.write(identical_part_configs)
     text_file.close()

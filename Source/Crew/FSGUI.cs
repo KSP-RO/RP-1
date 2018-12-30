@@ -14,7 +14,8 @@ namespace RP0.Crew
         private Vector2 nautListScroll = new Vector2();
         private Dictionary<ProtoCrewMember, ActiveCourse> activeMap = new Dictionary<ProtoCrewMember, ActiveCourse>();
         private Vector2 courseSelectorScroll = new Vector2();
-
+        private GUIContent nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false));
+        
         protected void nautListHeading()
         {
             GUILayout.BeginHorizontal();
@@ -125,6 +126,17 @@ namespace RP0.Crew
                         if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
                             leaveCourse(currentCourse, student);
                     }
+
+                    if (KACWrapper.APIReady && GUILayout.Button(nautRowAlarmBtnContent, GUILayout.ExpandWidth(false)))
+                    {
+                        // CrewHandler processes trainings every 3600 seconds. Need to account for that to set up accurate KAC alarms.
+                        double completeUT = currentCourse.CompletionTime();
+                        double timeDiff = completeUT - CrewHandler.Instance.nextUpdate;
+                        double timesChRun = Math.Ceiling(timeDiff / CrewHandler.Instance.updateInterval);
+                        double alarmUT = CrewHandler.Instance.nextUpdate + timesChRun * CrewHandler.Instance.updateInterval;
+                        string alarmTxt = $"{currentCourse.name} - {student.name}";
+                        KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, alarmUT);
+                    }
                 }
             } finally {
                 GUILayout.EndHorizontal();
@@ -135,7 +147,7 @@ namespace RP0.Crew
         {
             updateActiveMap();
             float scrollHeight = currentTab == tabs.Training ? 420 : 305;
-            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(480), GUILayout.Height(scrollHeight));
+            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(505), GUILayout.Height(scrollHeight));
             try {
                 nautListHeading();
                 for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; i++)
@@ -159,7 +171,7 @@ namespace RP0.Crew
 
         protected void courseSelector()
         {
-            courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(480), GUILayout.Height(430));
+            courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));
             try {
                 foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
                     if (GUILayout.Button(course.name))

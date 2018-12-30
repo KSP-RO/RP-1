@@ -250,8 +250,8 @@
         "entry_cost": "720",
         "category": "SOLID",
         "info": "SRB",
-        "year": "1950",
-        "technology": "earlySolids",
+        "year": "1959",
+        "technology": "solids1959",
         "era": "01-PW",
         "ro": true,
         "rp0": true,
@@ -261,7 +261,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "AerobeeBooster",
         "module_tags": [
             "EngineSolid"
         ]
@@ -415,7 +415,7 @@
         "title": "Aerobee RM-8290 Recovery Parachute Pack",
         "description": "This small inline parachute module goes underneath the despin module, to carry the scientific instruments safely back to the ground. The parachute actually deploys out the bottom, and decouples whatever is placed below it.",
         "mod": "Taerobee",
-        "cost": "250",
+        "cost": "0",
         "entry_cost": "1",
         "category": "MATERIALS",
         "info": "Parachute",

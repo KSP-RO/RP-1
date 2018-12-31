@@ -388,7 +388,7 @@
         "spacecraft": "",
         "engine_config": "AJ10_Early",
         "upgrade": true,
-        "entry_cost_mods": "1000, AJ10-138",
+        "entry_cost_mods": "1000, AJ10-142",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -457,7 +457,7 @@
         "spacecraft": "",
         "engine_config": "AJ10_Adv",
         "upgrade": false,
-        "entry_cost_mods": "3000, AJ10-118E",
+        "entry_cost_mods": "3000, AJ10-118E, AJ10-138",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -503,7 +503,7 @@
         "spacecraft": "Apollo",
         "engine_config": "AJ10_137",
         "upgrade": false,
-        "entry_cost_mods": "5000, AJ10_138",
+        "entry_cost_mods": "5000, AJ10-138",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -526,7 +526,7 @@
         "spacecraft": "",
         "engine_config": "AJ10_138",
         "upgrade": false,
-        "entry_cost_mods": "5000, AJ10-101A",
+        "entry_cost_mods": "25000, AJ10-104",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -3357,7 +3357,7 @@
         "spacecraft": "Minuteman ICBM",
         "engine_config": "M55",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "15000",
         "identical_part_name": "",
         "module_tags": [
             "EngineSolid"

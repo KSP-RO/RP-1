@@ -143,7 +143,7 @@
         "spacecraft": "PHOTO-2/4",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "2500, science_module",
+        "entry_cost_mods": "2500, science-module",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"

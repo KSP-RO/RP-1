@@ -503,7 +503,7 @@
         "spacecraft": "Apollo",
         "engine_config": "AJ10_137",
         "upgrade": false,
-        "entry_cost_mods": "5000, AJ10_138",
+        "entry_cost_mods": "5000, AJ10-138",
         "identical_part_name": "",
         "module_tags": []
     },

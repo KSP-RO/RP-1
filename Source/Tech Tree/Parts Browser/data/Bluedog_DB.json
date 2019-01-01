@@ -1166,7 +1166,7 @@
         "spacecraft": "Diamant",
         "engine_config": "Vexin",
         "upgrade": false,
-        "entry_cost_mods": "Vesta_sounding_rocket",
+        "entry_cost_mods": "Vesta-sounding-rocket",
         "identical_part_name": "",
         "module_tags": []
     },

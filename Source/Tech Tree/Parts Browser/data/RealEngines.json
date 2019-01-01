@@ -1,6 +1,6 @@
 [
     {
-        "name": "A7",
+        "name": "RO-RE-A7",
         "title": "NAA-75-110 A-Series",
         "description": "",
         "mod": "RealEngines",
@@ -18,14 +18,14 @@
         "spacecraft": "Redstone",
         "engine_config": "NAA75_110",
         "upgrade": false,
-        "entry_cost_mods": "5000, HydyneFuel",
+        "entry_cost_mods": "A-6",
         "identical_part_name": "A-6",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
     },
     {
-        "name": "AJ10_104",
+        "name": "RO-RE-AJ10-104",
         "title": "AJ10Series (Mid)",
         "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents mid-period AJ10s with a nozzle extension and restart capability. Used on Thor-Ablestar and Delta E through Delta N. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -43,7 +43,7 @@
         "spacecraft": "AJ10 (Mid)",
         "engine_config": "AJ10_Mid",
         "upgrade": false,
-        "entry_cost_mods": "25000, AJ10-101A",
+        "entry_cost_mods": "AJ10-104",
         "identical_part_name": "AJ10 (Mid)",
         "module_tags": [
             "EngineLiquidPF",
@@ -51,7 +51,7 @@
         ]
     },
     {
-        "name": "AJ10_137",
+        "name": "RO-RE-AJ10-137",
         "title": "AJ10-137 (Service Propulsion System)",
         "description": "The Aerojet AJ10-137 rocket engine used on the Apollo Service Module as the Service Propulsion System. Diameter: [3.9 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -69,14 +69,14 @@
         "spacecraft": "Apollo",
         "engine_config": "AJ10_137",
         "upgrade": false,
-        "entry_cost_mods": "5000, AJ10_138",
+        "entry_cost_mods": "AJ10_137",
         "identical_part_name": "AJ10-137",
         "module_tags": [
             "Reentry"
         ]
     },
     {
-        "name": "AJ10_190",
+        "name": "RO-RE-AJ10-190",
         "title": "AJ10-190",
         "description": "Low thrust pressure-fed hypergolic engine. It was used on the Space Shuttle for orbital insertion, maneuvering and deorbiting. Currently used by the Orion MPCV. Diameter: [1.17 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -94,12 +94,12 @@
         "spacecraft": "Shuttle",
         "engine_config": "AJ10_190",
         "upgrade": false,
-        "entry_cost_mods": "10000, AJ10-137",
+        "entry_cost_mods": "AJ10-190",
         "identical_part_name": "AJ10-190",
         "module_tags": []
     },
     {
-        "name": "AJ10_37",
+        "name": "RO-RE-AJ10-37",
         "title": "AJ10 Series (Early)",
         "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This is the original Vanguard second stage / Able / Delta configuration, without restart capability. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -117,7 +117,7 @@
         "spacecraft": "AJ10 (Early)",
         "engine_config": "AJ10_Early",
         "upgrade": false,
-        "entry_cost_mods": "8000, AJ10-27",
+        "entry_cost_mods": "AJ10-37",
         "identical_part_name": "AJ10 (Early)",
         "module_tags": [
             "EngineLiquidPF",
@@ -125,7 +125,7 @@
         ]
     },
     {
-        "name": "J2",
+        "name": "RO-RE-J2",
         "title": "J-2 Series",
         "description": "The Rocketdyne J-2 rocket engine found on the Saturn S-IVB and S-II stages. Ensure you enable roll capability or disable gimbal as required for your application. Diameter: [2.01 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -143,7 +143,7 @@
         "spacecraft": "Saturn V (J-2)",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "30000, J-2-200klbf",
+        "entry_cost_mods": "J-2-200klbf",
         "identical_part_name": "J-2",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -151,7 +151,7 @@
         ]
     },
     {
-        "name": "LMAE",
+        "name": "RO-RE-LMAE",
         "title": "Lunar Module Ascent Engine",
         "description": "",
         "mod": "RealEngines",
@@ -177,7 +177,7 @@
         ]
     },
     {
-        "name": "LMDE",
+        "name": "RO-RE-LMDE",
         "title": "Lunar Module Descent Engine",
         "description": "",
         "mod": "RealEngines",
@@ -203,7 +203,7 @@
         ]
     },
     {
-        "name": "NK33engine",
+        "name": "RO-RE-NK33",
         "title": "NK-15/33",
         "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science's Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -228,7 +228,7 @@
         ]
     },
     {
-        "name": "NK43engine",
+        "name": "RO-RE-NK43",
         "title": "NK-15V/43",
         "description": "Originally designed and built for the N1F, the NK-43 is a derivative of the NK-33 with longer bell and restart capability for upper stages. Diameter: [2.54 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -253,7 +253,7 @@
         ]
     },
     {
-        "name": "RD0110engine",
+        "name": "RO-RE-RD0110",
         "title": "RD-0110",
         "description": "An upper stage Kerosene/LOX engine designed for the Molniya launch vehicle. Also be used with the Voskhod and Soyuz launchers. Diameter: [1.7 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -301,7 +301,7 @@
         "module_tags": []
     },
     {
-        "name": "RD0124Aengine",
+        "name": "RO-RE-RD0124A",
         "title": "RD-0124A (Dual)",
         "description": "A dual version of the RD-0124A engine variant, developed for the second stage of the Sunkar launch vehicle. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -324,7 +324,7 @@
         "module_tags": []
     },
     {
-        "name": "RD0124engine",
+        "name": "RO-RE-RD0124",
         "title": "RD-0124",
         "description": "An upper stage Kerosene/LOX engine designed for new versions of the Soyuz-2 launchers. To also be used with the Angara family of launchers. Diameter: [1.7 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -349,7 +349,7 @@
         ]
     },
     {
-        "name": "RD0146engine",
+        "name": "RO-RE-RD0146",
         "title": "RD-0146",
         "description": "A designed based upon the RL10 series of rocket engines, with a more Russian flavour. Diameter: [1.3 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -375,7 +375,7 @@
         ]
     },
     {
-        "name": "RD0210",
+        "name": "RO-RE-RD0210",
         "title": "RD-0210/0211",
         "description": "A staged combustion, hypergolic vacuum rocket engine. Used as a power plant on the second stage of the Proton launch vehicle family. Features a two-axis gimbal mechanism for attitude control. Diameter: 1.47 m. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -400,7 +400,7 @@
         ]
     },
     {
-        "name": "RD0212",
+        "name": "RO-RE-RD0212",
         "title": "RD-0212",
         "description": "A gas generator, hypergolic vacuum rocket engine. Used as the power plant on the third stage of Proton launch vehicle family. Features four integrated vernier engines for three-axis attitude control. Diameter: 1.47 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
@@ -425,7 +425,7 @@
         ]
     },
     {
-        "name": "RD107",
+        "name": "RO-RE-RD107",
         "title": "RD-107 Series",
         "description": "Booster engine for the R-7 Semyorka and its derivatives, including the Sputnik, Luna, Voskhod, Vostok, Soyuz, and Molniya launch vehicles. Differs from the core engine series (RD-108) with a higher chamber pressure, thrust, and smaller vernier layout. The R-7 family core was supplemented for (roughly) two minutes by four strap-on boosters powered by these engines. Diameter: [1.85 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -450,7 +450,7 @@
         ]
     },
     {
-        "name": "RD108",
+        "name": "RO-RE-RD108",
         "title": "RD-108 Series",
         "description": "Core engine for the R-7 Semyorka and its derivatives, including the Sputnik, Luna, Voskhod, Vostok, Soyuz, and Molniya launch vehicles.  Differs from the booster engine series (RD-107) with a lower chamber pressure, thrust, and a wider vernier layout.  Powers the R-7 family core through a very long (roughly) five minute burn that starts on the pad alongside the boosters. Diameter: [1.85 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -475,7 +475,7 @@
         ]
     },
     {
-        "name": "RD120",
+        "name": "RO-RE-RD120",
         "title": "RD-120 Series",
         "description": "The RD-120 is a staged combustion vacuum kerolox engine, used as the main power plant on the Zenit launch vehicle family second stage. Diameter: 2.0 m Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
@@ -521,7 +521,7 @@
         "module_tags": []
     },
     {
-        "name": "RD170engine",
+        "name": "RO-RE-RD170",
         "title": "RD-170 Series",
         "description": "1980s to present, High TWR, atmospheric booster engine. The RD-170 is the most powerful liquid rocket engine ever flown. Originally developed for the Energia launcher's boosters, the engine consists of four combustion chambers fed by a single turbopump. A modified version, the RD-171, is used on the first stage of the Zenit launch vehicle. Diameter: [3.8 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -546,7 +546,7 @@
         ]
     },
     {
-        "name": "RD180engine",
+        "name": "RO-RE-RD180",
         "title": "RD-180",
         "description": "The RD-180 is a two-chamber derivative of the four-chamber RD-170/171 and powers the first stage of the Atlas V. Diameter: [3.5 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -571,7 +571,7 @@
         ]
     },
     {
-        "name": "RD191engine",
+        "name": "RO-RE-RD191",
         "title": "RD-191",
         "description": "A further continuation of the RD-170/171 series, featuring a single combustion chamber and nozzle. The RD-191 powers the Angara family of launchers, while the RD-151 was used on the Naro-1 launch vehicle and the RD-181 will be used on the Antares 200-series. Diameter: [1.7 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -596,7 +596,7 @@
         ]
     },
     {
-        "name": "RD275",
+        "name": "RO-RE-RD275",
         "title": "RD-253/RD-275",
         "description": "A high thrust engine designed for use with storable propellants. In use with the Proton series of rockets. Diameter: [2.0 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -621,7 +621,7 @@
         ]
     },
     {
-        "name": "RD58",
+        "name": "RO-RE-RD58",
         "title": "S1.5400/RD-58 Series",
         "description": "World's first closed-cycle kerolox vacuum engine. The S1.5400 served as an R-7 upper stage and the RD-58 (an upgrade) as upper stage / OMS for many Soviet and Russian launchers and spacecraft (Proton, N1, Zenit, Buran...). The S1.5400 was designed for the Blok L stage which was the final stage for the Molniya configuration of the R-7, used to launch communication satellites and interplanetary probes. Unlike prior upper stages, it was restartable (this was needed to perform apogee kick to place Molniya satellites in their final orbits). It was given the industry designation 11D33. An upgraded version, termed 11D33M, had slightly improved performance. The RD-58 is a derivative of the 11D33M engine with higher performance (industry designation 11D58); it has been used on many Russian launchers and is still in use today on Proton and Zenit. In comparison to hydrolox upper stages, kerolox ones do not suffer boiloff as badly and need far less volume (kerosene being far denser than liquid hydrogen), but have much lower specific impulse. Diameter: [2.0 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -646,7 +646,7 @@
         ]
     },
     {
-        "name": "RD8",
+        "name": "RO-RE-RD8",
         "title": "RD-8",
         "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
@@ -669,7 +669,7 @@
         "module_tags": []
     },
     {
-        "name": "Raptor_Vacuum",
+        "name": "RO-RE-RaptorVac",
         "title": "Raptor Engine (Vacuum)",
         "description": "",
         "mod": "RealEngines",
@@ -695,7 +695,7 @@
         ]
     },
     {
-        "name": "Raptor_engine",
+        "name": "RO-RE-Raptor",
         "title": "Raptor Engine",
         "description": "",
         "mod": "RealEngines",
@@ -721,7 +721,7 @@
         ]
     },
     {
-        "name": "S5_92fversion",
+        "name": "RO-RE-S5-92F",
         "title": "S5.92",
         "description": "A gas generator cycle hypergolic vacuum engine. Used on the Fregat upper stage series. Diameter: 0.85 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
@@ -744,7 +744,7 @@
         "module_tags": []
     },
     {
-        "name": "S5_98M",
+        "name": "RO-RE-S5-98M",
         "title": "S5.98M",
         "description": "A staged combustion cycle hypergolic vacuum engine. Used on the Briz upper stage series. Diameter: 0.95 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
@@ -767,7 +767,7 @@
         "module_tags": []
     },
     {
-        "name": "SSME_Engine",
+        "name": "RO-RE-SSME",
         "title": "RS-25 (SSME)",
         "description": "The RS-25, also known as the Space Shuttle Main Engine (SSME), is a LH2/LOX fuel-rich staged combustion engine. Though complex and expensive, these engines provide very high performance and are extremely reliable. Three of these engines powered each Shuttle Orbiter and four will be used on the core stage of the SLS. Diameter: [2.4 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -793,7 +793,7 @@
         ]
     },
     {
-        "name": "STEERING_MOTOR_RD0110engine",
+        "name": "RO-RE-RD0110",
         "title": "RD-0110 Vernier",
         "description": "The vernier engine for the RD-0110 power plant. Four of them are used on the Block I upper stage of the Soyuz U and FG launch vehicle variants for attitude control. Diameter: 0.3 m Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -818,7 +818,7 @@
         ]
     },
     {
-        "name": "SuperDrago",
+        "name": "RO-RE-SuperDraco",
         "title": "SuperDraco Dual Engine Block",
         "description": "The integrated dual SuperDraco engine block used by the Dragon V2 spacecraft for powered landings, trajectory corrections and as a Launch Abort System (LAS).",
         "mod": "RealEngines",
@@ -843,7 +843,7 @@
         ]
     },
     {
-        "name": "rd0120",
+        "name": "RO-RE-RD0120",
         "title": "RD-0120",
         "description": "1980s medium TWR, atmospheric and vacuum use. The RD-0120 is a fuel-rich staged combustion engine developed to power the core stage of the Energia launcher. Diameter: [2.6 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
@@ -870,7 +870,7 @@
         ]
     },
     {
-        "name": "rd100",
+        "name": "RO-RE-RD100",
         "title": "RD-100 Series (Early)",
         "description": "The RD-100 engine series were the first large scale Ethalox Russian liquid propellant rocket engines ever developed and fired. The original RD-100 engine was a 1:1 copy of the German Model 39 engine (used on the A-4 ballistic missile), with later variants (RD-101 and RD-103/M) featuring ever increasing performance to satisfy the needs of the larger R-2 and R-5 IRBMs. Diameter: 1.65 m. Plume configured by RealPlume.",
         "mod": "RealEngines",

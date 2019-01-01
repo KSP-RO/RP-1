@@ -18,7 +18,7 @@
         "spacecraft": "Molniya",
         "engine_config": "RD58",
         "upgrade": true,
-        "entry_cost_mods": "1000",
+        "entry_cost_mods": "5000, S1-5400",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -41,7 +41,7 @@
         "spacecraft": "Molniya-M",
         "engine_config": "RD58",
         "upgrade": true,
-        "entry_cost_mods": "2000",
+        "entry_cost_mods": "5000, S1-5400",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -64,7 +64,7 @@
         "spacecraft": "Buran",
         "engine_config": "RD58",
         "upgrade": true,
-        "entry_cost_mods": "20000",
+        "entry_cost_mods": "5000, RD-58M, RD58-FamSyntin",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -89,7 +89,7 @@
         "spacecraft": "N1 Block A (1st Stage)",
         "engine_config": "N1_BlockA",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -112,7 +112,7 @@
         "spacecraft": "N1F Block A (1st Stage)",
         "engine_config": "N1_BlockA",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-33",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -135,7 +135,7 @@
         "spacecraft": "N1 Block V (3rd stage)",
         "engine_config": "N1_BlockV",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-21",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -158,7 +158,7 @@
         "spacecraft": "N1F Block V (3rd stage)",
         "engine_config": "N1_BlockV",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-39",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -181,7 +181,7 @@
         "spacecraft": "N1 Block B (2nd Stage)",
         "engine_config": "N1_BlockB",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15V",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -204,7 +204,7 @@
         "spacecraft": "N1F Block B (2nd Stage)",
         "engine_config": "N1_BlockB",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-43",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -227,7 +227,7 @@
         "spacecraft": "V-2",
         "engine_config": "A-4",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -664,7 +664,7 @@
         "spacecraft": "Antares-100",
         "engine_config": "NK33",
         "upgrade": true,
-        "entry_cost_mods": "20000",
+        "entry_cost_mods": "10000, NK-33",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -917,7 +917,7 @@
         "spacecraft": "Bimodal NTR",
         "engine_config": "BNTR",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "139000, PEWEE100-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2092,7 +2092,7 @@
         "spacecraft": "",
         "engine_config": "KIWIA24",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "16000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2115,7 +2115,7 @@
         "spacecraft": "",
         "engine_config": "KIWIB48",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "33000, KIWIA24-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3888,7 +3888,7 @@
         "spacecraft": "",
         "engine_config": "NERVA",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "41000, NERVA-XE-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3911,7 +3911,7 @@
         "spacecraft": "",
         "engine_config": "NERVAII",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "139000, Pheobus2N100-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3934,7 +3934,7 @@
         "spacecraft": "",
         "engine_config": "NERVA_NRX",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "33000, KIWIB48-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3957,7 +3957,7 @@
         "spacecraft": "",
         "engine_config": "NERVA_XE",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "72000, KIWIB48-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3980,7 +3980,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK15-SubFam",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4003,7 +4003,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4026,7 +4026,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK15-SubFam, NK-Vacuum",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4049,7 +4049,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-15V",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4072,7 +4072,7 @@
         "spacecraft": "N1 Block G",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-9V, NK-Throttling, 5000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4095,7 +4095,7 @@
         "spacecraft": "N1 Block V",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-19",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4118,7 +4118,7 @@
         "spacecraft": "N1F Block G",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-19, NK-Reign",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4141,7 +4141,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": true,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "NK-33Upgrade",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4164,7 +4164,7 @@
         "spacecraft": "",
         "engine_config": "NK33",
         "upgrade": false,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "NK-33",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4187,7 +4187,7 @@
         "spacecraft": "N1F Block V",
         "engine_config": "NK9V",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "10000, NK-19",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4210,7 +4210,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": true,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "NK-33Upgrade, NK-Vacuum",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4233,7 +4233,7 @@
         "spacecraft": "",
         "engine_config": "NK43",
         "upgrade": false,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "NK-43",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4256,7 +4256,7 @@
         "spacecraft": "GR-1",
         "engine_config": "NK9",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK9-SubFam",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4279,7 +4279,7 @@
         "spacecraft": "GR-1",
         "engine_config": "NK9",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-9, 2000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4302,7 +4302,7 @@
         "spacecraft": "GR-1",
         "engine_config": "NK9",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-9-1969, 2000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4325,7 +4325,7 @@
         "spacecraft": "GR-1",
         "engine_config": "NK9",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK-9-1972, 5000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4348,7 +4348,7 @@
         "spacecraft": "GR-1",
         "engine_config": "NK9V",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "NK9-SubFam, NK-Vacuum",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4440,7 +4440,7 @@
         "spacecraft": "",
         "engine_config": "PEWEE100",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "13000, Phoebus1N50-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4463,7 +4463,7 @@
         "spacecraft": "",
         "engine_config": "Phoebus1N50",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "7000, KIWIB48-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4486,7 +4486,7 @@
         "spacecraft": "",
         "engine_config": "Phoebus2N100",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "132000, Phoebus1N50-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4716,7 +4716,7 @@
         "spacecraft": "Luna",
         "engine_config": "RD0105",
         "upgrade": false,
-        "entry_cost_mods": "20000, R7-Engines",
+        "entry_cost_mods": "R7-Uppers",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4739,7 +4739,7 @@
         "spacecraft": "Molniya",
         "engine_config": "RD0110",
         "upgrade": false,
-        "entry_cost_mods": "15000, RD-0105",
+        "entry_cost_mods": "R7-Vacuum, 5000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4762,7 +4762,7 @@
         "spacecraft": "Vostok",
         "engine_config": "RD0105",
         "upgrade": true,
-        "entry_cost_mods": "2000",
+        "entry_cost_mods": "2000, RD-0105",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4785,7 +4785,7 @@
         "spacecraft": "Molniya-M",
         "engine_config": "RD0110",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "2000, RD-0107",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4923,7 +4923,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD0210",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "40000, Proton-Family",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4946,7 +4946,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD0212",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "5000, RD-0210",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4969,7 +4969,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD0213",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "RD-0212",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4992,7 +4992,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD0214",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "RD-0212",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5038,7 +5038,7 @@
         "spacecraft": "",
         "engine_config": "RD0410MID",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "9000",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5130,7 +5130,7 @@
         "spacecraft": "RD-103",
         "engine_config": "RD100",
         "upgrade": true,
-        "entry_cost_mods": "7000, RD-102, RD-103TP",
+        "entry_cost_mods": "7000, RD-103TP",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5912,7 +5912,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD253",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "60000, Proton-Family",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -5937,7 +5937,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD253",
         "upgrade": true,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "10000, RD-253za",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -5962,7 +5962,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD253",
         "upgrade": true,
-        "entry_cost_mods": "20000",
+        "entry_cost_mods": "10000, RD-253-Mk2",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -6033,7 +6033,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD253",
         "upgrade": true,
-        "entry_cost_mods": "40000",
+        "entry_cost_mods": "20000, RD-253-Mk4",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -6058,7 +6058,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD253",
         "upgrade": true,
-        "entry_cost_mods": "60000",
+        "entry_cost_mods": "20000, RD-275",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -6152,7 +6152,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD58",
         "upgrade": true,
-        "entry_cost_mods": "10000",
+        "entry_cost_mods": "10000, 11D33M, 11D33",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6175,7 +6175,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD58",
         "upgrade": true,
-        "entry_cost_mods": "15000",
+        "entry_cost_mods": "5000, RD-58",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6198,7 +6198,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD58",
         "upgrade": true,
-        "entry_cost_mods": "20000",
+        "entry_cost_mods": "5000, RD-58M",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6221,7 +6221,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD58",
         "upgrade": true,
-        "entry_cost_mods": "25000",
+        "entry_cost_mods": "5000, RD-58, RD58-FamSyntin",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7003,7 +7003,7 @@
         "spacecraft": "Molniya",
         "engine_config": "RD58",
         "upgrade": false,
-        "entry_cost_mods": "10000, StagedKerolox, RD0105",
+        "entry_cost_mods": "RD58-Family",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7141,7 +7141,7 @@
         "spacecraft": "",
         "engine_config": "SNTPPFE100",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "135000, Phoebus2N100-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },

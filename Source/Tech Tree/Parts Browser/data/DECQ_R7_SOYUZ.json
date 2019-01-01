@@ -314,7 +314,7 @@
         "description": "An upper stage Kerosene/LOX engine designed for the Molniya launch vehicle. Also be used with the Voskhod and Soyuz launchers. Diameter: [1.7 m]. Plume configured by RealPlume.",
         "mod": "DECQ R7/SOYUZ",
         "cost": "350",
-        "entry_cost": "8000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1960",

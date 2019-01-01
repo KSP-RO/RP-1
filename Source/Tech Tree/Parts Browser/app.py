@@ -3,6 +3,7 @@ import json
 
 from flask import jsonify
 from part_data import PartData
+from ecm_data import ECMData
 from tech_mapping import TechMapping
 from flask import Flask, g
 from flask import Blueprint, abort, g, render_template, redirect, request, url_for
@@ -15,6 +16,7 @@ from identical_parts_cfg_generator import generate_identical_parts
 
 part_data = PartData()
 tech_mapping = TechMapping()
+ecm_data = ECMData(part_data.parts)
 
 tech_mapping.validate_current(part_data.parts)
 
@@ -47,6 +49,9 @@ def create_app(test_config=None):
     @app.route('/api/part_data')
     def all_part_data():
         return jsonify({"data": part_data.parts})
+    @app.route('/api/ecm_data')
+    def get_ecm_data():
+        return jsonify(ecm_data.get_data())
     
     @app.route('/api/unique_values_for_column/<column_name>')
     def unique_values_for_column(column_name):
@@ -169,6 +174,16 @@ def dashboard():
         return render_template("browser/dashboard.html", parts=part_data.parts)
 
     return render_template("browser/dashboard.html", parts=part_data.parts)
+
+@bp.route("/ecm-tree", methods=["GET", "POST"])
+def ecm_tree():
+    """
+    Render the ecm tree view page.
+    """
+    if request.method == "GET":
+        return render_template("browser/ecm-tree.html")
+
+    return render_template("browser/ecm-tree.html")
 
 
 if __name__ == "__main__":

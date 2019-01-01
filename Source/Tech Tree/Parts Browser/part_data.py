@@ -63,6 +63,23 @@ class PartData:
                 self.parts.extend(data)
                 print(f'Loaded {len(data)} parts from {file_name}')
         self.parts.sort(key=lambda x: x['name'] if x['name'].lower() is not None and len(x['name']) > 0 else x['title'].lower())
+        
+        # find any duplicate part names and report them
+        unique_names = {}
+        duplicates = {}
+        for part in self.parts:
+            name = part['name'] if part['mod'] != 'Engine Config' else part['title']
+            if name in unique_names:
+                if name not in duplicates:
+                    duplicates[name] = [unique_names[name]]
+                duplicates[name].append(part['mod'])
+            unique_names[name] = part['mod']
+            
+        for name in duplicates:
+            if len(name) > 0:
+                print(f"Found duplicate parts with name '{name}' in mods: {str(duplicates[name])}")
+            
+
             
     # gets a list of unique values for each column we specified above, for filtering in the datatable.
     def index_columns(self):

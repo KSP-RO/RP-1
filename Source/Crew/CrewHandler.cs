@@ -116,10 +116,8 @@ namespace RP0.Crew
         [KSPField(isPersistant = true)]
         public double nextUpdate = -1d;
 
-        protected double updateInterval = 3600d;
-
-
-
+        public double updateInterval = 3600d;
+        
         public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
@@ -163,7 +161,7 @@ namespace RP0.Crew
             GameEvents.onGameStateLoad.Add(LoadSettings);
 
             cliTooltip = typeof(KSP.UI.CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
-
+            
             FindAllCourseConfigs(); //find all applicable configs
             GenerateOfferedCourses(); //turn the configs into offered courses
         }
@@ -221,6 +219,7 @@ namespace RP0.Crew
             }
 
             TrainingDatabase.Initialize();
+            KACWrapper.InitKACWrapper();
         }
 
         public override void OnSave(ConfigNode node)
@@ -290,7 +289,12 @@ namespace RP0.Crew
             double time = Planetarium.GetUniversalTime();
             if (nextUpdate < time)
             {
-                nextUpdate = time + updateInterval;
+                // Ensure that CrewHandler updates happen at predictable times so that accurate KAC alarms can be set.
+                do
+                {
+                    nextUpdate += updateInterval;
+                }
+                while (nextUpdate < time);
 
                 if (retirementEnabled)
                 {

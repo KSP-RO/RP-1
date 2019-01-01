@@ -1663,7 +1663,7 @@
         "spacecraft": "F-1A ETS",
         "engine_config": "F-1A_ETS",
         "upgrade": false,
-        "entry_cost_mods": "F-1A_ETS",
+        "entry_cost_mods": "F-1A-ETS",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",

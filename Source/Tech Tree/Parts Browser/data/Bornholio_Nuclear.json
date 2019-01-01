@@ -68,7 +68,7 @@
         "spacecraft": "",
         "engine_config": "NERVA_NRX",
         "upgrade": false,
-        "entry_cost_mods": "NERVA_NRX-Hydrogen",
+        "entry_cost_mods": "NERVA-NRX-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -93,7 +93,7 @@
         "spacecraft": "",
         "engine_config": "NERVA_XE",
         "upgrade": false,
-        "entry_cost_mods": "NERVA_XE-Hydrogen",
+        "entry_cost_mods": "NERVA-XE-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"

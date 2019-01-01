@@ -1135,7 +1135,7 @@
         "spacecraft": "N-1",
         "engine_config": "N1_BlockB",
         "upgrade": false,
-        "entry_cost_mods": "8x_NK-15V",
+        "entry_cost_mods": "8x-NK-15V",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1158,7 +1158,7 @@
         "spacecraft": "N-1",
         "engine_config": "N1_BlockA",
         "upgrade": false,
-        "entry_cost_mods": "30x_NK-15",
+        "entry_cost_mods": "30x-NK-15",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1658,7 +1658,7 @@
         "spacecraft": "N-1",
         "engine_config": "N1_BlockV",
         "upgrade": false,
-        "entry_cost_mods": "4x_NK-21",
+        "entry_cost_mods": "4x-NK-21",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

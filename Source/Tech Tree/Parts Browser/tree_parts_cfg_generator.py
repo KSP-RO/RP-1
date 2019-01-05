@@ -1,5 +1,8 @@
 import part_data
+import os
 from string import Template
+
+output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-0/Tree/")
 
 tree_parts_header = """
 //*********************************************************************************************
@@ -34,7 +37,7 @@ def generate_parts_tree(parts):
         if part['name'] is not None and len(part['name']) > 0:
             if part['mod'] != 'Engine_Config' and not part['orphan']:
                 part_configs += generate_part_config(part)
-    text_file = open("../../../GameData/RP-0/Tree/TREE-Parts.cfg", "w", newline='\n')
+    text_file = open(output_dir + "TREE-Parts.cfg", "w", newline='\n')
     text_file.write(tree_parts_header)
     text_file.write(part_configs)
     text_file.close()

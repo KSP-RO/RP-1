@@ -1,5 +1,8 @@
+import os
 import part_data
 from string import Template
+
+output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-0/Tree/")
 
 tree_engine_header = """
 //*********************************************************************************************
@@ -54,7 +57,7 @@ def generate_engine_tree(parts):
             engine_configs += generate_engine_config(part)
             if 'upgrade' in part and part['upgrade'] is True:
                 part_upgrades += generate_part_upgrade_config(part)
-    text_file = open("../../../GameData/RP-0/Tree/TREE-Engines.cfg", "w", newline='\n')
+    text_file = open(output_dir + "TREE-Engines.cfg", "w", newline='\n')
     text_file.write(tree_engine_header)
     text_file.write(engine_configs)
     text_file.write(tree_engine_mid)

@@ -3,6 +3,9 @@ import json
 import sys
 from os import listdir
 from os.path import isfile, join
+import os
+
+output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-0/Tree/")
 
 class ECMNodeEncoder(json.JSONEncoder):
      def default(self, obj):
@@ -63,7 +66,7 @@ class ECMData:
         return json_data
         
     def load_ecm_data(self, parts):
-        with open('../../../GameData/RP-0/Tree/EntryCostModifiers.cfg', newline="\n") as ecm_file:
+        with open(output_dir + 'EntryCostModifiers.cfg', newline="\n") as ecm_file:
             line_count = 0
             for line in ecm_file:
                 line_count += 1

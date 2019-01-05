@@ -19,6 +19,7 @@ tech_mapping = TechMapping()
 ecm_data = ECMData(part_data.parts)
 
 tech_mapping.validate_current(part_data.parts)
+server_port = os.getenv('FLASK_RUN_PORT', "5000")
 
 def create_app(test_config=None):
 
@@ -141,7 +142,7 @@ def create_app(test_config=None):
         part = part_data.get_part_by_name(change_set['name']);
     
     app.register_blueprint(bp)
-    app.run()    
+    app.run(port=server_port)    
     return app
     
 def make_safe_filename(s):

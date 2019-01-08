@@ -212,8 +212,8 @@
         "spacecraft": "Agena",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "2000, avionicsUpperBasic, avionicsHibernation",
+        "identical_part_name": "Agena Avionics",
         "module_tags": [
             "Avionics"
         ]

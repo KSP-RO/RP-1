@@ -3911,7 +3911,7 @@
         "spacecraft": "",
         "engine_config": "NERVAII",
         "upgrade": false,
-        "entry_cost_mods": "139000, Pheobus2N100-Hydrogen",
+        "entry_cost_mods": "139000, Phoebus2N100-Hydrogen",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5107,7 +5107,7 @@
         "spacecraft": "RD-102",
         "engine_config": "RD100",
         "upgrade": true,
-        "entry_cost_mods": "10000, RD102-TP",
+        "entry_cost_mods": "RD-101, RD102-TP",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5130,7 +5130,7 @@
         "spacecraft": "RD-103",
         "engine_config": "RD100",
         "upgrade": true,
-        "entry_cost_mods": "7000, RD-103TP",
+        "entry_cost_mods": "7000, RD103-TP",
         "identical_part_name": "",
         "module_tags": []
     },

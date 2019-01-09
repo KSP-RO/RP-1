@@ -37,8 +37,9 @@ namespace RP0
             try
             {
                 Debug.Log("[RP-0]: Replacing loading screens.");
+                int loadingScreenIdx = Versioning.version_minor < 4 ? 1 : 3;    // KSP 1.4+ has 2 extra loading screens
 
-                LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[1];
+                LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[loadingScreenIdx];
 
                 List<Texture2D> textures = new List<Texture2D>();
 
@@ -63,7 +64,7 @@ namespace RP0
                 int tC = textures.Count;
                 if (tC > 0)
                 {
-                    LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[1];
+                    LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[loadingScreenIdx];
                     sc.screens = textures.ToArray();
                     sc.displayTime = 8;    // Default value is 4 which causes the images to switch too quickly
 

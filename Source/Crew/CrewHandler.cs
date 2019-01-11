@@ -351,7 +351,9 @@ namespace RP0.Crew
                                 FlightLog.Entry ent = pcm.careerLog[j];
                                 for (int k = eC; k-- > 0;)
                                 {
-                                    if (e.Compare(k, ent))
+                                    // Allow only mission trainings to expire. 
+                                    // This check is actually only needed for old savegames as only these can have expirations on proficiencies.
+                                    if (ent.type == "TRAINING_mission" && e.Compare(k, ent))
                                     {
                                         ScreenMessages.PostScreenMessage(pcm.name + ": Expired: " + GetPrettyCourseName(ent.type) + ent.target);
                                         ent.type = "expired_" + ent.type;

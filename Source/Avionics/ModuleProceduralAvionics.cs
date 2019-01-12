@@ -229,7 +229,6 @@ namespace RP0.ProceduralAvionics
 			avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
 
 			AvionicsConfigChanged();
-			ResetTo100();
 		}
 
 		private void AvionicsConfigChanged()
@@ -243,6 +242,7 @@ namespace RP0.ProceduralAvionics
             Log("Setting tech node to ", avionicsTechLevel);
             oldAvionicsConfigName = avionicsConfigName;
             SetInternalKSPFields();
+            ResetTo100();
             ClampInternalMassLimit();
             SetMinVolume(true);
             UpdateMaxValues();
@@ -322,14 +322,12 @@ namespace RP0.ProceduralAvionics
 		#region part attribute calculations
 		private float CalculateNewMass()
 		{
-			if (HighLogic.LoadedSceneIsFlight) {
+			if (HighLogic.LoadedSceneIsFlight || maxDensityOfAvionics > 0) {
 				return DoMassCalculation();
 			}
 			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
-				//Standard density is 4/3s of maximum density
-				//Log("Current Tech node standard density: ", CurrentProceduralAvionicsTechNode.standardAvionicsDensity);
-				maxDensityOfAvionics = (CurrentProceduralAvionicsTechNode.standardAvionicsDensity * 4) / 3;
-				tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
+                Log("Not yet initialized but getmass called!?");
+                SetInternalKSPFields();
 				return DoMassCalculation();
 			}
 			else {
@@ -396,9 +394,12 @@ namespace RP0.ProceduralAvionics
 
 		private void ResetTo100()
 		{
-			float value = cachedVolume * maxDensityOfAvionics * tonnageToMassRatio;
-			Log("100% utilization calculated as ", value);
-			proceduralMassLimit = value;
+            if(cachedVolume == float.MaxValue)
+            {
+                return;
+            }
+            proceduralMassLimit = cachedVolume * maxDensityOfAvionics * tonnageToMassRatio;
+			Log("100% utilization calculated as ", proceduralMassLimit);
 		}
 
 		private void UpdateMaxValues()
@@ -519,6 +520,7 @@ namespace RP0.ProceduralAvionics
             Log("avionics tech level: ", avionicsTechLevel);
 
             tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
+            maxDensityOfAvionics = CurrentProceduralAvionicsTechNode.standardAvionicsDensity * 4 / 3;
             costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
             enabledProceduralW = CurrentProceduralAvionicsTechNode.enabledProceduralW;
             disabledProceduralW = CurrentProceduralAvionicsTechNode.disabledProceduralW;
@@ -744,7 +746,6 @@ namespace RP0.ProceduralAvionics
 						currentProceduralAvionicsConfig = currentlyDisplayedConfigs;
 						avionicsConfigName = guiAvionicsConfigName;
 						AvionicsConfigChanged();
-                        ResetTo100();
                     }
 				}
 			}

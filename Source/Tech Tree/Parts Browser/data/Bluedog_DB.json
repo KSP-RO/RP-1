@@ -2351,7 +2351,7 @@
         ]
     },
     {
-        "name": "bluedog_rl10",
+        "name": "bluedog_centaur_rl10",
         "title": "RL10 Series Vacuum Engine",
         "description": "Hydrolox restartable expander-cycle vacuum engine used in multiple upper stages, including Centaur, the Saturn I S-IV, and the Delta Cryogenic Second Stage. It has low thrust, but very high specific impulse and low mass, making it ideal for high energy, beyond-low-Earth-orbit applications like launching satellites to geostationary transfer orbits or to the Moon or other planets. However, like all hydrolox engines, hydrogen boiloff is a serious issue without heat pumps or radiators. Diameter: [0.92 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",

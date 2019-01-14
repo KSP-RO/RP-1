@@ -9,6 +9,7 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     class LoadingScreenChanger : MonoBehaviour
     {
+        public const string TipFilePath = @"GameData\RP-0\PluginData\LoadingScreenTips.txt";
         protected bool done = false;
 
         protected void Awake()
@@ -68,6 +69,12 @@ namespace RP0
                     sc.screens = textures.ToArray();
                     sc.displayTime = 8;    // Default value is 4 which causes the images to switch too quickly
 
+                    var newTips = LoadTips();
+                    if (newTips?.Length > 0)
+                    {
+                        sc.tips = newTips;
+                    }
+
                     string msgStr = "[RP-0]: Loading screens replaced.";
 
                     Debug.Log(msgStr);
@@ -87,6 +94,12 @@ namespace RP0
             done = true;
         }
 
+        private string[] LoadTips()
+        {
+            if (!File.Exists(TipFilePath)) return null;
+
+            return File.ReadAllLines(TipFilePath);
+        }
 
         // DDS Loader by Sarbian
 

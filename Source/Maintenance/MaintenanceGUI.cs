@@ -112,7 +112,7 @@ namespace RP0
                     continue;
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label(String.Format("  level {0} × {1}", i, MaintenanceHandler.Instance.kctPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label(String.Format("  level {0} × {1}", i + 1, MaintenanceHandler.Instance.kctPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
                     GUILayout.Label((MaintenanceHandler.Instance.padCosts[i] * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();

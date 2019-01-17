@@ -40,7 +40,7 @@ namespace RP0
                 if (ptd.part.maximum_drag == float.MinValue)
                 {
                     ptd.convectionTempMultiplier = Math.Max(ptd.convectionTempMultiplier, 0.5d);
-                    ptd.convectionTempMultiplier = Math.Max(ptd.convectionCoeffMultiplier, 0.5d);
+                    ptd.convectionCoeffMultiplier = Math.Max(ptd.convectionCoeffMultiplier, 0.5d);
                 }
             }
         }

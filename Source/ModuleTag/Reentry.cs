@@ -8,7 +8,10 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            return "Contains reentry equipment";
+            string str = string.Empty;
+            str = "Contains reentry equipment that needs proper integration and testing for safety. It will increase the overall rollout costs.\n\n" +
+                "<b><color=orange>Rollout Cost: Cost of This Part * 2.0</color></b>";
+            return str;
         }
     }
 }

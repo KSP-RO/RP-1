@@ -8,7 +8,10 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            return "Contains a pump-fed liquid rocket engine";
+            string str = string.Empty;
+            str = "Contains a pump-fed liquid rocket engine. The turbopump is a very complicated piece of machinery that requires extensive testing. Overall this will increase the rollout costs.\n\n" +
+                "<b><color=orange>Rollout Cost: Cost of This Part * 4.0</color></b>";
+            return str;
         }
     }
 }

@@ -5,7 +5,7 @@
         "description": "A two-person pod. Features an offset Center of Mass to allow lifting reentry and an integrated bipropellant Attitude Control System (ACS) for controlled reentries. Heat shield rated for LEO reentries.",
         "mod": "K2 Command Pod",
         "cost": "6120",
-        "entry_cost": "322000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",
         "year": "1965",
@@ -18,7 +18,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "30000,capsulesSecondGen",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",

@@ -9,6 +9,7 @@ namespace RP0
     public class ModuleNoEVA : PartModule
     {
         protected List<Collider> airlocks = new List<Collider>();
+        protected Transform airlock = null;
         public override string GetInfo()
         {
             return "Cannot EVA from this part. Can still exit when landed on Earth or flying at low (20km) altitude.";
@@ -23,10 +24,15 @@ namespace RP0
             foreach (var c in part.GetComponentsInChildren<Collider>())
                 if (c.gameObject.tag == "Airlock")
                     airlocks.Add(c);
+
+            airlock = part.airlock;
         }
 
         protected void FixedUpdate()
         {
+            if (!HighLogic.LoadedSceneIsFlight || vessel == null || vessel.mainBody == null || airlocks == null)
+                return;
+
             bool evaOK = vessel.mainBody == Planetarium.fetch.Home &&
                 (vessel.situation == Vessel.Situations.LANDED
                     || vessel.situation == Vessel.Situations.PRELAUNCH
@@ -45,6 +51,16 @@ namespace RP0
                     if (c.gameObject.tag == "Airlock")
                         c.gameObject.tag = "Untagged";
                 }
+            }
+
+            if (evaOK)
+            {
+                if (part.airlock != airlock)
+                    part.airlock = airlock;
+            }
+            else
+            {
+                part.airlock = null;
             }
         }
     }

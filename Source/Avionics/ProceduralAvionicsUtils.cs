@@ -7,12 +7,12 @@ namespace RP0.ProceduralAvionics
 {
 	static class ProceduralAvionicsUtils
 	{
-		private static bool ENABLED = false;
+		private static bool _enableLogging = false;
 
 		private const string logPreix = "[ProcAvi] - ";
 		public static void Log(params string[] message)
 		{
-			if (ENABLED) {
+			if (_enableLogging) {
 				var builder = StringBuilderCache.Acquire();
 				builder.Append(logPreix);
 				foreach (string part in message) {
@@ -24,7 +24,7 @@ namespace RP0.ProceduralAvionics
 
 		public static void Log(params object[] parts)
 		{
-			if (ENABLED) {
+			if (_enableLogging) {
 				var builder = StringBuilderCache.Acquire();
 				builder.Append(logPreix);
 				foreach (object part in parts) {

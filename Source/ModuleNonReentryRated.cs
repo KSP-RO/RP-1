@@ -39,8 +39,13 @@ namespace RP0
                 PartThermalData ptd = fi.partThermalDataList[i];
                 if (ptd.part.maximum_drag == float.MinValue)
                 {
+                    var part = ptd.part;
+
                     ptd.convectionTempMultiplier = Math.Max(ptd.convectionTempMultiplier, 0.5d);
                     ptd.convectionCoeffMultiplier = Math.Max(ptd.convectionCoeffMultiplier, 0.5d);
+
+                    ptd.postShockExtTemp = UtilMath.LerpUnclamped(part.vessel.atmosphericTemperature, part.vessel.externalTemperature, ptd.convectionTempMultiplier);
+                    ptd.finalCoeff = part.vessel.convectiveCoefficient * ptd.convectionArea * 0.001d * part.heatConvectiveConstant * ptd.convectionCoeffMultiplier;
                 }
             }
         }

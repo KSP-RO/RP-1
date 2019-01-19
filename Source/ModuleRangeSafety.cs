@@ -10,7 +10,17 @@ namespace RP0
         [KSPEvent(guiActive = true, guiName = "Range Safety")]
         public void BoomEvent()
         {
-            Boom();
+            SpawnConfirmationDialog();
+        }
+
+        private void SpawnConfirmationDialog()
+        {
+            var options = new DialogGUIBase[] {
+                new DialogGUIButton("Yes", Boom),
+                new DialogGUIButton("No", () => {})
+            };
+            var dialog = new MultiOptionDialog("ConfirmRangeSafety", "Destroy Vessel?", "Range Safety", HighLogic.UISkin, 300, options);
+            PopupDialog.SpawnPopupDialog(dialog, true, HighLogic.UISkin);
         }
 
         [KSPAction("Range Safety")]

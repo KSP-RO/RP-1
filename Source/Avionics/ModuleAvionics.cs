@@ -125,11 +125,21 @@ namespace RP0
             currentWatts *= 1000f;
         }
 
+        protected void OnConfigurationUpdated()
+        {
+            SetActionsAndGui();
+        }
+
         private void SetActionsAndGui()
         {
-            Events["ToggleEvent"].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
-            Actions["ActivateAction"].active = !systemEnabled;
-            Actions["ShutdownAction"].active = systemEnabled;
+            var toggleAble = GetToggleable();
+            Events[nameof(ToggleEvent)].guiActive = toggleAble;
+            Events[nameof(ToggleEvent)].guiActiveEditor = toggleAble;
+            Events[nameof(ToggleEvent)].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
+            Actions[nameof(ActivateAction)].active = (!systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
+            Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
+            Actions[nameof(ToggleAction)].active = toggleAble;
+            Fields[nameof(currentWatts)].guiActive = toggleAble;
         }
 
         protected void StageActivated(int stage)
@@ -200,14 +210,6 @@ namespace RP0
             }
             //We want to call UpdateRate all the time to capture anything from proceduralAvionics
             UpdateRate();
-
-            Fields["currentWatts"].guiActive = 
-                Events["ToggleEvent"].guiActive =
-                Events["ToggleEvent"].guiActiveEditor = 
-                Actions["ToggleAction"].active =
-                Actions["ActivateAction"].active =
-                Actions["ShutdownAction"].active = GetToggleable();
-
             SetActionsAndGui();
         }
 

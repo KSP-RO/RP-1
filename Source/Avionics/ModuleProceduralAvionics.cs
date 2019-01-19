@@ -246,6 +246,7 @@ namespace RP0.ProceduralAvionics
             ClampInternalMassLimit();
             SetMinVolume(true);
             UpdateMaxValues();
+            OnConfigurationUpdated();
             RefreshDisplays();
 		}
 

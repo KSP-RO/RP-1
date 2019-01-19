@@ -48,9 +48,9 @@ namespace RP0
                 var part = ptd.part;
                 if(parts.Contains(part))
                 {
-                    ptd.convectionTempMultiplier = Math.Max(ptd.convectionTempMultiplier, 0.5d);
-                    ptd.convectionCoeffMultiplier = Math.Max(ptd.convectionCoeffMultiplier, 0.5d);
-                    ptd.convectionAreaMultiplier = Math.Max(ptd.convectionAreaMultiplier, 0.5d);
+                    ptd.convectionTempMultiplier = Math.Max(ptd.convectionTempMultiplier, 0.75d);
+                    ptd.convectionCoeffMultiplier = Math.Max(ptd.convectionCoeffMultiplier, 0.75d);
+                    ptd.convectionAreaMultiplier = Math.Max(ptd.convectionAreaMultiplier, 0.75d);
 
                     ptd.postShockExtTemp = UtilMath.LerpUnclamped(part.vessel.atmosphericTemperature, part.vessel.externalTemperature, ptd.convectionTempMultiplier);
                     ptd.finalCoeff = part.vessel.convectiveCoefficient * ptd.convectionArea * 0.001d * part.heatConvectiveConstant * ptd.convectionCoeffMultiplier;

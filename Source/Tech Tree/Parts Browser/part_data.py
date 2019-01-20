@@ -21,12 +21,19 @@ class PartData:
         "year": set()
         }
 
-    module_tags = ["Avionics","DecreaseA","DecreaseB","EngineLiquidPF",
-            "EngineLiquidTurbo","EngineSolid", "Habitable","HumanRated","Instruments",
-            "Nuclear","Reentry","Toxic","Decoupler","Hydrolox","TankBalloon","TankServiceModule","NonReentryRated","UnpressurizedCockpit"]
+    module_tags = {}
             
     column_index = {}
     
+    def load_module_tags(self):
+        with open('module_tags.csv') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            line_count = 0
+            for row in csv_reader:
+                line_count += 1
+                self.module_tags[row[0]] = row[1]
+            print(f"Loaded {line_count} module tags.")
+            
     def get_part_by_name(self, name):
         print(f'Getting part with name: {name}')
         for part in self.parts:
@@ -44,10 +51,12 @@ class PartData:
     
     def __init__(self):
         """Load the parts from the json files."""
+        self.load_module_tags()
         self.load_parts_json()
         print(f'Initialized the database.')
         self.index_columns()
         print(f'Indexed the columns.')
+        
         
     # loads the parts from the json files in the data directory 
     #(if running from flask or python, we use data/ for json file location, 
@@ -137,7 +146,7 @@ class PartData:
         if part['technology'] == 'start':
             part['technology'] = 'unlockParts'
         
-        for module_tag in self.module_tags:
+        for module_tag in list(self.module_tags.keys()):
             if self.get_tag(row, module_tag):
                 part["module_tags"].append(module_tag)
         

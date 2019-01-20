@@ -59,6 +59,12 @@ def create_app(test_config=None):
         sorted_values = list(part_data.unique_values_for_columns[column_name])
         sorted_values.sort()
         return jsonify({"data": sorted_values})
+    @app.route('/api/module_tags')
+    def module_tags():
+        sorted_values = list(part_data.module_tags.keys())
+        sorted_values.sort()
+        return jsonify({"data": list(map(lambda x: {"tag": x}, sorted_values))})
+        
     @app.route('/api/tech_mapping/<category>/<year>')
     def get_tech_mapping(category, year):
         return tech_mapping.get_tech_by_category_and_year(category, year)
@@ -109,7 +115,7 @@ def create_app(test_config=None):
         
     @app.route('/api/generate_all_configs')
     def generate_all_configs():
-        generate_parts_tree(part_data.parts)
+        generate_parts_tree(part_data.parts,part_data.module_tags)
         generate_engine_tree(part_data.parts)
         generate_identical_parts(part_data.parts)
         generate_ecm_parts(part_data.parts)

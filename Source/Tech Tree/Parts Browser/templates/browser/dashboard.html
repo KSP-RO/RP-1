@@ -181,28 +181,6 @@
                   itemCheckBox: true,
                   type: 'text',
                   autoHeight: true,
-                  displayKey: 'tag',
-                  valueKey: 'tag',
-                  data: [
-                        {index: 0, tag: 'Avionics'},
-                        {index: 1, tag: 'DecreaseA'},
-                        {index: 2, tag: 'DecreaseB'},
-                        {index: 3, tag: 'EngineLiquidPF'},
-                        {index: 4, tag: 'EngineLiquidTurbo'},
-                        {index: 5, tag: 'EngineSolid'},
-                        {index: 6, tag: 'Habitable'},
-                        {index: 7, tag: 'HumanRated'},
-                        {index: 8, tag: 'Instruments'},
-                        {index: 9, tag: 'Nuclear'},
-                        {index: 10, tag: 'Reentry'},
-                        {index: 11, tag: 'Toxic'},
-                        {index: 12, tag: 'Decoupler'},
-                        {index: 13, tag: 'Hydrolox'},
-                        {index: 14, tag: 'TankBalloon'},
-                        {index: 15, tag: 'TankServiceModule'},
-                        {index: 16, tag: 'NonReentryRated'},
-                        {index: 17, tag: 'UnpressurizedCockpit'},
-                    ],
                   width: 200
                 }, {
                   type: 'action',
@@ -439,26 +417,11 @@
                     itemCheckBox: true,
                     displayKey: "tag",
                     valueKey: "tag",
-                    data: [
-                        {index: 0, tag: 'Avionics'},
-                        {index: 1, tag: 'DecreaseA'},
-                        {index: 2, tag: 'DecreaseB'},
-                        {index: 3, tag: 'EngineLiquidPF'},
-                        {index: 4, tag: 'EngineLiquidTurbo'},
-                        {index: 5, tag: 'EngineSolid'},
-                        {index: 6, tag: 'Habitable'},
-                        {index: 7, tag: 'HumanRated'},
-                        {index: 8, tag: 'Instruments'},
-                        {index: 9, tag: 'Nuclear'},
-                        {index: 10, tag: 'Reentry'},
-                        {index: 11, tag: 'Toxic'},
-                        {index: 12, tag: 'Decoupler'},
-                        {index: 13, tag: 'Hydrolox'},
-                        {index: 14, tag: 'TankBalloon'},
-                        {index: 15, tag: 'TankServiceModule'},
-                        {index: 16, tag: 'NonReentryRated'},
-                        {index: 17, tag: 'UnpressurizedCockpit'},
-                    ]
+                    data: {
+                        proxy: {
+                        url: '/api/module_tags'
+                        }
+                    },
                 }
             ],
             buttons: [{

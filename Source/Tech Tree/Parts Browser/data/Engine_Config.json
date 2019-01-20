@@ -2552,7 +2552,7 @@
         "spacecraft": "",
         "engine_config": "LR105",
         "upgrade": true,
-        "entry_cost_mods": "1200, MA-5-System-I, LR105-NA-7.1",
+        "entry_cost_mods": "1200, MA-5-System-I, LR105-NA-7-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3081,7 +3081,7 @@
         "spacecraft": "",
         "engine_config": "LR89",
         "upgrade": true,
-        "entry_cost_mods": "1000, MA-5-System-I, LR89-NA-7.1",
+        "entry_cost_mods": "1000, MA-5-System-I, LR89-NA-7-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6727,7 +6727,7 @@
         "spacecraft": "",
         "engine_config": "LR89",
         "upgrade": true,
-        "entry_cost_mods": "5000, H1-TP, LR89-NA-7.2",
+        "entry_cost_mods": "5000, H1-TP, LR89-NA-7-2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6750,7 +6750,7 @@
         "spacecraft": "",
         "engine_config": "LR105",
         "upgrade": true,
-        "entry_cost_mods": "6000, H1-TP, LR105-NA-7.2",
+        "entry_cost_mods": "6000, H1-TP, LR105-NA-7-2",
         "identical_part_name": "",
         "module_tags": []
     },

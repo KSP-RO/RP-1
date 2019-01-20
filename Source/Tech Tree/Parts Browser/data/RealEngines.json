@@ -105,7 +105,7 @@
         "entry_cost": "24500",
         "category": "ORBITAL",
         "info": "Engine",
-        "year": "1967",
+        "year": "1968",
         "technology": "orbitalRocketry1967",
         "era": "05-LUNAR",
         "ro": true,
@@ -115,10 +115,12 @@
         "spacecraft": "Apollo",
         "engine_config": "AJ10_137",
         "upgrade": false,
-        "entry_cost_mods": "AJ10_137",
+        "entry_cost_mods": "AJ10-137",
         "identical_part_name": "AJ10-137",
         "module_tags": [
-            "Reentry"
+            "Toxic",
+            "HumanRated",
+            "EngineLiquidPF"
         ]
     },
     {

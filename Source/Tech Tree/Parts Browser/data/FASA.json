@@ -4167,7 +4167,8 @@
             "Avionics",
             "EngineSolid",
             "HumanRated",
-            "Reentry"
+            "Reentry",
+            "NoEVA"
         ]
     },
     {

@@ -4363,7 +4363,8 @@
             "Avionics",
             "Habitable",
             "HumanRated",
-            "Reentry"
+            "Reentry",
+            "NoEVA"
         ]
     },
     {

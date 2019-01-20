@@ -62,7 +62,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="KerbalConstructionTime">
-      <HintPath>..\..\..\..\..\..\..\..\Games\Kerbal Space Program 1.3.1 - RP1\GameData\KerbalConstructionTime\plugins\KerbalConstructionTime.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Games\RP1\GameData\KerbalConstructionTime\plugins\KerbalConstructionTime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">

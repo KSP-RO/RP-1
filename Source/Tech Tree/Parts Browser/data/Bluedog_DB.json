@@ -81,7 +81,7 @@
         "description": "The module that was used to transport astronauts to the Moon. Room for three crew.",
         "mod": "Bluedog DB",
         "cost": "9000",
-        "entry_cost": "350000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",
         "year": "1968",
@@ -94,7 +94,7 @@
         "spacecraft": "Apollo",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "75000,capsulesMature,heatshieldsLunar",
         "identical_part_name": "Apollo CM",
         "module_tags": [
             "Avionics",
@@ -1189,7 +1189,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, avioincsProbesEarly",
+        "entry_cost_mods": "1000, avionicsProbesEarly",
         "identical_part_name": "Explorer 1",
         "module_tags": [
             "Avionics"

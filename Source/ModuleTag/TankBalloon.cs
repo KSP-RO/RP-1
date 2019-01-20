@@ -8,7 +8,10 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            return "Contains a balloon tank";
+            string str = string.Empty;
+            str = "Contains a Balloon Tank which are very difficult to handle properly and must be pressurized properly at all times increasing the overall rollout costs.\n\n" +
+                "<b><color=orange>Rollout Cost: Cost of This Part * 2.0</color></b>";
+            return str;
         }
     }
 }

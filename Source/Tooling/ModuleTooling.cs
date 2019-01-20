@@ -116,7 +116,7 @@ namespace RP0
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (!HighLogic.LoadedSceneIsEditor)
+            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER)
                 return 0f;
 
             if (IsUnlocked())

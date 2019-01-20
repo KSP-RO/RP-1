@@ -430,7 +430,7 @@
         "title": "Baby Sergeant (5.4KS1975)",
         "description": "A small solid kick motor used on the Jupiter-C sounding rocket (and later the Juno I and II launch vehicles) as upper stages in clusters of 11, 3 and, finally, one attached to the payload. The standard version uses the T17-E2 grain mixture while the higher performance one uses the JPL-532A. Very low overall performance and reliability. Plume configured by RealPlume.",
         "mod": "Ven Stock Revamp",
-        "cost": "30",
+        "cost": "60",
         "entry_cost": "5000",
         "category": "SOLID",
         "info": "US SRM",

@@ -190,7 +190,8 @@
         "module_tags": [
             "Habitable",
             "HumanRated",
-            "NonReentryRated"
+            "NonReentryRated",
+            "NoEVA"
         ]
     },
     {

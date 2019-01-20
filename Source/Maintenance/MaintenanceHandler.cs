@@ -99,13 +99,15 @@ namespace RP0
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                EnsureFacilityLvlCostsLoaded();
+                // Need to load the facility upgrade prices after CustomBarnKit has finished patching them
+                GameEvents.onLevelWasLoaded.Add(LoadUpgradesPrices);
             }
         }
 
         public void updateUpkeep()
         {
             float[] costs;
+            EnsureFacilityLvlCostsLoaded();
 
             // Pad
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out costs))
@@ -197,7 +199,6 @@ namespace RP0
                     return;
             }
 
-            EnsureFacilityLvlCostsLoaded();
             updateUpkeep();
 
             double timePassed = time - lastUpdate;
@@ -242,6 +243,12 @@ namespace RP0
                 }
                 Debug.Log($"[RP-0] Updated facilityLevelsCosts, count: {facilityLevelCosts.Count}");
             }
+        }
+
+        private void LoadUpgradesPrices(GameScenes scene)
+        {
+            EnsureFacilityLvlCostsLoaded();
+            GameEvents.onLevelWasLoaded.Remove(LoadUpgradesPrices);
         }
     }
 }

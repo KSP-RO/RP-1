@@ -8,7 +8,10 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            return "Contains human-rated equipment";
+            string str = string.Empty;
+            str = "Contains human-rated equipment that requires more time for integration and testing. Overall this raises the rollout costs by a VERY large amount.\n\n" +
+                "<b><color=orange>Rollout Cost: Cost of ALL Parts * 1.5</color></b>";
+            return str;
         }
     }
 }

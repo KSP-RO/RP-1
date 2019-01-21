@@ -59,6 +59,7 @@
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
     <Compile Include="Crew\CrewHandler.cs" />
     <Compile Include="DifficultyPresets.cs" />
+    <Compile Include="ModuleNonRecharge.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleNoEVA.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />

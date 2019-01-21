@@ -4,6 +4,6 @@ Tooling width (diameter) is much more expensive than tooling length -> It is far
 Forget everything you have ever learned from Stock KSP
 Don't pay for the tooling of your parts until you have tested your rocket design
 Remember to train your crew before you launch them on a mission
-Some contracts require specific payloads. These are resources that can be put into "fuel tanks".
-The rocket equation is cruel. Your rocket will usually be at least 85% of fuel.
-The Orbital Reentry (uncrewed) contract unlocks once you unlock the first EDL tech node.
+Some contracts require specific payloads. These are resources that can be put into "fuel tanks"
+The rocket equation is cruel. Your rocket will usually be at least 85% fuel
+The Orbital Reentry (uncrewed) contract unlocks once you unlock the first EDL tech node

@@ -494,7 +494,7 @@ namespace RP0.Crew
         {
             expireTimes.Add(e);
         }
-
+        
         #endregion
 
         #region Methods
@@ -877,7 +877,10 @@ namespace RP0.Crew
 
         protected void onPartPurchased(AvailablePart ap)
         {
-            AddPartCourses(ap);
+            if (ap.partPrefab.CrewCapacity > 0)
+            {
+                AddPartCourses(ap);
+            }
         }
 
         protected string GetPrettyCourseName(string str)

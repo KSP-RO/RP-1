@@ -1183,9 +1183,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "SXTK1Decoupler2",
@@ -1208,9 +1206,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "SXTKD170",

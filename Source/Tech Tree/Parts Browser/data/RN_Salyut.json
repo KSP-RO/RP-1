@@ -163,9 +163,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "almaz_sr_para",
@@ -237,8 +235,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -309,8 +306,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {

@@ -636,9 +636,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_aj10_104",
@@ -930,9 +928,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Baby Sergeant x11 Decoupler",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_junoii_sgt_3",
@@ -980,9 +976,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Baby Sergeant x3 Decoupler",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_junoii_ss",
@@ -2792,9 +2786,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_ua1205_nc",
@@ -2865,9 +2857,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_ua1206_nc",
@@ -2938,9 +2928,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_ua1207_nc",

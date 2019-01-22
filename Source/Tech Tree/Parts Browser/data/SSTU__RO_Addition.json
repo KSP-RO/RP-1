@@ -21,8 +21,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "APAS-89/95",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -47,8 +46,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -419,9 +417,7 @@
         "upgrade": false,
         "entry_cost_mods": "Tanks-LevelII",
         "identical_part_name": "Tank-II",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "SSTU-D-Tank-III",
@@ -444,9 +440,7 @@
         "upgrade": false,
         "entry_cost_mods": "Tanks-LevelIII",
         "identical_part_name": "Tank-III",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "SSTU-D-Tank-IV",
@@ -469,9 +463,7 @@
         "upgrade": false,
         "entry_cost_mods": "Tanks-LevelIV",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "SSTU-SC-ENG-M1-RO",

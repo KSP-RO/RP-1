@@ -135,9 +135,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KW_PF_Interstage_123",
@@ -160,9 +158,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KW_PF_Interstage_5",
@@ -185,9 +181,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KzFlatAdapter",
@@ -210,9 +204,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KzInterstageAdapter2",
@@ -235,9 +227,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KzProcFairingAtlas",
@@ -812,9 +802,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "squad_interstage_adapter",

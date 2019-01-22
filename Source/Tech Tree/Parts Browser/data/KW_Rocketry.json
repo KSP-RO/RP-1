@@ -66,9 +66,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KW1mFairingCone",
@@ -284,9 +282,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KW2mFairingCone",
@@ -506,8 +502,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -554,9 +549,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "KW3mFairingCone",

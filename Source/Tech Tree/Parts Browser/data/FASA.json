@@ -143,9 +143,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAAgenaLFT",
@@ -726,9 +724,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAApolloStrJ2StrJ23m5mDec",
@@ -751,9 +747,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAApolloStrJ2StrJ23m5mDecNova",
@@ -776,9 +770,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Saturn C-8 Interstage",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAApolloStrJ2StrJ25mDec",
@@ -1617,9 +1609,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Baby Sergeant x11 Decoupler",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAExplorerSgt3",
@@ -1667,9 +1657,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Baby Sergeant x3",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAFairingBase_15m",
@@ -1807,9 +1795,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAFairingNosecone_3mSRB",
@@ -1947,9 +1933,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAFairingsCone1m",
@@ -1972,9 +1956,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAFairingsCone3m",
@@ -1997,9 +1979,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAFairingsPlate1m",
@@ -2022,9 +2002,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAFairingsPlate2m",
@@ -2047,9 +2025,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAFairingsPlate375m",
@@ -2173,8 +2149,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -2223,9 +2198,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiBigGWhite",
@@ -2275,9 +2248,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiDecDark125_Atlas",
@@ -2323,9 +2294,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiDecDark25",
@@ -2371,9 +2340,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiDecDark375",
@@ -3711,8 +3678,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -4087,8 +4053,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -4112,9 +4077,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAMercuryMiniSRB",
@@ -4291,9 +4254,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASASaturnSLA_long",
@@ -4479,9 +4440,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "Decoupler"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAUmbilicalTower",

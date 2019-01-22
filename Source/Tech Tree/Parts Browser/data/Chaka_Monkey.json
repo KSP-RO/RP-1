@@ -255,8 +255,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -402,8 +401,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -429,8 +427,7 @@
         "identical_part_name": "",
         "module_tags": [
             "EngineSolid",
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -807,8 +804,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {
@@ -2599,8 +2595,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "NASA Docking System",
         "module_tags": [
-            "HumanRated",
-            "Decoupler"
+            "HumanRated"
         ]
     },
     {

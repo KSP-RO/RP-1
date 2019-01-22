@@ -64,6 +64,13 @@ def create_app(test_config=None):
         sorted_values = list(part_data.module_tags.keys())
         sorted_values.sort()
         return jsonify({"data": list(map(lambda x: {"tag": x}, sorted_values))})
+    
+    @app.route('/api/nuke_module_tag/<module_tag>')
+    def nuke_module_tags(module_tag):
+        for part in part_data.parts:
+            if module_tag in part['module_tags']:
+                part['module_tags'].remove(module_tag)
+        return "TRUE"
         
     @app.route('/api/tech_mapping/<category>/<year>')
     def get_tech_mapping(category, year):

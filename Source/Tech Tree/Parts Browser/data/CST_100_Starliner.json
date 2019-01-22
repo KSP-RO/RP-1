@@ -112,9 +112,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "CST-100?capsule",
@@ -138,8 +136,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated",
             "Reentry"
         ]
@@ -166,8 +162,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -191,9 +186,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "cstparachute",

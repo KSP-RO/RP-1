@@ -6,8 +6,8 @@ NoEVA,
 NonRecharge,
 EngineLiquidTurbo,Tag
 EngineSolid,Tag
-Habitable,Tag
 HumanRated,Tag
+Cockpit,Tag
 Instruments,Tag
 Nuclear,Tag
 Reentry,Tag

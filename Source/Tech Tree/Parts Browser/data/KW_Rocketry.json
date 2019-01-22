@@ -428,7 +428,6 @@
         "identical_part_name": "AJ10-137",
         "module_tags": [
             "EngineLiquidPF",
-            "HumanRated",
             "Toxic"
         ]
     },
@@ -501,9 +500,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "KW3mExpandedFairingWall",
@@ -643,7 +640,6 @@
         "identical_part_name": "RD-0120",
         "module_tags": [
             "EngineLiquidTurbo",
-            "HumanRated",
             "Hydrolox"
         ]
     },
@@ -767,8 +763,7 @@
         "entry_cost_mods": "F-1",
         "identical_part_name": "F-1",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {

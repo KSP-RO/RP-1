@@ -21,6 +21,7 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -47,6 +48,7 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -73,7 +75,8 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },
@@ -99,7 +102,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated"
         ]
     },
@@ -125,7 +128,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },
@@ -151,6 +155,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "NonReentryRated"
         ]
     },
@@ -176,7 +181,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },
@@ -202,6 +208,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "NonReentryRated"
         ]
     }

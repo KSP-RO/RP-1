@@ -1628,8 +1628,7 @@
         "entry_cost_mods": "F-1",
         "identical_part_name": "F-1",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -1654,8 +1653,7 @@
         "entry_cost_mods": "F-1A-ETS",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -1680,8 +1678,7 @@
         "entry_cost_mods": "F-1B",
         "identical_part_name": "F-1B",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {

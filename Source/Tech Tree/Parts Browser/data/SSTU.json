@@ -633,8 +633,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -710,8 +709,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "7KOKService",
         "module_tags": [
-            "Habitable",
-            "HumanRated"
+            "Avionics",
+            "EngineLiquidPF"
         ]
     },
     {
@@ -759,8 +758,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LES",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -811,8 +809,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -838,6 +834,7 @@
         "entry_cost_mods": "ApolloSM",
         "identical_part_name": "Apollo SM",
         "module_tags": [
+            "Avionics",
             "EngineLiquidPF",
             "Toxic"
         ]
@@ -887,8 +884,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Orion LAS",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -913,8 +909,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "Orion CM",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated",
             "Reentry"
         ]
@@ -941,8 +935,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -1014,7 +1006,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Orion MPCV",
         "module_tags": [
-            "HumanRated"
+            "Avionics"
         ]
     },
     {
@@ -1040,7 +1032,6 @@
         "identical_part_name": "AJ10-137",
         "module_tags": [
             "EngineLiquidPF",
-            "HumanRated",
             "Toxic"
         ]
     },
@@ -1089,8 +1080,7 @@
         "entry_cost_mods": "F-1",
         "identical_part_name": "F-1",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -1115,8 +1105,7 @@
         "entry_cost_mods": "F-1B",
         "identical_part_name": "F-1B",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -1218,8 +1207,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LMAE",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -1244,8 +1232,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LMDE",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -1823,9 +1810,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "NASA Docking System",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "SSTU-SC-GEN-FR-I",

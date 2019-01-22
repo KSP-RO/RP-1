@@ -825,9 +825,6 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated",
-            "Habitable"
-        ]
+        "module_tags": []
     }
 ]

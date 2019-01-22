@@ -67,7 +67,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -234,9 +233,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "s1_lsolar",
@@ -305,9 +302,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "salyut1-4",
@@ -331,7 +326,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated",
             "Instruments"
         ]
@@ -358,7 +352,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated",
             "Instruments"
         ]
@@ -385,7 +378,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated",
             "Instruments"
         ]

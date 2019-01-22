@@ -21,8 +21,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },

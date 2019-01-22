@@ -20,9 +20,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "CXA_APAS_A",
@@ -275,9 +273,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "CXA_NapHabV1",
@@ -461,9 +457,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "CXA_PMA",

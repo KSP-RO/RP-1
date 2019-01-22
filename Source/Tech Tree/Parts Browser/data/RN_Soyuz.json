@@ -67,7 +67,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
             "Reentry"
         ]
     },
@@ -93,7 +92,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "HumanRated"
         ]
     },
     {
@@ -117,9 +116,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "ok_hs",
@@ -191,7 +188,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
             "Reentry"
         ]
     },
@@ -312,8 +308,6 @@
         "entry_cost_mods": "20000,capsulesMature",
         "identical_part_name": "7KLOKorbital",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -338,9 +332,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_lok_para",
@@ -364,7 +356,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
             "Reentry"
         ]
     },
@@ -390,7 +381,6 @@
         "entry_cost_mods": "20000,capsulesMature,heatshieldsLunar",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
             "HumanRated",
             "Reentry"
         ]
@@ -416,9 +406,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_tks",
@@ -559,8 +547,6 @@
         "entry_cost_mods": "capsulesVA",
         "identical_part_name": "VA Capsule",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated",
             "Reentry"
         ]
@@ -610,8 +596,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -658,9 +643,7 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesAirlock",
         "identical_part_name": "VoskhodAirlock",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_voskhod_para",
@@ -755,7 +738,6 @@
         "entry_cost_mods": "capsulesVoskhod",
         "identical_part_name": "VoskhodCapsule",
         "module_tags": [
-            "Habitable",
             "HumanRated",
             "Reentry"
         ]
@@ -828,10 +810,9 @@
         "entry_cost_mods": "capsulesVostok",
         "identical_part_name": "VostokCapsule",
         "module_tags": [
-            "Habitable",
             "HumanRated",
-            "Reentry",
-            "NoEVA"
+            "NoEVA",
+            "Reentry"
         ]
     },
     {
@@ -927,8 +908,6 @@
         "entry_cost_mods": "25000,capsulesMature,heatshieldsLunar",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated",
             "Reentry"
         ]
@@ -978,8 +957,6 @@
         "entry_cost_mods": "40000,capsulesMature",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -1005,8 +982,7 @@
         "entry_cost_mods": "40000,capsulesMature",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "HumanRated"
+            "Avionics"
         ]
     },
     {
@@ -1030,9 +1006,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "t_pao",
@@ -1055,9 +1029,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "t_pao2",
@@ -1080,9 +1052,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "tg_bo",
@@ -1106,8 +1076,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },

@@ -21,7 +21,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated"
         ]
     },
@@ -47,9 +47,9 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
-            "UnpressurizedCockpit",
-            "NonReentryRated"
+            "Cockpit",
+            "NonReentryRated",
+            "UnpressurizedCockpit"
         ]
     },
     {
@@ -236,9 +236,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "LSmallFuelMod",
@@ -284,9 +282,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LEM Descent",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "MEMLander",
@@ -310,7 +306,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LEM Ascent",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -460,7 +455,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -735,7 +729,7 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -810,7 +804,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -838,7 +832,6 @@
         "identical_part_name": "RD-0120",
         "module_tags": [
             "EngineLiquidTurbo",
-            "HumanRated",
             "Hydrolox"
         ]
     },
@@ -864,7 +857,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -890,7 +882,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -916,7 +907,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -992,7 +982,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated"
         ]
     },
@@ -1064,8 +1054,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
-            "HumanRated"
+            "HumanRated",
+            "Instruments"
         ]
     },
     {
@@ -1112,9 +1102,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Habitable"
-        ]
+        "module_tags": []
     },
     {
         "name": "SXTK1Base5m",
@@ -1323,9 +1311,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Habitable"
-        ]
+        "module_tags": []
     },
     {
         "name": "SXTKe90TurboJet",
@@ -1682,7 +1668,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated"
         ]
     },
@@ -1754,7 +1740,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated"
         ]
     },
@@ -2014,7 +2000,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -2183,9 +2168,7 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": [
-            "Habitable"
-        ]
+        "module_tags": []
     },
     {
         "name": "SXTelevonLarge",
@@ -2301,7 +2284,7 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -2351,7 +2334,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
+            "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },

@@ -188,10 +188,9 @@
         "entry_cost_mods": "",
         "identical_part_name": "X1Cockpit",
         "module_tags": [
-            "Habitable",
-            "HumanRated",
-            "NonReentryRated",
-            "NoEVA"
+            "Cockpit",
+            "NoEVA",
+            "NonReentryRated"
         ]
     },
     {

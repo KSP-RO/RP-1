@@ -755,7 +755,6 @@
         "entry_cost_mods": "capsulesVoskhod",
         "identical_part_name": "VoskhodCapsule",
         "module_tags": [
-            "Avionics",
             "Habitable",
             "HumanRated",
             "Reentry"

@@ -296,7 +296,6 @@
         "entry_cost_mods": "heatshieldsLEO",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
             "Reentry"
         ]
     },

@@ -20,10 +20,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated",
-            "Reentry"
-        ]
+        "module_tags": []
     },
     {
         "name": "IronVostok_Antenna_A",
@@ -202,9 +199,9 @@
         "entry_cost_mods": "capsulesVoskhod",
         "identical_part_name": "VoskhodCapsule",
         "module_tags": [
-            "Avionics",
             "Habitable",
-            "HumanRated"
+            "HumanRated",
+            "Reentry"
         ]
     }
 ]

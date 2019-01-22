@@ -1068,7 +1068,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "ApolloHGA",
         "module_tags": [
-            "HumanRated"
+            "Instruments"
         ]
     },
     {
@@ -3925,9 +3925,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAMercuryAtlasEng",
@@ -4048,9 +4046,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAMercuryFairing",
@@ -4097,8 +4093,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -4151,8 +4146,7 @@
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -4792,8 +4786,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Mercury LES",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {

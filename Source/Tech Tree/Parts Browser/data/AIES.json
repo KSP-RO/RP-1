@@ -1317,10 +1317,10 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
             "Habitable",
             "HumanRated",
-            "Reentry"
+            "NoEVA",
+            "NonReentryRated"
         ]
     },
     {
@@ -1416,10 +1416,10 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
             "Habitable",
             "HumanRated",
-            "Reentry"
+            "Reentry",
+            "NoEVA"
         ]
     },
     {

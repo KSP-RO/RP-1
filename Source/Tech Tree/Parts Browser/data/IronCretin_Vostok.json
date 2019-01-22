@@ -73,9 +73,10 @@
         "entry_cost_mods": "capsulesVostok",
         "identical_part_name": "VostokCapsule",
         "module_tags": [
-            "Avionics",
             "Habitable",
-            "HumanRated"
+            "HumanRated",
+            "Reentry",
+            "NoEVA"
         ]
     },
     {

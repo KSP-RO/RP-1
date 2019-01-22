@@ -494,7 +494,33 @@ namespace RP0.Crew
         {
             expireTimes.Add(e);
         }
-        
+
+        public void AddCoursesForTechNode(RDTech tech)
+        {
+            for (int i = 0; i < tech.partsAssigned.Count; i++)
+            {
+                AvailablePart ap = tech.partsAssigned[i];
+                if (ap.partPrefab.CrewCapacity > 0)
+                {
+                    AddPartCourses(ap);
+                }
+            }
+        }
+
+        public void AddPartCourses(AvailablePart ap)
+        {
+            string name = TrainingDatabase.SynonymReplace(ap.name);
+            if (!partSynsHandled.Contains(name))
+            {
+                partSynsHandled.Add(name);
+                GenerateCourseProf(ap);
+                if (ResearchAndDevelopment.PartModelPurchased(ap))
+                {
+                    GenerateCourseMission(ap);
+                }
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -806,28 +832,15 @@ namespace RP0.Crew
 
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
-                if (ap.partPrefab.CrewCapacity > 0 /*&& ap.TechRequired != "start"*/)
+                if (ap.partPrefab.CrewCapacity > 0 && /*&& ap.TechRequired != "start"*/
+                    ResearchAndDevelopment.PartModelPurchased(ap))
                 {
-                    if (ResearchAndDevelopment.PartModelPurchased(ap))
-                    {
-                        string name = TrainingDatabase.SynonymReplace(ap.name);
-                        if (!partSynsHandled.Contains(name))
-                        {
-                            partSynsHandled.Add(name);
-                            AddPartCourses(ap);
-                        }
-                    }
+                    AddPartCourses(ap);
                 }
             }
 
             Debug.Log("[FS] Offering " + OfferedCourses.Count + " courses.");
             //fire an event to let other mods add available courses (where they can pass variables through then)
-        }
-
-        protected void AddPartCourses(AvailablePart ap)
-        {
-            GenerateCourseProf(ap);
-            GenerateCourseMission(ap);
         }
 
         protected void GenerateCourseProf(AvailablePart ap)

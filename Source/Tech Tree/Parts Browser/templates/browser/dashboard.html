@@ -16,8 +16,10 @@
         grid = new FancyGrid({
             title: 'RP-0 Parts',
             renderTo: 'parts_table',
-            selModel: 'cells',
+            selModel: 'rows',
             striped: true,
+            trackOver: true,
+            textSelection: true,
             width: '1850',
             height: 'fit',
             nativeScroller: true,
@@ -28,30 +30,37 @@
             },
             defaults: {
               type: 'string',
-              flex: 1,  
+              //flex: 1,
+              editable: true,
               sortable: true,
+              resizable: true, // Each column can be resized by user
+              menu: true, // Column has a menu to see options
               ellipsis: false,
               filter: {
                 header: true,
                 emptyText: 'Filter'
               }
             },
-            expander: {
-                tpl: [
-                '<div style="float: left;">',
-                  '<br/><b>Info:</b> {info}',
-                  '<br/><b>Description:</b> {description}',
-                '</div>'
-              ].join(""),
-              },
+            clicksToEdit: 2,
+            columnLines: true,
+            columnClickData: true,
+            //expander: {
+            //    tpl: [
+            //    '<div style="float: left;">',
+            //      '<br/><b>Info:</b> {info}',
+            //      '<br/><b>Description:</b> {description}',
+            //    '</div>'
+            //  ].join(""),
+            //  },
             paging: {
-              pageSize: 15,
+              pageSize: 50,
               pageSizeData: [5, 10, 15, 20, 25, 50, 100, 500, 1000]
             },
-            columns: [{
-                    type: 'expand',
-                    locked: true
-                },{
+            columns: [//{
+                    //type: 'expand',
+                    //locked: true
+                //},
+                {
                   index: 'name',
                   title: 'Name',
                   width: 200
@@ -92,15 +101,17 @@
                   title: 'RO',
                   width: 40,
                   type: 'checkbox'
-                }, {
-                  index: 'rp0',
-                  title: 'RP-0',
-                  width: 40,
-                  type: 'checkbox'
-                }, {
+                }, 
+                //{
+                //  index: 'rp0',
+                //  title: 'RP-0',
+                //  width: 40,
+                //  type: 'checkbox'
+                //},
+                {
                   index: 'rp0_conf',
-                  title: 'RP-0 Conf',
-                  width: 75,
+                  title: 'RP-0',
+                  width: 50,
                   type: 'checkbox'
                 }, {
                   index: 'category',
@@ -124,7 +135,7 @@
                       url: 'api/unique_values_for_column/year'
                     }
                   },
-                  width: 70
+                  width: 50
                 }, {
                   index: 'orphan',
                   title: 'Orphan',
@@ -153,17 +164,30 @@
                     }
                   }
                 }, {
-                  index: 'era',
-                  title: 'Era',
-                  type: 'combo',
-                  multiSelect: false,
-                  itemCheckBox: true,
-                  data: {
-                    proxy: {
-                      url: '/api/unique_values_for_column/era'
-                    }
-                  }
-                }, {
+                  index: 'info',
+                  title: 'Info',
+                  width: 70
+                },
+                {
+                  index: 'description',
+                  title: 'Description',
+                  type: 'text',
+                  hidden: true,
+                  //value: false
+                },
+                //{
+                //  index: 'era',
+                //  title: 'Era',
+                //  type: 'combo',
+                //  multiSelect: false,
+                //  itemCheckBox: true,
+                //  data: {
+                //    proxy: {
+                //      url: '/api/unique_values_for_column/era'
+                //    }
+                //  }
+                //},
+                {
                   index: 'technology',
                   title: 'Technology',
                   type: 'combo',
@@ -180,10 +204,11 @@
                   multiSelect: true,
                   itemCheckBox: true,
                   type: 'text',
-                  autoHeight: true,
-                  width: 200
+                  //autoHeight: true,
+                  width: 180
                 }, {
                   type: 'action',
+                  title: 'Edit',
                   width: 50,
                   filter: false,
                   items: [{

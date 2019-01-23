@@ -643,7 +643,9 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesAirlock",
         "identical_part_name": "VoskhodAirlock",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "rn_voskhod_para",
@@ -739,6 +741,7 @@
         "identical_part_name": "VoskhodCapsule",
         "module_tags": [
             "HumanRated",
+            "NoEVA",
             "Reentry"
         ]
     },

@@ -191,6 +191,7 @@
         "identical_part_name": "VoskhodCapsule",
         "module_tags": [
             "HumanRated",
+            "NoEVA",
             "Reentry"
         ]
     }

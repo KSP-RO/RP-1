@@ -4337,7 +4337,7 @@
         "title": "Mk1 Pod (2m)",
         "description": "A one-person pod. Comes with built-in RCS thrusters running off High-Test Peroxide (HTP) and a large battery. Heat shield rated for LEO reentries. Center of mass can be offset slightly to allow lifting reentry (toggle Descent Mode).",
         "mod": "Stock (RO Config)",
-        "cost": "2500",
+        "cost": "2468",
         "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",
@@ -4351,7 +4351,7 @@
         "spacecraft": "Mercury",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "20000, capsulesBasic",
+        "entry_cost_mods": "40000, capsulesBasic",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",

@@ -230,11 +230,11 @@
         "description": "The VA command module is part of the TKS/FGB spacecraft. It can be attached either to the FGB module of the TKS, to the front section of the Almaz station or to both. In the latter case, the station could be launched manned with the crew riding to orbit inside the VA capsule. The crew would be able to exit and enter the VA capsule in orbit via a hatch in the heat shield located at the bottom of the craft. Supports two crew for one day. Center of mass can be offset to allow lifting reentry (toggle Descent Mode).",
         "mod": "Ven Stock Revamp",
         "cost": "8000",
-        "entry_cost": "600000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",
-        "year": "1977",
-        "technology": "improvedCapsules",
+        "year": "1974",
+        "technology": "matureCapsules",
         "era": "06-STATION",
         "ro": true,
         "rp0": true,
@@ -243,11 +243,9 @@
         "spacecraft": "TKS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "capsulesVA",
+        "identical_part_name": "VA Capsule",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },

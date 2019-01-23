@@ -79,7 +79,7 @@
         "title": "Apollo Command Module",
         "description": "The module that was used to transport astronauts to the Moon. Room for three crew.",
         "mod": "Bluedog DB",
-        "cost": "9000",
+        "cost": "35000",
         "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",
@@ -93,11 +93,9 @@
         "spacecraft": "Apollo",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "75000,capsulesMature,heatshieldsLunar",
+        "entry_cost_mods": "capsulesApollo",
         "identical_part_name": "Apollo CM",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated",
             "Reentry"
         ]
@@ -365,8 +363,8 @@
         "title": "Apollo Service Module",
         "description": "The Apollo Service Module that has a complete package of fuel, monoprop, batteries, fuel cells, and storage bays for your service module.",
         "mod": "Bluedog DB",
-        "cost": "10000",
-        "entry_cost": "350000",
+        "cost": "9000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "Service Module",
         "year": "1968",
@@ -379,11 +377,9 @@
         "spacecraft": "Apollo",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "ApolloSM",
         "identical_part_name": "Apollo SM",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "bluedog_Apollo_Block3_Capsule",

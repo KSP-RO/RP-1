@@ -22,6 +22,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },
@@ -48,6 +49,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -730,6 +732,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -805,6 +808,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -983,6 +987,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },
@@ -1669,6 +1674,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },
@@ -1741,6 +1747,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated"
         ]
     },
@@ -2285,6 +2292,7 @@
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
+            "NoEVA",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]

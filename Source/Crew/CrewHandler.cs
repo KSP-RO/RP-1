@@ -513,8 +513,10 @@ namespace RP0.Crew
             if (!partSynsHandled.Contains(name))
             {
                 partSynsHandled.Add(name);
-                GenerateCourseProf(ap);
-                if (ResearchAndDevelopment.PartModelPurchased(ap))
+                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap);
+
+                GenerateCourseProf(ap, !isPartUnlocked);
+                if (isPartUnlocked)
                 {
                     GenerateCourseMission(ap);
                 }
@@ -843,7 +845,7 @@ namespace RP0.Crew
             //fire an event to let other mods add available courses (where they can pass variables through then)
         }
 
-        protected void GenerateCourseProf(AvailablePart ap)
+        protected void GenerateCourseProf(AvailablePart ap, bool isTemporary)
         {
             ConfigNode n = new ConfigNode("FS_COURSE");
             string name = TrainingDatabase.SynonymReplace(ap.name);
@@ -851,6 +853,7 @@ namespace RP0.Crew
             n.AddValue("id", "prof_" + name);
             n.AddValue("name", "Proficiency: " + name);
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400d));
+            n.AddValue("isTemporary", isTemporary);
 
             n.AddValue("conflicts", "TRAINING_proficiency:" + name);
 
@@ -872,6 +875,7 @@ namespace RP0.Crew
             n.AddValue("id", "msn_" + name);
             n.AddValue("name", "Mission: " + name);
             n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "-Mission") * 86400d);
+            n.AddValue("isTemporary", false);
             n.AddValue("timeUseStupid", true);
             n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
             n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);

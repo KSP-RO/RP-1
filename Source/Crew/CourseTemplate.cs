@@ -40,6 +40,8 @@ namespace RP0.Crew
         public ConfigNode RewardLog = null; //the flight log to insert
         public ConfigNode ExpireLog = null; // expire all these on complete
 
+        public bool isTemporary = false;
+
         public CourseTemplate(ConfigNode source)
         {
             sourceNode = source;
@@ -134,6 +136,7 @@ namespace RP0.Crew
             source.TryGetValue("expirationUseStupid", ref expirationUseStupid);
 
             source.TryGetValue("required", ref required);
+            source.TryGetValue("isTemporary", ref isTemporary);
 
             string repeatStr = source.GetValue("repeatable");
             if (!string.IsNullOrEmpty(repeatStr))

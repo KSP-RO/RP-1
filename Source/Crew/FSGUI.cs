@@ -14,6 +14,8 @@ namespace RP0.Crew
         private Vector2 nautListScroll = new Vector2();
         private Dictionary<ProtoCrewMember, ActiveCourse> activeMap = new Dictionary<ProtoCrewMember, ActiveCourse>();
         private Vector2 courseSelectorScroll = new Vector2();
+        private GUIStyle courseBtnStyle = null;
+        private GUIStyle tempCourseLblStyle = null;
         private GUIContent nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false));
         
         protected void nautListHeading()
@@ -171,10 +173,17 @@ namespace RP0.Crew
 
         protected void courseSelector()
         {
+            if (courseBtnStyle == null)
+            {
+                courseBtnStyle = new GUIStyle(GUI.skin.button);
+                courseBtnStyle.normal.textColor = Color.yellow;
+            }
+            
             courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));
             try {
                 foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
-                    if (GUILayout.Button(course.name))
+                    var style = course.isTemporary ? courseBtnStyle : GUI.skin.button;
+                    if (GUILayout.Button(course.name, style))
                         selectedCourse = new ActiveCourse(course);
                 }
             } finally {
@@ -191,6 +200,12 @@ namespace RP0.Crew
 
         public tabs newCourseTab()
         {
+            if (tempCourseLblStyle == null)
+            {
+                tempCourseLblStyle = new GUIStyle(GUI.skin.label);
+                tempCourseLblStyle.normal.textColor = Color.yellow;
+            }
+
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.FlexibleSpace();
@@ -199,7 +214,10 @@ namespace RP0.Crew
             } finally {
                 GUILayout.EndHorizontal();
             }
-            GUILayout.Label(selectedCourse.description);
+            if (!string.IsNullOrEmpty(selectedCourse.description))
+                GUILayout.Label(selectedCourse.description);
+            if (selectedCourse.isTemporary)
+                GUILayout.Label("Tech for this part is still being researched", tempCourseLblStyle);
             summaryBody(tabs.NewCourse);
             if (selectedCourse.seatMax > 0)
                 GUILayout.Label(selectedCourse.seatMax - selectedCourse.Students.Count + " remaining seat(s).");

@@ -6,12 +6,17 @@
   <div id="commands"><button onclick="generateConfigs()">Generate Configs</button> &nbsp; <button onclick="addNewPart()">Add New Part</button></div></br>
   <div id="parts_table"></div>
     <script>
+    if (typeof JSON.clone !== "function") {
+        JSON.clone = function(obj) {
+            return JSON.parse(JSON.stringify(obj));
+        };
+    }
+    
     Fancy.loadModule('form');
     var form = null, grid = null;
     document.addEventListener("DOMContentLoaded", function() {
         initialize();
     });
-
     function initialize() {
         grid = new FancyGrid({
             title: 'RP-0 Parts',
@@ -23,6 +28,26 @@
             width: '1850',
             height: 'fit',
             nativeScroller: true,
+            events: [{
+                set: function(grid, o){
+                    key = o['key'];
+                    row = o['data'];
+                    if (!(row['id'] in originalData)) {
+                        originalData[row['id']] = JSON.clone(row);
+                        originalData[row['id']][key] = o['oldValue'];
+                        originalData[row['id']]['module_tags'] = row['module_tags'].slice();
+                    }
+                    changeSet = getChanges(originalData[row['id']], row);
+                    
+                    if (shouldAddChangeSet(changeSet)) {
+                        addChangeSet(row['name'], row['title'], row['mod'], row['id'], changeSet, false);
+                    } else {
+                        // if there are no changes from the original data, remove the changes.
+                        delete queuedChanges[row['id']];
+                        drawQueuedChanges();
+                    }
+                }
+            }],
             data: {
               proxy: {
                 url: '/api/part_data'
@@ -372,31 +397,16 @@
                     label: 'Technology',
                     name: 'technology',
                     disabled: true
-                }, {
-                    type: 'combo',
-                    label: 'Era',
-                    name: 'era',
-                    data: {
-                        proxy: {
-                          url: 'api/combo_options/era'
-                        }
-                    },
-                    displayKey: 'era',
-                    valueKey: 'era'
-                }, {
+                },{
                     label: 'RO',
                     type: 'checkbox',
                     name: 'ro'
-                },{
-                    label: 'RP-0',
-                    type: 'checkbox',
-                    name: 'rp0'
                 },{
                     label: 'Orphan',
                     type: 'checkbox',
                     name: 'orphan'
                 },{
-                    label: 'RP-0 conf',
+                    label: 'RP-0',
                     type: 'checkbox',
                     name: 'rp0_conf'
                 }, {
@@ -462,9 +472,13 @@
                 handler: function(){
                     console.log('submit');
                     if (form.valid()) {
-                        changeSet = getChanges(form.previousData, form.get());
-                        if (Object.keys(changeSet).length > 0) {
-                            addChangeSet(form.get().name, form.get().title, form.get().mod, form.get().id, changeSet);
+                        changeSet = getChanges(originalData[form.get().id], form.get());
+                        if (shouldAddChangeSet(changeSet)) {
+                            addChangeSet(form.get().name, form.get().title, form.get().mod, form.get().id, changeSet, true);
+                        } else {
+                            // if there are no changes from the original data, remove the changes.
+                            delete queuedChanges[row['id']];
+                            drawQueuedChanges();
                         }
                         form.clear();
                         form.hide();
@@ -473,6 +487,21 @@
             }]
         });
     }
+    
+    function shouldAddChangeSet(changeSet) {
+        size = Object.keys(changeSet).length;
+        if (size > 2) {
+            return true;
+        } else if (size == 1) {
+            return !("new_mod" in changeSet || "mod_type" in changeSet);
+        } else if (size == 2) {
+            return !("new_mod" in changeSet && "mod_type" in changeSet);
+        } else {
+          return false;
+        }
+    }
+    
+    originalData = {};
     
     function showEditForm(data, isCreate) {
         data['mod_type'] = 'existing';
@@ -483,15 +512,17 @@
             form.getItem('name').disable();
         }
         form.set(data);
-        form.previousData = data;
-        form.previousData['module_tags'] = data['module_tags'].slice();
+        if (!(data['id'] in originalData)) {
+            originalData[data['id']] = JSON.clone(data);
+            originalData[data['id']]['module_tags'] = data['module_tags'].slice();
+        }
         form.show();
     }
     
     function getChanges(prev, now) {
         var changes = {};
         for (var prop in now) {
-          if (prop !== 'id') {
+          if (prop !== 'id' && prop !== '$selected') {
             if (prop == 'module_tags' && !compareArrays(now[prop],prev[prop])) {
                 changes[prop] = {"new": now[prop], "old": prev[prop]};
             } else {
@@ -514,11 +545,14 @@
     
     var queuedChanges = {};
     
-    function addChangeSet(name, title, mod, row_id, changeSet) {
+    function addChangeSet(name, title, mod, row_id, changeSet, shouldSetInTable) {
         key = row_id;
         queuedChanges[key] = {row_id: row_id, name: name, title: title, mod: mod, changes: changeSet};
-        drawQueuedChanges();
-        updateTable(changeSet, row_id, false);
+        if (shouldSetInTable) {
+            updateTable(changeSet, row_id, false);
+        } else {
+            drawQueuedChanges();
+        }
     }
     
     function drawQueuedChanges() {
@@ -527,7 +561,7 @@
             $.map( Object.keys(queuedChanges), function( row_id ) {
                 html+="<tr><td>" + getCancelButton(row_id) + "</td><td>" + queuedChanges[row_id].name + " - " + queuedChanges[row_id].title + "</td><td>" + queuedChanges[row_id].mod + "</td><td colspan='3'>&nbsp;</td></tr>";
                 $.map( Object.keys(queuedChanges[row_id].changes), function( field_name ) {
-                    if (field_name != "new_mod") {
+                    if (field_name != "new_mod" && field_name != "mod_type") {
                         html+="<tr><td colspan='3'>&nbsp;</td><td>" + field_name + "</td><td>" + 
                             queuedChanges[row_id].changes[field_name]["old"] + "</td><td>" + 
                             queuedChanges[row_id].changes[field_name]["new"] + "</td></tr>";
@@ -575,6 +609,7 @@
                     alert('Multiple items have the same name, I suggest you abort this mission and reload.');
                 }
             }
+            drawQueuedChanges()
         }
         
         grid.update();

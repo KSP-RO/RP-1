@@ -20,9 +20,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "APAS-89/95",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "RO-SSTU-DP-CBM",
@@ -45,9 +43,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "RO-SSTU-M1-SL",

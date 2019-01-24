@@ -91,6 +91,8 @@ def create_app(test_config=None):
         for mod in part_data.unique_values_for_columns['mod']:
             parts_for_mod = list(filter(lambda x: x['mod'] == mod, part_data.parts))
             parts_for_mod.sort(key=lambda x: x['name'] if x['name'] is not None and len(x['name']) > 0 else x['title'] )
+            for part in parts_for_mod:
+                part['module_tags'] = list(sorted(part['module_tags']))
             text_file = open("data/" + make_safe_filename(mod)  + ".json", "w", newline='\n')
             text_file.write(json.dumps(parts_for_mod, indent=4, separators=(',', ': ')))
             text_file.close()

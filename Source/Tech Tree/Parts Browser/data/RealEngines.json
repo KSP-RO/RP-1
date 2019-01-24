@@ -118,9 +118,8 @@
         "entry_cost_mods": "AJ10-137",
         "identical_part_name": "AJ10-137",
         "module_tags": [
-            "Toxic",
-            "HumanRated",
-            "EngineLiquidPF"
+            "EngineLiquidPF",
+            "Toxic"
         ]
     },
     {
@@ -220,8 +219,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LMAE",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -246,8 +244,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LMDE",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -373,7 +370,6 @@
         "identical_part_name": "RD-0120",
         "module_tags": [
             "EngineLiquidTurbo",
-            "HumanRated",
             "Hydrolox"
         ]
     },
@@ -769,8 +765,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -795,8 +790,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {

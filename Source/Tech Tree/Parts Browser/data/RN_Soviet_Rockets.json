@@ -159,8 +159,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -841,8 +839,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -867,8 +864,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -2115,8 +2111,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -2739,8 +2734,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -2765,8 +2759,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -2933,8 +2926,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -2959,8 +2951,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -2985,8 +2976,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -3011,8 +3001,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "HumanRated"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -3406,9 +3395,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "rn_zenit_p_dec",
@@ -3595,8 +3582,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     }
 ]

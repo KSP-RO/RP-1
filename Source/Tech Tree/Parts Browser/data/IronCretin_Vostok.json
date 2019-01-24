@@ -20,10 +20,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated",
-            "Reentry"
-        ]
+        "module_tags": []
     },
     {
         "name": "IronVostok_Antenna_A",
@@ -47,7 +44,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
             "Instruments"
         ]
     },
@@ -73,9 +69,9 @@
         "entry_cost_mods": "capsulesVostok",
         "identical_part_name": "VostokCapsule",
         "module_tags": [
-            "Avionics",
-            "Habitable",
-            "HumanRated"
+            "HumanRated",
+            "NoEVA",
+            "Reentry"
         ]
     },
     {
@@ -99,9 +95,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "IronVostok_Engine_A",
@@ -125,8 +119,7 @@
         "entry_cost_mods": "VostokSM",
         "identical_part_name": "VostokServiceModule",
         "module_tags": [
-            "EngineLiquidPF",
-            "HumanRated"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -150,9 +143,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "IronVostok_Parachute_A",
@@ -175,9 +166,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "Voskhod_Crew_A",
@@ -201,9 +190,9 @@
         "entry_cost_mods": "capsulesVoskhod",
         "identical_part_name": "VoskhodCapsule",
         "module_tags": [
-            "Avionics",
-            "Habitable",
-            "HumanRated"
+            "HumanRated",
+            "NoEVA",
+            "Reentry"
         ]
     }
 ]

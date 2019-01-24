@@ -152,7 +152,6 @@
         "identical_part_name": "RD-0120",
         "module_tags": [
             "EngineLiquidTurbo",
-            "HumanRated",
             "Hydrolox"
         ]
     }

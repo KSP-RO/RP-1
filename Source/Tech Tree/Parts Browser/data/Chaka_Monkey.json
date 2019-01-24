@@ -280,7 +280,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -375,7 +374,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
             "Reentry"
         ]
     },
@@ -400,9 +398,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "OrionDockingPortXx",
@@ -426,8 +422,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -522,7 +517,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "SDHIxADAPTERx",
@@ -660,7 +657,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "X2009RCSX",
@@ -778,9 +777,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "XCXA_ACBMX",
@@ -803,9 +800,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "CBM",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "XDRAGON--ADAPTERX",
@@ -851,9 +846,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "XESARCSX",
@@ -1275,9 +1268,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "XKzProcFairingBaseRing3_75",
@@ -1324,8 +1315,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Orion MPCV",
         "module_tags": [
-            "Avionics",
-            "HumanRated"
+            "Avionics"
         ]
     },
     {
@@ -1465,8 +1455,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Orion LAS",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -1491,8 +1480,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "Orion MPCV",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -1518,8 +1505,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "Orion CM",
         "module_tags": [
-            "Avionics",
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -1884,7 +1869,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated",
             "Reentry"
         ]
@@ -2594,9 +2578,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "NASA Docking System",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "xparachuteRadialx",

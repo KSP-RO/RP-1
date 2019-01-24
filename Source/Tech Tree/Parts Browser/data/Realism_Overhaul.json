@@ -20,9 +20,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "APAS-89/95",
-        "module_tags": [
-            "HumanRated"
-        ]
+        "module_tags": []
     },
     {
         "name": "Heatshield-10M",
@@ -194,7 +192,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -220,7 +217,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },
@@ -390,8 +386,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "Mercury LES",
         "module_tags": [
-            "EngineSolid",
-            "HumanRated"
+            "EngineSolid"
         ]
     },
     {
@@ -416,10 +411,9 @@
         "entry_cost_mods": "",
         "identical_part_name": "X1Cockpit",
         "module_tags": [
-            "NonReentryRated",
-            "Habitable",
-            "HumanRated",
-            "NoEVA"
+            "Cockpit",
+            "NoEVA",
+            "NonReentryRated"
         ]
     },
     {
@@ -519,7 +513,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Habitable",
             "HumanRated"
         ]
     },

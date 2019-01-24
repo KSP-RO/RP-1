@@ -46,9 +46,11 @@ namespace RP0
         {
             if (IsUnlocked())
             {
-                tEvent.guiActiveEditor = false;
+                tEvent.guiName = "TOOLED";
                 return;
             }
+            else
+                tEvent.guiName = toolingName;
 
             float toolingCost = GetToolingCost();
             bool canAfford = true;
@@ -107,8 +109,7 @@ namespace RP0
 
             tEvent = Events["ToolingEvent"];
 
-            tEvent.guiActiveEditor = IsUnlocked();
-            tEvent.guiName = toolingName;
+            tEvent.guiName = IsUnlocked() ? "TOOLED" : toolingName;
 
             if (!string.IsNullOrEmpty(costReducers))
                 reducers = new List<string>(costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
@@ -121,10 +122,10 @@ namespace RP0
 
             if (IsUnlocked())
             {
-                tEvent.guiActiveEditor = false;
+                tEvent.guiName = "TOOLED";
                 return 0f;
             }
-            tEvent.guiActiveEditor = true;
+            tEvent.guiName = toolingName;
 
             return GetToolingCost() * untooledMultiplier;
         }

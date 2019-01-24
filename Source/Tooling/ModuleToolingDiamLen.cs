@@ -14,6 +14,9 @@ namespace RP0
         [KSPField]
         public float partLength;
 
+        [KSPField]
+        public float costMultiplierDL = 0f;
+
         public virtual void GetDimensions(out float diam, out float len)
         {
             diam = partDiameter;
@@ -67,6 +70,14 @@ namespace RP0
                 return true;
 
             return ToolingDatabase.HasTooling(toolingType, d, l) == ToolingDatabase.ToolingLevel.Full;
+        }
+
+        public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
+        {
+            float baseCost = base.GetModuleCost(defaultCost, sit);
+            float d, l;
+            GetDimensions(out d, out l);
+            return baseCost + (d * l * costMultiplierDL);
         }
     }
 }

@@ -100,9 +100,9 @@ namespace RP0
                         try {
                             GUILayout.Label(uP.name, boldLabel, GUILayout.Width(312));
                             GUILayout.Label(uP.toolingCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
-                            float untooledCost = uP.toolingCost * uP.untooledMultiplier;
-                            GUILayout.Label(untooledCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
-                            GUILayout.Label((uP.totalCost - untooledCost).ToString("N0") + "f", rightLabel, GUILayout.Width(72));
+                            float untooledExtraCost = uP.toolingCost * uP.untooledMultiplier;
+                            GUILayout.Label(uP.totalCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
+                            GUILayout.Label((uP.totalCost - untooledExtraCost).ToString("N0") + "f", rightLabel, GUILayout.Width(72));
                         } finally {
                             GUILayout.EndHorizontal();
                         }

@@ -2310,7 +2310,7 @@
         ]
     },
     {
-        "name": "bluedog_centaur_rl10",
+        "name": "bluedog_Centaur_RL10",
         "title": "RL10 Series Vacuum Engine",
         "description": "Hydrolox restartable expander-cycle vacuum engine used in multiple upper stages, including Centaur, the Saturn I S-IV, and the Delta Cryogenic Second Stage. It has low thrust, but very high specific impulse and low mass, making it ideal for high energy, beyond-low-Earth-orbit applications like launching satellites to geostationary transfer orbits or to the Moon or other planets. However, like all hydrolox engines, hydrogen boiloff is a serious issue without heat pumps or radiators. Diameter: [0.92 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -2336,7 +2336,7 @@
         ]
     },
 	    {
-        "name": "bluedog_centaur_rl10a41",
+        "name": "bluedog_Centaur_RL10A41",
         "title": "RL10A-4 Series Vacuum Engine",
         "description": "Hydrolox restartable expander-cycle vacuum engine used in countless applications. Most famous applications include the Centaur upper stage, the S-IV upper stage of the original Saturn I launcher, and the new Delta Cryogenic Second Stage. The RL10 uses liquid hydrogen and liquid oxygen (so beware of boiloff); it has very low thrust, but very high specific impulse, and is designed for beyond-Low-Earth-Orbit applications like launching satellites to geostationary transfer orbits or to the Moon or other planets. However, like all cryogenic engines, boiloff is a serious issue without heat pumps or radiators. Mount size can be adjusted from 1.25m to 10m in 1m increments. Diameter: [1.25 m]. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -2362,7 +2362,7 @@
         ]
     },
 	{
-        "name": "bluedog_centaur_rl10b2",
+        "name": "bluedog_Centaur_RL10B2",
         "title": "RL10-B/CECE Series",
         "description": "Hydrolox restartable expander-cycle vacuum engine used in multiple upper stages, including Centaur, the Saturn I S-IV, and the Delta Cryogenic Second Stage. It has low thrust, but very high specific impulse and low mass, making it ideal for high energy, beyond-low-Earth-orbit applications like launching satellites to geostationary transfer orbits or to the Moon or other planets. However, like all hydrolox engines, hydrogen boiloff is a serious issue without heat pumps or radiators. Diameter: [0.92 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -2388,7 +2388,7 @@
         ]
     },
 	{
-        "name": "bluedog_f1",
+        "name": "bluedog_F1",
         "title": "F-1 Series",
         "description": "The massive Rocketdyne F-1 engine. One of the largest, most powerful rocket engines ever built. Ensure you enable roll capability or disable gimbal as required for your application. Diameter: [3.61 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -2413,7 +2413,7 @@
         ]
     },
 		{
-        "name": "bluedog_h1c",
+        "name": "bluedog_H1C",
         "title": "H-1/RS-27 Series",
         "description": "The H-1 is an upgrade to the LR79 engine that propelled the Saturn-I and IB vehicles, as well as late-model Delta rockets (as the RS-27). The H-1/RS-27 are optimized for the first-stage main engine role. The RS-27A has a higher expansion ratio for increased performance at altitude since liftoff thrust on the Delta II is augmented by solid boosters and the core burns rather longer. Diameter: [1.0 m]. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -2438,7 +2438,7 @@
         ]
     },
 	{
-        "name": "bluedog_h1d",
+        "name": "bluedog_H1D",
         "title": "H-1/RS-27 Series",
         "description": "The H-1 is an upgrade to the LR79 engine that propelled the Saturn-I and IB vehicles, as well as late-model Delta rockets (as the RS-27). The H-1/RS-27 are optimized for the first-stage main engine role. The RS-27A has a higher expansion ratio for increased performance at altitude since liftoff thrust on the Delta II is augmented by solid boosters and the core burns rather longer. Diameter: [1.0 m]. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -2463,7 +2463,7 @@
         ]
     },
 	{
-        "name": "bluedog_j2",
+        "name": "bluedog_J2",
         "title": "J-2 Series",
         "description": "The Rocketdyne J-2 rocket engine found on the Saturn S-IVB and S-II stages. Ensure you enable roll capability or disable gimbal as required for your application. Diameter: [2.01 m]. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -2489,7 +2489,7 @@
         ]
     },
 	{
-        "name": "bluedog_j2_toroidal",
+        "name": "bluedog_J2_Toroidal",
         "title": "J-2T-200/250K",
         "description": "Aerospike. Using proven technology from the J-2 and introducing an aerospike nozzle to the developing J-2S machinery. Diameter: [2.5 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",

@@ -530,7 +530,7 @@
         "spacecraft": "AJ10 (Advanced)",
         "engine_config": "AJ10_Adv",
         "upgrade": false,
-        "entry_cost_mods": "AJ10-118F",
+        "entry_cost_mods": "AJ10-138",
         "identical_part_name": "AJ10 (Adv)",
         "module_tags": [
             "EngineLiquidPF",

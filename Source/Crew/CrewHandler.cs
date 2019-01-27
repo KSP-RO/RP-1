@@ -494,7 +494,35 @@ namespace RP0.Crew
         {
             expireTimes.Add(e);
         }
-        
+
+        public void AddCoursesForTechNode(RDTech tech)
+        {
+            for (int i = 0; i < tech.partsAssigned.Count; i++)
+            {
+                AvailablePart ap = tech.partsAssigned[i];
+                if (ap.partPrefab.CrewCapacity > 0)
+                {
+                    AddPartCourses(ap);
+                }
+            }
+        }
+
+        public void AddPartCourses(AvailablePart ap)
+        {
+            string name = TrainingDatabase.SynonymReplace(ap.name);
+            if (!partSynsHandled.Contains(name))
+            {
+                partSynsHandled.Add(name);
+                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap);
+
+                GenerateCourseProf(ap, !isPartUnlocked);
+                if (isPartUnlocked)
+                {
+                    GenerateCourseMission(ap);
+                }
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -806,17 +834,10 @@ namespace RP0.Crew
 
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
-                if (ap.partPrefab.CrewCapacity > 0 /*&& ap.TechRequired != "start"*/)
+                if (ap.partPrefab.CrewCapacity > 0 && /*&& ap.TechRequired != "start"*/
+                    ResearchAndDevelopment.PartModelPurchased(ap))
                 {
-                    if (ResearchAndDevelopment.PartModelPurchased(ap))
-                    {
-                        string name = TrainingDatabase.SynonymReplace(ap.name);
-                        if (!partSynsHandled.Contains(name))
-                        {
-                            partSynsHandled.Add(name);
-                            AddPartCourses(ap);
-                        }
-                    }
+                    AddPartCourses(ap);
                 }
             }
 
@@ -824,13 +845,7 @@ namespace RP0.Crew
             //fire an event to let other mods add available courses (where they can pass variables through then)
         }
 
-        protected void AddPartCourses(AvailablePart ap)
-        {
-            GenerateCourseProf(ap);
-            GenerateCourseMission(ap);
-        }
-
-        protected void GenerateCourseProf(AvailablePart ap)
+        protected void GenerateCourseProf(AvailablePart ap, bool isTemporary)
         {
             ConfigNode n = new ConfigNode("FS_COURSE");
             string name = TrainingDatabase.SynonymReplace(ap.name);
@@ -838,6 +853,7 @@ namespace RP0.Crew
             n.AddValue("id", "prof_" + name);
             n.AddValue("name", "Proficiency: " + name);
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400d));
+            n.AddValue("isTemporary", isTemporary);
 
             n.AddValue("conflicts", "TRAINING_proficiency:" + name);
 
@@ -859,6 +875,7 @@ namespace RP0.Crew
             n.AddValue("id", "msn_" + name);
             n.AddValue("name", "Mission: " + name);
             n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "-Mission") * 86400d);
+            n.AddValue("isTemporary", false);
             n.AddValue("timeUseStupid", true);
             n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
             n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);

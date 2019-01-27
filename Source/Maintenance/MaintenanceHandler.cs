@@ -155,10 +155,47 @@ namespace RP0
 
             // AC
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out costs))
-                acCost = settings.facilityLevelCostMult * Math.Pow(costs[(int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * (costs.Length - 0.95f))], settings.facilityLevelCostPow);
+            {
+                float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
+                int lvlInt = (int)(lvl * (costs.Length - 0.95f));
+                acCost = settings.facilityLevelCostMult * Math.Pow(costs[lvlInt], settings.facilityLevelCostPow);
+                if (RP0.Crew.CrewHandler.Instance != null && RP0.Crew.CrewHandler.Instance.ActiveCourses != null)
+                {
+                    double courses = RP0.Crew.CrewHandler.Instance.ActiveCourses.Count;
+                    if (courses > 0)
+                    {
+                        courses -= lvlInt * settings.freeCoursesPerLevel;
+                        if (courses > 0d)
+                            acCost *= 1d + (courses * (settings.courseMultiplierDivisor / (settings.courseMultiplierDivisor + lvlInt)));
+                    }
+                }
+            }
 
             nautYearlyUpkeep = settings.nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * settings.nautYearlyUpkeepAdd);
             nautUpkeep = HighLogic.CurrentGame.CrewRoster.GetActiveCrewCount() * nautYearlyUpkeep * (1d / 365d);
+            for (int i = HighLogic.CurrentGame.CrewRoster.Count; i-- > 0;)
+            {
+                var k = HighLogic.CurrentGame.CrewRoster[i];
+                if (k.rosterStatus == ProtoCrewMember.RosterStatus.Dead || k.rosterStatus == ProtoCrewMember.RosterStatus.Missing)
+                    continue;
+
+                if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
+                    nautUpkeep += settings.nautInFlightDailyRate;
+                else
+                {
+                    // TODO we really should track this independently, in crewhandler, for fast
+                    // use since this runs every frame or so.
+                    for (int j = k.flightLog.Count; j-- > 0;)
+                    {
+                        var e = k.flightLog[j];
+                        if (e.type == "TRAINING_proficiency" && Crew.TrainingDatabase.HasName(e.target, "Orbit"))
+                        {
+                            nautUpkeep += settings.nautOrbitProficiencyDailyRate;
+                            break;
+                        }
+                    }
+                }
+            }
 
             researchUpkeep = kctResearchRate * settings.kctResearchMult;
 

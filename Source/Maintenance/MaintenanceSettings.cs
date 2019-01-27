@@ -10,7 +10,7 @@ namespace RP0
     public class MaintenanceSettings : IConfigNode
     {
         [Persistent]
-        public double facilityLevelCostMult = 0.0000005d;
+        public double facilityLevelCostMult = 0.00002d;
 
         [Persistent]
         public double facilityLevelCostPow = 1d;
@@ -26,6 +26,18 @@ namespace RP0
 
         [Persistent]
         public double nautYearlyUpkeepBase = 500d;
+
+        [Persistent]
+        public double nautInFlightDailyRate = 100d;
+
+        [Persistent]
+        public double nautOrbitProficiencyDailyRate = 20d;
+
+        [Persistent]
+        public double freeCoursesPerLevel = 0.5d;
+
+        [Persistent]
+        public double courseMultiplierDivisor = 3d;
 
         public void Load(ConfigNode node)
         {

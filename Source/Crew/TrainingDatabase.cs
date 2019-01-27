@@ -50,6 +50,17 @@ namespace RP0.Crew
                 return c;
             }
 
+            public bool HasName(string name)
+            {
+                if (this.name == name)
+                    return true;
+                foreach (string s in children)
+                    if (TrainingDatabase.holders[s].HasName(name))
+                        return true;
+
+                return false;
+            }
+
             #endregion
         }
 
@@ -116,6 +127,16 @@ namespace RP0.Crew
                 return h.GetTime();
             
             return 0d;
+        }
+
+        public static bool HasName(string training, string name)
+        {
+            // Don't have to guard against repeats because we're not summing,
+            // just getting existence.
+            if (holders.TryGetValue(training, out var h))
+                return h.HasName(name);
+
+            return false;
         }
 
         public static string SynonymReplace(string name)

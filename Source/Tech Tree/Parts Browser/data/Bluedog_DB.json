@@ -20,9 +20,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "bluedog_AgenaD",
@@ -45,9 +43,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Agena-D SPS",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "bluedog_Apollo_Block2_ActiveDockingMechanism",

@@ -62,6 +62,7 @@
     <Compile Include="ModuleNonRecharge.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleNoEVA.cs" />
+    <Compile Include="ModuleTag\NoResourceCostMult.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
     <Compile Include="ModuleTag\DecreaseB.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />

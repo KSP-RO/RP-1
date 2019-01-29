@@ -709,8 +709,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "7KOKService",
         "module_tags": [
-            "Avionics",
-            "EngineLiquidPF"
+            "Avionics"
         ]
     },
     {
@@ -834,9 +833,7 @@
         "entry_cost_mods": "ApolloSM",
         "identical_part_name": "Apollo SM",
         "module_tags": [
-            "Avionics",
-            "EngineLiquidPF",
-            "Toxic"
+            "Avionics"
         ]
     },
     {

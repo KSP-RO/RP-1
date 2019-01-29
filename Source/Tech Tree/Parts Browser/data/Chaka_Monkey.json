@@ -1794,9 +1794,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "nervaII_kerbscalexx",

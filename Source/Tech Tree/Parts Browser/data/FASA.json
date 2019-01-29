@@ -262,9 +262,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Agena-D SPS",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAAgena_Engine_FP_b",
@@ -287,9 +285,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAAgena_Engine_FP_d",
@@ -312,9 +308,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAApalloLFTF1Plate",
@@ -521,9 +515,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAApolloDecSV5m",
@@ -1032,9 +1024,7 @@
         "upgrade": false,
         "entry_cost_mods": "ApolloSM",
         "identical_part_name": "Apollo SM",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAApollo_SM_Dish",
@@ -2361,9 +2351,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiEngineFuel2",
@@ -3163,9 +3151,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiPod2RCSWhite",
@@ -3188,9 +3174,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiPod2White",
@@ -3285,9 +3269,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGeminiUtilityPack",
@@ -3333,9 +3315,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "FASAGerminiSRB175",

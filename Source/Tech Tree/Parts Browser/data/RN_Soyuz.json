@@ -992,9 +992,7 @@
         "upgrade": false,
         "entry_cost_mods": "40000,capsulesMature",
         "identical_part_name": "",
-        "module_tags": [
-            "Avionics"
-        ]
+        "module_tags": []
     },
     {
         "name": "t_dp",

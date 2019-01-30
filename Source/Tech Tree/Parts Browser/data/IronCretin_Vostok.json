@@ -118,9 +118,7 @@
         "upgrade": false,
         "entry_cost_mods": "VostokSM",
         "identical_part_name": "VostokServiceModule",
-        "module_tags": [
-            "EngineLiquidPF"
-        ]
+        "module_tags": []
     },
     {
         "name": "IronVostok_Mono_A",

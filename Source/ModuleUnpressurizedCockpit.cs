@@ -20,7 +20,7 @@ namespace RP0
 
         public override string GetInfo()
         {
-            return "Cockpit is unpressurized and will lead to crew death above 50km";
+            return "Cockpit is unpressurized and will lead to crew death above 30km";
         }
 
         public override void OnAwake()
@@ -39,7 +39,7 @@ namespace RP0
                 if (UT > nextCheck)
                 {
                     nextCheck = UT + checkInterval;
-                    if (part.staticPressureAtm * 101.325d < 0.075d)
+                    if (part.staticPressureAtm * 101.325d < 1.2d)
                     {
                         bool kill = false;
                         for(int i = pC; i-- > 0;)

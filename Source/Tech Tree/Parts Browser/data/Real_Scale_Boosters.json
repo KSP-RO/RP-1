@@ -3063,7 +3063,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Saturn I Instrument",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {

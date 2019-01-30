@@ -1318,7 +1318,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Orion MPCV",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "XNP_lft_W375x3SHORTW",

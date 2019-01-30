@@ -89,7 +89,7 @@
         "cost": "4000",
         "entry_cost": "80000",
         "category": "STATIONS",
-        "info": "Fuel Tank",
+        "info": "Service Module",
         "year": "1967",
         "technology": "spaceStationPrototypes",
         "era": "05-LUNAR",
@@ -102,7 +102,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "LMiniAircaftTail",
@@ -240,7 +242,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "LSmallFuelMod",
@@ -250,7 +254,7 @@
         "cost": "2000",
         "entry_cost": "40000",
         "category": "STATIONS",
-        "info": "Fuel Tank",
+        "info": "Service Module",
         "year": "1967",
         "technology": "spaceStationPrototypes",
         "era": "05-LUNAR",
@@ -263,7 +267,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "MEMDescentMod",
@@ -435,7 +441,8 @@
         "identical_part_name": "",
         "module_tags": [
             "Avionics",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -486,7 +493,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Saturn I Instrument",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -635,7 +643,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1032,7 +1041,7 @@
         "cost": "1200",
         "entry_cost": "24000",
         "category": "AVIONICS",
-        "info": "Probe",
+        "info": "Avionics",
         "year": "1961",
         "technology": "interplanetaryProbes",
         "era": "03-HUMAN",
@@ -1045,7 +1054,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Ranger",
-        "module_tags": []
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "SXTISSHabISK30",
@@ -2069,7 +2081,8 @@
         "entry_cost_mods": "250, avionicsProbesPW",
         "identical_part_name": "Sputnik",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {

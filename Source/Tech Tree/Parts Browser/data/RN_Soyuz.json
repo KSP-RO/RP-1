@@ -165,7 +165,9 @@
         "upgrade": false,
         "entry_cost_mods": "7KOKSM",
         "identical_part_name": "7KOKService",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "ok_para",
@@ -410,7 +412,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "rn_tks",
@@ -847,7 +851,9 @@
         "upgrade": false,
         "entry_cost_mods": "VostokSM",
         "identical_part_name": "VostokServiceModule",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "rn_zond_asas",
@@ -992,7 +998,10 @@
         "upgrade": false,
         "entry_cost_mods": "40000,capsulesMature",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "t_dp",
@@ -1038,7 +1047,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "t_pao2",
@@ -1061,7 +1072,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "tg_bo",
@@ -1111,7 +1124,9 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Instruments"
+            "Avionics",
+            "Instruments",
+            "NoResourceCostMult"
         ]
     }
 ]

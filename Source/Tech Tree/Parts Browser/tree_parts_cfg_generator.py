@@ -43,7 +43,7 @@ def generate_part_config(part, module_tags_with_prefixes):
     module_tags = ''
     for module_tag in part['module_tags']:
         # some module tags have a prefix (usually 'Tag') so if it has a prefix, prefix it.
-        prefix = module_tags_with_prefixes[module_tag]
+        prefix = module_tags_with_prefixes[module_tag].strip()
         module_tags += module_template.substitute(module_tag=prefix + module_tag)
     if len(module_tags) > 0:
         module_tags = "\n" + module_tags + "\n"

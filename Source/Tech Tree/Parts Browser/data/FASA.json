@@ -213,7 +213,8 @@
         "entry_cost_mods": "2000, avionicsUpperBasic, avionicsHibernation",
         "identical_part_name": "Agena Avionics",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -262,7 +263,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Agena-D SPS",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAAgena_Engine_FP_b",
@@ -285,7 +288,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAAgena_Engine_FP_d",
@@ -308,7 +313,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAApalloLFTF1Plate",
@@ -515,7 +522,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAApolloDecSV5m",
@@ -562,7 +571,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Saturn IB Instrument",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1025,7 +1035,9 @@
         "upgrade": false,
         "entry_cost_mods": "ApolloSM",
         "identical_part_name": "Apollo SM",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAApollo_SM_Dish",
@@ -1286,7 +1298,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1311,7 +1324,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1336,7 +1350,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1361,7 +1376,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1386,7 +1402,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1483,7 +1500,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAExplorerProbe",
@@ -1507,7 +1527,8 @@
         "entry_cost_mods": "1000, avionicsProbesEarly",
         "identical_part_name": "Explorer 1",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -2143,7 +2164,9 @@
         "upgrade": false,
         "entry_cost_mods": "50000, GeminiSM",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAGeminiBigGDockExt",
@@ -2377,7 +2400,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAGeminiLES",
@@ -3298,7 +3323,9 @@
         "upgrade": false,
         "entry_cost_mods": "GeminiSM",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "FASAGeminiUtilitySasRcs",
@@ -3462,7 +3489,7 @@
         "era": "03-HUMAN",
         "ro": true,
         "rp0": true,
-        "orphan": false,
+        "orphan": true,
         "rp0_conf": true,
         "spacecraft": "Titan II",
         "engine_config": "",
@@ -3470,7 +3497,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3495,7 +3523,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {

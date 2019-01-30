@@ -710,7 +710,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "7KOKService",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "SSTU-SC-A-SMX",
@@ -834,7 +836,9 @@
         "upgrade": false,
         "entry_cost_mods": "ApolloSM",
         "identical_part_name": "Apollo SM",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "SSTU-SC-BAY-MCB-A",
@@ -1004,7 +1008,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Orion MPCV",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "SSTU-SC-ENG-AJ10-137",

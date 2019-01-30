@@ -1317,6 +1317,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -1415,6 +1416,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },

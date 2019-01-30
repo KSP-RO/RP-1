@@ -659,6 +659,7 @@
         "identical_part_name": "7KOKdescent",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -684,7 +685,8 @@
         "entry_cost_mods": "capsulesSoyuz",
         "identical_part_name": "7KOKorbital",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -783,6 +785,7 @@
         "identical_part_name": "Apollo CM",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -808,7 +811,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -907,6 +911,7 @@
         "identical_part_name": "Orion CM",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -932,7 +937,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {

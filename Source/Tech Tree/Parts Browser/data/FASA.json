@@ -854,6 +854,7 @@
         "identical_part_name": "Apollo CM",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -2094,6 +2095,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -2189,6 +2191,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -2938,7 +2941,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3127,6 +3131,7 @@
         "identical_part_name": "GeminiPod",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -3199,6 +3204,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -3589,7 +3595,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LEM Ascent",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4042,6 +4049,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },

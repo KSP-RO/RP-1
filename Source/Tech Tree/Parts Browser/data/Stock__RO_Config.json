@@ -787,7 +787,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -883,7 +884,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -955,6 +957,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -980,7 +983,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1005,7 +1009,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3083,7 +3088,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3108,7 +3114,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3759,7 +3766,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4335,6 +4343,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -4406,7 +4415,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4432,6 +4442,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -4458,6 +4469,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -4830,7 +4842,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4855,7 +4868,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -5911,7 +5925,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -6665,7 +6680,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {

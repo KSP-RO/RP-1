@@ -92,7 +92,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -214,6 +215,7 @@
         "identical_part_name": "7KOKdescent",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -308,7 +310,8 @@
         "entry_cost_mods": "20000,capsulesMature",
         "identical_part_name": "7KLOKorbital",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -382,6 +385,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -548,6 +552,7 @@
         "identical_part_name": "VA Capsule",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -644,7 +649,8 @@
         "entry_cost_mods": "capsulesAirlock",
         "identical_part_name": "VoskhodAirlock",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -742,6 +748,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -815,6 +822,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -910,6 +918,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -958,7 +967,8 @@
         "entry_cost_mods": "40000,capsulesMature",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1077,7 +1087,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {

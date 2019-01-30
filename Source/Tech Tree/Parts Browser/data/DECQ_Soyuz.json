@@ -206,6 +206,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -277,7 +278,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {

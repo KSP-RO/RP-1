@@ -23,6 +23,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -51,6 +52,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated",
             "UnpressurizedCockpit"
         ]
@@ -79,6 +81,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -106,6 +109,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -133,6 +137,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -160,6 +165,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -187,6 +193,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -214,6 +221,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     }

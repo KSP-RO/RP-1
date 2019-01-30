@@ -162,7 +162,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {

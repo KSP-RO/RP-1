@@ -190,6 +190,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },

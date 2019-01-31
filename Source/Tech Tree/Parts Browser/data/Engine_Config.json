@@ -3709,8 +3709,8 @@
         "module_tags": []
     },
     {
-        "name": "Mode#1",
-        "title": "Mode#1",
+        "name": "RD701-Mode-1",
+        "title": "RD701-Mode-1",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",
@@ -3732,8 +3732,8 @@
         "module_tags": []
     },
     {
-        "name": "Mode#1",
-        "title": "Mode#1",
+        "name": "RD704-Mode-1",
+        "title": "RD704-Mode-1",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",
@@ -3755,8 +3755,8 @@
         "module_tags": []
     },
     {
-        "name": "Mode#2",
-        "title": "Mode#2",
+        "name": "RD701-Mode-2",
+        "title": "RD701-Mode-2",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",
@@ -3778,8 +3778,8 @@
         "module_tags": []
     },
     {
-        "name": "Mode#2",
-        "title": "Mode#2",
+        "name": "RD704-Mode-2",
+        "title": "RD704-Mode-2",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",

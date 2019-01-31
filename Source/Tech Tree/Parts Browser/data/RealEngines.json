@@ -323,7 +323,7 @@
         ]
     },
     {
-        "name": "RO-RE-RD0110",
+        "name": "RO-RE-STEERING_MOTOR_RD0110engine",
         "title": "RD-0110 Vernier",
         "description": "The vernier engine for the RD-0110 power plant. Four of them are used on the Block I upper stage of the Soyuz U and FG launch vehicle variants for attitude control. Diameter: 0.3 m Plume configured by RealPlume.",
         "mod": "RealEngines",

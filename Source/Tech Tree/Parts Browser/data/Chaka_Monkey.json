@@ -499,7 +499,7 @@
         ]
     },
     {
-        "name": "RD180_StockVersion",
+        "name": "MonkeyPodpsADAPTER",
         "title": "Logistics Module (Small)",
         "description": "A general purpose cargo module for on-orbit operations.",
         "mod": "Chaka Monkey",

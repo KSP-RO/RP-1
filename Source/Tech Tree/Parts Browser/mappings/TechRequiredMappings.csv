@@ -410,8 +410,8 @@ PW,supersonicDev,Spaceplanes
 1963,improvedFlightControl,RCS
 1964,earlyDocking,RCS
 1965,earlyDocking,RCS
-1966,earlyDocking,RCS
-1967,advancedFlightControl,RCS
+1966,dockingCrewTransfer,RCS
+1967,dockingCrewTransfer,RCS
 1968,dockingCrewTransfer,RCS
 1969,dockingCrewTransfer,RCS
 1970,dockingCrewTransfer,RCS

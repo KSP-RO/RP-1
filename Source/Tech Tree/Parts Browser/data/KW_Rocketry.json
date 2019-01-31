@@ -802,7 +802,7 @@
         "category": "RCS",
         "info": "Fin",
         "year": "1967",
-        "technology": "advancedFlightControl",
+        "technology": "dockingCrewTransfer",
         "era": "05-LUNAR",
         "ro": true,
         "rp0": false,

@@ -9,7 +9,7 @@
         "category": "AVIONICS",
         "info": "Avionics",
         "year": "1956",
-        "technology": "earlyAvionics",
+        "technology": "dockingCrewTransfer",
         "era": "02-SAT",
         "ro": false,
         "rp0": false,

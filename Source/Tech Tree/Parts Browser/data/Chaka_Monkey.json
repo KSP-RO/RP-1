@@ -286,6 +286,32 @@
         ]
     },
     {
+        "name": "MonkeyPodpsADAPTER",
+        "title": "Logistics Module (Small)",
+        "description": "A general purpose cargo module for on-orbit operations.",
+        "mod": "Chaka Monkey",
+        "cost": "8000",
+        "entry_cost": "160000",
+        "category": "STATIONS",
+        "info": "Cargo",
+        "year": "1986",
+        "technology": "modularSpaceStations",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult"
+        ]
+    },
+    {
         "name": "MonkeySMA8FPodLANDERPsXX",
         "title": "SP - 600 Habitation Module",
         "description": "A hard shell habitation module designed for surface operations.",
@@ -496,32 +522,6 @@
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
-        ]
-    },
-    {
-        "name": "MonkeyPodpsADAPTER",
-        "title": "Logistics Module (Small)",
-        "description": "A general purpose cargo module for on-orbit operations.",
-        "mod": "Chaka Monkey",
-        "cost": "8000",
-        "entry_cost": "160000",
-        "category": "STATIONS",
-        "info": "Cargo",
-        "year": "1986",
-        "technology": "modularSpaceStations",
-        "era": "08-LONGTERM",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
-        "module_tags": [
-            "HumanRated",
-            "NoResourceCostMult"
         ]
     },
     {
@@ -2473,10 +2473,10 @@
         "mod": "Chaka Monkey",
         "cost": "0",
         "entry_cost": "1",
-        "category": "EDL",
+        "category": "COMMAND",
         "info": "Parachute",
         "year": "2019",
-        "technology": "SIAD",
+        "technology": "capsulesNF",
         "era": "11-NF",
         "ro": true,
         "rp0": true,

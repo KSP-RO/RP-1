@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using KSP;
+using RP0.Crew;
 using UnityEngine;
 using Upgradeables;
 
@@ -18,6 +18,7 @@ namespace RP0
         public double lastUpdate = 0d;
 
         protected double updateInterval = 3600d;
+        protected double maintenanceCostMult = 1d;
 
         protected bool wasWarpingHigh = false;
 
@@ -67,7 +68,7 @@ namespace RP0
             double tmp = 0d;
             foreach (double d in kctBuildRates.Values)
                 tmp += d;
-            return tmp * settings.kctBPMult;
+            return tmp * settings.kctBPMult * maintenanceCostMult;
         }}
         public double researchUpkeep = 0d;
         public double nautYearlyUpkeep = 0d;
@@ -82,12 +83,14 @@ namespace RP0
 
         public override void OnAwake()
         {
-
             if (_instance != null)
             {
                 GameObject.Destroy(_instance);
             }
             _instance = this;
+
+            GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
+            GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
         public override void OnLoad(ConfigNode node)
@@ -113,7 +116,7 @@ namespace RP0
             return s;
         }
 
-        public void updateUpkeep()
+        public void UpdateUpkeep()
         {
             float[] costs;
             EnsureFacilityLvlCostsLoaded();
@@ -128,7 +131,7 @@ namespace RP0
                     {
                         padCosts[i] = 0d;
                         if (i < lC)
-                            padCosts[i] = settings.facilityLevelCostMult * kctPadCounts[i] * Math.Pow(SumCosts(costs, i), settings.facilityLevelCostPow);
+                            padCosts[i] = maintenanceCostMult * settings.facilityLevelCostMult * kctPadCounts[i] * Math.Pow(SumCosts(costs, i), settings.facilityLevelCostPow);
                     }
                     padCost = 0;
                     for (int i = padLevels; i-- > 0;)
@@ -140,37 +143,37 @@ namespace RP0
 
             // Runway
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.Runway, out costs))
-                runwayCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
+                runwayCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
             //VAB
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out costs))
-                vabCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
+                vabCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
             //SPH
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
-                sphCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
+                sphCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
             //RnD
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out costs))
-                rndCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
+                rndCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
             // MC
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.MissionControl, out costs))
-                mcCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
+                mcCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
             // TS
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.TrackingStation, out costs))
-                tsCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
+                tsCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
             // AC
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out costs))
             {
                 float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
                 int lvlInt = (int)(lvl * (costs.Length - 0.95f));
-                acCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, lvlInt), settings.facilityLevelCostPow);
-                if (RP0.Crew.CrewHandler.Instance != null && RP0.Crew.CrewHandler.Instance.ActiveCourses != null)
+                acCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, lvlInt), settings.facilityLevelCostPow);
+                if (CrewHandler.Instance?.ActiveCourses != null)
                 {
-                    double courses = RP0.Crew.CrewHandler.Instance.ActiveCourses.Count;
+                    double courses = CrewHandler.Instance.ActiveCourses.Count;
                     if (courses > 0)
                     {
                         courses -= lvlInt * settings.freeCoursesPerLevel;
@@ -180,7 +183,7 @@ namespace RP0
                 }
             }
 
-            nautYearlyUpkeep = settings.nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * settings.nautYearlyUpkeepAdd);
+            nautYearlyUpkeep = maintenanceCostMult * settings.nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * maintenanceCostMult * settings.nautYearlyUpkeepAdd);
             nautUpkeep = 0d;
             double perNaut = nautYearlyUpkeep * (1d / 365d);
             int nautCount = 0;
@@ -192,7 +195,7 @@ namespace RP0
 
                 ++nautCount;
                 if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
-                    nautUpkeep += settings.nautInFlightDailyRate;
+                    nautUpkeep += maintenanceCostMult * settings.nautInFlightDailyRate;
                 else
                 {
                     // TODO we really should track this independently, in crewhandler, for fast
@@ -200,9 +203,9 @@ namespace RP0
                     for (int j = k.flightLog.Count; j-- > 0;)
                     {
                         var e = k.flightLog[j];
-                        if (e.type == "TRAINING_proficiency" && Crew.TrainingDatabase.HasName(e.target, "Orbit"))
+                        if (e.type == "TRAINING_proficiency" && TrainingDatabase.HasName(e.target, "Orbit"))
                         {
-                            nautUpkeep += settings.nautOrbitProficiencyDailyRate;
+                            nautUpkeep += maintenanceCostMult * settings.nautOrbitProficiencyDailyRate;
                             break;
                         }
                     }
@@ -210,7 +213,7 @@ namespace RP0
             }
             nautUpkeep += nautCount * perNaut;
 
-            researchUpkeep = kctResearchRate * settings.kctResearchMult;
+            researchUpkeep = maintenanceCostMult * kctResearchRate * settings.kctResearchMult;
 
             totalUpkeep = facilityUpkeep + integrationUpkeep + researchUpkeep + nautUpkeep;
         }
@@ -249,7 +252,7 @@ namespace RP0
                     return;
             }
 
-            updateUpkeep();
+            UpdateUpkeep();
 
             double timePassed = time - lastUpdate;
 
@@ -271,10 +274,22 @@ namespace RP0
 
         public void OnDestroy()
         {
-           
+            GameEvents.onGameStateLoad.Remove(LoadSettings);
+            GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
         }
 
         #endregion
+
+        private void LoadSettings(ConfigNode data)
+        {
+            maintenanceCostMult = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().MaintenanceCostMult;
+        }
+
+        private void SettingsChanged()
+        {
+            LoadSettings(null);
+            UpdateUpkeep();
+        }
 
         private void EnsureFacilityLvlCostsLoaded()
         {

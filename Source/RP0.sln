@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RP0KCTBinder", "RP0KCTBinde
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CC_RP0", "CC_RP0\CC_RP0.csproj", "{CB4E4485-39C3-4C4A-9C24-CDD85841AA4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearInputLocks", "..\ClearInputLocks\ClearInputLocks.csproj", "{25CFD266-ED2F-47CD-AF33-4365C8D381E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearInputLocks", "ClearInputLocks\ClearInputLocks.csproj", "{25CFD266-ED2F-47CD-AF33-4365C8D381E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

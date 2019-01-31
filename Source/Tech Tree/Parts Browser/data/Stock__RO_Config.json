@@ -391,7 +391,8 @@
         "entry_cost_mods": "1000, avionicsBoosterPW",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -416,7 +417,8 @@
         "entry_cost_mods": "1000,         avionicsBoosterEarly",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -441,7 +443,8 @@
         "entry_cost_mods": "1500,         avionicsBoosterEarly",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -466,7 +469,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -491,7 +495,8 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -516,7 +521,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -787,7 +793,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -883,7 +890,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -955,6 +963,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -980,7 +989,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1005,7 +1015,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1730,7 +1741,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1755,7 +1767,8 @@
         "entry_cost_mods": "500, avionicsUpperPW",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1780,7 +1793,8 @@
         "entry_cost_mods": "500, avionicsUpperBasic",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1805,7 +1819,8 @@
         "entry_cost_mods": "2000, avionicsUpperBasic, avionicsHibernation",
         "identical_part_name": "Agena Avionics",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1830,7 +1845,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1855,7 +1871,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Saturn IB Instrument",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1880,7 +1897,8 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -2964,7 +2982,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3083,7 +3102,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3108,7 +3128,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -3759,7 +3780,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4335,6 +4357,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -4406,7 +4429,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4432,6 +4456,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -4458,6 +4483,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -4506,7 +4532,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4830,7 +4857,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -4855,7 +4883,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -5297,7 +5326,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -5322,7 +5352,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -5347,7 +5378,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Surveyor",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -5372,7 +5404,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -5769,7 +5802,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -5911,7 +5945,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -6665,7 +6700,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {

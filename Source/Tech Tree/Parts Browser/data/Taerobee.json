@@ -44,7 +44,8 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -190,6 +191,7 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
+            "NoResourceCostMult",
             "NonReentryRated"
         ]
     },
@@ -313,7 +315,8 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {

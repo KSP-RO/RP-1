@@ -4,6 +4,7 @@ DecreaseB,Tag
 EngineLiquidPF,Tag
 NoEVA,
 NonRecharge,
+NoResourceCostMult,Tag
 EngineLiquidTurbo,Tag
 EngineSolid,Tag
 HumanRated,Tag

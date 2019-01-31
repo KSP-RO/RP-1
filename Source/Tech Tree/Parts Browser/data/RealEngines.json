@@ -323,31 +323,6 @@
         ]
     },
     {
-        "name": "RO-RE-RD0110",
-        "title": "RD-0110 Vernier",
-        "description": "The vernier engine for the RD-0110 power plant. Four of them are used on the Block I upper stage of the Soyuz U and FG launch vehicle variants for attitude control. Diameter: 0.3 m Plume configured by RealPlume.",
-        "mod": "RealEngines",
-        "cost": "20",
-        "entry_cost": "400",
-        "category": "ORBITAL",
-        "info": "",
-        "year": "1960",
-        "technology": "orbitalRocketry1960",
-        "era": "02-SAT",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "Molniya, Voskhod",
-        "engine_config": "RD0110Vernier",
-        "upgrade": false,
-        "entry_cost_mods": "RD-0110-Vernier",
-        "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
-    },
-    {
         "name": "RO-RE-RD0120",
         "title": "RD-0120",
         "description": "1980s medium TWR, atmospheric and vacuum use. The RD-0120 is a fuel-rich staged combustion engine developed to power the core stage of the Energia launcher. Diameter: [2.6 m]. Plume configured by RealPlume.",
@@ -863,6 +838,31 @@
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
+        ]
+    },
+    {
+        "name": "RO-RE-STEERING_MOTOR_RD0110engine",
+        "title": "RD-0110 Vernier",
+        "description": "The vernier engine for the RD-0110 power plant. Four of them are used on the Block I upper stage of the Soyuz U and FG launch vehicle variants for attitude control. Diameter: 0.3 m Plume configured by RealPlume.",
+        "mod": "RealEngines",
+        "cost": "20",
+        "entry_cost": "400",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Molniya, Voskhod",
+        "engine_config": "RD0110Vernier",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0110-Vernier",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
         ]
     },
     {

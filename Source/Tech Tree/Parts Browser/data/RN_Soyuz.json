@@ -92,7 +92,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -164,7 +165,9 @@
         "upgrade": false,
         "entry_cost_mods": "7KOKSM",
         "identical_part_name": "7KOKService",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "ok_para",
@@ -214,6 +217,7 @@
         "identical_part_name": "7KOKdescent",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -308,7 +312,8 @@
         "entry_cost_mods": "20000,capsulesMature",
         "identical_part_name": "7KLOKorbital",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -382,6 +387,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -406,7 +412,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "rn_tks",
@@ -548,6 +556,7 @@
         "identical_part_name": "VA Capsule",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -644,7 +653,8 @@
         "entry_cost_mods": "capsulesAirlock",
         "identical_part_name": "VoskhodAirlock",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -742,6 +752,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -775,10 +786,10 @@
         "mod": "RN Soyuz",
         "cost": "0",
         "entry_cost": "1",
-        "category": "EDL",
+        "category": "COMMAND",
         "info": "Parachute",
         "year": "1960",
-        "technology": "humanRatedEDL",
+        "technology": "",
         "era": "02-SAT",
         "ro": true,
         "rp0": true,
@@ -815,6 +826,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -839,7 +851,9 @@
         "upgrade": false,
         "entry_cost_mods": "VostokSM",
         "identical_part_name": "VostokServiceModule",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "rn_zond_asas",
@@ -910,6 +924,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -958,7 +973,8 @@
         "entry_cost_mods": "40000,capsulesMature",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -983,7 +999,8 @@
         "entry_cost_mods": "40000,capsulesMature",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1030,7 +1047,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "t_pao2",
@@ -1053,7 +1072,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "tg_bo",
@@ -1077,7 +1098,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1102,7 +1124,9 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Instruments"
+            "Avionics",
+            "Instruments",
+            "NoResourceCostMult"
         ]
     }
 ]

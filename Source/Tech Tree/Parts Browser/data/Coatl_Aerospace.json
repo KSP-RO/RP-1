@@ -507,7 +507,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "ca_fom_parachute",
@@ -670,7 +673,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Surveyor",
-        "module_tags": []
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "ca_landv_hga",
@@ -1211,7 +1217,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "ca_vor_dish",
@@ -1672,7 +1681,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {

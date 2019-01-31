@@ -20,7 +20,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "bluedog_AgenaD",
@@ -43,7 +45,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Agena-D SPS",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "bluedog_Apollo_Block2_ActiveDockingMechanism",
@@ -91,6 +95,7 @@
         "identical_part_name": "Apollo CM",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -360,7 +365,9 @@
         "upgrade": false,
         "entry_cost_mods": "ApolloSM",
         "identical_part_name": "Apollo SM",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "bluedog_Apollo_Block3_Capsule",
@@ -385,6 +392,7 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -435,7 +443,9 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -482,7 +492,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "bluedog_Apollo_Block5_SolarPanels",
@@ -1071,8 +1083,8 @@
         "title": "Asterix Probe",
         "description": "France's first satellite attained orbit in 1965. It was originally designated A-1, but later renamed after the popular comic character.",
         "mod": "Bluedog DB",
-        "cost": "",
-        "entry_cost": "",
+        "cost": 250,
+        "entry_cost": 5000,
         "category": "AVIONICS",
         "info": "Probe",
         "year": "1965",
@@ -1081,20 +1093,23 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Asterix",
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
-        "module_tags": []
+        "identical_part_name": "Asterix",
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "bluedog_Diamant_Diapason",
-        "title": "Diapason/Diad\u00c3\u00a8me Probe",
-        "description": "The second French satellite was launched in 1966. It was attitude-stabilised by Earth's magnetic field and used for geodetic measurements. Two almost identical Diad\u00c3\u00a8me satellites followed a year later.",
+        "title": "Diapason/Diad\u00e8me Probe",
+        "description": "The second French satellite was launched in 1966. It was attitude-stabilised by Earth's magnetic field and used for geodetic measurements. Two almost identical Diad\u00e8me satellites followed a year later.",
         "mod": "Bluedog DB",
-        "cost": "200",
+        "cost": 500,
         "entry_cost": "10000",
         "category": "AVIONICS",
         "info": "Probe",
@@ -1104,13 +1119,16 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Diapason",
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "bluedog_Diamant_Rita",
@@ -1232,7 +1250,8 @@
         "entry_cost_mods": "1000, avionicsProbesEarly",
         "identical_part_name": "Explorer 1",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1409,7 +1428,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LEM Ascent",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1582,7 +1602,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Pioneer 1",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1607,7 +1628,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Pioneer 3/4",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -1632,7 +1654,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Saturn I Instrument",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -2173,7 +2196,8 @@
         "entry_cost_mods": "2000, avionicsUpperBasic, avionicsHibernation",
         "identical_part_name": "Agena Avionics",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -2457,7 +2481,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -2468,7 +2493,7 @@
         "cost": "1200",
         "entry_cost": "24000",
         "category": "AVIONICS",
-        "info": "Probe",
+        "info": "Avionics",
         "year": "1961",
         "technology": "interplanetaryProbes",
         "era": "03-HUMAN",
@@ -2482,7 +2507,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "Ranger",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {

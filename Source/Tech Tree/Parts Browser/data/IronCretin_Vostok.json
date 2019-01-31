@@ -71,6 +71,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     },
@@ -118,7 +119,9 @@
         "upgrade": false,
         "entry_cost_mods": "VostokSM",
         "identical_part_name": "VostokServiceModule",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "IronVostok_Mono_A",
@@ -190,6 +193,7 @@
         "module_tags": [
             "HumanRated",
             "NoEVA",
+            "NoResourceCostMult",
             "Reentry"
         ]
     }

@@ -435,7 +435,8 @@
         "entry_cost_mods": "250, avionicsProbesPW",
         "identical_part_name": "Sputnik",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -460,7 +461,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -485,7 +487,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     }
 ]

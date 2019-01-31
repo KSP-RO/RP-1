@@ -162,7 +162,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -209,7 +210,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Avionics",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "skylab_trs_docking",

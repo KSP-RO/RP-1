@@ -67,7 +67,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -327,7 +328,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -353,7 +355,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -379,7 +382,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "Instruments"
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -404,7 +408,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics"
+            "Avionics",
+            "NoResourceCostMult"
         ]
     }
 ]

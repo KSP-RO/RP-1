@@ -67,7 +67,7 @@ namespace RP0
             {
                 if (currentlyEnabled 
                     && (interplanetary || part.vessel == null || part.vessel.mainBody == null 
-                        || (part.vessel.mainBody.isHomeWorld && part.vessel.altitude < part.vessel.mainBody.scienceValues.spaceAltitudeThreshold + 10000d))
+                        || (part.vessel.mainBody.isHomeWorld && part.vessel.altitude < part.vessel.mainBody.scienceValues.spaceAltitudeThreshold + 20000000d))  // 55,786 km so resonant satellite orbits can still be used
                     && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
                     return GetInternalMassLimit();
                 else

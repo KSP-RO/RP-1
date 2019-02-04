@@ -29,6 +29,9 @@ namespace RP0
         [KSPField]
         public string techRequired = "";
 
+        [KSPField]
+        public bool interplanetary = true;
+
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Set to Debris"),
             UI_Toggle(disabledText = "Never", enabledText = "On Stage", affectSymCounterparts = UI_Scene.Editor)]
         public bool setToDebrisOnStage = false;
@@ -62,7 +65,10 @@ namespace RP0
         {
             get
             {
-                if (currentlyEnabled && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
+                if (currentlyEnabled 
+                    && (interplanetary || part.vessel == null || part.vessel.mainBody == null 
+                        || (part.vessel.mainBody.isHomeWorld && part.vessel.altitude < part.vessel.mainBody.scienceValues.spaceAltitudeThreshold + 10000d))
+                    && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
                     return GetInternalMassLimit();
                 else
                     return 0f;
@@ -240,8 +246,13 @@ namespace RP0
                         + (GetEnabledkW() * 1000d).ToString("N1") + " W to " + (GetDisabledkW() * 1000d).ToString("N1") + " W.";
                 }
             }
+
             if (!string.IsNullOrEmpty(techRequired))
                 retStr += "\nNote: requires technology unlock to function.";
+
+            if (!interplanetary)
+                retStr += "\n<color=red>Note: Only works near Earth!</color>";
+
             return retStr;
         }
 

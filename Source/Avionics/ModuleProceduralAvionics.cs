@@ -531,6 +531,7 @@ namespace RP0.ProceduralAvionics
 
             SASServiceLevel = CurrentProceduralAvionicsTechNode.SASServiceLevel;
             hasScienceContainer = CurrentProceduralAvionicsTechNode.hasScienceContainer;
+            interplanetary = CurrentProceduralAvionicsTechNode.interplanetary;
         }
 
         private void RefreshDisplays()

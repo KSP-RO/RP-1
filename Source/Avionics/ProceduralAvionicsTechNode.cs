@@ -61,6 +61,10 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public bool hasScienceContainer = false;
 
+        // is this capable of >LEO use?
+        [Persistent]
+        public bool interplanetary = true;
+
 		public bool IsAvailable {
 			get {
 				return ResearchAndDevelopment.GetTechnologyState(name) == RDTech.State.Available;

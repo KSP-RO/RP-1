@@ -292,6 +292,56 @@
         "module_tags": []
     },
     {
+        "name": "ROAerojet18KS7800",
+        "title": "Aerojet 1.8KS7800",
+        "description": "Small, solid fueled booster that was used as the third stage on the Aerobee 300 and Aerobee 300A sounding rockets.",
+        "mod": "Realism Overhaul",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Aerobee 300",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1000",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROAerojet25KS18000",
+        "title": "Aerojet 2.5KS18000",
+        "description": "Small, but powerful solid fueled booster used as the first stage for the Aerobee line of Sounding Rockets.",
+        "mod": "Realism Overhaul",
+        "cost": "40",
+        "entry_cost": "1",
+        "category": "SOLID",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Aerobee 100",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "AerobeeBooster",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "RO_FASA_ExplorerRCS",
         "title": "Attitude Jet (69/111 N class)",
         "description": "These small thrusters are for upper stage or small probe orientation.",

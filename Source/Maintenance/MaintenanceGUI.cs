@@ -83,8 +83,8 @@ namespace RP0
             }
             GUILayout.BeginHorizontal();
             try {
-                GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.totalUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                GUILayout.Label("Total (after subsidy)", boldLabel, GUILayout.Width(160));
+                GUILayout.Label(((MaintenanceHandler.Instance.totalUpkeep + MaintenanceHandler.Instance.settings.maintenanceOffset) * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }

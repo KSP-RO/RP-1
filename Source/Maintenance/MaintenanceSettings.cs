@@ -10,6 +10,9 @@ namespace RP0
     public class MaintenanceSettings : IConfigNode
     {
         [Persistent]
+        public double maintenanceOffset = -10d;
+
+        [Persistent]
         public double facilityLevelCostMult = 0.00002d;
 
         [Persistent]

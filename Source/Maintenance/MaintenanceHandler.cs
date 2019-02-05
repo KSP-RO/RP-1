@@ -256,7 +256,7 @@ namespace RP0
 
             double timePassed = time - lastUpdate;
 
-            Funding.Instance.AddFunds(-timePassed * (totalUpkeep * (1d / 86400d)), TransactionReasons.StructureRepair);
+            Funding.Instance.AddFunds(-timePassed * ((totalUpkeep + settings.maintenanceOffset) * (1d / 86400d)), TransactionReasons.StructureRepair);
 
             lastUpdate = time;
 

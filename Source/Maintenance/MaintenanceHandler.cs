@@ -190,8 +190,11 @@ namespace RP0
             for (int i = HighLogic.CurrentGame.CrewRoster.Count; i-- > 0;)
             {
                 var k = HighLogic.CurrentGame.CrewRoster[i];
-                if (k.rosterStatus == ProtoCrewMember.RosterStatus.Dead || k.rosterStatus == ProtoCrewMember.RosterStatus.Missing)
+                if (k.rosterStatus == ProtoCrewMember.RosterStatus.Dead || k.rosterStatus == ProtoCrewMember.RosterStatus.Missing ||
+                    k.type != ProtoCrewMember.KerbalType.Crew)
+                {
                     continue;
+                }
 
                 ++nautCount;
                 if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)

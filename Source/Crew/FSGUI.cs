@@ -155,7 +155,7 @@ namespace RP0.Crew
                 for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; i++)
                 {
                     ProtoCrewMember student = HighLogic.CurrentGame.CrewRoster[i];
-                    if (student.type == ProtoCrewMember.KerbalType.Crew)
+                    if (student.type == ProtoCrewMember.KerbalType.Crew && student.rosterStatus == ProtoCrewMember.RosterStatus.Available)
                         nautListRow(currentTab, student);
                 }
             } finally {

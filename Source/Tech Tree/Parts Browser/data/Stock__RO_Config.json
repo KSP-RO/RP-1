@@ -1348,6 +1348,56 @@
         "module_tags": []
     },
     {
+        "name": "RO-AltairIII",
+        "title": "Altair III",
+        "description": "A small solid kick motor. Developed from the Altair, this final version was used on later Scout and Delta craft. Used to circularize at apogee or perform final payload kick. Maximum thrust 25.6kN, burn time 31 seconds. Diameter: [0.50 m].",
+        "mod": "Stock (RO Config)",
+        "cost": "300",
+        "entry_cost": "5000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1965",
+        "technology": "solids1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair III",
+        "engine_config": "Altair-III",
+        "upgrade": false,
+        "entry_cost_mods": "Altair-III",
+        "identical_part_name": "Altair III",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "RO-GCRC",
+        "title": "GCRC 33-KS-2800",
+        "description": "A small solid kick motor, used as the third stage on all but the last Vanguard launch. Burn time 33 seconds. Diameter: [0.45 m].",
+        "mod": "Stock (RO Config)",
+        "cost": "170",
+        "entry_cost": "3000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1957",
+        "technology": "solids1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Vanguard",
+        "engine_config": "GCRC",
+        "upgrade": false,
+        "entry_cost_mods": "GCRC",
+        "identical_part_name": "GCRC",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "RO-H1-RS27",
         "title": "H-1/RS-27 Series",
         "description": "The H-1 is an upgrade to the LR79 engine that propelled the Saturn-I and IB vehicles, as well as late-model Delta rockets (as the RS-27). The H-1/RS-27 are optimized for the first-stage main engine role. The RS-27A has a higher expansion ratio for increased performance at altitude since liftoff thrust on the Delta II is augmented by solid boosters and the core burns rather longer. Diameter: [1.0 m]. Plume configured by RealPlume.",
@@ -1531,8 +1581,8 @@
         "entry_cost": "3400",
         "category": "SOLID",
         "info": "US SRM",
-        "year": "1958",
-        "technology": "solids1958",
+        "year": "1959",
+        "technology": "solids1959",
         "era": "02-SAT",
         "ro": true,
         "rp0": true,
@@ -1556,8 +1606,8 @@
         "entry_cost": "4000",
         "category": "SOLID",
         "info": "US SRM",
-        "year": "1964",
-        "technology": "solids1964",
+        "year": "1963",
+        "technology": "solids1962",
         "era": "04-ADV",
         "ro": true,
         "rp0": true,
@@ -1567,7 +1617,7 @@
         "engine_config": "Altair-II",
         "upgrade": false,
         "entry_cost_mods": "Altair-II",
-        "identical_part_name": "",
+        "identical_part_name": "Altair II",
         "module_tags": [
             "EngineSolid"
         ]

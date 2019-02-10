@@ -272,7 +272,7 @@
         "title": "Castor 1",
         "description": "The Castor 1 was first used for a successful suborbital launch of a Scout X-1 rocket on September 2, 1960. Castor 1 stages were also used as strap-on boosters for launch vehicles using Thor first stages, including the Delta-D. Diameter: [0.79 m]. Plume configured by RealPlume.",
         "mod": "RealFuels",
-        "cost": "300",
+        "cost": 150,
         "entry_cost": "6000",
         "category": "SOLID",
         "info": "SRB",

@@ -1982,7 +1982,7 @@
         "title": "Castor-1 Solid Rocket Motor",
         "description": "Castor 1 SRB for the Thor-Able/Delta D rocket. Put three of these radially around the core stage. Remove the fins on the core stage before using this. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
-        "cost": "300",
+        "cost": 150,
         "entry_cost": "6000",
         "category": "SOLID",
         "info": "SRB",
@@ -2747,7 +2747,7 @@
         "title": "UA1205 SRM",
         "description": "Strap-on booster for Titan IIIC, IIID, IIIE, proposed for Saturn IB derivatives. Burn time 117s. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
-        "cost": "5320",
+        "cost": 2600,
         "entry_cost": "106400",
         "category": "SOLID",
         "info": "",
@@ -2761,7 +2761,7 @@
         "spacecraft": "UA1205",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "UA1205",
         "identical_part_name": "UA1205",
         "module_tags": [
             "EngineSolid"
@@ -2818,7 +2818,7 @@
         "title": "UA1206 SRM",
         "description": "Strap-on booster for Titan 34D. Burn time 114s. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
-        "cost": "6250",
+        "cost": 2000,
         "entry_cost": "125000",
         "category": "SOLID",
         "info": "",
@@ -2832,7 +2832,7 @@
         "spacecraft": "UA1206",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "UA1205",
         "identical_part_name": "UA1206",
         "module_tags": [
             "EngineSolid"
@@ -2889,7 +2889,7 @@
         "title": "UA1207 SRM",
         "description": "Strap-on booster for Titan IIIM and Titan IV. Burn time 125s. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
-        "cost": "7218",
+        "cost": 3000,
         "entry_cost": "144360",
         "category": "SOLID",
         "info": "",

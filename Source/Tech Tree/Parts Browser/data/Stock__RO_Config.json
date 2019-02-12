@@ -179,7 +179,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "5000, fuelCells",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -188,7 +188,7 @@
         "title": "Fuel Cell Array",
         "description": "A 4.5kW fuel cell. Consumes about 245 liters of LH2 and 175 liters of LOX per week. These figures were determined by ground tests and include boil-off. The actual hydrogen boil-off rate may be considerably higher depending on the situation and the surface to volume ratio of your storage tanks.",
         "mod": "Stock (RO Config)",
-        "cost": "2500",
+        "cost": 5000,
         "entry_cost": "50000",
         "category": "POWER",
         "info": "Fuel Cell",
@@ -202,7 +202,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "10000, fuelCells",
         "identical_part_name": "",
         "module_tags": []
     },

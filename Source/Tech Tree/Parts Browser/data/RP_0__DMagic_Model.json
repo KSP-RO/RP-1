@@ -105,7 +105,7 @@
         "description": "The High Resolution Film Camera is used to take photographs of Earth from space. This camera provides very high resolution photographs of Earth. They can be transmitted back to Earth, but some fidelity is lost. It is still recommended to physically return them. Historically, these were flown as Spy Satellites under the KH-9 Hexagon name.\\nThe photos can be transmitted, but at a penalty of only 50% data. Level 3 Photograph Experiment. Can gather 100% of Photography Science. You can store up to 5 different photos before you need to return them to Earth.",
         "mod": "RP-0 (DMagic Model)",
         "cost": "1000",
-        "entry_cost": "2500",
+        "entry_cost": 25000,
         "category": "SCIENCE",
         "info": "Photography",
         "year": "1971",

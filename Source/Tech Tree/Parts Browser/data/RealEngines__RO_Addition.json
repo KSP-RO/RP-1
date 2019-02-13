@@ -171,5 +171,28 @@
         "module_tags": [
             "EngineLiquidTurbo"
         ]
+    },
+    {
+        "name": "RO-RealEngines-S2.253",
+        "title": "S2.253",
+        "description": "The S2.253 engine was developed for use in the R-11 Zemlya ballistic missile, based on the Wasserfall engine using Kerosene and Nitric Acid as propellants.  Diameter: 0.88 m.",
+        "mod": "RealEngines (RO Addition)",
+        "cost": 150,
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1953",
+        "technology": "basicRocketryRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "R-11",
+        "engine_config": "S2.253",
+        "upgrade": false,
+        "entry_cost_mods": "S2-253",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     }
 ]

@@ -2963,7 +2963,7 @@
         "spacecraft": "MOL",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "50000, stationProto, longTermHab",
+        "entry_cost_mods": "50000, stationsProto, longTermHab",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",

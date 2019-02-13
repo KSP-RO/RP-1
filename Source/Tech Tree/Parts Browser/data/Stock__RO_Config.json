@@ -391,7 +391,6 @@
         "entry_cost_mods": "1000, avionicsBoosterPW",
         "identical_part_name": "",
         "module_tags": [
-            "Avionics",
             "NoResourceCostMult"
         ]
     },

@@ -235,7 +235,7 @@
         "era": "05-LUNAR",
         "ro": true,
         "rp0": true,
-        "orphan": false,
+        "orphan": true,
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",

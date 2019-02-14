@@ -73,6 +73,7 @@ namespace RP0
                     if (newTips?.Length > 0)
                     {
                         sc.tips = newTips;
+                        sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
                     }
 
                     string msgStr = "[RP-0]: Loading screens replaced.";

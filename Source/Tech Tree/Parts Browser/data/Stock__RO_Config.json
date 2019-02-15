@@ -1749,7 +1749,7 @@
         "description": "Staged combustion hydrolox upper stage engine intended for use on the N-1M and considered for use on Proton and Angara, eventually licensed to India for its GSLV MkI and MkII.  Later versions were developed by India for domestic use on the as the CE-7.5.  The main engine bell is fixed in place, and two verniers are used to provide combined pitch-yaw-roll control; this leads to lower control authority than on stages where the main engine can gimbal.  This engine runs with a somewhat higher than average O/F ratio, resulting in a denser than average hydrolox stage. Diameter: [2.5 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
         "cost": "650",
-        "entry_cost": "27750",
+        "entry_cost": 0,
         "category": "HYDROLOX",
         "info": "",
         "year": "1973",

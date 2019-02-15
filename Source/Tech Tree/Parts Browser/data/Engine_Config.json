@@ -2412,7 +2412,7 @@
         "spacecraft": "N-1M, GSLV MkI, MkII",
         "engine_config": "KVD1",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "20000, StagedHydrolox",
         "identical_part_name": "",
         "module_tags": []
     },

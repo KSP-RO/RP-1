@@ -32,6 +32,7 @@ namespace RP0.ProceduralAvionics
 
 		[KSPField(isPersistant = true)]
 		public string avionicsTechLevel;
+        private string oldAvionicsTechLevel;
 
 		[KSPField(isPersistant = true)]
 		public float maxDensityOfAvionics;
@@ -43,10 +44,10 @@ namespace RP0.ProceduralAvionics
 		public float costPerControlledTon;
 
 		[KSPField(isPersistant = true)]
-		public float enabledProceduralW;
+		public float enabledkWPerTon;
 
 		[KSPField(isPersistant = true)]
-		public float disabledProceduralW;
+		public float disabledkWPerTon;
 
 		[KSPField(isPersistant = true)]
 		public float minimumTonnage;
@@ -134,17 +135,17 @@ namespace RP0.ProceduralAvionics
 
 		protected override float GetEnabledkW()
 		{
-			return enabledProceduralW * GetResourceRateMultiplier() * GetMaximumControllableTonnage() / 2;
+			return enabledkWPerTon * GetInternalMassLimit();
 		}
 
 		protected override float GetDisabledkW()
 		{
-			return disabledProceduralW * GetResourceRateMultiplier() * GetMaximumControllableTonnage() / 2;
+			return disabledkWPerTon * GetInternalMassLimit();
 		}
 
 		protected override bool GetToggleable()
 		{
-			return disabledProceduralW > 0;
+			return disabledkWPerTon > 0;
 		}
 
 		protected override string GetTonnageString()
@@ -233,7 +234,7 @@ namespace RP0.ProceduralAvionics
 
 		private void AvionicsConfigChanged()
 		{
-            if (avionicsConfigName == oldAvionicsConfigName)
+            if (avionicsConfigName == oldAvionicsConfigName && avionicsTechLevel == oldAvionicsTechLevel)
             {
                 return;
             }
@@ -241,6 +242,7 @@ namespace RP0.ProceduralAvionics
             currentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
             Log("Setting tech node to ", avionicsTechLevel);
             oldAvionicsConfigName = avionicsConfigName;
+            oldAvionicsTechLevel = avionicsTechLevel;
             SetInternalKSPFields();
             ResetTo100();
             ClampInternalMassLimit();
@@ -362,26 +364,22 @@ namespace RP0.ProceduralAvionics
 		{
 			float controllablePercentage = GetControllableUtilizationPercentage();
 			float costPercentage = controllablePercentage * controllablePercentage;
-			return costPerControlledTon * 4 * costPercentage * GetInternalMassLimit();
+			return costPerControlledTon * GetInternalMassLimit();
 		}
 
-		private float GetResourceRateMultiplier()
-		{
-			return (GetControllableUtilizationPercentage() + .5f) / 1000;
-		}
 		#endregion
 
 		#region private utiliy functions
 		private float GetControllableUtilizationPercentage()
 		{
-			return GetInternalMassLimit() / (cachedVolume * maxDensityOfAvionics * tonnageToMassRatio * 2);
+			return GetInternalMassLimit() / (cachedVolume * maxDensityOfAvionics * tonnageToMassRatio);
 		}
 
 		private float GetMaximumControllableTonnage()
 		{
 			var maxAvionicsMass = cachedVolume * maxDensityOfAvionics;
             //Log("max for volume before trunc: ", maxAvionicsMass * tonnageToMassRatio * 2);
-            var maxForVolume = FloorToSliderIncrement(maxAvionicsMass * tonnageToMassRatio * 2);
+            var maxForVolume = FloorToSliderIncrement(maxAvionicsMass * tonnageToMassRatio);
 			return Math.Min(maxForVolume, maximumTonnage);
 		}
 
@@ -400,7 +398,7 @@ namespace RP0.ProceduralAvionics
                 return;
             }
             proceduralMassLimit = cachedVolume * maxDensityOfAvionics * tonnageToMassRatio;
-			Log("100% utilization calculated as ", proceduralMassLimit);
+			Log("100% utilization calculated as ", proceduralMassLimit, " from ", cachedVolume, " ", maxDensityOfAvionics, " ", tonnageToMassRatio);
 		}
 
 		private void UpdateMaxValues()
@@ -521,10 +519,10 @@ namespace RP0.ProceduralAvionics
             Log("avionics tech level: ", avionicsTechLevel);
 
             tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
-            maxDensityOfAvionics = CurrentProceduralAvionicsTechNode.standardAvionicsDensity * 4 / 3;
+            maxDensityOfAvionics = CurrentProceduralAvionicsTechNode.standardAvionicsDensity;
             costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
-            enabledProceduralW = CurrentProceduralAvionicsTechNode.enabledProceduralW;
-            disabledProceduralW = CurrentProceduralAvionicsTechNode.disabledProceduralW;
+            enabledkWPerTon = CurrentProceduralAvionicsTechNode.enabledkWPerTon;
+            disabledkWPerTon = CurrentProceduralAvionicsTechNode.disabledkWPerTon;
 
             minimumTonnage = CurrentProceduralAvionicsTechNode.minimumTonnage;
             maximumTonnage = CurrentProceduralAvionicsTechNode.maximumTonnage;
@@ -538,7 +536,7 @@ namespace RP0.ProceduralAvionics
         {
             RefreshCostAndMassDisplays();
 
-            utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 200);
+            utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
             Log("Utilization display: ", utilizationDisplay);
 
             RefreshPowerDisplay();
@@ -547,24 +545,27 @@ namespace RP0.ProceduralAvionics
         private void RefreshPowerDisplay()
         {
             StringBuilder powerConsumptionBuilder = StringBuilderCache.Acquire();
-            if (GetEnabledkW() >= 0.1)
+            Log("Getting power reqs: total tons", GetInternalMassLimit(), " ", enabledkWPerTon, " ", disabledkWPerTon);
+            double kW = GetEnabledkW();
+            if (kW >= 0.1)
             {
-                powerConsumptionBuilder.AppendFormat(kwFormat, GetEnabledkW()).Append(" kW");
+                powerConsumptionBuilder.AppendFormat(kwFormat, kW).Append(" kW");
             }
             else
             {
-                powerConsumptionBuilder.AppendFormat(wFormat, GetEnabledkW() * 1000).Append(" W");
+                powerConsumptionBuilder.AppendFormat(wFormat, kW * 1000).Append(" W");
             }
-            if (GetDisabledkW() > 0)
+            double dkW = GetDisabledkW();
+            if (dkW > 0)
             {
                 powerConsumptionBuilder.Append(" /");
-                if (GetDisabledkW() >= 0.1)
+                if (dkW >= 0.1)
                 {
-                    powerConsumptionBuilder.AppendFormat(kwFormat, GetDisabledkW()).Append(" kW");
+                    powerConsumptionBuilder.AppendFormat(kwFormat, dkW).Append(" kW");
                 }
                 else
                 {
-                    powerConsumptionBuilder.AppendFormat(wFormat, GetDisabledkW() * 1000).Append(" W");
+                    powerConsumptionBuilder.AppendFormat(wFormat, dkW * 1000).Append(" W");
                 }
             }
 

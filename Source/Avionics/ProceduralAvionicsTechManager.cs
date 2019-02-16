@@ -70,7 +70,7 @@ namespace RP0.ProceduralAvionics
 
 		public static List<string> GetAvailableConfigs()
 		{
-			ProceduralAvionicsUtils.Log("Getting Available configs, procedural avionics has ", allTechNodes.Count, " nodes loaded");
+			//ProceduralAvionicsUtils.Log("Getting Available configs, procedural avionics has ", allTechNodes.Count, " nodes loaded");
 			List<string> availableConfigs = new List<string>();
 			foreach (var config in allTechNodes) {
 				if (!TechIsEnabled || (config.TechNodes.Values.Where(node => node.IsAvailable).Count() > 0)) {

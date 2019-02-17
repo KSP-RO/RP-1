@@ -114,6 +114,11 @@ namespace RP0
 
         public static ToolingLevel HasTooling(string type, float diam, float len)
         {
+            if (!ToolingManager.Instance.toolingEnabled)
+            {
+                return ToolingLevel.Full;
+            }
+
             List<ToolingDiameter> lst;
             if (toolings.TryGetValue(type, out lst))
             {

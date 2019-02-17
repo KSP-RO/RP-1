@@ -58,6 +58,24 @@ namespace RP0
         public tabs toolingTab()
         {
             MaybeUpdate();
+
+            if (!ToolingManager.Instance.toolingEnabled)
+            {
+                GUILayout.BeginHorizontal();
+                try
+                {
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label("Part tooling is disabled", HighLogic.Skin.label);
+                    GUILayout.FlexibleSpace();
+                }
+                finally
+                {
+                    GUILayout.EndHorizontal();
+                }
+
+                return tabs.Tooling;
+            }
+
             currentToolingType = null;
             GUILayout.BeginHorizontal();
             try {

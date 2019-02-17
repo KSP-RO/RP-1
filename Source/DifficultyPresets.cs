@@ -52,6 +52,9 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;
 
+        [GameParameters.CustomParameterUI("Enable part tooling")]
+        public bool IsToolingEnabled = true;
+
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
             switch (preset)
@@ -59,12 +62,14 @@ namespace RP0
                 case GameParameters.Preset.Easy:
                     IsTrainingEnabled = false;
                     IsRetirementEnabled = false;
+                    IsToolingEnabled = false;
                     break;
                 case GameParameters.Preset.Normal:
                 case GameParameters.Preset.Moderate:
                 case GameParameters.Preset.Hard:
                     IsTrainingEnabled = true;
                     IsRetirementEnabled = true;
+                    IsToolingEnabled = true;
                     break;
             }
         }

@@ -13,6 +13,8 @@ namespace RP0
 
         protected static ToolingDatabase database = new ToolingDatabase();
 
+        public bool toolingEnabled = true;
+
         #region Instance
 
         private static ToolingManager _instance = null;
@@ -39,6 +41,9 @@ namespace RP0
                 GameObject.Destroy(_instance);
             }
             _instance = this;
+
+            GameEvents.OnGameSettingsApplied.Add(LoadSettings);
+            GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
         public override void OnLoad(ConfigNode node)
@@ -53,6 +58,25 @@ namespace RP0
             base.OnSave(node);
 
             ToolingDatabase.Save(node.AddNode("Tooling"));
+        }
+        public void OnDestroy()
+        {
+            GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
+            GameEvents.onGameStateLoad.Remove(LoadSettings);
+        }
+
+        #endregion
+
+        #region Methods
+
+        protected void LoadSettings(ConfigNode n)
+        {
+            LoadSettings();
+        }
+
+        protected void LoadSettings()
+        {
+            toolingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsToolingEnabled;
         }
 
         #endregion

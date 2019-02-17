@@ -17,6 +17,7 @@ namespace RP0.ProceduralAvionics
 		const string kwFormat = "{0:0.##}";
 		const string wFormat = "{0:0}";
         const float FLOAT_TOLERANCE = 1.00001f;
+        const float FLOAT_TOLERANCE2 = 1.001f;
 
         // This controls how much the current part can control (in metric tons)
         [KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
@@ -114,19 +115,31 @@ namespace RP0.ProceduralAvionics
                 return;
             }
             var min = GetMinimumControllableTonnage();
+
             bool changed = false;
-            if (proceduralMassLimit > max * FLOAT_TOLERANCE)
-            {
-                Log("Resetting procedural mass limit to max of ", max, ", was ", proceduralMassLimit);
-                proceduralMassLimit = max;
-                changed = true;
-            }
-            if (proceduralMassLimit * FLOAT_TOLERANCE < min)
-            {
-                Log("Resetting procedural mass limit to min of ", min, ", was ", proceduralMassLimit);
-                proceduralMassLimit = min;
-                changed = true;
-            }
+            //if (max < min)
+            //{
+            //    if (proceduralMassLimit > 0)
+            //    {
+            //        proceduralMassLimit = 0;
+            //        changed = true;
+            //    }
+            //}
+            //else
+            //{
+                if (proceduralMassLimit > max * FLOAT_TOLERANCE)
+                {
+                    Log("Resetting procedural mass limit to max of ", max, ", was ", proceduralMassLimit);
+                    proceduralMassLimit = max;
+                    changed = true;
+                }
+                if (proceduralMassLimit * FLOAT_TOLERANCE < min)
+                {
+                    Log("Resetting procedural mass limit to min of ", min, ", was ", proceduralMassLimit);
+                    proceduralMassLimit = min;
+                    changed = true;
+                }
+            //}
             if (changed)
             {
                 RefreshPartWindow();
@@ -257,7 +270,7 @@ namespace RP0.ProceduralAvionics
 		public void SetMinVolume(bool forceUpdate = false)
 		{
 			Log("Setting min volume for proceduralMassLimit of ", proceduralMassLimit);
-			float minVolume = proceduralMassLimit / (2 * tonnageToMassRatio * maxDensityOfAvionics) * FLOAT_TOLERANCE;
+			float minVolume = proceduralMassLimit / (tonnageToMassRatio * maxDensityOfAvionics) * FLOAT_TOLERANCE2;
 			if (float.IsNaN(minVolume)) {
 				return;
 			}

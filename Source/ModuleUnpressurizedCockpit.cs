@@ -9,7 +9,7 @@ namespace RP0
     public class ModuleUnpressurizedCockpit : PartModule
     {
         [KSPField]
-        public double crewDeathChance = 0.04d;
+        public double crewDeathChance = 0.1d * (1d / 50d);
 
         public double nextCheck = -1d;
         public double checkInterval = 1d;
@@ -36,7 +36,9 @@ namespace RP0
             if (HighLogic.LoadedSceneIsFlight && part.CrewCapacity > 0 && (pC = part.protoModuleCrew.Count) > 0)
             {
                 double UT = Planetarium.GetUniversalTime();
-                if (UT > nextCheck)
+                if(nextCheck < 0d)
+                    nextCheck = UT + checkInterval;
+                else if (UT > nextCheck)
                 {
                     nextCheck = UT + checkInterval;
                     if (part.staticPressureAtm * 101.325d < 1.2d)

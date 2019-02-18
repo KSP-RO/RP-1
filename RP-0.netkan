@@ -42,7 +42,8 @@
 		{ "name" : "TACLS" },
 		{ "name" : "TestFlight" },
 		{ "name" : "TextureReplacerReplaced" },
-		{ "name" : "Toolbar" }
+		{ "name" : "Toolbar" },
+		{ "name" : "WasdEditorCameraContinued" }
     ],	
 	"suggests"   : [
 		{ "name" : "BluedogDB" },
@@ -65,8 +66,6 @@
 		{ "name" : "WaypointManager" }
     ],
     "conflicts" : [
-        { "name" : "CrowdSourcedScience" },
-		{ "name" : "HideEmptyTechNodes" },
-		{ "name" : "MechJebForAll" }
+        { "name" : "CrowdSourcedScience" }
     ]
 }

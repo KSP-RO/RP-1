@@ -1,0 +1,63 @@
+[System.Serializable]
+public class AvionicsLevel : IConfigNode
+{
+	[Persistent]
+  public string avionicsType;
+  
+  [Persistent]
+	public string techRequired;
+  
+  [Persistent]
+  public int avionicsLevel;
+  
+  [Persistent]
+  public float tonnageControlPerUnit;
+  
+  [Persistent]
+  public float minimumTonnage;
+  
+  [Persistent]
+  public float enabledProckW;
+  
+  [Persistent]
+  public float disabledProckW;
+  
+  [Persistent]
+  public bool canHibernate;
+  
+  [Persistent]
+  public int procSASlevel; // This is probably actually an enum in KSP?
+  
+  [Persistent]
+  public bool storeScienceData;
+  
+  public void Load(ConfigNode node)
+  {
+  	ConfigNode.LoadObjectFromConfig (this, node);
+  }
+  
+  public void Save(ConfigNode node)
+  {
+  	ConfigNode.CreateConfigFromObject (this, node);
+  }
+}
+
+public class ProcAvionicsModule : PartModule
+{
+	public List<AvionicsLevel> avionicsLevels = new List<AvionicsLevel>();
+  
+	// ..........
+  public override void OnLoad(ConfigNode node)
+  {
+  	foreach(var n in node.GetNodes("LEVEL"))
+    {
+    	var al = new AvionicsLevel();
+      al.Load(n);
+      avionicsLevels.Add(al);
+    }
+    
+    // This may be needed, it may not.
+    if(avionicsLevels.Count == 0)
+    	avionicsLevels = part.partInfo.partPrefab.GetModule<ProcAvionicsModule>().avionicsLevels;
+  }
+}

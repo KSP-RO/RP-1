@@ -250,7 +250,7 @@
         "spacecraft": "Redstone",
         "engine_config": "NAA75_110",
         "upgrade": false,
-        "entry_cost_mods": "3000, Navaho-PhaseIII-TP",
+        "entry_cost_mods": "13000, Navaho-PhaseIII-TP",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -296,7 +296,7 @@
         "spacecraft": "",
         "engine_config": "A-4",
         "upgrade": true,
-        "entry_cost_mods": "20000, HydyneFuel",
+        "entry_cost_mods": "25000, HydyneFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -618,7 +618,7 @@
         "spacecraft": "Vanguard",
         "engine_config": "AJ10_Early",
         "upgrade": false,
-        "entry_cost_mods": "8000, AJ10-27",
+        "entry_cost_mods": "8000, AJ10-27, HydrazineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5105,7 +5105,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD0210",
         "upgrade": false,
-        "entry_cost_mods": "40000, Proton-Family",
+        "entry_cost_mods": "20000, Proton-Family",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5289,7 +5289,7 @@
         "spacecraft": "RD-102",
         "engine_config": "RD100",
         "upgrade": true,
-        "entry_cost_mods": "RD-101, RD102-TP",
+        "entry_cost_mods": "1500, RD-101, RD102-TP",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5312,7 +5312,7 @@
         "spacecraft": "RD-103",
         "engine_config": "RD100",
         "upgrade": true,
-        "entry_cost_mods": "7000, RD103-TP",
+        "entry_cost_mods": "22000, RD103-TP",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6094,7 +6094,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD253",
         "upgrade": false,
-        "entry_cost_mods": "60000, Proton-Family",
+        "entry_cost_mods": "40000, Proton-Family",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -7346,7 +7346,7 @@
         "spacecraft": "R-11",
         "engine_config": "S2_253",
         "upgrade": false,
-        "entry_cost_mods": "15000",
+        "entry_cost_mods": "15000, NTOOxidizer",
         "identical_part_name": "",
         "module_tags": []
     },

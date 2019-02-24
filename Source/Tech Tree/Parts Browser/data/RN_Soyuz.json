@@ -55,7 +55,7 @@
         "category": "EDL",
         "info": "Parachute",
         "year": "1965",
-        "technology": "earlyLanding",
+        "technology": "secondGenCapsules",
         "era": "05-LUNAR",
         "ro": true,
         "rp0": true,
@@ -67,7 +67,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "Reentry"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -178,8 +179,8 @@
         "entry_cost": "1",
         "category": "COMMAND",
         "info": "Parachute",
-        "year": "1967",
-        "technology": "matureCapsules",
+        "year": "1965",
+        "technology": "secondGenCapsules",
         "era": "05-LUNAR",
         "ro": true,
         "rp0": true,

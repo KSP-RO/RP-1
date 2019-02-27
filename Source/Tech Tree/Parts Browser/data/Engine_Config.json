@@ -8778,6 +8778,29 @@
             "EngineLiquidTurbo"
         ]
     },
+	{
+        "name": "XM-20",
+        "title": "XM-20",
+        "description": "The XM-20 Sergeant was a Castor predecessor that was used on the X-17 hypersonic test vehicle.",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "XM-20",
+        "upgrade": false,
+        "entry_cost_mods": "5000, SolidsHollow",
+        "identical_part_name": "",
+        "module_tags": []
+    },
     {
         "name": "XRS-2200",
         "title": "XRS-2200",

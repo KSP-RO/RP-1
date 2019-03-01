@@ -11,9 +11,6 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public string name;
 
-		[Persistent]
-		public int unlockCost;
-
 		// A higher number here is more efficient.  This is the number of controllable tons per ton of avionics mass at 50% of the maximum controllable tonnage.  
 		// This actual ratio will be higher if closer to the maximum, and lower if farther away, however, as we get closer to our maximum, 
 		// the price gets exponentionally higher, since we're trying to cram more controls in the same amount of space (at 50%, we are at 75% of the avionics mass 

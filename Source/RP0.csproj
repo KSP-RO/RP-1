@@ -126,6 +126,10 @@
       <HintPath>..\..\..\..\..\..\Games\RP1\GameData\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RealFuels">
+      <HintPath>..\..\..\..\..\..\Games\RP1\GameData\RealFuels\Plugins\RealFuels.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>

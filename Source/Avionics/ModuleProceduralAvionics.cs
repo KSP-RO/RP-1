@@ -728,7 +728,7 @@ namespace RP0.ProceduralAvionics
 				}
 				else {
 					bool switchedConfig = false;
-					int unlockCost = GetUnlockCost(guiAvionicsConfigName, techNode);
+					int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(guiAvionicsConfigName, techNode);
 					if (unlockCost == 0) {
 						if (GUILayout.Button("Switch to " + BuildTechName(techNode))) {
 							switchedConfig = true;
@@ -740,15 +740,7 @@ namespace RP0.ProceduralAvionics
 					else if (GUILayout.Button("Purchase " + BuildTechName(techNode) + BuildCostString(unlockCost))) {
 						switchedConfig = true;
 						if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) {
-
-							// shouldn't need this since we only show this if you can afford it
-							// but just in case...
-							if (Funding.Instance.Funds >= unlockCost) {
-								Funding.Instance.AddFunds(-unlockCost, TransactionReasons.RnDPartPurchase);
-							}
-							else {
-								switchedConfig = false;
-							}
+							switchedConfig = ProceduralAvionicsTechManager.PurchaseConfig(guiAvionicsConfigName, techNode);
 						}
 						if (switchedConfig) {
 							ProceduralAvionicsTechManager.SetMaxUnlockedTech(guiAvionicsConfigName, techNode.name);
@@ -834,20 +826,6 @@ namespace RP0.ProceduralAvionics
 				return String.Empty;
 			}
 			return " (" + String.Format("{0:N}", cost) + ")";
-		}
-
-		private int GetUnlockCost(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
-		{
-			string currentUnlockedTech = ProceduralAvionicsTechManager
-				.GetMaxUnlockedTech(avionicsConfigName);
-			int alreadyPaidCost = 0;
-			if (!String.IsNullOrEmpty(currentUnlockedTech)) {
-				alreadyPaidCost = ProceduralAvionicsTechManager
-					.GetProceduralAvionicsConfig(avionicsConfigName)
-					.TechNodes[currentUnlockedTech].unlockCost;
-			}
-			int priceDiff = techNode.unlockCost - alreadyPaidCost;
-			return (priceDiff > 0 ? priceDiff : 0);
 		}
 
 		#endregion

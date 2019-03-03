@@ -988,7 +988,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
+            "Cockpit",
+            "NoEVA",
             "NoResourceCostMult"
         ]
     },
@@ -1014,7 +1015,8 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "HumanRated",
+            "Cockpit",
+            "NoEVA",
             "NoResourceCostMult"
         ]
     },

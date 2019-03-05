@@ -423,7 +423,7 @@
         "title": "20in X-Ray Detector",
         "description": "A small (0.5m) satellite designed to study the variation in solar X-ray radiation.",
         "mod": "SXT",
-        "cost": "550",
+        "cost": 60,
         "entry_cost": "0",
         "category": "AVIONICS",
         "info": "Probe",

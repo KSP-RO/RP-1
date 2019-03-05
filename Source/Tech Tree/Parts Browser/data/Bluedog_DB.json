@@ -1233,7 +1233,7 @@
         "title": "Explorer 1 Probe",
         "description": "Explorer 1, the first satellite launched by the United States, was a very simple scientific probe of less than a dozen kilograms. It featured a cosmic ray detector and micrometeorite detectors, as well as temperature sensors. Mercury batteries provided a month of electricity for the high power transmitter and another two and a half months for the low-power transmitter.",
         "mod": "Bluedog DB",
-        "cost": "158",
+        "cost": "60",
         "entry_cost": "3160",
         "category": "AVIONICS",
         "info": "Probe",

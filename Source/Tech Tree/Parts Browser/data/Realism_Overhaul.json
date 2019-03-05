@@ -73,31 +73,6 @@
         ]
     },
     {
-        "name": "SoyuzHeatshield",
-        "title": "Heat Shield (2.2m)",
-        "description": "Lunar-rated heat shield for Soyuz or Gemini pods.",
-        "mod": "Realism Overhaul",
-        "cost": "1650",
-        "entry_cost": "32000",
-        "category": "EDL",
-        "info": "Heat Shield",
-        "year": "1967",
-        "technology": "lunarRatedHeatshields",
-        "era": "05-LUNAR",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "heatshieldsLunar",
-        "identical_part_name": "",
-        "module_tags": [
-            "Reentry"
-        ]
-    },
-    {
         "name": "Heatshield3m",
         "title": "Heat Shield (3m)",
         "description": "Lunar-rated heat shield.",
@@ -316,7 +291,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "ROAdvCapsule",
         "title": "Advanced Command Pod",
         "description": "A two-person pod. Features an offset Center of Mass to allow lifting reentry and an integrated bi-propellant Attitude Control System (ACS) for controlled reentries. Heat shield rated for LEO reentries.",
@@ -519,6 +494,31 @@
             "NoEVA",
             "NoResourceCostMult",
             "NonReentryRated"
+        ]
+    },
+    {
+        "name": "SoyuzHeatshield",
+        "title": "Heat Shield (2.2m)",
+        "description": "Lunar-rated heat shield for Soyuz or Gemini pods.",
+        "mod": "Realism Overhaul",
+        "cost": "1650",
+        "entry_cost": "32000",
+        "category": "EDL",
+        "info": "Heat Shield",
+        "year": "1967",
+        "technology": "lunarRatedHeatshields",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "heatshieldsLunar",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
         ]
     },
     {

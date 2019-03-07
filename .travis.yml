@@ -1,5 +1,8 @@
 language: c
 
+git:
+  depth: 500
+
 install:
     - sudo apt-get update
     - sudo apt-get install zip libyaml-libyaml-perl libipc-system-simple-perl

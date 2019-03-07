@@ -13,7 +13,7 @@
         "era": "04-ADV",
         "ro": true,
         "rp0": true,
-        "orphan": false,
+        "orphan": true,
         "rp0_conf": true,
         "spacecraft": "Gemini",
         "engine_config": "",

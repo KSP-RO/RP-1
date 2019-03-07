@@ -902,10 +902,10 @@ PW,rocketryTesting,Orbital
 0,unlockParts,Solid
 1950,earlySolids,Solid
 1951,earlySolids,Solid
-1952,earlySolids,Solid
-1953,earlySolids,Solid
-1954,earlySolids,Solid
-1955,earlySolids,Solid
+1952,basicSolids,Solid
+1953,basicSolids,Solid
+1954,basicSolids,Solid
+1955,basicSolids,Solid
 1956,solids1956,Solid
 1957,solids1956,Solid
 1958,solids1958,Solid

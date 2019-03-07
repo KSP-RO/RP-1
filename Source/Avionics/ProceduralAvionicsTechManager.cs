@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealFuels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,7 +49,7 @@ namespace RP0.ProceduralAvionics
 				if (!unlockedTech.ContainsKey(config.name)) {
 					//We don't have max level for this config, should we?
 					ProceduralAvionicsTechNode freeTech = 
-						config.TechNodes.Values.Where(techNode => techNode.unlockCost == 0).FirstOrDefault();
+						config.TechNodes.Values.Where(techNode => GetUnlockCost(config.name, techNode) <= 1).FirstOrDefault();
 					if (freeTech != null) {
 						unlockedTech.Add(config.name, freeTech.name);
 					}
@@ -123,13 +124,32 @@ namespace RP0.ProceduralAvionics
 		{
 			if (!TechIsEnabled) {
 				var techNodesForConfig = allTechNodes.Where(config => config.name == avionicsConfigName).FirstOrDefault();
-				int maxCost = techNodesForConfig.TechNodes.Values.Max(node => node.unlockCost);
-				return techNodesForConfig.TechNodes.Values.Where(node => node.unlockCost == maxCost).FirstOrDefault().name;
+				var tn = techNodesForConfig.TechNodes.Values.Last().name;
+				return tn;
 			}
 			if (unlockedTech.ContainsKey(avionicsConfigName)) {
 				return unlockedTech[avionicsConfigName];
 			}
 			return String.Empty;
+		}
+
+		internal static int GetUnlockCost(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
+		{
+			string ecmName = GetEcmName(avionicsConfigName, techNode);
+			double cost = EntryCostManager.Instance.ConfigEntryCost(ecmName);
+
+			return (int)cost;
+		}
+
+		internal static bool PurchaseConfig(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
+		{
+			string ecmName = GetEcmName(avionicsConfigName, techNode);
+			return EntryCostManager.Instance.PurchaseConfig(ecmName);
+		}
+
+		private static string GetEcmName(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
+		{
+			return $"{avionicsConfigName}-{techNode.name}";
 		}
 
 		public static ProceduralAvionicsConfig GetProceduralAvionicsConfig(string configName)

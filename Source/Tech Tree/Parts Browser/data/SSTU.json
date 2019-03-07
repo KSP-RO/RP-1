@@ -278,10 +278,10 @@
     {
         "name": "SSTU-LC2-POD",
         "title": "SSTU - LC2-POD",
-        "description": "LC2-POD",
+        "description": "LC2-POD 2 crew, built in RCS, optional accent fuel tanks. ",
         "mod": "SSTU",
-        "cost": "1800",
-        "entry_cost": "7200",
+        "cost": "8000",
+        "entry_cost": "280000",
         "category": "EDL",
         "info": "Lander",
         "year": "1968",
@@ -290,12 +290,12 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Apollo LEM Ascent",
         "module_tags": []
     },
     {

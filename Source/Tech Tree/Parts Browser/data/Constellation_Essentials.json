@@ -65,11 +65,12 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
-        "engine_config": "",
+        "engine_config": "BNTR",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "BNTR",
+        "identical_part_name": "BNTR",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },

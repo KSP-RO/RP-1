@@ -97,6 +97,32 @@
         "identical_part_name": "AJ10-190",
         "module_tags": []
     },
+	{
+        "name": "ROE-AJ10Adv-MCD",
+        "title": "AJ10 Series (Advanced)",
+        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents advanced era AJ10s with a nozzle extension and restart capability. Used on Transtage as AJ10-138; similar models but back with the -118 designation were used on the Delta F and Delta K upper stages. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "6000",
+        "category": "ORBITAL",
+        "info": "US Engine",
+        "year": "1964",
+        "technology": "orbitalRocketry1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "AJ10 (Advanced)",
+        "engine_config": "AJ10_Adv",
+        "upgrade": false,
+        "entry_cost_mods": "AJ10-138",
+        "identical_part_name": "AJ10 (Adv)",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
     {
         "name": "ROE-AJ10Early-RE",
         "title": "AJ10 Series (Early)",

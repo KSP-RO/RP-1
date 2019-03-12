@@ -111,7 +111,7 @@
         "era": "00-START",
         "ro": true,
         "rp0": true,
-        "orphan": true,
+        "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",

@@ -484,7 +484,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "AJ10-133-LH",
         "title": "AJ10-133-LH",
         "description": "",
@@ -494,7 +494,7 @@
         "category": "ORBITAL",
         "info": "",
         "year": "1963",
-        "technology": "earlyHydrolox",
+        "technology": "orbitalRocketry1963",
         "era": "",
         "ro": true,
         "rp0": false,
@@ -503,7 +503,7 @@
         "spacecraft": "Alternate Apollo",
         "engine_config": "AJ10_Adv",
         "upgrade": true,
-        "entry_cost_mods": "140000, HydroloxPumps, Navaho-TP",
+        "entry_cost_mods": "10000, HydroloxPF, AJ10-104, AJ10-highPerf",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2071,7 +2071,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "H-1-165K",
         "title": "H-1-165K",
         "description": "",
@@ -2140,7 +2140,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "H-1-205K",
         "title": "H-1-205K",
         "description": "",
@@ -2370,7 +2370,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "J-2-230K",
         "title": "J-2-230K",
         "description": "",
@@ -2508,7 +2508,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "Juno45k",
         "title": "Juno45k",
         "description": "",

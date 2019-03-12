@@ -545,6 +545,31 @@
         ]
     },
     {
+        "name": "bluedog_Atlas_LR101_Inline",
+        "title": "LR101 Series",
+        "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MA-x system (2x LR89 + LR105 + 2x LR101) on Atlas, and MB-x system (LR79 or RS-27 + 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
+        "mod": "Bluedog DB",
+        "cost": "15",
+        "entry_cost": "1000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Atlas",
+        "engine_config": "LR101",
+        "upgrade": false,
+        "entry_cost_mods": "LR101-NA-3",
+        "identical_part_name": "LR101",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "bluedog_Atlas_LR105",
         "title": "LR105 Series",
         "description": "Kerolox gas-generator sustainer engine used in the Atlas launch vehicle. It, like the Atlas's booster engines (LR89s) are lit on the ground, but after a bit over 2 minutes' flight the boosters are dropped and the Atlas core continues to orbit under the power of the sustainer engine (and the verniers for roll control and final adjustment). The final configuration of the LR105 (like the LR89) uses RS-27 components for increased performance. As a sustainer engine, the LR105 has relatively poor sea level specific impulse compared to most boosters, but somewhat better vacuum specific impulse--though the difference in both is nowhere near as pronounced as when comparing a booster to an upper stage engine. Diameter: [1.5 m]. Plume configured by RealPlume.",

@@ -292,6 +292,81 @@
             "EngineLiquidPF"
         ]
     },
+	{
+        "name": "ROE-Altair-RN",
+        "title": "Altair",
+        "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "170",
+        "entry_cost": "3400",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1959",
+        "technology": "solids1959",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair",
+        "engine_config": "Altair",
+        "upgrade": false,
+        "entry_cost_mods": "Altair",
+        "identical_part_name": "Altair",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+	{
+        "name": "ROE-AltairII-RN",
+        "title": "Altair II",
+        "description": "A small solid kick motor. Developed from the Altair, this successor was used on Scout and Delta. Used to circularize at apogee or perform final payload kick. Maximum thrust 26.4kN, burn time 28 seconds. Diameter: [0.65 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": "4000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1963",
+        "technology": "solids1962",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair II",
+        "engine_config": "Altair-II",
+        "upgrade": false,
+        "entry_cost_mods": "Altair-II",
+        "identical_part_name": "Altair II",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+	{
+        "name": "ROE-AltairIII-RN",
+        "title": "Altair III",
+        "description": "A small solid kick motor. Developed from the Altair, this final version was used on later Scout and Delta craft. Used to circularize at apogee or perform final payload kick. Maximum thrust 25.6kN, burn time 31 seconds. Diameter: [0.50 m].",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "5000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1965",
+        "technology": "solids1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair III",
+        "engine_config": "Altair-III",
+        "upgrade": false,
+        "entry_cost_mods": "Altair-III",
+        "identical_part_name": "Altair III",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
     {
         "name": "ROE-BabySergeant-BDB",
         "title": "Baby Sergeant (5.4KS1975)",
@@ -413,6 +488,31 @@
         "identical_part_name": "Baby Sergeant x3 Decoupler",
         "module_tags": []
     },
+	{
+        "name": "ROE-Castor1-RN",
+        "title": "Castor 1 Radial SRB",
+        "description": "Radial Boosters for the TAT and Delta Launch Vehicles",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": 6000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "TAT, Delta-D, Delta-E",
+        "engine_config": "Castor-1",
+        "upgrade": false,
+        "entry_cost_mods": "Castor-1",
+        "identical_part_name": "Castor 1",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
     {
         "name": "ROE-Castor1Inline-BDB",
         "title": "Castor 1",
@@ -427,7 +527,7 @@
         "era": "",
         "ro": true,
         "rp0": true,
-        "orphan": false,
+        "orphan": true,
         "rp0_conf": true,
         "spacecraft": "Scout",
         "engine_config": "Castor-1",
@@ -452,13 +552,38 @@
         "era": "",
         "ro": true,
         "rp0": true,
-        "orphan": false,
+        "orphan": true,
         "rp0_conf": true,
         "spacecraft": "TAT, Delta-D, Delta-E",
         "engine_config": "Castor-1",
         "upgrade": false,
         "entry_cost_mods": "Castor-1",
         "identical_part_name": "Castor 1",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+	{
+        "name": "ROE-Castor2-RN",
+        "title": "Castor 2",
+        "description": "A derivative of the Castor 1 motor, the Castor 2 featured higher specific impulse and propellant load and lower dry mass fraction as well as a longer burn time. It was used as strap-on booster starting with Delta E and was also used in all but the early Scouts. Burn time 37s. Diameter: [0.79 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": 180,
+        "entry_cost": "6400",
+        "category": "SOLID",
+        "info": "SRB",
+        "year": "1965",
+        "technology": "solids1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Castor 2",
+        "engine_config": "Castor-2",
+        "upgrade": false,
+        "entry_cost_mods": "Castor-2",
+        "identical_part_name": "",
         "module_tags": [
             "EngineSolid"
         ]
@@ -486,6 +611,31 @@
         "identical_part_name": "F-1",
         "module_tags": [
             "EngineLiquidTurbo"
+        ]
+    },
+	{
+        "name": "ROE-GCRC-RN",
+        "title": "GCRC 33-KS-2800",
+        "description": "A small solid kick motor, used as the third stage on all but the last Vanguard launch. Burn time 33 seconds. Diameter: [0.45 m].",
+        "mod": "ROEngines",
+        "cost": "170",
+        "entry_cost": "3000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1955",
+        "technology": "basicSolids",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Vanguard",
+        "engine_config": "GCRC",
+        "upgrade": false,
+        "entry_cost_mods": "GCRC",
+        "identical_part_name": "GCRC",
+        "module_tags": [
+            "EngineSolid"
         ]
     },
     {

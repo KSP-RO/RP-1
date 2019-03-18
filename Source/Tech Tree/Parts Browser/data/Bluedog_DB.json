@@ -520,7 +520,7 @@
         "module_tags": []
     },
     {
-        "name": "bluedog_Atlas_LR101_Radial",
+        "name": "bluedog_Atlas_LR101_Inline",
         "title": "LR101 Series",
         "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MA-x system (2x LR89 + LR105 + 2x LR101) on Atlas, and MB-x system (LR79 or RS-27 + 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
@@ -545,7 +545,7 @@
         ]
     },
     {
-        "name": "bluedog_Atlas_LR101_Inline",
+        "name": "bluedog_Atlas_LR101_Radial",
         "title": "LR101 Series",
         "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MA-x system (2x LR89 + LR105 + 2x LR101) on Atlas, and MB-x system (LR79 or RS-27 + 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
         "mod": "Bluedog DB",

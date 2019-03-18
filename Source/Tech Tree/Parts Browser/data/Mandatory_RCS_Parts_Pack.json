@@ -118,7 +118,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -143,7 +143,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -193,7 +193,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -218,7 +218,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -268,7 +268,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -293,7 +293,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -443,7 +443,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -493,7 +493,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -518,7 +518,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -568,7 +568,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -618,7 +618,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -643,7 +643,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"

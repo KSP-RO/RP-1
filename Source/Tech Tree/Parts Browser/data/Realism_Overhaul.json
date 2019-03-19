@@ -349,7 +349,7 @@
         "description": "Small, but powerful solid fueled booster used as the first stage for the Aerobee line of Sounding Rockets.",
         "mod": "Realism Overhaul",
         "cost": "40",
-        "entry_cost": "800",
+        "entry_cost": "0",
         "category": "SOLID",
         "info": "",
         "year": "1950",
@@ -362,7 +362,7 @@
         "spacecraft": "Aerobee 100",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "800",
         "identical_part_name": "AerobeeBooster",
         "module_tags": [
             "EngineSolid"

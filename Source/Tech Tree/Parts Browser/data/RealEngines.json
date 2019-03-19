@@ -41,7 +41,7 @@
         "spacecraft": "Zenit",
         "engine_config": "RD8",
         "upgrade": false,
-        "entry_cost_mods": "RD-8-SI",
+        "entry_cost_mods": "RD-8",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -712,9 +712,9 @@
         "orphan": false,
         "rp0_conf": false,
         "spacecraft": "Zenit",
-        "engine_config": "RD805",
+        "engine_config": "RD8",
         "upgrade": false,
-        "entry_cost_mods": "RD-805",
+        "entry_cost_mods": "RD-8",
         "identical_part_name": "",
         "module_tags": []
     },

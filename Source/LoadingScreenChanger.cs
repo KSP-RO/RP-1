@@ -9,7 +9,7 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     class LoadingScreenChanger : MonoBehaviour
     {
-        public const string TipFilePath = @"GameData\RP-0\PluginData\LoadingScreenTips.txt";
+        public const string TipFilePath = @"GameData/RP-0/PluginData/LoadingScreenTips.txt";
         protected bool done = false;
 
         protected void Awake()

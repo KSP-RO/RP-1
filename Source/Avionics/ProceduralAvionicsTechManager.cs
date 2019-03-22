@@ -135,6 +135,8 @@ namespace RP0.ProceduralAvionics
 
 		internal static int GetUnlockCost(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
 		{
+			if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return 0;
+
 			string ecmName = GetEcmName(avionicsConfigName, techNode);
 			double cost = EntryCostManager.Instance.ConfigEntryCost(ecmName);
 

@@ -176,7 +176,7 @@ namespace RP0.ProceduralAvionics
 		{
 			try {
 				Log("OnLoad called");
-				if (GameSceneFilter.AnyInitializing.IsLoaded()) {
+				if (GameSceneFilter.Loading.IsLoaded()) {
 					Log("Loading Avionics Configs");
 					ProceduralAvionicsTechManager.LoadAvionicsConfigs(node);
 				}

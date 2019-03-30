@@ -103,7 +103,7 @@ namespace RP0
         public Vessel vessel = null;
         bool wasLocked = false;
         const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | 
-            ControlTypes.RCS | ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
+            ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
         const string lockID = "RP0ControlLocker";
         float maxMass, vesselMass;
         double lastUT = -1d;

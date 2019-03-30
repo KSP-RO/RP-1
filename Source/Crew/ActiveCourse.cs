@@ -188,7 +188,6 @@ namespace RP0.Crew
 
         public void CompleteCourse()
         {
-
             //assign rewards to all kerbals and set them to free
             if (Completed)
             {
@@ -196,7 +195,7 @@ namespace RP0.Crew
                 {
                     if (student == null)
                         continue;
-
+                    
                     if (ExpireLog != null)
                     {
                         foreach (ConfigNode.Value v in ExpireLog.values)
@@ -232,10 +231,30 @@ namespace RP0.Crew
                             exp.expiration += Planetarium.GetUniversalTime();
                         }
 
+                        bool prevMissionsAlreadyExpired = false;
                         foreach (ConfigNode.Value v in RewardLog.values)
                         {
                             string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            student.flightLog.AddEntry(s[0], s.Length == 1 ? null : s[1]);
+                            string trainingType = s[0];
+                            string trainingTarget = s.Length == 1 ? null : s[1];
+
+                            if (!prevMissionsAlreadyExpired && trainingType == "TRAINING_mission")
+                            {
+                                // Expire any previous mission trainings because only 1 should be active at a time
+                                for (int i = student.careerLog.Count; i-- > 0;)
+                                {
+                                    FlightLog.Entry e = student.careerLog.Entries[i];
+                                    if (e.type == "TRAINING_mission")
+                                    {
+                                        e.type = "expired_" + e.type;
+                                        CrewHandler.Instance.RemoveExpiration(student.name, v.value);
+                                        student.ArchiveFlightLog();
+                                        prevMissionsAlreadyExpired = true;
+                                    }
+                                }
+                            }
+
+                            student.flightLog.AddEntry(trainingType, trainingTarget);
                             student.ArchiveFlightLog();
                             if (expiration > 0d)
                                 exp.entries.Add(v.value);

@@ -51,7 +51,7 @@ namespace RP0
                 try {
                     /* If totalUpkeep is zero, we probably haven't calculated the upkeeps yet, so recalculate now */
                     if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER && MaintenanceHandler.Instance.totalUpkeep == 0d)
-                        MaintenanceHandler.Instance.updateUpkeep();
+                        MaintenanceHandler.Instance.UpdateUpkeep();
 
                     tabSelector();
                     if (showTab(currentTab)) {

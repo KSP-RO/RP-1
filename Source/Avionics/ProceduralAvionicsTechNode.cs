@@ -11,9 +11,6 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public string name;
 
-		[Persistent]
-		public int unlockCost;
-
 		// A higher number here is more efficient.  This is the number of controllable tons per ton of avionics mass at 50% of the maximum controllable tonnage.  
 		// This actual ratio will be higher if closer to the maximum, and lower if farther away, however, as we get closer to our maximum, 
 		// the price gets exponentionally higher, since we're trying to cram more controls in the same amount of space (at 50%, we are at 75% of the avionics mass 
@@ -33,13 +30,13 @@ namespace RP0.ProceduralAvionics
 		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
 		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
 		[Persistent]
-		public float enabledProceduralW = 1;
+		public float enabledkWPerTon = 1;
 
 		// If postitive, this will enable the abilty to put avioniccs on standby.
 		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
 		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
 		[Persistent]
-		public float disabledProceduralW = -1;
+		public float disabledkWPerTon = -1;
 
 		// This is the overall density of this avionics unit at 50% utilization.  This can be tweaked to help match up historical avionics units with their proper sizes.
 		[Persistent]
@@ -60,6 +57,10 @@ namespace RP0.ProceduralAvionics
 		// Controls whether or not this part has a science return container 
 		[Persistent]
 		public bool hasScienceContainer = false;
+
+        // is this capable of >LEO use?
+        [Persistent]
+        public bool interplanetary = true;
 
 		public bool IsAvailable {
 			get {

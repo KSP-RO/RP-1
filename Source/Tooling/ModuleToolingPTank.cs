@@ -50,6 +50,10 @@ namespace RP0
                         procShape = part.Modules["ProceduralShapePill"];
                         cone = false;
                         break;
+                    case "Polygon":
+                        procShape = part.Modules["ProceduralShapePolygon"];
+                        cone = false;
+                        break;
 
                     default: // "Cylinder"
                         procShape = part.Modules["ProceduralShapeCylinder"];

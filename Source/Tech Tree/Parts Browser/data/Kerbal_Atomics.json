@@ -1,0 +1,80 @@
+[
+    {
+        "name": "ntr-sc-125-1",
+        "title": "NERVA I",
+        "description": "1970s low TWR vacuum engine. the NERVA (Nuclear Engine for Rocket Vehicle Applications) is designed for orbital tugs and large rocket upper stages. Diameter: [1.25 m]. Plume configured by RealPlume.",
+        "mod": "Kerbal Atomics",
+        "cost": 2100,
+        "entry_cost": 0,
+        "category": "NTR",
+        "info": "Engine",
+        "year": "1981",
+        "technology": "basicNuclearPropulsion",
+        "era": "06-STATION",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "NERVA",
+        "engine_config": "NERVA",
+        "upgrade": false,
+        "entry_cost_mods": "NERVA-I",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
+        ]
+    },
+    {
+        "name": "ntr-sc-125-2",
+        "title": "NERVA II",
+        "description": "A later 70s atomic engine. Relatively low TWR but high ISP and power generation of 4200 MW. Derived from the Phoebus 2A ground demonstrator, tested in 1968. Plume configured by RealPlume.",
+        "mod": "Kerbal Atomics",
+        "cost": 7200,
+        "entry_cost": 0,
+        "category": "NTR",
+        "info": "Engine",
+        "year": "1986",
+        "technology": "improvedNuclearPropulsion",
+        "era": "07-SPCPLANES",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "NERVA II",
+        "engine_config": "NERVAII",
+        "upgrade": false,
+        "entry_cost_mods": "NERVA-II",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
+        ]
+    },
+    {
+        "name": "ntr-sc-25-1",
+        "title": "Bimodal NTR",
+        "description": "Low thrust pump-fed expander nuclear engine. Evolved for the original NERVA design the Bimodal NTR, instead of wasting precious propellant mass for cooling the engine reactor, uses a Brayton cycle electricity generator unit to convert the waste thermal energy into useful electrical power. It also supports liquid oxygen injection (TRITON - trimodal operation) for increased thrust but with the cost of a lower overall efficiency. Plume configured by RealPlume.",
+        "mod": "Kerbal Atomics",
+        "cost": 17500,
+        "entry_cost": 350000,
+        "category": "NTR",
+        "info": "Engine",
+        "year": "2021",
+        "technology": "nuclearPropulsionNF",
+        "era": "11-NF",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Bimodal NTR",
+        "engine_config": "BNTR",
+        "upgrade": false,
+        "entry_cost_mods": "BNTR",
+        "identical_part_name": "BNTR",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
+        ]
+    }
+]

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\GameData\RP-0\Plugins\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -59,7 +59,10 @@
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
     <Compile Include="Crew\CrewHandler.cs" />
     <Compile Include="DifficultyPresets.cs" />
+    <Compile Include="ModuleNonRecharge.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
+    <Compile Include="ModuleNoEVA.cs" />
+    <Compile Include="ModuleTag\NoResourceCostMult.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
     <Compile Include="ModuleTag\DecreaseB.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />
@@ -92,12 +95,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
     <Compile Include="Tooling\ModuleTooling.cs" />
+    <Compile Include="Tooling\ModuleToolingStockFairing.cs" />
     <Compile Include="Tooling\ModuleToolingPFSide.cs" />
     <Compile Include="Tooling\ModuleToolingGeneric.cs" />
     <Compile Include="Tooling\ModuleToolingSSTUTank.cs" />
     <Compile Include="Tooling\ToolingDatabase.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />
+    <Compile Include="Utilities\KACWrapper.cs" />
     <Compile Include="Utilities\KSPUtils.cs" />
     <Compile Include="Utilities\MathUtils.cs" />
     <Compile Include="Utilities\ObjectSerializer.cs" />
@@ -111,21 +116,30 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\..\..\Games\Kerbal Space Program 1.3.1 - RO\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\..\..\..\Games\Kerbal Space Program 1.3.1 - RO\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ModularFlightIntegrator">
-      <HintPath>..\..\..\..\..\..\..\..\Games\Kerbal Space Program 1.3.1 - RO\GameData\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Games\RP1\GameData\ModularFlightIntegrator\ModularFlightIntegrator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RealFuels">
+      <HintPath>..\..\..\..\..\..\Games\RP1\GameData\RealFuels\Plugins\RealFuels.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\..\..\Games\Kerbal Space Program 1.3.1 - RO\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\..\..\..\..\..\Games\Kerbal Space Program 1.3.1 - RO\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

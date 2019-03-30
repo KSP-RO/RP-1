@@ -1,0 +1,22 @@
+{% extends "browser/layout.html" %}
+
+{% block title %}ECM-Tree{% endblock %}
+
+{% block body %}
+  <div id="ecm_tree"></div>
+  <script>
+    $( document ).ready(function() {
+        $.ajax({
+            url: '/api/ecm_data',
+            success: function (result) {
+                data = result;
+                $('#ecm_tree').jstree({ 'core' : {
+                    'data' : [{ 'text': 'ECMs', 'state': {'opened': true}, 'children': data}]
+                } });
+                
+            },
+        });
+    });
+
+  </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+Guidance Unit (Starting), 1m
+  cost = 350
+  mass = 600
+  tonnage = 20
+  ecUse = 3kW
+  SAS = NONE
+  ecStore = 540
+  width = 1.0
+  height = 0.2
+  
+Guidance Unit (Early), 1m
+  cost = 350
+  mass = 230
+  tonnage = 45
+  ecUse = 300W
+  SAS = 0
+  ecStore = 108
+  width = 1.0
+  height = 0.2
+  
+Guidance Unit (Early), 2m
+  cost = 400
+  mass = 400
+  tonnage = 130
+  ecUse = 1kW
+  SAS = 1
+  ecStore = 540
+  width = 2.0
+  height = 0.4
+  
+Guidance Unit (Early), 3m
+  cost = 600
+  mass = 850
+  tonnage = 300
+  ecUse = 1.5kW
+  SAS = 1
+  ecStore = 810
+  width = 3.0
+  height = 0.5
+
+Able Avionics Unit
+  cost = 100
+  mass = 140
+  tonnage = 5
+  ecUse = 100W
+  SAS = All?
+  ecStore = 300 (free, no mass)
+  width = 0.813
+  height = 0.5

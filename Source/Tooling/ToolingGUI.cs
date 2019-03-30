@@ -97,13 +97,15 @@ namespace RP0
                 try {
                     foreach (untooledPart uP in untooledParts) {
                         GUILayout.BeginHorizontal();
-                        try {
+                        try
+                        {
                             GUILayout.Label(uP.name, boldLabel, GUILayout.Width(312));
                             GUILayout.Label(uP.toolingCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
-                            float untooledCost = uP.toolingCost * uP.untooledMultiplier;
-                            GUILayout.Label(untooledCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
-                            GUILayout.Label((uP.totalCost - untooledCost).ToString("N0") + "f", rightLabel, GUILayout.Width(72));
-                        } finally {
+                            var untooledExtraCost = GetUntooledExtraCost(uP);
+                            GUILayout.Label(uP.totalCost.ToString("N0") + "f", rightLabel, GUILayout.Width(72));
+                            GUILayout.Label((uP.totalCost - untooledExtraCost).ToString("N0") + "f", rightLabel, GUILayout.Width(72));
+                        }
+                        finally {
                             GUILayout.EndHorizontal();
                         }
                     }
@@ -112,8 +114,8 @@ namespace RP0
                 }
                 GUILayout.BeginHorizontal();
                 try {
-                    float toolAllCost = EditorLogic.fetch.ship.GetShipCosts(out _, out _) - EditorLogic.fetch.ship.parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq()).Where(mt => !mt.IsUnlocked()).Select(mt => mt.GetModuleCost(mt.part.partInfo.cost, ModifierStagingSituation.CURRENT)).Sum();
-                    GUILayout.Label("Total vessel cost if all parts are tooled: " + toolAllCost.ToString("N0"));
+                    var allTooledCost = EditorLogic.fetch.ship.GetShipCosts(out _, out _) - untooledParts.Slinq().Select(p => GetUntooledExtraCost(p)).Sum();
+                    GUILayout.Label("Total vessel cost if all parts are tooled: " + allTooledCost.ToString("N0"));
                 } finally {
                     GUILayout.EndHorizontal();
                 }
@@ -161,6 +163,11 @@ namespace RP0
                 }
             }
             return currentToolingType == null ? tabs.Tooling : tabs.ToolingType;
+        }
+
+        private static float GetUntooledExtraCost(untooledPart uP)
+        {
+            return uP.toolingCost * uP.untooledMultiplier;
         }
 
         private void toolingTypesHeading()

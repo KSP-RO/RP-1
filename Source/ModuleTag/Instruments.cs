@@ -8,7 +8,10 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            return "Contains scientific instruments";
+            string str = string.Empty;
+            str = "Contains scientific instruments. Currently, these do not multiply rollout costs.\n\n" +
+                "<b><color=orange>Rollout Cost: Cost of This Part * 1.0</color></b>";
+            return str;
         }
     }
 }

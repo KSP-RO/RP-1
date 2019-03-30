@@ -1,0 +1,28 @@
+[
+    {
+        "name": "RO_bluedog_M1",
+        "title": "M-1 Series",
+        "description": "The massive M-1 engine. The largest, most powerful, LH2/LOX engine ever designed. Individual components have been tested. Generally designed as an upper stage engine, first stages designs with expanding nozzles were being worked on. Diameter: [4.28 m]. Plume configured by RealPlume.",
+        "mod": "Bluedog DB (RO Addition)",
+        "cost": "22000",
+        "entry_cost": "770000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1972",
+        "technology": "hydrolox1972",
+        "era": "06-STATION",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "M-1",
+        "engine_config": "M1",
+        "upgrade": false,
+        "entry_cost_mods": "M-1-Spec",
+        "identical_part_name": "M-1",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    }
+]

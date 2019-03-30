@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link href="https://cdn.fancygrid.com/fancy.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <script src="http://cdn.fancygrid.com/fancy.full.js"></script>
+    <script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <style>
+        table.blueTable {
+          border: 1px solid #1C6EA4;
+          background-color: #EEEEEE;
+          width: 100%;
+          text-align: left;
+          border-collapse: collapse;
+        }
+        table.blueTable td, table.blueTable th {
+          border: 1px solid #AAAAAA;
+          padding: 3px 2px;
+        }
+        table.blueTable tbody td {
+          font-size: 13px;
+        }
+        table.blueTable tr:nth-child(even) {
+          background: #D0E4F5;
+        }
+        table.blueTable thead {
+          background: #1C6EA4;
+          background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+          background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+          background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+          border-bottom: 2px solid #444444;
+        }
+        table.blueTable thead th {
+          font-size: 15px;
+          font-weight: bold;
+          color: #FFFFFF;
+          border-left: 2px solid #D0E4F5;
+        }
+        table.blueTable thead th:first-child {
+          border-left: none;
+        }
+
+        table.blueTable tfoot {
+          font-size: 14px;
+          font-weight: bold;
+          color: #FFFFFF;
+          background: #D0E4F5;
+          background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+          background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+          background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+          border-top: 2px solid #444444;
+        }
+        table.blueTable tfoot td {
+          font-size: 14px;
+        }
+        table.blueTable tfoot .links {
+          text-align: right;
+        }
+        table.blueTable tfoot .links a{
+          display: inline-block;
+          background: #1C6EA4;
+          color: #FFFFFF;
+          padding: 2px 8px;
+          border-radius: 5px;
+        }
+        
+        button {
+          background-color: #ddd;
+          border: none;
+          color: black;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 6px;
+        }
+        
+        button:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .pill {
+          background-color: #ddd;
+          border: none;
+          color: black;
+          padding: 3px 3px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          cursor: pointer;
+          border-radius: 6px;
+        }
+        
+        .pill:hover {
+            background-color: #f1f1f1;
+        }
+        .fancy-combo-result-list {
+          width: 200px !important;
+        }
+		
+    </style>
+    <title>RP-0 Part Browser | {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+      <h5 class="my-0 mr-md-auto font-weight-normal">RP-0 Part Browser</h5>
+      <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="/" title="Home">Home</a>
+        <a class="p-2 text-dark" href="/dashboard">Dashboard</a>
+        <a class="p-2 text-dark" href="/ecm-tree">ECM Tree View</a>
+      </nav>
+    </div>
+    <div class="container" style="max-width: 9000px; max-height: 9000px; padding-top: 0px; padding-bottom: 0px; margin-top: 0px; margin-bottom: 0px;">
+      {% block body %}{% endblock %}
+    </div>
+  </body>
+</html>

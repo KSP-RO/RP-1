@@ -1,0 +1,13 @@
+{% extends "browser/layout.html" %}
+
+{% block title %}{{ part.title }}{% endblock %}
+
+{% block body %}
+  <h2 class="text-center">{{ part.title }}</h2>
+  <div class="row">
+    <div class="offset-sm-2 col-sm-8">
+      <div class="body">{{ part.name|safe }}</div>
+      <p class="author">Created by {{ part.author_name }}</p>
+    </div>
+  </div>
+{% endblock %}

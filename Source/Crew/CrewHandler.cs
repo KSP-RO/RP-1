@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using KSP;
 using UnityEngine;
 using System.Reflection;
 
@@ -118,10 +116,8 @@ namespace RP0.Crew
         [KSPField(isPersistant = true)]
         public double nextUpdate = -1d;
 
-        protected double updateInterval = 3600d;
-
-
-
+        public double updateInterval = 3600d;
+        
         public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
@@ -165,7 +161,7 @@ namespace RP0.Crew
             GameEvents.onGameStateLoad.Add(LoadSettings);
 
             cliTooltip = typeof(KSP.UI.CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
-
+            
             FindAllCourseConfigs(); //find all applicable configs
             GenerateOfferedCourses(); //turn the configs into offered courses
         }
@@ -223,6 +219,7 @@ namespace RP0.Crew
             }
 
             TrainingDatabase.Initialize();
+            KACWrapper.InitKACWrapper();
         }
 
         public override void OnSave(ConfigNode node)
@@ -292,7 +289,12 @@ namespace RP0.Crew
             double time = Planetarium.GetUniversalTime();
             if (nextUpdate < time)
             {
-                nextUpdate = time + updateInterval;
+                // Ensure that CrewHandler updates happen at predictable times so that accurate KAC alarms can be set.
+                do
+                {
+                    nextUpdate += updateInterval;
+                }
+                while (nextUpdate < time);
 
                 if (retirementEnabled)
                 {
@@ -349,7 +351,9 @@ namespace RP0.Crew
                                 FlightLog.Entry ent = pcm.careerLog[j];
                                 for (int k = eC; k-- > 0;)
                                 {
-                                    if (e.Compare(k, ent))
+                                    // Allow only mission trainings to expire. 
+                                    // This check is actually only needed for old savegames as only these can have expirations on proficiencies.
+                                    if (ent.type == "TRAINING_mission" && e.Compare(k, ent))
                                     {
                                         ScreenMessages.PostScreenMessage(pcm.name + ": Expired: " + GetPrettyCourseName(ent.type) + ent.target);
                                         ent.type = "expired_" + ent.type;
@@ -491,6 +495,34 @@ namespace RP0.Crew
             expireTimes.Add(e);
         }
 
+        public void AddCoursesForTechNode(RDTech tech)
+        {
+            for (int i = 0; i < tech.partsAssigned.Count; i++)
+            {
+                AvailablePart ap = tech.partsAssigned[i];
+                if (ap.partPrefab.CrewCapacity > 0)
+                {
+                    AddPartCourses(ap);
+                }
+            }
+        }
+
+        public void AddPartCourses(AvailablePart ap)
+        {
+            string name = TrainingDatabase.SynonymReplace(ap.name);
+            if (!partSynsHandled.Contains(name))
+            {
+                partSynsHandled.Add(name);
+                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap);
+
+                GenerateCourseProf(ap, !isPartUnlocked);
+                if (isPartUnlocked)
+                {
+                    GenerateCourseMission(ap);
+                }
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -524,6 +556,10 @@ namespace RP0.Crew
             List<string> inactivity = new List<string>();
 
             double UT = Planetarium.GetUniversalTime();
+
+            // When flight duration was too short, mission training should not be set as expired.
+            // This can happen when an on-the-pad failure occurs and the vessel is recovered.
+            if (elapsedTime < settings.minFlightDurationSecondsForTrainingExpire) return;
 
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
@@ -704,7 +740,6 @@ namespace RP0.Crew
 
         public string GetTrainingString(ProtoCrewMember pcm)
         {
-            HashSet<string> expiredProfs = new HashSet<string>();
             bool found = false;
             string trainingStr = "\n\nTraining:";
             int lastFlight = pcm.careerLog.Last() == null ? 0 : pcm.careerLog.Last().flight;
@@ -713,28 +748,21 @@ namespace RP0.Crew
                 string pretty = GetPrettyCourseName(ent.type);
                 if (!string.IsNullOrEmpty(pretty))
                 {
-                    if (ent.type == "expired_TRAINING_proficiency")
+                    if (ent.type == "TRAINING_proficiency")
                     {
-                        found = true;
-                        expiredProfs.Add(ent.target);
-                    }
-                    else
-                    {
-                        if (ent.type == "TRAINING_mission" && ent.flight != lastFlight)
-                            continue;
-
                         found = true;
                         trainingStr += "\n  " + pretty + ent.target;
+                    }
+                    else if (ent.type == "TRAINING_mission")
+                    {
                         double exp = GetExpiration(pcm.name, ent);
                         if (exp > 0d)
-                            trainingStr += ". Expires " + KSPUtil.PrintDate(exp, false);
+                        {
+                            trainingStr += "\n  " + pretty + ent.target + ". Expires " + KSPUtil.PrintDate(exp, false);
+                        }
                     }
                 }
             }
-            if (expiredProfs.Count > 0)
-                trainingStr += "\n  Expired proficiencies:";
-            foreach (string s in expiredProfs)
-                trainingStr += "\n    " + s;
 
             if (found)
                 return trainingStr;
@@ -742,7 +770,7 @@ namespace RP0.Crew
                 return string.Empty;
         }
 
-        protected double GetExpiration(string pcmName, FlightLog.Entry ent)
+        public double GetExpiration(string pcmName, FlightLog.Entry ent)
         {
             for (int i = expireTimes.Count; i-- > 0;)
             {
@@ -806,17 +834,10 @@ namespace RP0.Crew
 
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
-                if (ap.partPrefab.CrewCapacity > 0 /*&& ap.TechRequired != "start"*/)
+                if (ap.partPrefab.CrewCapacity > 0 && /*&& ap.TechRequired != "start"*/
+                    ResearchAndDevelopment.PartModelPurchased(ap))
                 {
-                    if (ResearchAndDevelopment.PartModelPurchased(ap))
-                    {
-                        string name = TrainingDatabase.SynonymReplace(ap.name);
-                        if (!partSynsHandled.Contains(name))
-                        {
-                            partSynsHandled.Add(name);
-                            AddPartCourses(ap);
-                        }
-                    }
+                    AddPartCourses(ap);
                 }
             }
 
@@ -824,13 +845,7 @@ namespace RP0.Crew
             //fire an event to let other mods add available courses (where they can pass variables through then)
         }
 
-        protected void AddPartCourses(AvailablePart ap)
-        {
-            GenerateCourseProf(ap);
-            GenerateCourseMission(ap);
-        }
-
-        protected void GenerateCourseProf(AvailablePart ap)
+        protected void GenerateCourseProf(AvailablePart ap, bool isTemporary)
         {
             ConfigNode n = new ConfigNode("FS_COURSE");
             string name = TrainingDatabase.SynonymReplace(ap.name);
@@ -838,8 +853,7 @@ namespace RP0.Crew
             n.AddValue("id", "prof_" + name);
             n.AddValue("name", "Proficiency: " + name);
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400d));
-            n.AddValue("expiration", settings.trainingProficiencyExpirationYears * 86400d * 365d);
-            n.AddValue("expirationUseStupid", true);
+            n.AddValue("isTemporary", isTemporary);
 
             n.AddValue("conflicts", "TRAINING_proficiency:" + name);
 
@@ -849,22 +863,6 @@ namespace RP0.Crew
             l.AddValue("0", "TRAINING_proficiency," + name);
 
             CourseTemplate c = new CourseTemplate(n);
-            c.PopulateFromSourceNode();
-            OfferedCourses.Add(c);
-
-            ConfigNode n2 = n.CreateCopy();
-            n2.SetValue("id", "profR_" + name);
-            n2.SetValue("name", "Refresher: " + name);
-            n2.SetValue("time", 1d + TrainingDatabase.GetTime(name) * 86400d * settings.trainingProficiencyRefresherTimeMult);
-            n2.AddValue("preReqsAny", "expired_TRAINING_proficiency:" + name + ",TRAINING_proficiency:" + name);
-            n2.RemoveValue("conflicts");
-
-            r = n2.GetNode("REWARD");
-            r.SetValue("XPAmt", "0");
-            ConfigNode exp = r.AddNode("EXPIRELOG");
-            exp.AddValue("0", "TRAINING_proficiency," + name);
-
-            c = new CourseTemplate(n2);
             c.PopulateFromSourceNode();
             OfferedCourses.Add(c);
         }
@@ -877,6 +875,7 @@ namespace RP0.Crew
             n.AddValue("id", "msn_" + name);
             n.AddValue("name", "Mission: " + name);
             n.AddValue("time", 1d + TrainingDatabase.GetTime(name + "-Mission") * 86400d);
+            n.AddValue("isTemporary", false);
             n.AddValue("timeUseStupid", true);
             n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
             n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);
@@ -895,7 +894,10 @@ namespace RP0.Crew
 
         protected void onPartPurchased(AvailablePart ap)
         {
-            AddPartCourses(ap);
+            if (ap.partPrefab.CrewCapacity > 0)
+            {
+                AddPartCourses(ap);
+            }
         }
 
         protected string GetPrettyCourseName(string str)
@@ -904,8 +906,6 @@ namespace RP0.Crew
             {
                 case "TRAINING_proficiency":
                     return "Proficiency with ";
-                case "expired_TRAINING_proficiency":
-                    return "(Expired) Proficiency with ";
                 case "TRAINING_mission":
                     return "Mission training for ";
                 /*case "expired_TRAINING_mission":

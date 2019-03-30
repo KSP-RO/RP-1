@@ -1,0 +1,100 @@
+footer {
+  text-align: center;
+  font-style: italic;
+  margin-top: 1em;
+}
+
+.nav {
+  float: right;
+}
+
+.fancy-grid-center > div:nth-child(2) > div:nth-child(1)
+{
+  display: none;
+}
+
+h2 {
+  margin-bottom: 2em;
+}
+
+.parts ul {
+  list-style-type: none;
+}
+
+.parts a {
+  font-size: 1.3em;
+  text-decoration: underline;
+  color: #212529;
+}
+
+.parts span {
+  font-size: 1.1em;
+  float: right;
+}
+
+.empty {
+  font-size: 2em;
+  margin-bottom: 5em;
+}
+
+.container {
+  padding-top: 2em;
+}
+
+.unauthenticated p {
+  font-size: 1.3em;
+  text-align: center;
+}
+
+hr.bottom {
+  margin-top: 4em;
+}
+
+.submit-btn {
+  float: right;
+}
+
+.alert p {
+  font-size: 1.1em;
+}
+
+.author {
+  font-size: 1.2em;
+  margin-top: 2em;
+}
+
+.body {
+  margin-top: 2em;
+  font-size: 1.2em;
+}
+
+.edit {
+  padding-left: 0;
+}
+
+.edit a {
+  text-decoration: underline;
+  color: #212529;
+  font-size: 1.5em;
+}
+
+.edit li {
+  list-style-type: none;
+  line-height: 2.5em;
+}
+
+.edit button {
+  float: right;
+}
+
+.delete {
+  margin-left: 1em;
+}
+
+.your-parts {
+  margin-top: 2em;
+}
+
+.hidden {
+  display: inline;
+}

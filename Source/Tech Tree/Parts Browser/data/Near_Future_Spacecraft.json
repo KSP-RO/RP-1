@@ -1,0 +1,82 @@
+[
+    {
+        "name": "inlineCmdPod",
+        "title": "PPD-1 Heavy Command Module",
+        "description": "This large command module is optimized for use with Kerlington's PPD series of products. Its seats 2 pilots and 4 passengers. No reaction wheels, but plenty of storage make it an excellent choice for large craft.",
+        "mod": "Near Future Spacecraft",
+        "cost": "5144",
+        "entry_cost": "13500",
+        "category": "COMMAND",
+        "info": "Command Module",
+        "year": "2019",
+        "technology": "capsulesNF",
+        "era": "11-NF",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult"
+        ]
+    },
+    {
+        "name": "mk3-9pod",
+        "title": "Mk3-9 Orbital Command Pod",
+        "description": "This newer command cockpit is optimized for orbital operations - it sacrifices some durability for lower mass. It has extensive fly-by wire systems, and can even pilot a craft without crew! Beware running out of power, though...",
+        "mod": "Near Future Spacecraft",
+        "cost": "5600",
+        "entry_cost": "9600",
+        "category": "COMMAND",
+        "info": "Command Module",
+        "year": "2019",
+        "technology": "capsulesNF",
+        "era": "11-NF",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
+        "name": "utilityCabin",
+        "title": "PPD-24 Itinerant Service Container",
+        "description": "The Itinerant is a handy service compartment for use in deep space missions. It seats two Kerbals and includes a decent amount of built-in electric storage and a small radioisotope generator.",
+        "mod": "Near Future Spacecraft",
+        "cost": "22500",
+        "entry_cost": "36400",
+        "category": "COMMAND",
+        "info": "Service Module",
+        "year": "2019",
+        "technology": "capsulesNF",
+        "era": "11-NF",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult",
+            "NoResourceCostMult"
+        ]
+    }
+]

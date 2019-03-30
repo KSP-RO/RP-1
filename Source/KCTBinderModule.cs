@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
+using System.Collections;
 using KerbalConstructionTime;
+using RP0.Crew;
+using UnityEngine;
 
 namespace RP0
 {
@@ -20,12 +20,30 @@ namespace RP0
         protected bool skipOne = true;
         protected bool skipTwo = true;
 
+        private EventData<RDTech> onKctTechQueuedEvent;
+
         public override void OnAwake()
         {
             base.OnAwake();
 
             KCT_GUI.UseAvailabilityChecker = true;
             KCT_GUI.AvailabilityChecker = CheckCrewForPart;
+        }
+
+        public void Start()
+        {
+            onKctTechQueuedEvent = GameEvents.FindEvent<EventData<RDTech>>("OnKctTechQueued");
+            if (onKctTechQueuedEvent != null)
+            {
+                onKctTechQueuedEvent.Add(OnKctTechQueued);
+            }
+
+            StartCoroutine(CreateCoursesRoutine());
+        }
+
+        public void OnDestroy()
+        {
+            if (onKctTechQueuedEvent != null) onKctTechQueuedEvent.Remove(OnKctTechQueued);
         }
 
         public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)
@@ -39,27 +57,26 @@ namespace RP0
             if (!requireTraining || EntryCostStorage.GetCost(partName) == 1)
                 return true;
 
-            partName = Crew.TrainingDatabase.SynonymReplace(partName);
+            partName = TrainingDatabase.SynonymReplace(partName);
 
             FlightLog.Entry ent = pcm.careerLog.Last();
             if (ent == null)
                 return false;
 
-            int lastFlight = ent.flight;
             bool lacksMission = true;
             for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
             {
                 FlightLog.Entry e = pcm.careerLog.Entries[i];
                 if (lacksMission)
                 {
-                    if (e.flight < lastFlight)
-                        return false;
-
                     if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
                         continue;
 
                     if (e.type == "TRAINING_mission" && e.target == partName)
-                        lacksMission = false;
+                    {
+                        double exp = CrewHandler.Instance.GetExpiration(pcm.name, e);
+                        lacksMission = exp == 0d || exp < Planetarium.GetUniversalTime();
+                    }
                 }
                 else
                 {
@@ -115,7 +132,6 @@ namespace RP0
                 if (buildRate > 0.001d)
                     MaintenanceHandler.Instance.kctBuildRates[ksc.KSCName] = buildRate;
 
-
                 for (int i = ksc.LaunchPads.Count; i-- > 0;)
                 {
                     int lvl = ksc.LaunchPads[i].level;
@@ -127,6 +143,29 @@ namespace RP0
 
             MaintenanceHandler.Instance.kctResearchRate = RDRate;
             MaintenanceHandler.Instance.kctPadCounts = padCounts;
+        }
+
+        private void OnKctTechQueued(RDTech data)
+        {
+            CrewHandler.Instance.AddCoursesForTechNode(data);
+        }
+
+        private IEnumerator CreateCoursesRoutine()
+        {
+            yield return new WaitForFixedUpdate();
+
+            for (int i = 0; i < PartLoader.LoadedPartsList.Count; i++)
+            {
+                var ap = PartLoader.LoadedPartsList[i];
+                if (ap.partPrefab.CrewCapacity > 0)
+                {
+                    var kctTech = KCT_GameStates.TechList.Find(t => t.techID == ap.TechRequired);
+                    if (kctTech != null)
+                    {
+                        CrewHandler.Instance.AddPartCourses(ap);
+                    }
+                }
+            }
         }
     }
 }

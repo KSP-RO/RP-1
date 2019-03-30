@@ -1,0 +1,700 @@
+{% extends "browser/layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+  <div id="commands"><button onclick="generateConfigs()">Generate Configs</button> &nbsp; <button onclick="addNewPart()">Add New Part</button></div></br>
+  <div id="parts_table"></div>
+    <script>
+    if (typeof JSON.clone !== "function") {
+        JSON.clone = function(obj) {
+            return JSON.parse(JSON.stringify(obj));
+        };
+    }
+    
+    Fancy.loadModule('form');
+    var form = null, grid = null;
+    document.addEventListener("DOMContentLoaded", function() {
+        initialize();
+    });
+    function initialize() {
+        grid = new FancyGrid({
+            title: 'RP-0 Parts',
+            renderTo: 'parts_table',
+            selModel: 'rows',
+            striped: true,
+            trackOver: true,
+            textSelection: true,
+            width: '1850',
+            height: 'fit',
+            nativeScroller: true,
+            events: [{
+                set: function(grid, o){
+                    key = o['key'];
+                    row = o['data'];
+                    if (!(row['id'] in originalData)) {
+                        originalData[row['id']] = JSON.clone(row);
+                        originalData[row['id']][key] = o['oldValue'];
+                        originalData[row['id']]['module_tags'] = row['module_tags'].slice();
+                    }
+                    changeSet = getChanges(originalData[row['id']], row);
+                    
+                    if (shouldAddChangeSet(changeSet)) {
+                        addChangeSet(row['name'], row['title'], row['mod'], row['id'], changeSet, false);
+                    } else {
+                        // if there are no changes from the original data, remove the changes.
+                        delete queuedChanges[row['id']];
+                        drawQueuedChanges();
+                    }
+                }
+            }],
+            data: {
+              proxy: {
+                url: '/api/part_data'
+              }
+            },
+            defaults: {
+              type: 'string',
+              //flex: 1,
+              editable: true,
+              sortable: true,
+              resizable: true, // Each column can be resized by user
+              menu: true, // Column has a menu to see options
+              ellipsis: false,
+              filter: {
+                header: true,
+                emptyText: 'Filter'
+              }
+            },
+            clicksToEdit: 2,
+            columnLines: true,
+            columnClickData: true,
+            //expander: {
+            //    tpl: [
+            //    '<div style="float: left;">',
+            //      '<br/><b>Info:</b> {info}',
+            //      '<br/><b>Description:</b> {description}',
+            //    '</div>'
+            //  ].join(""),
+            //  },
+            paging: {
+              pageSize: 50,
+              pageSizeData: [5, 10, 15, 20, 25, 50, 100, 500, 1000]
+            },
+            columns: [//{
+                    //type: 'expand',
+                    //locked: true
+                //},
+                {
+                  index: 'name',
+                  title: 'Name',
+                  width: 200
+                }, {
+                  index: 'title',
+                  title: 'Title',
+                  type: 'text',
+                  width: 250
+                }, {
+                  index: 'is_new_part',
+                  type: 'text',
+                  hidden: true,
+                  value: false
+                }, {
+                  index: 'mod',
+                  title: 'Mod',
+                  width: 175,
+                  //type: 'combo',
+                  multiSelect: true,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/mod'
+                    }
+                  }
+                }, {
+                  index: 'cost',
+                  title: 'Cost',
+                  width: 65,
+                  type: 'number'
+                }, {
+                  index: 'entry_cost',
+                  title: 'Entry Cost',
+                  width: 75,
+                  type: 'number'
+                }, {
+                  index: 'ro',
+                  title: 'RO',
+                  width: 40,
+                  type: 'checkbox'
+                }, 
+                //{
+                //  index: 'rp0',
+                //  title: 'RP-0',
+                //  width: 40,
+                //  type: 'checkbox'
+                //},
+                {
+                  index: 'rp0_conf',
+                  title: 'RP-0',
+                  width: 50,
+                  type: 'checkbox'
+                }, {
+                  index: 'category',
+                  title: 'Category',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/category'
+                    }
+                  }
+                }, {
+                  index: 'year',
+                  title: 'Year',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: 'api/unique_values_for_column/year'
+                    }
+                  },
+                  width: 50
+                }, {
+                  index: 'orphan',
+                  title: 'Orphan',
+                  width: 65,
+                  type: 'checkbox'
+                }, {
+                  index: 'upgrade',
+                  title: 'Upgrade',
+                  width: 65,
+                  type: 'checkbox'
+                }, {
+                  index: 'entry_cost_mods',
+                  title: 'Entry Cost Mods'
+                }, {
+                  index: 'identical_part_name',
+                  title: 'Identical Part'
+                }, {
+                  index: 'engine_config',
+                  title: 'Engine Config',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/engine_config'
+                    }
+                  }
+                }, {
+                  index: 'info',
+                  title: 'Info',
+                  width: 70
+                },
+                {
+                  index: 'description',
+                  title: 'Description',
+                  type: 'text',
+                  hidden: true,
+                  //value: false
+                },
+                //{
+                //  index: 'era',
+                //  title: 'Era',
+                //  type: 'combo',
+                //  multiSelect: false,
+                //  itemCheckBox: true,
+                //  data: {
+                //    proxy: {
+                //      url: '/api/unique_values_for_column/era'
+                //    }
+                //  }
+                //},
+                {
+                  index: 'technology',
+                  title: 'Technology',
+                  type: 'combo',
+                  multiSelect: false,
+                  itemCheckBox: true,
+                  data: {
+                    proxy: {
+                      url: '/api/unique_values_for_column/technology'
+                    }
+                  }
+                }, {
+                  index: 'module_tags',
+                  title: 'Module Tags',
+                  multiSelect: true,
+                  itemCheckBox: true,
+                  type: 'text',
+                  //autoHeight: true,
+                  width: 180
+                }, {
+                  type: 'action',
+                  title: 'Edit',
+                  width: 50,
+                  filter: false,
+                  items: [{
+                      cls: "pill",
+                      text: 'Edit',
+                      handler: function(grid, o){
+                        showEditForm(o.data, false);
+                      }
+                  }]
+                }]
+        });
+         
+        form = new FancyForm({
+            title: 'Edit Part',
+            width: 700,
+            height: "fit",
+            window: true,
+            scrollable: true,
+            model: true,
+            draggable: true,
+            inputWidth: 525,
+            labelWidth: 175,
+            url: 'submit.php',
+            params: {
+                param1: 1,
+                param2: 'string'
+            },
+            method: 'POST',
+            defaults: {
+                type: 'string',     
+                inputWidth: 525,
+            },
+            items: [
+                {
+                    label: 'Id',
+                    emptyText: 'Id',
+                    name: 'id',
+                    type: 'hidden',
+                    inputWidth: 150
+                },{
+                    label: 'Name',
+                    disabled: true,
+                    emptyText: 'Name',
+                    name: 'name'
+                },{
+                    label: 'Title',
+                    emptyText: 'Title',
+                    name: 'title',
+                    valid: {
+                        type: 'title',
+                        blank: false,
+                        blankText: 'Required'
+                    }
+
+                },{
+                    label: 'Description',
+                    emptyText: 'Description',
+                    name: 'description',
+                    type: "textarea"
+                },{
+                    type: 'radio',
+                    label: 'Existing Mod or New Mod',
+                    name: 'mod_type',
+                    value: 'existing',
+                    items: [{
+                      text: 'Existing Mod',
+                      value: 'existing'
+                    },{
+                      text: 'New Mod',
+                      value: 'new'
+                    }],
+                    events: [{
+                      change: function(){
+                        if (form) {
+                            if (this.get() == "new") {
+                                form.getItem('new_mod').enable();
+                                form.getItem('mod').disable();
+                            } else {
+                                form.getItem('new_mod').disable();
+                                form.getItem('mod').enable();
+                            }
+                        }
+                      }
+                    }]
+                }, {
+                    type: 'string',
+                    label: 'New Mod Name',
+                    disabled: true,
+                    name: 'new_mod',
+                    emptyText: 'New Mod Name'
+                }, {
+                    type: 'combo',
+                    label: 'Mod',
+                    name: 'mod',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/mod'
+                        }
+                    },
+                    displayKey: 'mod',
+                    valueKey: 'mod'
+                },{
+                    label: 'Cost',
+                    emptyText: 'Cost',
+                    name: 'cost',
+                    valid: {
+                        type: 'notnan',
+                        text: 'Must be a number'
+                    }
+                },{
+                    label: 'Entry Cost',
+                    emptyText: 'Entry Cost',
+                    name: 'entry_cost',
+                    valid: {
+                        type: 'notnan',
+                        text: 'Must be a number'
+                    }
+                }, {
+                    type: 'combo',
+                    label: 'Category',
+                    name: 'category',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/category'
+                        }
+                    },
+                    displayKey: 'category',
+                    valueKey: 'category',
+                    events: [{
+                      change: function(){
+                        if (form) {
+                            updateTechField();
+                        }
+                      }
+                    }],
+                    vtype: 'notempty'
+                },{
+                    label: 'Info',
+                    emptyText: 'Info',
+                    name: 'info'
+                },{
+                    type: 'combo',
+                    label: 'Year',
+                    name: 'year',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/year'
+                        }
+                    },
+                    displayKey: 'year',
+                    valueKey: 'year',
+                    events: [{
+                      change: function(){
+                        if (form) {
+                            updateTechField();
+                        }
+                      }
+                    }],
+                    vtype: 'notempty'
+                }, {
+                    label: 'Technology',
+                    name: 'technology',
+                    disabled: true
+                },{
+                    label: 'RO',
+                    type: 'checkbox',
+                    name: 'ro'
+                },{
+                    label: 'Orphan',
+                    type: 'checkbox',
+                    name: 'orphan'
+                },{
+                    label: 'RP-0',
+                    type: 'checkbox',
+                    name: 'rp0_conf'
+                }, {
+                    type: 'combo',
+                    label: 'Spacecraft',
+                    name: 'spacecraft',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/spacecraft'
+                        }
+                    },
+                    displayKey: 'spacecraft',
+                    valueKey: 'spacecraft'
+                },{
+                    type: 'combo',
+                    label: 'Engine Config',
+                    emptyText: 'Engine Config',
+                    name: 'engine_config',
+                    data: {
+                        proxy: {
+                          url: 'api/combo_options/engine_config'
+                        }
+                    },
+                    displayKey: 'engine_config',
+                    valueKey: 'engine_config'
+                },{
+                    label: 'Upgrade',
+                    type: 'checkbox',
+                    name: 'upgrade'
+                },{
+                    label: 'Entry Cost Modifier',
+                    emptyText: 'Entry Cost Modifier',
+                    name: 'entry_cost_mods'
+                },{
+                    label: 'Identical Part Id',
+                    emptyText: 'Identical Part Id',
+                    name: 'identical_part_name'
+                }, {
+                    type: 'combo',
+                    label: 'Module Tags',
+                    name: 'module_tags',
+                    multiSelect: true,
+                    itemCheckBox: true,
+                    displayKey: "tag",
+                    valueKey: "tag",
+                    data: {
+                        proxy: {
+                        url: '/api/module_tags'
+                        }
+                    },
+                }
+            ],
+            buttons: [{
+                text: 'Cancel',
+                handler: function(){
+                    console.log(form.get());
+                    console.log(form.get('name'));
+                    form.clear();
+                    form.hide();
+                }
+            },{
+                text: 'Queue Changes',
+                handler: function(){
+                    console.log('submit');
+                    if (form.valid()) {
+                        changeSet = getChanges(originalData[form.get().id], form.get());
+                        if (shouldAddChangeSet(changeSet)) {
+                            addChangeSet(form.get().name, form.get().title, form.get().mod, form.get().id, changeSet, true);
+                        } else {
+                            // if there are no changes from the original data, remove the changes.
+                            delete queuedChanges[row['id']];
+                            drawQueuedChanges();
+                        }
+                        form.clear();
+                        form.hide();
+                    }
+                }
+            }]
+        });
+    }
+    
+    function shouldAddChangeSet(changeSet) {
+        size = Object.keys(changeSet).length;
+        if (size > 2) {
+            return true;
+        } else if (size == 1) {
+            return !("new_mod" in changeSet || "mod_type" in changeSet);
+        } else if (size == 2) {
+            return !("new_mod" in changeSet && "mod_type" in changeSet);
+        } else {
+          return false;
+        }
+    }
+    
+    originalData = {};
+    
+    function showEditForm(data, isCreate) {
+        data['mod_type'] = 'existing';
+        if (isCreate) {
+            form.getItem('name').enable();
+            data['id'] = "new_part_" + Math.random();
+        } else {
+            form.getItem('name').disable();
+        }
+        form.set(data);
+        if (!(data['id'] in originalData)) {
+            originalData[data['id']] = JSON.clone(data);
+            originalData[data['id']]['module_tags'] = data['module_tags'].slice();
+        }
+        form.show();
+    }
+    
+    function getChanges(prev, now) {
+        var changes = {};
+        for (var prop in now) {
+          if (prop !== 'id' && prop !== '$selected') {
+            if (prop == 'module_tags' && !compareArrays(now[prop],prev[prop])) {
+                changes[prop] = {"new": now[prop], "old": prev[prop]};
+            } else {
+                if (!prev || prev[prop] !== now[prop]) {
+                    if (typeof now[prop] == "object") {
+                        1;
+                    } else {
+                        changes[prop] = {"new": now[prop], "old": prev[prop]};
+                    }
+                }
+            }
+          }
+        }
+        return changes;
+    }
+    
+    function compareArrays(arr1, arr2) {
+        return $(arr1).not(arr2).length == 0 && $(arr2).not(arr1).length == 0
+    };
+    
+    var queuedChanges = {};
+    
+    function addChangeSet(name, title, mod, row_id, changeSet, shouldSetInTable) {
+        key = row_id;
+        queuedChanges[key] = {row_id: row_id, name: name, title: title, mod: mod, changes: changeSet};
+        if (shouldSetInTable) {
+            updateTable(changeSet, row_id, false);
+        } else {
+            drawQueuedChanges();
+        }
+    }
+    
+    function drawQueuedChanges() {
+        if (Object.keys(queuedChanges).length > 0) {
+            html="These changes are only staged locally, click commit to update the underlying json data.  If you refresh your browser they will be lost.<br/><br/><table class='blueTable'><tr><th>&nbsp;</th><th>Part Name - Title</th><th>Mod</th><th>Field</th><th>Old Value</th><th>New Value</th></tr>";
+            $.map( Object.keys(queuedChanges), function( row_id ) {
+                html+="<tr><td>" + getCancelButton(row_id) + "</td><td>" + queuedChanges[row_id].name + " - " + queuedChanges[row_id].title + "</td><td>" + queuedChanges[row_id].mod + "</td><td colspan='3'>&nbsp;</td></tr>";
+                $.map( Object.keys(queuedChanges[row_id].changes), function( field_name ) {
+                    if (field_name != "new_mod" && field_name != "mod_type") {
+                        html+="<tr><td colspan='3'>&nbsp;</td><td>" + field_name + "</td><td>" + 
+                            queuedChanges[row_id].changes[field_name]["old"] + "</td><td>" + 
+                            queuedChanges[row_id].changes[field_name]["new"] + "</td></tr>";
+                    }
+                });
+            });
+            html += "</table><br/><button onclick='cancelAllChanges()'>Cancel All Changes</button> &nbsp; <button onclick='commitChanges()'>Commit Changes to JSON Files</button>";
+            $("#queued_changes").html(html);
+            $("#queued_changes").show();
+        } else {
+            $("#queued_changes").html("");
+            $("#queued_changes").hide();
+        }
+
+    }
+    
+    function updateTable(changeSet, row_id, revert) {
+        if (grid.getById(row_id)) {
+            $.map( Object.keys(changeSet), function( field_name ) {
+                value = changeSet[field_name][(revert ? "old" : "new")];
+                grid.setById(row_id, field_name, value);
+            });    
+        } else {
+            // it's a new item.  if we're reverting, we want to remove it, otherwise, add it
+            if (!revert) {
+                newItem = {}
+                $.map( Object.keys(changeSet), function( field_name ) {
+                    if (field_name != 'id' && field_name != 'mod_type') {
+                        value = changeSet[field_name]["new"];
+                        newItem[field_name] = value;
+                    }
+                });
+                // if the mod isn't set, we are almost certainly adding a new mod
+                if (newItem['mod'] == "") {
+                    newItem['mod'] = newItem['new_mod'];
+                }
+                // make sure we keep track that this is a new part
+                newItem['is_new_part'] = true;
+                grid.add(newItem);
+            } else {
+                items = grid.findItem('name', changeSet['name']["new"]);
+                if (items.length == 1) {
+                    grid.remove(items[0]['id']);
+                } else {
+                    alert('Multiple items have the same name, I suggest you abort this mission and reload.');
+                }
+            }
+            drawQueuedChanges()
+        }
+        
+        grid.update();
+    }
+    
+    function getCancelButton(row_id) {
+        return "<button class='cancelButton' info='Cancel this change' onclick='cancelChange(\"" + row_id + "\", true)'>X</button>";
+    }
+    
+    function cancelChange(row_id, shouldConfirm) {
+        if (!shouldConfirm || confirm("Are you sure you want to cancel this change?")) {
+            updateTable(queuedChanges[row_id].changes, row_id, true);
+            delete queuedChanges[row_id];
+            drawQueuedChanges();
+        }
+    }
+    
+    function cancelAllChanges() {
+        if (confirm("Are you sure you want to cancel all queued changes?")) {
+            $.map( Object.keys(queuedChanges), function( row_id ) {
+                cancelChange(row_id, false);
+            });
+        }
+    }
+    
+    function generateConfigs() {
+        if (confirm("Are you sure you want to generate the configs? (any queued changes at the bottom will not currently be included)")) {
+            $.get("api/generate_all_configs", function( data ) {
+                if (data == "true") {
+                    alert( "Configs successfully generated." );
+                } else {
+                    alert("Config generation failed.");
+                }
+            });
+        }
+    }
+    
+    function commitChanges() {
+        if (confirm('Are you sure you want to commit changes to JSON files?')) {
+            $.ajax({
+                url: 'api/commit_changes',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "queued_changes": queuedChanges
+                }),
+                dataType: 'json',
+                success: function() {
+                    form.destroy();
+                    grid.destroy();
+                    initialize();
+                    queuedChanges = {};
+                    drawQueuedChanges();
+                    alert( "Changes successfully committed to JSON files.");
+                }
+            });
+        }
+    }
+
+    function updateTechField() {
+        category = form.get('category');
+        year = form.get('year');
+        $.get("/api/tech_mapping/" + escape(category) + "/" + escape(year), function( tech ) {
+            if (tech != "not found") {
+                form.set('technology', tech);
+            } else {
+                form.set('technology', '');
+            }
+        });
+    }
+
+    function addNewPart() {
+        showEditForm({module_tags: []}, true);
+    }
+    
+    function showNewMods() {
+        form.getItem('new_mod').enable();
+        form.getItem('mod').disable();
+    }
+
+    function showExistingMods() {
+        form.getItem('new_mod').disable();
+        form.getItem('mod').enable();
+    }
+  </script>
+  <br/><br/>
+  <div id="queued_changes" style='display:none;'></div>
+{% endblock %}

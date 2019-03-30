@@ -8,7 +8,10 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            return "Contains a solid rocket motor";
+            string str = string.Empty;
+            str = "Contains a solid rocket motor. These do not multiply the rollout costs as they are much easier to integrate and test than liquid engines.\n\n" +
+                "<b><color=orange>Rollout Cost: Cost of This Part * 1.0</color></b>";
+            return str;
         }
     }
 }

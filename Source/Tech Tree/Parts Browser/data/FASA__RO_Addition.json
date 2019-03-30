@@ -1,0 +1,50 @@
+[
+    {
+        "name": "FASAE1",
+        "title": "E-1",
+        "description": "Pump-fed kerolox open cycle (gas generator) booster engine developed from LR79/89. Backup proposal for the first stage engine on the Titan 1 ICBM, and proposed first stage engine on the Saturn 1 but ultimately never flown (4 E-1s replaced with 8 H-1s). Diameter: [2.14 m]. Plume configured by RealPlume.",
+        "mod": "FASA (RO Addition)",
+        "cost": 600,
+        "entry_cost": "60000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1963",
+        "technology": "orbitalRocketry1963",
+        "era": "03-HUMAN",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "E-1",
+        "engine_config": "E1",
+        "upgrade": false,
+        "entry_cost_mods": "E-1",
+        "identical_part_name": "E1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "RO-SRLaunchClamp",
+        "title": "Sounding Rocket Launch Clamp",
+        "description": "This clamp attaches to the bottom of the early sounding rockets.",
+        "mod": "FASA (RO Addition)",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

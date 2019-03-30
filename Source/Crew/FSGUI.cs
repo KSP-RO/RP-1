@@ -14,7 +14,10 @@ namespace RP0.Crew
         private Vector2 nautListScroll = new Vector2();
         private Dictionary<ProtoCrewMember, ActiveCourse> activeMap = new Dictionary<ProtoCrewMember, ActiveCourse>();
         private Vector2 courseSelectorScroll = new Vector2();
-
+        private GUIStyle courseBtnStyle = null;
+        private GUIStyle tempCourseLblStyle = null;
+        private GUIContent nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false));
+        
         protected void nautListHeading()
         {
             GUILayout.BeginHorizontal();
@@ -125,6 +128,17 @@ namespace RP0.Crew
                         if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
                             leaveCourse(currentCourse, student);
                     }
+
+                    if (KACWrapper.APIReady && GUILayout.Button(nautRowAlarmBtnContent, GUILayout.ExpandWidth(false)))
+                    {
+                        // CrewHandler processes trainings every 3600 seconds. Need to account for that to set up accurate KAC alarms.
+                        double completeUT = currentCourse.CompletionTime();
+                        double timeDiff = completeUT - CrewHandler.Instance.nextUpdate;
+                        double timesChRun = Math.Ceiling(timeDiff / CrewHandler.Instance.updateInterval);
+                        double alarmUT = CrewHandler.Instance.nextUpdate + timesChRun * CrewHandler.Instance.updateInterval;
+                        string alarmTxt = $"{currentCourse.name} - {student.name}";
+                        KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, alarmUT);
+                    }
                 }
             } finally {
                 GUILayout.EndHorizontal();
@@ -135,13 +149,13 @@ namespace RP0.Crew
         {
             updateActiveMap();
             float scrollHeight = currentTab == tabs.Training ? 420 : 305;
-            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(480), GUILayout.Height(scrollHeight));
+            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(505), GUILayout.Height(scrollHeight));
             try {
                 nautListHeading();
                 for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; i++)
                 {
                     ProtoCrewMember student = HighLogic.CurrentGame.CrewRoster[i];
-                    if (student.type == ProtoCrewMember.KerbalType.Crew)
+                    if (student.type == ProtoCrewMember.KerbalType.Crew && student.rosterStatus == ProtoCrewMember.RosterStatus.Available)
                         nautListRow(currentTab, student);
                 }
             } finally {
@@ -159,10 +173,17 @@ namespace RP0.Crew
 
         protected void courseSelector()
         {
-            courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(480), GUILayout.Height(430));
+            if (courseBtnStyle == null)
+            {
+                courseBtnStyle = new GUIStyle(GUI.skin.button);
+                courseBtnStyle.normal.textColor = Color.yellow;
+            }
+            
+            courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));
             try {
                 foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
-                    if (GUILayout.Button(course.name))
+                    var style = course.isTemporary ? courseBtnStyle : GUI.skin.button;
+                    if (GUILayout.Button(course.name, style))
                         selectedCourse = new ActiveCourse(course);
                 }
             } finally {
@@ -179,6 +200,12 @@ namespace RP0.Crew
 
         public tabs newCourseTab()
         {
+            if (tempCourseLblStyle == null)
+            {
+                tempCourseLblStyle = new GUIStyle(GUI.skin.label);
+                tempCourseLblStyle.normal.textColor = Color.yellow;
+            }
+
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.FlexibleSpace();
@@ -187,7 +214,10 @@ namespace RP0.Crew
             } finally {
                 GUILayout.EndHorizontal();
             }
-            GUILayout.Label(selectedCourse.description);
+            if (!string.IsNullOrEmpty(selectedCourse.description))
+                GUILayout.Label(selectedCourse.description);
+            if (selectedCourse.isTemporary)
+                GUILayout.Label("Tech for this part is still being researched", tempCourseLblStyle);
             summaryBody(tabs.NewCourse);
             if (selectedCourse.seatMax > 0)
                 GUILayout.Label(selectedCourse.seatMax - selectedCourse.Students.Count + " remaining seat(s).");

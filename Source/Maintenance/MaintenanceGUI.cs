@@ -83,8 +83,8 @@ namespace RP0
             }
             GUILayout.BeginHorizontal();
             try {
-                GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.totalUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                GUILayout.Label("Total (after subsidy)", boldLabel, GUILayout.Width(160));
+                GUILayout.Label(((MaintenanceHandler.Instance.totalUpkeep + MaintenanceHandler.Instance.settings.maintenanceOffset) * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -112,7 +112,7 @@ namespace RP0
                     continue;
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label(String.Format("  level {0} × {1}", i, MaintenanceHandler.Instance.kctPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label(String.Format("  level {0} × {1}", i + 1, MaintenanceHandler.Instance.kctPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
                     GUILayout.Label((MaintenanceHandler.Instance.padCosts[i] * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
@@ -211,7 +211,7 @@ namespace RP0
             try {
                 GUILayout.Space(20);
                 GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(144));
-                GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(80));
+                GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -221,7 +221,7 @@ namespace RP0
                     GUILayout.Space(20);
                     double rt = Crew.CrewHandler.Instance.kerbalRetireTimes[name];
                     GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(144));
-                    GUILayout.Label(Crew.CrewHandler.Instance.retirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(80));
+                    GUILayout.Label(Crew.CrewHandler.Instance.retirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }
@@ -248,7 +248,7 @@ namespace RP0
             } finally {
                 GUILayout.EndHorizontal();
             }
-            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(280), GUILayout.Height(320));
+            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(360), GUILayout.Height(320));
             try {
                 nautList();
             } finally {

@@ -29,6 +29,9 @@ namespace RP0
         [KSPField]
         public string techRequired = "";
 
+        [KSPField]
+        public bool interplanetary = true;
+
         [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Set to Debris"),
             UI_Toggle(disabledText = "Never", enabledText = "On Stage", affectSymCounterparts = UI_Scene.Editor)]
         public bool setToDebrisOnStage = false;
@@ -62,7 +65,10 @@ namespace RP0
         {
             get
             {
-                if (currentlyEnabled && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
+                if (currentlyEnabled 
+                    && (interplanetary || part.vessel == null || part.vessel.mainBody == null 
+                        || (part.vessel.mainBody.isHomeWorld && part.vessel.altitude < part.vessel.mainBody.scienceValues.spaceAltitudeThreshold + 20000000d))  // 55,786 km so resonant satellite orbits can still be used
+                    && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
                     return GetInternalMassLimit();
                 else
                     return 0f;
@@ -125,11 +131,21 @@ namespace RP0
             currentWatts *= 1000f;
         }
 
+        protected void OnConfigurationUpdated()
+        {
+            SetActionsAndGui();
+        }
+
         private void SetActionsAndGui()
         {
-            Events["ToggleEvent"].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
-            Actions["ActivateAction"].active = !systemEnabled;
-            Actions["ShutdownAction"].active = systemEnabled;
+            var toggleAble = GetToggleable();
+            Events[nameof(ToggleEvent)].guiActive = toggleAble;
+            Events[nameof(ToggleEvent)].guiActiveEditor = toggleAble;
+            Events[nameof(ToggleEvent)].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
+            Actions[nameof(ActivateAction)].active = (!systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
+            Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
+            Actions[nameof(ToggleAction)].active = toggleAble;
+            Fields[nameof(currentWatts)].guiActive = toggleAble;
         }
 
         protected void StageActivated(int stage)
@@ -200,14 +216,6 @@ namespace RP0
             }
             //We want to call UpdateRate all the time to capture anything from proceduralAvionics
             UpdateRate();
-
-            Fields["currentWatts"].guiActive = 
-                Events["ToggleEvent"].guiActive =
-                Events["ToggleEvent"].guiActiveEditor = 
-                Actions["ToggleAction"].active =
-                Actions["ActivateAction"].active =
-                Actions["ShutdownAction"].active = GetToggleable();
-
             SetActionsAndGui();
         }
 
@@ -238,8 +246,13 @@ namespace RP0
                         + (GetEnabledkW() * 1000d).ToString("N1") + " W to " + (GetDisabledkW() * 1000d).ToString("N1") + " W.";
                 }
             }
+
             if (!string.IsNullOrEmpty(techRequired))
                 retStr += "\nNote: requires technology unlock to function.";
+
+            if (!interplanetary)
+                retStr += "\n<color=red>Note: Only works near Earth!</color>";
+
             return retStr;
         }
 

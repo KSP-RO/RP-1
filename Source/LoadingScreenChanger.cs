@@ -9,6 +9,7 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     class LoadingScreenChanger : MonoBehaviour
     {
+        public const string TipFilePath = @"GameData/RP-0/PluginData/LoadingScreenTips.txt";
         protected bool done = false;
 
         protected void Awake()
@@ -37,8 +38,9 @@ namespace RP0
             try
             {
                 Debug.Log("[RP-0]: Replacing loading screens.");
+                int loadingScreenIdx = Versioning.version_minor < 4 ? 1 : 3;    // KSP 1.4+ has 2 extra loading screens
 
-                LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[1];
+                LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[loadingScreenIdx];
 
                 List<Texture2D> textures = new List<Texture2D>();
 
@@ -63,9 +65,16 @@ namespace RP0
                 int tC = textures.Count;
                 if (tC > 0)
                 {
-                    LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[1];
+                    LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[loadingScreenIdx];
                     sc.screens = textures.ToArray();
                     sc.displayTime = 8;    // Default value is 4 which causes the images to switch too quickly
+
+                    var newTips = LoadTips();
+                    if (newTips?.Length > 0)
+                    {
+                        sc.tips = newTips;
+                        sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
+                    }
 
                     string msgStr = "[RP-0]: Loading screens replaced.";
 
@@ -86,6 +95,12 @@ namespace RP0
             done = true;
         }
 
+        private string[] LoadTips()
+        {
+            if (!File.Exists(TipFilePath)) return null;
+
+            return File.ReadAllLines(TipFilePath);
+        }
 
         // DDS Loader by Sarbian
 

@@ -37,9 +37,9 @@ namespace RP0
     public class RP0Settings : GameParameters.CustomParameterNode
     {
         public override string Title { get { return "General Settings"; } }
-        public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.CAREER; } }
-        public override string Section { get { return "RP-0"; } }
-        public override string DisplaySection { get { return "RP-0"; } }
+        public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
+        public override string Section { get { return "RP-1"; } }
+        public override string DisplaySection { get { return "RP-1"; } }
         public override int SectionOrder { get { return 1; } }
         public override bool HasPresets { get { return true; } }
 
@@ -48,6 +48,9 @@ namespace RP0
 
         [GameParameters.CustomParameterUI("Enable crew retirement", toolTip = "Re-enabling this option can cause some of the older crewmembers to instantly retire.")]
         public bool IsRetirementEnabled = true;
+
+        [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
+        public float MaintenanceCostMult = 1f;
 
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {

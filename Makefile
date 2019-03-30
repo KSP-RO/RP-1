@@ -4,7 +4,7 @@
 
 PROJ_NAME = $(shell basename `pwd`)
 
-AVC := GameData/RP-0/RP-1.version
+AVC := GameData/RP-0/RP-0.version
 
 VERSION := $(shell git describe --tags)
 

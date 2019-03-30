@@ -1,0 +1,25 @@
+[
+    {
+        "name": "ALCOR_LanderCapsule",
+        "title": "ALCOR Pod(A)",
+        "description": "Advanced Landing Capsule for Orbital Rendezvous, a lander pod that actually is as lightweight as the manufacturer claims. Warranty void when subjected to atmospheric entry, sneeze, hard knocks and misplaced screwdrivers and/or wrenches. Packed full of high technology, leaving precious little space for the crew.",
+        "mod": "ALCOR",
+        "cost": "4000",
+        "entry_cost": "8000",
+        "category": "EDL",
+        "info": "Lander",
+        "year": "1969",
+        "technology": "lunarLanding",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "LEM",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

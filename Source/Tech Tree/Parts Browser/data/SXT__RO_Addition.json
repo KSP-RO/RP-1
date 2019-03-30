@@ -1,0 +1,28 @@
+[
+    {
+        "name": "RO-HG-3",
+        "title": "",
+        "description": "",
+        "mod": "SXT (RO Addition)",
+        "cost": "3175",
+        "entry_cost": "127000",
+        "category": "HYDROLOX",
+        "info": "Engine",
+        "year": "1976",
+        "technology": "hydrolox1976",
+        "era": "06-STATION",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "HG3",
+        "upgrade": false,
+        "entry_cost_mods": "HG3",
+        "identical_part_name": "HG3",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    }
+]

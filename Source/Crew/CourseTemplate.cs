@@ -40,6 +40,8 @@ namespace RP0.Crew
         public ConfigNode RewardLog = null; //the flight log to insert
         public ConfigNode ExpireLog = null; // expire all these on complete
 
+        public bool isTemporary = false;
+
         public CourseTemplate(ConfigNode source)
         {
             sourceNode = source;
@@ -134,6 +136,7 @@ namespace RP0.Crew
             source.TryGetValue("expirationUseStupid", ref expirationUseStupid);
 
             source.TryGetValue("required", ref required);
+            source.TryGetValue("isTemporary", ref isTemporary);
 
             string repeatStr = source.GetValue("repeatable");
             if (!string.IsNullOrEmpty(repeatStr))
@@ -169,8 +172,13 @@ namespace RP0.Crew
 
         public double GetTime(List<ProtoCrewMember> students)
         {
+            double curTime = time;
+
+            double level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
+            curTime *= (1d - level * 0.5d);
+
             if (students == null || students.Count == 0 || !timeUseStupid)
-                return time;
+                return curTime;
 
             double averageStupid = 0d;
             int sC = students.Count;
@@ -179,7 +187,7 @@ namespace RP0.Crew
 
             averageStupid /= sC;
 
-            return time * UtilMath.Lerp(CrewHandler.Instance.settings.trainingMissionStupidMin, CrewHandler.Instance.settings.trainingMissionStupidMax, averageStupid);
+            return curTime * UtilMath.Lerp(CrewHandler.Instance.settings.trainingMissionStupidMin, CrewHandler.Instance.settings.trainingMissionStupidMax, averageStupid);
         }
 
         public double GetExpiration(ProtoCrewMember pcm)

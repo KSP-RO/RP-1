@@ -10,7 +10,7 @@
     "x_netkan_force_v": true,
     "release_status" : "stable",
     "depends" : [
-        { "name" : "ModuleManager" } ,
+        { "name" : "ModuleManager" },
         { "name" : "RealismOverhaul" },
         { "name" : "SXTContinued" },
         { "name" : "ContractConfigurator" },
@@ -42,8 +42,7 @@
 		{ "name" : "TACLS" },
 		{ "name" : "TestFlight" },
 		{ "name" : "TextureReplacerReplaced" },
-		{ "name" : "Toolbar" },
-		{ "name" : "WasdEditorCameraContinued" }
+		{ "name" : "Toolbar" }
     ],	
 	"suggests"   : [
 		{ "name" : "BluedogDB" },
@@ -66,6 +65,8 @@
 		{ "name" : "WaypointManager" }
     ],
     "conflicts" : [
-        { "name" : "CrowdSourcedScience" }
+        { "name" : "CrowdSourcedScience" },
+		{ "name" : "HideEmptyTechNodes" },
+		{ "name" : "MechJebForAll" }
     ]
 }

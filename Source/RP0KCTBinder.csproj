@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\GameData\RP-0\Plugins\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -62,7 +62,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="KerbalConstructionTime">
-      <HintPath>..\..\..\..\..\..\Games\RO_131\GameData\KerbalConstructionTime\plugins\KerbalConstructionTime.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Games\RP1\GameData\KerbalConstructionTime\plugins\KerbalConstructionTime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">

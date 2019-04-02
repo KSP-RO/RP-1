@@ -717,7 +717,7 @@
         "engine_config": "Gamma2",
         "upgrade": false,
         "entry_cost_mods": "Gamma-2",
-        "identical_part_name": "",
+        "identical_part_name": "Gamma2",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

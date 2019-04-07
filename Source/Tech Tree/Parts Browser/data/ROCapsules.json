@@ -1,6 +1,6 @@
 [
     {
-        "name": "ROC-VostokAntenna-TAN",
+        "name": "ROC-VostokAntenna",
         "title": "Vostok Hoop Antenna",
         "description": "",
         "mod": "ROCapsules",
@@ -25,7 +25,7 @@
         ]
     },
     {
-        "name": "ROC-VostokCapsule-TAN",
+        "name": "ROC-VostokCapsule",
         "title": "Vostok Capsule",
         "description": "",
         "mod": "ROCapsules",
@@ -53,7 +53,7 @@
         ]
     },
     {
-        "name": "ROC-VostokDecoupler-TAN",
+        "name": "ROC-VostokDecoupler",
         "title": "Vostok Capsule Decoupler",
         "description": "",
         "mod": "ROCapsules",
@@ -76,7 +76,7 @@
         "module_tags": []
     },
     {
-        "name": "ROC-VostokParachute-TAN",
+        "name": "ROC-VostokParachute",
         "title": "Vostok Parachute",
         "description": "",
         "mod": "ROCapsules",
@@ -99,7 +99,7 @@
         "module_tags": []
     },
     {
-        "name": "ROC-VostokService-TAN",
+        "name": "ROC-VostokService",
         "title": "Vostok Service Module",
         "description": "",
         "mod": "ROCapsules",

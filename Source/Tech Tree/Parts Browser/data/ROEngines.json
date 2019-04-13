@@ -901,31 +901,6 @@
         "era": "",
         "ro": true,
         "rp0": true,
-        "orphan": true,
-        "rp0_conf": true,
-        "spacecraft": "Explorer 1",
-        "engine_config": "BabySergeant",
-        "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
-        "identical_part_name": "Baby Sergeant",
-        "module_tags": [
-            "EngineSolid"
-        ]
-    },
-    {
-        "name": "ROE-BabySergeant",
-        "title": "Baby Sergeant (5.4KS1975)",
-        "description": "",
-        "mod": "ROEngines",
-        "cost": 60,
-        "entry_cost": 5000,
-        "category": "SOLID",
-        "info": "",
-        "year": "1956",
-        "technology": "solids1956",
-        "era": "",
-        "ro": true,
-        "rp0": true,
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Explorer 1",
@@ -983,31 +958,6 @@
         "upgrade": false,
         "entry_cost_mods": "JPL-532A",
         "identical_part_name": "Baby Sergeant",
-        "module_tags": [
-            "EngineSolid"
-        ]
-    },
-    {
-        "name": "ROE-BabySergeantX11",
-        "title": "Baby Sergeant 11x Solid Kick Motor Cluster",
-        "description": "",
-        "mod": "ROEngines",
-        "cost": 660,
-        "entry_cost": 5000,
-        "category": "SOLID",
-        "info": "",
-        "year": "1956",
-        "technology": "solids1956",
-        "era": "",
-        "ro": true,
-        "rp0": true,
-        "orphan": true,
-        "rp0_conf": true,
-        "spacecraft": "Explorer 1",
-        "engine_config": "BabySergeant",
-        "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
-        "identical_part_name": "Baby Sergeant x11",
         "module_tags": [
             "EngineSolid"
         ]
@@ -1132,31 +1082,6 @@
         "entry_cost_mods": "",
         "identical_part_name": "Baby Sergeant x11 Decoupler",
         "module_tags": []
-    },
-    {
-        "name": "ROE-BabySergeantX3",
-        "title": "Baby Sergeant 3x Solid Kick Motor Cluster",
-        "description": "",
-        "mod": "ROEngines",
-        "cost": 180,
-        "entry_cost": 5000,
-        "category": "SOLID",
-        "info": "",
-        "year": "1956",
-        "technology": "solids1956",
-        "era": "",
-        "ro": true,
-        "rp0": true,
-        "orphan": true,
-        "rp0_conf": true,
-        "spacecraft": "Explorer 1",
-        "engine_config": "BabySergeant",
-        "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
-        "identical_part_name": "Baby Sergeant x3",
-        "module_tags": [
-            "EngineSolid"
-        ]
     },
     {
         "name": "ROE-BabySergeantX3",
@@ -1648,7 +1573,7 @@
         "spacecraft": "",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1673,7 +1598,7 @@
         "spacecraft": "",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1698,7 +1623,7 @@
         "spacecraft": "",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1723,7 +1648,7 @@
         "spacecraft": "",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -2136,31 +2061,6 @@
         "ro": true,
         "rp0": true,
         "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "",
-        "engine_config": "LR79",
-        "upgrade": false,
-        "entry_cost_mods": "S-3",
-        "identical_part_name": "LR79",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
-    },
-    {
-        "name": "ROE-LR79",
-        "title": "LR79 Engine",
-        "description": "",
-        "mod": "ROEngines",
-        "cost": 300,
-        "entry_cost": 13000,
-        "category": "ORBITAL",
-        "info": "",
-        "year": "1956",
-        "technology": "orbitalRocketry1956",
-        "era": "",
-        "ro": true,
-        "rp0": true,
-        "orphan": true,
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "LR79",
@@ -3174,7 +3074,7 @@
         ]
     },
     {
-        "name": "ROE-RD100-RD",
+        "name": "ROE-RD100",
         "title": "RD-100 Series Engine",
         "description": "",
         "mod": "ROEngines",

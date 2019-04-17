@@ -1505,31 +1505,6 @@
         ]
     },
     {
-        "name": "ROE-Gamma2",
-        "title": "Gamma 2",
-        "description": "A two chamber version of Gamma, used for the second stage of the Black Arrow satellite launch vehicle. As the only Gamma not required to operate at sea level, the nozzles were extended to allow better expansion. Diameter: [1.37 m]. Plume configured by RealPlume.",
-        "mod": "ROEngines",
-        "cost": "250",
-        "entry_cost": "4000",
-        "category": "ORBITAL",
-        "info": "",
-        "year": "1956",
-        "technology": "orbitalRocketry1956",
-        "era": "02-SAT",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "Black Arrow (Gamma)",
-        "engine_config": "Gamma2",
-        "upgrade": false,
-        "entry_cost_mods": "Gamma-2",
-        "identical_part_name": "Gamma2",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
-    },
-    {
         "name": "ROE-GCRC",
         "title": "GCRC 33-KS-2800",
         "description": "A small solid kick motor, used as the third stage on all but the last Vanguard launch. Burn time 33 seconds. Diameter: [0.45 m].",
@@ -1577,6 +1552,31 @@
         "identical_part_name": "GCRC",
         "module_tags": [
             "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Gamma2",
+        "title": "Gamma 2",
+        "description": "A two chamber version of Gamma, used for the second stage of the Black Arrow satellite launch vehicle. As the only Gamma not required to operate at sea level, the nozzles were extended to allow better expansion. Diameter: [1.37 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "4000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Black Arrow (Gamma)",
+        "engine_config": "Gamma2",
+        "upgrade": false,
+        "entry_cost_mods": "Gamma-2",
+        "identical_part_name": "Gamma2",
+        "module_tags": [
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -1744,7 +1744,7 @@
         "spacecraft": "",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "J-2-200klbf",
+        "entry_cost_mods": "J-2-200K",
         "identical_part_name": "J-2",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -1770,7 +1770,7 @@
         "spacecraft": "",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "J-2-200klbf",
+        "entry_cost_mods": "J-2-200K",
         "identical_part_name": "J-2",
         "module_tags": [
             "EngineLiquidTurbo",

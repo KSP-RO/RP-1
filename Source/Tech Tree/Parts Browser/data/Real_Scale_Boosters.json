@@ -1751,7 +1751,7 @@
         "spacecraft": "Saturn V (J-2)",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "J-2-200klbf",
+        "entry_cost_mods": "J-2-200K",
         "identical_part_name": "J-2",
         "module_tags": [
             "EngineLiquidTurbo",

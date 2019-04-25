@@ -136,7 +136,12 @@ def create_app(test_config=None):
         queued_changes = request.get_json()
         for row_id in queued_changes['queued_changes']:
             new_part = False
-            part = part_data.get_part_by_name(queued_changes['queued_changes'][row_id]['name'])
+            part = None
+            # if the part name changed, we need to use the old name to find it, else use the supplied name field
+            if queued_changes['queued_changes'][row_id]['changes']['name']:
+                part = part_data.get_part_by_name(queued_changes['queued_changes'][row_id]['changes']['name']['old'])
+            else: 
+                part = part_data.get_part_by_name(queued_changes['queued_changes'][row_id]['name'])
             # if the part can't be found, we assume it's a new part
             if part is None:
                 part = {}

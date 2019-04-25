@@ -941,7 +941,7 @@
     },
     {
         "name": "Mark1-2Pod",
-        "title": "Mk2 Pod (4m)",
+        "title": "(Deprecated) Mk2 Pod (4m)",
         "description": "A three-person pod. Comes with built-in RCS thrusters running off NTO/MMH and a small battery. Heat shield required for safe reentry. Center of mass can be offset to allow lifting reentry (toggle Descent Mode).",
         "mod": "Stock (RO Config)",
         "cost": "9000",
@@ -2344,7 +2344,7 @@
         "module_tags": []
     },
     {
-        "name": "Size3to2Adapter",
+        "name": "Size3to2Adapter_v2",
         "title": "Kerbodyne ADTP-2-3",
         "description": "This adapter is used to bridge between Kerbodyne and Rockomax rocket bodies.",
         "mod": "Stock (RO Config)",
@@ -4148,7 +4148,7 @@
         ]
     },
     {
-        "name": "liquidEngine3",
+        "name": "liquidEngine3_v2",
         "title": "RD-0105/0109 Series",
         "description": "Kerolox gas generator vacuum engine which served in R-7 upper stages (Luna, Vostok). The RD-0105 was designed for Luna launches; it was the first upper stage for the R-7 series and was reused for uncrewed Vostok tests. An enhanced version, the RD-0109, was used for crewed Vostok launches. Diameter: [2.56 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
@@ -4173,7 +4173,7 @@
         ]
     },
     {
-        "name": "liquidEngineMini",
+        "name": "liquidEngineMini_v2",
         "title": "Lunar Module Ascent Engine",
         "description": "Pressure-fed engine used for the ascent module of the Apollo lunar lander. Diameter: [0.86 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
@@ -4411,7 +4411,62 @@
         "module_tags": []
     },
     {
+        "name": "mk1-3pod",
+        "title": "Mk2 Pod (4m)",
+        "description": "A three-person pod. Comes with built-in RCS thrusters running off NTO/MMH and a small battery. Heat shield required for safe reentry. Center of mass can be offset to allow lifting reentry (toggle Descent Mode).",
+        "mod": "Stock (RO Config)",
+        "cost": "9000",
+        "entry_cost": "0",
+        "category": "COMMAND",
+        "info": "Command Module",
+        "year": "1968",
+        "technology": "matureCapsules",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Apollo",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "75000,capsulesMature,heatshieldsLunar",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
         "name": "mk1pod",
+        "title": "(Deprecated) Mk1 Pod (2m)",
+        "description": "A one-person pod. Comes with built-in RCS thrusters running off High-Test Peroxide (HTP) and a large battery. Heat shield rated for LEO reentries. Center of mass can be offset slightly to allow lifting reentry (toggle Descent Mode).",
+        "mod": "Stock (RO Config)",
+        "cost": "2468",
+        "entry_cost": "0",
+        "category": "COMMAND",
+        "info": "Command Module",
+        "year": "1961",
+        "technology": "basicCapsules",
+        "era": "03-HUMAN",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Mercury",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "40000, capsulesBasic",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoEVA",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
+        "name": "mk1pod_v2",
         "title": "Mk1 Pod (2m)",
         "description": "A one-person pod. Comes with built-in RCS thrusters running off High-Test Peroxide (HTP) and a large battery. Heat shield rated for LEO reentries. Center of mass can be offset slightly to allow lifting reentry (toggle Descent Mode).",
         "mod": "Stock (RO Config)",
@@ -4730,6 +4785,29 @@
     },
     {
         "name": "mk2LanderCabin",
+        "title": "(Deprecated) Mk2 Lander Can",
+        "description": "3-person cockpit for landers and space taxis. Much roomier than earlier models.",
+        "mod": "Stock (RO Config)",
+        "cost": "4500",
+        "entry_cost": "90000",
+        "category": "EDL",
+        "info": "Lander",
+        "year": "1969",
+        "technology": "lunarLanding",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Apollo",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+	{
+        "name": "mk2LanderCabin_v2",
         "title": "Mk2 Lander Can",
         "description": "3-person cockpit for landers and space taxis. Much roomier than earlier models.",
         "mod": "Stock (RO Config)",
@@ -5409,7 +5487,7 @@
     },
     {
         "name": "probeCoreHex",
-        "title": "Ranger Block III Core",
+        "title": "(Deprecated) Ranger Block III Core",
         "description": "This automated control unit was originally developed for the NASA Ranger program. It is especially suited for lunar probes and flyby missions. Includes data storage for returning data to Earth (use Ship Manifest to transfer the data from the experiment to this core).",
         "mod": "Stock (RO Config)",
         "cost": "1500",
@@ -5434,48 +5512,22 @@
         ]
     },
     {
-        "name": "probeCoreOcto",
-        "title": "(Deprecated) Surveyor Core",
-        "description": "Avionics and control unit for Surveyor landing probes. Includes data storage for returning data to Earth (use Ship Manifest to transfer the data from the experiment to this core).",
+        "name": "probeCoreHex_v2",
+        "title": "Ranger Block III Core",
+        "description": "This automated control unit was originally developed for the NASA Ranger program. It is especially suited for lunar probes and flyby missions. Includes data storage for returning data to Earth (use Ship Manifest to transfer the data from the experiment to this core).",
         "mod": "Stock (RO Config)",
-        "cost": "4000",
-        "entry_cost": "80000",
+        "cost": "1500",
+        "entry_cost": "30000",
         "category": "AVIONICS",
         "info": "Probe",
-        "year": "1966",
-        "technology": "matureAvionics",
-        "era": "04-ADV",
+        "year": "1962",
+        "technology": "improvedAvionics",
+        "era": "03-HUMAN",
         "ro": true,
         "rp0": true,
-        "orphan": true,
+        "orphan": false,
         "rp0_conf": true,
-        "spacecraft": "Surveyor",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "Surveyor",
-        "module_tags": [
-            "Avionics",
-            "NoResourceCostMult"
-        ]
-    },
-    {
-        "name": "probeCoreOcto2",
-        "title": "(Deprecated) Early Controllable Core",
-        "description": "This relatively lightweight probe core allows early probes to be controlled during flight. However, it draws a fair amount of electricity for its abilities. Includes data storage for returning data to Earth (use Ship Manifest to transfer the data from the experiment to this core).",
-        "mod": "Stock (RO Config)",
-        "cost": "1000",
-        "entry_cost": "20000",
-        "category": "AVIONICS",
-        "info": "Probe",
-        "year": "1959",
-        "technology": "basicAvionics",
-        "era": "02-SAT",
-        "ro": true,
-        "rp0": true,
-        "orphan": true,
-        "rp0_conf": true,
-        "spacecraft": "",
+        "spacecraft": "Ranger Block III",
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
@@ -5835,7 +5887,7 @@
         "module_tags": []
     },
     {
-        "name": "rocketNoseCone",
+        "name": "rocketNoseCone_v2",
         "title": "Protective Rocket Nose Cone Mk7",
         "description": "A large nosecone for covering up exposed areas of big rockets. Enhanced to fit stock solid rocket motors too. Capable of some fuel carriage as well.",
         "mod": "Stock (RO Config)",
@@ -5858,7 +5910,7 @@
         "module_tags": []
     },
     {
-        "name": "roverBody",
+        "name": "roverBody_v2",
         "title": "Probodobodyne RoveMate",
         "description": "A sturdy housing for a robust probe and battery system - no assembly required! Though intended as the body for surface rovers, we've been told by our most day-dreaming of engineers that the possibilities are endless! While it has a Stability Assistance System, the RoveMate lacks reaction wheels so bring some along if you want to hold that attitude.",
         "mod": "Stock (RO Config)",
@@ -6405,7 +6457,7 @@
         "module_tags": []
     },
     {
-        "name": "solidBooster",
+        "name": "solidBooster_v2",
         "title": "Castor 30XL",
         "description": "The Castor 30XL is an enlarged Castor 30. Designed for the second stage of the Antares launcher. Diameter: [2.34 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
@@ -6455,7 +6507,7 @@
         ]
     },
     {
-        "name": "solidBooster_sm",
+        "name": "solidBooster_sm_v2",
         "title": "Star 48B",
         "description": "Also known as the Payload Assistance Module (PAM) B, this kick motor was used for Delta and STS launches to add extra impulse to the payload. This is the short-nozzle version. Maximum thrust 76.11kN, burn time 85 seconds. Diameter: [1.3 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
@@ -6526,7 +6578,7 @@
         "module_tags": []
     },
     {
-        "name": "stackBiCoupler",
+        "name": "stackBiCoupler_v2",
         "title": "TVR-200 Stack Bi-Coupler",
         "description": "The TVR-200 Stack Bi-Coupler is a simple method for splitting one rocket into two - WITHOUT the disastrous consequences of doing it the normal (explosive) way.",
         "mod": "Stock (RO Config)",
@@ -6710,7 +6762,7 @@
         "module_tags": []
     },
     {
-        "name": "stackTriCoupler",
+        "name": "stackTriCoupler_v2",
         "title": "TVR-1180C Mk1 Stack Tri-Coupler",
         "description": "The Stack Tricoupler! If your stack is lacking in awesomeness, this is the tool for you! Just remember that this is not a decoupler, and won't separate stages.",
         "mod": "Stock (RO Config)",

@@ -320,6 +320,32 @@
             "NoResourceCostMult"
         ]
     },
+	{
+        "name": "MEMLanderSXT",
+        "title": "Apollo Lunar Module Ascent Module",
+        "description": "Apollo Ascent Module. Contains two astronauts. Plume configured by RealPlume.",
+        "mod": "SXT",
+        "cost": "8000",
+        "entry_cost": "280000",
+        "category": "EDL",
+        "info": "Lander",
+        "year": "1969",
+        "technology": "lunarLanding",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Apollo LEM",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "Apollo LEM Ascent",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult"
+        ]
+    },
     {
         "name": "R7_Booster_Engine",
         "title": "RD-107 Series",

@@ -1,5 +1,30 @@
 [
     {
+        "name": "ROE-18KS7800",
+        "title": "Aerojet 1.8KS-7800",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 50,
+        "entry_cost": 0,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1000",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-18KS7800-RN",
         "title": "Aerojet 1.8KS-7800",
         "description": "",
@@ -20,6 +45,31 @@
         "upgrade": false,
         "entry_cost_mods": "1000",
         "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-25KS18000",
+        "title": "Aerojet 2.5KS-18000",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 40,
+        "entry_cost": 800,
+        "category": "SOLID",
+        "info": "",
+        "year": "1950",
+        "technology": "earlySolids",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "AerobeeBooster",
         "module_tags": [
             "EngineSolid"
         ]
@@ -50,6 +100,31 @@
         ]
     },
     {
+        "name": "ROE-A4",
+        "title": "A-4 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": 1,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "A-4",
+        "upgrade": false,
+        "entry_cost_mods": "A-4",
+        "identical_part_name": "A-4",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-A4-RE",
         "title": "A-4 Series Engine",
         "description": "",
@@ -70,6 +145,31 @@
         "upgrade": false,
         "entry_cost_mods": "A-4",
         "identical_part_name": "A-4",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-A7",
+        "title": "NAA-75-110 A-Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 400,
+        "entry_cost": 16000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1952",
+        "technology": "basicRocketryRP0",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "NAA75_110",
+        "upgrade": false,
+        "entry_cost_mods": "A-6",
+        "identical_part_name": "A-6",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -100,6 +200,31 @@
         ]
     },
     {
+        "name": "ROE-AJ10-137",
+        "title": "AJ10-137 (Service Propulsion System)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "700",
+        "entry_cost": "24500",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1968",
+        "technology": "orbitalRocketry1967",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ10_137",
+        "upgrade": false,
+        "entry_cost_mods": "AJ10-137",
+        "identical_part_name": "AJ10-137",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-AJ10-137-SSTU",
         "title": "AJ10-137 (Service Propulsion System)",
         "description": "",
@@ -125,6 +250,29 @@
         ]
     },
     {
+        "name": "ROE-AJ10-190",
+        "title": "AJ10-190 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 400,
+        "entry_cost": 8000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1981",
+        "technology": "orbitalRocketry1981",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ10_190",
+        "upgrade": false,
+        "entry_cost_mods": "AJ10-190",
+        "identical_part_name": "AJ10-190",
+        "module_tags": []
+    },
+    {
         "name": "ROE-AJ10-190-SSTU",
         "title": "AJ10-190 Engine",
         "description": "",
@@ -148,6 +296,32 @@
         "module_tags": []
     },
     {
+        "name": "ROE-AJ10Adv",
+        "title": "AJ10 Series (Advanced)",
+        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents advanced era AJ10s with a nozzle extension and restart capability. Used on Transtage as AJ10-138; similar models but back with the -118 designation were used on the Delta F and Delta K upper stages. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "6000",
+        "category": "ORBITAL",
+        "info": "US Engine",
+        "year": "1964",
+        "technology": "orbitalRocketry1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "AJ10 (Advanced)",
+        "engine_config": "AJ10_Adv",
+        "upgrade": false,
+        "entry_cost_mods": "AJ10-138",
+        "identical_part_name": "AJ10 (Adv)",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-AJ10Adv-MCD",
         "title": "AJ10 Series (Advanced)",
         "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents advanced era AJ10s with a nozzle extension and restart capability. Used on Transtage as AJ10-138; similar models but back with the -118 designation were used on the Delta F and Delta K upper stages. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
@@ -168,6 +342,32 @@
         "upgrade": false,
         "entry_cost_mods": "AJ10-138",
         "identical_part_name": "AJ10 (Adv)",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-AJ10Early",
+        "title": "AJ10 Series (Early)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": 3000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ10_Early",
+        "upgrade": false,
+        "entry_cost_mods": "AJ10-37",
+        "identical_part_name": "AJ10 (Early)",
         "module_tags": [
             "EngineLiquidPF",
             "Toxic"
@@ -200,6 +400,32 @@
         ]
     },
     {
+        "name": "ROE-AJ10Mid",
+        "title": "AJ10 Series (Mid)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 250,
+        "entry_cost": 5000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ10_Mid",
+        "upgrade": false,
+        "entry_cost_mods": "AJ10-104",
+        "identical_part_name": "AJ10 (Mid)",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-AJ10Mid-RE",
         "title": "AJ10 Series (Mid)",
         "description": "",
@@ -226,8 +452,54 @@
         ]
     },
     {
+        "name": "ROE-AJ260FLA",
+        "title": "AJ-260 FL Angled SRM",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "9000",
+        "entry_cost": "300000",
+        "category": "SOLID",
+        "info": "",
+        "year": "1972",
+        "technology": "solids1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ260FL",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "AJ-260FL",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-AJ260FLA-BDB",
         "title": "AJ-260 FL Angled SRM",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "9000",
+        "entry_cost": "300000",
+        "category": "SOLID",
+        "info": "",
+        "year": "1972",
+        "technology": "solids1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ260FL",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "AJ-260FL",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-AJ260FLF",
+        "title": "AJ-260 FL Flared SRM",
         "description": "",
         "mod": "ROEngines",
         "cost": "9000",
@@ -272,8 +544,54 @@
         ]
     },
     {
+        "name": "ROE-AJ260SLA",
+        "title": "AJ-260 SL Angled SRM",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "6000",
+        "entry_cost": "200000",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ260SL",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "AJ-260SL",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-AJ260SLA-BDB",
         "title": "AJ-260 SL Angled SRM",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "6000",
+        "entry_cost": "200000",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ260SL",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "AJ-260SL",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-AJ260SLF",
+        "title": "AJ-260 SL Flared SRM",
         "description": "",
         "mod": "ROEngines",
         "cost": "6000",
@@ -318,6 +636,31 @@
         ]
     },
     {
+        "name": "ROE-Aerobee",
+        "title": "Aerobee Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 30,
+        "entry_cost": 1,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Aerobee",
+        "upgrade": false,
+        "entry_cost_mods": "WAC-Corporal",
+        "identical_part_name": "Aerobee",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROE-Aerobee-Taerobee",
         "title": "Aerobee Engine",
         "description": "",
@@ -343,6 +686,31 @@
         ]
     },
     {
+        "name": "ROE-Altair",
+        "title": "Altair",
+        "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "170",
+        "entry_cost": "3400",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1959",
+        "technology": "solids1959",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair",
+        "engine_config": "Altair",
+        "upgrade": false,
+        "entry_cost_mods": "Altair",
+        "identical_part_name": "Altair",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Altair-RN",
         "title": "Altair",
         "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
@@ -363,6 +731,31 @@
         "upgrade": false,
         "entry_cost_mods": "Altair",
         "identical_part_name": "Altair",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-AltairII",
+        "title": "Altair II",
+        "description": "A small solid kick motor. Developed from the Altair, this successor was used on Scout and Delta. Used to circularize at apogee or perform final payload kick. Maximum thrust 26.4kN, burn time 28 seconds. Diameter: [0.65 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": "4000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1963",
+        "technology": "solids1962",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair II",
+        "engine_config": "Altair-II",
+        "upgrade": false,
+        "entry_cost_mods": "Altair-II",
+        "identical_part_name": "Altair II",
         "module_tags": [
             "EngineSolid"
         ]
@@ -393,6 +786,31 @@
         ]
     },
     {
+        "name": "ROE-AltairIII",
+        "title": "Altair III",
+        "description": "A small solid kick motor. Developed from the Altair, this final version was used on later Scout and Delta craft. Used to circularize at apogee or perform final payload kick. Maximum thrust 25.6kN, burn time 31 seconds. Diameter: [0.50 m].",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "5000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1965",
+        "technology": "solids1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair III",
+        "engine_config": "Altair-III",
+        "upgrade": false,
+        "entry_cost_mods": "Altair-III",
+        "identical_part_name": "Altair III",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-AltairIII-RN",
         "title": "Altair III",
         "description": "A small solid kick motor. Developed from the Altair, this final version was used on later Scout and Delta craft. Used to circularize at apogee or perform final payload kick. Maximum thrust 25.6kN, burn time 31 seconds. Diameter: [0.50 m].",
@@ -415,6 +833,32 @@
         "identical_part_name": "Altair III",
         "module_tags": [
             "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-BE3",
+        "title": "BE-3",
+        "description": "The BE-3 (Blue Engine 3) is a LH2/LOX rocket engine developed by Blue Origin. The BE-3 uses a combustion tap-off cycle engine design which takes a small amount of combustion gases from the main combustion chamber in order to power the engine turbopumps. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "3000",
+        "entry_cost": "60000",
+        "category": "HYDROLOX",
+        "info": "FS Engine",
+        "year": "2015",
+        "technology": "hydrolox2009",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Blue Origin New Shepard Suborbital",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
         ]
     },
     {
@@ -441,6 +885,31 @@
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-BabySergeant",
+        "title": "Baby Sergeant (5.4KS1975)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 60,
+        "entry_cost": 5000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Explorer 1",
+        "engine_config": "BabySergeant",
+        "upgrade": false,
+        "entry_cost_mods": "JPL-532A",
+        "identical_part_name": "Baby Sergeant",
+        "module_tags": [
+            "EngineSolid"
         ]
     },
     {
@@ -489,6 +958,31 @@
         "upgrade": false,
         "entry_cost_mods": "JPL-532A",
         "identical_part_name": "Baby Sergeant",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-BabySergeantX11",
+        "title": "Baby Sergeant 11x Solid Kick Motor Cluster",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 660,
+        "entry_cost": 5000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Explorer 1",
+        "engine_config": "BabySergeant",
+        "upgrade": false,
+        "entry_cost_mods": "JPL-532A",
+        "identical_part_name": "Baby Sergeant x11",
         "module_tags": [
             "EngineSolid"
         ]
@@ -544,6 +1038,29 @@
         ]
     },
     {
+        "name": "ROE-BabySergeantX11Dec",
+        "title": "Baby Sergeant 11x Cluster Decoupler",
+        "description": "A light decoupler for your Baby Sergeant 11x cluster. This attaches to the top of the Sergeant 3x rocket.",
+        "mod": "ROEngines",
+        "cost": 20,
+        "entry_cost": 400,
+        "category": "SOLID",
+        "info": "Decoupler",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Baby Sergeant",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "Baby Sergeant x11 Decoupler",
+        "module_tags": []
+    },
+    {
         "name": "ROE-BabySergeantX11Dec-RN",
         "title": "Baby Sergeant 11x Cluster Decoupler",
         "description": "A light decoupler for your Baby Sergeant 11x cluster. This attaches to the top of the Sergeant 3x rocket.",
@@ -565,6 +1082,31 @@
         "entry_cost_mods": "",
         "identical_part_name": "Baby Sergeant x11 Decoupler",
         "module_tags": []
+    },
+    {
+        "name": "ROE-BabySergeantX3",
+        "title": "Baby Sergeant 3x Solid Kick Motor Cluster",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 180,
+        "entry_cost": 5000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Explorer 1",
+        "engine_config": "BabySergeant",
+        "upgrade": false,
+        "entry_cost_mods": "JPL-532A",
+        "identical_part_name": "Baby Sergeant x3",
+        "module_tags": [
+            "EngineSolid"
+        ]
     },
     {
         "name": "ROE-BabySergeantX3-BDB",
@@ -617,6 +1159,29 @@
         ]
     },
     {
+        "name": "ROE-BabySergeantX3Dec",
+        "title": "Baby Sergeant 3x Cluster Decoupler",
+        "description": "A light decoupler for your Baby Sergeant 3x cluster.",
+        "mod": "ROEngines",
+        "cost": 10,
+        "entry_cost": 200,
+        "category": "SOLID",
+        "info": "Decoupler",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Baby Sergeant",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "Baby Sergeant x3 Decoupler",
+        "module_tags": []
+    },
+    {
         "name": "ROE-BabySergeantX3Dec-RN",
         "title": "Baby Sergeant 3x Cluster Decoupler",
         "description": "A light decoupler for your Baby Sergeant 3x cluster.",
@@ -640,6 +1205,31 @@
         "module_tags": []
     },
     {
+        "name": "ROE-Castor1",
+        "title": "Castor 1 Radial SRB",
+        "description": "Radial Boosters for the TAT and Delta Launch Vehicles",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": 6000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "TAT, Delta-D, Delta-E",
+        "engine_config": "Castor-1",
+        "upgrade": false,
+        "entry_cost_mods": "Castor-1",
+        "identical_part_name": "Castor 1",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Castor1-RN",
         "title": "Castor 1 Radial SRB",
         "description": "Radial Boosters for the TAT and Delta Launch Vehicles",
@@ -656,6 +1246,31 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "TAT, Delta-D, Delta-E",
+        "engine_config": "Castor-1",
+        "upgrade": false,
+        "entry_cost_mods": "Castor-1",
+        "identical_part_name": "Castor 1",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Castor1Inline",
+        "title": "Castor 1",
+        "description": "2nd Stage of the Scout Launch Vehicle",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": 6000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": true,
+        "rp0_conf": true,
+        "spacecraft": "Scout",
         "engine_config": "Castor-1",
         "upgrade": false,
         "entry_cost_mods": "Castor-1",
@@ -690,6 +1305,31 @@
         ]
     },
     {
+        "name": "ROE-Castor1Radial",
+        "title": "Castor 1 Radial SRB",
+        "description": "Radial Boosters for the TAT and Delta Launch Vehicles",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": 6000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1956",
+        "technology": "solids1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": true,
+        "rp0_conf": true,
+        "spacecraft": "TAT, Delta-D, Delta-E",
+        "engine_config": "Castor-1",
+        "upgrade": false,
+        "entry_cost_mods": "Castor-1",
+        "identical_part_name": "Castor 1",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Castor1Radial-BDB",
         "title": "Castor 1 Radial SRB",
         "description": "Radial Boosters for the TAT and Delta Launch Vehicles",
@@ -710,6 +1350,31 @@
         "upgrade": false,
         "entry_cost_mods": "Castor-1",
         "identical_part_name": "Castor 1",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Castor2",
+        "title": "Castor 2",
+        "description": "A derivative of the Castor 1 motor, the Castor 2 featured higher specific impulse and propellant load and lower dry mass fraction as well as a longer burn time. It was used as strap-on booster starting with Delta E and was also used in all but the early Scouts. Burn time 37s. Diameter: [0.79 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": 180,
+        "entry_cost": "6400",
+        "category": "SOLID",
+        "info": "SRB",
+        "year": "1965",
+        "technology": "solids1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Castor 2",
+        "engine_config": "Castor-2",
+        "upgrade": false,
+        "entry_cost_mods": "Castor-2",
+        "identical_part_name": "",
         "module_tags": [
             "EngineSolid"
         ]
@@ -740,6 +1405,31 @@
         ]
     },
     {
+        "name": "ROE-E1",
+        "title": "E-1",
+        "description": "Pump-fed kerolox open cycle (gas generator) booster engine developed from LR79/89. Backup proposal for the first stage engine on the Titan 1 ICBM, and proposed first stage engine on the Saturn 1 but ultimately never flown (4 E-1s replaced with 8 H-1s). Diameter: [2.14 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": 600,
+        "entry_cost": "60000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1963",
+        "technology": "orbitalRocketry1963",
+        "era": "03-HUMAN",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "E-1",
+        "engine_config": "E1",
+        "upgrade": false,
+        "entry_cost_mods": "E-1",
+        "identical_part_name": "E1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-E1-BDB",
         "title": "E-1",
         "description": "Pump-fed kerolox open cycle (gas generator) booster engine developed from LR79/89. Backup proposal for the first stage engine on the Titan 1 ICBM, and proposed first stage engine on the Saturn 1 but ultimately never flown (4 E-1s replaced with 8 H-1s). Diameter: [2.14 m]. Plume configured by RealPlume.",
@@ -760,6 +1450,31 @@
         "upgrade": false,
         "entry_cost_mods": "E-1",
         "identical_part_name": "E1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-F1",
+        "title": "F-1 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "4555",
+        "entry_cost": "409361",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1967",
+        "technology": "orbitalRocketry1967",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "F1",
+        "upgrade": false,
+        "entry_cost_mods": "F-1",
+        "identical_part_name": "F-1",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -790,6 +1505,31 @@
         ]
     },
     {
+        "name": "ROE-GCRC",
+        "title": "GCRC 33-KS-2800",
+        "description": "A small solid kick motor, used as the third stage on all but the last Vanguard launch. Burn time 33 seconds. Diameter: [0.45 m].",
+        "mod": "ROEngines",
+        "cost": "170",
+        "entry_cost": "3000",
+        "category": "SOLID",
+        "info": "US SRM",
+        "year": "1955",
+        "technology": "basicSolids",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Vanguard",
+        "engine_config": "GCRC",
+        "upgrade": false,
+        "entry_cost_mods": "GCRC",
+        "identical_part_name": "GCRC",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-GCRC-RN",
         "title": "GCRC 33-KS-2800",
         "description": "A small solid kick motor, used as the third stage on all but the last Vanguard launch. Burn time 33 seconds. Diameter: [0.45 m].",
@@ -815,6 +1555,56 @@
         ]
     },
     {
+        "name": "ROE-Gamma2",
+        "title": "Gamma 2",
+        "description": "A two chamber version of Gamma, used for the second stage of the Black Arrow satellite launch vehicle. As the only Gamma not required to operate at sea level, the nozzles were extended to allow better expansion. Diameter: [1.37 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "4000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Black Arrow (Gamma)",
+        "engine_config": "Gamma2",
+        "upgrade": false,
+        "entry_cost_mods": "Gamma-2",
+        "identical_part_name": "Gamma2",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-H1C",
+        "title": "H-1C Engine (No Gimbal)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "4000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "H1",
+        "upgrade": false,
+        "entry_cost_mods": "H-1-165K",
+        "identical_part_name": "H-1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-H1C-SSTU",
         "title": "H-1C Engine (No Gimbal)",
         "description": "",
@@ -833,7 +1623,32 @@
         "spacecraft": "",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
+        "identical_part_name": "H-1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-H1D",
+        "title": "H-1/RS-27 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "4000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "H1",
+        "upgrade": false,
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -858,11 +1673,34 @@
         "spacecraft": "",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
+    },
+    {
+        "name": "ROE-HiPAT",
+        "title": "R-4D HiPAT (445N)",
+        "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world's communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini's orbit insertion of Saturn.",
+        "mod": "ROEngines",
+        "cost": "75",
+        "entry_cost": "3000",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "1965",
+        "technology": "earlyDocking",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Apollo CSM",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
     },
     {
         "name": "ROE-HiPAT-NicheParts",
@@ -888,6 +1726,32 @@
         "module_tags": []
     },
     {
+        "name": "ROE-J2",
+        "title": "J-2 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "2000",
+        "entry_cost": "100000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1966",
+        "technology": "improvedHydrolox",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "J2",
+        "upgrade": false,
+        "entry_cost_mods": "J-2-200K",
+        "identical_part_name": "J-2",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-J2-SSTU",
         "title": "J-2 Series Engine",
         "description": "",
@@ -906,8 +1770,34 @@
         "spacecraft": "",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "J-2-200klbf",
+        "entry_cost_mods": "J-2-200K",
         "identical_part_name": "J-2",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-J2X",
+        "title": "J-2X Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "3310",
+        "entry_cost": "158860",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2012",
+        "technology": "hydrolox2009",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "J2X",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "J-2X",
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
@@ -940,6 +1830,29 @@
         ]
     },
     {
+        "name": "ROE-LEROS1B",
+        "title": "LEROS-1b (635N)",
+        "description": "LEROS is a family of chemical rocket engines manufactured by Moog-ISP. LEROS engines have been used as primary apogee engines for telecommunications satellites such as the Lockheed Martin A2100 as well as deep space missions such as Juno. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "100",
+        "entry_cost": "2000",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "1996",
+        "technology": "standardDockingPorts",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "A2100, Juno",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-LEROS1B-NicheParts",
         "title": "LEROS-1b (635N)",
         "description": "LEROS is a family of chemical rocket engines manufactured by Moog-ISP. LEROS engines have been used as primary apogee engines for telecommunications satellites such as the Lockheed Martin A2100 as well as deep space missions such as Juno. Plume configured by RealPlume.",
@@ -956,6 +1869,29 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "A2100, Juno",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-LEROS4",
+        "title": "LEROS-4 (1100N)",
+        "description": "The LEROS 4 High Thrust Apogee Engine is a ESA funded 1100 N spacecraft main engine undergoing development by Moog. The engine will uniquely support the agencies future interplanetary exploration missions by reducing the mass of spacecraft propellant required for orbit insertion manoeuvres and so allow increased scientific payload to be accommodated on these missions. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "200",
+        "entry_cost": "4000",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "2018",
+        "technology": "gridFins",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "LEROS-4",
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
@@ -986,8 +1922,58 @@
         "module_tags": []
     },
     {
+        "name": "ROE-LR101",
+        "title": "LR101 Vernier Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 15,
+        "entry_cost": 1000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR101",
+        "upgrade": false,
+        "entry_cost_mods": "LR101-NA-3",
+        "identical_part_name": "LR101",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-LR101-BDB",
         "title": "LR101 Vernier Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 15,
+        "entry_cost": 1000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR101",
+        "upgrade": false,
+        "entry_cost_mods": "LR101-NA-3",
+        "identical_part_name": "LR101",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-LR101Inline",
+        "title": "LR101 Vernier (Inline)",
         "description": "",
         "mod": "ROEngines",
         "cost": 15,
@@ -1036,6 +2022,31 @@
         ]
     },
     {
+        "name": "ROE-LR105",
+        "title": "LR105 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 275,
+        "entry_cost": 5500,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR105",
+        "upgrade": false,
+        "entry_cost_mods": "LR43-NA-3",
+        "identical_part_name": "LR105",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-LR105-BDB",
         "title": "LR105 Series Engine",
         "description": "",
@@ -1056,6 +2067,31 @@
         "upgrade": false,
         "entry_cost_mods": "LR43-NA-3",
         "identical_part_name": "LR105",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-LR79",
+        "title": "LR79 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 300,
+        "entry_cost": 13000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR79",
+        "upgrade": false,
+        "entry_cost_mods": "S-3",
+        "identical_part_name": "LR79",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1111,6 +2147,31 @@
         ]
     },
     {
+        "name": "ROE-LR87",
+        "title": "LR87 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 500,
+        "entry_cost": 10000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Titan",
+        "engine_config": "LR87",
+        "upgrade": false,
+        "entry_cost_mods": "LR87-AJ-3",
+        "identical_part_name": "LR87",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-LR87-RN",
         "title": "LR87 Engine",
         "description": "",
@@ -1131,6 +2192,31 @@
         "upgrade": false,
         "entry_cost_mods": "LR87-AJ-3",
         "identical_part_name": "LR87",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-LR89",
+        "title": "LR89 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 300,
+        "entry_cost": 6000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR89",
+        "upgrade": false,
+        "entry_cost_mods": "LR43-NA-3",
+        "identical_part_name": "LR89",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1161,6 +2247,31 @@
         ]
     },
     {
+        "name": "ROE-LR91",
+        "title": "LR91 Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 250,
+        "entry_cost": 5000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Titan",
+        "engine_config": "LR91",
+        "upgrade": false,
+        "entry_cost_mods": "LR91-AJ-3",
+        "identical_part_name": "LR87",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-LR91-RN",
         "title": "LR91 Series",
         "description": "",
@@ -1186,8 +2297,54 @@
         ]
     },
     {
+        "name": "ROE-LargeApolloLC",
+        "title": "Large Apollo Style Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-LargeApolloLC-FASA",
         "title": "Large Apollo Style Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-LargeLC",
+        "title": "Large Launch Clamp",
         "description": "",
         "mod": "ROEngines",
         "cost": "1",
@@ -1232,6 +2389,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-LargeRadialLC",
+        "title": "Large Radial Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-LargeRadialLC-FASA",
         "title": "Large Radial Launch Clamp",
         "description": "",
@@ -1255,6 +2435,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-MR104",
+        "title": "0.44kN Engine (MR-104)",
+        "description": "MR-104 Monopropellant Engine family originally provided in-space propulsion for the Voyager 1 and 2 and Magellan missions. Subsequent MR-104 variants provided propulsion for Landsat and NOAA as well as for other U.S. government programs. A variation of this engine (MR-104G) is to be used on the Orion Deep Space Exploration Vehicle.",
+        "mod": "ROEngines",
+        "cost": "44",
+        "entry_cost": "880",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "1959",
+        "technology": "earlyFlightControl",
+        "era": "06-STATION",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Voyager, Magellan",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-MR104-NicheParts",
         "title": "0.44kN Engine (MR-104)",
         "description": "MR-104 Monopropellant Engine family originally provided in-space propulsion for the Voyager 1 and 2 and Magellan missions. Subsequent MR-104 variants provided propulsion for Landsat and NOAA as well as for other U.S. government programs. A variation of this engine (MR-104G) is to be used on the Orion Deep Space Exploration Vehicle.",
@@ -1271,6 +2474,29 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Voyager, Magellan",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-MR80B",
+        "title": "MR-80B (MLE)",
+        "description": "The Mars Landing Engine (MLE) is a derivative of the highly successful MR-80 engine used for the two Viking missions to Mars in 1976. Eight of these engines where used on the sky-crane which landed the Curiosity Rover on the martian surface. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "200",
+        "entry_cost": "4000",
+        "category": "EDL",
+        "info": "Lander Engine",
+        "year": "2007",
+        "technology": "largeRoverDesigns",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Curiosity",
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
@@ -1301,6 +2527,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-MR80TDE",
+        "title": "MR-80 (TDE)",
+        "description": "The Viking lander Terminal Descent Engine (TDE). The lander had three such engines, which were used during the final 45 seconds or so of the descent to the surface of Mars. Multiple small exhaust nozzles are used to diffuse the exhaust plume and eliminate a recirculation zone that could contaminate spacecraft instrumentation and avoid potential extensive erosion of the landing site. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "2000",
+        "category": "EDL",
+        "info": "Lander Engine",
+        "year": "1970",
+        "technology": "improvedLandingEngines",
+        "era": "06-STATION",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Viking",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-MR80TDE-NicheParts",
         "title": "MR-80 (TDE)",
         "description": "The Viking lander Terminal Descent Engine (TDE). The lander had three such engines, which were used during the final 45 seconds or so of the descent to the surface of Mars. Multiple small exhaust nozzles are used to diffuse the exhaust plume and eliminate a recirculation zone that could contaminate spacecraft instrumentation and avoid potential extensive erosion of the landing site. Plume configured by RealPlume.",
@@ -1324,8 +2573,54 @@
         "module_tags": []
     },
     {
+        "name": "ROE-MediumApolloLC",
+        "title": "Medium Apollo Style Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-MediumApolloLC-FASA",
         "title": "Medium Apollo Style Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-MediumLC",
+        "title": "Medium Launch Clamp",
         "description": "",
         "mod": "ROEngines",
         "cost": "1",
@@ -1370,6 +2665,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-MediumRadialLC",
+        "title": "Medium Radial Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-MediumRadialLC-FASA",
         "title": "Medium Radial Launch Clamp",
         "description": "",
@@ -1393,6 +2711,31 @@
         "module_tags": []
     },
     {
+        "name": "ROE-NK33",
+        "title": "NK-15/33",
+        "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science's Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "670",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1969",
+        "technology": "stagedCombustion1969",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "N-1",
+        "engine_config": "NK33",
+        "upgrade": false,
+        "entry_cost_mods": "NK-15",
+        "identical_part_name": "NK-15",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-NK33-RE",
         "title": "NK-15/33",
         "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science's Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
@@ -1413,6 +2756,31 @@
         "upgrade": false,
         "entry_cost_mods": "NK-15",
         "identical_part_name": "NK-15",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-NK43",
+        "title": "NK-15V/43",
+        "description": "Originally designed and built for the N1F, the NK-43 is a derivative of the NK-33 with longer bell and restart capability for upper stages. Diameter: [2.54 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "780",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1969",
+        "technology": "stagedCombustion1969",
+        "era": "05-LUNAR",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "N-1F",
+        "engine_config": "NK43",
+        "upgrade": false,
+        "entry_cost_mods": "NK-15V",
+        "identical_part_name": "NK-15V",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1443,6 +2811,31 @@
         ]
     },
     {
+        "name": "ROE-NikeM5E1",
+        "title": "Nike-M5E1",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "361",
+        "entry_cost": "1200",
+        "category": "SOLID",
+        "info": "",
+        "year": "1955",
+        "technology": "basicSolids",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Nike-M5E1",
+        "upgrade": false,
+        "entry_cost_mods": "900, SolidsFiber, SolidsHollow",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-NikeM5E1-Wrobz",
         "title": "Nike-M5E1",
         "description": "",
@@ -1468,6 +2861,29 @@
         ]
     },
     {
+        "name": "ROE-PLE",
+        "title": "0.592kN Dual Radial Engine",
+        "description": "A pair of MR-107 Monopropellant Engines, six of these pairs where used as retro-propulsion for the final decent phase of the Phoenix Mars Lander. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": 100,
+        "entry_cost": 2000,
+        "category": "EDL",
+        "info": "Lander Engine",
+        "year": "1959",
+        "technology": "entryDescentLanding",
+        "era": "09-INTL",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Phoenix Mars Lander",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-PLE-NicheParts",
         "title": "0.592kN Dual Radial Engine",
         "description": "A pair of MR-107 Monopropellant Engines, six of these pairs where used as retro-propulsion for the final decent phase of the Phoenix Mars Lander. Plume configured by RealPlume.",
@@ -1488,6 +2904,29 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-R40B",
+        "title": "R-40B Bipropellant Engine",
+        "description": "The R-40B bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes.",
+        "mod": "ROEngines",
+        "cost": "150",
+        "entry_cost": "3000",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "1981",
+        "technology": "largeSpaceplaneControl",
+        "era": "07-SPCPLANES",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Shuttle",
+        "engine_config": "R40",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "R-40",
         "module_tags": []
     },
     {
@@ -1514,6 +2953,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-R42",
+        "title": "R-42 Bipropellant Engine (890N)",
+        "description": "The R-42 Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. The engine is an evolution of the R-4D series of engines used on the highly successful HTV vehicle and the legendary Cassini probe.",
+        "mod": "ROEngines",
+        "cost": "60",
+        "entry_cost": "2000",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "1986",
+        "technology": "standardDockingPorts",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "R-42",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-R42-NicheParts",
         "title": "R-42 Bipropellant Engine (890N)",
         "description": "The R-42 Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. The engine is an evolution of the R-4D series of engines used on the highly successful HTV vehicle and the legendary Cassini probe.",
@@ -1537,6 +2999,31 @@
         "module_tags": []
     },
     {
+        "name": "ROE-RD0105",
+        "title": "RD-0105/0109 Series",
+        "description": "Kerolox gas generator vacuum engine which served in R-7 upper stages (Luna, Vostok). The RD-0105 was designed for Luna launches; it was the first upper stage for the R-7 series and was reused for uncrewed Vostok tests. An enhanced version, the RD-0109, was used for crewed Vostok launches. Diameter: [2.56 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1958",
+        "technology": "orbitalRocketry1958",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Luna, Vostok",
+        "engine_config": "RD0105",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0105",
+        "identical_part_name": "RD-0105",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD0105-RE",
         "title": "RD-0105/0109 Series",
         "description": "Kerolox gas generator vacuum engine which served in R-7 upper stages (Luna, Vostok). The RD-0105 was designed for Luna launches; it was the first upper stage for the R-7 series and was reused for uncrewed Vostok tests. An enhanced version, the RD-0109, was used for crewed Vostok launches. Diameter: [2.56 m]. Plume configured by RealPlume.",
@@ -1557,6 +3044,31 @@
         "upgrade": false,
         "entry_cost_mods": "RD-0105",
         "identical_part_name": "RD-0105",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD0110",
+        "title": "RD-0110 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "350",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": true,
+        "entry_cost_mods": "RD-0107",
+        "identical_part_name": "RD-0110",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1587,6 +3099,31 @@
         ]
     },
     {
+        "name": "ROE-RD100",
+        "title": "RD-100 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": 1,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD100",
+        "upgrade": false,
+        "entry_cost_mods": "RD-100",
+        "identical_part_name": "RD-100",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD100-RD",
         "title": "RD-100 Series Engine",
         "description": "",
@@ -1607,6 +3144,31 @@
         "upgrade": false,
         "entry_cost_mods": "RD-100",
         "identical_part_name": "RD-100",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD107",
+        "title": "RD-107 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 470,
+        "entry_cost": 13600,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD107_117",
+        "upgrade": false,
+        "entry_cost_mods": "RD-107-8D74",
+        "identical_part_name": "RD-107",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1637,6 +3199,31 @@
         ]
     },
     {
+        "name": "ROE-RD108",
+        "title": "RD-108 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 450,
+        "entry_cost": 14000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD108_118",
+        "upgrade": false,
+        "entry_cost_mods": "RD-108-8D75",
+        "identical_part_name": "RD-108",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD108-SSTU",
         "title": "RD-108 Series Engine",
         "description": "",
@@ -1657,6 +3244,31 @@
         "upgrade": false,
         "entry_cost_mods": "RD-108-8D75",
         "identical_part_name": "RD-108",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD170",
+        "title": "RD-170 Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "5400",
+        "entry_cost": "108000",
+        "category": "STAGED",
+        "info": "",
+        "year": "1987",
+        "technology": "stagedCombustion1986",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD170",
+        "upgrade": true,
+        "entry_cost_mods": "RD-170",
+        "identical_part_name": "RD-170",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1687,6 +3299,31 @@
         ]
     },
     {
+        "name": "ROE-RD180",
+        "title": "RD-180 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "2700",
+        "entry_cost": "54000",
+        "category": "STAGED",
+        "info": "",
+        "year": "2002",
+        "technology": "stagedCombustion1998",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Atlas V",
+        "engine_config": "RD180",
+        "upgrade": false,
+        "entry_cost_mods": "RD-180",
+        "identical_part_name": "RD-180",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD180-SSTU",
         "title": "RD-180 Engine",
         "description": "",
@@ -1707,6 +3344,31 @@
         "upgrade": false,
         "entry_cost_mods": "RD-180",
         "identical_part_name": "RD-180",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD191",
+        "title": "RD-191 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1350",
+        "entry_cost": "27000",
+        "category": "STAGED",
+        "info": "",
+        "year": "2009",
+        "technology": "stagedCombustion2009",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD191",
+        "upgrade": false,
+        "entry_cost_mods": "RD-151",
+        "identical_part_name": "RD-191",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1737,6 +3399,31 @@
         ]
     },
     {
+        "name": "ROE-RD58",
+        "title": "S1.5400/RD-58 Series",
+        "description": "World's first closed-cycle kerolox vacuum engine. The S1.5400 served as an R-7 upper stage and the RD-58 (an upgrade) as upper stage / OMS for many Soviet and Russian launchers and spacecraft (Proton, N1, Zenit, Buran...). The S1.5400 was designed for the Blok L stage which was the final stage for the Molniya configuration of the R-7, used to launch communication satellites and interplanetary probes. Unlike prior upper stages, it was restartable (this was needed to perform apogee kick to place Molniya satellites in their final orbits). It was given the industry designation 11D33. An upgraded version, termed 11D33M, had slightly improved performance. The RD-58 is a derivative of the 11D33M engine with higher performance (industry designation 11D58); it has been used on many Russian launchers and is still in use today on Proton and Zenit. In comparison to hydrolox upper stages, kerolox ones do not suffer boiloff as badly and need far less volume (kerosene being far denser than liquid hydrogen), but have much lower specific impulse. Diameter: [2.0 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1961",
+        "technology": "firstStagedCombustion",
+        "era": "03-HUMAN",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Molniya",
+        "engine_config": "RD58",
+        "upgrade": false,
+        "entry_cost_mods": "S1-5400",
+        "identical_part_name": "RD58",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD58-RE",
         "title": "S1.5400/RD-58 Series",
         "description": "World's first closed-cycle kerolox vacuum engine. The S1.5400 served as an R-7 upper stage and the RD-58 (an upgrade) as upper stage / OMS for many Soviet and Russian launchers and spacecraft (Proton, N1, Zenit, Buran...). The S1.5400 was designed for the Blok L stage which was the final stage for the Molniya configuration of the R-7, used to launch communication satellites and interplanetary probes. Unlike prior upper stages, it was restartable (this was needed to perform apogee kick to place Molniya satellites in their final orbits). It was given the industry designation 11D33. An upgraded version, termed 11D33M, had slightly improved performance. The RD-58 is a derivative of the 11D33M engine with higher performance (industry designation 11D58); it has been used on many Russian launchers and is still in use today on Proton and Zenit. In comparison to hydrolox upper stages, kerolox ones do not suffer boiloff as badly and need far less volume (kerosene being far denser than liquid hydrogen), but have much lower specific impulse. Diameter: [2.0 m]. Plume configured by RealPlume.",
@@ -1762,6 +3449,29 @@
         ]
     },
     {
+        "name": "ROE-RD8",
+        "title": "RD-8",
+        "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "1000",
+        "entry_cost": "3500",
+        "category": "STAGED",
+        "info": "",
+        "year": "1985",
+        "technology": "stagedCombustion1981",
+        "era": "07-SPCPLANES",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Zenit",
+        "engine_config": "RD8",
+        "upgrade": false,
+        "entry_cost_mods": "RD-8",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-RD8-RE",
         "title": "RD-8",
         "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume.",
@@ -1785,6 +3495,32 @@
         "module_tags": []
     },
     {
+        "name": "ROE-RL10A3",
+        "title": "RL10A-3 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 500,
+        "entry_cost": 60000,
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1962",
+        "technology": "prototypeHydrolox",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10A-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RL10A3-SSTU",
         "title": "RL10A-3 Engine",
         "description": "",
@@ -1804,6 +3540,32 @@
         "engine_config": "RL10",
         "upgrade": false,
         "entry_cost_mods": "RL10A-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-RL10A4",
+        "title": "RL10A-4 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "60000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1992",
+        "technology": "hydrolox1992",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10A-4",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -1837,6 +3599,32 @@
         ]
     },
     {
+        "name": "ROE-RL10A5",
+        "title": "RL10A-5 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 500,
+        "entry_cost": 60000,
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1993",
+        "technology": "hydrolox1992",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10A-5",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RL10A5-SSTU",
         "title": "RL10A-5 Engine",
         "description": "",
@@ -1856,6 +3644,32 @@
         "engine_config": "RL10",
         "upgrade": false,
         "entry_cost_mods": "RL10A-5",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-RL10B2",
+        "title": "RL10B-2 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 3800,
+        "entry_cost": 76000,
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1998",
+        "technology": "hydrolox1998",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10B-3",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -1889,6 +3703,32 @@
         ]
     },
     {
+        "name": "ROE-RS25",
+        "title": "RS-25 SSME",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "5700",
+        "entry_cost": "114000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1981",
+        "technology": "hydrolox1981",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SSME",
+        "upgrade": false,
+        "entry_cost_mods": "RS-25",
+        "identical_part_name": "RS-25",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RS25-SSTU",
         "title": "RS-25 SSME",
         "description": "",
@@ -1909,6 +3749,32 @@
         "upgrade": false,
         "entry_cost_mods": "RS-25",
         "identical_part_name": "RS-25",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-RS68",
+        "title": "RS-68 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 2850,
+        "entry_cost": 5700,
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2002",
+        "technology": "hydrolox1998",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RS68",
+        "upgrade": false,
+        "entry_cost_mods": "RS-68",
+        "identical_part_name": "RS-68",
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
@@ -1941,6 +3807,31 @@
         ]
     },
     {
+        "name": "ROE-Rutherford",
+        "title": "Rutherford",
+        "description": "The Rutherford Engine is the worlds first electric turbo-pumped LOX/RP-1 engine. Rutherford adopts an entirely new propulsion cycle, making use of brushless DC motors and high performance Lithium Polymer batteries to drive its turbo-pumps. The engine is named after the famous New Zealand born physicist Ernest Rutherford. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "21",
+        "entry_cost": "15000",
+        "category": "ORBITAL",
+        "info": "FS Engine",
+        "year": "2017",
+        "technology": "orbitalRocketry2014",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Electron (Rocket Lab)",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "Rutherford",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-Rutherford-NicheParts",
         "title": "Rutherford",
         "description": "The Rutherford Engine is the worlds first electric turbo-pumped LOX/RP-1 engine. Rutherford adopts an entirely new propulsion cycle, making use of brushless DC motors and high performance Lithium Polymer batteries to drive its turbo-pumps. The engine is named after the famous New Zealand born physicist Ernest Rutherford. Plume configured by RealPlume.",
@@ -1949,6 +3840,31 @@
         "entry_cost": "15000",
         "category": "ORBITAL",
         "info": "FS Engine",
+        "year": "2017",
+        "technology": "orbitalRocketry2014",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Electron (Rocket Lab)",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "Rutherford",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RutherfordVac",
+        "title": "Rutherford Vacuum Engine",
+        "description": "The Rutherford Engine is the worlds first electric turbo-pumped LOX/RP-1 engine. Rutherford adopts an entirely new propulsion cycle, making use of brushless DC motors and high performance Lithium Polymer batteries to drive its turbo-pumps. The engine is named after the famous physicist Ernest Rutherford. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "28",
+        "entry_cost": "20000",
+        "category": "ORBITAL",
+        "info": "US Engine",
         "year": "2017",
         "technology": "orbitalRocketry2014",
         "era": "10-COMM",
@@ -1991,6 +3907,29 @@
         ]
     },
     {
+        "name": "ROE-S2253",
+        "title": "S2.253",
+        "description": "The S2.253 engine was developed for use in the R-11 Zemlya ballistic missile, based on the Wasserfall engine using Kerosene and Nitric Acid as propellants.  Diameter: 0.88 m.",
+        "mod": "ROEngines",
+        "cost": 150,
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1953",
+        "technology": "basicRocketryRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "R-11",
+        "engine_config": "S2.253",
+        "upgrade": false,
+        "entry_cost_mods": "S2-253",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-S2253-RE",
         "title": "S2.253",
         "description": "The S2.253 engine was developed for use in the R-11 Zemlya ballistic missile, based on the Wasserfall engine using Kerosene and Nitric Acid as propellants.  Diameter: 0.88 m.",
@@ -2014,6 +3953,29 @@
         ]
     },
     {
+        "name": "ROE-S400",
+        "title": "0.4kN Engine (S400)",
+        "description": "The S400 400N bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. Notable missions include Galileo, Mars Express, Venus Express & the ExoMars Trace Gas Orbiter. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "40",
+        "entry_cost": "800",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "1959",
+        "technology": "earlyFlightControl",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Galileo, Mars Express, Venus Express",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-S400-NicheParts",
         "title": "0.4kN Engine (S400)",
         "description": "The S400 400N bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. Notable missions include Galileo, Mars Express, Venus Express & the ExoMars Trace Gas Orbiter. Plume configured by RealPlume.",
@@ -2034,6 +3996,29 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-S592",
+        "title": "S5.92",
+        "description": "The S5.92 is a Russian rocket engine currently powering the Fregat upper stage. The S5.92 engine was developed for use on the Phobos missions, then later adapted for use on the Fregat space tug which currently serves as the orbital stage for the Soyuz and Zenit launch vehicles. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "600",
+        "entry_cost": "20000",
+        "category": "ORBITAL",
+        "info": "US Engine",
+        "year": "2000",
+        "technology": "orbitalRocketry1998",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Phobos, Fregat",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "S5.92",
         "module_tags": []
     },
     {
@@ -2060,6 +4045,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-S598M",
+        "title": "S5.98M (14D30)",
+        "description": "The S5.98M also known as the 14D30 is a Russian rocket engine, currently powering the Briz upper stages. The engines design was based on the S5.92 engine, but differs slightly in mass, performance and physical layout. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "50000",
+        "category": "STAGED",
+        "info": "US Engine",
+        "year": "1999",
+        "technology": "stagedCombustion1998",
+        "era": "09-INTL",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Briz",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "S5.98M",
+        "identical_part_name": "S5.98M",
+        "module_tags": []
+    },
+    {
         "name": "ROE-S598M-NicheParts",
         "title": "S5.98M (14D30)",
         "description": "The S5.98M also known as the 14D30 is a Russian rocket engine, currently powering the Briz upper stages. The engines design was based on the S5.92 engine, but differs slightly in mass, performance and physical layout. Plume configured by RealPlume.",
@@ -2083,8 +4091,54 @@
         "module_tags": []
     },
     {
+        "name": "ROE-SmallApolloLC",
+        "title": "Small Apollo Style Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-SmallApolloLC-FASA",
         "title": "Small Apollo Style Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-SmallLC",
+        "title": "Small Launch Clamp",
         "description": "",
         "mod": "ROEngines",
         "cost": "1",
@@ -2129,6 +4183,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-SmallRadialLC",
+        "title": "Small Radial Launch Clamp",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-SmallRadialLC-FASA",
         "title": "Small Radial Launch Clamp",
         "description": "",
@@ -2152,6 +4229,31 @@
         "module_tags": []
     },
     {
+        "name": "ROE-Star5D",
+        "title": "STAR 5D (RAD)",
+        "description": "The STAR 5D rocket motor was designed and qualified to serve as the rocket-assisted deceleration (RAD) motor on the Mars Pathfinder mission. Three of these motors were fired to slow the Pathfinder spacecraft to near-zero velocity before bouncing on the surface of Mars. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "1000",
+        "category": "SOLID",
+        "info": "SRM",
+        "year": "1996",
+        "technology": "solids1992",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Pathfinder",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Star5D-NicheParts",
         "title": "STAR 5D (RAD)",
         "description": "The STAR 5D rocket motor was designed and qualified to serve as the rocket-assisted deceleration (RAD) motor on the Mars Pathfinder mission. Three of these motors were fired to slow the Pathfinder spacecraft to near-zero velocity before bouncing on the surface of Mars. Plume configured by RealPlume.",
@@ -2168,6 +4270,31 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Pathfinder",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star8",
+        "title": "STAR 8 (RAD)",
+        "description": "The STAR 8 was developed and qualified as the rocket assisted deceleration (RAD) motor for the Mars Exploration Rover (MER) program. The motor is based on the STAR 5D motor technology developed for JPL\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s Mars Pathfinder program. The STAR 8 first flew in January 2004 when three motors were used to decelerate each of the Spirit and Opportunity rovers for landing at Gusev Crater and Meridiani Planum on Mars. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "1000",
+        "category": "SOLID",
+        "info": "SRM",
+        "year": "2002",
+        "technology": "solids1998",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Curiosity",
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
@@ -2202,6 +4329,31 @@
         ]
     },
     {
+        "name": "ROE-SuperDraco",
+        "title": "SuperDraco",
+        "description": "A powerful hypergolic engine. Used by the Dragon V2 Command Module for powered landings, trajectory corrections and as a Launch Abort System (LAS). Other applications include hypersonic deceleration and landing for crew and cargo modules. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "62",
+        "entry_cost": "1240",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "2018",
+        "technology": "gridFins",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Dragon V2",
+        "engine_config": "SuperDraco",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "SuperDraco",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROE-SuperDraco-NicheParts",
         "title": "SuperDraco",
         "description": "A powerful hypergolic engine. Used by the Dragon V2 Command Module for powered landings, trajectory corrections and as a Launch Abort System (LAS). Other applications include hypersonic deceleration and landing for crew and cargo modules. Plume configured by RealPlume.",
@@ -2222,6 +4374,31 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "SuperDraco",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "ROE-SuperDracoDouble",
+        "title": "Twin SuperDraco",
+        "description": "SuperDraco is a hypergolic propellant liquid rocket engine designed and built by SpaceX. It is part of SpaceX's Draco family of rocket engines. A redundant array of eight SuperDraco engines provides fault-tolerant propulsion for use as a launch escape system and propulsive-landing thrust for the Dragon V2 passenger-carrying space capsule. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "124",
+        "entry_cost": "1240",
+        "category": "RCS",
+        "info": "RCS Engine",
+        "year": "2018",
+        "technology": "gridFins",
+        "era": "10-COMM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Dragon V2",
+        "engine_config": "SuperDraco",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "SuperDraco Double",
         "module_tags": [
             "EngineLiquidPF"
         ]
@@ -2252,6 +4429,31 @@
         ]
     },
     {
+        "name": "ROE-TD339",
+        "title": "TD-339",
+        "description": "The Vernier System as used on the Surveyor Probes. Uses storable hypergolic propellants, has infinite restarts and is not subject to ullage. Throttleable down to 30%. Historically 3 of them were used on the Surveyor probes which landed on the Moon. Diameter: [0.13 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "30",
+        "entry_cost": "600",
+        "category": "EDL",
+        "info": "RCS Engine",
+        "year": "1965",
+        "technology": "earlyLanding",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Surveyor",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "TD-339",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROE-TD339-NicheParts",
         "title": "TD-339",
         "description": "The Vernier System as used on the Surveyor Probes. Uses storable hypergolic propellants, has infinite restarts and is not subject to ullage. Throttleable down to 30%. Historically 3 of them were used on the Surveyor probes which landed on the Moon. Diameter: [0.13 m]. Plume configured by RealPlume.",
@@ -2274,6 +4476,31 @@
         "identical_part_name": "TD-339",
         "module_tags": [
             "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "ROE-UA1207",
+        "title": "UA1207 SRM",
+        "description": "Strap-on booster for Titan 3M. Burn time 117s. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": 3000,
+        "entry_cost": "144360",
+        "category": "SOLID",
+        "info": "",
+        "year": "1989",
+        "technology": "solids1986",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "UA1207",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "UA1207",
+        "identical_part_name": "UA1207",
+        "module_tags": [
+            "EngineSolid"
         ]
     },
     {
@@ -2302,6 +4529,29 @@
         ]
     },
     {
+        "name": "ROE-UA1207nc",
+        "title": "UA1207 Nosecone and Separator",
+        "description": "Nosecone and separator for the UA1207 SRM.",
+        "mod": "ROEngines",
+        "cost": 50,
+        "entry_cost": 1000,
+        "category": "SOLID",
+        "info": "",
+        "year": "1989",
+        "technology": "solids1986",
+        "era": "08-LONGTERM",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "UA1207",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROE-UA1207nc-RN",
         "title": "UA1207 Nosecone and Separator",
         "description": "Nosecone and separator for the UA1207 SRM.",
@@ -2321,6 +4571,29 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROE-UmbilicalTower",
+        "title": "Umbilical Tower",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "10",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Launch Clamp",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "00-START",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2348,6 +4621,31 @@
         "module_tags": []
     },
     {
+        "name": "ROE-X405",
+        "title": "Vanguard X-405",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 400,
+        "entry_cost": 12000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Vanguard",
+        "engine_config": "X405",
+        "upgrade": false,
+        "entry_cost_mods": "X-405",
+        "identical_part_name": "X405",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-X405-BDB",
         "title": "Vanguard X-405",
         "description": "",
@@ -2368,6 +4666,31 @@
         "upgrade": false,
         "entry_cost_mods": "X-405",
         "identical_part_name": "X405",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-X405H",
+        "title": "X-405H Vega",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 100,
+        "entry_cost": 0,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Vega",
+        "engine_config": "X405",
+        "upgrade": false,
+        "entry_cost_mods": "X-405H",
+        "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

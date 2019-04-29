@@ -1700,7 +1700,7 @@
         "spacecraft": "Saturn I (H-1)",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1751,7 +1751,7 @@
         "spacecraft": "Saturn V (J-2)",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "J-2-200klbf",
+        "entry_cost_mods": "J-2-200K",
         "identical_part_name": "J-2",
         "module_tags": [
             "EngineLiquidTurbo",

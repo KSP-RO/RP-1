@@ -165,8 +165,8 @@
         "title": "Multi-Mission RTG",
         "description": "Multi-Mission Radioisotope Thermoelectric Generator or (MMRTG) developed by Aerojet Rocketdyne and Teledyne Energy Systems.",
         "mod": "RLA Stockalike",
-        "cost": "13363",
-        "entry_cost": "133630",
+        "cost": 2500,
+        "entry_cost": "0",
         "category": "NUCLEAR",
         "info": "RTG",
         "year": "2011",
@@ -179,7 +179,7 @@
         "spacecraft": "Curiosity",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "50000,RTGlevel6",
+        "entry_cost_mods": "50000,RTGlevel5",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"

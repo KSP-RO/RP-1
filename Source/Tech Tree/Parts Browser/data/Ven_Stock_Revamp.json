@@ -326,8 +326,8 @@
         "title": "Multi-Mission RTG",
         "description": "The Multi-Mission RTG or MMRTG was designed for the Mars Science Laboratory and the Curiousity Rover for use on Mars.",
         "mod": "Ven Stock Revamp",
-        "cost": "13363",
-        "entry_cost": "133630",
+        "cost": 2500,
+        "entry_cost": "0",
         "category": "NUCLEAR",
         "info": "RTG",
         "year": "2011",
@@ -340,7 +340,7 @@
         "spacecraft": "Curiosity",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "50000,RTGlevel6",
+        "entry_cost_mods": "50000,RTGlevel5",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -377,8 +377,8 @@
         "title": "SNAP-19 Series RTG",
         "description": "The SNAP-19 series were originally developed for the Nimbus weather satellite program, complementing the regular solar arrays and countering their degradation due to radiation. Later, they were also used by the Pioneer 10 and 11 spacecrafts, along with the Viking Mars landers. Similar to the SNAP-9 series but with over 40% better conversion efficiency.",
         "mod": "Ven Stock Revamp",
-        "cost": "11917",
-        "entry_cost": "119170",
+        "cost": 1800,
+        "entry_cost": "0",
         "category": "NUCLEAR",
         "info": "RTG",
         "year": "1969",
@@ -402,8 +402,8 @@
         "title": "SNAP-9 Series RTG",
         "description": "The SNAP-9 series were evolved designs of the experimental SNAP-3 series, again as part of the Transit system (precursor to the current GPS system), but now featuring over 10 times higher power generation.",
         "mod": "Ven Stock Revamp",
-        "cost": "11321",
-        "entry_cost": "113210",
+        "cost": 1160,
+        "entry_cost": "0",
         "category": "NUCLEAR",
         "info": "RTG",
         "year": "1963",
@@ -598,8 +598,8 @@
         "title": "SNAP-3 Series RTG",
         "description": "The SNAP-3 series were the first radioisotope thermoelectric generators (RTGs) to ever operate in space, as part of the Transit system (precursor to the current GPS system). Very low overall efficiency and power generation.",
         "mod": "Ven Stock Revamp",
-        "cost": "10755",
-        "entry_cost": "107550",
+        "cost": 300,
+        "entry_cost": "0",
         "category": "NUCLEAR",
         "info": "RTG",
         "year": "1961",
@@ -614,7 +614,9 @@
         "upgrade": false,
         "entry_cost_mods": "50000,RTGlevel1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Nuclear"
+        ]
     },
     {
         "name": "solidBoosterMAX",

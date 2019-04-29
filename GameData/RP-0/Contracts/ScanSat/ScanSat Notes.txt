@@ -1,0 +1,21 @@
+Imaging / Mapping Satellites
+=============================================
+Lunar Orbiter	1966
+Mariner 9		1971 (Mars)
+Landsat			1972
+Skylab			1973
+Seasat			1978
+Pioneer Venus Orbiter 1978 (Venus)
+Venera 15/16	1983
+Geosat			1985
+Magellan		1989 (Venus)
+ERS-1			1991
+Mars Global Surveyor 1996 (Mars)
+MESSENGER		2004 (Merucry)
+Mars Reconnaisance Orbiter 2005 (Mars)
+
+Ideas
+=============================================
+* Contracts for every Major Body and Moons
+* Utilize Resource Scanners for people that want to look at doing surface bases and using RealISRU
+* Resource Scanning contracts for the Moon and Mars

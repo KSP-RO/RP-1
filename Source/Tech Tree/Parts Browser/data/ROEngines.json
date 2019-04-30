@@ -2266,7 +2266,7 @@
         "engine_config": "LR91",
         "upgrade": false,
         "entry_cost_mods": "LR91-AJ-3",
-        "identical_part_name": "LR87",
+        "identical_part_name": "LR91",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -2291,7 +2291,7 @@
         "engine_config": "LR91",
         "upgrade": false,
         "entry_cost_mods": "LR91-AJ-3",
-        "identical_part_name": "LR87",
+        "identical_part_name": "LR91",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

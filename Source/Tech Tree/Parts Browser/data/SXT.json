@@ -1053,7 +1053,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "Ranger",
+        "identical_part_name": "Mariner",
         "module_tags": [
             "Avionics",
             "NoResourceCostMult"

@@ -1790,7 +1790,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Surveyor",
         "module_tags": [
             "Avionics",
             "NoResourceCostMult"
@@ -5982,8 +5982,8 @@
         "title": "Small Inline Reaction Wheel",
         "description": "Using a small electric motor, this reaction wheel lets probes and satellites adjust their attitudes without expending propellant.",
         "mod": "Stock (RO Config)",
-        "cost": "2500",
-        "entry_cost": "50000",
+        "cost": 250,
+        "entry_cost": 5000,
         "category": "RCS",
         "info": "Reaction Wheel",
         "year": "1964",

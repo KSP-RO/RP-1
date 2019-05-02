@@ -1583,7 +1583,7 @@
         "title": "Pioneer SNAP-19 RTG",
         "description": "The SNAP-19 radioisotope thermoelectric generator as found on the Pioneer spacecraft. Developed by the Atomic Energy Commission (AEC).",
         "mod": "Coatl Aerospace",
-        "cost": 1800,
+        "cost": 3600,
         "entry_cost": "0",
         "category": "NUCLEAR",
         "info": "RTG",

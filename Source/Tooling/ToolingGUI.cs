@@ -41,9 +41,9 @@ namespace RP0
                         if (m is ModuleTooling && !((mT = (m as ModuleTooling)).IsUnlocked())) {
                             untooledPart uP;
                             if (m is ModuleToolingDiamLen) {
-                                uP.name = p.partInfo.title + " (" + mT.toolingType + ") " + (m as ModuleToolingDiamLen).GetDimensions();
+                                uP.name = p.partInfo.title + " (" + mT.ToolingType + ") " + (m as ModuleToolingDiamLen).GetDimensions();
                             } else {
-                                uP.name = p.partInfo.title + " (" + mT.toolingType + ")";
+                                uP.name = p.partInfo.title + " (" + mT.ToolingType + ")";
                             }
                             uP.toolingCost = mT.GetToolingCost();
                             uP.untooledMultiplier = mT.untooledMultiplier;

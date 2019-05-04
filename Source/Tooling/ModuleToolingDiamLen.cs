@@ -38,7 +38,7 @@ namespace RP0
             float d, l;
             GetDimensions(out d, out l);
             float cost = lengthToolingCost.x * d * d + lengthToolingCost.y * d + lengthToolingCost.z * l + lengthToolingCost.w;
-            if (ToolingDatabase.HasTooling(toolingType, d, l) == ToolingDatabase.ToolingLevel.None)
+            if (ToolingDatabase.HasTooling(ToolingType, d, l) == ToolingDatabase.ToolingLevel.None)
             {
                 float mult = 1f;
                 foreach (string s in reducers)
@@ -59,7 +59,7 @@ namespace RP0
         {
             float d, l;
             GetDimensions(out d, out l);
-            ToolingDatabase.UnlockTooling(toolingType, d, l);
+            ToolingDatabase.UnlockTooling(ToolingType, d, l);
         }
 
         public override bool IsUnlocked()
@@ -69,7 +69,7 @@ namespace RP0
             if (d < minDiameter)
                 return true;
 
-            return ToolingDatabase.HasTooling(toolingType, d, l) == ToolingDatabase.ToolingLevel.Full;
+            return ToolingDatabase.HasTooling(ToolingType, d, l) == ToolingDatabase.ToolingLevel.Full;
         }
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)

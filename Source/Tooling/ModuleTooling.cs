@@ -41,6 +41,14 @@ namespace RP0
 
         protected BaseEvent tEvent;
 
+        public virtual string ToolingType
+        {
+            get
+            {
+                return toolingType;
+            }
+        }
+
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Item")]
         public virtual void ToolingEvent()
         {
@@ -156,7 +164,7 @@ namespace RP0
             try
             {
                 // Currently all cost reducers are applied correctly when the tooling types are first sorted in alphabetical order
-                toolingColl.Sort((mt1, mt2) => mt1.toolingType.CompareTo(mt2.toolingType));
+                toolingColl.Sort((mt1, mt2) => mt1.ToolingType.CompareTo(mt2.ToolingType));
 
                 //TODO: find the most optimal order to purchase toolings that have diameter and length.
                 //      If there are diameters 2.9; 3 and 3.1 only 3 needs to be purchased and others will fit inside the stretch margin.
@@ -194,7 +202,7 @@ namespace RP0
         /// <returns>True if toolings match</returns>
         public static bool IsSame(ModuleTooling a, ModuleTooling b)
         {
-            if (a.toolingType != b.toolingType) return false;
+            if (a.ToolingType != b.ToolingType) return false;
 
             if (a is ModuleToolingDiamLen || b is ModuleToolingDiamLen)
             {

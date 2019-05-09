@@ -41,7 +41,7 @@ namespace RP0
             if (ToolingDatabase.HasTooling(ToolingType, d, l) == ToolingDatabase.ToolingLevel.None)
             {
                 float mult = 1f;
-                foreach (string s in reducers)
+                foreach (string s in CostReducers)
                 {
                     if (ToolingDatabase.HasTooling(s, d, l) > ToolingDatabase.ToolingLevel.None)
                     {

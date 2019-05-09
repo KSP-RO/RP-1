@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using KSP;
 using RealFuels.Tanks;
 using UnityEngine;
 
@@ -43,6 +40,49 @@ namespace RP0
 
             procTank = part.Modules["ProceduralPart"];
             rfTank = part.Modules.GetModule<ModuleFuelTanks>();
+        }
+
+        public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
+        {
+            Debug.Log("[ModuleTooling] GetModuleCost");
+            UpdateToolingDefinition();
+
+            return base.GetModuleCost(defaultCost, sit);
+        }
+
+        public override float GetToolingCost()
+        {
+            Debug.Log("[ModuleTooling] GetToolingCost");
+            UpdateToolingDefinition();
+
+            return base.GetToolingCost();
+        }
+
+        private void UpdateToolingDefinition()
+        {
+            var toolingDef = ToolingManager.Instance.GetToolingDefinition(ToolingType);
+            if (toolingDef != null)
+            {
+                Debug.Log("[RP0] Found ToolingDef for " + ToolingType);
+
+                if (toolingDef.untooledMultiplier != default(float))
+                    untooledMultiplier = toolingDef.untooledMultiplier;
+
+                if (toolingDef.finalToolingCostMultiplier != default(float))
+                    finalToolingCostMultiplier = toolingDef.finalToolingCostMultiplier;
+
+                if (toolingDef.costMultiplierDL != default(float))
+                    costMultiplierDL = toolingDef.costMultiplierDL;
+
+                if (!string.IsNullOrEmpty(toolingDef.toolingName))
+                    toolingName = toolingDef.toolingName;
+
+                if (!string.Equals(toolingDef.costReducers, costReducers))
+                {
+                    costReducers = toolingDef.costReducers;
+                    reducerList = null;    // force base class to recalculate the list from string
+                }
+            }
         }
 
         public override void GetDimensions(out float diam, out float len)

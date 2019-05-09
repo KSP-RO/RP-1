@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using KSP;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace RP0
@@ -12,6 +9,7 @@ namespace RP0
         #region Fields
 
         protected static ToolingDatabase database = new ToolingDatabase();
+        protected static Dictionary<string, ToolingDefinition> toolingDefinitions = null;
 
         #region Instance
 
@@ -47,7 +45,9 @@ namespace RP0
 
             ToolingDatabase.Load(node.GetNode("Tooling"));
 
+            EnsureDefinitionsLoaded();
         }
+
         public override void OnSave(ConfigNode node)
         {
             base.OnSave(node);
@@ -56,5 +56,34 @@ namespace RP0
         }
 
         #endregion
+
+        public ToolingDefinition GetToolingDefinition(string name)
+        {
+            EnsureDefinitionsLoaded();
+            toolingDefinitions.TryGetValue(name, out ToolingDefinition def);
+
+            return def;
+        }
+
+        private static void EnsureDefinitionsLoaded()
+        {
+            if (toolingDefinitions == null)
+            {
+                toolingDefinitions = new Dictionary<string, ToolingDefinition>();
+
+                foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("TOOLING_DEFINITION"))
+                {
+                    var def = new ToolingDefinition(n);
+                    Debug.Log("[ModuleTooling] Loaded definition: " + def.name);
+                    if (toolingDefinitions.ContainsKey(def.name))
+                    {
+                        Debug.LogError("[ModuleTooling] Found duplicate definition: " + def.name);
+                        continue;
+                    }
+
+                    toolingDefinitions.Add(def.name, def);
+                }
+            }
+        }
     }
 }

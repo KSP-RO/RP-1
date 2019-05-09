@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using KSP;
 using UnityEngine;
 
 namespace RP0
@@ -9,15 +8,13 @@ namespace RP0
     public abstract class ModuleTooling : PartModule, IPartCostModifier
     {
         [KSPField]
-        public string toolingType = "TankStarting";
+        public string toolingType = string.Empty;
 
         [KSPField]
         public string costReducers = string.Empty;
 
         [KSPField]
         public float costReductionMult = 0.5f;
-
-        public List<string> reducers = new List<string>();
 
         [KSPField]
         public string toolingName = "Tool Tank";
@@ -40,12 +37,35 @@ namespace RP0
         public float minDiameter = 0f;
 
         protected BaseEvent tEvent;
+        protected List<string> reducerList;
 
         public virtual string ToolingType
         {
             get
             {
                 return toolingType;
+            }
+        }
+
+        public virtual List<string> CostReducers
+        {
+            get
+            {
+                if (reducerList == null)
+                {
+                    if (!string.IsNullOrEmpty(costReducers))
+                    {
+                        var strColl = costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                  .Select(s => s.Trim());
+                        reducerList = new List<string>(strColl);
+                    }
+                    else
+                    {
+                        reducerList = new List<string>(0);
+                    }
+                }
+
+                return reducerList;
             }
         }
 
@@ -116,11 +136,7 @@ namespace RP0
             base.OnLoad(node);
 
             tEvent = Events["ToolingEvent"];
-
             tEvent.guiName = IsUnlocked() ? "TOOLED" : toolingName;
-
-            if (!string.IsNullOrEmpty(costReducers))
-                reducers = new List<string>(costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)

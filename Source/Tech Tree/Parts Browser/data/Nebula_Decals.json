@@ -1,7 +1,7 @@
 [
     {
         "name": "Decal?curved",
-        "title": "",
+        "title": "Decal",
         "description": "",
         "mod": "Nebula Decals",
         "cost": "1",
@@ -24,7 +24,7 @@
     },
     {
         "name": "DecalCurvedHorizontalRectangle",
-        "title": "",
+        "title": "Decal",
         "description": "",
         "mod": "Nebula Decals",
         "cost": "1",
@@ -47,7 +47,7 @@
     },
     {
         "name": "DecalCurvedVerticalRectangle",
-        "title": "",
+        "title": "Decal",
         "description": "",
         "mod": "Nebula Decals",
         "cost": "1",
@@ -70,7 +70,7 @@
     },
     {
         "name": "Flat?decal",
-        "title": "",
+        "title": "Decal",
         "description": "",
         "mod": "Nebula Decals",
         "cost": "1",
@@ -93,7 +93,7 @@
     },
     {
         "name": "Long?decal?1x2",
-        "title": "",
+        "title": "Decal",
         "description": "",
         "mod": "Nebula Decals",
         "cost": "1",
@@ -116,7 +116,7 @@
     },
     {
         "name": "Long?decal?1x4",
-        "title": "",
+        "title": "Decal",
         "description": "",
         "mod": "Nebula Decals",
         "cost": "1",
@@ -139,7 +139,7 @@
     },
     {
         "name": "Long?decal?1x8",
-        "title": "",
+        "title": "Decal",
         "description": "",
         "mod": "Nebula Decals",
         "cost": "1",

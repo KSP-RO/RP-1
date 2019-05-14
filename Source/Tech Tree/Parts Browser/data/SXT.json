@@ -320,7 +320,7 @@
             "NoResourceCostMult"
         ]
     },
-	{
+    {
         "name": "MEMLanderSXT",
         "title": "Apollo Lunar Module Ascent Module",
         "description": "Apollo Ascent Module. Contains two astronauts. Plume configured by RealPlume.",

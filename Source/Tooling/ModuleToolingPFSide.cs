@@ -95,13 +95,7 @@ namespace RP0
                 len = noseHeightRatioF * diam * 0.5f + cylEndF;
         }
 
-        private void OnFairingStagedChanged(BaseField bf, object obj)
-        {
-            var isDecoupled = bf.GetValue<bool>(pmDecoupler);
-            UpdateToolingAndCosts(isDecoupled);
-        }
-
-        private void UpdateToolingAndCosts(bool isDecoupled)
+        public void UpdateToolingAndCosts(bool isDecoupled)
         {
             if (toolingTypeNonDecoupled == null || costPerTonneNonDecoupled == 0f || untooledMultiplierNonDecoupled == 0f || finalToolingCostMultiplierNonDecoupled == 0f)
                 return;
@@ -120,6 +114,19 @@ namespace RP0
             untooledMultiplier = isDecoupled ? toolingPrefabModule.untooledMultiplier : untooledMultiplierNonDecoupled;
             finalToolingCostMultiplier = isDecoupled ? toolingPrefabModule.finalToolingCostMultiplier : finalToolingCostMultiplierNonDecoupled;
             costPerTonne.SetValue(isDecoupled ? prefabCostPerTonne : costPerTonneNonDecoupled, pmFairing);
+        }
+
+        private void OnFairingStagedChanged(BaseField bf, object obj)
+        {
+            var isDecoupled = bf.GetValue<bool>(pmDecoupler);
+            UpdateToolingAndCosts(isDecoupled);
+
+            for (int i = 0; i < part.symmetryCounterparts.Count; i++)
+            {
+                var p = part.symmetryCounterparts[i];
+                var pm = p.Modules.GetModule<ModuleToolingPFSide>();
+                pm.UpdateToolingAndCosts(isDecoupled);
+            }
         }
     }
 }

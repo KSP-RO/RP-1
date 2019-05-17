@@ -1374,7 +1374,7 @@
         "title": "RCS Quad (275/445 N class)",
         "description": "A generic RCS quad. Use this for attitude control or translation/ullage for medium stages and spacecraft (when using NTO/MMH, same performance as the Apollo SM quads).",
         "mod": "Stock (RO Config)",
-        "cost": "35",
+        "cost": 40,
         "entry_cost": "2000",
         "category": "RCS",
         "info": "RCS",

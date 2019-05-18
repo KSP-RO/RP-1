@@ -835,12 +835,12 @@
         "title": "Centaur 3-Way Large RCS Block (69/111 N Class)",
         "description": "Three way RCS block for the Centaur stages. Place one on each of the mounting blocks on either side of the engine mount.",
         "mod": "Bluedog DB",
-        "cost": "15",
-        "entry_cost": "1000",
+        "cost": 16,
+        "entry_cost": 1,
         "category": "RCS",
-        "info": "",
-        "year": "1963",
-        "technology": "improvedFlightControl",
+        "info": "RCS",
+        "year": "0",
+        "technology": "unlockParts",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -849,9 +849,11 @@
         "spacecraft": "Centaur",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "bluedog_Centaur_RL10",
@@ -936,12 +938,12 @@
         "title": "Centaur 3-Way RCS Block (69/111 N Class)",
         "description": "Three way RCS block for the Centaur stages. Place one on each of the mounting blocks on either side of the engine mount.",
         "mod": "Bluedog DB",
-        "cost": "20",
-        "entry_cost": "1000",
+        "cost": 16,
+        "entry_cost": 1,
         "category": "RCS",
-        "info": "",
-        "year": "1963",
-        "technology": "improvedFlightControl",
+        "info": "RCS",
+        "year": "0",
+        "technology": "unlockParts",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -950,9 +952,11 @@
         "spacecraft": "Centaur",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "bluedog_Centaur_Tank",

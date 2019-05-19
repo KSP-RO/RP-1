@@ -19,7 +19,8 @@
         { "name" : "VenStockRevamp" },
         { "name" : "KerbalConstructionTime" },
         { "name" : "RealSolarSystem" },
-        { "name" : "DMagicOrbitalScience" }
+        { "name" : "DMagicOrbitalScience" },
+        { "name" : "DMModuleScienceAnimateGeneric" }
     ],
     "recommends" : [
 		{ "name" : "ConnectedLivingSpace" },

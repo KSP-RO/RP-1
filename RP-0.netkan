@@ -20,7 +20,7 @@
         { "name" : "KerbalConstructionTime" },
         { "name" : "RealSolarSystem" },
         { "name" : "DMagicOrbitalScience" },
-        { "name" : "DMModuleScienceAnimateGeneric" }
+        { "name" : "DMagicScienceAnimate" }
     ],
     "recommends" : [
 		{ "name" : "ConnectedLivingSpace" },

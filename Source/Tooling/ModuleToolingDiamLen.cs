@@ -14,6 +14,9 @@ namespace RP0
         [KSPField]
         public float partLength;
 
+        /// <summary>
+        /// Used for increasing costs a bit based on diameter and length (thereby discounting bigger-diameter parts).
+        /// </summary>
         [KSPField]
         public float costMultiplierDL = 0f;
 

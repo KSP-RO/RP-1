@@ -11,7 +11,7 @@
 	
 	@advanceFunds = (Random(1000, 3000.0) + 5000.0 * (@/targetBody1.Multiplier() / 2)) * 2.4
 	@rewardFunds = @advanceFunds
-	@failureFunds = @advanceFunds * 1.5
+	@failureFunds = @advanceFunds * 0.5
 	
 	@rewardReputation = 3 + @/targetBody1.Multiplier()*3
 	@failureReputation = @rewardReputation * 1.5
@@ -36,7 +36,7 @@
 	
 	@advanceFunds = (Random(5000, 10000.0) + 10000.0 * (@/targetBody3.Multiplier() / 2)) * 2.4
 	@rewardFunds = @advanceFunds
-	@failureFunds = @advanceFunds * 1.5
+	@failureFunds = @advanceFunds * 0.5
 	
 	@rewardReputation = 5 + @/targetBody3.Multiplier()*5
 	@failureReputation = @rewardReputation * 1.5
@@ -61,7 +61,7 @@
 	
 	@advanceFunds = (Random(5000, 10000.0) + 10000.0 * (@/targetBody2.Multiplier() / 2)) * 2.4
 	@rewardFunds = @advanceFunds
-	@failureFunds = @advanceFunds * 1.5
+	@failureFunds = @advanceFunds * 0.5
 	
 	@rewardReputation = 5 + @/targetBody2.Multiplier()*5
 	@failureReputation = @rewardReputation * 1.5

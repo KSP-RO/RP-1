@@ -278,7 +278,7 @@ namespace RP0.Crew
                                                         "InitialRetirementDateNotification",
                                                         "Initial Retirement Date",
                                                         msgStr
-                                                        + "\n(Retirement will be delayed the more intersting flights they fly.)",
+                                                        + "\n(Retirement will be delayed the more interesting flights they fly.)",
                                                         "OK",
                                                         false,
                                                         HighLogic.UISkin);
@@ -706,7 +706,7 @@ namespace RP0.Crew
                                                         "InitialRetirementDateNotification",
                                                         "Initial Retirement Date",
                                                         pcm.name + " will retire no earlier than " + KSPUtil.PrintDate(retireTime, false)
-                                                        + "\n(Retirement will be delayed the more intersting flights they fly.)",
+                                                        + "\n(Retirement will be delayed the more interesting flights they fly.)",
                                                         "OK",
                                                         false,
                                                         HighLogic.UISkin);

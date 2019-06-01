@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RP0
 {
-    class ModuleToolingPTank : ModuleToolingDiamLen
+    public class ModuleToolingPTank : ModuleToolingDiamLen
     {
         protected PartModule procTank, procShape;
         protected ModuleFuelTanks rfTank;
@@ -34,17 +34,10 @@ namespace RP0
             }
         }
 
-        public override void OnAwake()
-        {
-            base.OnAwake();
-
-            procTank = part.Modules["ProceduralPart"];
-            rfTank = part.Modules.GetModule<ModuleFuelTanks>();
-        }
-
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            Debug.Log("[ModuleTooling] GetModuleCost");
+            if (!onStartFinished) return 0f;
+
             UpdateToolingDefinition();
 
             return base.GetModuleCost(defaultCost, sit);
@@ -52,10 +45,15 @@ namespace RP0
 
         public override float GetToolingCost()
         {
-            Debug.Log("[ModuleTooling] GetToolingCost");
             UpdateToolingDefinition();
 
             return base.GetToolingCost();
+        }
+
+        protected override void LoadPartModules()
+        {
+            procTank = part.Modules["ProceduralPart"];
+            rfTank = part.Modules.GetModule<ModuleFuelTanks>();
         }
 
         private void UpdateToolingDefinition()
@@ -63,8 +61,6 @@ namespace RP0
             var toolingDef = ToolingManager.Instance.GetToolingDefinition(ToolingType);
             if (toolingDef != null)
             {
-                Debug.Log("[RP0] Found ToolingDef for " + ToolingType);
-
                 if (toolingDef.untooledMultiplier != default(float))
                     untooledMultiplier = toolingDef.untooledMultiplier;
 
@@ -127,7 +123,7 @@ namespace RP0
 
                 if (procShape == null)
                 {
-                    Debug.LogError("[ModuleTooling]: Could not find proc SHAPE to bind to");
+                    Debug.LogError("[ModuleTooling] Could not find proc SHAPE to bind to");
                     return;
                 }
 
@@ -146,13 +142,13 @@ namespace RP0
             }
             else if (procShape == null)
             {
-                Debug.LogError("[ModuleTooling]: Lost proc SHAPE to bind to");
+                Debug.LogError("[ModuleTooling] Lost proc SHAPE to bind to");
                 return;
             }
 
             if (diam1 == null || length == null)
             {
-                Debug.LogError("[ModuleTooling]: Could not bind to procpart fields");
+                Debug.LogError("[ModuleTooling] Could not bind to procpart fields");
                 return;
             }
 

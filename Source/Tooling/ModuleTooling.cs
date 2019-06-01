@@ -38,6 +38,7 @@ namespace RP0
 
         protected BaseEvent tEvent;
         protected List<string> reducerList;
+        protected bool onStartFinished;
 
         public virtual string ToolingType
         {
@@ -136,12 +137,32 @@ namespace RP0
             base.OnLoad(node);
 
             tEvent = Events["ToolingEvent"];
+        }
+
+        public override void OnStart(StartState state)
+        {
+            base.OnStart(state);
+
             tEvent.guiName = IsUnlocked() ? "TOOLED" : toolingName;
+
+            try
+            {
+                LoadPartModules();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+            onStartFinished = true;
+        }
+
+        protected virtual void LoadPartModules()
+        {
         }
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER)
+            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER || !onStartFinished)
                 return 0f;
 
             if (IsUnlocked())

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RP0
 {
-    class ModuleToolingGeneric : ModuleToolingDiamLen
+    public class ModuleToolingGeneric : ModuleToolingDiamLen
     {
         [KSPField]
         public string partModuleName = string.Empty;
@@ -23,20 +23,10 @@ namespace RP0
         protected PartModule pm;
 
         protected BaseField diameter, length;
-
-        public override void OnAwake()
+        
+        protected override void LoadPartModules()
         {
-            base.OnAwake();
-
-            // Grab current link to module, *if* we've done a load already to get the field.
-            if (!string.IsNullOrEmpty(partModuleName))
-                pm = part.Modules[partModuleName];
-        }
-
-        public override void OnLoad(ConfigNode node)
-        {
-            base.OnLoad(node);
-
+            base.LoadPartModules();
             if (!string.IsNullOrEmpty(partModuleName))
                 pm = part.Modules[partModuleName];
         }
@@ -48,7 +38,7 @@ namespace RP0
 
             if (pm == null)
             {
-                Debug.LogError("[ModuleTooling]: Could not find module " + partModuleName + " to bind to");
+                Debug.LogError("[ModuleTooling] Could not find module " + partModuleName + " to bind to");
                 return;
             }
 
@@ -58,18 +48,18 @@ namespace RP0
 
                 if (diameter == null)
                 {
-                    Debug.LogError("[ModuleTooling]: Could not bind to field: " + diamField + " on " + partModuleName);
+                    Debug.LogError("[ModuleTooling] Could not bind to field: " + diamField + " on " + partModuleName);
                     return;
                 }
             }
 
-            if(useLength && length == null)
+            if (useLength && length == null)
             {
                 length = pm.Fields[lenField];
 
                 if (length == null)
                 {
-                    Debug.LogError("[ModuleTooling]: Could not bind to field: " + lenField + " on " + partModuleName);
+                    Debug.LogError("[ModuleTooling] Could not bind to field: " + lenField + " on " + partModuleName);
                     return;
                 }
             }

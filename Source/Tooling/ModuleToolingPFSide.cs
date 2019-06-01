@@ -22,16 +22,9 @@ namespace RP0
 
         protected BaseField baseRad, maxRad, cylEnd, sideThickness, inlineHeight, noseHeightRatio, costPerTonne;
 
-        public override void OnAwake()
+        protected override void LoadPartModules()
         {
-            base.OnAwake();
-            pmFairing = part.Modules["ProceduralFairingSide"];
-            pmDecoupler = part.Modules["ProceduralFairingDecoupler"];
-        }
-
-        public override void OnLoad(ConfigNode node)
-        {
-            base.OnLoad(node);
+            base.LoadPartModules();
             pmFairing = part.Modules["ProceduralFairingSide"];
             pmDecoupler = part.Modules["ProceduralFairingDecoupler"];
         }
@@ -60,7 +53,7 @@ namespace RP0
 
             if (pmFairing == null)
             {
-                Debug.LogError("[ModuleTooling]: Could not find PF module to bind to");
+                Debug.LogError("[ModuleTooling] Could not find PF module to bind to");
                 return;
             }
 
@@ -76,7 +69,7 @@ namespace RP0
 
                 if (baseRad == null)
                 {
-                    Debug.LogError("[ModuleTooling]: Could not bind to fields in PF module");
+                    Debug.LogError("[ModuleTooling] Could not bind to fields in PF module");
                     return;
                 }
             }

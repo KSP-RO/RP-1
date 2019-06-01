@@ -36,7 +36,6 @@ namespace RP0
 
         private void Update()
         {
-            Debug.Log("[ModuleTooling] Running GUI data update");
             untooledParts.Clear();
             float totalUntooledExtraCost = 0;
 
@@ -125,7 +124,7 @@ namespace RP0
                 }
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label($"Total vessel cost if all parts are tooled: {allTooledCost:N0)}");
+                    GUILayout.Label($"Total vessel cost if all parts are tooled: {allTooledCost:N0}");
                 } finally {
                     GUILayout.EndHorizontal();
                 }
@@ -143,7 +142,7 @@ namespace RP0
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(
                             "ConfirmAllToolingsPurchase",
-                            $"Tooling for all untooled parts will cost {totalToolingCost:N0)} funds.",
+                            $"Tooling for all untooled parts will cost {totalToolingCost:N0} funds.",
                             "Tooling Purchase",
                             HighLogic.UISkin,
                             new Rect(0.5f, 0.5f, 150f, 60f),

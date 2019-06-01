@@ -77,6 +77,8 @@ namespace RP0
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
+            if (!onStartFinished) return 0f;
+
             float baseCost = base.GetModuleCost(defaultCost, sit);
             float d, l;
             GetDimensions(out d, out l);

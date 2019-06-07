@@ -37,3 +37,4 @@ using System.Runtime.InteropServices;
 
 [assembly: KSPAssembly("RP-0", 1, 00)]
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]
+[assembly: KSPAssemblyDependency("RealFuels", 1, 0)]

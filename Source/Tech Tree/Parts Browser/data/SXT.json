@@ -1064,7 +1064,7 @@
         "title": "Mariner Core",
         "description": "Probe core used for early Ranger missions as well as (in stripped-down form)  the first Mariner missions. Includes data storage for returning data to Earth (use Ship Manifest to transfer the data from the experiment to this core).",
         "mod": "SXT",
-        "cost": "1200",
+        "cost": 950,
         "entry_cost": "24000",
         "category": "AVIONICS",
         "info": "Avionics",

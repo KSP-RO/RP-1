@@ -1365,7 +1365,7 @@
         "title": "Surveyor Lunar Probe",
         "description": "Surveyor 1-7 lunar probes.",
         "mod": "RN US Probes",
-        "cost": 4000,
+        "cost": 2500,
         "entry_cost": 80000,
         "category": "AVIONICS",
         "info": "Probe",

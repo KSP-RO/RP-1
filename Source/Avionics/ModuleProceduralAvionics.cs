@@ -17,16 +17,11 @@ namespace RP0.ProceduralAvionics
 		const string kwFormat = "{0:0.##}";
 		const string wFormat = "{0:0}";
         const float FLOAT_TOLERANCE = 1.00001f;
-        const float FLOAT_TOLERANCE2 = 1.001f;
 
-        // This controls how much the current part can control (in metric tons)
         [KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
 		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "\u2009t")]
 		public float proceduralMassLimit = 0;
 
-		// We can have multiple configurations of avionics, for example: 
-		//    boosters can have a high EC usage, but lower cost and mass
-		//    probeCores can have a higher mass, but be very power efficient (and can even be turned off)
 		[KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Configuration"), UI_ChooseOption(scene = UI_Scene.Editor)]
 		public string avionicsConfigName;
 		private string oldAvionicsConfigName;
@@ -35,28 +30,40 @@ namespace RP0.ProceduralAvionics
 		public string avionicsTechLevel;
         private string oldAvionicsTechLevel;
 
-		[KSPField(isPersistant = true)]
-		public float maxDensityOfAvionics;
+        [KSPField(isPersistant = true)]
+        public float avionicsDensity;
 
-		[KSPField(isPersistant = true)]
-		public float tonnageToMassRatio;
+        [KSPField(isPersistant = true)]
+        public float massExponent;
 
-		[KSPField(isPersistant = true)]
-		public float costPerControlledTon;
+        [KSPField(isPersistant = true)]
+        public float massConstant;
 
-		[KSPField(isPersistant = true)]
-		public float enabledkWPerTon;
+        [KSPField(isPersistant = true)]
+        public float massFactor;
 
-		[KSPField(isPersistant = true)]
-		public float disabledkWPerTon;
+        [KSPField(isPersistant = true)]
+        public float costExponent;
 
-		[KSPField(isPersistant = true)]
-		public float minimumTonnage;
+        [KSPField(isPersistant = true)]
+        public float costConstant;
 
-		[KSPField(isPersistant = true)]
-		public float maximumTonnage;
+        [KSPField(isPersistant = true)]
+        public float costFactor;
 
-		[KSPField(isPersistant = true)]
+        [KSPField(isPersistant = true)]
+        public float powerExponent;
+
+        [KSPField(isPersistant = true)]
+        public float powerConstant;
+
+        [KSPField(isPersistant = true)]
+        public float powerFactor;
+
+        [KSPField(isPersistant = true)]
+        public float disabledPowerFactor;
+
+        [KSPField(isPersistant = true)]
 		public int SASServiceLevel = -1;
 
 		[KSPField(isPersistant = true)]
@@ -74,7 +81,6 @@ namespace RP0.ProceduralAvionics
 		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Cost")]
 		public string costDisplay;
 
-		// The currently selected avionics config
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig {
 			get { return currentProceduralAvionicsConfig; }
 		}
@@ -87,11 +93,6 @@ namespace RP0.ProceduralAvionics
 				}
 				return null;
 			}
-		}
-
-		private float GetCurrentDensity()
-		{
-			return maxDensityOfAvionics;
 		}
 
 		protected override float GetInternalMassLimit()
@@ -110,55 +111,57 @@ namespace RP0.ProceduralAvionics
             var max = GetMaximumControllableTonnage();
             if (max == 0)
             {
-                //Sounds like we're not yet initiaziled, let's not change anything
-                //Log("no max");
+                Log("NO MAX");
                 return;
             }
             var min = GetMinimumControllableTonnage();
 
             bool changed = false;
-            //if (max < min)
-            //{
-            //    if (proceduralMassLimit > 0)
-            //    {
-            //        proceduralMassLimit = 0;
-            //        changed = true;
-            //    }
-            //}
-            //else
-            //{
-                if (proceduralMassLimit > max * FLOAT_TOLERANCE)
-                {
-                    Log("Resetting procedural mass limit to max of ", max, ", was ", proceduralMassLimit);
-                    proceduralMassLimit = max;
-                    changed = true;
-                }
-                if (proceduralMassLimit * FLOAT_TOLERANCE < min)
-                {
-                    Log("Resetting procedural mass limit to min of ", min, ", was ", proceduralMassLimit);
-                    proceduralMassLimit = min;
-                    changed = true;
-                }
-            //}
+            if (proceduralMassLimit > max * FLOAT_TOLERANCE)
+            {
+                Log("Resetting procedural mass limit to max of ", max, ", was ", proceduralMassLimit);
+                proceduralMassLimit = max;
+                changed = true;
+            }
+            if (proceduralMassLimit * FLOAT_TOLERANCE < min)
+            {
+                Log("Resetting procedural mass limit to min of ", min, ", was ", proceduralMassLimit);
+                proceduralMassLimit = min;
+                changed = true;
+            }
             if (changed)
             {
                 RefreshPartWindow();
             }
         }
 
-		protected override float GetEnabledkW()
-		{
-			return enabledkWPerTon * GetInternalMassLimit();
-		}
+        private float GetControllableMass(float avionicsMass)
+        {
+            var mass = GetInversePolynomial(avionicsMass * 1000, massExponent, massConstant, massFactor);
+            Log($"Controllable mass: {mass}, avionicsMass: {avionicsMass}, Exp: {massExponent}, C: {massConstant}, Fac: {massFactor}");
+            return mass;
+        }
 
-		protected override float GetDisabledkW()
-		{
-			return disabledkWPerTon * GetInternalMassLimit();
-		}
+        private float GetAvionicsMass()
+        {
+            var mass = GetPolynomial(GetInternalMassLimit(), massExponent, massConstant, massFactor) / 1000f;
+            Log($"Internal mass limit: {GetInternalMassLimit()}, Avionics mass: {mass}");
+            return mass;
+        }
 
-		protected override bool GetToggleable()
+        private float GetAvionicsCost() => GetPolynomial(GetInternalMassLimit(), costExponent, costConstant, costFactor);
+
+        protected override float GetEnabledkW() => GetPolynomial(GetInternalMassLimit(), powerExponent, powerConstant, powerFactor) / 1000f;
+
+        private static float GetPolynomial(float value, float exponent, float constant, float factor) => (Mathf.Pow(value, exponent) + constant) * factor;
+
+        private static float GetInversePolynomial(float value, float exponent, float constant, float factor) => Mathf.Pow(value / factor - constant, 1 / exponent);
+
+        protected override float GetDisabledkW() => GetEnabledkW() * disabledPowerFactor;
+
+        protected override bool GetToggleable()
 		{
-			return disabledkWPerTon > 0;
+			return disabledPowerFactor > 0;
 		}
 
 		protected override string GetTonnageString()
@@ -224,8 +227,8 @@ namespace RP0.ProceduralAvionics
 		private void BindUIChangeCallbacks()
 		{
 			if (!callbacksBound) {
-				Fields["proceduralMassLimit"].uiControlEditor.onFieldChanged += MassLimitChanged;
-				Fields["avionicsConfigName"].uiControlEditor.onFieldChanged += AvionicsConfigChanged;
+				Fields[nameof(proceduralMassLimit)].uiControlEditor.onFieldChanged += MassLimitChanged;
+				Fields[nameof(avionicsConfigName)].uiControlEditor.onFieldChanged += AvionicsConfigChanged;
 				callbacksBound = true;
 			}
 		}
@@ -270,7 +273,7 @@ namespace RP0.ProceduralAvionics
 		public void SetMinVolume(bool forceUpdate = false)
 		{
 			Log("Setting min volume for proceduralMassLimit of ", proceduralMassLimit);
-			float minVolume = proceduralMassLimit / (tonnageToMassRatio * maxDensityOfAvionics) * FLOAT_TOLERANCE2;
+			float minVolume = GetAvionicsMass() / avionicsDensity * FLOAT_TOLERANCE;
 			if (float.IsNaN(minVolume)) {
 				return;
 			}
@@ -279,7 +282,7 @@ namespace RP0.ProceduralAvionics
 
 			PartModule ppModule = null;
 			Type ppModuleType = null;
-			foreach (PartModule module in part.Modules) {
+			foreach (var module in part.Modules) {
 				var moduleType = module.GetType();
 				if (moduleType.FullName == "ProceduralParts.ProceduralPart") {
 					ppModule = module;
@@ -290,7 +293,7 @@ namespace RP0.ProceduralAvionics
 			}
 			Log("minVolume: ", minVolume);
 			Log("Comparing against cached volume of ", cachedVolume);
-			if (forceUpdate || minVolume > cachedVolume) { // adding a buffer for floating point errors
+			if (forceUpdate || minVolume > cachedVolume) {
 				if (!forceUpdate) {
 					Log("cachedVolume too low: ", cachedVolume);
 				}
@@ -304,7 +307,7 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		public void FixedUpdate()
+        public void FixedUpdate()
 		{
 			if (!HighLogic.LoadedSceneIsEditor) {
 				SetSASServiceLevel();
@@ -338,70 +341,45 @@ namespace RP0.ProceduralAvionics
 		#region part attribute calculations
 		private float CalculateNewMass()
 		{
-			if (HighLogic.LoadedSceneIsFlight || maxDensityOfAvionics > 0) {
-				return DoMassCalculation();
-			}
+			if (HighLogic.LoadedSceneIsFlight || avionicsDensity > 0) {
+                return GetAvionicsMass();
+            }
 			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
                 Log("Not yet initialized but getmass called!?");
                 SetInternalKSPFields();
-				return DoMassCalculation();
-			}
+				return GetAvionicsMass();
+            }
 			else {
 				return 0;
 			}
-		}
-
-		private float DoMassCalculation()
-		{
-			float controllablePercentage = GetControllableUtilizationPercentage();
-			float massPercentage = (-1 * controllablePercentage * controllablePercentage) + (2 * controllablePercentage);
-			float result = massPercentage * cachedVolume * GetCurrentDensity();
-			return result;
 		}
 
 		private float CalculateCost()
 		{
 			if (HighLogic.LoadedSceneIsFlight) {
-				return DoCostCalculation();
+				return GetAvionicsCost();
 			}
 			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
-				costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
-				return DoCostCalculation();
+                SetInternalKSPFields();
+				return GetAvionicsCost();
 			}
 			else {
 				return 0;
 			}
 		}
 
-		private float DoCostCalculation()
-		{
-			float controllablePercentage = GetControllableUtilizationPercentage();
-			float costPercentage = controllablePercentage * controllablePercentage;
-			return costPerControlledTon * GetInternalMassLimit();
-		}
-
 		#endregion
-
-		#region private utiliy functions
-		private float GetControllableUtilizationPercentage()
-		{
-			return GetInternalMassLimit() / (cachedVolume * maxDensityOfAvionics * tonnageToMassRatio);
-		}
 
 		private float GetMaximumControllableTonnage()
 		{
-			var maxAvionicsMass = cachedVolume * maxDensityOfAvionics;
-            //Log("max for volume before trunc: ", maxAvionicsMass * tonnageToMassRatio * 2);
-            var maxForVolume = FloorToSliderIncrement(maxAvionicsMass * tonnageToMassRatio);
-			return Math.Min(maxForVolume, maximumTonnage);
+            Log($"Max avionics mass: {MaxAvionicsMass}");
+            return FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
 		}
 
         private float GetMinimumControllableTonnage()
 		{
-			if (CurrentProceduralAvionicsTechNode != null) {
-				return CurrentProceduralAvionicsTechNode.minimumTonnage;
-			}
-			return minimumTonnage;
+            var constantMass = massFactor * massConstant;
+            return 0;
 		}
 
 		private void ResetTo100()
@@ -410,8 +388,7 @@ namespace RP0.ProceduralAvionics
             {
                 return;
             }
-            proceduralMassLimit = cachedVolume * maxDensityOfAvionics * tonnageToMassRatio;
-			Log("100% utilization calculated as ", proceduralMassLimit, " from ", cachedVolume, " ", maxDensityOfAvionics, " ", tonnageToMassRatio);
+            proceduralMassLimit = GetControllableMass(MaxAvionicsMass);
 		}
 
 		private void UpdateMaxValues()
@@ -419,22 +396,18 @@ namespace RP0.ProceduralAvionics
 			// update mass limit value slider
 
 			if (proceduralMassLimitEdit == null) {
-				proceduralMassLimitEdit = (UI_FloatEdit)Fields["proceduralMassLimit"].uiControlEditor;
+				proceduralMassLimitEdit = (UI_FloatEdit)Fields[nameof(proceduralMassLimit)].uiControlEditor;
 			}
 
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
             {
-
-                tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
                 proceduralMassLimitEdit.maxValue = CeilingToSmallIncrement(GetMaximumControllableTonnage());
                 proceduralMassLimitEdit.minValue = 0;
 
-                var procMassDelta = proceduralMassLimitEdit.maxValue - proceduralMassLimitEdit.minValue;
-
-                proceduralMassLimitEdit.incrementSmall = GetSmallIncrement(procMassDelta);
+                proceduralMassLimitEdit.incrementSmall = GetSmallIncrement(proceduralMassLimitEdit.maxValue);
                 proceduralMassLimitEdit.incrementLarge = proceduralMassLimitEdit.incrementSmall * 10;
-                proceduralMassLimitEdit.incrementSlide = GetSliderIncrement(procMassDelta);
-                proceduralMassLimitEdit.sigFigs = GetSigFigs(procMassDelta);
+                proceduralMassLimitEdit.incrementSlide = GetSliderIncrement(proceduralMassLimitEdit.maxValue);
+                proceduralMassLimitEdit.sigFigs = GetSigFigs(proceduralMassLimitEdit.maxValue);
             }
             else
             {
@@ -453,13 +426,13 @@ namespace RP0.ProceduralAvionics
         private float CeilingToSmallIncrement(float value)
         {
             var smallIncrement = GetSmallIncrement(value);
-            return (float) Math.Ceiling(value / smallIncrement) * smallIncrement;
+            return Mathf.Ceil(value / smallIncrement) * smallIncrement;
         }
 
         private float FloorToSliderIncrement(float value)
         {
             float sliderIncrement = GetSliderIncrement(value);
-            return (float) Math.Floor(value / sliderIncrement) * sliderIncrement;
+            return Mathf.Floor(value / sliderIncrement) * sliderIncrement;
         }
 
         private float GetSliderIncrement(float value)
@@ -474,16 +447,16 @@ namespace RP0.ProceduralAvionics
             return (float) Math.Pow(10, exponent);
         }
 
-        private double GetSmallIncrementExponent(float procMassDelta)
+        private double GetSmallIncrementExponent(float maxValue)
         {
-            var log = Math.Log(procMassDelta, 10);
+            var log = Math.Log(maxValue, 10);
             return Math.Max(Math.Floor(log - 1.3), -2);
         }
 
         private void UpdateConfigSliders()
 		{
 			Log("Updating Config Slider");
-			BaseField avionicsConfigField = Fields["avionicsConfigName"];
+			BaseField avionicsConfigField = Fields[nameof(avionicsConfigName)];
 			avionicsConfigField.guiActiveEditor = true;
 			UI_ChooseOption range = (UI_ChooseOption)avionicsConfigField.uiControlEditor;
 			range.options = ProceduralAvionicsTechManager.GetPurchasedConfigs().ToArray();
@@ -531,14 +504,17 @@ namespace RP0.ProceduralAvionics
             Log("Setting internal KSP fields");
             Log("avionics tech level: ", avionicsTechLevel);
 
-            tonnageToMassRatio = CurrentProceduralAvionicsTechNode.tonnageToMassRatio;
-            maxDensityOfAvionics = CurrentProceduralAvionicsTechNode.standardAvionicsDensity;
-            costPerControlledTon = CurrentProceduralAvionicsTechNode.costPerControlledTon;
-            enabledkWPerTon = CurrentProceduralAvionicsTechNode.enabledkWPerTon;
-            disabledkWPerTon = CurrentProceduralAvionicsTechNode.disabledkWPerTon;
-
-            minimumTonnage = CurrentProceduralAvionicsTechNode.minimumTonnage;
-            maximumTonnage = CurrentProceduralAvionicsTechNode.maximumTonnage;
+            massExponent = CurrentProceduralAvionicsTechNode.massExponent;
+            massConstant = CurrentProceduralAvionicsTechNode.massConstant;
+            massFactor = CurrentProceduralAvionicsTechNode.massFactor;
+            costExponent = CurrentProceduralAvionicsTechNode.costExponent;
+            costConstant = CurrentProceduralAvionicsTechNode.costConstant;
+            costFactor = CurrentProceduralAvionicsTechNode.costFactor;
+            powerExponent = CurrentProceduralAvionicsTechNode.powerExponent;
+            powerConstant = CurrentProceduralAvionicsTechNode.powerConstant;
+            powerFactor = CurrentProceduralAvionicsTechNode.powerFactor;
+            disabledPowerFactor = CurrentProceduralAvionicsTechNode.disabledPowerFactor;
+            avionicsDensity = CurrentProceduralAvionicsTechNode.avionicsDensity;
 
             SASServiceLevel = CurrentProceduralAvionicsTechNode.SASServiceLevel;
             hasScienceContainer = CurrentProceduralAvionicsTechNode.hasScienceContainer;
@@ -555,10 +531,16 @@ namespace RP0.ProceduralAvionics
             RefreshPowerDisplay();
         }
 
+        private float GetControllableUtilizationPercentage()
+        {
+            return GetAvionicsMass() / MaxAvionicsMass;
+        }
+
+        private float MaxAvionicsMass => cachedVolume * avionicsDensity;
+
         private void RefreshPowerDisplay()
         {
             StringBuilder powerConsumptionBuilder = StringBuilderCache.Acquire();
-            Log("Getting power reqs: total tons", GetInternalMassLimit(), " ", enabledkWPerTon, " ", disabledkWPerTon);
             double kW = GetEnabledkW();
             if (kW >= 0.1)
             {
@@ -631,7 +613,7 @@ namespace RP0.ProceduralAvionics
 			float baseCost = GetBaseCost();
 			float baseMass = GetBaseMass();
 			massDisplay = MathUtils.FormatMass(baseMass + CalculateNewMass());
-			costDisplay = (baseCost + CalculateCost()).ToString();
+			costDisplay = Mathf.Round(baseCost + CalculateCost()).ToString();
 		}
 
 		private bool HideField(string moduleName, string fieldName)
@@ -686,8 +668,6 @@ namespace RP0.ProceduralAvionics
 			return 0;
 		}
 
-		#endregion
-
 		#region Config GUI
 		[KSPField(isPersistant = false, guiActiveEditor = true, guiActive = false, guiName = "Configure"),
 		UI_Toggle(enabledText = "Hide GUI", disabledText = "Show GUI"),
@@ -722,7 +702,6 @@ namespace RP0.ProceduralAvionics
 				}
 				if (techNode == CurrentProceduralAvionicsTechNode) {
 					GUILayout.Label("Current Config: " + techNode.name);
-					GUILayout.Label("Supported Tonnage: " + BuildTonnageString(techNode));
 					GUILayout.Label("SAS Level: " + techNode.SASServiceLevel.ToString());
 					GUILayout.Label("Storage Container: " + (techNode.hasScienceContainer ? "Yes" : "No"));
 				}
@@ -773,37 +752,8 @@ namespace RP0.ProceduralAvionics
 		{
 			StringBuilder sbuilder = StringBuilderCache.Acquire();
 			sbuilder.Append(techNode.name);
-			if (techNode.maximumTonnage != float.MaxValue || techNode.minimumTonnage != 0) {
-				sbuilder.Append(" [");
-				sbuilder.Append(BuildTonnageString(techNode));
-				sbuilder.Append("]");
-			}
 			sbuilder.Append(BuildSasAndScienceString(techNode));
 
-			return sbuilder.ToStringAndRelease();
-		}
-
-		private static string BuildTonnageString(ProceduralAvionicsTechNode techNode)
-		{
-			StringBuilder sbuilder = StringBuilderCache.Acquire();
-			if (techNode.minimumTonnage != 0) {
-				sbuilder.Append(String.Format("{0:N}", techNode.minimumTonnage));
-				if (techNode.maximumTonnage != float.MaxValue) {
-					sbuilder.Append("-");
-				}
-				else {
-					sbuilder.Append("+");
-				}
-			}
-			if (techNode.maximumTonnage != float.MaxValue) {
-				sbuilder.Append(String.Format("{0:N}", techNode.maximumTonnage));
-			}
-			if (sbuilder.Length == 0) {
-				return "Unlimited";
-			}
-			else {
-				sbuilder.Append("T");
-			}
 			return sbuilder.ToStringAndRelease();
 		}
 

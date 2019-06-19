@@ -238,6 +238,7 @@ namespace RP0.ProceduralAvionics
 			Log("Mass limit changed");
             ClampControllableMass();
             SetMinVolume();
+            SendRemainingVolume();
             RefreshDisplays();
 		}
 
@@ -264,6 +265,7 @@ namespace RP0.ProceduralAvionics
             ClampControllableMass();
             SetMinVolume(true);
             UpdateMaxValues();
+            SendRemainingVolume();
             OnConfigurationUpdated();
             RefreshDisplays();
 		}
@@ -479,27 +481,49 @@ namespace RP0.ProceduralAvionics
 				cachedEventData = eventData;
 				return;
 			}
-			try {
-				float volume = (float)eventData.Get<double>("newTotalVolume");
-				Log("volume changed to ", volume);
-				if (volume * FLOAT_TOLERANCE < cachedMinVolume && cachedMinVolume != float.MaxValue) {
-					Log("volume of ", volume, " is less than expected min volume of ", cachedMinVolume, " expecting another update");
-					RefreshPartWindow();
-					//assuming the part will be resized
-					return;
-				}
-				Log("setting cachedVolume to ", volume);
-				cachedVolume = volume;
-                //Log("cached total volume set from eventData: ", cachedVolume);
+			try
+            {
+                float volume = (float)eventData.Get<double>("newTotalVolume");
+                Log("volume changed to ", volume);
+                if (volume * FLOAT_TOLERANCE < cachedMinVolume && cachedMinVolume != float.MaxValue)
+                {
+                    Log("volume of ", volume, " is less than expected min volume of ", cachedMinVolume, " expecting another update");
+                    RefreshPartWindow();
+                    //assuming the part will be resized
+                    return;
+                }
+                Log("setting cachedVolume to ", volume);
+                cachedVolume = volume;
+                SendRemainingVolume();
                 UpdateMaxValues();
                 RefreshDisplays();
             }
-			catch (Exception ex) {
+            catch (Exception ex) {
 				Log("error getting changed volume: ", ex);
 			}
 		}
 
-		private void SetInternalKSPFields()
+        private void SendRemainingVolume()
+        {
+            if(cachedVolume == float.MaxValue)
+            {
+                return;
+            }
+            Log($"Sending remaining volume: {cachedVolume - GetAvionicsMass() / avionicsDensity}");
+            Events[nameof(OnPartVolumeChanged)].active = false;
+            SendVolumeChangedEvent(cachedVolume - GetAvionicsMass() / avionicsDensity);
+            Events[nameof(OnPartVolumeChanged)].active = true;
+        }
+
+        public void SendVolumeChangedEvent(double newVolume)
+        {
+            var data = new BaseEventDetails(BaseEventDetails.Sender.USER);
+            data.Set<string>("volName", "Tankage");
+            data.Set<double>("newTotalVolume", newVolume);
+            part.SendEvent(nameof(OnPartVolumeChanged), data, 0);
+        }
+
+        private void SetInternalKSPFields()
         {
             Log("Setting internal KSP fields");
             Log("avionics tech level: ", avionicsTechLevel);

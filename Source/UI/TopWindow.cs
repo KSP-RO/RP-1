@@ -15,6 +15,7 @@ namespace RP0
         private readonly ToolingGUI _toolUI = new ToolingGUI();
         private readonly Crew.FSGUI _fsUI = new Crew.FSGUI();
         private readonly AvionicsGUI _avUI = new AvionicsGUI();
+        private readonly ContractGUI _contractUI = new ContractGUI();
         private readonly CareerLogGUI _logUI = new CareerLogGUI();
 
         public TopWindow()
@@ -41,6 +42,7 @@ namespace RP0
             _toolUI.Start();
             _fsUI.Start();
             _avUI.Start();
+            _contractUI.Start();
             _logUI.Start();
         }
 
@@ -65,6 +67,8 @@ namespace RP0
                 SwitchTabTo(UITab.Courses);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
                 SwitchTabTo(UITab.Avionics);
+            if (ShouldShowTab(UITab.Contracts) && RenderToggleButton("Contracts", _currentTab == UITab.Contracts))
+                SwitchTabTo(UITab.Contracts);
             if (ShouldShowTab(UITab.CareerLog) && RenderToggleButton("Career Log", _currentTab == UITab.CareerLog))
                 SwitchTabTo(UITab.CareerLog);
             GUILayout.EndHorizontal();
@@ -116,6 +120,9 @@ namespace RP0
                             break;
                         case UITab.Avionics:
                             _avUI.RenderAvionicsTab();
+                            break;
+                        case UITab.Contracts:
+                            _contractUI.RenderContractsTab();
                             break;
                         case UITab.CareerLog:
                             _logUI.RenderTab();

@@ -22,6 +22,11 @@ namespace RP0
             }
         }
 
+        protected void Start()
+        {
+            tw.Start();
+        }
+
         private void ShowWindow()
         {
             guiEnabled = true;

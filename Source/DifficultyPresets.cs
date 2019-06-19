@@ -68,6 +68,10 @@ namespace RP0
         [GameParameters.CustomParameterUI("Procedural avionics window auto opens", toolTip = "When enabled, the Procedural Avionics configuration window is automatically opened when you right click on a part with Proc Avionics.")]
         public bool IsProcAvionicsAutoShown = true;
 
+        // The following values are persisted to the savegame but are not shown in the difficulty settings UI
+        public int CommsPayload = ContractGUI.MinPayload;
+        public int WeatherPayload = ContractGUI.MinPayload;
+
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;
         public bool AvionicsWindow_ShowInfo3 = true;

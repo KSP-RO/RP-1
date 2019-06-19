@@ -25,6 +25,7 @@ namespace RP0
         protected void Start()
         {
             tw = new TopWindow();
+            tw.Start();
         }
 
         private void ShowWindow()

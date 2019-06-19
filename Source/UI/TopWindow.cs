@@ -1,17 +1,16 @@
-﻿using System;
-using UnityEngine;
-using KSP.UI.Screens;
+﻿using UnityEngine;
 
 namespace RP0
 {
     public class TopWindow : UIBase
     {
-        // GUI
         static Rect windowPos = new Rect(500, 240, 0, 0);
+
         private MaintenanceGUI maintUI = new MaintenanceGUI();
         private ToolingGUI toolUI = new ToolingGUI();
         private Crew.FSGUI fsUI = new RP0.Crew.FSGUI();
         private AvionicsGUI avUI = new AvionicsGUI();
+        private ContractGUI contractUI = new ContractGUI();
         private static tabs currentTab;
 
         public TopWindow()
@@ -23,6 +22,15 @@ namespace RP0
         public void OnGUI()
         {
             windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1");
+        }
+
+        protected override void OnStart()
+        {
+            maintUI.Start();
+            toolUI.Start();
+            fsUI.Start();
+            avUI.Start();
+            contractUI.Start();
         }
 
         public static void SwitchTabTo(tabs newTab)
@@ -44,6 +52,8 @@ namespace RP0
                     currentTab = tabs.Courses;
                 if (showTab(tabs.Avionics) && toggleButton("Avionics", currentTab == tabs.Avionics))
                     currentTab = tabs.Avionics;
+                if (showTab(tabs.Contracts) && toggleButton("Contracts", currentTab == tabs.Contracts))
+                    currentTab = tabs.Contracts;
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -93,6 +103,9 @@ namespace RP0
                             break;
                         case tabs.Avionics:
                             avUI.avionicsTab();
+                            break;
+                        case tabs.Contracts:
+                            contractUI.ContractTab();
                             break;
                         default: // can't happen
                             break;

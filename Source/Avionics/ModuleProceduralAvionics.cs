@@ -75,17 +75,17 @@ namespace RP0.ProceduralAvionics
 		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Power Requirements")]
 		public string powerRequirementsDisplay;
 
-		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Mass")]
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Avionics Mass")]
 		public string massDisplay;
 
-		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Cost")]
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Avionics Cost")]
 		public string costDisplay;
 
 		public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig {
 			get { return currentProceduralAvionicsConfig; }
 		}
 
-		public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode {
+        public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode {
 			get {
 				if (CurrentProceduralAvionicsConfig != null && avionicsTechLevel != null && CurrentProceduralAvionicsConfig.TechNodes.ContainsKey(avionicsTechLevel))
 				{
@@ -194,7 +194,6 @@ namespace RP0.ProceduralAvionics
 		public new void Start()
 		{
 			Log("Start called");
-			started = true;
 
 			string config = ProceduralAvionicsTechManager.GetPurchasedConfigs()[0];
 			Log("Default config to use: ", config);
@@ -220,7 +219,8 @@ namespace RP0.ProceduralAvionics
 			}
 
 			base.Start();
-			Log("Start finished");
+            started = true;
+            Log("Start finished");
 		}
 
 		private bool callbacksBound = false;
@@ -299,7 +299,6 @@ namespace RP0.ProceduralAvionics
 				if (!forceUpdate) {
 					Log("cachedVolume too low: ", cachedVolume);
 				}
-				//here we'll need to use reflection to update our part to have a min volume
 				if (ppModule != null) {
 					var reflectedShape = ppModuleType.GetProperty("CurrentShape").GetValue(ppModule, null);
 					reflectedShape.GetType().GetMethod("ForceNextUpdate").Invoke(reflectedShape, new object[] { });
@@ -319,7 +318,7 @@ namespace RP0.ProceduralAvionics
 
 		public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)
 		{
-			return CalculateNewMass();
+			return GetMassSafely();
 		}
 
 		public ModifierChangeWhen GetModuleMassChangeWhen()
@@ -329,7 +328,7 @@ namespace RP0.ProceduralAvionics
 
 		public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
 		{
-			return CalculateCost();
+			return GetCostSafely();
 		}
 
 		public ModifierChangeWhen GetModuleCostChangeWhen()
@@ -341,7 +340,7 @@ namespace RP0.ProceduralAvionics
 
 
 		#region part attribute calculations
-		private float CalculateNewMass()
+		private float GetMassSafely()
 		{
 			if (HighLogic.LoadedSceneIsFlight || avionicsDensity > 0) {
                 return GetAvionicsMass();
@@ -356,7 +355,7 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		private float CalculateCost()
+		private float GetCostSafely()
 		{
 			if (HighLogic.LoadedSceneIsFlight) {
 				return GetAvionicsCost();
@@ -395,8 +394,6 @@ namespace RP0.ProceduralAvionics
 
 		private void UpdateMaxValues()
 		{
-			// update mass limit value slider
-
 			if (controllableMassEdit == null) {
 				controllableMassEdit = (UI_FloatEdit)Fields[nameof(controllableMass)].uiControlEditor;
 			}
@@ -624,76 +621,14 @@ namespace RP0.ProceduralAvionics
 			scienceContainerFiltered = true;
 		}
 
-		bool ppFieldsHidden = false;
-		string TCSmoduleName = "TankContentSwitcher";
-		string PPModuleName = "ProceduralPart";
-
-		private void RefreshCostAndMassDisplays()
+        private void RefreshCostAndMassDisplays()
 		{
-			if (!ppFieldsHidden) {
-				ppFieldsHidden = HideField(TCSmoduleName, "massDisplay") && HideField(TCSmoduleName, "volumeDisplay");
-			}
-
-			float baseCost = GetBaseCost();
-			float baseMass = GetBaseMass();
-			massDisplay = MathUtils.FormatMass(baseMass + CalculateNewMass());
-			costDisplay = Mathf.Round(baseCost + CalculateCost()).ToString();
+			massDisplay = MathUtils.FormatMass(GetMassSafely());
+			costDisplay = Mathf.Round(GetCostSafely()).ToString();
 		}
 
-		private bool HideField(string moduleName, string fieldName)
-		{
-			var field = GetBaseField(moduleName, fieldName);
-			if (field == null) {
-				Log("Field ", fieldName, " not found");
-				return false;
-			}
-			field.guiActive = false;
-			field.guiActiveEditor = false;
-			return true;
-		}
-
-		private BaseField GetBaseField(string moduleName, string fieldName)
-		{
-			PartModule module = this;
-			if (!String.IsNullOrEmpty(moduleName)) {
-				module = part.Modules[moduleName];
-				if (module == null) {
-					Log("Module ", moduleName, " not found");
-				}
-			}
-			return module.Fields[fieldName];
-		}
-
-		// Base cost comes from ProceduralPart
-		private float GetBaseCost()
-		{
-			var ppModule = part.Modules[PPModuleName];
-			if (ppModule != null) {
-				var ppMassModule = (IPartCostModifier)ppModule;
-				return ppMassModule.GetModuleCost(0, ModifierStagingSituation.CURRENT);
-			}
-			else {
-				Log("Module ", PPModuleName, " not found");
-			}
-			return 0;
-		}
-
-		// Base mass comes from TankContentSwitcher
-		private float GetBaseMass()
-		{
-			var tcsModule = part.Modules[TCSmoduleName];
-			if (tcsModule != null) {
-				var tcsMassModule = (IPartMassModifier)tcsModule;
-				return tcsMassModule.GetModuleMass(0, ModifierStagingSituation.CURRENT);
-			}
-			else {
-				Log("Module ", TCSmoduleName, " not found");
-			}
-			return 0;
-		}
-
-		#region Config GUI
-		[KSPField(isPersistant = false, guiActiveEditor = true, guiActive = false, guiName = "Configure"),
+        #region Config GUI
+        [KSPField(isPersistant = false, guiActiveEditor = true, guiActive = false, guiName = "Configure"),
 		UI_Toggle(enabledText = "Hide GUI", disabledText = "Show GUI"),
 		NonSerialized]
 		public bool showGUI;
@@ -760,7 +695,7 @@ namespace RP0.ProceduralAvionics
                     }
 				}
 			}
-			GUILayout.Label(" "); // blank space
+			GUILayout.Label(" ");
 			if (GUILayout.Button("Reset to 100%")) {
 				ResetTo100();
 				RefreshPartWindow();
@@ -804,7 +739,7 @@ namespace RP0.ProceduralAvionics
 
 		#endregion
 
-		private void RefreshPartWindow() //AGX: Refresh right-click part window to show/hide Groups slider
+		private void RefreshPartWindow()
 		{
 			UIPartActionWindow[] partWins = FindObjectsOfType<UIPartActionWindow>();
 			foreach (UIPartActionWindow partWin in partWins) {

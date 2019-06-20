@@ -4,7 +4,8 @@ using System.Text;
 using KSP;
 using UnityEngine;
 using KSP.UI;
-
+using System.Linq;
+using System.Reflection;
 
 namespace RP0
 {
@@ -112,6 +113,30 @@ namespace RP0
 
         ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
+        // For locking MJ.
+        Type mechJebCore;
+        PropertyInfo mjDeactivateControl;
+
+        ControlLocker()
+        {
+            var mechJebAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2");
+            if (mechJebAssembly != null)
+            {
+                Debug.LogFormat("[RP-0 Avionics] MJ assembly found");
+
+                mechJebCore = Type.GetType("MuMech.MechJebCore, MechJeb2");
+                if (mechJebCore != null)
+                {
+                    mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
+                    Debug.LogFormat("[RP-0 Avionics] MJ present, mjDeactivateControl = {0}", mjDeactivateControl);
+                }
+            }
+            else
+            {
+                Debug.LogFormat("[RP-0 Avionics] No MJ assembly found");
+            }
+        }
+
         public bool ShouldLock()
         {
             if (vessel != FlightGlobals.ActiveVessel)
@@ -141,6 +166,17 @@ namespace RP0
                 InputLockManager.RemoveControlLock(lockID);
                 return;
             }
+
+            PartModule mjModule = null;
+            foreach (PartModule pm in FlightGlobals.ActiveVessel.rootPart.Modules)
+            {
+                if (pm.moduleName == "MechJebCore")
+                {
+                    mjModule = pm;
+                    break;
+                }
+            }
+
             bool doLock = ShouldLock();
             if (doLock != wasLocked)
             {
@@ -160,6 +196,9 @@ namespace RP0
                 FlightLogger.fetch.LogEvent(message.message);
                 wasLocked = doLock;
             }
+
+            // Update MJ every tick, to make sure it gets correct state after separation / docking.
+            mjDeactivateControl.SetValue(mjModule, doLock, index : null);
         }
         public void OnDestroy()
         {

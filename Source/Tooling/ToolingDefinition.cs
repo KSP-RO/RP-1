@@ -9,7 +9,7 @@ namespace RP0
         public string name;
 
         /// <summary>
-        /// Text to show on the PAW action - "Tool [toolingType]"
+        /// Text to show on the PAW action - for example "Tool Tank"
         /// </summary>
         [Persistent]
         public string toolingName;

@@ -69,7 +69,7 @@ namespace RP0.ProceduralAvionics
 		[KSPField(isPersistant = true)]
 		public bool hasScienceContainer = false;
 
-		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Percent Utilization")]
+		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Avionics Utilization")]
 		public string utilizationDisplay;
 
 		[KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Power Requirements")]
@@ -108,7 +108,7 @@ namespace RP0.ProceduralAvionics
 
         private void ClampControllableMass()
         {
-            var max = GetMaximumControllableTonnage();
+            var max = GetMaximumControllableMass();
             if (max == 0)
             {
                 Log("NO MAX");
@@ -264,7 +264,7 @@ namespace RP0.ProceduralAvionics
             ResetTo100();
             ClampControllableMass();
             SetMinVolume(true);
-            UpdateMaxValues();
+            UpdateControllableMassSlider();
             SendRemainingVolume();
             OnConfigurationUpdated();
             RefreshDisplays();
@@ -371,7 +371,7 @@ namespace RP0.ProceduralAvionics
 
 		#endregion
 
-		private float GetMaximumControllableTonnage()
+		private float GetMaximumControllableMass()
 		{
             Log($"Max avionics mass: {MaxAvionicsMass}");
             return FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
@@ -389,10 +389,10 @@ namespace RP0.ProceduralAvionics
             {
                 return;
             }
-            controllableMass = GetControllableMass(MaxAvionicsMass);
+            controllableMass = GetMaximumControllableMass();
 		}
 
-		private void UpdateMaxValues()
+		private void UpdateControllableMassSlider()
 		{
 			if (controllableMassEdit == null) {
 				controllableMassEdit = (UI_FloatEdit)Fields[nameof(controllableMass)].uiControlEditor;
@@ -400,19 +400,18 @@ namespace RP0.ProceduralAvionics
 
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
             {
-                controllableMassEdit.maxValue = CeilingToSmallIncrement(GetMaximumControllableTonnage());
-                controllableMassEdit.minValue = 0;
+                controllableMassEdit.maxValue = CeilingToSmallIncrement(GetMaximumControllableMass());
 
                 controllableMassEdit.incrementSmall = GetSmallIncrement(controllableMassEdit.maxValue);
                 controllableMassEdit.incrementLarge = controllableMassEdit.incrementSmall * 10;
                 controllableMassEdit.incrementSlide = GetSliderIncrement(controllableMassEdit.maxValue);
                 controllableMassEdit.sigFigs = GetSigFigs(controllableMassEdit.maxValue);
+
+                controllableMassEdit.minValue = controllableMassEdit.incrementSlide;
             }
             else
             {
                 Log("Cannot update max value yet, CurrentProceduralAvionicsConfig is null");
-                controllableMassEdit.maxValue = float.MaxValue;
-                controllableMassEdit.minValue = 0;
             }
 		}
 
@@ -492,7 +491,7 @@ namespace RP0.ProceduralAvionics
                 Log("setting cachedVolume to ", volume);
                 cachedVolume = volume;
                 SendRemainingVolume();
-                UpdateMaxValues();
+                UpdateControllableMassSlider();
                 RefreshDisplays();
             }
             catch (Exception ex) {
@@ -588,7 +587,6 @@ namespace RP0.ProceduralAvionics
             powerRequirementsDisplay = powerConsumptionBuilder.ToStringAndRelease();
         }
 
-        // creating a field for this so we don't need to look it up every update
         private ModuleSAS sasModule = null;
 		private void SetSASServiceLevel()
 		{

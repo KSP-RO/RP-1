@@ -114,8 +114,6 @@ namespace RP0
         ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
         // For locking MJ.
-        Type mechJebCore = null;
-        Type mechJebVesselExtensions = null;
         MethodInfo getMasterMechJeb = null;
         PropertyInfo mjDeactivateControl = null;
         object masterMechJeb = null;
@@ -127,12 +125,12 @@ namespace RP0
             {
                 Debug.Log("[RP-0 Avionics] MechJeb assembly found");
 
-                mechJebCore = Type.GetType("MuMech.MechJebCore, MechJeb2");
+                Type mechJebCore = Type.GetType("MuMech.MechJebCore, MechJeb2");
                 if (mechJebCore != null)
                 {
                     mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
 
-                    mechJebVesselExtensions = Type.GetType("MuMech.VesselExtensions, MechJeb2");
+                    Type mechJebVesselExtensions = Type.GetType("MuMech.VesselExtensions, MechJeb2");
                     if (mechJebVesselExtensions != null)
                     {
                         getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);

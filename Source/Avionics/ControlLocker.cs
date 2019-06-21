@@ -114,26 +114,39 @@ namespace RP0
         ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
         // For locking MJ.
-        Type mechJebCore;
-        PropertyInfo mjDeactivateControl;
+        Type mechJebCore = null;
+        Type mechJebVesselExtensions = null;
+        MethodInfo getMasterMechJeb = null;
+        PropertyInfo mjDeactivateControl = null;
+        object masterMechJeb = null;
 
         ControlLocker()
         {
             var mechJebAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2");
             if (mechJebAssembly != null)
             {
-                Debug.LogFormat("[RP-0 Avionics] MJ assembly found");
+                Debug.Log("[RP-0 Avionics] MechJeb assembly found");
 
                 mechJebCore = Type.GetType("MuMech.MechJebCore, MechJeb2");
                 if (mechJebCore != null)
                 {
                     mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
-                    Debug.LogFormat("[RP-0 Avionics] MJ present, mjDeactivateControl = {0}", mjDeactivateControl);
+
+                    mechJebVesselExtensions = Type.GetType("MuMech.VesselExtensions, MechJeb2");
+                    if (mechJebVesselExtensions != null)
+                    {
+                        getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
+
+                        if ( mjDeactivateControl != null && getMasterMechJeb != null )
+                        {
+                            Debug.Log("[RP-0 Avionics] MechJeb methods present" );
+                        }
+                    }
                 }
             }
             else
             {
-                Debug.LogFormat("[RP-0 Avionics] No MJ assembly found");
+                Debug.Log("[RP-0 Avionics] No MJ assembly found");
             }
         }
 
@@ -143,6 +156,7 @@ namespace RP0
             {
                 vParts = -1;
                 vessel = FlightGlobals.ActiveVessel;
+                masterMechJeb = null;
             }
             // if we have no active vessel, undo locks
             if ((object)vessel == null)
@@ -167,16 +181,6 @@ namespace RP0
                 return;
             }
 
-            PartModule mjModule = null;
-            foreach (PartModule pm in FlightGlobals.ActiveVessel.rootPart.Modules)
-            {
-                if (pm.moduleName == "MechJebCore")
-                {
-                    mjModule = pm;
-                    break;
-                }
-            }
-
             bool doLock = ShouldLock();
             if (doLock != wasLocked)
             {
@@ -197,8 +201,15 @@ namespace RP0
                 wasLocked = doLock;
             }
 
-            // Update MJ every tick, to make sure it gets correct state after separation / docking.
-            mjDeactivateControl.SetValue(mjModule, doLock, index : null);
+            if (masterMechJeb == null && getMasterMechJeb != null)
+            {
+                masterMechJeb = getMasterMechJeb.Invoke(null, new object[] { FlightGlobals.ActiveVessel });
+            }
+            if (masterMechJeb != null && mjDeactivateControl != null)
+            {
+                // Update MJ every tick, to make sure it gets correct state after separation / docking.
+                mjDeactivateControl.SetValue(masterMechJeb, doLock, index: null);
+            }
         }
         public void OnDestroy()
         {

@@ -26,6 +26,7 @@ namespace RP0
         {
             guiEnabled = true;
         }
+
         private void HideWindow()
         {
             guiEnabled = false;

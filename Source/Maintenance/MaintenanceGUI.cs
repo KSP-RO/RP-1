@@ -3,30 +3,32 @@ using UnityEngine;
 
 namespace RP0
 {
-    class MaintenanceGUI : UIBase
+    public class MaintenanceGUI : UIBase
     {
         private Vector2 nautListScroll = new Vector2();
 
         private enum per { DAY, MONTH, YEAR };
         private per displayPer = per.YEAR;
 
-        private double perFactor { get {
-            switch (displayPer) {
-            case per.DAY:
-                return 1d;
-            case per.MONTH:
-                return 30d;
-            case per.YEAR:
-                return 365d;
-            default: // can't happen
-                return 0d;
+        private double perFactor
+        {
+            get
+            {
+                switch (displayPer)
+                {
+                    case per.DAY:
+                        return 1d;
+                    case per.MONTH:
+                        return 30d;
+                    case per.YEAR:
+                        return 365d;
+                    default: // can't happen
+                        return 0d;
+                }
             }
-        }}
-        private string perFormat { get {
-            if (displayPer == per.DAY)
-                return "N1";
-            return "N0";
-        }}
+        }
+
+        private string perFormat => displayPer == per.DAY ? "N1" : "N0";
 
         private void perSelector()
         {
@@ -57,6 +59,10 @@ namespace RP0
             try {
                 GUILayout.Label("Facilities", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.facilityUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
+                {
+                    TopWindow.SwitchTabTo(tabs.Facilities);
+                }
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -64,6 +70,10 @@ namespace RP0
             try {
                 GUILayout.Label("Integration", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.integrationUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
+                {
+                    TopWindow.SwitchTabTo(tabs.Integration);
+                }
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -78,6 +88,10 @@ namespace RP0
             try {
                 GUILayout.Label("Astronauts", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.nautUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
+                {
+                    TopWindow.SwitchTabTo(tabs.Astronauts);
+                }
             } finally {
                 GUILayout.EndHorizontal();
             }

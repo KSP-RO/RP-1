@@ -4,7 +4,7 @@ using KSP.UI.Screens;
 
 namespace RP0
 {
-    class TopWindow : UIBase
+    public class TopWindow : UIBase
     {
         // GUI
         static Rect windowPos = new Rect(500, 240, 0, 0);
@@ -12,25 +12,30 @@ namespace RP0
         private ToolingGUI toolUI = new ToolingGUI();
         private Crew.FSGUI fsUI = new RP0.Crew.FSGUI();
         private AvionicsGUI avUI = new AvionicsGUI();
+        private static tabs currentTab;
+
+        public TopWindow()
+        {
+            // Reset the tab on scene changes
+            currentTab = default(tabs);
+        }
 
         public void OnGUI()
         {
             windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-0");
         }
 
-        private tabs currentTab;
+        public static void SwitchTabTo(tabs newTab)
+        {
+            currentTab = newTab;
+        }
+
         private void tabSelector()
         {
             GUILayout.BeginHorizontal();
             try {
                 if (showTab(tabs.Maintenance) && toggleButton("Maintenance", currentTab == tabs.Maintenance))
                     currentTab = tabs.Maintenance;
-                if (showTab(tabs.Facilities) && toggleButton("Facilities", currentTab == tabs.Facilities))
-                    currentTab = tabs.Facilities;
-                if (showTab(tabs.Integration) && toggleButton("Integration", currentTab == tabs.Integration))
-                    currentTab = tabs.Integration;
-                if (showTab(tabs.Astronauts) && toggleButton("Astronauts", currentTab == tabs.Astronauts))
-                    currentTab = tabs.Astronauts;
                 if (showTab(tabs.Tooling) && toggleButton("Tooling", currentTab == tabs.Tooling))
                     currentTab = tabs.Tooling;
                 if (showTab(tabs.Training) && toggleButton("Training", currentTab == tabs.Training))

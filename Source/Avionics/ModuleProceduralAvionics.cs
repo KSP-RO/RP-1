@@ -114,23 +114,11 @@ namespace RP0.ProceduralAvionics
                 Log("NO MAX");
                 return;
             }
-            var min = GetMinimumControllableTonnage();
 
-            bool changed = false;
             if (controllableMass > max * FLOAT_TOLERANCE)
             {
                 Log("Resetting procedural mass limit to max of ", max, ", was ", controllableMass);
                 controllableMass = max;
-                changed = true;
-            }
-            if (controllableMass * FLOAT_TOLERANCE < min)
-            {
-                Log("Resetting procedural mass limit to min of ", min, ", was ", controllableMass);
-                controllableMass = min;
-                changed = true;
-            }
-            if (changed)
-            {
                 RefreshPartWindow();
             }
         }
@@ -373,14 +361,7 @@ namespace RP0.ProceduralAvionics
 
 		private float GetMaximumControllableMass()
 		{
-            Log($"Max avionics mass: {MaxAvionicsMass}");
             return FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
-		}
-
-        private float GetMinimumControllableTonnage()
-		{
-            var constantMass = massFactor * massConstant;
-            return 0;
 		}
 
 		private void ResetTo100()

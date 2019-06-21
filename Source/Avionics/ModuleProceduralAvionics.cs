@@ -123,6 +123,8 @@ namespace RP0.ProceduralAvionics
             }
         }
 
+        private float GetMaximumControllableMass() => FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
+
         private float GetControllableMass(float avionicsMass)
         {
             var mass = GetInversePolynomial(avionicsMass * 1000, massExponent, massConstant, massFactor);
@@ -249,7 +251,6 @@ namespace RP0.ProceduralAvionics
             oldAvionicsConfigName = avionicsConfigName;
             oldAvionicsTechLevel = avionicsTechLevel;
             SetInternalKSPFields();
-            ResetTo100();
             ClampControllableMass();
             SetMinVolume(true);
             UpdateControllableMassSlider();
@@ -304,31 +305,16 @@ namespace RP0.ProceduralAvionics
 			}
 		}
 
-		public float GetModuleMass(float defaultMass, ModifierStagingSituation sit)
-		{
-			return GetMassSafely();
-		}
+        public float GetModuleMass(float defaultMass, ModifierStagingSituation sit) => GetMassSafely();
+        public ModifierChangeWhen GetModuleMassChangeWhen() => ModifierChangeWhen.FIXED;
+        public float GetModuleCost(float defaultCost, ModifierStagingSituation sit) => GetCostSafely();
+        public ModifierChangeWhen GetModuleCostChangeWhen() => ModifierChangeWhen.FIXED;
 
-		public ModifierChangeWhen GetModuleMassChangeWhen()
-		{
-			return ModifierChangeWhen.FIXED;
-		}
-
-		public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
-		{
-			return GetCostSafely();
-		}
-
-		public ModifierChangeWhen GetModuleCostChangeWhen()
-		{
-			return ModifierChangeWhen.FIXED;
-		}
-
-		#endregion
+        #endregion
 
 
-		#region part attribute calculations
-		private float GetMassSafely()
+        #region part attribute calculations
+        private float GetMassSafely()
 		{
 			if (HighLogic.LoadedSceneIsFlight || avionicsDensity > 0) {
                 return GetAvionicsMass();
@@ -358,20 +344,6 @@ namespace RP0.ProceduralAvionics
 		}
 
 		#endregion
-
-		private float GetMaximumControllableMass()
-		{
-            return FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
-		}
-
-		private void ResetTo100()
-		{
-            if(cachedVolume == float.MaxValue)
-            {
-                return;
-            }
-            controllableMass = GetMaximumControllableMass();
-		}
 
 		private void UpdateControllableMassSlider()
 		{
@@ -675,10 +647,6 @@ namespace RP0.ProceduralAvionics
 				}
 			}
 			GUILayout.Label(" ");
-			if (GUILayout.Button("Reset to 100%")) {
-				ResetTo100();
-				RefreshPartWindow();
-			}
 			if (GUILayout.Button("Close")) {
 				showGUI = false;
 			}

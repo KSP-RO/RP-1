@@ -21,6 +21,9 @@ namespace RP0.ProceduralAvionics
         public float massFactor = 1;
 
         [Persistent]
+        public float shieldingMassFactor = 0;
+
+        [Persistent]
         public float costExponent = 1;
 
         [Persistent]

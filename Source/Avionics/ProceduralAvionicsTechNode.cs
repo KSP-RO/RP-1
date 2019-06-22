@@ -49,7 +49,7 @@ namespace RP0.ProceduralAvionics
 
 		// This is the service level of the SAS part module
 		[Persistent]
-		public int SASServiceLevel = 0;
+		public int SASServiceLevel = 5;
 
 		// Controls whether or not this part has a science return container 
 		[Persistent]

@@ -18,7 +18,7 @@ namespace RP0.ProceduralAvionics
 		const string wFormat = "{0:0}";
         const float FLOAT_TOLERANCE = 1.00001f;
 
-        [KSPField(isPersistant = true, guiName = "Tonnage", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
+        [KSPField(isPersistant = true, guiName = "Contr. Mass", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
 		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "\u2009t")]
 		public float controllableMass = 0;
 
@@ -114,8 +114,7 @@ namespace RP0.ProceduralAvionics
             var max = GetMaximumControllableMass();
             if (max == 0)
             {
-                Log("WARNING: NO MAX");
-                return;
+                Log($"WARNING: NO MAX volume: {cachedVolume} MaxAvMass: {MaxAvionicsMass} max controllable mass: {GetControllableMass(MaxAvionicsMass)}");
             }
 
             if (controllableMass > max * FLOAT_TOLERANCE)
@@ -128,12 +127,7 @@ namespace RP0.ProceduralAvionics
 
         private float GetMaximumControllableMass() => FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
 
-        private float GetControllableMass(float avionicsMass)
-        {
-            var mass = GetInversePolynomial(avionicsMass * 1000, massExponent, massConstant, massFactor);
-            Log($"Controllable mass: {mass}, avionicsMass: {avionicsMass}, Exp: {massExponent}, C: {massConstant}, Fac: {massFactor}");
-            return mass;
-        }
+        private float GetControllableMass(float avionicsMass) => GetInversePolynomial(avionicsMass * 1000, massExponent, massConstant, massFactor);
 
         private float GetShieldedAvionicsMass()
         {
@@ -155,17 +149,11 @@ namespace RP0.ProceduralAvionics
 
         protected override float GetDisabledkW() => GetEnabledkW() * disabledPowerFactor;
 
-        protected override bool GetToggleable()
-		{
-			return disabledPowerFactor > 0;
-		}
+        protected override bool GetToggleable() => disabledPowerFactor > 0;
 
-		protected override string GetTonnageString()
-		{
-			return "This part can be configured to allow control of vessels up to any mass.";
-		}
+        protected override string GetTonnageString() => "This part can be configured to allow control of vessels up to any mass.";
 
-		private ProceduralAvionicsConfig currentProceduralAvionicsConfig;
+        private ProceduralAvionicsConfig currentProceduralAvionicsConfig;
 		private UI_FloatEdit controllableMassEdit;
 
 		#endregion
@@ -322,32 +310,13 @@ namespace RP0.ProceduralAvionics
         #region part attribute calculations
         private float GetMassSafely()
 		{
-			if (HighLogic.LoadedSceneIsFlight || avionicsDensity > 0) {
-                return GetShieldedAvionicsMass();
-            }
-			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
-                Log("WARNING: Not yet initialized but getmass called!?");
-                SetInternalKSPFields();
-                return GetShieldedAvionicsMass();
-            }
-			else {
-				return 0;
-			}
-		}
+            return avionicsDensity > 0 ? GetShieldedAvionicsMass() : 0;
+        }
 
 		private float GetCostSafely()
 		{
-			if (HighLogic.LoadedSceneIsFlight) {
-				return GetAvionicsCost();
-			}
-			if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null) {
-                SetInternalKSPFields();
-				return GetAvionicsCost();
-			}
-			else {
-				return 0;
-			}
-		}
+            return avionicsDensity > 0 ? GetAvionicsCost() : 0;
+        }
 
 		#endregion
 
@@ -360,17 +329,16 @@ namespace RP0.ProceduralAvionics
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
             {
                 controllableMassEdit.maxValue = CeilingToSmallIncrement(GetMaximumControllableMass());
+                controllableMassEdit.minValue = 0;
 
                 controllableMassEdit.incrementSmall = GetSmallIncrement(controllableMassEdit.maxValue);
                 controllableMassEdit.incrementLarge = controllableMassEdit.incrementSmall * 10;
                 controllableMassEdit.incrementSlide = GetSliderIncrement(controllableMassEdit.maxValue);
                 controllableMassEdit.sigFigs = GetSigFigs(controllableMassEdit.maxValue);
-
-                controllableMassEdit.minValue = controllableMassEdit.incrementSlide;
             }
             else
             {
-                Log("Cannot update max value yet, CurrentProceduralAvionicsConfig is null");
+                Log("WARNING: Cannot update max value yet, CurrentProceduralAvionicsConfig is null");
             }
 		}
 
@@ -511,10 +479,7 @@ namespace RP0.ProceduralAvionics
             RefreshPowerDisplay();
         }
 
-        private float GetControllableUtilizationPercentage()
-        {
-            return GetAvionicsMass() / MaxAvionicsMass;
-        }
+        private float GetControllableUtilizationPercentage() => GetAvionicsMass() / MaxAvionicsMass;
 
         private float MaxAvionicsMass => cachedVolume * avionicsDensity;
 
@@ -522,7 +487,7 @@ namespace RP0.ProceduralAvionics
         {
             StringBuilder powerConsumptionBuilder = StringBuilderCache.Acquire();
             double kW = GetEnabledkW();
-            if (kW >= 0.1)
+            if (kW >= 1)
             {
                 powerConsumptionBuilder.AppendFormat(kwFormat, kW).Append(" kW");
             }

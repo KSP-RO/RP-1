@@ -70,6 +70,8 @@ namespace RP0
             }
         }
 
+        public virtual string GetToolingParameterInfo() => "";
+
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Item")]
         public virtual void ToolingEvent()
         {
@@ -147,6 +149,7 @@ namespace RP0
 
             try
             {
+                Debug.Log("[MT] Loading part modules");
                 LoadPartModules();
             }
             catch (Exception ex)

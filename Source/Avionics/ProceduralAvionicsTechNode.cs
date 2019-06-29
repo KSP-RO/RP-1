@@ -11,48 +11,48 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public string name;
 
-		// A higher number here is more efficient.  This is the number of controllable tons per ton of avionics mass at 50% of the maximum controllable tonnage.  
-		// This actual ratio will be higher if closer to the maximum, and lower if farther away, however, as we get closer to our maximum, 
-		// the price gets exponentionally higher, since we're trying to cram more controls in the same amount of space (at 50%, we are at 75% of the avionics mass 
-		// we would be had we selected 100% of our maximum).
-		// I consider 50% utilization to be the "sweet spot" of cost efficiency vs mass efficiency. 
-		// (mass efficiency calculation = -x^2+2x, maxControllableTons = volume * avionicsMassPerVolume * tonnageToMassRatio * 2)
-		[Persistent]
-		public float tonnageToMassRatio = 1;
+        [Persistent]
+        public int techLevel;
 
-		// This is the cost per controlled ton, again, at 50% of our maximum controllable tonnage.  Obviously, lower is better here.
-		// At 100% of the maximum, this value will actually be 4 times greater.
-		// (cost efficiency calculation = x^2, maxCost = costPerControlledTon * maxControlledTons * 4);
-		[Persistent]
-		public float costPerControlledTon = 1;
+        [Persistent]
+		public float massExponent = 1;
 
+        [Persistent]
+        public float massConstant = 1;
 
-		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
-		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
-		[Persistent]
-		public float enabledkWPerTon = 1;
+        [Persistent]
+        public float massFactor = 1;
 
-		// If postitive, this will enable the abilty to put avioniccs on standby.
-		// Again, this is the rate at 50% capacity.  This rate changes linerally, at 0% utilization, 
-		// the rate will be 0.5x,  while at 100%, the rate will be 1.5x 
-		[Persistent]
-		public float disabledkWPerTon = -1;
+        [Persistent]
+        public float shieldingMassFactor = 0;
 
-		// This is the overall density of this avionics unit at 50% utilization.  This can be tweaked to help match up historical avionics units with their proper sizes.
-		[Persistent]
-		public float standardAvionicsDensity = 1f;
+        [Persistent]
+        public float costExponent = 1;
 
-		// This is the least amout of mass this avionics unit can be configured to control.  Set this to prevent unrealistic scaled down avionics units.
-		[Persistent]
-		public float minimumTonnage = 0;
+        [Persistent]
+        public float costConstant = 1;
 
-		// This is the largest amout of mass this avionics unit can be configured to control.  Set this to prevent unrealistic supersized avionics units.
+        [Persistent]
+        public float costFactor = 1;
+
+        [Persistent]
+        public float powerExponent = 1;
+
+        [Persistent]
+        public float powerConstant = 1;
+
+        [Persistent]
+        public float powerFactor = 1;
+
 		[Persistent]
-		public float maximumTonnage = float.MaxValue;
+		public float disabledPowerFactor = -1;
+
+		[Persistent]
+		public float avionicsDensity = 1f;
 
 		// This is the service level of the SAS part module
 		[Persistent]
-		public int SASServiceLevel = 0;
+		public int SASServiceLevel = 5;
 
 		// Controls whether or not this part has a science return container 
 		[Persistent]

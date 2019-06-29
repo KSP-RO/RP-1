@@ -87,7 +87,7 @@ namespace RP0
                             currentTab = toolUI.toolingTab();
                             break;
                         case tabs.ToolingType:
-                            toolUI.toolingTypeTab();
+                            toolUI.DisplayTypeTab();
                             break;
                         case tabs.Training:
                             currentTab = fsUI.summaryTab();

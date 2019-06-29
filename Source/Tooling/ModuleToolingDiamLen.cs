@@ -26,7 +26,7 @@ namespace RP0
             len = partLength;
         }
 
-        public virtual string GetDimensions()
+        public override string GetToolingParameterInfo()
         {
             float d, l;
             GetDimensions(out d, out l);
@@ -41,12 +41,12 @@ namespace RP0
             float d, l;
             GetDimensions(out d, out l);
             float cost = lengthToolingCost.x * d * d + lengthToolingCost.y * d + lengthToolingCost.z * l + lengthToolingCost.w;
-            if (ToolingDatabase.HasTooling(ToolingType, d, l) == ToolingDatabase.ToolingLevel.None)
+            if (ToolingDatabase.GetToolingLevel(ToolingType, d, l) == 0)
             {
                 float mult = 1f;
                 foreach (string s in CostReducers)
                 {
-                    if (ToolingDatabase.HasTooling(s, d, l) > ToolingDatabase.ToolingLevel.None)
+                    if (ToolingDatabase.GetToolingLevel(s, d, l) > 0)
                     {
                         mult = costReductionMult;
                         break;
@@ -72,7 +72,7 @@ namespace RP0
             if (d < minDiameter)
                 return true;
 
-            return ToolingDatabase.HasTooling(ToolingType, d, l) == ToolingDatabase.ToolingLevel.Full;
+            return ToolingDatabase.GetToolingLevel(ToolingType, d, l) == 2;
         }
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)

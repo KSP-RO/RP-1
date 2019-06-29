@@ -95,11 +95,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
     <Compile Include="Tooling\ModuleTooling.cs" />
+    <Compile Include="Tooling\ModuleToolingProcAvionics.cs" />
     <Compile Include="Tooling\ModuleToolingROTanks.cs" />
     <Compile Include="Tooling\ModuleToolingStockFairing.cs" />
     <Compile Include="Tooling\ModuleToolingPFSide.cs" />
     <Compile Include="Tooling\ModuleToolingGeneric.cs" />
     <Compile Include="Tooling\ModuleToolingSSTUTank.cs" />
+    <Compile Include="Tooling\Parameter.cs" />
+    <Compile Include="Tooling\ParameterUnits.cs" />
     <Compile Include="Tooling\ToolingDatabase.cs" />
     <Compile Include="Tooling\ToolingDefinition.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />

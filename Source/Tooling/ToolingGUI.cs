@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Smooth.Slinq;
+using RP0.Tooling;
 
 namespace RP0
 {
@@ -43,15 +44,9 @@ namespace RP0
                 for (int i = EditorLogic.fetch.ship.Parts.Count; i-- > 0;) {
                     Part p = EditorLogic.fetch.ship.Parts[i];
                     for (int j = p.Modules.Count; j-- > 0;) {
-                        PartModule m = p.Modules[j];
-                        ModuleTooling mT;
-                        if (m is ModuleTooling && !((mT = (m as ModuleTooling)).IsUnlocked())) {
+                        if (p.Modules[j] is ModuleTooling mT && !mT.IsUnlocked()) {
                             untooledPart uP;
-                            if (m is ModuleToolingDiamLen) {
-                                uP.name = $"{p.partInfo.title} ({mT.ToolingType}) {(m as ModuleToolingDiamLen).GetDimensions()}";
-                            } else {
-                                uP.name = $"{p.partInfo.title} ({mT.ToolingType})";
-                            }
+                            uP.name = $"{p.partInfo.title} ({mT.ToolingType}) {mT.GetToolingParameterInfo()}";
                             uP.toolingCost = mT.GetToolingCost();
                             uP.untooledMultiplier = mT.untooledMultiplier;
                             uP.totalCost = p.GetModuleCosts(p.partInfo.cost) + p.partInfo.cost;
@@ -105,7 +100,7 @@ namespace RP0
                 }
                 untooledTypesScroll = GUILayout.BeginScrollView(untooledTypesScroll, GUILayout.Height(204), GUILayout.Width(572));
                 try {
-                    foreach (untooledPart uP in untooledParts) {
+                    foreach (var uP in untooledParts) {
                         GUILayout.BeginHorizontal();
                         try
                         {
@@ -179,32 +174,38 @@ namespace RP0
             return uP.toolingCost * uP.untooledMultiplier;
         }
 
-        private void toolingTypesHeading()
+        private void DisplayTypeHeadings(Parameter[] parameters)
         {
             GUILayout.BeginHorizontal();
             try {
-                GUILayout.Label("Diameter", HighLogic.Skin.label, GUILayout.Width(80));
-                GUILayout.Label("×", HighLogic.Skin.label);
-                GUILayout.Label("Length", rightLabel, GUILayout.Width(80));
+                GUILayout.Label(parameters[0].Title, HighLogic.Skin.label, GUILayout.Width(80));
+                for (int i = 1; i < parameters.Length; ++i)
+                {
+                    GUILayout.Label("×", HighLogic.Skin.label);
+                    GUILayout.Label(parameters[i].Title, HighLogic.Skin.label, GUILayout.Width(80));
+                }
             } finally {
                 GUILayout.EndHorizontal();
             }
         }
 
-        private void toolingTypeRow(float diameter, float length)
+        private void DisplayRow(float[] values, Parameter[] parameters)
         {
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label($"{diameter:F3}m", HighLogic.Skin.label, GUILayout.Width(80));
-                GUILayout.Label("×", HighLogic.Skin.label);
-                GUILayout.Label($"{length:F3}m", rightLabel, GUILayout.Width(80));
+                GUILayout.Label($"{values[0]:F3} {parameters[0].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
+                for (int i = 1; i < values.Length; ++i)
+                {
+                    GUILayout.Label("×", HighLogic.Skin.label);
+                    GUILayout.Label($"{values[i]:F3} {parameters[i].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
+                }
             } finally {
                 GUILayout.EndHorizontal();
             }
         }
 
-        public void toolingTypeTab()
+        public void DisplayTypeTab()
         {
             GUILayout.BeginHorizontal();
             try {
@@ -214,16 +215,32 @@ namespace RP0
             } finally {
                 GUILayout.EndHorizontal();
             }
-            toolingTypesHeading();
-            toolingTypesScroll = GUILayout.BeginScrollView(toolingTypesScroll, GUILayout.Width(200), GUILayout.Height(240));
-            try {
-                foreach (ToolingDiameter td in ToolingDatabase.toolings[currentToolingType]) {
-                    foreach (float length in td.lengths) {
-                        toolingTypeRow(td.diameter, length);
-                    }
-                }
-            } finally {
+            var parameters = Parameters.GetParametersForToolingType(currentToolingType);
+            DisplayTypeHeadings(parameters);
+            toolingTypesScroll = GUILayout.BeginScrollView(toolingTypesScroll, GUILayout.Width(360), GUILayout.Height(300));
+            try
+            {
+                var entries = ToolingDatabase.toolings[currentToolingType];
+                var values = new float[parameters.Length];
+                DisplayRows(entries, 0, values, parameters);
+            }
+            finally {
                 GUILayout.EndScrollView();
+            }
+        }
+
+        private void DisplayRows(List<ToolingEntry> entries, int parameterIndex, float[] values, Parameter[] parameters)
+        {
+            if(parameterIndex == parameters.Length)
+            {
+                DisplayRow(values, parameters);
+                return;
+            }
+
+            foreach (var toolingEntry in entries)
+            {
+                values[parameterIndex] = toolingEntry.Value;
+                DisplayRows(toolingEntry.Children, parameterIndex + 1, values, parameters);
             }
         }
     }

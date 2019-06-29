@@ -11,7 +11,10 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public string name;
 
-		[Persistent]
+        [Persistent]
+        public int techLevel;
+
+        [Persistent]
 		public float massExponent = 1;
 
         [Persistent]

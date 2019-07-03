@@ -22,7 +22,7 @@ namespace RP0
 
         public void OnGUI()
         {
-            windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-0");
+            windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1");
         }
 
         public static void SwitchTabTo(tabs newTab)

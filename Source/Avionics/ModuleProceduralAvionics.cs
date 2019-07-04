@@ -473,13 +473,13 @@ namespace RP0.ProceduralAvionics
         {
             RefreshCostAndMassDisplays();
 
-            utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
+            utilizationDisplay = String.Format("{0:0.#}%", Utilization* 100);
             Log("Utilization display: ", utilizationDisplay);
 
             RefreshPowerDisplay();
         }
 
-        private float GetControllableUtilizationPercentage() => GetAvionicsMass() / MaxAvionicsMass;
+        public float Utilization => GetAvionicsMass() / MaxAvionicsMass;
 
         private float MaxAvionicsMass => cachedVolume * avionicsDensity;
 

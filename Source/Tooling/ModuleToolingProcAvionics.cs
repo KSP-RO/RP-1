@@ -20,22 +20,29 @@ namespace RP0
 
         public override string GetToolingParameterInfo()
         {
-            return base.GetToolingParameterInfo() + $" x {Math.Round(ControllableMass, 3)} t";
+            return $"{Math.Round(ControllableMass, 3)} t x {base.GetToolingParameterInfo()}";
         }
 
         public override float GetToolingCost()
         {
             GetDimensions(out var diameter, out var length, out var controllableMass);
-            var toolingLevel = ToolingDatabase.GetToolingLevel(ToolingType, diameter, length, controllableMass);
-            var baseCost = toolingLevel < 3 ? base.GetToolingCost() / finalToolingCostMultiplier : 0;
+            var toolingLevel = ToolingDatabase.GetToolingLevel(ToolingType, controllableMass, diameter, length);
+            var toolingCosts = new[] { GetControlledMassToolingCost(), GetDiameterToolingCost(diameter), GetLengthToolingCost(diameter, length)};
+            var toolingCost = 0f;
+            for(int i = toolingLevel; i < 3; ++i)
+            {
+                toolingCost += toolingCosts[i];
+            }
 
-            return (baseCost + procAvionics.GetModuleCost(0, ModifierStagingSituation.UNSTAGED) * 15) * finalToolingCostMultiplier;
+            return toolingCost * 0.5f;
         }
+
+        private float GetControlledMassToolingCost() => procAvionics.GetModuleCost(0, ModifierStagingSituation.UNSTAGED) * 20;
 
         public override void PurchaseTooling()
         {
             GetDimensions(out var diameter, out var length, out var controllableMass);
-            ToolingDatabase.UnlockTooling(ToolingType, diameter, length, controllableMass);
+            ToolingDatabase.UnlockTooling(ToolingType, controllableMass, diameter, length);
         }
 
         public override bool IsUnlocked()
@@ -45,7 +52,7 @@ namespace RP0
                 return true;
             }
             GetDimensions(out var diameter, out var length, out var controllableMass);
-            return ToolingDatabase.GetToolingLevel(ToolingType, diameter, length, controllableMass) == 3;
+            return ToolingDatabase.GetToolingLevel(ToolingType, controllableMass, diameter, length) == 3;
         }
 
         private void GetDimensions(out float diameter, out float length, out float controllableMass)

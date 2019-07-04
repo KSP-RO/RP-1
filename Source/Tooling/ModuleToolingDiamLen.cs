@@ -38,25 +38,32 @@ namespace RP0
 
         public override float GetToolingCost()
         {
-            float d, l;
-            GetDimensions(out d, out l);
-            float cost = lengthToolingCost.x * d * d + lengthToolingCost.y * d + lengthToolingCost.z * l + lengthToolingCost.w;
+            GetDimensions(out var d, out var l);
+            float cost = GetLengthToolingCost(d, l);
             if (ToolingDatabase.GetToolingLevel(ToolingType, d, l) == 0)
             {
-                float mult = 1f;
-                foreach (string s in CostReducers)
-                {
-                    if (ToolingDatabase.GetToolingLevel(s, d, l) > 0)
-                    {
-                        mult = costReductionMult;
-                        break;
-                    }
-                }
-                cost += mult * (diameterToolingCost.x * d * d + diameterToolingCost.y * d + diameterToolingCost.z);
+                var reductionFactor = GetCostReductionFactor(d, l);
+                cost += reductionFactor * GetDiameterToolingCost(d);
             }
 
             return cost * finalToolingCostMultiplier;
         }
+
+        private float GetCostReductionFactor(float d, float l)
+        {
+            foreach (string s in CostReducers)
+            {
+                if (ToolingDatabase.GetToolingLevel(s, d, l) > 0)
+                {
+                    return costReductionMult;
+                }
+            }
+
+            return 1;
+        }
+
+        protected virtual float GetDiameterToolingCost(float diameter) => diameterToolingCost.x * diameter * diameter + diameterToolingCost.y * diameter + diameterToolingCost.z;
+        protected virtual float GetLengthToolingCost(float diameter, float length) => lengthToolingCost.x * diameter * diameter + lengthToolingCost.y * diameter + lengthToolingCost.z * length + lengthToolingCost.w;
 
         public override void PurchaseTooling()
         {

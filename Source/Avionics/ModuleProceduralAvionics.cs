@@ -17,6 +17,7 @@ namespace RP0.ProceduralAvionics
 		const string kwFormat = "{0:0.##}";
 		const string wFormat = "{0:0}";
         const float FLOAT_TOLERANCE = 1.00001f;
+        private const float InternalTanksVolumeUtilization = 7f / 9;
 
         [KSPField(isPersistant = true, guiName = "Contr. Mass", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
 		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "\u2009t")]
@@ -434,7 +435,7 @@ namespace RP0.ProceduralAvionics
             }
             Log($"Sending remaining volume: {cachedVolume - GetAvionicsMass() / avionicsDensity}");
             Events[nameof(OnPartVolumeChanged)].active = false;
-            SendVolumeChangedEvent(cachedVolume - GetAvionicsMass() / avionicsDensity);
+            SendVolumeChangedEvent(cachedVolume - GetAvionicsMass() / avionicsDensity * InternalTanksVolumeUtilization);
             Events[nameof(OnPartVolumeChanged)].active = true;
         }
 

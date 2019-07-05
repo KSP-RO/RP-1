@@ -27,11 +27,9 @@ namespace RP0
         {
             GetDimensions(out var diameter, out var length, out var controllableMass);
             var toolingLevel = ToolingDatabase.GetToolingLevel(ToolingType, controllableMass, diameter, length);
-            var avToolingFactor = 0.8f;
-            var dimensionToolingFactor = 2 - avToolingFactor - procAvionics.Utilization;
-            var toolingCosts = new[] { GetControlledMassToolingCost() * avToolingFactor, GetDiameterToolingCost(diameter) * dimensionToolingFactor, GetLengthToolingCost(diameter, length) * dimensionToolingFactor};
+            var toolingCosts = GetPerLevelToolingCosts(diameter, length);
             var toolingCost = 0f;
-            for(int i = toolingLevel; i < 3; ++i)
+            for (int i = toolingLevel; i < 3; ++i)
             {
                 toolingCost += toolingCosts[i];
             }
@@ -39,6 +37,19 @@ namespace RP0
             return toolingCost;
         }
 
+        private float[] GetPerLevelToolingCosts(float diameter, float length)
+        {
+            var avToolingFactor = 0.8f;
+            var dimensionToolingFactor = 1 - avToolingFactor;
+            var internalTankDiameter = diameter * Mathf.Sqrt(1 - procAvionics.Utilization);
+            return new[] {
+                GetControlledMassToolingCost() * avToolingFactor,
+                base.GetDiameterToolingCost(diameter) * dimensionToolingFactor,
+                base.GetLengthToolingCost(diameter, length) * dimensionToolingFactor + GetInternalTankToolingCosts(length, internalTankDiameter) * (1 - dimensionToolingFactor)
+            };
+        }
+
+        private float GetInternalTankToolingCosts(float length, float internalTankDiameter) => (GetDiameterToolingCost(internalTankDiameter) + GetLengthToolingCost(internalTankDiameter, length));
         private float GetControlledMassToolingCost() => procAvionics.GetModuleCost(0, ModifierStagingSituation.UNSTAGED) * 20;
 
         public override void PurchaseTooling()

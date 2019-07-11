@@ -17,7 +17,7 @@ namespace RP0
         [KSPField]
         public float disabledkW = -1f;
 
-        [KSPField(guiActive = false, guiName = "Watts used: ", guiFormat = "N1", guiUnits = " W")]
+        [KSPField(guiActive = false, guiName = "Power", guiFormat = "N1", guiUnits = "\u2009W")]
         public float currentWatts = 0f;
 
         [KSPField]
@@ -243,7 +243,7 @@ namespace RP0
                 if(resRate >= 0)
                 {
                     retStr += "\nCan be disabled, to lower command module wattage from " 
-                        + (GetEnabledkW() * 1000d).ToString("N1") + " W to " + (GetDisabledkW() * 1000d).ToString("N1") + " W.";
+                        + (GetEnabledkW() * 1000d).ToString("N1") + "\u2009W to " + (GetDisabledkW() * 1000d).ToString("N1") + "\u2009W.";
                 }
             }
 

@@ -498,11 +498,11 @@ namespace RP0.ProceduralAvionics
             double kW = GetEnabledkW();
             if (kW >= 1)
             {
-                powerConsumptionBuilder.AppendFormat(kwFormat, kW).Append(" kW");
+                powerConsumptionBuilder.AppendFormat(kwFormat, kW).Append("\u2009kW");
             }
             else
             {
-                powerConsumptionBuilder.AppendFormat(wFormat, kW * 1000).Append(" W");
+                powerConsumptionBuilder.AppendFormat(wFormat, kW * 1000).Append("\u2009W");
             }
             double dkW = GetDisabledkW();
             if (dkW > 0)
@@ -510,11 +510,11 @@ namespace RP0.ProceduralAvionics
                 powerConsumptionBuilder.Append(" /");
                 if (dkW >= 0.1)
                 {
-                    powerConsumptionBuilder.AppendFormat(kwFormat, dkW).Append(" kW");
+                    powerConsumptionBuilder.AppendFormat(kwFormat, dkW).Append("\u2009kW");
                 }
                 else
                 {
-                    powerConsumptionBuilder.AppendFormat(wFormat, dkW * 1000).Append(" W");
+                    powerConsumptionBuilder.AppendFormat(wFormat, dkW * 1000).Append("\u2009W");
                 }
             }
 

@@ -124,6 +124,16 @@ namespace RP0
                 return;
             }
 
+            LoadNewDbFormat(node);
+
+            if (toolings.Count == 0)
+            {
+                LoadOldDbFormat(node);
+            }
+        }
+
+        private static void LoadNewDbFormat(ConfigNode node)
+        {
             foreach (var typeNode in node.GetNodes("TYPE"))
             {
                 string type = typeNode.GetValue("type");
@@ -134,7 +144,10 @@ namespace RP0
 
                 var entries = new List<ToolingEntry>();
                 LoadEntries(typeNode, entries);
-                toolings[type] = entries;
+                if (entries.Count > 0)
+                {
+                    toolings[type] = entries;
+                }
             }
         }
 
@@ -176,39 +189,40 @@ namespace RP0
             }
         }
 
-        public static void LoadOldFormat(ConfigNode node)
+        public static void LoadOldDbFormat(ConfigNode node)
         {
-            toolings.Clear();
-
-            if (node == null)
-                return;
-
-            foreach (ConfigNode c in node.GetNodes("TYPE"))
+            foreach (var c in node.GetNodes("TYPE"))
             {
                 string type = c.GetValue("type");
                 if (string.IsNullOrEmpty(type))
                     continue;
 
-                List<ToolingEntry> lst = new List<ToolingEntry>();
+                var entries = new List<ToolingEntry>();
 
-                foreach (ConfigNode n in c.GetNodes("DIAMETER"))
+                foreach (var n in c.GetNodes("DIAMETER"))
                 {
                     float tmp = 0f;
                     if (!n.TryGetValue("diameter", ref tmp))
                         continue;
 
-                    ToolingEntry d = new ToolingEntry(tmp);
+                    var diameter = new ToolingEntry(tmp);
 
-                    ConfigNode len = n.GetNode("LENGTHS");
-                    if (len != null)
-                        foreach (ConfigNode.Value v in len.values)
+                    var length = n.GetNode("LENGTHS");
+                    if (length != null)
+                    {
+                        foreach (ConfigNode.Value v in length.values)
+                        {
                             if (float.TryParse(v.value, out tmp))
-                                //d.lengths.Add(tmp);
+                            {
+                                diameter.Children.Add(new ToolingEntry(tmp));
+                            }
+                        }
+                    }
 
-                    lst.Add(d);
+                    entries.Add(diameter);
                 }
 
-                toolings[type] = lst;
+                toolings[type] = entries;
             }
         }
     }

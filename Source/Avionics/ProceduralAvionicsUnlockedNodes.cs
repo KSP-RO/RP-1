@@ -27,12 +27,12 @@ namespace RP0.ProceduralAvionics
 			ProceduralAvionicsUtils.Log("ScenarioModule onload");
 			base.OnLoad(node);
 
-			ConfigNode n = node.GetNode(UNLOCKED_TECH_NODE_NAME);
+			var unlockedTechNode = node.GetNode(UNLOCKED_TECH_NODE_NAME);
 
-			string serialized = "";
+            string serialized = "";
 
-			if (n != null) {
-				string param = n.GetValue(UNLOCKED_TECH_STATE);
+			if (unlockedTechNode != null) {
+				string param = unlockedTechNode.GetValue(UNLOCKED_TECH_STATE);
 				if (param != null) {
 					serialized = param;
 				}

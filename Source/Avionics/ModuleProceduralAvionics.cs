@@ -180,15 +180,27 @@ namespace RP0.ProceduralAvionics
             BindUIChangeCallbacks();
             SetControllableMassForLegacyCraft();
             AvionicsConfigChanged();
+            InjectCachedEventData();
+            base.Start();
+            SetScienceContainerIfNeeded();
+            started = true;
+            Log("Start finished");
+        }
 
+        private void SetScienceContainerIfNeeded()
+        {
+            if (!HighLogic.LoadedSceneIsEditor)
+            {
+                SetScienceContainer();
+            }
+        }
+
+        private void InjectCachedEventData()
+        {
             if (cachedEventData != null)
             {
                 OnPartVolumeChanged(cachedEventData);
             }
-
-            base.Start();
-            started = true;
-            Log("Start finished");
         }
 
         private void SetFallbackConfigForLegacyCraft()
@@ -294,13 +306,6 @@ namespace RP0.ProceduralAvionics
 					Log("Volume fixed, refreshing part window");
 				}
 				RefreshPartWindow();
-			}
-		}
-
-        public void FixedUpdate()
-		{
-			if (!HighLogic.LoadedSceneIsEditor) {
-				SetScienceContainer();
 			}
 		}
 
@@ -516,20 +521,15 @@ namespace RP0.ProceduralAvionics
             powerRequirementsDisplay = powerConsumptionBuilder.ToStringAndRelease();
         }
 
-		private bool scienceContainerFiltered = false;
 		private void SetScienceContainer()
 		{
-			if (scienceContainerFiltered) {
-				return;
-			}
 			if (!hasScienceContainer) {
 				var module = part.FindModuleImplementing<ModuleScienceContainer>();
 				if (module != null) {
 					part.RemoveModule(module);
 				}
 			}
-			Log("Setting science container to ", (hasScienceContainer ? "enabled." : "disabled."));
-			scienceContainerFiltered = true;
+			Log("Setting science container to ", hasScienceContainer ? "enabled." : "disabled.");
 		}
 
         private void RefreshCostAndMassDisplays()

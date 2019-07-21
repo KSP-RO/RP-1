@@ -38,24 +38,26 @@ namespace RP0.ProceduralAvionics
 				string[] typeStrings = param.Split('|');
 				if (typeStrings.Length > 1) {
 					for (int i = 0; i < typeStrings.Length; i += 2) {
-						unlockedTech.Add(typeStrings[i], typeStrings[i + 1]);
+                        var configName = typeStrings[i];
+                        if (allTechNodes.Any(x => x.name == configName))
+                        {
+                            unlockedTech.Add(configName, typeStrings[i + 1]);
+                        }
 					}
 				}
 			}
 			ProceduralAvionicsUtils.Log("unlocked tech has ", unlockedTech.Keys.Count.ToString(), " nodes");
 
 			//At this point, we can go through our configs and see if we have any that need to be unlocked
-			foreach (ProceduralAvionicsConfig config in allTechNodes) {
+			foreach (var config in allTechNodes) {
 				if (!unlockedTech.ContainsKey(config.name)) {
-					//We don't have max level for this config, should we?
-					ProceduralAvionicsTechNode freeTech = 
-						config.TechNodes.Values.Where(techNode => GetUnlockCost(config.name, techNode) <= 1).FirstOrDefault();
+					var freeTech = config.TechNodes.Values.FirstOrDefault(techNode => GetUnlockCost(config.name, techNode) <= 1 && techNode.IsAvailable);
 					if (freeTech != null) {
 						unlockedTech.Add(config.name, freeTech.name);
 					}
 				}
 			}
-		}
+        }
 
 		#endregion
 
@@ -107,7 +109,7 @@ namespace RP0.ProceduralAvionics
 			return state;
 		}
 
-		internal static void SetMaxUnlockedTech( string avionicsConfigName, string techNodeName)
+		internal static void SetMaxUnlockedTech(string avionicsConfigName, string techNodeName)
 		{
 			ProceduralAvionicsUtils.Log("Unlocking ", techNodeName, " for ", avionicsConfigName);
 			if (!unlockedTech.ContainsKey(avionicsConfigName)) {
@@ -156,7 +158,7 @@ namespace RP0.ProceduralAvionics
 
 		public static ProceduralAvionicsConfig GetProceduralAvionicsConfig(string configName)
 		{
-			return allTechNodes.Where(config => config.name == configName).FirstOrDefault();
+			return allTechNodes.Where(config => config.name == configName).FirstOrDefault() ?? new ProceduralAvionicsConfig {name = "LegacyConfig"};
 		}
 	}
 }

@@ -17,10 +17,11 @@ namespace RP0.ProceduralAvionics
 		const string kwFormat = "{0:0.##}";
 		const string wFormat = "{0:0}";
         const float FLOAT_TOLERANCE = 1.00001f;
+        private const float InternalTanksVolumeUtilization = 7f / 9;
 
         [KSPField(isPersistant = true, guiName = "Contr. Mass", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
 		 UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "\u2009t")]
-		public float controllableMass = 0;
+		public float controllableMass = -1;
 
 		[KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Configuration"), UI_ChooseOption(scene = UI_Scene.Editor)]
 		public string avionicsConfigName;
@@ -66,9 +67,6 @@ namespace RP0.ProceduralAvionics
         [KSPField(isPersistant = true)]
         public float disabledPowerFactor;
 
-        [KSPField(isPersistant = true)]
-		public int SASServiceLevel = -1;
-
 		[KSPField(isPersistant = true)]
 		public bool hasScienceContainer = false;
 
@@ -94,7 +92,7 @@ namespace RP0.ProceduralAvionics
 				{
 					return CurrentProceduralAvionicsConfig.TechNodes[avionicsTechLevel];
 				}
-				return null;
+                return new ProceduralAvionicsTechNode();
 			}
 		}
 
@@ -176,38 +174,58 @@ namespace RP0.ProceduralAvionics
 
 		private bool started = false;
 		public new void Start()
-		{
-			Log("Start called");
-
-			string config = ProceduralAvionicsTechManager.GetPurchasedConfigs()[0];
-			Log("Default config to use: ", config);
-
-			if (String.IsNullOrEmpty(avionicsTechLevel)) {
-				avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(
-					String.IsNullOrEmpty(avionicsConfigName) ? config : avionicsConfigName);
-				Log("No tech level set, using ", avionicsTechLevel);
-			}
-
-			if (String.IsNullOrEmpty(avionicsConfigName)) {
-				Log("No config set, using ", config);
-				avionicsConfigName = config;
-			}
-
-			UpdateConfigSliders();
-			BindUIChangeCallbacks();
-
+        {
+            SetFallbackConfigForLegacyCraft();
+            UpdateConfigSliders();
+            BindUIChangeCallbacks();
+            SetControllableMassForLegacyCraft();
             AvionicsConfigChanged();
-
-			if (cachedEventData != null) {
-				OnPartVolumeChanged(cachedEventData);
-			}
-
-			base.Start();
+            InjectCachedEventData();
+            base.Start();
+            SetScienceContainerIfNeeded();
             started = true;
             Log("Start finished");
-		}
+        }
 
-		private bool callbacksBound = false;
+        private void SetScienceContainerIfNeeded()
+        {
+            if (!HighLogic.LoadedSceneIsEditor)
+            {
+                SetScienceContainer();
+            }
+        }
+
+        private void InjectCachedEventData()
+        {
+            if (cachedEventData != null)
+            {
+                OnPartVolumeChanged(cachedEventData);
+            }
+        }
+
+        private void SetFallbackConfigForLegacyCraft()
+        {
+            if (HighLogic.LoadedSceneIsEditor && !ProceduralAvionicsTechManager.GetAvailableConfigs().Contains(avionicsConfigName))
+            {
+                Log($"No valid config set ({avionicsConfigName})");
+                avionicsConfigName = ProceduralAvionicsTechManager.GetPurchasedConfigs().First();
+            }
+            if (string.IsNullOrEmpty(avionicsTechLevel))
+            {
+                avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
+                Log("No tech level set, using ", avionicsTechLevel);
+            }
+        }
+
+        private void SetControllableMassForLegacyCraft()
+        {
+            if (controllableMass < 0)
+            {
+                controllableMass = HighLogic.LoadedSceneIsFlight ? float.MaxValue : 0;
+            }
+        }
+
+        private bool callbacksBound = false;
 		private void BindUIChangeCallbacks()
 		{
 			if (!callbacksBound) {
@@ -288,14 +306,6 @@ namespace RP0.ProceduralAvionics
 					Log("Volume fixed, refreshing part window");
 				}
 				RefreshPartWindow();
-			}
-		}
-
-        public void FixedUpdate()
-		{
-			if (!HighLogic.LoadedSceneIsEditor) {
-				SetSASServiceLevel();
-				SetScienceContainer();
 			}
 		}
 
@@ -381,12 +391,12 @@ namespace RP0.ProceduralAvionics
         private void UpdateConfigSliders()
 		{
 			Log("Updating Config Slider");
-			BaseField avionicsConfigField = Fields[nameof(avionicsConfigName)];
+			var avionicsConfigField = Fields[nameof(avionicsConfigName)];
 			avionicsConfigField.guiActiveEditor = true;
-			UI_ChooseOption range = (UI_ChooseOption)avionicsConfigField.uiControlEditor;
+			var range = (UI_ChooseOption)avionicsConfigField.uiControlEditor;
 			range.options = ProceduralAvionicsTechManager.GetPurchasedConfigs().ToArray();
 
-			if (String.IsNullOrEmpty(avionicsConfigName)) {
+			if (string.IsNullOrEmpty(avionicsConfigName)) {
 				avionicsConfigName = range.options[0];
 				Log("Defaulted config to ", avionicsConfigName);
 			}
@@ -434,7 +444,7 @@ namespace RP0.ProceduralAvionics
             }
             Log($"Sending remaining volume: {cachedVolume - GetAvionicsMass() / avionicsDensity}");
             Events[nameof(OnPartVolumeChanged)].active = false;
-            SendVolumeChangedEvent(cachedVolume - GetAvionicsMass() / avionicsDensity);
+            SendVolumeChangedEvent(cachedVolume - GetAvionicsMass() / avionicsDensity * InternalTanksVolumeUtilization);
             Events[nameof(OnPartVolumeChanged)].active = true;
         }
 
@@ -464,7 +474,6 @@ namespace RP0.ProceduralAvionics
             disabledPowerFactor = CurrentProceduralAvionicsTechNode.disabledPowerFactor;
             avionicsDensity = CurrentProceduralAvionicsTechNode.avionicsDensity;
 
-            SASServiceLevel = CurrentProceduralAvionicsTechNode.SASServiceLevel;
             hasScienceContainer = CurrentProceduralAvionicsTechNode.hasScienceContainer;
             interplanetary = CurrentProceduralAvionicsTechNode.interplanetary;
         }
@@ -473,13 +482,13 @@ namespace RP0.ProceduralAvionics
         {
             RefreshCostAndMassDisplays();
 
-            utilizationDisplay = String.Format("{0:0.#}%", GetControllableUtilizationPercentage() * 100);
+            utilizationDisplay = String.Format("{0:0.#}%", Utilization* 100);
             Log("Utilization display: ", utilizationDisplay);
 
             RefreshPowerDisplay();
         }
 
-        private float GetControllableUtilizationPercentage() => GetAvionicsMass() / MaxAvionicsMass;
+        public float Utilization => GetAvionicsMass() / MaxAvionicsMass;
 
         private float MaxAvionicsMass => cachedVolume * avionicsDensity;
 
@@ -489,11 +498,11 @@ namespace RP0.ProceduralAvionics
             double kW = GetEnabledkW();
             if (kW >= 1)
             {
-                powerConsumptionBuilder.AppendFormat(kwFormat, kW).Append(" kW");
+                powerConsumptionBuilder.AppendFormat(kwFormat, kW).Append("\u2009kW");
             }
             else
             {
-                powerConsumptionBuilder.AppendFormat(wFormat, kW * 1000).Append(" W");
+                powerConsumptionBuilder.AppendFormat(wFormat, kW * 1000).Append("\u2009W");
             }
             double dkW = GetDisabledkW();
             if (dkW > 0)
@@ -501,47 +510,26 @@ namespace RP0.ProceduralAvionics
                 powerConsumptionBuilder.Append(" /");
                 if (dkW >= 0.1)
                 {
-                    powerConsumptionBuilder.AppendFormat(kwFormat, dkW).Append(" kW");
+                    powerConsumptionBuilder.AppendFormat(kwFormat, dkW).Append("\u2009kW");
                 }
                 else
                 {
-                    powerConsumptionBuilder.AppendFormat(wFormat, dkW * 1000).Append(" W");
+                    powerConsumptionBuilder.AppendFormat(wFormat, dkW * 1000).Append("\u2009W");
                 }
             }
 
             powerRequirementsDisplay = powerConsumptionBuilder.ToStringAndRelease();
         }
 
-        private ModuleSAS sasModule = null;
-		private void SetSASServiceLevel()
-		{
-			if (SASServiceLevel >= 0) {
-				if (sasModule == null) {
-					sasModule = part.FindModuleImplementing<ModuleSAS>();
-				}
-				if (sasModule != null) {
-					if (sasModule.SASServiceLevel != SASServiceLevel) {
-						sasModule.SASServiceLevel = SASServiceLevel;
-						Log("Setting SAS service level to ", SASServiceLevel);
-					}
-				}
-			}
-		}
-
-		private bool scienceContainerFiltered = false;
 		private void SetScienceContainer()
 		{
-			if (scienceContainerFiltered) {
-				return;
-			}
 			if (!hasScienceContainer) {
 				var module = part.FindModuleImplementing<ModuleScienceContainer>();
 				if (module != null) {
 					part.RemoveModule(module);
 				}
 			}
-			Log("Setting science container to ", (hasScienceContainer ? "enabled." : "disabled."));
-			scienceContainerFiltered = true;
+			Log("Setting science container to ", hasScienceContainer ? "enabled." : "disabled.");
 		}
 
         private void RefreshCostAndMassDisplays()
@@ -568,28 +556,21 @@ namespace RP0.ProceduralAvionics
 		private int selectedConfigIndex = 0;
 		void WindowFunction(int windowID)
 		{
-			string[] configNames = ProceduralAvionicsTechManager.GetAvailableConfigs().ToArray();
-
-			selectedConfigIndex = GUILayout.Toolbar(
-				selectedConfigIndex,
-				configNames);
-
-			string guiAvionicsConfigName = configNames[selectedConfigIndex];
-
-			ProceduralAvionicsConfig currentlyDisplayedConfigs =
-				ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(guiAvionicsConfigName);
-			foreach (ProceduralAvionicsTechNode techNode in currentlyDisplayedConfigs.TechNodes.Values) {
+			var configNames = ProceduralAvionicsTechManager.GetAvailableConfigs().ToArray();
+			selectedConfigIndex = GUILayout.Toolbar(selectedConfigIndex, configNames);
+			var guiAvionicsConfigName = configNames[selectedConfigIndex];
+			var currentlyDisplayedConfigs = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(guiAvionicsConfigName);
+			foreach (var techNode in currentlyDisplayedConfigs.TechNodes.Values) {
 				if (!techNode.IsAvailable) {
 					continue;
 				}
 				if (techNode == CurrentProceduralAvionicsTechNode) {
 					GUILayout.Label("Current Config: " + techNode.name);
-					GUILayout.Label("SAS Level: " + techNode.SASServiceLevel.ToString());
 					GUILayout.Label("Storage Container: " + (techNode.hasScienceContainer ? "Yes" : "No"));
 				}
 				else {
-					bool switchedConfig = false;
-					int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(guiAvionicsConfigName, techNode);
+					var switchedConfig = false;
+					var unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(guiAvionicsConfigName, techNode);
 					if (unlockCost == 0) {
 						if (GUILayout.Button("Switch to " + BuildTechName(techNode))) {
 							switchedConfig = true;
@@ -635,20 +616,9 @@ namespace RP0.ProceduralAvionics
 			return sbuilder.ToStringAndRelease();
 		}
 
-		private static string BuildSasAndScienceString(ProceduralAvionicsTechNode techNode)
-		{
-			StringBuilder sbuilder = StringBuilderCache.Acquire();
-			sbuilder.Append(" {SAS: ");
-			sbuilder.Append(techNode.SASServiceLevel);
-			if (techNode.hasScienceContainer) {
-				sbuilder.Append(", SC");
-			}
-			sbuilder.Append("}");
+        private static string BuildSasAndScienceString(ProceduralAvionicsTechNode techNode) => techNode.hasScienceContainer ? " {SC}" : "";
 
-			return sbuilder.ToString();
-		}
-
-		private string BuildCostString(int cost)
+        private string BuildCostString(int cost)
 		{
 			if (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) {
 				return String.Empty;

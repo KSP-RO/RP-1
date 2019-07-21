@@ -15,44 +15,40 @@ namespace RP0.ProceduralAvionics
         public int techLevel;
 
         [Persistent]
-		public float massExponent = 1;
+		public float massExponent;
 
         [Persistent]
-        public float massConstant = 1;
+        public float massConstant;
 
         [Persistent]
-        public float massFactor = 1;
+        public float massFactor;
 
         [Persistent]
-        public float shieldingMassFactor = 0;
+        public float shieldingMassFactor;
 
         [Persistent]
-        public float costExponent = 1;
+        public float costExponent;
 
         [Persistent]
-        public float costConstant = 1;
+        public float costConstant;
 
         [Persistent]
-        public float costFactor = 1;
+        public float costFactor;
 
         [Persistent]
-        public float powerExponent = 1;
+        public float powerExponent;
 
         [Persistent]
-        public float powerConstant = 1;
+        public float powerConstant;
 
         [Persistent]
-        public float powerFactor = 1;
+        public float powerFactor;
 
 		[Persistent]
 		public float disabledPowerFactor = -1;
 
 		[Persistent]
-		public float avionicsDensity = 1f;
-
-		// This is the service level of the SAS part module
-		[Persistent]
-		public int SASServiceLevel = 5;
+		public float avionicsDensity = 1;
 
 		// Controls whether or not this part has a science return container 
 		[Persistent]

@@ -39,12 +39,12 @@ namespace RP0
 
         private float[] GetPerLevelToolingCosts(float diameter, float length)
         {
-            var avToolingFactor = 0.8f;
-            var dimensionToolingFactor = 1 - avToolingFactor;
+            var controlledMassToolingFactor = 0.95f;
+            var dimensionToolingFactor = 1 - controlledMassToolingFactor;
             //simulate the use of 7 cylindrical tanks, each having a diameter of 1/3 of the surrounding cylinder
             var internalTankDiameter = diameter * Mathf.Sqrt(1 - procAvionics.Utilization) / 3;
             return new[] {
-                GetControlledMassToolingCost() * avToolingFactor,
+                GetControlledMassToolingCost() * controlledMassToolingFactor,
                 base.GetDiameterToolingCost(diameter) * dimensionToolingFactor,
                 base.GetLengthToolingCost(diameter, length) * dimensionToolingFactor + GetInternalTankToolingCosts(internalTankDiameter, length) * (1 - dimensionToolingFactor)
             };

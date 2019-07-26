@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
+using KSP.UI.Screens;
 
 namespace RP0.Crew
 {
@@ -152,7 +153,7 @@ namespace RP0.Crew
             }
             _instance = this;
 
-            GameEvents.OnVesselRecoveryRequested.Add(VesselRecoveryRequested);
+            GameEvents.onVesselRecoveryProcessing.Add(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Add(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
@@ -477,7 +478,7 @@ namespace RP0.Crew
 
         public void OnDestroy()
         {
-            GameEvents.OnVesselRecoveryRequested.Remove(VesselRecoveryRequested);
+            GameEvents.onVesselRecoveryProcessing.Remove(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Remove(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Remove(ACDespawn);
@@ -549,20 +550,33 @@ namespace RP0.Crew
             retirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
         }
 
-        protected void VesselRecoveryRequested(Vessel v)
+        private void VesselRecoveryProcessing(ProtoVessel v, MissionRecoveryDialog mrDialog, float data)
         {
-            double elapsedTime = v.missionTime;
+            Debug.Log("[VR] - Vessel recovery processing");
+
             List<string> retirementChanges = new List<string>();
             List<string> inactivity = new List<string>();
 
             double UT = Planetarium.GetUniversalTime();
 
+            // normally we would use v.missionTime, but that doesn't seem to update
+            // when you're not actually controlling the vessel
+            double elapsedTime = UT - v.launchTime;
+
             // When flight duration was too short, mission training should not be set as expired.
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
-            if (elapsedTime < settings.minFlightDurationSecondsForTrainingExpire) return;
+            // We could perhaps override this if they're not actually in flight
+            // (if the user didn't recover right from the pad I think this is a fair assumption)
+            if (elapsedTime < settings.minFlightDurationSecondsForTrainingExpire)
+            {
+                Debug.Log("[VR] - mission time too short for crew to be inactive (elapsed time was " + elapsedTime + ", settings set for " + settings.minFlightDurationSecondsForTrainingExpire + ")");
+                return;
+            }
 
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
+                Debug.Log("[VR] - Found ProtoCrewMember: " + pcm.displayName);
+
                 bool hasSpace = false;
                 bool hasOrbit = false;
                 bool hasEVA = false;
@@ -670,12 +684,14 @@ namespace RP0.Crew
             }
             if (inactivity.Count > 0)
             {
+                Debug.Log("[VR] - showing on leave message");
+
                 string msgStr = "The following crew members will be on leave:";
                 foreach (string s in inactivity)
                 {
                     msgStr += s;
                 }
-                
+
                 if (retirementEnabled && retirementChanges.Count > 0)
                 {
                     msgStr += "\n\nThe following retirement changes have occurred:";

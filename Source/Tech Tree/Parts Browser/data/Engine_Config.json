@@ -1331,7 +1331,7 @@
         "spacecraft": "",
         "engine_config": "Castor-1",
         "upgrade": true,
-        "entry_cost_mods": "5000, SolidsHollow",
+        "entry_cost_mods": "5000, Castor-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1354,7 +1354,7 @@
         "spacecraft": "",
         "engine_config": "Castor-1",
         "upgrade": true,
-        "entry_cost_mods": "5000, SolidsHollow",
+        "entry_cost_mods": "5000, Castor-1",
         "identical_part_name": "",
         "module_tags": []
     },

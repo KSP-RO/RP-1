@@ -4,7 +4,8 @@ using System.Text;
 using KSP;
 using UnityEngine;
 using KSP.UI;
-
+using System.Linq;
+using System.Reflection;
 
 namespace RP0
 {
@@ -112,12 +113,48 @@ namespace RP0
 
         ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
+        // For locking MJ.
+        MethodInfo getMasterMechJeb = null;
+        PropertyInfo mjDeactivateControl = null;
+        object masterMechJeb = null;
+
+        ControlLocker()
+        {
+            var mechJebAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2");
+            if (mechJebAssembly != null)
+            {
+                Debug.Log("[RP-0 Avionics] MechJeb assembly found");
+
+                Type mechJebCore = Type.GetType("MuMech.MechJebCore, MechJeb2");
+                if (mechJebCore != null)
+                {
+                    mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
+
+                    Type mechJebVesselExtensions = Type.GetType("MuMech.VesselExtensions, MechJeb2");
+                    if (mechJebVesselExtensions != null)
+                    {
+                        getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
+
+                        if ( mjDeactivateControl != null && getMasterMechJeb != null )
+                        {
+                            Debug.Log("[RP-0 Avionics] MechJeb methods present" );
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("[RP-0 Avionics] No MJ assembly found");
+            }
+        }
+
         public bool ShouldLock()
         {
             if (vessel != FlightGlobals.ActiveVessel)
             {
                 vParts = -1;
                 vessel = FlightGlobals.ActiveVessel;
+                masterMechJeb = null;
             }
             // if we have no active vessel, undo locks
             if ((object)vessel == null)
@@ -141,6 +178,7 @@ namespace RP0
                 InputLockManager.RemoveControlLock(lockID);
                 return;
             }
+
             bool doLock = ShouldLock();
             if (doLock != wasLocked)
             {
@@ -159,6 +197,16 @@ namespace RP0
                 ScreenMessages.PostScreenMessage(message);
                 FlightLogger.fetch.LogEvent(message.message);
                 wasLocked = doLock;
+            }
+
+            if (masterMechJeb == null && getMasterMechJeb != null)
+            {
+                masterMechJeb = getMasterMechJeb.Invoke(null, new object[] { FlightGlobals.ActiveVessel });
+            }
+            if (masterMechJeb != null && mjDeactivateControl != null)
+            {
+                // Update MJ every tick, to make sure it gets correct state after separation / docking.
+                mjDeactivateControl.SetValue(masterMechJeb, doLock, index: null);
             }
         }
         public void OnDestroy()

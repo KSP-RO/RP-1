@@ -10,7 +10,7 @@ namespace RP0.ModuleTags
         {
             string str = string.Empty;
             str = "Contains radioactive elements that must be carefully handled and integrated. Additional permits need to be secure increasing rollout costs.\n\n" +
-                "<b><color=orange>Rollout Cost: Cost of This Part * 5.0</color></b>";
+                "<b><color=orange>Rollout Cost: Cost of This Part * 5.0, cost of ALL Parts * 1.5</color></b>";
             return str;
         }
     }

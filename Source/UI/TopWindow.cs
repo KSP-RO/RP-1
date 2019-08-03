@@ -21,7 +21,7 @@ namespace RP0
 
         public void OnGUI()
         {
-            windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-0");
+            windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1");
         }
 
         protected override void OnStart()
@@ -46,7 +46,7 @@ namespace RP0
                     currentTab = tabs.Maintenance;
                 if (showTab(tabs.Tooling) && toggleButton("Tooling", currentTab == tabs.Tooling))
                     currentTab = tabs.Tooling;
-                if (showTab(tabs.Training) && toggleButton("Training", currentTab == tabs.Training))
+                if (showTab(tabs.Training) && toggleButton("Astronauts", currentTab == tabs.Training))
                     currentTab = tabs.Training;
                 if (showTab(tabs.Courses) && toggleButton("Courses", currentTab == tabs.Courses))
                     currentTab = tabs.Courses;

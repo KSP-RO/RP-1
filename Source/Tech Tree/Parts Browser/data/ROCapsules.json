@@ -18,7 +18,7 @@
         "spacecraft": "Apollo",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "35000, capsulesApollo",
+        "entry_cost_mods": "capsulesApollo",
         "identical_part_name": "Apollo CM",
         "module_tags": [
             "HumanRated",

@@ -906,7 +906,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant",
         "module_tags": [
             "EngineSolid"
@@ -931,7 +931,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant",
         "module_tags": [
             "EngineSolid"
@@ -956,7 +956,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant",
         "module_tags": [
             "EngineSolid"
@@ -981,7 +981,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x11",
         "module_tags": [
             "EngineSolid"
@@ -1006,7 +1006,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x11",
         "module_tags": [
             "EngineSolid"
@@ -1031,7 +1031,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x11",
         "module_tags": [
             "EngineSolid"
@@ -1102,7 +1102,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x3",
         "module_tags": [
             "EngineSolid"
@@ -1127,7 +1127,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x3",
         "module_tags": [
             "EngineSolid"
@@ -1152,7 +1152,7 @@
         "spacecraft": "Explorer 1",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x3",
         "module_tags": [
             "EngineSolid"

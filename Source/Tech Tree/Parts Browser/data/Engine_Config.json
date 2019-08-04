@@ -8519,7 +8519,7 @@
         "spacecraft": "Baby Sergeant",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "5000, Castor-1",
+        "entry_cost_mods": "10000, SolidsHollow",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9280,7 +9280,7 @@
         "spacecraft": "",
         "engine_config": "Castor-1",
         "upgrade": false,
-        "entry_cost_mods": "5000, SolidsHollow",
+        "entry_cost_mods": "Castor-1",
         "identical_part_name": "",
         "module_tags": []
     },

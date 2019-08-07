@@ -12,6 +12,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public int budgetCounter = 0;
 
+        [KSPField(isPersistant = true)]
+        public double reputation = -double.MaxValue;
+
         public const int BudgetPeriodMonths = 3;
         public const double BaseBudgetStart = 50000 * BudgetPeriodMonths / 12;
         public const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
@@ -22,6 +25,14 @@ namespace RP0
 
         public static BudgetHandler Instance { get; private set; } = null;
 
+        public void Start()
+        {
+            if(reputation == -double.MaxValue)
+            {
+                reputation = Reputation.CurrentRep;
+            }
+        }
+
         public override void OnAwake()
         {
             if (Instance != null)
@@ -29,6 +40,26 @@ namespace RP0
                 Destroy(Instance);
             }
             Instance = this;
+            GameEvents.Modifiers.OnCurrencyModified.Add(OnCurrencyModified);
+        }
+
+        public void OnDestroy()
+        {
+            GameEvents.Modifiers.OnCurrencyModified.Remove(OnCurrencyModified);
+        }
+
+        private void OnCurrencyModified(CurrencyModifierQuery data)
+        {
+            var reputationChange = data.GetInput(Currency.Reputation);
+            if (reputationChange != 0)
+            {
+                if ((data.reason & TransactionReasons.Contracts) > 0)
+                {
+                    Debug.Log($"[RP0] Reputation change valid for budgets:");
+                    reputation += reputationChange;
+                }
+                Debug.Log($"[RP0] Reputation changed by: {reputationChange} (reason: {data.reason}, total reputation: {reputation})");
+            }
         }
 
         public void Update()
@@ -74,8 +105,8 @@ namespace RP0
 
         private double GetRepBudget()
         {
-            var reputationToConvert = Reputation.CurrentRep * ReputationDecayFactor;
-            Reputation.Instance.AddReputation(-reputationToConvert, TransactionReasons.None);
+            var reputationToConvert = Math.Max(reputation * ReputationDecayFactor, 0);
+            reputation -= reputationToConvert;
             return reputationToConvert * ReputationToFundsFactor;
         }
     }

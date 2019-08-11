@@ -17,7 +17,7 @@ namespace RP0
         public const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
         public const int StartToEndPeriods = 12 * 4;
         public const float ReputationDecayFactor = 0.125f;
-        public const float ReputationToFundsFactor = 10_000;
+        public const float ReputationToFundsFactor = 1000;
         public static readonly DateTime Epoch = new DateTime(1951, 1, 1);
 
         public static BudgetHandler Instance { get; private set; } = null;

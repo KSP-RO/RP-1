@@ -48,6 +48,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Budget\BudgetHandler.cs" />
     <Compile Include="Crew\ActiveCourse.cs" />
     <Compile Include="Crew\CourseTemplate.cs" />
     <Compile Include="Crew\CrewHandlerSettings.cs" />

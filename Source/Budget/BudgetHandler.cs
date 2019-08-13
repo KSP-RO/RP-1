@@ -38,21 +38,20 @@ namespace RP0
                 return;
             }
 
-            var time = Planetarium.GetUniversalTime();
-            if (nextUpdate > time)
+            if (nextUpdate > Planetarium.GetUniversalTime())
             {
                 return;
             }
             StopTimeWarp();
             PayBudget();
-            ScheduleNextUpdate(time);
+            ScheduleNextUpdate();
         }
 
         private static void StopTimeWarp() => TimeWarp.SetRate(0, true);
 
-        private void ScheduleNextUpdate(double time)
+        private void ScheduleNextUpdate()
         {
-            nextUpdate = Epoch.AddSeconds(time).AddMonths(BudgetPeriodMonths).Date.Subtract(Epoch).TotalSeconds;
+            nextUpdate = Epoch.AddMonths(BudgetPeriodMonths * (budgetCounter+1)).Date.Subtract(Epoch).TotalSeconds;
         }
 
         private void PayBudget()

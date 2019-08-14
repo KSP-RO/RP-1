@@ -13,10 +13,10 @@ namespace RP0
         public int budgetCounter = 0;
 
         public const int BudgetPeriodMonths = 3;
-        public const double BaseBudgetStart = 50000 * BudgetPeriodMonths / 12;
+        public const double BaseBudgetStart = 20000 * BudgetPeriodMonths / 12;
         public const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
-        public const int StartToEndPeriods = 12 * 4;
-        public const float ReputationDecayFactor = 0.125f;
+        public const int StartToEndPeriods = 20 / BudgetPeriodMonths * 12;
+        public const float ReputationDecayFactor = 0.1f;
         public const float ReputationToFundsFactor = 1000;
         public static readonly DateTime Epoch = new DateTime(1951, 1, 1);
 

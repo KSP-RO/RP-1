@@ -51,7 +51,7 @@ namespace RP0
 
         private void ScheduleNextUpdate()
         {
-            nextUpdate = Epoch.AddMonths(BudgetPeriodMonths * (budgetCounter+1)).Date.Subtract(Epoch).TotalSeconds;
+            nextUpdate = Epoch.AddMonths(BudgetPeriodMonths * budgetCounter).Date.Subtract(Epoch).TotalSeconds;
         }
 
         private void PayBudget()

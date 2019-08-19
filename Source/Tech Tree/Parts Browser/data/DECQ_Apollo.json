@@ -290,7 +290,7 @@
         "technology": "surfaceScience",
         "ro": true,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Apollo Rover",
         "engine_config": "",
         "upgrade": false,

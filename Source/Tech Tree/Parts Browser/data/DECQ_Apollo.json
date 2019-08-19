@@ -19,6 +19,7 @@
         "entry_cost_mods": "capsulesApollo",
         "identical_part_name": "Apollo CM",
         "module_tags": [
+            "HumanRated",
             "NoResourceCostMult",
             "Reentry"
         ]

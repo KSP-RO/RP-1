@@ -4976,7 +4976,7 @@
         "title": "Nike-M5E1",
         "description": "Solid Sounding Rocket Motor",
         "mod": "Engine_Config",
-        "cost": "10",
+        "cost": 180,
         "entry_cost": "0",
         "category": "SOLID",
         "info": "",

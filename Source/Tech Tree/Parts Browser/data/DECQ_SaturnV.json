@@ -260,5 +260,26 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "TOWER_SV",
+        "title": "Saturn V Launch Tower",
+        "description": "",
+        "mod": "DECQ_SaturnV",
+        "cost": "30",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Clamps",
+        "year": "1968",
+        "technology": "materialsScienceLunar",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Saturn V",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
     }
 ]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RP0.Crew;
 using UnityEngine;
 using Upgradeables;
@@ -168,7 +169,7 @@ namespace RP0
                 acCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, lvlInt), settings.facilityLevelCostPow);
                 if (CrewHandler.Instance?.ActiveCourses != null)
                 {
-                    double courses = CrewHandler.Instance.ActiveCourses.Count;
+                    double courses = CrewHandler.Instance.ActiveCourses.Count(c => c.Started);
                     if (courses > 0)
                     {
                         courses -= lvlInt * settings.freeCoursesPerLevel;

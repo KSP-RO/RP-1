@@ -71,8 +71,10 @@ namespace RP0
             return tmp * settings.kctBPMult * maintenanceCostMult;
         }}
         public double researchUpkeep = 0d;
-        public double nautYearlyUpkeep = 0d;
-        public double nautUpkeep = 0d;
+        public double trainingUpkeep = 0d;
+        public double nautBaseUpkeep = 0d;
+        public double nautInFlightUpkeep = 0d;
+        public double nautTotalUpkeep = 0d;
         public double totalUpkeep = 0d;
 
         public MaintenanceSettings settings = new MaintenanceSettings();
@@ -121,7 +123,6 @@ namespace RP0
             float[] costs;
             EnsureFacilityLvlCostsLoaded();
 
-            // Pad
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out costs))
             {
                 if (kctResearchRate > 0d)
@@ -141,31 +142,25 @@ namespace RP0
                     padCost = settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
             }
 
-            // Runway
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.Runway, out costs))
                 runwayCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
-            //VAB
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out costs))
                 vabCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
-            //SPH
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
                 sphCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
-            //RnD
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out costs))
                 rndCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
-            // MC
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.MissionControl, out costs))
                 mcCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
-            // TS
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.TrackingStation, out costs))
                 tsCost = maintenanceCostMult * settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (costs.Length - 0.95f))), settings.facilityLevelCostPow);
 
-            // AC
+            trainingUpkeep = 0d;
             if (facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out costs))
             {
                 float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
@@ -178,13 +173,17 @@ namespace RP0
                     {
                         courses -= lvlInt * settings.freeCoursesPerLevel;
                         if (courses > 0d)
-                            acCost *= 1d + (courses * (settings.courseMultiplierDivisor / (settings.courseMultiplierDivisor + lvlInt)));
+                        {
+                            trainingUpkeep = acCost * (courses * (settings.courseMultiplierDivisor / (settings.courseMultiplierDivisor + lvlInt)));
+                        }
                     }
                 }
             }
 
-            nautYearlyUpkeep = maintenanceCostMult * settings.nautYearlyUpkeepBase + ((double)ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * maintenanceCostMult * settings.nautYearlyUpkeepAdd);
-            nautUpkeep = 0d;
+            double nautYearlyUpkeep = maintenanceCostMult * settings.nautYearlyUpkeepBase + ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * maintenanceCostMult * settings.nautYearlyUpkeepAdd;
+            nautBaseUpkeep = 0d;
+            nautInFlightUpkeep = 0d;
+            nautTotalUpkeep = 0d;
             double perNaut = nautYearlyUpkeep * (1d / 365d);
             int nautCount = 0;
             for (int i = HighLogic.CurrentGame.CrewRoster.Count; i-- > 0;)
@@ -198,7 +197,7 @@ namespace RP0
 
                 ++nautCount;
                 if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
-                    nautUpkeep += maintenanceCostMult * settings.nautInFlightDailyRate;
+                    nautInFlightUpkeep += maintenanceCostMult * settings.nautInFlightDailyRate;
                 else
                 {
                     // TODO we really should track this independently, in crewhandler, for fast
@@ -208,17 +207,19 @@ namespace RP0
                         var e = k.flightLog[j];
                         if (e.type == "TRAINING_proficiency" && TrainingDatabase.HasName(e.target, "Orbit"))
                         {
-                            nautUpkeep += maintenanceCostMult * settings.nautOrbitProficiencyDailyRate;
+                            nautBaseUpkeep += maintenanceCostMult * settings.nautOrbitProficiencyDailyRate;
                             break;
                         }
                     }
                 }
             }
-            nautUpkeep += nautCount * perNaut;
+
+            nautBaseUpkeep += nautCount * perNaut;
+            nautTotalUpkeep = nautBaseUpkeep + trainingUpkeep + nautInFlightUpkeep;
 
             researchUpkeep = maintenanceCostMult * kctResearchRate * settings.kctResearchMult;
 
-            totalUpkeep = facilityUpkeep + integrationUpkeep + researchUpkeep + nautUpkeep;
+            totalUpkeep = facilityUpkeep + integrationUpkeep + researchUpkeep + nautTotalUpkeep;
         }
 
         public void Update()

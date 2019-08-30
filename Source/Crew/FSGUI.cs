@@ -36,13 +36,21 @@ namespace RP0.Crew
         {
             DialogGUIBase[] options = new DialogGUIBase[3];
             options[0] = new DialogGUIFlexibleSpace();
-            options[1] = new DialogGUIButton("Yes", () => { course.RemoveStudent(student); });
+            options[1] = new DialogGUIButton("Yes", () => 
+            {
+                course.RemoveStudent(student);
+                if (course.Students.Count == 0)
+                {
+                    CrewHandler.Instance.ActiveCourses.Remove(course);
+                    MaintenanceHandler.Instance.UpdateUpkeep();
+                }
+            });
             options[2] = new DialogGUIButton("No", () => { });
             MultiOptionDialog diag = new MultiOptionDialog("ConfirmStudentDropCourse", "Are you sure you want "+student.name+ " to drop this course?", "Drop Course?",
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
-                new DialogGUIVerticalLayout(options));
+                new DialogGUIHorizontalLayout(options));
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
@@ -52,11 +60,13 @@ namespace RP0.Crew
             options[0] = new DialogGUIFlexibleSpace();
             options[1] = new DialogGUIButton("Yes", () =>
                 {
-                    /* We "complete" the course but we didn't mark it as Completed, so it just releases the students and doesn't apply rewards */
+                    // We "complete" the course but we didn't mark it as Completed, so it just releases the students and doesn't apply rewards
                     course.CompleteCourse();
+                    CrewHandler.Instance.ActiveCourses.Remove(course);
+                    MaintenanceHandler.Instance.UpdateUpkeep();
                 });
             options[2] = new DialogGUIButton("No", () => { });
-            StringBuilder msg = new StringBuilder("Are you sure you want to cancel this course?  The following students will cease study:");
+            StringBuilder msg = new StringBuilder("Are you sure you want to cancel this course? The following students will cease study:");
             foreach (ProtoCrewMember stud in course.Students) {
                 msg.AppendLine();
                 msg.Append(stud.name);
@@ -65,7 +75,7 @@ namespace RP0.Crew
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
-                new DialogGUIVerticalLayout(options));
+                new DialogGUIHorizontalLayout(options));
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
@@ -229,6 +239,7 @@ namespace RP0.Crew
                 if (selectedCourse.StartCourse()) {
                     CrewHandler.Instance.ActiveCourses.Add(selectedCourse);
                     selectedCourse = null;
+                    MaintenanceHandler.Instance.UpdateUpkeep();
                 }
             }
             return selectedCourse == null ? tabs.Training : tabs.NewCourse;

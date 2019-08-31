@@ -327,12 +327,14 @@ namespace RP0.Crew
                     }
                 }
 
+                bool anyCourseEnded = false;
                 for (int i = ActiveCourses.Count; i-- > 0;)
                 {
                     ActiveCourse course = ActiveCourses[i];
                     if (course.ProgressTime(time)) //returns true when the course completes
                     {
                         ActiveCourses.RemoveAt(i);
+                        anyCourseEnded = true;
                     }
                 }
 
@@ -391,6 +393,11 @@ namespace RP0.Crew
                     }
 
                     toRemove.Clear();
+                }
+
+                if (anyCourseEnded || toRemove.Count > 0)
+                {
+                    MaintenanceHandler.Instance.UpdateUpkeep();
                 }
             }
 

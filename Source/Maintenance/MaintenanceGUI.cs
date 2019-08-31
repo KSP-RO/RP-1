@@ -87,7 +87,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Astronauts", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.nautUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.nautTotalUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
                 {
                     TopWindow.SwitchTabTo(tabs.Astronauts);
@@ -262,7 +262,7 @@ namespace RP0
             } finally {
                 GUILayout.EndHorizontal();
             }
-            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(360), GUILayout.Height(320));
+            nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(360), GUILayout.Height(280));
             try {
                 nautList();
             } finally {
@@ -272,15 +272,38 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label("Cost per astronaut", HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.nautYearlyUpkeep * perFactor / 365d).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                    GUILayout.Label("Astronaut base cost", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.nautBaseUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }
+
+                GUILayout.BeginHorizontal();
+                try
+                {
+                    GUILayout.Label("Astronaut operational cost", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.nautInFlightUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                }
+                finally
+                {
+                    GUILayout.EndHorizontal();
+                }
+
+                GUILayout.BeginHorizontal();
+                try
+                {
+                    GUILayout.Label("Astronaut training cost", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.trainingUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                }
+                finally
+                {
+                    GUILayout.EndHorizontal();
+                }
+
                 GUILayout.BeginHorizontal();
                 try {
                     GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.nautUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.nautTotalUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }

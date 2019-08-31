@@ -36,13 +36,21 @@ namespace RP0.Crew
         {
             DialogGUIBase[] options = new DialogGUIBase[3];
             options[0] = new DialogGUIFlexibleSpace();
-            options[1] = new DialogGUIButton("Yes", () => { course.RemoveStudent(student); });
+            options[1] = new DialogGUIButton("Yes", () => 
+            {
+                course.RemoveStudent(student);
+                if (course.Students.Count == 0)
+                {
+                    CrewHandler.Instance.ActiveCourses.Remove(course);
+                    MaintenanceHandler.Instance.UpdateUpkeep();
+                }
+            });
             options[2] = new DialogGUIButton("No", () => { });
             MultiOptionDialog diag = new MultiOptionDialog("ConfirmStudentDropCourse", "Are you sure you want "+student.name+ " to drop this course?", "Drop Course?",
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
-                new DialogGUIVerticalLayout(options));
+                new DialogGUIHorizontalLayout(options));
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
@@ -52,11 +60,13 @@ namespace RP0.Crew
             options[0] = new DialogGUIFlexibleSpace();
             options[1] = new DialogGUIButton("Yes", () =>
                 {
-                    /* We "complete" the course but we didn't mark it as Completed, so it just releases the students and doesn't apply rewards */
+                    // We "complete" the course but we didn't mark it as Completed, so it just releases the students and doesn't apply rewards
                     course.CompleteCourse();
+                    CrewHandler.Instance.ActiveCourses.Remove(course);
+                    MaintenanceHandler.Instance.UpdateUpkeep();
                 });
             options[2] = new DialogGUIButton("No", () => { });
-            StringBuilder msg = new StringBuilder("Are you sure you want to cancel this course?  The following students will cease study:");
+            StringBuilder msg = new StringBuilder("Are you sure you want to cancel this course? The following students will cease study:");
             foreach (ProtoCrewMember stud in course.Students) {
                 msg.AppendLine();
                 msg.Append(stud.name);
@@ -65,7 +75,7 @@ namespace RP0.Crew
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
-                new DialogGUIVerticalLayout(options));
+                new DialogGUIHorizontalLayout(options));
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
@@ -98,10 +108,16 @@ namespace RP0.Crew
                 }
                 string course, complete, retires;
                 if (currentCourse == null) {
-                    if (student.inactive) {
+                    if (student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
+                    {
+                        course = "(in-flight)";
+                        complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
+                    }
+                    else if (student.inactive) {
                         course = "(inactive)";
                         complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
-                    } else {
+                    }
+                    else {
                         course = "(free)";
                         complete = "(n/a)";
                     }
@@ -155,8 +171,12 @@ namespace RP0.Crew
                 for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; i++)
                 {
                     ProtoCrewMember student = HighLogic.CurrentGame.CrewRoster[i];
-                    if (student.type == ProtoCrewMember.KerbalType.Crew && student.rosterStatus == ProtoCrewMember.RosterStatus.Available)
+                    if (student.type == ProtoCrewMember.KerbalType.Crew && 
+                        (student.rosterStatus == ProtoCrewMember.RosterStatus.Available ||
+                         (currentTab == tabs.Training && student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)))
+                    {
                         nautListRow(currentTab, student);
+                    }
                 }
             } finally {
                 GUILayout.EndScrollView();
@@ -229,6 +249,7 @@ namespace RP0.Crew
                 if (selectedCourse.StartCourse()) {
                     CrewHandler.Instance.ActiveCourses.Add(selectedCourse);
                     selectedCourse = null;
+                    MaintenanceHandler.Instance.UpdateUpkeep();
                 }
             }
             return selectedCourse == null ? tabs.Training : tabs.NewCourse;
@@ -260,7 +281,7 @@ namespace RP0.Crew
                 ActiveCourse currentCourse = activeMap[selectedNaut];
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label("Studying "+currentCourse.name+" until "+KSPUtil.PrintDate(currentCourse.CompletionTime(), false));
+                    GUILayout.Label($"Studying {currentCourse.name} until {KSPUtil.PrintDate(currentCourse.CompletionTime(), false)}");
                     if (currentCourse.seatMin > 1) {
                         if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
                             cancelCourse(currentCourse);

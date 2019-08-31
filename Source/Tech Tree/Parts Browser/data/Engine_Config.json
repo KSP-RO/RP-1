@@ -1329,9 +1329,9 @@
         "orphan": false,
         "rp0_conf": false,
         "spacecraft": "",
-        "engine_config": "Castor-1",
+        "engine_config": "Castor-1-SL",
         "upgrade": true,
-        "entry_cost_mods": "5000, Castor-1",
+        "entry_cost_mods": "200, Castor-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1352,9 +1352,9 @@
         "orphan": false,
         "rp0_conf": false,
         "spacecraft": "",
-        "engine_config": "Castor-1",
+        "engine_config": "Castor-1-Vac",
         "upgrade": true,
-        "entry_cost_mods": "5000, Castor-1",
+        "entry_cost_mods": "200, Castor-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9280,7 +9280,7 @@
         "spacecraft": "",
         "engine_config": "Castor-1",
         "upgrade": false,
-        "entry_cost_mods": "5000, SolidsHollow",
+        "entry_cost_mods": "4000, SolidsHollow",
         "identical_part_name": "",
         "module_tags": []
     },

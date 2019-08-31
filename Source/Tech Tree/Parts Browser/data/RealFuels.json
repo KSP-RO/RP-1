@@ -357,9 +357,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Castor 1",
-        "engine_config": "Castor-1",
+        "engine_config": "XM-20",
         "upgrade": false,
-        "entry_cost_mods": "Castor-1",
+        "entry_cost_mods": "XM-20",
         "identical_part_name": "Castor 1",
         "module_tags": [
             "EngineSolid"

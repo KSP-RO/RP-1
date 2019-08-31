@@ -108,10 +108,16 @@ namespace RP0.Crew
                 }
                 string course, complete, retires;
                 if (currentCourse == null) {
-                    if (student.inactive) {
+                    if (student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
+                    {
+                        course = "(in-flight)";
+                        complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
+                    }
+                    else if (student.inactive) {
                         course = "(inactive)";
                         complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
-                    } else {
+                    }
+                    else {
                         course = "(free)";
                         complete = "(n/a)";
                     }
@@ -165,8 +171,12 @@ namespace RP0.Crew
                 for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; i++)
                 {
                     ProtoCrewMember student = HighLogic.CurrentGame.CrewRoster[i];
-                    if (student.type == ProtoCrewMember.KerbalType.Crew && student.rosterStatus == ProtoCrewMember.RosterStatus.Available)
+                    if (student.type == ProtoCrewMember.KerbalType.Crew && 
+                        (student.rosterStatus == ProtoCrewMember.RosterStatus.Available ||
+                         (currentTab == tabs.Training && student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)))
+                    {
                         nautListRow(currentTab, student);
+                    }
                 }
             } finally {
                 GUILayout.EndScrollView();
@@ -271,7 +281,7 @@ namespace RP0.Crew
                 ActiveCourse currentCourse = activeMap[selectedNaut];
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label("Studying "+currentCourse.name+" until "+KSPUtil.PrintDate(currentCourse.CompletionTime(), false));
+                    GUILayout.Label($"Studying {currentCourse.name} until {KSPUtil.PrintDate(currentCourse.CompletionTime(), false)}");
                     if (currentCourse.seatMin > 1) {
                         if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
                             cancelCourse(currentCourse);

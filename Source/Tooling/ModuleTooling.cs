@@ -168,6 +168,11 @@ namespace RP0
             if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER || !onStartFinished)
                 return 0f;
 
+            return GetUntooledPenaltyCost();
+        }
+
+        protected float GetUntooledPenaltyCost()
+        {
             if (IsUnlocked())
             {
                 tEvent.guiName = "TOOLED";

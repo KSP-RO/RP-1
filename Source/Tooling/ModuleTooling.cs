@@ -17,7 +17,7 @@ namespace RP0
         public float costReductionMult = 0.5f;
 
         [KSPField]
-        public string toolingName = "Tool Tank";
+        public string toolingName = "Tool Part";
 
         [KSPField]
         public float untooledMultiplier = 0.25f;
@@ -119,7 +119,7 @@ namespace RP0
                         HighLogic.UISkin);
         }
 
-        private void UpdateButtonName() => tEvent.guiName = IsUnlocked() ? "TOOLED" : toolingName;
+        private void UpdateButtonName() => tEvent.guiName = IsUnlocked() ? "Tooled" : toolingName;
         public abstract float GetToolingCost();
 
         public abstract void PurchaseTooling();

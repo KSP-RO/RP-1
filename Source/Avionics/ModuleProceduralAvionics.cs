@@ -444,7 +444,7 @@ namespace RP0.ProceduralAvionics
             }
             Log($"Sending remaining volume: {cachedVolume - GetAvionicsMass() / avionicsDensity}");
             Events[nameof(OnPartVolumeChanged)].active = false;
-            SendVolumeChangedEvent(cachedVolume - GetAvionicsMass() / avionicsDensity * InternalTanksVolumeUtilization);
+            SendVolumeChangedEvent((cachedVolume - GetAvionicsMass() / avionicsDensity) * InternalTanksVolumeUtilization);
             Events[nameof(OnPartVolumeChanged)].active = true;
         }
 

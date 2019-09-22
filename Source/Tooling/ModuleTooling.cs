@@ -77,11 +77,9 @@ namespace RP0
         {
             if (IsUnlocked())
             {
-                tEvent.guiName = "TOOLED";
+                UpdateButtonName();
                 return;
             }
-            else
-                tEvent.guiName = toolingName;
 
             float toolingCost = GetToolingCost();
             bool canAfford = true;
@@ -112,7 +110,7 @@ namespace RP0
                                             Funding.Instance.AddFunds(-toolingCost, TransactionReasons.RnDPartPurchase);
                                             PurchaseTooling();
                                             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
-                                            Events["ToolingEvent"].guiActiveEditor = false;
+                                            UpdateButtonName();
                                         }
                                     }, 140.0f, 30.0f, true),
                                 new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
@@ -121,6 +119,7 @@ namespace RP0
                         HighLogic.UISkin);
         }
 
+        private void UpdateButtonName() => tEvent.guiName = IsUnlocked() ? "TOOLED" : toolingName;
         public abstract float GetToolingCost();
 
         public abstract void PurchaseTooling();
@@ -144,8 +143,7 @@ namespace RP0
         public override void OnStart(StartState state)
         {
             base.OnStart(state);
-
-            tEvent.guiName = IsUnlocked() ? "TOOLED" : toolingName;
+            UpdateButtonName();
 
             try
             {
@@ -173,12 +171,11 @@ namespace RP0
 
         protected float GetUntooledPenaltyCost()
         {
+            UpdateButtonName();
             if (IsUnlocked())
             {
-                tEvent.guiName = "TOOLED";
                 return 0f;
             }
-            tEvent.guiName = toolingName;
 
             return GetToolingCost() * untooledMultiplier;
         }

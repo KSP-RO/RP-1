@@ -119,16 +119,11 @@ namespace RP0.ProceduralAvionics
 
         private void ClampControllableMass()
         {
-            var max = GetMaximumControllableMass();
-            if (max == 0)
+            var maxControllableMass = GetMaximumControllableMass();
+            if (controllableMass > maxControllableMass * FLOAT_TOLERANCE)
             {
-                Log($"WARNING: NO MAX volume: {cachedVolume} MaxAvMass: {MaxAvionicsMass} max controllable mass: {GetControllableMass(MaxAvionicsMass)}");
-            }
-
-            if (controllableMass > max * FLOAT_TOLERANCE)
-            {
-                Log("Resetting procedural mass limit to max of ", max, ", was ", controllableMass);
-                controllableMass = max;
+                Log("Resetting procedural mass limit to max of ", maxControllableMass, ", was ", controllableMass);
+                controllableMass = maxControllableMass;
                 RefreshPartWindow();
             }
         }

@@ -14,13 +14,13 @@ namespace RP0
         private ModuleProceduralAvionics procAvionics;
 
         public override string ToolingType => $"{MainToolingType}-{procAvionics.CurrentProceduralAvionicsConfig.name[0]}{procAvionics.CurrentProceduralAvionicsTechNode.techLevel}-{base.ToolingType}";
-
         private string TankToolingType => base.ToolingType;
         private ToolingDefinition TankToolingDefinition => ToolingManager.Instance.GetToolingDefinition(TankToolingType);
 
+        private float ControllableMass => procAvionics?.controllableMass ?? 0f;
+
         protected override void LoadPartModules()
         {
-            Debug.Log("[AvionicsTooling] Loading part modules");
             base.LoadPartModules();
             procAvionics = part.Modules.GetModule<ModuleProceduralAvionics>();
         }
@@ -32,8 +32,8 @@ namespace RP0
 
         public override float GetToolingCost()
         {
-            GetDimensions(out var diameter, out var length, out var controllableMass);
-            var toolingLevel = ToolingDatabase.GetToolingLevel(ToolingType, controllableMass, diameter, length);
+            GetDimensions(out var diameter, out var length);
+            var toolingLevel = ToolingDatabase.GetToolingLevel(ToolingType, ControllableMass, diameter, length);
             var toolingCosts = GetPerLevelToolingCosts(diameter, length);
 
             return GetToolingCost(toolingLevel, toolingCosts);
@@ -67,6 +67,7 @@ namespace RP0
             {
                 return 0;
             }
+
             var internalTankDiameter = GetInternalTankDiameter(externalDiameter, length);
             var level = ToolingDatabase.GetToolingLevel(TankToolingType, internalTankDiameter, internalTankDiameter);
             var perLevelCosts = new[] { GetDiameterToolingCost(internalTankDiameter), GetLengthToolingCost(internalTankDiameter, internalTankDiameter) };
@@ -97,7 +98,8 @@ namespace RP0
             {
                 return 0;
             }
-            GetDimensions(out var externalDiameter, out var length, out _);
+
+            GetDimensions(out var externalDiameter, out var length);
             var internalTankDiameter = GetInternalTankDiameter(externalDiameter, length);
             var tankCount = procAvionics.InternalTanksVolume / SphericalTankUtilities.GetSphereVolume(internalTankDiameter / 2);
             
@@ -106,8 +108,8 @@ namespace RP0
 
         public override void PurchaseTooling()
         {
-            GetDimensions(out var diameter, out var length, out var controllableMass);
-            ToolingDatabase.UnlockTooling(ToolingType, controllableMass, diameter, length);
+            GetDimensions(out var diameter, out var length);
+            ToolingDatabase.UnlockTooling(ToolingType, ControllableMass, diameter, length);
             var internalTankDiameter = GetInternalTankDiameter(diameter, length);
             ToolingDatabase.UnlockTooling(TankToolingType, internalTankDiameter, internalTankDiameter);
         }
@@ -118,22 +120,9 @@ namespace RP0
             {
                 return true;
             }
-            GetDimensions(out var diameter, out var length, out var controllableMass);
-            return ToolingDatabase.GetToolingLevel(ToolingType, controllableMass, diameter, length) == 3;
+
+            GetDimensions(out var diameter, out var length);
+            return ToolingDatabase.GetToolingLevel(ToolingType, ControllableMass, diameter, length) == 3;
         }
-
-        private void GetDimensions(out float diameter, out float length, out float controllableMass)
-        {
-            if(procAvionics == null)
-            {
-                diameter = length = controllableMass = 0;
-                return;
-            }
-
-            GetDimensions(out diameter, out length);
-            controllableMass = ControllableMass;
-        }
-
-        private float ControllableMass => procAvionics.controllableMass;
     }
 }

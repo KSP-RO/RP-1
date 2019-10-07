@@ -2,7 +2,6 @@
 using RP0.Utilities;
 using System;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
@@ -11,12 +10,9 @@ namespace RP0.ProceduralAvionics
 {
     class ModuleProceduralAvionics : ModuleAvionics, IPartMassModifier, IPartCostModifier
     {
-
-        #region KSPFields, overrides, and class variables
-
-        const string kwFormat = "{0:0.##}";
-        const string wFormat = "{0:0}";
-        const float FLOAT_TOLERANCE = 1.00001f;
+        private const string KwFormat = "{0:0.##}";
+        private const string WFormat = "{0:0}";
+        private const float FloatTolerance = 1.00001f;
         private const float InternalTanksTotalVolumeUtilization = 0.246f; //Max utilization for 2 spheres within a cylindrical container worst case scenario
         private const float InternalTanksAvailableVolumeUtilization = 0.5f;
 
@@ -83,10 +79,7 @@ namespace RP0.ProceduralAvionics
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Avionics Cost")]
         public string costDisplay;
 
-        public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig
-        {
-            get { return currentProceduralAvionicsConfig; }
-        }
+        public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig { get; private set; }
 
         public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode
         {
@@ -120,7 +113,7 @@ namespace RP0.ProceduralAvionics
         private void ClampControllableMass()
         {
             var maxControllableMass = GetMaximumControllableMass();
-            if (controllableMass > maxControllableMass * FLOAT_TOLERANCE)
+            if (controllableMass > maxControllableMass * FloatTolerance)
             {
                 Log("Resetting procedural mass limit to max of ", maxControllableMass, ", was ", controllableMass);
                 controllableMass = maxControllableMass;
@@ -156,12 +149,8 @@ namespace RP0.ProceduralAvionics
 
         protected override string GetTonnageString() => "This part can be configured to allow control of vessels up to any mass.";
 
-        private ProceduralAvionicsConfig currentProceduralAvionicsConfig;
         private UI_FloatEdit controllableMassEdit;
 
-        #endregion
-
-        #region event handlers
         public override void OnLoad(ConfigNode node)
         {
             try
@@ -267,7 +256,7 @@ namespace RP0.ProceduralAvionics
                 return;
             }
             Log("Setting config to ", avionicsConfigName);
-            currentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
+            CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
             Log("Setting tech node to ", avionicsTechLevel);
             oldAvionicsConfigName = avionicsConfigName;
             oldAvionicsTechLevel = avionicsTechLevel;
@@ -285,7 +274,7 @@ namespace RP0.ProceduralAvionics
         public void SetMinVolume(bool forceUpdate = false)
         {
             Log("Setting min volume for proceduralMassLimit of ", controllableMass);
-            float minVolume = GetAvionicsMass() / avionicsDensity * FLOAT_TOLERANCE;
+            float minVolume = GetAvionicsMass() / avionicsDensity * FloatTolerance;
             if (float.IsNaN(minVolume))
             {
                 return;
@@ -329,10 +318,6 @@ namespace RP0.ProceduralAvionics
         public float GetModuleCost(float defaultCost, ModifierStagingSituation sit) => GetCostSafely();
         public ModifierChangeWhen GetModuleCostChangeWhen() => ModifierChangeWhen.FIXED;
 
-        #endregion
-
-
-        #region part attribute calculations
         private float GetMassSafely()
         {
             return avionicsDensity > 0 ? GetShieldedAvionicsMass() : 0;
@@ -342,8 +327,6 @@ namespace RP0.ProceduralAvionics
         {
             return avionicsDensity > 0 ? GetAvionicsCost() : 0;
         }
-
-        #endregion
 
         private void UpdateControllableMassSlider()
         {
@@ -436,7 +419,7 @@ namespace RP0.ProceduralAvionics
             {
                 float volume = (float)eventData.Get<double>("newTotalVolume");
                 Log("volume changed to ", volume);
-                if (volume * FLOAT_TOLERANCE < cachedMinVolume && cachedMinVolume != float.MaxValue)
+                if (volume * FloatTolerance < cachedMinVolume && cachedMinVolume != float.MaxValue)
                 {
                     Log("volume of ", volume, " is less than expected min volume of ", cachedMinVolume, " expecting another update");
                     RefreshPartWindow();
@@ -512,15 +495,15 @@ namespace RP0.ProceduralAvionics
 
         private void RefreshPowerDisplay()
         {
-            StringBuilder powerConsumptionBuilder = StringBuilderCache.Acquire();
+            var powerConsumptionBuilder = StringBuilderCache.Acquire();
             double kW = GetEnabledkW();
             if (kW >= 1)
             {
-                powerConsumptionBuilder.AppendFormat(kwFormat, kW).Append("\u2009kW");
+                powerConsumptionBuilder.AppendFormat(KwFormat, kW).Append("\u2009kW");
             }
             else
             {
-                powerConsumptionBuilder.AppendFormat(wFormat, kW * 1000).Append("\u2009W");
+                powerConsumptionBuilder.AppendFormat(WFormat, kW * 1000).Append("\u2009W");
             }
             double dkW = GetDisabledkW();
             if (dkW > 0)
@@ -528,11 +511,11 @@ namespace RP0.ProceduralAvionics
                 powerConsumptionBuilder.Append(" /");
                 if (dkW >= 0.1)
                 {
-                    powerConsumptionBuilder.AppendFormat(kwFormat, dkW).Append("\u2009kW");
+                    powerConsumptionBuilder.AppendFormat(KwFormat, dkW).Append("\u2009kW");
                 }
                 else
                 {
-                    powerConsumptionBuilder.AppendFormat(wFormat, dkW * 1000).Append("\u2009W");
+                    powerConsumptionBuilder.AppendFormat(WFormat, dkW * 1000).Append("\u2009W");
                 }
             }
 
@@ -558,7 +541,6 @@ namespace RP0.ProceduralAvionics
             costDisplay = Mathf.Round(GetCostSafely()).ToString();
         }
 
-        #region Config GUI
         [KSPField(isPersistant = false, guiActiveEditor = true, guiActive = false, guiName = "Configure"),
         UI_Toggle(enabledText = "Hide GUI", disabledText = "Show GUI"),
         NonSerialized]
@@ -625,7 +607,7 @@ namespace RP0.ProceduralAvionics
                         Log("Configuration window changed, updating part window");
                         UpdateConfigSliders();
                         avionicsTechLevel = techNode.name;
-                        currentProceduralAvionicsConfig = currentlyDisplayedConfigs;
+                        CurrentProceduralAvionicsConfig = currentlyDisplayedConfigs;
                         avionicsConfigName = guiAvionicsConfigName;
                         AvionicsConfigChanged();
                     }
@@ -642,7 +624,7 @@ namespace RP0.ProceduralAvionics
 
         private string BuildTechName(ProceduralAvionicsTechNode techNode)
         {
-            StringBuilder sbuilder = StringBuilderCache.Acquire();
+            var sbuilder = StringBuilderCache.Acquire();
             sbuilder.Append(techNode.name);
             sbuilder.Append(BuildSasAndScienceString(techNode));
 
@@ -655,17 +637,15 @@ namespace RP0.ProceduralAvionics
         {
             if (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
             {
-                return String.Empty;
+                return string.Empty;
             }
-            return " (" + String.Format("{0:N}", cost) + ")";
+            return " (" + string.Format("{0:N}", cost) + ")";
         }
-
-        #endregion
 
         private void RefreshPartWindow()
         {
             UIPartActionWindow[] partWins = FindObjectsOfType<UIPartActionWindow>();
-            foreach (UIPartActionWindow partWin in partWins)
+            foreach (var partWin in partWins)
             {
                 partWin.displayDirty = true;
             }

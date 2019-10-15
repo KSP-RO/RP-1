@@ -28,8 +28,7 @@ namespace RP0
 
         public override string GetToolingParameterInfo()
         {
-            float d, l;
-            GetDimensions(out d, out l);
+            GetDimensions(out var d, out var l);
             if (l != 0f)
                 return d.ToString("F3") + "m x " + l.ToString("F3") + "m";
             else
@@ -67,15 +66,13 @@ namespace RP0
 
         public override void PurchaseTooling()
         {
-            float d, l;
-            GetDimensions(out d, out l);
+            GetDimensions(out var d, out var l);
             ToolingDatabase.UnlockTooling(ToolingType, d, l);
         }
 
         public override bool IsUnlocked()
         {
-            float d, l;
-            GetDimensions(out d, out l);
+            GetDimensions(out var d, out var l);
             if (d < minDiameter)
                 return true;
 
@@ -87,9 +84,10 @@ namespace RP0
             if (!onStartFinished) return 0f;
 
             float baseCost = base.GetModuleCost(defaultCost, sit);
-            float d, l;
-            GetDimensions(out d, out l);
-            return baseCost + (d * l * costMultiplierDL);
+            GetDimensions(out var d, out var l);
+            return baseCost + GetDimensionModuleCost(d, l, costMultiplierDL);
         }
+
+        protected float GetDimensionModuleCost(float diameter, float length, float costMultiplierDL) => (diameter * length * costMultiplierDL);
     }
 }

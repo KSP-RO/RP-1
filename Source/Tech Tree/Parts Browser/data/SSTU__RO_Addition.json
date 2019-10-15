@@ -224,7 +224,7 @@
         "category": "MATERIALS",
         "info": "RF Tanks",
         "year": "1951",
-        "technology": "postWarMaterialsScience",
+        "technology": "unlockParts",
         "era": "01-PW",
         "ro": true,
         "rp0": true,

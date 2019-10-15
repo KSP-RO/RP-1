@@ -54,6 +54,8 @@ namespace RP0
                     currentTab = tabs.Avionics;
                 if (showTab(tabs.Contracts) && toggleButton("Contracts", currentTab == tabs.Contracts))
                     currentTab = tabs.Contracts;
+                if (showTab(tabs.Budget) && toggleButton("Budget", currentTab == tabs.Budget))
+                    currentTab = tabs.Budget;
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -94,6 +96,9 @@ namespace RP0
                             break;
                         case tabs.Courses:
                             currentTab = fsUI.coursesTab();
+                            break;
+                        case tabs.Budget:
+                            currentTab = fsUI.budgetTab();
                             break;
                         case tabs.NewCourse:
                             currentTab = fsUI.newCourseTab();

@@ -210,6 +210,34 @@ namespace RP0.Crew
                 GUILayout.EndScrollView();
             }
         }
+        public tabs budgetTab()
+        {
+            GUILayout.BeginHorizontal();
+            try
+            {
+                GUILayout.Label("", GUILayout.Width(24));
+                GUILayout.Label("Current Reputation", boldLabel, GUILayout.Width(144));
+                GUILayout.Label("Next Payout", boldLabel, GUILayout.Width(144));
+                GUILayout.Label("Last Payout", boldLabel, GUILayout.Width(144));
+            }
+            finally
+            {
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+            }
+            try
+            {
+                GUILayout.Label("", GUILayout.Width(24));
+                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.reputation), HighLogic.Skin.label, GUILayout.Width(144));
+                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.GetBaseBudget() + BudgetHandler.Instance.GetRepBudget()), HighLogic.Skin.label, GUILayout.Width(144));
+                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.payout), HighLogic.Skin.label, GUILayout.Width(144));
+            }
+            finally
+            {
+                GUILayout.EndHorizontal();
+            }
+            return tabs.Budget;
+        }
 
         public tabs coursesTab()
         {

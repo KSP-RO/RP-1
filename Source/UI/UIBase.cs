@@ -6,7 +6,7 @@ namespace RP0
     {
         protected GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
 
-        public enum tabs { Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, Training, Courses, NewCourse, Naut, Avionics, Contracts };
+        public enum tabs { Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, Training, Courses, NewCourse, Naut, Avionics, Contracts, Budget };
 
         public UIBase()
         {
@@ -44,6 +44,7 @@ namespace RP0
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER;
                 case tabs.Training:
                 case tabs.Courses:
+                case tabs.Budget:
                 case tabs.NewCourse:
                 case tabs.Naut:
                 default:

@@ -215,10 +215,11 @@ namespace RP0.Crew
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("", GUILayout.Width(24));
+                GUILayout.Label("", GUILayout.Width(10));
                 GUILayout.Label("Current Reputation", boldLabel, GUILayout.Width(144));
-                GUILayout.Label("Next Payout", boldLabel, GUILayout.Width(144));
-                GUILayout.Label("Last Payout", boldLabel, GUILayout.Width(144));
+                GUILayout.Label("Last Payout", boldLabel, GUILayout.Width(120));
+                GUILayout.Label("Next Payout", boldLabel, GUILayout.Width(120));
+                GUILayout.Label("Payout Date", boldLabel, GUILayout.Width(120));
             }
             finally
             {
@@ -227,10 +228,11 @@ namespace RP0.Crew
             }
             try
             {
-                GUILayout.Label("", GUILayout.Width(24));
+                GUILayout.Label("", GUILayout.Width(10));
                 GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.reputation), HighLogic.Skin.label, GUILayout.Width(144));
-                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.GetBaseBudget() + BudgetHandler.Instance.GetRepBudget()), HighLogic.Skin.label, GUILayout.Width(144));
-                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.payout), HighLogic.Skin.label, GUILayout.Width(144));
+                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.payout), HighLogic.Skin.label, GUILayout.Width(120));
+                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.GetBaseBudget() + BudgetHandler.Instance.GetRepBudget()), HighLogic.Skin.label, GUILayout.Width(120));
+                GUILayout.Label(String.Format("{0}", KSPUtil.PrintDate(BudgetHandler.Instance.nextUpdate,false)), HighLogic.Skin.label, GUILayout.Width(120));
             }
             finally
             {

@@ -15,6 +15,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public double reputation = -double.MaxValue;
 
+        [KSPField(isPersistant = true)]
+        public double payout = 0;
+
         public const int BudgetPeriodMonths = 3;
         public const double BaseBudgetStart = 20000 * BudgetPeriodMonths / 12;
         public const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
@@ -87,7 +90,8 @@ namespace RP0
 
         private void PayBudget()
         {
-            Funding.Instance.AddFunds(GetBudget(), TransactionReasons.None);
+            payout = GetBudget();
+            Funding.Instance.AddFunds(payout, TransactionReasons.None);
             budgetCounter++;
         }
 
@@ -95,17 +99,17 @@ namespace RP0
         {
             var baseBudget = GetBaseBudget();
             var repBudget = GetRepBudget();
+            reputation -= repBudget / ReputationToFundsFactor;
             var budget = baseBudget + repBudget;
             Debug.Log($"[RP0] Budget payout: {budget} (Base: {baseBudget}, Rep: {repBudget})");
             return budget;
         }
 
-        private double GetBaseBudget() => BaseBudgetStart * Math.Pow(BaseBudgetEnd / BaseBudgetStart, (float) Math.Min(StartToEndPeriods, budgetCounter) / StartToEndPeriods);
+        public double GetBaseBudget() => BaseBudgetStart * Math.Pow(BaseBudgetEnd / BaseBudgetStart, (float) Math.Min(StartToEndPeriods, budgetCounter) / StartToEndPeriods);
 
-        private double GetRepBudget()
+        public double GetRepBudget()
         {
             var reputationToConvert = Math.Max(reputation * ReputationDecayFactor, 0);
-            reputation -= reputationToConvert;
             return reputationToConvert * ReputationToFundsFactor;
         }
     }

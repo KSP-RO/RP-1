@@ -229,7 +229,7 @@ namespace RP0.Crew
             try
             {
                 GUILayout.Label("", GUILayout.Width(10));
-                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.reputation), HighLogic.Skin.label, GUILayout.Width(144));
+                GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.reputation + BudgetHandler.Instance.buffer), HighLogic.Skin.label, GUILayout.Width(144));
                 GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.payout), HighLogic.Skin.label, GUILayout.Width(120));
                 GUILayout.Label(String.Format("{0:F0}", BudgetHandler.Instance.GetBaseBudget() + BudgetHandler.Instance.GetRepBudget()), HighLogic.Skin.label, GUILayout.Width(120));
                 GUILayout.Label(String.Format("{0}", KSPUtil.PrintDate(BudgetHandler.Instance.nextUpdate,false)), HighLogic.Skin.label, GUILayout.Width(120));

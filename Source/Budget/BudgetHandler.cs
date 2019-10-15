@@ -16,13 +16,17 @@ namespace RP0
         public double reputation = -double.MaxValue;
 
         [KSPField(isPersistant = true)]
+        public double buffer = 0;
+
+        [KSPField(isPersistant = true)]
         public double payout = 0;
 
         public const int BudgetPeriodMonths = 3;
         public const double BaseBudgetStart = 20000 * BudgetPeriodMonths / 12;
         public const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
         public const int StartToEndPeriods = 20 / BudgetPeriodMonths * 12;
-        public const float ReputationDecayFactor = 0.1f;
+        public const float ReputationDecayFactor = 0.15f;
+        public const float BufferDecayFactor = 0.2f;
         public const float ReputationToFundsFactor = 1000;
         public static readonly DateTime Epoch = new DateTime(1951, 1, 1);
 
@@ -59,9 +63,9 @@ namespace RP0
                 if ((data.reason & TransactionReasons.Contracts) > 0)
                 {
                     Debug.Log($"[RP0] Reputation change valid for budgets:");
-                    reputation += reputationChange;
+                    buffer += reputationChange;
                 }
-                Debug.Log($"[RP0] Reputation changed by: {reputationChange} (reason: {data.reason}, total reputation: {reputation})");
+                Debug.Log($"[RP0] Reputation changed by: {reputationChange} (reason: {data.reason}, total reputation: {reputation + buffer})");
             }
         }
 
@@ -99,7 +103,9 @@ namespace RP0
         {
             var baseBudget = GetBaseBudget();
             var repBudget = GetRepBudget();
-            reputation -= repBudget / ReputationToFundsFactor;
+            var repTransfer = GetBufferTransfer();
+            buffer -= repTransfer;
+            reputation += repTransfer - repBudget / ReputationToFundsFactor;
             var budget = baseBudget + repBudget;
             Debug.Log($"[RP0] Budget payout: {budget} (Base: {baseBudget}, Rep: {repBudget})");
             return budget;
@@ -107,9 +113,15 @@ namespace RP0
 
         public double GetBaseBudget() => BaseBudgetStart * Math.Pow(BaseBudgetEnd / BaseBudgetStart, (float) Math.Min(StartToEndPeriods, budgetCounter) / StartToEndPeriods);
 
+        public double GetBufferTransfer()
+        {
+            var reputationToTransfer = Math.Max(buffer * BufferDecayFactor, 0);
+            return reputationToTransfer;
+        }
         public double GetRepBudget()
         {
-            var reputationToConvert = Math.Max(reputation * ReputationDecayFactor, 0);
+            var reputationIncrease = GetBufferTransfer();
+            var reputationToConvert = Math.Max((reputation + reputationIncrease) * ReputationDecayFactor, 0);
             return reputationToConvert * ReputationToFundsFactor;
         }
     }

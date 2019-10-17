@@ -46,6 +46,9 @@ namespace RP0
         [GameParameters.CustomParameterUI("Enable crew retirement", toolTip = "Re-enabling this option can cause some of the older crewmembers to instantly retire.")]
         public bool IsRetirementEnabled = true;
 
+        [GameParameters.CustomParameterUI("Set KAC alarm for budget payouts")]
+        public bool SetBudgetAlamrs = false;
+
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;
 

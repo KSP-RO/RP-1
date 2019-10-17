@@ -47,7 +47,7 @@ namespace RP0
         public bool IsRetirementEnabled = true;
 
         [GameParameters.CustomParameterUI("Set KAC alarm for budget payouts")]
-        public bool SetBudgetAlamrs = false;
+        public bool SetBudgetAlarms = false;
 
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;

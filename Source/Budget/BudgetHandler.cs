@@ -12,31 +12,40 @@ namespace RP0
         public double nextUpdate = 0;
 
         [KSPField(isPersistant = true)]
-        public int budgetCounter = 0;
+        private int budgetCounter = 0;
 
         [KSPField(isPersistant = true)]
-        public double reputation = -double.MaxValue;
+        private double reputation = -double.MaxValue;
 
         [KSPField(isPersistant = true)]
-        public double buffer = 0;
+        private double reputationNaught = 0;
 
         [KSPField(isPersistant = true)]
-        public double payout = 0;
+        private double buffer = 0;
 
         [KSPField(isPersistant = true)]
-        public double  lastreputation= 0;
+        private double bufferNaught = 0;
 
         [KSPField(isPersistant = true)]
-        public string BudgetAlarmID = "";
+        private double lastPayout = 0;
 
-        public const int BudgetPeriodMonths = 3;
-        public const double BaseBudgetStart = 20000 * BudgetPeriodMonths / 12;
-        public const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
-        public const int StartToEndPeriods = 20 / BudgetPeriodMonths * 12;
-        public const float ReputationDecayFactor = 0.15f;
-        public const float BufferDecayFactor = 0.2f;
-        public const float ReputationToFundsFactor = 1000;
-        public static readonly DateTime Epoch = new DateTime(1951, 1, 1);
+        [KSPField(isPersistant = true)]
+        private double totalPayout = 0;
+
+        [KSPField(isPersistant = true)]
+        private double lastReputation= 0;
+
+        [KSPField(isPersistant = true)]
+        private string BudgetAlarmID = "";
+
+        private const int BudgetPeriodMonths = 3;
+        private const double BaseBudgetStart = 20000 * BudgetPeriodMonths / 12;
+        private const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
+        private const int StartToEndPeriods = 20 / BudgetPeriodMonths * 12;
+        private const float ReputationDecayFactor = 0.15f;
+        private const float BufferDecayFactor = 0.2f;
+        private const float ReputationToFundsFactor = 1000;
+        private static readonly DateTime Epoch = new DateTime(1951, 1, 1);
 
         public static BudgetHandler Instance { get; private set; } = null;
 
@@ -45,7 +54,7 @@ namespace RP0
             if (reputation == -double.MaxValue)
             {
                 reputation = Reputation.CurrentRep;
-                lastreputation = reputation;
+                lastReputation = reputation;
             }
         }
 
@@ -78,15 +87,15 @@ namespace RP0
             }
         }
 
-        public void Update()
+        private void Update()
         {
             if (HighLogic.CurrentGame == null)
             {
                 return;
             }
-            if (KACWrapper.APIReady && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().SetBudgetAlamrs && BudgetAlarmID == "" && nextUpdate != 0)
+            if (KACWrapper.APIReady && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().SetBudgetAlarms && BudgetAlarmID == "" && nextUpdate != 0)
             {
-                ScheduleNextUpdate();  // If SetBudgetAlamrs setting changes we need to schedule.
+                ScheduleNextUpdate();  // If SetBudgetAlarms setting changes we need to schedule.
             }
 
             if (nextUpdate > Planetarium.GetUniversalTime())
@@ -103,7 +112,7 @@ namespace RP0
 
         private void ScheduleNextUpdate()
         {
-            if (KACWrapper.APIReady && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().SetBudgetAlamrs)
+            if (KACWrapper.APIReady && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().SetBudgetAlarms)
             {
                 if (BudgetAlarmID != "")
                 {
@@ -122,52 +131,99 @@ namespace RP0
         }
         private void PayBudget()
         {
-            payout = GetBudget();
-            Funding.Instance.AddFunds(payout, TransactionReasons.None);
-            budgetCounter++;
-        }
+            void StockMessage(string title, string text)
+            {
 
-        private double GetBudget()
-        {
+                MessageSystem.Message m = new MessageSystem.Message(title, text, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.MESSAGE);
+                MessageSystem.Instance.AddMessage(m);
+            }
+
+            reputationNaught = reputation;
+            bufferNaught = buffer;
+
             var baseBudget = GetBaseBudget();
             var repBudget = GetRepBudget();
-            var repTransfer = GetBufferTransfer();
-            var budget = baseBudget + repBudget;
-            StockMessage("Budget Report",
-                String.Format("Budget Report for {0}\n", KSPUtil.PrintDate(BudgetHandler.Instance.nextUpdate, false)) +
-                              "---------------------------------------------------------------\n" +
-                String.Format("Last Period Reputation:\t\t{0:F0}\n", lastreputation) +
-                String.Format("Reputation earned this period:\t{0:F0}\n", reputation + buffer - lastreputation) +
-                String.Format("Reputation converted to funds:\t{0:F1}\n", repBudget/ReputationToFundsFactor) +
-                String.Format("Reputation balance:\t\t\t{0:F0}\n\n", reputation + buffer - repBudget / ReputationToFundsFactor) +
-                String.Format("Base budget payout: \t\t\t{0:F0}\n", baseBudget) +
-                String.Format("Reputation conversion payout:\t{0:F0}\n", repBudget) +
-                String.Format("Total payout:\t\t\t\t{0:F0}\n", budget));
+            var repTransfer = CalculateBufferTransfer();
+
+            var payout = baseBudget + repBudget;
+            totalPayout += payout;
+
+            reputation += repTransfer - reputation * ReputationDecayFactor;
             buffer -= repTransfer;
-            lastreputation = reputation;
-            reputation += repTransfer - repBudget / ReputationToFundsFactor;
-            Debug.Log($"[RP0] Budget payout: {budget} (Base: {baseBudget}, Rep: {repBudget})");
-            return budget;
+
+            Funding.Instance.AddFunds(payout, TransactionReasons.None);
+            budgetCounter++;
+
+            var maintenanceReputation = Math.Ceiling(CalculateMaintenanceReputation());
+            var oldGrowth = (payout - lastPayout) / lastPayout;
+            var newGrowth = (GetBudget() - payout) / payout;
+            if (budgetCounter == 1) oldGrowth = 0;             
+
+            var infoMessage =
+                String.Format("Budget Report for {0}\n", KSPUtil.PrintDate(BudgetHandler.Instance.nextUpdate, false)) +
+                              "-----------------------------------------\n\n" +
+                String.Format("Budget payout:\t\t\t\t{0:N0}\n", payout) +
+                String.Format("Total budget to date:\t\t\t{0:N0}\n\n", totalPayout) +
+                String.Format("Previous payout:\t\t\t{0:N0}\n", lastPayout) +
+                String.Format("Growth from last period:\t\t{0:F1}%\n", oldGrowth * 100) +
+                String.Format("Projected next payout:\t\t{0:N0}\n", GetBudget()) +
+                String.Format("Projected next period growth:\t{0:F1}%\n\n", newGrowth * 100) +
+                String.Format("Reputation earned last period:\t{0:F0}\n", GetOldReputation() - lastReputation) +
+                String.Format("Reputation decayed last period:\t{0:F0}\n", GetOldReputation() - GetTotalReputation()) +
+                String.Format("Net reputation change:\t\t{0:F0}\n\n", GetTotalReputation() - lastReputation) +
+                String.Format("Current total reputatation:\t\t{0:F0}\n\n", GetTotalReputation());
+
+            Debug.Log($"[RP0] " + infoMessage + String.Format("Rep change to maintain funding: {0:F0} rep", maintenanceReputation));
+
+            if (budgetCounter == 1) // Young program
+                infoMessage += "Welcome to the space race. Your new program is young and poorly funded. To increase your funding, you will need to grow its reputation by setting records and completing contracts.";
+            else if (oldGrowth > 0.1) // Saw growth last quarter
+            {
+                if (newGrowth > 0.075) // Growing big 
+                    infoMessage += "Congratulations! Your achievements have been very impressive. Your funding is on an upward trend and shows no signs of stopping. Your funders are happy and the near future looks bright.";
+                else if (newGrowth > 0.05) // Coasting 
+                    infoMessage += "Your recent accomplishments mean your program is projected to see substantial funding growth even if you don't do anything this period. Keep up the good work.";
+                else if (newGrowth < 0)
+                    infoMessage += String.Format("Congratulations on the recent sucesses. However, now is no time to slow down. You will need to earn at least {0:F0} reputation to maintain your current funding.", maintenanceReputation); // Unlikely to happen
+                else // Nothing to worry about
+                    infoMessage += "Congratulations on your recent sucesses. Your funders are happy to maintain your increased funding for the next period. Further achievements will prevent your program from stagnating.";
+            }
+            else 
+            {
+                if (newGrowth > 0.03) // Coasting 
+                    infoMessage += "Your recent publicity has been excellent and your funding is projected to rise even if you don't do anything this period. Don't slow down now!"; // Should be pretty rare
+                else if (oldGrowth < -0.025) // Need more reputation
+                    infoMessage += String.Format("Your program has been stagnating badly and your funders are unimpressed. You must earn at least {0:F0} reputation to avoid further cuts.", maintenanceReputation);
+                else if (oldGrowth < 0 && newGrowth < -0.01) // Need more reputation
+                    infoMessage += String.Format("Your funders are disappointed with your sluggish progress and are threatening to cut funding. You need to earn at least {0:F0} reputation to maintain your current funding.", maintenanceReputation);
+                else if (newGrowth < 0.01) // Need more reputation
+                    infoMessage += String.Format("Your program has been doing well but any inactivity now will lose the trust of your funders. You will need to earn at least {0:F0} reputation to maintain your current funding.", maintenanceReputation);
+                else // Nothing to worry about
+                    infoMessage += "Your funding is projected to stay relatively constant over the next period. While you have little to worry about right now, you'll soon need to earn more reputation to avoid loss of future funding.";
+            }
+
+            StockMessage("Budget Report", infoMessage);
+
+            lastPayout = payout;
+            lastReputation = GetTotalReputation();
         }
 
-        public double GetBaseBudget() => BaseBudgetStart * Math.Pow(BaseBudgetEnd / BaseBudgetStart, (float)Math.Min(StartToEndPeriods, budgetCounter) / StartToEndPeriods);
+        private double CalculateBufferTransfer() => Math.Max(buffer * BufferDecayFactor, 0);
 
-        public double GetBufferTransfer()
-        {
-            var reputationToTransfer = Math.Max(buffer * BufferDecayFactor, 0);
-            return reputationToTransfer;
-        }
-        public double GetRepBudget()
-        {
-            var reputationIncrease = GetBufferTransfer();
-            var reputationToConvert = Math.Max((reputation + reputationIncrease) * ReputationDecayFactor, 0);
-            return reputationToConvert * ReputationToFundsFactor;
-        }
-        private void StockMessage(String title, String text)
-        {
+        private double CalculateMaintenanceReputation() => (ReputationDecayFactor * reputationNaught / BufferDecayFactor) - bufferNaught - ((CalculateBaseFunding(budgetCounter) - CalculateBaseFunding(budgetCounter-1)) / ReputationDecayFactor / BufferDecayFactor / ReputationToFundsFactor);
 
-            MessageSystem.Message m = new MessageSystem.Message(title, text, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.MESSAGE);
-            MessageSystem.Instance.AddMessage(m);
-        }
+        private double CalculateBaseFunding(int period) => BaseBudgetStart * Math.Pow(BaseBudgetEnd / BaseBudgetStart, (float)Math.Min(StartToEndPeriods, period) / StartToEndPeriods);
+
+        public double GetTotalReputation() => reputation + buffer;
+
+        public double GetOldReputation() => reputationNaught + bufferNaught;
+
+        public double GetLastPayout() => lastPayout;
+
+        public double GetBaseBudget() => CalculateBaseFunding(budgetCounter);
+
+        public double GetRepBudget() => Math.Max((reputation + CalculateBufferTransfer()) * ReputationDecayFactor, 0) * ReputationToFundsFactor;
+
+        public double GetBudget() => GetBaseBudget() + GetRepBudget();
     }
 }

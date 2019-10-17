@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using KSP;
 using UnityEngine;
 using KSP.UI;
 using System.Linq;
@@ -13,16 +11,16 @@ namespace RP0
     {
         public static bool ShouldLock(List<Part> parts, bool countClamps, out float maxMass, out float vesselMass)
         {
-            int crewCount = -1;
-            maxMass = vesselMass = 0f;
-            Part p;
+            maxMass = vesselMass = 0f;  // These are unreliable if the calculation exits early!
 
             if (parts == null || parts.Count <= 0)
                 return false;
+            if (!HighLogic.LoadedSceneIsFlight && !HighLogic.LoadedSceneIsEditor) return false;
 
-            for (int i = parts.Count - 1; i >= 0; --i)
+            int crewCount = (HighLogic.LoadedSceneIsFlight) ? parts[0].vessel.GetCrewCount() : CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
+
+            foreach (Part p in parts)
             {
-                p = parts[i];
                 // add up mass
                 float partMass = p.mass + p.GetResourceMass();
 
@@ -30,11 +28,8 @@ namespace RP0
                 bool cmd = false, science = false, avionics = false, clamp = false;
                 float partAvionicsMass = 0f;
                 ModuleCommand mC = null;
-                PartModule m;
-                for (int j = p.Modules.Count - 1; j >= 0; --j)
+                foreach (PartModule m in p.Modules)
                 {
-                    m = p.Modules[j];
-
                     if (m is KerbalEVA)
                         return false;
 
@@ -61,36 +56,16 @@ namespace RP0
                 }
                 vesselMass += partMass; // done after the clamp check
 
-                // switch based on modules
-
                 // Do we have an unencumbered command module?
                 // if we count clamps, they can give control. If we don't, this works only if the part isn't a clamp.
                 if ((countClamps || !clamp) && cmd && !science && !avionics)
                     return false;
-                if (cmd && avionics) // check if need crew
-                {
-                    if (mC.minimumCrew > 0) // if we need crew
-                    {
-                        if (crewCount < 0) // see if we cached crew
-                        {
-                            if (HighLogic.LoadedSceneIsFlight) // get from vessel
-                                crewCount = p.vessel.GetCrewCount();
-                            else if (HighLogic.LoadedSceneIsEditor) // or crew manifest
-                                crewCount = CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
-                            else crewCount = 0; // or assume no crew (should never trip this)
-                        }
-                        if (mC.minimumCrew > crewCount)
-                            avionics = false; // not operational
-                    }
-                }
+                if (cmd && avionics && mC.minimumCrew > crewCount) // check if need crew
+                    avionics = false; // not operational
                 if (avionics)
                     maxMass += partAvionicsMass;
             }
-            if (maxMass > vesselMass) // will only be reached if the best we have is avionics.
-                return false; // unlock if our max avionics mass is >= vessel mass
-
-            // Otherwise, we lock yaw/pitch/roll.
-            return true;
+            return (vesselMass > maxMass);  // Lock if vessel mass is greater than controlled mass.
         }
     }
 
@@ -100,9 +75,9 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     class ControlLocker : MonoBehaviour
     {
-        public int vParts = -1;
         public Vessel vessel = null;
         bool wasLocked = false;
+        bool requested = false;
         const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | 
             ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
         const string lockID = "RP0ControlLocker";
@@ -111,40 +86,52 @@ namespace RP0
 
         const double updateFrequency = 1d; // run a check every second, unless staging.
 
-        ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
+        readonly ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
+        const string ModTag = "[RP-1 ControlLocker]";
 
         // For locking MJ.
         MethodInfo getMasterMechJeb = null;
         PropertyInfo mjDeactivateControl = null;
         object masterMechJeb = null;
 
-        ControlLocker()
+        private void Awake()
         {
-            var mechJebAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2");
-            if (mechJebAssembly != null)
+            if (AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2") is var mechJebAssembly &&
+               Type.GetType("MuMech.MechJebCore, MechJeb2") is Type mechJebCore &&
+               Type.GetType("MuMech.VesselExtensions, MechJeb2") is Type mechJebVesselExtensions)
             {
-                Debug.Log("[RP-0 Avionics] MechJeb assembly found");
-
-                Type mechJebCore = Type.GetType("MuMech.MechJebCore, MechJeb2");
-                if (mechJebCore != null)
-                {
-                    mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
-
-                    Type mechJebVesselExtensions = Type.GetType("MuMech.VesselExtensions, MechJeb2");
-                    if (mechJebVesselExtensions != null)
-                    {
-                        getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
-
-                        if ( mjDeactivateControl != null && getMasterMechJeb != null )
-                        {
-                            Debug.Log("[RP-0 Avionics] MechJeb methods present" );
-                        }
-                    }
-                }
+                mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
+                getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
             }
+            if (mjDeactivateControl != null && getMasterMechJeb != null)
+                Debug.Log($"{ModTag} MechJeb methods found");
             else
+                Debug.Log($"{ModTag} MJ assembly or methods NOT found");
+        }
+
+        private void Start()
+        {
+            GameEvents.onVesselWasModified.Add(OnVesselModifiedHandler);
+            GameEvents.onVesselSwitching.Add(OnVesselSwitchingHandler);
+            vessel = FlightGlobals.ActiveVessel;
+            if (vessel && vessel.loaded) vessel.OnPostAutopilotUpdate += FlightInputModifier;
+        }
+
+        protected void OnVesselSwitchingHandler(Vessel v1, Vessel v2)
+        {
+            // Apply only when switching does not result in new scene load.
+            if (v1 && v2 && v2.loaded) v2.OnPostAutopilotUpdate += FlightInputModifier;
+        }
+        protected void OnVesselModifiedHandler(Vessel v)
+        {
+            requested = true;
+        }
+        void FlightInputModifier(FlightCtrlState state)
+        {
+            if (wasLocked)
             {
-                Debug.Log("[RP-0 Avionics] No MJ assembly found");
+                state.X = state.Y = 0;                      // Disable X/Y translation, allow Z (fwd/reverse)
+                state.yaw = state.pitch = state.roll = 0;   // Disable roll control
             }
         }
 
@@ -152,20 +139,19 @@ namespace RP0
         {
             if (vessel != FlightGlobals.ActiveVessel)
             {
-                vParts = -1;
                 vessel = FlightGlobals.ActiveVessel;
                 masterMechJeb = null;
             }
             // if we have no active vessel, undo locks
-            if ((object)vessel == null)
+            if (vessel is null)
                 return false;
 
             // Do we need to update?
             double cTime = Planetarium.GetUniversalTime();
-            if (vessel.Parts.Count != vParts || cTime > lastUT + updateFrequency)
+            if (requested || cTime > lastUT + updateFrequency)
             {
                 lastUT = cTime;
-                vParts = vessel.Parts.Count;
+                requested = false;
                 return ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
             }
             return wasLocked;
@@ -191,8 +177,8 @@ namespace RP0
                 {
                     InputLockManager.SetControlLock(lockmask, lockID);
                     vessel.Autopilot.Disable();
-                    message.message = "Insufficient Avionics, Locking Controls (supports "
-                        + maxMass.ToString("N3") + "t, vessel " + vesselMass.ToString("N3") + "t)";
+                    vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, false);
+                    message.message = $"Insufficient Avionics, Locking Controls (supports {maxMass:N3}t, vessel {vesselMass:N3}t)";
                 }
                 ScreenMessages.PostScreenMessage(message);
                 FlightLogger.fetch.LogEvent(message.message);
@@ -212,6 +198,8 @@ namespace RP0
         public void OnDestroy()
         {
             InputLockManager.RemoveControlLock(lockID);
+            GameEvents.onVesselWasModified.Remove(OnVesselModifiedHandler);
+            GameEvents.onVesselSwitching.Remove(OnVesselSwitchingHandler);
         }
     }
 }

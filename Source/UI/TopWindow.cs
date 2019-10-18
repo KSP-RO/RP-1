@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using KSP.UI.Screens;
+using ClickThroughFix;
 
 namespace RP0
 {
@@ -22,7 +23,7 @@ namespace RP0
 
         public void OnGUI()
         {
-            windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1");
+            windowPos = ClickThruBlocker.GUILayoutWindow("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1");
         }
 
         public static void SwitchTabTo(tabs newTab)

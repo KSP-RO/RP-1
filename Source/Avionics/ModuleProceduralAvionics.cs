@@ -3,6 +3,7 @@ using RP0.Utilities;
 using System;
 using System.Linq;
 using UnityEngine;
+using ClickThroughFix;
 
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
 
@@ -552,7 +553,7 @@ namespace RP0.ProceduralAvionics
         {
             if (showGUI)
             {
-                windowRect = GUILayout.Window(GetInstanceID(), windowRect, WindowFunction, "Configure Procedural Avionics");
+                windowRect = ClickThruBlocker.GUILayoutWindow(GetInstanceID(), windowRect, WindowFunction, "Configure Procedural Avionics");
             }
         }
 

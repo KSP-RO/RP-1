@@ -1,0 +1,11 @@
+MaxTimeWarp = 7
+ForceStopWarp = False
+DisableAllMessages = False
+AutoKACAlarms = True
+Debug = False
+OverrideLaunchButton = True
+PreferBlizzyToolbar = False
+CheckForDebugUpdates = False
+RandomizeCrew = False
+AutoHireCrew = False
+WindowMode = 1

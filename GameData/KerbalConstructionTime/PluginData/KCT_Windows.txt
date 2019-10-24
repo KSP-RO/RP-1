@@ -1,0 +1,14 @@
+editorPositionSaved
+{
+	guiName = editor
+	xPos = 973.714294
+	yPos = 35.7142792
+	visible = True
+}
+buildListPositionSaved
+{
+	guiName = buildList
+	xPos = 773
+	yPos = 57
+	visible = False
+}

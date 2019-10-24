@@ -1,0 +1,26 @@
+{
+  "NAME": "Kerbal Construction Time",
+  "URL": "http://ksp.spacetux.net/avc/KerbalConstructionTime-Stock",
+  "DOWNLOAD": "http://forum.kerbalspaceprogram.com/threads/92377-0-24-2-Kerbal-Construction-Time-Release-v1-0-2-%289-3-14%29",
+  "GITHUB": {
+    "USERNAME": "linuxgurugamer",
+    "REPOSITORY": "KCT",
+    "ALLOW_PRE_RELEASE": false
+  },
+  "VERSION": {
+    "MAJOR": 1,
+    "MINOR": 4,
+    "PATCH": 5,
+    "BUILD": 6
+  },
+  "KSP_VERSION": {
+    "MAJOR": 1,
+    "MINOR": 6,
+    "PATCH": 1
+  },
+  "KSP_VERSION_MIN": {
+    "MAJOR": 1,
+    "MINOR": 6,
+    "PATCH": 1
+  }
+}

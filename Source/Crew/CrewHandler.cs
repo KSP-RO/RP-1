@@ -570,7 +570,7 @@ namespace RP0.Crew
             // when you're not actually controlling the vessel
             double elapsedTime = UT - v.launchTime;
 
-            Debug.Log("[VR] mission elapsedTime: " + KSPUtil.PrintDateDeltaCompact(elapsedTime, false, false));
+            Debug.Log("[VR] mission elapsedTime: " + KSPUtil.PrintDateDeltaCompact(elapsedTime, true, true));
 
             // When flight duration was too short, mission training should not be set as expired.
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
@@ -696,7 +696,7 @@ namespace RP0.Crew
 
                     if (offset > 0d)
                     {
-                        Debug.Log("[VR] retire date increased by: " + KSPUtil.PrintDateDeltaCompact(offset, false, false));
+                        Debug.Log("[VR] retire date increased by: " + KSPUtil.PrintDateDeltaCompact(offset, true, false));
                         Debug.Log($"[VR]  constant: {constant}; curFlight: {curFlight}; stupidity: {pcm.stupidity}");
 
                         retTime += offset;
@@ -708,7 +708,7 @@ namespace RP0.Crew
                 multiplier /= (ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1d);
 
                 double inactiveTime = elapsedTime * multiplier + constant * 86400d;
-                Debug.Log("[VR] inactive for: " + KSPUtil.PrintDateDeltaCompact(inactiveTime, false, false));
+                Debug.Log("[VR] inactive for: " + KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false));
 
                 pcm.SetInactive(inactiveTime, false);
                 inactivity.Add("\n" + pcm.name + ", until " + KSPUtil.PrintDate(inactiveTime + UT, true, false));

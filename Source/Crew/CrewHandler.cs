@@ -659,7 +659,7 @@ namespace RP0.Crew
                     constant += settings.recOtherBody.y;
                     Debug.Log($"[VR]  has other body, mult {settings.recOtherBody.x}; constant {settings.recOtherBody.y}");
                 }
-                if (hasEVA)
+                if (hasOrbit && hasEVA)    // EVA should only count while in orbit, not when walking on Earth
                 {
                     multiplier += settings.recEVA.x;
                     constant += settings.recEVA.y;

@@ -1,0 +1,111 @@
+CONTRACT_TYPE
+{
+	name = OrbitDurationRecord
+	group = Records
+	agent = Federation Aeronautique Internationale
+
+	title = Operational Duration Record of @duration
+	genericTitle = Operational Duration Record
+	
+	description = We want you to set a new operational duration record! Stay alive in space and connected to the KSC for @duration.
+	genericDescription = We want you to set a new operational duration record!
+
+	synopsis = Set an operational duration record of @duration.
+
+	completedMessage = Congratulations! You've set a new operational duration record!	
+
+	autoAccept = true
+	cancellable = false
+	declinable = false	
+	maxSimultaneous = 1
+
+	targetBody = HomeWorld()
+	
+	// ************ REWARDS ************
+	prestige = Trivial
+	rewardReputation = @rewards.ElementAt(@index)
+		
+	DATA {
+		type = List<float>
+		durations = [	1d,		5d,		10d,	30d,	60d,	100d,	150d,	200d,	1y,		2y,		3y,		4y,		5y ]
+	}
+	DATA {
+		type = List<float>
+		rewards = [		20,		30,		40,		50,		60,		70,		80,		90,		100,	100,	100,	100,	100 ]
+	}	
+	DATA {
+		type = float
+		duration = @durations.ElementAt(@index)
+	}	
+	DATA {
+		type = float
+		index = RP0RecordOrbitDurationIndex
+	}
+	BEHAVIOUR {
+		name = IncrementIndex
+		type = Expression
+		CONTRACT_COMPLETED_SUCCESS {
+				RP0RecordOrbitDurationIndex = RP0RecordOrbitDurationIndex + 1
+		}
+	}
+
+	// ************ REQUIREMENTS ************	
+	REQUIREMENT {
+		type = Expression
+		title = Altitude
+		expression = @/index < @/durations.Count()
+	}	
+	REQUIREMENT {
+		name = AcceptContract
+		type = AcceptContract
+		contractType = first_OrbitUncrewed
+		title = Accept @contractType Contract
+	}
+
+	// ************ PARAMETERS ************	
+    PARAMETER {
+        name = VesselGroup
+        type = VesselParameterGroup
+        title = Stay alive for @/duration
+        
+        PARAMETER {
+            name = durationInSpace
+            type = All
+            title = Stay alive for @/duration
+            
+            disableOnStateChange = False
+            
+            PARAMETER {
+                name = ReachState
+                type = ReachState
+                situation = ORBITING
+                situation = SUB_ORBITAL
+                situation = ESCAPING
+                
+                targetBody = AllBodies()
+                
+                disableOnStateChange = False
+            }
+            PARAMETER {
+				name = HasPower
+				type = HasResource
+				resource = ElectricCharge
+				minQuantity = 10.0
+				title = Craft must have substantial ElectricCharge
+				disableOnStateChange = false
+            }
+            PARAMETER {
+                name = Duration
+                type = Duration
+                duration = @/duration
+            }
+        }
+		PARAMETER:NEEDS[RemoteTech] {
+			name = KSCConnectivity
+			type = KSCConnectivity
+			title = Must have an active connection to the ground
+
+			hasConnectivity = true
+		}
+    }
+}

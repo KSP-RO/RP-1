@@ -649,7 +649,7 @@ namespace RP0.Crew
                     multiplier += settings.recOtherBody.x;
                     constant += settings.recOtherBody.y;
                 }
-                if (hasEVA)
+                if (hasOrbit && hasEVA)    // EVA should only count while in orbit, not when walking on Earth
                 {
                     multiplier += settings.recEVA.x;
                     constant += settings.recEVA.y;

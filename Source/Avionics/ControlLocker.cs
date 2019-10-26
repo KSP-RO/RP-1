@@ -11,7 +11,8 @@ namespace RP0
     {
         public static bool ShouldLock(List<Part> parts, bool countClamps, out float maxMass, out float vesselMass)
         {
-            maxMass = vesselMass = 0f;  // These are unreliable if the calculation exits early!
+            maxMass = vesselMass = 0f;
+            bool forceUnlock = false;   // Defer return until maxMass and avionicsMass are fully calculated
 
             if (parts == null || parts.Count <= 0)
                 return false;
@@ -31,7 +32,7 @@ namespace RP0
                 foreach (PartModule m in p.Modules)
                 {
                     if (m is KerbalEVA)
-                        return false;
+                        forceUnlock = true;
 
                     if (m is ModuleCommand)
                     {
@@ -59,13 +60,13 @@ namespace RP0
                 // Do we have an unencumbered command module?
                 // if we count clamps, they can give control. If we don't, this works only if the part isn't a clamp.
                 if ((countClamps || !clamp) && cmd && !science && !avionics)
-                    return false;
+                    forceUnlock = true;
                 if (cmd && avionics && mC.minimumCrew > crewCount) // check if need crew
                     avionics = false; // not operational
                 if (avionics)
                     maxMass += partAvionicsMass;
             }
-            return (vesselMass > maxMass);  // Lock if vessel mass is greater than controlled mass.
+            return (!forceUnlock && vesselMass > maxMass);  // Lock if vessel mass is greater than controlled mass.
         }
     }
 

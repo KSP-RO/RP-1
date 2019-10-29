@@ -2848,7 +2848,7 @@
         "description": "A short range omnidirectional antenna. Perfect for reentry vehicles and landers.",
         "mod": "Stock (RO Config)",
         "cost": "0.4",
-        "entry_cost": "40",
+        "entry_cost": 0,
         "category": "COMMS",
         "info": "Omni",
         "year": "0",

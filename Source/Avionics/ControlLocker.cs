@@ -11,7 +11,8 @@ namespace RP0
     {
         public static bool ShouldLock(List<Part> parts, bool countClamps, out float maxMass, out float vesselMass)
         {
-            maxMass = vesselMass = 0f;  // These are unreliable if the calculation exits early!
+            maxMass = vesselMass = 0f;
+            bool forceUnlock = false;   // Defer return until maxMass and avionicsMass are fully calculated
 
             if (parts == null || parts.Count <= 0)
                 return false;
@@ -31,7 +32,7 @@ namespace RP0
                 foreach (PartModule m in p.Modules)
                 {
                     if (m is KerbalEVA)
-                        return false;
+                        forceUnlock = true;
 
                     if (m is ModuleCommand)
                     {
@@ -59,13 +60,13 @@ namespace RP0
                 // Do we have an unencumbered command module?
                 // if we count clamps, they can give control. If we don't, this works only if the part isn't a clamp.
                 if ((countClamps || !clamp) && cmd && !science && !avionics)
-                    return false;
+                    forceUnlock = true;
                 if (cmd && avionics && mC.minimumCrew > crewCount) // check if need crew
                     avionics = false; // not operational
                 if (avionics)
                     maxMass += partAvionicsMass;
             }
-            return (vesselMass > maxMass);  // Lock if vessel mass is greater than controlled mass.
+            return (!forceUnlock && vesselMass > maxMass); 
         }
     }
 
@@ -76,26 +77,28 @@ namespace RP0
     class ControlLocker : MonoBehaviour
     {
         public Vessel vessel = null;
-        bool wasLocked = false;
-        bool requested = false;
-        const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | 
-            ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
-        const string lockID = "RP0ControlLocker";
-        float maxMass, vesselMass;
-        double lastUT = -1d;
+        private bool wasLocked = false;
+        private bool requested = false;
+        private const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | 
+                                              ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
+        private const string lockID = "RP0ControlLocker";
+        private float maxMass, vesselMass;
+        private double lastUT = -1d;
 
-        const double updateFrequency = 1d; // run a check every second, unless staging.
-
-        readonly ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
-        const string ModTag = "[RP-1 ControlLocker]";
+        private const double updateFrequency = 1d; // run a check every second, unless staging.
+        private readonly ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
+        private const string ModTag = "[RP-1 ControlLocker]";
 
         // For locking MJ.
-        MethodInfo getMasterMechJeb = null;
-        PropertyInfo mjDeactivateControl = null;
-        object masterMechJeb = null;
+        private static bool isFirstLoad = true;
+        private static MethodInfo getMasterMechJeb = null;
+        private static PropertyInfo mjDeactivateControl = null;
+        private object masterMechJeb = null;
 
         private void Awake()
         {
+            if (!isFirstLoad) return;
+            isFirstLoad = false;
             if (AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2") is var mechJebAssembly &&
                Type.GetType("MuMech.MechJebCore, MechJeb2") is Type mechJebCore &&
                Type.GetType("MuMech.VesselExtensions, MechJeb2") is Type mechJebVesselExtensions)
@@ -122,10 +125,12 @@ namespace RP0
             // Apply only when switching does not result in new scene load.
             if (v1 && v2 && v2.loaded) v2.OnPostAutopilotUpdate += FlightInputModifier;
         }
+
         protected void OnVesselModifiedHandler(Vessel v)
         {
             requested = true;
         }
+
         void FlightInputModifier(FlightCtrlState state)
         {
             if (wasLocked)
@@ -195,6 +200,7 @@ namespace RP0
                 mjDeactivateControl.SetValue(masterMechJeb, doLock, index: null);
             }
         }
+
         public void OnDestroy()
         {
             InputLockManager.RemoveControlLock(lockID);

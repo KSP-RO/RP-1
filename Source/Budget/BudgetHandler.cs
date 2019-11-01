@@ -196,7 +196,7 @@ namespace RP0
                     infoMessage += String.Format("Your program has been stagnating badly and your funders are unimpressed. You must earn at least {0:F0} reputation to avoid further cuts.", maintenanceReputation);
                 else if (oldGrowth < 0 && newGrowth < -0.01) // Need more reputation
                     infoMessage += String.Format("Your funders are disappointed with your sluggish progress and are threatening to cut funding. You need to earn at least {0:F0} reputation to maintain your current funding.", maintenanceReputation);
-                else if (newGrowth < 0.01) // Need more reputation
+                else if (newGrowth < 0) // Need more reputation
                     infoMessage += String.Format("Your program has been doing well but any inactivity now will lose the trust of your funders. You will need to earn at least {0:F0} reputation to maintain your current funding.", maintenanceReputation);
                 else // Nothing to worry about
                     infoMessage += "Your funding is projected to stay relatively constant over the next period. While you have little to worry about right now, you'll soon need to earn more reputation to avoid loss of future funding.";

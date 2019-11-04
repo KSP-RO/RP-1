@@ -6,23 +6,14 @@ using UnityEngine;
 
 namespace RP0
 {
-    public class ToolingDiameter
+    public class ToolingEntry
     {
-        public float diameter;
+        public float Value { get; set; }
+        public List<ToolingEntry> Children { get; } = new List<ToolingEntry>();
 
-        public List<float> lengths;
-
-        public ToolingDiameter(float d)
+        public ToolingEntry(float value)
         {
-            diameter = d;
-            lengths = new List<float>();
-        }
-
-        public ToolingDiameter(float d, float l)
-        {
-            diameter = d;
-            lengths = new List<float>();
-            lengths.Add(l);
+            Value = value;
         }
     }
     public class ToolingDatabase
@@ -38,16 +29,16 @@ namespace RP0
             return a.CompareTo(b);
         }
 
-        public static Dictionary<string, List<ToolingDiameter>> toolings = new Dictionary<string, List<ToolingDiameter>>();
+        public static Dictionary<string, List<ToolingEntry>> toolings = new Dictionary<string, List<ToolingEntry>>();
 
-        protected static int DiamIndex(float diam, List<ToolingDiameter> lst, out int min)
+        protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min)
         {
             min = 0;
-            int max = lst.Count - 1;
-            do
+            int max = list.Count - 1;
+            while (min <= max)
             {
                 int mid = (min + max) / 2;
-                switch (EpsilonCompare(diam, lst[mid].diameter))
+                switch (EpsilonCompare(value, list[mid].Value))
                 {
                     case 0:
                         return mid;
@@ -62,42 +53,8 @@ namespace RP0
                         break;
                 }
             }
-            while (min <= max);
             return -1;
         }
-
-        protected static int LengthIndex(float length, List<float> lst, out int min)
-        {
-            min = 0;
-            int max = lst.Count - 1;
-            do
-            {
-                int mid = (min + max) / 2;
-                switch (EpsilonCompare(length, lst[mid]))
-                {
-                    case 0:
-                        return mid;
-
-                    case 1:
-                        min = mid + 1;
-                        break;
-
-                    default:
-                    case -1:
-                        max = mid - 1;
-                        break;
-                }
-            }
-            while (min <= max);
-            return -1;
-        }
-
-        public enum ToolingLevel
-        {
-            None = 0,
-            Diameter = 1,
-            Full = 2
-        };
 
         /// <summary>
         /// Compares two tooling sizes and checks whether their diameter and length are within a predefined epsilon (currently 4%).
@@ -112,67 +69,49 @@ namespace RP0
             return EpsilonCompare(diam1, diam2) == 0 && EpsilonCompare(len1, len2) == 0;
         }
 
-        public static ToolingLevel HasTooling(string type, float diam, float len)
+        public static int GetToolingLevel(string type, params float[] parameters)
         {
-            List<ToolingDiameter> lst;
-            if (toolings.TryGetValue(type, out lst))
+            List<ToolingEntry> entries;
+            var level = 0;
+            if (toolings.TryGetValue(type, out entries))
             {
-                if (lst.Count == 0)
-                    return ToolingLevel.None;
-
-                int tmp;
-                int dIndex = DiamIndex(diam, lst, out tmp);
-                if (dIndex == -1)
-                    return ToolingLevel.None;
-
-                int lIndex = LengthIndex(len, lst[dIndex].lengths, out tmp);
-
-                if (lIndex == -1)
-                    return ToolingLevel.Diameter;
-                else
-                    return ToolingLevel.Full;
+                for(int i = 0; i < parameters.Length; ++i)
+                {
+                    var entryIndex = GetEntryIndex(parameters[i], entries, out _);
+                    if(entryIndex == -1)
+                    {
+                        break;
+                    }
+                    level++;
+                    entries = entries[entryIndex].Children;
+                }
             }
 
-            return ToolingLevel.None;
+            return level;
         }
 
-        public static bool UnlockTooling(string type, float diam, float len)
+        public static bool UnlockTooling(string type, params float[] parameters)
         {
-            List<ToolingDiameter> lst;
-            if (!toolings.TryGetValue(type, out lst))
+            var toolingUnlocked = false;
+            if (!toolings.TryGetValue(type, out var entries))
             {
-                lst = new List<ToolingDiameter>();
-                toolings[type] = lst;
+                entries = new List<ToolingEntry>();
+                toolings[type] = entries;
             }
-            if (lst.Count == 0)
+
+            for (int i = 0; i < parameters.Length; ++i)
             {
-                lst.Add(new ToolingDiameter(diam, len));
-                return true;
+                var entryIndex = GetEntryIndex(parameters[i], entries, out var insertionIndex);
+                if(entryIndex == -1)
+                {
+                    entries.Insert(insertionIndex, new ToolingEntry(parameters[i]));
+                    entryIndex = insertionIndex;
+                    toolingUnlocked = true;
+                }
+                entries = entries[entryIndex].Children;
             }
-            else
-            {
 
-                int insertionIdx;
-                int dIndex = DiamIndex(diam, lst, out insertionIdx);
-                if (dIndex == -1)
-                {
-                    ToolingDiameter d = new ToolingDiameter(diam, len);
-                    lst.Insert(insertionIdx, d);
-                    return true;
-                }
-
-                int lIndex = LengthIndex(len, lst[dIndex].lengths, out insertionIdx);
-
-                if (lIndex != -1)
-                {
-                    return false;
-                }
-                else
-                {
-                    lst[dIndex].lengths.Insert(insertionIdx, len);
-                    return true;
-                }
-            }
+            return toolingUnlocked;
         }
 
 
@@ -181,53 +120,109 @@ namespace RP0
             toolings.Clear();
 
             if (node == null)
-                return;
-
-            foreach (ConfigNode c in node.GetNodes("TYPE"))
             {
-                string type = c.GetValue("type");
+                return;
+            }
+
+            LoadNewDbFormat(node);
+
+            if (toolings.Count == 0)
+            {
+                LoadOldDbFormat(node);
+            }
+        }
+
+        private static void LoadNewDbFormat(ConfigNode node)
+        {
+            foreach (var typeNode in node.GetNodes("TYPE"))
+            {
+                string type = typeNode.GetValue("type");
                 if (string.IsNullOrEmpty(type))
-                    continue;
-
-                List<ToolingDiameter> lst = new List<ToolingDiameter>();
-
-                foreach (ConfigNode n in c.GetNodes("DIAMETER"))
                 {
-                    float tmp = 0f;
-                    if (!n.TryGetValue("diameter", ref tmp))
-                        continue;
-
-                    ToolingDiameter d = new ToolingDiameter(tmp);
-
-                    ConfigNode len = n.GetNode("LENGTHS");
-                    if (len != null)
-                        foreach (ConfigNode.Value v in len.values)
-                            if (float.TryParse(v.value, out tmp))
-                                d.lengths.Add(tmp);
-
-                    lst.Add(d);
+                    continue;
                 }
 
-                toolings[type] = lst;
+                var entries = new List<ToolingEntry>();
+                LoadEntries(typeNode, entries);
+                if (entries.Count > 0)
+                {
+                    toolings[type] = entries;
+                }
+            }
+        }
+
+        private static void LoadEntries(ConfigNode node, List<ToolingEntry> entries)
+        {
+            foreach (var entryNode in node.GetNodes("ENTRY"))
+            {
+                var tmp = 0f;
+                if (!entryNode.TryGetValue("value", ref tmp))
+                {
+                    continue;
+                }
+
+                var entry = new ToolingEntry(tmp);
+                LoadEntries(entryNode, entry.Children);
+                entries.Add(entry);
             }
         }
 
         public static void Save(ConfigNode node)
         {
-            foreach (KeyValuePair<string, List<ToolingDiameter>> kvp in toolings)
+            foreach (var typeToEntries in toolings)
             {
-                ConfigNode c = node.AddNode("TYPE");
-                c.AddValue("type", kvp.Key);
+                var typeNode = node.AddNode("TYPE");
+                typeNode.AddValue("type", typeToEntries.Key);
 
-                foreach (ToolingDiameter d in kvp.Value)
+                var entries = typeToEntries.Value;
+                SaveEntries(typeNode, entries);
+            }
+        }
+
+        private static void SaveEntries(ConfigNode typeNode, List<ToolingEntry> entries)
+        {
+            foreach (var entry in entries)
+            {
+                var entryNode = typeNode.AddNode("ENTRY");
+                entryNode.AddValue("value", entry.Value.ToString("G17"));
+                SaveEntries(entryNode, entry.Children);
+            }
+        }
+
+        public static void LoadOldDbFormat(ConfigNode node)
+        {
+            foreach (var c in node.GetNodes("TYPE"))
+            {
+                string type = c.GetValue("type");
+                if (string.IsNullOrEmpty(type))
+                    continue;
+
+                var entries = new List<ToolingEntry>();
+
+                foreach (var n in c.GetNodes("DIAMETER"))
                 {
-                    ConfigNode n = c.AddNode("DIAMETER");
-                    n.AddValue("diameter", d.diameter.ToString("G17"));
+                    float tmp = 0f;
+                    if (!n.TryGetValue("diameter", ref tmp))
+                        continue;
 
-                    ConfigNode len = n.AddNode("LENGTHS");
-                    for (int i = 0, iC = d.lengths.Count; i < iC; ++i)
-                        len.AddValue("length", d.lengths[i].ToString("G17"));
+                    var diameter = new ToolingEntry(tmp);
+
+                    var length = n.GetNode("LENGTHS");
+                    if (length != null)
+                    {
+                        foreach (ConfigNode.Value v in length.values)
+                        {
+                            if (float.TryParse(v.value, out tmp))
+                            {
+                                diameter.Children.Add(new ToolingEntry(tmp));
+                            }
+                        }
+                    }
+
+                    entries.Add(diameter);
                 }
+
+                toolings[type] = entries;
             }
         }
     }

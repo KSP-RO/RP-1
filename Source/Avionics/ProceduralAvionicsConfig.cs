@@ -64,7 +64,7 @@ namespace RP0.ProceduralAvionics
 		{
 			ProceduralAvionicsUtils.Log("TechNode deserialization needed");
 			techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
-			List<ProceduralAvionicsTechNode> techNodeList = ObjectSerializer.Deserialize<List<ProceduralAvionicsTechNode>>(techNodesSerialized);
+			var techNodeList = techNodesSerialized == null ? new List<ProceduralAvionicsTechNode>() : ObjectSerializer.Deserialize<List<ProceduralAvionicsTechNode>>(techNodesSerialized);
 			foreach (var item in techNodeList)
 			{
 				ProceduralAvionicsUtils.Log("Deserialized " + item.name);

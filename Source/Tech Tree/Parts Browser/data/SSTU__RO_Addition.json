@@ -220,7 +220,7 @@
         "description": "Modular Tank",
         "mod": "SSTU (RO Addition)",
         "cost": "0",
-        "entry_cost": "10000",
+        "entry_cost": "1",
         "category": "MATERIALS",
         "info": "RF Tanks",
         "year": "0",

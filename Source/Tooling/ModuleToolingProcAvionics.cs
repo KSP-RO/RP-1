@@ -122,7 +122,7 @@ namespace RP0
             var tankCount = _procAvionics.InternalTanksVolume / SphericalTankUtilities.GetSphereVolume(internalTankDiameter / 2);
             var costMultDL = TankToolingDefinition?.costMultiplierDL ?? 0f;
 
-            return GetDimensionModuleCost(internalTankDiameter, length, costMultDL) * tankCount;>>>>>>> upstream/master
+            return GetDimensionModuleCost(internalTankDiameter, length, costMultDL) * tankCount;
         }
 
         public override void PurchaseTooling()

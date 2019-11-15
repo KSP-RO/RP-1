@@ -146,14 +146,6 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assembly-CSharp-firstpass.dll" />
-    <Content Include="Assembly-CSharp.dll" />
-    <Content Include="ModularFlightIntegrator.dll" />
-    <Content Include="RealFuels.dll" />
-    <Content Include="UnityEngine.dll" />
-    <Content Include="UnityEngine.UI.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>

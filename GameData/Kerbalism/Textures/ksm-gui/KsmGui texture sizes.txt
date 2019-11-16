@@ -1,0 +1,10 @@
+Headers/entries are 16 px height at 100% scale, so to look good at any scaling 32px images are ideal
+Headers have a solid black background, and overall backgrounds are usually quite dark so white icons are better
+Also, icons can easily be soft-recolored in the code so unless you really need a non-monochrome icon, always use a white icon
+
+Icons ideal specs : 
+- 32x32 px images, white on fully transparent background
+- transparent border of 2 px on all edges (4 px is better)
+- square-shaped 28x28 px effective icon size
+- any shape width should be 2 px minimum (4 px is better)
+

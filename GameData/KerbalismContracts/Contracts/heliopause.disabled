@@ -1,0 +1,79 @@
+CONTRACT_TYPE:NEEDS[Kerbalism,FeatureRadiation]
+{
+  name = Kerbalism_LeaveSolarSystem
+  agent = Kerbalism
+  group = Kerbalism
+  title = Leave the heliosphere
+  description = We've reached moons, we went to other planets, now it's time to go interstellar.
+  synopsis = Leave the heliosphere
+  completedMessage = We've officially reached interstellar space!
+  minExpiry = 600.0
+  maxExpiry = 2000.0
+  deadline = 8400.0
+  prestige = Exceptional
+  maxCompletions = 1
+  maxSimultaneous = 1
+  rewardScience = 45
+  rewardReputation = 35
+  rewardFunds = 125000
+  failureFunds = 60000
+  failureReputation = 15
+
+  targetBody = AllBodies().Where(cb => cb.IsSun()).First()
+
+  REQUIREMENT
+  {
+    name = OrbitJool
+    type = Orbit
+    targetBody = AllBodies().Where(cb => cb.IsPlanet() && !cb.HasSurface()).First()
+  }
+
+  PARAMETER
+  {
+    name = CompleteContract
+    type = VesselParameterGroup
+    title = Leave the heliosphere
+
+    PARAMETER
+    {
+      name = RadiationSensor
+      type = PartValidation
+      title = Have a radiation sensor
+      hideChildren = true
+
+      FILTER
+      {
+        MODULE
+        {
+          name = Sensor
+          type = radiation
+        }
+      }
+    }
+
+    PARAMETER
+    {
+      name = RadiationField
+      type = RadiationField
+      title = Leave the heliosphere
+      field = MAGNETOPAUSE
+      stay_out = true
+    }
+
+    PARAMETER
+    {
+      name = CollectScience
+      type = CollectScience
+      recoveryMethod = RecoverOrTransmit
+      experiment = geigerCounter
+      completeInSequence = true
+    }
+  }
+
+  BEHAVIOUR
+  {
+    name = ShowBelt
+    type = ShowRadiationField
+    field = MAGNETOPAUSE
+  }
+}

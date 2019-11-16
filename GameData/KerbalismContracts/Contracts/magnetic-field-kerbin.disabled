@@ -1,0 +1,72 @@
+CONTRACT_TYPE
+{
+	name = Kerbalism_ResearchMagneticField_Kerbin
+	title = Research the magnetic field of @targetBody
+	genericTitle = Research magnetic field
+	group = Kerbalism
+	agent = Kerbalism
+	description = Investigate the magnetic fields of @targetBody. For best results, get into a highly elliptical orbit with high inclination.
+	genericDescription = Research the magnetic fields of the targeted celestial body.
+	synopsis = Research the magnetic fields of @targetBody.
+	completedMessage = Mission Success! Magnetic field researched.
+
+	sortKey = 5
+
+	cancellable = true
+	declinable = true
+	autoAccept = false
+	minExpiry = 0
+	maxExpiry = 0
+	maxCompletions = 1
+	maxSimultaneous = 1
+
+	targetBody = HomeWorld()
+
+	prestige = Significant
+	advanceFunds = 14000
+	rewardFunds = @advanceFunds * 4
+	rewardScience = 0
+	rewardReputation = 10
+
+	REQUIREMENT
+    {
+        name = DidCrossBelt
+        type = CompleteContract
+		contractType = Kerbalism_CrossRadiationBelt
+    }
+
+	PARAMETER
+	{
+	    name = RadiationFieldVisible
+	    type = RadiationFieldVisible
+		field = INNER_BELT
+		title = Research the inner radiation belt
+	}
+
+	PARAMETER
+	{
+	    name = RadiationFieldVisible
+	    type = RadiationFieldVisible
+		field = OUTER_BELT
+		title = Research the outer radiation field
+	}
+
+	PARAMETER
+	{
+	    name = RadiationFieldVisible
+	    type = RadiationFieldVisible
+		field = MAGNETOPAUSE
+		title = Research the magnetosphere
+	}
+
+	PARAMETER
+	{
+		name = CollectScience
+		type = CollectScience
+		recoveryMethod = RecoverOrTransmit
+		experiment = geigerCounter
+		completeInSequence = true
+		hideChildren = true
+		title = Transmit radiation scan data
+	}
+}

@@ -1,0 +1,56 @@
+CONTRACT_TYPE:NEEDS[Kerbalism,FeatureRadiation]
+{
+  name = Kerbalism_CrossRadiationBelt
+  agent = Kerbalism
+  group = Kerbalism
+  title = Cross the radiation belt
+  description = Scientists think that there could be a deadly radiation belt around @targetBody. We need to know where it is. Go and find it with a geiger counter.
+  genericDescription = Scientists think that there is a deadly radiation belt around our planet. We need to know where it is. Go and find it with a geiger counter.
+  synopsis = We suspect that our planet is surrounded by a deadly radiation field. Go find it.
+  completedMessage = Radiation field theory confirmed: you are experiencing extreme radiation levels. Now get out of there!
+  minExpiry = 500.0
+  maxExpiry = 1000.0
+  deadline = 400.0
+  prestige = Trivial
+  maxCompletions = 1
+  maxSimultaneous = 1
+  rewardScience = 10
+  rewardReputation = 10
+  rewardFunds = 5000
+  failureFunds = 5000
+  failureReputation = 5
+  targetBody = HomeWorld()
+
+  sortKey = 1
+
+  REQUIREMENT
+  {
+    name = ReachSpace
+    type = ReachSpace
+  }
+
+  PARAMETER
+  {
+    name = CompleteContract
+    type = VesselParameterGroup
+    title = Take a radiation reading within a radiation belt
+    hideChildren = false
+
+//    PARAMETER
+//    {
+//      name = RadiationField
+//      type = RadiationField
+//      title = Find the inner radiation belt
+//      field = INNER_BELT
+//      stay_in = true
+//    }
+
+    PARAMETER
+    {
+      name = ExperimentRunning
+      type = ExperimentRunning
+      title = Run geigerCounter
+      experiment_id = geigerCounter
+    }
+  }
+}

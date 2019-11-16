@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+This file is used to manage the Kerbalism version and the supported KSP versions
+The values defined here will be propagated to :
+- the Kerbalism.version KSP-AVC file used by CKAN
+- the AssemblyInfo.cs of Kerbalism and KerbalismBootstrap
+- the available conditional compilation constants for defining KSP version specific code
+-->
+
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+    <!-- 
+    Kerbalism major and minor version numbers 
+    -->
+		<KerbalismVersionMajor>3</KerbalismVersionMajor>
+		<KerbalismVersionMinor>1</KerbalismVersionMinor>
+    <!-- 
+    Must match the `include=XXXX` of a KBinVersionConstant item, 
+    used to determine the lowest and highest supported KSP version in the Kerbalism.version KSP-AVC file.
+    -->
+		<KBinMaxVersion>18</KBinMaxVersion>
+		<KBinMinVersion>15_16</KBinMinVersion>
+	</PropertyGroup>
+    <!-- 
+    KBinVersionConstant items : 
+    The string defined in `Include=XXXX` will determine the conditional compilation constant. 
+    The constant will be "KSPXXXX".
+    This also will be used to name the compiled assemblies (KerbalismXXXX.kbin), and by KerbalismBootstrap
+    to know which one to use for which KSP version.
+    The `KSPBuildVersion` number is the KSP version that will be used to compile the kbin assembly, it must
+    match the version (X.X.X format) of one of zips (KSP-X.X.X.7z) in BuildSystem\References\KSPReferenceZips
+    -->
+	<ItemGroup>
+    <KBinVersionConstant Include="18">
+      <KSPMinMajor>1</KSPMinMajor>
+      <KSPMinMinor>8</KSPMinMinor>
+      <KSPMinBuild>0</KSPMinBuild>
+      <KSPMaxMajor>1</KSPMaxMajor>
+      <KSPMaxMinor>8</KSPMaxMinor>
+      <KSPMaxBuild>9</KSPMaxBuild>
+      <KSPBuildVersion>1.8.0</KSPBuildVersion>
+      <KSPNETFramework>v4.0</KSPNETFramework>
+    </KBinVersionConstant>
+		<KBinVersionConstant Include="17">
+			<KSPMinMajor>1</KSPMinMajor>
+			<KSPMinMinor>7</KSPMinMinor>
+			<KSPMinBuild>0</KSPMinBuild>
+			<KSPMaxMajor>1</KSPMaxMajor>
+			<KSPMaxMinor>7</KSPMaxMinor>
+			<KSPMaxBuild>3</KSPMaxBuild>
+			<KSPBuildVersion>1.7.3</KSPBuildVersion>
+      <KSPNETFramework>v3.5</KSPNETFramework>
+		</KBinVersionConstant>
+		<KBinVersionConstant Include="15_16">
+			<KSPMinMajor>1</KSPMinMajor>
+			<KSPMinMinor>5</KSPMinMinor>
+			<KSPMinBuild>0</KSPMinBuild>
+			<KSPMaxMajor>1</KSPMaxMajor>
+			<KSPMaxMinor>6</KSPMaxMinor>
+			<KSPMaxBuild>1</KSPMaxBuild>
+			<KSPBuildVersion>1.6.1</KSPBuildVersion>
+      <KSPNETFramework>v3.5</KSPNETFramework>
+		</KBinVersionConstant>
+	</ItemGroup>
+</Project>

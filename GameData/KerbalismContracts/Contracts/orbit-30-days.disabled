@@ -1,0 +1,75 @@
+CONTRACT_TYPE
+{
+  name = Kerbalism_Orbit30days
+  agent = Kerbalism
+  group = Kerbalism
+  title = #KERBALISM_Contracts_orbitTitle
+  description = #KERBALISM_Contracts_orbitTitle
+  synopsis = #KERBALISM_Contracts_orbitDesc
+  completedMessage = #KERBALISM_Contracts_orbitComplete
+  minExpiry = 500.0
+  maxExpiry = 1000.0
+  deadline = 400.0
+  prestige = Significant
+  maxCompletions = 1
+  maxSimultaneous = 1
+  rewardScience = 20
+  rewardReputation = 30
+  rewardFunds = 25000
+  failureFunds = 10000
+  failureReputation = 10
+  targetBody = HomeWorld()
+
+  REQUIREMENT
+  {
+    name = Orbit
+    type = Orbit
+    checkType = Manned
+  }
+
+  PARAMETER
+  {
+    name = CompleteContract
+    type = VesselParameterGroup
+    title = #KERBALISM_Contracts_orbitTitle
+
+    PARAMETER
+    {
+      name = Crewmembers
+      type = HasCrew
+      minCrew = 1
+      maxCrew = 99
+      title = Have at least 1 crewmember on board
+      disableOnStateChange = true
+      hideChildren = true
+    }
+
+    PARAMETER
+    {
+      name = Orbit
+      type = Orbit
+      minAltitude = @targetBody.AtmosphereAltitude()
+      title = Achieve Orbit around @targetBody
+      disableOnStateChange = true
+      hideChildren = true
+    }
+
+    PARAMETER
+    {
+      name = Duration
+      type = Duration
+      duration = 30d
+      preWaitText = Mission duration
+      waitingText = Remaining mission duration
+      completionText = Mission goal reached
+    }
+  }
+
+  PARAMETER
+  {
+    name = ReturnHome
+    type = ReturnHome
+    title = Return Home Safely
+    completeInSequence = true
+  }
+}

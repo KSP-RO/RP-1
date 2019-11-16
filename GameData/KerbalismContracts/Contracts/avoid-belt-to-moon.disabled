@@ -1,0 +1,88 @@
+CONTRACT_TYPE:NEEDS[Kerbalism,FeatureRadiation]
+{
+  targetBody = HomeWorld()
+  failureFunds = 4000
+  rewardFunds = 20000
+  advanceFunds = 16000
+
+  name = Kerbalism_AvoidBeltToMoon
+
+  sortKey = 5
+
+  agent = Kerbalism
+  group = Kerbalism
+  title = Get to @/moon and back without crossing the inner radiation belt
+  genericTitle = Avoid the inner radiation belt on a roundtrip to a moon
+  description = Avoid the inner radiation belt on a roundtrip to @/moon
+  genericDescription = Avoid the inner radiation belt a roundtrip to a moon
+  synopsis = To avoid radiation poisoning, we need to find a way to @/moon and back without crossing the inner radiation belt of @/home.
+  completedMessage = Congratulations, you found a safe way to @/moon and back!
+  minExpiry = 0.0
+  maxExpiry = 0.0
+  deadline = 0.0
+  prestige = Trivial
+  maxCompletions = 1
+  maxSimultaneous = 1
+  rewardScience = 4
+  rewardReputation = 4
+
+  DATA
+  {
+    type = CelestialBody
+    name = The Moon
+    moon = HomeWorld().Children().First()
+  }
+
+  DATA
+  {
+    type = CelestialBody
+    name = Home
+    home = HomeWorld()
+  }
+
+  REQUIREMENT
+  {
+    name = DidFindBelt
+    type = CompleteContract
+    contractType = Kerbalism_CrossRadiationBelt
+  }
+
+  PARAMETER
+  {
+    name = CompleteContract
+    type = VesselParameterGroup
+    title = Get to @/moon and back without crossing the inner radiation belt of @/home
+
+    PARAMETER
+    {
+      name = NewVessel
+      type = NewVessel
+    }
+
+    PARAMETER
+    {
+      name = InnerBelt
+      type = RadiationField
+      field = INNER_BELT
+      crossings_max = 0
+      targetBody = @/home
+    }
+
+    PARAMETER
+    {
+      name = ReachState
+      type = ReachState
+      targetBody = @/moon
+      situation = ESCAPING
+    }
+
+    PARAMETER
+    {
+      name = ReturnHome
+      type = ReturnHome
+      targetBody = @/home
+      title = Return Home Safely
+      completeInSequence = true
+    }
+  }
+}

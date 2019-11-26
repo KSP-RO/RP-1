@@ -14,7 +14,7 @@ namespace RP0.Utilities
             return GetSphereCount(availableVolume, sphereVolume) * sphereVolume;
         }
 
-        private static float GetSphereCount(float availableVolume, float sphereVolume) => Mathf.Floor(availableVolume / sphereVolume);
+        private static float GetSphereCount(float availableVolume, float sphereVolume) => sphereVolume == 0 ? 0 : Mathf.Floor(availableVolume / sphereVolume);
 
         public static float GetSphereVolume(float radius)
         {
@@ -23,6 +23,11 @@ namespace RP0.Utilities
 
         public static float GetSphericalTankRadius(float availableVolume)
         {
+            if(availableVolume == 0)
+            {
+                return 0;
+            }
+
             var radiusExponent = Mathf.Max(0, Mathf.Log(Mathf.Pow(availableVolume / Mathf.PI * 3 / 4 / MinSpheres, 1f / 3) / BaseRadius, 2));
             return Mathf.Pow(2, Mathf.Floor(Mathf.Round(radiusExponent * 10000) / 10000)) * BaseRadius;
         }

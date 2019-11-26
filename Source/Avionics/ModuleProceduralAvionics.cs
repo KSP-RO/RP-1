@@ -450,7 +450,7 @@ namespace RP0.ProceduralAvionics
             Events[nameof(OnPartVolumeChanged)].active = true;
         }
 
-        private float GetAvailableVolume() => Math.Min((cachedVolume - GetAvionicsVolume()) * InternalTanksAvailableVolumeUtilization, cachedVolume * InternalTanksTotalVolumeUtilization);
+        private float GetAvailableVolume() => Math.Max(Math.Min((cachedVolume - GetAvionicsVolume()) * InternalTanksAvailableVolumeUtilization, cachedVolume * InternalTanksTotalVolumeUtilization), 0);
         private float GetAvionicsVolume() => GetAvionicsMass() / avionicsDensity;
 
         public void SendVolumeChangedEvent(double newVolume)

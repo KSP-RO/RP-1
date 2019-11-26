@@ -9237,6 +9237,27 @@
         "module_tags": []
     },
     {
+        "name": "XLR81-LF2-SPS",
+        "title": "XLR-LF2-SPS",
+        "description": "Liquid Fluorine based design, proposed for use on the GE D-2 Apollo vehicle, and later high performance Agena tugs.",
+        "mod": "Engine_Config",
+        "cost": 1000,
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1963",
+        "technology": "earlyHydrolox",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Alternate Apollo",
+        "engine_config": "Agena",
+        "upgrade": true,
+        "entry_cost_mods": "80000,Model8096 //No source, assumed similar to RL10 based on complexity",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "XLR99",
         "title": "XLR99",
         "description": "",

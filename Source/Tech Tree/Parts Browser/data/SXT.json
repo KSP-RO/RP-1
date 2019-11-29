@@ -463,7 +463,7 @@
         "spacecraft": "Vanguard 2",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, avionicsProbesEarly, Geiger, IonMass, Micrometeorite",
+        "entry_cost_mods": "1000, avionicsProbesEarly",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",

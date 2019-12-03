@@ -709,6 +709,29 @@
         ]
     },
     {
+        "name": "ROE-Agena8096",
+        "title": "ROEngines XLR81 Agena D+ Engine Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 200,
+        "entry_cost": 7000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1962",
+        "technology": "orbitalRocketry1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Agena (Only D+)",
+        "upgrade": false,
+        "entry_cost_mods": "XLR81-BA-11",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-Altair",
         "title": "Altair",
         "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",

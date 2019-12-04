@@ -2,6 +2,8 @@
 using System.Collections;
 using UniLinq;
 using UnityEngine;
+using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
+
 
 namespace RP0
 {
@@ -16,6 +18,9 @@ namespace RP0
 
         [KSPField]
         public float disabledkW = -1f;
+
+        [KSPField]
+        public float noavionicskW = -1f;
 
         [KSPField(guiActive = false, guiName = "Power", guiFormat = "N1", guiUnits = "\u2009W")]
         public float currentWatts = 0f;
@@ -54,6 +59,11 @@ namespace RP0
         {
             return disabledkW;
         }
+        protected virtual float GetNoAvionicskW()
+        {
+            return noavionicskW;
+        }
+
 
         protected virtual bool GetToggleable()
         {
@@ -118,17 +128,31 @@ namespace RP0
             }
             else
             {
-                currentlyEnabled = !((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled);
-                if (currentlyEnabled)
-                {
-                    commandChargeResource.rate = currentWatts = GetEnabledkW();
+                 noavionicskW = GetNoAvionicskW();
+                if (!(GetInternalMassLimit() == 0f))
+               {
+                    currentlyEnabled = !(TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) && systemEnabled && !toggleable;
+
+
+                    if (currentlyEnabled)
+                    {
+                        commandChargeResource.rate = currentWatts = GetEnabledkW();
+                    }
+                    else
+                    {
+                        commandChargeResource.rate = currentWatts = GetDisabledkW();
+                        Log("Used Disabled KW ", currentWatts);
+                    }
                 }
                 else
                 {
-                    commandChargeResource.rate = currentWatts = GetDisabledkW();
+                    commandChargeResource.rate = currentWatts = GetNoAvionicskW();
+                    Log("Used NoAvionics Kw Rate: ", currentWatts);
                 }
             }
             currentWatts *= 1000f;
+            Log("Current watt draw: ", currentWatts);
+
         }
 
         protected void OnConfigurationUpdated()
@@ -210,7 +234,8 @@ namespace RP0
         public void Start()
         {
         // check then bind to ModuleCommand
-            if (ResourceRate() <= 0f || !GetToggleable() || GetDisabledkW() <= 0f) {
+            if (ResourceRate() <= 0f || !GetToggleable() || GetDisabledkW() <= 0f || (GetInternalMassLimit() == 0f))
+            {
                 toggleable = false;
                 currentlyEnabled = true; // just in case
             }
@@ -237,7 +262,7 @@ namespace RP0
         public override string GetInfo()
         {
             string retStr = GetTonnageString();
-            if(GetToggleable() && GetDisabledkW() >= 0f)
+            if(GetToggleable() && GetDisabledkW() >= 0f && !(GetInternalMassLimit() == 0f))
             {
                 double resRate = ResourceRate();
                 if(resRate >= 0)

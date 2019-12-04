@@ -65,6 +65,9 @@ namespace RP0.ProceduralAvionics
         public float disabledPowerFactor;
 
         [KSPField(isPersistant = true)]
+        public float noAvionicsFactor;
+
+        [KSPField(isPersistant = true)]
         public bool hasScienceContainer = false;
 
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Avionics Utilization")]
@@ -145,7 +148,9 @@ namespace RP0.ProceduralAvionics
 
         protected override float GetDisabledkW() => GetEnabledkW() * disabledPowerFactor;
 
-        protected override bool GetToggleable() => disabledPowerFactor > 0;
+        protected override float GetNoAvionicskW() => GetEnabledkW() * noAvionicsFactor;
+
+        protected override bool GetToggleable() => (disabledPowerFactor > 0 && !(GetInternalMassLimit() == 0f));
 
         protected override string GetTonnageString() => "This part can be configured to allow control of vessels up to any mass.";
 
@@ -478,6 +483,7 @@ namespace RP0.ProceduralAvionics
             powerFactor = CurrentProceduralAvionicsTechNode.powerFactor;
             disabledPowerFactor = CurrentProceduralAvionicsTechNode.disabledPowerFactor;
             avionicsDensity = CurrentProceduralAvionicsTechNode.avionicsDensity;
+            noAvionicsFactor = CurrentProceduralAvionicsTechNode.noAvionicsFactor;
 
             hasScienceContainer = CurrentProceduralAvionicsTechNode.hasScienceContainer;
             interplanetary = CurrentProceduralAvionicsTechNode.interplanetary;
@@ -496,29 +502,47 @@ namespace RP0.ProceduralAvionics
         private void RefreshPowerDisplay()
         {
             var powerConsumptionBuilder = StringBuilderCache.Acquire();
-            double kW = GetEnabledkW();
-            if (kW >= 1)
+
+            ClampControllableMass();
+            Log("Mass Is: ", controllableMass);
+            if (controllableMass == 0)
             {
-                powerConsumptionBuilder.AppendFormat(KwFormat, kW).Append("\u2009kW");
-            }
-            else
-            {
-                powerConsumptionBuilder.AppendFormat(WFormat, kW * 1000).Append("\u2009W");
-            }
-            double dkW = GetDisabledkW();
-            if (dkW > 0)
-            {
-                powerConsumptionBuilder.Append(" /");
-                if (dkW >= 0.1)
+                double nkW = GetNoAvionicskW();
+
+                if (nkW >= 1)
                 {
-                    powerConsumptionBuilder.AppendFormat(KwFormat, dkW).Append("\u2009kW");
+                    powerConsumptionBuilder.AppendFormat(KwFormat, nkW).Append("\u2009kW");
                 }
                 else
                 {
-                    powerConsumptionBuilder.AppendFormat(WFormat, dkW * 1000).Append("\u2009W");
+                    powerConsumptionBuilder.AppendFormat(WFormat, nkW * 1000).Append("\u2009W");
                 }
             }
-
+            else
+            {
+                double kW = GetEnabledkW();
+                if (kW >= 1)
+                {
+                    powerConsumptionBuilder.AppendFormat(KwFormat, kW).Append("\u2009kW");
+                }
+                else
+                {
+                    powerConsumptionBuilder.AppendFormat(WFormat, kW * 1000).Append("\u2009W");
+                }
+                double dkW = GetDisabledkW();
+                if (dkW > 0)
+                {
+                    powerConsumptionBuilder.Append(" / ");
+                    if (dkW >= 1)
+                    {
+                        powerConsumptionBuilder.AppendFormat(KwFormat, dkW).Append("\u2009kW");
+                    }
+                    else
+                    {
+                        powerConsumptionBuilder.AppendFormat(WFormat, dkW * 1000).Append("\u2009W");
+                    }
+                }
+            }
             powerRequirementsDisplay = powerConsumptionBuilder.ToStringAndRelease();
         }
 

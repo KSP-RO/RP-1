@@ -47,7 +47,10 @@ namespace RP0.ProceduralAvionics
 		[Persistent]
 		public float disabledPowerFactor = -1;
 
-		[Persistent]
+        [Persistent]
+        public float noAvionicsFactor = -1;
+
+        [Persistent]
 		public float avionicsDensity = 1;
 
 		// Controls whether or not this part has a science return container 

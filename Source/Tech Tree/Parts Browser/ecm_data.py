@@ -29,12 +29,12 @@ class ECMNode:
         self.children.append(child_node)
     
 class ECMData:
-    ecms = {}
-    top_level_ids = []
-    total_parents = 0
-    
     def __init__(self, parts):
         """Load the parts from the json files."""
+        self.ecms = {}
+        self.top_level_ids = []
+        self.total_parents = 0
+    
         self.load_ecm_data(parts)
         print(f'Initialized the ecm data.')
         print(f'Total parents added: {self.total_parents}.')

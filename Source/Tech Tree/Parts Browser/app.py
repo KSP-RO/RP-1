@@ -133,6 +133,14 @@ def create_app(test_config=None):
         generate_ecm_parts(part_data.parts)
         generate_ecm_engines(part_data.parts)
         return "true"
+
+    @app.route('/api/reload_data')
+    def reload_data():
+        global part_data, tech_mapping, ecm_data
+        part_data = PartData()
+        tech_mapping = TechMapping()
+        ecm_data = ECMData(part_data.parts)
+        return "true"
     
     @app.route('/api/commit_changes',  methods=['POST'])
     def commit_changes():

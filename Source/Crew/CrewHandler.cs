@@ -125,7 +125,7 @@ namespace RP0.Crew
         protected HashSet<string> partSynsHandled = new HashSet<string>();
         protected TrainingDatabase trainingDatabase = new TrainingDatabase();
 
-        public FSGUI fsGUI = new FSGUI();
+        public FSGUI fsGUI;
 
         #region Instance
 
@@ -146,7 +146,6 @@ namespace RP0.Crew
 
         public override void OnAwake()
         {
-
             if (_instance != null)
             {
                 GameObject.Destroy(_instance);
@@ -165,6 +164,11 @@ namespace RP0.Crew
             
             FindAllCourseConfigs(); //find all applicable configs
             GenerateOfferedCourses(); //turn the configs into offered courses
+        }
+
+        public void Start()
+        {
+            fsGUI = new FSGUI();
         }
 
         public override void OnLoad(ConfigNode node)

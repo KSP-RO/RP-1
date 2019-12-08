@@ -51,7 +51,7 @@ namespace RP0
                             if (rnd.NextDouble() < crewDeathChance)
                             {
                                 kill = true;
-                                ScreenMessages.PostScreenMessage(vessel.vesselName + ": Crewmember " + pcm.name + " from exposure to near-vacuum.", 30.0f, ScreenMessageStyle.UPPER_CENTER);
+                                ScreenMessages.PostScreenMessage(vessel.vesselName + ": Crewmember " + pcm.name + " has died from exposure to near-vacuum.", 30.0f, ScreenMessageStyle.UPPER_CENTER);
                                 FlightLogger.fetch.LogEvent("[" + KSPUtil.PrintTime(vessel.missionTime, 3, false) + "] "
                                                       + pcm.name + " died from exposure to near-vacuum.");
                                 part.RemoveCrewmember(pcm);

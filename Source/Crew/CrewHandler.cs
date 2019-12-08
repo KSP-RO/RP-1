@@ -574,6 +574,8 @@ namespace RP0.Crew
             // when you're not actually controlling the vessel
             double elapsedTime = UT - v.launchTime;
 
+            Debug.Log("[VR] mission elapsedTime: " + KSPUtil.PrintDateDeltaCompact(elapsedTime, true, true));
+
             // When flight duration was too short, mission training should not be set as expired.
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
             // We could perhaps override this if they're not actually in flight
@@ -604,9 +606,14 @@ namespace RP0.Crew
                     if (e.flight != curFlight)
                         continue;
 
+                    Debug.Log($"[VR]  processing flight entry: {e.type}; {e.target}");
+
                     bool isOther = false;
                     if (!string.IsNullOrEmpty(e.target) && e.target != Planetarium.fetch.Home.name)
+                    {
+                        Debug.Log($"[VR]    flight is beyond Earth");
                         isOther = hasOther = true;
+                    }
 
                     if (!string.IsNullOrEmpty(e.type))
                     {
@@ -642,45 +649,60 @@ namespace RP0.Crew
                 {
                     multiplier += settings.recSpace.x;
                     constant += settings.recSpace.y;
+                    Debug.Log($"[VR]  has space, mult {settings.recSpace.x}; constant {settings.recSpace.y}");
                 }
                 if (hasOrbit)
                 {
                     multiplier += settings.recOrbit.x;
                     constant += settings.recOrbit.y;
+                    Debug.Log($"[VR]  has orbit, mult {settings.recOrbit.x}; constant {settings.recOrbit.y}");
                 }
                 if (hasOther)
                 {
                     multiplier += settings.recOtherBody.x;
                     constant += settings.recOtherBody.y;
+                    Debug.Log($"[VR]  has other body, mult {settings.recOtherBody.x}; constant {settings.recOtherBody.y}");
                 }
                 if (hasOrbit && hasEVA)    // EVA should only count while in orbit, not when walking on Earth
                 {
                     multiplier += settings.recEVA.x;
                     constant += settings.recEVA.y;
+                    Debug.Log($"[VR]  has EVA, mult {settings.recEVA.x}; constant {settings.recEVA.y}");
                 }
                 if (hasEVAOther)
                 {
                     multiplier += settings.recEVAOther.x;
                     constant += settings.recEVAOther.y;
+                    Debug.Log($"[VR]  has EVA at another body, mult {settings.recEVAOther.x}; constant {settings.recEVAOther.y}");
                 }
                 if (hasOrbitOther)
                 {
                     multiplier += settings.recOrbitOther.x;
                     constant += settings.recOrbitOther.y;
+                    Debug.Log($"[VR]  has orbit around another body, mult {settings.recOrbitOther.x}; constant {settings.recOrbitOther.y}");
                 }
                 if (hasLandOther)
                 {
                     multiplier += settings.recLandOther.x;
                     constant += settings.recLandOther.y;
+                    Debug.Log($"[VR]  has landed on another body, mult {settings.recLandOther.x}; constant {settings.recLandOther.y}");
                 }
+
+                Debug.Log("[VR]  multiplier: " + multiplier);
+                Debug.Log("[VR]  AC multiplier: " + (ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1d));
+                Debug.Log("[VR]  constant: " + constant);
 
                 double retTime;
                 if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
                 {
                     double offset = constant * 86400d * settings.retireOffsetBaseMult / (1 + Math.Pow(Math.Max(curFlight + settings.retireOffsetFlightNumOffset, 0d), settings.retireOffsetFlightNumPow)
                         * UtilMath.Lerp(settings.retireOffsetStupidMin, settings.retireOffsetStupidMax, pcm.stupidity));
+
                     if (offset > 0d)
                     {
+                        Debug.Log("[VR] retire date increased by: " + KSPUtil.PrintDateDeltaCompact(offset, true, false));
+                        Debug.Log($"[VR]  constant: {constant}; curFlight: {curFlight}; stupidity: {pcm.stupidity}");
+
                         retTime += offset;
                         kerbalRetireTimes[pcm.name] = retTime;
                         retirementChanges.Add("\n" + pcm.name + ", no earlier than " + KSPUtil.PrintDate(retTime, false));
@@ -690,6 +712,8 @@ namespace RP0.Crew
                 multiplier /= (ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1d);
 
                 double inactiveTime = elapsedTime * multiplier + constant * 86400d;
+                Debug.Log("[VR] inactive for: " + KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false));
+
                 pcm.SetInactive(inactiveTime, false);
                 inactivity.Add("\n" + pcm.name + ", until " + KSPUtil.PrintDate(inactiveTime + UT, true, false));
             }

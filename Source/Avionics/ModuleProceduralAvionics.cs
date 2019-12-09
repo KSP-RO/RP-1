@@ -149,21 +149,22 @@ namespace RP0.ProceduralAvionics
         }
 
         private bool started = false;
-        public new void Start()
+
+        public override void OnStart(StartState state)
         {
-            Log($"Start in {HighLogic.LoadedScene}");
+            Log($"OnStart in {HighLogic.LoadedScene}");
             SetFallbackConfigForLegacyCraft();
             SetupConfigNameFields();
             SetControllableMassForLegacyCraft();
             AvionicsConfigChanged();
-            base.Start();
+            base.OnStart(state);
             SetScienceContainerIfNeeded();
             Fields[nameof(controllableMass)].uiControlEditor.onFieldChanged = ControllableMassChanged;
             Fields[nameof(avionicsConfigName)].uiControlEditor.onFieldChanged = AvionicsConfigChanged;
             started = true;
             if (cachedEventData != null)
                 OnPartVolumeChanged(cachedEventData);
-            Log("Start finished");
+            Log("OnStart finished");
         }
 
         private void SetScienceContainerIfNeeded()

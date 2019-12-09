@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace RP0
@@ -19,16 +18,10 @@ namespace RP0
                 deltaTime = 0;
                 haveParts = false;
                 isControlLocked = false;
-                List<Part> parts = null;
-                if ((object)(EditorLogic.fetch.ship) != null)
-                    parts = EditorLogic.fetch.ship.Parts;
-                if (parts != null)
+                if (EditorLogic.fetch.ship?.Parts is List<Part> parts && parts.Count > 0)
                 {
-                    if (parts.Count > 0)
-                    {
-                        isControlLocked = ControlLockerUtils.ShouldLock(parts, false, out maxMass, out vesselMass);
-                        haveParts = true;
-                    }
+                    isControlLocked = ControlLockerUtils.ShouldLock(parts, false, out maxMass, out vesselMass);
+                    haveParts = true;
                 }
             }
         }
@@ -41,14 +34,14 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Supports:", HighLogic.Skin.label, GUILayout.Width(80));
-                GUILayout.Label(maxMass.ToString("N3") + "t", rightLabel, GUILayout.Width(80));
+                GUILayout.Label($"{maxMass:N3}t", rightLabel, GUILayout.Width(80));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Vessel:", HighLogic.Skin.label, GUILayout.Width(80));
-                GUILayout.Label(vesselMass.ToString("N3") + "t", rightLabel, GUILayout.Width(80));
+                GUILayout.Label($"{vesselMass:N3}t", rightLabel, GUILayout.Width(80));
             } finally {
                 GUILayout.EndHorizontal();
             }

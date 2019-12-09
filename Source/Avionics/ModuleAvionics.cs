@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections;
-using UniLinq;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace RP0
@@ -32,7 +30,7 @@ namespace RP0
         [KSPField]
         public bool interplanetary = true;
 
-        [KSPField(isPersistant = true, guiActive = false, guiActiveEditor = true, guiName = "Set to Debris"),
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Set to Debris"),
             UI_Toggle(disabledText = "Never", enabledText = "On Stage", affectSymCounterparts = UI_Scene.Editor)]
         public bool setToDebrisOnStage = false;
 
@@ -40,35 +38,20 @@ namespace RP0
         protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
 
-        protected virtual float GetInternalMassLimit()
-        {
-            return massLimit;
-        }
-
-        protected virtual float GetEnabledkW()
-        {
-            return enabledkW;
-        }
-
-        protected virtual float GetDisabledkW()
-        {
-            return disabledkW;
-        }
-
-        protected virtual bool GetToggleable()
-        {
-            return toggleable;
-        }
+        protected virtual float GetInternalMassLimit() => massLimit;
+        protected virtual float GetEnabledkW() => enabledkW;
+        protected virtual float GetDisabledkW() => disabledkW;
+        protected virtual bool GetToggleable() => toggleable;
+        internal bool TechAvailable => string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available;
 
         // returns current limit, based on enabled/disabled
         public float CurrentMassLimit
         {
             get
             {
-                if (currentlyEnabled 
+                if (currentlyEnabled && TechAvailable
                     && (interplanetary || part.vessel == null || part.vessel.mainBody == null 
-                        || (part.vessel.mainBody.isHomeWorld && part.vessel.altitude < part.vessel.mainBody.scienceValues.spaceAltitudeThreshold + 20000000d))  // 55,786 km so resonant satellite orbits can still be used
-                    && (string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available))
+                        || (part.vessel.mainBody.isHomeWorld && part.vessel.altitude < part.vessel.mainBody.scienceValues.spaceAltitudeThreshold * 2)))  // *2, so resonant satellite orbits can still be used
                     return GetInternalMassLimit();
                 else
                     return 0f;
@@ -79,9 +62,7 @@ namespace RP0
         #region Utility methods
         protected double ResourceRate()
         {
-            ModuleCommand mC = part.FindModuleImplementing<ModuleCommand>();
-
-            if (mC != null)
+            if (part.FindModuleImplementing<ModuleCommand>() is ModuleCommand mC)
             {
                 foreach (ModuleResource r in mC.resHandler.inputResources)
                 {
@@ -105,28 +86,20 @@ namespace RP0
 
         protected void UpdateRate()
         {
-			if (commandChargeResource == null) {
-				UnityEngine.Debug.Log("[RP-0] - Can't change rate with no commandChargeResource");
-				return;
-			}
+            if (commandChargeResource == null) {
+                UnityEngine.Debug.Log("[RP-0] - Can't change rate with no commandChargeResource");
+                return;
+            }
             if (part.protoModuleCrew != null && part.protoModuleCrew.Count > 0)
             {
                 currentlyEnabled = systemEnabled = true;
-                
                 commandChargeResource.rate = currentWatts = GetEnabledkW();
                 ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
             }
             else
             {
                 currentlyEnabled = !((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled);
-                if (currentlyEnabled)
-                {
-                    commandChargeResource.rate = currentWatts = GetEnabledkW();
-                }
-                else
-                {
-                    commandChargeResource.rate = currentWatts = GetDisabledkW();
-                }
+                commandChargeResource.rate = currentWatts = currentlyEnabled ? GetEnabledkW() : GetDisabledkW();
             }
             currentWatts *= 1000f;
         }
@@ -160,29 +133,23 @@ namespace RP0
             yield return new WaitForSeconds(1f);
             if (vessel != FlightGlobals.ActiveVessel)
             {
-                Part p;
-                PartModule pm;
-                ModuleAvionics am;
-                for (int i = vessel.Parts.Count; i-- > 0;)
+                foreach (Part p in vessel.Parts)
                 {
-                    p = vessel.Parts[i];
                     if (p == part)
                         continue;
 
                     bool hasCommand = false;
                     bool allAvionicsDebris = true;
                     bool noAvionics = true;
-                    for (int j = p.Modules.Count; j-- > 0;)
+                    foreach (PartModule pm in p.Modules)
                     {
-                        pm = p.Modules[j];
                         if (pm is ModuleCommand)
                         {
                             hasCommand = true;
                         }
-                        else if (pm is ModuleAvionics)
+                        else if (pm is ModuleAvionics am)
                         {
                             noAvionics = false;
-                            am = pm as ModuleAvionics;
                             if (!am.setToDebrisOnStage)
                                 allAvionicsDebris = false;
                         }
@@ -226,12 +193,8 @@ namespace RP0
 
         protected virtual string GetTonnageString()
         {
-            string retStr = "This part allows control of vessels of ";
-            if (massLimit < float.MaxValue)
-                retStr += "up to " + massLimit.ToString("N3") + " tons.";
-            else
-                retStr += "any mass.";
-            return retStr;
+            string lim = (massLimit < float.MaxValue) ? $"up to {massLimit:N3} tons" : "any mass";
+            return $"This part allows control of vessels of {lim}.";
         }
 
         public override string GetInfo()
@@ -243,7 +206,7 @@ namespace RP0
                 if(resRate >= 0)
                 {
                     retStr += "\nCan be disabled, to lower command module wattage from " 
-                        + (GetEnabledkW() * 1000d).ToString("N1") + "\u2009W to " + (GetDisabledkW() * 1000d).ToString("N1") + "\u2009W.";
+                        + $"{(GetEnabledkW() * 1000d):N1}\u2009W to {(GetDisabledkW() * 1000d):N1}\u2009W.";
                 }
             }
 

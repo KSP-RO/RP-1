@@ -9123,7 +9123,7 @@
     },
     {
         "name": "XLR11",
-        "title": "XLR11",
+        "title": "XLR11-RM-3",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",
@@ -9143,6 +9143,75 @@
         "entry_cost_mods": "5000",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "XLR11-RM-13-10K",
+        "title": "XLR11-RM-13-10K",
+        "description": "Uprated for use on X-24B",
+        "mod": "Engine_Config",
+        "cost": "150",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "XLR11",
+        "upgrade": true,
+        "entry_cost_mods": "XLR11-RM-13-8K",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "XLR11-RM-13-8K",
+        "title": "XLR11-RM-13-8K",
+        "description": "Uprated for use on X-15",
+        "mod": "Engine_Config",
+        "cost": "150",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1952",
+        "technology": "basicRocketryRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "X-15",
+        "engine_config": "XLR11",
+        "upgrade": true,
+        "entry_cost_mods": "1000,XLR11-RM-5",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "XLR11-RM-5",
+        "title": "XLR11-RM-5",
+        "description": "Turbopump added to allow better performance and lighter tankage",
+        "mod": "Engine_Config",
+        "cost": "150",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1950",
+        "technology": "earlyRocketry",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "X-1",
+        "engine_config": "XLR11",
+        "upgrade": true,
+        "entry_cost_mods": "5000,XLR11",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "XLR81-BA-11",

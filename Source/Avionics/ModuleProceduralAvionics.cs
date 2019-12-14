@@ -113,7 +113,11 @@ namespace RP0.ProceduralAvionics
             }
         }
 
-        private float GetControllableMass(float avionicsMass) => GetInversePolynomial(avionicsMass * 1000, massExponent, massConstant, massFactor);
+        private float GetControllableMass(float avionicsMass) 
+        {
+            float res = GetInversePolynomial(avionicsMass * 1000, massExponent, massConstant, massFactor);
+            return float.IsNaN(res) ? 0 : res;
+        }
 //        private float GetMaximumControllableMass() => FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
         private float GetMaximumControllableMass() => GetControllableMass(MaxAvionicsMass);
 
@@ -226,11 +230,7 @@ namespace RP0.ProceduralAvionics
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
             {
                 // Formula for controllable mass given avionics mass is Mathf.Pow(1000*avionicsMass / massFactor - massConstant, 1 / massExponent)
-                // This is NaN is avionicsMass*1000 < massConstant * massFactor, so avoid that case or detect it.
-                float maxVal = GetMaximumControllableMass();
-                if (float.IsNaN(maxVal))
-                    maxVal = 0;
-                controllableMassEdit.maxValue = Mathf.Max(maxVal, 0.001f);
+                controllableMassEdit.maxValue = Mathf.Max(GetMaximumControllableMass(), 0.001f);
             }
             else
                 controllableMassEdit.maxValue = 0.001f;

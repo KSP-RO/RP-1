@@ -79,6 +79,8 @@ namespace RP0.ProceduralAvionics
         [KSPField(isPersistant = false, guiActive = false, guiActiveEditor = true, guiName = "Avionics Cost")]
         public string costDisplay;
 
+        public bool IsScienceCore => massExponent == 0 && powerExponent == 0 && costExponent == 0;
+
         public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig { get; private set; }
 
         public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode
@@ -101,6 +103,11 @@ namespace RP0.ProceduralAvionics
 
         protected override float GetInternalMassLimit()
         {
+            if(IsScienceCore)
+            {
+                return 0;
+            }
+
             var oldLimit = controllableMass;
             ClampControllableMass();
             if (controllableMass != oldLimit)
@@ -337,18 +344,32 @@ namespace RP0.ProceduralAvionics
 
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
             {
-                controllableMassEdit.maxValue = CeilingToSmallIncrement(GetMaximumControllableMass());
-                controllableMassEdit.minValue = 0;
-
-                controllableMassEdit.incrementSmall = GetSmallIncrement(controllableMassEdit.maxValue);
-                controllableMassEdit.incrementLarge = controllableMassEdit.incrementSmall * 10;
-                controllableMassEdit.incrementSlide = GetSliderIncrement(controllableMassEdit.maxValue);
-                controllableMassEdit.sigFigs = GetSigFigs(controllableMassEdit.maxValue);
+                if (IsScienceCore)
+                {
+                    Fields[nameof(controllableMass)].guiActiveEditor = false;
+                }
+                else
+                {
+                    ConfigureControllableMassSliderForRegularAvionics();
+                }
             }
             else
             {
                 Log("WARNING: Cannot update max value yet, CurrentProceduralAvionicsConfig is null");
             }
+        }
+
+        private void ConfigureControllableMassSliderForRegularAvionics()
+        {
+            Fields[nameof(controllableMass)].guiActiveEditor = true;
+
+            controllableMassEdit.maxValue = CeilingToSmallIncrement(GetMaximumControllableMass());
+            controllableMassEdit.minValue = 0;
+
+            controllableMassEdit.incrementSmall = GetSmallIncrement(controllableMassEdit.maxValue);
+            controllableMassEdit.incrementLarge = controllableMassEdit.incrementSmall * 10;
+            controllableMassEdit.incrementSlide = GetSliderIncrement(controllableMassEdit.maxValue);
+            controllableMassEdit.sigFigs = GetSigFigs(controllableMassEdit.maxValue);
         }
 
         private int GetSigFigs(float value)

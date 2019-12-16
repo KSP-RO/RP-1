@@ -79,6 +79,29 @@ namespace RP0.ProceduralAvionics
         [KSPField(guiActiveEditor = true, guiName = "Avionics Cost")]
         public string costDisplay;
 
+        public bool IsScienceCore => massExponent == 0 && powerExponent == 0 && costExponent == 0;
+
+        [KSPField(guiName = "Desired Utilization", guiActiveEditor = true, guiFormat = "P1"),
+         UI_FloatRange(scene = UI_Scene.Editor, minValue = .01f, maxValue = .999f, stepIncrement = .001f, suppressEditorShipModified = true)]
+        public float targetUtilization = 1;
+
+        [KSPEvent(active =true, guiActiveEditor = true, guiName = "Resize to Utilization")]
+        void SeekVolume()
+        {
+            if (part.Modules.Contains("ProceduralPart") && part.Modules["ProceduralPart"] is PartModule PPart)
+            {
+                System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance;
+                System.Reflection.MethodInfo method = PPart.GetType().GetMethod("SeekVolume", flags);
+                float targetVolume = GetAvionicsVolume() / targetUtilization;
+                Log($"SeekVolume() target utilization {targetUtilization:P1}, CurrentAvionicsVolume for max util: {GetAvionicsVolume()}, Desired Volume: {targetVolume}");
+                try
+                {
+                    method.Invoke(PPart, new object[] { targetVolume });
+                }
+                catch (Exception e) { Debug.LogError($"{e?.InnerException.Message}"); }
+            }
+        }
+
         public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig { get; private set; }
 
         public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode
@@ -100,7 +123,9 @@ namespace RP0.ProceduralAvionics
         public float InternalTanksVolume { get; private set; }
 
         #endregion
-        protected override float GetInternalMassLimit() => controllableMass;
+
+        #region Get Utilities
+        protected override float GetInternalMassLimit() => !IsScienceCore ? controllableMass : 0;
 
         private void ClampControllableMass()
         {
@@ -143,6 +168,15 @@ namespace RP0.ProceduralAvionics
 
         protected override string GetTonnageString() => "This part can be configured to allow control of vessels up to any mass.";
 
+        public float GetModuleMass(float defaultMass, ModifierStagingSituation sit) => avionicsDensity > 0 ? GetShieldedAvionicsMass() : 0;
+        public ModifierChangeWhen GetModuleMassChangeWhen() => ModifierChangeWhen.FIXED;
+        public float GetModuleCost(float defaultCost, ModifierStagingSituation sit) => avionicsDensity > 0 ? GetAvionicsCost() : 0;
+        public ModifierChangeWhen GetModuleCostChangeWhen() => ModifierChangeWhen.FIXED;
+
+        #endregion
+
+        #region Callbacks
+
         public override void OnLoad(ConfigNode node)
         {
             if (HighLogic.LoadedScene == GameScenes.LOADING)
@@ -169,7 +203,12 @@ namespace RP0.ProceduralAvionics
             if (cachedEventData != null)
                 OnPartVolumeChanged(cachedEventData);
             Log("OnStart finished");
+
         }
+
+        #endregion
+
+        #region OnStart Utilities
 
         private void SetScienceContainerIfNeeded()
         {
@@ -216,15 +255,11 @@ namespace RP0.ProceduralAvionics
             }
         }
 
-
-
-        public float GetModuleMass(float defaultMass, ModifierStagingSituation sit) => avionicsDensity > 0 ? GetShieldedAvionicsMass() : 0;
-        public ModifierChangeWhen GetModuleMassChangeWhen() => ModifierChangeWhen.FIXED;
-        public float GetModuleCost(float defaultCost, ModifierStagingSituation sit) => avionicsDensity > 0 ? GetAvionicsCost() : 0;
-        public ModifierChangeWhen GetModuleCostChangeWhen() => ModifierChangeWhen.FIXED;
+        #endregion
 
         private void UpdateControllableMassSlider()
         {
+            Fields[nameof(controllableMass)].guiActiveEditor = !IsScienceCore;
             UI_FloatEdit controllableMassEdit = Fields[nameof(controllableMass)].uiControlEditor as UI_FloatEdit;
 
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)

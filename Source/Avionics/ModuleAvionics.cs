@@ -182,11 +182,11 @@ namespace RP0
             base.OnAwake();
             GameEvents.onStageActivate.Add(StageActivated);
             if (HighLogic.LoadedScene != GameScenes.LOADING)
-                KerbalismAPI ??= AssemblyLoader.loadedAssemblies.First(x => x.name.StartsWith("Kerbalism"))?.assembly;
+                KerbalismAPI ??= AssemblyLoader.loadedAssemblies.FirstOrDefault(x => x.name.StartsWith("Kerbalism"))?.assembly;
         }
 
         // OnStartFinished(), to let ModuleCommand configure itself first.
-//        public override void OnStart(StartState _)
+        //        public override void OnStart(StartState _)
         public override void OnStartFinished(StartState _)
         {
             InitializeResourceRate();
@@ -305,7 +305,7 @@ namespace RP0
             {
                 float cw = 0;
                 if (module_snapshot.moduleValues.TryGetValue("currentWatts", ref cw))
-                    resourceChangeRequest.Add(new KeyValuePair<string, double>(ecName, cw / 1000));
+                    resourceChangeRequest.Add(new KeyValuePair<string, double>(ecName, -cw / 1000));
             }
             return "Avionics";
         }

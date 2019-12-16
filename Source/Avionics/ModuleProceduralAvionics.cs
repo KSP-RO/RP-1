@@ -196,14 +196,17 @@ namespace RP0.ProceduralAvionics
             SetControllableMassForLegacyCraft();
             AvionicsConfigChanged();
             base.OnStart(state);
-            SetScienceContainerIfNeeded();
             Fields[nameof(controllableMass)].uiControlEditor.onFieldChanged = ControllableMassChanged;
             Fields[nameof(avionicsConfigName)].uiControlEditor.onFieldChanged = AvionicsConfigChanged;
             started = true;
             if (cachedEventData != null)
                 OnPartVolumeChanged(cachedEventData);
-            Log("OnStart finished");
+        }
 
+        public void Start()
+        {
+            Log("Delayed SetScienceContainerIfNeeded in Unity.Start() to allow PartModule removal");
+            SetScienceContainerIfNeeded();
         }
 
         #endregion

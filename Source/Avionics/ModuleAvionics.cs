@@ -1,4 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace RP0
@@ -15,7 +18,7 @@ namespace RP0
         [KSPField]
         public float disabledkW = -1f;
 
-        [KSPField(guiActive = false, guiName = "Power", guiFormat = "N1", guiUnits = "\u2009W")]
+        [KSPField(isPersistant = true, guiActive = true, guiName = "Power", guiFormat = "N1", guiUnits = "\u2009W")]
         public float currentWatts = 0f;
 
         [KSPField]
@@ -37,6 +40,8 @@ namespace RP0
         protected ModuleResource commandChargeResource = null;
         protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
+        private const string ecName = "ElectricCharge";
+        private static Assembly KerbalismAPI = null;
 
         protected virtual float GetInternalMassLimit() => massLimit;
         protected virtual float GetEnabledkW() => enabledkW;
@@ -59,49 +64,51 @@ namespace RP0
         }
         #endregion
 
+        protected void InitializeResourceRate()
+        {
+            commandChargeResource ??= FindCommandChargeResource();
+            if (GetEnabledkW() < 0)
+                enabledkW = (commandChargeResource is ModuleResource r) ? (float) r.rate : 0;
+            if (commandChargeResource is ModuleResource res)
+                res.rate = 0;   // Disable the CommandModule consuming electric charge on init.
+        }
+
+        protected void UpdateRate()
+        {
+            float currentKW;
+            if (part.protoModuleCrew?.Count > 0)
+            {
+                currentlyEnabled = systemEnabled = true;
+                currentKW = GetEnabledkW();
+                ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
+            }
+            else
+            {
+                currentlyEnabled = systemEnabled && !(TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f);
+                currentKW = currentlyEnabled ? GetEnabledkW() : GetDisabledkW();
+            }
+            ecConsumption = new KeyValuePair<string, double>(ecName, -currentKW);
+            currentWatts = currentKW * 1000;
+            // If Kerbalism, Avionics will handle all power draw through it.
+            // If not, then let the ModuleCommand go ahead and consume ec.
+            if (KerbalismAPI == null && commandChargeResource is ModuleResource res)
+                res.rate = currentKW;
+        }
+
         #region Utility methods
-        protected double ResourceRate()
+
+        private ModuleResource FindCommandChargeResource()
         {
             if (part.FindModuleImplementing<ModuleCommand>() is ModuleCommand mC)
             {
                 foreach (ModuleResource r in mC.resHandler.inputResources)
                 {
                     if (r.id == PartResourceLibrary.ElectricityHashcode)
-                    {
-                        commandChargeResource = r;
-                        if (GetEnabledkW() < 0)
-                        {
-                            enabledkW = (float)r.rate;
-                        }
-                        else
-                        {
-                            r.rate = GetEnabledkW();
-                        }
-                        return r.rate;
-                    }
+                        return r;
                 }
+//                return mC.resHandler.inputResources.First(r => r?.id == PartResourceLibrary.ElectricityHashcode);
             }
-            return -1;
-        }
-
-        protected void UpdateRate()
-        {
-            if (commandChargeResource == null) {
-                UnityEngine.Debug.Log("[RP-0] - Can't change rate with no commandChargeResource");
-                return;
-            }
-            if (part.protoModuleCrew != null && part.protoModuleCrew.Count > 0)
-            {
-                currentlyEnabled = systemEnabled = true;
-                commandChargeResource.rate = currentWatts = GetEnabledkW();
-                ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
-            }
-            else
-            {
-                currentlyEnabled = !((TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f) || !systemEnabled);
-                commandChargeResource.rate = currentWatts = currentlyEnabled ? GetEnabledkW() : GetDisabledkW();
-            }
-            currentWatts *= 1000f;
+            return null;
         }
 
         protected void OnConfigurationUpdated()
@@ -165,30 +172,38 @@ namespace RP0
                     vessel.vesselType = VesselType.Debris;
             }
         }
+
         #endregion
 
-        #region Overrides
+        #region Overrides and callbacks
+
         public override void OnAwake()
         {
             base.OnAwake();
             GameEvents.onStageActivate.Add(StageActivated);
+            if (HighLogic.LoadedScene != GameScenes.LOADING)
+                KerbalismAPI ??= AssemblyLoader.loadedAssemblies.First(x => x.name.StartsWith("Kerbalism"))?.assembly;
         }
 
-        public void Start()
+        // OnStartFinished(), to let ModuleCommand configure itself first.
+//        public override void OnStart(StartState _)
+        public override void OnStartFinished(StartState _)
         {
-        // check then bind to ModuleCommand
-            if (ResourceRate() <= 0f || !GetToggleable() || GetDisabledkW() <= 0f) {
+            InitializeResourceRate();
+            if (!GetToggleable())
                 toggleable = false;
-                currentlyEnabled = true; // just in case
-            }
-            //We want to call UpdateRate all the time to capture anything from proceduralAvionics
             UpdateRate();
             SetActionsAndGui();
+            if (HighLogic.LoadedSceneIsEditor)
+                GameEvents.onEditorShipModified.Add(OnShipModified);
         }
+
+        private void OnShipModified(ShipConstruct _) => UpdateRate();
 
         protected void OnDestroy()
         {
             GameEvents.onStageActivate.Remove(StageActivated);
+            GameEvents.onEditorShipModified.Remove(OnShipModified);
         }
 
         protected virtual string GetTonnageString()
@@ -200,14 +215,15 @@ namespace RP0
         public override string GetInfo()
         {
             string retStr = GetTonnageString();
-            if(GetToggleable() && GetDisabledkW() >= 0f)
+            InitializeResourceRate();
+
+            if (GetToggleable() && GetDisabledkW() >= 0)
             {
-                double resRate = ResourceRate();
-                if(resRate >= 0)
-                {
-                    retStr += "\nCan be disabled, to lower command module wattage from " 
-                        + $"{(GetEnabledkW() * 1000d):N1}\u2009W to {(GetDisabledkW() * 1000d):N1}\u2009W.";
-                }
+                retStr += "\nCan be disabled, to lower wattage from " 
+                    + $"{(GetEnabledkW() * 1000d):N1}\u2009W to {(GetDisabledkW() * 1000d):N1}\u2009W.";
+            } else
+            {
+                retStr += $"\nConsumes {(GetEnabledkW() * 1000d):N1}\u2009W";
             }
 
             if (!string.IsNullOrEmpty(techRequired))
@@ -219,7 +235,7 @@ namespace RP0
             return retStr;
         }
 
-        public void Update()
+        public override void OnUpdate()
         {
             if (!HighLogic.LoadedSceneIsFlight)
                 return;
@@ -233,36 +249,73 @@ namespace RP0
             }
             wasWarping = isWarping;
         }
+
         #endregion
 
         #region Actions and Events
+
         [KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Shutdown Avionics")]
         public void ToggleEvent()
         {
             systemEnabled = !systemEnabled;
             UpdateRate();
             SetActionsAndGui();
+            if (HighLogic.LoadedSceneIsEditor)
+                GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
         }
 
         [KSPAction("Toggle Avionics")]
-        public void ToggleAction(KSPActionParam param)
+        public void ToggleAction(KSPActionParam _)
         {
             ToggleEvent();
         }
 
         [KSPAction("Shutdown Avionics")]
-        public void ShutdownAction(KSPActionParam param)
+        public void ShutdownAction(KSPActionParam _)
         {
             systemEnabled = true;
             ToggleEvent();
         }
 
         [KSPAction("Activate Avionics")]
-        public void ActivateAction(KSPActionParam param)
+        public void ActivateAction(KSPActionParam _)
         {
             systemEnabled = false;
             ToggleEvent();
         }
+        #endregion
+
+        #region Kerbalism
+
+        private KeyValuePair<string, double> ecConsumption = new KeyValuePair<string, double>(ecName, 0);
+
+        public string PlannerUpdate(List<KeyValuePair<string, double>> resources, CelestialBody _, Dictionary<string, double> environment)
+        {
+            resources.Add(ecConsumption);   // ecConsumption is updated by the Toggle event
+            return "Avionics";
+        }
+
+        public static string BackgroundUpdate(Vessel v,
+            ProtoPartSnapshot part_snapshot, ProtoPartModuleSnapshot module_snapshot,
+            PartModule proto_part_module, Part proto_part,
+            Dictionary<string, double> availableResources, List<KeyValuePair<string, double>> resourceChangeRequest,
+            double elapsed_s)
+        {
+            if (availableResources.ContainsKey(ecName))
+            {
+                float cw = 0;
+                if (module_snapshot.moduleValues.TryGetValue("currentWatts", ref cw))
+                    resourceChangeRequest.Add(new KeyValuePair<string, double>(ecName, cw / 1000));
+            }
+            return "Avionics";
+        }
+
+        public virtual string ResourceUpdate(Dictionary<string, double> availableResources, List<KeyValuePair<string, double>> resourceChangeRequest)
+        {
+            resourceChangeRequest.Add(ecConsumption);   // ecConsumption is updated by the Toggle event
+            return "Avionics";
+        }
+
         #endregion
 
     }

@@ -14,7 +14,7 @@ namespace RP0
         /// Altitude in meters above which the crew can be killed.
         /// </summary>
         [KSPField]
-        public double crewDeathAltitude = 30000;
+        public double crewDeathAltitude = 16000;
 
         public double nextCheck = -1d;
         public double checkInterval = 1d;

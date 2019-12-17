@@ -14,7 +14,7 @@ The values defined here will be propagated to :
     Kerbalism major and minor version numbers 
     -->
 		<KerbalismVersionMajor>3</KerbalismVersionMajor>
-		<KerbalismVersionMinor>1</KerbalismVersionMinor>
+		<KerbalismVersionMinor>2</KerbalismVersionMinor>
     <!-- 
     Must match the `include=XXXX` of a KBinVersionConstant item, 
     used to determine the lowest and highest supported KSP version in the Kerbalism.version KSP-AVC file.

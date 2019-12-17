@@ -1,0 +1,10 @@
+{
+  "NAME": "KerbalismContracts",
+  "URL": "http://ksp-avc.cybutek.net/version.php?id=559",
+  "DOWNLOAD": "https://spacedock.info/mod/1111/KerbalismContracts",
+  "CHANGE_LOG_URL": "https://spacedock.info/mod/1111/KerbalismContracts",
+  "VERSION": {"MAJOR": 0, "MINOR": 1, "PATCH": 0, "BUILD": 0},
+  "KSP_VERSION": {"MAJOR": 1, "MINOR": 8, "PATCH": 1},
+  "KSP_VERSION_MIN": {"MAJOR": 1, "MINOR": 8, "PATCH": 0},
+  "KSP_VERSION_MAX": {"MAJOR": 1, "MINOR": 8, "PATCH": 99}
+}

@@ -1,6 +1,7 @@
 ﻿using KSPAPIExtensions;
 using RP0.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -91,14 +92,16 @@ namespace RP0.ProceduralAvionics
             if (part.Modules.Contains("ProceduralPart") && part.Modules["ProceduralPart"] is PartModule PPart)
             {
                 System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance;
-                System.Reflection.MethodInfo method = PPart.GetType().GetMethod("SeekVolume", flags);
-                float targetVolume = GetAvionicsVolume() / targetUtilization;
-                Log($"SeekVolume() target utilization {targetUtilization:P1}, CurrentAvionicsVolume for max util: {GetAvionicsVolume()}, Desired Volume: {targetVolume}");
-                try
+                if (PPart.GetType().GetMethod("SeekVolume", flags) is System.Reflection.MethodInfo method)
                 {
-                    method.Invoke(PPart, new object[] { targetVolume });
+                    float targetVolume = GetAvionicsVolume() / targetUtilization;
+                    Log($"SeekVolume() target utilization {targetUtilization:P1}, CurrentAvionicsVolume for max util: {GetAvionicsVolume()}, Desired Volume: {targetVolume}");
+                    try
+                    {
+                        method.Invoke(PPart, new object[] { targetVolume });
+                    }
+                    catch (Exception e) { Debug.LogError($"{e?.InnerException.Message ?? e.Message}"); }
                 }
-                catch (Exception e) { Debug.LogError($"{e?.InnerException.Message}"); }
             }
         }
 
@@ -198,6 +201,7 @@ namespace RP0.ProceduralAvionics
             base.OnStart(state);
             Fields[nameof(controllableMass)].uiControlEditor.onFieldChanged = ControllableMassChanged;
             Fields[nameof(avionicsConfigName)].uiControlEditor.onFieldChanged = AvionicsConfigChanged;
+            massLimit = controllableMass;
             started = true;
             if (cachedEventData != null)
                 OnPartVolumeChanged(cachedEventData);
@@ -334,6 +338,7 @@ namespace RP0.ProceduralAvionics
                 controllableMass = 0;
             }
             ClampControllableMass();
+            massLimit = controllableMass;
             SendRemainingVolume();
             RefreshDisplays();
         }
@@ -405,6 +410,12 @@ namespace RP0.ProceduralAvionics
         }
 
         #endregion
+
+        public new static string BackgroundUpdate(Vessel v,
+            ProtoPartSnapshot part_snapshot, ProtoPartModuleSnapshot module_snapshot,
+            PartModule proto_part_module, Part proto_part,
+            Dictionary<string, double> availableResources, List<KeyValuePair<string, double>> resourceChangeRequest,
+            double elapsed_s) => ModuleAvionics.BackgroundUpdate(v, part_snapshot, module_snapshot, proto_part_module, proto_part, availableResources, resourceChangeRequest, elapsed_s);
 
         private void SetInternalKSPFields()
         {

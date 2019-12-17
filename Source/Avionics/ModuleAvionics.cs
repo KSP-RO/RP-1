@@ -8,7 +8,7 @@ namespace RP0
     class ModuleAvionics : PartModule
     {
         #region Members
-        [KSPField]
+        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N1", guiUnits = "T")]
         public float massLimit = float.MaxValue; // default is unlimited
 
         [KSPField]

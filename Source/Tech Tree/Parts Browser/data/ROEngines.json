@@ -686,6 +686,52 @@
         ]
     },
     {
+        "name": "ROE-Agena8048",
+        "title": "ROEngines XLR81 Agena A/B Vacuum Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 200,
+        "entry_cost": 7000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Agena (A&B)",
+        "upgrade": false,
+        "entry_cost_mods": "XLR81-BA-5",
+        "identical_part_name": "XLR81",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-Agena8096",
+        "title": "ROEngines XLR81 Agena D+ Engine Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 200,
+        "entry_cost": 7000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1962",
+        "technology": "orbitalRocketry1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Agena (Only D+)",
+        "upgrade": false,
+        "entry_cost_mods": "XLR81-BA-11",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-Altair",
         "title": "Altair",
         "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
@@ -1563,8 +1609,8 @@
         "entry_cost": "4000",
         "category": "ORBITAL",
         "info": "",
-        "year": "1956",
-        "technology": "orbitalRocketry1956",
+        "year": "1958",
+        "technology": "orbitalRocketry1958",
         "era": "02-SAT",
         "ro": true,
         "rp0": true,
@@ -2936,6 +2982,56 @@
         ]
     },
     {
+        "name": "ROE-NK9",
+        "title": "NK-9",
+        "description": "Staged combustion kerolox booster engine. Designed by Kuznetsov for the Korolev GR-1 project. Basis for the NK-15 used on the N1, and the NK-33 used today. Diameter: [1.3 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "450",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1964",
+        "technology": "stagedCombustion1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "NK9",
+        "upgrade": false,
+        "entry_cost_mods": "NK-9",
+        "identical_part_name": "NK-9",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-NK9V",
+        "title": "NK-9V/21/19/39/31",
+        "description": "Staged combustion kerolox upper/vacuum engine. Designed by Kuznetsov for the Korolev GR-1 projet. Reused (as NK-19) on the N1, upgraded for the N1F with restart capability as NK-31. Diameter: [1.8 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1964",
+        "technology": "stagedCombustion1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "NK9V",
+        "upgrade": false,
+        "entry_cost_mods": "NK-9V",
+        "identical_part_name": "NK-9V",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-NikeM5E1",
         "title": "Nike-M5E1",
         "description": "",
@@ -3221,6 +3317,32 @@
         "identical_part_name": "RD-0110",
         "module_tags": [
             "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD0120",
+        "title": "RD-0120",
+        "description": "1980s medium TWR, atmospheric and vacuum use. The RD-0120 is a fuel-rich staged combustion engine developed to power the core stage of the Energia launcher. Diameter: [2.6 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "5000",
+        "entry_cost": "100000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1985",
+        "technology": "hydrolox1981",
+        "era": "07-SPCPLANES",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Energia",
+        "engine_config": "RD0120",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0120",
+        "identical_part_name": "RD-0120",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
         ]
     },
     {
@@ -3519,6 +3641,31 @@
         "upgrade": false,
         "entry_cost_mods": "RD-151",
         "identical_part_name": "RD-191",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD275",
+        "title": "RD-253/RD-275",
+        "description": "A high thrust engine designed for use with storable propellants. In use with the Proton series of rockets. Diameter: [2.0 m]. Plume configured by RealPlume.",
+        "mod": "ROEngines",
+        "cost": "515",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1966",
+        "technology": "stagedCombustion1966",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Proton",
+        "engine_config": "RD253",
+        "upgrade": false,
+        "entry_cost_mods": "RD-253",
+        "identical_part_name": "RD253",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -3929,6 +4076,56 @@
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-Raptor",
+        "title": "Raptor Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "3000",
+        "entry_cost": "60000",
+        "category": "STAGED",
+        "info": "",
+        "year": "2025",
+        "technology": "stagedCombustionNF",
+        "era": "11-NF",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "BFR",
+        "engine_config": "Raptor",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RaptorVac",
+        "title": "Raptor Engine (Vacuum)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "3000",
+        "entry_cost": "60000",
+        "category": "STAGED",
+        "info": "",
+        "year": "2025",
+        "technology": "stagedCombustionNF",
+        "era": "11-NF",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "BFR",
+        "engine_config": "Raptor",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
         ]
     },
     {

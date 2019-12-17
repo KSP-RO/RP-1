@@ -5,26 +5,6 @@ from os import listdir
 from os.path import isfile, join
 
 class PartData:
-    parts = []
-    unique_values_for_columns = {
-        "mod": set(),
-        "ro": set(),
-        "rp0": set(),
-        "category": set(),
-        "technology": set(),
-        "orphan": set(),
-        "upgrade": set(),
-        "rp0_conf": set(),
-        "spacecraft": set(),
-        "engine_config": set(),
-        "era": set(),
-        "year": set()
-        }
-
-    module_tags = {}
-            
-    column_index = {}
-    
     def load_module_tags(self):
         with open('module_tags.csv') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
@@ -51,6 +31,25 @@ class PartData:
     
     def __init__(self):
         """Load the parts from the json files."""
+        self.parts = []
+        self.unique_values_for_columns = {
+            "mod": set(),
+            "ro": set(),
+            "rp0": set(),
+            "category": set(),
+            "technology": set(),
+            "orphan": set(),
+            "upgrade": set(),
+            "rp0_conf": set(),
+            "spacecraft": set(),
+            "engine_config": set(),
+            "era": set(),
+            "year": set()
+            }
+
+        self.module_tags = {}
+        self.column_index = {}
+    
         self.load_module_tags()
         self.load_parts_json()
         print(f'Initialized the database.')

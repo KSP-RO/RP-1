@@ -10,7 +10,7 @@ namespace RP0
         // GUI
         private bool guiEnabled = false;
         private ApplicationLauncherButton button;
-        private TopWindow tw = new TopWindow();
+        private TopWindow tw;
 
         protected void Awake()
         {
@@ -24,7 +24,7 @@ namespace RP0
 
         protected void Start()
         {
-            tw.Start();
+            tw = new TopWindow();
         }
 
         private void ShowWindow()

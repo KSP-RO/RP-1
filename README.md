@@ -5,9 +5,9 @@ So you want to try Neph's Quarterly Budgets?
   * Delete your /GameData/RP-0 folder.
   * Replace it with the /GameData/RP-0 folder from that git.
   
-2) Install SepInteg KCT:
+2) Install Airlaunch KCT:
 
-  * Download the latest release from here: https://github.com/linuxgurugamer/KCT/releases
+  * Download the latest release from here: https://github.com/KSP-RO/KCT/tree/Airlaunch
   * Delete your /GameData/KerbalConstructionTime folder.
   * You know what to do by now, right?
   

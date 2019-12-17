@@ -97,19 +97,8 @@ namespace RP0
 
         #region Utility methods
 
-        private ModuleResource FindCommandChargeResource()
-        {
-            if (part.FindModuleImplementing<ModuleCommand>() is ModuleCommand mC)
-            {
-                foreach (ModuleResource r in mC.resHandler.inputResources)
-                {
-                    if (r.id == PartResourceLibrary.ElectricityHashcode)
-                        return r;
-                }
-//                return mC.resHandler.inputResources.First(r => r?.id == PartResourceLibrary.ElectricityHashcode);
-            }
-            return null;
-        }
+        private ModuleResource FindCommandChargeResource() =>
+            part.FindModuleImplementing<ModuleCommand>()?.resHandler.inputResources.FirstOrDefault(r => r?.id == PartResourceLibrary.ElectricityHashcode);
 
         protected void OnConfigurationUpdated()
         {

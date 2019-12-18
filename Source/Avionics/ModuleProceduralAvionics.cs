@@ -201,6 +201,7 @@ namespace RP0.ProceduralAvionics
             base.OnStart(state);
             Fields[nameof(controllableMass)].uiControlEditor.onFieldChanged = ControllableMassChanged;
             Fields[nameof(avionicsConfigName)].uiControlEditor.onFieldChanged = AvionicsConfigChanged;
+            Fields[nameof(massLimit)].guiActiveEditor = false;
             massLimit = controllableMass;
             started = true;
             if (cachedEventData != null)
@@ -366,6 +367,8 @@ namespace RP0.ProceduralAvionics
             }
             OnConfigurationUpdated();
             RefreshDisplays();
+            if (HighLogic.LoadedSceneIsEditor)
+                GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
         }
 
         [KSPEvent]
@@ -544,6 +547,7 @@ namespace RP0.ProceduralAvionics
                         CurrentProceduralAvionicsConfig = currentlyDisplayedConfigs;
                         avionicsConfigName = guiAvionicsConfigName;
                         AvionicsConfigChanged();
+                        MonoUtilities.RefreshContextWindows(part);
                     }
                 }
             }

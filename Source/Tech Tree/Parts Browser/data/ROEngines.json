@@ -3082,6 +3082,30 @@
         ]
     },
     {
+        "name": "ROE-ORM65",
+        "title": "ORM-65",
+        "description": "Very early Soviet rocket engine, designed by Glushko in 1936 for use on the KR-212 cruise missile, and modified for the rocket aircraft RP-318. It was the first reliable, regenerativley cooled rocket.",
+        "mod": "ROEngines",
+        "cost": "30",
+        "entry_cost": "1",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "ORM65",
+        "upgrade": false,
+        "entry_cost_mods": "ORM65",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-PLE",
         "title": "0.592kN Dual Radial Engine",
         "description": "A pair of MR-107 Monopropellant Engines, six of these pairs where used as retro-propulsion for the final decent phase of the Phoenix Mars Lander. Plume configured by RealPlume.",

@@ -73,20 +73,14 @@ namespace RP0
                 res.rate = 0;   // Disable the CommandModule consuming electric charge on init.
         }
 
-        protected void UpdateRate()
+        public float PowerDraw(bool onRails = false) =>
+            part.protoModuleCrew?.Count > 0 || (systemEnabled && !(GetToggleable() && onRails)) ?
+            GetEnabledkW() : GetDisabledkW();
+
+        protected void UpdateRate(bool onRails = false)
         {
-            float currentKW;
-            if (part.protoModuleCrew?.Count > 0)
-            {
-                currentlyEnabled = systemEnabled = true;
-                currentKW = GetEnabledkW();
-                ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
-            }
-            else
-            {
-                currentlyEnabled = systemEnabled && !(TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f);
-                currentKW = currentlyEnabled ? GetEnabledkW() : GetDisabledkW();
-            }
+            currentlyEnabled = systemEnabled && !(GetToggleable() && onRails);
+            float currentKW = PowerDraw(onRails);
             ecConsumption = new KeyValuePair<string, double>(ecName, -currentKW);
             currentWatts = currentKW * 1000;
             // If Kerbalism, Avionics will handle all power draw through it.
@@ -185,14 +179,34 @@ namespace RP0
             SetActionsAndGui();
             if (HighLogic.LoadedSceneIsEditor)
                 GameEvents.onEditorShipModified.Add(OnShipModified);
+            if (HighLogic.LoadedSceneIsFlight)
+            {
+                GameEvents.onVesselGoOnRails.Add(GoOnRails);
+                GameEvents.onVesselGoOffRails.Add(GoOffRails);
+            }
         }
 
         private void OnShipModified(ShipConstruct _) => UpdateRate();
+        private void GoOnRails(Vessel v) => RailChange(v, true);
+        private void GoOffRails(Vessel v) => RailChange(v, false);
+        private void RailChange(Vessel v, bool onRails)
+        {
+            if (vessel == v)
+                UpdateRate(onRails);
+        }
+
+        // Too many ways to exit a scene, so always write the Disabled power draw
+        public override void OnSave(ConfigNode node)
+        {
+            node.SetValue(nameof(currentWatts), PowerDraw(true) * 1000);
+        }
 
         protected void OnDestroy()
         {
             GameEvents.onStageActivate.Remove(StageActivated);
             GameEvents.onEditorShipModified.Remove(OnShipModified);
+            GameEvents.onVesselGoOnRails.Remove(GoOnRails);
+            GameEvents.onVesselGoOffRails.Remove(GoOffRails);
         }
 
         protected virtual string GetTonnageString()
@@ -224,21 +238,6 @@ namespace RP0
             return retStr;
         }
 
-        public override void OnUpdate()
-        {
-            if (!HighLogic.LoadedSceneIsFlight)
-                return;
-
-            // Automatic mode switch
-            bool isWarping = (TimeWarp.WarpMode == TimeWarp.Modes.HIGH && TimeWarp.CurrentRate > 1f);
-            if (GetToggleable() && isWarping != wasWarping)
-            {
-                // Maybe do a screenmessage here?
-                UpdateRate();
-            }
-            wasWarping = isWarping;
-        }
-
         #endregion
 
         #region Actions and Events
@@ -247,6 +246,11 @@ namespace RP0
         public void ToggleEvent()
         {
             systemEnabled = !systemEnabled;
+            if (part.protoModuleCrew?.Count > 0)
+            {
+                systemEnabled = true;
+                ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
+            }
             UpdateRate();
             SetActionsAndGui();
             if (HighLogic.LoadedSceneIsEditor)

@@ -86,23 +86,31 @@ namespace RP0.ProceduralAvionics
          UI_FloatRange(scene = UI_Scene.Editor, minValue = .01f, maxValue = .999f, stepIncrement = .001f, suppressEditorShipModified = true)]
         public float targetUtilization = 1;
 
-        [KSPEvent(active =true, guiActiveEditor = true, guiName = "Resize to Utilization")]
+        [KSPEvent(active = true, guiActiveEditor = true, guiName = "Resize to Utilization")]
         void SeekVolume()
         {
-            if (part.Modules.Contains("ProceduralPart") && part.Modules["ProceduralPart"] is PartModule PPart)
+            if (GetSeekVolumeMethod(out PartModule PPart) is System.Reflection.MethodInfo method)
             {
-                System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance;
-                if (PPart.GetType().GetMethod("SeekVolume", flags) is System.Reflection.MethodInfo method)
+                float targetVolume = GetAvionicsVolume() / targetUtilization;
+                Log($"SeekVolume() target utilization {targetUtilization:P1}, CurrentAvionicsVolume for max util: {GetAvionicsVolume()}, Desired Volume: {targetVolume}");
+                try
                 {
-                    float targetVolume = GetAvionicsVolume() / targetUtilization;
-                    Log($"SeekVolume() target utilization {targetUtilization:P1}, CurrentAvionicsVolume for max util: {GetAvionicsVolume()}, Desired Volume: {targetVolume}");
-                    try
-                    {
-                        method.Invoke(PPart, new object[] { targetVolume });
-                    }
-                    catch (Exception e) { Debug.LogError($"{e?.InnerException.Message ?? e.Message}"); }
+                    method.Invoke(PPart, new object[] { targetVolume });
                 }
+                catch (Exception e) { Debug.LogError($"{e?.InnerException.Message ?? e.Message}"); }
             }
+        }
+
+        private System.Reflection.MethodInfo GetSeekVolumeMethod(out PartModule PPart)
+        {
+            PPart = null;
+            if (part.Modules.Contains("ProceduralPart"))
+            {
+                PPart = part.Modules["ProceduralPart"];
+                System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance;
+                return PPart.GetType().GetMethod("SeekVolume", flags);
+            }
+            return null;
         }
 
         public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig { get; private set; }
@@ -206,11 +214,16 @@ namespace RP0.ProceduralAvionics
             started = true;
             if (cachedEventData != null)
                 OnPartVolumeChanged(cachedEventData);
+            if (!(GetSeekVolumeMethod(out PartModule _) is System.Reflection.MethodInfo))
+            {
+                Events[nameof(SeekVolume)].active = Events[nameof(SeekVolume)].guiActiveEditor = false;
+                Fields[nameof(targetUtilization)].guiActiveEditor = false;
+            }
         }
 
         public void Start()
         {
-            Log("Delayed SetScienceContainerIfNeeded in Unity.Start() to allow PartModule removal");
+            // Delay SetScienceContainerIfNeeded to Unity.Start() to allow PartModule removal
             SetScienceContainerIfNeeded();
         }
 

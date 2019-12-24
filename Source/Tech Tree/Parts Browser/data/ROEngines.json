@@ -4995,5 +4995,28 @@
         "module_tags": [
             "EngineLiquidTurbo"
         ]
+    },
+    {
+        "name": "ROE-XLR43",
+        "title": "XLR43 Series",
+        "description": "First large, single chamber engine developed in the US, based off of the A-4.",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "0",
+        "year": "1950",
+        "technology": "earlyRocketry",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "XLR43",
+        "upgrade": false,
+        "entry_cost_mods": "XLR43-NA-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     }
 ]

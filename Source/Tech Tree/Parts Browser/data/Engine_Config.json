@@ -9161,7 +9161,7 @@
         "spacecraft": "",
         "engine_config": "XLR43",
         "upgrade": false,
-        "entry_cost_mods": "10000,Navaho-PhaseIII-TP",
+        "entry_cost_mods": "Navaho-PhaseIII-TP",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9170,7 +9170,7 @@
         "title": "XLR43-NA-3",
         "description": "Improved XLR43 with brazed chamber walls and burning 90% Ethanol.",
         "mod": "Engine_Config",
-        "cost": "200",
+        "cost": "50",
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
@@ -9182,7 +9182,7 @@
         "spacecraft": "",
         "engine_config": "XLR43",
         "upgrade": true,
-        "entry_cost_mods": "10000,XLR43-NA-1,Navaho-TP",
+        "entry_cost_mods": "Navaho-TP",
         "identical_part_name": "",
         "module_tags": []
     },

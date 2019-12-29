@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="DownrangeDistanceFactory.cs" />
     <Compile Include="DownrangeDistanceVesselParam.cs" />
+    <Compile Include="ImpactCBFactory.cs" />
+    <Compile Include="ImpactCBParam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -27,7 +27,7 @@ namespace ContractConfigurator.RP0
         {
             bool isDestroyed = destroyedVessels.ContainsKey(vessel) || vessel.state == Vessel.State.DEAD;
             bool isCorrectBody = vessel.mainBody == targetBody;
-            bool isValidVel = srfVelQueue.Peek() >= minSrfVel;
+            bool isValidVel = srfVelQueue.Count > 0 && srfVelQueue.Peek() >= minSrfVel;
             bool isValidAlt = vessel.radarAltitude < 100;
 
             Debug.Log($"[ImpactCB] VesselMeetsCondition vel: {srfVelQueue.Peek()}; isDestroyed: {isDestroyed}; isCorrectBody: {isCorrectBody}; radarAltitude: {vessel.radarAltitude}");

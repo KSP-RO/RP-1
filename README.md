@@ -1,23 +1,43 @@
-So you want to try Neph's Quarterly Budgets?
-1)  Install NQB:
+How to install:
 
-  * Go here and download the latest release: https://github.com/nepphhh/RP-0/releases
-  * Delete your /GameData/RP-0 folder.
-  * Replace it with the /GameData/RP-0 folder from that git.
-  
-2) Install Airlaunch KCT:
+  1) Be on KSP v1.7.3.
 
-  * Download the latest release from here: https://github.com/KSP-RO/KCT/tree/Airlaunch
-  * Delete your /GameData/KerbalConstructionTime folder.
-  * You know what to do by now, right?
-  
-3) Update RealismOverhaul:
+  2) Install ROKerbalism w/ Contracts:  
+      https://github.com/Kerbalism/Kerbalism
+      https://github.com/Standecco/ROKerbalism
+      https://github.com/Kerbalism/KerbalismContracts
 
-  * Download this: https://github.com/KSP-RO/RealismOverhaul
-  * Same as above.
+  3) Install Airlaunch KCT: 
+      https://github.com/KSP-RO/KCT/tree/TEST/GameData/KerbalConstructionTime
+
+  4) Install NQB: 
+      https://github.com/nepphhh/RP-0/releases
+
+  5) Update RealismOverhaul: 
+      https://github.com/KSP-RO/RealismOverhaul
+
+RP-NQB 0.3.0 Changelog:
+
+  * Overhauled the preorbital phase again. 
+
+    * Remixed SR contracts bigtime:
+      * Added Mass Spec SR contracts.
+      * Changes to the downrange series should encourage more realistic booster designs instead of clusterbee bumper spam.
+      * Replaced High-Altitude SR contracts with Thermosphere Research SR contracts.
+      * Simplified Photo SR contracts--ceiling removed.
+      * Removed Heavy SR contract series.
+      * Genericized SatPayloads so they can be used in SR contracts.
+      * Finished Kerbalism integration with science SR contracts.
+
+    * Expanded on plane contracts:
+      * Merged PP-1 & KCT airlaunch capability.
+
+  * Number of pads again granularly doubled.
+
+  * Completely redid contract organization and gave agencies new handcrafted logos.
  
-That's it!
- 
+
+RP-NQB 0.2.1 Changelog:
 Changes from normal RP-1 include but are not limited to:
 
   * You earn reputation, which gives you a budget four times a year. More reputation = more money.

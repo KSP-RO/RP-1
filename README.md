@@ -35,6 +35,10 @@ RP-NQB 0.3.0 Changelog:
   * Number of pads again granularly doubled.
 
   * Completely redid contract organization and gave agencies new handcrafted logos.
+
+  * Bumped the value of the geosync contract.
+
+  * Extended satellite deadlines to at least a year where it was less than a year before. Extended some sounding rocket contracts.
  
 
 RP-NQB 0.2.1 Changelog:

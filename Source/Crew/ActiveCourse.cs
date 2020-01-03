@@ -73,9 +73,9 @@ namespace RP0.Crew
 
         public bool MeetsStudentReqs(ProtoCrewMember student)
         {
-            if (!((student.type == (ProtoCrewMember.KerbalType.Crew) && (seatMax <= 0 || Students.Count < seatMax) && !student.inactive 
+            if (!(student.type == ProtoCrewMember.KerbalType.Crew && (seatMax <= 0 || Students.Count < seatMax) && !student.inactive 
                 && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && student.experienceLevel >= minLevel && student.experienceLevel <= maxLevel 
-                && (classes.Length == 0 || classes.Contains(student.trait)) && !Students.Contains(student))))
+                && (classes.Length == 0 || classes.Contains(student.trait)) && !Students.Contains(student)))
                 return false;
 
             int pCount = preReqs.GetLength(0);

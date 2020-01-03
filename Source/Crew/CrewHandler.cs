@@ -932,7 +932,6 @@ namespace RP0.Crew
             n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);
 
             n.AddValue("preReqs", "TRAINING_proficiency:" + name);
-            n.AddValue("conflicts", "TRAINING_mission:" + name);
 
             ConfigNode r = n.AddNode("REWARD");
             ConfigNode l = r.AddNode("FLIGHTLOG");

@@ -3975,6 +3975,30 @@
         ]
     },
     {
+        "name": "ROE-RL10C",
+        "title": "RL10C Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2014",
+        "technology": "hydrolox2009",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10C-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RS25",
         "title": "RS-25 SSME",
         "description": "",

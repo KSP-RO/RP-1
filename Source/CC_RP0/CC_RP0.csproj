@@ -57,8 +57,7 @@
   <ItemGroup>
     <Compile Include="CustomExpressionParserRegistrer.cs" />
     <Compile Include="AvionicsCheck.cs" />
-    <Compile Include="ImpactCBFactory.cs" />
-    <Compile Include="ImpactCBParam.cs" />
+    <Compile Include="ImpactCB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

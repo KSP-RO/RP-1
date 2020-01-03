@@ -16,7 +16,7 @@ How to install:
   5) Update RealismOverhaul: 
       https://github.com/KSP-RO/RealismOverhaul
 
-RP-NQB 0.3.0 Changelog:
+RP-NQB 0.2.2 Changelog:
 
   * Overhauled the preorbital phase again. 
 
@@ -30,7 +30,7 @@ RP-NQB 0.3.0 Changelog:
       * Finished Kerbalism integration with science SR contracts.
 
     * Expanded on plane contracts:
-      * Merged PP-1 & KCT airlaunch capability.
+      * Merged PP-1 with KCT airlaunch capability.
 
   * Number of pads again granularly doubled.
 

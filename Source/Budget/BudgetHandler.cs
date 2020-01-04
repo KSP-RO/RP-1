@@ -38,20 +38,32 @@ namespace RP0
         [KSPField(isPersistant = true)]
         private string BudgetAlarmID = "";
 
+        // Quarterly updates
         private const int BudgetPeriodMonths = 3;
+
+        // Define base budget behavior
         private const double BaseBudgetStart = 20000 * BudgetPeriodMonths / 12;
         private const double BaseBudgetEnd = 200000 * BudgetPeriodMonths / 12;
+
+        // AFter 20 years base budget will no longer grow
         private const int StartToEndPeriods = 20 / BudgetPeriodMonths * 12;
+
+        // How much reputation is released as cash each period
         private const float ReputationDecayFactor = 0.15f;
+
+        // How much rep is transfered from the buffer to the releasable funds bucket
         private const float BufferDecayFactor = 0.2f;
+
+        // How much cash per released funds
         private const float ReputationToFundsFactor = 1000;
+
         private static readonly DateTime Epoch = new DateTime(1951, 1, 1);
 
         public static BudgetHandler Instance { get; private set; } = null;
 
         public void Start()
         {
-            if (reputation == -double.MaxValue)
+            if (reputation == -double.MaxValue) // Should only happen when starting the game
             {
                 reputation = Reputation.CurrentRep;
                 lastReputation = reputation;
@@ -131,34 +143,44 @@ namespace RP0
         }
         private void PayBudget()
         {
-            void StockMessage(string title, string text)
+            // Message outputter
+            static void StockMessage(string title, string text)
             {
 
                 MessageSystem.Message m = new MessageSystem.Message(title, text, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.MESSAGE);
                 MessageSystem.Instance.AddMessage(m);
             }
 
+            // Track initial bucket values
             reputationNaught = reputation;
             bufferNaught = buffer;
 
+            // Get transfer/conversion amounts
             var baseBudget = GetBaseBudget();
             var repBudget = GetRepBudget();
             var repTransfer = CalculateBufferTransfer();
 
+            // Calculate payout
             var payout = baseBudget + repBudget;
+
+            // Track payout to date
             totalPayout += payout;
 
+            // Transfer from buffer to releasable bucket (also remove released funds from that bucket)
             reputation += repTransfer - reputation * ReputationDecayFactor;
             buffer -= repTransfer;
 
+            // Release as funds
             Funding.Instance.AddFunds(payout, TransactionReasons.None);
             budgetCounter++;
 
+            // Calculate things for the budget report
             var maintenanceReputation = Math.Ceiling(CalculateMaintenanceReputation());
             var oldGrowth = (payout - lastPayout) / lastPayout;
             var newGrowth = (GetBudget() - payout) / payout;
             if (budgetCounter == 1) oldGrowth = 0;             
-
+            
+            // Display budget report
             var infoMessage =
                 String.Format("Budget Report for {0}\n", KSPUtil.PrintDate(BudgetHandler.Instance.nextUpdate, false)) +
                               "-----------------------------------------\n\n" +

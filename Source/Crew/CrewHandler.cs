@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using System.Reflection;
+using UnityEngine;
 using KSP.UI.Screens;
 
 namespace RP0.Crew
@@ -598,12 +599,13 @@ namespace RP0.Crew
                 bool hasOrbitOther = false;
                 bool hasLandOther = false;
                 int curFlight = pcm.careerLog.Last().flight;
+                int numFlightsDone = pcm.careerLog.Entries.Count(e => e.type == "Recover");
                 foreach (FlightLog.Entry e in pcm.careerLog.Entries)
                 {
                     if (e.type == "TRAINING_mission")
                         SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
 
-                    if (e.flight != curFlight)
+                    if (e.flight != curFlight || e.type == "Nationality")
                         continue;
 
                     Debug.Log($"[VR]  processing flight entry: {e.type}; {e.target}");
@@ -695,13 +697,13 @@ namespace RP0.Crew
                 double retTime;
                 if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
                 {
-                    double offset = constant * 86400d * settings.retireOffsetBaseMult / (1 + Math.Pow(Math.Max(curFlight + settings.retireOffsetFlightNumOffset, 0d), settings.retireOffsetFlightNumPow)
+                    double offset = constant * 86400d * settings.retireOffsetBaseMult / (1 + Math.Pow(Math.Max(numFlightsDone + settings.retireOffsetFlightNumOffset, 0d), settings.retireOffsetFlightNumPow)
                         * UtilMath.Lerp(settings.retireOffsetStupidMin, settings.retireOffsetStupidMax, pcm.stupidity));
 
                     if (offset > 0d)
                     {
                         Debug.Log("[VR] retire date increased by: " + KSPUtil.PrintDateDeltaCompact(offset, true, false));
-                        Debug.Log($"[VR]  constant: {constant}; curFlight: {curFlight}; stupidity: {pcm.stupidity}");
+                        Debug.Log($"[VR]  constant: {constant}; curFlight: {numFlightsDone}; stupidity: {pcm.stupidity}");
 
                         retTime += offset;
                         kerbalRetireTimes[pcm.name] = retTime;

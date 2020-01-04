@@ -1,15 +1,15 @@
 [
     {
-        "name": "ROS-StaticSolarPanel",
-        "title": "Static Solar Panel",
+        "name": "ROS-FoldingSolarPanel",
+        "title": "Folding Solar Panel",
         "description": "",
         "mod": "ROSolar",
         "cost": "0",
-        "entry_cost": "1500",
+        "entry_cost": "6000",
         "category": "MATERIALS",
         "info": "",
-        "year": "1956",
-        "technology": "electronicsSatellite",
+        "year": "1967",
+        "technology": "lunarRatedPower",
         "era": "",
         "ro": true,
         "rp0": true,
@@ -18,11 +18,11 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "100, solarInitial",
+        "entry_cost_mods": "1000, solarLevel2, solarFolding, solarTracking",
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "ROS-HingedSolarPanel",
         "title": "Hinged Solar Panel",
         "description": "",
@@ -45,17 +45,17 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
-        "name": "ROS-FoldingSolarPanel",
-        "title": "Folding Solar Panel",
+    {
+        "name": "ROS-StaticSolarPanel",
+        "title": "Static Solar Panel",
         "description": "",
         "mod": "ROSolar",
         "cost": "0",
-        "entry_cost": "6000",
+        "entry_cost": "1500",
         "category": "MATERIALS",
         "info": "",
-        "year": "1967",
-        "technology": "lunarRatedPower",
+        "year": "1956",
+        "technology": "electronicsSatellite",
         "era": "",
         "ro": true,
         "rp0": true,
@@ -64,7 +64,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, solarLevel2, solarFolding, solarTracking",
+        "entry_cost_mods": "100, solarInitial",
         "identical_part_name": "",
         "module_tags": []
     }

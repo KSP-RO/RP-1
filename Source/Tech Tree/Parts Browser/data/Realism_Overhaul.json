@@ -491,10 +491,10 @@
         "identical_part_name": "X1Cockpit",
         "module_tags": [
             "Cockpit",
+            "ModuleUnpressurizedCockpit",
             "NoEVA",
             "NoResourceCostMult",
-            "NonReentryRated",
-            "ModuleUnpressurizedCockpit"
+            "NonReentryRated"
         ]
     },
     {

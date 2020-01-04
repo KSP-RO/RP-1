@@ -16,12 +16,19 @@ How to install:
   5) Update RealismOverhaul: 
       * https://github.com/KSP-RO/RealismOverhaul
 
+
+
 RP-NQB 0.2.2 Changelog:
 
   * Overhauled the preorbital phase again. 
     * Remixed SR contracts bigtime:
       * Added Mass Spec SR contracts.
-      * Changes to the downrange series should encourage more realistic booster designs instead of clusterbee bumper spam.
+      * Changes to the downrange series should encourage more realistic booster designs instead of RP-NQB 0.2.2a Changelog:
+  * Quick fixes:
+    * Fixed a bug in the sound barrier contract.
+    * Restored proper science costs to plane tech nodes.
+    * Pruned a few more non-proc parts from the tree.
+  * Added an NQB toolbar icon.clusterbee bumper spam.
       * Replaced High-Altitude SR contracts with Thermosphere Research SR contracts.
       * Simplified Photo SR contracts--ceiling removed.
       * Removed Heavy SR contract series.

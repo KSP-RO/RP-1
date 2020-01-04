@@ -29,6 +29,9 @@ RP-NQB 0.2.2 Changelog:
       * Finished Kerbalism integration with science SR contracts.
     * Expanded on plane contracts:
       * Merged PP-1 with KCT airlaunch capability.
+      * Added more plane milestones.
+      * Expanded existing X-Plane contract series & adapted those from PP-1.
+      * Re-enabled and buffed value of suborbital flights.
   * Number of pads again granularly doubled.
   * Completely redid contract organization and gave agencies new handcrafted logos.
   * Bumped the value of the geosync contract.

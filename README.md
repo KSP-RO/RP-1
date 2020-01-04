@@ -3,23 +3,22 @@ How to install:
   1) Be on KSP v1.7.3.
 
   2) Install ROKerbalism w/ Contracts:  
-      https://github.com/Kerbalism/Kerbalism
-      https://github.com/Standecco/ROKerbalism
-      https://github.com/Kerbalism/KerbalismContracts
+      * https://github.com/Kerbalism/Kerbalism
+      * https://github.com/Standecco/ROKerbalism
+      * https://github.com/Kerbalism/KerbalismContracts
 
   3) Install Airlaunch KCT: 
-      https://github.com/KSP-RO/KCT/tree/TEST/GameData/KerbalConstructionTime
+      * https://github.com/KSP-RO/KCT/tree/TEST/GameData/KerbalConstructionTime
 
   4) Install NQB: 
-      https://github.com/nepphhh/RP-0/releases
+      * https://github.com/nepphhh/RP-0/releases
 
   5) Update RealismOverhaul: 
-      https://github.com/KSP-RO/RealismOverhaul
+      * https://github.com/KSP-RO/RealismOverhaul
 
 RP-NQB 0.2.2 Changelog:
 
   * Overhauled the preorbital phase again. 
-
     * Remixed SR contracts bigtime:
       * Added Mass Spec SR contracts.
       * Changes to the downrange series should encourage more realistic booster designs instead of clusterbee bumper spam.
@@ -28,18 +27,12 @@ RP-NQB 0.2.2 Changelog:
       * Removed Heavy SR contract series.
       * Genericized SatPayloads so they can be used in SR contracts.
       * Finished Kerbalism integration with science SR contracts.
-
     * Expanded on plane contracts:
       * Merged PP-1 with KCT airlaunch capability.
-
   * Number of pads again granularly doubled.
-
   * Completely redid contract organization and gave agencies new handcrafted logos.
-
   * Bumped the value of the geosync contract.
-
-  * Extended satellite deadlines to at least a year where it was less than a year before. Extended some sounding rocket contracts.
- 
+  * Extended satellite deadlines to at least a year where it was less than a year before. Extended some sounding rocket contracts. 
 
 RP-NQB 0.2.1 Changelog:
 Changes from normal RP-1 include but are not limited to:

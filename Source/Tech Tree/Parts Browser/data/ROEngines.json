@@ -5041,5 +5041,28 @@
         "module_tags": [
             "EngineLiquidTurbo"
         ]
+    },
+    {
+        "name": "ROE-XLR41",
+        "title": "XLR41 Series Engine",
+        "description": "Americanized version of the V-2 Model 39 (A-4). It was very similar to its predecessor, but was built using American SAE components rather than Metric components, and featured several minor upgrades.",
+        "mod": "ROEngines",
+        "cost": "125",
+        "entry_cost": "",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "PW",
+        "technology": "rocketryTesting",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "XLR41",
+        "upgrade": false,
+        "entry_cost_mods": "XLR41",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     }
 ]

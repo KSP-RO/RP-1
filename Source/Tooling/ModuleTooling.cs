@@ -143,17 +143,16 @@ namespace RP0
         public override void OnStart(StartState state)
         {
             base.OnStart(state);
-            UpdateButtonName();
-
+            Debug.Log("[MT] OnStart() Loading part modules");
             try
             {
-                Debug.Log("[MT] Loading part modules");
                 LoadPartModules();
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
             }
+            UpdateButtonName();
             onStartFinished = true;
         }
 

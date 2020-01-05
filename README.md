@@ -1,6 +1,6 @@
 How to install:
 
-  1) Be on KSP v1.7.3.
+  1) Be on KSP v1.7.3 with a functional RP-1 setup.
 
   2) Install ROKerbalism w/ Contracts:  
       * https://github.com/Kerbalism/Kerbalism
@@ -13,7 +13,7 @@ How to install:
   4) Install NQB: 
       * https://github.com/nepphhh/RP-0/releases
 
-  5) Update RealismOverhaul: 
+  5) Update RealismOverhaul (do NOT copy over the MFI folder): 
       * https://github.com/KSP-RO/RealismOverhaul
 
 

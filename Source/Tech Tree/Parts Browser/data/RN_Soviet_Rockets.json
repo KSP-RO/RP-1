@@ -796,6 +796,54 @@
         "module_tags": []
     },
     {
+        "name": "rn_kosmos2_rd214",
+        "title": "RD-211 Series",
+        "description": "",
+        "mod": "RN Soviet Rockets",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "R-12",
+        "engine_config": "RD211",
+        "upgrade": false,
+        "entry_cost_mods": "RD-211-8D57",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "rn_kosmos3_rd216",
+        "title": "RD-215 Series",
+        "description": "",
+        "mod": "RN Soviet Rockets",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Kosmos",
+        "engine_config": "RD215",
+        "upgrade": false,
+        "entry_cost_mods": "RD-215-8D513",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "rn_lk_lander",
         "title": "LK Lander Module",
         "description": "LK lander pod, attach both sets of engines to the bottom and the landing legs. Use the legs as a launch platform on the moon.",

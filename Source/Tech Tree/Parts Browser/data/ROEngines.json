@@ -3646,6 +3646,54 @@
         ]
     },
     {
+        "name": "ROE-RD211",
+        "title": "RD-211 Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "R-12",
+        "engine_config": "RD211",
+        "upgrade": false,
+        "entry_cost_mods": "RD-211-8D57",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-RD215",
+        "title": "RD-215 Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Kosmos",
+        "engine_config": "RD215",
+        "upgrade": false,
+        "entry_cost_mods": "RD-215-8D513",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-RD275",
         "title": "RD-253/RD-275",
         "description": "A high thrust engine designed for use with storable propellants. In use with the Proton series of rockets. Diameter: [2.0 m]. Plume configured by RealPlume.",

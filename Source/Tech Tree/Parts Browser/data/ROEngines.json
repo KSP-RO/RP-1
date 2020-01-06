@@ -3346,6 +3346,54 @@
         ]
     },
     {
+        "name": "ROE-RD0210",
+        "title": "RD-0208/0210",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1966",
+        "technology": "stagedCombustion1966",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Proton",
+        "engine_config": "RD0210",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0210",
+        "identical_part_name": "RD-0210",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD0212",
+        "title": "RD-0223",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1966",
+        "technology": "stagedCombustion1966",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Proton",
+        "engine_config": "RD0212",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0212",
+        "identical_part_name": "RD-0212",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD100",
         "title": "RD-100 Series Engine",
         "description": "",

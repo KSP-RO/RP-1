@@ -7515,7 +7515,7 @@
         "title": "RL10B-2",
         "description": "",
         "mod": "Engine_Config",
-        "cost": "1600",
+        "cost": 2800,
         "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",

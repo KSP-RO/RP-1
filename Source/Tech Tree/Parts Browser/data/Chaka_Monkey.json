@@ -1689,7 +1689,7 @@
         "title": "RL10B/C/CECE Series",
         "description": "The modern iterations of the workhorse RL10 engine (RL-10B-2, RL-10C-1 & CECE). Plume configured by RealPlume.",
         "mod": "Chaka Monkey",
-        "cost": "3800",
+        "cost": 500,
         "entry_cost": "76000",
         "category": "HYDROLOX",
         "info": "",

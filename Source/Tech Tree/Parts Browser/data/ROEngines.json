@@ -4071,7 +4071,7 @@
         "title": "RL10B-2 Engine",
         "description": "",
         "mod": "ROEngines",
-        "cost": 3800,
+        "cost": 500,
         "entry_cost": 76000,
         "category": "HYDROLOX",
         "info": "",
@@ -4086,7 +4086,7 @@
         "engine_config": "RL10",
         "upgrade": false,
         "entry_cost_mods": "RL10B-3",
-        "identical_part_name": "",
+        "identical_part_name": "RL10B-2",
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
@@ -4097,7 +4097,7 @@
         "title": "RL10B-2 Engine",
         "description": "",
         "mod": "ROEngines",
-        "cost": 3800,
+        "cost": 500,
         "entry_cost": 76000,
         "category": "HYDROLOX",
         "info": "",
@@ -4106,13 +4106,13 @@
         "era": "",
         "ro": true,
         "rp0": true,
-        "orphan": false,
+        "orphan": true,
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": false,
         "entry_cost_mods": "RL10B-3",
-        "identical_part_name": "",
+        "identical_part_name": "RL10B-2",
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"

@@ -1224,7 +1224,7 @@
         "title": "RL10B-2 Vacuum Engine",
         "description": "Developed for the Delta Cryogenic Second Stage (DCSS), which was first used on the Delta III then modified for the Delta IV. Its extending nozzle increases specific impulse compared to the RL10A, at the cost of greater dry mass. Boeing purchased a large number of these engines for the Delta IV, but the launcher's low flight rate led to ULA converting many of them to RL10C-1 engines for use on the Atlas V's Centaur upper stage. Also includes a config for the European Vinci 180kN engine. Mount size can be adjusted from 1.25m to 10m in 1m increments. Diameter: [2.15 m]. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
         "mod": "SSTU",
-        "cost": "3800",
+        "cost": 500,
         "entry_cost": "76000",
         "category": "HYDROLOX",
         "info": "US Engine",

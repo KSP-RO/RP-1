@@ -3568,6 +3568,30 @@
         ]
     },
     {
+        "name": "ROE-RD109",
+        "title": "RD-109/119 Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "300",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Kosmos",
+        "engine_config": "RD109",
+        "upgrade": false,
+        "entry_cost_mods": "RD-109-8D711",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-RD170",
         "title": "RD-170 Series",
         "description": "",
@@ -3715,6 +3739,54 @@
         "identical_part_name": "RD-191",
         "module_tags": [
             "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD211",
+        "title": "RD-211 Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "R-12",
+        "engine_config": "RD211",
+        "upgrade": false,
+        "entry_cost_mods": "RD-211-8D57",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-RD215",
+        "title": "RD-215 Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Kosmos",
+        "engine_config": "RD215",
+        "upgrade": false,
+        "entry_cost_mods": "RD-215-8D513",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
         ]
     },
     {

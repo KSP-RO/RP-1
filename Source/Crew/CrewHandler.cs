@@ -402,7 +402,7 @@ namespace RP0.Crew
 
                 if (anyCourseEnded || toRemove.Count > 0)
                 {
-                    MaintenanceHandler.Instance.UpdateUpkeep();
+                    MaintenanceHandler.Instance?.UpdateUpkeep();
                 }
             }
 

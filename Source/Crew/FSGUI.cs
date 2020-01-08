@@ -42,7 +42,7 @@ namespace RP0.Crew
                 if (course.Students.Count == 0)
                 {
                     CrewHandler.Instance.ActiveCourses.Remove(course);
-                    MaintenanceHandler.Instance.UpdateUpkeep();
+                    MaintenanceHandler.Instance?.UpdateUpkeep();
                 }
             });
             options[2] = new DialogGUIButton("No", () => { });
@@ -63,7 +63,7 @@ namespace RP0.Crew
                     // We "complete" the course but we didn't mark it as Completed, so it just releases the students and doesn't apply rewards
                     course.CompleteCourse();
                     CrewHandler.Instance.ActiveCourses.Remove(course);
-                    MaintenanceHandler.Instance.UpdateUpkeep();
+                    MaintenanceHandler.Instance?.UpdateUpkeep();
                 });
             options[2] = new DialogGUIButton("No", () => { });
             StringBuilder msg = new StringBuilder("Are you sure you want to cancel this course? The following students will cease study:");
@@ -249,7 +249,7 @@ namespace RP0.Crew
                 if (selectedCourse.StartCourse()) {
                     CrewHandler.Instance.ActiveCourses.Add(selectedCourse);
                     selectedCourse = null;
-                    MaintenanceHandler.Instance.UpdateUpkeep();
+                    MaintenanceHandler.Instance?.UpdateUpkeep();
                 }
             }
             return selectedCourse == null ? tabs.Training : tabs.NewCourse;

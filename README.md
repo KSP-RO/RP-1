@@ -17,6 +17,11 @@ How to install:
       * https://github.com/KSP-RO/RealismOverhaul
 
 
+RP-NQB 0.2.3 Changelog:
+
+  * Added First Guided Rocket contract.
+  * Modified some early game contract requirement orders.
+  * Made early mission control cheaper, added two more levels.
 
 RP-NQB 0.2.2 Changelog:
 

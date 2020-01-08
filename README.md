@@ -5,7 +5,7 @@ How to install:
   2) Install ROKerbalism w/ Contracts:  
       * https://github.com/Kerbalism/Kerbalism
       * https://github.com/Standecco/ROKerbalism
-      * https://github.com/Kerbalism/KerbalismContracts
+      * https://github.com/nepphhh/KerbalismContracts
 
   3) Install Airlaunch KCT: 
       * https://github.com/KSP-RO/KCT/tree/TEST/GameData/KerbalConstructionTime

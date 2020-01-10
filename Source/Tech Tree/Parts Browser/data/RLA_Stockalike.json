@@ -182,7 +182,7 @@
         "entry_cost_mods": "50000,RTGlevel5",
         "identical_part_name": "",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {

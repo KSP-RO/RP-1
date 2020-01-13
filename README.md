@@ -16,12 +16,28 @@ How to install:
   5) Update RealismOverhaul (do NOT copy over the MFI folder): 
       * https://github.com/KSP-RO/RealismOverhaul
 
-
 RP-NQB 0.2.3 Changelog:
+  
+  BALANCE CHANGES:
+  * More early game tweaks.
+    * Nerfed mass & power draw of the starting level science core.
+    * Added First Guided Rocket contract.
+    * Modified early game contract requirement orders to permit more free play.
+    * Made early mission control cheaper, added two more levels.
+    * Made all starting parts cost nothing.
+  * Changes to large vehicle progression.
+    * Increased build rate of larger vehicles.
+    * Increased cost of upgrades with time.
+    * Decreased number of upgrades from science with time.
 
-  * Added First Guided Rocket contract.
-  * Modified some early game contract requirement orders.
-  * Made early mission control cheaper, added two more levels.
+  IMPROVEMENTS:
+  * Added an NQB toolbar icon.
+  * Pruned more non-proc parts from the tree.
+
+  BUG FIXES:
+  * Fixed broken contracts from 0.2.2.
+  * Removed broken Contract tab from RP-1 window.
+  * Fixed mission control upgrade costs.
 
 RP-NQB 0.2.2 Changelog:
 
@@ -48,7 +64,6 @@ RP-NQB 0.2.2 Changelog:
   * Completely redid contract organization and gave agencies new handcrafted logos.
   * Bumped the value of the geosync contract.
   * Extended satellite deadlines to at least a year where it was less than a year before. Extended some sounding rocket contracts. 
-
 RP-NQB 0.2.1 Changelog:
 Changes from normal RP-1 include but are not limited to:
 

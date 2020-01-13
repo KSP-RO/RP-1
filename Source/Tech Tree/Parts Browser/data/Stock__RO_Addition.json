@@ -30,7 +30,7 @@
         "description": "Very small solid motor used to spin stabilize stages.",
         "mod": "Stock (RO Addition)",
         "cost": "8",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "SOLID",
         "info": "",
         "year": "0",
@@ -43,7 +43,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "Spin Motor Small",
         "module_tags": []
     },

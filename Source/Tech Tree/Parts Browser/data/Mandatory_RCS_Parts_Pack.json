@@ -5,7 +5,7 @@
         "description": "These small thrusters are for upper stage or small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 8,
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -18,7 +18,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -30,7 +30,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 4,
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -43,7 +43,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -55,7 +55,7 @@
         "description": "These small thrusters are for upper stage or small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 8,
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -68,7 +68,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -80,7 +80,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": "4",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -93,7 +93,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -105,7 +105,7 @@
         "description": "These small thrusters are for upper stage or small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 12,
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -118,7 +118,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -130,7 +130,7 @@
         "description": "These small thrusters are for upper stage or small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 12,
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -143,7 +143,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -155,7 +155,7 @@
         "description": "These small thrusters are for upper stage or small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 16,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -168,7 +168,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -180,7 +180,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": "8",
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -193,7 +193,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -205,7 +205,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": "6",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -218,7 +218,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -230,7 +230,7 @@
         "description": "These small thrusters are for upper stage or small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 16,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -243,7 +243,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -255,7 +255,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": "8",
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -268,7 +268,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -280,7 +280,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": "6",
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -293,7 +293,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -330,7 +330,7 @@
         "description": "These small thrusters are for upper stage or medium probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 12,
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -343,7 +343,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -430,7 +430,7 @@
         "description": "These small thrusters are for upper stage or medium probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 24,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -443,7 +443,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -480,7 +480,7 @@
         "description": "These small thrusters are for upper stage or medium probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 30,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -493,7 +493,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -505,7 +505,7 @@
         "description": "These small thrusters are for upper stage or medium probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 18,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -518,7 +518,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -555,7 +555,7 @@
         "description": "These small thrusters are for upper stage or medium probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 24,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -568,7 +568,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -605,7 +605,7 @@
         "description": "These small thrusters are for upper stage or medium probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 30,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -618,7 +618,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -630,7 +630,7 @@
         "description": "These small thrusters are for upper stage or medium probe orientation.",
         "mod": "Mandatory RCS Parts Pack",
         "cost": 18,
-        "entry_cost": 1,
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -643,7 +643,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"

@@ -28,7 +28,7 @@
         "description": "A generic, single port, RCS thruster for attitude control.",
         "mod": "Chaka Monkey",
         "cost": "12",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "",
         "year": "0",
@@ -41,7 +41,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -2210,7 +2210,7 @@
         "description": "A generic solid rocket motor for safe separation of discarded rocket stages. Plume configured by RealPlume.",
         "mod": "Chaka Monkey",
         "cost": "3",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "SOLID",
         "info": "Sep",
         "year": "0",
@@ -2223,7 +2223,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "Separation Motor",
         "module_tags": [
             "EngineSolid"
@@ -2400,7 +2400,7 @@
         "description": "A structural procedural fairing for creating interstages or protective covers. Lacks a decoupler.",
         "mod": "Chaka Monkey",
         "cost": "0",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "MATERIALS",
         "info": "Fairing",
         "year": "0",
@@ -2413,7 +2413,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -168,7 +168,7 @@
         "description": "This is a capsule containing biological samples (fruit flies, fungus, perhaps even a mouse or two). While some observations of the sample may be transmitted, only by recovering the sample safely can the most information be gained about life's response to the given situation.",
         "mod": "Dmagic Orbital Science",
         "cost": "250",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "SCIENCE",
         "info": "Bio Sample",
         "year": "0",

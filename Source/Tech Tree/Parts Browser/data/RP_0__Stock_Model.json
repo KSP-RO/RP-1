@@ -30,7 +30,7 @@
         "description": "The Early Film Camera is used to take photographs of Earth from space. This is a very early camera and lacks resolution in the images. Historically, these were flown on V-2 Rockets.\\nThe photos cannot be transmitted and must be returned for further study. Level 1 Photograph Experiment. Can gather 20% of Photography Science. You can store up to 3 different photos before you need to return them to Earth.",
         "mod": "RP-0 (Stock Model)",
         "cost": "100",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "SCIENCE",
         "info": "Photography",
         "year": "0",

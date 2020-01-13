@@ -155,7 +155,7 @@
         "description": "Omnidirectional antenna: Effective range 10 Mm, power consumption 5 Watts.",
         "mod": "RemoteTech",
         "cost": "2",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "COMMS",
         "info": "Omni",
         "year": "0",
@@ -168,7 +168,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"

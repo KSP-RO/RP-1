@@ -5,7 +5,7 @@
         "description": "128/223 N Class",
         "mod": "ReStock Plus",
         "cost": "18",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -18,7 +18,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -30,7 +30,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "6",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -43,7 +43,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -55,7 +55,7 @@
         "description": "128/223 N Class",
         "mod": "ReStock Plus",
         "cost": "30",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -68,7 +68,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -80,7 +80,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "10",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -93,7 +93,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -105,7 +105,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "10",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -118,7 +118,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -130,7 +130,7 @@
         "description": "128/223 N Class",
         "mod": "ReStock Plus",
         "cost": "36",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -143,7 +143,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -155,7 +155,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "12",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -168,7 +168,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -180,7 +180,7 @@
         "description": "128/223 N Class",
         "mod": "ReStock Plus",
         "cost": "24",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -193,7 +193,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -205,7 +205,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "8",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -218,7 +218,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -230,7 +230,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "4",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -243,7 +243,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -386,7 +386,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -524,7 +524,7 @@
         "description": "",
         "mod": "ReStock Plus",
         "cost": "1",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "MATERIALS",
         "info": "Fairing Base",
         "year": "0",
@@ -537,7 +537,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -547,7 +547,7 @@
         "description": "",
         "mod": "ReStock Plus",
         "cost": "1",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "MATERIALS",
         "info": "Fairing Base",
         "year": "0",
@@ -560,7 +560,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -618,7 +618,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "12",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -631,7 +631,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -668,7 +668,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "20",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -681,7 +681,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -693,7 +693,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "20",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -706,7 +706,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -743,7 +743,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "24",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -756,7 +756,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -793,7 +793,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "16",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -806,7 +806,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -818,7 +818,7 @@
         "description": "These small thrusters are for upper stage or very small probe orientation.",
         "mod": "ReStock Plus",
         "cost": "8",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "RCS",
         "info": "RCS",
         "year": "0",
@@ -831,7 +831,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"

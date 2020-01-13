@@ -308,7 +308,7 @@
         "description": "Made from the finest materials found in the fields around the Space Center. Conic version.",
         "mod": "Horizon Aeronautics Zenit",
         "cost": "0",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "MATERIALS",
         "info": "Fairing",
         "year": "0",
@@ -321,7 +321,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
     }

@@ -626,7 +626,7 @@
         "description": "The RD-100 engine series were the first large scale Ethalox Russian liquid propellant rocket engines ever developed and fired. The original RD-100 engine was a 1:1 copy of the German Model 39 engine (used on the A-4 ballistic missile), with later variants (RD-101 and RD-103/M) featuring ever increasing performance to satisfy the needs of the larger R-2 and R-5 IRBMs. Diameter: 1.65 m. Plume configured by RealPlume.",
         "mod": "RealEngines",
         "cost": "150",
-        "entry_cost": "1",
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "0",

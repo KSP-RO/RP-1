@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using KSP.UI.Screens;
 
 namespace RP0
 {
-    public abstract class UIBase
+    public class UIBase
     {
         protected GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
-
-        public enum tabs { Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, Training, Courses, NewCourse, Naut, Avionics, Contracts, Budget };
-
+        public enum tabs { Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, Training, Courses, NewCourse, Naut, Avionics, Budget };
         public UIBase()
         {
             rightLabel = new GUIStyle(HighLogic.Skin.label);
@@ -19,14 +19,6 @@ namespace RP0
             pressedButton = new GUIStyle(HighLogic.Skin.button);
             pressedButton.normal = pressedButton.active;
         }
-
-        internal void Start()
-        {
-            OnStart();
-        }
-
-        protected virtual void OnStart() { }
-
         protected bool showTab(tabs tab)
         {
             switch (tab) {
@@ -36,7 +28,6 @@ namespace RP0
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case tabs.Tooling:
                 case tabs.ToolingType:
-                case tabs.Contracts:
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case tabs.Avionics:
                     return HighLogic.LoadedSceneIsEditor;

@@ -21,12 +21,10 @@ namespace RP0
                 Debug.LogException(ex);
             }
         }
-
         protected void Start()
         {
             tw = new TopWindow();
         }
-
         private void ShowWindow()
         {
             guiEnabled = true;

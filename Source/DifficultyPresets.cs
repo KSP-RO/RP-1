@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
+using KSP;
 
 namespace RP0
 {
@@ -51,10 +54,6 @@ namespace RP0
 
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;
-
-        // The following values are persisted to the savegame but are not shown in the difficulty settings UI
-        public int CommsPayload = ContractGUI.MinPayload;
-        public int WeatherPayload = ContractGUI.MinPayload;
 
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {

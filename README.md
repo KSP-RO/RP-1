@@ -8,7 +8,7 @@
 
 **How to install:**
 
-NOTE: Whenever you install or update a mod, ensure you completely delete and replace the old folder.
+*NOTE: Whenever you install or update a mod, ensure you completely delete and replace the old folder.*
 
   1) Be on KSP v1.7.3 with a functional RP-1 setup.
 

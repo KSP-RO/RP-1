@@ -1,4 +1,14 @@
-How to install:
+### INTRODUCTION & INSTALLATION
+
+**What is NQB? NQB (Neph's Quarterly Budgets) does three things:**
+
+  1) Replaces funding contract rewards with reputation rewards. More reputation means you earn more money in your budget, which is paid out four times a year.
+  2) Restructures the contract progression to be more historical. This means contract objectives are based off of real rocket contracts and also relative rewards are changed to encourage the player to try more than just the traditionally optimal RP-1 path.
+  3) Relies on Kerbalism to make more interesting long-duration science and communications contracts.
+
+**How to install:**
+
+*NOTE: Whenever you install or update a mod, ensure you completely delete and replace the old folder.*
 
   1) Be on KSP v1.7.3 with a functional RP-1 setup.
 
@@ -16,7 +26,9 @@ How to install:
   5) Update RealismOverhaul (do NOT copy over the MFI folder): 
       * https://github.com/KSP-RO/RealismOverhaul
 
-RP-NQB 0.2.3 Changelog:
+### CHANGELOGS
+
+**RP-NQB 0.2.3 Changelog:**
   
   BALANCE CHANGES:
   * More early game tweaks.
@@ -39,7 +51,7 @@ RP-NQB 0.2.3 Changelog:
   * Removed broken Contract tab from RP-1 window.
   * Fixed mission control upgrade costs.
 
-RP-NQB 0.2.2 Changelog:
+**RP-NQB 0.2.2 Changelog:**
 
   * Overhauled the preorbital phase again. 
     * Remixed SR contracts bigtime:
@@ -64,8 +76,9 @@ RP-NQB 0.2.2 Changelog:
   * Completely redid contract organization and gave agencies new handcrafted logos.
   * Bumped the value of the geosync contract.
   * Extended satellite deadlines to at least a year where it was less than a year before. Extended some sounding rocket contracts. 
-RP-NQB 0.2.1 Changelog:
-Changes from normal RP-1 include but are not limited to:
+
+
+**RP-NQB 0.2.1 Changelog:**
 
   * You earn reputation, which gives you a budget four times a year. More reputation = more money.
   * Revamped early game contracts, the sounding rocket era less sucky.
@@ -73,8 +86,3 @@ Changes from normal RP-1 include but are not limited to:
   * There are more and cheaper building upgrades. Total building costs have been halved across the board.
   * KCT rate upgrades are twice as cheap but half as powerful.
   * You have two tech queues and can research multiple things at the same time.
-  * You get new VAB lines upon your first, fourth, and ninth upgrades, for four VAB lines total!
-    
-NQB comes packaged with the latest Kerbalism. Kerbalism modifies science such that experiments take time to be completed, life supprot is realistic, and power management is an actual consideration. When you start running an experiment, it will collect science until it completes the experiment or the situation changes, returning fractional science rewards the while time. 
-
-If an experiment is left incomplete, you will still collect that partial science, and you can return again and keep working on the experiment until all science has been collected. This means if you collect the science from a 10 minute flying high experiment in ten one-minute portions, it's the same full data as if you did it all in one go.

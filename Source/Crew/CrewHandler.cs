@@ -269,6 +269,11 @@ namespace RP0.Crew
                 {
                     if ((pcm.rosterStatus == ProtoCrewMember.RosterStatus.Assigned || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available) && !kerbalRetireTimes.ContainsKey(pcm.name))
                     {
+                        if (pcm.trait != KerbalRoster.pilotTrait)
+                        {
+                            KerbalRoster.SetExperienceTrait(pcm, KerbalRoster.pilotTrait);
+                        }
+
                         newHires.Add(pcm.name);
                         OnCrewHired(pcm, int.MinValue);
                     }

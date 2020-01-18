@@ -38,13 +38,13 @@ namespace RP0
                         forceUnlock = true;
                     if (m is ModuleCommand || m is ModuleAvionics)
                         p.GetConnectedResourceTotals(electricChargeDef.id, out ecResource, out double _);
-                    if (m is ModuleCommand && ecResource > 0)
+                    if (m is ModuleCommand && (ecResource > 0 || HighLogic.LoadedSceneIsEditor))
                     {
                         cmd = true;
                         mC = m as ModuleCommand;
                     }
                     science |= m is ModuleScienceCore;
-                    if (m is ModuleAvionics && ecResource > 0)
+                    if (m is ModuleAvionics && (ecResource > 0 || HighLogic.LoadedSceneIsEditor))
                     {
                         avionics = true;
                         partAvionicsMass += (m as ModuleAvionics).CurrentMassLimit;

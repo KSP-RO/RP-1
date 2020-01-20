@@ -109,7 +109,7 @@
         "description": "1990s Medium TWR atmospheric engine. Using technology developed for the Space Shuttle SSME, the RS-68 is a single-use engine, featuring a simplified design with less parts and an easier construction. The RS-68 powers the Delta IV launch vehicle family and is the most powerful LH2/LOX engine ever flown. Exhaust from the gas generator is used for roll control. Diameter: [2.43 m]. Plume configured by RealPlume.",
         "mod": "Cryo Engines",
         "cost": "2850",
-        "entry_cost": "57000",
+        "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",
         "year": "2002",

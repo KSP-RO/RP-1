@@ -2205,7 +2205,7 @@
         "spacecraft": "",
         "engine_config": "HG3",
         "upgrade": true,
-        "entry_cost_mods": "80000",
+        "entry_cost_mods": "80000,HG3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2377,7 +2377,7 @@
         "spacecraft": "Ariane",
         "engine_config": "HM7",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2400,7 +2400,7 @@
         "spacecraft": "Ariane",
         "engine_config": "HM7",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HM-7B_Early",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2423,7 +2423,7 @@
         "spacecraft": "Ariane",
         "engine_config": "HM7",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HM-7",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2929,7 +2929,7 @@
         "spacecraft": "H-II",
         "engine_config": "LE7",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,StagedHydrolox",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2952,7 +2952,7 @@
         "spacecraft": "H-II",
         "engine_config": "LE7",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,LE-7",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2975,7 +2975,7 @@
         "spacecraft": "H-II",
         "engine_config": "LE7",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,LE-7A",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5543,8 +5543,8 @@
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
-        "year": "2013",
-        "technology": "orbitalRocketry2009",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
         "era": "10-COMM",
         "ro": true,
         "rp0": false,
@@ -5553,7 +5553,7 @@
         "spacecraft": "Soyuz U, Soyuz FG",
         "engine_config": "RD0110Vernier",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-0107",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5576,7 +5576,7 @@
         "spacecraft": "Soyuz-2-IV",
         "engine_config": "RD0110R",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-0110",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5599,7 +5599,7 @@
         "spacecraft": "Energia",
         "engine_config": "RD0120",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,StagedHydrolox",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5622,7 +5622,7 @@
         "spacecraft": "Soyuz-2, Angara",
         "engine_config": "RD0124",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-0110",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5645,7 +5645,7 @@
         "spacecraft": "",
         "engine_config": "RD0146",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6381,7 +6381,7 @@
         "spacecraft": "Zenit",
         "engine_config": "RD120",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,StagedKerolox",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6404,7 +6404,7 @@
         "spacecraft": "",
         "engine_config": "RD120",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-120",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6427,7 +6427,7 @@
         "spacecraft": "",
         "engine_config": "RD120",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-120",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6450,7 +6450,7 @@
         "spacecraft": "Naro-1",
         "engine_config": "RD191",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-180",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6473,7 +6473,7 @@
         "spacecraft": "Energia",
         "engine_config": "RD170",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-120",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6496,7 +6496,7 @@
         "spacecraft": "Zenit",
         "engine_config": "RD170",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-170",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6519,7 +6519,7 @@
         "spacecraft": "",
         "engine_config": "RD170",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-171",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6542,7 +6542,7 @@
         "spacecraft": "Vulkan",
         "engine_config": "RD170",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-171",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6565,7 +6565,7 @@
         "spacecraft": "Atlas V",
         "engine_config": "RD180",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-170",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6588,7 +6588,7 @@
         "spacecraft": "Antares (Replace NK33)",
         "engine_config": "RD191",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-151",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6611,7 +6611,7 @@
         "spacecraft": "Angara",
         "engine_config": "RD191",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-151",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6634,7 +6634,7 @@
         "spacecraft": "Soyuz 2-IV (Replace NK33)",
         "engine_config": "RD191",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-151",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6707,7 +6707,7 @@
         "spacecraft": "Proton",
         "engine_config": "RD253",
         "upgrade": true,
-        "entry_cost_mods": "10000, RD-253-Mk2",
+        "entry_cost_mods": "10000, RD-253-Mk3",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -6732,7 +6732,7 @@
         "spacecraft": "",
         "engine_config": "RD270",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,StagedHypergolic",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6755,7 +6755,7 @@
         "spacecraft": "",
         "engine_config": "RD270M",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-270",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6989,7 +6989,7 @@
         "spacecraft": "",
         "engine_config": "RD8",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-120",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7035,7 +7035,7 @@
         "spacecraft": "Tsyklon",
         "engine_config": "RD855",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-215-8D513",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7058,7 +7058,7 @@
         "spacecraft": "Tsyklon",
         "engine_config": "RD856",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RD-219",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7242,7 +7242,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "30000",
+        "entry_cost_mods": "30000,RL10A-3-3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7265,7 +7265,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "45000",
+        "entry_cost_mods": "45000,RL10A-3-3A",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7288,7 +7288,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "50000",
+        "entry_cost_mods": "50000,RL10A-4",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7311,7 +7311,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "45000",
+        "entry_cost_mods": "45000,RL10A-4",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7334,7 +7334,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "80000",
+        "entry_cost_mods": "80000,RL10A-4-1-2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7357,7 +7357,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "60000",
+        "entry_cost_mods": "60000,RL10A-4-1-2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7587,7 +7587,7 @@
         "spacecraft": "Delta IV",
         "engine_config": "RS68",
         "upgrade": false,
-        "entry_cost_mods": "57000",
+        "entry_cost_mods": "57000,HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7955,7 +7955,7 @@
         "spacecraft": "Fregat",
         "engine_config": "S5_92",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HypergolicPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7978,7 +7978,7 @@
         "spacecraft": "Fregat",
         "engine_config": "S5_92",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HypergolicPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8001,7 +8001,7 @@
         "spacecraft": "Briz",
         "engine_config": "S5_98M",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HypergolicPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8944,7 +8944,7 @@
         "spacecraft": "",
         "engine_config": "Vikas",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HypergolicPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8967,7 +8967,7 @@
         "spacecraft": "",
         "engine_config": "Vikas",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,Vikas-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8990,7 +8990,7 @@
         "spacecraft": "",
         "engine_config": "Vikas",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,HypergolicPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9013,7 +9013,7 @@
         "spacecraft": "",
         "engine_config": "Vikas",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,Vikas-2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9036,7 +9036,7 @@
         "spacecraft": "Replacement for RL10",
         "engine_config": "RL60",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,RL60",
         "identical_part_name": "",
         "module_tags": []
     },

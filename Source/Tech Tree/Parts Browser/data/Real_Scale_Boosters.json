@@ -1725,7 +1725,7 @@
         "spacecraft": "Ariane 1",
         "engine_config": "HM7",
         "upgrade": false,
-        "entry_cost_mods": "HM7",
+        "entry_cost_mods": "HM-7",
         "identical_part_name": "HM-7",
         "module_tags": [
             "EngineLiquidTurbo",

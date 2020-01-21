@@ -1538,7 +1538,7 @@
         "spacecraft": "Castor 4",
         "engine_config": "Castor-4",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,Castor-2,SolidsPBAN",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1561,7 +1561,7 @@
         "spacecraft": "Delta II (1989)",
         "engine_config": "Castor-4A",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,Castor-4",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1584,7 +1584,7 @@
         "spacecraft": "Atlas IIAS, H-II (2001)",
         "engine_config": "Castor-4AXL",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "0,Castor-4",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -34,6 +34,7 @@
 **RP-NQB 0.2.3 Changelog:**
   
   BALANCE CHANGES:
+  * Increased value of downrange rocket contracts, made the smaller ones a bit less worthwhile.
   * Delinearlization of contracts--contract unlocks are less sequential.
     * Bio SRs are no longer behind First Suborbital Return.
     * X-Plane Altitude is no longer behind Sound Barrier.
@@ -51,6 +52,7 @@
   IMPROVEMENTS:
   * Added an NQB toolbar icon.
   * Pruned more non-proc parts from the tree.
+  * Made the high altitude contract requirements reasonable at altitudes where there is no lift.
 
   BUG FIXES:
   * Fixed broken contracts from 0.2.2.

@@ -17,20 +17,26 @@
       * https://github.com/Standecco/ROKerbalism
       * https://github.com/nepphhh/KerbalismContracts
 
-  3) Install Airlaunch KCT: 
-      * https://github.com/KSP-RO/KCT/tree/TEST/GameData/KerbalConstructionTime
+  3) Install Pre-release (Airlaunch) KCT: 
+      * hhttps://github.com/linuxgurugamer/KCT/releases/download/1.4.7.8/KerbalConstructionTime-1.7.3-1.4.6.19-173.zip
 
-  4) Install NQB: 
-      * https://github.com/nepphhh/RP-0/releases
-
-  5) Update RealismOverhaul (do NOT copy over the MFI folder): 
+  4) Update RealismOverhaul (do NOT copy over the MFI folder): 
       * https://github.com/KSP-RO/RealismOverhaul
+
+  5) Install NQB: 
+      * https://github.com/nepphhh/RP-0
+
+  6) WARNING!
+      * When you start your career, make sure you disable all contract packs besides RP-1 NQB. This is done from the difficulty settings, and may include the SCANSat and KerbalismContracts contract packs.
 
 ### CHANGELOGS
 
 **RP-NQB 0.2.3 Changelog:**
   
   BALANCE CHANGES:
+  * Delinearlization of contracts--contract unlocks are less sequential.
+    * Bio SRs are no longer behind First Suborbital Return.
+    * X-Plane Altitude is no longer behind Sound Barrier.
   * More early game tweaks.
     * Nerfed mass & power draw of the starting level science core.
     * Added First Guided Rocket contract.

@@ -8,7 +8,6 @@
 
 **How to install:**
 
-*NOTE: Whenever you install or update a mod, ensure you completely delete and replace the old folder.*
 
   1) Be on KSP v1.7.3 with a functional RP-1 setup.
 
@@ -24,7 +23,9 @@
       * https://github.com/KSP-RO/RealismOverhaul
 
   5) Install NQB: 
-      * https://github.com/nepphhh/RP-0
+      * https://github.com/nepphhh/RP-0      
+      
+      ***NOTE: Ensure you completely delete and replace the old RP-0 folder! Do not put NQB on top of your old version!***
 
   6) WARNING!
       * When you start your career, make sure you disable all contract packs besides RP-1 NQB. This is done from the difficulty settings, and may include the SCANSat and KerbalismContracts contract packs.

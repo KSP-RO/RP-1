@@ -19,7 +19,11 @@ namespace RP0
             pressedButton.normal = pressedButton.active;
         }
 
-        public enum tabs { Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, Training, Courses, NewCourse, Naut, Avionics };
+        public enum tabs
+        { 
+            Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, 
+            Training, Courses, NewCourse, Naut, Avionics, CareerLog
+        };
 
         protected bool showTab(tabs tab)
         {
@@ -39,6 +43,7 @@ namespace RP0
                 case tabs.Courses:
                 case tabs.NewCourse:
                 case tabs.Naut:
+                case tabs.CareerLog:
                 default:
                     return true;
             }

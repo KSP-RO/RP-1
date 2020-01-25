@@ -1471,9 +1471,9 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "50000,RTGlevel3",
-        "identical_part_name": "",
+        "identical_part_name": "SNAP19-RTG",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {

@@ -21,6 +21,7 @@
         "entry_cost_mods": "KIWIA24-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -46,6 +47,7 @@
         "entry_cost_mods": "KIWIB48-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -71,6 +73,7 @@
         "entry_cost_mods": "NERVA-NRX-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -96,6 +99,7 @@
         "entry_cost_mods": "NERVA-XE-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -121,6 +125,7 @@
         "entry_cost_mods": "PEWEE100-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -146,6 +151,7 @@
         "entry_cost_mods": "Phoebus1N50-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -171,6 +177,7 @@
         "entry_cost_mods": "Phoebus2N100-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -196,6 +203,7 @@
         "entry_cost_mods": "RD-0410MID-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     },
@@ -221,6 +229,7 @@
         "entry_cost_mods": "SNTPPFE100-Hydrogen",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidTurbo",
             "Nuclear"
         ]
     }

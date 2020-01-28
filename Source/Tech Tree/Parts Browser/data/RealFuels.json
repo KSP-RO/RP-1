@@ -605,6 +605,27 @@
         ]
     },
     {
+        "name": "RO-RFTank-Integral",
+        "title": "Procedural Tank (Integral Structure)",
+        "description": "Integral structure tanks are also load-bearing and form the entire structure of the tank, so no additional mass is needed to maintain rigidity. Manufacturing them can be difficult, however.",
+        "mod": "RealFuels",
+        "cost": "0",
+        "entry_cost": "10000",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "1956",
+        "technology": "materialsScienceSatellite",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Aluminum, Isogrids",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RO-RFTank-SM",
         "title": "",
         "description": "",
@@ -628,6 +649,27 @@
         "module_tags": [
             "TankServiceModule"
         ]
+    },
+    {
+        "name": "RO-RFTank-Seperate",
+        "title": "Procedural Tank (Separate Structure)",
+        "description": "Separate structure tanks do not have load bearing tanks. This makes them cheaper to produce but they are heavier than other types of tank.\n",
+        "mod": "RealFuels",
+        "cost": "0",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "Fuel Tank",
+        "year": "0",
+        "technology": "unlockParts",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
     },
     {
         "name": "engineLargeSkipper_125m",

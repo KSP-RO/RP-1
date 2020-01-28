@@ -74,12 +74,12 @@ namespace RP0
         }
 
         public float PowerDraw(bool onRails = false) =>
-            part.protoModuleCrew?.Count > 0 || (systemEnabled && !(GetToggleable() && onRails)) ?
+            part.protoModuleCrew?.Count > 0 || (!GetToggleable() || (systemEnabled && !onRails)) ?
             GetEnabledkW() : GetDisabledkW();
 
         protected void UpdateRate(bool onRails = false)
         {
-            currentlyEnabled = systemEnabled && !(GetToggleable() && onRails);
+            currentlyEnabled = !GetToggleable() || (systemEnabled && !onRails);
             float currentKW = PowerDraw(onRails);
             ecConsumption = new KeyValuePair<string, double>(ecName, -currentKW);
             currentWatts = currentKW * 1000;

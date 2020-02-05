@@ -74,12 +74,12 @@ namespace RP0
         }
 
         public float PowerDraw(bool onRails = false) =>
-            part.protoModuleCrew?.Count > 0 || (!GetToggleable() || (systemEnabled && !onRails)) ?
+            part.protoModuleCrew?.Count > 0 || (systemEnabled && !(GetToggleable() && onRails)) ?
             GetEnabledkW() : GetDisabledkW();
 
         protected void UpdateRate(bool onRails = false)
         {
-            currentlyEnabled = !GetToggleable() || (systemEnabled && !onRails);
+            currentlyEnabled = systemEnabled && !(GetToggleable() && onRails);
             float currentKW = PowerDraw(onRails);
             ecConsumption = new KeyValuePair<string, double>(ecName, -currentKW);
             currentWatts = currentKW * 1000;
@@ -105,6 +105,7 @@ namespace RP0
             Events[nameof(ToggleEvent)].guiActive = toggleAble;
             Events[nameof(ToggleEvent)].guiActiveEditor = toggleAble;
             Events[nameof(ToggleEvent)].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
+            Events[nameof(ToggleEvent)].active = toggleAble;
             Actions[nameof(ActivateAction)].active = (!systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
             Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
             Actions[nameof(ToggleAction)].active = toggleAble;
@@ -250,6 +251,11 @@ namespace RP0
             {
                 systemEnabled = true;
                 ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
+            }
+            else if (!GetToggleable())
+            {
+                systemEnabled = true;
+                ScreenMessages.PostScreenMessage("Cannot shut down avionics on this part");
             }
             UpdateRate();
             SetActionsAndGui();

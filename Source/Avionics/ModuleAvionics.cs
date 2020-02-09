@@ -9,7 +9,7 @@ namespace RP0
     class ModuleAvionics : PartModule
     {
         #region Members
-        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N1", guiUnits = "T")]
+        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N2", guiUnits = "T")]
         public float massLimit = float.MaxValue; // default is unlimited
 
         [KSPField]
@@ -105,6 +105,7 @@ namespace RP0
             Events[nameof(ToggleEvent)].guiActive = toggleAble;
             Events[nameof(ToggleEvent)].guiActiveEditor = toggleAble;
             Events[nameof(ToggleEvent)].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
+            Events[nameof(ToggleEvent)].active = toggleAble;
             Actions[nameof(ActivateAction)].active = (!systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
             Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
             Actions[nameof(ToggleAction)].active = toggleAble;
@@ -251,6 +252,11 @@ namespace RP0
                 systemEnabled = true;
                 ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
             }
+            else if (!GetToggleable())
+            {
+                systemEnabled = true;
+                ScreenMessages.PostScreenMessage("Cannot shut down avionics on this part");
+            }
             UpdateRate();
             SetActionsAndGui();
             if (HighLogic.LoadedSceneIsEditor)
@@ -285,7 +291,7 @@ namespace RP0
         public string PlannerUpdate(List<KeyValuePair<string, double>> resources, CelestialBody _, Dictionary<string, double> environment)
         {
             resources.Add(ecConsumption);   // ecConsumption is updated by the Toggle event
-            return "Avionics";
+            return "avionics";
         }
 
         public static string BackgroundUpdate(Vessel v,
@@ -300,13 +306,13 @@ namespace RP0
                 if (module_snapshot.moduleValues.TryGetValue("currentWatts", ref cw))
                     resourceChangeRequest.Add(new KeyValuePair<string, double>(ecName, -cw / 1000));
             }
-            return "Avionics";
+            return "avionics";
         }
 
         public virtual string ResourceUpdate(Dictionary<string, double> availableResources, List<KeyValuePair<string, double>> resourceChangeRequest)
         {
             resourceChangeRequest.Add(ecConsumption);   // ecConsumption is updated by the Toggle event
-            return "Avionics";
+            return "avionics";
         }
 
         #endregion

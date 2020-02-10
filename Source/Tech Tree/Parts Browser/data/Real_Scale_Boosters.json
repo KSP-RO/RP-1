@@ -1550,7 +1550,7 @@
         "spacecraft": "Atlas V (AJ-60A)",
         "engine_config": "AJ60A",
         "upgrade": false,
-        "entry_cost_mods": "AJ60A",
+        "entry_cost_mods": "AJ-60A",
         "identical_part_name": "AJ-60A",
         "module_tags": [
             "EngineSolid"
@@ -1725,7 +1725,7 @@
         "spacecraft": "Ariane 1",
         "engine_config": "HM7",
         "upgrade": false,
-        "entry_cost_mods": "HM7",
+        "entry_cost_mods": "HM-7",
         "identical_part_name": "HM-7",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -2018,7 +2018,7 @@
         "description": "The RS-25, also known as the Space Shuttle Main Engine (SSME), is a LH2/LOX fuel-rich staged combustion engine. Though complex and expensive, these engines provide very high performance and are extremely reliable. Three of these engines powered each Shuttle Orbiter and four will be used on the core stage of the SLS. Diameter: [2.4 m]. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": "5700",
-        "entry_cost": "114000",
+        "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",
         "year": "1981",
@@ -2069,7 +2069,7 @@
         "description": "1990s Medium TWR atmospheric engine. Using technology developed for the Space Shuttle SSME, the RS-68 is a single-use engine, featuring a simplified design with less parts and an easier construction. The RS-68 powers the Delta IV launch vehicle family and is the most powerful LH2/LOX engine ever flown. Exhaust from the gas generator is used for roll control. Diameter: [2.43 m]. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": "2850",
-        "entry_cost": "57000",
+        "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",
         "year": "2002",

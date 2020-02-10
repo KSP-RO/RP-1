@@ -10,7 +10,7 @@ namespace RP0
     public class KCTBinderModule : ScenarioModule
     {
         // FIXME if we change the min build rate, FIX THIS.
-        protected const double BuildRateOffset = -0.05001d;
+        protected const double BuildRateOffset = -0.0001d;
 
         protected double nextTime = -1d;
         protected double checkInterval = 0.5d;
@@ -129,8 +129,9 @@ namespace RP0
                 for (int i = ksc.SPHRates.Count; i-- > 0;)
                     buildRate += Math.Max(0d, ksc.SPHRates[i] + BuildRateOffset);
 
-                if (buildRate > 0.001d)
-                    MaintenanceHandler.Instance.kctBuildRates[ksc.KSCName] = buildRate;
+                if (buildRate < 0.01d) continue;
+
+                MaintenanceHandler.Instance.kctBuildRates[ksc.KSCName] = buildRate;
 
                 for (int i = ksc.LaunchPads.Count; i-- > 0;)
                 {

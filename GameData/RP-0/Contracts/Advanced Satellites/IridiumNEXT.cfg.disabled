@@ -40,7 +40,6 @@ CONTRACT_TYPE
 		name = CompleteContract
 		type = CompleteContract
 		contractType = GeoComSatNetwork
-		title = Complete @contractType Contract
 	}
 	
 	// ************ ORBIT GENERATION ************

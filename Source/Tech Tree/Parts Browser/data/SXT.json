@@ -980,7 +980,7 @@
         "entry_cost_mods": "50000,RTGlevel5",
         "identical_part_name": "GPHS-RTG",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {
@@ -1005,7 +1005,7 @@
         "entry_cost_mods": "50000,RTGlevel5",
         "identical_part_name": "GPHS-RTG",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {

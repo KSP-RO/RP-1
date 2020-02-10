@@ -8,13 +8,13 @@ namespace RP0
         /// Chance to die (%) per 1s interval.
         /// </summary>
         [KSPField]
-        public double crewDeathChance = 0.1d * (1d / 50d);
+        public double crewDeathChance = 0.01;
 
         /// <summary>
         /// Altitude in meters above which the crew can be killed.
         /// </summary>
         [KSPField]
-        public double crewDeathAltitude = 30000;
+        public double crewDeathAltitude = 16000;
 
         public double nextCheck = -1d;
         public double checkInterval = 1d;
@@ -24,6 +24,8 @@ namespace RP0
         protected System.Random rnd;
         protected double pressureAtKillAltitude;
 
+        private static bool? _origDoStockGCalcs;
+
         public override string GetInfo()
         {
             return $"Cockpit is unpressurized and will lead to crew death above {crewDeathAltitude / 1000:0.#}km";
@@ -32,7 +34,7 @@ namespace RP0
         public override void OnAwake()
         {
             base.OnAwake();
-            gDamageAdder = PhysicsGlobals.KerbalGThresholdLOC * (1d / 5d);
+            gDamageAdder = PhysicsGlobals.KerbalGThresholdLOC * 0.04;
             rnd = new System.Random();
         }
 
@@ -49,19 +51,28 @@ namespace RP0
                     if (pressureAtKillAltitude == default)
                     {
                         pressureAtKillAltitude = FlightGlobals.GetHomeBody().GetPressureAtm(crewDeathAltitude);
+                        _origDoStockGCalcs = ProtoCrewMember.doStockGCalcs;
                     }
 
                     nextCheck = UT + checkInterval;
                     if (part.staticPressureAtm < pressureAtKillAltitude)
                     {
-                        ScreenMessages.PostScreenMessage($"Cockpit is above the safe altitude which will lead to crew death", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
+                        ScreenMessages.PostScreenMessage($"Cockpit is above the safe altitude which will lead to crew incapacitation and eventually to death", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
+
+                        if (!_origDoStockGCalcs.HasValue)
+                        {
+                            _origDoStockGCalcs = ProtoCrewMember.doStockGCalcs;
+                        }
+                        ProtoCrewMember.doStockGCalcs = false;
 
                         bool killed = false;
                         for (int i = pC; i-- > 0;)
                         {
                             ProtoCrewMember pcm = part.protoModuleCrew[i];
-                            pcm.gExperienced += (0.5d + rnd.NextDouble()) * gDamageAdder;
-                            if (rnd.NextDouble() < crewDeathChance)
+
+                            double highGPenalty = vessel.geeForce > 3 ? vessel.geeForce : 1;
+                            pcm.gExperienced += (0.5d + rnd.NextDouble()) * gDamageAdder * highGPenalty;
+                            if (pcm.outDueToG && rnd.NextDouble() < crewDeathChance)
                             {
                                 killed = true;
                                 ScreenMessages.PostScreenMessage($"{vessel.vesselName}: Crewmember {pcm.name} has died from exposure to near-vacuum.", 30.0f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
@@ -76,7 +87,23 @@ namespace RP0
                             CameraManager.Instance.SetCameraFlight();
                         }
                     }
+                    else
+                    {
+                        if (_origDoStockGCalcs.HasValue)
+                        {
+                            ProtoCrewMember.doStockGCalcs = _origDoStockGCalcs.Value;
+                            _origDoStockGCalcs = null;
+                        }
+                    }
                 }
+            }
+        }
+
+        protected void OnDestroy()
+        {
+            if (_origDoStockGCalcs.HasValue)
+            {
+                ProtoCrewMember.doStockGCalcs = _origDoStockGCalcs.Value;
             }
         }
     }

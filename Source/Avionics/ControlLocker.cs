@@ -9,6 +9,7 @@ namespace RP0
 {
     class ControlLockerUtils
     {
+        private static PartResourceDefinition electricChargeDef = null;
         public static bool ShouldLock(List<Part> parts, bool countClamps, out float maxMass, out float vesselMass)
         {
             maxMass = vesselMass = 0f;
@@ -19,6 +20,7 @@ namespace RP0
             if (!HighLogic.LoadedSceneIsFlight && !HighLogic.LoadedSceneIsEditor) return false;
 
             int crewCount = (HighLogic.LoadedSceneIsFlight) ? parts[0].vessel.GetCrewCount() : CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
+            electricChargeDef ??= PartResourceLibrary.Instance.GetDefinition("ElectricCharge");
 
             foreach (Part p in parts)
             {
@@ -28,19 +30,21 @@ namespace RP0
                 // get modules
                 bool cmd = false, science = false, avionics = false, clamp = false;
                 float partAvionicsMass = 0f;
+                double ecResource = 0;
                 ModuleCommand mC = null;
                 foreach (PartModule m in p.Modules)
                 {
                     if (m is KerbalEVA)
                         forceUnlock = true;
-
-                    if (m is ModuleCommand)
+                    if (m is ModuleCommand || m is ModuleAvionics)
+                        p.GetConnectedResourceTotals(electricChargeDef.id, out ecResource, out double _);
+                    if (m is ModuleCommand && (ecResource > 0 || HighLogic.LoadedSceneIsEditor))
                     {
                         cmd = true;
                         mC = m as ModuleCommand;
                     }
                     science |= m is ModuleScienceCore;
-                    if (m is ModuleAvionics)
+                    if (m is ModuleAvionics && (ecResource > 0 || HighLogic.LoadedSceneIsEditor))
                     {
                         avionics = true;
                         partAvionicsMass += (m as ModuleAvionics).CurrentMassLimit;
@@ -88,7 +92,7 @@ namespace RP0
         private const double updateFrequency = 1d; // run a check every second, unless staging.
 
         private readonly ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
-        private const string ModTag = "[RP-1 ControlLocker]";
+        internal const string ModTag = "[RP-1 ControlLocker]";
 
         // For locking MJ.
         private static bool isFirstLoad = true;

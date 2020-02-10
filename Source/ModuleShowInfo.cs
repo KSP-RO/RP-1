@@ -128,7 +128,18 @@ namespace RP0
 
     public class ModuleShowInfo : PartModule
     {
-        public static string sModuleName = "Show Info";
+        public const string sModuleName = "Show Info";
+        public const string dragCubeGroup = "Drag Cubes";
+
+        [KSPField(guiName = "X+")] private string XP;
+        [KSPField(guiName = "X-")] private string XN;
+        [KSPField(guiName = "Y+")] private string YP;
+        [KSPField(guiName = "Y-")] private string YN;
+        [KSPField(guiName = "Z+")] private string ZP;
+        [KSPField(guiName = "Z-")] private string ZN;
+
+        private bool showCubeInfo = false;
+
         public override string GetModuleDisplayName() => "Unlock Requirements";
 
         public override string GetInfo()
@@ -143,6 +154,36 @@ namespace RP0
                 APInfo = $"Tech Required: {ap.TechRequired}";
             string res = $"Part name: {part.name}\n{APInfo}\n{data}";
             return res;
+        }
+        private void Update()
+        {
+            if (HighLogic.LoadedSceneIsFlight)
+            {
+                // Coroutine is better, but this is only active during user-enabled debugging
+                if (showCubeInfo != PhysicsGlobals.AeroDataDisplay)
+                {
+                    showCubeInfo = PhysicsGlobals.AeroDataDisplay;
+                    Fields[nameof(XP)].guiActive = showCubeInfo;
+                    Fields[nameof(XN)].guiActive = showCubeInfo;
+                    Fields[nameof(YP)].guiActive = showCubeInfo;
+                    Fields[nameof(YN)].guiActive = showCubeInfo;
+                    Fields[nameof(ZP)].guiActive = showCubeInfo;
+                    Fields[nameof(ZN)].guiActive = showCubeInfo;
+                }
+                if (showCubeInfo) 
+                    BuildCubeData();
+            }
+        }
+
+        private void BuildCubeData()
+        {
+            DragCubeList cubes = part.DragCubes;
+            XP = $"{cubes.WeightedArea[0]:F2} ({cubes.GetCubeAreaDir(DragCubeList.GetFaceDirection(DragCube.DragFace.XP)):F2})";
+            XN = $"{cubes.WeightedArea[1]:F2} ({cubes.GetCubeAreaDir(DragCubeList.GetFaceDirection(DragCube.DragFace.XN)):F2})";
+            YP = $"{cubes.WeightedArea[2]:F2} ({cubes.GetCubeAreaDir(DragCubeList.GetFaceDirection(DragCube.DragFace.YP)):F2})";
+            YN = $"{cubes.WeightedArea[3]:F2} ({cubes.GetCubeAreaDir(DragCubeList.GetFaceDirection(DragCube.DragFace.YN)):F2})";
+            ZP = $"{cubes.WeightedArea[4]:F2} ({cubes.GetCubeAreaDir(DragCubeList.GetFaceDirection(DragCube.DragFace.ZP)):F2})";
+            ZN = $"{cubes.WeightedArea[5]:F2} ({cubes.GetCubeAreaDir(DragCubeList.GetFaceDirection(DragCube.DragFace.ZN)):F2})";
         }
     }
 }

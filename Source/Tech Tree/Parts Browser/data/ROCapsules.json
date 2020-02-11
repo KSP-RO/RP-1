@@ -1,5 +1,26 @@
 [
     {
+        "name": "ROC-AgenaPort",
+        "title": "Gemini Agena Target/Docking Adapter",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "RCS",
+        "info": "Docking",
+        "year": "1965",
+        "technology": "earlyDocking",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Agena",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "9000,dockingProbeDrogue",
+        "identical_part_name": "AgenaPort",
+        "module_tags": []
+    },
+    {
         "name": "ROC-ApolloCM",
         "title": "Apollo Command Module",
         "description": "Apollo Command Module. Contains three astronauts.",

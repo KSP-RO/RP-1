@@ -37,39 +37,40 @@ Discord Link: https://discord.gg/V73jjNd
 - Ven's Stock Revamp (Needed for engines)
 - Kerbal Construction Time (Infrastructure, Build Time, Rollout Costs)
 - DMagic Orbital Science (Science parts)
+- DMModuleScienceAnimateGeneric
 
 **Highly Recommended:**
 - B9 Procedural Wings
 - Connected Living Space
 - Hangar Extender
-- Janitors Closet
 - Kerbal Alarm Clock
-- Kerbal Engineer
 - KRASH
 - KSCSwitcher
-- KSP-AVC
 - MechJeb
 - Procedural Fairings
 - Procedural Parts
 - RCS Build Aid
+- RealAntennas
 - RemoteTech
 - SCANsat
-- Science Alert
 - Science Situation Info (tells you what science parts work where)
-- Stage Recovery
 - Ship Manifest
+- ROKerbalism
 - TAC Life Support
+- TestLite
 - Test Flight
 - Texture Replacer
 - Toolbar
-- WASD Editor
 
 **Suggested Mods**
 - Raidernick's Mods (especially US Probes and Soviet Probes)
 - FASA
+- Janitors Closet
+- Kerbal Engineer Redux
 - Kerbal Renamer
 - kOS
-- Real Engines
+- ROEngines
+- ROCapsules
 - Real Scale Boosters
 - Bluedog Design Bureau
 - Soviet Engine Pack

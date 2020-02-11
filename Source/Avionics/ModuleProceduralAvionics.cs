@@ -143,8 +143,8 @@ namespace RP0.ProceduralAvionics
             var maxControllableMass = GetMaximumControllableMass();
             if (controllableMass > maxControllableMass * FloatTolerance)
             {
-                Log($"Resetting procedural mass limit to {Mathf.Floor(maxControllableMass)}, was {controllableMass}");
-                controllableMass = Mathf.Floor(maxControllableMass);
+                Log($"Resetting procedural mass limit to {maxControllableMass}, was {controllableMass}");
+                controllableMass = maxControllableMass;
                 MonoUtilities.RefreshContextWindows(part);
             }
         }
@@ -296,6 +296,7 @@ namespace RP0.ProceduralAvionics
             controllableMassEdit.incrementLarge = controllableMassEdit.incrementSmall * 10;
             controllableMassEdit.incrementSlide = GetSliderIncrement(controllableMassEdit.maxValue);
             controllableMassEdit.sigFigs = GetSigFigs(controllableMassEdit.maxValue);
+            controllableMassEdit.maxValue = FloorToPrecision(controllableMassEdit.maxValue, controllableMassEdit.incrementSlide);
         }
 
         #region UI Slider Tools
@@ -312,11 +313,7 @@ namespace RP0.ProceduralAvionics
             return Mathf.Ceil(value / smallIncrement) * smallIncrement;
         }
 
-        private float FloorToSliderIncrement(float value)
-        {
-            float sliderIncrement = GetSliderIncrement(value);
-            return Mathf.Floor(value / sliderIncrement) * sliderIncrement;
-        }
+        private float FloorToPrecision(float value, float precision) => Mathf.Floor(value / precision) * precision;
 
         private float GetSliderIncrement(float value)
         {

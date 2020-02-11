@@ -321,6 +321,52 @@
         ]
     },
     {
+        "name": "ROC-GeminiFlightPack",
+        "title": "Gemini Flight Pack",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "5000",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1969",
+        "technology": "prototypeSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Gemini",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ROC-GeminiWing",
+        "identical_part_name": "GeminiFP",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
+        "name": "ROC-GeminiFlightPackContSurf",
+        "title": "Gemini Flight Pack Control Surface",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "500",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1969",
+        "technology": "prototypeSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Gemini",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ROC-GeminiWing",
+        "identical_part_name": "GeminiSpoiler",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
         "name": "ROC-GeminiNoseCap",
         "title": "Gemini Nose Fairing",
         "description": "",
@@ -489,6 +535,52 @@
         "entry_cost_mods": "GeminiSM,rcsMult",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "ROC-GeminiWing",
+        "title": "Gemini Wings",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "5200",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1969",
+        "technology": "prototypeSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Gemini",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "40000,capsulesGemini",
+        "identical_part_name": "GeminiWing",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
+        "name": "ROC-GeminiWingContSurf",
+        "title": "Gemini Wing Control Surface",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "500",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1969",
+        "technology": "prototypeSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Gemini",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ROC-GeminiWing",
+        "identical_part_name": "GeminiContSurface",
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "ROC-LEM-LMDE",

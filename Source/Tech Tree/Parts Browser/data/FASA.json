@@ -5257,7 +5257,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiWing",
         "module_tags": []
     },
     {
@@ -5280,7 +5280,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiContSurface",
         "module_tags": []
     },
     {
@@ -5303,7 +5303,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiFP",
         "module_tags": []
     },
     {
@@ -5326,7 +5326,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiSpoiler",
         "module_tags": []
     }
 ]

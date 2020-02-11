@@ -2,7 +2,7 @@ Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Sp
 
 RP-1 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-1 works with as many additional mods as possible; we use a fresh fully icon rebuilt Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a historical fashion.  Right now a good number of nodes lack much in the way of parts allowing for placement of balanced historically appropriate parts in those nodes. 
 
-RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/tree/Developmental), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/Developmental). 
+RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/issues), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/master). 
 
 When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production. 
 
@@ -23,7 +23,7 @@ This top-post is jointly maintained by pjf and NathanKell and many others.
 
 License: CC-BY-NC-SA-4.0
 
-Release Thread: https://forum.kerbalspaceprogram.com/index.php?/topic/162117-122-realistic-progression-zero-rp-0-lightweight-realismoverhaul-career-v054-june-15/&
+Release Thread: https://forum.kerbalspaceprogram.com/index.php?/topic/190040-161-173-rp-1-realistic-progression-one-v12/
 Github Repo:  https://github.com/KSP-RO/RP-0
 Discord Link: https://discord.gg/V73jjNd
 

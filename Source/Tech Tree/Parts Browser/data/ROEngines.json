@@ -5216,7 +5216,7 @@
         "description": "Americanized version of the V-2 Model 39 (A-4). It was very similar to its predecessor, but was built using American SAE components rather than Metric components, and featured several minor upgrades.",
         "mod": "ROEngines",
         "cost": "125",
-        "entry_cost": "",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "PW",

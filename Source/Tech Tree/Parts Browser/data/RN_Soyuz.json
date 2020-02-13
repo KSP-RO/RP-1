@@ -422,7 +422,7 @@
         "title": "Transport Supply Spacecraft",
         "description": "TKS for use with Salyut stations. Attach VA capsule to aft Plume configured by RealPlume. (Missing entryCost field)",
         "mod": "RN Soyuz",
-        "cost": "",
+        "cost": "0",
         "entry_cost": "1",
         "category": "AVIONICS",
         "info": "Probe",

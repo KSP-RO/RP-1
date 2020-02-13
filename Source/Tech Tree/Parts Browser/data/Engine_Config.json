@@ -2278,7 +2278,7 @@
         "description": "",
         "mod": "Engine_Config",
         "cost": "300",
-        "entry_cost": "",
+        "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",
         "year": "1988",

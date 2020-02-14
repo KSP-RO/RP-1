@@ -17,17 +17,20 @@ namespace RP0.ProceduralAvionics
 
 		#region calls made duirng OnLoad, OnSave, other initialization
 
-		public static void LoadAvionicsConfigs(ConfigNode node)
+		public static void LoadAvionicsConfigs()
 		{
-			allTechNodes = new List<ProceduralAvionicsConfig>();
-			foreach (ConfigNode tNode in node.GetNodes("AVIONICSCONFIG")) {
-				ProceduralAvionicsConfig config = new ProceduralAvionicsConfig();
-				config.Load(tNode);
-				config.InitializeTechNodes();
-				allTechNodes.Add(config);
-				ProceduralAvionicsUtils.Log("Loaded AvionicsConfg: ", config.name);
+			foreach (ConfigNode node in GameDatabase.Instance.GetConfigNodes("AVIONICSCONFIGS"))
+			{
+				allTechNodes = new List<ProceduralAvionicsConfig>();
+				foreach (ConfigNode tNode in node.GetNodes("AVIONICSCONFIG"))
+				{
+					ProceduralAvionicsConfig config = new ProceduralAvionicsConfig();
+					config.Load(tNode);
+					config.InitializeTechNodes();
+					allTechNodes.Add(config);
+					ProceduralAvionicsUtils.Log("Loaded AvionicsConfg: ", config.name);
+				}
 			}
-
 		}
 
 		internal static void SetUnlockedTechState(string param)

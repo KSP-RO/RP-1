@@ -21,11 +21,16 @@ namespace RP0
         protected bool skipTwo = true;
 
         private EventData<RDTech> onKctTechQueuedEvent;
+        private EventData<ProtoTechNode> onKctTechCompletedEvent;
+        private EventData<KCT_UpgradingBuilding> onKctFacilityUpgradeQueuedEvent;
+        private EventData<KCT_UpgradingBuilding> onKctFacilityUpgradeCompletedEvent;
 
         public override void OnAwake()
         {
             base.OnAwake();
 
+            CareerLog.FnGetKCTUpgdCounts = GetKCTUpgradeCounts;
+            CareerLog.FnGetKCTSciPoints = GetSciPointTotalFromKCT;
             KCT_GUI.UseAvailabilityChecker = true;
             KCT_GUI.AvailabilityChecker = CheckCrewForPart;
         }
@@ -36,6 +41,28 @@ namespace RP0
             if (onKctTechQueuedEvent != null)
             {
                 onKctTechQueuedEvent.Add(OnKctTechQueued);
+                Debug.Log($"[RP-0] Bound to OnKctTechQueued");
+            }
+
+            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<ProtoTechNode>>("OnKctTechCompleted");
+            if (onKctTechCompletedEvent != null)
+            {
+                onKctTechCompletedEvent.Add(OnKctTechCompleted);
+                Debug.Log($"[RP-0] Bound to OnKctTechCompleted");
+            }
+
+            onKctFacilityUpgradeQueuedEvent = GameEvents.FindEvent<EventData<KCT_UpgradingBuilding>>("OnKctFacilityUpgradeQueued");
+            if (onKctFacilityUpgradeQueuedEvent != null)
+            {
+                onKctFacilityUpgradeQueuedEvent.Add(OnKctFacilityUpgdQueued);
+                Debug.Log($"[RP-0] Bound to OnKctFacilityUpgradeQueued");
+            }
+
+            onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<KCT_UpgradingBuilding>>("OnKctFacilityUpgradeComplete");
+            if (onKctFacilityUpgradeCompletedEvent != null)
+            {
+                onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
+                Debug.Log($"[RP-0] Bound to OnKctFacilityUpgradeComplete");
             }
 
             StartCoroutine(CreateCoursesRoutine());
@@ -44,6 +71,19 @@ namespace RP0
         public void OnDestroy()
         {
             if (onKctTechQueuedEvent != null) onKctTechQueuedEvent.Remove(OnKctTechQueued);
+            if (onKctTechCompletedEvent != null) onKctTechCompletedEvent.Remove(OnKctTechCompleted);
+            if (onKctFacilityUpgradeQueuedEvent != null) onKctFacilityUpgradeQueuedEvent.Remove(OnKctFacilityUpgdQueued);
+            if (onKctFacilityUpgradeCompletedEvent != null) onKctFacilityUpgradeCompletedEvent.Remove(OnKctFacilityUpgdComplete);
+        }
+
+        public static int GetKCTUpgradeCounts(SpaceCenterFacility facility)
+        {
+            return KCT_Utilities.SpentUpgradesFor(facility);
+        }
+
+        public static float GetSciPointTotalFromKCT()
+        {
+            return KCT_GameStates.SciPointsTotal;
         }
 
         public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)
@@ -148,7 +188,26 @@ namespace RP0
 
         private void OnKctTechQueued(RDTech data)
         {
+            Debug.Log($"[RP-0] OnKctTechQueued");
             CrewHandler.Instance.AddCoursesForTechNode(data);
+        }
+
+        private void OnKctTechCompleted(ProtoTechNode data)
+        {
+            Debug.Log($"[RP-0] OnKctTechCompleted");
+            CareerLog.Instance?.AddTechEvent(data.techID);
+        }
+
+        private void OnKctFacilityUpgdQueued(KCT_UpgradingBuilding data)
+        {
+            Debug.Log($"[RP-0] OnKctFacilityUpgdQueued");
+            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType, data.upgradeLevel, data.cost, ConstructionState.Started);
+        }
+
+        private void OnKctFacilityUpgdComplete(KCT_UpgradingBuilding data)
+        {
+            Debug.Log($"[RP-0] OnKctFacilityUpgdComplete");
+            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType, data.upgradeLevel, data.cost, ConstructionState.Completed);
         }
 
         private IEnumerator CreateCoursesRoutine()

@@ -33,6 +33,15 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CareerLog\CareerEvent.cs" />
+    <Compile Include="CareerLog\CareerEventScope.cs" />
+    <Compile Include="CareerLog\CareerLog.cs" />
+    <Compile Include="CareerLog\CareerLogGUI.cs" />
+    <Compile Include="CareerLog\ContractEvent.cs" />
+    <Compile Include="CareerLog\FacilityConstructionEvent.cs" />
+    <Compile Include="CareerLog\LaunchEvent.cs" />
+    <Compile Include="CareerLog\LogPeriod.cs" />
+    <Compile Include="CareerLog\TechResearchEvent.cs" />
     <Compile Include="Crew\ActiveCourse.cs" />
     <Compile Include="Crew\CourseTemplate.cs" />
     <Compile Include="Crew\CrewHandlerSettings.cs" />
@@ -93,6 +102,7 @@
     <Compile Include="Tooling\ToolingDefinition.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />
+    <Compile Include="Utilities\CSV\CsvWriter.cs" />
     <Compile Include="Utilities\SphericalTankUtilities.cs" />
     <Compile Include="Utilities\KACWrapper.cs" />
     <Compile Include="Utilities\KSPUtils.cs" />

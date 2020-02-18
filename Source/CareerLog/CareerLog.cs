@@ -159,9 +159,9 @@ namespace RP0
 
             foreach (ConfigNode n in node.GetNodes("TECHS"))
             {
-                foreach (ConfigNode tn in n.GetNodes("TECHS"))
+                foreach (ConfigNode tn in n.GetNodes("TECH"))
                 {
-                    //Debug.Log($"[RP-0] CareerLog OnLoad TECHS :: {fn}");
+                    //Debug.Log($"[RP-0] CareerLog OnLoad TECH :: {fn}");
                     var te = new TechResearchEvent(tn);
                     _techEvents.Add(te);
                 }
@@ -241,15 +241,15 @@ namespace RP0
                 p.VABUpgrades.ToString(),
                 p.SPHUpgrades.ToString(),
                 p.RnDUpgrades.ToString(),
-                p.CurrentFunds.ToString(),
-                p.CurrentSci.ToString(),
-                p.ScienceEarned.ToString(),
-                (p.OtherFundsEarned + p.ContractRewards).ToString(),
-                p.LaunchFees.ToString(),
-                p.MaintenanceFees.ToString(),
-                p.ToolingFees.ToString(),
-                p.EntryCosts.ToString(),
-                p.OtherFees.ToString(),
+                p.CurrentFunds.ToString("F0"),
+                p.CurrentSci.ToString("F1"),
+                p.ScienceEarned.ToString("F1"),
+                (p.OtherFundsEarned + p.ContractRewards).ToString("F0"),
+                p.LaunchFees.ToString("F0"),
+                p.MaintenanceFees.ToString("F0"),
+                p.ToolingFees.ToString("F0"),
+                p.EntryCosts.ToString("F0"),
+                p.OtherFees.ToString("F0"),
                 string.Join(", ", _launchedVessels.Where(l => l.UT >= p.StartUT && l.UT < p.EndUT)
                                                   .Select(l => l.VesselName)
                                                   .ToArray()),

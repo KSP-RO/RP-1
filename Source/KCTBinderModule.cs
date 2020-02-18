@@ -83,7 +83,8 @@ namespace RP0
 
         public static float GetSciPointTotalFromKCT()
         {
-            return KCT_GameStates.SciPointsTotal;
+            // KCT returns -1 if the player hasn't earned any sci yet
+            return Math.Max(0, KCT_GameStates.SciPointsTotal);
         }
 
         public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)

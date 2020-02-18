@@ -53,7 +53,7 @@ namespace RP0
         public float MaintenanceCostMult = 1f;
 
         [GameParameters.CustomParameterUI("Enable career progress logging")]
-        public bool CareerLogEnabled = false;
+        public bool CareerLogEnabled = true;
 
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
         public bool avionicsUseKerbalism = true;

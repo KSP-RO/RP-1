@@ -28,7 +28,7 @@
         "description": "The RS-68B is a Delta IV engine modified to meet the requirements of the Ares V.",
         "mod": "Constellation Essentials",
         "cost": "2950",
-        "entry_cost": "57000",
+        "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",
         "year": "2002",

@@ -1,0 +1,23 @@
+[
+    {
+        "name": "RD-253-Mk3",
+        "title": "RD-253-Mk3",
+        "description": "",
+        "mod": "",
+        "cost": "75",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1970",
+        "technology": "stagedCombustion1970",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "RD253",
+        "upgrade": true,
+        "entry_cost_mods": "10000,RD-253-Mk2",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

@@ -86,6 +86,10 @@ namespace RP0.ProceduralAvionics
          UI_FloatRange(scene = UI_Scene.Editor, minValue = .01f, maxValue = .999f, stepIncrement = .001f, suppressEditorShipModified = true)]
         public float targetUtilization = 1;
 
+        private static bool _configsLoaded = false;
+
+        private bool _started = false;
+
         [KSPEvent(active = true, guiActiveEditor = true, guiName = "Resize to Utilization")]
         void SeekVolume()
         {
@@ -143,8 +147,8 @@ namespace RP0.ProceduralAvionics
             var maxControllableMass = GetMaximumControllableMass();
             if (controllableMass > maxControllableMass * FloatTolerance)
             {
-                Log($"Resetting procedural mass limit to {Mathf.Floor(maxControllableMass)}, was {controllableMass}");
-                controllableMass = Mathf.Floor(maxControllableMass);
+                Log($"Resetting procedural mass limit to {maxControllableMass}, was {controllableMass}");
+                controllableMass = maxControllableMass;
                 MonoUtilities.RefreshContextWindows(part);
             }
         }
@@ -190,14 +194,22 @@ namespace RP0.ProceduralAvionics
 
         public override void OnLoad(ConfigNode node)
         {
-            if (HighLogic.LoadedScene == GameScenes.LOADING)
+            if (HighLogic.LoadedScene == GameScenes.LOADING && !_configsLoaded)
             {
-                Log("Loading Avionics Configs");
-                ProceduralAvionicsTechManager.LoadAvionicsConfigs(node);
+                try
+                {
+                    Log("Loading Avionics Configs");
+                    ProceduralAvionicsTechManager.LoadAvionicsConfigs();
+                    _configsLoaded = true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
             }
-        }
 
-        private bool started = false;
+            base.OnLoad(node);
+        }
 
         public override void OnStart(StartState state)
         {
@@ -211,7 +223,7 @@ namespace RP0.ProceduralAvionics
             Fields[nameof(avionicsConfigName)].uiControlEditor.onFieldChanged = AvionicsConfigChanged;
             Fields[nameof(massLimit)].guiActiveEditor = false;
             massLimit = controllableMass;
-            started = true;
+            _started = true;
             if (cachedEventData != null)
                 OnPartVolumeChanged(cachedEventData);
             if (!(GetSeekVolumeMethod(out PartModule _) is System.Reflection.MethodInfo))
@@ -296,6 +308,7 @@ namespace RP0.ProceduralAvionics
             controllableMassEdit.incrementLarge = controllableMassEdit.incrementSmall * 10;
             controllableMassEdit.incrementSlide = GetSliderIncrement(controllableMassEdit.maxValue);
             controllableMassEdit.sigFigs = GetSigFigs(controllableMassEdit.maxValue);
+            controllableMassEdit.maxValue = FloorToPrecision(controllableMassEdit.maxValue, controllableMassEdit.incrementSlide);
         }
 
         #region UI Slider Tools
@@ -312,11 +325,7 @@ namespace RP0.ProceduralAvionics
             return Mathf.Ceil(value / smallIncrement) * smallIncrement;
         }
 
-        private float FloorToSliderIncrement(float value)
-        {
-            float sliderIncrement = GetSliderIncrement(value);
-            return Mathf.Floor(value / sliderIncrement) * sliderIncrement;
-        }
+        private float FloorToPrecision(float value, float precision) => Mathf.Floor(value / precision) * precision;
 
         private float GetSliderIncrement(float value)
         {
@@ -371,7 +380,7 @@ namespace RP0.ProceduralAvionics
             Log($"Avionics Config: {avionicsConfigName}.  Tech: {avionicsTechLevel}");
             SetInternalKSPFields();
             ClampControllableMass();
-            if (started)
+            if (_started)
             {
                 // Don't fire these if cachedVolume isn't known yet.
                 Log("UpdateControllableMassSlider in AvionicsConfigChanged");
@@ -389,7 +398,7 @@ namespace RP0.ProceduralAvionics
         {
             float volume = (float)eventData.Get<double>("newTotalVolume");
             Log($"OnPartVolumeChanged to {volume} from {cachedVolume}");
-            if (!started)
+            if (!_started)
             {
                 Log("Delaying OnPartVolumeChanged until after Start()");
                 cachedEventData = eventData;
@@ -404,7 +413,7 @@ namespace RP0.ProceduralAvionics
 
         private void SendRemainingVolume()
         {
-            if (started && cachedVolume < float.MaxValue)
+            if (_started && cachedVolume < float.MaxValue)
             {
                 Events[nameof(OnPartVolumeChanged)].active = false;
                 InternalTanksVolume = SphericalTankUtilities.GetSphericalTankVolume(GetAvailableVolume());

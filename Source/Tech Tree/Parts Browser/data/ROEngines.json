@@ -3370,6 +3370,29 @@
         ]
     },
     {
+        "name": "ROE-RD0124",
+        "title": "RD-0124",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1200",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "2004",
+        "technology": "stagedCombustion2004",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD0124",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0124",
+        "identical_part_name": "RD-0124",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD0146",
         "title": "RD-0146",
         "description": "",

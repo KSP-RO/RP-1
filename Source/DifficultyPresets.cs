@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using KSP;
 
 namespace RP0
 {
@@ -57,6 +54,10 @@ namespace RP0
 
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
         public bool avionicsUseKerbalism = true;
+
+        // The following values are persisted to the savegame but are not shown in the difficulty settings UI
+        public int CommsPayload = ContractGUI.MinPayload;
+        public int WeatherPayload = ContractGUI.MinPayload;
 
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {

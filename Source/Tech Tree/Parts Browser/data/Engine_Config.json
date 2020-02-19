@@ -5664,7 +5664,7 @@
         "spacecraft": "Soyuz-2, Angara",
         "engine_config": "RD0124",
         "upgrade": false,
-        "entry_cost_mods": "0,RD-0110",
+        "entry_cost_mods": "24000,RD-0110,StagedKerolox",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5687,7 +5687,7 @@
         "spacecraft": "",
         "engine_config": "RD0146",
         "upgrade": false,
-        "entry_cost_mods": "0,HydroloxPumps",
+        "entry_cost_mods": "100000,HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7331,7 +7331,7 @@
         "spacecraft": "",
         "engine_config": "RD8",
         "upgrade": false,
-        "entry_cost_mods": "0,RD-120",
+        "entry_cost_mods": "20000,RD-120",
         "identical_part_name": "",
         "module_tags": []
     },

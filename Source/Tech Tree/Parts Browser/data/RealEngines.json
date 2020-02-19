@@ -502,7 +502,7 @@
         "description": "An upper stage Kerosene/LOX engine designed for new versions of the Soyuz-2 launchers. To also be used with the Angara family of launchers. Diameter: [1.7 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
         "cost": "1200",
-        "entry_cost": "24000",
+        "entry_cost": "0",
         "category": "STAGED",
         "info": "",
         "year": "2004",
@@ -542,7 +542,9 @@
         "upgrade": false,
         "entry_cost_mods": "RD-0124",
         "identical_part_name": "RD-0124",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "RO-RealEngines-RD-0146",
@@ -550,7 +552,7 @@
         "description": "A designed based upon the RL10 series of rocket engines, with a more Russian flavour. Diameter: [1.3 m]. Plume configured by RealPlume.",
         "mod": "RealEngines",
         "cost": "2000",
-        "entry_cost": "40000",
+        "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",
         "year": "2020",
@@ -617,7 +619,8 @@
         "entry_cost_mods": "RD-0212",
         "identical_part_name": "RD-0212",
         "module_tags": [
-            "EngineLiquidTurbo"
+            "EngineLiquidTurbo",
+            "Toxic"
         ]
     },
     {

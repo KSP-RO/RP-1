@@ -1061,7 +1061,7 @@
         "description": "The Titan IVB Solid Rocket Motor Upgrade (SRMU, also know as the Upgraded Solid Rocket Motor or USRM), was developed with the goal of achieving a 25% increase in capacity over the Titan IVA with the UA1207 SRM. It achieved this through the use of a more energetic propellant and a 3-segment composite case that carried more fuel and weighed less than the UA1207's 7-segment steel case. Burn time 150 seconds, 3.2 m diameter. Plume configured by RealPlume.",
         "mod": "KW Rocketry",
         "cost": "7350",
-        "entry_cost": "147000",
+        "entry_cost": "0",
         "category": "SOLID",
         "info": "",
         "year": "1989",

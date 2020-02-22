@@ -30,12 +30,7 @@ CONTRACT_TYPE
     // ************ REWARDS ************
 
     prestige            	= Exceptional // 1.50
-    advanceFunds        	= 2000 * @RP0:globalHardContractMultiplier
-    rewardScience       	= 0
-    rewardReputation    	= 20
-    rewardFunds         	= @advanceFunds * 4
-    failureReputation   	= 40
-    failureFunds        	= @advanceFunds * 1.5
+	genericReward = 24000
 
 
     // ************ DATA BLOCKS ************

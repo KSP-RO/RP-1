@@ -25,12 +25,7 @@ CONTRACT_TYPE
 	targetBody = HomeWorld()
 	
 	prestige = Exceptional   // 1.5x
-	advanceFunds = 125000 * @RP0:globalHardContractMultiplier
-	rewardScience = 0
-	rewardReputation = 35
-	rewardFunds = 200000 * @RP0:globalHardContractMultiplier
-	failureReputation = 60
-	failureFunds = @advanceFunds * 0.5
+	genericReward = 780000
 	
 	
 	// ************ REQUIREMENTS ************

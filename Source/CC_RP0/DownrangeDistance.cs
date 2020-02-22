@@ -1,14 +1,29 @@
 ﻿using ContractConfigurator.Parameters;
-using System;
-using System.Collections.Generic;
+using Contracts;
 using UnityEngine;
 
 namespace ContractConfigurator.RP0
 {
+    public class DownrangeDistanceFactory : ParameterFactory
+    {
+        protected double distance;
+
+        public override bool Load(ConfigNode configNode)
+        {
+            bool valid = base.Load(configNode);
+
+            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "distance", x => distance = x, this, 1, x => Validation.GE(x, 1));
+
+            return valid;
+        }
+
+        public override ContractParameter Generate(Contract contract)
+        {
+            return new DownrangeDistance(title, distance);
+        }
+    }
     public class DownrangeDistance : VesselParameter
     {
-        protected static Dictionary<string, DownrangeDistance> CompletedParams;
-
         protected bool triggered = false;
         protected double distance = 0;
         protected double curDist = 0;
@@ -71,60 +86,10 @@ namespace ContractConfigurator.RP0
             return curDist > distance;
         }
 
-        protected override void AwardCompletion()
-        {
-            base.AwardCompletion();
-
-            Debug.Log("[RP-0] DownrangeDistance AwardCompletion");
-
-            var cc = (ConfiguredContract)Root;
-            if (cc.AutoAccept)
-            {
-                string contractName = ConfiguredContract.contractTypeName(cc);
-                Debug.Log("[RP-0] Contract name: " + contractName);
-
-                GameEvents.onGameSceneSwitchRequested.Add(SceneChangeInProgress);
-
-                if (CompletedParams == null)
-                {
-                    CompletedParams = new Dictionary<string, DownrangeDistance>();
-                }
-
-                if (CompletedParams.ContainsKey(contractName))
-                {
-                    CompletedParams[contractName] = this;
-                }
-                else
-                {
-                    CompletedParams.Add(contractName, this);
-                }
-            }
-        }
-
         protected override void OnRegister()
         {
             base.OnRegister();
             GameEvents.onLaunch.Add(new EventData<EventReport>.OnEvent(OnLaunch));
-
-            try
-            {
-                var cc = (ConfiguredContract)Root;
-                string contractName = ConfiguredContract.contractTypeName(cc);
-
-                if (cc.AutoAccept && CompletedParams != null && CompletedParams.ContainsKey(contractName))
-                {
-                    Debug.Log("[RP-0] Carrying starting point over to new contract...");
-                    DownrangeDistance oldParam = CompletedParams[contractName];
-                    triggered = oldParam.triggered;
-                    curDist = oldParam.curDist;
-                    markLatitude = oldParam.markLatitude;
-                    markLongitude = oldParam.markLongitude;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError("[RP-0] OnRegisterError: " + ex);
-            }
         }
 
         protected override void OnUnregister()
@@ -156,13 +121,6 @@ namespace ContractConfigurator.RP0
                 // Force a call to GetTitle to update the contracts app
                 GetTitle();
             }
-        }
-
-        private void SceneChangeInProgress(GameEvents.FromToAction<GameScenes, GameScenes> evt)
-        {
-            Debug.Log("[RP-0] SceneChangeInProgress");
-            GameEvents.onGameSceneSwitchRequested.Remove(SceneChangeInProgress);
-            CompletedParams = null;
         }
     }
 }

@@ -36,18 +36,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\KSP DLL\1.3.1\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\kspReferences\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\KSP DLL\1.3.1\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\kspReferences\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\KSP DLL\1.3.1\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\kspReferences\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

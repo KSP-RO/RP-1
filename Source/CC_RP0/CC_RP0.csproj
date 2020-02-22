@@ -31,30 +31,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>F:\Kerbal Space Program 1.3.1 RP1\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\kspReferences\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>F:\Kerbal Space Program 1.3.1 RP1\KSP_x64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\kspReferences\Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ContractConfigurator">
-      <HintPath>F:\Kerbal Space Program 1.3.1 RP1\GameData\ContractConfigurator\ContractConfigurator.dll</HintPath>
+      <HintPath>..\..\..\kspReferences\ContractConfigurator.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>F:\Kerbal Space Program 1.3.1 RP1\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\kspReferences\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DownrangeDistanceFactory.cs" />
-    <Compile Include="DownrangeDistanceVesselParam.cs" />
-    <Compile Include="ImpactCBFactory.cs" />
-    <Compile Include="ImpactCBParam.cs" />
+    <Compile Include="AvionicsCheck.cs" />
+    <Compile Include="DownrangeDistance.cs" />
+    <Compile Include="ImpactCB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

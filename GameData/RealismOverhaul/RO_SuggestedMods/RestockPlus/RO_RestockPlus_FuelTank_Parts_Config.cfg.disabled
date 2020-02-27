@@ -1,0 +1,227 @@
+//  ==================================================
+//  Kerbodyne S3-1800 propellant tank.
+//
+//  Dimensions: 3.75 m x 0.95 m
+//  Gross Mass: 525 kg
+//  ==================================================
+
+@PART[restock-fuel-tank-375-4]:FOR[RealismExpansion]
+{
+    %RECompatible = True
+
+    @MODEL
+    {
+        %scale = 1.0, 1.0, 1.0
+    }
+
+    %scale = 1.0
+    %rescaleFactor = 1.0
+
+    @title = Kerbodyne S3-1800 Propellant Tank
+    @description = A non-pressurized general purpose propellant tank.
+
+    @mass = 0.525
+
+    !MODULE[ModuleFuelTanks],*{}
+
+    //  Maximum utilization ~87%.
+
+    MODULE
+    {
+        name = ModuleFuelTanks
+        type = Tank-IV
+        volume = 9150
+    }
+
+    !RESOURCE,*{}
+}
+
+//  ==================================================
+//  Kerbodyne S3-3600 propellant tank.
+//
+//  Dimensions: 3.75 m x 0.95 m
+//  Gross Mass: 1367 kg
+//  ==================================================
+
+@PART[restock-nosecone-375-1]:FOR[RealismExpansion]
+{
+    %RECompatible = True
+
+    @MODEL
+    {
+        %scale = 1.0, 1.0, 1.0
+    }
+
+    %scale = 1.0
+    %rescaleFactor = 1.0
+
+    @title = Kerbodyne S3-3600 Propellant Tank
+    @description = A non-pressurized general purpose propellant tank.
+
+    @mass = 1.367
+
+    !MODULE[ModuleFuelTanks],*{}
+
+    //  Maximum utilization ~87%.
+
+    MODULE
+    {
+        name = ModuleFuelTanks
+        type = Tank-IV
+        volume = 21000
+    }
+
+    !RESOURCE,*{}
+}
+
+//  ==================================================
+//  Oscar-C propellant tank.
+//
+//  Dimensions: 0.625 m x 0.725 m
+//  Gross Mass: 3.6 kg
+//  ==================================================
+
+@PART[restock-fuel-tank-0625-3]:FOR[RealismExpansion]
+{
+    %RECompatible = True
+
+    @MODEL
+    {
+        %scale = 1.0, 1.0, 1.0
+    }
+
+    %scale = 1.0
+    %rescaleFactor = 1.0
+
+    @title = Oscar-C Propellant Tank
+    @description = A non-pressurized general purpose propellant tank.
+
+    @mass = 0.0036
+
+    !MODULE[ModuleFuelTanks],*{}
+
+    //  Maximum utilization ~55%.
+
+    MODULE
+    {
+        name = ModuleFuelTanks
+        type = Tank-III
+        volume = 145
+    }
+
+    !RESOURCE,*{}
+}
+
+//  ==================================================
+//  Oscar-D propellant tank.
+//
+//  Dimensions: 0.625 m x 1.42 m
+//  Gross Mass: 7 kg
+//  ==================================================
+
+@PART[restock-fuel-tank-0625-2]:FOR[RealismExpansion]
+{
+    %RECompatible = True
+
+    @MODEL
+    {
+        %scale = 1.0, 1.0, 1.0
+    }
+
+    %scale = 1.0
+    %rescaleFactor = 1.0
+
+    @title = Oscar-D Propellant Tank
+    @description = A non-pressurized general purpose propellant tank.
+
+    @mass = 0.007
+
+    !MODULE[ModuleFuelTanks],*{}
+
+    //  Maximum utilization ~55%.
+
+    MODULE
+    {
+        name = ModuleFuelTanks
+        type = Tank-III
+        volume = 317
+    }
+
+    !RESOURCE,*{}
+}
+
+//  ==================================================
+//  Oscar-E propellant tank.
+//
+//  Dimensions: 0.625 m x 2.8 m
+//  Gross Mass: 13.75 kg
+//  ==================================================
+
+@PART[restock-fuel-tank-0625-1]:FOR[RealismExpansion]
+{
+    %RECompatible = True
+
+    @MODEL
+    {
+        %scale = 1.0, 1.0, 1.0
+    }
+
+    %scale = 1.0
+    %rescaleFactor = 1.0
+
+    @title = Oscar-E Propellant Tank
+    @description = A non-pressurized general purpose propellant tank.
+
+    @mass = 0.01375
+
+    !MODULE[ModuleFuelTanks],*{}
+
+    //  Maximum utilization ~55%.
+
+    MODULE
+    {
+        name = ModuleFuelTanks
+        type = Tank-III
+        volume = 660
+    }
+
+    !RESOURCE,*{}
+}
+
+//  ==================================================
+//  Stratus-V propellant tank.
+//
+//  Dimensions: 0.35 m x 0.35 m
+//  Gross Mass: 0.45 kg
+//  ==================================================
+
+@PART[restock-fuel-tank-rcs-radial-tiny-1]:FOR[RealismExpansion]
+{
+    %RECompatible = True
+
+    @MODEL
+    {
+        %scale = 1.0, 1.0, 1.0
+    }
+
+    %scale = 1.0
+    %rescaleFactor = 1.0
+
+    @title = Stratus-V Propellant Tank (Pressurized)
+    @description = A highly-pressurized general purpose propellant tank.
+
+    @mass = 0.00045
+
+    !MODULE[ModuleFuelTanks],*{}
+
+    //  Maximum utilization ~86%.
+
+    MODULE
+    {
+        name = ModuleFuelTanks
+        type = Tank-III
+        volume = 19.3
+    }
+
+    !RESOURCE,*{}
+}

@@ -1,0 +1,792 @@
+@PART[nuclearEngineLightbulb]:FOR[RealPlume]:NEEDS[SmokeScreen]	//United Technologies UAGC-156 Nuclear Lightbulb
+{
+
+
+	@MODULE[ModuleEngines*]
+	{
+		@name = ModuleEnginesRF
+		//%runningEffectName = flamethrust
+		!runningEffectName = DELETE
+		%directThrottleEffectName = flamethrust
+	}
+	@MODULE[ModuleEngineConfigs]
+    {
+		%type = ModuleEnginesRF
+    }
+	@MODULE[ModuleHybridEngine]
+    {
+		%type = ModuleEnginesRF
+    }
+	!EFFECTS
+	{
+	}
+	EFFECTS
+	{
+		flamethrust
+		{
+			!MODEL_MULTI_PARTICLE { }
+			
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamethrust
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/flamejet3
+				transformName = thrustTransform
+				emission = 0.0 0.0 0 0
+				emission = 0.001 0.05 0 0
+				
+emission = 1.0 0.05 0 0
+				
+speed = 0.0 25
+				speed = 1.0 25
+				
+energy = 0.0 2
+				energy = 1.0 5
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 -1
+				
+offset = 1.0 -1
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 1
+
+					density = 0.00001 4.0
+					density = 0 4.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 25
+					density = 0.0 -1
+
+				}
+				linGrow
+				{
+					density = 1.2 -4
+
+					density = 0.00001 0.5
+
+					density = 0.0 70
+				
+}
+				energy
+
+				{
+
+					density = 1.2 1
+					density = 0.5 2
+					density = 0.00001 6
+
+					density = 0 4
+				
+}
+				
+speed
+				
+{
+					density = 0.00001 25
+					density = 0.5 20
+					density = 1.2 2
+
+				}
+
+				emission
+
+				{
+
+					density = 0 0.05
+					density = 0.5 0.1
+
+					density = 1.2 2
+
+				}
+				
+size
+				{
+
+					density = 0.5 2
+
+					density = 1.2 0.35
+
+				}
+				offset
+				{
+					density = 0.8 -1
+					density = 1.2 -0.5
+				}
+			}
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamehighaltclosenozzle
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/flamejet3
+				transformName = thrustTransform
+				emission = 0.0 0.0 0 0
+				emission = 0.001 0.05 0 0
+				
+emission = 1.0 0 0 0
+				
+speed = 0.0 25
+				speed = 1.0 25
+				
+energy = 0.0 0.75
+				energy = 1.0 0.75
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 -1
+				
+offset = 1.0 -1
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 1
+
+					density = 0.00001 4.0
+					density = 0 4.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 20
+					density = 0.0 -10
+
+				}
+				linGrow
+				{
+					density = 1.2 -4
+
+					density = 0.00001 0.5
+
+					density = 0.0 70
+				
+}
+				
+speed
+				
+{
+					density = 0.0 20
+					density = 0.00001 25
+					density = 0.5 20
+					density = 1.2 2
+
+				}
+
+				emission
+
+				{
+
+					density = 0.00001 0.3
+					density = 0.5 0
+
+				}
+			}
+			AUDIO
+			{
+				channel = Ship
+				clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_altloop
+				volume = 0.0 0.0
+				volume = 0.001 0.3
+				volume = 1.0 0.4
+				pitch = 0 0.8
+				pitch = 1.0 1.2
+				loop = true
+			}
+		}
+		engage
+		{
+			AUDIO
+			{
+				channel = Ship
+				clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_liq1
+				volume = 0.7
+				pitch = 0.8
+				loop = false
+			}
+		}
+        	disengage
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_vent_soft
+                		volume = 1.0
+                		pitch = 0.9
+                		loop = false
+            		}
+        	}
+        	flameout
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_explosion_low
+                		volume = 1.0
+                		pitch = 0.8
+                		loop = false
+            		}
+        	}
+	}
+
+}
+
+@PART[nuclearEngineLANTR]:FOR[RealPlume]:NEEDS[SmokeScreen]	//Pratt & Whitney TRITON LANTR
+{
+
+
+	@MODULE[ModuleEngines*]
+	{
+		@name = ModuleEnginesRF
+		//%runningEffectName = flamethrust
+		!runningEffectName = DELETE
+		%directThrottleEffectName = flamefar
+	}
+	@MODULE[ModuleEngineConfigs]
+    {
+		%type = ModuleEnginesRF
+    }
+	!EFFECTS
+	{
+	}
+	EFFECTS
+	{
+		flamefar
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamethrust
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/flamejet3
+				transformName = thrustTransform
+				emission = 0.0 0.0 0 0
+				emission = 0.001 0.05 0 0
+				
+emission = 1.0 0.05 0 0
+				
+speed = 0.0 25
+				speed = 1.0 25
+				
+energy = 0.0 2
+				energy = 1.0 5
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 -1
+				
+offset = 1.0 -1
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 1
+
+					density = 0.00001 4.0
+					density = 0 4.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 25
+					density = 0.0 -1
+
+				}
+				linGrow
+				{
+					density = 1.2 -4
+
+					density = 0.00001 0.5
+
+					density = 0.0 70
+				
+}
+				energy
+
+				{
+
+					density = 1.2 1
+					density = 0.5 2
+					density = 0.00001 6
+
+					density = 0 4
+				
+}
+				
+speed
+				
+{
+					density = 0.00001 25
+					density = 0.5 20
+					density = 1.2 2
+
+				}
+
+				emission
+
+				{
+
+					density = 0 0.05
+					density = 0.5 0.1
+
+					density = 1.2 2
+
+				}
+				
+size
+				{
+
+					density = 0.5 2
+
+					density = 1.2 0.35
+
+				}
+				offset
+				{
+					density = 0.8 -1
+					density = 1.2 -0.5
+				}
+			}
+			AUDIO
+			{
+				channel = Ship
+				clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_altloop
+				volume = 0.0 0.0
+				volume = 0.001 0.3
+				volume = 1.0 0.4
+				pitch = 0 0.8
+				pitch = 1.0 1.2
+				loop = true
+			}
+		}
+		engage
+		{
+			AUDIO
+			{
+				channel = Ship
+				clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_liq7
+				volume = 0.7
+				pitch = 0.8
+				loop = false
+			}
+		}
+        	disengage
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_vent_soft
+                		volume = 1.0
+                		pitch = 0.9
+                		loop = false
+            		}
+        	}
+        	flameout
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_explosion_low
+                		volume = 1.0
+                		pitch = 0.8
+                		loop = false
+            		}
+        	}
+		CONFIGflamenearNTR
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamehighaltclosenozzle
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/flamejet3
+				transformName = thrustTransform
+				emission = 0.0 0.0 0 0
+				emission = 0.001 0.05 0 0
+				
+emission = 1.0 0 0 0
+				
+speed = 0.0 25
+				speed = 1.0 25
+				
+energy = 0.0 0.75
+				energy = 1.0 0.75
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 -0.5
+				
+offset = 1.0 -0.5
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 1
+
+					density = 0.00001 4.0
+					density = 0 4.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 20
+					density = 0.0 -10
+
+				}
+				linGrow
+				{
+					density = 1.2 -4
+
+					density = 0.00001 0.5
+
+					density = 0.0 70
+				
+}
+				
+speed
+				
+{
+					density = 0.0 20
+					density = 0.00001 25
+					density = 0.5 20
+					density = 1.2 2
+
+				}
+
+				emission
+
+				{
+
+					density = 0.00001 0.6
+					density = 0.5 0
+
+				}
+			}			
+		}
+		CONFIGflamenearLOXLight
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamehighaltclosenozzle
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/nasa4engine
+				transformName = thrustTransform
+				emission = 0.0 0
+				
+emission = 1.0 0
+				
+speed = 0.0 5
+				speed = 1.0 5
+				
+energy = 0.0 1
+				energy = 1.0 1
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 0
+				
+offset = 1.0 0
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 0.5
+					density = 0.00001 2.0
+					density = 0 2.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 20
+					density = 0.0 -10
+
+				}
+				linGrow
+				{
+					density = 1.2 -2
+					density = 0.00001 0.25
+
+					density = 0.0 35
+				
+}
+				energy
+				{
+					power = 1 0.5
+					power = 0 0.3
+				}
+				
+speed
+				
+{
+					density = 0.0 5
+					density = 0.00001 6.25
+					density = 0.5 5
+					density = 1.2 0.5
+				}
+
+				emission
+				{
+					power = 0 0 0 0
+					power = 0.001 0.25 0 0
+					power = 1 0.25 0 0
+				}
+			}			
+		}
+		CONFIGflamenearLOXMed
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamehighaltclosenozzle
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/nasa4engine
+				transformName = thrustTransform
+				emission = 0.0 0
+				
+emission = 1.0 0
+				
+speed = 0.0 5
+				speed = 1.0 5
+				
+energy = 0.0 1
+				energy = 1.0 1
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 0
+				
+offset = 1.0 0
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 0.5
+					density = 0.00001 2.0
+					density = 0 2.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 20
+					density = 0.0 -10
+
+				}
+				linGrow
+				{
+					density = 1.2 -2
+					density = 0.00001 0.25
+
+					density = 0.0 35
+				
+}
+				energy
+				{
+					power = 1 1
+					power = 0 0.3
+				}
+				
+speed
+				
+{
+					density = 0.0 5
+					density = 0.00001 6.25
+					density = 0.5 5
+					density = 1.2 0.5
+				}
+
+				emission
+				{
+					power = 0 0 0 0
+					power = 0.001 0.25 0 0
+					power = 1 0.25 0 0
+				}
+			}			
+		}
+		CONFIGflamenearLOXHigh
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamehighaltclosenozzle
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/nasa4engine
+				transformName = thrustTransform
+				emission = 0.0 0
+				
+emission = 1.0 0
+				
+speed = 0.0 5
+				speed = 1.0 5
+				
+energy = 0.0 1
+				energy = 1.0 1
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 0
+				
+offset = 1.0 0
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 0.5
+					density = 0.00001 2.0
+					density = 0 2.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 20
+					density = 0.0 -10
+
+				}
+				linGrow
+				{
+					density = 1.2 -2
+					density = 0.00001 0.25
+
+					density = 0.0 35
+				
+}
+				energy
+				{
+					power = 1 1.5
+					power = 0 0.3
+				}
+				
+speed
+				
+{
+					density = 0.0 5
+					density = 0.00001 6.25
+					density = 0.5 5
+					density = 1.2 0.5
+				}
+
+				emission
+				{
+					power = 0 0 0 0
+					power = 0.001 0.25 0 0
+					power = 1 0.25 0 0
+				}
+			}			
+		}
+		CONFIGflamenearLOXVeryHigh
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamehighaltclosenozzle
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/nasa4engine
+				transformName = thrustTransform
+				emission = 0.0 0
+				
+emission = 1.0 0
+				
+speed = 0.0 5
+				speed = 1.0 5
+				
+energy = 0.0 1
+				energy = 1.0 1
+				size = 0.0 2
+				size = 1.0 2
+				scale = 0.0 6.9
+				scale = 1.0 6.9
+				offset = 0.0 0
+				
+offset = 1.0 0
+				
+fixedEmissions = false
+				sizeClamp = 100
+				randomInitalVelocityOffsetMaxRadius = 2
+				
+logGrow
+				{
+					density = 1.2 0.5
+					density = 0.00001 2.0
+					density = 0 2.0
+				}
+				logGrowScale
+				{
+					density = 1.2 -1
+					density = 0.00001 20
+					density = 0.0 -10
+
+				}
+				linGrow
+				{
+					density = 1.2 -2
+					density = 0.00001 0.25
+
+					density = 0.0 35
+				
+}
+				energy
+				{
+					power = 1 2
+					power = 0 0.3
+				}
+				
+speed
+				
+{
+					density = 0.0 5
+					density = 0.00001 6.25
+					density = 0.5 5
+					density = 1.2 0.5
+				}
+
+				emission
+				{
+					power = 0 0 0 0
+					power = 0.001 0.25 0 0
+					power = 1 0.25 0 0
+				}
+			}			
+		}
+	}
+	@MODULE[ModuleHybridEngine]
+	{
+		@CONFIG[*],0
+		{
+			%runningEffectName = CONFIGflamenearNTR
+		}
+		@CONFIG[*],1
+		{
+			%runningEffectName = CONFIGflamenearLOXVeryHigh
+		}
+		@CONFIG[*],2
+		{
+			%runningEffectName = CONFIGflamenearLOXHigh
+		}
+		@CONFIG[*],3
+		{
+			%runningEffectName = CONFIGflamenearLOXMed
+		}
+		@CONFIG[*],4
+		{
+			%runningEffectName = CONFIGflamenearLOXLight
+		}
+	}
+}

@@ -1,0 +1,804 @@
+@PART[RO_RLA_AJ260_HL]:FOR[RealPlume]:NEEDS[SmokeScreen]
+{
+	!EFFECTS {}
+
+	EFFECTS
+	{
+        	powerflame
+        	{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamethrust
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/KWbooster
+				transformName = thrustTransform
+				emission = 0.0 1.75
+				emission = 1.0 1.75
+				speed = 0.0 2.5
+				speed = 1.0 2.5
+				energy = 0.0 2.5 // Same for energy
+				energy = 1.0 2.5 // Same for energy
+				offset = 0.0 2.5  // Move the particle emitter away from its default position by x meters
+				offset = 1.0 2.5  // Move the particle emitter away from its default position by x meters
+				size = 0.0 4 // Rescale the particles to +0%
+				size = 1.0 4 // Rescale the particles to +0%
+				fixedEmissions = false
+				scale = 0 2.167
+				scale = 1 2.167
+				randomInitalVelocityOffsetMaxRadius = 0.5
+				sizeClamp = 250
+				logGrow
+				{
+					density = 1.0 5
+					density = 0.0 5
+				}
+				logGrowScale
+				{
+					density = 1.0 0.0
+					density = 0.8 0.15
+					density = 0.0 45
+				}
+				linGrow
+				{
+					density = 1.0 2.0
+					density = 0.8 2.0
+					density = 0.005 2.0
+					density = 0.0 25
+				}
+				speed
+				{
+					density = 1.0 6
+					density = 0.8 6
+					density = 0.005 90
+					density = 0.0 60
+				}
+				emission
+				{
+					density = 1.0 1.0
+					density = 0.8 1.0
+					density = 0.5 0.6
+					density = 0.0 0.25
+				}
+				energy
+				{
+					density = 1.0 0.9
+					density = 0.005 1.0
+					density = 0.0 0.25
+				}
+				offset
+				{
+					density = 1.0 0
+					density = 0.8 0
+					density = 0.5 -0.5
+					density = 0.0 0.5
+				}
+			}
+            				AUDIO
+					{
+					  channel = Ship
+					  clip = FASA/Sounds/sound_Titan_srb
+					  volume = 0.0 0
+					  volume = 1.0 1.0
+					  pitch = 0.0 0.4 0 0
+					  pitch = 0.7 2 0 0
+					  loop = true
+					}
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flameflare
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/KWbooster
+				transformName = thrustTransform
+				emission = 0.0 1.75
+				emission = 1.0 1.75
+				speed = 0.0 2.2
+				speed = 1.0 2.2
+				offset = 0.0 0.25
+				offset = 1.0 0.25
+				energy = 0.0 0.4 // Same for energy
+				energy = 1.0 0.4 // Same for energy
+				size = 0.0 3.5 // Rescale the particles to +0%
+				size = 1.0 3.5 // Rescale the particles to +0%
+				fixedEmissions = false
+				sizeClamp = 250
+				grow = 0.0 1
+				grow = 1.0 1
+				grow
+				{
+					density = 1.0 0.0
+					density = 0.8 0.0
+					density = 0.0 5.0
+				}
+				scale = 0 2.167
+				scale = 1 2.167
+
+				randomInitalVelocityOffsetMaxRadius = 0.2
+			}
+        	}
+        	powersmoke
+        	{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = smokethrust
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/smokebooster
+				transformName = thrustTransform
+				emission = 0.0 0.0  // Curve for emission like stock
+			        emission = 0.07 0.0  // Curve for emission like stock
+				emission = 0.2 0.4  // Curve for emission like stock
+				emission = 1.0 0.75  // Curve for emission like stock
+				energy = 0.0 0.2 // Same for energy
+				energy = 1.0 3.0 // Same for energy
+				speed = 0.0 1  // And speed
+				speed = 1.0 0.8  // And speed
+				grow = 0.0 0.0 // Grow the particles at 0% per seconds ( 0.02 would be 2% )
+				grow = 1.0 0.05 // Grow the particles at 0% per seconds ( 0.02 would be 2% )
+				scale = 0.0 2.167 // Rescale the emitters to +0%
+				scale = 1.0 2.167 // Rescale the emitters to +0%
+				offset = 0.0 0.0  // Move the particle emitter away from its default position by x meters
+				offset = 1.0 2  // Move the particle emitter away from its default position by x meters
+				size = 0.0 5.5 // Rescale the particles to +0%
+				size = 1.0 5.5 // Rescale the particles to +0%
+
+				renderMode = "Billboard"  // Render mode : Billboard / SortedBillboard / HorizontalBillboard / VerticalBillboard / Stretch
+				collide = false // Collision active or not
+				collideRatio = 0 // how the particles react on collision. 1 is a mirror bounce, 0 is go parallel to the hit surface
+				fixedScale = 1.0 // Fixed rescale of the particle emitter (for when you rescale the model)
+
+				sizeClamp = 450 // Limits particle size. Default to 50
+
+				// ***************
+				// From here the value are not the default anymore.
+				// ***************
+
+
+				angle = 0.0 1.0 // Display if the angle between the emitter transform and camera is lower than 45°
+				angle = 45.0 1.0
+				angle = 50.0 1.0
+				distance = 0.0 1.0 // Display if the distance to camera is higher than 110
+				distance = 100.0 1.0
+				distance = 110.0 1.0
+
+				emission  // Modulate emission from mach and density curve. You can add other section for size, energy, speed, grow, offset and scale
+				{
+					density = 1.0 1.0
+					density = 0.8 1.0 // don't display over .4 atmo
+					density = 0.5 0.15
+					density = 0.002 0.15
+					density = 0.001 0.0 // and stop under .001
+				}
+				offset
+				{
+					density = 1.0 2
+					density = 0.8 2
+					density = 0.1 50
+					density = 0.002 50
+					density = 0.0 20
+				}
+				logGrow
+				{
+					density = 1.0 5
+					density = 0.0 5
+				}
+				logGrowScale
+				{
+					density = 1.0 0.0
+					density = 0.8 0.15
+					density = 0.0 2
+				}
+				linGrow
+				{
+					density = 1.0 0.5
+					density = 0.8 0.5
+					density = 0.005 0.5
+					density = 0.0 5
+				}
+				speed
+				{
+					density = 1.0 1
+					density = 0.8 1
+					density = 0.005 6
+					density = 0.0 4
+				}
+				size
+				{
+					density = 1.0 5.5
+					density = 0.8 5.5
+					density = 0.0 50
+				}
+			}
+        	}
+        	engage
+			{
+				AUDIO
+				{
+				  channel = Ship
+				  clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_srb3
+				  volume = 1.0
+				  pitch = 1.0
+				  loop = false
+				}
+			}
+        	disengage
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_vent_soft
+                		volume = 1.0
+                		pitch = 2.0
+                		loop = false
+            		}
+        	}
+        	flameout
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_explosion_low
+                		volume = 1.0
+                		pitch = 2.0
+                		loop = false
+            		}
+        	}
+    	}
+	@MODULE[ModuleEngines*]
+	{
+		%runningEffectName = powersmoke
+		%directThrottleEffectName = powerflame
+	}
+	@MODULE[ModuleEngineConfigs]
+    {
+		%type = ModuleEnginesRF
+    }
+}
+@PART[RO_RLA_AJ260_FL]:FOR[RealPlume]:NEEDS[SmokeScreen]
+{
+	!EFFECTS {}
+
+	EFFECTS
+	{
+        	powerflame
+        	{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamethrust
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/KWbooster
+				transformName = newThrustTransform
+				emission = 0.0 1.75
+				emission = 1.0 1.75
+				speed = 0.0 2.5
+				speed = 1.0 2.5
+				energy = 0.0 2.5 // Same for energy
+				energy = 1.0 2.5 // Same for energy
+				offset = 0.0 2.5  // Move the particle emitter away from its default position by x meters
+				offset = 1.0 2.5  // Move the particle emitter away from its default position by x meters
+				size = 0.0 4 // Rescale the particles to +0%
+				size = 1.0 4 // Rescale the particles to +0%
+				fixedEmissions = false
+				scale = 0 2.167
+				scale = 1 2.167
+				randomInitalVelocityOffsetMaxRadius = 0.5
+				sizeClamp = 250
+				logGrow
+				{
+					density = 1.0 5
+					density = 0.0 5
+				}
+				logGrowScale
+				{
+					density = 1.0 0.0
+					density = 0.8 0.15
+					density = 0.0 45
+				}
+				linGrow
+				{
+					density = 1.0 2.0
+					density = 0.8 2.0
+					density = 0.005 2.0
+					density = 0.0 25
+				}
+				speed
+				{
+					density = 1.0 6
+					density = 0.8 6
+					density = 0.005 90
+					density = 0.0 60
+				}
+				emission
+				{
+					density = 1.0 1.0
+					density = 0.8 1.0
+					density = 0.5 0.6
+					density = 0.0 0.25
+				}
+				energy
+				{
+					density = 1.0 0.9
+					density = 0.005 1.0
+					density = 0.0 0.25
+				}
+				offset
+				{
+					density = 1.0 0
+					density = 0.8 0
+					density = 0.5 -0.5
+					density = 0.0 0.5
+				}
+			}
+            				AUDIO
+					{
+					  channel = Ship
+					  clip = FASA/Sounds/sound_Titan_srb
+					  volume = 0.0 0
+					  volume = 1.0 1.0
+					  pitch = 0.0 0.4 0 0
+					  pitch = 0.7 2 0 0
+					  loop = true
+					}
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flameflare
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/KWbooster
+				transformName = newThrustTransform
+				emission = 0.0 1.75
+				emission = 1.0 1.75
+				speed = 0.0 2.2
+				speed = 1.0 2.2
+				offset = 0.0 0.25
+				offset = 1.0 0.25
+				energy = 0.0 0.4 // Same for energy
+				energy = 1.0 0.4 // Same for energy
+				size = 0.0 3.5 // Rescale the particles to +0%
+				size = 1.0 3.5 // Rescale the particles to +0%
+				fixedEmissions = false
+				sizeClamp = 250
+				grow = 0.0 1
+				grow = 1.0 1
+				grow
+				{
+					density = 1.0 0.0
+					density = 0.8 0.0
+					density = 0.0 5.0
+				}
+				scale = 0 2.167
+				scale = 1 2.167
+
+				randomInitalVelocityOffsetMaxRadius = 0.2
+			}
+        	}
+        	powersmoke
+        	{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = smokethrust
+				modelName = RealismOverhaul/SmokeScreen_MP_Nazari_FX/smokebooster
+				transformName = newThrustTransform
+				emission = 0.0 0.0  // Curve for emission like stock
+			        emission = 0.07 0.0  // Curve for emission like stock
+				emission = 0.2 0.4  // Curve for emission like stock
+				emission = 1.0 0.75  // Curve for emission like stock
+				energy = 0.0 0.2 // Same for energy
+				energy = 1.0 3.0 // Same for energy
+				speed = 0.0 1  // And speed
+				speed = 1.0 0.8  // And speed
+				grow = 0.0 0.0 // Grow the particles at 0% per seconds ( 0.02 would be 2% )
+				grow = 1.0 0.05 // Grow the particles at 0% per seconds ( 0.02 would be 2% )
+				scale = 0.0 2.167 // Rescale the emitters to +0%
+				scale = 1.0 2.167 // Rescale the emitters to +0%
+				offset = 0.0 0.0  // Move the particle emitter away from its default position by x meters
+				offset = 1.0 2  // Move the particle emitter away from its default position by x meters
+				size = 0.0 5.5 // Rescale the particles to +0%
+				size = 1.0 5.5 // Rescale the particles to +0%
+
+				renderMode = "Billboard"  // Render mode : Billboard / SortedBillboard / HorizontalBillboard / VerticalBillboard / Stretch
+				collide = false // Collision active or not
+				collideRatio = 0 // how the particles react on collision. 1 is a mirror bounce, 0 is go parallel to the hit surface
+				fixedScale = 1.0 // Fixed rescale of the particle emitter (for when you rescale the model)
+
+				sizeClamp = 450 // Limits particle size. Default to 50
+
+				// ***************
+				// From here the value are not the default anymore.
+				// ***************
+
+
+				angle = 0.0 1.0 // Display if the angle between the emitter transform and camera is lower than 45°
+				angle = 45.0 1.0
+				angle = 50.0 1.0
+				distance = 0.0 1.0 // Display if the distance to camera is higher than 110
+				distance = 100.0 1.0
+				distance = 110.0 1.0
+
+				emission  // Modulate emission from mach and density curve. You can add other section for size, energy, speed, grow, offset and scale
+				{
+					density = 1.0 1.0
+					density = 0.8 1.0 // don't display over .4 atmo
+					density = 0.5 0.15
+					density = 0.002 0.15
+					density = 0.001 0.0 // and stop under .001
+				}
+				offset
+				{
+					density = 1.0 2
+					density = 0.8 2
+					density = 0.1 50
+					density = 0.002 50
+					density = 0.0 20
+				}
+				logGrow
+				{
+					density = 1.0 5
+					density = 0.0 5
+				}
+				logGrowScale
+				{
+					density = 1.0 0.0
+					density = 0.8 0.15
+					density = 0.0 2
+				}
+				linGrow
+				{
+					density = 1.0 0.5
+					density = 0.8 0.5
+					density = 0.005 0.5
+					density = 0.0 5
+				}
+				speed
+				{
+					density = 1.0 1
+					density = 0.8 1
+					density = 0.005 6
+					density = 0.0 4
+				}
+				size
+				{
+					density = 1.0 5.5
+					density = 0.8 5.5
+					density = 0.0 50
+				}
+			}
+        	}
+        	engage
+			{
+				AUDIO
+				{
+				  channel = Ship
+				  clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_srb3
+				  volume = 1.0
+				  pitch = 1.0
+				  loop = false
+				}
+			}
+        	disengage
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_vent_soft
+                		volume = 1.0
+                		pitch = 2.0
+                		loop = false
+            		}
+        	}
+        	flameout
+        	{
+            		AUDIO
+            		{
+                		channel = Ship
+                		clip = sound_explosion_low
+                		volume = 1.0
+                		pitch = 2.0
+                		loop = false
+            		}
+        	}
+    	}
+	@MODULE[ModuleEngines*]
+	{
+		%runningEffectName = powersmoke
+		%directThrottleEffectName = powerflame
+	}
+	@MODULE[ModuleEngineConfigs]
+    {
+		%type = ModuleEnginesRF
+    }
+}
+
+@PART[RLA_s_highengine]:FOR[RealPlume]:NEEDS[SmokeScreen]	//RD-253/RD-275
+{
+	!fx_exhaustFlame_blue = DELETE
+	!fx_exhaustFlames_white_tiny = DELETE
+	!fx_exhaustLight_blue = DELETE
+	!fx_smokeTrail_light = DELETE
+	!fx_exhaustSparks_flameout = DELETE
+	!sound_vent_medium = DELETE
+	!sound_rocket_hard = DELETE
+	!sound_vent_soft = DELETE
+	!sound_explosion_low = DELETE
+	@MODULE[ModuleEngines*]
+	{
+		@name = ModuleEnginesRF
+		!directThrottleEffectName = DELETE
+		%runningEffectName = powerflame
+	}
+	@MODULE[ModuleEngineConfigs]
+    {
+		%type = ModuleEnginesRF
+    }
+	EFFECTS
+	{
+		powerflame
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamethrust
+				modelName = RealismOverhaul/SmokeScreen_Ferram_FX/hypergolicexhaust
+				transformName = thrustTransform
+				localPosition = 0,0,0.65
+				fixedScale = 1.3
+				emission = 0.0 1
+				emission = 1.0 1
+				speed = 0.0 1
+				speed = 1.0 1
+				energy = 0.0 1 // Same for energy
+				energy = 1.0 1 // Same for energy
+				offset = 0.0 0
+				offset = 1.0 0
+				size = 0.0 1.3
+				size = 1.0 1.3
+				fixedEmissions = false
+				logGrow
+				{
+				  density = 1.0 10.0
+				  density = 0.0 10.0
+				}
+				logGrowScale
+				{
+					density = 1.0 0
+					density = 0.9 0
+					density = 0 4
+				}
+				linGrow
+				{
+				  density = 1.0 -0.5
+				  density = 0.9 0.0
+				  density = 0.0 0.0
+				}
+				offset
+				{
+				  density = 1.0 -0.2
+				  density = 0.0 -0.1
+				}
+				energy
+				{
+				  density = 1.0 1.0
+				  density = 0.9 1.5
+				  density = 0.0 3
+				}
+				emission
+				{
+				  density = 1.0 1.3
+				  density = 0.9 1
+				  density = 0.0 0.1
+				}
+				speed
+				{
+					density = 1.0 1.0
+					density = 0.9 1.0
+					density = 0 1.5
+				}
+			}
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flameflare
+				modelName = RealismOverhaul/SmokeScreen_Ferram_FX/hypergolicflare
+				transformName = thrustTransform
+				emission = 0.0 1
+				emission = 1.0 1
+				speed = 0.0 1
+				speed = 1.0 1
+				offset = 0.0 0.2
+				offset = 1.0 0.2
+				energy = 0.0 1 // Same for energy
+				energy = 1.0 1 // Same for energy
+				size = 0.0 1 // Rescale the particles to +0%
+				size = 1.0 1 // Rescale the particles to +0%
+				fixedEmissions = false
+				sizeClamp = 250
+			}
+			AUDIO
+			{
+			  channel = Ship
+			  clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_altloop
+			  volume = 0.0 0.0
+			  volume = 1.0 1.0
+			  pitch = 0.0 1.6
+			  pitch = 1.0 1.6
+			  loop = true
+			}
+		}
+		engage
+		{
+			AUDIO
+			{
+			  channel = Ship
+			  clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_liq4
+			  volume = 1.0
+			  pitch = 1.4
+			  loop = false
+			}
+		}
+		disengage
+		{
+			AUDIO
+			{
+				channel = Ship
+				clip = sound_vent_soft
+				volume = 1.0
+				pitch = 2.0
+				loop = false
+			}
+		}
+		flameout
+		{
+			AUDIO
+			{
+				channel = Ship
+				clip = sound_explosion_low
+				volume = 1.0
+				pitch = 2.0
+				loop = false
+			}
+		}
+	}
+}
+@PART[RLA_s_lowengine]:FOR[RealPlume]:NEEDS[SmokeScreen]	//RD-210/RD-213
+{
+	!fx_exhaustFlame_blue = DELETE
+	!fx_exhaustFlames_white_tiny = DELETE
+	!fx_exhaustLight_blue = DELETE
+	!fx_smokeTrail_light = DELETE
+	!fx_exhaustSparks_flameout = DELETE
+	!sound_vent_medium = DELETE
+	!sound_rocket_hard = DELETE
+	!sound_vent_soft = DELETE
+	!sound_explosion_low = DELETE
+	@MODULE[ModuleEngines*]
+	{
+		@name = ModuleEnginesRF
+		%runningEffectName = powerflame
+	}
+	@MODULE[ModuleEngineConfigs]
+    {
+		%type = ModuleEnginesRF
+    }
+	EFFECTS
+	{
+		powerflame
+		{
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flamethrust
+				modelName = RealismOverhaul/SmokeScreen_Ferram_FX/hypergolicexhaust
+				transformName = thrustTransform
+				localPosition = 0,0,0
+				fixedScale = 1.2
+				emission = 0.0 1
+				emission = 1.0 1
+				speed = 0.0 1
+				speed = 1.0 1
+				energy = 0.0 1 // Same for energy
+				energy = 1.0 1 // Same for energy
+				offset = 0.0 0
+				offset = 1.0 0
+				fixedEmissions = false
+				logGrow
+				{
+				  density = 1.0 10.0
+				  density = 0.0 10.0
+				}
+				logGrowScale
+				{
+					density = 1.0 0
+					density = 0.08 0
+					density = 0 4
+				}
+				grow
+				{
+				  density = 1.0 -0.999
+				  density = 0.08 0.0
+				  density = 0.0 0.0
+				}
+				energy
+				{
+				  density = 1.0 0.44
+				  density = 0.08 0.44
+				  density = 0.0 1.7
+				}
+				emission
+				{
+				  density = 1.0 1.2
+				  density = 0.08 1
+				  density = 0.0 0.1
+				}
+				offset
+				{
+				  density = 1.0 0.05
+				  density = 0.08 0.15
+				  density = 0.0 0.15
+				}
+				size
+				{
+				  density = 1.0 1
+				  density = 0.08 1.4
+				  density = 0.0 1.4
+				}
+				speed
+				{
+					density = 1.0 1.4
+					density = 0.9 1.4
+					density = 0 2.1
+				}
+			}
+			MODEL_MULTI_PARTICLE_PERSIST
+			{
+				name = flameflare
+				modelName = RealismOverhaul/SmokeScreen_Ferram_FX/hypergolicflare
+				transformName = thrustTransform
+				fixedsize = 0.7
+				emission = 0.0 1.3
+				emission = 1.0 1.3
+				speed = 0.0 1
+				speed = 1.0 1
+				offset = 0.0 0.15
+				offset = 1.0 0.15
+				energy = 0.0 0.6 // Same for energy
+				energy = 1.0 0.6 // Same for energy
+				size = 0.0 0.4 // Rescale the particles to +0%
+				size = 1.0 0.4 // Rescale the particles to +0%
+				fixedEmissions = false
+				sizeClamp = 250
+			}
+			AUDIO
+			{
+			  channel = Ship
+			  clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_altloop
+			  volume = 0.0 0.0
+			  volume = 1.0 1.0
+			  pitch = 0.0 1.0
+			  pitch = 1.0 1.6
+			  loop = true
+			}
+		}
+		engage
+		{
+			AUDIO
+			{
+			  channel = Ship
+			  clip = RealismOverhaul/SmokeScreen_RE_Sounds/sound_liq5
+			  volume = 1.0
+			  pitch = 1.4
+			  loop = false
+			}
+		}
+		disengage
+		{
+			AUDIO
+			{
+				channel = Ship
+				clip = sound_vent_soft
+				volume = 1.0
+				pitch = 2.0
+				loop = false
+			}
+		}
+		flameout
+		{
+			AUDIO
+			{
+				channel = Ship
+				clip = sound_explosion_low
+				volume = 1.0
+				pitch = 2.0
+				loop = false
+			}
+		}
+	}
+}

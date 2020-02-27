@@ -1,0 +1,78 @@
+// SPACE STATION PROTOTYPES =========================================
+spaceStationPrototypes (1967)
+
+**************************************************************
+2.5m Containers
+ECM => cargoContainers25 = 68200
+
+sspx-cargo-container-25-1		336-8825,cargoContainers25
+sspx-cargo-container-25-2		168-8625,cargoContainers25
+sspx-cargo-container-25-3		 84-8425,cargoContainers25
+**************************************************************
+
+
+
+
+// SPACE STATION DEVELOPMENT ========================================
+spaceStationDev (1970)
+
+**************************************************************
+3.5m Containers
+ECM => cargoContainers375 = 61875,cargoContainers25
+
+sspx-cargo-container-375-1		681-15231,cargoContainers375
+sspx-cargo-container-375-2		340-15031,cargoContainers375
+sspx-cargo-container-375-3		170-14831,cargoContainers375
+
+
+
+
+// EARLY SPACE STATIONS =============================================
+earlySpaceStations (1972)
+
+**************************************************************
+Radial Containers
+ECM => radialCargoContainersSM = 10000,cargoContainers25
+
+sspx-cargo-container-radial-small-1		168-8625,radialCargoContainersSM
+sspx-cargo-container-radial-small-2		 84-8425,radialCargoContainersSM
+sspx-cargo-container-radial-small-3		 42-8225,radialCargoContainersSM
+sspx-cargo-container-radial-medium-1	336-8825,radialCargoContainersSM
+sspx-cargo-container-radial-medium-2	168-8625,radialCargoContainersSM
+sspx-cargo-container-radial-medium-3	 84-8425,radialCargoContainersSM
+
+
+
+
+
+// MODULAR SPACE STATIONS ===========================================
+modularSpaceStations (1986)
+
+**************************************************************
+Radial Containers
+ECM => radialCargoContainersLG = 50000,radialCargoContainersSM,cargoContainers375
+
+sspx-cargo-container-radial-huge-1		1700-12025,radialCargoContainersLG
+sspx-cargo-container-radial-huge-2		850-10025,radialCargoContainersLG
+
+
+// LARGE SCALE ORBITAL CONSTRUCTION =================================
+largeScaleOrbitalConstruction (1998)
+
+**************************************************************
+Habitats
+
+RO-sspx-iss-demo $200m 2011
+
+
+
+
+
+
+// IMPROVED ORBITAL CONSTRUCTION =================================
+improvedOrbitalConstruction (2004)
+
+**************************************************************
+Habitats
+
+sspx-inflatable-centrifuge-125-1 $4B 2011

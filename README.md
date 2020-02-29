@@ -17,7 +17,7 @@
       * https://github.com/nepphhh/KerbalismContracts
 
   3) Install Pre-release (Airlaunch) KCT: 
-      * hhttps://github.com/linuxgurugamer/KCT/releases/download/1.4.7.8/KerbalConstructionTime-1.7.3-1.4.6.19-173.zip
+      * https://github.com/linuxgurugamer/KCT/releases/download/1.4.7.8/KerbalConstructionTime-1.7.3-1.4.6.19-173.zip
 
   4) Update RealismOverhaul (do NOT copy over the MFI folder): 
       * https://github.com/KSP-RO/RealismOverhaul
@@ -26,8 +26,11 @@
       * https://github.com/nepphhh/RP-0      
       
       ***NOTE: Ensure you completely delete and replace the old RP-0 folder! Do not put NQB on top of your old version!***
+      
+  6) Patch a bug: 
+      Go to line 98 in `GameData\RP-0\Contracts\XPlanes\High Altitude Flight.cfg` and change `@maxRateOfClimb` to `-@maxRateOfClimb`.
 
-  6) WARNING!
+  7) WARNING!
       * When you start your career, make sure you disable all contract packs besides RP-1 NQB. This is done from the difficulty settings, and may include the SCANSat and KerbalismContracts contract packs.
 
 ### CHANGELOGS

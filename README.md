@@ -2,9 +2,9 @@
 
 **What is NQB? NQB (Neph's Quarterly Budgets) does three things:**
 
-  1) Replaces funding contract rewards with reputation rewards. More reputation means you earn more money in your budget, which is paid out four times a year.
-  2) Restructures the contract progression to be more historical. This means contract objectives are based off of real rocket contracts and also relative rewards are changed to encourage the player to try more than just the traditionally optimal RP-1 path.
-  3) Relies on Kerbalism to make more interesting long-duration science and communications contracts.
+  1) *Replaces funding contract rewards with reputation rewards.* More reputation means you earn more money in your budget, which is paid out four times a year.
+  2) *Restructures the contract progression to be more historical.* This means contract objectives are based off of real rocket contracts and also relative rewards are changed to encourage the player to try more than just the traditionally optimal RP-1 path.
+  3) *Relies on Kerbalism* to make more interesting long-duration science and communications contracts.
 
 **How to install:**
 

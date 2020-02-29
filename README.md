@@ -19,7 +19,7 @@
   3) Install Pre-release (Airlaunch) KCT: 
       * https://github.com/linuxgurugamer/KCT/releases/download/1.4.7.8/KerbalConstructionTime-1.7.3-1.4.6.19-173.zip
 
-  4) Update RealismOverhaul (do NOT copy over the MFI folder): 
+  4) Update RealismOverhaul: 
       * https://github.com/KSP-RO/RealismOverhaul
 
   5) Install NQB: 

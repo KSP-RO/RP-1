@@ -3,7 +3,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-  <div id="commands"><button onclick="generateConfigs()">Generate Configs</button> &nbsp; <button onclick="addNewPart()">Add New Part</button></div></br>
+  <div id="commands"><button onclick="generateConfigs()">Generate Configs</button> &nbsp; <button onclick="addNewPart()">Add New Part</button> &nbsp; <button onclick="reloadData()">Reload from disk</button></div></br>
   <div id="parts_table"></div>
     <script>
     if (typeof JSON.clone !== "function") {
@@ -103,8 +103,8 @@
                   index: 'mod',
                   title: 'Mod',
                   width: 175,
-                  type: 'combo',
-                  multiSelect: false,
+                  //type: 'combo',
+                  multiSelect: true,
                   itemCheckBox: true,
                   data: {
                     proxy: {
@@ -645,6 +645,16 @@
                 }
             });
         }
+    }
+    
+    function reloadData() {
+        $.get("api/reload_data", function(data) {
+            if (data == "true") {
+                location.reload();
+            } else {
+                alert("Reload failed.");
+            }
+        });
     }
     
     function commitChanges() {

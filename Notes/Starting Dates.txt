@@ -1,0 +1,45 @@
+JANUARY 1, 1955
+===========================================================
+
+STARTING RESOURCES
+---------------------------------------
+Money = 
+	* Enough for 60ton Pad + Usual $20,000 starting funds
+Science = 20 (enough for Blue Sky Nodes)
+Reputation = 
+
+
+BUILDING UPGRADES
+---------------------------------------
+* Tracking Station Level 2
+
+
+TECHNOLOGY
+---------------------------------------
+Starting Parts
+
+Supersonic Plane Development
+Supersonic Flight
+Mature Supersonic Flight
+
+Post-War Rocketry Testing
+Early Rocketry
+Basic Rocketry
+
+Early Solid Rocket Engines
+Basic Solid Rocket Engines
+
+Post-War Materials Science
+Early Materials Science
+
+Early Tracking Systems
+Avionics Prototypes
+Early Science
+
+
+CONTRACTS
+----------------------------------------
+First Launch
+Karman Line
+Reach Suborbital & Return
+Break the Sound Barrier (Crewed)

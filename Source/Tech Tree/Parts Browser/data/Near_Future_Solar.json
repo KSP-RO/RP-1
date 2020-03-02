@@ -4,7 +4,7 @@
         "title": "OKEB-500 Blanket Photovoltaic Array",
         "description": "OKEB offers a new take on solar arrays - really, really big. Their first entry into the market dwarfs even Kerb Kastria Inc.'s Megalador panel. Uses the latest state of the art technology. 420m^2.",
         "mod": "Near Future Solar",
-        "cost": "",
+        "cost": "0",
         "entry_cost": "1140000",
         "category": "POWER",
         "info": "Solar",

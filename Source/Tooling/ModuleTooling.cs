@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Text;
-using KSP;
 using UnityEngine;
 
 namespace RP0
@@ -9,7 +8,7 @@ namespace RP0
     public abstract class ModuleTooling : PartModule, IPartCostModifier
     {
         [KSPField]
-        public string toolingType = "TankStarting";
+        public string toolingType = string.Empty;
 
         [KSPField]
         public string costReducers = string.Empty;
@@ -17,10 +16,8 @@ namespace RP0
         [KSPField]
         public float costReductionMult = 0.5f;
 
-        public List<string> reducers = new List<string>();
-
         [KSPField]
-        public string toolingName = "Tool Tank";
+        public string toolingName = "Tool Part";
 
         [KSPField]
         public float untooledMultiplier = 0.25f;
@@ -40,17 +37,49 @@ namespace RP0
         public float minDiameter = 0f;
 
         protected BaseEvent tEvent;
+        protected List<string> reducerList;
+        protected bool onStartFinished;
+
+        public virtual string ToolingType
+        {
+            get
+            {
+                return toolingType;
+            }
+        }
+
+        public virtual List<string> CostReducers
+        {
+            get
+            {
+                if (reducerList == null)
+                {
+                    if (!string.IsNullOrEmpty(costReducers))
+                    {
+                        var strColl = costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                  .Select(s => s.Trim());
+                        reducerList = new List<string>(strColl);
+                    }
+                    else
+                    {
+                        reducerList = new List<string>(0);
+                    }
+                }
+
+                return reducerList;
+            }
+        }
+
+        public virtual string GetToolingParameterInfo() => "";
 
         [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Item")]
         public virtual void ToolingEvent()
         {
             if (IsUnlocked())
             {
-                tEvent.guiName = "TOOLED";
+                UpdateButtonName();
                 return;
             }
-            else
-                tEvent.guiName = toolingName;
 
             float toolingCost = GetToolingCost();
             bool canAfford = true;
@@ -81,7 +110,7 @@ namespace RP0
                                             Funding.Instance.AddFunds(-toolingCost, TransactionReasons.RnDPartPurchase);
                                             PurchaseTooling();
                                             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
-                                            Events["ToolingEvent"].guiActiveEditor = false;
+                                            UpdateButtonName();
                                         }
                                     }, 140.0f, 30.0f, true),
                                 new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
@@ -90,6 +119,7 @@ namespace RP0
                         HighLogic.UISkin);
         }
 
+        private void UpdateButtonName() => tEvent.guiName = IsUnlocked() ? "Tooled" : toolingName;
         public abstract float GetToolingCost();
 
         public abstract void PurchaseTooling();
@@ -108,24 +138,43 @@ namespace RP0
             base.OnLoad(node);
 
             tEvent = Events["ToolingEvent"];
+        }
 
-            tEvent.guiName = IsUnlocked() ? "TOOLED" : toolingName;
+        public override void OnStart(StartState state)
+        {
+            base.OnStart(state);
+            Debug.Log("[MT] OnStart() Loading part modules");
+            try
+            {
+                LoadPartModules();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+            UpdateButtonName();
+            onStartFinished = true;
+        }
 
-            if (!string.IsNullOrEmpty(costReducers))
-                reducers = new List<string>(costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+        protected virtual void LoadPartModules()
+        {
         }
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER)
+            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER || !onStartFinished)
                 return 0f;
 
+            return GetUntooledPenaltyCost();
+        }
+
+        protected float GetUntooledPenaltyCost()
+        {
+            UpdateButtonName();
             if (IsUnlocked())
             {
-                tEvent.guiName = "TOOLED";
                 return 0f;
             }
-            tEvent.guiName = toolingName;
 
             return GetToolingCost() * untooledMultiplier;
         }
@@ -156,7 +205,7 @@ namespace RP0
             try
             {
                 // Currently all cost reducers are applied correctly when the tooling types are first sorted in alphabetical order
-                toolingColl.Sort((mt1, mt2) => mt1.toolingType.CompareTo(mt2.toolingType));
+                toolingColl.Sort((mt1, mt2) => mt1.ToolingType.CompareTo(mt2.ToolingType));
 
                 //TODO: find the most optimal order to purchase toolings that have diameter and length.
                 //      If there are diameters 2.9; 3 and 3.1 only 3 needs to be purchased and others will fit inside the stretch margin.
@@ -194,7 +243,7 @@ namespace RP0
         /// <returns>True if toolings match</returns>
         public static bool IsSame(ModuleTooling a, ModuleTooling b)
         {
-            if (a.toolingType != b.toolingType) return false;
+            if (a.ToolingType != b.ToolingType) return false;
 
             if (a is ModuleToolingDiamLen || b is ModuleToolingDiamLen)
             {

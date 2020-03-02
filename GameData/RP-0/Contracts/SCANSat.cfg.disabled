@@ -1,0 +1,87 @@
+@CONTRACT_GROUP[ScanSatOfficial]
+{
+	@maxSimultaneous = 18
+}
+
+@CONTRACT_TYPE[SCAN_*LoRes]:FOR[RP-0]
+{
+	%maxSimultaneous = 5
+	
+	@deadline = 365 * @/targetBody1.Multiplier() // 1 year * mult
+	
+	@advanceFunds = (Random(1000, 3000.0) + 5000.0 * (@/targetBody1.Multiplier() / 2)) * 2.4
+	@rewardFunds = @advanceFunds
+	@failureFunds = @advanceFunds * 0.5
+	
+	@rewardReputation = 3 + @/targetBody1.Multiplier()*3
+	@failureReputation = @rewardReputation * 1.5
+	
+	prestige = Exceptional // add the flyby case too
+	
+	@DATA,0
+	{
+		@targetBody1 = Prestige() == Significant ? @ScanSatOfficial:p2Bodies.Random() : Prestige() == Trivial ? @ScanSatOfficial:p1Bodies.Random() : @ScanSatOfficial:p3Bodies.Random()
+	}
+	@DATA,1
+	{
+		@diffModifier1 = Prestige() == Trivial ? 0 : Prestige() == Significant ? 10 : 20
+	}
+}
+
+@CONTRACT_TYPE[SCAN_*HiRes]:FOR[RP-0]
+{
+	%maxSimultaneous = 5
+	
+	@deadline = 365 * @/targetBody3.Multiplier() // 1 year * mult
+	
+	@advanceFunds = (Random(5000, 10000.0) + 10000.0 * (@/targetBody3.Multiplier() / 2)) * 2.4
+	@rewardFunds = @advanceFunds
+	@failureFunds = @advanceFunds * 0.5
+	
+	@rewardReputation = 5 + @/targetBody3.Multiplier()*5
+	@failureReputation = @rewardReputation * 1.5
+	
+	prestige = Trivial // add the local case too
+	
+	@DATA,0
+	{
+		@targetBody3 = Prestige() == Significant ? @ScanSatOfficial:p2Bodies.Random() : Prestige() == Trivial ? @ScanSatOfficial:p1Bodies.Random() : @ScanSatOfficial:p3Bodies.Random()
+	}
+	@DATA,1
+	{
+		@diffModifier3 = 10
+	}
+}
+
+@CONTRACT_TYPE[SCAN_*Biome]:FOR[RP-0]
+{
+	%maxSimultaneous = 5
+	
+	@deadline = 365 * @/targetBody2.Multiplier() // 1 year * mult
+	
+	@advanceFunds = (Random(5000, 10000.0) + 10000.0 * (@/targetBody2.Multiplier() / 2)) * 2.4
+	@rewardFunds = @advanceFunds
+	@failureFunds = @advanceFunds * 0.5
+	
+	@rewardReputation = 5 + @/targetBody2.Multiplier()*5
+	@failureReputation = @rewardReputation * 1.5
+	
+	prestige = Exceptional // add the flyby case too
+	
+	@DATA,0
+	{
+		@targetBody2 = Prestige() == Significant ? @ScanSatOfficial:p2Bodies.Random() : Prestige() == Trivial ? @ScanSatOfficial:p1Bodies.Random() : @ScanSatOfficial:p3Bodies.Random()
+	}
+	@DATA,1
+	{
+		@diffModifier2 = Prestige() == Trivial ? 0 : Prestige() == Significant ? 10 : 20
+	}
+}
+
+!CONTRACT_TYPE[SCAN_*M700]:FOR[RP-0]
+{
+}
+
+!CONTRACT_TYPE[SCAN_*NarrowBand]:FOR[RP-0]
+{
+}

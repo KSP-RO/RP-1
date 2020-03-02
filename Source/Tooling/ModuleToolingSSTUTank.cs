@@ -6,24 +6,15 @@ using UnityEngine;
 
 namespace RP0
 {
-    class ModuleToolingSSTUTank : ModuleToolingDiamLen
+    public class ModuleToolingSSTUTank : ModuleToolingDiamLen
     {
         protected PartModule SSTUTank;
 
-        public override void OnAwake()
+        protected override void LoadPartModules()
         {
-            base.OnAwake();
-            // ******* 1.4+ SSTUTank = part.Modules["SSTUModularPart"];
+            base.LoadPartModules();
             SSTUTank = part.Modules["SSTUModularFuelTank"];
         }
-        /* Removing as I believe it is causing a lot of slowdowns and log spam
-        public override void OnLoad(ConfigNode node)
-        {
-            base.OnLoad(node);
-            // ******* 1.4+ SSTUTank = part.Modules["SSTUModularPart"];
-            SSTUTank = part.Modules["SSTUModularFuelTank"];
-        }
-        */
 
         public override void GetDimensions(out float diameter, out float length)
         {
@@ -32,7 +23,7 @@ namespace RP0
 
             if (SSTUTank == null)
             {
-                Debug.LogError("[ModuleTooling]: Could not find SSTU part to bind to");
+                Debug.LogError("[ModuleTooling] Could not find SSTU part to bind to");
                 return;
             }
 
@@ -40,7 +31,7 @@ namespace RP0
             // ******* 1.4+ diam1 = SSTUTank.Fields["currentDiameter"];
             diameter = SSTUTank.Fields["currentTankDiameter"].GetValue<float>(SSTUTank);
             length = diameter * GetLengthMultiplier();
-            // Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Size: Diameter = {diam}, Length = {len}");
+            // Debug.Log($"[ModuleTooling] SSTU Tank Size: Diameter = {diam}, Length = {len}");
         }
 
         private float GetLengthMultiplier()
@@ -48,7 +39,7 @@ namespace RP0
             // Get core size from part field and convert to String
             // ******* 1.4+ string coreStr = SSTUTank.Fields["currentCore"].GetValue<string>(SSTUTank);
             string coreStr = SSTUTank.Fields["currentTankType"].GetValue<string>(SSTUTank);
-            // Debug.Log($"[RP1-ModuleTooling]: SSTU Tank Core: {coreStr}");
+            // Debug.Log($"[ModuleTooling] SSTU Tank Core: {coreStr}");
 
             string noseType = SSTUTank.Fields["currentNoseType"].GetValue<string>(SSTUTank);
             string mountType = SSTUTank.Fields["currentMountType"].GetValue<string>(SSTUTank);
@@ -72,7 +63,7 @@ namespace RP0
                 return GetBoosterBaseLengthMultiplier(coreStr);
             }
 
-            Debug.LogError("[ModuleTooling]: Unknown Tank: " + coreStr);
+            Debug.LogError("[ModuleTooling] Unknown Tank: " + coreStr);
             return 0;
         }
 

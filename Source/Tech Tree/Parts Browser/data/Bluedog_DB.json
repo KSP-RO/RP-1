@@ -520,6 +520,31 @@
         "module_tags": []
     },
     {
+        "name": "bluedog_Atlas_LR101_Inline",
+        "title": "LR101 Series",
+        "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MA-x system (2x LR89 + LR105 + 2x LR101) on Atlas, and MB-x system (LR79 or RS-27 + 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
+        "mod": "Bluedog DB",
+        "cost": "15",
+        "entry_cost": "1000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Atlas",
+        "engine_config": "LR101",
+        "upgrade": false,
+        "entry_cost_mods": "LR101-NA-3",
+        "identical_part_name": "LR101",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "bluedog_Atlas_LR101_Radial",
         "title": "LR101 Series",
         "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MA-x system (2x LR89 + LR105 + 2x LR101) on Atlas, and MB-x system (LR79 or RS-27 + 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
@@ -810,12 +835,12 @@
         "title": "Centaur 3-Way Large RCS Block (69/111 N Class)",
         "description": "Three way RCS block for the Centaur stages. Place one on each of the mounting blocks on either side of the engine mount.",
         "mod": "Bluedog DB",
-        "cost": "15",
-        "entry_cost": "1000",
+        "cost": 16,
+        "entry_cost": 1,
         "category": "RCS",
-        "info": "",
-        "year": "1963",
-        "technology": "improvedFlightControl",
+        "info": "RCS",
+        "year": "0",
+        "technology": "unlockParts",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -824,9 +849,11 @@
         "spacecraft": "Centaur",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "bluedog_Centaur_RL10",
@@ -911,12 +938,12 @@
         "title": "Centaur 3-Way RCS Block (69/111 N Class)",
         "description": "Three way RCS block for the Centaur stages. Place one on each of the mounting blocks on either side of the engine mount.",
         "mod": "Bluedog DB",
-        "cost": "20",
-        "entry_cost": "1000",
+        "cost": 16,
+        "entry_cost": 1,
         "category": "RCS",
-        "info": "",
-        "year": "1963",
-        "technology": "improvedFlightControl",
+        "info": "RCS",
+        "year": "0",
+        "technology": "unlockParts",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -925,9 +952,11 @@
         "spacecraft": "Centaur",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "bluedog_Centaur_Tank",
@@ -971,7 +1000,7 @@
         "spacecraft": "Saturn I (H-1)",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1233,7 +1262,7 @@
         "title": "Explorer 1 Probe",
         "description": "Explorer 1, the first satellite launched by the United States, was a very simple scientific probe of less than a dozen kilograms. It featured a cosmic ray detector and micrometeorite detectors, as well as temperature sensors. Mercury batteries provided a month of electricity for the high power transmitter and another two and a half months for the low-power transmitter.",
         "mod": "Bluedog DB",
-        "cost": "158",
+        "cost": "60",
         "entry_cost": "3160",
         "category": "AVIONICS",
         "info": "Probe",
@@ -1298,7 +1327,7 @@
         "spacecraft": "Saturn I (H-1)",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1323,7 +1352,7 @@
         "spacecraft": "Saturn I (H-1)",
         "engine_config": "H1",
         "upgrade": false,
-        "entry_cost_mods": "H-1-SaturnI",
+        "entry_cost_mods": "H-1-165K",
         "identical_part_name": "H-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1348,7 +1377,7 @@
         "spacecraft": "Saturn V (J-2)",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "J-2-200klbf",
+        "entry_cost_mods": "J-2-200K",
         "identical_part_name": "J-2",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -1966,8 +1995,8 @@
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
-        "year": "1959",
-        "technology": "orbitalRocketry1959",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
         "era": "02-SAT",
         "ro": true,
         "rp0": true,
@@ -2405,9 +2434,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Castor-1",
-        "engine_config": "Castor-1",
+        "engine_config": "XM-20",
         "upgrade": false,
-        "entry_cost_mods": "Castor-1",
+        "entry_cost_mods": "XM-20",
         "identical_part_name": "Castor 1",
         "module_tags": [
             "EngineSolid"

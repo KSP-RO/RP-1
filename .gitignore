@@ -12,6 +12,7 @@ GameData/RP-0/RP-0.version
 .vs/
 RP0.userprefs
 RealSolarSystem/Plugins/PluginData/
+GameData/RP-0/Pap_FINAL.cfg
 
 # Build results
 
@@ -159,3 +160,7 @@ $RECYCLE.BIN/
 
 # KSP RP-0 Tree.cfg
 GameData/RP-0/Tree.cfg
+
+Notes/Engine Stats\.xlsx
+
+Notes/Contracts/CBmultipliersAndPayoutsCalculator\.xlsx

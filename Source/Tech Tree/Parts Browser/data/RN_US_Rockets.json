@@ -242,12 +242,12 @@
         "title": "2.5KS-18000",
         "description": "Aerobee model 100/150/300 solid rocket motor. Used as the first stage on these vehicles. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
-        "cost": "36",
-        "entry_cost": "720",
+        "cost": "40",
+        "entry_cost": "800",
         "category": "SOLID",
         "info": "FS SRB",
-        "year": "1959",
-        "technology": "solids1959",
+        "year": "1950",
+        "technology": "earlySolids",
         "era": "02-SAT",
         "ro": true,
         "rp0": true,
@@ -903,7 +903,7 @@
         "spacecraft": "Baby Sergeant",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x11",
         "module_tags": [
             "EngineSolid"
@@ -951,7 +951,7 @@
         "spacecraft": "Baby Sergeant",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "JPL-532A",
+        "entry_cost_mods": "T17-E2",
         "identical_part_name": "Baby Sergeant x3",
         "module_tags": [
             "EngineSolid"
@@ -1300,7 +1300,7 @@
         "title": "Scout Jet Vane",
         "description": "Jet vane for scout first stage. Place 4 around main SRB exhaust.",
         "mod": "RN US Rockets",
-        "cost": "",
+        "cost": "0",
         "entry_cost": "2800",
         "category": "SOLID",
         "info": "Thrust Vane",
@@ -1994,9 +1994,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Castor 1",
-        "engine_config": "Castor-1",
+        "engine_config": "XM-20",
         "upgrade": false,
-        "entry_cost_mods": "Castor-1",
+        "entry_cost_mods": "XM-20",
         "identical_part_name": "Castor 1",
         "module_tags": [
             "EngineSolid"

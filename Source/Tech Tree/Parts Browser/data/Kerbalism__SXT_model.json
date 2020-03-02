@@ -1,0 +1,27 @@
+[
+    {
+        "name": "BioCapsule",
+        "title": "Advanced Biological Capsule",
+        "description": "A capsule containing a monkey, or a small dog. Returning the sample is crucial for scientific and ethical reasons.",
+        "mod": "Kerbalism (SXT model)",
+        "cost": "250",
+        "entry_cost": "1000",
+        "category": "SCIENCE",
+        "info": "Bio Sample",
+        "year": "1955",
+        "technology": "earlyScience",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    }
+]

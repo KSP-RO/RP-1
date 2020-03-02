@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using System.Reflection;
+using UnityEngine;
+using KSP.UI.Screens;
 
 namespace RP0.Crew
 {
@@ -124,7 +126,7 @@ namespace RP0.Crew
         protected HashSet<string> partSynsHandled = new HashSet<string>();
         protected TrainingDatabase trainingDatabase = new TrainingDatabase();
 
-        public FSGUI fsGUI = new FSGUI();
+        public FSGUI fsGUI;
 
         #region Instance
 
@@ -145,14 +147,13 @@ namespace RP0.Crew
 
         public override void OnAwake()
         {
-
             if (_instance != null)
             {
                 GameObject.Destroy(_instance);
             }
             _instance = this;
 
-            GameEvents.OnVesselRecoveryRequested.Add(VesselRecoveryRequested);
+            GameEvents.onVesselRecoveryProcessing.Add(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Add(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
@@ -164,6 +165,11 @@ namespace RP0.Crew
             
             FindAllCourseConfigs(); //find all applicable configs
             GenerateOfferedCourses(); //turn the configs into offered courses
+        }
+
+        public void Start()
+        {
+            fsGUI = new FSGUI();
         }
 
         public override void OnLoad(ConfigNode node)
@@ -263,6 +269,11 @@ namespace RP0.Crew
                 {
                     if ((pcm.rosterStatus == ProtoCrewMember.RosterStatus.Assigned || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available) && !kerbalRetireTimes.ContainsKey(pcm.name))
                     {
+                        if (pcm.trait != KerbalRoster.pilotTrait)
+                        {
+                            KerbalRoster.SetExperienceTrait(pcm, KerbalRoster.pilotTrait);
+                        }
+
                         newHires.Add(pcm.name);
                         OnCrewHired(pcm, int.MinValue);
                     }
@@ -278,7 +289,7 @@ namespace RP0.Crew
                                                         "InitialRetirementDateNotification",
                                                         "Initial Retirement Date",
                                                         msgStr
-                                                        + "\n(Retirement will be delayed the more intersting flights they fly.)",
+                                                        + "\n(Retirement will be delayed the more interesting flights they fly.)",
                                                         "OK",
                                                         false,
                                                         HighLogic.UISkin);
@@ -326,12 +337,14 @@ namespace RP0.Crew
                     }
                 }
 
+                bool anyCourseEnded = false;
                 for (int i = ActiveCourses.Count; i-- > 0;)
                 {
                     ActiveCourse course = ActiveCourses[i];
                     if (course.ProgressTime(time)) //returns true when the course completes
                     {
                         ActiveCourses.RemoveAt(i);
+                        anyCourseEnded = true;
                     }
                 }
 
@@ -373,8 +386,10 @@ namespace RP0.Crew
                     foreach (string s in toRemove)
                     {
                         kerbalRetireTimes.Remove(s);
-                        if (HighLogic.CurrentGame.CrewRoster[s] != null)
-                            msgStr += "\n" + s;
+                        if (HighLogic.CurrentGame.CrewRoster[s] != null && retirees.Contains(s))
+                        {
+                            msgStr = $"{msgStr}\n{s}";
+                        }
                     }
                     if (!string.IsNullOrEmpty(msgStr))
                     {
@@ -390,6 +405,11 @@ namespace RP0.Crew
                     }
 
                     toRemove.Clear();
+                }
+
+                if (anyCourseEnded || toRemove.Count > 0)
+                {
+                    MaintenanceHandler.Instance?.UpdateUpkeep();
                 }
             }
 
@@ -477,7 +497,7 @@ namespace RP0.Crew
 
         public void OnDestroy()
         {
-            GameEvents.OnVesselRecoveryRequested.Remove(VesselRecoveryRequested);
+            GameEvents.onVesselRecoveryProcessing.Remove(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Remove(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Remove(ACDespawn);
@@ -549,20 +569,35 @@ namespace RP0.Crew
             retirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
         }
 
-        protected void VesselRecoveryRequested(Vessel v)
+        private void VesselRecoveryProcessing(ProtoVessel v, MissionRecoveryDialog mrDialog, float data)
         {
-            double elapsedTime = v.missionTime;
+            Debug.Log("[VR] - Vessel recovery processing");
+
             List<string> retirementChanges = new List<string>();
             List<string> inactivity = new List<string>();
 
             double UT = Planetarium.GetUniversalTime();
 
+            // normally we would use v.missionTime, but that doesn't seem to update
+            // when you're not actually controlling the vessel
+            double elapsedTime = UT - v.launchTime;
+
+            Debug.Log("[VR] mission elapsedTime: " + KSPUtil.PrintDateDeltaCompact(elapsedTime, true, true));
+
             // When flight duration was too short, mission training should not be set as expired.
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
-            if (elapsedTime < settings.minFlightDurationSecondsForTrainingExpire) return;
+            // We could perhaps override this if they're not actually in flight
+            // (if the user didn't recover right from the pad I think this is a fair assumption)
+            if (elapsedTime < settings.minFlightDurationSecondsForTrainingExpire)
+            {
+                Debug.Log("[VR] - mission time too short for crew to be inactive (elapsed time was " + elapsedTime + ", settings set for " + settings.minFlightDurationSecondsForTrainingExpire + ")");
+                return;
+            }
 
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
+                Debug.Log("[VR] - Found ProtoCrewMember: " + pcm.displayName);
+
                 bool hasSpace = false;
                 bool hasOrbit = false;
                 bool hasEVA = false;
@@ -571,17 +606,23 @@ namespace RP0.Crew
                 bool hasOrbitOther = false;
                 bool hasLandOther = false;
                 int curFlight = pcm.careerLog.Last().flight;
+                int numFlightsDone = pcm.careerLog.Entries.Count(e => e.type == "Recover");
                 foreach (FlightLog.Entry e in pcm.careerLog.Entries)
                 {
                     if (e.type == "TRAINING_mission")
                         SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
 
-                    if (e.flight != curFlight)
+                    if (e.flight != curFlight || e.type == "Nationality")
                         continue;
+
+                    Debug.Log($"[VR]  processing flight entry: {e.type}; {e.target}");
 
                     bool isOther = false;
                     if (!string.IsNullOrEmpty(e.target) && e.target != Planetarium.fetch.Home.name)
+                    {
+                        Debug.Log($"[VR]    flight is beyond Earth");
                         isOther = hasOther = true;
+                    }
 
                     if (!string.IsNullOrEmpty(e.type))
                     {
@@ -617,45 +658,60 @@ namespace RP0.Crew
                 {
                     multiplier += settings.recSpace.x;
                     constant += settings.recSpace.y;
+                    Debug.Log($"[VR]  has space, mult {settings.recSpace.x}; constant {settings.recSpace.y}");
                 }
                 if (hasOrbit)
                 {
                     multiplier += settings.recOrbit.x;
                     constant += settings.recOrbit.y;
+                    Debug.Log($"[VR]  has orbit, mult {settings.recOrbit.x}; constant {settings.recOrbit.y}");
                 }
                 if (hasOther)
                 {
                     multiplier += settings.recOtherBody.x;
                     constant += settings.recOtherBody.y;
+                    Debug.Log($"[VR]  has other body, mult {settings.recOtherBody.x}; constant {settings.recOtherBody.y}");
                 }
-                if (hasEVA)
+                if (hasOrbit && hasEVA)    // EVA should only count while in orbit, not when walking on Earth
                 {
                     multiplier += settings.recEVA.x;
                     constant += settings.recEVA.y;
+                    Debug.Log($"[VR]  has EVA, mult {settings.recEVA.x}; constant {settings.recEVA.y}");
                 }
                 if (hasEVAOther)
                 {
                     multiplier += settings.recEVAOther.x;
                     constant += settings.recEVAOther.y;
+                    Debug.Log($"[VR]  has EVA at another body, mult {settings.recEVAOther.x}; constant {settings.recEVAOther.y}");
                 }
                 if (hasOrbitOther)
                 {
                     multiplier += settings.recOrbitOther.x;
                     constant += settings.recOrbitOther.y;
+                    Debug.Log($"[VR]  has orbit around another body, mult {settings.recOrbitOther.x}; constant {settings.recOrbitOther.y}");
                 }
                 if (hasLandOther)
                 {
                     multiplier += settings.recLandOther.x;
                     constant += settings.recLandOther.y;
+                    Debug.Log($"[VR]  has landed on another body, mult {settings.recLandOther.x}; constant {settings.recLandOther.y}");
                 }
+
+                Debug.Log("[VR]  multiplier: " + multiplier);
+                Debug.Log("[VR]  AC multiplier: " + (ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1d));
+                Debug.Log("[VR]  constant: " + constant);
 
                 double retTime;
                 if (kerbalRetireTimes.TryGetValue(pcm.name, out retTime))
                 {
-                    double offset = constant * 86400d * settings.retireOffsetBaseMult / (1 + Math.Pow(Math.Max(curFlight + settings.retireOffsetFlightNumOffset, 0d), settings.retireOffsetFlightNumPow)
+                    double offset = constant * 86400d * settings.retireOffsetBaseMult / (1 + Math.Pow(Math.Max(numFlightsDone + settings.retireOffsetFlightNumOffset, 0d), settings.retireOffsetFlightNumPow)
                         * UtilMath.Lerp(settings.retireOffsetStupidMin, settings.retireOffsetStupidMax, pcm.stupidity));
+
                     if (offset > 0d)
                     {
+                        Debug.Log("[VR] retire date increased by: " + KSPUtil.PrintDateDeltaCompact(offset, true, false));
+                        Debug.Log($"[VR]  constant: {constant}; curFlight: {numFlightsDone}; stupidity: {pcm.stupidity}");
+
                         retTime += offset;
                         kerbalRetireTimes[pcm.name] = retTime;
                         retirementChanges.Add("\n" + pcm.name + ", no earlier than " + KSPUtil.PrintDate(retTime, false));
@@ -665,17 +721,21 @@ namespace RP0.Crew
                 multiplier /= (ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1d);
 
                 double inactiveTime = elapsedTime * multiplier + constant * 86400d;
+                Debug.Log("[VR] inactive for: " + KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false));
+
                 pcm.SetInactive(inactiveTime, false);
                 inactivity.Add("\n" + pcm.name + ", until " + KSPUtil.PrintDate(inactiveTime + UT, true, false));
             }
             if (inactivity.Count > 0)
             {
+                Debug.Log("[VR] - showing on leave message");
+
                 string msgStr = "The following crew members will be on leave:";
                 foreach (string s in inactivity)
                 {
                     msgStr += s;
                 }
-                
+
                 if (retirementEnabled && retirementChanges.Count > 0)
                 {
                     msgStr += "\n\nThe following retirement changes have occurred:";
@@ -706,7 +766,7 @@ namespace RP0.Crew
                                                         "InitialRetirementDateNotification",
                                                         "Initial Retirement Date",
                                                         pcm.name + " will retire no earlier than " + KSPUtil.PrintDate(retireTime, false)
-                                                        + "\n(Retirement will be delayed the more intersting flights they fly.)",
+                                                        + "\n(Retirement will be delayed the more interesting flights they fly.)",
                                                         "OK",
                                                         false,
                                                         HighLogic.UISkin);
@@ -881,7 +941,6 @@ namespace RP0.Crew
             n.AddValue("expiration", settings.trainingMissionExpirationDays * 86400d);
 
             n.AddValue("preReqs", "TRAINING_proficiency:" + name);
-            n.AddValue("conflicts", "TRAINING_mission:" + name);
 
             ConfigNode r = n.AddNode("REWARD");
             ConfigNode l = r.AddNode("FLIGHTLOG");

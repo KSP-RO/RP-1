@@ -92,7 +92,10 @@ def create_app(test_config=None):
             parts_for_mod = list(filter(lambda x: x['mod'] == mod, part_data.parts))
             parts_for_mod.sort(key=lambda x: x['name'] if x['name'] is not None and len(x['name']) > 0 else x['title'] )
             for part in parts_for_mod:
-                part['module_tags'] = list(sorted(part['module_tags']))
+                if 'module_tags' in part:
+                    part['module_tags'] = list(sorted(part['module_tags']))
+                else: 
+                    part['module_tags'] = []
             text_file = open("data/" + make_safe_filename(mod)  + ".json", "w", newline='\n')
             text_file.write(json.dumps(parts_for_mod, indent=4, separators=(',', ': ')))
             text_file.close()
@@ -130,13 +133,26 @@ def create_app(test_config=None):
         generate_ecm_parts(part_data.parts)
         generate_ecm_engines(part_data.parts)
         return "true"
+
+    @app.route('/api/reload_data')
+    def reload_data():
+        global part_data, tech_mapping, ecm_data
+        part_data = PartData()
+        tech_mapping = TechMapping()
+        ecm_data = ECMData(part_data.parts)
+        return "true"
     
     @app.route('/api/commit_changes',  methods=['POST'])
     def commit_changes():
         queued_changes = request.get_json()
         for row_id in queued_changes['queued_changes']:
             new_part = False
-            part = part_data.get_part_by_name(queued_changes['queued_changes'][row_id]['name'])
+            part = None
+            # if the part name changed, we need to use the old name to find it, else use the supplied name field
+            if 'name' in queued_changes['queued_changes'][row_id]['changes'] and 'old' in queued_changes['queued_changes'][row_id]['changes']['name']:
+                part = part_data.get_part_by_name(queued_changes['queued_changes'][row_id]['changes']['name']['old'])
+            else: 
+                part = part_data.get_part_by_name(queued_changes['queued_changes'][row_id]['name'])
             # if the part can't be found, we assume it's a new part
             if part is None:
                 part = {}

@@ -6,19 +6,13 @@ using UnityEngine;
 
 namespace RP0
 {
-    class ModuleToolingStockFairing : ModuleToolingDiamLen
+    public class ModuleToolingStockFairing : ModuleToolingDiamLen
     {
         protected ModuleProceduralFairing pm;
 
-        public override void OnAwake()
+        protected override void LoadPartModules()
         {
-            base.OnAwake();
-            pm = part.Modules.GetModule<ModuleProceduralFairing>();
-        }
-
-        public override void OnLoad(ConfigNode node)
-        {
-            base.OnLoad(node);
+            base.LoadPartModules();
             pm = part.Modules.GetModule<ModuleProceduralFairing>();
         }
 

@@ -2,7 +2,7 @@ Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Sp
 
 RP-1 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-1 works with as many additional mods as possible; we use a fresh fully icon rebuilt Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a historical fashion.  Right now a good number of nodes lack much in the way of parts allowing for placement of balanced historically appropriate parts in those nodes. 
 
-RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/tree/Developmental), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/Developmental). 
+RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/issues), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/master). 
 
 When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production. 
 
@@ -23,8 +23,9 @@ This top-post is jointly maintained by pjf and NathanKell and many others.
 
 License: CC-BY-NC-SA-4.0
 
-Release Thread: https://forum.kerbalspaceprogram.com/index.php?/topic/162117-122-realistic-progression-zero-rp-0-lightweight-realismoverhaul-career-v054-june-15/&
-Github Repo:  https://github.com/KSP-RO/RP-0  
+Release Thread: https://forum.kerbalspaceprogram.com/index.php?/topic/190040-161-173-rp-1-realistic-progression-one-v12/
+Github Repo:  https://github.com/KSP-RO/RP-0
+Discord Link: https://discord.gg/V73jjNd
 
 **Requirements:**
 - Realism Overhaul and all of its required mods (including Real Solar System)
@@ -36,39 +37,40 @@ Github Repo:  https://github.com/KSP-RO/RP-0
 - Ven's Stock Revamp (Needed for engines)
 - Kerbal Construction Time (Infrastructure, Build Time, Rollout Costs)
 - DMagic Orbital Science (Science parts)
+- DMModuleScienceAnimateGeneric
 
 **Highly Recommended:**
 - B9 Procedural Wings
 - Connected Living Space
 - Hangar Extender
-- Janitors Closet
 - Kerbal Alarm Clock
-- Kerbal Engineer
 - KRASH
 - KSCSwitcher
-- KSP-AVC
 - MechJeb
 - Procedural Fairings
 - Procedural Parts
 - RCS Build Aid
+- RealAntennas
 - RemoteTech
 - SCANsat
-- Science Alert
 - Science Situation Info (tells you what science parts work where)
-- Stage Recovery
 - Ship Manifest
+- ROKerbalism
 - TAC Life Support
+- TestLite
 - Test Flight
 - Texture Replacer
 - Toolbar
-- WASD Editor
 
 **Suggested Mods**
 - Raidernick's Mods (especially US Probes and Soviet Probes)
 - FASA
+- Janitors Closet
+- Kerbal Engineer Redux
 - Kerbal Renamer
 - kOS
-- Real Engines
+- ROEngines
+- ROCapsules
 - Real Scale Boosters
 - Bluedog Design Bureau
 - Soviet Engine Pack
@@ -102,7 +104,7 @@ Procedural Avionics can have different configurations.  For instance, booster av
 As part utilization goes up, so do part cost and part weight.  However, these do not rise at the same rates.  Consider this example: as you try to fit more avionics controls into the same amount of space, you should probably invest some effort into making those controls smaller and more efficient.  The smaller and more efficient you try to make those parts, the more they cost (and the higher the cost per controllable ton).  However, since these parts are more efficient, while your overall part mass continues to rise, your mass per controllable ton actually decreases.  Because of this, we actually get two different "curves", a mass curve, and a cost curve:
 
  - mass curve: -(x^2) + 2x  (as utilization goes up, additional mass needed per controllable mass goes down)
- - cost curve: x^2  (as utilization goes up, cost rises exponentially)
+ - cost curve: x^2  (as utilization goes up, cost rises quadratically)
 >Note that while utilization is normally displayed as a range between 0-200%, the above formulas treat utilization as 0-100%
 
 Because the actual efficiency of a part depends on its utilization, we run into a problem when trying to configure these parts.  Thus, we'll define a "sweet spot" of 100% utilization.  If a part is 100% utilized, then their cost/controllable ton and mass/controllable ton will be what's in the configs.  Bringing the utilization up to 200% (and reduce the volume accordingly, so you're still controlling the same amount of mass), and you should find your part mass decreased by about 1/3, but your cost to be 4x as much.

@@ -1,0 +1,63 @@
+//	==============================================================================
+//	RTG Pricing and Balance
+//
+//	Each gram of Plutonium-238 costs about $2,000 per gram in 1997
+//	Based on 1965 money it is about $395 per gram
+//
+//	Cost per watt average between GPHS and MMRTG is $341,770 in 2015 $
+//	Converted to 1965 (and divided by 1000) is $45 per watt
+//
+//	87.7 years half life
+//
+//	Source #1: Cost Comparison in 2018 Dollars for Radioisotope Power Systems
+//		https://inldigitallibrary.inl.gov/sites/sti/sti/7267852.pdf
+//	Source #2: First Flights: Nuclear Power to Advance Space Exploration
+//		https://fas.org/nuke/space/first.pdf
+//	Source #3: Survey of Electric Power Plants for Space Exploration
+//		https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19660005486.pdf
+//	Source #4: Space Nuclear Power: Opening the Final Frontier
+//		https://fas.org/nuke/space/bennett0706.pdf
+//
+//	==============================================================================
+//	SNAP-3
+//	2.5 Watts
+//	0.1-kg Pu-238
+//	$113 per unit
+//	$34.5 for Pu-238
+//	500x Cost for entryCost = 56,250
+//	==============================================================================
+//	SNAP-9A
+//	25 Watts
+//	13.6 kg
+//	1-kg Pu-238
+//	$1125 per unit
+//	$345 for Pu-238
+//	100x Cost for entryCost = 112,500
+//	==============================================================================
+//	SNAP-19 (1972)
+//	40 Watts => 13.6 kg Pioneer 10/11
+//	42 Watts => 15.2 kg Viking 1/2
+//	1-kg Pu-238
+//	$1800 per unit
+//	$345 for Pu-238
+//	50x Cost for entryCost = 90,000
+//	==============================================================================
+//	MHW-RTG (1977) => Voyager 1/2
+//	158 Watts
+//	37.69 kg
+//	3.478-kg Pu-238
+//	==============================================================================
+//	GPHS-RTG (1989)
+//	287 Watts => Galileo (1989)
+//	282 Watts => Ulysses (1990)
+//	290 Watts => Cassini (1997)
+//	55.9 kg
+//	7.9333-kg Pu-238
+//	Cost for each one for Cassini = $10,458 Entry and $550 Each (before fuel)
+//	==============================================================================
+//	MMRTG (MSL)
+//	110 Watts
+//	
+//	3.5-kg Pu-238
+//	==============================================================================
+

@@ -55,6 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AvionicsCheckFactory.cs" />
+    <Compile Include="AvionicsCheckVesselParam.cs" />
     <Compile Include="CustomExpressionParserRegistrer.cs" />
     <Compile Include="DownrangeDistanceFactory.cs" />
     <Compile Include="DownrangeDistanceVesselParam.cs" />

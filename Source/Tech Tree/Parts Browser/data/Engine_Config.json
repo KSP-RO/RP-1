@@ -7440,8 +7440,8 @@
         "module_tags": []
     },
     {
-        "name": "RL10A-3-3 Lunex",
-        "title": "RL10A-3-3 Lunex",
+        "name": "RL10A-3-3-Lunex",
+        "title": "RL10A-3-3-Lunex",
         "description": "",
         "mod": "Engine_Config",
         "cost": "1000",

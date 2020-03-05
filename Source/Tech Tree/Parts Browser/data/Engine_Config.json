@@ -7650,6 +7650,27 @@
         "module_tags": []
     },
     {
+        "name": "RL10A-3-3-Lunex",
+        "title": "RL10A-3-3-Lunex",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "1000",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1967",
+        "technology": "largeHydrolox",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": true,
+        "entry_cost_mods": "50000,RL10A-3-3,throttlingTP",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RL10A-3-3A",
         "title": "RL10A-3-3A",
         "description": "",

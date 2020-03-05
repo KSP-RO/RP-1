@@ -9,7 +9,7 @@ namespace RP0
     class ModuleAvionics : PartModule
     {
         #region Members
-        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N1", guiUnits = "T")]
+        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N2", guiUnits = "T")]
         public float massLimit = float.MaxValue; // default is unlimited
 
         [KSPField]
@@ -37,8 +37,9 @@ namespace RP0
             UI_Toggle(disabledText = "Never", enabledText = "On Stage", affectSymCounterparts = UI_Scene.Editor)]
         public bool setToDebrisOnStage = false;
 
+        public bool useKerbalismInFlight = true;
+        private bool onRailsCached = false;
         protected ModuleResource commandChargeResource = null;
-        protected bool wasWarping = false;
         protected bool currentlyEnabled = true;
         private const string ecName = "ElectricCharge";
         private static Assembly KerbalismAPI = null;
@@ -83,10 +84,9 @@ namespace RP0
             float currentKW = PowerDraw(onRails);
             ecConsumption = new KeyValuePair<string, double>(ecName, -currentKW);
             currentWatts = currentKW * 1000;
-            // If Kerbalism, Avionics will handle all power draw through it.
-            // If not, then let the ModuleCommand go ahead and consume ec.
-            if (KerbalismAPI == null && commandChargeResource is ModuleResource res)
-                res.rate = currentKW;
+            // If requested, let Kerbalism handle power draw, else handle via ModuleCommand resourceHandler.
+            if (commandChargeResource is ModuleResource res)
+                res.rate = useKerbalismInFlight ? 0 : currentKW;
         }
 
         #region Utility methods
@@ -105,6 +105,7 @@ namespace RP0
             Events[nameof(ToggleEvent)].guiActive = toggleAble;
             Events[nameof(ToggleEvent)].guiActiveEditor = toggleAble;
             Events[nameof(ToggleEvent)].guiName = (systemEnabled ? "Shutdown" : "Activate") + " Avionics";
+            Events[nameof(ToggleEvent)].active = toggleAble;
             Actions[nameof(ActivateAction)].active = (!systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
             Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleAble;
             Actions[nameof(ToggleAction)].active = toggleAble;
@@ -168,8 +169,7 @@ namespace RP0
                 KerbalismAPI ??= AssemblyLoader.loadedAssemblies.FirstOrDefault(x => x.name.StartsWith("Kerbalism"))?.assembly;
         }
 
-        // OnStartFinished(), to let ModuleCommand configure itself first.
-        //        public override void OnStart(StartState _)
+        // OnStartFinished() instead of OnStart(), to let ModuleCommand configure itself first.
         public override void OnStartFinished(StartState _)
         {
             InitializeResourceRate();
@@ -183,14 +183,22 @@ namespace RP0
             {
                 GameEvents.onVesselGoOnRails.Add(GoOnRails);
                 GameEvents.onVesselGoOffRails.Add(GoOffRails);
+                OnSettingsApplied();
+                GameEvents.OnGameSettingsApplied.Add(OnSettingsApplied);
             }
         }
 
-        private void OnShipModified(ShipConstruct _) => UpdateRate();
+        private void OnSettingsApplied()
+        {
+            useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().avionicsUseKerbalism;
+            UpdateRate(onRailsCached);
+        }
+        private void OnShipModified(ShipConstruct _) => UpdateRate(onRailsCached);
         private void GoOnRails(Vessel v) => RailChange(v, true);
         private void GoOffRails(Vessel v) => RailChange(v, false);
         private void RailChange(Vessel v, bool onRails)
         {
+            onRailsCached = onRails;
             if (vessel == v)
                 UpdateRate(onRails);
         }
@@ -207,6 +215,7 @@ namespace RP0
             GameEvents.onEditorShipModified.Remove(OnShipModified);
             GameEvents.onVesselGoOnRails.Remove(GoOnRails);
             GameEvents.onVesselGoOffRails.Remove(GoOffRails);
+            GameEvents.OnGameSettingsApplied.Remove(OnSettingsApplied);
         }
 
         protected virtual string GetTonnageString()
@@ -251,6 +260,11 @@ namespace RP0
                 systemEnabled = true;
                 ScreenMessages.PostScreenMessage("Cannot shut down avionics while crewed");
             }
+            else if (!GetToggleable())
+            {
+                systemEnabled = true;
+                ScreenMessages.PostScreenMessage("Cannot shut down avionics on this part");
+            }
             UpdateRate();
             SetActionsAndGui();
             if (HighLogic.LoadedSceneIsEditor)
@@ -285,7 +299,7 @@ namespace RP0
         public string PlannerUpdate(List<KeyValuePair<string, double>> resources, CelestialBody _, Dictionary<string, double> environment)
         {
             resources.Add(ecConsumption);   // ecConsumption is updated by the Toggle event
-            return "Avionics";
+            return "avionics";
         }
 
         public static string BackgroundUpdate(Vessel v,
@@ -300,13 +314,14 @@ namespace RP0
                 if (module_snapshot.moduleValues.TryGetValue("currentWatts", ref cw))
                     resourceChangeRequest.Add(new KeyValuePair<string, double>(ecName, -cw / 1000));
             }
-            return "Avionics";
+            return "avionics";
         }
 
         public virtual string ResourceUpdate(Dictionary<string, double> availableResources, List<KeyValuePair<string, double>> resourceChangeRequest)
         {
-            resourceChangeRequest.Add(ecConsumption);   // ecConsumption is updated by the Toggle event
-            return "Avionics";
+            if (useKerbalismInFlight)
+                resourceChangeRequest.Add(ecConsumption);   // ecConsumption is updated by the Toggle event
+            return "avionics";
         }
 
         #endregion

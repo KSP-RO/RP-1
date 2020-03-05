@@ -1300,7 +1300,7 @@
         "title": "Scout Jet Vane",
         "description": "Jet vane for scout first stage. Place 4 around main SRB exhaust.",
         "mod": "RN US Rockets",
-        "cost": "",
+        "cost": "0",
         "entry_cost": "2800",
         "category": "SOLID",
         "info": "Thrust Vane",

@@ -4,7 +4,7 @@
         "title": "Apollo Command Module",
         "description": "Apollo Command Module. Contains three astronauts.",
         "mod": "ROCapsules",
-        "cost": "38000",
+        "cost": 35000,
         "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",

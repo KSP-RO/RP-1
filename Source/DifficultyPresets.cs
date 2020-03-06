@@ -65,14 +65,12 @@ namespace RP0
                 case GameParameters.Preset.Easy:
                     IsTrainingEnabled = false;
                     IsRetirementEnabled = false;
-                    IsToolingEnabled = false;
                     break;
                 case GameParameters.Preset.Normal:
                 case GameParameters.Preset.Moderate:
                 case GameParameters.Preset.Hard:
                     IsTrainingEnabled = true;
                     IsRetirementEnabled = true;
-                    IsToolingEnabled = true;
                     break;
             }
         }

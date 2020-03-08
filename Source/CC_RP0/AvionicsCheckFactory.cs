@@ -45,6 +45,7 @@ namespace ContractConfigurator.RP0
             base.OnUnregister();
             GameEvents.onInputLocksModified.Remove(OnInputLocksModified);
         }
+
         protected override string GetParameterTitle()
         {
             // Title will change to reflect the state of the parameter, with special considerations if we

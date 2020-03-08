@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -18,6 +19,24 @@ namespace ContractConfigurator.RP0
         {
             _ccType = ccType;
             _evtType = evtType;
+        }
+
+        protected override void OnLoad(ConfigNode node)
+        {
+            base.OnLoad(node);
+
+            string sEvtType = null;
+            node.TryGetValue("contractType", ref _ccType);
+            node.TryGetValue("eventType", ref sEvtType);
+            _evtType = (ContractEventType)Enum.Parse(typeof(ContractEventType), sEvtType);
+        }
+
+        protected override void OnSave(ConfigNode node)
+        {
+            base.OnSave(node);
+
+            node.AddValue("contractType", _ccType);
+            node.AddValue("eventType", _evtType.ToString());
         }
 
         protected override void OnOffered()

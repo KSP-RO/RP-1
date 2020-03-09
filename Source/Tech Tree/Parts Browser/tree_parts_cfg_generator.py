@@ -22,6 +22,7 @@ module_part_config_template = Template("""
     %cost = ${cost}
     %entryCost = ${entry_cost}
     RP0conf = ${rp0_conf}
+    NonProcBalanced = ${is_non_proc}
     @description ^=:$$: <b><color=green>From ${mod} mod</color></b>${module_tags}
 }""")
 module_template = Template("""

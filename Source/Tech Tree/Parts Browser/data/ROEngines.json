@@ -2622,6 +2622,54 @@
         "module_tags": []
     },
     {
+        "name": "ROE-M1",
+        "title": "M-1",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "13600",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1972",
+        "technology": "hydrolox1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "M1",
+        "upgrade": false,
+        "entry_cost_mods": "M-1-Spec",
+        "identical_part_name": "M-1",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-M1SL",
+        "title": "M-1 (Sea Level)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "13600",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1976",
+        "technology": "hydrolox1976",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "M1",
+        "upgrade": false,
+        "entry_cost_mods": "M-1SL",
+        "identical_part_name": "M-1SL",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-MR104",
         "title": "0.44kN Engine (MR-104)",
         "description": "MR-104 Monopropellant Engine family originally provided in-space propulsion for the Voyager 1 and 2 and Magellan missions. Subsequent MR-104 variants provided propulsion for Landsat and NOAA as well as for other U.S. government programs. A variation of this engine (MR-104G) is to be used on the Orion Deep Space Exploration Vehicle.",

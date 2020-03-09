@@ -1,7 +1,7 @@
 [
     {
         "name": "ROT-BalloonTank",
-        "title": "Modular Balloon Tank",
+        "title": "Modular Balloon Tank (Deprecated)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -26,7 +26,7 @@
     },
     {
         "name": "ROT-BoosterTank",
-        "title": "Modular Booster Tank",
+        "title": "Modular Booster Tank (Deprecated)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -49,7 +49,7 @@
     },
     {
         "name": "ROT-GenericTank",
-        "title": "Modular Tank",
+        "title": "Modular Tank (Deprecated)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -98,7 +98,7 @@
     },
     {
         "name": "ROT-RadialTank",
-        "title": "Modular Radial Tank",
+        "title": "Modular Radial Tank (Deprecated)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -167,7 +167,7 @@
     },
     {
         "name": "ROT-SphericalTank",
-        "title": "Modular Spherical Tank",
+        "title": "Modular Spherical Tank (Deprecated)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -190,7 +190,7 @@
     },
     {
         "name": "ROT-ToroidalTank",
-        "title": "Modular Toroidal Tank",
+        "title": "Modular Toroidal Tank (Deprecated)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",

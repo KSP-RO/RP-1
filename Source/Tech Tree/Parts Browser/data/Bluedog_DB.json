@@ -2249,7 +2249,7 @@
         "engine_config": "AgenaSPS",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Agena-D SPS",
         "module_tags": [
             "EngineLiquidPF"
         ]

@@ -3511,8 +3511,55 @@
         ]
     },
     {
+        "name": "ROE-RD0124",
+        "title": "RD-0124",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1200",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "2004",
+        "technology": "stagedCombustion2004",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD0124",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0124",
+        "identical_part_name": "RD-0124",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD0146",
+        "title": "RD-0146",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "2000",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2001",
+        "technology": "hydrolox1998",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD0146",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0146",
+        "identical_part_name": "RD-0146",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RD0210",
-        "title": "RD-0208/0210",
+        "title": "RD-0210/0211",
         "mod": "ROEngines",
         "cost": "300",
         "entry_cost": "0",
@@ -3531,12 +3578,14 @@
         "entry_cost_mods": "RD-0210",
         "identical_part_name": "RD-0210",
         "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+            "EngineLiquidTurbo",
+            "Toxic"
+        ],
+        "description": ""
     },
     {
         "name": "ROE-RD0212",
-        "title": "RD-0223",
+        "title": "RD-0212",
         "mod": "ROEngines",
         "cost": "300",
         "entry_cost": "0",
@@ -3555,8 +3604,10 @@
         "entry_cost_mods": "RD-0212",
         "identical_part_name": "RD-0212",
         "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+            "EngineLiquidTurbo",
+            "Toxic"
+        ],
+        "description": ""
     },
     {
         "name": "ROE-RD100",
@@ -4011,7 +4062,7 @@
         "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": "1000",
-        "entry_cost": "3500",
+        "entry_cost": "0",
         "category": "STAGED",
         "info": "",
         "year": "1985",
@@ -4020,7 +4071,7 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Zenit",
         "engine_config": "RD8",
         "upgrade": false,
@@ -4034,7 +4085,7 @@
         "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": "1000",
-        "entry_cost": "3500",
+        "entry_cost": "0",
         "category": "STAGED",
         "info": "",
         "year": "1985",
@@ -4043,7 +4094,7 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Zenit",
         "engine_config": "RD8",
         "upgrade": false,

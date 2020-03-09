@@ -15,6 +15,7 @@
         "rp0": true,
         "orphan": true,
         "rp0_conf": true,
+        "is_non_proc": false,
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,

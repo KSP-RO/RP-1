@@ -13,6 +13,7 @@
         "ro": true,
         "orphan": false,
         "rp0_conf": false,
+        "is_non_proc": false,
         "spacecraft": "",
         "engine_config": "RD253",
         "upgrade": true,

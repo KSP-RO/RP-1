@@ -15,6 +15,7 @@
         "rp0": true,
         "orphan": false,
         "rp0_conf": true,
+        "is_non_proc": false,
         "spacecraft": "",
         "engine_config": "HG3",
         "upgrade": false,

@@ -41,6 +41,7 @@ class PartData:
             "orphan": set(),
             "upgrade": set(),
             "rp0_conf": set(),
+            "is_non_proc": set(),
             "spacecraft": set(),
             "engine_config": set(),
             "era": set(),

@@ -1,28 +1,28 @@
 {
-    "spec_version" : "v1.4",
-    "identifier" : "RP-0",
-    "name"       : "Realistic Progression One (RP-1)",
-    "abstract"   : "Realistic Progression One - Career for Realism Overhaul",
-    "license"    : "CC-BY-4.0",
-    "author"     : "RP-0 Group",
-    "$kref"      : "#/ckan/github/KSP-RO/RP-0",
-    "$vref"      : "#/ckan/ksp-avc",
-    "x_netkan_force_v": true,
-    "release_status" : "stable",
-    "depends" : [
-        { "name" : "ModuleManager" },
-        { "name" : "RealismOverhaul" },
-        { "name" : "SXTContinued" },
-        { "name" : "ContractConfigurator" },
-        { "name" : "CustomBarnKit" },
-        { "name" : "DeadlyReentry" },
-        { "name" : "VenStockRevamp" },
-        { "name" : "KerbalConstructionTime-173" },
-        { "name" : "RealSolarSystem" },
-        { "name" : "DMagicOrbitalScience" },
-        { "name" : "DMagicScienceAnimate" }
-    ],
-    "recommends" : [
+	"spec_version" : "v1.4",
+	"identifier" : "RP-0",
+	"name"       : "Realistic Progression One (RP-1)",
+	"abstract"   : "Realistic Progression One - Career for Realism Overhaul",
+	"license"    : "CC-BY-4.0",
+	"author"     : "RP-0 Group",
+	"$kref"      : "#/ckan/github/KSP-RO/RP-0",
+	"$vref"      : "#/ckan/ksp-avc",
+	"x_netkan_force_v": true,
+	"release_status" : "stable",
+	"depends" : [
+		{ "name" : "ModuleManager" },
+		{ "name" : "RealismOverhaul" },
+		{ "name" : "SXTContinued" },
+		{ "name" : "ContractConfigurator" },
+		{ "name" : "CustomBarnKit" },
+		{ "name" : "DeadlyReentry" },
+		{ "name" : "VenStockRevamp" },
+		{ "name" : "KerbalConstructionTime-173" },
+		{ "name" : "RealSolarSystem" },
+		{ "name" : "DMagicOrbitalScience" },
+		{ "name" : "DMagicScienceAnimate" }
+	],
+	"recommends" : [
 		{ "name" : "ConnectedLivingSpace" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },
@@ -32,23 +32,26 @@
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
 		{ "name" : "RCSBuildAidCont" },
+		{ "name" : "RealAntennas" },
 		{ "name" : "RemoteTech" },
 		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
+		{ "name" : "Kerbalism-Config-RO" },
 		{ "name" : "TACLS" },
 		{ "name" : "TestFlight" },
 		{ "name" : "TextureReplacer" },
 		{ "name" : "Toolbar" }
-    ],	
-	"suggests"   : [
+	],
+	"suggests" : [
 		{ "name" : "BluedogDB" },
 		{ "name" : "FASA" },
 		{ "name" : "JanitorsCloset" },
 		{ "name" : "KerbalEngineerRedux" },
 		{ "name" : "KerbalRenamer" },
 		{ "name" : "kOS" },
-		{ "name" : "RealEngines" },
+		{ "name" : "ROEngines" },
+		{ "name" : "ROCapsules" },
 		{ "name" : "RealScaleBoosters" },
 		{ "name" : "RN-SalyutStations" },
 		{ "name" : "RN-Skylab" },
@@ -61,10 +64,10 @@
 		{ "name" : "SovietEnginePack" },
 		{ "name" : "Taerobee" },
 		{ "name" : "WaypointManager" }
-    ],
-    "conflicts" : [
-        { "name" : "CrowdSourcedScience" },
+	],
+	"conflicts" : [
+		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
 		{ "name" : "MechJebForAll" }
-    ]
+	]
 }

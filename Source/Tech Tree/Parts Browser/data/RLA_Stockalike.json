@@ -672,7 +672,7 @@
         "title": "AJ-260 FL [6.55 m]",
         "description": "The largest solid rocket motor ever designed, intended for uprated Saturn and Nova applications.  Full-length version, burn time 140s.",
         "mod": "RLA Stockalike",
-        "cost": "",
+        "cost": "0",
         "entry_cost": "661620",
         "category": "SOLID",
         "info": "SRB",

@@ -20,6 +20,7 @@
         "identical_part_name": "AgenaPort",
         "module_tags": []
     },
+    {
         "name": "ROC-APAS8995A",
         "title": "APAS 89/95 Active Docking Port",
         "description": "",

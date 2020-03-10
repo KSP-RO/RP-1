@@ -211,7 +211,6 @@
         "identical_part_name": "",
         "module_tags": []
     },
-
     {
         "name": "ROT-BalloonTank-New",
         "title": "Modular Balloon Tank",
@@ -353,8 +352,8 @@
         "module_tags": []
     },
     {
-        "name": "ROT-BoosterTank",
-        "title": "Modular Booster Tank (Deprecated)",
+        "name": "ROT-BoosterTank-Seperate",
+        "title": "Modular Booster Tank (Seperate Structure)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",

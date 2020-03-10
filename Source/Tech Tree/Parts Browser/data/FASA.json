@@ -142,7 +142,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "1000, dockingProbeDrogue",
-        "identical_part_name": "",
+        "identical_part_name": "AgenaPort",
         "module_tags": []
     },
     {
@@ -2088,7 +2088,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiHGA",
         "module_tags": [
             "Instruments"
         ]
@@ -3002,10 +3002,10 @@
         "mod": "FASA",
         "cost": "1000",
         "entry_cost": "50000",
-        "category": "MATERIALS",
+        "category": "RCS",
         "info": "Nosecone",
         "year": "1965",
-        "technology": "materialsScienceAdvCapsules",
+        "technology": "earlyDocking",
         "era": "04-ADV",
         "ro": true,
         "rp0": true,
@@ -3015,7 +3015,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "5000, dockingProbeDrogue",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiDockingProbe",
         "module_tags": []
     },
     {
@@ -3061,7 +3061,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiNoseCap",
         "module_tags": []
     },
     {
@@ -3071,10 +3071,10 @@
         "mod": "FASA",
         "cost": "1000",
         "entry_cost": "50000",
-        "category": "MATERIALS",
+        "category": "RCS",
         "info": "Nosecone",
         "year": "1965",
-        "technology": "materialsScienceAdvCapsules",
+        "technology": "earlyDocking",
         "era": "04-ADV",
         "ro": true,
         "rp0": true,
@@ -3084,7 +3084,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "FASAGeminiNoseCone2",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiDockingProbe",
         "module_tags": []
     },
     {
@@ -3107,7 +3107,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiMainChute",
         "module_tags": []
     },
     {
@@ -3130,7 +3130,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiDrogueChute",
         "module_tags": []
     },
     {
@@ -3180,7 +3180,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiReentryControl",
         "module_tags": []
     },
     {
@@ -3322,7 +3322,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "GeminiSM",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiSM",
         "module_tags": [
             "NoResourceCostMult"
         ]
@@ -4687,7 +4687,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMulti",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiRCS",
         "module_tags": [
             "EngineLiquidPF"
         ]
@@ -5257,7 +5257,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiWing",
         "module_tags": []
     },
     {
@@ -5280,7 +5280,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiContSurface",
         "module_tags": []
     },
     {
@@ -5303,7 +5303,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiFP",
         "module_tags": []
     },
     {
@@ -5326,7 +5326,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "GeminiSpoiler",
         "module_tags": []
     }
 ]

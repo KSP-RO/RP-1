@@ -761,8 +761,8 @@
         "module_tags": []
     },
     {
-        "name": "AMBR-623N",
-        "title": "AMBR-623N",
+        "name": "AMBR",
+        "title": "AMBR",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",

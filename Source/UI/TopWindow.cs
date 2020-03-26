@@ -12,6 +12,7 @@ namespace RP0
         private ToolingGUI toolUI = new ToolingGUI();
         private Crew.FSGUI fsUI = new RP0.Crew.FSGUI();
         private AvionicsGUI avUI = new AvionicsGUI();
+        private CareerLogGUI logUI = new CareerLogGUI();
         private static tabs currentTab;
 
         public TopWindow()
@@ -44,6 +45,8 @@ namespace RP0
                     currentTab = tabs.Courses;
                 if (showTab(tabs.Avionics) && toggleButton("Avionics", currentTab == tabs.Avionics))
                     currentTab = tabs.Avionics;
+                if (showTab(tabs.CareerLog) && toggleButton("Career Log", currentTab == tabs.CareerLog))
+                    currentTab = tabs.CareerLog;
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -93,6 +96,9 @@ namespace RP0
                             break;
                         case tabs.Avionics:
                             avUI.avionicsTab();
+                            break;
+                        case tabs.CareerLog:
+                            logUI.RenderTab();
                             break;
                         default: // can't happen
                             break;

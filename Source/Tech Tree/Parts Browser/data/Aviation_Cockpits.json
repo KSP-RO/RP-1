@@ -82,7 +82,8 @@
             "Cockpit",
             "NoEVA",
             "NoResourceCostMult",
-            "NonReentryRated"
+            "NonReentryRated",
+            "UnpressurizedCockpit"
         ]
     },
     {

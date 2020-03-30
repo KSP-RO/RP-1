@@ -24,7 +24,8 @@
             "Cockpit",
             "NoEVA",
             "NoResourceCostMult",
-            "NonReentryRated"
+            "NonReentryRated",
+            "UnpressurizedCockpit"
         ]
     },
     {
@@ -1725,7 +1726,8 @@
             "Cockpit",
             "NoEVA",
             "NoResourceCostMult",
-            "NonReentryRated"
+            "NonReentryRated",
+            "UnpressurizedCockpit"
         ]
     },
     {
@@ -1799,7 +1801,8 @@
             "Cockpit",
             "NoEVA",
             "NoResourceCostMult",
-            "NonReentryRated"
+            "NonReentryRated",
+            "UnpressurizedCockpit"
         ]
     },
     {
@@ -2399,7 +2402,8 @@
             "Cockpit",
             "NoEVA",
             "NoResourceCostMult",
-            "NonReentryRated"
+            "NonReentryRated",
+            "UnpressurizedCockpit"
         ]
     },
     {

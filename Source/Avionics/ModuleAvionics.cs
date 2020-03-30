@@ -9,7 +9,9 @@ namespace RP0
     class ModuleAvionics : PartModule
     {
         #region Members
-        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N2", guiUnits = "T")]
+        protected const string PAWGroup = "Avionics";
+
+        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N2", guiUnits = "T", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float massLimit = float.MaxValue; // default is unlimited
 
         [KSPField]
@@ -18,7 +20,7 @@ namespace RP0
         [KSPField]
         public float disabledkW = -1f;
 
-        [KSPField(isPersistant = true, guiActive = true, guiName = "Power", guiFormat = "N1", guiUnits = "\u2009W")]
+        [KSPField(isPersistant = true, guiActive = true, guiName = "Power", guiFormat = "N1", guiUnits = "\u2009W", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float currentWatts = 0f;
 
         [KSPField]
@@ -33,7 +35,7 @@ namespace RP0
         [KSPField]
         public bool interplanetary = true;
 
-        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Set to Debris"),
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Set to Debris", groupName = PAWGroup, groupDisplayName = PAWGroup),
             UI_Toggle(disabledText = "Never", enabledText = "On Stage", affectSymCounterparts = UI_Scene.Editor)]
         public bool setToDebrisOnStage = false;
 
@@ -251,7 +253,7 @@ namespace RP0
 
         #region Actions and Events
 
-        [KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Shutdown Avionics")]
+        [KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Shutdown Avionics", groupName = PAWGroup)]
         public void ToggleEvent()
         {
             systemEnabled = !systemEnabled;

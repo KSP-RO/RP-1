@@ -19,11 +19,11 @@ namespace RP0.ProceduralAvionics
 
         #region Fields
 
-        [KSPField(isPersistant = true, guiName = "Contr. Mass", guiActive = false, guiActiveEditor = true, guiUnits = "\u2009t"),
+        [KSPField(isPersistant = true, guiName = "Contr. Mass", guiActiveEditor = true, guiUnits = "\u2009t", groupName = PAWGroup, groupDisplayName = PAWGroup),
          UI_FloatEdit(scene = UI_Scene.Editor, minValue = 0f, incrementLarge = 10f, incrementSmall = 1f, incrementSlide = 0.05f, sigFigs = 3, unit = "\u2009t")]
         public float controllableMass = -1;
 
-        [KSPField(isPersistant = true, guiActiveEditor = true, guiActive = false, guiName = "Configuration"), UI_ChooseOption(scene = UI_Scene.Editor)]
+        [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Configuration", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
         public string avionicsConfigName;
 
         [KSPField(isPersistant = true)]
@@ -68,21 +68,21 @@ namespace RP0.ProceduralAvionics
         [KSPField(isPersistant = true)]
         public bool hasScienceContainer = false;
 
-        [KSPField(guiActiveEditor = true, guiName = "Avionics Utilization")]
+        [KSPField(guiActiveEditor = true, guiName = "Avionics Utilization", groupName = PAWGroup)]
         public string utilizationDisplay;
 
-        [KSPField(guiActiveEditor = true, guiName = "Power Requirements")]
+        [KSPField(guiActiveEditor = true, guiName = "Power Requirements", groupName = PAWGroup)]
         public string powerRequirementsDisplay;
 
-        [KSPField(guiActiveEditor = true, guiName = "Avionics Mass")]
+        [KSPField(guiActiveEditor = true, guiName = "Avionics Mass", groupName = PAWGroup)]
         public string massDisplay;
 
-        [KSPField(guiActiveEditor = true, guiName = "Avionics Cost")]
+        [KSPField(guiActiveEditor = true, guiName = "Avionics Cost", groupName = PAWGroup)]
         public string costDisplay;
 
         public bool IsScienceCore => massExponent == 0 && powerExponent == 0 && costExponent == 0;
 
-        [KSPField(guiName = "Desired Utilization", guiActiveEditor = true, guiFormat = "P1"),
+        [KSPField(guiName = "Desired Utilization", guiActiveEditor = true, guiFormat = "P1", groupName = PAWGroup),
          UI_FloatRange(scene = UI_Scene.Editor, minValue = .01f, maxValue = .999f, stepIncrement = .001f, suppressEditorShipModified = true)]
         public float targetUtilization = 1;
 
@@ -90,7 +90,7 @@ namespace RP0.ProceduralAvionics
 
         private bool _started = false;
 
-        [KSPEvent(active = true, guiActiveEditor = true, guiName = "Resize to Utilization")]
+        [KSPEvent(active = true, guiActiveEditor = true, guiName = "Resize to Utilization", groupName = PAWGroup)]
         void SeekVolume()
         {
             if (GetSeekVolumeMethod(out PartModule PPart) is System.Reflection.MethodInfo method)
@@ -500,7 +500,7 @@ namespace RP0.ProceduralAvionics
             Log($"Setting science container to {(hasScienceContainer ? "enabled." : "disabled.")}");
         }
 
-        [KSPField(guiActiveEditor = true, guiName = "Configure"),
+        [KSPField(guiActiveEditor = true, guiName = "Configure", groupName = PAWGroup),
         UI_Toggle(enabledText = "Hide GUI", disabledText = "Show GUI"),
         NonSerialized]
         public bool showGUI;

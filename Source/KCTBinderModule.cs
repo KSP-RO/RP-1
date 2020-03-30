@@ -202,13 +202,17 @@ namespace RP0
         private void OnKctFacilityUpgdQueued(KCT_UpgradingBuilding data)
         {
             Debug.Log($"[RP-0] OnKctFacilityUpgdQueued");
-            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType, data.upgradeLevel, data.cost, ConstructionState.Started);
+            if (!data.facilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+
+            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType.Value, data.upgradeLevel, data.cost, ConstructionState.Started);
         }
 
         private void OnKctFacilityUpgdComplete(KCT_UpgradingBuilding data)
         {
             Debug.Log($"[RP-0] OnKctFacilityUpgdComplete");
-            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType, data.upgradeLevel, data.cost, ConstructionState.Completed);
+            if (!data.facilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+
+            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType.Value, data.upgradeLevel, data.cost, ConstructionState.Completed);
         }
 
         private IEnumerator CreateCoursesRoutine()

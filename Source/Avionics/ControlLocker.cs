@@ -83,13 +83,14 @@ namespace RP0
         public Vessel vessel = null;
         private bool wasLocked = false;
         private bool requested = false;
+        private bool onRails = false;
+        private bool cachedLockResult = false;
         private const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | 
                                               ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
         private const string lockID = "RP0ControlLocker";
         private float maxMass, vesselMass;
-        private double lastUT = -1d;
 
-        private const double updateFrequency = 1d; // run a check every second, unless staging.
+        private const float updateFrequency = 1; // Default check interval
 
         private readonly ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
         internal const string ModTag = "[RP-1 ControlLocker]";
@@ -122,8 +123,11 @@ namespace RP0
         {
             GameEvents.onVesselWasModified.Add(OnVesselModifiedHandler);
             GameEvents.onVesselSwitching.Add(OnVesselSwitchingHandler);
+            GameEvents.onVesselGoOnRails.Add(OnRailsHandler);
+            GameEvents.onVesselGoOffRails.Add(OffRailsHandler);
             vessel = FlightGlobals.ActiveVessel;
             if (vessel && vessel.loaded) vessel.OnPostAutopilotUpdate += FlightInputModifier;
+            StartCoroutine(CheckLockCR());
         }
 
         protected void OnVesselSwitchingHandler(Vessel v1, Vessel v2)
@@ -132,9 +136,13 @@ namespace RP0
             if (v1 && v2 && v2.loaded) v2.OnPostAutopilotUpdate += FlightInputModifier;
         }
 
-        protected void OnVesselModifiedHandler(Vessel v)
+        protected void OnVesselModifiedHandler(Vessel v) => requested = true;
+        private void OnRailsHandler(Vessel v) => onRails = true;
+        private void OffRailsHandler(Vessel v)
         {
-            requested = true;
+            onRails = false;
+            if (ControlLockerUtils.ShouldLock(vessel.Parts, true, out float _, out float _))
+                DisableAutopilot();
         }
 
         void FlightInputModifier(FlightCtrlState state)
@@ -148,24 +156,22 @@ namespace RP0
 
         public bool ShouldLock()
         {
-            if (vessel != FlightGlobals.ActiveVessel)
-            {
-                vessel = FlightGlobals.ActiveVessel;
-                masterMechJeb = null;
-            }
             // if we have no active vessel, undo locks
             if (vessel is null)
-                return false;
+                return cachedLockResult = false;
+            if (requested)
+                cachedLockResult = ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
+            requested = false;
+            return cachedLockResult;
+        }
 
-            // Do we need to update?
-            double cTime = Planetarium.GetUniversalTime();
-            if (requested || cTime > lastUT + updateFrequency)
+        private System.Collections.IEnumerator CheckLockCR()
+        {
+            while (HighLogic.LoadedSceneIsFlight)
             {
-                lastUT = cTime;
-                requested = false;
-                return ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
+                yield return new WaitForSeconds(updateFrequency);
+                cachedLockResult = ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
             }
-            return wasLocked;
         }
 
         public void Update()
@@ -175,7 +181,11 @@ namespace RP0
                 InputLockManager.RemoveControlLock(lockID);
                 return;
             }
-
+            if (vessel != FlightGlobals.ActiveVessel)
+            {
+                vessel = FlightGlobals.ActiveVessel;
+                masterMechJeb = null;
+            }
             bool doLock = ShouldLock();
             if (doLock != wasLocked)
             {
@@ -187,8 +197,8 @@ namespace RP0
                 else
                 {
                     InputLockManager.SetControlLock(lockmask, lockID);
-                    vessel.Autopilot.Disable();
-                    vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, false);
+                    if (!onRails) 
+                        DisableAutopilot();
                     message.message = $"Insufficient Avionics, Locking Controls (supports {maxMass:N3}t, vessel {vesselMass:N3}t)";
                 }
                 ScreenMessages.PostScreenMessage(message);
@@ -212,6 +222,14 @@ namespace RP0
             InputLockManager.RemoveControlLock(lockID);
             GameEvents.onVesselWasModified.Remove(OnVesselModifiedHandler);
             GameEvents.onVesselSwitching.Remove(OnVesselSwitchingHandler);
+            GameEvents.onVesselGoOnRails.Remove(OnRailsHandler);
+            GameEvents.onVesselGoOffRails.Remove(OffRailsHandler);
+        }
+
+        private void DisableAutopilot()
+        {
+            vessel.Autopilot.Disable();
+            vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, false);
         }
     }
 }

@@ -131,12 +131,13 @@ namespace RP0
         public const string sModuleName = "Show Info";
         public const string dragCubeGroup = "Drag Cubes";
 
-        [KSPField(guiName = "X+")] private string XP;
-        [KSPField(guiName = "X-")] private string XN;
-        [KSPField(guiName = "Y+")] private string YP;
-        [KSPField(guiName = "Y-")] private string YN;
-        [KSPField(guiName = "Z+")] private string ZP;
-        [KSPField(guiName = "Z-")] private string ZN;
+        [KSPField(guiName = "X+", groupName = dragCubeGroup, groupDisplayName = dragCubeGroup)] private string XP;
+        [KSPField(guiName = "X-", groupName = dragCubeGroup)] private string XN;
+        [KSPField(guiName = "Y+", groupName = dragCubeGroup)] private string YP;
+        [KSPField(guiName = "Y-", groupName = dragCubeGroup)] private string YN;
+        [KSPField(guiName = "Z+", groupName = dragCubeGroup)] private string ZP;
+        [KSPField(guiName = "Z-", groupName = dragCubeGroup)] private string ZN;
+        [KSPField] public float updateInterval = 0.25f;
 
         private bool showCubeInfo = false;
 
@@ -155,11 +156,17 @@ namespace RP0
             string res = $"Part name: {part.name}\n{APInfo}\n{data}";
             return res;
         }
-        private void Update()
+
+        public override void OnStart(StartState state)
         {
             if (HighLogic.LoadedSceneIsFlight)
+                StartCoroutine(DragCubeDisplay());
+        }
+
+        private System.Collections.IEnumerator DragCubeDisplay()
+        {
+            while (HighLogic.LoadedSceneIsFlight)
             {
-                // Coroutine is better, but this is only active during user-enabled debugging
                 if (showCubeInfo != PhysicsGlobals.AeroDataDisplay)
                 {
                     showCubeInfo = PhysicsGlobals.AeroDataDisplay;
@@ -170,8 +177,9 @@ namespace RP0
                     Fields[nameof(ZP)].guiActive = showCubeInfo;
                     Fields[nameof(ZN)].guiActive = showCubeInfo;
                 }
-                if (showCubeInfo) 
+                if (showCubeInfo)
                     BuildCubeData();
+                yield return new WaitForSeconds(updateInterval);
             }
         }
 

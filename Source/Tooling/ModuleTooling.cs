@@ -107,7 +107,10 @@ namespace RP0
                                     {
                                         if (canAfford)
                                         {
-                                            Funding.Instance.AddFunds(-toolingCost, TransactionReasons.RnDPartPurchase);
+                                            using (new CareerEventScope(CareerEventType.Tooling)) 
+                                            {
+                                                Funding.Instance.AddFunds(-toolingCost, TransactionReasons.RnDPartPurchase);
+                                            }
                                             PurchaseTooling();
                                             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
                                             UpdateButtonName();
@@ -220,7 +223,10 @@ namespace RP0
 
                 if (totalCost > 0 && !isSimulation)
                 {
-                    Funding.Instance.AddFunds(-totalCost, TransactionReasons.RnDPartPurchase);
+                    using (new CareerEventScope(CareerEventType.Tooling))
+                    {
+                        Funding.Instance.AddFunds(-totalCost, TransactionReasons.RnDPartPurchase);
+                    }
                 }
             }
             finally

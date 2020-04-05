@@ -1670,7 +1670,7 @@
         "description": "Strap-on booster for Titan IV-B. Burn time 135.7s. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
         "cost": "7200",
-        "entry_cost": "144000",
+        "entry_cost": "0",
         "category": "SOLID",
         "info": "",
         "year": "1997",
@@ -2787,7 +2787,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "UA1200Decoupler",
         "module_tags": []
     },
     {
@@ -2858,7 +2858,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "UA1200Decoupler",
         "module_tags": []
     },
     {
@@ -2929,7 +2929,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "UA1200Decoupler",
         "module_tags": []
     },
     {

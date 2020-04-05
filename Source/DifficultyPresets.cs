@@ -54,6 +54,9 @@ namespace RP0
 
         [GameParameters.CustomParameterUI("Enable part tooling")]
         public bool IsToolingEnabled = true;
+        
+        [GameParameters.CustomParameterUI("Enable career progress logging")]
+        public bool CareerLogEnabled = true;
 
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
         public bool avionicsUseKerbalism = true;

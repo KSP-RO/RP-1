@@ -287,7 +287,7 @@
         "description": "An upper stage Kerosene/LOX engine designed for new versions of the Soyuz-2 launchers. To also be used with the Angara family of launchers. Diameter: [1.7 m]. Plume configured by RealPlume.",
         "mod": "DECQ R7/SOYUZ",
         "cost": "1200",
-        "entry_cost": "24000",
+        "entry_cost": "0",
         "category": "STAGED",
         "info": "",
         "year": "2004",

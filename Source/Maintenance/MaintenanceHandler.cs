@@ -261,7 +261,12 @@ namespace RP0
 
             double timePassed = time - lastUpdate;
 
-            Funding.Instance.AddFunds(-timePassed * ((totalUpkeep + settings.maintenanceOffset) * (1d / 86400d)), TransactionReasons.StructureRepair);
+            using (new CareerEventScope(CareerEventType.Maintenance))
+            {
+                double cost = -timePassed * ((totalUpkeep + settings.maintenanceOffset) * (1d / 86400d));
+                Debug.Log($"[RP-0] MaintenanceHandler removing {cost} funds");
+                Funding.Instance.AddFunds(cost, TransactionReasons.StructureRepair);
+            }
 
             lastUpdate = time;
 

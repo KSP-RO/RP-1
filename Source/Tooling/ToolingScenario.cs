@@ -59,6 +59,7 @@ namespace RP0
 
             ToolingDatabase.Save(node.AddNode("Tooling"));
         }
+        
         public void OnDestroy()
         {
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);

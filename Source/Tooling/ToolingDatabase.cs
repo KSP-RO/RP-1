@@ -73,7 +73,7 @@ namespace RP0
         {
             if (!ToolingManager.Instance.toolingEnabled)
             {
-                return ToolingLevel.Full;
+                return parameters.Length;
             }
 
             List<ToolingEntry> entries;

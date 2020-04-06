@@ -71,14 +71,19 @@ namespace RP0
 
         public static int GetToolingLevel(string type, params float[] parameters)
         {
+            if (!ToolingManager.Instance.toolingEnabled)
+            {
+                return parameters.Length;
+            }
+
             List<ToolingEntry> entries;
             var level = 0;
             if (toolings.TryGetValue(type, out entries))
             {
-                for(int i = 0; i < parameters.Length; ++i)
+                for (int i = 0; i < parameters.Length; ++i)
                 {
                     var entryIndex = GetEntryIndex(parameters[i], entries, out _);
-                    if(entryIndex == -1)
+                    if (entryIndex == -1)
                     {
                         break;
                     }
@@ -102,7 +107,7 @@ namespace RP0
             for (int i = 0; i < parameters.Length; ++i)
             {
                 var entryIndex = GetEntryIndex(parameters[i], entries, out var insertionIndex);
-                if(entryIndex == -1)
+                if (entryIndex == -1)
                 {
                     entries.Insert(insertionIndex, new ToolingEntry(parameters[i]));
                     entryIndex = insertionIndex;

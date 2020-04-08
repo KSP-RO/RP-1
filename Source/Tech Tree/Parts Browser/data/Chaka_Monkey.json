@@ -386,7 +386,7 @@
         "description": "The forward heat shield and docking adapter base for the Orion EFT and MPCV command modules.",
         "mod": "Chaka Monkey",
         "cost": "1000",
-        "entry_cost": "1400",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "CM Parts",
         "year": "2019",
@@ -399,7 +399,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesOrion",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -411,7 +411,7 @@
         "description": "The NASA docking system for the Orion MPCV Crew Module.",
         "mod": "Chaka Monkey",
         "cost": "4000",
-        "entry_cost": "175000",
+        "entry_cost": "0",
         "category": "RCS",
         "info": "Docking",
         "year": "2019",
@@ -424,7 +424,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesOrion",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -434,7 +434,7 @@
         "description": "The Launch Abort System (LAS) explosive bolt decoupler of the Orion EFT Crew Module.",
         "mod": "Chaka Monkey",
         "cost": "4000",
-        "entry_cost": "175000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "LES",
         "year": "2019",
@@ -447,7 +447,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesOrion",
         "identical_part_name": "",
         "module_tags": [
             "EngineSolid"
@@ -730,7 +730,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "OrionESM",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1316,7 +1316,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesOrion",
         "identical_part_name": "Orion MPCV",
         "module_tags": [
             "NoResourceCostMult"
@@ -1443,7 +1443,7 @@
         "description": "The launch escape tower of the Orion command module. Activates in the case of an emergency and carries the crew of the Orion safely away from the launch vehicle. Plume configured by RealPlume.",
         "mod": "Chaka Monkey",
         "cost": "5000",
-        "entry_cost": "175000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "LES",
         "year": "2019",
@@ -1456,8 +1456,8 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "Orion LAS",
+        "entry_cost_mods": "capsulesOrion",
+        "identical_part_name": "OrionLAS",
         "module_tags": [
             "EngineSolid"
         ]
@@ -1467,8 +1467,8 @@
         "title": "Orion MPCV Crew Module",
         "description": "The next generation NASA spacecraft for beyond LEO (BEO) exploration.",
         "mod": "Chaka Monkey",
-        "cost": "0",
-        "entry_cost": "750000",
+        "cost": "70000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",
         "year": "2019",
@@ -1481,8 +1481,8 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "Orion MPCV",
+        "entry_cost_mods": "capsulesOrion",
+        "identical_part_name": "OrionCM",
         "module_tags": [
             "HumanRated",
             "NoResourceCostMult"
@@ -1507,7 +1507,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesOrion",
         "identical_part_name": "Orion CM",
         "module_tags": [
             "HumanRated",
@@ -1584,7 +1584,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "OrionRCS",
         "module_tags": []
     },
     {
@@ -1619,7 +1619,7 @@
         "description": "A protective fairing for the Orion service module.",
         "mod": "Chaka Monkey",
         "cost": "200",
-        "entry_cost": "600",
+        "entry_cost": "0",
         "category": "MATERIALS",
         "info": "Fairing",
         "year": "2019",
@@ -1632,7 +1632,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesOrion",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2485,8 +2485,8 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "capsulesOrion",
+        "identical_part_name": "OrionChute",
         "module_tags": []
     },
     {

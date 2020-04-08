@@ -5330,7 +5330,7 @@
         "spacecraft": "",
         "engine_config": "ORM65",
         "upgrade": false,
-        "entry_cost_mods": "100",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
     },

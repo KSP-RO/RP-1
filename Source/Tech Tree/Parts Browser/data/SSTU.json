@@ -422,7 +422,7 @@
         "description": "The LEA provides the means for separation the CM from the launch vehicle during pad or suborbital aborts. This assembly consists of a Q-ball instrumentation assembly, ballast compartment, canard surfaces, pitch control motor, tower jettison motor, launch escape motor, a structural skirt, an open-frame tower, and a boost protective cover.",
         "mod": "SSTU",
         "cost": "5000",
-        "entry_cost": "175000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "LES",
         "year": "2019",
@@ -435,8 +435,8 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "Orion LAS",
+        "entry_cost_mods": "capsulesOrion",
+        "identical_part_name": "OrionLAS",
         "module_tags": [
             "EngineSolid"
         ]
@@ -446,8 +446,8 @@
         "title": "Orion Command Module",
         "description": "Orion Command Module. Contains between 2 and 6 astronauts.",
         "mod": "SSTU",
-        "cost": "0",
-        "entry_cost": "750000",
+        "cost": "75000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "Command Module",
         "year": "2019",
@@ -460,8 +460,8 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "Orion CM",
+        "entry_cost_mods": "capsulesOrion",
+        "identical_part_name": "OrionCM",
         "module_tags": [
             "HumanRated",
             "NoResourceCostMult",
@@ -487,7 +487,7 @@
         "spacecraft": "Orion",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesOrion",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
@@ -545,8 +545,8 @@
         "title": "Orion European Service Module",
         "description": "The Orion Service Module is the service module component of the Orion spacecraft, serving as its primary power and propulsion component until it is discarded at the end of each mission. In January 2013, NASA announced that the European Space Agency (ESA) will construct the service module for Exploration Mission 1, replacing the previous design. Based on ESA's Automated Transfer Vehicle (ATV), the new design is also known as the European Service Module (ESM). Plume configured by RealPlume.",
         "mod": "SSTU",
-        "cost": "0",
-        "entry_cost": "750000",
+        "cost": "25000",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "Service Module",
         "year": "2020",
@@ -559,8 +559,8 @@
         "spacecraft": "Orion EUS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "Orion MPCV",
+        "entry_cost_mods": "OrionESM, R-4D-11",
+        "identical_part_name": "OrionESM",
         "module_tags": [
             "NoResourceCostMult"
         ]

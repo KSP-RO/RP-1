@@ -28,5 +28,10 @@ namespace RP0
         {
             ConfigNode.CreateConfigFromObject(this, node);
         }
+
+        public bool IsInPeriod(LogPeriod p)
+        {
+            return UT >= p.StartUT && UT < p.EndUT;
+        }
     }
 }

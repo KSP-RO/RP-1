@@ -2611,7 +2611,7 @@
         "category": "RCS",
         "info": "",
         "year": "1959",
-        "technology": "earlyFlightControl",
+        "technology": "stabilityRP0",
         "era": "02-SAT",
         "ro": false,
         "rp0": false,

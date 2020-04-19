@@ -6198,6 +6198,29 @@
         ]
     },
     {
+        "name": "ROE-XLR11",
+        "title": "XLR11",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "150",
+        "entry_cost": "3000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "PW",
+        "technology": "rocketryTesting",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "X-1",
+        "engine_config": "XLR11",
+        "upgrade": false,
+        "entry_cost_mods": "XLR11",
+        "identical_part_name": "XLR11",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROE-XLR41",
         "title": "XLR41 Series Engine",
         "description": "Americanized version of the V-2 Model 39 (A-4). It was very similar to its predecessor, but was built using American SAE components rather than Metric components, and featured several minor upgrades.",

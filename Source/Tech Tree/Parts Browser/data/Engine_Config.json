@@ -2709,7 +2709,7 @@
         "module_tags": []
     },
     {
-        "name": "ISE-100 (445N)",
+        "name": "ISE-100_445",
         "title": "ISE-100 (445N)",
         "description": "",
         "mod": "Engine_Config",
@@ -2730,7 +2730,7 @@
         "module_tags": []
     },
     {
-        "name": "ISE-100 (445N) MON3",
+        "name": "ISE-100_MON3",
         "title": "ISE-100 (445N) MON3",
         "description": "",
         "mod": "Engine_Config",

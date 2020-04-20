@@ -26,6 +26,8 @@ namespace RP0
 
         private static bool? _origDoStockGCalcs;
 
+        private bool _anyCrewAboveWarnThreshold = false;
+
         public override string GetInfo()
         {
             return $"Cockpit is unpressurized and will lead to crew death above {crewDeathAltitude / 1000:0.#}km";
@@ -72,6 +74,18 @@ namespace RP0
 
                             double highGPenalty = vessel.geeForce > 3 ? vessel.geeForce : 1;
                             pcm.gExperienced += (0.5d + rnd.NextDouble()) * gDamageAdder * highGPenalty;
+
+                            double gMult = ProtoCrewMember.GToleranceMult(pcm) * HighLogic.CurrentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().KerbalGToleranceMult;
+                            _anyCrewAboveWarnThreshold = pcm.gExperienced > PhysicsGlobals.KerbalGThresholdWarn * gMult;
+
+                            double locThreshold = PhysicsGlobals.KerbalGThresholdLOC * gMult;
+                            if (!pcm.outDueToG && pcm.gExperienced > locThreshold)
+                            {
+                                // Just passed out
+                                ScreenMessages.PostScreenMessage($"<color=red>{pcm.name} has lost consciousness due to hypoxia!</color>", 5.5f, ScreenMessageStyle.UPPER_CENTER);
+                            }
+
+                            // There's at least one cycle of delay after passing out before the death chance rolls start
                             if (pcm.outDueToG && rnd.NextDouble() < crewDeathChance)
                             {
                                 killed = true;
@@ -94,6 +108,27 @@ namespace RP0
                             ProtoCrewMember.doStockGCalcs = _origDoStockGCalcs.Value;
                             _origDoStockGCalcs = null;
                         }
+                    }
+                }
+            }
+        }
+
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+
+            // Stock code adds it's G-limit messages after the FixedUpdate() of this partmodule is run.
+            // Thus OnUpdate() is used for removing those standard messages.
+            if (_anyCrewAboveWarnThreshold)
+            {
+                _anyCrewAboveWarnThreshold = false;
+                for (int i = ScreenMessages.Instance.ActiveMessages.Count - 1; i >= 0; i--)
+                {
+                    // Note: Should probably find the "X: lost consciousness!" and "X: reaching G limit!" messages by text but that's a bit more complicated due to localization.
+                    ScreenMessage m = ScreenMessages.Instance.ActiveMessages[i];
+                    if (m.style == ScreenMessageStyle.UPPER_CENTER && (m.duration == 5f || m.duration == 3f))
+                    {
+                        ScreenMessages.RemoveMessage(m);
                     }
                 }
             }

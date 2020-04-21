@@ -227,7 +227,8 @@ CONTRACT_TYPE
 			type = HasResource
 			resource = ComSatPayload
 			minQuantity = 1249.99
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -326,8 +327,8 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
 			hideChildren = true
 		}
 		PARAMETER
@@ -427,8 +428,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -527,8 +529,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -627,8 +630,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -727,8 +731,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -827,8 +832,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -927,8 +933,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1027,8 +1034,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1127,8 +1135,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1227,8 +1236,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1328,8 +1338,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1428,8 +1439,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1528,8 +1540,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1628,8 +1641,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1728,8 +1742,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1828,8 +1843,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -1928,8 +1944,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2028,8 +2045,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2128,8 +2146,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2228,8 +2247,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2328,8 +2348,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2429,8 +2450,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2529,8 +2551,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2629,8 +2652,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2729,8 +2753,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2829,8 +2854,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -2929,8 +2955,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3029,8 +3056,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3129,8 +3157,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3229,8 +3258,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3329,8 +3359,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3429,8 +3460,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3530,8 +3562,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3630,8 +3663,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3730,8 +3764,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3830,8 +3865,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -3930,8 +3966,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4030,8 +4067,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4130,8 +4168,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4230,8 +4269,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4330,8 +4370,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4430,8 +4471,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4530,8 +4572,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4631,8 +4674,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4731,8 +4775,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4831,8 +4876,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -4931,8 +4977,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5031,8 +5078,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5131,8 +5179,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5231,8 +5280,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5331,8 +5381,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5431,8 +5482,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5531,8 +5583,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5631,8 +5684,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5732,8 +5786,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5832,8 +5887,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -5932,8 +5988,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6032,8 +6089,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6132,8 +6190,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6232,8 +6291,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6332,8 +6392,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6432,8 +6493,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6532,8 +6594,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6632,8 +6695,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{
@@ -6732,8 +6796,9 @@ CONTRACT_TYPE
 			name = HasComSatPayload
 			type = HasResource
 			resource = ComSatPayload
-			minQuantity = 1250
-			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg)
+			minQuantity = 1249.99
+			title = Have a ComSatPayload of at least 1250 units on the craft (500 kg) 
+             hideChildren = true
 		}
 		PARAMETER
 		{

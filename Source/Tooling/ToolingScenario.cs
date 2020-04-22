@@ -12,19 +12,7 @@ namespace RP0
         protected static Dictionary<string, ToolingDefinition> toolingDefinitions = null;
 
         public bool toolingEnabled = true;
-
-        #region Instance
-
-        private static ToolingManager _instance = null;
-        public static ToolingManager Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
-
-        #endregion
+        public static ToolingManager Instance { get; private set; } = null;
 
         #endregion
 
@@ -32,13 +20,9 @@ namespace RP0
 
         public override void OnAwake()
         {
-            base.OnAwake();
-
-            if (_instance != null)
-            {
-                GameObject.Destroy(_instance);
-            }
-            _instance = this;
+            if (Instance != null)
+                Destroy(Instance);
+            Instance = this;
 
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
@@ -46,17 +30,12 @@ namespace RP0
 
         public override void OnLoad(ConfigNode node)
         {
-            base.OnLoad(node);
-
             ToolingDatabase.Load(node.GetNode("Tooling"));
-
             EnsureDefinitionsLoaded();
         }
 
         public override void OnSave(ConfigNode node)
         {
-            base.OnSave(node);
-
             ToolingDatabase.Save(node.AddNode("Tooling"));
         }
         
@@ -68,25 +47,13 @@ namespace RP0
 
         #endregion
 
-        #region Methods
-
-        protected void LoadSettings(ConfigNode n)
-        {
-            LoadSettings();
-        }
-
-        protected void LoadSettings()
-        {
-            toolingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsToolingEnabled;
-        }
-
-        #endregion
+        protected void LoadSettings(ConfigNode n) => LoadSettings();
+        protected void LoadSettings() => toolingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsToolingEnabled;
 
         public ToolingDefinition GetToolingDefinition(string name)
         {
             EnsureDefinitionsLoaded();
             toolingDefinitions.TryGetValue(name, out ToolingDefinition def);
-
             return def;
         }
 
@@ -101,12 +68,9 @@ namespace RP0
                     var def = new ToolingDefinition(n);
                     Debug.Log("[ModuleTooling] Loaded definition: " + def.name);
                     if (toolingDefinitions.ContainsKey(def.name))
-                    {
                         Debug.LogError("[ModuleTooling] Found duplicate definition: " + def.name);
-                        continue;
-                    }
-
-                    toolingDefinitions.Add(def.name, def);
+                    else
+                        toolingDefinitions.Add(def.name, def);
                 }
             }
         }

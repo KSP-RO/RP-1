@@ -91,7 +91,6 @@
     <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
     <Compile Include="Tooling\ModuleTooling.cs" />
     <Compile Include="Tooling\ModuleToolingProcAvionics.cs" />
-    <Compile Include="Tooling\ModuleToolingROTanks.cs" />
     <Compile Include="Tooling\ModuleToolingStockFairing.cs" />
     <Compile Include="Tooling\ModuleToolingPFSide.cs" />
     <Compile Include="Tooling\ModuleToolingGeneric.cs" />

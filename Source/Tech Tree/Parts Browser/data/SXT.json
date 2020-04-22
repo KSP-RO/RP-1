@@ -464,7 +464,7 @@
         "spacecraft": "Vanguard 2",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, avionicsProbesEarly",
+        "entry_cost_mods": "1000, Science-Core-earlyAvionics",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",
@@ -2107,7 +2107,7 @@
         "spacecraft": "Sputnik",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "250, avionicsProbesPW",
+        "entry_cost_mods": "250, Science-Core-avionicsPrototypes",
         "identical_part_name": "Sputnik",
         "module_tags": [
             "Avionics",

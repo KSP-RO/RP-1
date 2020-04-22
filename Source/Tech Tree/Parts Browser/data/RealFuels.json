@@ -621,7 +621,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "BalloonTanks",
+        "entry_cost_mods": "25000, BalloonTanks",
         "identical_part_name": "",
         "module_tags": [
             "TankBalloon"

@@ -419,7 +419,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "250, Science-Core-avionicsPrototypes",
         "identical_part_name": "",
         "module_tags": []
     }

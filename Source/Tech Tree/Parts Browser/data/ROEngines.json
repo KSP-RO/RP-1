@@ -2992,6 +2992,30 @@
         ]
     },
     {
+        "name": "ROE-LR87_LH2V",
+        "title": "LR87-LH2 Vac",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "700",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1967",
+        "technology": "largeHydrolox",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR87LH2",
+        "upgrade": false,
+        "entry_cost_mods": "LR87-LH2-Vacuum",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-LR87_Single",
         "title": "LR87 Single",
         "description": "",

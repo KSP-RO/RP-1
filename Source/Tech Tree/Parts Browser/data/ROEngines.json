@@ -2978,7 +2978,7 @@
         "info": "",
         "year": "1963",
         "technology": "earlyHydrolox",
-        "ro": false,
+        "ro": true,
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",

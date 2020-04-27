@@ -14,6 +14,7 @@ namespace RP0
         [KSPField] public float untooledMultiplier = 0.25f;
         [KSPField] public float finalToolingCostMultiplier = 1;
         [KSPField] public float minDiameter = 0;
+        [KSPField(isPersistant = true)] public float addedCost = 0;
 
         [KSPField] public Vector3 diameterToolingCost = new Vector3(3000f, 6000f, 250f); // d^2, d^1, 1
         [KSPField] public Vector4 lengthToolingCost = new Vector4(250f, 1000f, 100f, 50f); // d^2, d^1, l^1, 1
@@ -111,10 +112,12 @@ namespace RP0
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER || !onStartFinished)
-                return 0f;
+            if (HighLogic.LoadedSceneIsEditor && HighLogic.CurrentGame.Mode == Game.Modes.CAREER && onStartFinished)
+            {
+                addedCost = GetUntooledPenaltyCost();
+            }
 
-            return GetUntooledPenaltyCost();
+            return addedCost;
         }
 
         protected float GetUntooledPenaltyCost()

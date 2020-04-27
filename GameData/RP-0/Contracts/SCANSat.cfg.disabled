@@ -7,7 +7,7 @@
 {
 	%maxSimultaneous = 5
 	
-	@deadline = 365 * @/targetBody1.Multiplier() // 1 year * mult
+	@deadline = 365 * RP1DeadlineMult() * @/targetBody1.Multiplier() // 1 year * mult
 	
 	@advanceFunds = (Random(1000, 3000.0) + 5000.0 * (@/targetBody1.Multiplier() / 2)) * 2.4
 	@rewardFunds = @advanceFunds
@@ -32,7 +32,7 @@
 {
 	%maxSimultaneous = 5
 	
-	@deadline = 365 * @/targetBody3.Multiplier() // 1 year * mult
+	@deadline = 365 * RP1DeadlineMult() * @/targetBody3.Multiplier() // 1 year * mult
 	
 	@advanceFunds = (Random(5000, 10000.0) + 10000.0 * (@/targetBody3.Multiplier() / 2)) * 2.4
 	@rewardFunds = @advanceFunds
@@ -57,7 +57,7 @@
 {
 	%maxSimultaneous = 5
 	
-	@deadline = 365 * @/targetBody2.Multiplier() // 1 year * mult
+	@deadline = 365 * RP1DeadlineMult() * @/targetBody2.Multiplier() // 1 year * mult
 	
 	@advanceFunds = (Random(5000, 10000.0) + 10000.0 * (@/targetBody2.Multiplier() / 2)) * 2.4
 	@rewardFunds = @advanceFunds

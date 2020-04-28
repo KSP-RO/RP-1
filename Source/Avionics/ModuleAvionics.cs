@@ -128,26 +128,10 @@ namespace RP0
             {
                 foreach (Part p in vessel.Parts)
                 {
-                    if (p == part)
-                        continue;
-
-                    bool hasCommand = false;
-                    bool allAvionicsDebris = true;
-                    bool noAvionics = true;
-                    foreach (PartModule pm in p.Modules)
-                    {
-                        if (pm is ModuleCommand)
-                        {
-                            hasCommand = true;
-                        }
-                        else if (pm is ModuleAvionics am)
-                        {
-                            noAvionics = false;
-                            if (!am.setToDebrisOnStage)
-                                allAvionicsDebris = false;
-                        }
-                    }
-                    if (hasCommand && (noAvionics || !allAvionicsDebris))
+                    ModuleAvionics avionics = p.FindModuleImplementing<ModuleAvionics>();
+                    ModuleCommand command = p.FindModuleImplementing<ModuleCommand>();
+                    bool debris = avionics?.setToDebrisOnStage ?? true;
+                    if (command && !debris)
                     {
                         rename = false;
                         break;

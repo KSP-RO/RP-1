@@ -96,12 +96,8 @@ namespace RP0
         private ModuleResource FindCommandChargeResource() =>
             part.FindModuleImplementing<ModuleCommand>()?.resHandler.inputResources.FirstOrDefault(r => r?.id == PartResourceLibrary.ElectricityHashcode);
 
-        protected void OnConfigurationUpdated()
-        {
-            SetActionsAndGui();
-        }
 
-        private void SetActionsAndGui()
+        protected virtual void SetActionsAndGui()
         {
             var toggleAble = GetToggleable();
             Events[nameof(ToggleEvent)].guiActive = toggleAble;

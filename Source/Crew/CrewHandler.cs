@@ -224,7 +224,7 @@ namespace RP0.Crew
                 }
             }
 
-            TrainingDatabase.Initialize();
+            TrainingDatabase.EnsureInitialized();
             KACWrapper.InitKACWrapper();
         }
 

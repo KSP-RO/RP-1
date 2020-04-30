@@ -335,13 +335,10 @@ namespace RP0.ProceduralAvionics
             CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
             Log($"Avionics Config changed to: {avionicsConfigName}.  Tech: {avionicsTechLevel}");
             interplanetary = CurrentProceduralAvionicsTechNode.interplanetary;
-            ClampControllableMass();
             if (_started)
             {
                 // Don't fire these if cachedVolume isn't known yet.
-                Log("UpdateControllableMassSlider in AvionicsConfigChanged");
-                UpdateControllableMassSlider();
-                SendRemainingVolume();
+                UpdateMassLimitsAndVolume();
             }
             if (!GetToggleable())
                 systemEnabled = true;
@@ -363,10 +360,15 @@ namespace RP0.ProceduralAvionics
                 return;
             }
             cachedVolume = volume;
+            UpdateMassLimitsAndVolume();
+            RefreshDisplays();
+        }
+
+        private void UpdateMassLimitsAndVolume()
+        {
             ClampControllableMass();
             UpdateControllableMassSlider();
             SendRemainingVolume();
-            RefreshDisplays();
         }
 
         private void SendRemainingVolume()

@@ -243,7 +243,7 @@ namespace RP0.Crew
                 GUILayout.Label(selectedCourse.seatMax - selectedCourse.Students.Count + " remaining seat(s).");
             if (selectedCourse.seatMin > selectedCourse.Students.Count)
                 GUILayout.Label(selectedCourse.seatMin - selectedCourse.Students.Count + " more student(s) required.");
-            GUILayout.Label("Will take " + KSPUtil.PrintDateDeltaCompact(selectedCourse.GetTime(), false, false));
+            GUILayout.Label("Will take " + KSPUtil.PrintDateDeltaCompact(selectedCourse.GetTime(), true, false));
             GUILayout.Label("and finish on " + KSPUtil.PrintDate(selectedCourse.CompletionTime(), false));
             if (GUILayout.Button("Start Course", GUILayout.ExpandWidth(false))) {
                 if (selectedCourse.StartCourse()) {

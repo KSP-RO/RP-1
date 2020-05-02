@@ -5090,6 +5090,29 @@
         ]
     },
     {
+        "name": "ROE-RS27",
+        "title": "H-1/RS-27 Series Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "4000",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "H1",
+        "upgrade": false,
+        "entry_cost_mods": "H-1-165K",
+        "identical_part_name": "H-1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RS68",
         "title": "RS-68 Engine",
         "description": "",

@@ -95,6 +95,16 @@ namespace RP0
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
             GameEvents.onGameStateLoad.Add(LoadSettings);
         }
+        public void Start()
+        {
+            double ut = Planetarium.GetUniversalTime();
+            if (nextUpdate > ut + updateInterval)
+            {
+                // KRASH has a bad habit of not reverting state properly when exiting sims.
+                // This means that the updateInterval could end up years into the future.
+                nextUpdate = ut + 5;
+            }
+        }
 
         public override void OnLoad(ConfigNode node)
         {

@@ -288,7 +288,8 @@ namespace RP0
             else
             {
                 wasWarpingHigh = true;
-                nextUpdate = time + updateInterval * (TimeWarp.CurrentRate * (1f / 100f));
+                // Scale the update interval up with timewarp but don't allow longer than 1 day steps
+                nextUpdate = time + Math.Min(3600 * 24, updateInterval * TimeWarp.CurrentRate / 100f);
             }
         }
 

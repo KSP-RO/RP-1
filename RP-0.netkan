@@ -16,13 +16,14 @@
 		{ "name" : "ContractConfigurator" },
 		{ "name" : "CustomBarnKit" },
 		{ "name" : "DeadlyReentry" },
-		{ "name" : "VenStockRevamp" },
+		{ "name" : "VenStockRevamp-NewParts" },
 		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "RealSolarSystem" },
 		{ "name" : "DMagicOrbitalScience" },
 		{ "name" : "DMagicScienceAnimate" }
 	],
 	"recommends" : [
+		{ "name" : "VenStockRevamp" },
 		{ "name" : "ConnectedLivingSpace" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },

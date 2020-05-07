@@ -513,7 +513,7 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": true,
+        "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,

@@ -70,6 +70,7 @@
     <ProjectReference Include="..\RP0.csproj">
       <Project>{997854F8-4EFB-4A78-87BC-F7C8CEA64669}</Project>
       <Name>RP0</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

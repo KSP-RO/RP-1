@@ -229,13 +229,13 @@ namespace RP0
             } finally {
                 GUILayout.EndHorizontal();
             }
-            foreach (string name in Crew.CrewHandler.Instance.kerbalRetireTimes.Keys) {
+            foreach (string name in Crew.CrewHandler.Instance.KerbalRetireTimes.Keys) {
                 GUILayout.BeginHorizontal();
                 try {
                     GUILayout.Space(20);
-                    double rt = Crew.CrewHandler.Instance.kerbalRetireTimes[name];
+                    double rt = Crew.CrewHandler.Instance.KerbalRetireTimes[name];
                     GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(144));
-                    GUILayout.Label(Crew.CrewHandler.Instance.retirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }

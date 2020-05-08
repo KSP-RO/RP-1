@@ -13,7 +13,6 @@ namespace RP0.Crew
         public double startTime = 0d;
         public bool Started = false, Completed = false;
 
-
         public ActiveCourse(CourseTemplate template)
         {
             sourceNode = template.sourceNode;
@@ -207,7 +206,7 @@ namespace RP0.Crew
                             for (int i = student.careerLog.Count; i-- > 0;)
                             {
                                 FlightLog.Entry e = student.careerLog.Entries[i];
-                                if (CrewHandler.TrainingExpiration.Compare(v.value, e))
+                                if (TrainingExpiration.Compare(v.value, e))
                                 {
                                     e.type = "expired_" + e.type;
                                     CrewHandler.Instance.RemoveExpiration(student.name, v.value);
@@ -222,17 +221,17 @@ namespace RP0.Crew
                         if (student.flightLog.Count > 0)
                             student.ArchiveFlightLog();
 
-                        CrewHandler.TrainingExpiration exp = null;
+                        TrainingExpiration exp = null;
                         if (expiration > 0d)
                         {
-                            exp = new CrewHandler.TrainingExpiration();
-                            exp.pcmName = student.name;
-                            exp.expiration = expiration;
+                            exp = new TrainingExpiration();
+                            exp.PcmName = student.name;
+                            exp.Expiration = expiration;
                             if (expirationUseStupid)
-                                exp.expiration *= UtilMath.Lerp(CrewHandler.Instance.settings.trainingProficiencyStupidMin,
-                                    CrewHandler.Instance.settings.trainingProficiencyStupidMax,
+                                exp.Expiration *= UtilMath.Lerp(CrewHandler.Instance.Settings.trainingProficiencyStupidMin,
+                                    CrewHandler.Instance.Settings.trainingProficiencyStupidMax,
                                     student.stupidity);
-                            exp.expiration += Planetarium.GetUniversalTime();
+                            exp.Expiration += Planetarium.GetUniversalTime();
                         }
 
                         bool prevMissionsAlreadyExpired = false;
@@ -261,7 +260,7 @@ namespace RP0.Crew
                             student.flightLog.AddEntry(trainingType, trainingTarget);
                             student.ArchiveFlightLog();
                             if (expiration > 0d)
-                                exp.entries.Add(v.value);
+                                exp.Entries.Add(v.value);
                         }
 
                         if (expiration > 0d)

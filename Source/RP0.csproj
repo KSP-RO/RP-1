@@ -47,6 +47,7 @@
     <Compile Include="Crew\CrewHandlerSettings.cs" />
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="Crew\FSGUI.cs" />
+    <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />

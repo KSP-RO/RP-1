@@ -129,6 +129,11 @@ namespace RP0
             return s;
         }
 
+        public void ScheduleMaintenanceUpdate()
+        {
+            nextUpdate = 0;
+        }
+
         public void UpdateUpkeep()
         {
             float[] costs;

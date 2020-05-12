@@ -53,7 +53,7 @@
         "description": "Used in the first stage of the Titan rocket family, the LR87 is composed of two engines with separate turbomachinery integrated into one unit. The version used on Titan I burned kerosene and liquid oxygen, while Titan II through Titan IV burned storable propellants. A modified version burning liquid hydrogen was developed for the upper stages of Saturn V and Saturn IB, but the J-2 was selected instead. Diameter: [3.0 m]. Plume configured by RealPlume.",
         "mod": "RO-MakingHistory",
         "cost": "500",
-        "entry_cost": "10000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1959",

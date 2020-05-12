@@ -794,7 +794,7 @@
         "spacecraft": "Apollo Alternatives",
         "engine_config": "AJ260FL",
         "upgrade": false,
-        "entry_cost_mods": "250000,SolidsPBAN",
+        "entry_cost_mods": "150000,AJ260-SL1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -817,7 +817,7 @@
         "spacecraft": "Apollo Alternatives",
         "engine_config": "AJ260SL",
         "upgrade": false,
-        "entry_cost_mods": "75000,SolidsPBAN",
+        "entry_cost_mods": "75000,SolidsPBAN,SolidsLarge,SolidsTVC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -840,7 +840,7 @@
         "spacecraft": "Apollo Alternatives",
         "engine_config": "AJ260SL",
         "upgrade": true,
-        "entry_cost_mods": "20000,SolidsPBAN",
+        "entry_cost_mods": "20000,AJ260-SL1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1087,7 +1087,7 @@
         "spacecraft": "Scout X-3",
         "engine_config": "Algol-II",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "10000, Algol-I",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1110,7 +1110,7 @@
         "spacecraft": "Scout D, E, F, G",
         "engine_config": "Algol-III",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "10000, Algol-II",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1202,7 +1202,7 @@
         "spacecraft": "Scout X-1",
         "engine_config": "Antares-I",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1225,7 +1225,7 @@
         "spacecraft": "Scout X-2",
         "engine_config": "Antares-II",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Antares-I",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1248,7 +1248,7 @@
         "spacecraft": "Scout G",
         "engine_config": "Antares-III",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Antares-II",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1566,7 +1566,7 @@
         "spacecraft": "Minotaur, Athena",
         "engine_config": "Castor-120",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsHTPB,SolidsTVC",
+        "entry_cost_mods": "200000,SolidsHTPB,SolidsTVC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1658,7 +1658,7 @@
         "spacecraft": "",
         "engine_config": "Castor-30A",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsHTPB,SolidsTVC",
+        "entry_cost_mods": "100000,SolidsHTPB,SolidsTVC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1681,7 +1681,7 @@
         "spacecraft": "",
         "engine_config": "Castor-30B",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsHTPB,SolidsTVC",
+        "entry_cost_mods": "10000,Castor-30A",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1704,7 +1704,7 @@
         "spacecraft": "Antares",
         "engine_config": "Castor-30XL",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsHTPB,SolidsTVC",
+        "entry_cost_mods": "10000,Castor-30A",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1727,7 +1727,7 @@
         "spacecraft": "Castor 4",
         "engine_config": "Castor-4",
         "upgrade": false,
-        "entry_cost_mods": "0,Castor-2,SolidsPBAN",
+        "entry_cost_mods": "7224,Castor-2,SolidsPBAN",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1750,7 +1750,7 @@
         "spacecraft": "Delta II (1989)",
         "engine_config": "Castor-4A",
         "upgrade": false,
-        "entry_cost_mods": "0,Castor-4",
+        "entry_cost_mods": "12020,Castor-4,SolidsHTPB",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1773,7 +1773,7 @@
         "spacecraft": "Atlas IIAS, H-II (2001)",
         "engine_config": "Castor-4AXL",
         "upgrade": false,
-        "entry_cost_mods": "0,Castor-4",
+        "entry_cost_mods": "20000,Castor-4A",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3821,7 +3821,7 @@
         "spacecraft": "LR87",
         "engine_config": "LR87",
         "upgrade": false,
-        "entry_cost_mods": "20000, AJTitan",
+        "entry_cost_mods": "30000, AJTitan",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3982,7 +3982,7 @@
         "spacecraft": "",
         "engine_config": "LR87LH2",
         "upgrade": false,
-        "entry_cost_mods": "2000, AJTitan-LH2",
+        "entry_cost_mods": "75000, AJTitan-LH2",
         "identical_part_name": "",
         "module_tags": []
     },

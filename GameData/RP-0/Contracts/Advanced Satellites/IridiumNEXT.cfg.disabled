@@ -20,7 +20,7 @@ CONTRACT_TYPE
 	maxExpiry = 0
 	maxCompletions = 1
 	maxSimultaneous = 1
-	deadline = 2555  // 7 years
+	deadline = 2555 * RP1DeadlineMult()  // 7 years
 
 	targetBody = HomeWorld()
 	

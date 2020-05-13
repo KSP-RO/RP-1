@@ -66,8 +66,8 @@ namespace RP0.Crew
 
         #region Fields
 
+        protected static bool isInitialized = false;
         protected static Dictionary<string, TrainingHolder> holders = null;
-
         protected static HashSet<string> unlockPathTracker = new HashSet<string>();
 
         #endregion
@@ -76,8 +76,17 @@ namespace RP0.Crew
 
         public TrainingDatabase()
         {
-            Initialize();
+            EnsureInitialized();
         }
+
+        public static void EnsureInitialized()
+        {
+            if (!isInitialized)
+            {
+                Initialize();
+            }
+        }
+
         public static void Initialize()
         {
             if (holders == null)
@@ -85,7 +94,7 @@ namespace RP0.Crew
 
             FillHolders();
         }
-        
+
         protected static void FillHolders()
         {
             holders.Clear();
@@ -108,6 +117,7 @@ namespace RP0.Crew
             ClearTracker();
             return _GetTime(Sanitize(name));
         }
+
         protected static double _GetTime(string name)
         {
             if (unlockPathTracker.Contains(name))
@@ -141,6 +151,8 @@ namespace RP0.Crew
 
         public static string SynonymReplace(string name)
         {
+            EnsureInitialized();
+
             name = Sanitize(name);
             TrainingHolder h;
             if (holders.TryGetValue(name, out h))

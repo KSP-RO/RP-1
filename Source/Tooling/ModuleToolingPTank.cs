@@ -8,19 +8,19 @@ namespace RP0
     {
         protected PartModule procTank, procShape;
         protected ModuleFuelTanks rfTank;
-        protected string shapeName = string.Empty;
-        protected bool cone = false;
 
         protected BaseField diam1, diam2, length;
+        protected enum TankType { ProceduralPart, ROTank, Unknown }
+        protected TankType TTank => part.Modules.Contains("ProceduralPart") ? TankType.ProceduralPart :
+                                    part.Modules.Contains("ModuleROTank") ? TankType.ROTank : TankType.Unknown;
 
         public override string ToolingType
         {
             get
             {
                 // This PartModule is also used on structural bits which may not have a RF tank
-                if (rfTank != null && rfTank.type != null)
+                if (rfTank != null && rfTank.type is string rfType)
                 {
-                    string rfType = rfTank.type;
                     if (rfType.EndsWith("-HP"))
                     {
                         // Highly Pressurised tanks currently share the tooling with regular tanks
@@ -36,38 +36,39 @@ namespace RP0
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (!onStartFinished) return 0f;
-
-            UpdateToolingDefinition();
-
+            if (onStartFinished) UpdateToolingDefinition();
             return base.GetModuleCost(defaultCost, sit);
         }
 
         public override float GetToolingCost()
         {
             UpdateToolingDefinition();
-
             return base.GetToolingCost();
         }
 
         protected override void LoadPartModules()
         {
-            procTank = part.Modules["ProceduralPart"];
+            procTank = TTank switch
+            {
+                TankType.ProceduralPart => part.Modules["ProceduralPart"],
+                TankType.ROTank => part.Modules["ModuleROTank"],
+                TankType.Unknown => null,
+                _ => null
+            };
             rfTank = part.Modules.GetModule<ModuleFuelTanks>();
         }
 
         private void UpdateToolingDefinition()
         {
-            var toolingDef = ToolingManager.Instance.GetToolingDefinition(ToolingType);
-            if (toolingDef != null)
+            if (ToolingManager.Instance.GetToolingDefinition(ToolingType) is ToolingDefinition toolingDef)
             {
-                if (toolingDef.untooledMultiplier != default(float))
+                if (toolingDef.untooledMultiplier != default)
                     untooledMultiplier = toolingDef.untooledMultiplier;
 
-                if (toolingDef.finalToolingCostMultiplier != default(float))
+                if (toolingDef.finalToolingCostMultiplier != default)
                     finalToolingCostMultiplier = toolingDef.finalToolingCostMultiplier;
 
-                if (toolingDef.costMultiplierDL != default(float))
+                if (toolingDef.costMultiplierDL != default)
                     costMultiplierDL = toolingDef.costMultiplierDL;
 
                 if (!string.IsNullOrEmpty(toolingDef.toolingName))
@@ -85,79 +86,51 @@ namespace RP0
         {
             diam = 0f;
             len = 0f;
+            object host = null;
+            bool cone = false;
 
             if (procTank == null)
             {
-                Debug.LogError("[ModuleTooling]: Could not find proc part to bind to");
+                Debug.LogError($"[ModuleTooling]: Could not find ProceduralPart or ModuleROTank to bind to for {part}");
                 return;
             }
-
-            string newName = procTank.Fields["shapeName"].GetValue<string>(procTank);
-            if (newName != shapeName || procShape == null)
+            if (TTank == TankType.ProceduralPart)
             {
-                shapeName = newName;
-                switch (shapeName)
+                string shapeName = procTank.Fields["shapeName"].GetValue<string>(procTank);
+                procShape = shapeName switch
                 {
-                    case "Smooth Cone":
-                        procShape = part.Modules["ProceduralShapeBezierCone"];
-                        cone = true;
-                        break;
-                    case "Cone":
-                        procShape = part.Modules["ProceduralShapeCone"];
-                        cone = true;
-                        break;
-                    case "Fillet Cylinder":
-                        procShape = part.Modules["ProceduralShapePill"];
-                        cone = false;
-                        break;
-                    case "Polygon":
-                        procShape = part.Modules["ProceduralShapePolygon"];
-                        cone = false;
-                        break;
-
-                    default: // "Cylinder"
-                        procShape = part.Modules["ProceduralShapeCylinder"];
-                        cone = false;
-                        break;
-                }
+                    "Smooth Cone" => part.Modules["ProceduralShapeBezierCone"],
+                    "Cone" => part.Modules["ProceduralShapeCone"],
+                    "Fillet Cylinder" => part.Modules["ProceduralShapePill"],
+                    "Polygon" => part.Modules["ProceduralShapePolygon"],
+                    _ => part.Modules["ProceduralShapeCylinder"]
+                };
+                cone = shapeName.Contains("Cone");
 
                 if (procShape == null)
                 {
                     Debug.LogError("[ModuleTooling] Could not find proc SHAPE to bind to");
                     return;
                 }
-
-                if (cone)
-                {
-                    diam1 = procShape.Fields["topDiameter"];
-                    diam2 = procShape.Fields["bottomDiameter"];
-                }
-                else
-                {
-                    diam1 = procShape.Fields["diameter"];
-                    diam2 = null;
-                }
-
                 length = procShape.Fields["length"];
-            }
-            else if (procShape == null)
+                diam1 = cone ? procShape.Fields["topDiameter"] : procShape.Fields["diameter"];
+                diam2 = cone ? procShape.Fields["bottomDiameter"] : null;
+                host = procShape;
+            } else if (TTank == TankType.ROTank)
             {
-                Debug.LogError("[ModuleTooling] Lost proc SHAPE to bind to");
-                return;
+                length = procTank.Fields["totalTankLength"];
+                diam1 = procTank.Fields["largestDiameter"];
+                diam2 = null;
+                host = procTank;
             }
 
             if (diam1 == null || length == null)
             {
-                Debug.LogError("[ModuleTooling] Could not bind to procpart fields");
+                Debug.LogError($"[ModuleTooling] Could not bind to length or diamater fields for {host} on {part}");
                 return;
             }
-
-            if (cone)
-                diam = Math.Max(diam1.GetValue<float>(procShape), diam2.GetValue<float>(procShape));
-            else
-                diam = diam1.GetValue<float>(procShape);
-
-            len = length.GetValue<float>(procShape);
+            diam = Mathf.Max(diam1.GetValue<float>(host), (cone && procShape) ? diam2.GetValue<float>(host) : 0);
+            len = length.GetValue<float>(host);
         }
     }
 }

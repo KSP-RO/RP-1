@@ -47,6 +47,7 @@
     <Compile Include="Crew\CrewHandlerSettings.cs" />
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="Crew\FSGUI.cs" />
+    <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
@@ -91,7 +92,6 @@
     <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
     <Compile Include="Tooling\ModuleTooling.cs" />
     <Compile Include="Tooling\ModuleToolingProcAvionics.cs" />
-    <Compile Include="Tooling\ModuleToolingROTanks.cs" />
     <Compile Include="Tooling\ModuleToolingStockFairing.cs" />
     <Compile Include="Tooling\ModuleToolingPFSide.cs" />
     <Compile Include="Tooling\ModuleToolingGeneric.cs" />

@@ -49,6 +49,9 @@ namespace RP0
         [GameParameters.CustomParameterUI("Enable crew retirement", toolTip = "Re-enabling this option can cause some of the older crewmembers to instantly retire.")]
         public bool IsRetirementEnabled = true;
 
+        [GameParameters.CustomFloatParameterUI("Contract deadline multiplier", toolTip = "Used to lengthen or shorten all contract deadlines.", minValue = 0.5f, maxValue = 5f, stepCount = 46, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
+        public float ContractDeadlineMult = 1f;
+
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;
 
@@ -68,12 +71,22 @@ namespace RP0
                 case GameParameters.Preset.Easy:
                     IsTrainingEnabled = false;
                     IsRetirementEnabled = false;
+                    ContractDeadlineMult = 1.7f;
                     break;
                 case GameParameters.Preset.Normal:
+                    IsTrainingEnabled = true;
+                    IsRetirementEnabled = true;
+                    ContractDeadlineMult = 1.3f;
+                    break;
                 case GameParameters.Preset.Moderate:
+                    IsTrainingEnabled = true;
+                    IsRetirementEnabled = true;
+                    ContractDeadlineMult = 1f;
+                    break;
                 case GameParameters.Preset.Hard:
                     IsTrainingEnabled = true;
                     IsRetirementEnabled = true;
+                    ContractDeadlineMult = 0.8f;
                     break;
             }
         }

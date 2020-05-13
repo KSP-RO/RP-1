@@ -7,72 +7,39 @@ namespace RP0
 {
     public abstract class ModuleTooling : PartModule, IPartCostModifier
     {
-        [KSPField]
-        public string toolingType = string.Empty;
+        [KSPField] public string toolingType = string.Empty;
+        [KSPField] public string costReducers = string.Empty;
+        [KSPField] public float costReductionMult = 0.5f;
+        [KSPField] public string toolingName = "Tool Part";
+        [KSPField] public float untooledMultiplier = 0.25f;
+        [KSPField] public float finalToolingCostMultiplier = 1;
+        [KSPField] public float minDiameter = 0;
+        [KSPField(isPersistant = true)] public float addedCost = 0;
 
-        [KSPField]
-        public string costReducers = string.Empty;
-
-        [KSPField]
-        public float costReductionMult = 0.5f;
-
-        [KSPField]
-        public string toolingName = "Tool Part";
-
-        [KSPField]
-        public float untooledMultiplier = 0.25f;
-
-        [KSPField]
-        public float finalToolingCostMultiplier = 1f;
-
-        [KSPField]
-        // d^2, d^1, 1
-        public Vector3 diameterToolingCost = new Vector3(3000f, 6000f, 250f);
-
-        [KSPField]
-        // d^2, d^1, l^1, 1
-        public Vector4 lengthToolingCost = new Vector4(250f, 1000f, 100f, 50f);
-
-        [KSPField]
-        public float minDiameter = 0f;
+        [KSPField] public Vector3 diameterToolingCost = new Vector3(3000f, 6000f, 250f); // d^2, d^1, 1
+        [KSPField] public Vector4 lengthToolingCost = new Vector4(250f, 1000f, 100f, 50f); // d^2, d^1, l^1, 1
 
         protected BaseEvent tEvent;
         protected List<string> reducerList;
         protected bool onStartFinished;
 
-        public virtual string ToolingType
-        {
-            get
-            {
-                return toolingType;
-            }
-        }
+        public virtual string ToolingType { get => toolingType; }
 
         public virtual List<string> CostReducers
         {
             get
             {
-                if (reducerList == null)
-                {
-                    if (!string.IsNullOrEmpty(costReducers))
-                    {
-                        var strColl = costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                                  .Select(s => s.Trim());
-                        reducerList = new List<string>(strColl);
-                    }
-                    else
-                    {
-                        reducerList = new List<string>(0);
-                    }
-                }
-
+                reducerList ??= string.IsNullOrEmpty(costReducers)
+                                ? new List<string>(0)
+                                : new List<string>(costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                                  .Select(s => s.Trim()));
                 return reducerList;
             }
         }
 
         public virtual string GetToolingParameterInfo() => "";
 
-        [KSPEvent(guiActive = false, guiActiveEditor = true, guiName = "Tool Item")]
+        [KSPEvent(guiActiveEditor = true, guiName = "Tool Item")]
         public virtual void ToolingEvent()
         {
             if (IsUnlocked())
@@ -81,21 +48,15 @@ namespace RP0
                 return;
             }
 
-            float toolingCost = GetToolingCost();
-            bool canAfford = true;
-            if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
-            {
-                if (Funding.Instance.Funds < toolingCost)
-                    canAfford = false;
-            }
-            else
-                toolingCost = 0f;
+            bool bypass = HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch;
+            float toolingCost = bypass ? 0f : GetToolingCost();
+            bool canAfford = bypass || Funding.Instance.Funds >= toolingCost;
 
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(
                             "ConfirmToolingPurchase",
-                            "Tooling has not yet been set up for this part. It will cost " + toolingCost.ToString("N0") + " funds.",
+                            $"Tooling has not yet been set up for this part. It will cost { toolingCost:N0} funds.",
                             "Tooling Purchase",
                             HighLogic.UISkin,
                             new Rect(0.5f, 0.5f, 150f, 60f),
@@ -129,24 +90,10 @@ namespace RP0
 
         public abstract bool IsUnlocked();
 
-        public override void OnAwake()
-        {
-            base.OnAwake();
-
-            tEvent = Events["ToolingEvent"];
-        }
-
-        public override void OnLoad(ConfigNode node)
-        {
-            base.OnLoad(node);
-
-            tEvent = Events["ToolingEvent"];
-        }
-
         public override void OnStart(StartState state)
         {
-            base.OnStart(state);
-            Debug.Log("[MT] OnStart() Loading part modules");
+            Debug.Log($"[MT] OnStart() Loading part modules for {part}");
+            tEvent = Events["ToolingEvent"];
             try
             {
                 LoadPartModules();
@@ -165,27 +112,21 @@ namespace RP0
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Mode != Game.Modes.CAREER || !onStartFinished)
-                return 0f;
+            if (HighLogic.LoadedSceneIsEditor && HighLogic.CurrentGame.Mode == Game.Modes.CAREER && onStartFinished)
+            {
+                addedCost = GetUntooledPenaltyCost();
+            }
 
-            return GetUntooledPenaltyCost();
+            return addedCost;
         }
 
         protected float GetUntooledPenaltyCost()
         {
             UpdateButtonName();
-            if (IsUnlocked())
-            {
-                return 0f;
-            }
-
-            return GetToolingCost() * untooledMultiplier;
+            return IsUnlocked() ? 0 : GetToolingCost() * untooledMultiplier;
         }
 
-        public ModifierChangeWhen GetModuleCostChangeWhen()
-        {
-            return ModifierChangeWhen.FIXED;
-        }
+        public ModifierChangeWhen GetModuleCostChangeWhen() => ModifierChangeWhen.FIXED;
 
         /// <summary>
         /// Use for purchasing multiple toolings at once. Does it's best to determine the best order to buy them so that the cost would be minimal.

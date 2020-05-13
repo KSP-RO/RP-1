@@ -1,8 +1,10 @@
-﻿using System;
+﻿using RP0.Crew;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace RP0
 {
@@ -148,12 +150,16 @@ namespace RP0
             EntryCostDatabaseAccessor.Init();
             EntryCostDatabaseAccessor.GetFields();
 
-            string data = null, APInfo = null;
+            string data = null, apInfo = null;
             if (EntryCostDatabaseAccessor.GetHolder(part.name) is RealFuels.PartEntryCostHolder h)
                 data = $"Total cost: {EntryCostDatabaseAccessor.GetCost(h)}\n{EntryCostDatabaseAccessor.DisplayHolder(h, false)}";
             if (part.partInfo is AvailablePart ap)
-                APInfo = $"Tech Required: {ap.TechRequired}";
-            string res = $"Part name: {part.name}\n{APInfo}\n{data}";
+            {
+                apInfo = $"Tech Required: {ap.TechRequired}";
+                if (part.CrewCapacity > 0)
+                    apInfo = $"Training course: {TrainingDatabase.SynonymReplace(part.name)}\n{apInfo}";
+            }
+            string res = $"Part name: {part.name}\n{apInfo}\n{data}";
             return res;
         }
 
@@ -163,7 +169,7 @@ namespace RP0
                 StartCoroutine(DragCubeDisplay());
         }
 
-        private System.Collections.IEnumerator DragCubeDisplay()
+        private IEnumerator DragCubeDisplay()
         {
             while (HighLogic.LoadedSceneIsFlight)
             {

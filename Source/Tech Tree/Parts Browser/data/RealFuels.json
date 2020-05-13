@@ -621,7 +621,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "BalloonTanks",
+        "entry_cost_mods": "BalloonTanks-SatMat",
         "identical_part_name": "",
         "module_tags": [
             "TankBalloon"
@@ -775,8 +775,8 @@
         "title": "Castor 30B",
         "description": "A shortened Castor 120 became the Castor 30 used as an upper stage. [2.34 m] Plume configured by RealPlume.",
         "mod": "RealFuels",
-        "cost": "750",
-        "entry_cost": "15000",
+        "cost": "400",
+        "entry_cost": "0",
         "category": "SOLID",
         "info": "SRB",
         "year": "2013",

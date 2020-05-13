@@ -432,7 +432,7 @@
         "spacecraft": "Sputnik",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "250, avionicsProbesPW",
+        "entry_cost_mods": "250, Science-Core-avionicsPrototypes",
         "identical_part_name": "Sputnik",
         "module_tags": [
             "Avionics",

@@ -35,6 +35,8 @@ namespace RP0
         private MethodInfo _mInfContractName;
         private double _prevFundsChangeAmount;
         private TransactionReasons _prevFundsChangeReason;
+        private LogPeriod _prevPeriod;
+        private LogPeriod _currentPeriod;
 
         public static Func<SpaceCenterFacility, int> FnGetKCTUpgdCounts;
         public static Func<float> FnGetKCTSciPoints;
@@ -48,34 +50,38 @@ namespace RP0
                 double time = Planetarium.GetUniversalTime();
                 while (time > NextPeriodStart)
                 {
-                    Debug.Log($"[RP-0] CareerLog switching current period: {time} > {NextPeriodStart}");
                     DateTime dtNextPeriod = _epoch.AddSeconds(NextPeriodStart).AddMonths(LogPeriodMonths);
                     CurPeriodStart = NextPeriodStart;
                     NextPeriodStart = (dtNextPeriod - _epoch).TotalSeconds;
-                    Debug.Log($"[RP-0] CareerLog new period: {CurPeriodStart} to {NextPeriodStart}");
+                    _prevPeriod = _currentPeriod;
+                    _currentPeriod = null;
                 }
 
-                if (!_periodDict.TryGetValue(CurPeriodStart, out LogPeriod curPeriod))
+                if (_currentPeriod == null)
                 {
-                    Debug.Log($"[RP-0] CareerLog current period not found in dict, adding...");
-                    curPeriod = new LogPeriod(CurPeriodStart, NextPeriodStart);
-                    _periodDict.Add(CurPeriodStart, curPeriod);
+                    if (!_periodDict.TryGetValue(CurPeriodStart, out _currentPeriod))
+                    {
+                        _currentPeriod = new LogPeriod(CurPeriodStart, NextPeriodStart);
+                        _periodDict.Add(CurPeriodStart, _currentPeriod);
 
-                    curPeriod.CurrentFunds = Funding.Instance.Funds;
-                    curPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
-                    curPeriod.VABUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.VehicleAssemblyBuilding);
-                    curPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
-                    curPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
-                    curPeriod.ScienceEarned = GetSciPointTotalFromKCT();
+                        if (_prevPeriod != null)
+                        {
+                            _prevPeriod.CurrentFunds = Funding.Instance.Funds;
+                            _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
+                            _prevPeriod.VABUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.VehicleAssemblyBuilding);
+                            _prevPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
+                            _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
+                            _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
+                        }
+                    }
                 }
 
-                return curPeriod;
+                return _currentPeriod;
             }
         }
 
         public override void OnAwake()
         {
-            Debug.Log($"[RP-0] CareerLog OnAwake");
             if (Instance != null)
             {
                 Destroy(Instance);
@@ -88,7 +94,6 @@ namespace RP0
 
         public void OnDestroy()
         {
-            Debug.Log($"[RP-0] CareerLog OnDestroy");
             GameEvents.onGameStateLoad.Remove(LoadSettings);
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
 
@@ -105,15 +110,12 @@ namespace RP0
 
         public override void OnLoad(ConfigNode node)
         {
-            Debug.Log($"[RP-0] CareerLog OnLoad");
             base.OnLoad(node);
 
             foreach (ConfigNode n in node.GetNodes("LOGPERIODS"))
             {
                 foreach (ConfigNode pn in n.GetNodes("LOGPERIOD"))
                 {
-                    //Debug.Log($"[RP-0] CareerLog OnLoad LOGPERIOD :: {pn}");
-
                     var lp = new LogPeriod(pn);
                     double periodStart = lp.StartUT;
                     try
@@ -131,7 +133,6 @@ namespace RP0
             {
                 foreach (ConfigNode cn in n.GetNodes("CONTRACT"))
                 {
-                    //Debug.Log($"[RP-0] CareerLog OnLoad CONTRACT :: {cn}");
                     var c = new ContractEvent(cn);
                     _contractDict.Add(c);
                 }
@@ -141,7 +142,6 @@ namespace RP0
             {
                 foreach (ConfigNode ln in n.GetNodes("LAUNCHEVENT"))
                 {
-                    //Debug.Log($"[RP-0] CareerLog OnLoad LAUNCHEVENT :: {ln}");
                     var l = new LaunchEvent(ln);
                     _launchedVessels.Add(l);
                 }
@@ -151,7 +151,6 @@ namespace RP0
             {
                 foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTRUCTION"))
                 {
-                    //Debug.Log($"[RP-0] CareerLog OnLoad FACILITYCONSTRUCTION :: {fn}");
                     var fc = new FacilityConstructionEvent(fn);
                     _facilityConstructions.Add(fc);
                 }
@@ -161,7 +160,6 @@ namespace RP0
             {
                 foreach (ConfigNode tn in n.GetNodes("TECH"))
                 {
-                    //Debug.Log($"[RP-0] CareerLog OnLoad TECH :: {fn}");
                     var te = new TechResearchEvent(tn);
                     _techEvents.Add(te);
                 }
@@ -172,36 +170,30 @@ namespace RP0
         {
             base.OnSave(node);
 
-            Debug.Log($"[RP-0] CareerLog OnSave _periodDict count: {_periodDict?.Count}");
             var n = node.AddNode("LOGPERIODS");
             foreach (LogPeriod e in _periodDict.Values)
             {
-                Debug.Log($"[RP-0] CareerLog saving period: {e.StartUT}");
                 e.Save(n.AddNode("LOGPERIOD"));
             }
 
-            Debug.Log($"[RP-0] CareerLog OnSave _contractDict count: {_contractDict?.Count}");
             n = node.AddNode("CONTRACTS");
             foreach (ContractEvent c in _contractDict)
             {
                 c.Save(n.AddNode("CONTRACT"));
             }
 
-            Debug.Log($"[RP-0] CareerLog OnSave _launchedVessels count: {_launchedVessels?.Count}");
             n = node.AddNode("LAUNCHEVENTS");
             foreach (LaunchEvent l in _launchedVessels)
             {
                 l.Save(n.AddNode("LAUNCHEVENT"));
             }
 
-            Debug.Log($"[RP-0] CareerLog OnSave _facilityConstructions count: {_facilityConstructions?.Count}");
             n = node.AddNode("FACILITYCONSTRUCTIONS");
             foreach (FacilityConstructionEvent fc in _facilityConstructions)
             {
                 fc.Save(n.AddNode("FACILITYCONSTRUCTION"));
             }
 
-            Debug.Log($"[RP-0] CareerLog OnSave _techEvents count: {_techEvents?.Count}");
             n = node.AddNode("TECHS");
             foreach (TechResearchEvent tr in _techEvents)
             {
@@ -296,7 +288,6 @@ namespace RP0
 
         private void LoadSettings(ConfigNode data)
         {
-            Debug.Log($"[RP-0] CareerLog LoadSettings");
             IsEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().CareerLogEnabled;
 
             if (IsEnabled && !_eventsBound)
@@ -313,7 +304,6 @@ namespace RP0
 
         private void SettingsChanged()
         {
-            Debug.Log($"[RP-0] CareerLog SettingsChanged");
             LoadSettings(null);
         }
 

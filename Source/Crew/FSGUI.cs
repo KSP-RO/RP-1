@@ -127,9 +127,9 @@ namespace RP0.Crew
                 }
                 GUILayout.Label(course, GUILayout.Width(96));
                 GUILayout.Label(complete, GUILayout.Width(80));
-                if (CrewHandler.Instance.kerbalRetireTimes.ContainsKey(student.name))
+                if (CrewHandler.Instance.KerbalRetireTimes.ContainsKey(student.name))
                 {
-                    retires = CrewHandler.Instance.retirementEnabled ? KSPUtil.PrintDate(CrewHandler.Instance.kerbalRetireTimes[student.name], false) : "(n/a)";
+                    retires = CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(CrewHandler.Instance.KerbalRetireTimes[student.name], false) : "(n/a)";
                 }
                 else
                 {
@@ -149,9 +149,9 @@ namespace RP0.Crew
                     {
                         // CrewHandler processes trainings every 3600 seconds. Need to account for that to set up accurate KAC alarms.
                         double completeUT = currentCourse.CompletionTime();
-                        double timeDiff = completeUT - CrewHandler.Instance.nextUpdate;
-                        double timesChRun = Math.Ceiling(timeDiff / CrewHandler.Instance.updateInterval);
-                        double alarmUT = CrewHandler.Instance.nextUpdate + timesChRun * CrewHandler.Instance.updateInterval;
+                        double timeDiff = completeUT - CrewHandler.Instance.NextUpdate;
+                        double timesChRun = Math.Ceiling(timeDiff / CrewHandler.Instance.UpdateInterval);
+                        double alarmUT = CrewHandler.Instance.NextUpdate + timesChRun * CrewHandler.Instance.UpdateInterval;
                         string alarmTxt = $"{currentCourse.name} - {student.name}";
                         KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, alarmUT);
                     }
@@ -243,7 +243,7 @@ namespace RP0.Crew
                 GUILayout.Label(selectedCourse.seatMax - selectedCourse.Students.Count + " remaining seat(s).");
             if (selectedCourse.seatMin > selectedCourse.Students.Count)
                 GUILayout.Label(selectedCourse.seatMin - selectedCourse.Students.Count + " more student(s) required.");
-            GUILayout.Label("Will take " + KSPUtil.PrintDateDeltaCompact(selectedCourse.GetTime(), false, false));
+            GUILayout.Label("Will take " + KSPUtil.PrintDateDeltaCompact(selectedCourse.GetTime(), true, false));
             GUILayout.Label("and finish on " + KSPUtil.PrintDate(selectedCourse.CompletionTime(), false));
             if (GUILayout.Button("Start Course", GUILayout.ExpandWidth(false))) {
                 if (selectedCourse.StartCourse()) {
@@ -269,9 +269,9 @@ namespace RP0.Crew
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label(String.Format("{0} {1:D}", selectedNaut.trait, selectedNaut.experienceLevel.ToString()));
-                if (CrewHandler.Instance.retirementEnabled && CrewHandler.Instance.kerbalRetireTimes.ContainsKey(selectedNaut.name)) {
+                if (CrewHandler.Instance.RetirementEnabled && CrewHandler.Instance.KerbalRetireTimes.ContainsKey(selectedNaut.name)) {
                     GUILayout.Space(8);
-                    GUILayout.Label(String.Format("Retires NET {0}", KSPUtil.PrintDate(CrewHandler.Instance.kerbalRetireTimes[selectedNaut.name], false)),
+                    GUILayout.Label(String.Format("Retires NET {0}", KSPUtil.PrintDate(CrewHandler.Instance.KerbalRetireTimes[selectedNaut.name], false)),
                                     rightLabel);
                 }
             } finally {

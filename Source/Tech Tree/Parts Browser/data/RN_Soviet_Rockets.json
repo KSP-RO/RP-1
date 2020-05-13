@@ -120,7 +120,7 @@
         "description": "Docking port for ASTP",
         "mod": "RN Soviet Rockets",
         "cost": "2500",
-        "entry_cost": "50000",
+        "entry_cost": "0",
         "category": "RCS",
         "info": "Docking",
         "year": "1975",
@@ -133,7 +133,7 @@
         "spacecraft": "APAS-75 (ASTP)",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "dockingAndro",
         "identical_part_name": "",
         "module_tags": []
     },

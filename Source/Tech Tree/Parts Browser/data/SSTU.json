@@ -1351,7 +1351,7 @@
         "description": "The NASA Docking System (NDS) is a spacecraft docking and berthing mechanism being developed for future US human spaceflight vehicles, such as the Orion Multi-Purpose Crew Vehicle and the Commercial Crew vehicles. The NDS is NASA's implementation of the International Docking System Standard (IDSS), an attempt by the ISS Multilateral Coordination Board (MCB) to create an international spacecraft docking standard. NDS is also known as the international Low Impact Docking System (iLIDS). Parachutes included.",
         "mod": "SSTU",
         "cost": "3500",
-        "entry_cost": "70000",
+        "entry_cost": "0",
         "category": "RCS",
         "info": "Docking",
         "year": "2015",
@@ -1364,7 +1364,7 @@
         "spacecraft": "NDS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "NASADock",
         "identical_part_name": "NASA Docking System",
         "module_tags": []
     },

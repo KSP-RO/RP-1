@@ -5,7 +5,7 @@
         "description": "The Androgynous Peripheral Attach System series 89/95.",
         "mod": "SSTU (RO Addition)",
         "cost": "3500",
-        "entry_cost": "70000",
+        "entry_cost": "0",
         "category": "RCS",
         "info": "Docking",
         "year": "1989",
@@ -18,7 +18,7 @@
         "spacecraft": "APAS-89/95",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "APAS8995Dock",
         "identical_part_name": "APAS-89/95",
         "module_tags": []
     },

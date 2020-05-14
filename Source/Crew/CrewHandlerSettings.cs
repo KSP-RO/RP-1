@@ -1,40 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using KSP;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Reflection;
 
 namespace RP0.Crew
 {
     public class CrewHandlerSettings : IConfigNode
     {
         [Persistent]
-        public Vector2 recSpace = new Vector2(2, 2), recOrbit = new Vector2(5, 10), recOtherBody = new Vector2(10, 10),
-            recEVA = new Vector2(15, 20), recEVAOther = new Vector2(20, 25), recOrbitOther = new Vector2(15, 10), recLandOther = new Vector2(30, 30);
+        public double retireOffsetBaseMult = 100, retireOffsetFlightNumPow = 1.5, retireOffsetStupidMin = 1.4, retireOffsetStupidMax = 0.8, retireIncreaseCap = 473040000;
 
         [Persistent]
-        public double retireOffsetBaseMult = 100d, retireOffsetFlightNumPow = 1.5d, retireOffsetFlightNumOffset = -3d, retireOffsetStupidMin = 1.4d, retireOffsetStupidMax = 0.8d;
+        public double retireBaseYears = 5, retireCourageMin = 0, retireCourageMax = 3, retireStupidMin = 1, retireStupidMax = 0;
 
         [Persistent]
-        public double retireBaseYears = 5d, retireCourageMin = 0d, retireCourageMax = 3d, retireStupidMin = 1d, retireStupidMax = 0d;
-
-        [Persistent]
-        public double trainingProficiencyStupidMin = 1.5d, trainingProficiencyStupidMax = 0.5d, trainingProficiencyRefresherTimeMult = 0.25d;
+        public double trainingProficiencyStupidMin = 1.5, trainingProficiencyStupidMax = 0.5, trainingProficiencyRefresherTimeMult = 0.25;
 
         [Persistent]
         public int trainingProficiencyXP = 1;
 
         [Persistent]
-        public double trainingMissionExpirationDays = 120d, trainingMissionStupidMin = 0.5d, trainingMissionStupidMax = 1.5d;
+        public double trainingMissionExpirationDays = 120, trainingMissionStupidMin = 0.5, trainingMissionStupidMax = 1.5;
 
         [Persistent]
-        public double minFlightDurationSecondsForTrainingExpire = 30d;
+        public double minFlightDurationSecondsForTrainingExpire = 30;
 
+        [Persistent]
+        public double flightHighAltitude = 40000;
+
+        public Dictionary<string, double> situationValues = new Dictionary<string, double>();
 
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
+
+            var subNodes = node.GetNodes("SITUATIONVALUES");
+            foreach (ConfigNode subNode in subNodes)
+            {
+                foreach (ConfigNode.Value configVal in subNode.values)
+                {
+                    if (situationValues.ContainsKey(configVal.name))
+                    {
+                        Debug.LogError("[RP-0] Duplicate SITUATIONVALUE " + configVal.name);
+                    }
+                    else
+                    {
+                        situationValues.Add(configVal.name, double.Parse(configVal.value));
+                    }
+                }
+            }
         }
 
         public void Save(ConfigNode node)

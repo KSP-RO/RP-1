@@ -845,7 +845,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "50000,dockingProbeDrogue",
+        "entry_cost_mods": "25000,dockingProbeDrogue",
         "identical_part_name": "GeminiDockingProbe",
         "module_tags": [
             "Instruments"

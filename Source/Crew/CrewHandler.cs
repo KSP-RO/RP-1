@@ -225,6 +225,41 @@ namespace RP0.Crew
             }
         }
 
+        public bool NautHasTrainingForPart(ProtoCrewMember pcm, string partName)
+        {
+            partName = TrainingDatabase.SynonymReplace(partName);
+
+            FlightLog.Entry ent = pcm.careerLog.Last();
+            if (ent == null)
+                return false;
+
+            bool lacksMission = true;
+            for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
+            {
+                FlightLog.Entry e = pcm.careerLog.Entries[i];
+                if (lacksMission)
+                {
+                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
+                        continue;
+
+                    if (e.type == "TRAINING_mission" && e.target == partName)
+                    {
+                        double exp = GetExpiration(pcm.name, e);
+                        lacksMission = exp == 0d || exp < Planetarium.GetUniversalTime();
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
+                        continue;
+
+                    if (e.type == "TRAINING_proficiency" && e.target == partName)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public string GetTrainingString(ProtoCrewMember pcm)
         {
             bool found = false;

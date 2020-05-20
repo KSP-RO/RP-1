@@ -406,7 +406,7 @@ namespace RP0.Crew
 
                 var allFlightsDict = new Dictionary<string, int>();
                 int curFlight = pcm.careerLog.Last().flight;
-                double inactivityMult = 1;
+                double inactivityMult = 0;
                 double retirementMult = 0;
 
                 foreach (FlightLog.Entry e in pcm.careerLog.Entries)
@@ -450,7 +450,7 @@ namespace RP0.Crew
                 Debug.Log("[RP-0]  retirementMult: " + retirementMult);
                 Debug.Log("[RP-0]  inactivityMult: " + inactivityMult);
 
-                double acMult = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1d;
+                double acMult = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1;
                 Debug.Log("[RP-0]  AC multiplier: " + acMult);
 
                 if (KerbalRetireTimes.TryGetValue(pcm.name, out double retTime))
@@ -480,9 +480,11 @@ namespace RP0.Crew
                     }
                 }
 
-                inactivityMult /= acMult;
-
-                double inactiveTime = elapsedTime * inactivityMult + retirementMult * 86400;
+                inactivityMult = Math.Max(1, inactivityMult);
+                double elapsedTimeDays = elapsedTime / 86400;
+                double inactiveTimeDays = Math.Pow(Math.Max(Settings.inactivityMinFlightDurationDays, elapsedTimeDays), Settings.inactivityFlightDurationExponent) *
+                                          Math.Min(Settings.inactivityMaxSituationMult, inactivityMult) / acMult;
+                double inactiveTime = inactiveTimeDays * 86400;
                 Debug.Log("[RP-0] inactive for: " + KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false));
 
                 pcm.SetInactive(inactiveTime, false);

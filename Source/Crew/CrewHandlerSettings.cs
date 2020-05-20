@@ -9,6 +9,9 @@ namespace RP0.Crew
         public double retireOffsetBaseMult = 100, retireOffsetFlightNumPow = 1.5, retireOffsetStupidMin = 1.4, retireOffsetStupidMax = 0.8, retireIncreaseCap = 473040000;
 
         [Persistent]
+        public double inactivityMinFlightDurationDays = 10, inactivityFlightDurationExponent = 0.7, inactivityMaxSituationMult = 20;
+
+        [Persistent]
         public double retireBaseYears = 5, retireCourageMin = 0, retireCourageMax = 3, retireStupidMin = 1, retireStupidMax = 0;
 
         [Persistent]

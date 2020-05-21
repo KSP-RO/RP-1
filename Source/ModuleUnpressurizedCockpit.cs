@@ -8,7 +8,7 @@ namespace RP0
         /// Chance to die (%) per 1s interval.
         /// </summary>
         [KSPField]
-        public double crewDeathChance = 0.01;
+        public double crewDeathChance = 0.02;
 
         /// <summary>
         /// Altitude in meters above which the crew can be killed.

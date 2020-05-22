@@ -8,10 +8,8 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            string str = string.Empty;
-            str = "Contains a Service Module Fuel Tank. These tanks are specially designed to hold many different resources so it increases the overall rollout cost.\n\n" +
-                "<b><color=orange>Rollout Cost: Cost of This Part * 2.0</color></b>";
-            return str;
+            return "Contains a Service Module Fuel Tank. These tanks are specially designed to hold many different resources so it increases the overall launch cost.\n\n" +
+                   "<b><color=orange>Launch Cost: Cost of This Part * 2</color></b>";
         }
     }
 }

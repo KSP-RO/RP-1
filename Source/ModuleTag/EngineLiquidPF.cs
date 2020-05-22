@@ -8,10 +8,8 @@ namespace RP0.ModuleTags
     {
         public override string GetInfo()
         {
-            string str = string.Empty;
-            str = "Contains a pressure-fed liquid rocket engine that requires some additional testing. Overall this will increase the rollout costs.\n\n" +
-                "<b><color=orange>Rollout Cost: Cost of This Part * 1.75</color></b>";
-            return str;
+            return "Contains a pressure-fed liquid rocket engine that requires some additional testing. Overall this will increase the launch costs.\n\n" +
+                   "<b><color=orange>Launch Cost: Cost of This Part * 1.75</color></b>";
         }
     }
 }

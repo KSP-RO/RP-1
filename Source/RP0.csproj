@@ -60,13 +60,11 @@
     <Compile Include="ModuleTag\NoResourceCostMult.cs" />
     <Compile Include="ModuleTag\NuclearRTG.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
-    <Compile Include="ModuleTag\DecreaseB.cs" />
     <Compile Include="ModuleTag\EngineLiquidPF.cs" />
     <Compile Include="ModuleTag\Decoupler.cs" />
     <Compile Include="ModuleTag\TankServiceModule.cs" />
     <Compile Include="ModuleTag\TankBalloon.cs" />
     <Compile Include="ModuleTag\Habitable.cs" />
-    <Compile Include="ModuleTag\DecreaseA.cs" />
     <Compile Include="ModuleTag\Toxic.cs" />
     <Compile Include="ModuleTag\Reentry.cs" />
     <Compile Include="ModuleTag\Instruments.cs" />

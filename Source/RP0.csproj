@@ -57,6 +57,7 @@
     <Compile Include="ModuleNonRecharge.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleNoEVA.cs" />
+    <Compile Include="ModuleTag\ModuleTag.cs" />
     <Compile Include="ModuleTag\NoResourceCostMult.cs" />
     <Compile Include="ModuleTag\NuclearRTG.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Avionics\ModuleAvionicsModifier.cs" />
     <Compile Include="Avionics\ModuleProceduralAvionics.cs" />
     <Compile Include="ModuleRangeSafety.cs" />
-    <Compile Include="ModuleTag\DummyModule.cs" />
     <Compile Include="Avionics\ModuleAvionics.cs" />
     <Compile Include="Avionics\ModuleScienceCore.cs" />
     <Compile Include="ModuleShowInfo.cs" />

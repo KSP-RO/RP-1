@@ -268,15 +268,24 @@ namespace RP0.Crew
             }
             GUILayout.BeginHorizontal();
             try {
-                GUILayout.Label(String.Format("{0} {1:D}", selectedNaut.trait, selectedNaut.experienceLevel.ToString()));
+                GUILayout.Label($"{selectedNaut.trait} {selectedNaut.experienceLevel.ToString():D}");
                 if (CrewHandler.Instance.RetirementEnabled && CrewHandler.Instance.KerbalRetireTimes.ContainsKey(selectedNaut.name)) {
                     GUILayout.Space(8);
-                    GUILayout.Label(String.Format("Retires NET {0}", KSPUtil.PrintDate(CrewHandler.Instance.KerbalRetireTimes[selectedNaut.name], false)),
-                                    rightLabel);
+                    GUILayout.Label($"Retires NET {KSPUtil.PrintDate(CrewHandler.Instance.KerbalRetireTimes[selectedNaut.name], false)}", rightLabel);
                 }
             } finally {
                 GUILayout.EndHorizontal();
             }
+
+            double nlt = CrewHandler.Instance.GetLatestRetireTime(selectedNaut);
+            if (nlt > 0)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(string.Empty, GUILayout.ExpandWidth(true));
+                GUILayout.Label($"Retires NLT {KSPUtil.PrintDate(nlt, false)}", rightLabel);
+                GUILayout.EndHorizontal();
+            }
+
             if (activeMap.ContainsKey(selectedNaut)) {
                 ActiveCourse currentCourse = activeMap[selectedNaut];
                 GUILayout.BeginHorizontal();

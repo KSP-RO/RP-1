@@ -62,7 +62,6 @@ namespace RP0.Crew
             _cliTooltip = typeof(CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
 
             FindAllCourseConfigs();     //find all applicable configs
-            GenerateOfferedCourses();   //turn the configs into offered courses
         }
 
         public void Start()
@@ -140,6 +139,7 @@ namespace RP0.Crew
             }
 
             TrainingDatabase.EnsureInitialized();
+            GenerateOfferedCourses();
             KACWrapper.InitKACWrapper();
         }
 
@@ -344,6 +344,18 @@ namespace RP0.Crew
             }
 
             return false;
+        }
+
+        public double GetLatestRetireTime(ProtoCrewMember pcm)
+        {
+            if (KerbalRetireTimes.TryGetValue(pcm.name, out double retTime))
+            {
+                KerbalRetireIncreases.TryGetValue(pcm.name, out double retIncreaseTotal);
+                double retIncreaseLeft = Settings.retireIncreaseCap - retIncreaseTotal;
+                return retTime + retIncreaseLeft;
+            }
+
+            return 0;
         }
 
         private void ACSpawn()

@@ -1,11 +1,12 @@
-﻿using Contracts;
-using Csv;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using Contracts;
+using Csv;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -309,14 +310,21 @@ namespace RP0
         private IEnumerator PostRequestCareerLog(string url)
         {
             var logPeriods = _periodDict.Select(p => p.Value)
-                .Select(p => new[] {CreateLogDto(p)});
+                .Select(CreateLogDto).ToArray();
 
-            Debug.Log(logPeriods);
+            // Create JSON structure for arrays, afaict not supported on this unity version out of the box
+            var jsonToSend = "[";
 
-            var jsonToSend = new System.Text.UTF8Encoding()
-                .GetBytes(JsonUtility.ToJson(logPeriods));
+            for (var i = 0; i < logPeriods.Length; i++)
+            {
+                if (i < logPeriods.Length - 1) jsonToSend += JsonUtility.ToJson(logPeriods[i]) + ",";
+                else jsonToSend += JsonUtility.ToJson(logPeriods[i]) + "]";
+            }
+
+            var byteJson = new UTF8Encoding().GetBytes(jsonToSend);
+
             var uwr = new UnityWebRequest(url, "POST")
-                {downloadHandler = new DownloadHandlerBuffer(), uploadHandler = new UploadHandlerRaw(jsonToSend)};
+                {downloadHandler = new DownloadHandlerBuffer(), uploadHandler = new UploadHandlerRaw(byteJson)};
 
             uwr.SetRequestHeader("Content-Type", "application/json");
 
@@ -358,35 +366,35 @@ namespace RP0
 
             return new CareerLogDto
             {
-                CareerUuid = SystemInfo.deviceUniqueIdentifier,
-                Epoch = _epoch.AddSeconds(logPeriod.StartUT).ToString("yyyy-MM"),
-                VabUpgrades = logPeriod.VABUpgrades,
-                SphUpgrades = logPeriod.SPHUpgrades,
-                RndUpgrades = logPeriod.RnDUpgrades,
-                CurrentFunds = logPeriod.CurrentFunds,
-                CurrentSci = logPeriod.CurrentSci,
-                ScienceEarned = logPeriod.ScienceEarned,
-                AdvanceFunds = advanceFunds,
-                RewardFunds = rewardFunds,
-                FailureFunds = failureFunds,
-                OtherFundsEarned = logPeriod.OtherFundsEarned,
-                LaunchFees = logPeriod.LaunchFees,
-                MaintenanceFees = logPeriod.MaintenanceFees,
-                ToolingFees = logPeriod.ToolingFees,
-                EntryCosts = logPeriod.EntryCosts,
-                ConstructionFees = logPeriod.OtherFees,
-                OtherFees = logPeriod.OtherFees - constructionFees,
-                LaunchedVessels = _launchedVessels.Where(l => l.UT >= logPeriod.StartUT && l.UT < logPeriod.EndUT)
+                careerUuid = SystemInfo.deviceUniqueIdentifier,
+                epoch = _epoch.AddSeconds(logPeriod.StartUT).ToString("yyyy-MM"),
+                vabUpgrades = logPeriod.VABUpgrades.ToString(),
+                sphUpgrades = logPeriod.SPHUpgrades.ToString(),
+                rndUpgrades = logPeriod.RnDUpgrades.ToString(),
+                currentFunds = logPeriod.CurrentFunds.ToString("F0"),
+                currentSci = logPeriod.CurrentSci.ToString("F1"),
+                scienceEarned = logPeriod.ScienceEarned.ToString("F1"),
+                advanceFunds = advanceFunds.ToString("F0"),
+                rewardFunds = rewardFunds.ToString("F0"),
+                failureFunds = failureFunds.ToString("F0"),
+                otherFundsEarned = logPeriod.OtherFundsEarned.ToString("F0"),
+                launchFees = logPeriod.LaunchFees.ToString("F0"),
+                maintenanceFees = logPeriod.MaintenanceFees.ToString("F0"),
+                toolingFees = logPeriod.ToolingFees.ToString("F0"),
+                entryCosts = logPeriod.EntryCosts.ToString("F0"),
+                constructionFees = logPeriod.OtherFees.ToString("F0"),
+                otherFees = (logPeriod.OtherFees - constructionFees).ToString("F0"),
+                launchedVessels = _launchedVessels.Where(l => l.UT >= logPeriod.StartUT && l.UT < logPeriod.EndUT)
                     .Select(l => l.VesselName)
                     .ToArray(),
-                ContractEvents = _contractDict.Where(c =>
+                contractEvents = _contractDict.Where(c =>
                         c.Type == ContractEventType.Complete && c.UT >= logPeriod.StartUT && c.UT < logPeriod.EndUT)
                     .Select(c => c.DisplayName)
                     .ToArray(),
-                TechEvents = _techEvents.Where(t => t.UT >= logPeriod.StartUT && t.UT < logPeriod.EndUT)
+                techEvents = _techEvents.Where(t => t.UT >= logPeriod.StartUT && t.UT < logPeriod.EndUT)
                     .Select(t => t.NodeName)
                     .ToArray(),
-                FacilityConstructions = _facilityConstructions
+                facilityConstructions = _facilityConstructions
                     .Where(f => f.State == ConstructionState.Completed && f.UT >= logPeriod.StartUT &&
                                 f.UT < logPeriod.EndUT)
                     .Select(f => $"{f.Facility} ({f.NewLevel + 1})")

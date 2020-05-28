@@ -1,25 +1,25 @@
 ﻿using Contracts;
 using Csv;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace RP0
 {
-    [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
+    [KSPScenario((ScenarioCreationOptions) 480,
+        new GameScenes[] {GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION})]
     public class CareerLog : ScenarioModule
     {
-        [KSPField]
-        public int LogPeriodMonths = 1;
+        [KSPField] public int LogPeriodMonths = 1;
 
-        [KSPField(isPersistant = true)]
-        public double CurPeriodStart = 0;
+        [KSPField(isPersistant = true)] public double CurPeriodStart = 0;
 
-        [KSPField(isPersistant = true)]
-        public double NextPeriodStart = 0;
+        [KSPField(isPersistant = true)] public double NextPeriodStart = 0;
 
         public bool IsEnabled = false;
 
@@ -44,7 +44,7 @@ namespace RP0
         public static CareerLog Instance { get; private set; }
 
         public LogPeriod CurrentPeriod
-        { 
+        {
             get
             {
                 double time = Planetarium.GetUniversalTime();
@@ -86,6 +86,7 @@ namespace RP0
             {
                 Destroy(Instance);
             }
+
             Instance = this;
 
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
@@ -211,7 +212,8 @@ namespace RP0
             });
         }
 
-        public void AddFacilityConstructionEvent(SpaceCenterFacility facility, int newLevel, double cost, ConstructionState state)
+        public void AddFacilityConstructionEvent(SpaceCenterFacility facility, int newLevel, double cost,
+            ConstructionState state)
         {
             if (!IsEnabled) return;
 
@@ -227,64 +229,171 @@ namespace RP0
         public void ExportToFile(string path)
         {
             var rows = _periodDict.Select(p => p.Value)
-                                  .Select(p => 
-            {
-                double advanceFunds = _contractDict.Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(p))
-                                                   .Select(c => c.FundsChange)
-                                                   .Sum();
-
-                double rewardFunds = _contractDict.Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
-                                                  .Select(c => c.FundsChange)
-                                                  .Sum();
-
-                double failureFunds = -_contractDict.Where(c => (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(p))
-                                                    .Select(c => c.FundsChange)
-                                                    .Sum();
-
-                double constructionFees = _facilityConstructions.Where(f => f.State == ConstructionState.Started && f.IsInPeriod(p))
-                                                                .Select(c => c.Cost)
-                                                                .Sum();
-                return new[]
+                .Select(p =>
                 {
-                    _epoch.AddSeconds(p.StartUT).ToString("yyyy-MM"),
-                    p.VABUpgrades.ToString(),
-                    p.SPHUpgrades.ToString(),
-                    p.RnDUpgrades.ToString(),
-                    p.CurrentFunds.ToString("F0"),
-                    p.CurrentSci.ToString("F1"),
-                    p.ScienceEarned.ToString("F1"),
-                    advanceFunds.ToString("F0"),
-                    rewardFunds.ToString("F0"),
-                    failureFunds.ToString("F0"),
-                    p.OtherFundsEarned.ToString("F0"),
-                    p.LaunchFees.ToString("F0"),
-                    p.MaintenanceFees.ToString("F0"),
-                    p.ToolingFees.ToString("F0"),
-                    p.EntryCosts.ToString("F0"),
-                    constructionFees.ToString("F0"),
-                    (p.OtherFees - constructionFees).ToString("F0"),
-                    string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
-                                                      .Select(l => l.VesselName)
-                                                      .ToArray()),
-                    string.Join(", ", _contractDict.Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(p))
-                                                   .Select(c => $"{c.DisplayName}")
-                                                   .ToArray()),
-                    string.Join(", ", _contractDict.Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
-                                                   .Select(c => $"{c.DisplayName}")
-                                                   .ToArray()),
-                    string.Join(", ", _techEvents.Where(t => t.IsInPeriod(p))
-                                                 .Select(t => t.NodeName)
-                                                 .ToArray()),
-                    string.Join(", ", _facilityConstructions.Where(f => f.IsInPeriod(p))
-                                                            .Select(f => $"{f.Facility} ({f.NewLevel + 1}) - {f.State}")
-                                                            .ToArray())
-                };
-            });
+                    double advanceFunds = _contractDict
+                        .Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(p))
+                        .Select(c => c.FundsChange)
+                        .Sum();
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+                    double rewardFunds = _contractDict
+                        .Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
+                        .Select(c => c.FundsChange)
+                        .Sum();
+
+                    double failureFunds = -_contractDict.Where(c =>
+                            (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(p))
+                        .Select(c => c.FundsChange)
+                        .Sum();
+
+                    double constructionFees = _facilityConstructions
+                        .Where(f => f.State == ConstructionState.Started && f.IsInPeriod(p))
+                        .Select(c => c.Cost)
+                        .Sum();
+                    return new[]
+                    {
+                        _epoch.AddSeconds(p.StartUT).ToString("yyyy-MM"),
+                        p.VABUpgrades.ToString(),
+                        p.SPHUpgrades.ToString(),
+                        p.RnDUpgrades.ToString(),
+                        p.CurrentFunds.ToString("F0"),
+                        p.CurrentSci.ToString("F1"),
+                        p.ScienceEarned.ToString("F1"),
+                        advanceFunds.ToString("F0"),
+                        rewardFunds.ToString("F0"),
+                        failureFunds.ToString("F0"),
+                        p.OtherFundsEarned.ToString("F0"),
+                        p.LaunchFees.ToString("F0"),
+                        p.MaintenanceFees.ToString("F0"),
+                        p.ToolingFees.ToString("F0"),
+                        p.EntryCosts.ToString("F0"),
+                        constructionFees.ToString("F0"),
+                        (p.OtherFees - constructionFees).ToString("F0"),
+                        string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
+                            .Select(l => l.VesselName)
+                            .ToArray()),
+                        string.Join(", ",
+                            _contractDict.Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(p))
+                                .Select(c => $"{c.DisplayName}")
+                                .ToArray()),
+                        string.Join(", ",
+                            _contractDict.Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
+                                .Select(c => $"{c.DisplayName}")
+                                .ToArray()),
+                        string.Join(", ", _techEvents.Where(t => t.IsInPeriod(p))
+                            .Select(t => t.NodeName)
+                            .ToArray()),
+                        string.Join(", ", _facilityConstructions.Where(f => f.IsInPeriod(p))
+                            .Select(f => $"{f.Facility} ({f.NewLevel + 1}) - {f.State}")
+                            .ToArray())
+                    };
+                });
+
+            var columnNames = new[]
+            {
+                "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances",
+                "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling",
+                "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts",
+                "Completed contracts", "Tech", "Facilities"
+            };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
+
+        // Experimental web exporter to Heroku / MongoDB Atlas in the cloud for testing the web interface
+        public void ExportToWeb()
+        {
+            StartCoroutine(PostRequestCareerLog("localhost:3000/api/postlog"));
+        }
+
+        private IEnumerator PostRequestCareerLog(string url)
+        {
+            var logPeriods = _periodDict.Select(p => p.Value)
+                .Select(p => new[] {CreateLogDto(p)});
+
+            Debug.Log(logPeriods);
+
+            var jsonToSend = new System.Text.UTF8Encoding()
+                .GetBytes(JsonUtility.ToJson(logPeriods));
+            var uwr = new UnityWebRequest(url, "POST")
+                {downloadHandler = new DownloadHandlerBuffer(), uploadHandler = new UploadHandlerRaw(jsonToSend)};
+
+            uwr.SetRequestHeader("Content-Type", "application/json");
+
+            //Send the request then wait here until it returns
+            yield return uwr.SendWebRequest();
+
+            if (uwr.isNetworkError)
+            {
+                Debug.Log("Error While Sending: " + uwr.error);
+            }
+            else
+            {
+                Debug.Log("Received: " + uwr.downloadHandler.text);
+            }
+        }
+
+        private CareerLogDto CreateLogDto(LogPeriod logPeriod)
+        {
+            double advanceFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double rewardFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double failureFunds = -_contractDict.Where(c =>
+                    (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double constructionFees = _facilityConstructions
+                .Where(f => f.State == ConstructionState.Started && f.IsInPeriod(logPeriod))
+                .Select(c => c.Cost)
+                .Sum();
+
+
+            return new CareerLogDto
+            {
+                CareerUuid = SystemInfo.deviceUniqueIdentifier,
+                Epoch = _epoch.AddSeconds(logPeriod.StartUT).ToString("yyyy-MM"),
+                VabUpgrades = logPeriod.VABUpgrades,
+                SphUpgrades = logPeriod.SPHUpgrades,
+                RndUpgrades = logPeriod.RnDUpgrades,
+                CurrentFunds = logPeriod.CurrentFunds,
+                CurrentSci = logPeriod.CurrentSci,
+                ScienceEarned = logPeriod.ScienceEarned,
+                AdvanceFunds = advanceFunds,
+                RewardFunds = rewardFunds,
+                FailureFunds = failureFunds,
+                OtherFundsEarned = logPeriod.OtherFundsEarned,
+                LaunchFees = logPeriod.LaunchFees,
+                MaintenanceFees = logPeriod.MaintenanceFees,
+                ToolingFees = logPeriod.ToolingFees,
+                EntryCosts = logPeriod.EntryCosts,
+                ConstructionFees = logPeriod.OtherFees,
+                OtherFees = logPeriod.OtherFees - constructionFees,
+                LaunchedVessels = _launchedVessels.Where(l => l.UT >= logPeriod.StartUT && l.UT < logPeriod.EndUT)
+                    .Select(l => l.VesselName)
+                    .ToArray(),
+                ContractEvents = _contractDict.Where(c =>
+                        c.Type == ContractEventType.Complete && c.UT >= logPeriod.StartUT && c.UT < logPeriod.EndUT)
+                    .Select(c => c.DisplayName)
+                    .ToArray(),
+                TechEvents = _techEvents.Where(t => t.UT >= logPeriod.StartUT && t.UT < logPeriod.EndUT)
+                    .Select(t => t.NodeName)
+                    .ToArray(),
+                FacilityConstructions = _facilityConstructions
+                    .Where(f => f.State == ConstructionState.Completed && f.UT >= logPeriod.StartUT &&
+                                f.UT < logPeriod.EndUT)
+                    .Select(f => $"{f.Facility} ({f.NewLevel + 1})")
+                    .ToArray()
+            };
+        }
+
 
         private void LoadSettings(ConfigNode data)
         {
@@ -372,7 +481,7 @@ namespace RP0
 
         private void ContractAccepted(Contract c)
         {
-            if (c.AutoAccept) return;   // Do not record the Accept event for record contracts
+            if (c.AutoAccept) return; // Do not record the Accept event for record contracts
 
             _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
             {
@@ -455,12 +564,13 @@ namespace RP0
         {
             if (_mInfContractName == null)
             {
-                Assembly ccAssembly = AssemblyLoader.loadedAssemblies.First(a => a.assembly.GetName().Name == "ContractConfigurator").assembly;
+                Assembly ccAssembly = AssemblyLoader.loadedAssemblies
+                    .First(a => a.assembly.GetName().Name == "ContractConfigurator").assembly;
                 Type ccType = ccAssembly.GetType("ContractConfigurator.ConfiguredContract", true);
                 _mInfContractName = ccType.GetMethod("contractTypeName", BindingFlags.Public | BindingFlags.Static);
             }
 
-            return (string)_mInfContractName.Invoke(null, new object[] { c });
+            return (string) _mInfContractName.Invoke(null, new object[] {c});
         }
 
         private int GetKCTUpgradeCounts(SpaceCenterFacility facility)

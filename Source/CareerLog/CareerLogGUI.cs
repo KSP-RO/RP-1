@@ -12,8 +12,7 @@ namespace RP0
         public void RenderTab()
         {
             GUILayout.BeginVertical();
-            if (GUILayout.Button("Export to file", GUILayout.ExpandWidth(false), GUILayout.Height(30),
-                GUILayout.Width(125)))
+            if (GUILayout.Button("Export to file", GUILayout.ExpandWidth(false), GUILayout.Height(30), GUILayout.Width(125)))
             {
                 try
                 {
@@ -26,8 +25,8 @@ namespace RP0
                     _exportStatus = $"Export failed: {ex.Message}";
                 }
             }
-
             GUILayout.Label(_exportStatus);
+            
             if (GUILayout.Button("Export to web", GUILayout.ExpandWidth(false), GUILayout.Height(30),
                 GUILayout.Width(125)))
             {

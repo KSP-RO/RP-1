@@ -304,7 +304,7 @@ namespace RP0
         // Experimental web exporter to Heroku / MongoDB Atlas in the cloud for testing the web interface
         public void ExportToWeb()
         {
-            StartCoroutine(PostRequestCareerLog("localhost:3000/api/postlog"));
+            StartCoroutine(PostRequestCareerLog("https://kspro-rp1-analytics.herokuapp.com/api/careerlogs"));
         }
 
         private IEnumerator PostRequestCareerLog(string url)

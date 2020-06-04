@@ -8340,6 +8340,27 @@
         "module_tags": []
     },
     {
+        "name": "RS-2100",
+        "title": "RS-2100",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2005",
+        "technology": "hydrolox1998",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "200000,RS-25",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RS-25",
         "title": "RS-25",
         "description": "",

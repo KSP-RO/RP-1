@@ -157,7 +157,7 @@
         "description": "Rocket Lab\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s flagship engine, the 4,900lbf Rutherford, is an electrical turbo-pumped LOX/RP-1 engine specifically designed for the Electron Launch Vehicle. [0.3m] Plume configured by RealPlume.",
         "mod": "ForgottenRealEngines",
         "cost": "21",
-        "entry_cost": "15000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "FS Engine",
         "year": "2017",
@@ -168,9 +168,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Electron (Rocket Lab)",
-        "engine_config": "",
+        "engine_config": "Rutherford-SL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Rutherford-SL",
         "identical_part_name": "Rutherford",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -182,7 +182,7 @@
         "description": "The Rutherford engine with an extended nozzle for better vacuum performance. [0.6m] Plume configured by RealPlume.",
         "mod": "ForgottenRealEngines",
         "cost": "28",
-        "entry_cost": "20000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "US Engine",
         "year": "2017",
@@ -193,9 +193,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Electron (Rocket Lab)",
-        "engine_config": "",
+        "engine_config": "RutherfordVac",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "RutherfordVac",
         "identical_part_name": "Rutherford",
         "module_tags": [
             "EngineLiquidTurbo"

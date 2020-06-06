@@ -1339,6 +1339,30 @@
         ]
     },
     {
+        "name": "ROE-BNTR",
+        "title": "Bimodal NTR",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "17500",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "2021",
+        "technology": "nuclearPropulsionNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "BNTR",
+        "upgrade": false,
+        "entry_cost_mods": "BNTR",
+        "identical_part_name": "BNTR",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
+        ]
+    },
+    {
         "name": "ROE-BabySergeant",
         "title": "Baby Sergeant (5.4KS1975)",
         "description": "",
@@ -5159,6 +5183,30 @@
         "upgrade": false,
         "entry_cost_mods": "RS-68",
         "identical_part_name": "RS-68",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-RS68B",
+        "title": "RS-68 Regen",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "2850",
+        "entry_cost": "",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2012",
+        "technology": "hydrolox2009",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RS68",
+        "upgrade": false,
+        "entry_cost_mods": "RS-68K",
+        "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"

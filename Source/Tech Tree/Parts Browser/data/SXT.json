@@ -1607,7 +1607,7 @@
         "description": "Low thrust pump-fed expander nuclear engine. Evolved for the original NERVA design the Bimodal NTR, instead of wasting precious propellant mass for cooling the engine reactor, uses a Brayton cycle electricity generator unit to convert the waste thermal energy into useful electrical power. It also supports liquid oxygen injection (TRITON - trimodal operation) for increased thrust but with the cost of a lower overall efficiency. Plume configured by RealPlume.",
         "mod": "SXT",
         "cost": 17500,
-        "entry_cost": 350000,
+        "entry_cost": "0",
         "category": "NTR",
         "info": "Engine",
         "year": "2021",

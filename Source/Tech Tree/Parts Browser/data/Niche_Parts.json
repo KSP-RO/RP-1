@@ -606,7 +606,7 @@
         "description": "The Rutherford Engine is the worlds first electric turbo-pumped LOX/RP-1 engine. Rutherford adopts an entirely new propulsion cycle, making use of brushless DC motors and high performance Lithium Polymer batteries to drive its turbo-pumps. The engine is named after the famous New Zealand born physicist Ernest Rutherford. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": "21",
-        "entry_cost": "15000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "FS Engine",
         "year": "2017",
@@ -617,9 +617,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Electron (Rocket Lab)",
-        "engine_config": "",
+        "engine_config": "Rutherford-SL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Rutherford-SL",
         "identical_part_name": "Rutherford",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -642,9 +642,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Electron (Rocket Lab)",
-        "engine_config": "",
+        "engine_config": "RutherfordVac",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "RutherfordVac",
         "identical_part_name": "Rutherford",
         "module_tags": [
             "EngineLiquidTurbo"

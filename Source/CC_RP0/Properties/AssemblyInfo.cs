@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.4.1.0")]
+[assembly: AssemblyFileVersion("1.5.0.0")]
 
 [assembly: KSPAssembly("CC_RP0", 1, 0)]
 [assembly: KSPAssemblyDependency("ContractConfigurator", 1, 0)]

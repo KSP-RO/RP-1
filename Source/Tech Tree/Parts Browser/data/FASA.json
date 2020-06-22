@@ -580,7 +580,7 @@
         "title": "F-1 Series",
         "description": "The massive Rocketdyne F-1 engine. One of the largest, most powerful rocket engines ever built. Ensure you enable roll capability or disable gimbal as required for your application. Diameter: [3.61 m]. Plume configured by RealPlume.",
         "mod": "FASA",
-        "cost": "2000",
+        "cost": "2100",
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",

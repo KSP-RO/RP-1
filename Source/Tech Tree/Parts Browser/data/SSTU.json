@@ -619,7 +619,7 @@
         "title": "F-1 Series",
         "description": "The massive Rocketdyne F-1 engine. One of the largest, most powerful rocket engines ever built. Ensure you enable roll capability or disable gimbal as required for your application. Diameter: [3.61 m]. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
         "mod": "SSTU",
-        "cost": "2000",
+        "cost": "2100",
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "FS Engine",

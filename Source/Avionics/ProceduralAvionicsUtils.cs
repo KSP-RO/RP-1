@@ -1,33 +1,39 @@
-﻿namespace RP0.ProceduralAvionics
+﻿using UnityEngine;
+
+namespace RP0.ProceduralAvionics
 {
     static class ProceduralAvionicsUtils
     {
         private static bool _enableLogging = true;
 
-        private const string logPreix = "[ProcAvi] - ";
+        private const string LogPrefix = "[ProcAvi] ";
+
         public static void Log(params string[] message)
         {
-            if (_enableLogging) {
+            if (_enableLogging)
+            {
                 var builder = StringBuilderCache.Acquire();
-                builder.Append(logPreix);
-                foreach (string part in message) {
+                builder.Append(LogPrefix);
+                foreach (string part in message)
+                {
                     builder.Append(part);
                 }
-                UnityEngine.Debug.Log(builder.ToStringAndRelease());
+                Debug.Log(builder.ToStringAndRelease());
             }
         }
 
         public static void Log(params object[] parts)
         {
-            if (_enableLogging) {
+            if (_enableLogging)
+            {
                 var builder = StringBuilderCache.Acquire();
-                builder.Append(logPreix);
-                foreach (object part in parts) {
+                builder.Append(LogPrefix);
+                foreach (object part in parts)
+                {
                     builder.Append(part.ToString());
                 }
-                UnityEngine.Debug.Log(builder.ToStringAndRelease());
+                Debug.Log(builder.ToStringAndRelease());
             }
         }
-
     }
 }

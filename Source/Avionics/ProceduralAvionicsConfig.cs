@@ -11,6 +11,9 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public string name;
 
+        [Persistent]
+        public string description;
+
         public byte[] techNodesSerialized;
 
         private Dictionary<String, ProceduralAvionicsTechNode> techNodes;

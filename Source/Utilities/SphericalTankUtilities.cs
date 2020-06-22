@@ -2,16 +2,24 @@
 
 namespace RP0.Utilities
 {
-    class SphericalTankUtilities
+    public class SphericalTankUtilities
     {
         private const int MinSpheres = 2;
         private const float BaseRadius = 0.05f;
 
         public static float GetSphericalTankVolume(float availableVolume)
         {
-            var radius = GetSphericalTankRadius(availableVolume);
-            var sphereVolume = GetSphereVolume(radius);
+            float radius = GetSphericalTankRadius(availableVolume);
+            float sphereVolume = GetSphereVolume(radius);
             return GetSphereCount(availableVolume, sphereVolume) * sphereVolume;
+        }
+
+        public static float GetRequiredVolumeFromSphericalTankVolume(float desiredVolume)
+        {
+            float radius = GetSphericalTankRadius(desiredVolume);
+            float sphereVolume = GetSphereVolume(radius);
+            float numSpheres = Mathf.Ceil(desiredVolume / sphereVolume);
+            return numSpheres * sphereVolume;
         }
 
         private static float GetSphereCount(float availableVolume, float sphereVolume) => sphereVolume == 0 ? 0 : Mathf.Floor(availableVolume / sphereVolume);
@@ -23,7 +31,7 @@ namespace RP0.Utilities
 
         public static float GetSphericalTankRadius(float availableVolume)
         {
-            if(availableVolume == 0)
+            if (availableVolume == 0)
             {
                 return 0;
             }

@@ -318,8 +318,6 @@ namespace RP0
 
         private void FundsChanged(float changeDelta, TransactionReasons reason)
         {
-            Debug.Log($"[RP-0] FundsChanged {changeDelta} for {reason}");
-
             _prevFundsChangeAmount = changeDelta;
             _prevFundsChangeReason = reason;
 
@@ -332,40 +330,34 @@ namespace RP0
 
             if (CareerEventScope.Current?.EventType == CareerEventType.Maintenance)
             {
-                Debug.Log($"[RP-0] Adding {changeDelta} to maintenance fees");
                 CurrentPeriod.MaintenanceFees -= changeDelta;
                 return;
             }
 
             if (CareerEventScope.Current?.EventType == CareerEventType.Tooling)
             {
-                Debug.Log($"[RP-0] Adding {changeDelta} to tooling fees");
                 CurrentPeriod.ToolingFees -= changeDelta;
                 return;
             }
 
             if (reason == TransactionReasons.VesselRollout || reason == TransactionReasons.VesselRecovery)
             {
-                Debug.Log($"[RP-0] Adding {changeDelta} to launch fees");
                 CurrentPeriod.LaunchFees -= changeDelta;
                 return;
             }
 
             if (reason == TransactionReasons.RnDPartPurchase)
             {
-                Debug.Log($"[RP-0] Adding {changeDelta} to entry costs");
                 CurrentPeriod.EntryCosts -= changeDelta;
                 return;
             }
 
             if (changeDelta > 0)
             {
-                Debug.Log($"[RP-0] Adding {changeDelta} to OtherFundsEarned");
                 CurrentPeriod.OtherFundsEarned += changeDelta;
             }
             else
             {
-                Debug.Log($"[RP-0] Adding {changeDelta} to other fees");
                 CurrentPeriod.OtherFees -= changeDelta;
             }
         }

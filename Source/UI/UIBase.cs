@@ -19,31 +19,31 @@ namespace RP0
             pressedButton.normal = pressedButton.active;
         }
 
-        public enum tabs
+        public enum Tabs
         { 
             Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, 
             Training, Courses, NewCourse, Naut, Avionics, CareerLog
         };
 
-        protected bool showTab(tabs tab)
+        protected bool showTab(Tabs tab)
         {
             switch (tab) {
-                case tabs.Maintenance:
-                case tabs.Facilities:
-                case tabs.Integration:
+                case Tabs.Maintenance:
+                case Tabs.Facilities:
+                case Tabs.Integration:
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
-                case tabs.Tooling:
-                case tabs.ToolingType:
+                case Tabs.Tooling:
+                case Tabs.ToolingType:
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
-                case tabs.Avionics:
+                case Tabs.Avionics:
                     return HighLogic.LoadedSceneIsEditor;
-                case tabs.Astronauts:
+                case Tabs.Astronauts:
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER;
-                case tabs.Training:
-                case tabs.Courses:
-                case tabs.NewCourse:
-                case tabs.Naut:
-                case tabs.CareerLog:
+                case Tabs.Training:
+                case Tabs.Courses:
+                case Tabs.NewCourse:
+                case Tabs.Naut:
+                case Tabs.CareerLog:
                 default:
                     return true;
             }

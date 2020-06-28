@@ -79,7 +79,7 @@ namespace RP0.Crew
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
-        protected void nautListRow(tabs currentTab, ProtoCrewMember student)
+        protected void nautListRow(Tabs currentTab, ProtoCrewMember student)
         {
             GUIStyle style = HighLogic.Skin.label;
             ActiveCourse currentCourse = null;
@@ -99,7 +99,7 @@ namespace RP0.Crew
                         else
                             selectedCourse.AddStudent(student);
                     }
-                } else if (currentTab == tabs.Training) {
+                } else if (currentTab == Tabs.Training) {
                     if (GUILayout.Button(student.name, GUILayout.Width(144))) {
                         selectedNaut = student;
                     }
@@ -161,10 +161,10 @@ namespace RP0.Crew
             }
         }
 
-        private void summaryBody(tabs currentTab)
+        private void summaryBody(Tabs currentTab)
         {
             updateActiveMap();
-            float scrollHeight = currentTab == tabs.Training ? 420 : 305;
+            float scrollHeight = currentTab == Tabs.Training ? 420 : 305;
             nautListScroll = GUILayout.BeginScrollView(nautListScroll, GUILayout.Width(505), GUILayout.Height(scrollHeight));
             try {
                 nautListHeading();
@@ -173,7 +173,7 @@ namespace RP0.Crew
                     ProtoCrewMember student = HighLogic.CurrentGame.CrewRoster[i];
                     if (student.type == ProtoCrewMember.KerbalType.Crew && 
                         (student.rosterStatus == ProtoCrewMember.RosterStatus.Available ||
-                         (currentTab == tabs.Training && student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)))
+                         (currentTab == Tabs.Training && student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)))
                     {
                         nautListRow(currentTab, student);
                     }
@@ -183,12 +183,12 @@ namespace RP0.Crew
             }
         }
 
-        public tabs summaryTab()
+        public Tabs summaryTab()
         {
             selectedCourse = null;
             selectedNaut = null;
-            summaryBody(tabs.Training);
-            return selectedNaut == null ? tabs.Training : tabs.Naut;
+            summaryBody(Tabs.Training);
+            return selectedNaut == null ? Tabs.Training : Tabs.Naut;
         }
 
         protected void courseSelector()
@@ -211,14 +211,14 @@ namespace RP0.Crew
             }
         }
 
-        public tabs coursesTab()
+        public Tabs coursesTab()
         {
             selectedCourse = null;
             courseSelector();
-            return selectedCourse == null ? tabs.Courses : tabs.NewCourse;
+            return selectedCourse == null ? Tabs.Courses : Tabs.NewCourse;
         }
 
-        public tabs newCourseTab()
+        public Tabs newCourseTab()
         {
             if (tempCourseLblStyle == null)
             {
@@ -238,7 +238,7 @@ namespace RP0.Crew
                 GUILayout.Label(selectedCourse.description);
             if (selectedCourse.isTemporary)
                 GUILayout.Label("Tech for this part is still being researched", tempCourseLblStyle);
-            summaryBody(tabs.NewCourse);
+            summaryBody(Tabs.NewCourse);
             if (selectedCourse.seatMax > 0)
                 GUILayout.Label(selectedCourse.seatMax - selectedCourse.Students.Count + " remaining seat(s).");
             if (selectedCourse.seatMin > selectedCourse.Students.Count)
@@ -252,7 +252,7 @@ namespace RP0.Crew
                     MaintenanceHandler.Instance?.UpdateUpkeep();
                 }
             }
-            return selectedCourse == null ? tabs.Training : tabs.NewCourse;
+            return selectedCourse == null ? Tabs.Training : Tabs.NewCourse;
         }
 
         public void nautTab()

@@ -18,6 +18,7 @@ namespace RP0
 
         private const float UPDATEINTERVAL = 0.5f;
 
+        private bool isToolingTempDisabled = false;
         private float nextUpdate = 0f;
         private float allTooledCost;
         private List<untooledPart> untooledParts = new List<untooledPart>();
@@ -64,7 +65,7 @@ namespace RP0
         {
             MaybeUpdate();
 
-            if (!ToolingManager.Instance.toolingEnabled)
+            if (!isToolingTempDisabled && !ToolingManager.Instance.toolingEnabled)
             {
                 GUILayout.BeginHorizontal();
                 try
@@ -106,7 +107,7 @@ namespace RP0
                 GUILayout.EndHorizontal();
             }
 
-            if (untooledParts.Count > 0) {
+            if (isToolingTempDisabled || untooledParts.Count > 0) {
                 GUILayout.BeginHorizontal();
                 try {
                     GUILayout.Label("Untooled Parts:", HighLogic.Skin.label, GUILayout.Width(312));
@@ -141,47 +142,65 @@ namespace RP0
                 } finally {
                     GUILayout.EndHorizontal();
                 }
-                GUILayout.BeginHorizontal();
+                GUILayout.BeginVertical();
                 try {
-                if (GUILayout.Button("Tool All"))
-                {
-                    var untooledParts = EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq())
-                                                                            .Where(mt => !mt.IsUnlocked())
-                                                                            .ToList();
+                    if (GUILayout.RepeatButton("Press to preview fully tooled build time & cost"))
+                    {
+                        if (!isToolingTempDisabled)
+                        {
+                            isToolingTempDisabled = true;
+                            ToolingManager.Instance.toolingEnabled = false;
+                            Update();
+                            GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
+                        }
+                    }
+                    else if (isToolingTempDisabled && Event.current.type == EventType.Repaint)   // button events are handled on the Repaint pass
+                    {
+                        ToolingManager.Instance.toolingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsToolingEnabled;
+                        isToolingTempDisabled = false;
+                        Update();
+                        GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
+                    }
 
-                    float totalToolingCost = ModuleTooling.PurchaseToolingBatch(untooledParts, isSimulation: true);
-                    bool canAfford = Funding.Instance.Funds >= totalToolingCost;
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                        new Vector2(0.5f, 0.5f),
-                        new MultiOptionDialog(
-                            "ConfirmAllToolingsPurchase",
-                            $"Tooling for all untooled parts will cost {totalToolingCost:N0} funds.",
-                            "Tooling Purchase",
-                            HighLogic.UISkin,
-                            new Rect(0.5f, 0.5f, 150f, 60f),
-                            new DialogGUIFlexibleSpace(),
-                            new DialogGUIVerticalLayout(
+                    if (GUILayout.Button("Tool All"))
+                    {
+                        var untooledParts = EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq())
+                                                                                .Where(mt => !mt.IsUnlocked())
+                                                                                .ToList();
+
+                        float totalToolingCost = ModuleTooling.PurchaseToolingBatch(untooledParts, isSimulation: true);
+                        bool canAfford = Funding.Instance.Funds >= totalToolingCost;
+                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                            new Vector2(0.5f, 0.5f),
+                            new MultiOptionDialog(
+                                "ConfirmAllToolingsPurchase",
+                                $"Tooling for all untooled parts will cost {totalToolingCost:N0} funds.",
+                                "Tooling Purchase",
+                                HighLogic.UISkin,
+                                new Rect(0.5f, 0.5f, 150f, 60f),
                                 new DialogGUIFlexibleSpace(),
-                                new DialogGUIButton(canAfford ? "Purchase All Toolings" : "Can't Afford",
-                                    () =>
-                                    {
-                                        if (canAfford)
+                                new DialogGUIVerticalLayout(
+                                    new DialogGUIFlexibleSpace(),
+                                    new DialogGUIButton(canAfford ? "Purchase All Toolings" : "Can't Afford",
+                                        () =>
                                         {
-                                            ModuleTooling.PurchaseToolingBatch(untooledParts);
-                                            untooledParts.ForEach(mt =>
+                                            if (canAfford)
                                             {
-                                                mt.Events["ToolingEvent"].guiActiveEditor = false;
-                                            });
-                                            GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
-                                        }
-                                    }, 140.0f, 30.0f, true),
-                                new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
-                                )),
-                        false,
-                        HighLogic.UISkin);
-                }
+                                                ModuleTooling.PurchaseToolingBatch(untooledParts);
+                                                untooledParts.ForEach(mt =>
+                                                {
+                                                    mt.Events["ToolingEvent"].guiActiveEditor = false;
+                                                });
+                                                GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
+                                            }
+                                        }, 140.0f, 30.0f, true),
+                                    new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
+                                    )),
+                            false,
+                            HighLogic.UISkin);
+                    }
                 } finally {
-                    GUILayout.EndHorizontal();
+                    GUILayout.EndVertical();
                 }
             }
             return currentToolingType == null ? tabs.Tooling : tabs.ToolingType;

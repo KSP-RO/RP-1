@@ -97,7 +97,7 @@
     },
     {
         "name": "ROT-BoosterTank-Separate",
-        "title": "Modular Booster Tank (Separate Structure)",
+        "title": "Modular Booster Tank (Stringer)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -166,7 +166,7 @@
     },
     {
         "name": "ROT-GenericTank-Separate",
-        "title": "Modular Tank (Separate Structure)",
+        "title": "Modular Tank (Stringer)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -261,7 +261,7 @@
     },
     {
         "name": "ROT-RadialTank-Separate",
-        "title": "Modular Radial Tank (Separate Structure)",
+        "title": "Modular Radial Tank (Stringer)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -376,7 +376,7 @@
     },
     {
         "name": "ROT-SphericalTank-Separate",
-        "title": "Modular Spherical Tank (Separate Structure)",
+        "title": "Modular Spherical Tank (Stringer)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",
@@ -445,7 +445,7 @@
     },
     {
         "name": "ROT-ToroidalTank-Separate",
-        "title": "Modular Toroidal Tank (Separate Structure)",
+        "title": "Modular Toroidal Tank (Stringer)",
         "description": "",
         "mod": "ROTanks",
         "cost": "0",

@@ -1258,7 +1258,6 @@
         "entry_cost_mods": "capsulesMercury",
         "identical_part_name": "MercuryCapsule",
         "module_tags": [
-            "",
             "HumanRated",
             "NoEVA",
             "NoResourceCostMult",

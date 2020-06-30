@@ -2112,29 +2112,6 @@
         ]
     },
     {
-        "name": "ROE-F-1B",
-        "title": "F-1B",
-        "description": "",
-        "mod": "ROEngines",
-        "cost": "1448",
-        "entry_cost": "0",
-        "category": "ORBITAL",
-        "info": "",
-        "year": "2022",
-        "technology": "orbitalRocketryNF",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "SLS",
-        "engine_config": "F1B",
-        "upgrade": false,
-        "entry_cost_mods": "F-1B",
-        "identical_part_name": "F-1B",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
-    },
-    {
         "name": "ROE-F1",
         "title": "F-1 Series Engine",
         "description": "",
@@ -2180,6 +2157,29 @@
         "upgrade": false,
         "entry_cost_mods": "F-1",
         "identical_part_name": "F-1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-F1B",
+        "title": "F-1B",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1488",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "2022",
+        "technology": "orbitalRocketryNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "SLS",
+        "engine_config": "F1B",
+        "upgrade": false,
+        "entry_cost_mods": "F-1B",
+        "identical_part_name": "F-1B",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -5914,10 +5914,10 @@
         "mod": "ROEngines",
         "cost": "30",
         "entry_cost": "600",
-        "category": "RCS",
+        "category": "EDL",
         "info": "RCS Engine",
         "year": "1965",
-        "technology": "earlyDocking",
+        "technology": "earlyLanding",
         "era": "04-ADV",
         "ro": true,
         "rp0": true,
@@ -5939,10 +5939,10 @@
         "mod": "ROEngines",
         "cost": "30",
         "entry_cost": "600",
-        "category": "RCS",
+        "category": "EDL",
         "info": "RCS Engine",
         "year": "1965",
-        "technology": "earlyDocking",
+        "technology": "earlyLanding",
         "era": "04-ADV",
         "ro": true,
         "rp0": true,

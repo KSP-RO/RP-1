@@ -61,7 +61,7 @@ namespace RP0
                 GUILayout.Label((MaintenanceHandler.Instance.facilityUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
                 {
-                    TopWindow.SwitchTabTo(tabs.Facilities);
+                    TopWindow.SwitchTabTo(Tabs.Facilities);
                 }
             } finally {
                 GUILayout.EndHorizontal();
@@ -72,7 +72,7 @@ namespace RP0
                 GUILayout.Label((MaintenanceHandler.Instance.integrationUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
                 {
-                    TopWindow.SwitchTabTo(tabs.Integration);
+                    TopWindow.SwitchTabTo(Tabs.Integration);
                 }
             } finally {
                 GUILayout.EndHorizontal();
@@ -90,7 +90,7 @@ namespace RP0
                 GUILayout.Label((MaintenanceHandler.Instance.nautTotalUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
                 {
-                    TopWindow.SwitchTabTo(tabs.Astronauts);
+                    TopWindow.SwitchTabTo(Tabs.Astronauts);
                 }
             } finally {
                 GUILayout.EndHorizontal();

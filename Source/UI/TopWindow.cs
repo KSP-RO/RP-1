@@ -13,12 +13,12 @@ namespace RP0
         private Crew.FSGUI fsUI = new RP0.Crew.FSGUI();
         private AvionicsGUI avUI = new AvionicsGUI();
         private CareerLogGUI logUI = new CareerLogGUI();
-        private static tabs currentTab;
+        private static Tabs currentTab;
 
         public TopWindow()
         {
             // Reset the tab on scene changes
-            currentTab = default(tabs);
+            currentTab = default(Tabs);
         }
 
         public void OnGUI()
@@ -26,7 +26,7 @@ namespace RP0
             windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1");
         }
 
-        public static void SwitchTabTo(tabs newTab)
+        public static void SwitchTabTo(Tabs newTab)
         {
             currentTab = newTab;
         }
@@ -35,18 +35,18 @@ namespace RP0
         {
             GUILayout.BeginHorizontal();
             try {
-                if (showTab(tabs.Maintenance) && toggleButton("Maintenance", currentTab == tabs.Maintenance))
-                    currentTab = tabs.Maintenance;
-                if (showTab(tabs.Tooling) && toggleButton("Tooling", currentTab == tabs.Tooling))
-                    currentTab = tabs.Tooling;
-                if (showTab(tabs.Training) && toggleButton("Astronauts", currentTab == tabs.Training))
-                    currentTab = tabs.Training;
-                if (showTab(tabs.Courses) && toggleButton("Courses", currentTab == tabs.Courses))
-                    currentTab = tabs.Courses;
-                if (showTab(tabs.Avionics) && toggleButton("Avionics", currentTab == tabs.Avionics))
-                    currentTab = tabs.Avionics;
-                if (showTab(tabs.CareerLog) && toggleButton("Career Log", currentTab == tabs.CareerLog))
-                    currentTab = tabs.CareerLog;
+                if (showTab(Tabs.Maintenance) && toggleButton("Maintenance", currentTab == Tabs.Maintenance))
+                    currentTab = Tabs.Maintenance;
+                if (showTab(Tabs.Tooling) && toggleButton("Tooling", currentTab == Tabs.Tooling))
+                    currentTab = Tabs.Tooling;
+                if (showTab(Tabs.Training) && toggleButton("Astronauts", currentTab == Tabs.Training))
+                    currentTab = Tabs.Training;
+                if (showTab(Tabs.Courses) && toggleButton("Courses", currentTab == Tabs.Courses))
+                    currentTab = Tabs.Courses;
+                if (showTab(Tabs.Avionics) && toggleButton("Avionics", currentTab == Tabs.Avionics))
+                    currentTab = Tabs.Avionics;
+                if (showTab(Tabs.CareerLog) && toggleButton("Career Log", currentTab == Tabs.CareerLog))
+                    currentTab = Tabs.CareerLog;
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -64,40 +64,40 @@ namespace RP0
                     tabSelector();
                     if (showTab(currentTab)) {
                         switch (currentTab) {
-                        case tabs.Maintenance:
+                        case Tabs.Maintenance:
                             maintUI.summaryTab();
                             break;
-                        case tabs.Facilities:
+                        case Tabs.Facilities:
                             maintUI.facilitiesTab();
                             break;
-                        case tabs.Integration:
+                        case Tabs.Integration:
                             maintUI.integrationTab();
                             break;
-                        case tabs.Astronauts:
+                        case Tabs.Astronauts:
                             maintUI.astronautsTab();
                             break;
-                        case tabs.Tooling:
-                            currentTab = toolUI.toolingTab();
+                        case Tabs.Tooling:
+                            currentTab = toolUI.RenderToolingTab();
                             break;
-                        case tabs.ToolingType:
+                        case Tabs.ToolingType:
                             toolUI.DisplayTypeTab();
                             break;
-                        case tabs.Training:
+                        case Tabs.Training:
                             currentTab = fsUI.summaryTab();
                             break;
-                        case tabs.Courses:
+                        case Tabs.Courses:
                             currentTab = fsUI.coursesTab();
                             break;
-                        case tabs.NewCourse:
+                        case Tabs.NewCourse:
                             currentTab = fsUI.newCourseTab();
                             break;
-                        case tabs.Naut:
+                        case Tabs.Naut:
                             fsUI.nautTab();
                             break;
-                        case tabs.Avionics:
+                        case Tabs.Avionics:
                             avUI.avionicsTab();
                             break;
-                        case tabs.CareerLog:
+                        case Tabs.CareerLog:
                             logUI.RenderTab();
                             break;
                         default: // can't happen

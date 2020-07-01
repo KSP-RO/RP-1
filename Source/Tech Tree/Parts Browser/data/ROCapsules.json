@@ -1118,7 +1118,6 @@
         "entry_cost_mods": "GeminiSM, MMH+NTO",
         "identical_part_name": "",
         "module_tags": [
-            "",
             "EngineLiquidPF"
         ]
     },

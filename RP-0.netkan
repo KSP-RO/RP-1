@@ -1,5 +1,5 @@
 {
-	"spec_version" : "v1.4",
+	"spec_version" : "v1.26",
 	"identifier" : "RP-0",
 	"name"       : "Realistic Progression One (RP-1)",
 	"abstract"   : "Realistic Progression One - Career for Realism Overhaul",
@@ -33,14 +33,19 @@
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
 		{ "name" : "RCSBuildAidCont" },
-		{ "name" : "RealAntennas" },
-		{ "name" : "RemoteTech" },
+		{ "any_of": [
+			{ "name" : "RealAntennas" },
+			{ "name" : "RemoteTech" }
+		] },
 		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
 		{ "name" : "Kerbalism-Config-RO" },
 		{ "name" : "TACLS" },
-		{ "name" : "TestFlight" },
+		{ "any_of": [
+			{ "name" : "TestFlight" },
+			{ "name" : "TestLite" }
+		] },
 		{ "name" : "TextureReplacer" },
 		{ "name" : "Toolbar" }
 	],

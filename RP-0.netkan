@@ -26,13 +26,23 @@
 		{ "name" : "DMagicScienceAnimate" }
 	],
 	"recommends" : [
-		{ "name" : "VenStockRevamp" },
-		{ "name" : "ConnectedLivingSpace" },
+		{ "any_of": [
+			{ "name" : "VenStockRevamp" },
+			{ "name" : "ReStock" }
+		] },
+		{ "name" : "ROEngines" },
+		{ "name" : "ROTanks" },
+		{ "name" : "ROCapsules" },
+		{ "name" : "ROSolar" },
+		{ "name" : "B9-PWings-Fork" },
+		{ "name" : "PersistentRotation" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },
+		{ "name" : "KerbalRenamer" },
 		{ "name" : "KRASH" },
 		{ "name" : "KSCSwitcher" },
 		{ "name" : "MechJeb2" },
+		{ "name" : "AtmosphereAutopilot" },
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
 		{ "name" : "RCSBuildAidCont" },
@@ -43,24 +53,25 @@
 		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
-		{ "name" : "Kerbalism-Config-RO" },
-		{ "name" : "TACLS" },
+		{ "any_of": [
+			{ "name" : "Kerbalism-Config-RO" },
+			{ "name" : "TACLS" }
+		] },
 		{ "any_of": [
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }
-		] },
-		{ "name" : "TextureReplacer" },
-		{ "name" : "Toolbar" }
+		] }
 	],
 	"suggests" : [
 		{ "name" : "BluedogDB" },
 		{ "name" : "FASA" },
+		{ "name" : "TextureReplacer" },
+		{ "name" : "SemiSaturatableRW" },
 		{ "name" : "JanitorsCloset" },
+		{ "name" : "HyperEdit" },
+		{ "name" : "EditorExtensionsRedux" },
 		{ "name" : "KerbalEngineerRedux" },
-		{ "name" : "KerbalRenamer" },
 		{ "name" : "kOS" },
-		{ "name" : "ROEngines" },
-		{ "name" : "ROCapsules" },
 		{ "name" : "RealScaleBoosters" },
 		{ "name" : "RN-SalyutStations" },
 		{ "name" : "RN-Skylab" },
@@ -72,7 +83,13 @@
 		{ "name" : "RN-USRockets" },
 		{ "name" : "SovietEnginePack" },
 		{ "name" : "Taerobee" },
-		{ "name" : "WaypointManager" }
+		{ "name" : "NearFutureSolar" },
+		{ "name" : "NearFutureConstruction" },
+		{ "name" : "	InternalRCS" },
+		{ "name" : "	ProbesPlus" },
+		{ "name" : "	ATKPropulsionPack" },
+		{ "name" : "WaypointManager" },
+		{ "name" : "NavHud" }
 	],
 	"conflicts" : [
 		{ "name" : "CrowdSourcedScience" },

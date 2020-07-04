@@ -85,9 +85,9 @@
 		{ "name" : "Taerobee" },
 		{ "name" : "NearFutureSolar" },
 		{ "name" : "NearFutureConstruction" },
-		{ "name" : "	InternalRCS" },
-		{ "name" : "	ProbesPlus" },
-		{ "name" : "	ATKPropulsionPack" },
+		{ "name" : "InternalRCS" },
+		{ "name" : "ProbesPlus" },
+		{ "name" : "ATKPropulsionPack" },
 		{ "name" : "WaypointManager" },
 		{ "name" : "NavHud" }
 	],

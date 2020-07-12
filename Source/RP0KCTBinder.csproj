@@ -44,9 +44,6 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KerbalConstructionTime">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -62,6 +59,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="KerbalConstructionTime\KerbalConstructionTime.csproj">
+      <Project>{93908b2a-0859-4dab-8873-d32a4c633308}</Project>
+      <Name>KerbalConstructionTime</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="RP0.csproj">
       <Project>{997854f8-4efb-4a78-87bc-f7c8cea64669}</Project>
       <Name>RP0</Name>

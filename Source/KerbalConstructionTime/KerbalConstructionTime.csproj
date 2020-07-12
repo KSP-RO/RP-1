@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{93908B2A-0859-4DAB-8873-D32A4C633308}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KerbalConstructionTime</RootNamespace>
+    <AssemblyName>RP0KCT</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\GameData\RP-0\Plugins\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\GameData\RP-0\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ToolbarControl">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\KSP1.8.1-DLLs\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\KSP1.8.1-DLLs\UnityEngine.InputModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ClickThroughBlocker">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MagiCore">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AirlaunchParams.cs" />
+    <Compile Include="AirlaunchTechLevel.cs" />
+    <Compile Include="GUI\GUIStates.cs" />
+    <Compile Include="GUI\GUI_Airlaunch.cs" />
+    <Compile Include="GUI\GUI_ClearLaunch.cs" />
+    <Compile Include="GUI\GUI_CrewSelect.cs" />
+    <Compile Include="GUI\GUI_DismantlePad.cs" />
+    <Compile Include="GUI\GUI_Editor.cs" />
+    <Compile Include="GUI\GUI_FirstRun.cs" />
+    <Compile Include="GUI\GUI_NewPad.cs" />
+    <Compile Include="GUI\GUI_Upgrades.cs" />
+    <Compile Include="KCTOnLoadError.cs" />
+    <Compile Include="ModIntegrations\CTIWrapper.cs" />
+    <Compile Include="Persistence\AirlaunchPrepStorageItem.cs" />
+    <Compile Include="Persistence\BuildListStorageItem.cs" />
+    <Compile Include="Persistence\ConfigNodeStorage.cs" />
+    <Compile Include="Persistence\FacilityUpgradeStorageItem.cs" />
+    <Compile Include="Persistence\GUIPosition.cs" />
+    <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
+    <Compile Include="TechItemIlist.cs" />
+    <Compile Include="Utilities\HyperEdit_Utilities.cs" />
+    <Compile Include="BuildItems\IKCTBuildItem.cs" />
+    <Compile Include="InstallChecker.cs" />
+    <Compile Include="ModIntegrations\KACWrapper.cs" />
+    <Compile Include="Utilities\KCTDebug.cs" />
+    <Compile Include="BuildItems\AirlaunchPrep.cs" />
+    <Compile Include="BuildItems\BuildListVessel.cs" />
+    <Compile Include="GUI\GUI_BuildPlans.cs" />
+    <Compile Include="Persistence\KCT_TechStorageItem.cs" />
+    <Compile Include="SceneAddons\EditorAddon.cs" />
+    <Compile Include="KCTEvents.cs" />
+    <Compile Include="SceneAddons\FlightAddon.cs" />
+    <Compile Include="FuelWhitelistLoader.cs" />
+    <Compile Include="KCTGameStates.cs" />
+    <Compile Include="GUI\GUI_Main.cs" />
+    <Compile Include="Persistence\KCT_DataStorage.cs" />
+    <Compile Include="GUI\GUI_BuildList.cs" />
+    <Compile Include="GUI\GUI_Presets.cs" />
+    <Compile Include="KSCItem.cs" />
+    <Compile Include="KSCContextMenuOverrider.cs" />
+    <Compile Include="Persistence\KCT_LaunchPad.cs" />
+    <Compile Include="Utilities\MathParser.cs" />
+    <Compile Include="Presets\PresetManager.cs" />
+    <Compile Include="BuildItems\ReconRollout.cs" />
+    <Compile Include="Presets\KCTSettings.cs" />
+    <Compile Include="SceneAddons\SpaceCenterAddon.cs" />
+    <Compile Include="BuildItems\TechItem.cs" />
+    <Compile Include="SceneAddons\TrackingStationAddon.cs" />
+    <Compile Include="BuildItems\FacilityUpgrade.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
+    <Compile Include="Utilities\WindowHelper.cs" />
+    <Compile Include="KerbalConstructionTime.cs" />
+    <Compile Include="Persistence\KerbalConstructionTimeData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ModIntegrations\ScrapYardWrapper.cs" />
+    <Compile Include="ModIntegrations\StageRecoveryWrapper.cs" />
+    <Compile Include="Utilities\TextureScale.cs" />
+    <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
+    <Compile Include="Utilities\TypeExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del "System.Core.dll"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets. -->
+  <Target Name="BeforeBuild">
+    <WriteLinesToFile Condition=" '$(BUILD_NUMBER)' != '' And $(Configuration) != 'Release'" File="Properties\VersionInfo.cs" Overwrite="True" Lines="[assembly: System.Reflection.AssemblyVersion(&quot;1.3.5.$(BUILD_NUMBER)&quot;)] // Generated by build" />
+    <WriteLinesToFile Condition=" '$(BUILD_NUMBER)' != '' And $(Configuration) != 'Release'" File="Properties\VersionInfo.cs" Overwrite="False" Lines="[assembly: System.Reflection.AssemblyFileVersion(&quot;1.3.5.$(BUILD_NUMBER)&quot;)] // Generated by build" />
+  </Target>
+  <!--
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

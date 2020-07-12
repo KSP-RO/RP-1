@@ -22,8 +22,8 @@ namespace RP0
 
         private EventData<RDTech> onKctTechQueuedEvent;
         private EventData<ProtoTechNode> onKctTechCompletedEvent;
-        private EventData<KCT_UpgradingBuilding> onKctFacilityUpgradeQueuedEvent;
-        private EventData<KCT_UpgradingBuilding> onKctFacilityUpgradeCompletedEvent;
+        private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
+        private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
 
         public override void OnAwake()
         {
@@ -51,14 +51,14 @@ namespace RP0
                 Debug.Log($"[RP-0] Bound to OnKctTechCompleted");
             }
 
-            onKctFacilityUpgradeQueuedEvent = GameEvents.FindEvent<EventData<KCT_UpgradingBuilding>>("OnKctFacilityUpgradeQueued");
+            onKctFacilityUpgradeQueuedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeQueued");
             if (onKctFacilityUpgradeQueuedEvent != null)
             {
                 onKctFacilityUpgradeQueuedEvent.Add(OnKctFacilityUpgdQueued);
                 Debug.Log($"[RP-0] Bound to OnKctFacilityUpgradeQueued");
             }
 
-            onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<KCT_UpgradingBuilding>>("OnKctFacilityUpgradeComplete");
+            onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeComplete");
             if (onKctFacilityUpgradeCompletedEvent != null)
             {
                 onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
@@ -78,13 +78,13 @@ namespace RP0
 
         public static int GetKCTUpgradeCounts(SpaceCenterFacility facility)
         {
-            return KCT_Utilities.SpentUpgradesFor(facility);
+            return KerbalConstructionTime.Utilities.SpentUpgradesFor(facility);
         }
 
         public static float GetSciPointTotalFromKCT()
         {
             // KCT returns -1 if the player hasn't earned any sci yet
-            return Math.Max(0, KCT_GameStates.SciPointsTotal);
+            return Math.Max(0, KCTGameStates.SciPointsTotal);
         }
 
         public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)
@@ -103,7 +103,7 @@ namespace RP0
 
         protected void Update()
         {
-            if (HighLogic.CurrentGame == null || KerbalConstructionTime.KerbalConstructionTime.instance == null)
+            if (HighLogic.CurrentGame == null || KerbalConstructionTime.KerbalConstructionTime.Instance == null)
                 return;
 
             if (skipTwo)
@@ -130,7 +130,7 @@ namespace RP0
             for (int i = padCounts.Length; i-- > 0;)
                 padCounts[i] = 0;
 
-            foreach (KCT_KSC ksc in KCT_GameStates.KSCs)
+            foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 double buildRate = 0d;
 
@@ -151,7 +151,7 @@ namespace RP0
                         ++padCounts[lvl];
                 }
             }
-            double RDRate = KCT_MathParsing.ParseNodeRateFormula(10, 0, false);
+            double RDRate = MathParser.ParseNodeRateFormula(10, 0, false);
 
             MaintenanceHandler.Instance.kctResearchRate = RDRate;
             MaintenanceHandler.Instance.kctPadCounts = padCounts;
@@ -169,20 +169,20 @@ namespace RP0
             CareerLog.Instance?.AddTechEvent(data.techID);
         }
 
-        private void OnKctFacilityUpgdQueued(KCT_UpgradingBuilding data)
+        private void OnKctFacilityUpgdQueued(FacilityUpgrade data)
         {
             Debug.Log($"[RP-0] OnKctFacilityUpgdQueued");
-            if (!data.facilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+            if (!data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
 
-            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType.Value, data.upgradeLevel, data.cost, ConstructionState.Started);
+            CareerLog.Instance?.AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Started);
         }
 
-        private void OnKctFacilityUpgdComplete(KCT_UpgradingBuilding data)
+        private void OnKctFacilityUpgdComplete(FacilityUpgrade data)
         {
             Debug.Log($"[RP-0] OnKctFacilityUpgdComplete");
-            if (!data.facilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+            if (!data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
 
-            CareerLog.Instance?.AddFacilityConstructionEvent(data.facilityType.Value, data.upgradeLevel, data.cost, ConstructionState.Completed);
+            CareerLog.Instance?.AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Completed);
         }
 
         private IEnumerator CreateCoursesRoutine()
@@ -194,7 +194,7 @@ namespace RP0
                 var ap = PartLoader.LoadedPartsList[i];
                 if (ap.partPrefab.CrewCapacity > 0)
                 {
-                    var kctTech = KCT_GameStates.TechList.Find(t => t.techID == ap.TechRequired);
+                    var kctTech = KCTGameStates.TechList.Find(t => t.TechID == ap.TechRequired);
                     if (kctTech != null)
                     {
                         CrewHandler.Instance.AddPartCourses(ap);

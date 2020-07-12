@@ -675,7 +675,7 @@
     },
     {
         "name": "RO-RFTank-Seperate",
-        "title": "Procedural Tank (Separate Structure)",
+        "title": "Procedural Tank (Stringer Structure)",
         "description": "Separate structure tanks do not have load bearing tanks. This makes them cheaper to produce but they are heavier than other types of tank.\n",
         "mod": "RealFuels",
         "cost": "0",

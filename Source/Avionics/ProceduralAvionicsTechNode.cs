@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RP0.ProceduralAvionics
 {
@@ -10,6 +7,9 @@ namespace RP0.ProceduralAvionics
     {
         [Persistent]
         public string name;
+
+        [Persistent]
+        public string dispName;
 
         [Persistent]
         public int techLevel;
@@ -50,6 +50,9 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public float avionicsDensity = 1;
 
+        [Persistent]
+        public float reservedRFTankVolume = 0.0015f;
+
         // Controls whether or not this part has a science return container 
         [Persistent]
         public bool hasScienceContainer = false;
@@ -58,11 +61,7 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public bool interplanetary = true;
 
-        public bool IsAvailable {
-            get {
-                return ResearchAndDevelopment.GetTechnologyState(name) == RDTech.State.Available;
-            }
-        }
+        public bool IsAvailable => ResearchAndDevelopment.GetTechnologyState(name) == RDTech.State.Available;
 
         public void Load(ConfigNode node)
         {

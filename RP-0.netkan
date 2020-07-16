@@ -1,5 +1,5 @@
 {
-	"spec_version" : "v1.4",
+	"spec_version" : "v1.26",
 	"identifier" : "RP-0",
 	"name"       : "Realistic Progression One (RP-1)",
 	"abstract"   : "Realistic Progression One - Career for Realism Overhaul",
@@ -9,6 +9,9 @@
 	"$vref"      : "#/ckan/ksp-avc",
 	"x_netkan_force_v": true,
 	"release_status" : "stable",
+	"resources": {
+		"homepage": "https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*"
+	},
 	"depends" : [
 		{ "name" : "ModuleManager" },
 		{ "name" : "RealismOverhaul" },
@@ -23,36 +26,52 @@
 		{ "name" : "DMagicScienceAnimate" }
 	],
 	"recommends" : [
-		{ "name" : "VenStockRevamp" },
-		{ "name" : "ConnectedLivingSpace" },
+		{ "any_of": [
+			{ "name" : "VenStockRevamp" },
+			{ "name" : "ReStock" }
+		] },
+		{ "name" : "ROEngines" },
+		{ "name" : "ROTanks" },
+		{ "name" : "ROCapsules" },
+		{ "name" : "ROSolar" },
+		{ "name" : "B9-PWings-Fork" },
+		{ "name" : "PersistentRotation" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },
+		{ "name" : "KerbalRenamer" },
 		{ "name" : "KRASH" },
 		{ "name" : "KSCSwitcher" },
 		{ "name" : "MechJeb2" },
+		{ "name" : "AtmosphereAutopilot" },
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
 		{ "name" : "RCSBuildAidCont" },
-		{ "name" : "RealAntennas" },
-		{ "name" : "RemoteTech" },
+		{ "any_of": [
+			{ "name" : "RealAntennas" },
+			{ "name" : "RemoteTech" }
+		] },
 		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
-		{ "name" : "Kerbalism-Config-RO" },
-		{ "name" : "TACLS" },
-		{ "name" : "TestFlight" },
-		{ "name" : "TextureReplacer" },
-		{ "name" : "Toolbar" }
+		{ "any_of": [
+			{ "name" : "Kerbalism-Config-RO" },
+			{ "name" : "TACLS" }
+		] },
+		{ "any_of": [
+			{ "name" : "TestFlight" },
+			{ "name" : "TestLite" }
+		] }
 	],
 	"suggests" : [
 		{ "name" : "BluedogDB" },
 		{ "name" : "FASA" },
+		{ "name" : "TextureReplacer" },
+		{ "name" : "SemiSaturatableRW" },
 		{ "name" : "JanitorsCloset" },
+		{ "name" : "HyperEdit" },
+		{ "name" : "EditorExtensionsRedux" },
 		{ "name" : "KerbalEngineerRedux" },
-		{ "name" : "KerbalRenamer" },
 		{ "name" : "kOS" },
-		{ "name" : "ROEngines" },
-		{ "name" : "ROCapsules" },
 		{ "name" : "RealScaleBoosters" },
 		{ "name" : "RN-SalyutStations" },
 		{ "name" : "RN-Skylab" },
@@ -64,7 +83,13 @@
 		{ "name" : "RN-USRockets" },
 		{ "name" : "SovietEnginePack" },
 		{ "name" : "Taerobee" },
-		{ "name" : "WaypointManager" }
+		{ "name" : "NearFutureSolar" },
+		{ "name" : "NearFutureConstruction" },
+		{ "name" : "InternalRCS" },
+		{ "name" : "ProbesPlus" },
+		{ "name" : "ATKPropulsionPack" },
+		{ "name" : "WaypointManager" },
+		{ "name" : "NavHud" }
 	],
 	"conflicts" : [
 		{ "name" : "CrowdSourcedScience" },

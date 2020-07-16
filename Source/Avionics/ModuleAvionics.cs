@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RP0
 {
-    class ModuleAvionics : PartModule
+    public class ModuleAvionics : PartModule
     {
         #region Members
         protected const string PAWGroup = "Avionics";

@@ -64,6 +64,10 @@ namespace RP0
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
         public bool avionicsUseKerbalism = true;
 
+        public bool AvionicsWindow_ShowInfo1 = true;
+        public bool AvionicsWindow_ShowInfo2 = true;
+        public bool AvionicsWindow_ShowInfo3 = true;
+
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
             switch (preset)

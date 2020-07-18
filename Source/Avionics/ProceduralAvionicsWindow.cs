@@ -21,6 +21,7 @@ namespace RP0.ProceduralAvionics
         private string _sECAmount = "400";
         private string _sExtraVolume = "0";
         private bool _showInfo1, _showInfo2, _showInfo3;
+        private bool _showROTankSizeWarning;
 
         public void OnGUI()
         {
@@ -120,6 +121,7 @@ namespace RP0.ProceduralAvionics
                 if (switchedConfig)
                 {
                     Log("Configuration window changed, updating part window");
+                    _showROTankSizeWarning = false;
                     SetupConfigNameFields();
                     avionicsTechLevel = techNode.name;
                     CurrentProceduralAvionicsConfig = curCfg;
@@ -163,9 +165,17 @@ namespace RP0.ProceduralAvionics
 
             GUILayout.BeginHorizontal(GUILayout.MaxWidth(250));
             GUILayout.Label("Additional tank volume: ", HighLogic.Skin.label, GUILayout.Width(150));
+            GUI.enabled = _seekVolumeMethod != null;
             _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);
+            GUI.enabled = true;
             GUILayout.Label("l", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
+
+            if (_showROTankSizeWarning)
+            {
+                GUILayout.Label("ROTanks does not currently support automatic resizing to correct dimensions. Increase the part size manually until it has sufficient volume.", HighLogic.Skin.label);
+            }
+
             GUILayout.EndVertical();
 
             GUILayout.BeginHorizontal();
@@ -213,7 +223,7 @@ namespace RP0.ProceduralAvionics
             else
             {
                 // ROTank probe cores do not support SeekVolume()
-                ClampControllableMass();
+                _showROTankSizeWarning = ClampControllableMass();
                 MonoUtilities.RefreshContextWindows(part);
             }
 

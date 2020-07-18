@@ -6359,5 +6359,28 @@
         "module_tags": [
             "EngineLiquidTurbo"
         ]
+    },
+    {
+        "name": "ROE-XLR99",
+        "title": "XLR-99",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1130",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "Engine",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "X-15",
+        "engine_config": "XLR99",
+        "upgrade": false,
+        "entry_cost_mods": "XLR99",
+        "identical_part_name": "XLR99",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     }
 ]

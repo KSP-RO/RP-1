@@ -984,7 +984,7 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "R-11",
-        "engine_config": "S2.253",
+        "engine_config": "S2_253",
         "upgrade": false,
         "entry_cost_mods": "S2-253",
         "identical_part_name": "",

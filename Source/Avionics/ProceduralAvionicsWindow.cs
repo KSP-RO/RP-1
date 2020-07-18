@@ -22,6 +22,7 @@ namespace RP0.ProceduralAvionics
         private string _sExtraVolume = "0";
         private bool _showInfo1, _showInfo2, _showInfo3;
         private bool _showROTankSizeWarning;
+        private bool _shouldResetUIHeight;
 
         public void OnGUI()
         {
@@ -33,6 +34,11 @@ namespace RP0.ProceduralAvionics
                     _selectedConfigIndex = _avionicsConfigNames.IndexOf(avionicsConfigName);
                 }
 
+                if (_shouldResetUIHeight && Event.current.type == EventType.Layout)
+                {
+                    _windowRect.height = 300;
+                    _shouldResetUIHeight = false;
+                }
                 _windowRect = GUILayout.Window(GetInstanceID(), _windowRect, WindowFunction, "Configure Procedural Avionics", HighLogic.Skin.window);
             }
         }
@@ -47,6 +53,7 @@ namespace RP0.ProceduralAvionics
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
                 settings.AvionicsWindow_ShowInfo1 = _showInfo1;
+                _shouldResetUIHeight = true;
             }
 
             if (_showInfo1)
@@ -55,7 +62,11 @@ namespace RP0.ProceduralAvionics
 
             GUILayout.BeginVertical(HighLogic.Skin.box);
             GUILayout.Label("Choose the avionics type:", HighLogic.Skin.label);
+            int oldConfigIdx = _selectedConfigIndex;
             _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames, HighLogic.Skin.button);
+            if (oldConfigIdx != _selectedConfigIndex)
+                _shouldResetUIHeight = true;
+
             string curCfgName = _avionicsConfigNames[_selectedConfigIndex];
             ProceduralAvionicsConfig curCfg = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(curCfgName);
 
@@ -63,10 +74,11 @@ namespace RP0.ProceduralAvionics
 
             oldShowInfo = _showInfo2;
             _showInfo2 = GUILayout.Toggle(_showInfo2, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
-            if (oldShowInfo != _showInfo1)
+            if (oldShowInfo != _showInfo2)
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
                 settings.AvionicsWindow_ShowInfo2 = _showInfo2;
+                _shouldResetUIHeight = true;
             }
 
             if (_showInfo2)
@@ -80,13 +92,10 @@ namespace RP0.ProceduralAvionics
             GUILayout.Label("Choose the tech level:", HighLogic.Skin.label);
             foreach (var techNode in curCfg.TechNodes.Values)
             {
-                if (!techNode.IsAvailable)
-                {
-                    continue;
-                }
+                if (!techNode.IsAvailable) continue;
 
-                var switchedConfig = false;
-                var unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(curCfgName, techNode);
+                bool switchedConfig = false;
+                int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(curCfgName, techNode);
                 if (unlockCost == 0)
                 {
                     bool isCurrent = techNode == CurrentProceduralAvionicsTechNode;
@@ -121,6 +130,7 @@ namespace RP0.ProceduralAvionics
                 if (switchedConfig)
                 {
                     Log("Configuration window changed, updating part window");
+                    _shouldResetUIHeight = true;
                     _showROTankSizeWarning = false;
                     SetupConfigNameFields();
                     avionicsTechLevel = techNode.name;
@@ -143,6 +153,7 @@ namespace RP0.ProceduralAvionics
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
                 settings.AvionicsWindow_ShowInfo3 = _showInfo3;
+                _shouldResetUIHeight = true;
             }
 
             if (_showInfo3)
@@ -224,6 +235,7 @@ namespace RP0.ProceduralAvionics
             {
                 // ROTank probe cores do not support SeekVolume()
                 _showROTankSizeWarning = ClampControllableMass();
+                _shouldResetUIHeight = true;
                 MonoUtilities.RefreshContextWindows(part);
             }
 

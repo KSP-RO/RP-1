@@ -400,6 +400,7 @@ namespace RP0.ProceduralAvionics
             {
                 // Don't fire these if cachedVolume isn't known yet.
                 UpdateMassLimitsAndVolume();
+                SetProcPartVolumeLimit();
             }
             if (!GetToggleable())
                 systemEnabled = true;
@@ -441,9 +442,9 @@ namespace RP0.ProceduralAvionics
 
         private void UpdateMassLimitsAndVolume()
         {
-            ClampControllableMass();
+            if (ClampControllableMass())
+                SetProcPartVolumeLimit();
             UpdateControllableMassSlider();
-            SetProcPartVolumeLimit();
             SendRemainingVolume();
         }
 

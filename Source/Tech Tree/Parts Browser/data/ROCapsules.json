@@ -860,6 +860,30 @@
         "mod": "ROCapsules",
         "cost": "5000",
         "entry_cost": "0",
+        "category": "POWER",
+        "info": "",
+        "year": "1965",
+        "technology": "improvedPower",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Gemini",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "GeminiSM, fuelCells",
+        "identical_part_name": "GeminiSM",
+        "module_tags": [
+            "Instruments",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "ROC-GeminiEquipmentSectionEarlyBDB",
+        "title": "Gemini Early Equipment Section",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "2500",
+        "entry_cost": "0",
         "category": "COMMAND",
         "info": "",
         "year": "1965",
@@ -871,9 +895,9 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "GeminiSM",
-        "identical_part_name": "GeminiSM",
+        "identical_part_name": "",
         "module_tags": [
-            "Toxic"
+            "Instruments"
         ]
     },
     {

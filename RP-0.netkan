@@ -89,7 +89,7 @@
 		{ "name" : "ProbesPlus" },
 		{ "name" : "ATKPropulsionPack" },
 		{ "name" : "WaypointManager" },
-		{ "name" : "NavHud" }
+		{ "name" : "NavHudRenewed" }
 	],
 	"conflicts" : [
 		{ "name" : "CrowdSourcedScience" },

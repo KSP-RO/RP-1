@@ -6,10 +6,11 @@ namespace KerbalConstructionTime
     public class KSCItem
     {
         public string KSCName;
-        public List<BuildListVessel> VABList = new List<BuildListVessel>();
+        public List<BuildListVessel> BuildList = new List<BuildListVessel>();
+        public KCTObservableList<BuildListVessel> VABList = new KCTObservableList<BuildListVessel>();
         public List<BuildListVessel> VABWarehouse = new List<BuildListVessel>();
         public SortedList<string, BuildListVessel> VABPlans = new SortedList<string, BuildListVessel>();
-        public List<BuildListVessel> SPHList = new List<BuildListVessel>();
+        public KCTObservableList<BuildListVessel> SPHList = new KCTObservableList<BuildListVessel>();
         public List<BuildListVessel> SPHWarehouse = new List<BuildListVessel>();
         public SortedList<string, BuildListVessel> SPHPlans = new SortedList<string, BuildListVessel>();
         public List<FacilityUpgrade> KSCTech = new List<FacilityUpgrade>();
@@ -29,6 +30,20 @@ namespace KerbalConstructionTime
             KSCName = name;
             RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
             LaunchPads.Add(new KCT_LaunchPad("LaunchPad", Utilities.BuildingUpgradeLevel(SpaceCenterFacility.LaunchPad)));
+
+            VABList.Added += added;
+            VABList.Removed += removed;
+            SPHList.Added += added;
+            SPHList.Removed += removed;
+
+            void added(int idx, BuildListVessel vessel)
+            {
+                BuildList.Add(vessel);
+            }
+            void removed(int idx, BuildListVessel vessel)
+            {
+                BuildList.Remove(vessel);
+            }
         }
 
         public KCT_LaunchPad ActiveLPInstance
@@ -221,6 +236,7 @@ namespace KerbalConstructionTime
             var cnVABl = new ConfigNode("VABList");
             foreach (BuildListVessel blv in VABList)
             {
+                blv.BuildListIndex = BuildList.IndexOf(blv);
                 var storageItem = new BuildListStorageItem();
                 storageItem.FromBuildListVessel(blv);
                 var cnTemp = new ConfigNode("KCTVessel");
@@ -235,6 +251,7 @@ namespace KerbalConstructionTime
             var cnSPHl = new ConfigNode("SPHList");
             foreach (BuildListVessel blv in SPHList)
             {
+                blv.BuildListIndex = BuildList.IndexOf(blv);
                 var storageItem = new BuildListStorageItem();
                 storageItem.FromBuildListVessel(blv);
                 var cnTemp = new ConfigNode("KCTVessel");
@@ -418,6 +435,8 @@ namespace KerbalConstructionTime
                 blv.KSC = this;
                 SPHList.Add(blv);
             }
+
+            BuildList.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
 
             tmp = node.GetNode("VABWarehouse");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))

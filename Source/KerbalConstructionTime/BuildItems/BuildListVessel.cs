@@ -25,6 +25,7 @@ namespace KerbalConstructionTime
         public int NumStageParts = 0;
         public double StagePartCost = 0;
         public float EmptyCost = 0, EmptyMass = 0;
+        public int BuildListIndex = -1;
 
         internal ShipConstruct _ship;
         private double _rushCost = -1;

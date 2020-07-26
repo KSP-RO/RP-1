@@ -114,7 +114,7 @@
     <Compile Include="Persistence\FacilityUpgradeStorageItem.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
-    <Compile Include="TechItemIlist.cs" />
+    <Compile Include="KCTObservableList.cs" />
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="BuildItems\IKCTBuildItem.cs" />
     <Compile Include="InstallChecker.cs" />

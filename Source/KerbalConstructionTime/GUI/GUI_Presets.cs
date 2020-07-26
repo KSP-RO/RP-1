@@ -98,7 +98,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
             GUILayout.Label("Features", yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            _workingPreset.GeneralSettings.Enabled= GUILayout.Toggle(_workingPreset.GeneralSettings.Enabled, "Mod Enabled", HighLogic.Skin.button);
+            _workingPreset.GeneralSettings.Enabled = GUILayout.Toggle(_workingPreset.GeneralSettings.Enabled, "Mod Enabled", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.BuildTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.BuildTimes, "Build Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.ReconditioningTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.ReconditioningTimes, "Launchpad Reconditioning", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.ReconditioningBlocksPad = GUILayout.Toggle(_workingPreset.GeneralSettings.ReconditioningBlocksPad, "Reconditioning Blocks Pad", HighLogic.Skin.button);
@@ -106,6 +106,7 @@ namespace KerbalConstructionTime
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.TechUpgrades = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUpgrades, "Upgrades From Tech Tree", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.SharedUpgradePool = GUILayout.Toggle(_workingPreset.GeneralSettings.SharedUpgradePool, "Shared Upgrade Pool (KSCSwitcher)", HighLogic.Skin.button);
+            _workingPreset.GeneralSettings.CommonBuildLine = GUILayout.Toggle(_workingPreset.GeneralSettings.CommonBuildLine, "Common build line for SPH+VAB", HighLogic.Skin.button);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Starting Upgrades:");

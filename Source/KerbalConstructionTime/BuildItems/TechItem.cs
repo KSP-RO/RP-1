@@ -139,7 +139,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public string GetBlockingTech(TechItemIlist<TechItem> techList)
+        public string GetBlockingTech(KCTObservableList<TechItem> techList)
         {
             string blockingTech = null;
             List<string> parentList = KerbalConstructionTimeData.techNameToParents[TechID];

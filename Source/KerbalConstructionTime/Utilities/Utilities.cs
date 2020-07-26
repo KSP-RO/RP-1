@@ -23,6 +23,9 @@ namespace KerbalConstructionTime
         internal const string _icon_KCT_On_38 = "RP-0/PluginData/Icons/KCT_on-38";
         internal const string _icon_KCT_Off = "RP-0/PluginData/Icons/KCT_off";
         internal const string _icon_KCT_On = "RP-0/PluginData/Icons/KCT_on";
+        internal const string _icon_plane = "RP-0/PluginData/Icons/KCT_flight";
+        internal const string _icon_rocket = "RP-0/PluginData/Icons/KCT_rocket";
+        internal const string _icon_settings = "RP-0/PluginData/Icons/KCT_setting";
 
         public static AvailablePart GetAvailablePartByName(string partName)
         {
@@ -304,12 +307,19 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            if (ship.Type == BuildListVessel.ListType.VAB)
-                return GetBuildRate(ship.KSC.VABList.IndexOf(ship), ship.Type, ship.KSC);
-            else if (ship.Type == BuildListVessel.ListType.SPH)
-                return GetBuildRate(ship.KSC.SPHList.IndexOf(ship), ship.Type, ship.KSC);
+            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
+            {
+                return GetBuildRate(ship.KSC.BuildList.IndexOf(ship), BuildListVessel.ListType.VAB, ship.KSC);
+            }
             else
-                return 0;
+            {
+                if (ship.Type == BuildListVessel.ListType.VAB)
+                    return GetBuildRate(ship.KSC.VABList.IndexOf(ship), ship.Type, ship.KSC);
+                else if (ship.Type == BuildListVessel.ListType.SPH)
+                    return GetBuildRate(ship.KSC.SPHList.IndexOf(ship), ship.Type, ship.KSC);
+            }
+
+            return 0;
         }
 
         public static List<double> BuildRatesVAB(KSCItem KSC)
@@ -350,8 +360,9 @@ namespace KerbalConstructionTime
 
         public static double GetBothBuildRateSum(KSCItem KSC)
         {
-            double rateTotal = GetSPHBuildRateSum(KSC);
-            rateTotal += GetVABBuildRateSum(KSC);
+            double rateTotal = GetVABBuildRateSum(KSC);
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
+                rateTotal += GetSPHBuildRateSum(KSC);
 
             return rateTotal;
         }
@@ -1719,6 +1730,13 @@ namespace KerbalConstructionTime
                    (FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH ||
                     string.IsNullOrEmpty(reqTech) ||
                     ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
+        }
+
+        public static bool IsSphRecoveryAvailable()
+        {
+            return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null && 
+                   FlightGlobals.ActiveVessel.IsRecoverable &&
+                   FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
         }
     }
 }

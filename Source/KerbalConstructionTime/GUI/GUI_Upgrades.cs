@@ -6,7 +6,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _upgradePosition = new Rect((Screen.width - 450) / 2, (Screen.height / 4), 450, 1);
+        private static Rect _upgradePosition = new Rect((Screen.width - 450) / 2, Screen.height / 4, 450, 1);
         private static int _upgradeWindowHolder = 0;
         private static double _fundsCost = -13;
         private static double _nodeRate = -13, _upNodeRate = -13;
@@ -21,6 +21,7 @@ namespace KerbalConstructionTime
         {
             int spentPoints = Utilities.TotalSpentUpgrades();
             int upgrades = Utilities.TotalUpgradePoints();
+            bool combineSphAndVab = PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine;
 
             bool cacheInvalid = false;
 
@@ -53,18 +54,26 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Points:", GUILayout.Width(90));
             GUILayout.Label(upgrades.ToString());
-            GUILayout.Label("Available: " + _availablePoints);
+            GUILayout.Label($"Available: {_availablePoints}");
             GUILayout.EndHorizontal();
+
+            int vabPoints = Utilities.SpentUpgradesFor(SpaceCenterFacility.VehicleAssemblyBuilding);
+            int sphPoints = Utilities.SpentUpgradesFor(SpaceCenterFacility.SpaceplaneHangar);
+            if (combineSphAndVab)
+                vabPoints += sphPoints;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Points in VAB:", GUILayout.Width(90));
-            GUILayout.Label(Utilities.SpentUpgradesFor(SpaceCenterFacility.VehicleAssemblyBuilding).ToString());
+            GUILayout.Label(vabPoints.ToString());
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Points in SPH:", GUILayout.Width(90));
-            GUILayout.Label(Utilities.SpentUpgradesFor(SpaceCenterFacility.SpaceplaneHangar).ToString());
-            GUILayout.EndHorizontal();
+            if (!combineSphAndVab)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Points in SPH:", GUILayout.Width(90));
+                GUILayout.Label(sphPoints.ToString());
+                GUILayout.EndHorizontal();
+            }
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Points in R&D:", GUILayout.Width(90));
@@ -90,10 +99,10 @@ namespace KerbalConstructionTime
                 if (_fundsCost >= 0)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label((_fundsDelta > 1) ? "Buy " + _fundsDelta + " Points: " : "Buy 1 Point: ");
+                    GUILayout.Label(_fundsDelta > 1 ? $"Buy {_fundsDelta} Points: " : "Buy 1 Point: ");
                     bool canAfford = Funding.Instance.Funds >= _fundsCost;
-                    var style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                    if (GUILayout.Button(Math.Round(_fundsCost, 0) + " Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
+                    GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                    if (GUILayout.Button($"{Math.Round(_fundsCost, 0)} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
                     {
                         Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
                         KCTGameStates.PurchasedUpgrades[1] += _fundsDelta;
@@ -113,9 +122,9 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Reset Upgrades: ");
 
-                bool canAfford = (_availablePoints >= ResetCost);
+                bool canAfford = _availablePoints >= ResetCost;
                 var style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                if (GUILayout.Button(ResetCost + " Points", style, GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button($"{ResetCost} Points", style, GUILayout.ExpandWidth(false)))
                 {
                     if (spentPoints > 0 && canAfford) //you have to spend some points before resetting does anything
                     {
@@ -147,32 +156,37 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("VAB")) { _upgradeWindowHolder = 0; _upgradePosition.height = 1; }
-            if (GUILayout.Button("SPH")) { _upgradeWindowHolder = 1; _upgradePosition.height = 1; }
+            if (!combineSphAndVab && GUILayout.Button("SPH")) { _upgradeWindowHolder = 1; _upgradePosition.height = 1; }
             if (Utilities.CurrentGameHasScience() && GUILayout.Button("R&D")) { _upgradeWindowHolder = 2; _upgradePosition.height = 1; }
             GUILayout.EndHorizontal();
+
             KSCItem KSC = KCTGameStates.ActiveKSC;
 
-            if (_upgradeWindowHolder == 0) //VAB
+            if (_upgradeWindowHolder == 0)    //VAB
             {
-                DrawRateSection(BuildListVessel.ListType.VAB, KSC, KSC.VABUpgrades, KSC.VABRates);
+                DrawRateSection(BuildListVessel.ListType.VAB, KSC);
             }
 
-            if (_upgradeWindowHolder == 1) //SPH
+            if (_upgradeWindowHolder == 1)    //SPH
             {
-                DrawRateSection(BuildListVessel.ListType.SPH, KSC, KSC.SPHUpgrades, KSC.SPHRates);
+                DrawRateSection(BuildListVessel.ListType.SPH, KSC);
             }
-            if (_upgradeWindowHolder == 2) //R&D
+            if (_upgradeWindowHolder == 2)    //R&D
             {
-                int labelDelta = (_buyModifier < 0) ? _availablePoints : _buyModifier;
+                int labelDelta = _buyModifier < 0 ? _availablePoints : _buyModifier;
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("R&D Upgrades");
-                GUILayout.Label("+" + labelDelta + " Point" + (labelDelta == 1 ? "" : "s"), GUILayout.ExpandWidth(false));
+                GUILayout.Label($"+{labelDelta} Point{(labelDelta == 1 ? "" : "s")}", GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
 
                 if (_researchRate == -13 || cacheInvalid)
                 {
                     _researchDelta = _buyModifier < 0 ? _availablePoints : _buyModifier;
-                    Dictionary<string, string> variables = new Dictionary<string, string>() { { "N", KSC.RDUpgrades[0].ToString() }, { "R", Utilities.BuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString() } };
+                    var variables = new Dictionary<string, string>()
+                    { 
+                        { "N", KSC.RDUpgrades[0].ToString() },
+                        { "R", Utilities.BuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString() }
+                    };
                     MathParser.AddCrewVariables(variables);
                     _researchRate = MathParser.GetStandardFormulaValue("Research", variables);
 
@@ -184,12 +198,12 @@ namespace KerbalConstructionTime
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Research");
-                    GUILayout.Label(Math.Round(_researchRate * 86400, 2) + " sci/86400 BP");
+                    GUILayout.Label($"{Math.Round(_researchRate * 86400, 2)} sci/86400 BP");
                     if (_availablePoints > 0)
                     {
-                        bool canAfford = (_availablePoints >= _researchDelta);
-                        var style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                        if (GUILayout.Button("+" + Math.Round((_upResearchRate - _researchRate) * 86400, 2), style, GUILayout.Width(45)) && canAfford)
+                        bool canAfford = _availablePoints >= _researchDelta;
+                        GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                        if (GUILayout.Button($"+{Math.Round((_upResearchRate - _researchRate) * 86400, 2)}", style, GUILayout.Width(45)) && canAfford)
                         {
                             KSC.RDUpgrades[0] += _researchDelta;
                             _researchRate = -13;
@@ -205,12 +219,11 @@ namespace KerbalConstructionTime
                     _nodeRate = MathParser.ParseNodeRateFormula(0);
                     _upNodeRate = MathParser.ParseNodeRateFormula(0, 0, _nodeDelta);
                 }
-                double sci = 86400 * _nodeRate;
 
+                double sci = 86400 * _nodeRate;
                 double sciPerDay = sci / days;
-                //days *= KCT_GameStates.timeSettings.NodeModifier;
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Devel.");
+                GUILayout.Label("Rate");
                 bool usingPerYear = false;
                 if (sciPerDay > 0.1)
                 {
@@ -237,14 +250,14 @@ namespace KerbalConstructionTime
                     if (everyKSCCanUpgrade)
                     {
                         double upSciPerDay = 86400 * _upNodeRate / days;
-                        string buttonText = Math.Round(1000 * upSciPerDay) / 1000 + " sci/day";
+                        string buttonText = $"{Math.Round(1000 * upSciPerDay) / 1000} sci/day";
                         if (usingPerYear)
                         {
                             int daysPerYear = KSPUtil.dateTimeFormatter.Year / KSPUtil.dateTimeFormatter.Day;
-                            buttonText = Math.Round(upSciPerDay * daysPerYear * 1000) / 1000 + " sci/yr";
+                            buttonText = $"{Math.Round(upSciPerDay * daysPerYear * 1000) / 1000} sci/yr";
                         }
-                        bool canAfford = (_availablePoints >= _nodeDelta);
-                        var style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                        bool canAfford = _availablePoints >= _nodeDelta;
+                        GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                         if (GUILayout.Button(buttonText, style, GUILayout.ExpandWidth(false)) && canAfford)
                         {
                             KCTGameStates.TechUpgradesTotal += _nodeDelta;
@@ -280,11 +293,14 @@ namespace KerbalConstructionTime
                 GUI.DragWindow();
         }
 
-        private static void DrawRateSection(BuildListVessel.ListType type, KSCItem KSC, List<int> upgrades, List<double> rates)
+        private static void DrawRateSection(BuildListVessel.ListType type, KSCItem KSC)
         {
+            List<int> upgrades = type == BuildListVessel.ListType.VAB ? KSC.VABUpgrades : KSC.SPHUpgrades;
+            List<double> rates = type == BuildListVessel.ListType.VAB ? KSC.VABRates : KSC.SPHRates;
+
             GUILayout.BeginHorizontal();
             GUILayout.Label(type.ToString() + " Upgrades");
-            GUILayout.Label("+" + ((_buyModifier < 0) ? "MAX" : _buyModifier.ToString()) + " Point" + (_buyModifier == 1 ? "" : "s"), GUILayout.ExpandWidth(false));
+            GUILayout.Label($"+{(_buyModifier < 0 ? "MAX" : _buyModifier.ToString())} Point{(_buyModifier == 1 ? "" : "s")}", GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height((upgrades.Count + 1) * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
             GUILayout.BeginVertical();
@@ -308,13 +324,13 @@ namespace KerbalConstructionTime
                 double upgraded = Utilities.GetBuildRate(i, type, KSC, true);
                 double deltaUpgraded = Utilities.GetBuildRate(i, type, KSC, pointsDelta);
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Rate " + (i + 1));
-                GUILayout.Label(rate + " BP/s");
+                GUILayout.Label($"Rate {i + 1}");
+                GUILayout.Label($"{rate} BP/s");
                 if (_availablePoints > 0 && (i == 0 || upgraded <= Utilities.GetBuildRate(i - 1, type, KSC)) && upgraded - rate > 0)
                 {
-                    bool canAfford = (_availablePoints >= pointsDelta) && (i == 0 || deltaUpgraded <= Utilities.GetBuildRate(i - 1, type, KSC));
-                    var style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                    if (GUILayout.Button("+" + Math.Round(deltaUpgraded - rate, 3), style, GUILayout.Width(55)) && canAfford)
+                    bool canAfford = _availablePoints >= pointsDelta && (i == 0 || deltaUpgraded <= Utilities.GetBuildRate(i - 1, type, KSC));
+                    GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                    if (GUILayout.Button($"+{Math.Round(deltaUpgraded - rate, 3)}", style, GUILayout.Width(55)) && canAfford)
                     {
                         if (i >= upgrades.Count)
                             upgrades.Add(pointsDelta);

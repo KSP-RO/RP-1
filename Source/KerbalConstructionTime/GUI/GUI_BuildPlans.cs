@@ -16,6 +16,8 @@ namespace KerbalConstructionTime
         private static float _scale;
         private static GUIContent _content;
 
+        private static bool _isVABSelectedInPlans;
+        private static bool _isSPHSelectedInPlans;
         private static SortedList<string, BuildListVessel> _plansList = null;
         private static int _planToDelete;
         private static Texture2D _up;
@@ -145,28 +147,36 @@ namespace KerbalConstructionTime
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            bool VABSelectedNew = GUILayout.Toggle(_isVABSelected, "VAB", GUI.skin.button);
-            bool SPHSelectedNew = GUILayout.Toggle(_isSPHSelected, "SPH", GUI.skin.button);
 
-            if (VABSelectedNew != _isVABSelected)
+            bool isVABSelectedNew = GUILayout.Toggle(_isVABSelectedInPlans, "VAB", GUI.skin.button);
+            bool isSPHSelectedNew = GUILayout.Toggle(_isSPHSelectedInPlans, "SPH", GUI.skin.button);
+            if (isVABSelectedNew != _isVABSelectedInPlans)
+            {
+                _isVABSelectedInPlans = isVABSelectedNew;
+                _isSPHSelectedInPlans = false;
                 SelectList("VAB");
-            else if (SPHSelectedNew != _isSPHSelected)
+            }
+            else if (isSPHSelectedNew != _isSPHSelectedInPlans)
+            {
+                _isSPHSelectedInPlans = isSPHSelectedNew;
+                _isVABSelectedInPlans = false;
                 SelectList("SPH");
+            }
 
             GUILayout.EndHorizontal();
             {
-                if (_isVABSelected)
+                if (isVABSelectedNew)
                     _plansList = KCTGameStates.ActiveKSC.VABPlans;
-                else if ( _isSPHSelected)
+                else if (isSPHSelectedNew)
                     _plansList = KCTGameStates.ActiveKSC.SPHPlans;
-                if ((_isVABSelected || _isSPHSelected) && _plansList != null)
+                if (_isVABSelectedInPlans || _isSPHSelectedInPlans)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Name:");
                     GUILayout.EndHorizontal();
                     _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 
-                    if (_plansList.Count == 0)
+                    if (_plansList == null || _plansList.Count == 0)
                     {
                         GUILayout.Label("No vessels in plans.");
                     }
@@ -188,13 +198,13 @@ namespace KerbalConstructionTime
                                 MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to remove this vessel from the plans?", "Delete plan", null, options: options);
                                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                             }
-       
+
                             if (GUILayout.Button(b.ShipName))
                             {
                                 Utilities.AddVesselToBuildList(b.CreateCopy(true));
                             }
                         }
-                     
+
                         GUILayout.EndHorizontal();
                     }
                     GUILayout.EndScrollView();

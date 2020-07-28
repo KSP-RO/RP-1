@@ -8,7 +8,14 @@ namespace KerbalConstructionTime
     {
         public const string LPID = "SpaceCenter/LaunchPad";
 
+        /// <summary>
+        /// Zero-based level of the launch pad
+        /// </summary>
         [Persistent] public int level = 0;
+
+        /// <summary>
+        /// Name given to the launch pad. Is also used for associating rollout/reconditioning with pads.
+        /// </summary>
         [Persistent] public string name = "LaunchPad";
 
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
@@ -27,7 +34,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public KCT_LaunchPad(string LPName, int lvl=0)
+        public KCT_LaunchPad(string LPName, int lvl = 0)
         {
             name = LPName;
             level = lvl;
@@ -117,7 +124,7 @@ namespace KerbalConstructionTime
         {
             try
             {
-                KCTDebug.Log("Switching to LaunchPad: " + name + " lvl: " + level + " destroyed? " + IsDestroyed);
+                KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}");
                 KCTGameStates.ActiveKSC.ActiveLaunchPadID = KCTGameStates.ActiveKSC.LaunchPads.IndexOf(this);
 
                 //set the level to this level

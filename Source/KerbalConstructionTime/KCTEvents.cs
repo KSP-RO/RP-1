@@ -326,8 +326,8 @@ namespace KerbalConstructionTime
                 KCTGameStates.Reset();
                 KCTGameStates.IsFirstStart = false;
                 InputLockManager.RemoveControlLock("KCTLaunchLock");
-                KCTGameStates.ActiveKSCName = "Stock";
-                KCTGameStates.ActiveKSC = new KSCItem("Stock");
+                KCTGameStates.ActiveKSCName = Utilities._defaultKscId;
+                KCTGameStates.ActiveKSC = new KSCItem(Utilities._defaultKscId);
                 KCTGameStates.KSCs = new List<KSCItem>() { KCTGameStates.ActiveKSC };
                 KCTGameStates.LastKnownTechCount = 0;
 

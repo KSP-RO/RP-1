@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace KerbalConstructionTime
 {
@@ -88,10 +90,11 @@ namespace KerbalConstructionTime
             KCTGameStates.SciPointsTotal = -1;
 
             var kctVS = new KCT_DataStorage();
-            ConfigNode CN = node.GetNode(kctVS.GetType().Name);
-            if (CN != null)
-                ConfigNode.LoadObjectFromConfig(kctVS, CN);
+            ConfigNode cn = node.GetNode(kctVS.GetType().Name);
+            if (cn != null)
+                ConfigNode.LoadObjectFromConfig(kctVS, cn);
 
+            bool foundStockKSC = false;
             foreach (ConfigNode ksc in node.GetNodes("KSC"))
             {
                 string name = ksc.GetValue("KSCName");
@@ -102,9 +105,13 @@ namespace KerbalConstructionTime
                     loaded_KSC.RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
                     if (KCTGameStates.KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
                         KCTGameStates.KSCs.Add(loaded_KSC);
+                    foundStockKSC |= string.Equals(loaded_KSC.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
                 }
             }
+
             Utilities.SetActiveKSCToRSS();
+            if (foundStockKSC)
+                TryMigrateStockKSC();
 
             ConfigNode tmp = node.GetNode("TechList");
             if (tmp != null)
@@ -120,6 +127,48 @@ namespace KerbalConstructionTime
             }
 
             KCTGameStates.ErroredDuringOnLoad.OnLoadFinish();
+        }
+
+        private void TryMigrateStockKSC()
+        {
+            KSCItem stockKsc = KCTGameStates.KSCs.Find(k => string.Equals(k.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
+            if (KCTGameStates.KSCs.Count == 1)
+            {
+                // Rename the stock KSC to the new default (Cape)
+                stockKsc.KSCName = Utilities._defaultKscId;
+                Utilities.SetActiveKSC(stockKsc.KSCName);
+                return;
+            }
+
+            if (stockKsc.IsEmpty)
+            {
+                // Nothing provisioned into the stock KSC so it's safe to just delete it
+                KCTGameStates.KSCs.Remove(stockKsc);
+                Utilities.SetActiveKSCToRSS();
+                return;
+            }
+
+            int numOtherUsedKSCs = KCTGameStates.KSCs.Count(k => !k.IsEmpty && k != stockKsc);
+            if (numOtherUsedKSCs == 0)
+            {
+                string kscName = Utilities.GetActiveRSSKSC() ?? Utilities._defaultKscId;
+                KSCItem newDefault = KCTGameStates.KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
+                if (newDefault != null)
+                {
+                    // Stock KSC isn't empty but the new default one is - safe to rename the stock and remove the old default item
+                    stockKsc.KSCName = newDefault.KSCName;
+                    KCTGameStates.KSCs.Remove(newDefault);
+                    Utilities.SetActiveKSC(stockKsc);
+                    return;
+                }
+            }
+
+            // Can't really do anything if there's multiple KSCs in use.
+            if (!Utilities.IsKSCSwitcherInstalled)
+            {
+                // Need to switch back to the legacy "Stock" KSC if KSCSwitcher isn't installed
+                Utilities.SetActiveKSC(stockKsc.KSCName);
+            }
         }
     }
 }

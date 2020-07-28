@@ -65,6 +65,16 @@ namespace KerbalConstructionTime
             }
         }
 
+        public bool IsEmpty
+        {
+            get
+            {
+                return !VABList.Any() && !VABWarehouse.Any() && !SPHList.Any() && !SPHWarehouse.Any() && !KSCTech.Any() &&
+                    VABUpgrades.All(i => i == 0) && SPHUpgrades.All(i => i == 0) && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
+                    LaunchPads.Count < 2 && LaunchPads.All(lp => lp.level < 1);
+            }
+        }
+
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad")
         {
             return Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");

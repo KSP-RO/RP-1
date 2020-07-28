@@ -50,7 +50,7 @@ namespace KerbalConstructionTime
 
         public void Upgrade()
         {
-            KCTDebug.Log("Upgrading " + CommonName + " to level " + UpgradeLevel);
+            KCTDebug.Log($"Upgrading {CommonName} to level {UpgradeLevel}");
             if (IsLaunchpad)
             {
                 KSC.LaunchPads[LaunchpadID].level = UpgradeLevel;
@@ -68,7 +68,7 @@ namespace KerbalConstructionTime
                 facility.SetLevel(UpgradeLevel);
             }
             int newLvl = Utilities.BuildingUpgradeLevel(Id);
-            UpgradeProcessed = (newLvl == UpgradeLevel);
+            UpgradeProcessed = newLvl == UpgradeLevel;
 
             KCTDebug.Log($"Upgrade processed: {UpgradeProcessed} Current: {newLvl} Desired: {UpgradeLevel}");
         }

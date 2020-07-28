@@ -17,6 +17,9 @@ namespace KerbalConstructionTime
         private static bool? _isKRASHInstalled = null;
         private static bool? _isPrincipiaInstalled = null;
         private static DateTime _startedFlashing;
+
+        internal const string _legacyDefaultKscId = "Stock";
+        internal const string _defaultKscId = "us_cape_canaveral";
         internal const string _icon_KCT_Off_24 = "RP-0/PluginData/Icons/KCT_off-24";
         internal const string _icon_KCT_Off_38 = "RP-0/PluginData/Icons/KCT_off-38";
         internal const string _icon_KCT_On_24 = "RP-0/PluginData/Icons/KCT_on-24";
@@ -1167,7 +1170,7 @@ namespace KerbalConstructionTime
 
         public static string GetActiveRSSKSC()
         {
-            if (!IsKSCSwitcherInstalled) return "Stock";
+            if (!IsKSCSwitcherInstalled) return null;
 
             //get the LastKSC.KSCLoader.instance object
             //check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
@@ -1181,13 +1184,13 @@ namespace KerbalConstructionTime
             });
             object LoaderInstance = GetMemberInfoValue(Loader.GetMember("instance")[0], null);
             if (LoaderInstance == null)
-                return "Stock";
-            object SitesObj = GetMemberInfoValue(Loader.GetMember("Sites")[0], LoaderInstance);
-            string lastSite = (string)GetMemberInfoValue(SitesObj.GetType().GetMember("lastSite")[0], SitesObj);
+                return null;
+            object sitesObj = GetMemberInfoValue(Loader.GetMember("Sites")[0], LoaderInstance);
+            string lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("lastSite")[0], sitesObj);
 
-            if (lastSite == "")
+            if (lastSite == string.Empty)
             {
-                string defaultSite = (string)GetMemberInfoValue(SitesObj.GetType().GetMember("defaultSite")[0], SitesObj);
+                string defaultSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("defaultSite")[0], sitesObj);
                 return defaultSite;
             }
             return lastSite;
@@ -1201,14 +1204,15 @@ namespace KerbalConstructionTime
 
         public static void SetActiveKSC(string site)
         {
-            if (site == "") site = "Stock";
+            if (string.IsNullOrEmpty(site)) 
+                site = _defaultKscId;
             if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
             {
-                KCTDebug.Log("Setting active site to " + site);
+                KCTDebug.Log($"Setting active site to {site}");
                 KSCItem setActive = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
                 if (setActive != null)
                 {
-                    KCTGameStates.ActiveKSC = setActive;
+                    SetActiveKSC(setActive);
                 }
                 else
                 {
@@ -1216,10 +1220,17 @@ namespace KerbalConstructionTime
                     if (CurrentGameIsCareer())
                         setActive.ActiveLPInstance.level = 0;
                     KCTGameStates.KSCs.Add(setActive);
-                    KCTGameStates.ActiveKSC = setActive;
+                    SetActiveKSC(setActive);
                 }
             }
-            KCTGameStates.ActiveKSCName = site;
+        }
+
+        public static void SetActiveKSC(KSCItem ksc)
+        {
+            if (ksc == null) return;
+
+            KCTGameStates.ActiveKSC = ksc;
+            KCTGameStates.ActiveKSCName = ksc.KSCName;
         }
 
         public static PQSCity FindKSC(CelestialBody home)

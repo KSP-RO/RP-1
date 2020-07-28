@@ -2,11 +2,14 @@
 using Csv;
 using KerbalConstructionTime;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace RP0
 {
@@ -291,6 +294,104 @@ namespace RP0
             var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
+        }
+
+        public void ExportToWeb()
+        {
+            StartCoroutine(PostRequestCareerLog("https://kspro-rp1-analytics.herokuapp.com/api/careerlogs"));
+        }
+
+        private IEnumerator PostRequestCareerLog(string url)
+        {
+            var logPeriods = _periodDict.Select(p => p.Value)
+                .Select(CreateLogDto).ToArray();
+
+            // Create JSON structure for arrays - afaict not supported on this unity version out of the box
+            var jsonToSend = "[";
+
+            for (var i = 0; i < logPeriods.Length; i++)
+            {
+                if (i < logPeriods.Length - 1) jsonToSend += JsonUtility.ToJson(logPeriods[i]) + ",";
+                else jsonToSend += JsonUtility.ToJson(logPeriods[i]) + "]";
+            }
+
+            var byteJson = new UTF8Encoding().GetBytes(jsonToSend);
+
+            var uwr = new UnityWebRequest(url, "POST")
+            { downloadHandler = new DownloadHandlerBuffer(), uploadHandler = new UploadHandlerRaw(byteJson) };
+
+            uwr.SetRequestHeader("Content-Type", "application/json");
+
+            yield return uwr.SendWebRequest();
+
+            if (uwr.isNetworkError)
+            {
+                Debug.Log("Error While Sending: " + uwr.error);
+            }
+            else
+            {
+                Debug.Log("Received: " + uwr.downloadHandler.text);
+            }
+        }
+
+        private CareerLogDto CreateLogDto(LogPeriod logPeriod)
+        {
+            double advanceFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double rewardFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double failureFunds = -_contractDict.Where(c =>
+                    (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double constructionFees = _facilityConstructions
+                .Where(f => f.State == ConstructionState.Started && f.IsInPeriod(logPeriod))
+                .Select(c => c.Cost)
+                .Sum();
+
+            return new CareerLogDto
+            {
+                careerUuid = SystemInfo.deviceUniqueIdentifier,
+                epoch = _epoch.AddSeconds(logPeriod.StartUT).ToString("yyyy-MM"),
+                vabUpgrades = logPeriod.VABUpgrades.ToString(),
+                sphUpgrades = logPeriod.SPHUpgrades.ToString(),
+                rndUpgrades = logPeriod.RnDUpgrades.ToString(),
+                currentFunds = logPeriod.CurrentFunds.ToString("F0"),
+                currentSci = logPeriod.CurrentSci.ToString("F1"),
+                scienceEarned = logPeriod.ScienceEarned.ToString("F1"),
+                advanceFunds = advanceFunds.ToString("F0"),
+                rewardFunds = rewardFunds.ToString("F0"),
+                failureFunds = failureFunds.ToString("F0"),
+                otherFundsEarned = logPeriod.OtherFundsEarned.ToString("F0"),
+                launchFees = logPeriod.LaunchFees.ToString("F0"),
+                maintenanceFees = logPeriod.MaintenanceFees.ToString("F0"),
+                toolingFees = logPeriod.ToolingFees.ToString("F0"),
+                entryCosts = logPeriod.EntryCosts.ToString("F0"),
+                constructionFees = logPeriod.OtherFees.ToString("F0"),
+                otherFees = (logPeriod.OtherFees - constructionFees).ToString("F0"),
+                launchedVessels = _launchedVessels.Where(l => l.UT >= logPeriod.StartUT && l.UT < logPeriod.EndUT)
+                    .Select(l => l.VesselName)
+                    .ToArray(),
+                contractEvents = _contractDict.Where(c =>
+                        c.Type == ContractEventType.Complete && c.UT >= logPeriod.StartUT && c.UT < logPeriod.EndUT)
+                    .Select(c => c.DisplayName)
+                    .ToArray(),
+                techEvents = _techEvents.Where(t => t.UT >= logPeriod.StartUT && t.UT < logPeriod.EndUT)
+                    .Select(t => t.NodeName)
+                    .ToArray(),
+                facilityConstructions = _facilityConstructions
+                    .Where(f => f.State == ConstructionState.Completed && f.UT >= logPeriod.StartUT &&
+                                f.UT < logPeriod.EndUT)
+                    .Select(f => $"{f.Facility} ({f.NewLevel + 1})")
+                    .ToArray()
+            };
         }
 
         private void SwitchToNextPeriod()

@@ -58,7 +58,7 @@ namespace RP0
                     GUILayout.BeginHorizontal();
                 }
                 counter++;
-                if (GUILayout.Button(type))
+                if (GUILayout.Button(type, HighLogic.Skin.button))
                     _currentToolingType = type;
             }
             GUILayout.EndHorizontal();
@@ -131,7 +131,7 @@ namespace RP0
 
         private static void RenderToolAllButton()
         {
-            if (GUILayout.Button("Tool All"))
+            if (GUILayout.Button("Tool All", HighLogic.Skin.button))
             {
                 GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
                 bool canAfford = Funding.Instance.Funds >= toolingCost;
@@ -183,7 +183,7 @@ namespace RP0
 
         private void RenderToolingPreviewButton()
         {
-            if (GUILayout.RepeatButton("Press to preview fully tooled build time & cost"))
+            if (GUILayout.RepeatButton("Press to preview fully tooled build time & cost", HighLogic.Skin.button))
             {
                 if (!_isToolingTempDisabled)
                 {

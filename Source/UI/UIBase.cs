@@ -6,17 +6,34 @@ namespace RP0
 {
     public class UIBase
     {
-        protected GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton;
+        protected GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton, infoButton;
+
         public UIBase()
         {
-            rightLabel = new GUIStyle(HighLogic.Skin.label);
-            rightLabel.alignment = TextAnchor.MiddleRight;
-            boldLabel = new GUIStyle(HighLogic.Skin.label);
-            boldLabel.fontStyle = FontStyle.Bold;
-            boldRightLabel = new GUIStyle(rightLabel);
-            boldRightLabel.fontStyle = FontStyle.Bold;
+            rightLabel = new GUIStyle(HighLogic.Skin.label)
+            {
+                alignment = TextAnchor.MiddleRight
+            };
+            boldLabel = new GUIStyle(HighLogic.Skin.label)
+            {
+                fontStyle = FontStyle.Bold
+            };
+            boldRightLabel = new GUIStyle(rightLabel)
+            {
+                fontStyle = FontStyle.Bold
+            };
+
             pressedButton = new GUIStyle(HighLogic.Skin.button);
             pressedButton.normal = pressedButton.active;
+
+            infoButton = new GUIStyle(HighLogic.Skin.button)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fixedHeight = 17f,
+                fixedWidth = 19f,
+                contentOffset = new Vector2(1, -1),
+                margin = new RectOffset(4, 4, 6, 4)
+            };
         }
 
         public enum Tabs

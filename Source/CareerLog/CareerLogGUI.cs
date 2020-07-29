@@ -11,7 +11,7 @@ namespace RP0
         public void RenderTab()
         {
             GUILayout.BeginVertical();
-            if (GUILayout.Button("Export to file", GUILayout.ExpandWidth(false), GUILayout.Height(30), GUILayout.Width(125)))
+            if (GUILayout.Button("Export to file", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(30), GUILayout.Width(125)))
             {
                 try
                 {

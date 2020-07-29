@@ -59,7 +59,7 @@ namespace RP0
             try {
                 GUILayout.Label("Facilities", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.facilityUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
-                if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button("ⓘ", infoButton))
                 {
                     TopWindow.SwitchTabTo(Tabs.Facilities);
                 }
@@ -70,7 +70,7 @@ namespace RP0
             try {
                 GUILayout.Label("Integration", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.integrationUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
-                if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button("ⓘ", infoButton))
                 {
                     TopWindow.SwitchTabTo(Tabs.Integration);
                 }
@@ -88,7 +88,7 @@ namespace RP0
             try {
                 GUILayout.Label("Astronauts", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.nautTotalUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
-                if (GUILayout.Button("ⓘ", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button("ⓘ", infoButton))
                 {
                     TopWindow.SwitchTabTo(Tabs.Astronauts);
                 }

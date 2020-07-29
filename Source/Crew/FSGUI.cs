@@ -100,7 +100,7 @@ namespace RP0.Crew
                             selectedCourse.AddStudent(student);
                     }
                 } else if (currentTab == Tabs.Training) {
-                    if (GUILayout.Button(student.name, GUILayout.Width(144))) {
+                    if (GUILayout.Button(student.name, HighLogic.Skin.button, GUILayout.Width(144))) {
                         selectedNaut = student;
                     }
                 } else {
@@ -138,14 +138,14 @@ namespace RP0.Crew
                 GUILayout.Label(retires, GUILayout.Width(80));
                 if (currentCourse != null) {
                     if (currentCourse.seatMin > 1) {
-                        if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button("X", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             cancelCourse(currentCourse);
                     } else {
-                        if (GUILayout.Button("X", GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button("X", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             leaveCourse(currentCourse, student);
                     }
 
-                    if (KACWrapper.APIReady && GUILayout.Button(nautRowAlarmBtnContent, GUILayout.ExpandWidth(false)))
+                    if (KACWrapper.APIReady && GUILayout.Button(nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                     {
                         // CrewHandler processes trainings every 3600 seconds. Need to account for that to set up accurate KAC alarms.
                         double completeUT = currentCourse.CompletionTime();
@@ -195,14 +195,14 @@ namespace RP0.Crew
         {
             if (courseBtnStyle == null)
             {
-                courseBtnStyle = new GUIStyle(GUI.skin.button);
+                courseBtnStyle = new GUIStyle(HighLogic.Skin.button);
                 courseBtnStyle.normal.textColor = Color.yellow;
             }
             
             courseSelectorScroll = GUILayout.BeginScrollView(courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));
             try {
                 foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses) {
-                    var style = course.isTemporary ? courseBtnStyle : GUI.skin.button;
+                    var style = course.isTemporary ? courseBtnStyle : HighLogic.Skin.button;
                     if (GUILayout.Button(course.name, style))
                         selectedCourse = new ActiveCourse(course);
                 }
@@ -245,7 +245,7 @@ namespace RP0.Crew
                 GUILayout.Label(selectedCourse.seatMin - selectedCourse.Students.Count + " more student(s) required.");
             GUILayout.Label("Will take " + KSPUtil.PrintDateDeltaCompact(selectedCourse.GetTime(), true, false));
             GUILayout.Label("and finish on " + KSPUtil.PrintDate(selectedCourse.CompletionTime(), false));
-            if (GUILayout.Button("Start Course", GUILayout.ExpandWidth(false))) {
+            if (GUILayout.Button("Start Course", HighLogic.Skin.button, GUILayout.ExpandWidth(false))) {
                 if (selectedCourse.StartCourse()) {
                     CrewHandler.Instance.ActiveCourses.Add(selectedCourse);
                     selectedCourse = null;
@@ -292,10 +292,10 @@ namespace RP0.Crew
                 try {
                     GUILayout.Label($"Studying {currentCourse.name} until {KSPUtil.PrintDate(currentCourse.CompletionTime(), false)}");
                     if (currentCourse.seatMin > 1) {
-                        if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button("Cancel", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             cancelCourse(currentCourse);
                     } else {
-                        if (GUILayout.Button("Remove", GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button("Remove", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             leaveCourse(currentCourse, selectedNaut);
                     }
                 } finally {

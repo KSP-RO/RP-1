@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace RP0
@@ -22,6 +24,11 @@ namespace RP0
 
         protected BaseField baseRad, maxRad, cylEnd, sideThickness, inlineHeight, noseHeightRatio, costPerTonne;
 
+        // Prep to support PF 1.8.x or 2+: Will no longer reach into PartModule and fiddle with costPerTonne.
+        private bool UpdateCostPerTonne => PFAssemblyVersion.CompareTo("6") < 0;
+        private Assembly PFAssembly;
+        private string PFAssemblyVersion => PFAssembly is Assembly ? System.Diagnostics.FileVersionInfo.GetVersionInfo(PFAssembly.Location).FileVersion : string.Empty;
+
         protected override void LoadPartModules()
         {
             base.LoadPartModules();
@@ -32,11 +39,13 @@ namespace RP0
         public override void OnStart(StartState state)
         {
             base.OnStart(state);
-
+            PFAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => string.Equals(a.assembly.GetName().Name, "ProceduralFairings", StringComparison.OrdinalIgnoreCase)).assembly;
+            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(PFAssembly.Location);
+            string version = fvi.FileVersion;
             if (state == StartState.Editor && pmDecoupler != null && pmFairing != null)
             {
                 var bf = pmDecoupler.Fields["fairingStaged"];
-                ((UI_Toggle)bf.uiControlEditor).onFieldChanged += OnFairingStagedChanged;
+                bf.uiControlEditor.onFieldChanged += OnFairingStagedChanged;
 
                 if (part.partInfo != null)
                 {
@@ -53,7 +62,7 @@ namespace RP0
 
             if (pmFairing == null)
             {
-                Debug.LogError("[ModuleTooling] Could not find PF module to bind to");
+                Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide module on {part}");
                 return;
             }
 
@@ -69,7 +78,7 @@ namespace RP0
 
                 if (baseRad == null)
                 {
-                    Debug.LogError("[ModuleTooling] Could not bind to fields in PF module");
+                    Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide fields on {part}");
                     return;
                 }
             }
@@ -82,10 +91,7 @@ namespace RP0
             noseHeightRatioF = noseHeightRatio.GetValue<float>(pmFairing);
 
             diam = (Math.Max(baseRadF, maxRadF) + sideThicknessF) * 2f;
-            if (inlineHeightF > 0f)
-                len = inlineHeightF;
-            else
-                len = noseHeightRatioF * diam * 0.5f + cylEndF;
+            len = (inlineHeightF > 0) ? inlineHeightF : (noseHeightRatioF * diam / 2) + cylEndF;
         }
 
         public void UpdateToolingAndCosts(bool isDecoupled)
@@ -94,31 +100,26 @@ namespace RP0
                 return;
 
             var toolingPrefabModule = part.partInfo.partPrefab.FindModuleImplementing<ModuleToolingPFSide>();
-            var fairingPrefabModule = part.partInfo.partPrefab.Modules["ProceduralFairingSide"];
-            var bf = fairingPrefabModule.Fields["costPerTonne"];
-            var prefabCostPerTonne = bf.GetValue<float>(fairingPrefabModule);
 
-            if (costPerTonne == null)
+            if (UpdateCostPerTonne && (costPerTonne ?? pmFairing.Fields["costPerTonne"]) is BaseField field)
             {
-                costPerTonne = pmFairing.Fields["costPerTonne"];
+                var fairingPrefabModule = part.partInfo.partPrefab.Modules["ProceduralFairingSide"];
+                var prefabCostPerTonne = fairingPrefabModule?.Fields["costPerTonne"]?.GetValue<float>(fairingPrefabModule) ?? 0;
+                field.SetValue(isDecoupled ? prefabCostPerTonne : costPerTonneNonDecoupled, pmFairing);
             }
 
             toolingType = isDecoupled ? toolingPrefabModule.toolingType : toolingTypeNonDecoupled;
             untooledMultiplier = isDecoupled ? toolingPrefabModule.untooledMultiplier : untooledMultiplierNonDecoupled;
             finalToolingCostMultiplier = isDecoupled ? toolingPrefabModule.finalToolingCostMultiplier : finalToolingCostMultiplierNonDecoupled;
-            costPerTonne.SetValue(isDecoupled ? prefabCostPerTonne : costPerTonneNonDecoupled, pmFairing);
         }
 
         private void OnFairingStagedChanged(BaseField bf, object obj)
         {
             var isDecoupled = bf.GetValue<bool>(pmDecoupler);
             UpdateToolingAndCosts(isDecoupled);
-
-            for (int i = 0; i < part.symmetryCounterparts.Count; i++)
+            foreach (Part p in part.symmetryCounterparts)
             {
-                var p = part.symmetryCounterparts[i];
-                var pm = p.Modules.GetModule<ModuleToolingPFSide>();
-                pm.UpdateToolingAndCosts(isDecoupled);
+                p.Modules.GetModule<ModuleToolingPFSide>().UpdateToolingAndCosts(isDecoupled);
             }
         }
     }

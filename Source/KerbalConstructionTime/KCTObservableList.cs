@@ -21,12 +21,20 @@ namespace KerbalConstructionTime
             int idx = IndexOf(item);
             if (idx >= 0)
             {
-                RemoveAt(idx);
+                base.RemoveAt(idx);
                 Removed(idx, item);
                 Updated();
                 return true;
             }
             return false;
+        }
+
+        public new void RemoveAt(int index)
+        {
+            T item = this[index];
+            base.RemoveAt(index);
+            Removed(index, item);
+            Updated();
         }
 
         public new void AddRange(IEnumerable<T> collection)
@@ -44,7 +52,7 @@ namespace KerbalConstructionTime
             for (int i = index + count - 1; i >= index; i--)
             {
                 T el = this[i];
-                RemoveAt(i);
+                base.RemoveAt(i);
                 Removed(i, el);
             }
             Updated();

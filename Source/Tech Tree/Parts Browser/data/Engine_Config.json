@@ -3065,7 +3065,7 @@
         "rp0_conf": false,
         "spacecraft": "N-1M, GSLV MkI, MkII",
         "engine_config": "KVD1",
-        "upgrade": false,
+        "upgrade": true,
         "entry_cost_mods": "20000, StagedHydrolox",
         "identical_part_name": "",
         "module_tags": []
@@ -7710,8 +7710,8 @@
         "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",
-        "year": "2001",
-        "technology": "hydrolox1998",
+        "year": "1971",
+        "technology": "hydrolox1968",
         "era": "09-INTL",
         "ro": true,
         "rp0": false,
@@ -7719,7 +7719,7 @@
         "rp0_conf": false,
         "spacecraft": "N-1M, GSLV MkI, MkII",
         "engine_config": "KVD1",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "0",
         "identical_part_name": "",
         "module_tags": []

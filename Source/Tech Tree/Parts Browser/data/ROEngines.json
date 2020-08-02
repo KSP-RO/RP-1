@@ -2579,6 +2579,54 @@
         "module_tags": []
     },
     {
+        "name": "ROE-KTDU35",
+        "title": "KTDU-35",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "100",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1966",
+        "technology": "orbitalRocketry1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Soyuz",
+        "engine_config": "KTDU35",
+        "upgrade": false,
+        "entry_cost_mods": "S5-60",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-KTDU425A",
+        "title": "KTDU-425A",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1971",
+        "technology": "orbitalRocketry1970",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Venera 9",
+        "engine_config": "KTDU425A",
+        "upgrade": false,
+        "entry_cost_mods": "KTDU-425A",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-LEROS1B",
         "title": "LEROS-1b (635N)",
         "description": "LEROS is a family of chemical rocket engines manufactured by Moog-ISP. LEROS engines have been used as primary apogee engines for telecommunications satellites such as the Lockheed Martin A2100 as well as deep space missions such as Juno. Plume configured by RealPlume.",
@@ -4508,6 +4556,29 @@
         "module_tags": [
             "EngineLiquidTurbo",
             "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-RD120",
+        "title": "RD-120",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "750",
+        "entry_cost": "3500",
+        "category": "STAGED",
+        "info": "",
+        "year": "1985",
+        "technology": "stagedCombustion1981",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Zenit",
+        "engine_config": "RD120",
+        "upgrade": false,
+        "entry_cost_mods": "RD-120",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
         ]
     },
     {

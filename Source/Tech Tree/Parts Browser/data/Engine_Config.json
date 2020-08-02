@@ -3048,6 +3048,27 @@
         "module_tags": []
     },
     {
+        "name": "KTDU-425A",
+        "title": "KTDU-425A",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1971",
+        "technology": "orbitalRocketry1970",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Venera 9",
+        "engine_config": "KTDU425A",
+        "upgrade": false,
+        "entry_cost_mods": "50000, HypergolicPumps",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "KVD-1",
         "title": "KVD-1",
         "description": "",
@@ -9234,7 +9255,7 @@
         "spacecraft": "Soyuz-7K",
         "engine_config": "KTDU35",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "S5-60",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9257,7 +9278,7 @@
         "spacecraft": "Soyuz-7K",
         "engine_config": "KTDU35",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "50000, HypergolicPumps",
         "identical_part_name": "",
         "module_tags": []
     },

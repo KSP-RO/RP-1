@@ -518,7 +518,7 @@
         "module_tags": []
     },
     {
-        "name": "ROC-BigGeminiCabin",
+        "name": "ROC-BigGeminiCabinBDB",
         "title": "Big Gemini Cabin",
         "description": "",
         "mod": "ROCapsules",

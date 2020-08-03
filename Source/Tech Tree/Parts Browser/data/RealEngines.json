@@ -203,7 +203,7 @@
         "description": "",
         "mod": "RealEngines",
         "cost": "100",
-        "entry_cost": "50000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1966",
@@ -216,7 +216,7 @@
         "spacecraft": "Soyuz-7K",
         "engine_config": "KTDU35",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "S5-60",
         "identical_part_name": "",
         "module_tags": []
     },

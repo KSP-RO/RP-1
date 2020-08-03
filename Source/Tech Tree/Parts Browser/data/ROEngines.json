@@ -2719,6 +2719,54 @@
         "module_tags": []
     },
     {
+        "name": "ROE-LMAE",
+        "title": "LMAE",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "550",
+        "entry_cost": "0",
+        "category": "EDL",
+        "info": "",
+        "year": "1969",
+        "technology": "lunarLanding",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "LEM",
+        "engine_config": "LMAE",
+        "upgrade": false,
+        "entry_cost_mods": "LMAE",
+        "identical_part_name": "Apollo LMAE",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-LMDE",
+        "title": "LMDE",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "900",
+        "entry_cost": "0",
+        "category": "EDL",
+        "info": "",
+        "year": "1969",
+        "technology": "lunarLanding",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "LEM",
+        "engine_config": "LMDE",
+        "upgrade": false,
+        "entry_cost_mods": "LMDE-H",
+        "identical_part_name": "Apollo LMDE",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-LR101",
         "title": "LR101 Vernier Engine",
         "description": "",

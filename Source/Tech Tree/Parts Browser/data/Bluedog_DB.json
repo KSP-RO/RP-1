@@ -454,7 +454,7 @@
         "description": "With the decreased weight and LEO operation design, there was no longer a need for a large engine to power the CSM. NASA decided to reuse the successful Lunar Module Ascent Engine. FICTIONAL (Eyes Turned Skyward)",
         "mod": "Bluedog DB",
         "cost": "550",
-        "entry_cost": "11000",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1976",
@@ -1467,7 +1467,7 @@
         "description": "Pressure-fed engine used for the ascent module of the Apollo lunar lander. Diameter: [0.86 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
         "cost": "550",
-        "entry_cost": "11000",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "Engine",
         "year": "1969",
@@ -1480,7 +1480,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "LMAE",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "LMAE",
         "identical_part_name": "Apollo LMAE",
         "module_tags": [
             "EngineLiquidPF"
@@ -1492,7 +1492,7 @@
         "description": "Deeply throttleable pressure-fed vacuum engine used for the descent module of the Apollo lunar lander. Uses storable propellants which are not subject to boiloff, but are far less efficient than hydrolox or even kerolox. The version used on J-class missions had slightly higher specific impulse (this, along with other changes, gave enough payload capacity for the rover, for example). A later variant (TR-201) was used on Delta as an upper stage engine (on Delta P series); this was a low-cost model with more restarts (4 instead of 2) and slightly higher thrust but lower efficiency and no throttling capability. Diameter: [1.5 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
         "cost": "900",
-        "entry_cost": "18000",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "Engine",
         "year": "1969",
@@ -1505,7 +1505,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "LMDE",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "LMDE-H",
         "identical_part_name": "Apollo LMDE",
         "module_tags": [
             "EngineLiquidPF"

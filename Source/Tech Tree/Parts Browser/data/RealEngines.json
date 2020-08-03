@@ -226,7 +226,7 @@
         "description": "",
         "mod": "RealEngines",
         "cost": "550",
-        "entry_cost": "11000",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "Engine",
         "year": "1969",
@@ -239,7 +239,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "LMAE",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "LMAE",
         "identical_part_name": "Apollo LMAE",
         "module_tags": [
             "EngineLiquidPF"
@@ -251,7 +251,7 @@
         "description": "",
         "mod": "RealEngines",
         "cost": "900",
-        "entry_cost": "18000",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "Engine",
         "year": "1969",
@@ -264,7 +264,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "LMDE",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "LMDE-H",
         "identical_part_name": "Apollo LMDE",
         "module_tags": [
             "EngineLiquidPF"

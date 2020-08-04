@@ -3363,7 +3363,7 @@
         "spacecraft": "LEM",
         "engine_config": "LMAE",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "11000, HydrazineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3386,7 +3386,7 @@
         "spacecraft": "LEM",
         "engine_config": "LMDE",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "18000, HydrazineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3409,7 +3409,7 @@
         "spacecraft": "LEM",
         "engine_config": "LMDE",
         "upgrade": true,
-        "entry_cost_mods": "3000",
+        "entry_cost_mods": "3000, LMDE-H",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10027,7 +10027,7 @@
         "spacecraft": "Delta P",
         "engine_config": "LMDE",
         "upgrade": true,
-        "entry_cost_mods": "2000",
+        "entry_cost_mods": "2000, LMDE-J",
         "identical_part_name": "",
         "module_tags": []
     },

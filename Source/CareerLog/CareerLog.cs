@@ -35,7 +35,6 @@ namespace RP0
         private MethodInfo _mInfContractName;
         private double _prevFundsChangeAmount;
         private TransactionReasons _prevFundsChangeReason;
-        private LogPeriod _prevPeriod;
         private LogPeriod _currentPeriod;
 
         public static Func<SpaceCenterFacility, int> FnGetKCTUpgdCounts;
@@ -50,30 +49,12 @@ namespace RP0
                 double time = Planetarium.GetUniversalTime();
                 while (time > NextPeriodStart)
                 {
-                    DateTime dtNextPeriod = _epoch.AddSeconds(NextPeriodStart).AddMonths(LogPeriodMonths);
-                    CurPeriodStart = NextPeriodStart;
-                    NextPeriodStart = (dtNextPeriod - _epoch).TotalSeconds;
-                    _prevPeriod = _currentPeriod;
-                    _currentPeriod = null;
+                    SwitchToNextPeriod();
                 }
 
                 if (_currentPeriod == null)
                 {
-                    if (!_periodDict.TryGetValue(CurPeriodStart, out _currentPeriod))
-                    {
-                        _currentPeriod = new LogPeriod(CurPeriodStart, NextPeriodStart);
-                        _periodDict.Add(CurPeriodStart, _currentPeriod);
-
-                        if (_prevPeriod != null)
-                        {
-                            _prevPeriod.CurrentFunds = Funding.Instance.Funds;
-                            _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
-                            _prevPeriod.VABUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.VehicleAssemblyBuilding);
-                            _prevPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
-                            _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
-                            _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
-                        }
-                    }
+                    _currentPeriod = GetOrCreatePeriod(CurPeriodStart);
                 }
 
                 return _currentPeriod;
@@ -284,6 +265,36 @@ namespace RP0
             var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
+        }
+
+        private void SwitchToNextPeriod()
+        {
+            LogPeriod _prevPeriod = _currentPeriod ?? GetOrCreatePeriod(CurPeriodStart);
+            if (_prevPeriod != null)
+            {
+                _prevPeriod.CurrentFunds = Funding.Instance.Funds;
+                _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
+                _prevPeriod.VABUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.VehicleAssemblyBuilding);
+                _prevPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
+                _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
+                _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
+            }
+
+            _currentPeriod = GetOrCreatePeriod(NextPeriodStart);
+            CurPeriodStart = NextPeriodStart;
+            NextPeriodStart = _currentPeriod.EndUT;
+        }
+
+        private LogPeriod GetOrCreatePeriod(double periodStartUt)
+        {
+            if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
+            {
+                DateTime dtNextPeriod = _epoch.AddSeconds(periodStartUt).AddMonths(LogPeriodMonths);
+                double nextPeriodStart = (dtNextPeriod - _epoch).TotalSeconds;
+                period = new LogPeriod(periodStartUt, nextPeriodStart);
+                _periodDict.Add(periodStartUt, period);
+            }
+            return period;
         }
 
         private void LoadSettings(ConfigNode data)

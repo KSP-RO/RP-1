@@ -296,9 +296,9 @@ namespace RP0
             File.WriteAllText(path, csv);
         }
 
-        public void ExportToWeb()
+        public void ExportToWeb(string serverUrl)
         {
-            StartCoroutine(PostRequestCareerLog("https://kspro-rp1-analytics.herokuapp.com/api/careerlogs"));
+            StartCoroutine(PostRequestCareerLog(serverUrl));
         }
 
         private IEnumerator PostRequestCareerLog(string url)
@@ -360,22 +360,22 @@ namespace RP0
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
                 epoch = _epoch.AddSeconds(logPeriod.StartUT).ToString("yyyy-MM"),
-                vabUpgrades = logPeriod.VABUpgrades.ToString(),
-                sphUpgrades = logPeriod.SPHUpgrades.ToString(),
-                rndUpgrades = logPeriod.RnDUpgrades.ToString(),
-                currentFunds = logPeriod.CurrentFunds.ToString("F0"),
-                currentSci = logPeriod.CurrentSci.ToString("F1"),
-                scienceEarned = logPeriod.ScienceEarned.ToString("F1"),
-                advanceFunds = advanceFunds.ToString("F0"),
-                rewardFunds = rewardFunds.ToString("F0"),
-                failureFunds = failureFunds.ToString("F0"),
-                otherFundsEarned = logPeriod.OtherFundsEarned.ToString("F0"),
-                launchFees = logPeriod.LaunchFees.ToString("F0"),
-                maintenanceFees = logPeriod.MaintenanceFees.ToString("F0"),
-                toolingFees = logPeriod.ToolingFees.ToString("F0"),
-                entryCosts = logPeriod.EntryCosts.ToString("F0"),
-                constructionFees = logPeriod.OtherFees.ToString("F0"),
-                otherFees = (logPeriod.OtherFees - constructionFees).ToString("F0"),
+                vabUpgrades = logPeriod.VABUpgrades,
+                sphUpgrades = logPeriod.SPHUpgrades,
+                rndUpgrades = logPeriod.RnDUpgrades,
+                currentFunds = logPeriod.CurrentFunds,
+                currentSci = logPeriod.CurrentSci,
+                scienceEarned = logPeriod.ScienceEarned,
+                advanceFunds = advanceFunds,
+                rewardFunds = rewardFunds,
+                failureFunds = failureFunds,
+                otherFundsEarned = logPeriod.OtherFundsEarned,
+                launchFees = logPeriod.LaunchFees,
+                maintenanceFees = logPeriod.MaintenanceFees,
+                toolingFees = logPeriod.ToolingFees,
+                entryCosts = logPeriod.EntryCosts,
+                constructionFees = logPeriod.OtherFees,
+                otherFees = logPeriod.OtherFees - constructionFees,
                 launchedVessels = _launchedVessels.Where(l => l.UT >= logPeriod.StartUT && l.UT < logPeriod.EndUT)
                     .Select(l => l.VesselName)
                     .ToArray(),

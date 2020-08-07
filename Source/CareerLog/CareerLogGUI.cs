@@ -8,6 +8,7 @@ namespace RP0
     {
         private string _exportStatus;
         private string _exportStatusWeb;
+        private string _serverUrl;
 
         public void RenderTab()
         {
@@ -27,12 +28,15 @@ namespace RP0
             }
             GUILayout.Label(_exportStatus);
 
+            GUILayout.Label("Server URL:");
+            _serverUrl = GUILayout.TextField(_serverUrl);
+
             if (GUILayout.Button("Export to web", GUILayout.ExpandWidth(false), GUILayout.Height(30),
                 GUILayout.Width(125)))
             {
                 try
                 {
-                    CareerLog.Instance.ExportToWeb();
+                    CareerLog.Instance.ExportToWeb(_serverUrl);
                     _exportStatusWeb = "Career progress exported to web.";
                 }
                 catch (Exception ex)

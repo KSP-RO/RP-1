@@ -175,6 +175,29 @@
         ]
     },
     {
+        "name": "KK_ATK_GEM60",
+        "title": "GEM 60",
+        "description": "A solid rocket motor, used to increase performance of the Delta IV Medium and Medium+ rockets. This motor features a gimballing nozzle for improved steering authority.",
+        "mod": "ATK Propulsion Pack",
+        "cost": "1800",
+        "entry_cost": "36000",
+        "category": "SOLID",
+        "info": "GEM 60 SRM from ATK Propulsion Pack",
+        "year": "2002",
+        "technology": "solids1998",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "GEM-60",
+        "upgrade": false,
+        "entry_cost_mods": "GEM-60/Fixed",
+        "identical_part_name": "GEM 60",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "KK_ATK_Star13B",
         "title": "Star 13B",
         "description": "Orbit insertion motor incorporated the lightweight case developed for the STAR 13 with the propellant and nozzle design of the earlier TE-M-516 apogee motor. The motor case was stretched 2.2 inches to provide for increased propellant loading. The motor was used to adjust orbit inclination of a satellite from a Delta launch. Diameter: [0.34 m]. Plume configured by RealPlume.",

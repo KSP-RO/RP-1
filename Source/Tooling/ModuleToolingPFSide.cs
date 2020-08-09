@@ -39,19 +39,11 @@ namespace RP0
         public override void OnStart(StartState state)
         {
             base.OnStart(state);
-            PFAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => string.Equals(a.assembly.GetName().Name, "ProceduralFairings", StringComparison.OrdinalIgnoreCase)).assembly;
-            System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(PFAssembly.Location);
-            string version = fvi.FileVersion;
-            if (state == StartState.Editor && pmDecoupler != null && pmFairing != null)
+            PFAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => string.Equals(a.assembly.GetName().Name, "ProceduralFairings", StringComparison.OrdinalIgnoreCase))?.assembly;
+            if (state == StartState.Editor && pmDecoupler?.Fields["fairingStaged"] is BaseField bf && pmFairing is PartModule)
             {
-                var bf = pmDecoupler.Fields["fairingStaged"];
                 bf.uiControlEditor.onFieldChanged += OnFairingStagedChanged;
-
-                if (part.partInfo != null)
-                {
-                    var isDecoupled = bf.GetValue<bool>(pmDecoupler);
-                    UpdateToolingAndCosts(isDecoupled);
-                }
+                UpdateToolingAndCosts(bf.GetValue<bool>(pmDecoupler));
             }
         }
 
@@ -96,7 +88,7 @@ namespace RP0
 
         public void UpdateToolingAndCosts(bool isDecoupled)
         {
-            if (toolingTypeNonDecoupled == null || costPerTonneNonDecoupled == 0f || untooledMultiplierNonDecoupled == 0f || finalToolingCostMultiplierNonDecoupled == 0f)
+            if (toolingTypeNonDecoupled == null || part?.partInfo?.partPrefab == null || costPerTonneNonDecoupled == 0f || untooledMultiplierNonDecoupled == 0f || finalToolingCostMultiplierNonDecoupled == 0f)
                 return;
 
             var toolingPrefabModule = part.partInfo.partPrefab.FindModuleImplementing<ModuleToolingPFSide>();

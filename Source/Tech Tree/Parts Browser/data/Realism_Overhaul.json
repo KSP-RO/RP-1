@@ -419,6 +419,31 @@
         ]
     },
     {
+        "name": "RO_LunarHeatshield7m",
+        "title": "Heat Shield (7m)",
+        "description": "Lunar-rated heat shield.",
+        "mod": "Realism Overhaul",
+        "cost": "5000",
+        "entry_cost": "37000",
+        "category": "EDL",
+        "info": "Heat Shield",
+        "year": "1972",
+        "technology": "advancedUncrewedLanding",
+        "era": "06-STATION",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "heatshieldsLunar",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
         "name": "RO_linearRcs_tenth",
         "title": "Attitude Jet (28/45 N class)",
         "description": "These small thrusters are for upper stage or very small probe orientation.",

@@ -381,7 +381,7 @@ namespace RP0
                     .ToArray(),
                 contractEvents = _contractDict.Where(c =>
                         c.Type == ContractEventType.Complete && c.UT >= logPeriod.StartUT && c.UT < logPeriod.EndUT)
-                    .Select(c => c.DisplayName)
+                    .Select(c => c.InternalName)
                     .ToArray(),
                 techEvents = _techEvents.Where(t => t.UT >= logPeriod.StartUT && t.UT < logPeriod.EndUT)
                     .Select(t => t.NodeName)

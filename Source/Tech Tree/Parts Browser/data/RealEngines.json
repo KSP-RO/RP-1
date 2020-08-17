@@ -703,7 +703,7 @@
         "title": "RD-120 Series",
         "description": "The RD-120 is a staged combustion vacuum kerolox engine, used as the main power plant on the Zenit launch vehicle family second stage. Diameter: 2.0 m Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
-        "cost": "1000",
+        "cost": 750,
         "entry_cost": "3500",
         "category": "STAGED",
         "info": "",
@@ -719,7 +719,9 @@
         "upgrade": false,
         "entry_cost_mods": "RD-120",
         "identical_part_name": "RD-120",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "RO-RealEngines-RD-170",
@@ -851,7 +853,7 @@
         "title": "RD-8",
         "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
-        "cost": "1000",
+        "cost": 0,
         "entry_cost": "3500",
         "category": "STAGED",
         "info": "",
@@ -867,7 +869,9 @@
         "upgrade": false,
         "entry_cost_mods": "RD-8",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "RO-RealEngines-RD-805",

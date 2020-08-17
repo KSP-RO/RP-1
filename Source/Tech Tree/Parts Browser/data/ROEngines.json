@@ -4624,7 +4624,7 @@
         "engine_config": "RD120",
         "upgrade": false,
         "entry_cost_mods": "RD-120",
-        "identical_part_name": "",
+        "identical_part_name": "RD-120",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -4907,7 +4907,7 @@
         "title": "RD-8",
         "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume.",
         "mod": "ROEngines",
-        "cost": "1000",
+        "cost": 0,
         "entry_cost": "0",
         "category": "STAGED",
         "info": "",
@@ -4923,30 +4923,9 @@
         "upgrade": false,
         "entry_cost_mods": "RD-8",
         "identical_part_name": "",
-        "module_tags": []
-    },
-    {
-        "name": "ROE-RD8-RE",
-        "title": "RD-8",
-        "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume.",
-        "mod": "ROEngines",
-        "cost": "1000",
-        "entry_cost": "0",
-        "category": "STAGED",
-        "info": "",
-        "year": "1985",
-        "technology": "stagedCombustion1981",
-        "era": "07-SPCPLANES",
-        "ro": true,
-        "rp0": false,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "Zenit",
-        "engine_config": "RD8",
-        "upgrade": false,
-        "entry_cost_mods": "RD-8",
-        "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "ROE-RL10A3",

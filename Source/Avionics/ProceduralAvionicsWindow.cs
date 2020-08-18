@@ -112,7 +112,7 @@ namespace RP0.ProceduralAvionics
                 }
                 else if (Funding.Instance.Funds < unlockCost)
                 {
-                    GUILayout.Label($"Can't afford {BuildTechName(techNode)} BuildCostString(unlockCost)", HighLogic.Skin.label);
+                    GUILayout.Label($"Can't afford {BuildTechName(techNode)} {BuildCostString(unlockCost)}", HighLogic.Skin.label);
                 }
                 else if (GUILayout.Button($"Purchase {BuildTechName(techNode)} {BuildCostString(unlockCost)}", HighLogic.Skin.button))
                 {

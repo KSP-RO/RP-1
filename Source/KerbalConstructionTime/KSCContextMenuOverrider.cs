@@ -18,16 +18,17 @@ namespace KerbalConstructionTime
     {
         private static Dictionary<string, Dictionary<int, string>> _techGatings = null;
 
-        private static bool _areTextsUpdated = false;
         private readonly KSCFacilityContextMenu _menu;
+
+        public static bool AreTextsUpdated { get; set; } = false;
 
         public KSCContextMenuOverrider(KSCFacilityContextMenu menu)
         {
             _menu = menu;
 
-            if (!_areTextsUpdated)
+            if (!AreTextsUpdated)
             {
-                _areTextsUpdated = OverrideFacilityDescriptions();
+                AreTextsUpdated = OverrideFacilityDescriptions();
             }
         }
 
@@ -37,12 +38,12 @@ namespace KerbalConstructionTime
             if (PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes && _menu != null)
             {
                 SpaceCenterBuilding hostBuilding = GetMember<SpaceCenterBuilding>("host");
-                KCTDebug.Log("Trying to override upgrade button of menu for " + hostBuilding.facilityName);
+                KCTDebug.Log($"Trying to override upgrade button of menu for {hostBuilding.facilityName}");
                 Button button = GetMember<Button>("UpgradeButton");
                 if (button == null)
                 {
                     KCTDebug.Log("Could not find UpgradeButton by name, using index instead.", true);
-                    button = GetMember<UnityEngine.UI.Button>(2);
+                    button = GetMember<Button>(2);
                 }
 
                 if (button != null)
@@ -51,14 +52,14 @@ namespace KerbalConstructionTime
                     button.onClick = new Button.ButtonClickedEvent();    //Clear existing KSP listener
                     button.onClick.AddListener(HandleUpgrade);
 
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.DisableLPUpgrades &&
-                        GetFacilityID().ToLower().Contains("launchpad"))
+                    if ((PresetManager.Instance.ActivePreset.GeneralSettings.DisableLPUpgrades &&
+                         GetFacilityID().IndexOf("launchpad", StringComparison.OrdinalIgnoreCase) >= 0) ||
+                        (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
+                         GetFacilityID().IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0))
                     {
                         button.interactable = false;
                         var hov = button.gameObject.GetComponent<UIOnHover>();
                         hov.gameObject.DestroyGameObject();
-
-                        _menu.levelStatsText.text = "<color=\"red\"><b>Launchpads cannot be upgraded. Build a new launchpad from the KCT VAB tab instead.</b></color>";
                     }
                 }
                 else
@@ -99,21 +100,47 @@ namespace KerbalConstructionTime
 
         private void UpdateFacilityLevelStats(UpgradeableObject.UpgradeLevel lvl, int lvlIdx)
         {
+            // levelText appears to be unused by KSP itself. We can use it to store original level stats.
+            // Restoring old values is necessary because those persist between scene changes but some of them are based on current KCT settings.
+            if (lvl.levelText == null)
+            {
+                lvl.levelText = ScriptableObject.CreateInstance<KSCUpgradeableLevelText>();
+                lvl.levelText.facility = lvl.levelStats.facility;
+                lvl.levelText.linePrefix = lvl.levelStats.linePrefix;
+                lvl.levelText.textBase = lvl.levelStats.textBase;
+            }
+            else
+            {
+                lvl.levelStats.textBase = lvl.levelText.textBase;
+            }
+
+            KCTDebug.Log($"Overriding level stats text for {lvl.levelStats.facility} lvl {lvlIdx}");
+
             SpaceCenterFacility facilityType = lvl.levelStats.facility;
             if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding ||
                 facilityType == SpaceCenterFacility.SpaceplaneHangar)
             {
-                lvl.levelStats.textBase += $"\n{lvlIdx + 1} build queue{(lvlIdx > 0 ? "s" : string.Empty)}";
-                if (lvlIdx > 0)
-                    lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% build rate";
+                if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
+                    facilityType == SpaceCenterFacility.SpaceplaneHangar)
+                {
+                    lvl.levelStats.linePrefix = string.Empty;
+                    lvl.levelStats.textBase = "Upgrade the VAB instead";
+                }
+                else
+                {
+                    lvl.levelStats.textBase += $"\n{lvlIdx + 1} build queue{(lvlIdx > 0 ? "s" : string.Empty)}";
+                    if (lvlIdx > 0)
+                        lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% build rate";
+                }
             }
-            else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
+            else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment &&
+                     lvlIdx > 0)
             {
-                if (lvlIdx > 0)
-                    lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% research rate";
+                lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% research rate";
             }
             else if (facilityType == SpaceCenterFacility.Administration)
             {
+                lvl.levelStats.linePrefix = string.Empty;
                 lvl.levelStats.textBase = "This facility is currently unused";
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex &&
@@ -121,6 +148,12 @@ namespace KerbalConstructionTime
             {
                 lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter R&R times";
                 lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter training times";
+            }
+            else if (facilityType == SpaceCenterFacility.LaunchPad &&
+                     PresetManager.Instance.ActivePreset.GeneralSettings.DisableLPUpgrades)
+            {
+                lvl.levelStats.linePrefix = string.Empty;
+                lvl.levelStats.textBase = "<color=\"red\"><b>Launchpads cannot be upgraded. Build a new launchpad from the KCT Build List tab instead.</b></color>";
             }
         }
 
@@ -205,13 +238,13 @@ namespace KerbalConstructionTime
             SpaceCenterFacility? facilityType = GetFacilityType();
 
             string gate = GetTechGate(facilityID, oldLevel + 1);
-            KCTDebug.Log("[KCTT] Gate for " + facilityID + "? " + gate);
+            KCTDebug.Log($"Gate for {facilityID}: {gate}");
             if (!string.IsNullOrEmpty(gate))
             {
                 if (ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available)
                 {
                     PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradePadConfirm",
-                            "Can't upgrade this facility. Requires " + KerbalConstructionTimeData.techNameToTitle[gate] + ".",
+                            $"Can't upgrade this facility. Requires {KerbalConstructionTimeData.techNameToTitle[gate]}.",
                             "Lack Tech to Upgrade",
                             HighLogic.UISkin,
                             new DialogGUIButton("Ok", () => { })),
@@ -299,8 +332,8 @@ namespace KerbalConstructionTime
             var scb = GetMember<SpaceCenterBuilding>("host");
             if (scb is AdministrationFacility) return SpaceCenterFacility.Administration;
             if (scb is AstronautComplexFacility) return SpaceCenterFacility.AstronautComplex;
-            if (scb is LaunchSiteFacility && ((LaunchSiteFacility)scb).facilityType == EditorFacility.VAB) return SpaceCenterFacility.LaunchPad;
-            if (scb is LaunchSiteFacility && ((LaunchSiteFacility)scb).facilityType == EditorFacility.SPH) return SpaceCenterFacility.Runway;
+            if (scb is LaunchSiteFacility lpFacility && lpFacility.facilityType == EditorFacility.VAB) return SpaceCenterFacility.LaunchPad;
+            if (scb is LaunchSiteFacility rwFacility && rwFacility.facilityType == EditorFacility.SPH) return SpaceCenterFacility.Runway;
             if (scb is MissionControlBuilding) return SpaceCenterFacility.MissionControl;
             if (scb is RnDBuilding) return SpaceCenterFacility.ResearchAndDevelopment;
             if (scb is SpacePlaneHangarBuilding) return SpaceCenterFacility.SpaceplaneHangar;

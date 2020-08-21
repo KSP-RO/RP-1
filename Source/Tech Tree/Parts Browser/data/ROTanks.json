@@ -192,7 +192,7 @@
         "title": "Procedural Probe Core",
         "description": "",
         "mod": "ROTanks",
-        "cost": "100",
+        "cost": "0",
         "entry_cost": 1,
         "category": "AVIONICS",
         "info": "",

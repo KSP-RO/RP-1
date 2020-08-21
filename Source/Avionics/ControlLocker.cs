@@ -141,7 +141,7 @@ namespace RP0
         private void OffRailsHandler(Vessel v)
         {
             onRails = false;
-            if (ControlLockerUtils.ShouldLock(vessel.Parts, true, out float _, out float _))
+            if (!CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(vessel.Parts, true, out float _, out float _))
                 DisableAutopilot();
         }
 
@@ -160,7 +160,7 @@ namespace RP0
             if (vessel is null)
                 return cachedLockResult = false;
             if (requested)
-                cachedLockResult = ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
+                cachedLockResult = !CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
             requested = false;
             return cachedLockResult;
         }
@@ -170,7 +170,7 @@ namespace RP0
             while (HighLogic.LoadedSceneIsFlight)
             {
                 yield return new WaitForSeconds(updateFrequency);
-                cachedLockResult = ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
+                cachedLockResult = !CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
             }
         }
 

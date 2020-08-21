@@ -6311,6 +6311,30 @@
         "module_tags": []
     },
     {
+        "name": "ROE-Veronique",
+        "title": "Veronique",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "75",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "PW",
+        "technology": "rocketryTesting",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Veronique",
+        "engine_config": "Veronique",
+        "upgrade": false,
+        "entry_cost_mods": "VeroniqueR",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-X405",
         "title": "Vanguard X-405",
         "description": "",

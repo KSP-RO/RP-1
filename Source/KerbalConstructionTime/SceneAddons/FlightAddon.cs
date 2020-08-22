@@ -76,9 +76,9 @@ namespace KerbalConstructionTime
                 options[cnt++] = new DialogGUIButton("Recover", DoNormalRecovery);
             options[cnt] = new DialogGUIButton("Cancel", () => { });
 
-            var diag = new MultiOptionDialog("RecoverVesselPopup", 
+            var diag = new MultiOptionDialog("RecoverVesselPopup",
                 "Do you want KCT to do the recovery?", 
-                "RP-1's (KCT)", 
+                "RP-1's KCT", 
                 null, options: options);
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }

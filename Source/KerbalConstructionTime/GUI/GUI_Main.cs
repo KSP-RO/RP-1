@@ -150,11 +150,11 @@ namespace KerbalConstructionTime
         {
             if (GUIStates.IsMainGuiVisible)
             {
-                KCTGameStates.ToolbarControl.SetTrue();
+                KCTGameStates.ToolbarControl.SetTrue(false);
             }
             else
             {
-                KCTGameStates.ToolbarControl.SetFalse();
+                KCTGameStates.ToolbarControl.SetFalse(false);
             }
         }
 

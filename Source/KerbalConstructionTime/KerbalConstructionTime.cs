@@ -37,7 +37,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.ToolbarControl.OnDestroy();
                 Destroy(KCTGameStates.ToolbarControl);
             }
-            KCT_GUI.GuiDataSaver.Save();
         }
 
         internal void OnGUI()

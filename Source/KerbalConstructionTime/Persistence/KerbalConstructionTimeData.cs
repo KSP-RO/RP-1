@@ -73,6 +73,9 @@ namespace KerbalConstructionTime
                 tech.AddNode(cnTemp);
             }
             node.AddNode(tech);
+
+            KCT_GUI.GuiDataSaver.Save();
+            KCT_GUI.HideAll();
         }
 
         public override void OnLoad(ConfigNode node)

@@ -28,6 +28,9 @@ namespace KerbalConstructionTime
 
         public void Save()
         {
+            // Only support persisting UI state for editor and space center scenes for now
+            if (!HighLogic.LoadedSceneIsEditor && HighLogic.LoadedScene != GameScenes.SPACECENTER) return;
+
             try
             {
                 buildListPositionSaved = new GUIPosition("buildList", KCT_GUI.BuildListWindowPosition.x, KCT_GUI.BuildListWindowPosition.y, KCTGameStates.ShowWindows[0]);
@@ -37,7 +40,7 @@ namespace KerbalConstructionTime
                 ConfigNode cnTemp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
                 cnTemp.Save(filePath);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogException(ex);
             }
@@ -45,10 +48,10 @@ namespace KerbalConstructionTime
 
         public void Load()
         {
-            if (!File.Exists(filePath))
+            if (!HighLogic.LoadedSceneIsGame || !File.Exists(filePath))
                 return;
 
-            try 
+            try
             {
                 ConfigNode cnToLoad = ConfigNode.Load(filePath);
                 ConfigNode.LoadObjectFromConfig(this, cnToLoad);
@@ -60,7 +63,7 @@ namespace KerbalConstructionTime
                     KCTGameStates.ShowWindows[0] = buildListPositionSaved.visible;
                 }
 
-                if (buildListPositionSaved != null)
+                if (editorPositionSaved != null)
                 {
                     KCT_GUI.EditorWindowPosition.x = editorPositionSaved.xPos;
                     KCT_GUI.EditorWindowPosition.y = editorPositionSaved.yPos;

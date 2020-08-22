@@ -127,10 +127,7 @@ namespace KerbalConstructionTime
                     else
                     {
                         GUIStates.ShowAirlaunch = false;
-                        if (KCTGameStates.ToolbarControl != null)
-                        {
-                            KCTGameStates.ToolbarControl.SetFalse();
-                        }
+                        KCTGameStates.ToolbarControl?.SetFalse();
                         _centralWindowPosition.height = 1;
                         AssignInitialCrew();
                         GUIStates.ShowShipRoster = true;

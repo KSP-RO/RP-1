@@ -154,7 +154,9 @@ namespace KerbalConstructionTime
                     if (!KCT_GUI.IsPrimarilyDisabled)
                     {
                         KCT_GUI.GUIStates.ShowEditorGUI = KCTGameStates.ShowWindows[1];
-                        if (KCT_GUI.GUIStates.ShowEditorGUI)
+                        if (KCTGameStates.EditorShipEditingMode)
+                            KCT_GUI.EnsureEditModeIsVisible();
+                        else if (KCT_GUI.GUIStates.ShowEditorGUI)
                             KCT_GUI.ToggleVisibility(true);
                         else
                             KCT_GUI.ToggleVisibility(false);
@@ -623,7 +625,7 @@ namespace KerbalConstructionTime
 
             if (HighLogic.LoadedSceneIsEditor && KCTGameStates.EditorShipEditingMode)
             {
-                KCTDebug.Log("Editing " + KCTGameStates.EditedVessel.ShipName);
+                KCTDebug.Log($"Editing {KCTGameStates.EditedVessel.ShipName}");
                 EditorLogic.fetch.shipNameField.text = KCTGameStates.EditedVessel.ShipName;
             }
 
@@ -633,6 +635,7 @@ namespace KerbalConstructionTime
                 if (!KCT_GUI.IsPrimarilyDisabled)
                 {
                     if (ToolbarManager.ToolbarAvailable && KCTGameStates.Settings.PreferBlizzyToolbar)
+                    {
                         if (KCTGameStates.ShowWindows[0])
                             KCT_GUI.ToggleVisibility(true);
                         else
@@ -643,6 +646,7 @@ namespace KerbalConstructionTime
                                     KCT_GUI.ToggleVisibility(true);
                             }
                         }
+                    }
                     KCT_GUI.ResetBLWindow();
                 }
                 else

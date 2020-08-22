@@ -282,9 +282,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowUpgradeWindow = false;
                 if (!IsPrimarilyDisabled)
                 {
-                    if (KCTGameStates.ToolbarControl != null)
-                        KCTGameStates.ToolbarControl.SetTrue();
-
+                    KCTGameStates.ToolbarControl?.SetTrue();
                     GUIStates.ShowBuildList = true;
                 }
             }

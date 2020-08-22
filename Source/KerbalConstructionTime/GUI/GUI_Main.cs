@@ -129,6 +129,8 @@ namespace KerbalConstructionTime
             {
                 EditorWindowPosition.height = 1;
                 GUIStates.ShowEditorGUI = isVisible;
+                if (!isVisible)
+                    GUIStates.ShowBuildList = false;
                 KCTGameStates.ShowWindows[1] = isVisible;
             }
             else if ((HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION) && !IsPrimarilyDisabled)
@@ -148,11 +150,11 @@ namespace KerbalConstructionTime
         {
             if (GUIStates.IsMainGuiVisible)
             {
-                KCTGameStates.ToolbarControl.SetTrue(false);
+                KCTGameStates.ToolbarControl.SetTrue();
             }
             else
             {
-                KCTGameStates.ToolbarControl.SetFalse(false);
+                KCTGameStates.ToolbarControl.SetFalse();
             }
         }
 
@@ -168,6 +170,12 @@ namespace KerbalConstructionTime
         public static void BackupUIState()
         {
             PrevGUIStates = GUIStates.Clone();
+        }
+
+        public static void EnsureEditModeIsVisible()
+        {
+            GUIStates.ShowEditorGUI = true;
+            RefreshToolbarState();
         }
 
         public static void OnRightClick()

@@ -91,6 +91,7 @@ namespace KerbalConstructionTime
             KCTGameStates.InitAndClearTechList();
             KCTGameStates.TechUpgradesTotal = 0;
             KCTGameStates.SciPointsTotal = -1;
+            KCT_GUI.ResetUpgradePointCounts();
 
             var kctVS = new KCT_DataStorage();
             ConfigNode cn = node.GetNode(kctVS.GetType().Name);

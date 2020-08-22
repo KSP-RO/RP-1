@@ -18,7 +18,7 @@ namespace KerbalConstructionTime
         private static bool _combineVabAndSph, _isVABSelected, _isSPHSelected, _isTechSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
-        private static double _costOfNewLP = -13;
+        private static double _costOfNewLP = int.MinValue;
 
         private static GUIStyle _redText, _yellowText, _greenText, _yellowButton, _redButton, _greenButton;
         private static GUIContent _settingsTexture, _planeTexture, _rocketTexture;
@@ -174,7 +174,7 @@ namespace KerbalConstructionTime
                 if (KCTGameStates.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!Utilities.ApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
+                    if (!Utilities.IsApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         KCTDebug.Log("KAC Alarm being created!");
                         KCTGameStates.KACAlarmUT = buildItem.GetTimeLeft() + UT;
@@ -983,7 +983,7 @@ namespace KerbalConstructionTime
                 List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                 if (facilityChecks.Count == 0)
                 {
-                    bool operational = Utilities.LaunchFacilityIntact(BuildListVessel.ListType.SPH);
+                    bool operational = Utilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
                     if (!operational)
                     {
                         ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -1048,7 +1048,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.FlexibleSpace();
             GUILayout.Label($"Current: {KCTGameStates.ActiveKSC.ActiveLPInstance.name} ({KCTGameStates.ActiveKSC.ActiveLPInstance.level + 1})");
-            if (_costOfNewLP == -13)
+            if (_costOfNewLP == int.MinValue)
             {
                 _costOfNewLP = MathParser.GetStandardFormulaValue("NewLaunchPadCost", new Dictionary<string, string>
                 {

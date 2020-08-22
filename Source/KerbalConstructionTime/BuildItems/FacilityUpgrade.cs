@@ -67,7 +67,7 @@ namespace KerbalConstructionTime
             {
                 facility.SetLevel(UpgradeLevel);
             }
-            int newLvl = Utilities.BuildingUpgradeLevel(Id);
+            int newLvl = Utilities.GetBuildingUpgradeLevel(Id);
             UpgradeProcessed = newLvl == UpgradeLevel;
 
             KCTDebug.Log($"Upgrade processed: {UpgradeProcessed} Current: {newLvl} Desired: {UpgradeLevel}");

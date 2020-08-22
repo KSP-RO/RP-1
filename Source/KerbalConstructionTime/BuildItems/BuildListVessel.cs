@@ -318,7 +318,7 @@ namespace KerbalConstructionTime
             {
                 foreach(ConfigNode module in part.GetNodes("MODULE"))
                 {
-                    SanitizeNode(Utilities.PartNameFromNode(part), module, templates);
+                    SanitizeNode(Utilities.GetPartNameFromNode(part), module, templates);
                 }
             }
             return node;
@@ -816,7 +816,7 @@ namespace KerbalConstructionTime
             bool valid = true;
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
-                if (Utilities.GetAvailablePartByName(Utilities.PartNameFromNode(pNode)) == null)
+                if (Utilities.GetAvailablePartByName(Utilities.GetPartNameFromNode(pNode)) == null)
                 {
                     valid = false;
                     break;
@@ -831,7 +831,7 @@ namespace KerbalConstructionTime
             List<string> missing = new List<string>();
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
-                string name = Utilities.PartNameFromNode(pNode);
+                string name = Utilities.GetPartNameFromNode(pNode);
                 if (Utilities.GetAvailablePartByName(name) == null)
                 {
                     //invalid part detected!
@@ -864,7 +864,7 @@ namespace KerbalConstructionTime
 
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
-                string partName = Utilities.PartNameFromNode(pNode);
+                string partName = Utilities.GetPartNameFromNode(pNode);
                 if (!Utilities.PartIsUnlocked(partName))
                 {
                     AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);

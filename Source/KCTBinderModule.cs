@@ -78,7 +78,7 @@ namespace RP0
 
         public static int GetKCTUpgradeCounts(SpaceCenterFacility facility)
         {
-            return KerbalConstructionTime.Utilities.SpentUpgradesFor(facility);
+            return KerbalConstructionTime.Utilities.GetSpentUpgradesFor(facility);
         }
 
         public static float GetSciPointTotalFromKCT()

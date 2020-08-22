@@ -54,8 +54,8 @@ namespace KerbalConstructionTime
             GUILayout.Label(" BP/s:");
 
             List<double> rates;
-            if (type == BuildListVessel.ListType.VAB) rates = Utilities.BuildRatesVAB(null);
-            else rates = Utilities.BuildRatesSPH(null);
+            if (type == BuildListVessel.ListType.VAB) rates = Utilities.GetVABBuildRates(null);
+            else rates = Utilities.GetSPHBuildRates(null);
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
@@ -138,8 +138,8 @@ namespace KerbalConstructionTime
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
             List<double> rates = new List<double>();
-            if (ship.Type == BuildListVessel.ListType.VAB) rates = Utilities.BuildRatesVAB(null);
-            else rates = Utilities.BuildRatesSPH(null);
+            if (ship.Type == BuildListVessel.ListType.VAB) rates = Utilities.GetVABBuildRates(null);
+            else rates = Utilities.GetSPHBuildRates(null);
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
                 if (GUILayout.Button("*", GUILayout.ExpandWidth(false)))

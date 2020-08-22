@@ -29,7 +29,7 @@ namespace KerbalConstructionTime
         {
             KSCName = name;
             RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
-            LaunchPads.Add(new KCT_LaunchPad("LaunchPad", Utilities.BuildingUpgradeLevel(SpaceCenterFacility.LaunchPad)));
+            LaunchPads.Add(new KCT_LaunchPad("LaunchPad", Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad)));
 
             VABList.Added += added;
             VABList.Removed += removed;

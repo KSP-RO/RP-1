@@ -420,7 +420,7 @@ namespace KerbalConstructionTime
                 if (_lvlCheckTimer++ > 30)
                 {
                     _lvlCheckTimer = 0;
-                    if (Utilities.BuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != KCTGameStates.ActiveKSC.ActiveLPInstance.level)
+                    if (Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != KCTGameStates.ActiveKSC.ActiveLPInstance.level)
                     {
                         KCTGameStates.ActiveKSC.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchPadID, false);
                         KCTGameStates.UpdateLaunchpadDestructionState = true;
@@ -662,7 +662,7 @@ namespace KerbalConstructionTime
                     KCT_GUI.GUIStates.ShowFirstRun = true;
 
                     //initialize the proper launchpad
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.level = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.LaunchPad);
+                    KCTGameStates.ActiveKSC.ActiveLPInstance.level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad);
                 }
 
                 KCTDebug.Log("SP switch starting");

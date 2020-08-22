@@ -134,7 +134,7 @@ namespace KerbalConstructionTime
             var globalVariables = new List<string>();
             foreach (ConfigNode p in parts)
             {
-                string name = PartNameFromNode(p);
+                string name = GetPartNameFromNode(p);
                 string raw_name = name;
                 double effectiveCost = 0;
                 double cost;
@@ -203,7 +203,7 @@ namespace KerbalConstructionTime
             return totalEffectiveCost * globalMultiplier;
         }
 
-        public static string PartNameFromNode(ConfigNode part)
+        public static string GetPartNameFromNode(ConfigNode part)
         {
             string name = part.GetValue("part");
             if (name != null)
@@ -325,13 +325,13 @@ namespace KerbalConstructionTime
             return 0;
         }
 
-        public static List<double> BuildRatesVAB(KSCItem KSC)
+        public static List<double> GetVABBuildRates(KSCItem KSC)
         {
             if (KSC == null) KSC = KCTGameStates.ActiveKSC;
             return KSC.VABRates;
         }
 
-        public static List<double> BuildRatesSPH(KSCItem KSC)
+        public static List<double> GetSPHBuildRates(KSCItem KSC)
         {
             if (KSC == null) KSC = KCTGameStates.ActiveKSC;
             return KSC.SPHRates;
@@ -340,7 +340,7 @@ namespace KerbalConstructionTime
         public static double GetVABBuildRateSum(KSCItem KSC)
         {
             double rateTotal = 0;
-            List<double> rates = BuildRatesVAB(KSC);
+            List<double> rates = GetVABBuildRates(KSC);
             for (int i = 0; i < rates.Count; i++)
             {
                 double rate = rates[i];
@@ -352,7 +352,7 @@ namespace KerbalConstructionTime
         public static double GetSPHBuildRateSum(KSCItem KSC)
         {
             double rateTotal = 0;
-            List<double> rates = BuildRatesSPH(KSC);
+            List<double> rates = GetSPHBuildRates(KSC);
             for (int i = 0; i < rates.Count; i++)
             {
                 double rate = rates[i];
@@ -465,7 +465,7 @@ namespace KerbalConstructionTime
 
         public static float GetPartCostFromNode(ConfigNode part, bool includeFuel = true)
         {
-            string name = PartNameFromNode(part);
+            string name = GetPartNameFromNode(part);
             AvailablePart aPart = GetAvailablePartByName(name);
             if (aPart == null)
                 return 0;
@@ -479,7 +479,7 @@ namespace KerbalConstructionTime
 
         public static float GetPartMassFromNode(ConfigNode part, bool includeFuel = true, bool includeClamps = true)
         {
-            AvailablePart aPart = GetAvailablePartByName(PartNameFromNode(part));
+            AvailablePart aPart = GetAvailablePartByName(GetPartNameFromNode(part));
 
             if (aPart == null || (!includeClamps && aPart.partPrefab != null && aPart.partPrefab.Modules.Contains<LaunchClamp>()))
                 return 0;
@@ -719,7 +719,7 @@ namespace KerbalConstructionTime
             //Assign science based on science rate
             if (CurrentGameHasScience() && !vessel.CannotEarnScience)
             {
-                double rate = MathParser.GetStandardFormulaValue("Research", new Dictionary<string, string>() { { "N", KSC.RDUpgrades[0].ToString() }, { "R", BuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString() } });
+                double rate = MathParser.GetStandardFormulaValue("Research", new Dictionary<string, string>() { { "N", KSC.RDUpgrades[0].ToString() }, { "R", GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString() } });
                 if (rate > 0)
                 {
                     Message.AppendLine(AddScienceWithMessage((float)(rate * vessel.BuildPoints), TransactionReasons.None));
@@ -785,6 +785,7 @@ namespace KerbalConstructionTime
             int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
             if (upgradesToAdd > 0)
             {
+                KCT_GUI.ResetUpgradePointCounts();
                 KCTDebug.Log($"Added {upgradesToAdd} upgrade points");
                 ScreenMessages.PostScreenMessage($"{upgradesToAdd} KCT Upgrade Point{(upgradesToAdd > 1 ? "s" : string.Empty)} Added!", 8f, ScreenMessageStyle.UPPER_LEFT);
             }
@@ -1021,7 +1022,7 @@ namespace KerbalConstructionTime
             return newVal;
         }
 
-        public static int TotalSpentUpgrades(KSCItem ksc = null)
+        public static int GetTotalSpentUpgrades(KSCItem ksc = null)
         {
             if (ksc == null) ksc = KCTGameStates.ActiveKSC;
             int spentPoints = 0;
@@ -1045,7 +1046,7 @@ namespace KerbalConstructionTime
             return spentPoints;
         }
 
-        public static int SpentUpgradesFor(SpaceCenterFacility facility, KSCItem ksc = null)
+        public static int GetSpentUpgradesFor(SpaceCenterFacility facility, KSCItem ksc = null)
         {
             if (ksc == null) ksc = KCTGameStates.ActiveKSC;
             int spentPoints = 0;
@@ -1266,7 +1267,7 @@ namespace KerbalConstructionTime
             MessageSystem.Instance.AddMessage(m);
         }
 
-        public static bool LaunchFacilityIntact(BuildListVessel.ListType type)
+        public static bool IsLaunchFacilityIntact(BuildListVessel.ListType type)
         {
             bool intact = true;
             if (type == BuildListVessel.ListType.VAB)
@@ -1295,7 +1296,7 @@ namespace KerbalConstructionTime
             KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
         }
 
-        public static bool ApproximatelyEqual(double d1, double d2, double error = 0.01 )
+        public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01 )
         {
             return (1-error) <= (d1 / d2) && (d1 / d2) <= (1+error);
         }
@@ -1405,7 +1406,7 @@ namespace KerbalConstructionTime
 
         public static bool PartIsUnlocked(ConfigNode partNode)
         {
-            string partName = PartNameFromNode(partNode);
+            string partName = GetPartNameFromNode(partNode);
             return PartIsUnlocked(partName);
         }
 
@@ -1474,9 +1475,9 @@ namespace KerbalConstructionTime
             return sb.ToString();
         }
 
-        public static int BuildingUpgradeLevel(SpaceCenterFacility facility)
+        public static int GetBuildingUpgradeLevel(SpaceCenterFacility facility)
         {
-            int lvl = BuildingUpgradeMaxLevel(facility);
+            int lvl = GetBuildingUpgradeMaxLevel(facility);
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
                 lvl = (int)Math.Round(lvl * ScenarioUpgradeableFacilities.GetFacilityLevel(facility));
@@ -1484,9 +1485,9 @@ namespace KerbalConstructionTime
             return lvl;
         }
 
-        public static int BuildingUpgradeLevel(string facilityID)
+        public static int GetBuildingUpgradeLevel(string facilityID)
         {
-            int lvl = BuildingUpgradeMaxLevel(facilityID);
+            int lvl = GetBuildingUpgradeMaxLevel(facilityID);
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
                 lvl = (int)Math.Round(lvl * ScenarioUpgradeableFacilities.GetFacilityLevel(facilityID));
@@ -1494,7 +1495,7 @@ namespace KerbalConstructionTime
             return lvl;
         }
 
-        public static int BuildingUpgradeMaxLevel(string facilityID)
+        public static int GetBuildingUpgradeMaxLevel(string facilityID)
         {
             int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facilityID);
             if (lvl < 0)
@@ -1509,7 +1510,7 @@ namespace KerbalConstructionTime
             return lvl;
         }
 
-        public static int BuildingUpgradeMaxLevel(SpaceCenterFacility facility)
+        public static int GetBuildingUpgradeMaxLevel(SpaceCenterFacility facility)
         {
             int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
             if (lvl < 0)
@@ -1524,7 +1525,7 @@ namespace KerbalConstructionTime
             return lvl;
         }
 
-        public static int TotalUpgradePoints()
+        public static int GetTotalUpgradePoints()
         {
             int total = 0;
             //Starting points
@@ -1553,10 +1554,6 @@ namespace KerbalConstructionTime
             total += KCTGameStates.PurchasedUpgrades[1];
             //Temp upgrades (currently for when tech nodes finish)
             total += KCTGameStates.MiscellaneousTempUpgrades;
-            
-            //Misc. (when API)
-            total += KCTGameStates.TemporaryModAddedUpgradesButReallyWaitForTheAPI;
-            total += KCTGameStates.PermanentModAddedUpgradesButReallyWaitForTheAPI;
 
             return total;
         }

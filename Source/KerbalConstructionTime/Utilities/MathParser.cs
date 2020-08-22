@@ -46,7 +46,7 @@ namespace KerbalConstructionTime
 
             if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
             {
-                level = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+                level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 if (KSC.VABUpgrades.Count > index)
                 {
                     upgrades = KSC.VABUpgrades[index];
@@ -57,13 +57,13 @@ namespace KerbalConstructionTime
             {
                 if (type == BuildListVessel.ListType.VAB)
                 {
-                    level = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+                    level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                     if (KSC.VABUpgrades.Count > index)
                         upgrades = KSC.VABUpgrades[index];
                 }
                 else if (type == BuildListVessel.ListType.SPH)
                 {
-                    level = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.SpaceplaneHangar);
+                    level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.SpaceplaneHangar);
                     if (KSC.SPHUpgrades.Count > index)
                         upgrades = KSC.SPHUpgrades[index];
                 }
@@ -73,7 +73,7 @@ namespace KerbalConstructionTime
             variables.Add("LM", level.ToString());
             variables.Add("N", upgrades.ToString());
             variables.Add("I", index.ToString());
-            variables.Add("R", Utilities.BuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString());
+            variables.Add("R", Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString());
             int numNodes = 0;
             if (ResearchAndDevelopment.Instance != null)
                 numNodes = ResearchAndDevelopment.Instance.snapshot.GetData().GetNodes("Tech").Length;
@@ -91,8 +91,8 @@ namespace KerbalConstructionTime
 
         public static double ParseNodeRateFormula(double ScienceValue, int index, int upgradeDelta)
         {
-            int RnDLvl = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            int RnDMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.ResearchAndDevelopment);
+            int RnDLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
+            int RnDMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.ResearchAndDevelopment);
             int upgrades = KCTGameStates.TechUpgradesTotal + upgradeDelta;
             var variables = new Dictionary<string, string>
             {
@@ -196,18 +196,18 @@ namespace KerbalConstructionTime
                 vessel.FindTypeFromLists();
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
-                EditorLevel = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+                EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.level;
-                EditorMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                LaunchSiteMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
+                EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+                LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
                 isVABVessel = 1;
             }
             else if (vessel.Type == BuildListVessel.ListType.SPH)
             {
-                EditorLevel = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.SpaceplaneHangar);
-                LaunchSiteLvl = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.Runway);
-                EditorMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.SpaceplaneHangar);
-                LaunchSiteMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.Runway);
+                EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.SpaceplaneHangar);
+                LaunchSiteLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.Runway);
+                EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.SpaceplaneHangar);
+                LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.Runway);
             }
             double BP = vessel.BuildPoints;
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;
@@ -249,18 +249,18 @@ namespace KerbalConstructionTime
             int isVABVessel = 0;
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
-                EditorLevel = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+                EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.level;
-                EditorMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                LaunchSiteMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
+                EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+                LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
                 isVABVessel = 1;
             }
             else
             {
-                EditorLevel = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.SpaceplaneHangar);
-                LaunchSiteLvl = Utilities.BuildingUpgradeLevel(SpaceCenterFacility.Runway);
-                EditorMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.SpaceplaneHangar);
-                LaunchSiteMax = Utilities.BuildingUpgradeMaxLevel(SpaceCenterFacility.Runway);
+                EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.SpaceplaneHangar);
+                LaunchSiteLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.Runway);
+                EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.SpaceplaneHangar);
+                LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.Runway);
             }
             double BP = vessel.BuildPoints;
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;

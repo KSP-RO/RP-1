@@ -331,9 +331,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.KSCs = new List<KSCItem>() { KCTGameStates.ActiveKSC };
                 KCTGameStates.LastKnownTechCount = 0;
 
-                KCTGameStates.PermanentModAddedUpgradesButReallyWaitForTheAPI = 0;
-                KCTGameStates.TemporaryModAddedUpgradesButReallyWaitForTheAPI = 0;
-
                 if (PresetManager.Instance != null)
                 {
                     PresetManager.Instance.ClearPresets();

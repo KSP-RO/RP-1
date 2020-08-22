@@ -21,7 +21,7 @@ namespace KerbalConstructionTime
         [Persistent] public List<string> PartInventory = new List<string>();
         [Persistent] public string activeKSC = string.Empty;
         [Persistent] public float SciPoints = -1f;
-        [Persistent] public int UpgradesResetCounter = 0, TechUpgrades = 0, SavedUpgradePointsPreAPI = 0;
+        [Persistent] public int UpgradesResetCounter = 0, TechUpgrades = 0;
 
         public override void OnDecodeFromConfigNode()
         {
@@ -30,7 +30,6 @@ namespace KerbalConstructionTime
             KCTGameStates.UpgradesResetCounter = UpgradesResetCounter;
             KCTGameStates.TechUpgradesTotal = TechUpgrades;
             KCTGameStates.SciPointsTotal = SciPoints;
-            KCTGameStates.PermanentModAddedUpgradesButReallyWaitForTheAPI = SavedUpgradePointsPreAPI;
         }
 
         public override void OnEncodeToConfigNode()
@@ -40,7 +39,6 @@ namespace KerbalConstructionTime
             SciPoints = KCTGameStates.SciPointsTotal;
             activeKSC = KCTGameStates.ActiveKSC.KSCName;
             UpgradesResetCounter = KCTGameStates.UpgradesResetCounter;
-            SavedUpgradePointsPreAPI = KCTGameStates.PermanentModAddedUpgradesButReallyWaitForTheAPI;
         }
     }
 }

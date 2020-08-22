@@ -97,7 +97,7 @@ namespace KerbalConstructionTime
 
                 _padCosts = null;
                 _padLvlOptions = null;
-                _costOfNewLP = -13;
+                _costOfNewLP = int.MinValue;
             }
             if (GUILayout.Button("No"))
             {

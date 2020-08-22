@@ -19,8 +19,8 @@ namespace KerbalConstructionTime
 
             GUILayout.Label($"{step++}) If you want to play from a different site than Cape Canaveral, switch to the Tracking Station and select a new site.");
 
-            if (!IsPrimarilyDisabled && Utilities.TotalUpgradePoints() > 0 &&
-                GUILayout.Button($"{step++}) Spend your {Utilities.TotalUpgradePoints()} upgrade points", HighLogic.Skin.button))
+            if (!IsPrimarilyDisabled && Utilities.GetTotalUpgradePoints() > 0 &&
+                GUILayout.Button($"{step++}) Spend your {Utilities.GetTotalUpgradePoints()} upgrade points", HighLogic.Skin.button))
             {
                 GUIStates.ShowUpgradeWindow = true;
             }

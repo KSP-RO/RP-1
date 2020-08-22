@@ -49,9 +49,6 @@ namespace KerbalConstructionTime
 
         public static KCTOnLoadError ErroredDuringOnLoad = new KCTOnLoadError();
 
-        public static int TemporaryModAddedUpgradesButReallyWaitForTheAPI = 0;    //Reset when returned to the MainMenu
-        public static int PermanentModAddedUpgradesButReallyWaitForTheAPI = 0;    //Saved to the save file
-
         public static bool VesselErrorAlerted = false;
         public static bool PersistenceLoaded = false;
         public static bool IsRefunding = false;

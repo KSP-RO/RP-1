@@ -217,12 +217,12 @@ namespace KerbalConstructionTime
 
         public static void ResetFormulaRateHolders()
         {
-            _fundsCost = -13;
-            _nodeRate = -13;
-            _upNodeRate = -13;
-            _researchRate = -13;
-            _upResearchRate = -13;
-            _costOfNewLP = -13;
+            _fundsCost = int.MinValue;
+            _nodeRate = int.MinValue;
+            _upNodeRate = int.MinValue;
+            _researchRate = int.MinValue;
+            _upResearchRate = int.MinValue;
+            _costOfNewLP = int.MinValue;
         }
 
         public static void CenterWindow(ref Rect window)

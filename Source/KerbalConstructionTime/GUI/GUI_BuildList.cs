@@ -254,7 +254,7 @@ namespace KerbalConstructionTime
             }
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                if (GUILayout.Button("Upgrades"))
+                if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
                 {
                     GUIStates.ShowUpgradeWindow = true;
                     GUIStates.ShowBuildList = false;

@@ -56,7 +56,7 @@ namespace KerbalConstructionTime
             PositionAndSizeIcon();
         }
 
-        static void PositionAndSizeIcon()
+        private static void PositionAndSizeIcon()
         {
             Texture2D upTex = Texture2D.Instantiate(_up);
             Texture2D hoverTex = Texture2D.Instantiate(_hover);

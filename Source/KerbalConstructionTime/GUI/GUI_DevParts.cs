@@ -96,7 +96,7 @@ namespace KerbalConstructionTime
             PositionAndSizeDevPartsIcon();
         }
 
-        static void PositionAndSizeDevPartsIcon()
+        private static void PositionAndSizeDevPartsIcon()
         {
             Texture2D onTex = Texture2D.Instantiate(_devPartsOnTex);
             Texture2D offTex = Texture2D.Instantiate(_devPartsOffTex);
@@ -120,7 +120,7 @@ namespace KerbalConstructionTime
             devPartsTooltipFrameCounter = 0;
         }
 
-        static void CreateDevPartsToggle()
+        private static void CreateDevPartsToggle()
         {
             if (DevPartsVisible)
                 _devPartsContent = _devPartsOnContent;

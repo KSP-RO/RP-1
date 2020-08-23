@@ -956,6 +956,20 @@ namespace KerbalConstructionTime
             return blv;
         }
 
+        public static Dictionary<string, ProtoTechNode> GetUnlockedProtoTechNodes()
+        {
+            var protoTechNodes = new Dictionary<string, ProtoTechNode>();
+            // get the nodes that have been researched from ResearchAndDevelopment
+            foreach (var t in ResearchAndDevelopment.Instance?.snapshot.GetData().GetNodes("Tech"))
+            {
+                // save proto nodes that have been researched
+                ProtoTechNode protoTechNode = new ProtoTechNode(t);
+                protoTechNodes.Add(protoTechNode.techID, protoTechNode);
+            }
+
+            return protoTechNodes;
+        }
+
         public static int FindUnlockCost(List<AvailablePart> availableParts)
         {
             int cost = 0;

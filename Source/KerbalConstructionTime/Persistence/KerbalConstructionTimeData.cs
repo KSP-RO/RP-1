@@ -137,12 +137,7 @@ namespace KerbalConstructionTime
                 }
             }
             // get the nodes that have been researched from ResearchAndDevelopment
-            foreach (var t in ResearchAndDevelopment.Instance?.snapshot.GetData().GetNodes("Tech"))
-            {
-                // save proto nodes that have been researched
-                ProtoTechNode protoTechNode = new ProtoTechNode(t);
-                protoTechNodes.Add(protoTechNode.techID, protoTechNode);
-            }
+            protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
             // iterate through all loaded parts to check if any of them should be experimental
             foreach (AvailablePart availablePart in PartLoader.LoadedPartsList)
             {

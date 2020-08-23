@@ -134,6 +134,7 @@ namespace KerbalConstructionTime
             if (EditorPartList.Instance != null && FirstOnGUIUpdate && !DevPartsVisible)
             {
                 EditorPartList.Instance.ExcludeFilters.AddFilter(expPartsFilter);
+                KCTGameStates.RemoveResearchedPartsFromExperimental();
                 FirstOnGUIUpdate = false;
             }
 
@@ -144,10 +145,12 @@ namespace KerbalConstructionTime
                 if (DevPartsVisible)
                 {
                     EditorPartList.Instance.ExcludeFilters.RemoveFilter(expPartsFilter);
+                    KCTGameStates.AddResearchedPartsToExperimental();
                 }
                 else
                 {
                     EditorPartList.Instance.ExcludeFilters.AddFilter(expPartsFilter);
+                    KCTGameStates.RemoveResearchedPartsFromExperimental();
                 }
 
                 FirstOnGUIUpdate = false;

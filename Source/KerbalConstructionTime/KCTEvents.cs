@@ -1,4 +1,4 @@
-﻿using KSP.UI.Screens;
+using KSP.UI.Screens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -234,7 +234,7 @@ namespace KerbalConstructionTime
             if (HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
                 return;
             TechItem tech = KCTGameStates.TechList.OfType<TechItem>().FirstOrDefault(t => t.TechID == part.TechRequired);
-            if (tech!= null && tech.IsInList())
+            if (tech != null && tech.IsInList())
             {
                 ScreenMessages.PostScreenMessage("[KCT] You must wait until the node is fully researched to purchase parts!", 4f, ScreenMessageStyle.UPPER_LEFT);
                 if (part.costsFunds)
@@ -244,23 +244,20 @@ namespace KerbalConstructionTime
                 tech.ProtoNode.partsPurchased.Remove(part);
                 tech.DisableTech();
             }
+            else
+            {
+                ResearchAndDevelopment.RemoveExperimentalPart(part);
+            }
         }
 
         public void TechUnlockEvent(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> ev)
         {
-            //TODO: Check if any of the parts are experimental, if so, do the normal KCT stuff and then set them experimental again
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
             if (ev.target == RDTech.OperationResult.Successful)
             {
                 var tech = new TechItem();
                 if (ev.host != null)
                     tech = new TechItem(ev.host);
-
-                foreach (AvailablePart expt in ev.host.partsPurchased)
-                {
-                    if (ResearchAndDevelopment.IsExperimentalPart(expt))
-                        KCTGameStates.ExperimentalParts.Add(expt);
-                }
 
                 if (!tech.IsInList())
                 {
@@ -274,6 +271,16 @@ namespace KerbalConstructionTime
                             techItem.UpdateBuildRate(KCTGameStates.TechList.IndexOf(techItem));
                         double timeLeft = tech.BuildRate > 0 ? tech.TimeLeft : tech.EstimatedTimeLeft;
                         ScreenMessages.PostScreenMessage($"[KCT] Node will unlock in {MagiCore.Utilities.GetFormattedTime(timeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
+
+                        foreach (AvailablePart ap in ev.host.partsAssigned)
+                        {
+                            if (!ResearchAndDevelopment.IsExperimentalPart(ap))
+                            {
+                                ResearchAndDevelopment.AddExperimentalPart(ap);
+                                KCTDebug.Log($"{ap.name} added to ExpParts: {ResearchAndDevelopment.IsExperimentalPart(ap)}");
+                            }
+                        }
+
                         OnTechQueued.Fire(ev.host);
                     }
                 }
@@ -300,7 +307,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public void TechDisableEventFinal(bool save=false)
+        public void TechDisableEventFinal(bool save = false)
         {
             if (PresetManager.Instance != null && PresetManager.Instance.ActivePreset != null &&
                 PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
@@ -358,6 +365,9 @@ namespace KerbalConstructionTime
             {
                 EditorLogic.fetch.Unlock("KCTEditorMouseLock");
             }
+
+            if (scene == GameScenes.EDITOR && !HighLogic.LoadedSceneIsEditor)
+                KCT_GUI.FirstOnGUIUpdate = true;
         }
 
         public void LaunchScreenOpenEvent(GameEvents.VesselSpawnInfo v)

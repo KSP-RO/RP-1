@@ -289,7 +289,7 @@ namespace KerbalConstructionTime
 
             if (listType == ListType.SPH)
             {
-                VesselToSave.SetRotation(new Quaternion((float)Math.Sqrt(0.5), 0, 0, (float)Math.Sqrt(0.5))); 
+                VesselToSave.SetRotation(new Quaternion((float)Math.Sqrt(0.5), 0, 0, (float)Math.Sqrt(0.5)));
             }
             else
             {
@@ -510,13 +510,6 @@ namespace KerbalConstructionTime
                 {
                     failedReasons.Add("Size limits exceeded");
                 }
-            }
-
-            Dictionary<AvailablePart, int> lockedParts = GetLockedParts();
-            if (lockedParts?.Count > 0)
-            {
-                var msg = Utilities.ConstructLockedPartsWarning(lockedParts);
-                failedReasons.Add(msg);
             }
 
             return failedReasons;
@@ -876,6 +869,29 @@ namespace KerbalConstructionTime
             }
 
             return lockedPartsOnShip;
+        }
+
+        public Dictionary<AvailablePart, int> GetExperimentalParts()
+        {
+            var devPartsOnShip = new Dictionary<AvailablePart, int>();
+
+            if (ResearchAndDevelopment.Instance == null)
+                return devPartsOnShip;
+
+            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
+            {
+                string partName = Utilities.PartNameFromNode(pNode);
+                if (Utilities.PartIsExperimental(partName))
+                {
+                    AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
+                    if (!devPartsOnShip.ContainsKey(partInfoByName))
+                        devPartsOnShip.Add(partInfoByName, 1);
+                    else
+                        ++devPartsOnShip[partInfoByName];
+                }
+            }
+
+            return devPartsOnShip;
         }
 
         public double ProgressPercent()

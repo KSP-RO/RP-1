@@ -117,16 +117,43 @@ namespace KerbalConstructionTime
             if (foundStockKSC)
                 TryMigrateStockKSC();
 
-            ConfigNode tmp = node.GetNode("TechList");
-            if (tmp != null)
+            var protoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that have been researched
+            var inDevProtoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that are being researched
+
+            // get the TechList node containing the TechItems with the tech nodes currently being researched from KCT's ConfigNode
+            if (node.GetNode("TechList") is ConfigNode tmp)
             {
                 foreach (ConfigNode techNode in tmp.GetNodes("Tech"))
                 {
+                    // populate KCTGameStates.TechList
                     var techStorageItem = new KCT_TechStorageItem();
                     ConfigNode.LoadObjectFromConfig(techStorageItem, techNode);
                     TechItem techItem = techStorageItem.ToTechItem();
                     techItem.ProtoNode = new ProtoTechNode(techNode.GetNode("ProtoNode"));
                     KCTGameStates.TechList.Add(techItem);
+
+                    // save proto nodes that are in development
+                    inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
+                }
+            }
+            // get the nodes that have been researched from ResearchAndDevelopment
+            foreach (var t in ResearchAndDevelopment.Instance?.snapshot.GetData().GetNodes("Tech"))
+            {
+                // save proto nodes that have been researched
+                ProtoTechNode protoTechNode = new ProtoTechNode(t);
+                protoTechNodes.Add(protoTechNode.techID, protoTechNode);
+            }
+            // iterate through all loaded parts to check if any of them should be experimental
+            foreach (AvailablePart availablePart in PartLoader.LoadedPartsList)
+            {
+                if (((protoTechNodes.ContainsKey(availablePart.TechRequired) &&                                 // ((node is in the list &&
+                    protoTechNodes[availablePart.TechRequired].state == RDTech.State.Available &&               // node has been unlocked &&
+                    !protoTechNodes[availablePart.TechRequired].partsPurchased.Contains(availablePart)) ||      // part hasn't been purchased) ||
+                    inDevProtoTechNodes.ContainsKey(availablePart.TechRequired)) &&                             // node is in development) &&
+                    !ResearchAndDevelopment.IsExperimentalPart(availablePart))                                  // part isn't already experimental
+                {
+                    // finally, make the part experimental
+                    ResearchAndDevelopment.AddExperimentalPart(availablePart);
                 }
             }
 

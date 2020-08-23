@@ -39,7 +39,6 @@ namespace KerbalConstructionTime
         public static double EditorRolloutTime = 0;
         public static double EditorIntegrationCosts = 0;
         public static bool LaunchFromTS = false;
-        public static List<AvailablePart> ExperimentalParts = new List<AvailablePart>();
 
         public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();
 
@@ -64,7 +63,6 @@ namespace KerbalConstructionTime
             TargetedItem = null;
             KCT_GUI.ResetFormulaRateHolders();
 
-            ExperimentalParts.Clear();
             MiscellaneousTempUpgrades = 0;
 
             BuildingMaxLevelCache.Clear();

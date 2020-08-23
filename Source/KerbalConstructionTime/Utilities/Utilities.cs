@@ -407,7 +407,7 @@ namespace KerbalConstructionTime
                                 blv.LaunchSiteID = -1;
                         }
                     });
-                    ksc.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes || 
+                    ksc.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes ||
                                                       (rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete()));
 
                     foreach (AirlaunchPrep ap in ksc.AirlaunchPrep)
@@ -695,10 +695,10 @@ namespace KerbalConstructionTime
                 vessel = KSC.VABList[index];
                 KSC.VABList.RemoveAt(index);
                 KSC.VABWarehouse.Add(vessel);
-                
+
                 Message.AppendLine(vessel.ShipName);
                 Message.AppendLine("Please check the VAB Storage at "+KSC.KSCName+" to launch it.");
-            
+
             }
             else if (ListIdentifier == BuildListVessel.ListType.SPH)
             {
@@ -856,14 +856,64 @@ namespace KerbalConstructionTime
         {
             if (CurrentGameIsCareer())
             {
-                //Check upgrades
-                //First, mass limit
+                //Check if vessel fails facility checks but can still be built
                 List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
                 if (facilityChecks.Count != 0)
                 {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n" 
-                        + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
+                        "Failed editor checks!",
+                        "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
+                        + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
+                        "Acknowledged",
+                        false,
+                        HighLogic.UISkin);
+                }
+
+                //Check if vessel contains locked or experimental parts, and therefore cannot be built
+                Dictionary<AvailablePart, int> lockedParts = blv.GetLockedParts();
+                if (lockedParts?.Count > 0)
+                {
+                    KCTDebug.Log("Tried to add " + blv.ShipName + " to build list but it contains locked parts.");
+
+                    //Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
+                    var lockedMsg = ConstructLockedPartsWarning(lockedParts);
+                    var msg = new ScreenMessage(lockedMsg, 4f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage(msg);
+                    return null;
+                }
+                Dictionary<AvailablePart, int> devParts = blv.GetExperimentalParts();
+                if (devParts?.Count > 0)
+                {
+                    var devMsg = ConstructExperimentalPartsWarning(devParts);
+
+                    //PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
+                    DialogGUIButton[] buttons;
+
+                    var unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
+                    int n = unlockableParts.Count();
+                    if (unlockableParts.Any())
+                    {
+                        buttons = new DialogGUIButton[] {
+                            new DialogGUIButton("Acknowledged", () => { }),
+                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {FindUnlockCost(unlockableParts)} Funds and Build", () => { UnlockExperimentalParts(unlockableParts); AddVesselToBuildList(blv); })
+                        };
+                    }
+                    else
+                    {
+                        buttons = new DialogGUIButton[] {
+                            new DialogGUIButton("Acknowledged", () => { })
+                        };
+                    }
+
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog("devPartsCheckFailedPopup",
+                            devMsg,
+                            "Vessel cannot be built!",
+                            HighLogic.UISkin,
+                            buttons),
+                        false,
+                        HighLogic.UISkin);
+                    return null;
                 }
 
 
@@ -906,6 +956,57 @@ namespace KerbalConstructionTime
             return blv;
         }
 
+        public static int FindUnlockCost(List<AvailablePart> availableParts)
+        {
+            int cost = 0;
+            foreach(var p in availableParts)
+            {
+                cost += p.entryCost;
+            }
+            return cost;
+        }
+
+        public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
+        {
+            foreach (var ap in availableParts)
+            {
+                ProtoTechNode protoNode = AssetBase.RnDTechTree.FindTech(ap.TechRequired);
+
+                if (!protoNode.partsPurchased.Contains(ap))
+                {
+                    protoNode.partsPurchased.Add(ap);
+                    GameEvents.OnPartPurchased.Fire(ap);
+                    HandlePurchase(ap);
+                }
+
+                Debug.Log("[KCT]: " + ap.title + " is no longer an experimental part. Part was unlocked.");
+                ResearchAndDevelopment.RemoveExperimentalPart(ap);
+            }
+
+            EditorPartList.Instance.Refresh();
+            EditorPartList.Instance.Refresh(EditorPartList.State.PartsList);
+            GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+        }
+
+        public static void HandlePurchase(AvailablePart partInfo)
+        {
+            ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(partInfo.TechRequired);
+
+            string[] indenticalPartsNames = partInfo.identicalParts.Split(',');
+
+            for (int i = indenticalPartsNames.Length;  i-- > 0;)
+            {
+                AvailablePart partInfoByName = PartLoader.getPartInfoByName(indenticalPartsNames[i].Replace('_', '.').Trim());
+                if (partInfoByName != null && partInfoByName.TechRequired == partInfo.TechRequired)
+                {
+                    partInfoByName.costsFunds = false;
+                    techState.partsPurchased.Add(partInfoByName);
+                    GameEvents.OnPartPurchased.Fire(partInfoByName);
+                    partInfoByName.costsFunds = true;
+                }
+            }
+        }
+
         public static IKCTBuildItem GetNextThingToFinish()
         {
             IKCTBuildItem thing = null;
@@ -932,7 +1033,7 @@ namespace KerbalConstructionTime
                         shortestTime = time;
                     }
                 }
-                
+
                 foreach (IKCTBuildItem rr in KSC.Recon_Rollout)
                 {
                     if (rr.IsComplete())
@@ -1205,7 +1306,7 @@ namespace KerbalConstructionTime
 
         public static void SetActiveKSC(string site)
         {
-            if (string.IsNullOrEmpty(site)) 
+            if (string.IsNullOrEmpty(site))
                 site = _defaultKscId;
             if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
             {
@@ -1421,9 +1522,25 @@ namespace KerbalConstructionTime
             bool partIsUnlocked = techState != null && techState.state == RDTech.State.Available &&
                                   RUIutils.Any(techState.partsPurchased, (a => a.name == partName));
 
-            bool isExperimental = ResearchAndDevelopment.IsExperimentalPart(partInfoByName);
+            bool partIsExperimental = ResearchAndDevelopment.IsExperimentalPart(partInfoByName);
 
-            return partIsUnlocked || isExperimental;
+            return partIsUnlocked || partIsExperimental;
+        }
+
+        public static bool PartIsExperimental(string partName)
+        {
+            if (partName == null) return false;
+
+            AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
+            if (partInfoByName == null) return false;
+
+            return ResearchAndDevelopment.IsExperimentalPart(partInfoByName);
+        }
+
+        public static bool PartIsExperimental(ConfigNode partNode)
+        {
+            string partName = PartNameFromNode(partNode);
+            return PartIsExperimental(partName);
         }
 
         public static bool PartIsProcedural(ConfigNode part)
@@ -1465,7 +1582,7 @@ namespace KerbalConstructionTime
                 return null;
 
             var sb = new StringBuilder();
-            sb.Append("This vessel contains parts which are not available at the moment:\n");
+            sb.Append("Warning! This vessel cannot be built. It contains parts which are not available at the moment:\n");
 
             foreach (KeyValuePair<AvailablePart, int> kvp in lockedPartsOnShip)
             {
@@ -1475,7 +1592,30 @@ namespace KerbalConstructionTime
             return sb.ToString();
         }
 
-        public static int GetBuildingUpgradeLevel(SpaceCenterFacility facility)
+        public static string ConstructExperimentalPartsWarning(Dictionary<AvailablePart, int> devPartsOnShip)
+        {
+            if (devPartsOnShip == null || devPartsOnShip.Count == 0)
+                return null;
+
+            var sb = new StringBuilder();
+            sb.Append("This vessel contains parts that are still in development. ");
+            if (devPartsOnShip.Any(kvp => ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available))
+                sb.Append("Green parts have been researched and can be unlocked.\n");
+            else
+                sb.Append("\n");
+
+            foreach (KeyValuePair<AvailablePart, int> kvp in devPartsOnShip)
+            {
+                if(ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
+                    sb.Append($" <color=green><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
+                else
+                    sb.Append($" <color=orange><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
+            }
+
+            return sb.ToString();
+        }
+
+        public static int BuildingUpgradeLevel(SpaceCenterFacility facility)
         {
             int lvl = GetBuildingUpgradeMaxLevel(facility);
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
@@ -1565,9 +1705,9 @@ namespace KerbalConstructionTime
             {
                 KCTDebug.Log("Attempting to recover active vessel to storage.  listType: " + listType);
                 GamePersistence.SaveGame("KCT_Backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
-  
+
                 KCTGameStates.RecoveredVessel = new BuildListVessel(FlightGlobals.ActiveVessel, listType);
-  
+
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == BuildListVessel.ListType.VAB)
                     KCTGameStates.RecoveredVessel.LaunchSite = "LaunchPad";
@@ -1734,7 +1874,7 @@ namespace KerbalConstructionTime
             string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
             return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
                    FlightGlobals.ActiveVessel.IsRecoverable &&
-                   FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR && 
+                   FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    (FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH ||
                     string.IsNullOrEmpty(reqTech) ||
                     ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
@@ -1742,7 +1882,7 @@ namespace KerbalConstructionTime
 
         public static bool IsSphRecoveryAvailable()
         {
-            return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null && 
+            return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
                    FlightGlobals.ActiveVessel.IsRecoverable &&
                    FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
         }

@@ -7,11 +7,11 @@ namespace KerbalConstructionTime
         [Persistent] string techName, techID;
         [Persistent] int scienceCost;
         [Persistent] double progress;
-        [Persistent] List<string> parts;
+        [Persistent] List<string> unlockedParts;
 
         public TechItem ToTechItem()
         {
-            var ret = new TechItem(techID, techName, progress, scienceCost, parts);
+            var ret = new TechItem(techID, techName, progress, scienceCost, unlockedParts);
             return ret;
         }
 
@@ -21,7 +21,7 @@ namespace KerbalConstructionTime
             techID = techItem.TechID;
             progress = techItem.Progress;
             scienceCost = techItem.ScienceCost;
-            parts = techItem.UnlockedParts;
+            unlockedParts = techItem.UnlockedParts;
 
             return this;
         }

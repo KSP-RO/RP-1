@@ -47,6 +47,7 @@ namespace KerbalConstructionTime
             {
                 KCT_GUI.InitBuildListVars();
                 KCT_GUI.InitBuildPlans();
+                KCT_GUI.InitDevPartsToggle();
                 _isGUIInitialized = true;
             }
             KCT_GUI.SetGUIPositions();
@@ -110,7 +111,10 @@ namespace KerbalConstructionTime
             }
 
             if (KCTGameStates.IsFirstStart)
+            {
                 PresetManager.Instance.SaveActiveToSaveData();
+
+            }
 
             // Ghetto event queue
             if (HighLogic.LoadedScene == GameScenes.EDITOR)
@@ -464,7 +468,7 @@ namespace KerbalConstructionTime
         private static void ProcessWarp(double lastUT)
         {
             IKCTBuildItem iKctItem = Utilities.GetNextThingToFinish();
-            if (KCTGameStates.TargetedItem == null && iKctItem != null) 
+            if (KCTGameStates.TargetedItem == null && iKctItem != null)
                 KCTGameStates.TargetedItem = iKctItem;
             double remaining = iKctItem != null ? iKctItem.GetTimeLeft() : -1;
             double dT = TimeWarp.CurrentRate / (KCTGameStates.UT - lastUT);
@@ -481,7 +485,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    if (iKctItem == KCTGameStates.TargetedItem && warpRate > 0 && 
+                    if (iKctItem == KCTGameStates.TargetedItem && warpRate > 0 &&
                         TimeWarp.fetch.warpRates[warpRate] * dT * nBuffers > Math.Max(remaining, 0))
                     {
                         int newRate = warpRate;
@@ -507,8 +511,8 @@ namespace KerbalConstructionTime
                 }
 
             }
-            else if (iKctItem != null && iKctItem == KCTGameStates.TargetedItem && 
-                     (KCTGameStates.WarpInitiated || KCTGameStates.Settings.ForceStopWarp) && 
+            else if (iKctItem != null && iKctItem == KCTGameStates.TargetedItem &&
+                     (KCTGameStates.WarpInitiated || KCTGameStates.Settings.ForceStopWarp) &&
                      TimeWarp.CurrentRateIndex > 0 && (remaining < 1) && (!iKctItem.IsComplete())) //Still warp down even if we don't control the clock
             {
                 TimeWarp.SetRate(0, true);

@@ -83,6 +83,7 @@ namespace KerbalConstructionTime
                 if (HighLogic.LoadedSceneIsEditor)
                 {
                     DoBuildPlansList();
+                    CreateDevPartsToggle();
                 }
 
                 //Disable KSC things when certain windows are shown.

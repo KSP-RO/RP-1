@@ -1539,7 +1539,7 @@ namespace KerbalConstructionTime
 
         public static bool PartIsExperimental(ConfigNode partNode)
         {
-            string partName = PartNameFromNode(partNode);
+            string partName = GetPartNameFromNode(partNode);
             return PartIsExperimental(partName);
         }
 
@@ -1615,7 +1615,7 @@ namespace KerbalConstructionTime
             return sb.ToString();
         }
 
-        public static int BuildingUpgradeLevel(SpaceCenterFacility facility)
+        public static int GetBuildingUpgradeLevel(SpaceCenterFacility facility)
         {
             int lvl = GetBuildingUpgradeMaxLevel(facility);
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)

@@ -880,7 +880,7 @@ namespace KerbalConstructionTime
 
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
-                string partName = Utilities.PartNameFromNode(pNode);
+                string partName = Utilities.GetPartNameFromNode(pNode);
                 if (Utilities.PartIsExperimental(partName))
                 {
                     AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);

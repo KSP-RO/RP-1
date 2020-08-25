@@ -960,10 +960,10 @@ namespace KerbalConstructionTime
         {
             var protoTechNodes = new Dictionary<string, ProtoTechNode>();
             // get the nodes that have been researched from ResearchAndDevelopment
-            foreach (var t in ResearchAndDevelopment.Instance?.snapshot.GetData().GetNodes("Tech"))
+            foreach (ConfigNode cn in ResearchAndDevelopment.Instance?.snapshot.GetData().GetNodes("Tech") ?? Enumerable.Empty<ConfigNode>())
             {
                 // save proto nodes that have been researched
-                ProtoTechNode protoTechNode = new ProtoTechNode(t);
+                ProtoTechNode protoTechNode = new ProtoTechNode(cn);
                 protoTechNodes.Add(protoTechNode.techID, protoTechNode);
             }
 

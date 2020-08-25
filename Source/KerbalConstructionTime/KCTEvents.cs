@@ -246,7 +246,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                ResearchAndDevelopment.RemoveExperimentalPart(part);
+                Utilities.RemoveExperimentalPart(part);
             }
         }
 
@@ -274,11 +274,8 @@ namespace KerbalConstructionTime
 
                         foreach (AvailablePart ap in ev.host.partsAssigned)
                         {
-                            if (!ResearchAndDevelopment.IsExperimentalPart(ap))
-                            {
-                                ResearchAndDevelopment.AddExperimentalPart(ap);
+                            if (Utilities.AddExperimentalPart(ap))
                                 KCTDebug.Log($"{ap.name} added to ExpParts: {ResearchAndDevelopment.IsExperimentalPart(ap)}");
-                            }
                         }
 
                         OnTechQueued.Fire(ev.host);

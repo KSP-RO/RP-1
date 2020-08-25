@@ -80,38 +80,6 @@ namespace KerbalConstructionTime
                 TechList = new KCTObservableList<TechItem>();
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
         }
-
-        public static void AddResearchedPartsToExperimental()
-        {
-            var protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
-
-            foreach (var ap in PartLoader.LoadedPartsList)
-            {
-                if (protoTechNodes.ContainsKey(ap.TechRequired) &&                                  // node is in the list &&
-                    protoTechNodes[ap.TechRequired].state == RDTech.State.Available &&              // node has been unlocked &&
-                    !protoTechNodes[ap.TechRequired].partsPurchased.Contains(ap) &&                 // part hasn't been unlocked &&
-                    !ResearchAndDevelopment.IsExperimentalPart(ap))                                 // part isn't already experimental
-                {
-                    ResearchAndDevelopment.AddExperimentalPart(ap);
-                }
-            }
-        }
-
-        public static void RemoveResearchedPartsFromExperimental()
-        {
-            var protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
-
-            foreach (var ap in PartLoader.LoadedPartsList)
-            {
-                if (protoTechNodes.ContainsKey(ap.TechRequired) &&                                  // node is in the list &&
-                    protoTechNodes[ap.TechRequired].state == RDTech.State.Available &&              // node has been unlocked &&
-                    !protoTechNodes[ap.TechRequired].partsPurchased.Contains(ap) &&                 // part hasn't been unlocked &&
-                    ResearchAndDevelopment.IsExperimentalPart(ap))                                  // part is experimental
-                {
-                    ResearchAndDevelopment.RemoveExperimentalPart(ap);
-                }
-            }
-        }
     }
 
     public class CrewedPart

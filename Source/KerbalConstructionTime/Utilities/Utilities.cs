@@ -994,12 +994,68 @@ namespace KerbalConstructionTime
                 }
 
                 Debug.Log("[KCT]: " + ap.title + " is no longer an experimental part. Part was unlocked.");
-                ResearchAndDevelopment.RemoveExperimentalPart(ap);
+                Utilities.RemoveExperimentalPart(ap);
             }
 
             EditorPartList.Instance.Refresh();
             EditorPartList.Instance.Refresh(EditorPartList.State.PartsList);
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+        }
+
+        public static void AddResearchedPartsToExperimental()
+        {
+            Dictionary<string, ProtoTechNode> protoTechNodes = GetUnlockedProtoTechNodes();
+
+            foreach (var ap in PartLoader.LoadedPartsList)
+            {
+                if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
+                {
+                    AddExperimentalPart(ap);
+                }
+            }
+        }
+
+        public static void RemoveResearchedPartsFromExperimental()
+        {
+            Dictionary<string, ProtoTechNode> protoTechNodes = GetUnlockedProtoTechNodes();
+
+            foreach (var ap in PartLoader.LoadedPartsList)
+            {
+                if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
+                {
+                    RemoveExperimentalPart(ap);
+                }
+            }
+        }
+
+        public static bool PartIsUnlockedButNotPurchased(Dictionary<string, ProtoTechNode> unlockedProtoTechNodes, AvailablePart ap)
+        {
+            bool nodeIsInList = unlockedProtoTechNodes.ContainsKey(ap.TechRequired);
+            bool nodeIsUnlocked = unlockedProtoTechNodes?[ap.TechRequired].state == RDTech.State.Available;
+            bool partNotPurchased = unlockedProtoTechNodes[ap.TechRequired].partsPurchased.Contains(ap);
+
+            return nodeIsInList && nodeIsUnlocked && partNotPurchased;
+        }
+
+        public static bool AddExperimentalPart(AvailablePart ap)
+        {
+            if (ap is null || !CurrentGameIsCareer())
+                return false;
+
+            else if (ResearchAndDevelopment.IsExperimentalPart(ap))
+                return false;
+
+            ResearchAndDevelopment.AddExperimentalPart(ap);
+            return true;
+        }
+
+        public static bool RemoveExperimentalPart(AvailablePart ap)
+        {
+            if (ap is null || !CurrentGameIsCareer())
+                return false;
+
+            ResearchAndDevelopment.RemoveExperimentalPart(ap);
+            return true;
         }
 
         public static void HandlePurchase(AvailablePart partInfo)

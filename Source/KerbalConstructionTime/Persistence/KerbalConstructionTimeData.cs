@@ -125,7 +125,6 @@ namespace KerbalConstructionTime
             {
                 foreach (ConfigNode techNode in tmp.GetNodes("Tech"))
                 {
-                    // populate KCTGameStates.TechList
                     var techStorageItem = new KCT_TechStorageItem();
                     ConfigNode.LoadObjectFromConfig(techStorageItem, techNode);
                     TechItem techItem = techStorageItem.ToTechItem();
@@ -139,16 +138,11 @@ namespace KerbalConstructionTime
             // get the nodes that have been researched from ResearchAndDevelopment
             protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
             // iterate through all loaded parts to check if any of them should be experimental
-            foreach (AvailablePart availablePart in PartLoader.LoadedPartsList)
+            foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
-                if (((protoTechNodes.ContainsKey(availablePart.TechRequired) &&                                 // ((node is in the list &&
-                    protoTechNodes[availablePart.TechRequired].state == RDTech.State.Available &&               // node has been unlocked &&
-                    !protoTechNodes[availablePart.TechRequired].partsPurchased.Contains(availablePart)) ||      // part hasn't been purchased) ||
-                    inDevProtoTechNodes.ContainsKey(availablePart.TechRequired)) &&                             // node is in development) &&
-                    !ResearchAndDevelopment.IsExperimentalPart(availablePart))                                  // part isn't already experimental
+                if (Utilities.PartIsUnlockedButNotPurchased(protoTechNodes, ap) || inDevProtoTechNodes.ContainsKey(ap.TechRequired))
                 {
-                    // finally, make the part experimental
-                    ResearchAndDevelopment.AddExperimentalPart(availablePart);
+                    Utilities.AddExperimentalPart(ap);
                 }
             }
 

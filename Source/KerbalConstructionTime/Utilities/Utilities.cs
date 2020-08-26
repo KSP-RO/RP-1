@@ -1030,19 +1030,18 @@ namespace KerbalConstructionTime
 
         public static bool PartIsUnlockedButNotPurchased(Dictionary<string, ProtoTechNode> unlockedProtoTechNodes, AvailablePart ap)
         {
-            bool nodeIsInList = unlockedProtoTechNodes.ContainsKey(ap.TechRequired);
-            bool nodeIsUnlocked = unlockedProtoTechNodes?[ap.TechRequired].state == RDTech.State.Available;
-            bool partNotPurchased = unlockedProtoTechNodes[ap.TechRequired].partsPurchased.Contains(ap);
+            bool nodeIsInList = unlockedProtoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn);
+            if (!nodeIsInList) return false;
 
-            return nodeIsInList && nodeIsUnlocked && partNotPurchased;
+            bool nodeIsUnlocked = ptn.state == RDTech.State.Available;
+            bool partNotPurchased = !ptn.partsPurchased.Contains(ap);
+
+            return nodeIsUnlocked && partNotPurchased;
         }
 
         public static bool AddExperimentalPart(AvailablePart ap)
         {
-            if (ap is null || !CurrentGameIsCareer())
-                return false;
-
-            else if (ResearchAndDevelopment.IsExperimentalPart(ap))
+            if (ap is null || !CurrentGameIsCareer() || ResearchAndDevelopment.IsExperimentalPart(ap))
                 return false;
 
             ResearchAndDevelopment.AddExperimentalPart(ap);

@@ -293,6 +293,8 @@ namespace KerbalConstructionTime
         public void TechDisableEvent()
         {
             TechDisableEventFinal(true);
+
+            Utilities.AddResearchedPartsToExperimental();
         }
 
         public void TechEnableEvent()
@@ -302,6 +304,8 @@ namespace KerbalConstructionTime
                 foreach (TechItem techItem in KCTGameStates.TechList)
                     techItem.EnableTech();
             }
+
+            Utilities.RemoveResearchedPartsFromExperimental();
         }
 
         public void TechDisableEventFinal(bool save = false)

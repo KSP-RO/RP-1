@@ -11,7 +11,6 @@ namespace KerbalConstructionTime
         public string TechName, TechID;
         public double Progress;
         public ProtoTechNode ProtoNode;
-        public List<string> UnlockedParts;
 
         private double _buildRate = -1;
 
@@ -52,9 +51,6 @@ namespace KerbalConstructionTime
             TechID = techNode.techID;
             Progress = 0;
             ProtoNode = ResearchAndDevelopment.Instance.GetTechState(TechID);
-            UnlockedParts = new List<string>();
-            foreach (AvailablePart p in techNode.partsPurchased)
-                UnlockedParts.Add(p.name);
 
             KCTDebug.Log("techID = " + TechID);
             KCTDebug.Log("TimeLeft = " + TimeLeft);
@@ -62,13 +58,12 @@ namespace KerbalConstructionTime
 
         public TechItem() {}
 
-        public TechItem(string ID, string name, double prog, int sci, List<string> parts)
+        public TechItem(string ID, string name, double prog, int sci)
         {
             TechID = ID;
             TechName = name;
             Progress = prog;
             ScienceCost = sci;
-            UnlockedParts = parts;
         }
 
         public double UpdateBuildRate(int index)

@@ -117,8 +117,11 @@ namespace KerbalConstructionTime
             if (foundStockKSC)
                 TryMigrateStockKSC();
 
-            ConfigNode tmp = node.GetNode("TechList");
-            if (tmp != null)
+            var protoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that have been researched
+            var inDevProtoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that are being researched
+
+            // get the TechList node containing the TechItems with the tech nodes currently being researched from KCT's ConfigNode
+            if (node.GetNode("TechList") is ConfigNode tmp)
             {
                 foreach (ConfigNode techNode in tmp.GetNodes("Tech"))
                 {
@@ -127,6 +130,19 @@ namespace KerbalConstructionTime
                     TechItem techItem = techStorageItem.ToTechItem();
                     techItem.ProtoNode = new ProtoTechNode(techNode.GetNode("ProtoNode"));
                     KCTGameStates.TechList.Add(techItem);
+
+                    // save proto nodes that are in development
+                    inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
+                }
+            }
+            // get the nodes that have been researched from ResearchAndDevelopment
+            protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
+            // iterate through all loaded parts to check if any of them should be experimental
+            foreach (AvailablePart ap in PartLoader.LoadedPartsList)
+            {
+                if (Utilities.PartIsUnlockedButNotPurchased(protoTechNodes, ap) || inDevProtoTechNodes.ContainsKey(ap.TechRequired))
+                {
+                    Utilities.AddExperimentalPart(ap);
                 }
             }
 

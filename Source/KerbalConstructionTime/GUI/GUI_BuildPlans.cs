@@ -56,7 +56,7 @@ namespace KerbalConstructionTime
             PositionAndSizeIcon();
         }
 
-        static void PositionAndSizeIcon()
+        private static void PositionAndSizeIcon()
         {
             Texture2D upTex = Texture2D.Instantiate(_up);
             Texture2D hoverTex = Texture2D.Instantiate(_hover);
@@ -70,7 +70,7 @@ namespace KerbalConstructionTime
                 offset = 140;
             _scale = GameSettings.UI_SCALE;
 
-            _rect = new Rect(Screen.width - (260 + offset) * _scale, 0, 42 * _scale, 38 * _scale);
+            _rect = new Rect(Screen.width - (304 + offset) * _scale, 0, 42 * _scale, 38 * _scale);
             {
                 TextureScale.Bilinear(upTex, (int)(_up.width * _scale), (int)(_up.height * _scale));
                 TextureScale.Bilinear(hoverTex, (int)(_hover.width * _scale), (int)(_hover.height * _scale));

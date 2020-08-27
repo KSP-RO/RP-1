@@ -38,14 +38,13 @@ namespace KerbalConstructionTime
                     new Vector2(0.5f, 0.5f),
                     "test",
                     "Incorrect " + _modName + " Installation",
-                    _modName + " has been installed incorrectly and will not function properly. All files should be located in KSP/GameData/" + _folderName + ". Do not move any files from inside that folder.\n\nIncorrect path(s):\n" + string.Join("\n", badPaths.ToArray()),
+                    _modName + " has been installed incorrectly and will not function properly. KCT is now integrated into RP-1 which means that installing it as a separate mod is no longer allowed.\n\nIncorrect path(s):\n" + string.Join("\n", badPaths.ToArray()),
                     "OK",
                     false,
                     HighLogic.UISkin
                 );
-                Debug.Log("Incorrect " + _modName + " Installation: " + _modName + " has been installed incorrectly and will not function properly. All files should be located in KSP/GameData/" + _expectedPath +
+                Debug.LogError("Incorrect " + _modName + " Installation: " + _modName + " has been installed incorrectly and will not function properly. All files should be located in KSP/GameData/" + _expectedPath +
                     ". Do not move any files from inside that folder.\n\nIncorrect path(s):\n" + string.Join("\n", badPaths.ToArray()));
-
             }
 
             if (!AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.assembly.GetName().Name, "magicore", StringComparison.OrdinalIgnoreCase)))
@@ -61,7 +60,39 @@ namespace KerbalConstructionTime
                                    false,
                                    HighLogic.UISkin
                                );
-                Debug.Log("Missing MagiCore Installation" );
+                Debug.LogError("Missing MagiCore Installation");
+            }
+
+            if (!AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.assembly.GetName().Name, "ToolbarControl", StringComparison.OrdinalIgnoreCase)))
+            {
+                PopupDialog.SpawnPopupDialog
+                               (
+                                   new Vector2(0.5f, 0.5f),
+                                   new Vector2(0.5f, 0.5f),
+                                   "test2",
+                                   "Missing ToolbarControl Installation",
+                                   "ToolbarControl is required by Kerbal Construction Time.\nKerbal Construction Time will not function until it is installed",
+                                   "OK",
+                                   false,
+                                   HighLogic.UISkin
+                               );
+                Debug.LogError("Missing ToolbarControl Installation");
+            }
+
+            if (!AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.assembly.GetName().Name, "ClickThroughBlocker", StringComparison.OrdinalIgnoreCase)))
+            {
+                PopupDialog.SpawnPopupDialog
+                               (
+                                   new Vector2(0.5f, 0.5f),
+                                   new Vector2(0.5f, 0.5f),
+                                   "test2",
+                                   "Missing ClickThroughBlocker Installation",
+                                   "ClickThroughBlocker is required by Kerbal Construction Time.\nKerbal Construction Time will not function until it is installed",
+                                   "OK",
+                                   false,
+                                   HighLogic.UISkin
+                               );
+                Debug.LogError("Missing ClickThroughBlocker Installation");
             }
         }
     }

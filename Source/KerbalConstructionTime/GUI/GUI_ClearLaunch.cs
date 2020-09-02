@@ -37,8 +37,10 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Cancel"))
             {
+                KCTGameStates.LaunchedVessel = null;
                 GUIStates.ShowClearLaunch = false;
                 GUIStates.ShowAirlaunch = false;
+                GUIStates.ShowBuildList = true;
                 _centralWindowPosition.height = 1;
             }
             GUILayout.EndVertical();

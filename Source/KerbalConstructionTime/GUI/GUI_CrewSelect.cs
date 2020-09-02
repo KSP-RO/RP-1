@@ -189,6 +189,8 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Cancel"))
             {
                 GUIStates.ShowShipRoster = false;
+                GUIStates.ShowBuildList = true;
+                KCTGameStates.LaunchedVessel = null;
                 KCTGameStates.LaunchedCrew.Clear();
                 _crewListWindowPosition.height = 1;
 

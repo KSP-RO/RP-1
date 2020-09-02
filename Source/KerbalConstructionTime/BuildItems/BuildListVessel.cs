@@ -412,7 +412,7 @@ namespace KerbalConstructionTime
 
         public void BruteForceLocateVessel()
         {
-            KCTDebug.Log("Brute force looking for "+ShipName);
+            KCTDebug.Log($"Brute force looking for {ShipName}");
             bool found = false;
             found = KSC.VABList.Exists(b => b.Id == Id);
             if (found) { Type = ListType.VAB; return; }
@@ -720,7 +720,7 @@ namespace KerbalConstructionTime
                 }
                 typeName="VAB";
             }
-            KCTDebug.Log("Removing " + ShipName + " from "+ typeName +" storage/list.");
+            KCTDebug.Log($"Removing {ShipName} from {typeName} storage/list.");
             if (!removed)
             {
                 KCTDebug.Log("Failed to remove ship from list! Performing direct comparison of ids...");

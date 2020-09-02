@@ -42,7 +42,7 @@ namespace KerbalConstructionTime
                 Button button = GetMember<Button>("UpgradeButton");
                 if (button == null)
                 {
-                    KCTDebug.Log("Could not find UpgradeButton by name, using index instead.", true);
+                    KCTDebug.Log("Could not find UpgradeButton by name, using index instead.");
                     button = GetMember<Button>(2);
                 }
 

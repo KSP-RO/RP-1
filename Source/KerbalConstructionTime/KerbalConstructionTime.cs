@@ -187,12 +187,12 @@ namespace KerbalConstructionTime
                         for (int i = 0; i < FlightGlobals.ActiveVessel.parts.Count; i++)
                         {
                             Part p = FlightGlobals.ActiveVessel.parts[i];
-                            KCTDebug.LogError("Part being tested: " + p.partInfo.title);
+                            KCTDebug.Log("Part being tested: " + p.partInfo.title);
                             {
-                                CrewedPart cP = KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID);
-                                if (cP == null) continue;
-                                List<ProtoCrewMember> crewList = cP.CrewList;
-                                KCTDebug.LogError("cP.crewList.Count: " + cP.CrewList.Count);
+                                CrewedPart cp = KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID);
+                                if (cp == null) continue;
+                                List<ProtoCrewMember> crewList = cp.CrewList;
+                                KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
                                 foreach (ProtoCrewMember crewMember in crewList)
                                 {
                                     if (crewMember != null)
@@ -208,12 +208,12 @@ namespace KerbalConstructionTime
                                         }
                                         if (finalCrewMember == null)
                                         {
-                                            KCTDebug.LogError("Error when assigning " + crewMember.name + " to " + p.partInfo.name + ". Cannot find Kerbal in list.");
+                                            KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}. Cannot find Kerbal in list.");
                                             continue;
                                         }
                                         try
                                         {
-                                            KCTDebug.Log("Assigning " + finalCrewMember.name + " to " + p.partInfo.name);
+                                            KCTDebug.Log($"Assigning {finalCrewMember.name } to {p.partInfo.name}");
                                             if (p.AddCrewmember(finalCrewMember))
                                             {
                                                 finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
@@ -222,7 +222,7 @@ namespace KerbalConstructionTime
                                             }
                                             else
                                             {
-                                                KCTDebug.LogError("Error when assigning " + crewMember.name + " to " + p.partInfo.name);
+                                                KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
                                                 finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
                                                 continue;
                                             }
@@ -454,7 +454,7 @@ namespace KerbalConstructionTime
                         foreach (SpaceCenterFacility facility in Enum.GetValues(typeof(SpaceCenterFacility)))
                         {
                             KCTGameStates.BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
-                            KCTDebug.Log("Cached " + facility.ToString() + " max at " + KCTGameStates.BuildingMaxLevelCache[facility.ToString()]);
+                            KCTDebug.Log($"Cached {facility} max at {KCTGameStates.BuildingMaxLevelCache[facility.ToString()]}");
                         }
                     }
                 }
@@ -496,7 +496,7 @@ namespace KerbalConstructionTime
                                 break;
                             newRate--;
                         }
-                        KCTDebug.Log("Warping down to " + newRate + " (delta: " + (TimeWarp.fetch.warpRates[newRate] * dT) + ")");
+                        KCTDebug.Log($"Warping down to {newRate} (delta: {TimeWarp.fetch.warpRates[newRate] * dT})");
                         TimeWarp.SetRate(newRate, true); //hopefully a faster warp down than before
                         warpRate = newRate;
                     }
@@ -680,7 +680,7 @@ namespace KerbalConstructionTime
                         ReconRollout rr = ksc.Recon_Rollout[i];
                         if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) == null)
                         {
-                            KCTDebug.Log("Invalid Recon_Rollout at " + ksc.KSCName + ". ID " + rr.AssociatedID + " not found.");
+                            KCTDebug.Log($"Invalid Recon_Rollout at {ksc.KSCName}. ID {rr.AssociatedID} not found.");
                             ksc.Recon_Rollout.Remove(rr);
                             i--;
                         }
@@ -691,7 +691,7 @@ namespace KerbalConstructionTime
                         AirlaunchPrep ap = ksc.AirlaunchPrep[i];
                         if (Utilities.FindBLVesselByID(new Guid(ap.AssociatedID)) == null)
                         {
-                            KCTDebug.Log("Invalid KCT_AirlaunchPrep at " + ksc.KSCName + ". ID " + ap.AssociatedID + " not found.");
+                            KCTDebug.Log($"Invalid KCT_AirlaunchPrep at {ksc.KSCName}. ID {ap.AssociatedID} not found.");
                             ksc.AirlaunchPrep.Remove(ap);
                             i--;
                         }

@@ -733,7 +733,7 @@ namespace KerbalConstructionTime
             }
 
             string stor = ListIdentifier == 0 ? "VAB" : "SPH";
-            KCTDebug.Log("Moved vessel " + vessel.ShipName + " to " + KSC.KSCName + "'s " + stor + " storage.");
+            KCTDebug.Log($"Moved vessel {vessel.ShipName} to {KSC.KSCName}'s {stor} storage.");
 
             KCT_GUI.ResetBLWindow(false);
             if (!KCTGameStates.Settings.DisableAllMessages)
@@ -873,7 +873,7 @@ namespace KerbalConstructionTime
                 Dictionary<AvailablePart, int> lockedParts = blv.GetLockedParts();
                 if (lockedParts?.Count > 0)
                 {
-                    KCTDebug.Log("Tried to add " + blv.ShipName + " to build list but it contains locked parts.");
+                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but it contains locked parts.");
 
                     //Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
                     var lockedMsg = ConstructLockedPartsWarning(lockedParts);
@@ -921,8 +921,8 @@ namespace KerbalConstructionTime
                 double prevFunds = Funding.Instance.Funds;
                 if (totalCost > prevFunds)
                 {
-                    KCTDebug.Log("Tried to add " + blv.ShipName + " to build list but not enough funds.");
-                    KCTDebug.Log("Vessel cost: " + GetTotalVesselCost(blv.ShipNode) + ", Current funds: " + prevFunds);
+                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but not enough funds.");
+                    KCTDebug.Log($"Vessel cost: {GetTotalVesselCost(blv.ShipNode)}, Current funds: {prevFunds}");
                     var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
                     return null;
@@ -993,8 +993,8 @@ namespace KerbalConstructionTime
                     HandlePurchase(ap);
                 }
 
-                Debug.Log("[KCT]: " + ap.title + " is no longer an experimental part. Part was unlocked.");
-                Utilities.RemoveExperimentalPart(ap);
+                KCTDebug.Log($"{ap.title} is no longer an experimental part. Part was unlocked.");
+                RemoveExperimentalPart(ap);
             }
 
             EditorPartList.Instance.Refresh();
@@ -1479,7 +1479,7 @@ namespace KerbalConstructionTime
                 {
                     string[] split = mi.info.Split(new char[] {':', '\n'});
                     //TODO: Get SR code and put that in here, maybe with TryParse instead of Parse
-                    for (int i=0; i<split.Length; i++)
+                    for (int i = 0; i < split.Length; i++)
                     {
                         if (split[i].Contains("Fully-Deployed Drag"))
                         {
@@ -1488,7 +1488,7 @@ namespace KerbalConstructionTime
                                 string[] split2 = split[i + 1].Split('>');
                                 if (!float.TryParse(split2[1], out drag))
                                 {
-                                    Debug.Log("[KCT] Failure trying to read parachute data. Assuming 500 drag.");
+                                    KCTDebug.Log("Failure trying to read parachute data. Assuming 500 drag.");
                                     drag = 500;
                                 }
                             }
@@ -1846,7 +1846,7 @@ namespace KerbalConstructionTime
                     }
                 }
             }
-            KCTDebug.Log("Removed " + referencesRemoved + " invalid symmetry references.");
+            KCTDebug.Log($"Removed {referencesRemoved} invalid symmetry references.");
         }
 
         /// <summary>

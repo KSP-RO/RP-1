@@ -43,8 +43,8 @@ namespace KerbalConstructionTime
                     false,
                     HighLogic.UISkin
                 );
-                Debug.LogError("Incorrect " + _modName + " Installation: " + _modName + " has been installed incorrectly and will not function properly. All files should be located in KSP/GameData/" + _expectedPath +
-                    ". Do not move any files from inside that folder.\n\nIncorrect path(s):\n" + string.Join("\n", badPaths.ToArray()));
+                Debug.LogError($"Incorrect {_modName} Installation: {_modName} has been installed incorrectly and will not function properly. All files should be located in KSP/GameData/{_expectedPath}. Do not move any files from inside that folder.\n\n" +
+                               $"Incorrect path(s):\n" + string.Join("\n", badPaths.ToArray()));
             }
 
             if (!AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.assembly.GetName().Name, "magicore", StringComparison.OrdinalIgnoreCase)))

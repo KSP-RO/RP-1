@@ -27,12 +27,12 @@ namespace KerbalConstructionTime
             CurrentLevel = oldLevel;
             CommonName = name;
 
-            KCTDebug.Log(string.Format("Upgrade of {0} requested from {1} to {2}", name, oldLevel, newLevel));
+            KCTDebug.Log($"Upgrade of {name} requested from {oldLevel} to {newLevel}");
         }
 
         public void Downgrade()
         {
-            KCTDebug.Log("Downgrading " + CommonName + " to level " + CurrentLevel);
+            KCTDebug.Log($"Downgrading {CommonName} to level {CurrentLevel}");
             if (IsLaunchpad)
             {
                 KSC.LaunchPads[LaunchpadID].level = CurrentLevel;

@@ -329,6 +329,8 @@ namespace KerbalConstructionTime
 
         public void GameSceneEvent(GameScenes scene)
         {
+            KCT_GUI.HideAll();
+
             if (scene == GameScenes.MAINMENU)
             {
                 KCTGameStates.Reset();

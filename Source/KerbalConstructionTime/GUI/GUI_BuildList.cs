@@ -32,7 +32,7 @@ namespace KerbalConstructionTime
         public static void SelectList(string list)
         {
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
-            bool isCommon = PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine;
+            bool isCommon = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;
             switch (list)
             {
                 case "Combined":

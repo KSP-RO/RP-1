@@ -80,6 +80,20 @@ namespace KerbalConstructionTime
                 TechList = new KCTObservableList<TechItem>();
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
         }
+
+        public static void CreateNewPad(string padName, int padLevel, bool removeDefaultPad = true)
+        {
+            KCT_LaunchPad lp = ActiveKSC.ActiveLPInstance;
+            var list = lp.GetUpgradeableFacilityReferences();
+            var upgdFacility = list[0];
+            var padUpgdLvls = upgdFacility.UpgradeLevels;
+            padLevel = UnityEngine.Mathf.Clamp(padLevel, 1, padUpgdLvls.Length);
+
+            if (removeDefaultPad)
+                ActiveKSC.LaunchPads.Clear();
+
+            ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
+        }
     }
 
     public class CrewedPart

@@ -14,6 +14,8 @@ namespace RP0.Crew
     public class CrewHandler : ScenarioModule
     {
         public const string Situation_FlightHigh = "Flight-High";
+        public const string TrainingType_Proficiency = "TRAINING_proficiency";
+        public const string TrainingType_Mission = "TRAINING_mission";
         public const double UpdateInterval = 3600;
         public const int FlightLogUpdateInterval = 50;
         public const int KarmanAltitude = 100000;
@@ -271,7 +273,7 @@ namespace RP0.Crew
                     if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
                         continue;
 
-                    if (e.type == "TRAINING_mission" && e.target == partName)
+                    if (e.type == TrainingType_Mission && e.target == partName)
                     {
                         double exp = GetExpiration(pcm.name, e);
                         lacksMission = exp == 0d || exp < Planetarium.GetUniversalTime();
@@ -282,7 +284,7 @@ namespace RP0.Crew
                     if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
                         continue;
 
-                    if (e.type == "TRAINING_proficiency" && e.target == partName)
+                    if (e.type == TrainingType_Proficiency && e.target == partName)
                         return true;
                 }
             }
@@ -299,12 +301,12 @@ namespace RP0.Crew
                 string pretty = GetPrettyCourseName(ent.type);
                 if (!string.IsNullOrEmpty(pretty))
                 {
-                    if (ent.type == "TRAINING_proficiency")
+                    if (ent.type == TrainingType_Proficiency)
                     {
                         found = true;
                         sb.Append($"\n  {pretty}{ent.target}");
                     }
-                    else if (ent.type == "TRAINING_mission")
+                    else if (ent.type == TrainingType_Mission)
                     {
                         double exp = GetExpiration(pcm.name, ent);
                         if (exp > 0d)
@@ -425,7 +427,7 @@ namespace RP0.Crew
                 {
                     if (e.type == "Nationality")
                         continue;
-                    if (e.type == "TRAINING_mission")
+                    if (e.type == TrainingType_Mission)
                         SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
 
                     if (validStatuses.Contains(e.type))
@@ -730,7 +732,7 @@ namespace RP0.Crew
                             {
                                 // Allow only mission trainings to expire.
                                 // This check is actually only needed for old savegames as only these can have expirations on proficiencies.
-                                if (ent.type == "TRAINING_mission" && e.Compare(k, ent))
+                                if (ent.type == TrainingType_Mission && e.Compare(k, ent))
                                 {
                                     ScreenMessages.PostScreenMessage($"{pcm.name}: Expired: {GetPrettyCourseName(ent.type)}{ent.target}");
                                     ent.type = "expired_" + ent.type;
@@ -933,12 +935,12 @@ namespace RP0.Crew
             n.AddValue("name", "Proficiency: " + name);
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400));
             n.AddValue("isTemporary", isTemporary);
-            n.AddValue("conflicts", "TRAINING_proficiency:" + name);
+            n.AddValue("conflicts", $"{TrainingType_Proficiency}:{name}");
 
             ConfigNode r = n.AddNode("REWARD");
             r.AddValue("XPAmt", Settings.trainingProficiencyXP);
             ConfigNode l = r.AddNode("FLIGHTLOG");
-            l.AddValue("0", "TRAINING_proficiency," + name);
+            l.AddValue("0", $"{TrainingType_Proficiency},{name}");
 
             var c = new CourseTemplate(n);
             c.PopulateFromSourceNode();
@@ -957,11 +959,11 @@ namespace RP0.Crew
             n.AddValue("timeUseStupid", true);
             n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
             n.AddValue("expiration", Settings.trainingMissionExpirationDays * 86400);
-            n.AddValue("preReqs", "TRAINING_proficiency:" + name);
+            n.AddValue("preReqs", $"{TrainingType_Proficiency}:{name}");
 
             ConfigNode r = n.AddNode("REWARD");
             ConfigNode l = r.AddNode("FLIGHTLOG");
-            l.AddValue("0", "TRAINING_mission," + name);
+            l.AddValue("0", $"{TrainingType_Mission},{name}");
 
             var c = new CourseTemplate(n);
             c.PopulateFromSourceNode();
@@ -980,9 +982,9 @@ namespace RP0.Crew
         {
             switch (str)
             {
-                case "TRAINING_proficiency":
+                case TrainingType_Proficiency:
                     return "Proficiency with ";
-                case "TRAINING_mission":
+                case TrainingType_Mission:
                     return "Mission training for ";
                 default:
                     return string.Empty;

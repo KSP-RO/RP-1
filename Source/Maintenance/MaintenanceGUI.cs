@@ -58,7 +58,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Facilities", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.facilityUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.FacilityUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 if (GUILayout.Button("ⓘ", infoButton))
                 {
                     TopWindow.SwitchTabTo(Tabs.Facilities);
@@ -69,7 +69,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Integration", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.integrationUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.IntegrationUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 if (GUILayout.Button("ⓘ", infoButton))
                 {
                     TopWindow.SwitchTabTo(Tabs.Integration);
@@ -80,14 +80,14 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Research Teams", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.researchUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.ResearchUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Astronauts", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.nautTotalUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.NautTotalUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 if (GUILayout.Button("ⓘ", infoButton))
                 {
                     TopWindow.SwitchTabTo(Tabs.Astronauts);
@@ -98,7 +98,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Total (after subsidy)", boldLabel, GUILayout.Width(160));
-                GUILayout.Label(((MaintenanceHandler.Instance.totalUpkeep + MaintenanceHandler.Instance.settings.maintenanceOffset) * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                GUILayout.Label(((MaintenanceHandler.Instance.TotalUpkeep + MaintenanceHandler.Settings.maintenanceOffset) * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -117,17 +117,17 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Launch Pads", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.padCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.PadCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
-            for (int i = 0; i < MaintenanceHandler.padLevels; i++) {
-                if (MaintenanceHandler.Instance.padCosts[i] == 0d)
+            for (int i = 0; i < MaintenanceHandler.PadLevelCount; i++) {
+                if (MaintenanceHandler.Instance.PadCosts[i] == 0d)
                     continue;
                 GUILayout.BeginHorizontal();
                 try {
-                    GUILayout.Label(String.Format("  level {0} × {1}", i + 1, MaintenanceHandler.Instance.kctPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.padCosts[i] * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                    GUILayout.Label(String.Format("  level {0} × {1}", i + 1, MaintenanceHandler.Instance.KCTPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.PadCosts[i] * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }
@@ -135,56 +135,56 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Runway", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.runwayCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.RunwayCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Vertical Assembly Building", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.vabCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.VabCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Spaceplane Hangar", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.sphCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.SphCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Research & Development", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.rndCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.RndCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Mission Control", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.mcCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.McCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Tracking Station", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.tsCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.TsCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Astronaut Complex", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.acCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.AcCost * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.facilityUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.FacilityUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -200,12 +200,12 @@ namespace RP0
             } finally {
                 GUILayout.EndHorizontal();
             }
-            foreach (string site in MaintenanceHandler.Instance.kctBuildRates.Keys) {
-                double rate = MaintenanceHandler.Instance.kctBuildRates[site];
+            foreach (string site in MaintenanceHandler.Instance.KCTBuildRates.Keys) {
+                double rate = MaintenanceHandler.Instance.KCTBuildRates[site];
                 GUILayout.BeginHorizontal();
                 try {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((rate * MaintenanceHandler.Instance.settings.kctBPMult * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                    GUILayout.Label((rate * MaintenanceHandler.Settings.kctBPMult * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }
@@ -213,7 +213,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try {
                 GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.integrationUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.IntegrationUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
             } finally {
                 GUILayout.EndHorizontal();
             }
@@ -273,7 +273,7 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try {
                     GUILayout.Label("Astronaut base cost", HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.nautBaseUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.NautBaseUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }
@@ -282,7 +282,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label("Astronaut operational cost", HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.nautInFlightUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.NautInFlightUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 }
                 finally
                 {
@@ -293,7 +293,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label("Astronaut training cost", HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.trainingUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.TrainingUpkeep * perFactor).ToString(perFormat), rightLabel, GUILayout.Width(160));
                 }
                 finally
                 {
@@ -303,7 +303,7 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try {
                     GUILayout.Label("Total", boldLabel, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.nautTotalUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
+                    GUILayout.Label((MaintenanceHandler.Instance.NautTotalUpkeep * perFactor).ToString(perFormat), boldRightLabel, GUILayout.Width(160));
                 } finally {
                     GUILayout.EndHorizontal();
                 }

@@ -142,7 +142,7 @@ namespace RP0
 
                 if (buildRate < 0.01d) continue;
 
-                MaintenanceHandler.Instance.kctBuildRates[ksc.KSCName] = buildRate;
+                MaintenanceHandler.Instance.KCTBuildRates[ksc.KSCName] = buildRate;
 
                 for (int i = ksc.LaunchPads.Count; i-- > 0;)
                 {
@@ -153,8 +153,8 @@ namespace RP0
             }
             double RDRate = MathParser.ParseNodeRateFormula(10, 0, false);
 
-            MaintenanceHandler.Instance.kctResearchRate = RDRate;
-            MaintenanceHandler.Instance.kctPadCounts = padCounts;
+            MaintenanceHandler.Instance.KCTResearchRate = RDRate;
+            MaintenanceHandler.Instance.KCTPadCounts = padCounts;
         }
 
         private void OnKctTechQueued(RDTech data)

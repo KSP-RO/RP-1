@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using KerbalConstructionTime;
 using RP0.Crew;
 using UnityEngine;
 using Upgradeables;
@@ -12,6 +13,7 @@ namespace RP0
     {
         public const double UpdateInterval = 3600d;
         public const int PadLevelCount = 10;
+        public const double BuildRateOffset = -0.0001d;    // if we change the min build rate, FIX THIS.
 
         public static MaintenanceHandler Instance { get; private set; } = null;
         public static MaintenanceSettings Settings { get; private set; } = null;
@@ -124,6 +126,36 @@ namespace RP0
         public void ScheduleMaintenanceUpdate()
         {
             nextUpdate = 0;
+        }
+
+        private void UpdateKCTRates()
+        {
+            for (int i = KCTPadCounts.Length; i-- > 0;)
+                KCTPadCounts[i] = 0;
+
+            foreach (KSCItem ksc in KCTGameStates.KSCs)
+            {
+                double buildRate = 0d;
+
+                for (int i = ksc.VABRates.Count; i-- > 0;)
+                    buildRate += Math.Max(0d, ksc.VABRates[i] + BuildRateOffset);
+
+                for (int i = ksc.SPHRates.Count; i-- > 0;)
+                    buildRate += Math.Max(0d, ksc.SPHRates[i] + BuildRateOffset);
+
+                if (buildRate < 0.01d) continue;
+
+                KCTBuildRates[ksc.KSCName] = buildRate;
+
+                for (int i = ksc.LaunchPads.Count; i-- > 0;)
+                {
+                    int lvl = ksc.LaunchPads[i].level;
+                    if (lvl >= 0 && lvl < PadLevelCount)
+                        ++KCTPadCounts[lvl];
+                }
+            }
+
+            KCTResearchRate = MathParser.ParseNodeRateFormula(10);
         }
 
         public void UpdateUpkeep()
@@ -247,6 +279,7 @@ namespace RP0
                 }
 
                 _skipThree = false;
+                UpdateKCTRates();
                 return;
             }
 
@@ -261,6 +294,7 @@ namespace RP0
                     return;
             }
 
+            UpdateKCTRates();
             UpdateUpkeep();
 
             double timePassed = time - lastUpdate;

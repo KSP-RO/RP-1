@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Csv;
+using KerbalConstructionTime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +26,9 @@ namespace RP0
 
         private static readonly DateTime _epoch = new DateTime(1951, 1, 1);
 
+        private EventData<ProtoTechNode> onKctTechCompletedEvent;
+        private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
+        private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
         private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
         private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
@@ -36,9 +40,6 @@ namespace RP0
         private double _prevFundsChangeAmount;
         private TransactionReasons _prevFundsChangeReason;
         private LogPeriod _currentPeriod;
-
-        public static Func<SpaceCenterFacility, int> FnGetKCTUpgdCounts;
-        public static Func<float> FnGetKCTSciPoints;
 
         public static CareerLog Instance { get; private set; }
 
@@ -73,10 +74,35 @@ namespace RP0
             GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
+        public void Start()
+        {
+            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<ProtoTechNode>>("OnKctTechCompleted");
+            if (onKctTechCompletedEvent != null)
+            {
+                onKctTechCompletedEvent.Add(OnKctTechCompleted);
+            }
+
+            onKctFacilityUpgradeQueuedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeQueued");
+            if (onKctFacilityUpgradeQueuedEvent != null)
+            {
+                onKctFacilityUpgradeQueuedEvent.Add(OnKctFacilityUpgdQueued);
+            }
+
+            onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeComplete");
+            if (onKctFacilityUpgradeCompletedEvent != null)
+            {
+                onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
+            }
+        }
+
         public void OnDestroy()
         {
             GameEvents.onGameStateLoad.Remove(LoadSettings);
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
+
+            if (onKctTechCompletedEvent != null) onKctTechCompletedEvent.Remove(OnKctTechCompleted);
+            if (onKctFacilityUpgradeQueuedEvent != null) onKctFacilityUpgradeQueuedEvent.Remove(OnKctFacilityUpgdQueued);
+            if (onKctFacilityUpgradeCompletedEvent != null) onKctFacilityUpgradeCompletedEvent.Remove(OnKctFacilityUpgdComplete);
 
             if (_eventsBound)
             {
@@ -470,7 +496,7 @@ namespace RP0
         {
             try
             {
-                return FnGetKCTUpgdCounts == null ? 0 : FnGetKCTUpgdCounts(facility);
+                return KerbalConstructionTime.Utilities.GetSpentUpgradesFor(facility);
             }
             catch (Exception ex)
             {
@@ -483,13 +509,33 @@ namespace RP0
         {
             try
             {
-                return FnGetKCTSciPoints == null ? 0 : FnGetKCTSciPoints();
+                // KCT returns -1 if the player hasn't earned any sci yet
+                return Math.Max(0, KCTGameStates.SciPointsTotal);
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
                 return 0;
             }
+        }
+
+        private void OnKctTechCompleted(ProtoTechNode data)
+        {
+            AddTechEvent(data.techID);
+        }
+
+        private void OnKctFacilityUpgdQueued(FacilityUpgrade data)
+        {
+            if (!data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+
+            AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Started);
+        }
+
+        private void OnKctFacilityUpgdComplete(FacilityUpgrade data)
+        {
+            if (!data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+
+            AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Completed);
         }
     }
 }

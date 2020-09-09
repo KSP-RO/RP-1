@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEngine;
+﻿using KerbalConstructionTime;
 using KSP.UI;
 using KSP.UI.Screens;
 using KSP.UI.TooltipTypes;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using UnityEngine;
 
 namespace RP0.Crew
 {
@@ -33,6 +34,7 @@ namespace RP0.Crew
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
         public bool RetirementEnabled = true;
 
+        private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
         private HashSet<string> _retirees = new HashSet<string>();
         private HashSet<string> _partSynsHandled = new HashSet<string>();
@@ -61,6 +63,9 @@ namespace RP0.Crew
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
 
+            KCT_GUI.UseAvailabilityChecker = true;
+            KCT_GUI.AvailabilityChecker = CheckCrewForPart;
+
             _cliTooltip = typeof(CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
 
             FindAllCourseConfigs();     //find all applicable configs
@@ -75,6 +80,14 @@ namespace RP0.Crew
                 // This means that the updateInterval could end up years into the future.
                 NextUpdate = ut + 5;
             }
+
+            onKctTechQueuedEvent = GameEvents.FindEvent<EventData<RDTech>>("OnKctTechQueued");
+            if (onKctTechQueuedEvent != null)
+            {
+                onKctTechQueuedEvent.Add(AddCoursesForTechNode);
+            }
+
+            StartCoroutine(CreateCoursesRoutine());
         }
 
         public override void OnLoad(ConfigNode node)
@@ -221,6 +234,8 @@ namespace RP0.Crew
             GameEvents.OnPartPurchased.Remove(new EventData<AvailablePart>.OnEvent(OnPartPurchased));
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
+
+            if (onKctTechQueuedEvent != null) onKctTechQueuedEvent.Remove(AddCoursesForTechNode);
         }
 
         public void AddExpiration(TrainingExpiration e)
@@ -254,6 +269,20 @@ namespace RP0.Crew
                     GenerateCourseMission(ap);
                 }
             }
+        }
+
+        public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)
+        {
+            // lolwut. But just in case.
+            if (pcm == null)
+                return false;
+
+            bool requireTraining = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled;
+
+            if (!requireTraining || EntryCostStorage.GetCost(partName) == 1)
+                return true;
+
+            return Instance.NautHasTrainingForPart(pcm, partName);
         }
 
         public bool NautHasTrainingForPart(ProtoCrewMember pcm, string partName)
@@ -988,6 +1017,24 @@ namespace RP0.Crew
                     return "Mission training for ";
                 default:
                     return string.Empty;
+            }
+        }
+
+        private IEnumerator CreateCoursesRoutine()
+        {
+            yield return new WaitForFixedUpdate();
+
+            for (int i = 0; i < PartLoader.LoadedPartsList.Count; i++)
+            {
+                var ap = PartLoader.LoadedPartsList[i];
+                if (ap.partPrefab.CrewCapacity > 0)
+                {
+                    var kctTech = KCTGameStates.TechList.Find(t => t.TechID == ap.TechRequired);
+                    if (kctTech != null)
+                    {
+                        AddPartCourses(ap);
+                    }
+                }
             }
         }
     }

@@ -158,6 +158,12 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="KerbalConstructionTime\KerbalConstructionTime.csproj">
+      <Project>{93908b2a-0859-4dab-8873-d32a4c633308}</Project>
+      <Name>KerbalConstructionTime</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>

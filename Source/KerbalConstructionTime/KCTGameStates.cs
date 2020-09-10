@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToolbarControl_NS;
+using Upgradeables;
 
 namespace KerbalConstructionTime
 {
@@ -81,18 +82,21 @@ namespace KerbalConstructionTime
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
         }
 
-        public static void CreateNewPad(string padName, int padLevel, bool removeDefaultPad = true)
+        public static void CreateNewPad(string padName, int padLevel)
         {
             KCT_LaunchPad lp = ActiveKSC.ActiveLPInstance;
-            var list = lp.GetUpgradeableFacilityReferences();
+            List<UpgradeableFacility> list = lp.GetUpgradeableFacilityReferences();
             var upgdFacility = list[0];
-            var padUpgdLvls = upgdFacility.UpgradeLevels;
+            UpgradeableObject.UpgradeLevel[] padUpgdLvls = upgdFacility.UpgradeLevels;
+
             padLevel = UnityEngine.Mathf.Clamp(padLevel, 1, padUpgdLvls.Length);
 
-            if (removeDefaultPad)
-                ActiveKSC.LaunchPads.Clear();
-
             ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
+        }
+
+        public static void ClearLaunchpadList()
+        {
+            ActiveKSC.LaunchPads.Clear();
         }
     }
 

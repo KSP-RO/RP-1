@@ -398,7 +398,7 @@ namespace KerbalConstructionTime
                         rr.IncrementProgress(UTDiff);
                     }
                     //Reset the associated launchpad id when rollback completes
-                    ksc.Recon_Rollout.ForEach(delegate(ReconRollout rr)
+                    ksc.Recon_Rollout.ForEach(delegate (ReconRollout rr)
                     {
                         if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete())
                         {
@@ -485,7 +485,7 @@ namespace KerbalConstructionTime
                 return 0;
             ShipConstruction.GetPartCostsAndMass(part, aPart, out _, out _, out float dryMass, out float fuelMass);
             if (includeFuel)
-                return dryMass+fuelMass;
+                return dryMass + fuelMass;
             else
                 return dryMass;
         }
@@ -697,7 +697,7 @@ namespace KerbalConstructionTime
                 KSC.VABWarehouse.Add(vessel);
 
                 Message.AppendLine(vessel.ShipName);
-                Message.AppendLine("Please check the VAB Storage at "+KSC.KSCName+" to launch it.");
+                Message.AppendLine("Please check the VAB Storage at " + KSC.KSCName + " to launch it.");
 
             }
             else if (ListIdentifier == BuildListVessel.ListType.SPH)
@@ -973,7 +973,7 @@ namespace KerbalConstructionTime
         public static int FindUnlockCost(List<AvailablePart> availableParts)
         {
             int cost = 0;
-            foreach(var p in availableParts)
+            foreach (var p in availableParts)
             {
                 cost += p.entryCost;
             }
@@ -984,7 +984,7 @@ namespace KerbalConstructionTime
         {
             foreach (var ap in availableParts)
             {
-                ProtoTechNode protoNode = AssetBase.RnDTechTree.FindTech(ap.TechRequired);
+                ProtoTechNode protoNode = ResearchAndDevelopment.Instance.GetTechState(ap.TechRequired);
 
                 if (!protoNode.partsPurchased.Contains(ap))
                 {
@@ -997,8 +997,8 @@ namespace KerbalConstructionTime
                 RemoveExperimentalPart(ap);
             }
 
-            EditorPartList.Instance.Refresh();
-            EditorPartList.Instance.Refresh(EditorPartList.State.PartsList);
+            EditorPartList.Instance?.Refresh();
+            EditorPartList.Instance?.Refresh(EditorPartList.State.PartsList);
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
         }
 
@@ -1011,6 +1011,7 @@ namespace KerbalConstructionTime
                 if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
                 {
                     AddExperimentalPart(ap);
+                    EditorPartIcon.SetPartColor(ap.iconPrefab, new Color32(128, 128, byte.MaxValue, byte.MaxValue), ap);
                 }
             }
         }
@@ -1024,6 +1025,7 @@ namespace KerbalConstructionTime
                 if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
                 {
                     RemoveExperimentalPart(ap);
+                    EditorPartIcon.SetPartColor(ap.iconPrefab, new Color(1f, 1f, 1f, 1f), ap);
                 }
             }
         }
@@ -1061,11 +1063,11 @@ namespace KerbalConstructionTime
         {
             ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(partInfo.TechRequired);
 
-            string[] indenticalPartsNames = partInfo.identicalParts.Split(',');
+            string[] identicalPartsNames = partInfo.identicalParts.Split(',');
 
-            for (int i = indenticalPartsNames.Length;  i-- > 0;)
+            for (int i = identicalPartsNames.Length; i-- > 0;)
             {
-                AvailablePart partInfoByName = PartLoader.getPartInfoByName(indenticalPartsNames[i].Replace('_', '.').Trim());
+                AvailablePart partInfoByName = PartLoader.getPartInfoByName(identicalPartsNames[i].Replace('_', '.').Trim());
                 if (partInfoByName != null && partInfoByName.TechRequired == partInfo.TechRequired)
                 {
                     partInfoByName.costsFunds = false;
@@ -1466,9 +1468,9 @@ namespace KerbalConstructionTime
             KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
         }
 
-        public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01 )
+        public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
         {
-            return (1-error) <= (d1 / d2) && (d1 / d2) <= (1+error);
+            return (1 - error) <= (d1 / d2) && (d1 / d2) <= (1 + error);
         }
 
         public static float GetParachuteDragFromPart(AvailablePart parachute)
@@ -1477,7 +1479,7 @@ namespace KerbalConstructionTime
             {
                 if (mi.info.Contains("Fully-Deployed Drag"))
                 {
-                    string[] split = mi.info.Split(new char[] {':', '\n'});
+                    string[] split = mi.info.Split(new char[] { ':', '\n' });
                     //TODO: Get SR code and put that in here, maybe with TryParse instead of Parse
                     for (int i = 0; i < split.Length; i++)
                     {
@@ -1636,7 +1638,7 @@ namespace KerbalConstructionTime
         {
             if (part?.Modules != null)
             {
-                for (int i = 0; i < part.Modules.Count; i++ )
+                for (int i = 0; i < part.Modules.Count; i++)
                 {
                     if (part.Modules[i]?.moduleName?.IndexOf("procedural", StringComparison.OrdinalIgnoreCase) >= 0)
                         return true;
@@ -1675,7 +1677,7 @@ namespace KerbalConstructionTime
 
             foreach (KeyValuePair<AvailablePart, int> kvp in devPartsOnShip)
             {
-                if(ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
                     sb.Append($" <color=green><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
                 else
                     sb.Append($" <color=orange><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");

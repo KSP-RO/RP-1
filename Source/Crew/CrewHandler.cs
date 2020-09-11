@@ -261,7 +261,7 @@ namespace RP0.Crew
             if (!_partSynsHandled.Contains(name))
             {
                 _partSynsHandled.Add(name);
-                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap);
+                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap) && !ResearchAndDevelopment.IsExperimentalPart(ap);
 
                 GenerateCourseProf(ap, !isPartUnlocked);
                 if (isPartUnlocked)
@@ -782,9 +782,9 @@ namespace RP0.Crew
 
         private double GetServiceTime(ProtoCrewMember pcm)
         {
-            return 86400d * 365d * 
-                (Settings.retireBaseYears + 
-                 UtilMath.Lerp(Settings.retireCourageMin, Settings.retireCourageMax, pcm.courage) + 
+            return 86400d * 365d *
+                (Settings.retireBaseYears +
+                 UtilMath.Lerp(Settings.retireCourageMin, Settings.retireCourageMax, pcm.courage) +
                  UtilMath.Lerp(Settings.retireStupidMin, Settings.retireStupidMax, pcm.stupidity));
         }
 
@@ -948,7 +948,8 @@ namespace RP0.Crew
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
                 if (ap.partPrefab.CrewCapacity > 0 &&
-                    ResearchAndDevelopment.PartModelPurchased(ap))
+                    ResearchAndDevelopment.PartModelPurchased(ap) &&
+                    !ResearchAndDevelopment.IsExperimentalPart(ap))
                 {
                     AddPartCourses(ap);
                 }

@@ -261,11 +261,10 @@ namespace RP0.Crew
             if (!_partSynsHandled.Contains(name))
             {
                 _partSynsHandled.Add(name);
-                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap);
-                bool isPartExperimental = ResearchAndDevelopment.IsExperimentalPart(ap);
+                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap) && !ResearchAndDevelopment.IsExperimentalPart(ap);
 
                 GenerateCourseProf(ap, !isPartUnlocked);
-                if (isPartUnlocked && !isPartExperimental)
+                if (isPartUnlocked)
                 {
                     GenerateCourseMission(ap);
                 }

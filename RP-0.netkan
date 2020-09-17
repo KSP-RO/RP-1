@@ -46,10 +46,7 @@
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
 		{ "name" : "RCSBuildAidCont" },
-		{ "any_of": [
-			{ "name" : "RealAntennas" },
-			{ "name" : "RemoteTech" }
-		] },
+		{ "name" : "RealAntennas" },
 		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },

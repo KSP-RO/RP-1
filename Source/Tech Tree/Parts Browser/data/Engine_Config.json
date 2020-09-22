@@ -10826,6 +10826,27 @@
         "module_tags": []
     },
     {
+        "name": "XLR25-CW-1",
+        "title": "XLR25-CW-1",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1954",
+        "technology": "basicRocketryRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "X-2",
+        "engine_config": "XLR25",
+        "upgrade": false,
+        "entry_cost_mods": "XLR11-RM-5, 5000",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "XLR41",
         "title": "XLR41-NA-1",
         "description": "Americanized version of the V-2 Model 39 (A-4). It was very similar to its predecessor, but was built using American SAE components rather than Metric components, and featured several minor upgrades.",

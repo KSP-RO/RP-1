@@ -4,6 +4,7 @@ using System.Linq;
 using KerbalConstructionTime;
 using RP0.Crew;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Upgradeables;
 
 namespace RP0
@@ -130,6 +131,7 @@ namespace RP0
 
         private void UpdateKCTRates()
         {
+            Profiler.BeginSample("RP0Maintenance UpdateKCTRates");
             for (int i = KCTPadCounts.Length; i-- > 0;)
                 KCTPadCounts[i] = 0;
 
@@ -156,10 +158,12 @@ namespace RP0
             }
 
             KCTResearchRate = MathParser.ParseNodeRateFormula(10);
+            Profiler.EndSample();
         }
 
         public void UpdateUpkeep()
         {
+            Profiler.BeginSample("RP0Maintenance UpdateUpkeep");
             EnsureFacilityLvlCostsLoaded();
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out float[] costs))
@@ -257,6 +261,7 @@ namespace RP0
             ResearchUpkeep = _maintenanceCostMult * KCTResearchRate * Settings.kctResearchMult;
 
             TotalUpkeep = FacilityUpkeep + IntegrationUpkeep + ResearchUpkeep + NautTotalUpkeep;
+            Profiler.EndSample();
         }
 
         public void Update()

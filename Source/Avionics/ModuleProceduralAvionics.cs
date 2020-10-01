@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Profiling;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
 
 namespace RP0.ProceduralAvionics
@@ -166,6 +167,7 @@ namespace RP0.ProceduralAvionics
 
         public override void OnStart(StartState state)
         {
+            Profiler.BeginSample("RP0ProcAvi OnStart");
             Log($"OnStart for {part} in {HighLogic.LoadedScene}");
             LoadPartModulesAndFields();
             SetFallbackConfigForLegacyCraft();
@@ -178,6 +180,7 @@ namespace RP0.ProceduralAvionics
             _started = true;
             if (_cachedEventData != null)
                 OnPartVolumeChanged(_cachedEventData);
+            Profiler.EndSample();
         }
 
         public void Start()
@@ -362,6 +365,7 @@ namespace RP0.ProceduralAvionics
 
         private void ControllableMassChanged(BaseField arg1, object arg2)
         {
+            Profiler.BeginSample("RP0ProcAvi ControllableMassChanged");
             Log($"ControllableMassChanged to {arg1.GetValue(this)} from {arg2}");
             if (float.IsNaN(controllableMass))
             {
@@ -383,6 +387,7 @@ namespace RP0.ProceduralAvionics
             StartCoroutine(DeferredRFTankChangeHandler());
             SendRemainingVolume();
             RefreshDisplays();
+            Profiler.EndSample();
         }
 
         private void AvionicsConfigChanged(BaseField f, object obj)
@@ -393,6 +398,7 @@ namespace RP0.ProceduralAvionics
 
         private void AvionicsConfigChanged()
         {
+            Profiler.BeginSample("RP0ProcAvi AvionicsConfigChanged");
             CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
             Log($"Avionics Config changed to: {avionicsConfigName}.  Tech: {avionicsTechLevel}");
             interplanetary = CurrentProceduralAvionicsTechNode.interplanetary;
@@ -412,6 +418,7 @@ namespace RP0.ProceduralAvionics
                 StartCoroutine(DeferredRFTankChangeHandler());
                 GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
             }
+            Profiler.EndSample();
         }
 
         [KSPEvent]
@@ -426,6 +433,7 @@ namespace RP0.ProceduralAvionics
         [KSPEvent]
         public void OnPartVolumeChanged(BaseEventDetails eventData)
         {
+            Profiler.BeginSample("RP0ProcAvi OnPartVolumeChanged");
             float volume = (float)eventData.Get<double>("newTotalVolume");
             Log($"OnPartVolumeChanged to {volume} from {_cachedVolume}");
             if (!_started)
@@ -438,6 +446,7 @@ namespace RP0.ProceduralAvionics
 
             UpdateMassLimitsAndVolume();
             RefreshDisplays();
+            Profiler.EndSample();
         }
 
         private void UpdateMassLimitsAndVolume()
@@ -450,6 +459,7 @@ namespace RP0.ProceduralAvionics
 
         private void SendRemainingVolume()
         {
+            Profiler.BeginSample("RP0ProcAvi SendRemainingVolume");
             if (_started && _cachedVolume < float.MaxValue)
             {
                 Events[nameof(OnPartVolumeChanged)].active = false;
@@ -459,6 +469,7 @@ namespace RP0.ProceduralAvionics
                 SendVolumeChangedEvent(InternalTanksVolume);
                 Events[nameof(OnPartVolumeChanged)].active = true;
             }
+            Profiler.EndSample();
         }
 
         private float GetAvailableVolume() => Math.Max(Math.Min((_cachedVolume - GetAvionicsVolume()) * InternalTanksAvailableVolumeUtilization, _cachedVolume * InternalTanksTotalVolumeUtilization), 0);
@@ -494,6 +505,7 @@ namespace RP0.ProceduralAvionics
         {
             if (_procPartPM != null && _procPartMinVolumeField != null && _procPartCurShapeProp != null)
             {
+                Profiler.BeginSample("RP0ProcAvi SetProcPartVolumeLimit");
                 float minVolume = GetAvionicsVolume();
                 minVolume += CurrentProceduralAvionicsTechNode.reservedRFTankVolume;
                 Log($"Setting PP min volume to {minVolume}");
@@ -512,6 +524,7 @@ namespace RP0.ProceduralAvionics
                     Log($"{minVolume} > {_cachedVolume}, diff {diff}, calling SeekVolume");
                     SeekVolume(minVolume);
                 }
+                Profiler.EndSample();
 
                 return true;
             }
@@ -522,6 +535,7 @@ namespace RP0.ProceduralAvionics
 
         private void SeekVolume(float targetVolume)
         {
+            Profiler.BeginSample("RP0ProcAvi SeekVolume");
             if (_seekVolumeMethod != null)
             {
                 Log($"SeekVolume() CurrentAvionicsVolume for max util: {GetAvionicsVolume()}, Desired Volume: {targetVolume}");
@@ -539,6 +553,7 @@ namespace RP0.ProceduralAvionics
             {
                 Log("SeekVolume not supported");
             }
+            Profiler.EndSample();
         }
 
         private void ShowOutdatedProcPartWarning()

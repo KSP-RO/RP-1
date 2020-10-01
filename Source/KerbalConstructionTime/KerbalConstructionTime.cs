@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using ToolbarControl_NS;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace KerbalConstructionTime
 {
@@ -467,6 +468,7 @@ namespace KerbalConstructionTime
 
         private static void ProcessWarp(double lastUT)
         {
+            Profiler.BeginSample("KCT ProcessWarp");
             IKCTBuildItem iKctItem = Utilities.GetNextThingToFinish();
             if (KCTGameStates.TargetedItem == null && iKctItem != null)
                 KCTGameStates.TargetedItem = iKctItem;
@@ -519,6 +521,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.WarpInitiated = false;
                 KCTGameStates.TargetedItem = null;
             }
+            Profiler.EndSample();
         }
 
         public void LateUpdate()

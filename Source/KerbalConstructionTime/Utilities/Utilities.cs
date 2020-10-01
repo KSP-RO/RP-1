@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 namespace KerbalConstructionTime
@@ -372,6 +373,7 @@ namespace KerbalConstructionTime
 
         public static void ProgressBuildTime()
         {
+            Profiler.BeginSample("KCT ProgressBuildTime");
             double UT = 0;
             if (HighLogic.LoadedSceneIsEditor) //support for EditorTime
                 UT = HighLogic.CurrentGame.flightState.universalTime;
@@ -437,6 +439,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.WarpInitiated = false;
             }
             KCTGameStates.LastUT = UT;
+            Profiler.EndSample();
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
@@ -1371,8 +1374,10 @@ namespace KerbalConstructionTime
 
         public static void SetActiveKSCToRSS()
         {
+            Profiler.BeginSample("KCT SetActiveKSCToRSS");
             string site = GetActiveRSSKSC();
             SetActiveKSC(site);
+            Profiler.EndSample();
         }
 
         public static void SetActiveKSC(string site)

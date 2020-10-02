@@ -33,6 +33,7 @@ namespace RP0
 
         private void UpdateSelectedTab()
         {
+            GUILayout.BeginHorizontal();
             if (ShouldShowTab(UITab.Maintenance) && RenderToggleButton("Maintenance", _currentTab == UITab.Maintenance))
                 _currentTab = UITab.Maintenance;
             if (ShouldShowTab(UITab.Tooling) && RenderToggleButton("Tooling", _currentTab == UITab.Tooling))
@@ -45,6 +46,7 @@ namespace RP0
                 _currentTab = UITab.Avionics;
             if (ShouldShowTab(UITab.CareerLog) && RenderToggleButton("Career Log", _currentTab == UITab.CareerLog))
                 _currentTab = UITab.CareerLog;
+            GUILayout.EndHorizontal();
         }
 
         public void DrawWindow(int windowID)

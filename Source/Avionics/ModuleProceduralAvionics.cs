@@ -400,7 +400,7 @@ namespace RP0.ProceduralAvionics
         {
             Profiler.BeginSample("RP0ProcAvi AvionicsConfigChanged");
             CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
-            Log($"Avionics Config changed to: {avionicsConfigName}.  Tech: {avionicsTechLevel}");
+            Log($"Avionics Config changed to: {avionicsConfigName}. Tech: {avionicsTechLevel}");
             interplanetary = CurrentProceduralAvionicsTechNode.interplanetary;
             if (_started && HighLogic.LoadedSceneIsEditor)
             {
@@ -416,7 +416,8 @@ namespace RP0.ProceduralAvionics
             {
                 _sControllableMass = $"{controllableMass:0.###}";
                 StartCoroutine(DeferredRFTankChangeHandler());
-                GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
+                if (_started)
+                    GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
             }
             Profiler.EndSample();
         }

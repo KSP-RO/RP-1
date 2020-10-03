@@ -7,22 +7,30 @@ namespace RP0
     {
         private static Rect _windowPos = new Rect(500, 240, 0, 0);
         private static readonly int _windowId = "RP0Top".GetHashCode();
+        private static UITab _currentTab;
+        private static bool _shouldResetUISize;
 
         private readonly MaintenanceGUI _maintUI = new MaintenanceGUI();
         private readonly ToolingGUI _toolUI = new ToolingGUI();
         private readonly Crew.FSGUI _fsUI = new Crew.FSGUI();
         private readonly AvionicsGUI _avUI = new AvionicsGUI();
         private readonly CareerLogGUI _logUI = new CareerLogGUI();
-        private static UITab _currentTab;
 
         public TopWindow()
         {
             // Reset the tab on scene changes
             _currentTab = HighLogic.LoadedSceneIsEditor ? UITab.Tooling : default;
+            _shouldResetUISize = true;
         }
 
         public void OnGUI()
         {
+            if (_shouldResetUISize && Event.current.type == EventType.Layout)
+            {
+                _windowPos.width = 0;
+                _windowPos.height = 0;
+                _shouldResetUISize = false;
+            }
             _windowPos = GUILayout.Window(_windowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
         }
 
@@ -37,24 +45,27 @@ namespace RP0
 
         public static void SwitchTabTo(UITab newTab)
         {
+            if (newTab == _currentTab)
+                return;
             _currentTab = newTab;
+            _shouldResetUISize = true;
         }
 
         private void UpdateSelectedTab()
         {
             GUILayout.BeginHorizontal();
             if (ShouldShowTab(UITab.Maintenance) && RenderToggleButton("Maintenance", _currentTab == UITab.Maintenance))
-                _currentTab = UITab.Maintenance;
+                SwitchTabTo(UITab.Maintenance);
             if (ShouldShowTab(UITab.Tooling) && RenderToggleButton("Tooling", _currentTab == UITab.Tooling))
-                _currentTab = UITab.Tooling;
+                SwitchTabTo(UITab.Tooling);
             if (ShouldShowTab(UITab.Training) && RenderToggleButton("Astronauts", _currentTab == UITab.Training))
-                _currentTab = UITab.Training;
+                SwitchTabTo(UITab.Training);
             if (ShouldShowTab(UITab.Courses) && RenderToggleButton("Courses", _currentTab == UITab.Courses))
-                _currentTab = UITab.Courses;
+                SwitchTabTo(UITab.Courses);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
-                _currentTab = UITab.Avionics;
+                SwitchTabTo(UITab.Avionics);
             if (ShouldShowTab(UITab.CareerLog) && RenderToggleButton("Career Log", _currentTab == UITab.CareerLog))
-                _currentTab = UITab.CareerLog;
+                SwitchTabTo(UITab.CareerLog);
             GUILayout.EndHorizontal();
         }
 
@@ -85,19 +96,19 @@ namespace RP0
                             _maintUI.RenderAstronautsTab();
                             break;
                         case UITab.Tooling:
-                            _currentTab = _toolUI.RenderToolingTab();
+                            SwitchTabTo(_toolUI.RenderToolingTab());
                             break;
                         case UITab.ToolingType:
                             _toolUI.RenderTypeTab();
                             break;
                         case UITab.Training:
-                            _currentTab = _fsUI.RenderSummaryTab();
+                            SwitchTabTo(_fsUI.RenderSummaryTab());
                             break;
                         case UITab.Courses:
-                            _currentTab = _fsUI.RenderCoursesTab();
+                            SwitchTabTo(_fsUI.RenderCoursesTab());
                             break;
                         case UITab.NewCourse:
-                            _currentTab = _fsUI.RenderNewCourseTab();
+                            SwitchTabTo(_fsUI.RenderNewCourseTab());
                             break;
                         case UITab.Naut:
                             _fsUI.RenderNautTab();

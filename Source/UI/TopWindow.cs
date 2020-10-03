@@ -18,7 +18,7 @@ namespace RP0
         public TopWindow()
         {
             // Reset the tab on scene changes
-            _currentTab = default;
+            _currentTab = HighLogic.LoadedSceneIsEditor ? UITab.Tooling : default;
         }
 
         public void OnGUI()

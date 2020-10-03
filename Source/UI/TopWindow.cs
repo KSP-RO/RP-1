@@ -26,6 +26,15 @@ namespace RP0
             _windowPos = GUILayout.Window(_windowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
         }
 
+        protected override void OnStart()
+        {
+            _maintUI.Start();
+            _toolUI.Start();
+            _fsUI.Start();
+            _avUI.Start();
+            _logUI.Start();
+        }
+
         public static void SwitchTabTo(UITab newTab)
         {
             _currentTab = newTab;

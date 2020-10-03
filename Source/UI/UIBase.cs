@@ -2,7 +2,7 @@
 
 namespace RP0
 {
-    public class UIBase
+    public abstract class UIBase
     {
         public enum UITab
         {
@@ -40,9 +40,17 @@ namespace RP0
             };
         }
 
+        internal void Start()
+        {
+            OnStart();
+        }
+
+        protected virtual void OnStart() { }
+
         protected bool ShouldShowTab(UITab tab)
         {
-            switch (tab) {
+            switch (tab)
+            {
                 case UITab.Maintenance:
                 case UITab.Facilities:
                 case UITab.Integration:

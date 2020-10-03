@@ -27,6 +27,7 @@ namespace RP0
         protected void Start()
         {
             _tw = new TopWindow();
+            _tw.Start();
         }
 
         protected void OnDestroy()

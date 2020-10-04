@@ -16,3 +16,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("2.0.0.0")]
+
+[assembly: KSPAssembly("KerbalConstructionTime", 2, 0)]
+[assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
+[assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]

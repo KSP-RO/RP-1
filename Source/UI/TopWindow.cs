@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClickThroughFix;
+using System;
 using UnityEngine;
 
 namespace RP0
@@ -31,7 +32,7 @@ namespace RP0
                 _windowPos.height = 0;
                 _shouldResetUISize = false;
             }
-            _windowPos = GUILayout.Window(_windowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+            _windowPos = ClickThruBlocker.GUILayoutWindow(_windowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
         }
 
         protected override void OnStart()

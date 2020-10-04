@@ -1,4 +1,5 @@
-﻿using RealFuels.Tanks;
+﻿using ClickThroughFix;
+using RealFuels.Tanks;
 using RP0.Utilities;
 using System;
 using System.Reflection;
@@ -39,7 +40,7 @@ namespace RP0.ProceduralAvionics
                     _windowRect.height = 300;
                     _shouldResetUIHeight = false;
                 }
-                _windowRect = GUILayout.Window(GetInstanceID(), _windowRect, WindowFunction, "Configure Procedural Avionics", HighLogic.Skin.window);
+                _windowRect = ClickThruBlocker.GUILayoutWindow(GetInstanceID(), _windowRect, WindowFunction, "Configure Procedural Avionics", HighLogic.Skin.window);
             }
         }
 

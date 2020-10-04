@@ -122,6 +122,10 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <Private>False</Private>
     </Reference>
+    <Reference Include="ClickThroughBlocker">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="ModularFlightIntegrator">
       <Private>False</Private>
     </Reference>
@@ -162,6 +166,7 @@
     <ProjectReference Include="KerbalConstructionTime\KerbalConstructionTime.csproj">
       <Project>{93908b2a-0859-4dab-8873-d32a4c633308}</Project>
       <Name>KerbalConstructionTime</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

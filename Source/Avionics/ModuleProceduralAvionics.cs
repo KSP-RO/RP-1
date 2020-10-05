@@ -441,6 +441,7 @@ namespace RP0.ProceduralAvionics
             {
                 Log("Delaying OnPartVolumeChanged until after Start()");
                 _cachedEventData = eventData;
+                Profiler.EndSample();
                 return;
             }
             _cachedVolume = volume;

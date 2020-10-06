@@ -42,6 +42,27 @@
         "module_tags": []
     },
     {
+        "name": "ROC-AgenaFairing",
+        "title": "Agena Target Vehicle Nose Cone",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "5",
+        "entry_cost": "0",
+        "category": "RCS",
+        "info": "",
+        "year": "1965",
+        "technology": "earlyDocking",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Agena",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ROC-AgenaPort",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROC-AgenaPort",
         "title": "Gemini Agena Target/Docking Adapter",
         "description": "",

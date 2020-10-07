@@ -1014,7 +1014,6 @@ namespace KerbalConstructionTime
                 if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
                 {
                     AddExperimentalPart(ap);
-                    EditorPartIcon.SetPartColor(ap.iconPrefab, new Color32(128, 128, byte.MaxValue, byte.MaxValue), ap);
                 }
             }
         }
@@ -1028,7 +1027,6 @@ namespace KerbalConstructionTime
                 if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
                 {
                     RemoveExperimentalPart(ap);
-                    EditorPartIcon.SetPartColor(ap.iconPrefab, new Color(1f, 1f, 1f, 1f), ap);
                 }
             }
         }

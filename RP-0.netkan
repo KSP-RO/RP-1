@@ -20,10 +20,12 @@
 		{ "name" : "CustomBarnKit" },
 		{ "name" : "DeadlyReentry" },
 		{ "name" : "VenStockRevamp-NewParts" },
-		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "RealSolarSystem" },
 		{ "name" : "DMagicOrbitalScience" },
-		{ "name" : "DMagicScienceAnimate" }
+		{ "name" : "DMagicScienceAnimate" },
+		{ "name" : "MagiCore" },
+		{ "name" : "ClickThroughBlocker" },
+		{ "name" : "ToolbarController" }
 	],
 	"recommends" : [
 		{ "any_of": [
@@ -89,6 +91,7 @@
 		{ "name" : "NavHudRenewed" }
 	],
 	"conflicts" : [
+		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
 		{ "name" : "MechJebForAll" }

@@ -635,7 +635,7 @@
         "category": "COMMAND",
         "info": "Heat Shield",
         "year": "1976",
-        "technology": "improvedCapsules",
+        "technology": "advancedUncrewedLanding",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

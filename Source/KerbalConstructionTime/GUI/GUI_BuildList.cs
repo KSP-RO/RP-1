@@ -1217,6 +1217,11 @@ namespace KerbalConstructionTime
                 Utilities.AddVesselToBuildList(b.CreateCopy(true));
             }
 
+            if (GUILayout.Button("Add to Plans"))
+            {
+                AddVesselToPlansList(b.CreateCopy(true));
+            }
+
             if (KCTGameStates.ActiveKSC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()) != null && GUILayout.Button("Rollback"))
             {
                 KCTGameStates.ActiveKSC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()).SwapRolloutType();

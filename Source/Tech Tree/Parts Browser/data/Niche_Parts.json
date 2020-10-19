@@ -168,7 +168,7 @@
         "title": "R-4D HiPAT (445N)",
         "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini's orbit insertion of Saturn. Plume configured by RealPlume.",
         "mod": "Niche Parts",
-        "cost": "200",
+        "cost": "35",
         "entry_cost": "2800",
         "category": "RCS",
         "info": "RCS Engine",

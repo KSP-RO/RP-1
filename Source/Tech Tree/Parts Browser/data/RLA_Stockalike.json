@@ -626,7 +626,7 @@
         "title": "R-4D-11",
         "description": "490N thrusters as found as the main propulsion of the ESA ATV, and used as various other control thrusters on numerous vehicles. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
         "mod": "RLA Stockalike",
-        "cost": "60",
+        "cost": "35",
         "entry_cost": "750",
         "category": "RCS",
         "info": "",

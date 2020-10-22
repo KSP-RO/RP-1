@@ -211,6 +211,11 @@ namespace RP0
             }
         }
 
+        public static DateTime UTToDate(double ut)
+        {
+            return _epoch.AddSeconds(ut);
+        }
+
         public void AddTechEvent(string nodeName)
         {
             if (!IsEnabled) return;
@@ -256,7 +261,7 @@ namespace RP0
                                                                 .Sum();
                 return new[]
                 {
-                    _epoch.AddSeconds(p.StartUT).ToString("yyyy-MM"),
+                    UTToDate(p.StartUT).ToString("yyyy-MM"),
                     p.VABUpgrades.ToString(),
                     p.SPHUpgrades.ToString(),
                     p.RnDUpgrades.ToString(),
@@ -307,18 +312,33 @@ namespace RP0
                 .Select(CreateLogDto).ToArray();
 
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
-            var jsonToSend = "[";
+            var jsonToSend = "{ \"periods\": [";
 
             for (var i = 0; i < logPeriods.Length; i++)
             {
                 if (i < logPeriods.Length - 1) jsonToSend += JsonUtility.ToJson(logPeriods[i]) + ",";
-                else jsonToSend += JsonUtility.ToJson(logPeriods[i]) + "]";
+                else jsonToSend += JsonUtility.ToJson(logPeriods[i]);
             }
+
+            jsonToSend += "], \"contractEvents\": [";
+
+            for (var i = 0; i < _contractDict.Count; i++)
+            {
+                if (i < _contractDict.Count - 1) jsonToSend += JsonUtility.ToJson(new ContractEventDto(_contractDict[i])) + ",";
+                else jsonToSend += JsonUtility.ToJson(_contractDict[i]);
+            }
+
+            jsonToSend += "] }";
+
+            Debug.Log("[RP-0] Request payload: " + jsonToSend);
 
             var byteJson = new UTF8Encoding().GetBytes(jsonToSend);
 
             var uwr = new UnityWebRequest(url, "POST")
-            { downloadHandler = new DownloadHandlerBuffer(), uploadHandler = new UploadHandlerRaw(byteJson) };
+            {
+                downloadHandler = new DownloadHandlerBuffer(),
+                uploadHandler = new UploadHandlerRaw(byteJson)
+            };
 
             uwr.SetRequestHeader("Content-Type", "application/json");
 
@@ -359,7 +379,7 @@ namespace RP0
             return new CareerLogDto
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
-                epoch = _epoch.AddSeconds(logPeriod.StartUT).ToString("yyyy-MM"),
+                epoch = UTToDate(logPeriod.StartUT).ToString("yyyy-MM"),
                 vabUpgrades = logPeriod.VABUpgrades,
                 sphUpgrades = logPeriod.SPHUpgrades,
                 rndUpgrades = logPeriod.RnDUpgrades,
@@ -378,10 +398,6 @@ namespace RP0
                 otherFees = logPeriod.OtherFees - constructionFees,
                 launchedVessels = _launchedVessels.Where(l => l.UT >= logPeriod.StartUT && l.UT < logPeriod.EndUT)
                     .Select(l => l.VesselName)
-                    .ToArray(),
-                contractEvents = _contractDict.Where(c =>
-                        c.Type == ContractEventType.Complete && c.UT >= logPeriod.StartUT && c.UT < logPeriod.EndUT)
-                    .Select(c => c.InternalName)
                     .ToArray(),
                 techEvents = _techEvents.Where(t => t.UT >= logPeriod.StartUT && t.UT < logPeriod.EndUT)
                     .Select(t => t.NodeName)
@@ -417,7 +433,7 @@ namespace RP0
         {
             if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
             {
-                DateTime dtNextPeriod = _epoch.AddSeconds(periodStartUt).AddMonths(LogPeriodMonths);
+                DateTime dtNextPeriod = UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
                 double nextPeriodStart = (dtNextPeriod - _epoch).TotalSeconds;
                 period = new LogPeriod(periodStartUt, nextPeriodStart);
                 _periodDict.Add(periodStartUt, period);

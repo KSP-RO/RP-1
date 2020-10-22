@@ -25,7 +25,6 @@ namespace RP0
         public double otherFees;
 
         public string[] launchedVessels;
-        public string[] contractEvents;
         public string[] techEvents;
         public string[] facilityConstructions;
 
@@ -51,9 +50,41 @@ namespace RP0
                 $"{nameof(constructionFees)}: {constructionFees}, " +
                 $"{nameof(otherFees)}: {otherFees}, " +
                 $"{nameof(launchedVessels)}: {launchedVessels}, " +
-                $"{nameof(contractEvents)}: {contractEvents}, " +
                 $"{nameof(techEvents)}: {techEvents}, " +
                 $"{nameof(facilityConstructions)}: {facilityConstructions}";
+        }
+    }
+
+    [Serializable]
+    internal class ContractEventDto
+    {
+        public string internalName;
+        public string date;
+        public double fundsChange;
+        public double repChange;
+        public string type;
+
+        public ContractEventDto()
+        {
+        }
+
+        public ContractEventDto(ContractEvent ce)
+        {
+            internalName = ce.InternalName;
+            date = CareerLog.UTToDate(ce.UT).ToString("u");
+            fundsChange = ce.FundsChange;
+            repChange = ce.RepChange;
+            type = ce.Type.ToString();
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(internalName)}: {internalName}, " +
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(fundsChange)}: {fundsChange}, " +
+                $"{nameof(repChange)}: {repChange}, " +
+                $"{nameof(type)}: {type}, ";
         }
     }
 }

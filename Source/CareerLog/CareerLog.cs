@@ -27,7 +27,7 @@ namespace RP0
 
         public bool IsEnabled = false;
 
-        private static readonly DateTime _epoch = new DateTime(1951, 1, 1);
+        private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private EventData<ProtoTechNode> onKctTechCompletedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
@@ -324,8 +324,36 @@ namespace RP0
 
             for (var i = 0; i < _contractDict.Count; i++)
             {
-                if (i < _contractDict.Count - 1) jsonToSend += JsonUtility.ToJson(new ContractEventDto(_contractDict[i])) + ",";
-                else jsonToSend += JsonUtility.ToJson(_contractDict[i]);
+                var dto = new ContractEventDto(_contractDict[i]);
+                if (i < _contractDict.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"facilityEvents\": [";
+
+            for (var i = 0; i < _facilityConstructions.Count; i++)
+            {
+                var dto = new FacilityConstructionEventDto(_facilityConstructions[i]);
+                if (i < _facilityConstructions.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"techEvents\": [";
+
+            for (var i = 0; i < _techEvents.Count; i++)
+            {
+                var dto = new TechResearchEventDto(_techEvents[i]);
+                if (i < _techEvents.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"launchEvents\": [";
+
+            for (var i = 0; i < _launchedVessels.Count; i++)
+            {
+                var dto = new LaunchEventDto(_launchedVessels[i]);
+                if (i < _launchedVessels.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
             }
 
             jsonToSend += "] }";
@@ -339,6 +367,10 @@ namespace RP0
                 downloadHandler = new DownloadHandlerBuffer(),
                 uploadHandler = new UploadHandlerRaw(byteJson)
             };
+
+            #if DEBUG
+            uwr.certificateHandler = new BypassCertificateHandler();
+            #endif
 
             uwr.SetRequestHeader("Content-Type", "application/json");
 
@@ -379,7 +411,8 @@ namespace RP0
             return new CareerLogDto
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
-                epoch = UTToDate(logPeriod.StartUT).ToString("yyyy-MM"),
+                startDate = UTToDate(logPeriod.StartUT).ToString("o"),
+                endDate = UTToDate(logPeriod.EndUT).ToString("o"),
                 vabUpgrades = logPeriod.VABUpgrades,
                 sphUpgrades = logPeriod.SPHUpgrades,
                 rndUpgrades = logPeriod.RnDUpgrades,
@@ -395,18 +428,7 @@ namespace RP0
                 toolingFees = logPeriod.ToolingFees,
                 entryCosts = logPeriod.EntryCosts,
                 constructionFees = logPeriod.OtherFees,
-                otherFees = logPeriod.OtherFees - constructionFees,
-                launchedVessels = _launchedVessels.Where(l => l.UT >= logPeriod.StartUT && l.UT < logPeriod.EndUT)
-                    .Select(l => l.VesselName)
-                    .ToArray(),
-                techEvents = _techEvents.Where(t => t.UT >= logPeriod.StartUT && t.UT < logPeriod.EndUT)
-                    .Select(t => t.NodeName)
-                    .ToArray(),
-                facilityConstructions = _facilityConstructions
-                    .Where(f => f.State == ConstructionState.Completed && f.UT >= logPeriod.StartUT &&
-                                f.UT < logPeriod.EndUT)
-                    .Select(f => $"{f.Facility} ({f.NewLevel + 1})")
-                    .ToArray()
+                otherFees = logPeriod.OtherFees - constructionFees
             };
         }
 

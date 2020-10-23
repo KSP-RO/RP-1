@@ -6,7 +6,8 @@ namespace RP0
     internal class CareerLogDto
     {
         public string careerUuid;
-        public string epoch;
+        public string startDate;
+        public string endDate;
         public int vabUpgrades;
         public int sphUpgrades;
         public int rndUpgrades;
@@ -24,15 +25,12 @@ namespace RP0
         public double constructionFees;
         public double otherFees;
 
-        public string[] launchedVessels;
-        public string[] techEvents;
-        public string[] facilityConstructions;
-
         public override string ToString()
         {
             return
                 $"{nameof(careerUuid)}: {careerUuid}, " +
-                $"{nameof(epoch)}: {epoch}, " +
+                $"{nameof(startDate)}: {startDate}, " +
+                $"{nameof(endDate)}: {endDate}, " +
                 $"{nameof(vabUpgrades)}: {vabUpgrades}, " +
                 $"{nameof(sphUpgrades)}: {sphUpgrades}, " +
                 $"{nameof(rndUpgrades)}: {rndUpgrades}, " +
@@ -48,10 +46,7 @@ namespace RP0
                 $"{nameof(toolingFees)}: {toolingFees}, " +
                 $"{nameof(entryCosts)}: {entryCosts}, " +
                 $"{nameof(constructionFees)}: {constructionFees}, " +
-                $"{nameof(otherFees)}: {otherFees}, " +
-                $"{nameof(launchedVessels)}: {launchedVessels}, " +
-                $"{nameof(techEvents)}: {techEvents}, " +
-                $"{nameof(facilityConstructions)}: {facilityConstructions}";
+                $"{nameof(otherFees)}: {otherFees}";
         }
     }
 
@@ -62,7 +57,7 @@ namespace RP0
         public string date;
         public double fundsChange;
         public double repChange;
-        public string type;
+        public ContractEventType type;
 
         public ContractEventDto()
         {
@@ -71,10 +66,10 @@ namespace RP0
         public ContractEventDto(ContractEvent ce)
         {
             internalName = ce.InternalName;
-            date = CareerLog.UTToDate(ce.UT).ToString("u");
+            date = CareerLog.UTToDate(ce.UT).ToString("o");
             fundsChange = ce.FundsChange;
             repChange = ce.RepChange;
-            type = ce.Type.ToString();
+            type = ce.Type;
         }
 
         public override string ToString()
@@ -84,7 +79,88 @@ namespace RP0
                 $"{nameof(date)}: {date}, " +
                 $"{nameof(fundsChange)}: {fundsChange}, " +
                 $"{nameof(repChange)}: {repChange}, " +
-                $"{nameof(type)}: {type}, ";
+                $"{nameof(type)}: {type}";
+        }
+    }
+
+    [Serializable]
+    internal class FacilityConstructionEventDto
+    {
+        public string date;
+        public SpaceCenterFacility facility;
+        public int newLevel;
+        public double cost;
+        public ConstructionState state;
+
+        public FacilityConstructionEventDto()
+        {
+        }
+
+        public FacilityConstructionEventDto(FacilityConstructionEvent fce)
+        {
+            date = CareerLog.UTToDate(fce.UT).ToString("o");
+            facility = fce.Facility;
+            newLevel = fce.NewLevel;
+            cost = fce.Cost;
+            state = fce.State;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(facility)}: {facility}, " +
+                $"{nameof(newLevel)}: {newLevel}, " +
+                $"{nameof(cost)}: {cost}, " +
+                $"{nameof(state)}: {state}";
+        }
+    }
+
+    [Serializable]
+    internal class TechResearchEventDto
+    {
+        public string date;
+        public string nodeName;
+
+        public TechResearchEventDto()
+        {
+        }
+
+        public TechResearchEventDto(TechResearchEvent tre)
+        {
+            date = CareerLog.UTToDate(tre.UT).ToString("o");
+            nodeName = tre.NodeName;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(nodeName)}: {nodeName}";
+        }
+    }
+
+    [Serializable]
+    internal class LaunchEventDto
+    {
+        public string date;
+        public string vesselName;
+
+        public LaunchEventDto()
+        {
+        }
+
+        public LaunchEventDto(LaunchEvent le)
+        {
+            date = CareerLog.UTToDate(le.UT).ToString("o");
+            vesselName = le.VesselName;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(vesselName)}: {vesselName}";
         }
     }
 }

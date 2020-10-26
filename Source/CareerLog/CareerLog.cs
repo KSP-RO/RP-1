@@ -301,9 +301,10 @@ namespace RP0
             File.WriteAllText(path, csv);
         }
 
-        public void ExportToWeb(string serverUrl)
+        public void ExportToWeb(string serverUrl, string token)
         {
-            StartCoroutine(PostRequestCareerLog(serverUrl));
+            string url = $"{serverUrl.TrimEnd('/')}/{token}";
+            StartCoroutine(PostRequestCareerLog(url));
         }
 
         private IEnumerator PostRequestCareerLog(string url)
@@ -362,7 +363,7 @@ namespace RP0
 
             var byteJson = new UTF8Encoding().GetBytes(jsonToSend);
 
-            var uwr = new UnityWebRequest(url, "POST")
+            var uwr = new UnityWebRequest(url, "PATCH")
             {
                 downloadHandler = new DownloadHandlerBuffer(),
                 uploadHandler = new UploadHandlerRaw(byteJson)

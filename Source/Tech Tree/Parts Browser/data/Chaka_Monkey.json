@@ -1641,8 +1641,8 @@
         "title": "RSRM",
         "description": "A four segment Reusable Solid Rocket Motor, one of the most powerful rocket motors ever built and flown. Two of them were used by the Space Shuttle for liftoff and the initial part of the flight, providing more than 75% of the overall stack thrust. Manufactured by Thiokol and later by ATK. Diameter: [3.7 m]. Plume configured by RealPlume.",
         "mod": "Chaka Monkey",
-        "cost": "6780",
-        "entry_cost": "135600",
+        "cost": 0,
+        "entry_cost": 0,
         "category": "SOLID",
         "info": "",
         "year": "1981",
@@ -1653,10 +1653,10 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Shuttle",
-        "engine_config": "RSRM",
+        "engine_config": "RSRM-1981",
         "upgrade": false,
-        "entry_cost_mods": "RSRM",
-        "identical_part_name": "RSRM",
+        "entry_cost_mods": "RSRM-1981",
+        "identical_part_name": "",
         "module_tags": [
             "EngineSolid"
         ]

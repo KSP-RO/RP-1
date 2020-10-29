@@ -4,8 +4,8 @@
         "title": "RSRM SRB",
         "description": "",
         "mod": "reDIRECT",
-        "cost": "6780",
-        "entry_cost": "135600",
+        "cost": 0,
+        "entry_cost": 0,
         "category": "SOLID",
         "info": "",
         "year": "1981",
@@ -14,10 +14,10 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Shuttle",
-        "engine_config": "",
+        "engine_config": "RSRM-1981",
         "upgrade": false,
-        "entry_cost_mods": "RSRM",
-        "identical_part_name": "RSRM",
+        "entry_cost_mods": "RSRM-1981",
+        "identical_part_name": "",
         "module_tags": [
             "EngineSolid"
         ]

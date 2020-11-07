@@ -928,7 +928,9 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesDragon",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "ROC-DragonCap",

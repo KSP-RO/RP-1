@@ -3771,15 +3771,15 @@
     },
     {
         "name": "ROE-Merlin1C",
-        "title": "Merlin 1D",
+        "title": "Merlin 1C",
         "description": "",
         "mod": "ROEngines",
-        "cost": "175",
-        "entry_cost": "32000",
+        "cost": "185",
+        "entry_cost": "26000",
         "category": "ORBITAL",
         "info": "FS Engine",
-        "year": "2013",
-        "technology": "orbitalRocketry2009",
+        "year": "2006",
+        "technology": "orbitalRocketry2004",
         "era": "09-INTL",
         "ro": true,
         "rp0": true,
@@ -3788,8 +3788,8 @@
         "spacecraft": "Falcon",
         "engine_config": "Merlin1",
         "upgrade": false,
-        "entry_cost_mods": "Merlin1D",
-        "identical_part_name": "Merlin 1D",
+        "entry_cost_mods": "Merlin1C",
+        "identical_part_name": "Merlin 1C",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -3821,15 +3821,15 @@
     },
     {
         "name": "ROE-Merlin1D",
-        "title": "Merlin 1C",
+        "title": "Merlin 1D",
         "description": "",
         "mod": "ROEngines",
-        "cost": "185",
-        "entry_cost": "26000",
+        "cost": "175",
+        "entry_cost": "32000",
         "category": "ORBITAL",
         "info": "FS Engine",
-        "year": "2006",
-        "technology": "orbitalRocketry2004",
+        "year": "2013",
+        "technology": "orbitalRocketry2009",
         "era": "09-INTL",
         "ro": true,
         "rp0": true,
@@ -3838,8 +3838,8 @@
         "spacecraft": "Falcon",
         "engine_config": "Merlin1",
         "upgrade": false,
-        "entry_cost_mods": "Merlin1C",
-        "identical_part_name": "Merlin 1C",
+        "entry_cost_mods": "Merlin1D",
+        "identical_part_name": "Merlin 1D",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

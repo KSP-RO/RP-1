@@ -5378,7 +5378,7 @@
         "spacecraft": "BFR",
         "engine_config": "Raptor",
         "upgrade": false,
-        "entry_cost_mods": "Raptor?Vacuum",
+        "entry_cost_mods": "Raptor",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

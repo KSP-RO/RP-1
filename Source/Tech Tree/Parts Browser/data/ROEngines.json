@@ -5643,7 +5643,9 @@
         "upgrade": false,
         "entry_cost_mods": "S5.98M",
         "identical_part_name": "S5.98M",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "ROE-S598M-NicheParts",
@@ -5666,7 +5668,9 @@
         "upgrade": false,
         "entry_cost_mods": "S5.98M",
         "identical_part_name": "S5.98M",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "ROE-SRMU",

@@ -8382,6 +8382,27 @@
         "module_tags": []
     },
     {
+        "name": "RS-18",
+        "title": "RS-18",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "150",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "2020",
+        "technology": "orbitalRocketryNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Altair (Lander)",
+        "engine_config": "LMAE",
+        "upgrade": true,
+        "entry_cost_mods": "10000, LMAE, MethaloxProp",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RS-2100",
         "title": "RS-2100",
         "description": "",

@@ -894,11 +894,13 @@ namespace KerbalConstructionTime
 
                     var unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
                     int n = unlockableParts.Count();
+                    int unlockCost = FindUnlockCost(unlockableParts);
+                    string mode = KCTGameStates.EditorShipEditingMode ? "Edit" : "Build";
                     if (unlockableParts.Any())
                     {
                         buttons = new DialogGUIButton[] {
                             new DialogGUIButton("Acknowledged", () => { }),
-                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {FindUnlockCost(unlockableParts)} Funds and Build", () => { UnlockExperimentalParts(unlockableParts); AddVesselToBuildList(blv); })
+                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () => { UnlockExperimentalParts(unlockableParts); if (!KCTGameStates.EditorShipEditingMode) AddVesselToBuildList(blv); else EditShip(KCTGameStates.EditedVessel); })
                         };
                     }
                     else
@@ -918,7 +920,6 @@ namespace KerbalConstructionTime
                         HighLogic.UISkin);
                     return null;
                 }
-
 
                 double totalCost = blv.GetTotalCost();
                 double prevFunds = Funding.Instance.Funds;
@@ -949,7 +950,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.ActiveKSC.SPHList.Add(blv);
                 type = "SPH";
             }
-
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
@@ -957,6 +957,43 @@ namespace KerbalConstructionTime
             var message = new ScreenMessage($"[KCT] Added {blv.ShipName} to {type} build list.", 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
             return blv;
+        }
+
+        public static void EditShip(BuildListVessel ship)
+        {
+            Utilities.AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+            BuildListVessel newShip = Utilities.AddVesselToBuildList();
+            if (newShip == null)
+            {
+                Utilities.SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                return;
+            }
+
+            ship.RemoveFromBuildList();
+
+            double origBP = (ship.IsFinished ? -1 : ship.BuildPoints) + ship.IntegrationPoints;
+            double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double difference = Math.Abs(buildTime - origBP);
+            double progress = ship.IsFinished ? origBP : ship.Progress;
+
+            newShip.Progress = Math.Max(0, progress - (1.1 * difference));
+            newShip.RushBuildClicks = ship.RushBuildClicks;
+            KCTDebug.Log($"Finished? {ship.IsFinished}");
+            if (ship.IsFinished)
+                newShip.CannotEarnScience = true;
+
+            GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+
+            KCTGameStates.EditorShipEditingMode = false;
+
+            InputLockManager.RemoveControlLock("KCTEditExit");
+            InputLockManager.RemoveControlLock("KCTEditLoad");
+            InputLockManager.RemoveControlLock("KCTEditNew");
+            InputLockManager.RemoveControlLock("KCTEditLaunch");
+            EditorLogic.fetch.Unlock("KCTEditorMouseLock");
+            KCTDebug.Log("Edits saved.");
+
+            HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
         public static Dictionary<string, ProtoTechNode> GetUnlockedProtoTechNodes()

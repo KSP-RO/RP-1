@@ -120,14 +120,12 @@ namespace KerbalConstructionTime
                 ship.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ship);
             }
 
-            double origBP = ship.IsFinished ? _finishedShipBP : ship.BuildPoints;
-            origBP += ship.IntegrationPoints;
+            double origBP = (ship.IsFinished ? -1 : ship.BuildPoints) + ship.IntegrationPoints;
             double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
             double difference = Math.Abs(buildTime - origBP);
-            double progress;
-            if (ship.IsFinished) progress = origBP;
-            else progress = ship.Progress;
+            double progress = ship.IsFinished ? origBP : ship.Progress;
             double newProgress = Math.Max(0, progress - (1.1 * difference));
+
             GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * (progress / origBP), 2))}%");
             GUILayout.Label($"Edited: {Math.Round(100 * newProgress / buildTime, 2)}%");
 
@@ -160,35 +158,8 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Edits"))
             {
-
                 _finishedShipBP = -1;
-                Utilities.AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
-                BuildListVessel newShip = Utilities.AddVesselToBuildList();
-                if (newShip == null)
-                {
-                    Utilities.SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
-                    return;
-                }
-
-                ship.RemoveFromBuildList();
-                newShip.Progress = newProgress;
-                newShip.RushBuildClicks = ship.RushBuildClicks;
-                KCTDebug.Log($"Finished? {ship.IsFinished}");
-                if (ship.IsFinished)
-                    newShip.CannotEarnScience = true;
-
-                GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
-
-                KCTGameStates.EditorShipEditingMode = false;
-
-                InputLockManager.RemoveControlLock("KCTEditExit");
-                InputLockManager.RemoveControlLock("KCTEditLoad");
-                InputLockManager.RemoveControlLock("KCTEditNew");
-                InputLockManager.RemoveControlLock("KCTEditLaunch");
-                EditorLogic.fetch.Unlock("KCTEditorMouseLock");
-                KCTDebug.Log("Edits saved.");
-
-                HighLogic.LoadScene(GameScenes.SPACECENTER);
+                Utilities.EditShip(ship);
             }
             if (GUILayout.Button("Cancel Edits"))
             {

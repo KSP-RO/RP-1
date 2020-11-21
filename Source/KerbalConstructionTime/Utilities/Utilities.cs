@@ -895,12 +895,18 @@ namespace KerbalConstructionTime
                     var unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
                     int n = unlockableParts.Count();
                     int unlockCost = FindUnlockCost(unlockableParts);
-                    string mode = KCTGameStates.EditorShipEditingMode ? "Edit" : "Build";
+                    string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
                     if (unlockableParts.Any())
                     {
                         buttons = new DialogGUIButton[] {
                             new DialogGUIButton("Acknowledged", () => { }),
-                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () => { UnlockExperimentalParts(unlockableParts); if (!KCTGameStates.EditorShipEditingMode) AddVesselToBuildList(blv); else EditShip(KCTGameStates.EditedVessel); })
+                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () => 
+                            { 
+                                UnlockExperimentalParts(unlockableParts);
+                                if (!KCTGameStates.EditorShipEditingMode)
+                                    AddVesselToBuildList(blv); 
+                                else EditShip(KCTGameStates.EditedVessel); 
+                            })
                         };
                     }
                     else

@@ -92,7 +92,7 @@
         "mod": "Kerbalism",
         "cost": "400",
         "entry_cost": "8000",
-        "category": "MATERIALS",
+        "category": "LS",
         "info": "",
         "year": "1990",
         "technology": "longTermLifeSupport",
@@ -102,7 +102,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "drillStart",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -146,7 +146,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "7000, kerbalism-drill",
+        "entry_cost_mods": "6000, kerbalism-drill",
         "identical_part_name": "",
         "module_tags": []
     },

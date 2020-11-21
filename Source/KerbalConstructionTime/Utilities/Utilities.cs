@@ -977,12 +977,7 @@ namespace KerbalConstructionTime
 
             ship.RemoveFromBuildList();
 
-            double origBP = (ship.IsFinished ? -1 : ship.BuildPoints) + ship.IntegrationPoints;
-            double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
-            double difference = Math.Abs(buildTime - origBP);
-            double progress = ship.IsFinished ? origBP : ship.Progress;
-
-            newShip.Progress = Math.Max(0, progress - (1.1 * difference));
+            newShip.Progress = GetShipProgress(ship, out _, out _, out _, out _);
             newShip.RushBuildClicks = ship.RushBuildClicks;
             KCTDebug.Log($"Finished? {ship.IsFinished}");
             if (ship.IsFinished)
@@ -1014,6 +1009,16 @@ namespace KerbalConstructionTime
             }
 
             return protoTechNodes;
+        }
+
+        public static double GetShipProgress(BuildListVessel ship, out double origBP, out double buildTime, out double difference, out double progress)
+        {
+            origBP = (ship.IsFinished ? -1 : ship.BuildPoints) + ship.IntegrationPoints;
+            buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            difference = Math.Abs(buildTime - origBP);
+            progress = ship.IsFinished ? origBP : ship.Progress;
+            double newProgress = Math.Max(0, progress - (1.1 * difference));
+            return newProgress;
         }
 
         public static int FindUnlockCost(List<AvailablePart> availableParts)

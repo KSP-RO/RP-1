@@ -120,12 +120,7 @@ namespace KerbalConstructionTime
                 ship.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ship);
             }
 
-            double origBP = (ship.IsFinished ? -1 : ship.BuildPoints) + ship.IntegrationPoints;
-            double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
-            double difference = Math.Abs(buildTime - origBP);
-            double progress = ship.IsFinished ? origBP : ship.Progress;
-            double newProgress = Math.Max(0, progress - (1.1 * difference));
-
+            double newProgress = Utilities.GetShipProgress(ship, out double origBP, out double buildTime, out double difference, out double progress);
             GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * (progress / origBP), 2))}%");
             GUILayout.Label($"Edited: {Math.Round(100 * newProgress / buildTime, 2)}%");
 

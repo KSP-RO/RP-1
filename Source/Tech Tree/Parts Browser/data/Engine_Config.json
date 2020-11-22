@@ -4980,7 +4980,7 @@
         "spacecraft": "",
         "engine_config": "Agena",
         "upgrade": false,
-        "entry_cost_mods": "7000, Model117ECM",
+        "entry_cost_mods": "Model117ECM",
         "identical_part_name": "",
         "module_tags": []
     },

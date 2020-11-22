@@ -5074,7 +5074,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": false,
-        "entry_cost_mods": "RL10A-4-2",
+        "entry_cost_mods": "RL10A-4-1-2",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",

@@ -580,17 +580,16 @@ namespace RP0.Crew
 
         private void OnCrewHired(ProtoCrewMember pcm, int idx)
         {
-            double currentTime = Planetarium.GetUniversalTime();
             double retireTime;
-            // Skip updating the retirement time if this is an existing kerbal who has not yet retired.
-            if (KerbalRetireTimes.ContainsKey(pcm.name) == false || KerbalRetireTimes[pcm.name] < currentTime)
-            {
-                retireTime = currentTime + GetServiceTime(pcm);
-                KerbalRetireTimes[pcm.name] = retireTime;
-            }
-            else
+            // Skip updating the retirement time if this is an existing kerbal.
+            if (KerbalRetireTimes.ContainsKey(pcm.name))
             {
                 retireTime = KerbalRetireTimes[pcm.name];
+            }
+            else
+            { 
+                retireTime = Planetarium.GetUniversalTime() + GetServiceTime(pcm);
+                KerbalRetireTimes[pcm.name] = retireTime;
             }
 
             if (RetirementEnabled && idx != int.MinValue)

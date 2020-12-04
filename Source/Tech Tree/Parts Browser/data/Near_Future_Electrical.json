@@ -1,5 +1,51 @@
 [
     {
+        "name": "RO-reactor-BES5",
+        "title": "BES-5 Nuclear Reactor",
+        "description": "",
+        "mod": "Near Future Electrical",
+        "cost": "1000",
+        "entry_cost": "0",
+        "category": "NUCLEAR",
+        "info": "",
+        "year": "1971",
+        "technology": "improvedRTG",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "RORSAT",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "100000",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
+        "name": "RO-reactor-TOPAZI",
+        "title": "TOPAZ-I Nuclear Reactor",
+        "description": "",
+        "mod": "Near Future Electrical",
+        "cost": "1503",
+        "entry_cost": "0",
+        "category": "NUCLEAR",
+        "info": "",
+        "year": "1988",
+        "technology": "improvedNuclearPower",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "RORSAT",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "200000",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
         "name": "nuclear-recycler-25",
         "title": "Whirlijig Nuclear Reprocessor",
         "description": "This centrifugal facility can both process Ore into Enriched Uranium and reprocess Depleted Fuel into Enriched Uranium or XenonGas. Both processes require a large amount of power and cooling capacity.",
@@ -121,8 +167,8 @@
         "title": "TOPAZ-II Nuclear Reactor",
         "description": "I. V. Kurchatov Institute of Atomic Energy. Related to the TOPAZ-I, a nuclear fission reactor found in around 30 satellites put into orbit by the Soviet Union.",
         "mod": "Near Future Electrical",
-        "cost": "0",
-        "entry_cost": "275000",
+        "cost": "1503",
+        "entry_cost": "0",
         "category": "NUCLEAR",
         "info": "Nuclear Reactor",
         "year": "2001",
@@ -131,11 +177,11 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "75000, RO-reactor-TOPAZI",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"

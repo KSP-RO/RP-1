@@ -708,8 +708,8 @@
         "title": "Gamma 8",
         "description": "This was an 8 chamber development of Gamma, used for the first stage of the Black Arrow satellite launch vehicle. Gamma thrust chambers were mounted in pairs radially, each pair on a one-axis tangential gimbal. Collective movement gave roll control, differential movement pitch. Diameter: [1.98 m]. Plume configured by RealPlume.",
         "mod": "SXT",
-        "cost": "300",
-        "entry_cost": "10000",
+        "cost": "154",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1958",
@@ -723,7 +723,7 @@
         "engine_config": "Gamma8",
         "upgrade": false,
         "entry_cost_mods": "Gamma-8",
-        "identical_part_name": "",
+        "identical_part_name": "Gamma8",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -733,8 +733,8 @@
         "title": "Gamma 2",
         "description": "A two chamber version of Gamma, used for the second stage of the Black Arrow satellite launch vehicle. As the only Gamma not required to operate at sea level, the nozzles were extended to allow better expansion. Diameter: [1.37 m]. Plume configured by RealPlume.",
         "mod": "SXT",
-        "cost": "250",
-        "entry_cost": "4000",
+        "cost": "100",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1958",

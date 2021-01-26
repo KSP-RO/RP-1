@@ -5337,6 +5337,29 @@
         ]
     },
     {
+        "name": "ROE-RZ",
+        "title": "RZ Series",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "280",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1958",
+        "technology": "orbitalRocketry1958",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Europa",
+        "engine_config": "RZ.2",
+        "upgrade": false,
+        "entry_cost_mods": "RZ-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-Raptor",
         "title": "Raptor Engine",
         "description": "",

@@ -112,7 +112,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Nuclear"
+        ]
     },
     {
         "name": "reactor-125",
@@ -135,7 +137,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Nuclear"
+        ]
     },
     {
         "name": "reactor-25",
@@ -158,7 +162,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Nuclear"
+        ]
     },
     {
         "name": "reactor-25-2",
@@ -181,7 +187,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Nuclear"
+        ]
     },
     {
         "name": "rtg-0625",

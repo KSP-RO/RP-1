@@ -1461,8 +1461,8 @@
         "title": "AJ10-118 Series",
         "description": "The AJ10 engine version used for the Delta F and K upper stages of the Delta launch vehicle family. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
-        "cost": "300",
-        "entry_cost": "6000",
+        "cost": "200",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "US Engine",
         "year": "1989",
@@ -2170,8 +2170,8 @@
         "title": "XLR81 (Agena) Vacuum Engine",
         "description": "Gas-generator nitric acid/UDMH vacuum engine used on Agena. The XLR81 family was derived from the Bell Hustler Rocket Engine, which was developed for use on an air-to-surface missile. Early engines were nearly identical to the Hustler engine, while later variants offered new capabilities and improved performance. Engine restart was introduced on the Agena B's XLR81-BA-7 (Model 8081). The XLR81-BA-11 (Model 8096) used on Agena D used propellant sumps to eliminate the need for ullage thrust. The XLR81-BA-13 (Model 8247) powered the Gemini Agena Target Vehicle (a modified Agena D) and was rated for up to 14 restarts. Diameter: [0.9 m]. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
-        "cost": "200",
-        "entry_cost": "7000",
+        "cost": "150",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1958",
@@ -2184,10 +2184,11 @@
         "spacecraft": "Agena A",
         "engine_config": "Agena",
         "upgrade": false,
-        "entry_cost_mods": "XLR81-BA-5",
+        "entry_cost_mods": "Model117",
         "identical_part_name": "XLR81",
         "module_tags": [
-            "EngineLiquidTurbo"
+            "EngineLiquidTurbo",
+            "Toxic"
         ]
     },
     {

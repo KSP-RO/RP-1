@@ -894,11 +894,19 @@ namespace KerbalConstructionTime
 
                     var unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
                     int n = unlockableParts.Count();
+                    int unlockCost = FindUnlockCost(unlockableParts);
+                    string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
                     if (unlockableParts.Any())
                     {
                         buttons = new DialogGUIButton[] {
                             new DialogGUIButton("Acknowledged", () => { }),
-                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {FindUnlockCost(unlockableParts)} Funds and Build", () => { UnlockExperimentalParts(unlockableParts); AddVesselToBuildList(blv); })
+                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () => 
+                            { 
+                                UnlockExperimentalParts(unlockableParts);
+                                if (!KCTGameStates.EditorShipEditingMode)
+                                    AddVesselToBuildList(blv); 
+                                else EditShip(KCTGameStates.EditedVessel); 
+                            })
                         };
                     }
                     else
@@ -918,7 +926,6 @@ namespace KerbalConstructionTime
                         HighLogic.UISkin);
                     return null;
                 }
-
 
                 double totalCost = blv.GetTotalCost();
                 double prevFunds = Funding.Instance.Funds;
@@ -949,7 +956,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.ActiveKSC.SPHList.Add(blv);
                 type = "SPH";
             }
-
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
@@ -957,6 +963,39 @@ namespace KerbalConstructionTime
             var message = new ScreenMessage($"[KCT] Added {blv.ShipName} to {type} build list.", 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
             return blv;
+        }
+
+        public static void EditShip(BuildListVessel ship)
+        {
+            AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+            BuildListVessel newShip = AddVesselToBuildList();
+            if (newShip == null)
+            {
+                SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                return;
+            }
+
+            ship.RemoveFromBuildList();
+
+            GetShipEditProgress(ship, out double progressBP, out _, out _);
+            newShip.Progress = progressBP;
+            newShip.RushBuildClicks = ship.RushBuildClicks;
+            KCTDebug.Log($"Finished? {ship.IsFinished}");
+            if (ship.IsFinished)
+                newShip.CannotEarnScience = true;
+
+            GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+
+            KCTGameStates.EditorShipEditingMode = false;
+
+            InputLockManager.RemoveControlLock("KCTEditExit");
+            InputLockManager.RemoveControlLock("KCTEditLoad");
+            InputLockManager.RemoveControlLock("KCTEditNew");
+            InputLockManager.RemoveControlLock("KCTEditLaunch");
+            EditorLogic.fetch.Unlock("KCTEditorMouseLock");
+            KCTDebug.Log("Edits saved.");
+
+            HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
         public static Dictionary<string, ProtoTechNode> GetUnlockedProtoTechNodes()
@@ -971,6 +1010,17 @@ namespace KerbalConstructionTime
             }
 
             return protoTechNodes;
+        }
+
+        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        {
+            double origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
+            double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
+            double oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+            newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
+            originalCompletionPercent = oldProgressBP / origTotalBP;
+            newCompletionPercent = newProgressBP / newTotalBP;
         }
 
         public static int FindUnlockCost(List<AvailablePart> availableParts)

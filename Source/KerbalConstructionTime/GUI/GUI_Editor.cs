@@ -120,9 +120,9 @@ namespace KerbalConstructionTime
                 ship.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ship);
             }
 
-            double newProgress = Utilities.GetShipProgress(ship, out double origBP, out double buildTime, out double difference, out double progress);
-            GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * (progress / origBP), 2))}%");
-            GUILayout.Label($"Edited: {Math.Round(100 * newProgress / buildTime, 2)}%");
+            Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
+            GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * originalCompletionPercent, 2))}%");
+            GUILayout.Label($"Edited: {Math.Round(100 * newCompletionPercent, 2)}%");
 
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             GUILayout.BeginHorizontal();
@@ -142,7 +142,7 @@ namespace KerbalConstructionTime
                     BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(buildTime - newProgress) / bR));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime - newProgressBP) / bR));
             }
             else
             {

@@ -967,17 +967,18 @@ namespace KerbalConstructionTime
 
         public static void EditShip(BuildListVessel ship)
         {
-            Utilities.AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
-            BuildListVessel newShip = Utilities.AddVesselToBuildList();
+            AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+            BuildListVessel newShip = AddVesselToBuildList();
             if (newShip == null)
             {
-                Utilities.SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
                 return;
             }
 
             ship.RemoveFromBuildList();
 
-            newShip.Progress = GetShipProgress(ship, out _, out _, out _, out _);
+            GetShipEditProgress(ship, out double progressBP, out _, out _);
+            newShip.Progress = progressBP;
             newShip.RushBuildClicks = ship.RushBuildClicks;
             KCTDebug.Log($"Finished? {ship.IsFinished}");
             if (ship.IsFinished)
@@ -1011,14 +1012,15 @@ namespace KerbalConstructionTime
             return protoTechNodes;
         }
 
-        public static double GetShipProgress(BuildListVessel ship, out double origBP, out double buildTime, out double difference, out double progress)
+        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
         {
-            origBP = (ship.IsFinished ? -1 : ship.BuildPoints) + ship.IntegrationPoints;
-            buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
-            difference = Math.Abs(buildTime - origBP);
-            progress = ship.IsFinished ? origBP : ship.Progress;
-            double newProgress = Math.Max(0, progress - (1.1 * difference));
-            return newProgress;
+            double origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
+            double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
+            double oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+            newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
+            originalCompletionPercent = oldProgressBP / origTotalBP;
+            newCompletionPercent = newProgressBP / newTotalBP;
         }
 
         public static int FindUnlockCost(List<AvailablePart> availableParts)

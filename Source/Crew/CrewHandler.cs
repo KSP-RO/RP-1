@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using KCTUtils = KerbalConstructionTime.Utilities;
 
 namespace RP0.Crew
 {
@@ -197,6 +198,7 @@ namespace RP0.Crew
             {
                 _isFirstLoad = false;
                 ProcessFirstLoad();
+                EnsureActiveCrewInSimulation();
             }
 
             if (HighLogic.LoadedSceneIsFlight && _flightLogUpdateCounter++ >= FlightLogUpdateInterval)
@@ -671,6 +673,17 @@ namespace RP0.Crew
                                              "OK",
                                              false,
                                              HighLogic.UISkin);
+            }
+        }
+
+        private static void EnsureActiveCrewInSimulation()
+        {
+            if (HighLogic.LoadedSceneIsFlight && KCTUtils.IsKRASHSimActive && FlightGlobals.ActiveVessel != null)
+            {
+                foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
+                {
+                    pcm.inactive = false;
+                }
             }
         }
 

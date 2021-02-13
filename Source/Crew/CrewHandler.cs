@@ -40,7 +40,7 @@ namespace RP0.Crew
         private HashSet<string> _retirees = new HashSet<string>();
         private HashSet<string> _partSynsHandled = new HashSet<string>();
         private List<TrainingExpiration> _expireTimes = new List<TrainingExpiration>();
-        private bool _isFirstLoad = true;
+        private bool _isFirstLoad = true;    // true if it's a freshly started career
         private bool _inAC = false;
         private int _flightLogUpdateCounter = 0;
         private int _countAvailable, _countAssigned, _countKIA;
@@ -89,6 +89,7 @@ namespace RP0.Crew
             }
 
             StartCoroutine(CreateCoursesRoutine());
+            StartCoroutine(EnsureActiveCrewInSimulationRoutine());
         }
 
         public override void OnLoad(ConfigNode node)
@@ -106,6 +107,7 @@ namespace RP0.Crew
             ConfigNode n = node.GetNode("RETIRETIMES");
             if (n != null)
             {
+                _isFirstLoad = false;
                 foreach (ConfigNode.Value v in n.values)
                     KerbalRetireTimes[v.name] = double.Parse(v.value);
             }
@@ -198,7 +200,6 @@ namespace RP0.Crew
             {
                 _isFirstLoad = false;
                 ProcessFirstLoad();
-                EnsureActiveCrewInSimulation();
             }
 
             if (HighLogic.LoadedSceneIsFlight && _flightLogUpdateCounter++ >= FlightLogUpdateInterval)
@@ -676,17 +677,6 @@ namespace RP0.Crew
             }
         }
 
-        private static void EnsureActiveCrewInSimulation()
-        {
-            if (HighLogic.LoadedSceneIsFlight && KCTUtils.IsKRASHSimActive && FlightGlobals.ActiveVessel != null)
-            {
-                foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
-                {
-                    pcm.inactive = false;
-                }
-            }
-        }
-
         private void ProcessRetirements(double time)
         {
             if (RetirementEnabled)
@@ -1058,6 +1048,20 @@ namespace RP0.Crew
                     {
                         AddPartCourses(ap);
                     }
+                }
+            }
+        }
+
+        private IEnumerator EnsureActiveCrewInSimulationRoutine()
+        {
+            if (!HighLogic.LoadedSceneIsFlight) yield return null;
+            yield return new WaitForFixedUpdate();
+
+            if (KCTUtils.IsKRASHSimActive && FlightGlobals.ActiveVessel != null)
+            {
+                foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
+                {
+                    pcm.inactive = false;
                 }
             }
         }

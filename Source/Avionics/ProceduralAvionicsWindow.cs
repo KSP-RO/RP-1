@@ -2,6 +2,7 @@
 using RealFuels.Tanks;
 using RP0.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
@@ -248,8 +249,25 @@ namespace RP0.ProceduralAvionics
             controllableMass = newControlMass;
             if (_seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2)
             {
+                // Store and sum together the volume of all resources other than EC on this part
+                double otherFuelVolume = 0;
+                var otherTanks = new List<KeyValuePair<FuelTank, double>>();
+                foreach (FuelTank t in _tankList)
+                {
+                    if (t == _ecTank || t.maxAmount == 0) continue;
+                    otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
+                    otherFuelVolume += t.maxAmount / t.utilization;
+                }
+
                 SetProcPartVolumeLimit();
-                ApplyCorrectProcTankVolume(extraVolumeLiters, ecAmount);
+                ApplyCorrectProcTankVolume(extraVolumeLiters + (float)otherFuelVolume, ecAmount);
+
+                // Restore all the pre-resize amounts in tanks
+                foreach (KeyValuePair<FuelTank, double> kvp in otherTanks)
+                {
+                    FuelTank t = kvp.Key;
+                    t.amount = t.maxAmount = kvp.Value;
+                }
             }
             else
             {

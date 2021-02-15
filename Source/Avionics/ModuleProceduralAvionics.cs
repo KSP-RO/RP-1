@@ -60,6 +60,7 @@ namespace RP0.ProceduralAvionics
         private PartModule _procPartPM;
         private PartModule _roTankPM;
         private ModuleFuelTanks _rfPM;
+        private FuelTankList _tankList;
         private FuelTank _ecTank;
         private MethodInfo _seekVolumeMethod;
         private FieldInfo _rfIsDirtyField;
@@ -115,13 +116,14 @@ namespace RP0.ProceduralAvionics
 //        private float GetMaximumControllableMass() => FloorToSliderIncrement(GetControllableMass(MaxAvionicsMass));
         private float GetMaximumControllableMass() => GetControllableMass(MaxAvionicsMass);
 
-        private float GetAvionicsMass() => GetPolynomial(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode.massExponent, CurrentProceduralAvionicsTechNode.massConstant, CurrentProceduralAvionicsTechNode.massFactor) / 1000f;
+        private float GetAvionicsMass() => GetAvionicsMass(GetInternalMassLimit());
+        private float GetAvionicsMass(float controllableMass) => GetPolynomial(controllableMass, CurrentProceduralAvionicsTechNode.massExponent, CurrentProceduralAvionicsTechNode.massConstant, CurrentProceduralAvionicsTechNode.massFactor) / 1000f;
         private float GetAvionicsCost() => GetPolynomial(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode.costExponent, CurrentProceduralAvionicsTechNode.costConstant, CurrentProceduralAvionicsTechNode.costFactor);
         private float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
-
-        private float GetShieldedAvionicsMass()
+        private float GetShieldedAvionicsMass() => GetShieldedAvionicsMass(GetAvionicsMass());
+        private float GetShieldedAvionicsMass(float controllableMass)
         {
-            var avionicsMass = GetAvionicsMass();
+            var avionicsMass = GetAvionicsMass(controllableMass);
             return avionicsMass + GetShieldingMass(avionicsMass);
         }
 
@@ -213,8 +215,8 @@ namespace RP0.ProceduralAvionics
             _rfPM = part.Modules.GetModule<ModuleFuelTanks>();
             _rfIsDirtyField = typeof(ModuleFuelTanks).GetField("massDirty", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
             var fiTanks = typeof(ModuleFuelTanks).GetField("tankList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            var tankList = (FuelTankList)fiTanks.GetValue(_rfPM);
-            _ecTank = tankList["ElectricCharge"];
+            _tankList = (FuelTankList)fiTanks.GetValue(_rfPM);
+            _ecTank = _tankList["ElectricCharge"];
 
             _seekVolumeMethod = GetSeekVolumeMethod();
         }

@@ -163,19 +163,38 @@ namespace RP0.ProceduralAvionics
 
             if (!IsScienceCore)
             {
-                GUILayout.BeginHorizontal(GUILayout.MaxWidth(250));
+                GUILayout.BeginHorizontal();
+                GUILayout.BeginHorizontal(GUILayout.Width(250));
                 GUILayout.Label("Controllable mass: ", HighLogic.Skin.label, GUILayout.Width(150));
                 _sControllableMass = GUILayout.TextField(_sControllableMass, HighLogic.Skin.textField);
                 GUILayout.Label("t", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
+                if (float.TryParse(_sControllableMass, out float newControlMass))
+                {
+                    float avionicsMass = GetShieldedAvionicsMass(newControlMass);
+                    GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+                }
+                GUILayout.EndHorizontal();
+                GUILayout.EndHorizontal();
             }
 
-            GUILayout.BeginHorizontal(GUILayout.MaxWidth(250));
+            GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
             GUILayout.Label("EC amount: ", HighLogic.Skin.label, GUILayout.Width(150));
             _sECAmount = GUILayout.TextField(_sECAmount, HighLogic.Skin.textField);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MaxWidth(250));
+            GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
+            if (float.TryParse(_sECAmount, out float ecAmount))
+            {
+                GUILayout.Label($" ({_ecTank.mass * ecAmount:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
             GUILayout.Label("Additional tank volume: ", HighLogic.Skin.label, GUILayout.Width(150));
             GUI.enabled = _seekVolumeMethod != null;
             _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);

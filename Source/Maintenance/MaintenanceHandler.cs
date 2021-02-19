@@ -86,17 +86,6 @@ namespace RP0
             GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
-        public void Start()
-        {
-            double ut = Planetarium.GetUniversalTime();
-            if (nextUpdate > ut + UpdateInterval)
-            {
-                // KRASH has a bad habit of not reverting state properly when exiting sims.
-                // This means that the updateInterval could end up years into the future.
-                nextUpdate = ut + 5;
-            }
-        }
-
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
@@ -288,7 +277,7 @@ namespace RP0
                 return;
             }
 
-            double time = Planetarium.GetUniversalTime();
+            double time = KSPUtils.GetUT();
             if (nextUpdate > time)
             {
                 if (_wasWarpingHigh && TimeWarp.CurrentRate <= 100f)

@@ -168,7 +168,7 @@ namespace RP0.Crew
             if (Started)
                 start = startTime;
             else
-                start = Planetarium.GetUniversalTime();
+                start = KSPUtils.GetUT();
             length = GetTime();
             return start + length;
         }
@@ -231,7 +231,7 @@ namespace RP0.Crew
                                 exp.Expiration *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
                                     CrewHandler.Settings.trainingProficiencyStupidMax,
                                     student.stupidity);
-                            exp.Expiration += Planetarium.GetUniversalTime();
+                            exp.Expiration += KSPUtils.GetUT();
                         }
 
                         bool prevMissionsAlreadyExpired = false;
@@ -293,7 +293,7 @@ namespace RP0.Crew
 
             Started = true;
 
-            startTime = Planetarium.GetUniversalTime();
+            startTime = KSPUtils.GetUT();
 
             foreach (ProtoCrewMember student in Students)
                 student.SetInactive(GetTime(Students) + 1d);

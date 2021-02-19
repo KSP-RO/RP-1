@@ -47,7 +47,7 @@ namespace RP0
         { 
             get
             {
-                double time = Planetarium.GetUniversalTime();
+                double time = KSPUtils.GetUT();
                 while (time > NextPeriodStart)
                 {
                     SwitchToNextPeriod();
@@ -212,7 +212,7 @@ namespace RP0
         {
             if (!IsEnabled) return;
 
-            _techEvents.Add(new TechResearchEvent(Planetarium.GetUniversalTime())
+            _techEvents.Add(new TechResearchEvent(KSPUtils.GetUT())
             {
                 NodeName = nodeName
             });
@@ -222,7 +222,7 @@ namespace RP0
         {
             if (!IsEnabled) return;
 
-            _facilityConstructions.Add(new FacilityConstructionEvent(Planetarium.GetUniversalTime())
+            _facilityConstructions.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
             {
                 Facility = facility,
                 NewLevel = newLevel,
@@ -403,7 +403,7 @@ namespace RP0
         {
             if (c.AutoAccept) return;   // Do not record the Accept event for record contracts
 
-            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
+            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Accept,
                 FundsChange = c.FundsAdvance,
@@ -415,7 +415,7 @@ namespace RP0
 
         private void ContractCompleted(Contract c)
         {
-            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
+            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Complete,
                 FundsChange = c.FundsCompletion,
@@ -435,7 +435,7 @@ namespace RP0
                 fundsChange = _prevFundsChangeAmount;
             }
 
-            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
+            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Cancel,
                 FundsChange = fundsChange,
@@ -448,7 +448,7 @@ namespace RP0
         private void ContractFailed(Contract c)
         {
             string internalName = GetContractInternalName(c);
-            double ut = Planetarium.GetUniversalTime();
+            double ut = KSPUtils.GetUT();
             if (_contractDict.Any(c2 => c2.UT == ut && c2.InternalName == internalName))
             {
                 // This contract was actually cancelled, not failed
@@ -473,7 +473,7 @@ namespace RP0
                 Debug.Log($"[RP-0] Launching {FlightGlobals.ActiveVessel?.vesselName}");
 
                 _launched = true;
-                _launchedVessels.Add(new LaunchEvent(Planetarium.GetUniversalTime())
+                _launchedVessels.Add(new LaunchEvent(KSPUtils.GetUT())
                 {
                     VesselName = FlightGlobals.ActiveVessel?.vesselName
                 });

@@ -74,7 +74,7 @@ namespace RP0.Crew
 
         public void Start()
         {
-            double ut = Planetarium.GetUniversalTime();
+            double ut = KSPUtils.GetUT();
             if (NextUpdate > ut + UpdateInterval)
             {
                 // KRASH has a bad habit of not reverting state properly when exiting sims.
@@ -208,7 +208,7 @@ namespace RP0.Crew
                 UpdateFlightLog();
             }
 
-            double time = Planetarium.GetUniversalTime();
+            double time = KSPUtils.GetUT();
             if (NextUpdate < time)
             {
                 // Ensure that CrewHandler updates happen at predictable times so that accurate KAC alarms can be set.
@@ -308,7 +308,7 @@ namespace RP0.Crew
                     if (e.type == TrainingType_Mission && e.target == partName)
                     {
                         double exp = GetExpiration(pcm.name, e);
-                        lacksMission = exp == 0d || exp < Planetarium.GetUniversalTime();
+                        lacksMission = exp == 0d || exp < KSPUtils.GetUT();
                     }
                 }
                 else
@@ -421,7 +421,7 @@ namespace RP0.Crew
             var retirementChanges = new List<string>();
             var inactivity = new List<string>();
 
-            double UT = Planetarium.GetUniversalTime();
+            double UT = KSPUtils.GetUT();
 
             // normally we would use v.missionTime, but that doesn't seem to update
             // when you're not actually controlling the vessel
@@ -460,7 +460,7 @@ namespace RP0.Crew
                     if (e.type == "Nationality")
                         continue;
                     if (e.type == TrainingType_Mission)
-                        SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
+                        SetExpiration(pcm.name, e, KSPUtils.GetUT());
 
                     if (validStatuses.Contains(e.type))
                     {
@@ -591,7 +591,7 @@ namespace RP0.Crew
             }
             else
             { 
-                retireTime = Planetarium.GetUniversalTime() + GetServiceTime(pcm);
+                retireTime = KSPUtils.GetUT() + GetServiceTime(pcm);
                 KerbalRetireTimes[pcm.name] = retireTime;
             }
 

@@ -2241,8 +2241,8 @@
         "title": "Gamma 2",
         "description": "A two chamber version of Gamma, used for the second stage of the Black Arrow satellite launch vehicle. As the only Gamma not required to operate at sea level, the nozzles were extended to allow better expansion. Diameter: [1.37 m]. Plume configured by RealPlume.",
         "mod": "ROEngines",
-        "cost": "250",
-        "entry_cost": "4000",
+        "cost": "100",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1958",
@@ -2257,6 +2257,52 @@
         "upgrade": false,
         "entry_cost_mods": "Gamma-2",
         "identical_part_name": "Gamma2",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-Gamma301",
+        "title": "Gamma-301",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "56",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1955",
+        "technology": "basicRocketryRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Black Knight",
+        "engine_config": "Gamma301",
+        "upgrade": false,
+        "entry_cost_mods": "Gamma-201",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-Gamma8",
+        "title": "Gamma 8",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "154",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1958",
+        "technology": "orbitalRocketry1958",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Black Arrow",
+        "engine_config": "Gamma8",
+        "upgrade": false,
+        "entry_cost_mods": "Gamma-8",
+        "identical_part_name": "Gamma8",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -5956,6 +6002,29 @@
         "identical_part_name": "",
         "module_tags": [
             "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Stentor",
+        "title": "Stentor",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1953",
+        "technology": "basicRocketryRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Blue Steel",
+        "engine_config": "Stentor",
+        "upgrade": false,
+        "entry_cost_mods": "Stentor",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
         ]
     },
     {

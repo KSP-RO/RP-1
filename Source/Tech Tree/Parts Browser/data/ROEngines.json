@@ -4122,7 +4122,7 @@
         "title": "ORM-65",
         "description": "Very early Soviet rocket engine, designed by Glushko in 1936 for use on the KR-212 cruise missile, and modified for the rocket aircraft RP-318. It was the first reliable, regenerativley cooled rocket.",
         "mod": "ROEngines",
-        "cost": "30",
+        "cost": "15",
         "entry_cost": "1",
         "category": "ORBITAL",
         "info": "",
@@ -4852,6 +4852,30 @@
         ]
     },
     {
+        "name": "ROE-RD200",
+        "title": "RD-200",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "150",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1951",
+        "technology": "earlyRocketry",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD200",
+        "upgrade": false,
+        "entry_cost_mods": "RD-200",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-RD211",
         "title": "RD-211 Series",
         "description": "",
@@ -5553,6 +5577,30 @@
         "identical_part_name": "Rutherford",
         "module_tags": [
             "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-S155",
+        "title": "S-155",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "MiG-21",
+        "engine_config": "S155",
+        "upgrade": false,
+        "entry_cost_mods": "S-155",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
         ]
     },
     {

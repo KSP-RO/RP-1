@@ -5407,6 +5407,30 @@
         ]
     },
     {
+        "name": "ROE-RZ20",
+        "title": "RZ.20",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "350",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1966",
+        "technology": "improvedHydrolox",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RZ20",
+        "upgrade": false,
+        "entry_cost_mods": "RZ20-Mk1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RZ",
         "title": "RZ Series",
         "description": "",

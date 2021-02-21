@@ -39,6 +39,12 @@ namespace KerbalConstructionTime
 
                 if (GUIStates.ShowEditorGUI)
                     EditorWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawEditorGUI"), EditorWindowPosition, DrawEditorGUI, "Kerbal Construction Time", HighLogic.Skin.window);
+                if (GUIStates.ShowSimulationGUI)
+                    _simulationWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawSimGUI"), _simulationWindowPosition, DrawSimulationWindow, "KCT Simulation", HighLogic.Skin.window);
+                if (GUIStates.ShowSimConfig)
+                    _simulationConfigPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawSimConfGUI"), _simulationConfigPosition, DrawSimulationConfigure, "Simulation Configuration", HighLogic.Skin.window);
+                if (GUIStates.ShowSimBodyChooser)
+                    _centralWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawSimBodyGUI"), _centralWindowPosition, DrawBodyChooser, "Choose Body", HighLogic.Skin.window);
                 if (GUIStates.ShowBuildList)
                 {
                     ref Rect pos = ref (HighLogic.LoadedSceneIsEditor ? ref EditorBuildListWindowPosition : ref BuildListWindowPosition);
@@ -121,9 +127,14 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
 
-                if (Utilities.IsKRASHSimActive && AirlaunchTechLevel.AnyUnlocked())
+                if (Utilities.IsSimulationActive && AirlaunchTechLevel.AnyUnlocked())
                 {
                     GUIStates.ShowAirlaunch = isVisible;
+                }
+                if (KCTGameStates.IsSimulatedFlight)
+                {
+                    GUIStates.ShowSimulationGUI = isVisible;
+                    _simulationWindowPosition.height = 1;
                 }
             }
             else if ((HighLogic.LoadedScene == GameScenes.EDITOR) && !IsPrimarilyDisabled)

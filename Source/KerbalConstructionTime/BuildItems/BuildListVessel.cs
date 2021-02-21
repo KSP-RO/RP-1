@@ -471,7 +471,6 @@ namespace KerbalConstructionTime
                 FillUnlockedFuelTanks();
             ShipNode.Save(tempFile);
             FlightDriver.StartWithNewLaunch(tempFile, Flag, LaunchSite, new VesselCrewManifest());
-            KCTGameStates.LaunchFromTS = false;
             if (KCTGameStates.AirlaunchParams != null) KCTGameStates.AirlaunchParams.KSPVesselId = null;
         }
 
@@ -552,7 +551,7 @@ namespace KerbalConstructionTime
                         if (module.HasValue("timestamp"))
                         {
                             KCTDebug.Log("Updating RF timestamp on a part");
-                            module.SetValue("timestamp", Planetarium.GetUniversalTime().ToString());
+                            module.SetValue("timestamp", Utilities.GetUT().ToString());
                         }
                     }
                 }

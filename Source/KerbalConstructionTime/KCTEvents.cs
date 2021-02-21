@@ -330,11 +330,13 @@ namespace KerbalConstructionTime
         public void GameSceneEvent(GameScenes scene)
         {
             KCT_GUI.HideAll();
+            KCTGameStates.SimulationParams.IsVesselMoved = false;
 
             if (scene == GameScenes.MAINMENU)
             {
                 KCTGameStates.Reset();
                 KCTGameStates.IsFirstStart = false;
+                Utilities.DisableSimulationLocks();
                 InputLockManager.RemoveControlLock("KCTLaunchLock");
                 KCTGameStates.ActiveKSCName = Utilities._defaultKscId;
                 KCTGameStates.ActiveKSC = new KSCItem(Utilities._defaultKscId);
@@ -356,6 +358,10 @@ namespace KerbalConstructionTime
             var validScenes = new List<GameScenes> { GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.EDITOR };
             if (validScenes.Contains(scene))
             {
+                if (Utilities.SimulationSaveExists())
+                {
+                    Utilities.LoadSimulationSave(false);
+                }
                 TechDisableEventFinal();
             }
 
@@ -408,7 +414,7 @@ namespace KerbalConstructionTime
         {
             KCTDebug.Log("VesselRecoverEvent");
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
-            if (!v.vesselRef.isEVA)
+            if (!KCTGameStates.IsSimulatedFlight && !v.vesselRef.isEVA)
             {
                 if (KCTGameStates.RecoveredVessel != null && v.vesselName == KCTGameStates.RecoveredVessel.ShipName)
                 {

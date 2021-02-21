@@ -93,16 +93,19 @@ namespace KerbalConstructionTime
             if (KCTGameStates.EditorRolloutCosts > 0)
                 GUILayout.Label($"Rollout Cost: {Math.Round(KCTGameStates.EditorRolloutCosts, 1)}");
 
-            if (!KCTGameStates.Settings.OverrideLaunchButton)
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Simulate"))
             {
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Build"))
-                {
-                    Utilities.AddVesselToBuildList();
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
-                GUILayout.EndHorizontal();
+                _simulationConfigPosition.height = 1;
+                EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
+                GUIStates.ShowSimConfig = true;
             }
+            if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Build"))
+            {
+                Utilities.AddVesselToBuildList();
+                Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+            }
+            GUILayout.EndHorizontal();
             if (GUILayout.Button("Show/Hide Build List"))
             {
                 GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
@@ -166,6 +169,21 @@ namespace KerbalConstructionTime
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
             }
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Simulate"))
+            {
+                _finishedShipBP = -1;
+                _simulationConfigPosition.height = 1;
+                EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
+                GUIStates.ShowSimConfig = true;
+
+                double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+                double bp = Utilities.GetBuildTime(effCost);
+                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL);
+            }
+            GUILayout.EndHorizontal();
+
             if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.LaunchedVessel.AreTanksFull() &&
                 GUILayout.Button("Fill Tanks"))
             {

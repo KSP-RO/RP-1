@@ -3,6 +3,7 @@ using KSP.UI.Screens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,8 +18,15 @@ namespace KerbalConstructionTime
         private static bool? _isKSCSwitcherInstalled = null;
         private static bool? _isKRASHInstalled = null;
         private static bool? _isPrincipiaInstalled = null;
-        private static DateTime _startedFlashing;
+        private static bool? _isTestFlightInstalled = null;
+        private static bool? _isTestLiteInstalled = null;
 
+        private static PropertyInfo _piTFInstance;
+        private static PropertyInfo _piTFSettingsEnabled;
+        private static Type _tlSettingsType;
+        private static FieldInfo _fiTLSettingsDisabled;
+
+        private static DateTime _startedFlashing;
         internal const string _legacyDefaultKscId = "Stock";
         internal const string _defaultKscId = "us_cape_canaveral";
         internal const string _icon_KCT_Off_24 = "RP-0/PluginData/Icons/KCT_off-24";
@@ -660,6 +668,16 @@ namespace KerbalConstructionTime
             return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
         }
 
+        /// <summary>
+        /// Use this method instead of Planetarium.GetUniversalTime().
+        /// Fixes the KSP stupidity where wrong UT can be returned when reverting back to the Editor.
+        /// </summary>
+        /// <returns></returns>
+        public static double GetUT()
+        {
+            return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
+        }
+
         public static string AddScienceWithMessage(float science, TransactionReasons reason)
         {
             if (science > 0)
@@ -1250,6 +1268,7 @@ namespace KerbalConstructionTime
 
         public static void DisableModFunctionality()
         {
+            DisableSimulationLocks();
             InputLockManager.RemoveControlLock("KCTLaunchLock");
             KCT_GUI.HideAll();
         }
@@ -1396,10 +1415,12 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static bool IsKRASHSimActive
+        public static bool IsSimulationActive
         {
             get
             {
+                if (KCTGameStates.IsSimulatedFlight) return true;
+
                 Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KRASH", StringComparison.OrdinalIgnoreCase))?.assembly;
                 Type t = a?.GetType("KRASH.KRASHShelter");
                 FieldInfo fi = t?.GetField("persistent", BindingFlags.Public | BindingFlags.Static);
@@ -2038,6 +2059,146 @@ namespace KerbalConstructionTime
             return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
                    FlightGlobals.ActiveVessel.IsRecoverable &&
                    FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
+        }
+
+        public static void EnableSimulationLocks()
+        {
+            InputLockManager.SetControlLock(ControlTypes.QUICKSAVE, "KCTLockSimQS");
+            InputLockManager.SetControlLock(ControlTypes.QUICKLOAD, "KCTLockSimQL");
+        }
+
+        public static void DisableSimulationLocks()
+        {
+            InputLockManager.RemoveControlLock("KCTLockSimQS");
+            InputLockManager.RemoveControlLock("KCTLockSimQL");
+        }
+
+        public static void MakeSimulationSave()
+        {
+            KCTDebug.Log("Making simulation backup file.");
+            GamePersistence.SaveGame("KCT_simulation_backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+        }
+
+        public static bool SimulationSaveExists()
+        {
+            return File.Exists($"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs");
+        }
+
+        /// <summary>
+        /// Copies the simulation save to /Backup/ folder and deletes it from the main savegame folder.
+        /// </summary>
+        public static void DeleteSimulationSave()
+        {
+            string preSimFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs";
+            string backupFolderPath = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup";
+            string backupFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup/KCT_simulation_backup.sfs";
+
+            File.Delete(backupFile);
+            Directory.CreateDirectory(backupFolderPath);
+            File.Move(preSimFile, backupFile);
+        }
+
+        public static void LoadSimulationSave(bool useNewMethod)
+        {
+            string backupFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs";
+            string saveFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/persistent.sfs";
+            DisableSimulationLocks();
+
+            if (FlightGlobals.fetch != null)
+            {
+                FlightGlobals.PersistentVesselIds.Clear();
+                FlightGlobals.PersistentLoadedPartIds.Clear();
+                FlightGlobals.PersistentUnloadedPartIds.Clear();
+            }
+
+            KCTDebug.Log("Swapping persistent.sfs with simulation backup file.");
+            if (useNewMethod)
+            {
+                ConfigNode lastShip = ShipConstruction.ShipConfig;
+                EditorFacility lastEditor = HighLogic.CurrentGame.editorFacility;
+
+                Game newGame = GamePersistence.LoadGame("KCT_simulation_backup", HighLogic.SaveFolder, true, false);
+                GamePersistence.SaveGame(newGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+                GameScenes targetScene = HighLogic.LoadedScene;
+                newGame.startScene = targetScene;
+
+                // This has to be before... newGame.Start()
+                if (targetScene == GameScenes.EDITOR)
+                {
+                    newGame.editorFacility = lastEditor;
+                }
+                newGame.Start();
+
+                // ... And this has to be after. <3 KSP
+                if (targetScene == GameScenes.EDITOR)
+                {
+                    EditorDriver.StartupBehaviour = EditorDriver.StartupBehaviours.LOAD_FROM_CACHE;
+                    ShipConstruction.ShipConfig = lastShip;
+                }
+            }
+            else
+            {
+                File.Copy(backupFile, saveFile, true);
+                Game newGame = GamePersistence.LoadGame("KCT_simulation_backup", HighLogic.SaveFolder, true, false);
+                GameEvents.onGameStatePostLoad.Fire(newGame.config);
+            }
+
+            DeleteSimulationSave();
+        }
+
+        public static bool IsTestFlightInstalled
+        {
+            get
+            {
+                if (!_isTestFlightInstalled.HasValue)
+                {
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestFlightCore", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isTestFlightInstalled = a != null;
+                    if (_isTestFlightInstalled.Value)
+                    {
+                        Type t = a.GetType("TestFlightCore.TestFlightManagerScenario");
+                        _piTFInstance = t?.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                        _piTFSettingsEnabled = t?.GetProperty("SettingsEnabled", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                    }
+                }
+                return _isTestFlightInstalled.Value;
+            }
+        }
+
+        public static bool IsTestLiteInstalled
+        {
+            get
+            {
+                if (!_isTestLiteInstalled.HasValue)
+                {
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestLite", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isTestLiteInstalled = a != null;
+                    if (_isTestLiteInstalled.Value)
+                    {
+                        _tlSettingsType = a.GetType("TestLite.TestLiteGameSettings");
+                        _fiTLSettingsDisabled = _tlSettingsType?.GetField("disabled");
+                    }
+                }
+                return _isTestLiteInstalled.Value;
+            }
+        }
+
+        public static void ToggleFailures(bool isEnabled)
+        {
+            if (IsTestFlightInstalled) ToggleTFFailures(isEnabled);
+            else if (IsTestLiteInstalled) ToggleTLFailures(isEnabled);
+        }
+
+        public static void ToggleTFFailures(bool isEnabled)
+        {
+            object tfInstance = _piTFInstance.GetValue(null);
+            _piTFSettingsEnabled.SetValue(tfInstance, isEnabled);
+        }
+
+        private static void ToggleTLFailures(bool isEnabled)
+        {
+            _fiTLSettingsDisabled.SetValue(HighLogic.CurrentGame.Parameters.CustomParams(_tlSettingsType), !isEnabled);
+            GameEvents.OnGameSettingsApplied.Fire();
         }
     }
 }

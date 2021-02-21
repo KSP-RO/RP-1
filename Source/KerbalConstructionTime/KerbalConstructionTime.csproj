@@ -105,6 +105,7 @@
     <Compile Include="GUI\GUI_Editor.cs" />
     <Compile Include="GUI\GUI_FirstRun.cs" />
     <Compile Include="GUI\GUI_NewPad.cs" />
+    <Compile Include="GUI\GUI_Simulation.cs" />
     <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
     <Compile Include="KCTOnLoadError.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
     <Compile Include="KCTObservableList.cs" />
+    <Compile Include="SceneAddons\MainMenuAddon.cs" />
+    <Compile Include="SimulationParams.cs" />
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="BuildItems\IKCTBuildItem.cs" />
     <Compile Include="InstallChecker.cs" />

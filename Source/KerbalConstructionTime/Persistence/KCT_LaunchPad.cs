@@ -54,7 +54,7 @@ namespace KerbalConstructionTime
             bool found = false;
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
-                int idx = KCTGameStates.ActiveKSC.LaunchPads.IndexOf(this);
+                int idx = ksc.LaunchPads.IndexOf(this);
                 if (idx < 0) continue;
 
                 var rr = ksc.Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == name);

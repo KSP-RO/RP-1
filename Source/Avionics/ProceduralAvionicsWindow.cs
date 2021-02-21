@@ -2,6 +2,7 @@
 using RealFuels.Tanks;
 using RP0.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
@@ -163,19 +164,38 @@ namespace RP0.ProceduralAvionics
 
             if (!IsScienceCore)
             {
-                GUILayout.BeginHorizontal(GUILayout.MaxWidth(250));
+                GUILayout.BeginHorizontal();
+                GUILayout.BeginHorizontal(GUILayout.Width(250));
                 GUILayout.Label("Controllable mass: ", HighLogic.Skin.label, GUILayout.Width(150));
                 _sControllableMass = GUILayout.TextField(_sControllableMass, HighLogic.Skin.textField);
                 GUILayout.Label("t", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
+                if (float.TryParse(_sControllableMass, out float newControlMass))
+                {
+                    float avionicsMass = GetShieldedAvionicsMass(newControlMass);
+                    GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+                }
+                GUILayout.EndHorizontal();
+                GUILayout.EndHorizontal();
             }
 
-            GUILayout.BeginHorizontal(GUILayout.MaxWidth(250));
+            GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
             GUILayout.Label("EC amount: ", HighLogic.Skin.label, GUILayout.Width(150));
             _sECAmount = GUILayout.TextField(_sECAmount, HighLogic.Skin.textField);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MaxWidth(250));
+            GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
+            if (float.TryParse(_sECAmount, out float ecAmount))
+            {
+                GUILayout.Label($" ({_ecTank.mass * ecAmount:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
             GUILayout.Label("Additional tank volume: ", HighLogic.Skin.label, GUILayout.Width(150));
             GUI.enabled = _seekVolumeMethod != null;
             _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);
@@ -229,8 +249,25 @@ namespace RP0.ProceduralAvionics
             controllableMass = newControlMass;
             if (_seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2)
             {
+                // Store and sum together the volume of all resources other than EC on this part
+                double otherFuelVolume = 0;
+                var otherTanks = new List<KeyValuePair<FuelTank, double>>();
+                foreach (FuelTank t in _tankList)
+                {
+                    if (t == _ecTank || t.maxAmount == 0) continue;
+                    otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
+                    otherFuelVolume += t.maxAmount / t.utilization;
+                }
+
                 SetProcPartVolumeLimit();
-                ApplyCorrectProcTankVolume(extraVolumeLiters, ecAmount);
+                ApplyCorrectProcTankVolume(extraVolumeLiters + (float)otherFuelVolume, ecAmount);
+
+                // Restore all the pre-resize amounts in tanks
+                foreach (KeyValuePair<FuelTank, double> kvp in otherTanks)
+                {
+                    FuelTank t = kvp.Key;
+                    t.amount = t.maxAmount = kvp.Value;
+                }
             }
             else
             {

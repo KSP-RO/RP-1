@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using KCTUtils = KerbalConstructionTime.Utilities;
 
 namespace RP0.Crew
 {
@@ -39,7 +40,7 @@ namespace RP0.Crew
         private HashSet<string> _retirees = new HashSet<string>();
         private HashSet<string> _partSynsHandled = new HashSet<string>();
         private List<TrainingExpiration> _expireTimes = new List<TrainingExpiration>();
-        private bool _isFirstLoad = true;
+        private bool _isFirstLoad = true;    // true if it's a freshly started career
         private bool _inAC = false;
         private int _flightLogUpdateCounter = 0;
         private int _countAvailable, _countAssigned, _countKIA;
@@ -73,7 +74,7 @@ namespace RP0.Crew
 
         public void Start()
         {
-            double ut = Planetarium.GetUniversalTime();
+            double ut = KSPUtils.GetUT();
             if (NextUpdate > ut + UpdateInterval)
             {
                 // KRASH has a bad habit of not reverting state properly when exiting sims.
@@ -88,6 +89,7 @@ namespace RP0.Crew
             }
 
             StartCoroutine(CreateCoursesRoutine());
+            StartCoroutine(EnsureActiveCrewInSimulationRoutine());
         }
 
         public override void OnLoad(ConfigNode node)
@@ -105,6 +107,7 @@ namespace RP0.Crew
             ConfigNode n = node.GetNode("RETIRETIMES");
             if (n != null)
             {
+                _isFirstLoad = false;
                 foreach (ConfigNode.Value v in n.values)
                     KerbalRetireTimes[v.name] = double.Parse(v.value);
             }
@@ -205,7 +208,7 @@ namespace RP0.Crew
                 UpdateFlightLog();
             }
 
-            double time = Planetarium.GetUniversalTime();
+            double time = KSPUtils.GetUT();
             if (NextUpdate < time)
             {
                 // Ensure that CrewHandler updates happen at predictable times so that accurate KAC alarms can be set.
@@ -305,7 +308,7 @@ namespace RP0.Crew
                     if (e.type == TrainingType_Mission && e.target == partName)
                     {
                         double exp = GetExpiration(pcm.name, e);
-                        lacksMission = exp == 0d || exp < Planetarium.GetUniversalTime();
+                        lacksMission = exp == 0d || exp < KSPUtils.GetUT();
                     }
                 }
                 else
@@ -418,7 +421,7 @@ namespace RP0.Crew
             var retirementChanges = new List<string>();
             var inactivity = new List<string>();
 
-            double UT = Planetarium.GetUniversalTime();
+            double UT = KSPUtils.GetUT();
 
             // normally we would use v.missionTime, but that doesn't seem to update
             // when you're not actually controlling the vessel
@@ -457,7 +460,7 @@ namespace RP0.Crew
                     if (e.type == "Nationality")
                         continue;
                     if (e.type == TrainingType_Mission)
-                        SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
+                        SetExpiration(pcm.name, e, KSPUtils.GetUT());
 
                     if (validStatuses.Contains(e.type))
                     {
@@ -580,8 +583,17 @@ namespace RP0.Crew
 
         private void OnCrewHired(ProtoCrewMember pcm, int idx)
         {
-            double retireTime = Planetarium.GetUniversalTime() + GetServiceTime(pcm);
-            KerbalRetireTimes[pcm.name] = retireTime;
+            double retireTime;
+            // Skip updating the retirement time if this is an existing kerbal.
+            if (KerbalRetireTimes.ContainsKey(pcm.name))
+            {
+                retireTime = KerbalRetireTimes[pcm.name];
+            }
+            else
+            { 
+                retireTime = KSPUtils.GetUT() + GetServiceTime(pcm);
+                KerbalRetireTimes[pcm.name] = retireTime;
+            }
 
             if (RetirementEnabled && idx != int.MinValue)
             {
@@ -692,6 +704,7 @@ namespace RP0.Crew
                             _toRemove.Add(kvp.Key);
                             _retirees.Add(kvp.Key);
                             pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
+                            pcm.type = ProtoCrewMember.KerbalType.Crew;
                         }
                     }
                 }
@@ -1035,6 +1048,20 @@ namespace RP0.Crew
                     {
                         AddPartCourses(ap);
                     }
+                }
+            }
+        }
+
+        private IEnumerator EnsureActiveCrewInSimulationRoutine()
+        {
+            if (!HighLogic.LoadedSceneIsFlight) yield return null;
+            yield return new WaitForFixedUpdate();
+
+            if (KCTUtils.IsKRASHSimActive && FlightGlobals.ActiveVessel != null)
+            {
+                foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
+                {
+                    pcm.inactive = false;
                 }
             }
         }

@@ -2029,10 +2029,11 @@
         "spacecraft": "N-1M (KVD-1)",
         "engine_config": "KVD1",
         "upgrade": false,
-        "entry_cost_mods": "KVD-1",
+        "entry_cost_mods": "RD-56",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo"
+            "EngineLiquidTurbo",
+            "Hydrolox"
         ]
     },
     {

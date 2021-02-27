@@ -1030,12 +1030,26 @@ namespace KerbalConstructionTime
 
         public static int FindUnlockCost(List<AvailablePart> availableParts)
         {
-            int cost = 0;
-            foreach (var p in availableParts)
+            Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RealFuels", StringComparison.OrdinalIgnoreCase))?.assembly;
+            Type t = a?.GetType("RealFuels.EntryCostManager");
+            var mi = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
+            if (mi != null)    // Older RF versions lack this method
             {
-                cost += p.entryCost;
+                var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                object instance = pi.GetValue(null);
+                IEnumerable<string> partNames = availableParts.Select(p => p.name);
+                double sum = (double)mi.Invoke(instance, new[] { partNames });
+                return (int)sum;
             }
-            return cost;
+            else
+            {
+                int cost = 0;
+                foreach (var p in availableParts)
+                {
+                    cost += p.entryCost;
+                }
+                return cost;
+            }
         }
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)

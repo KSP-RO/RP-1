@@ -304,6 +304,7 @@ namespace RP0
                 _prevPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
                 _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
+                _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);

@@ -900,12 +900,20 @@ namespace KerbalConstructionTime
                     {
                         buttons = new DialogGUIButton[] {
                             new DialogGUIButton("Acknowledged", () => { }),
-                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () => 
-                            { 
-                                UnlockExperimentalParts(unlockableParts);
-                                if (!KCTGameStates.EditorShipEditingMode)
-                                    AddVesselToBuildList(blv); 
-                                else EditShip(KCTGameStates.EditedVessel); 
+                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
+                            {
+                                if (Funding.Instance.Funds > unlockCost)
+                                {
+                                    UnlockExperimentalParts(unlockableParts);
+                                    if (!KCTGameStates.EditorShipEditingMode)
+                                        AddVesselToBuildList(blv);
+                                    else EditShip(KCTGameStates.EditedVessel);
+                                }
+                                else
+                                {
+                                    var msg = new ScreenMessage("Insufficient funds to unlock parts", 5f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessages.PostScreenMessage(msg);
+                                }
                             })
                         };
                     }

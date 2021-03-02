@@ -80,6 +80,18 @@ namespace KerbalConstructionTime
                 TechList = new KCTObservableList<TechItem>();
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
         }
+
+        public static void ClearVesselEditMode()
+        {
+            EditorShipEditingMode = false;
+            EditedVessel = null;
+
+            InputLockManager.RemoveControlLock("KCTEditExit");
+            InputLockManager.RemoveControlLock("KCTEditLoad");
+            InputLockManager.RemoveControlLock("KCTEditNew");
+            InputLockManager.RemoveControlLock("KCTEditLaunch");
+            EditorLogic.fetch.Unlock("KCTEditorMouseLock");
+        }
     }
 
     public class CrewedPart

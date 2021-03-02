@@ -169,6 +169,7 @@ namespace KerbalConstructionTime
                 case GameScenes.SPACECENTER:
                     bool shouldStart = KCT_GUI.GUIStates.ShowFirstRun;
                     KCT_GUI.HideAll();
+                    KCTGameStates.ClearVesselEditMode();
                     if (!shouldStart)
                     {
                         KCT_GUI.GUIStates.ShowBuildList = KCTGameStates.ShowWindows[0];
@@ -178,6 +179,9 @@ namespace KerbalConstructionTime
                             KCT_GUI.ToggleVisibility(false);
                     }
                     KCT_GUI.GUIStates.ShowFirstRun = shouldStart;
+                    break;
+                case GameScenes.TRACKSTATION:
+                    KCTGameStates.ClearVesselEditMode();
                     break;
                 case GameScenes.FLIGHT:
                     if (FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH &&

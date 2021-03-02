@@ -907,7 +907,7 @@ namespace KerbalConstructionTime
                                     UnlockExperimentalParts(unlockableParts);
                                     if (!KCTGameStates.EditorShipEditingMode)
                                         AddVesselToBuildList(blv);
-                                    else EditShip(KCTGameStates.EditedVessel);
+                                    else SaveShipEdits(KCTGameStates.EditedVessel);
                                 }
                                 else
                                 {
@@ -975,7 +975,7 @@ namespace KerbalConstructionTime
             return blv;
         }
 
-        public static void EditShip(BuildListVessel ship)
+        public static void SaveShipEdits(BuildListVessel ship)
         {
             AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
             BuildListVessel newShip = AddVesselToBuildList();
@@ -996,13 +996,8 @@ namespace KerbalConstructionTime
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
-            KCTGameStates.EditorShipEditingMode = false;
+            KCTGameStates.ClearVesselEditMode();
 
-            InputLockManager.RemoveControlLock("KCTEditExit");
-            InputLockManager.RemoveControlLock("KCTEditLoad");
-            InputLockManager.RemoveControlLock("KCTEditNew");
-            InputLockManager.RemoveControlLock("KCTEditLaunch");
-            EditorLogic.fetch.Unlock("KCTEditorMouseLock");
             KCTDebug.Log("Edits saved.");
 
             HighLogic.LoadScene(GameScenes.SPACECENTER);

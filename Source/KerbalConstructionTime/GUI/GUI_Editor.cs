@@ -154,19 +154,13 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Save Edits"))
             {
                 _finishedShipBP = -1;
-                Utilities.EditShip(ship);
+                Utilities.SaveShipEdits(ship);
             }
             if (GUILayout.Button("Cancel Edits"))
             {
                 KCTDebug.Log("Edits cancelled.");
                 _finishedShipBP = -1;
-                KCTGameStates.EditorShipEditingMode = false;
-
-                InputLockManager.RemoveControlLock("KCTEditExit");
-                InputLockManager.RemoveControlLock("KCTEditLoad");
-                InputLockManager.RemoveControlLock("KCTEditNew");
-                InputLockManager.RemoveControlLock("KCTEditLaunch");
-                EditorLogic.fetch.Unlock("KCTEditorMouseLock");
+                KCTGameStates.ClearVesselEditMode();
 
                 ScrapYardWrapper.ProcessVessel(KCTGameStates.EditedVessel.ExtractedPartNodes);
 

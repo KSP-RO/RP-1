@@ -429,7 +429,8 @@ namespace RP0
                 toolingFees = logPeriod.ToolingFees,
                 entryCosts = logPeriod.EntryCosts,
                 constructionFees = logPeriod.OtherFees,
-                otherFees = logPeriod.OtherFees - constructionFees
+                otherFees = logPeriod.OtherFees - constructionFees,
+                fundsGainMult = logPeriod.FundsGainMult
             };
         }
 

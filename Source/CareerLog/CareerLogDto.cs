@@ -24,6 +24,7 @@ namespace RP0
         public double entryCosts;
         public double constructionFees;
         public double otherFees;
+        public double fundsGainMult;
 
         public override string ToString()
         {
@@ -46,7 +47,8 @@ namespace RP0
                 $"{nameof(toolingFees)}: {toolingFees}, " +
                 $"{nameof(entryCosts)}: {entryCosts}, " +
                 $"{nameof(constructionFees)}: {constructionFees}, " +
-                $"{nameof(otherFees)}: {otherFees}";
+                $"{nameof(otherFees)}: {otherFees}, " +
+                $"{nameof(fundsGainMult)}: {fundsGainMult}";
         }
     }
 

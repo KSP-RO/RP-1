@@ -90,7 +90,7 @@ namespace KerbalConstructionTime
             InputLockManager.RemoveControlLock("KCTEditLoad");
             InputLockManager.RemoveControlLock("KCTEditNew");
             InputLockManager.RemoveControlLock("KCTEditLaunch");
-            EditorLogic.fetch.Unlock("KCTEditorMouseLock");
+            EditorLogic.fetch?.Unlock("KCTEditorMouseLock");
         }
     }
 

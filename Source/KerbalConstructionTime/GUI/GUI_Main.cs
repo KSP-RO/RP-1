@@ -165,6 +165,13 @@ namespace KerbalConstructionTime
 
             GUIStates = PrevGUIStates;
             PrevGUIStates = null;
+
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.EDITOR)
+            {
+                int idx = HighLogic.LoadedScene == GameScenes.SPACECENTER ? 0 : 1;
+                KCTGameStates.ShowWindows[idx] = GUIStates.IsMainGuiVisible;
+            }
+
             RefreshToolbarState();
         }
 

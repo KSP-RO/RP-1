@@ -2,11 +2,14 @@
 using Csv;
 using KerbalConstructionTime;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace RP0
 {
@@ -24,7 +27,7 @@ namespace RP0
 
         public bool IsEnabled = false;
 
-        private static readonly DateTime _epoch = new DateTime(1951, 1, 1);
+        private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         private EventData<ProtoTechNode> onKctTechCompletedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
@@ -208,6 +211,11 @@ namespace RP0
             }
         }
 
+        public static DateTime UTToDate(double ut)
+        {
+            return _epoch.AddSeconds(ut);
+        }
+
         public void AddTechEvent(string nodeName)
         {
             if (!IsEnabled) return;
@@ -253,7 +261,7 @@ namespace RP0
                                                                 .Sum();
                 return new[]
                 {
-                    _epoch.AddSeconds(p.StartUT).ToString("yyyy-MM"),
+                    UTToDate(p.StartUT).ToString("yyyy-MM"),
                     p.VABUpgrades.ToString(),
                     p.SPHUpgrades.ToString(),
                     p.RnDUpgrades.ToString(),
@@ -293,6 +301,139 @@ namespace RP0
             File.WriteAllText(path, csv);
         }
 
+        public void ExportToWeb(string serverUrl, string token)
+        {
+            string url = $"{serverUrl.TrimEnd('/')}/{token}";
+            StartCoroutine(PostRequestCareerLog(url));
+        }
+
+        private IEnumerator PostRequestCareerLog(string url)
+        {
+            var logPeriods = _periodDict.Select(p => p.Value)
+                .Select(CreateLogDto).ToArray();
+
+            // Create JSON structure for arrays - afaict not supported on this unity version out of the box
+            var jsonToSend = "{ \"periods\": [";
+
+            for (var i = 0; i < logPeriods.Length; i++)
+            {
+                if (i < logPeriods.Length - 1) jsonToSend += JsonUtility.ToJson(logPeriods[i]) + ",";
+                else jsonToSend += JsonUtility.ToJson(logPeriods[i]);
+            }
+
+            jsonToSend += "], \"contractEvents\": [";
+
+            for (var i = 0; i < _contractDict.Count; i++)
+            {
+                var dto = new ContractEventDto(_contractDict[i]);
+                if (i < _contractDict.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"facilityEvents\": [";
+
+            for (var i = 0; i < _facilityConstructions.Count; i++)
+            {
+                var dto = new FacilityConstructionEventDto(_facilityConstructions[i]);
+                if (i < _facilityConstructions.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"techEvents\": [";
+
+            for (var i = 0; i < _techEvents.Count; i++)
+            {
+                var dto = new TechResearchEventDto(_techEvents[i]);
+                if (i < _techEvents.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"launchEvents\": [";
+
+            for (var i = 0; i < _launchedVessels.Count; i++)
+            {
+                var dto = new LaunchEventDto(_launchedVessels[i]);
+                if (i < _launchedVessels.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "] }";
+
+            Debug.Log("[RP-0] Request payload: " + jsonToSend);
+
+            var byteJson = new UTF8Encoding().GetBytes(jsonToSend);
+
+            var uwr = new UnityWebRequest(url, "PATCH")
+            {
+                downloadHandler = new DownloadHandlerBuffer(),
+                uploadHandler = new UploadHandlerRaw(byteJson)
+            };
+
+            #if DEBUG
+            uwr.certificateHandler = new BypassCertificateHandler();
+            #endif
+
+            uwr.SetRequestHeader("Content-Type", "application/json");
+
+            yield return uwr.SendWebRequest();
+
+            if (uwr.isNetworkError)
+            {
+                Debug.Log("Error While Sending: " + uwr.error);
+            }
+            else
+            {
+                Debug.Log("Received: " + uwr.downloadHandler.text);
+            }
+        }
+
+        private CareerLogDto CreateLogDto(LogPeriod logPeriod)
+        {
+            double advanceFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double rewardFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double failureFunds = -_contractDict.Where(c =>
+                    (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double constructionFees = _facilityConstructions
+                .Where(f => f.State == ConstructionState.Started && f.IsInPeriod(logPeriod))
+                .Select(c => c.Cost)
+                .Sum();
+
+            return new CareerLogDto
+            {
+                careerUuid = SystemInfo.deviceUniqueIdentifier,
+                startDate = UTToDate(logPeriod.StartUT).ToString("o"),
+                endDate = UTToDate(logPeriod.EndUT).ToString("o"),
+                vabUpgrades = logPeriod.VABUpgrades,
+                sphUpgrades = logPeriod.SPHUpgrades,
+                rndUpgrades = logPeriod.RnDUpgrades,
+                currentFunds = logPeriod.CurrentFunds,
+                currentSci = logPeriod.CurrentSci,
+                scienceEarned = logPeriod.ScienceEarned,
+                advanceFunds = advanceFunds,
+                rewardFunds = rewardFunds,
+                failureFunds = failureFunds,
+                otherFundsEarned = logPeriod.OtherFundsEarned,
+                launchFees = logPeriod.LaunchFees,
+                maintenanceFees = logPeriod.MaintenanceFees,
+                toolingFees = logPeriod.ToolingFees,
+                entryCosts = logPeriod.EntryCosts,
+                constructionFees = logPeriod.OtherFees,
+                otherFees = logPeriod.OtherFees - constructionFees,
+                fundsGainMult = logPeriod.FundsGainMult
+            };
+        }
+
         private void SwitchToNextPeriod()
         {
             LogPeriod _prevPeriod = _currentPeriod ?? GetOrCreatePeriod(CurPeriodStart);
@@ -316,7 +457,7 @@ namespace RP0
         {
             if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
             {
-                DateTime dtNextPeriod = _epoch.AddSeconds(periodStartUt).AddMonths(LogPeriodMonths);
+                DateTime dtNextPeriod = UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
                 double nextPeriodStart = (dtNextPeriod - _epoch).TotalSeconds;
                 period = new LogPeriod(periodStartUt, nextPeriodStart);
                 _periodDict.Add(periodStartUt, period);

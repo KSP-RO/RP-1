@@ -68,6 +68,9 @@ namespace RP0
         public bool AvionicsWindow_ShowInfo2 = true;
         public bool AvionicsWindow_ShowInfo3 = true;
 
+        public string CareerLog_URL;
+        public string CareerLog_Token;
+
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
             switch (preset)

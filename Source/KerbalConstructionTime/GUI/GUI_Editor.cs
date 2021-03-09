@@ -160,9 +160,8 @@ namespace KerbalConstructionTime
             {
                 KCTDebug.Log("Edits cancelled.");
                 _finishedShipBP = -1;
-                KCTGameStates.ClearVesselEditMode();
-
                 ScrapYardWrapper.ProcessVessel(KCTGameStates.EditedVessel.ExtractedPartNodes);
+                KCTGameStates.ClearVesselEditMode();
 
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
             }

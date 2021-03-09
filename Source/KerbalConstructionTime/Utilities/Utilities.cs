@@ -1521,9 +1521,19 @@ namespace KerbalConstructionTime
             var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildTime, EditorLogic.FlagURL);
 
             KCTGameStates.EditorIntegrationTime = MathParser.ParseIntegrationTimeFormula(kctVessel);
-            KCTGameStates.EditorRolloutCosts = MathParser.ParseRolloutCostFormula(kctVessel);
             KCTGameStates.EditorIntegrationCosts = MathParser.ParseIntegrationCostFormula(kctVessel);
-            KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
+
+            if (EditorDriver.editorFacility == EditorFacility.VAB)
+            {
+                KCTGameStates.EditorRolloutCosts = MathParser.ParseRolloutCostFormula(kctVessel);
+                KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
+            }
+            else
+            {
+                // SPH lacks rollout times and costs
+                KCTGameStates.EditorRolloutCosts = 0;
+                KCTGameStates.EditorRolloutTime = 0;
+            }
         }
 
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)

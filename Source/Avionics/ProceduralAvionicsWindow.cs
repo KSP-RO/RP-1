@@ -174,7 +174,7 @@ namespace RP0.ProceduralAvionics
                 GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
                 if (float.TryParse(_sControllableMass, out float newControlMass))
                 {
-                    float avionicsMass = GetShieldedAvionicsMass(GetAvionicsMass(newControlMass));
+                    float avionicsMass = GetShieldedAvionicsMass(newControlMass);
                     GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
                 }
                 GUILayout.EndHorizontal();
@@ -282,7 +282,7 @@ namespace RP0.ProceduralAvionics
             _ecTank.amount = ecAmount;
             _rfPM.PartResourcesChanged();
             _rfPM.CalculateMass();
-            _sExtraVolume = $"{_rfPM.AvailableVolume:0.#}";
+            RefreshDisplays();
         }
 
         private void ApplyCorrectProcTankVolume(float extraVolumeLiters, float ecAmount)

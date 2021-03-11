@@ -119,7 +119,7 @@ namespace RP0.ProceduralAvionics
         private float GetAvionicsMass(float controllableMass) => GetPolynomial(controllableMass, CurrentProceduralAvionicsTechNode.massExponent, CurrentProceduralAvionicsTechNode.massConstant, CurrentProceduralAvionicsTechNode.massFactor) / 1000f;
         private float GetAvionicsCost() => GetPolynomial(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode.costExponent, CurrentProceduralAvionicsTechNode.costConstant, CurrentProceduralAvionicsTechNode.costFactor);
         private float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
-        private float GetShieldedAvionicsMass() => GetShieldedAvionicsMass(GetAvionicsMass());
+        private float GetShieldedAvionicsMass() => GetShieldedAvionicsMass(GetInternalMassLimit());
         private float GetShieldedAvionicsMass(float controllableMass)
         {
             var avionicsMass = GetAvionicsMass(controllableMass);
@@ -395,6 +395,13 @@ namespace RP0.ProceduralAvionics
                     GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
             }
             Profiler.EndSample();
+        }
+
+        [KSPEvent]
+        public void OnResourceInitialChanged(BaseEventDetails eventData)
+        {
+            if (_ecTank is FuelTank && eventData.Get<PartResource>("resource")?.part == _rfPM.part)
+                RefreshDisplays();
         }
 
         [KSPEvent]

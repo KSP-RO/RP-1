@@ -63,7 +63,6 @@ namespace RP0.ProceduralAvionics
         private FuelTankList _tankList;
         private FuelTank _ecTank;
         private MethodInfo _seekVolumeMethod;
-        private FieldInfo _rfIsDirtyField;
         private FieldInfo _procPartMinVolumeField;
         private PropertyInfo _procPartCurShapeProp;
 
@@ -198,22 +197,16 @@ namespace RP0.ProceduralAvionics
 
         private void LoadPartModulesAndFields()
         {
-            if (!HighLogic.LoadedSceneIsEditor) return;
-
-            _procPartPM = GetProcPartPM();
+            _roTankPM = part.Modules.GetModule("ModuleROTank");
+            _procPartPM = part.Modules.GetModule("ProceduralPart");
             if (_procPartPM != null)
             {
                 BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
                 _procPartMinVolumeField = _procPartPM.GetType().GetField("volumeMin", flags);
                 _procPartCurShapeProp = _procPartPM.GetType().GetProperty("CurrentShape", flags);
             }
-            else    // is it ROTanks instead?
-            {
-                _roTankPM = GetROTankPM();
-            }
 
             _rfPM = part.Modules.GetModule<ModuleFuelTanks>();
-            _rfIsDirtyField = typeof(ModuleFuelTanks).GetField("massDirty", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
             var fiTanks = typeof(ModuleFuelTanks).GetField("tankList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
             _tankList = (FuelTankList)fiTanks.GetValue(_rfPM);
             _ecTank = _tankList["ElectricCharge"];
@@ -232,24 +225,6 @@ namespace RP0.ProceduralAvionics
                     ShowOutdatedProcPartWarning();
 
                 return mi;
-            }
-            return null;
-        }
-
-        private PartModule GetProcPartPM()
-        {
-            if (part.Modules.Contains("ProceduralPart"))
-            {
-                return part.Modules["ProceduralPart"];
-            }
-            return null;
-        }
-
-        private PartModule GetROTankPM()
-        {
-            if (part.Modules.Contains("ModuleROTank"))
-            {
-                return part.Modules["ModuleROTank"];
             }
             return null;
         }
@@ -386,7 +361,6 @@ namespace RP0.ProceduralAvionics
 
             massLimit = controllableMass;
             _sControllableMass = $"{controllableMass:0.###}";
-            StartCoroutine(DeferredRFTankChangeHandler());
             SendRemainingVolume();
             RefreshDisplays();
             Profiler.EndSample();
@@ -417,20 +391,10 @@ namespace RP0.ProceduralAvionics
             if (HighLogic.LoadedSceneIsEditor)
             {
                 _sControllableMass = $"{controllableMass:0.###}";
-                StartCoroutine(DeferredRFTankChangeHandler());
                 if (_started)
                     GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
             }
             Profiler.EndSample();
-        }
-
-        [KSPEvent]
-        public void OnResourceInitialChanged(BaseEventDetails eventData)
-        {
-            if (_ecTank == null || eventData.Get<PartResource>("resource")?.part != _rfPM.part)
-                return;
-
-            StartCoroutine(DeferredRFTankChangeHandler());
         }
 
         [KSPEvent]
@@ -471,6 +435,7 @@ namespace RP0.ProceduralAvionics
                 float availVol = GetAvailableVolume();
                 Log($"SendRemainingVolume():  Cached Volume: {_cachedVolume}. AvionicsVolume: {GetAvionicsVolume()}.  AvailableVolume: {availVol}.  Internal Tanks: {InternalTanksVolume}");
                 SendVolumeChangedEvent(InternalTanksVolume);
+                _rfPM?.CalculateMass();
                 Events[nameof(OnPartVolumeChanged)].active = true;
             }
             Profiler.EndSample();
@@ -484,23 +449,6 @@ namespace RP0.ProceduralAvionics
             data.Set<string>("volName", "Tankage");
             data.Set<double>("newTotalVolume", newVolume);
             part.SendEvent(nameof(OnPartVolumeChanged), data, 0);
-        }
-
-        private IEnumerator DeferredRFTankChangeHandler()
-        {
-            // ¯\_(ツ)_/¯
-            // You never know when RF actually manages to update it's information
-
-            yield return new WaitForFixedUpdate();
-
-            int curFrame = 0, maxWaitFrames = 15;
-            while ((bool)_rfIsDirtyField.GetValue(_rfPM) && curFrame++ < maxWaitFrames)
-            {
-                yield return new WaitForFixedUpdate();
-            }
-
-            if (_ecTank != null) _sECAmount = $"{_ecTank.maxAmount:F0}";
-            if (_rfPM != null) _sExtraVolume = $"{_rfPM.AvailableVolume:0.#}";
         }
 
         #endregion
@@ -589,6 +537,8 @@ namespace RP0.ProceduralAvionics
             costDisplay = $"{Mathf.Round(CurrentProceduralAvionicsTechNode.avionicsDensity > 0 ? GetAvionicsCost() : 0)}";
             utilizationDisplay = $"{Utilization * 100:0.#}%";
             Log($"RefreshDisplays() Controllable mass: {controllableMass}, mass: {massDisplay} cost: {costDisplay}, Utilization: {utilizationDisplay}");
+            if (_ecTank != null) _sECAmount = $"{_ecTank.maxAmount:F0}";
+            if (_rfPM != null) _sExtraVolume = $"{_rfPM.AvailableVolume:0.#}";
         }
 
         private void RefreshPowerDisplay()

@@ -8,10 +8,12 @@ namespace KerbalConstructionTime
     public class GuiDataAndWhitelistItemsDatabase : MonoBehaviour
     {
         public static List<string> ValidFuelRes;
+        public static List<string> WasteRes;
 
         private void Awake()
         {
             ValidFuelRes = new List<string>();
+            WasteRes = new List<string>();
 
             var loaders = LoadingScreen.Instance.loaders;
             if (loaders != null)
@@ -61,6 +63,20 @@ namespace KerbalConstructionTime
                                 }
                             }
                         }
+
+                        items = configNode.GetValuesList("wasteResource");
+                        if (items != null)
+                        {
+                            foreach (var item in items)
+                            {
+                                if (item != null)
+                                {
+                                    if (!GuiDataAndWhitelistItemsDatabase.WasteRes.Contains(item))
+                                        GuiDataAndWhitelistItemsDatabase.WasteRes.Add(item);
+                                }
+                            }
+                        }
+
                         yield return null;
                     }
                 }

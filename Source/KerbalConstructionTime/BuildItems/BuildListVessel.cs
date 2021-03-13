@@ -320,6 +320,16 @@ namespace KerbalConstructionTime
                 {
                     SanitizeNode(Utilities.GetPartNameFromNode(part), module, templates);
                 }
+
+                // Remove all waste resources
+                var resList = part.GetNodes("RESOURCE");
+                foreach (var res in resList)
+                {
+                    if (GuiDataAndWhitelistItemsDatabase.WasteRes.Contains(res.GetValue("name")))
+                    {
+                        res.SetValue("amount", 0);
+                    }
+                }
             }
             return node;
         }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using KSP.UI.Screens;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace KerbalConstructionTime
 {
@@ -8,7 +9,6 @@ namespace KerbalConstructionTime
     public class TrackingStationAddon : KerbalConstructionTime
     {
         private Button.ButtonClickedEvent _originalCallback, _flyCallback;
-        private Vessel _selectedVessel = null;
 
         public new void Start()
         {
@@ -17,8 +17,7 @@ namespace KerbalConstructionTime
                 return;
 
             KCTDebug.Log("KCT_TS, Start");
-            SpaceTracking trackingStation = FindObjectOfType<SpaceTracking>();
-            if (trackingStation != null)
+            if (FindObjectOfType<SpaceTracking>() is SpaceTracking trackingStation)
             {
                 _originalCallback = trackingStation.RecoverButton.onClick;
                 _flyCallback = trackingStation.FlyButton.onClick;
@@ -60,11 +59,8 @@ namespace KerbalConstructionTime
 
         public void NewRecoveryFunctionTrackingStation()
         {
-            _selectedVessel = null;
-            var trackingStation = (SpaceTracking)FindObjectOfType(typeof(SpaceTracking));
-            _selectedVessel = trackingStation.SelectedVessel;
-
-            if (_selectedVessel == null)
+            if (!(FindObjectOfType(typeof(SpaceTracking)) is SpaceTracking ts
+                && ts.SelectedVessel is Vessel _selectedVessel))
             {
                 Debug.LogError("[KCT] No Vessel selected.");
                 return;
@@ -79,24 +75,15 @@ namespace KerbalConstructionTime
                                     string.IsNullOrEmpty(reqTech) ||
                                     ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
 
-            int cnt = 2;
-            if (canRecoverToSPH) cnt++;
-            if (canRecoverToVAB) cnt++;
-
-            DialogGUIBase[] options = new DialogGUIBase[cnt];
-            cnt = 0;
+            var options = new List<DialogGUIBase>();
             if (canRecoverToSPH)
-            {
-                options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
-            }
+                options.Add(new DialogGUIButton("Recover to SPH", RecoverToSPH));
             if (canRecoverToVAB)
-            {
-                options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
-            }
-            options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
-            options[cnt] = new DialogGUIButton("Cancel", () => { });
+                options.Add(new DialogGUIButton("Recover to VAB", RecoverToVAB));
+            options.Add(new DialogGUIButton("Normal recovery", DoNormalRecovery));
+            options.Add(new DialogGUIButton("Cancel", () => { }));
 
-            var diag = new MultiOptionDialog("scrapVesselPopup", "Do you want KCT to do the recovery?", "Recover Vessel", null, options: options);
+            var diag = new MultiOptionDialog("scrapVesselPopup", "Do you want KCT to do the recovery?", "Recover Vessel", null, options: options.ToArray());
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }
     }

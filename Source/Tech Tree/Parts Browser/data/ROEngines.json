@@ -5152,6 +5152,58 @@
         ]
     },
     {
+        "name": "ROE-RL10A4-2",
+        "title": "RL10A-4-2 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "60000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2002",
+        "technology": "hydrolox1998",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10A-4-1-2",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-RL10A4-2N",
+        "title": "RL10A-4-2N Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "60000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2003",
+        "technology": "hydrolox1998",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10A-4-2N",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RL10A5",
         "title": "RL10A-5 Engine",
         "description": "",

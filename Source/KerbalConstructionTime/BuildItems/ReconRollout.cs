@@ -1,42 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace KerbalConstructionTime
 {
     public class ReconRollout : IKCTBuildItem
     {
-        public string Name = string.Empty;
+        public string Name => RRInverseDict[RRType];
         public double BP = 0, Progress = 0, Cost = 0;
         public string AssociatedID = string.Empty;
         public string LaunchPadID = "LaunchPad";
+        public const string ReconditioningStr = "LaunchPad Reconditioning";
+        public const string RolloutStr = "Vessel Rollout";
+        public const string RollbackStr = "Vessel Rollback";
+        public const string RecoveryStr = "Vessel Recovery";
+        public const string UnknownStr = "Unknown Situation";
 
         public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
-        private RolloutReconType _rrTypeInternal = RolloutReconType.None;
+        public RolloutReconType RRType = RolloutReconType.None;
 
-        public RolloutReconType RRType
+        public static Dictionary<string, RolloutReconType> RRDict = new Dictionary<string, RolloutReconType>()
         {
-            get
-            {
-                if (_rrTypeInternal != RolloutReconType.None)
-                    return _rrTypeInternal;
-                else
-                {
-                    if (Name == "LaunchPad Reconditioning")
-                        _rrTypeInternal = RolloutReconType.Reconditioning;
-                    else if (Name == "Vessel Rollout")
-                        _rrTypeInternal = RolloutReconType.Rollout;
-                    else if (Name == "Vessel Rollback")
-                        _rrTypeInternal = RolloutReconType.Rollback;
-                    else if (Name == "Vessel Recovery")
-                        _rrTypeInternal = RolloutReconType.Recovery;
-                    return _rrTypeInternal;
-                }
-            }
-            set
-            {
-                _rrTypeInternal = value;
-            }
-        }
+            {  ReconditioningStr, RolloutReconType.Reconditioning },
+            {  RolloutStr, RolloutReconType.Rollout },
+            {  RollbackStr, RolloutReconType.Rollback },
+            {  RecoveryStr, RolloutReconType.Recovery },
+            {  UnknownStr, RolloutReconType.None }
+        };
+        public static Dictionary<RolloutReconType, string> RRInverseDict = new Dictionary<RolloutReconType, string>()
+        {
+            {  RolloutReconType.Reconditioning, ReconditioningStr },
+            {  RolloutReconType.Rollout, RolloutStr },
+            {  RolloutReconType.Rollback, RollbackStr },
+            {  RolloutReconType.Recovery, RecoveryStr },
+            {  RolloutReconType.None, UnknownStr }
+        };
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
 
@@ -44,7 +42,6 @@ namespace KerbalConstructionTime
 
         public ReconRollout()
         {
-            Name = "LaunchPad Reconditioning";
             Progress = 0;
             BP = 0;
             Cost = 0;
@@ -60,107 +57,43 @@ namespace KerbalConstructionTime
             LaunchPadID = launchSite;
             KCTDebug.Log("New recon_rollout at launchsite: " + LaunchPadID);
             Progress = 0;
-            if (type == RolloutReconType.Reconditioning) 
+            try
             {
-                try
-                {
-                    BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), true);
-                }
-                catch
-                {
-                    KCTDebug.Log("Error while determining BP for recon_rollout");
-                }
-                finally
-                {
-                    Name = "LaunchPad Reconditioning";
-                }
+                BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), true);
             }
-            else if (type == RolloutReconType.Rollout)
+            catch
             {
-                try
-                {
-                    BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), false);
-                }
-                catch
-                {
-                    KCTDebug.Log("Error while determining BP for recon_rollout");
-                }
-                finally
-                {
-                    Name = "Vessel Rollout";
-                }
+                KCTDebug.Log("Error while determining BP for recon_rollout");
             }
-            else if (type == RolloutReconType.Rollback)
-            {
-                try
-                {
-                    BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), false);
-                }
-                catch
-                {
-                    KCTDebug.Log("Error while determining BP for recon_rollout");
-                }
-                finally
-                {
-                    Name = "Vessel Rollback";
-                    Progress = BP;
-                }
-            }
+            if (type == RolloutReconType.Rollback)
+                Progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
-                try
-                {
-                    BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), false);
-                }
-                catch
-                {
-                    KCTDebug.Log("Error while determining BP for recon_rollout");
-                }
-                finally
-                {
-                    Name = "Vessel Recovery";
-                    double KSCDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
-                    double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
-                    BP += BP * (KSCDistance / maxDist);
-                }
+                double KSCDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
+                double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
+                BP += BP * (KSCDistance / maxDist);
             }
         }
-
         public ReconRollout(BuildListVessel vessel, RolloutReconType type, string id, string launchSite="")
         {
             RRType = type;
             AssociatedID = id;
-            if (launchSite != "") //For when we add custom launchpads
-                LaunchPadID = launchSite;
-            else
-                LaunchPadID = vessel.LaunchSite;
-
+            LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.LaunchSite : launchSite;    //For when we add custom launchpads
             Progress = 0;
+            BP = MathParser.ParseReconditioningFormula(vessel, true);
+            //if (type != RolloutReconType.Reconditioning)
+                //BP *= KCT_PresetManager.Instance.ActivePreset.timeSettings.RolloutReconSplit;
+
             if (type == RolloutReconType.Reconditioning)
             {
-                BP = MathParser.ParseReconditioningFormula(vessel, true);
                 //BP *= (1 - KCT_PresetManager.Instance.ActivePreset.timeSettings.RolloutReconSplit);
-                Name = "LaunchPad Reconditioning";
             }
             else if (type == RolloutReconType.Rollout)
-            {
-                BP = MathParser.ParseReconditioningFormula(vessel, false);
-                //BP *= KCT_PresetManager.Instance.ActivePreset.timeSettings.RolloutReconSplit;
-                Name = "Vessel Rollout";
                 Cost = MathParser.ParseRolloutCostFormula(vessel);
-            }
             else if (type == RolloutReconType.Rollback)
-            {
-                BP = MathParser.ParseReconditioningFormula(vessel, false);
-                //BP *= KCT_PresetManager.Instance.ActivePreset.timeSettings.RolloutReconSplit;
                 Progress = BP;
-                Name = "Vessel Rollback";
-            }
             else if (type == RolloutReconType.Recovery)
             {
-                BP = MathParser.ParseReconditioningFormula(vessel, false);
-                //BP *= KCT_PresetManager.Instance.ActivePreset.timeSettings.RolloutReconSplit;
-                Name = "Vessel Recovery";
                 double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
                 BP += BP * (vessel.DistanceFromKSC / maxDist);
             }
@@ -169,58 +102,34 @@ namespace KerbalConstructionTime
         public void SwapRolloutType()
         {
             if (RRType == RolloutReconType.Rollout)
-            {
                 RRType = RolloutReconType.Rollback;
-                Name = "Vessel Rollback";
-            }
             else if (RRType == RolloutReconType.Rollback)
-            {
                 RRType = RolloutReconType.Rollout;
-                Name = "Vessel Rollout";
-            }
         }
 
-        public double ProgressPercent()
-        {
-            return Math.Round(100 * (Progress / BP), 2);
-        }
+        public double ProgressPercent() => Math.Round(100 * (Progress / BP), 2);
 
-        public string GetItemName()
-        {
-            return Name;
-        }
+        public string GetItemName() => Name;
 
         public double GetBuildRate()
         {
-            double buildRate;
-            if (AssociatedBLV != null && AssociatedBLV.Type == BuildListVessel.ListType.SPH)
-                buildRate = Utilities.GetSPHBuildRateSum(KSC);
-            else
-                buildRate = Utilities.GetVABBuildRateSum(KSC);
+            double buildRate = AssociatedBLV?.Type == BuildListVessel.ListType.SPH
+                                ? Utilities.GetSPHBuildRateSum(KSC) : Utilities.GetVABBuildRateSum(KSC);
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;
-
             return buildRate;
         }
 
         public double GetTimeLeft()
         {
-            double timeLeft = (BP - Progress) / ((IKCTBuildItem)this).GetBuildRate();
-            if (RRType == RolloutReconType.Rollback)
-                timeLeft = (-Progress) / ((IKCTBuildItem)this).GetBuildRate();
-            return timeLeft;
+            double n = RRType == RolloutReconType.Rollback ? 0 : BP;
+            return (n - Progress) / GetBuildRate();
         }
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
 
-        public bool IsComplete()
-        {
-            bool complete = Progress >= BP;
-            if (RRType == RolloutReconType.Rollback)
-                complete = Progress <= 0;
-            return complete;
-        }
+        public bool IsComplete() => RRType == RolloutReconType.Rollback ? Progress <= 0 : Progress >= BP;
 
         public void IncrementProgress(double UTDiff)
         {
@@ -228,10 +137,13 @@ namespace KerbalConstructionTime
             Progress += GetBuildRate() * UTDiff;
             if (Progress > BP) Progress = BP;
 
+            int prevStep = (int)Math.Floor(10 * progBefore / BP);
+            int curStep = (int)Math.Floor(10 * Progress / BP);
+
             if (Utilities.CurrentGameIsCareer() && RRType == RolloutReconType.Rollout && Cost > 0)
             {
-                int steps;
-                if ((steps = (int)(Math.Floor(Progress / BP * 10) - Math.Floor(progBefore / BP * 10))) > 0) //passed 10% of the progress
+                int steps = curStep - prevStep;
+                if (steps > 0) //  Pay or halt at 10% intervals
                 {
                     if (Funding.Instance.Funds < Cost / 10) //If they can't afford to continue the rollout, progress stops
                     {
@@ -244,7 +156,7 @@ namespace KerbalConstructionTime
                         }
                     }
                     else
-                        Utilities.SpendFunds(Cost / 10 * steps, TransactionReasons.VesselRollout);
+                        Utilities.SpendFunds(steps * Cost / 10, TransactionReasons.VesselRollout);
                 }
             }
         }

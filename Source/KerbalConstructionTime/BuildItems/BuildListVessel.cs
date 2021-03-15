@@ -562,45 +562,15 @@ namespace KerbalConstructionTime
         {
             foreach (ConfigNode p in ShipNode.GetNodes("PART"))
             {
-                if (Utilities.PartIsProcedural(p))
+                foreach (var res in p.GetNodes("RESOURCE"))
                 {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
+                    if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
+                        bool.Parse(res.GetValue("flowState")))
                     {
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = float.Parse( res.GetValue("maxAmount"));
-                                var amt = float.Parse(res.GetValue("amount"));
-                                if (Math.Abs(amt-maxAmt) >= 1)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
-                    {
-                        var name = res.GetValue("name");
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(name))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = float.Parse(res.GetValue("maxAmount"));
-                                var amt = float.Parse(res.GetValue("amount"));
-                                if (Math.Abs(amt - maxAmt) >= 1)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
+                        var maxAmt = float.Parse(res.GetValue("maxAmount"));
+                        var amt = float.Parse(res.GetValue("amount"));
+                        if (Math.Abs(amt - maxAmt) >= 1)
+                            return false;
                     }
                 }
             }
@@ -611,38 +581,14 @@ namespace KerbalConstructionTime
         {
             foreach (ConfigNode p in ShipNode.GetNodes("PART"))
             {
-                //fill as part prefab would be filled?
-                if (Utilities.PartIsProcedural(p))
+                var resList = p.GetNodes("RESOURCE");
+                foreach (var res in resList)
                 {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
+                    if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
+                        bool.Parse(res.GetValue("flowState")))
                     {
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = res.GetValue("maxAmount");
-                                res.SetValue("amount", maxAmt);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
-                    {
-                        var name = res.GetValue("name");
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(name))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = res.GetValue("maxAmount");
-                                res.SetValue("amount", maxAmt);
-                            }
-                        }
+                        var maxAmt = res.GetValue("maxAmount");
+                        res.SetValue("amount", maxAmt);
                     }
                 }
             }
@@ -653,16 +599,13 @@ namespace KerbalConstructionTime
             if (TotalMass != 0 && EmptyMass != 0) return TotalMass;
             TotalMass = 0;
             EmptyMass = 0;
-            for (int i = ExtractedPartNodes.Count - 1; i >= 0; i--)
+            foreach (var p in ExtractedPartNodes)
             {
-                ConfigNode p = ExtractedPartNodes[i];
                 TotalMass += Utilities.GetPartMassFromNode(p, includeFuel: true, includeClamps: false);
                 EmptyMass += Utilities.GetPartMassFromNode(p, includeFuel: false, includeClamps: false);
             }
-            if (TotalMass < 0)
-                TotalMass = 0;
-            if (EmptyMass < 0)
-                EmptyMass = 0;
+            TotalMass = Math.Max(TotalMass, 0);
+            EmptyMass = Math.Max(EmptyMass, 0);
             return TotalMass;
         }
 
@@ -692,7 +635,7 @@ namespace KerbalConstructionTime
             if (Funding.Instance.Funds < rushCost) return false;
 
             double remainingBP = BuildPoints + IntegrationPoints - Progress;
-            AddProgress(remainingBP * 0.1);
+            Progress += remainingBP * 0.1;
             Utilities.SpendFunds(rushCost, TransactionReasons.VesselRollout);
             ++RushBuildClicks;
             _rushCost = -1;    // force recalculation of rush cost
@@ -787,9 +730,8 @@ namespace KerbalConstructionTime
         public List<PseudoPart> GetPseudoParts()
         {
             List<PseudoPart> retList = new List<PseudoPart>();
-            ConfigNode[] partNodes = ShipNode.GetNodes("PART");
 
-            foreach (ConfigNode cn in partNodes)
+            foreach (ConfigNode cn in ShipNode.GetNodes("PART"))
             {
                 string name = cn.GetValue("part");
                 string pID;
@@ -921,15 +863,9 @@ namespace KerbalConstructionTime
         public void IncrementProgress(double UTDiff)
         {
             double buildRate = Utilities.GetBuildRate(this);
-            AddProgress(buildRate * UTDiff);
+            Progress += buildRate * UTDiff;
             if (IsComplete())
                 Utilities.MoveVesselToWarehouse(this);
-        }
-
-        private double AddProgress(double toAdd)
-        {
-            Progress += toAdd;
-            return Progress;
         }
     }
 

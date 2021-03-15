@@ -17,14 +17,12 @@ namespace KerbalConstructionTime
                 string fullPath = KSPUtil.ApplicationRootPath + HighLogic.CurrentGame.Parameters.Career.TechTreeUrl;
                 KCTDebug.Log($"Loading tech tree from {fullPath}");
 
-                ConfigNode fileNode = ConfigNode.Load(fullPath);
-                if (fileNode != null && fileNode.HasNode("TechTree"))
+                if (ConfigNode.Load(fullPath) is ConfigNode fileNode && fileNode.HasNode("TechTree"))
                 {
                     techNameToTitle.Clear();
 
                     ConfigNode treeNode = fileNode.GetNode("TechTree");
-                    ConfigNode[] ns = treeNode.GetNodes("RDNode");
-                    foreach (ConfigNode n in ns)
+                    foreach (ConfigNode n in treeNode.GetNodes("RDNode"))
                     {
                         if (n.HasValue("id"))
                         {
@@ -33,9 +31,8 @@ namespace KerbalConstructionTime
                             if (n.HasValue("title"))
                                 techNameToTitle[techID] = n.GetValue("title");
 
-                            ConfigNode[] parents = n.GetNodes("Parent");
                             var pList = new List<string>();
-                            foreach (ConfigNode p in parents)
+                            foreach (ConfigNode p in n.GetNodes("Parent"))
                             {
                                 if (p.HasValue("parentID"))
                                     pList.Add(p.GetValue("parentID"));
@@ -55,11 +52,8 @@ namespace KerbalConstructionTime
             base.OnSave(node);
             var kctVS = new KCT_DataStorage();
             node.AddNode(kctVS.AsConfigNode());
-            foreach (KSCItem KSC in KCTGameStates.KSCs)
-            {
-                if (KSC != null && KSC.KSCName != null && KSC.KSCName.Length > 0)
-                    node.AddNode(KSC.AsConfigNode());
-            }
+            foreach (KSCItem KSC in KCTGameStates.KSCs.Where(x => x?.KSCName?.Length > 0))
+                node.AddNode(KSC.AsConfigNode());
             var tech = new ConfigNode("TechList");
             foreach (TechItem techItem in KCTGameStates.TechList)
             {
@@ -93,8 +87,7 @@ namespace KerbalConstructionTime
             KCT_GUI.ResetUpgradePointCounts();
 
             var kctVS = new KCT_DataStorage();
-            ConfigNode cn = node.GetNode(kctVS.GetType().Name);
-            if (cn != null)
+            if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
                 ConfigNode.LoadObjectFromConfig(kctVS, cn);
 
             bool foundStockKSC = false;
@@ -103,7 +96,7 @@ namespace KerbalConstructionTime
                 string name = ksc.GetValue("KSCName");
                 var loaded_KSC = new KSCItem(name);
                 loaded_KSC.FromConfigNode(ksc);
-                if (loaded_KSC != null && loaded_KSC.KSCName != null && loaded_KSC.KSCName.Length > 0)
+                if (loaded_KSC?.KSCName?.Length > 0)
                 {
                     loaded_KSC.RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
                     if (KCTGameStates.KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)

@@ -23,6 +23,29 @@
         ]
     },
     {
+        "name": "RO-reactor-kilopower",
+        "title": "NASA Kilopower Reactor",
+        "description": "",
+        "mod": "Near Future Electrical",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "NUCLEAR",
+        "info": "Nuclear Reactor",
+        "year": "2025",
+        "technology": "nuclearPowerNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
         "name": "RO-reactor-TOPAZI",
         "title": "TOPAZ-I Nuclear Reactor",
         "description": "",
@@ -40,6 +63,52 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "200000",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
+        "name": "RO-reactor-snap10a",
+        "title": "NASA SNAP-10A Nuclear Reactor",
+        "description": "",
+        "mod": "Near Future Electrical",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "NUCLEAR",
+        "info": "Nuclear Reactor",
+        "year": "1965",
+        "technology": "nuclearFissionReactors",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
+        "name": "RO-reactor-snap50",
+        "title": "NASA SNAP-50 Nuclear Reactor",
+        "description": "",
+        "mod": "Near Future Electrical",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "NUCLEAR",
+        "info": "Nuclear Reactor",
+        "year": "2030",
+        "technology": "nuclearPowerNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"

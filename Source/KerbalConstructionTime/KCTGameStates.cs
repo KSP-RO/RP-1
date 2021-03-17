@@ -21,7 +21,7 @@ namespace KerbalConstructionTime
         public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
 
-        public static KCTObservableList<TechItem> TechList;
+        public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 
         public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
         public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
@@ -79,10 +79,7 @@ namespace KerbalConstructionTime
 
         public static void InitAndClearTechList()
         {
-            if (TechList != null)
-                TechList.Clear();
-            else
-                TechList = new KCTObservableList<TechItem>();
+            TechList.Clear();
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
         }
       

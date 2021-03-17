@@ -1223,7 +1223,7 @@ namespace KerbalConstructionTime
         public static void DisableModFunctionality()
         {
             DisableSimulationLocks();
-            InputLockManager.RemoveControlLock("KCTLaunchLock");
+            InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
             KCT_GUI.HideAll();
         }
 
@@ -1956,7 +1956,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, "KCTLaunchLock");
+                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, KerbalConstructionTime.KCTLaunchLock);
                 if (!kctInstance.IsLaunchSiteControllerBound)
                 {
                     kctInstance.IsLaunchSiteControllerBound = true;

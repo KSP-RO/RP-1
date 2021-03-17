@@ -35,7 +35,6 @@ Discord Link: https://discord.gg/V73jjNd
 - Custom Barn Kit
 - Deadly Reentry
 - Ven's Stock Revamp (Needed for engines)
-- Kerbal Construction Time (Infrastructure, Build Time, Rollout Costs)
 - DMagic Orbital Science (Science parts)
 - DMModuleScienceAnimateGeneric
 

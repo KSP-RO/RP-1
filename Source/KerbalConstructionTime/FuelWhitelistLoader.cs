@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -7,32 +7,18 @@ namespace KerbalConstructionTime
     [KSPAddon(KSPAddon.Startup.Instantly, false)]
     public class GuiDataAndWhitelistItemsDatabase : MonoBehaviour
     {
-        public static List<string> ValidFuelRes;
-        public static List<string> WasteRes;
+        public static HashSet<string> ValidFuelRes = new HashSet<string>();
+        public static HashSet<string> WasteRes = new HashSet<string>();
 
         private void Awake()
         {
-            ValidFuelRes = new List<string>();
-            WasteRes = new List<string>();
-
-            var loaders = LoadingScreen.Instance.loaders;
-            if (loaders != null)
+            if (LoadingScreen.Instance?.loaders is List<LoadingSystem> loaders)
             {
-                for (var i = 0; i < loaders.Count; i++)
+                if (!(loaders.FirstOrDefault(x => x is FuelWhitelistLoader) is FuelWhitelistLoader))
                 {
-                    var loadingSystem = loaders[i];
-                    if (loadingSystem is FuelWhitelistLoader)
-                    {
-                        (loadingSystem as FuelWhitelistLoader).Done = false;
-                        break;
-                    }
-                    if (loadingSystem is PartLoader)
-                    {
-                        var go = new GameObject();
-                        var recipeLoader = go.AddComponent<FuelWhitelistLoader>();
-                        loaders.Insert(i, recipeLoader);
-                        break;
-                    }
+                    var go = new GameObject("KCTFuelWhitelistLoader");
+                    var recipeLoader = go.AddComponent<FuelWhitelistLoader>();
+                    loaders.Add(recipeLoader);
                 }
             }
         }
@@ -40,70 +26,32 @@ namespace KerbalConstructionTime
 
     public class FuelWhitelistLoader : LoadingSystem
     {
-        public bool Done = false;
-
-        private IEnumerator LoadCustomItems()
+        private void LoadCustomItems()
         {
-            var nodes = GameDatabase.Instance.GetConfigNodes("KCT_FUEL_RESOURCES");
-            if (nodes != null)
+            foreach (var configNode in GameDatabase.Instance.GetConfigNodes("KCT_FUEL_RESOURCES"))
             {
-                foreach (var configNode in nodes)
+                foreach (var item in configNode?.GetValuesList("fuelResource"))
                 {
-                    if (configNode != null)
-                    {
-                        var items = configNode.GetValuesList("fuelResource");
-                        if (items != null)
-                        {
-                            foreach (var item in items)
-                            {
-                                if (item != null)
-                                {
-                                    if (!GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(item))
-                                        GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Add(item);
-                                }
-                            }
-                        }
-
-                        items = configNode.GetValuesList("wasteResource");
-                        if (items != null)
-                        {
-                            foreach (var item in items)
-                            {
-                                if (item != null)
-                                {
-                                    if (!GuiDataAndWhitelistItemsDatabase.WasteRes.Contains(item))
-                                        GuiDataAndWhitelistItemsDatabase.WasteRes.Add(item);
-                                }
-                            }
-                        }
-
-                        yield return null;
-                    }
+                    if (!string.IsNullOrEmpty(item))
+                        GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Add(item);
+                }
+                foreach (var item in configNode?.GetValuesList("wasteResource"))
+                {
+                    if (!string.IsNullOrEmpty(item))
+                        GuiDataAndWhitelistItemsDatabase.WasteRes.Add(item);
                 }
             }
-
-            Done = true;
         }
 
-        public override bool IsReady()
-        {
-            return Done;
-        }
+        public override bool IsReady() => LoadingScreen.Instance?.loaders != null;
 
-        public override float ProgressFraction()
-        {
-            return 0;
-        }
+        public override float ProgressFraction() => 0;
 
-        public override string ProgressTitle()
-        {
-            return "KerbalConstructionTime Initialization & Setup";
-        }
+        public override string ProgressTitle() => "KerbalConstructionTime Initialization & Setup";
 
         public override void StartLoad()
         {
-            Done = false;
-            StartCoroutine(LoadCustomItems());
+            LoadCustomItems();
         }
     }
 }

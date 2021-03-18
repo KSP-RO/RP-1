@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace KerbalConstructionTime
 {
@@ -73,76 +74,82 @@ namespace KerbalConstructionTime
 
         public override void OnLoad(ConfigNode node)
         {
-            base.OnLoad(node);
-            LoadTree();
-
-            if (Utilities.CurrentGameIsMission()) return;
-
-            KCTDebug.Log("Reading from persistence.");
-            KCTGameStates.KSCs.Clear();
-            KCTGameStates.ActiveKSC = null;
-            KCTGameStates.InitAndClearTechList();
-            KCTGameStates.TechUpgradesTotal = 0;
-            KCTGameStates.SciPointsTotal = -1;
-            KCT_GUI.ResetUpgradePointCounts();
-
-            var kctVS = new KCT_DataStorage();
-            if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
-                ConfigNode.LoadObjectFromConfig(kctVS, cn);
-
-            bool foundStockKSC = false;
-            foreach (ConfigNode ksc in node.GetNodes("KSC"))
+            try
             {
-                string name = ksc.GetValue("KSCName");
-                var loaded_KSC = new KSCItem(name);
-                loaded_KSC.FromConfigNode(ksc);
-                if (loaded_KSC?.KSCName?.Length > 0)
+                base.OnLoad(node);
+                LoadTree();
+
+                if (Utilities.CurrentGameIsMission()) return;
+
+                KCTDebug.Log("Reading from persistence.");
+                KCTGameStates.KSCs.Clear();
+                KCTGameStates.ActiveKSC = null;
+                KCTGameStates.InitAndClearTechList();
+                KCTGameStates.TechUpgradesTotal = 0;
+                KCTGameStates.SciPointsTotal = -1;
+                KCT_GUI.ResetUpgradePointCounts();
+
+                var kctVS = new KCT_DataStorage();
+                if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
+                    ConfigNode.LoadObjectFromConfig(kctVS, cn);
+
+                bool foundStockKSC = false;
+                foreach (ConfigNode ksc in node.GetNodes("KSC"))
                 {
-                    loaded_KSC.RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
-                    if (KCTGameStates.KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
-                        KCTGameStates.KSCs.Add(loaded_KSC);
-                    foundStockKSC |= string.Equals(loaded_KSC.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
-                }
-            }
-
-            Utilities.SetActiveKSCToRSS();
-            if (foundStockKSC)
-                TryMigrateStockKSC();
-
-            var protoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that have been researched
-            var inDevProtoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that are being researched
-
-            // get the TechList node containing the TechItems with the tech nodes currently being researched from KCT's ConfigNode
-            if (node.GetNode("TechList") is ConfigNode tmp)
-            {
-                foreach (ConfigNode techNode in tmp.GetNodes("Tech"))
-                {
-                    var techStorageItem = new KCT_TechStorageItem();
-                    ConfigNode.LoadObjectFromConfig(techStorageItem, techNode);
-                    TechItem techItem = techStorageItem.ToTechItem();
-                    techItem.ProtoNode = new ProtoTechNode(techNode.GetNode("ProtoNode"));
-                    KCTGameStates.TechList.Add(techItem);
-
-                    // save proto nodes that are in development
-                    inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
-                }
-            }
-
-            if (HighLogic.LoadedSceneIsEditor)
-            {
-                // get the nodes that have been researched from ResearchAndDevelopment
-                protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
-                // iterate through all loaded parts to check if any of them should be experimental
-                foreach (AvailablePart ap in PartLoader.LoadedPartsList)
-                {
-                    if (Utilities.PartIsUnlockedButNotPurchased(protoTechNodes, ap) || inDevProtoTechNodes.ContainsKey(ap.TechRequired))
+                    string name = ksc.GetValue("KSCName");
+                    var loaded_KSC = new KSCItem(name);
+                    loaded_KSC.FromConfigNode(ksc);
+                    if (loaded_KSC?.KSCName?.Length > 0)
                     {
-                        Utilities.AddExperimentalPart(ap);
+                        loaded_KSC.RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
+                        if (KCTGameStates.KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
+                            KCTGameStates.KSCs.Add(loaded_KSC);
+                        foundStockKSC |= string.Equals(loaded_KSC.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
+                    }
+                }
+
+                Utilities.SetActiveKSCToRSS();
+                if (foundStockKSC)
+                    TryMigrateStockKSC();
+
+                var protoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that have been researched
+                var inDevProtoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that are being researched
+
+                // get the TechList node containing the TechItems with the tech nodes currently being researched from KCT's ConfigNode
+                if (node.GetNode("TechList") is ConfigNode tmp)
+                {
+                    foreach (ConfigNode techNode in tmp.GetNodes("Tech"))
+                    {
+                        var techStorageItem = new KCT_TechStorageItem();
+                        ConfigNode.LoadObjectFromConfig(techStorageItem, techNode);
+                        TechItem techItem = techStorageItem.ToTechItem();
+                        techItem.ProtoNode = new ProtoTechNode(techNode.GetNode("ProtoNode"));
+                        KCTGameStates.TechList.Add(techItem);
+
+                        // save proto nodes that are in development
+                        inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
+                    }
+                }
+                if (HighLogic.LoadedSceneIsEditor)
+                {
+                    // get the nodes that have been researched from ResearchAndDevelopment
+                    protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
+                    // iterate through all loaded parts to check if any of them should be experimental
+                    foreach (AvailablePart ap in PartLoader.LoadedPartsList)
+                    {
+                        if (Utilities.PartIsUnlockedButNotPurchased(protoTechNodes, ap) || inDevProtoTechNodes.ContainsKey(ap.TechRequired))
+                        {
+                            Utilities.AddExperimentalPart(ap);
+                        }
                     }
                 }
             }
-
-            KCTGameStates.ErroredDuringOnLoad.OnLoadFinish();
+            catch (Exception ex)
+            {
+                KCTGameStates.ErroredDuringOnLoad = true;
+                Debug.LogError("[KCT] ERROR! An error while KCT loading data occurred. Things will be seriously broken!");
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Error Loading KCT Data", "ERROR! An error occurred while loading KCT data. Things will be seriously broken! Please report this error to RP-1 GitHub and attach the log file. The game will be UNPLAYABLE in this state!", "Understood", false, HighLogic.UISkin);
+            }
         }
 
         private void TryMigrateStockKSC()

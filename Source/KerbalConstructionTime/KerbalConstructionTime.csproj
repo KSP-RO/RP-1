@@ -111,7 +111,6 @@
     <Compile Include="GUI\GUI_Simulation.cs" />
     <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
-    <Compile Include="KCTOnLoadError.cs" />
     <Compile Include="ModIntegrations\CTIWrapper.cs" />
     <Compile Include="Persistence\AirlaunchPrepStorageItem.cs" />
     <Compile Include="Persistence\BuildListStorageItem.cs" />

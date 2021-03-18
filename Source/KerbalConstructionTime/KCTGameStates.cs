@@ -46,7 +46,7 @@ namespace KerbalConstructionTime
         public static string KACAlarmId = string.Empty;
         public static double KACAlarmUT = 0;
 
-        public static KCTOnLoadError ErroredDuringOnLoad = new KCTOnLoadError();
+        public static bool ErroredDuringOnLoad = false;
 
         public static bool VesselErrorAlerted = false;
         public static bool PersistenceLoaded = false;

@@ -17,7 +17,6 @@ namespace KerbalConstructionTime
 
         public bool IsEditorRecalcuationRequired;
 
-        private static bool _ratesUpdated = false;
         private static bool _isGUIInitialized = false;
 
         private WaitForSeconds _wfsHalf = null, _wfsOne = null, _wfsTwo = null;
@@ -194,6 +193,7 @@ namespace KerbalConstructionTime
                     }
                     KCT_GUI.GUIStates.ShowFirstRun = shouldStart;
                     StartCoroutine(UpdateActiveLPLevel());
+                    StartCoroutine(UpdateBuildRates());
                     break;
                 case GameScenes.TRACKSTATION:
                     KCTGameStates.ClearVesselEditMode();
@@ -276,7 +276,6 @@ namespace KerbalConstructionTime
                     break;
             }
 
-            _ratesUpdated = false;
             KCTDebug.Log("Start finished");
 
             _wfsOne = new WaitForSeconds(1f);
@@ -361,6 +360,19 @@ namespace KerbalConstructionTime
             }
         }
 
+        public void Update()
+        {
+            // Move constantly-checked things that don't need physics precision to here.
+            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+                Utilities.SetActiveKSCToRSS();
+
+            if (!KCT_GUI.IsPrimarilyDisabled && HighLogic.LoadedScene == GameScenes.SPACECENTER &&
+                VesselSpawnDialog.Instance?.Visible == true)
+            {
+                VesselSpawnDialog.Instance.ButtonClose();
+                KCTDebug.Log("Attempting to close spawn dialog!");
+            }
+        }
 
         // TODO: GET OUT OF FIXEDUPDATE
         public void FixedUpdate()
@@ -373,10 +385,7 @@ namespace KerbalConstructionTime
             KCTGameStates.UT = Utilities.GetUT();
             try
             {
-                UpdateBuildRates();
-
-                if (!KCT_GUI.IsPrimarilyDisabled && !KCTGameStates.IsSimulatedFlight && 
-                    (HighLogic.LoadedSceneIsFlight || HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION))
+                if (!KCT_GUI.IsPrimarilyDisabled && (HighLogic.LoadedSceneIsFlight || HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION))
                 {
                     ProcessWarp(lastUT);
                 }
@@ -384,18 +393,6 @@ namespace KerbalConstructionTime
                 if (HighLogic.LoadedScene == GameScenes.FLIGHT && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
                 {
                     ProcessSimulation();
-                }
-
-                if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
-                {
-                    Utilities.SetActiveKSCToRSS();
-                }
-
-                if (!KCT_GUI.IsPrimarilyDisabled && HighLogic.LoadedScene == GameScenes.SPACECENTER &&
-                    VesselSpawnDialog.Instance != null && VesselSpawnDialog.Instance.Visible)
-                {
-                    VesselSpawnDialog.Instance.ButtonClose();
-                    KCTDebug.Log("Attempting to close spawn dialog!");
                 }
 
                 if (!KCT_GUI.IsPrimarilyDisabled)
@@ -426,34 +423,25 @@ namespace KerbalConstructionTime
             }
         }
 
-        private static void UpdateBuildRates()
+        private IEnumerator UpdateBuildRates()
         {
-            if (!_ratesUpdated)
+            yield return new WaitForFixedUpdate();  // TODO: Check why we stall here versus run in Start()
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER
+                && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) >= 0)
             {
-                if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                KCTDebug.Log("Updating build rates");
+                foreach (KSCItem KSC in KCTGameStates.KSCs)
                 {
-                    if (ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) >= 0)
-                    {
-                        _ratesUpdated = true;
-                        KCTDebug.Log("Updating build rates");
-                        foreach (KSCItem KSC in KCTGameStates.KSCs)
-                        {
-                            KSC?.RecalculateBuildRates();
-                            KSC?.RecalculateUpgradedBuildRates();
-                        }
-
-                        KCTDebug.Log("Rates updated");
-
-                        foreach (SpaceCenterFacility facility in Enum.GetValues(typeof(SpaceCenterFacility)))
-                        {
-                            KCTGameStates.BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
-                            KCTDebug.Log($"Cached {facility} max at {KCTGameStates.BuildingMaxLevelCache[facility.ToString()]}");
-                        }
-                    }
+                    KSC?.RecalculateBuildRates();
+                    KSC?.RecalculateUpgradedBuildRates();
                 }
-                else
+
+                KCTDebug.Log("Rates updated");
+
+                foreach (SpaceCenterFacility facility in Enum.GetValues(typeof(SpaceCenterFacility)))
                 {
-                    _ratesUpdated = true;
+                    KCTGameStates.BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
+                    KCTDebug.Log($"Cached {facility} max at {KCTGameStates.BuildingMaxLevelCache[facility.ToString()]}");
                 }
             }
         }

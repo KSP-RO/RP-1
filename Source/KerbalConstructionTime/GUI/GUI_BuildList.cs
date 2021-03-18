@@ -715,7 +715,7 @@ namespace KerbalConstructionTime
                         ub.IsLaunchpad
                         && ub.LaunchpadID == KCTGameStates.ActiveKSC.LaunchPads.IndexOf(KCTGameStates.ActiveKSC.ActiveLPInstance)) != null) != null;
                 GUIStyle btnColor = _greenButton;
-                if (KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed || KCTGameStates.ActiveKSC.ActiveLPInstance.upgradeRepair || isUpgrading)
+                if (KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed || isUpgrading)
                     btnColor = _redButton;
                 else if (hasRecond = KCTGameStates.ActiveKSC.GetReconditioning(KCTGameStates.ActiveKSC.ActiveLPInstance.name) != null)
                     btnColor = _yellowButton;

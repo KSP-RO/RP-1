@@ -17,7 +17,6 @@ namespace KerbalConstructionTime
         public static KSCItem ActiveKSC = null;
         public static List<KSCItem> KSCs = new List<KSCItem>();
         public static string ActiveKSCName = string.Empty;
-        public static bool UpdateLaunchpadDestructionState = false;
         public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
 

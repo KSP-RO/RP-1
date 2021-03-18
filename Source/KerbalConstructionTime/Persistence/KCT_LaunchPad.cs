@@ -19,18 +19,15 @@ namespace KerbalConstructionTime
         [Persistent] public string name = "LaunchPad";
 
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
-        public bool upgradeRepair = false;
 
         public bool IsDestroyed
         {
             get
             {
                 string nodeStr = level == 2 ? "SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_launchPad" : "SpaceCenter/LaunchPad/Facility/building";
-                ConfigNode mainNode = DestructionNode.GetNode(nodeStr);
-                if (mainNode == null)
-                    return false;
-                else
+                if (DestructionNode.GetNode(nodeStr) is ConfigNode mainNode)
                     return !bool.Parse(mainNode.GetValue("intact"));
+                return false;
             }
         }
 
@@ -44,9 +41,7 @@ namespace KerbalConstructionTime
         {
             //sets the new level, assumes completely repaired
             level = lvl;
-
-            KCTGameStates.UpdateLaunchpadDestructionState = true;
-            upgradeRepair = true;
+            UpdateLaunchpadDestructionState(true);
         }
 
         public bool Delete(out string failReason)
@@ -92,29 +87,24 @@ namespace KerbalConstructionTime
         public void Rename(string newName)
         {
             //find everything that references this launchpad by name and update the name reference
-            foreach (KSCItem ksc in KCTGameStates.KSCs)
+            if (KCTGameStates.KSCs.FirstOrDefault(x => x.LaunchPads.Contains(this)) is KSCItem ksc)
             {
-                if (ksc.LaunchPads.Contains(this))
+                if (ksc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
+                    return; //can't name it something that already is named that
+
+                foreach (ReconRollout rr in ksc.Recon_Rollout)
                 {
-                    if (ksc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
-                        return; //can't name it something that already is named that
-
-                    foreach (ReconRollout rr in ksc.Recon_Rollout)
+                    if (rr.LaunchPadID == name)
                     {
-                        if (rr.LaunchPadID == name)
-                        {
-                            rr.LaunchPadID = newName;
-                        }
+                        rr.LaunchPadID = newName;
                     }
-                    foreach (FacilityUpgrade up in ksc.KSCTech)
+                }
+                foreach (FacilityUpgrade up in ksc.KSCTech)
+                {
+                    if (up.IsLaunchpad && up.LaunchpadID == ksc.LaunchPads.IndexOf(this))
                     {
-                        if (up.IsLaunchpad && up.LaunchpadID == ksc.LaunchPads.IndexOf(this))
-                        {
-                            up.CommonName = newName;
-                        }
+                        up.CommonName = newName;
                     }
-
-                    break;
                 }
             }
             name = newName;
@@ -138,10 +128,7 @@ namespace KerbalConstructionTime
                 }
 
                 //set the destroyed state to this destroyed state
-                //might need to do this one frame later?
-                //RefreshDesctructibleState();
-                KCTGameStates.UpdateLaunchpadDestructionState = true;
-                upgradeRepair = false;
+                UpdateLaunchpadDestructionState(false);
             }
             catch (Exception ex)
             {
@@ -149,13 +136,25 @@ namespace KerbalConstructionTime
             }
         }
 
+        public void UpdateLaunchpadDestructionState(bool upgradeRepair)
+        {
+            // Comments suggest may need to wait until next frame.  Unsure why.
+            //yield return new WaitForFixedUpdate();
+            KCTDebug.Log("Updating launchpad destruction state.");
+            if (upgradeRepair)
+            {
+                RefreshDestructionNode();
+                CompletelyRepairNode();
+            }
+            SetDestructibleStateFromNode();
+        }
+
         public void SetDestructibleStateFromNode()
         {
             foreach (DestructibleBuilding facility in GetDestructibleFacilityReferences())
             {
-                ConfigNode aNode = DestructionNode.GetNode(facility.id);
-                if (aNode != null)
-                    facility.Load(aNode);
+                if (DestructionNode.GetNode(facility.id) is ConfigNode node)
+                    facility.Load(node);
             }
         }
 
@@ -173,10 +172,7 @@ namespace KerbalConstructionTime
         public void CompletelyRepairNode()
         {
             foreach (ConfigNode node in DestructionNode.GetNodes())
-            {
-                if (node.HasValue("intact"))
-                    node.SetValue("intact", "True");
-            }
+                node.SetValue("intact", "True", false);     // Only update value if already exists
         }
 
         public List<Upgradeables.UpgradeableFacility> GetUpgradeableFacilityReferences()

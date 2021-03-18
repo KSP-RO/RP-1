@@ -381,20 +381,6 @@ namespace KerbalConstructionTime
                     KCTGameStates.ErroredDuringOnLoad.FireAlert();
                 }
 
-                if (KCTGameStates.UpdateLaunchpadDestructionState)
-                {
-                    KCTDebug.Log("Updating launchpad destruction state.");
-                    KCTGameStates.UpdateLaunchpadDestructionState = false;
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.SetDestructibleStateFromNode();
-                    if (KCTGameStates.ActiveKSC.ActiveLPInstance.upgradeRepair)
-                    {
-                        //repair everything, then update the node
-                        KCTGameStates.ActiveKSC.ActiveLPInstance.RefreshDestructionNode();
-                        KCTGameStates.ActiveKSC.ActiveLPInstance.CompletelyRepairNode();
-                        KCTGameStates.ActiveKSC.ActiveLPInstance.SetDestructibleStateFromNode();
-                    }
-                }
-
                 UpdateBuildRates();
 
                 if (!KCT_GUI.IsPrimarilyDisabled && !KCTGameStates.IsSimulatedFlight && 
@@ -441,7 +427,7 @@ namespace KerbalConstructionTime
                     if (Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
                     {
                         KCTGameStates.ActiveKSC.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchPadID, false);
-                        KCTGameStates.UpdateLaunchpadDestructionState = true;
+                        pad.UpdateLaunchpadDestructionState(false);
                     }
                 }
                 yield return _wfsHalf;

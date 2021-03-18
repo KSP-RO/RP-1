@@ -17,7 +17,6 @@ namespace KerbalConstructionTime
 
         public bool IsEditorRecalcuationRequired;
 
-        private static int _lvlCheckTimer = 0;
         private static bool _ratesUpdated = false;
         private static bool _isGUIInitialized = false;
 
@@ -70,7 +69,6 @@ namespace KerbalConstructionTime
             if (Utilities.CurrentGameIsMission()) return;
 
             KCTDebug.Log("Awake called");
-            KCTGameStates.ErroredDuringOnLoad.OnLoadStart();
             KCTGameStates.PersistenceLoaded = false;
 
             Instance = this;
@@ -368,19 +366,13 @@ namespace KerbalConstructionTime
         public void FixedUpdate()
         {
             if (Utilities.CurrentGameIsMission()) return;
+            if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
+                return;
 
             double lastUT = KCTGameStates.UT > 0 ? KCTGameStates.UT : Utilities.GetUT();
             KCTGameStates.UT = Utilities.GetUT();
             try
             {
-                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
-                    return;
-
-                if (!KCTGameStates.ErroredDuringOnLoad.AlertFired && KCTGameStates.ErroredDuringOnLoad.HasErrored())
-                {
-                    KCTGameStates.ErroredDuringOnLoad.FireAlert();
-                }
-
                 UpdateBuildRates();
 
                 if (!KCT_GUI.IsPrimarilyDisabled && !KCTGameStates.IsSimulatedFlight && 

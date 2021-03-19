@@ -74,11 +74,10 @@ namespace KerbalConstructionTime
                     if (Funding.Instance.Funds < Cost / 10)    //If they can't afford to continue the rollout, progress stops
                     {
                         Progress = progBefore;
-                        if (TimeWarp.CurrentRate > 1f && KCTGameStates.WarpInitiated && this == KCTGameStates.TargetedItem)
+                        if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                         {
                             ScreenMessages.PostScreenMessage("Timewarp was stopped because there's insufficient funds to continue the airlaunch preparations");
-                            TimeWarp.SetRate(0, true);
-                            KCTGameStates.WarpInitiated = false;
+                            KCTWarpController.Instance.StopWarp();
                         }
                     }
                     else

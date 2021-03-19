@@ -10,8 +10,6 @@ namespace KerbalConstructionTime
         internal const string _modName = "Kerbal Construction Time";
 
         public static double UT, LastUT = 0;
-        public static bool CanWarp = false, WarpInitiated = false;
-        public static int LastWarpRate = 0;
         public static KCTSettings Settings = new KCTSettings();
 
         public static KSCItem ActiveKSC = null;
@@ -33,7 +31,6 @@ namespace KerbalConstructionTime
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
         public static bool IsSimulatedFlight = false;
-        public static IKCTBuildItem TargetedItem = null;
         public static double EditorBuildTime = 0;
         public static double EditorIntegrationTime = 0;
         public static double EditorRolloutCosts = 0;
@@ -64,7 +61,6 @@ namespace KerbalConstructionTime
             SimulationParams.Reset();
 
             PurchasedUpgrades = new List<int>() { 0, 0 };
-            TargetedItem = null;
             KCT_GUI.ResetFormulaRateHolders();
 
             MiscellaneousTempUpgrades = 0;
@@ -78,7 +74,7 @@ namespace KerbalConstructionTime
 
         public static void InitAndClearTechList()
         {
-            TechList.Clear();
+            TechList = new KCTObservableList<TechItem>();
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
         }
       

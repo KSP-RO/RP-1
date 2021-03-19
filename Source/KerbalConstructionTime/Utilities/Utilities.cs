@@ -427,12 +427,6 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (KCTGameStates.TargetedItem != null && KCTGameStates.TargetedItem.IsComplete())
-            {
-                TimeWarp.SetRate(0, true);
-                KCTGameStates.TargetedItem = null;
-                KCTGameStates.WarpInitiated = false;
-            }
             KCTGameStates.LastUT = UT;
             Profiler.EndSample();
         }
@@ -689,12 +683,6 @@ namespace KerbalConstructionTime
 
                 Message.AppendLine(vessel.ShipName);
                 Message.AppendLine("Please check the SPH Storage at " + KSC.KSCName + " to launch it.");
-            }
-
-            if ((KCTGameStates.Settings.ForceStopWarp || vessel == KCTGameStates.TargetedItem) && TimeWarp.CurrentRateIndex != 0)
-            {
-                TimeWarp.SetRate(0, true);
-                KCTGameStates.WarpInitiated = false;
             }
 
             //Assign science based on science rate
@@ -1197,27 +1185,6 @@ namespace KerbalConstructionTime
                 }
             }
             return thing;
-        }
-
-        public static void RampUpWarp()
-        {
-            IKCTBuildItem ship = GetNextThingToFinish();
-            RampUpWarp(ship);
-        }
-
-        public static void RampUpWarp(IKCTBuildItem item)
-        {
-            int newRate = TimeWarp.CurrentRateIndex;
-            double timeLeft = item.GetTimeLeft();
-            if (double.IsPositiveInfinity(timeLeft))
-                timeLeft = GetNextThingToFinish().GetTimeLeft();
-            while ((newRate + 1 < TimeWarp.fetch.warpRates.Length) &&
-                   (timeLeft > TimeWarp.fetch.warpRates[newRate + 1] * Planetarium.fetch.fixedDeltaTime) &&
-                   (newRate < KCTGameStates.Settings.MaxTimeWarp))
-            {
-                newRate++;
-            }
-            TimeWarp.SetRate(newRate, true);
         }
 
         public static void DisableModFunctionality()

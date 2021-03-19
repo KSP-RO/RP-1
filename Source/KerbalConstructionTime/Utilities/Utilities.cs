@@ -2093,8 +2093,8 @@ namespace KerbalConstructionTime
             string backupFolderPath = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup";
             string backupFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup/KCT_simulation_backup.sfs";
 
-            File.Delete(backupFile);
             Directory.CreateDirectory(backupFolderPath);
+            File.Delete(backupFile);
             File.Move(preSimFile, backupFile);
         }
 

@@ -559,24 +559,27 @@ namespace KerbalConstructionTime
                     Utilities.ToggleFailures(!simParams.DisableFailures);
                 }
 
+                if (!simParams.SimulateInOrbit || !FlightDriver.CanRevertToPrelaunch)
+                {
+                    // Either the player does not want to start in orbit or they saved and then loaded back into that save
+                    simParams.IsVesselMoved = true;
+                    return;
+                }
+
                 int secondsForMove = simParams.DelayMoveSeconds;
-                if (simParams.SimulateInOrbit && _simMoveDeferTime == DateTime.MaxValue)
+                if (_simMoveDeferTime == DateTime.MaxValue)
                 {
                     _simMoveDeferTime = DateTime.Now;
                 }
-                else if (simParams.SimulateInOrbit && (DateTime.Now.CompareTo(_simMoveDeferTime.AddSeconds(secondsForMove)) > 0))
+                else if (DateTime.Now.CompareTo(_simMoveDeferTime.AddSeconds(secondsForMove)) > 0)
                 {
                     KCTDebug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
                     HyperEdit_Utilities.PutInOrbitAround(simParams.SimulationBody, simParams.SimOrbitAltitude, simParams.SimInclination);
                     simParams.IsVesselMoved = true;
                     _simMoveDeferTime = DateTime.MaxValue;
                 }
-                else if (!simParams.SimulateInOrbit)
-                {
-                    simParams.IsVesselMoved = true;
-                }
 
-                if (simParams.SimulateInOrbit && _simMoveDeferTime != DateTime.MaxValue && _simMoveSecondsRemain != (_simMoveDeferTime.AddSeconds(secondsForMove) - DateTime.Now).Seconds)
+                if (_simMoveDeferTime != DateTime.MaxValue && _simMoveSecondsRemain != (_simMoveDeferTime.AddSeconds(secondsForMove) - DateTime.Now).Seconds)
                 {
                     double remaining = (_simMoveDeferTime.AddSeconds(secondsForMove) - DateTime.Now).TotalSeconds;
                     ScreenMessages.PostScreenMessage($"Moving vessel in {Math.Round(remaining)} seconds", (float)(remaining - Math.Floor(remaining)), ScreenMessageStyle.UPPER_CENTER);
@@ -767,7 +770,8 @@ namespace KerbalConstructionTime
             if (HighLogic.LoadedSceneIsFlight && KCTGameStates.IsSimulatedFlight)
             {
                 Utilities.EnableSimulationLocks();
-                if (KCTGameStates.SimulationParams.SimulationUT > 0)
+                if (KCTGameStates.SimulationParams.SimulationUT > 0 && 
+                    FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
                     KCTDebug.Log($"Setting simulation UT to {KCTGameStates.SimulationParams.SimulationUT}");
                     Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);

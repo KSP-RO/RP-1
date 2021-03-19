@@ -224,7 +224,7 @@
         "year": "1961",
         "technology": "basicCapsules",
         "ro": true,
-        "orphan": true,
+        "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Vostok",
         "engine_config": "",

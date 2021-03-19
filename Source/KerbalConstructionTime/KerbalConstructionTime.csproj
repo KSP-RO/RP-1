@@ -142,6 +142,7 @@
     <Compile Include="KSCItem.cs" />
     <Compile Include="KSCContextMenuOverrider.cs" />
     <Compile Include="Persistence\KCT_LaunchPad.cs" />
+    <Compile Include="KCTWarpController.cs" />
     <Compile Include="Utilities\MathParser.cs" />
     <Compile Include="Presets\PresetManager.cs" />
     <Compile Include="BuildItems\ReconRollout.cs" />

@@ -381,14 +381,9 @@ namespace KerbalConstructionTime
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
 
-            double lastUT = KCTGameStates.UT > 0 ? KCTGameStates.UT : Utilities.GetUT();
-            KCTGameStates.UT = Utilities.GetUT();
+            KCTGameStates.UT = Utilities.GetUT()
             try
             {
-                if (!KCT_GUI.IsPrimarilyDisabled && (HighLogic.LoadedSceneIsFlight || HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION))
-                {
-                    ProcessWarp(lastUT);
-                }
 
                 if (HighLogic.LoadedScene == GameScenes.FLIGHT && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
                 {
@@ -444,64 +439,6 @@ namespace KerbalConstructionTime
                     KCTDebug.Log($"Cached {facility} max at {KCTGameStates.BuildingMaxLevelCache[facility.ToString()]}");
                 }
             }
-        }
-
-        private static void ProcessWarp(double lastUT)
-        {
-            Profiler.BeginSample("KCT ProcessWarp");
-            IKCTBuildItem iKctItem = Utilities.GetNextThingToFinish();
-            if (KCTGameStates.TargetedItem == null && iKctItem != null)
-                KCTGameStates.TargetedItem = iKctItem;
-            double remaining = iKctItem != null ? iKctItem.GetTimeLeft() : -1;
-            double dT = TimeWarp.CurrentRate / (KCTGameStates.UT - lastUT);
-            if (dT >= 20)
-                dT = 0.1;
-            int nBuffers = 1;
-            if (KCTGameStates.CanWarp && iKctItem != null && !iKctItem.IsComplete())
-            {
-                int warpRate = TimeWarp.CurrentRateIndex;
-                if (warpRate < KCTGameStates.LastWarpRate) //if something else changes the warp rate then release control to them, such as Kerbal Alarm Clock
-                {
-                    KCTGameStates.CanWarp = false;
-                    KCTGameStates.LastWarpRate = 0;
-                }
-                else
-                {
-                    if (iKctItem == KCTGameStates.TargetedItem && warpRate > 0 &&
-                        TimeWarp.fetch.warpRates[warpRate] * dT * nBuffers > Math.Max(remaining, 0))
-                    {
-                        int newRate = warpRate;
-                        //find the first rate that is lower than the current rate
-                        while (newRate > 0)
-                        {
-                            if (TimeWarp.fetch.warpRates[newRate] * dT * nBuffers < remaining)
-                                break;
-                            newRate--;
-                        }
-                        KCTDebug.Log($"Warping down to {newRate} (delta: {TimeWarp.fetch.warpRates[newRate] * dT})");
-                        TimeWarp.SetRate(newRate, true); //hopefully a faster warp down than before
-                        warpRate = newRate;
-                    }
-                    else if (warpRate == 0 && KCTGameStates.WarpInitiated)
-                    {
-                        KCTGameStates.CanWarp = false;
-                        KCTGameStates.WarpInitiated = false;
-                        KCTGameStates.TargetedItem = null;
-
-                    }
-                    KCTGameStates.LastWarpRate = warpRate;
-                }
-
-            }
-            else if (iKctItem != null && iKctItem == KCTGameStates.TargetedItem &&
-                     (KCTGameStates.WarpInitiated || KCTGameStates.Settings.ForceStopWarp) &&
-                     TimeWarp.CurrentRateIndex > 0 && (remaining < 1) && (!iKctItem.IsComplete())) //Still warp down even if we don't control the clock
-            {
-                TimeWarp.SetRate(0, true);
-                KCTGameStates.WarpInitiated = false;
-                KCTGameStates.TargetedItem = null;
-            }
-            Profiler.EndSample();
         }
 
         private void ProcessSimulation()
@@ -603,7 +540,7 @@ namespace KerbalConstructionTime
 
         public void UpdateTechlistIconColor()
         {
-            foreach (var node in RDController.Instance?.nodes.Where(x => x?.tech is RDTech))
+            foreach (var node in RDController.Instance?.nodes.Where(x => x?.tech is RDTech) ?? Enumerable.Empty<RDNode>())
             {
                 if (HasTechInList(node.tech.techID))
                 {

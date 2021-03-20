@@ -1317,7 +1317,7 @@
         "spacecraft": "Vulcan",
         "engine_config": "BE4",
         "upgrade": false,
-        "entry_cost_mods": "0,StagedMethalox",
+        "entry_cost_mods": "54000,StagedMethalox",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2049,7 +2049,7 @@
         "spacecraft": "Delta II 7000",
         "engine_config": "GEM-40",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM",
+        "entry_cost_mods": "0,GEM-40/Ground",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2072,7 +2072,7 @@
         "spacecraft": "Delta II 7000",
         "engine_config": "GEM-40",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM",
+        "entry_cost_mods": "18000,GEM",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2095,7 +2095,7 @@
         "spacecraft": "Delta III, Delta II Heavy",
         "engine_config": "GEM-46",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM",
+        "entry_cost_mods": "0,GEM-46/Fixed-Ground",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2118,7 +2118,7 @@
         "spacecraft": "Delta III, Delta II Heavy",
         "engine_config": "GEM-46",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM",
+        "entry_cost_mods": "24000,GEM",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2141,7 +2141,7 @@
         "spacecraft": "Delta III, Delta II Heavy",
         "engine_config": "GEM-46",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM,SolidsTVC",
+        "entry_cost_mods": "0,GEM-46/Fixed-Ground,SolidsTVC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2164,7 +2164,7 @@
         "spacecraft": "Delta IV",
         "engine_config": "GEM-60",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM",
+        "entry_cost_mods": "36000,GEM",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2187,7 +2187,7 @@
         "spacecraft": "Delta IV",
         "engine_config": "GEM-60",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM,SolidsTVC",
+        "entry_cost_mods": "0,GEM-60/TVC,SolidsTVC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2210,7 +2210,7 @@
         "spacecraft": "Atlas V (2019)",
         "engine_config": "GEM-63",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM",
+        "entry_cost_mods": "48000,GEM",
         "identical_part_name": "",
         "module_tags": []
     },

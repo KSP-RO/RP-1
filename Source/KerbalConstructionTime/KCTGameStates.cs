@@ -9,7 +9,6 @@ namespace KerbalConstructionTime
         internal const string _modId = "KCT_NS";
         internal const string _modName = "Kerbal Construction Time";
 
-        public static double UT, LastUT = 0;
         public static KCTSettings Settings = new KCTSettings();
 
         public static KSCItem ActiveKSC = null;
@@ -66,8 +65,6 @@ namespace KerbalConstructionTime
             MiscellaneousTempUpgrades = 0;
 
             BuildingMaxLevelCache.Clear();
-
-            LastUT = 0;
 
             InitAndClearTechList();
         }

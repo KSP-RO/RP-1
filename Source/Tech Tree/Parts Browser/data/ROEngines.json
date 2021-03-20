@@ -1357,7 +1357,7 @@
         "spacecraft": "",
         "engine_config": "BE4",
         "upgrade": false,
-        "entry_cost_mods": "54000, BE-4",
+        "entry_cost_mods": "0, BE-4",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -2276,7 +2276,7 @@
         "spacecraft": "",
         "engine_config": "GEM-40",
         "upgrade": false,
-        "entry_cost_mods": "18000, GEM-40/Ground",
+        "entry_cost_mods": "0, GEM-40/Ground",
         "identical_part_name": "GEM 40",
         "module_tags": [
             "EngineSolid"
@@ -2299,7 +2299,7 @@
         "spacecraft": "",
         "engine_config": "GEM-46",
         "upgrade": false,
-        "entry_cost_mods": "24000, GEM-46/Fixed-Ground",
+        "entry_cost_mods": "0, GEM-46/Fixed-Ground",
         "identical_part_name": "GEN-46",
         "module_tags": [
             "EngineSolid"
@@ -2322,7 +2322,7 @@
         "spacecraft": "",
         "engine_config": "GEM-60",
         "upgrade": false,
-        "entry_cost_mods": "36000, GEM-60/Fixed",
+        "entry_cost_mods": "0, GEM-60/Fixed",
         "identical_part_name": "GEM 60",
         "module_tags": [
             "EngineSolid"
@@ -2345,7 +2345,7 @@
         "spacecraft": "",
         "engine_config": "GEM-63",
         "upgrade": false,
-        "entry_cost_mods": "48000, GEM-63",
+        "entry_cost_mods": "0, GEM-63",
         "identical_part_name": "GEM 63",
         "module_tags": [
             "EngineSolid"

@@ -6858,27 +6858,6 @@
         "module_tags": []
     },
     {
-        "name": "solidBooster_sm",
-        "title": "RT-5 \"Flea\"",
-        "description": "",
-        "mod": "Stock (RO Config)",
-        "cost": "0",
-        "entry_cost": "0",
-        "category": "SOLID",
-        "info": "",
-        "year": "0",
-        "technology": "orphanParts",
-        "ro": false,
-        "orphan": false,
-        "rp0_conf": false,
-        "spacecraft": "",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
-        "module_tags": []
-    },
-    {
         "name": "solidBooster1-1",
         "title": "Castor 120",
         "description": "The Castor 120 is a medium solid booster used on the Minotaur and Athena launch vehicles. Its design was based on the TU-903, which serves as the first stage of the Peacekeeper ICBM. The standard thrust curve can be modified to produce a regressive burn that reduces maximum acceleration or a saddle-shaped profile that limits aerodynamic forces. Burn time 79 seconds. Diameter: [2.34 m]. Plume configured by RealPlume.",
@@ -6902,6 +6881,27 @@
         "module_tags": [
             "EngineSolid"
         ]
+    },
+    {
+        "name": "solidBooster_sm",
+        "title": "RT-5 \"Flea\"",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "0",
+        "technology": "orphanParts",
+        "ro": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
     },
     {
         "name": "solidBooster_sm_v2",

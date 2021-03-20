@@ -21,6 +21,7 @@ namespace KerbalConstructionTime
 
         private WaitForSeconds _wfsHalf = null, _wfsOne = null, _wfsTwo = null;
         private bool _isIconUpdated = false;
+        private double _lastUT = 0;
 
         internal const string KCTLaunchLock = "KCTLaunchLock";
         internal const string KCTKSCLock = "KCTKSCLock";
@@ -111,6 +112,10 @@ namespace KerbalConstructionTime
         public void Start()
         {
             KCTDebug.Log("Start called");
+            _wfsOne = new WaitForSeconds(1f);
+            _wfsTwo = new WaitForSeconds(2f);
+            _wfsHalf = new WaitForSeconds(0.5f);
+
             if (Utilities.CurrentGameIsMission()) return;
 
             // Subscribe to events from KSP and other mods
@@ -153,8 +158,6 @@ namespace KerbalConstructionTime
             }
 
             //Begin primary mod functions
-
-            KCTGameStates.UT = Utilities.GetUT();
 
             KCT_GUI.GuiDataSaver.Load();
             KCT_GUI.GUIStates.HideAllNonMainWindows();
@@ -275,12 +278,7 @@ namespace KerbalConstructionTime
                     }
                     break;
             }
-
             KCTDebug.Log("Start finished");
-
-            _wfsOne = new WaitForSeconds(1f);
-            _wfsTwo = new WaitForSeconds(2f);
-            _wfsHalf = new WaitForSeconds(0.5f);
 
             DelayedStart();
 
@@ -374,29 +372,20 @@ namespace KerbalConstructionTime
             }
         }
 
-        // TODO: GET OUT OF FIXEDUPDATE
         public void FixedUpdate()
         {
             if (Utilities.CurrentGameIsMission()) return;
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
+            if (!KCT_GUI.IsPrimarilyDisabled)
+                ProgressBuildTime();
 
-            KCTGameStates.UT = Utilities.GetUT()
-            try
+            if (HighLogic.LoadedScene == GameScenes.FLIGHT && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
             {
-
-                if (HighLogic.LoadedScene == GameScenes.FLIGHT && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
-                {
-                    ProcessSimulation();
-                }
-
-                if (!KCT_GUI.IsPrimarilyDisabled)
-                    Utilities.ProgressBuildTime();
+                ProcessSimulation();
             }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
+
+
         }
 
         // Ran every 30 FixedUpdates, which we will treat as 0.5 seconds for now.
@@ -452,7 +441,6 @@ namespace KerbalConstructionTime
                 {
                     Utilities.ToggleFailures(!simParams.DisableFailures);
                 }
-
                 if (!simParams.SimulateInOrbit || !FlightDriver.CanRevertToPrelaunch)
                 {
                     // Either the player does not want to start in orbit or they saved and then loaded back into that save
@@ -525,6 +513,60 @@ namespace KerbalConstructionTime
                 rectTransform.sizeDelta = new Vector2(300 * uiController.uiScale, 50 * uiController.uiScale);
             }
         }
+
+        // Ran every FixedUpdate.  Will treat as 10/sec.
+        public void ProgressBuildTime()
+        {
+            Profiler.BeginSample("KCT ProgressBuildTime");
+            // Support EditorTime
+            double UT = HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.flightState.universalTime : Planetarium.GetUniversalTime();
+            if (_lastUT == 0)
+                _lastUT = UT;
+            double UTDiff = UT - _lastUT;
+            if (UTDiff > 0)
+            {
+                foreach (KSCItem ksc in KCTGameStates.KSCs)
+                {
+                    foreach (var x in ksc.VABList)
+                        x.IncrementProgress(UTDiff);
+                    foreach (var x in ksc.SPHList)
+                        x.IncrementProgress(UTDiff);
+                    foreach (ReconRollout rr in ksc.Recon_Rollout)
+                    {
+                        rr.IncrementProgress(UTDiff);
+                        //Reset the associated launchpad id when rollback completes
+                        Profiler.BeginSample("KCT ProgressBuildTime.ReconRollout.FindBLVesselByID");
+                        if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
+                            && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) is BuildListVessel blv)
+                        {
+                            blv.LaunchSiteID = -1;
+                        }
+                        Profiler.EndSample();
+                    }
+
+                    ksc.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes ||
+                                                        (rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete()));
+
+                    foreach (var x in ksc.AirlaunchPrep)
+                        x.IncrementProgress(UTDiff);
+
+                    ksc.AirlaunchPrep.RemoveAll(ap => ap.Direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
+
+                    foreach (var x in ksc.KSCTech)
+                        x.IncrementProgress(UTDiff);
+
+                    if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                        ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
+
+                    foreach (var x in KCTGameStates.TechList)
+                        x.IncrementProgress(UTDiff);
+                }
+            }
+
+            _lastUT = UT;
+            Profiler.EndSample();
+        }
+
 
         public void LateUpdate()
         {

@@ -377,10 +377,9 @@ namespace KerbalConstructionTime
             };
 
             //refresh all inventory parts to new
-            for (int i = ret.ExtractedPartNodes.Count - 1; i >= 0; i--)
+            foreach (var p in ret.ExtractedPartNodes)
             {
-                ConfigNode part = ret.ExtractedPartNodes[i];
-                ScrapYardWrapper.RefreshPart(part);
+                ScrapYardWrapper.RefreshPart(p);
             }
 
             ret.Id = Guid.NewGuid();
@@ -537,15 +536,10 @@ namespace KerbalConstructionTime
 
         private void UpdateRFTanks()
         {
-            var nodes = ShipNode.GetNodes("PART");
-            for (int i = nodes.Count() - 1; i >= 0; i--)
+            foreach (var cn in ShipNode.GetNodes("PART"))
             {
-                ConfigNode cn = nodes[i];
-
-                var modules = cn.GetNodes("MODULE");
-                for (int im = modules.Count() - 1; im >= 0; im--)
+                foreach (var module in cn.GetNodes("MODULE"))
                 {
-                    ConfigNode module = modules[im];
                     if (module.GetValue("name") == "ModuleFuelTanks")
                     {
                         if (module.HasValue("timestamp"))
@@ -785,65 +779,33 @@ namespace KerbalConstructionTime
             return missing;
         }
 
-        public bool AreAllPartsUnlocked()
+        public bool AreAllPartsUnlocked() => GetControlledParts(locked: true).Count == 0;
+
+        private Dictionary<AvailablePart, int> GetControlledParts(bool locked = false, bool experimental = false)
         {
-            if (ResearchAndDevelopment.Instance == null)
-                return true;
-
-            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
-            {
-                if (!Utilities.PartIsUnlocked(pNode))
-                    return false;
-            }
-
-            return true;
-        }
-
-        public Dictionary<AvailablePart, int> GetLockedParts()
-        {
-            var lockedPartsOnShip = new Dictionary<AvailablePart, int>();
+            var res = new Dictionary<AvailablePart, int>();
 
             if (ResearchAndDevelopment.Instance == null)
-                return lockedPartsOnShip;
+                return res;
 
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
                 string partName = Utilities.GetPartNameFromNode(pNode);
-                if (!Utilities.PartIsUnlocked(partName))
+                if ((locked && !Utilities.PartIsUnlocked(partName)) ||
+                    (experimental && Utilities.PartIsExperimental(partName)))
                 {
                     AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
-                    if (!lockedPartsOnShip.ContainsKey(partInfoByName))
-                        lockedPartsOnShip.Add(partInfoByName, 1);
+                    if (!res.ContainsKey(partInfoByName))
+                        res.Add(partInfoByName, 1);
                     else
-                        ++lockedPartsOnShip[partInfoByName];
+                        ++res[partInfoByName];
                 }
             }
-
-            return lockedPartsOnShip;
+            return res;
         }
 
-        public Dictionary<AvailablePart, int> GetExperimentalParts()
-        {
-            var devPartsOnShip = new Dictionary<AvailablePart, int>();
-
-            if (ResearchAndDevelopment.Instance == null)
-                return devPartsOnShip;
-
-            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
-            {
-                string partName = Utilities.GetPartNameFromNode(pNode);
-                if (Utilities.PartIsExperimental(partName))
-                {
-                    AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
-                    if (!devPartsOnShip.ContainsKey(partInfoByName))
-                        devPartsOnShip.Add(partInfoByName, 1);
-                    else
-                        ++devPartsOnShip[partInfoByName];
-                }
-            }
-
-            return devPartsOnShip;
-        }
+        public Dictionary<AvailablePart, int> GetLockedParts() => GetControlledParts(locked: true);
+        public Dictionary<AvailablePart, int> GetExperimentalParts() => GetControlledParts(experimental: true);
 
         public double ProgressPercent()
         {

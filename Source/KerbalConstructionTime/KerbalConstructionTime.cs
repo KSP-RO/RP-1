@@ -25,6 +25,7 @@ namespace KerbalConstructionTime
 
         internal const string KCTLaunchLock = "KCTLaunchLock";
         internal const string KCTKSCLock = "KCTKSCLock";
+        public static readonly Dictionary<string, KCTCostModifier> KCTCostModifiers = new Dictionary<string, KCTCostModifier>();
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;

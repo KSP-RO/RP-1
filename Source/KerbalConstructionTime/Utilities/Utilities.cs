@@ -40,28 +40,15 @@ namespace KerbalConstructionTime
         internal const string _icon_rocket = _iconPath + "KCT_rocket";
         internal const string _icon_settings = _iconPath + "KCT_setting";
 
-        public static AvailablePart GetAvailablePartByName(string partName)
-        {
-            return PartLoader.getPartInfoByName(partName);
-        }
+        public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
         /// <summary>
-        /// This is actually the cost in BPs which can in turn be used to calculate the ingame time it takes to build the vessel.
+        /// Returns cost in BPs, used to calculate the ingame time to build the vessel.
         /// </summary>
         /// <param name="parts"></param>
         /// <returns></returns>
-        public static double GetBuildTime(List<Part> parts)
-        {
-            double totalEffectiveCost = GetEffectiveCost(parts);
-            return GetBuildTime(totalEffectiveCost);
-        }
-
-        public static double GetBuildTime(List<ConfigNode> parts)
-        {
-            double totalEffectiveCost = GetEffectiveCost(parts);
-            return GetBuildTime(totalEffectiveCost);
-        }
-
+        public static double GetBuildTime(List<Part> parts) => GetBuildTime(GetEffectiveCost(parts));
+        public static double GetBuildTime(List<ConfigNode> parts) => GetBuildTime(GetEffectiveCost(parts));
         public static double GetBuildTime(double totalEffectiveCost)
         {
             var formulaParams = new Dictionary<string, string>()
@@ -73,118 +60,66 @@ namespace KerbalConstructionTime
             return finalBP;
         }
 
-        public static double GetEffectiveCost(List<Part> parts)
+        // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
+        private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass)
         {
-            //get list of parts that are in the inventory
-            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
-
-            double totalEffectiveCost = 0;
-
-            List<string> globalVariables = new List<string>();
-
-            foreach (Part p in parts)
-            {
-                string name = p.partInfo.name;
-                double effectiveCost = 0;
-                double cost = GetPartCosts(p);
-                double dryCost = GetPartCosts(p, false);
-
-                double drymass = p.mass;
-                double wetmass = p.GetResourceMass() + drymass;
-
-                double PartMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
-                double ModuleMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetModuleVariable(p.Modules, out bool doRes);
-                double ResourceMultiplier = 1d;
-                if (doRes)
-                    ResourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(p.Resources);
-                PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(globalVariables, p.Modules);
-
-                double InvEff = inventorySample.Contains(p) ? PresetManager.Instance.ActivePreset.TimeSettings.InventoryEffect : 0;
-                int builds = ScrapYardWrapper.GetBuildCount(p);
-                int used = ScrapYardWrapper.GetUseCount(p);
-                //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
-
-                effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
-                    new Dictionary<string, string>()
-                    {
-                        {"C", cost.ToString()},
-                        {"c", dryCost.ToString()},
-                        {"M", wetmass.ToString()},
-                        {"m", drymass.ToString()},
-                        {"U", builds.ToString()},
-                        {"u", used.ToString() },
-                        {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
-                        {"I", InvEff.ToString()},
-                        {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
-                        {"PV", PartMultiplier.ToString()},
-                        {"RV", ResourceMultiplier.ToString()},
-                        {"MV", ModuleMultiplier.ToString()}
-                    });
-
-                if (InvEff != 0)
-                {
-                    inventorySample.Remove(p);
-                }
-
-                if (effectiveCost < 0) effectiveCost = 0;
-                totalEffectiveCost += effectiveCost;
-            }
-
-            double globalMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(globalVariables);
-
-            return totalEffectiveCost * globalMultiplier;
+            dryCost = (float)GetPartCosts(p, false);
+            fuelCost = (float)GetPartCosts(p) - dryCost;
+            dryMass = p.mass;
+            fuelMass = p.GetResourceMass();
         }
 
-        public static double GetEffectiveCost(List<ConfigNode> parts)
+        private static double GetEffectiveCostInternal(object o, HashSet<string> globalMods, IList<Part> inventorySample)
         {
-            //get list of parts that are in the inventory
-            IList<ConfigNode> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<ConfigNode>();
+            if (!(o is Part || o is ConfigNode))
+                return 0;
+            if (globalMods == null || inventorySample == null)
+                return 0;
 
-            double totalEffectiveCost = 0;
-            var globalVariables = new List<string>();
-            foreach (ConfigNode p in parts)
+            string name = (o as Part)?.partInfo.name ?? GetPartNameFromNode(o as ConfigNode);
+            Part partRef = o as Part ?? GetAvailablePartByName(name).partPrefab;
+
+            float dryCost;
+            float fuelCost;
+            float dryMass;
+            float fuelMass;
+
+            if (o is ConfigNode)
+                ShipConstruction.GetPartCostsAndMass(o as ConfigNode, GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
+            else
+                Utilities.GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass);
+
+            float wetMass = dryMass + fuelMass;
+            float cost = dryCost + fuelCost;
+
+            double PartMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
+            double ModuleMultiplier = ApplyModuleCostModifiers(partRef, out bool applyResourceMods);
+
+            // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
+            double ResourceMultiplier = 1d;
+            if (applyResourceMods)
             {
-                string name = GetPartNameFromNode(p);
-                string raw_name = name;
-                double effectiveCost = 0;
-                double cost;
-                float wetMass;
-
-                ShipConstruction.GetPartCostsAndMass(p, GetAvailablePartByName(name), out float dryCost, out float fuelCost, out float dryMass, out float fuelMass);
-                cost = dryCost + fuelCost;
-                wetMass = dryMass + fuelMass;
-
-                double PartMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(raw_name);
-                var moduleNames = new List<string>();
-                bool hasResourceCostMult = true;
-                foreach (ConfigNode modNode in GetModulesFromPartNode(p))
-                {
-                    string s = modNode.GetValue("name");
-                    if (s == "ModuleTagNoResourceCostMult")
-                        hasResourceCostMult = false;
-                    moduleNames.Add(s);
-                }
-                double ModuleMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetModuleVariable(moduleNames);
-
-                double ResourceMultiplier = 1d;
-                if (hasResourceCostMult)
+                if (o is ConfigNode)
                 {
                     var resourceNames = new List<string>();
-                    foreach (ConfigNode rNode in GetResourcesFromPartNode(p))
+                    foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
                         resourceNames.Add(rNode.GetValue("name"));
                     ResourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
                 }
+                else
+                    ResourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
+            }
 
-                PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(globalVariables, moduleNames);
+            GatherGlobalModifiers(globalMods, partRef);
 
-                double InvEff = inventorySample.Contains(p) ? PresetManager.Instance.ActivePreset.TimeSettings.InventoryEffect : 0;
-                int builds = ScrapYardWrapper.GetBuildCount(p);
-                int used = ScrapYardWrapper.GetUseCount(p);
-                //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
+            double InvEff = inventorySample.Contains(partRef) ? PresetManager.Instance.ActivePreset.TimeSettings.InventoryEffect : 0;
+            int builds = ScrapYardWrapper.GetBuildCount(partRef);
+            int used = ScrapYardWrapper.GetUseCount(partRef);
 
-                effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
-                    new Dictionary<string, string>()
-                    {
+            //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
+            double effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
+                new Dictionary<string, string>()
+                {
                         {"C", cost.ToString()},
                         {"c", dryCost.ToString()},
                         {"M", wetMass.ToString()},
@@ -197,20 +132,86 @@ namespace KerbalConstructionTime
                         {"PV", PartMultiplier.ToString()},
                         {"RV", ResourceMultiplier.ToString()},
                         {"MV", ModuleMultiplier.ToString()}
-                    });
+                });
 
-                if (InvEff != 0)
-                {
-                    inventorySample.Remove(p);
-                }
+            if (InvEff != 0)
+                inventorySample.Remove(partRef);
 
-                if (effectiveCost < 0) effectiveCost = 0;
-                totalEffectiveCost += effectiveCost;
+            if (effectiveCost < 0) 
+                effectiveCost = 0;
+            return effectiveCost;
+        }
+
+        public static double GetEffectiveCost(List<Part> parts)
+        {
+            //get list of parts that are in the inventory
+            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
+            var globalVariables = new HashSet<string>();
+            double totalEffectiveCost = 0;
+            foreach (Part p in parts)
+            {
+                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
 
-            double globalMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(globalVariables);
-
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
             return totalEffectiveCost * globalMultiplier;
+        }
+
+
+        public static double GetEffectiveCost(List<ConfigNode> parts)
+        {
+            //get list of parts that are in the inventory
+            var apList = new List<Part>();
+            foreach (ConfigNode n in parts)
+            {
+                if (GetPartNameFromNode(n) is string pName &&
+                    GetAvailablePartByName(pName) is AvailablePart ap)
+                    apList.Add(ap.partPrefab);
+            }
+
+            //IList<ConfigNode> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<ConfigNode>();
+            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(apList, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
+            var globalVariables = new HashSet<string>();
+            double totalEffectiveCost = 0;
+            foreach (ConfigNode p in parts)
+            {
+                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
+            }
+
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
+            return totalEffectiveCost * globalMultiplier;
+        }
+
+        public static void GatherGlobalModifiers(HashSet<string> modifiers, Part p)
+        {
+            PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(modifiers, p.Modules);
+            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+                foreach (var x in pm.tags)
+                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod) && mod.globalMult != 1)
+                        modifiers.Add(mod.name);
+        }
+
+        public static double ApplyGlobalCostModifiers(HashSet<string> modifiers)
+        {
+            double res = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(modifiers.ToList()); 
+            foreach (var x in modifiers)
+                if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                    res *= mod.globalMult;
+            return res;
+        }
+
+        public static double ApplyModuleCostModifiers(Part p, out bool useResourceMult)
+        {
+            double res = PresetManager.Instance.ActivePreset.PartVariables.GetModuleVariable(p.Modules, out useResourceMult);
+            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+                foreach (var x in pm.tags)
+                {
+                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                        res *= mod.partMult;
+
+                    useResourceMult &= !x.Equals("NoResourceCostMult", StringComparison.OrdinalIgnoreCase);
+                }
+            return res;
         }
 
         public static string GetPartNameFromNode(ConfigNode part)
@@ -233,26 +234,6 @@ namespace KerbalConstructionTime
                 cost -= fuel * def.unitCost;
             }
             return cost;
-        }
-
-        public static ConfigNode[] GetModulesFromPartNode(ConfigNode partNode)
-        {
-            var n = partNode.GetNodes("MODULE").ToList();
-            for (int i = n.Count - 1; i >= 0; i--)
-            {
-                ConfigNode cn = n[i];
-
-                string s = null;
-                var b = cn.TryGetValue("name", ref s);
-                if (!b || string.IsNullOrEmpty(s))
-                    n.Remove(cn);
-            }
-            return n.ToArray();
-        }
-
-        public static ConfigNode[] GetResourcesFromPartNode(ConfigNode partNode)
-        {
-            return partNode.GetNodes("RESOURCE");
         }
 
         public static double GetBuildRate(int index, BuildListVessel.ListType type, KSCItem KSC, bool UpgradedRate = false)

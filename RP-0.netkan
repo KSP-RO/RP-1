@@ -27,6 +27,7 @@
 		{ "name" : "ToolbarController" }
 	],
 	"recommends" : [
+		{ "name" : "RSSDateTimeFormatter" },
 		{ "any_of": [
 			{ "name" : "VenStockRevamp" },
 			{ "name" : "ReStock" }
@@ -37,6 +38,7 @@
 		{ "name" : "ROCapsules" },
 		{ "name" : "ROSolar" },
 		{ "name" : "B9-PWings-Fork" },
+		{ "name" : "KSPWheel" },
 		{ "name" : "PersistentRotationUpgraded" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },

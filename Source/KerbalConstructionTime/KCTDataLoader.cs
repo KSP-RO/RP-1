@@ -14,17 +14,21 @@ namespace KerbalConstructionTime
         {
             if (LoadingScreen.Instance?.loaders is List<LoadingSystem> loaders)
             {
-                if (!(loaders.FirstOrDefault(x => x is FuelWhitelistLoader) is FuelWhitelistLoader))
+                if (!(loaders.FirstOrDefault(x => x is KCTDataLoader) is KCTDataLoader))
                 {
-                    var go = new GameObject("KCTFuelWhitelistLoader");
-                    var recipeLoader = go.AddComponent<FuelWhitelistLoader>();
-                    loaders.Add(recipeLoader);
+                    var go = new GameObject("KCTDataLoader");
+                    var configLoader = go.AddComponent<KCTDataLoader>();
+
+                    int index = loaders.FindIndex(x => x is PartLoader);
+                    if (index == -1)
+                        index = System.Math.Max(0, loaders.Count - 1);
+                    loaders.Insert(index, configLoader);
                 }
             }
         }
     }
 
-    public class FuelWhitelistLoader : LoadingSystem
+    public class KCTDataLoader : LoadingSystem
     {
         private void LoadCustomItems()
         {
@@ -39,6 +43,19 @@ namespace KerbalConstructionTime
                 {
                     if (!string.IsNullOrEmpty(item))
                         GuiDataAndWhitelistItemsDatabase.WasteRes.Add(item);
+                }
+            }
+
+            KerbalConstructionTime.KCTCostModifiers.Clear();
+            var nodes = GameDatabase.Instance.GetConfigNodes("KCTTAGS")?.FirstOrDefault();
+            foreach (var tagNode in nodes?.GetNodes("TAG") ?? Enumerable.Empty<ConfigNode>())
+            {
+                KCTCostModifier x = new KCTCostModifier();
+                if (ConfigNode.LoadObjectFromConfig(x, tagNode) && !string.IsNullOrEmpty(x.name))
+                {
+                    if (string.IsNullOrEmpty(x.displayName))
+                        x.displayName = x.name;
+                    KerbalConstructionTime.KCTCostModifiers[x.name] = x;
                 }
             }
         }

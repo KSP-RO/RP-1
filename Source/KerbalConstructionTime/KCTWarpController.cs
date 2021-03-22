@@ -57,6 +57,7 @@ namespace KerbalConstructionTime
             desiredWarpRate = RampUpWarp(target);
             warping = true;
         }
+
         public void FixedUpdate()
         {
             if (KCT_GUI.IsPrimarilyDisabled || Instance is null || !(HighLogic.LoadedSceneIsFlight || HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION))

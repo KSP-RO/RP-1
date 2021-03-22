@@ -71,7 +71,7 @@ namespace KerbalConstructionTime
 
         private static double GetEffectiveCostInternal(object o, HashSet<string> globalMods, IList<Part> inventorySample)
         {
-            if (!(o is Part || o is ConfigNode))
+            if (!(o is Part) && !(o is ConfigNode))
                 return 0;
             if (globalMods == null || inventorySample == null)
                 return 0;
@@ -564,42 +564,39 @@ namespace KerbalConstructionTime
         {
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
-
-            if (ship.Type == BuildListVessel.ListType.VAB)
-                MoveVesselToWarehouse(ship.Type, ship.KSC.VABList.IndexOf(ship), ship.KSC);
-            else if (ship.Type == BuildListVessel.ListType.SPH)
-                MoveVesselToWarehouse(ship.Type, ship.KSC.SPHList.IndexOf(ship), ship.KSC);
+            if (ship.Type != BuildListVessel.ListType.VAB && ship.Type != BuildListVessel.ListType.SPH)
+                return;
+            var list = ship.Type == BuildListVessel.ListType.VAB ? ship.KSC.VABList : ship.KSC.SPHList;
+            MoveVesselToWarehouse(ship.Type, list.IndexOf(ship), ship.KSC);
         }
 
         public static void MoveVesselToWarehouse(BuildListVessel.ListType ListIdentifier, int index, KSCItem KSC)
         {
             if (KSC == null) KSC = KCTGameStates.ActiveKSC;
+            if (ListIdentifier != BuildListVessel.ListType.VAB && ListIdentifier != BuildListVessel.ListType.SPH)
+                return;
 
             KCTEvents.Instance.KCTButtonStockImportant = true;
             _startedFlashing = DateTime.Now;    //Set the time to start flashing
 
             var Message = new StringBuilder();
             Message.AppendLine("The following vessel is complete:");
-            BuildListVessel vessel = null;
+            BuildListVessel vessel;
+            string stor = ListIdentifier == BuildListVessel.ListType.VAB ? "VAB" : "SPH";
             if (ListIdentifier == BuildListVessel.ListType.VAB)
             {
                 vessel = KSC.VABList[index];
                 KSC.VABList.RemoveAt(index);
                 KSC.VABWarehouse.Add(vessel);
-
-                Message.AppendLine(vessel.ShipName);
-                Message.AppendLine("Please check the VAB Storage at " + KSC.KSCName + " to launch it.");
-
             }
-            else if (ListIdentifier == BuildListVessel.ListType.SPH)
+            else
             {
                 vessel = KSC.SPHList[index];
                 KSC.SPHList.RemoveAt(index);
                 KSC.SPHWarehouse.Add(vessel);
-
-                Message.AppendLine(vessel.ShipName);
-                Message.AppendLine("Please check the SPH Storage at " + KSC.KSCName + " to launch it.");
             }
+            Message.AppendLine(vessel.ShipName);
+            Message.AppendLine($"Please check the {stor} Storage at {KSC.KSCName} to launch it.");
 
             //Assign science based on science rate
             if (CurrentGameHasScience() && !vessel.CannotEarnScience)
@@ -617,7 +614,6 @@ namespace KerbalConstructionTime
                 ScrapYardWrapper.RecordBuild(vessel.ExtractedPartNodes);
             }
 
-            string stor = ListIdentifier == 0 ? "VAB" : "SPH";
             KCTDebug.Log($"Moved vessel {vessel.ShipName} to {KSC.KSCName}'s {stor} storage.");
 
             KCT_GUI.ResetBLWindow(false);
@@ -651,14 +647,8 @@ namespace KerbalConstructionTime
             // Earned point totals shouldn't decrease. This would only make sense when done through the cheat menu.
             if (changeDelta <= 0f || KCTGameStates.IsRefunding) return;
 
-            bool addSavePts = KCTGameStates.SciPointsTotal == -1f;
             EnsureCurrentSaveHasSciTotalsInitialized(changeDelta);
-
-            float pointsBef;
-            if (addSavePts)
-                pointsBef = 0f;
-            else
-                pointsBef = KCTGameStates.SciPointsTotal;
+            float pointsBef = Math.Max(0, KCTGameStates.SciPointsTotal);
 
             KCTGameStates.SciPointsTotal += changeDelta;
             KCTDebug.Log("Total sci points earned is now: " + KCTGameStates.SciPointsTotal);
@@ -1024,6 +1014,17 @@ namespace KerbalConstructionTime
             }
         }
 
+        private static void _checkTime(in IKCTBuildItem item, ref double shortestTime, ref IKCTBuildItem closest)
+        {
+            if (item.IsComplete()) return;
+            double time = item.GetTimeLeft();
+            if (time < shortestTime)
+            {
+                closest = item;
+                shortestTime = time;
+            }
+        }
+
         public static IKCTBuildItem GetNextThingToFinish()
         {
             IKCTBuildItem thing = null;
@@ -1033,72 +1034,20 @@ namespace KerbalConstructionTime
             foreach (KSCItem KSC in KCTGameStates.KSCs)
             {
                 foreach (IKCTBuildItem blv in KSC.VABList)
-                {
-                    double time = blv.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = blv;
-                        shortestTime = time;
-                    }
-                }
+                    _checkTime(blv, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem blv in KSC.SPHList)
-                {
-                    double time = blv.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = blv;
-                        shortestTime = time;
-                    }
-                }
-
+                    _checkTime(blv, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem rr in KSC.Recon_Rollout)
-                {
-                    if (rr.IsComplete())
-                        continue;
-                    double time = rr.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = rr;
-                        shortestTime = time;
-                    }
-                }
-
+                    _checkTime(rr, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ap in KSC.AirlaunchPrep)
-                {
-                    if (ap.IsComplete())
-                        continue;
-                    double time = ap.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = ap;
-                        shortestTime = time;
-                    }
-                }
-
+                    _checkTime(ap, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ub in KSC.KSCTech)
-                {
-                    if (ub.IsComplete())
-                        continue;
-                    double time = ub.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = ub;
-                        shortestTime = time;
-                    }
-                }
+                    _checkTime(ub, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
             {
-                // Ignore items that are blocked
-                if (tech.GetBlockingTech(KCTGameStates.TechList) == null)
-                {
-                    double time = ((IKCTBuildItem)tech).GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = tech;
-                        shortestTime = time;
-                    }
-                }
+                if (tech.GetBlockingTech(KCTGameStates.TechList) == null)   // Ignore items that are blocked
+                    _checkTime(tech, ref shortestTime, ref thing);
             }
             return thing;
         }

@@ -25,6 +25,7 @@ namespace KerbalConstructionTime
 
         internal const string KCTLaunchLock = "KCTLaunchLock";
         internal const string KCTKSCLock = "KCTKSCLock";
+        private const float BUILD_TIME_INTERVAL = 0.5f;
         public static readonly Dictionary<string, KCTCostModifier> KCTCostModifiers = new Dictionary<string, KCTCostModifier>();
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
@@ -378,7 +379,8 @@ namespace KerbalConstructionTime
             if (Utilities.CurrentGameIsMission()) return;
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
-            if (!KCT_GUI.IsPrimarilyDisabled)
+            double UT = HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
+            if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UT - _lastUT > BUILD_TIME_INTERVAL))
                 ProgressBuildTime();
 
             if (HighLogic.LoadedScene == GameScenes.FLIGHT && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
@@ -509,12 +511,11 @@ namespace KerbalConstructionTime
             }
         }
 
-        // Ran every FixedUpdate.  Will treat as 10/sec.
         public void ProgressBuildTime()
         {
             Profiler.BeginSample("KCT ProgressBuildTime");
             // Support EditorTime
-            double UT = HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.flightState.universalTime : Planetarium.GetUniversalTime();
+            double UT = HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime: Planetarium.GetUniversalTime();
             if (_lastUT == 0)
                 _lastUT = UT;
             double UTDiff = UT - _lastUT;
@@ -561,7 +562,6 @@ namespace KerbalConstructionTime
             _lastUT = UT;
             Profiler.EndSample();
         }
-
 
         public void LateUpdate()
         {

@@ -379,16 +379,14 @@ namespace KerbalConstructionTime
             if (Utilities.CurrentGameIsMission()) return;
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
-            double UT = HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
+            double UT = Utilities.GetUT();
             if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UT - _lastUT > BUILD_TIME_INTERVAL))
                 ProgressBuildTime();
 
-            if (HighLogic.LoadedScene == GameScenes.FLIGHT && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
+            if (HighLogic.LoadedSceneIsFlight && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
             {
                 ProcessSimulation();
             }
-
-
         }
 
         // Ran every 30 FixedUpdates, which we will treat as 0.5 seconds for now.
@@ -514,8 +512,7 @@ namespace KerbalConstructionTime
         public void ProgressBuildTime()
         {
             Profiler.BeginSample("KCT ProgressBuildTime");
-            // Support EditorTime
-            double UT = HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime: Planetarium.GetUniversalTime();
+            double UT = Utilities.GetUT();
             if (_lastUT == 0)
                 _lastUT = UT;
             double UTDiff = UT - _lastUT;

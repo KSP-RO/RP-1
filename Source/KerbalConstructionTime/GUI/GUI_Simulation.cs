@@ -7,6 +7,7 @@ namespace KerbalConstructionTime
     {
         private static Rect _simulationWindowPosition = new Rect((Screen.width - 250) / 2, (Screen.height - 250) / 2, 250, 1);
         private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
+        private static Vector2 _bodyChooserScrollPos;
 
         private static string _sOrbitAlt = "", _sOrbitInc = "", _UTString = "", _sDelay = "0";
         private static bool _fromCurrentUT = true;
@@ -172,6 +173,13 @@ namespace KerbalConstructionTime
                 return;
             }
 
+            if (EditorLogic.fetch.ship.Count == 0)
+            {
+                var message = new ScreenMessage("Can't simulate without a vessel", 6f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
+
             if (simParams.SimulationBody != Planetarium.fetch.Home)
                 simParams.SimulateInOrbit = true;
 
@@ -188,12 +196,31 @@ namespace KerbalConstructionTime
                     simParams.SimInclination %= 360;
             }
 
-            double currentUT = HighLogic.CurrentGame.flightState.universalTime;
+            double currentUT = Utilities.GetUT();
             simParams.DelayMoveSeconds = 0;
             if (_fromCurrentUT)
-                simParams.SimulationUT = currentUT + MagiCore.Utilities.ParseTimeString(_UTString, false);
+            {
+                double utOffset = MagiCore.Utilities.ParseTimeString(_UTString, false);
+                simParams.SimulationUT = utOffset != 0 ? currentUT + utOffset : 0;
+            }
             else
+            {
                 simParams.SimulationUT = MagiCore.Utilities.ParseTimeString(_UTString, true);
+            }
+
+            if (simParams.SimulationUT < 0)
+            {
+                var message = new ScreenMessage("Cannot set time further back than the game start", 6f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
+
+            if (Utilities.IsPrincipiaInstalled && simParams.SimulationUT < currentUT + 0.5)
+            {
+                var message = new ScreenMessage("Going backwards in time isn't allowed with Principia", 6f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
 
             int.TryParse(_sDelay, out simParams.DelayMoveSeconds);
             if (simParams.SimulationUT < 0)

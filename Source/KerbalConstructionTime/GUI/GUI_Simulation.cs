@@ -147,6 +147,7 @@ namespace KerbalConstructionTime
 
         public static void DrawBodyChooser(int windowID)
         {
+            _bodyChooserScrollPos = GUILayout.BeginScrollView(_bodyChooserScrollPos, GUILayout.Height(500));
             GUILayout.BeginVertical();
             foreach (CelestialBody body in FlightGlobals.Bodies)
             {
@@ -159,6 +160,7 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.EndVertical();
+            GUILayout.EndScrollView();
 
             CheckEditorLock();
             CenterWindow(ref _centralWindowPosition);

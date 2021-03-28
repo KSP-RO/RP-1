@@ -347,7 +347,7 @@ namespace KerbalConstructionTime
             _overrideLaunchBtn = GUILayout.Toggle(_overrideLaunchBtn, "Override Launch Button", HighLogic.Skin.button);
             //useBlizzyToolbar = GUILayout.Toggle(useBlizzyToolbar, "Use Toolbar Mod", HighLogic.Skin.button);
             _disableAllMsgs = !GUILayout.Toggle(!_disableAllMsgs, "Use Message System", HighLogic.Skin.button);
-            _showSimWatermark = !GUILayout.Toggle(!_showSimWatermark, "Show sim watermark", HighLogic.Skin.button);
+            _showSimWatermark = GUILayout.Toggle(_showSimWatermark, "Show sim watermark", HighLogic.Skin.button);
             _debug = GUILayout.Toggle(_debug, "Debug Logging", HighLogic.Skin.button);
 
             GUILayout.EndVertical();

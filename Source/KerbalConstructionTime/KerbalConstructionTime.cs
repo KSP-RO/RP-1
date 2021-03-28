@@ -7,6 +7,7 @@ using System.Linq;
 using ToolbarControl_NS;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.UI;
 
 namespace KerbalConstructionTime
 {
@@ -26,6 +27,8 @@ namespace KerbalConstructionTime
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
 
+        private GameObject _simWatermark;
+
         internal void OnFacilityContextMenuSpawn(KSCFacilityContextMenu menu)
         {
             if (KCT_GUI.IsPrimarilyDisabled) return;
@@ -36,6 +39,8 @@ namespace KerbalConstructionTime
 
         public void OnDestroy()
         {
+            _simWatermark?.DestroyGameObject();
+
             if (KCTGameStates.ToolbarControl != null)
             {
                 KCTGameStates.ToolbarControl.OnDestroy();
@@ -588,6 +593,44 @@ namespace KerbalConstructionTime
             }
         }
 
+        private void AddSimulationWatermark()
+        {
+            if (!KCTGameStates.Settings.ShowSimWatermark) return;
+
+            var uiController = KSP.UI.UIMasterController.Instance;
+            if (uiController == null)
+            {
+                KCTDebug.LogError("UIMasterController.Instance is null");
+                return;
+            }
+
+            _simWatermark = new GameObject();
+            _simWatermark.transform.SetParent(uiController.mainCanvas.transform, false);
+            _simWatermark.name = "sim-watermark";
+
+            var c = Color.gray;
+            c.a = 0.65f;
+            var text = _simWatermark.AddComponent<Text>();
+            text.text = "Simulation";
+            text.font = UISkinManager.defaultSkin.font;
+            text.fontSize = (int)(40 * uiController.uiScale);
+            text.color = c;
+            text.alignment = TextAnchor.MiddleCenter;
+
+            var rectTransform = text.GetComponent<RectTransform>();
+            rectTransform.localPosition = Vector3.zero;
+            rectTransform.localScale = Vector3.one;
+            rectTransform.anchorMin = rectTransform.anchorMax = new Vector2(0.5f, 0.85f);
+            rectTransform.sizeDelta = new Vector2(190 * uiController.uiScale, 50 * uiController.uiScale);
+
+            if (DateTime.Today.Month == 4 && DateTime.Today.Day == 1)
+            {
+                text.text = "Activate Windows";
+                rectTransform.anchorMin = rectTransform.anchorMax = new Vector2(0.8f, 0.2f);
+                rectTransform.sizeDelta = new Vector2(300 * uiController.uiScale, 50 * uiController.uiScale);
+            }
+        }
+
         public void LateUpdate()
         {
             if (Utilities.CurrentGameIsMission()) return;
@@ -631,7 +674,7 @@ namespace KerbalConstructionTime
             return false;
         }
 
-        public static void DelayedStart()
+        public void DelayedStart()
         {
             if (Utilities.CurrentGameIsMission()) return;
 
@@ -770,12 +813,14 @@ namespace KerbalConstructionTime
             if (HighLogic.LoadedSceneIsFlight && KCTGameStates.IsSimulatedFlight)
             {
                 Utilities.EnableSimulationLocks();
-                if (KCTGameStates.SimulationParams.SimulationUT > 0 && 
+                if (KCTGameStates.SimulationParams.SimulationUT > 0 &&
                     FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
                     KCTDebug.Log($"Setting simulation UT to {KCTGameStates.SimulationParams.SimulationUT}");
                     Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);
                 }
+
+                AddSimulationWatermark();
             }
 
             if (KCTGameStates.IsSimulatedFlight && HighLogic.LoadedSceneIsGame && !HighLogic.LoadedSceneIsFlight)

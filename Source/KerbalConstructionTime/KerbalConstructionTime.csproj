@@ -93,6 +93,9 @@
     <Reference Include="MagiCore">
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirlaunchParams.cs" />

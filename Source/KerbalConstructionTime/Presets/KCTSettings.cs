@@ -15,6 +15,8 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool DisableAllMessages;
         [Persistent]
+        public bool ShowSimWatermark;
+        [Persistent]
         public bool AutoKACAlarms;
         [Persistent]
         public bool Debug;
@@ -31,6 +33,7 @@ namespace KerbalConstructionTime
         {
             ForceStopWarp = false;
             DisableAllMessages = false;
+            ShowSimWatermark = true;
             Debug = false;
             OverrideLaunchButton = true;
             AutoKACAlarms = false;

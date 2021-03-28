@@ -188,7 +188,7 @@ namespace KerbalConstructionTime
             if (simParams.SimulateInOrbit)
             {
                 if (!double.TryParse(_sOrbitAlt, out simParams.SimOrbitAltitude))
-                    simParams.SimOrbitAltitude = simParams.SimulationBody.atmosphereDepth + 1000;
+                    simParams.SimOrbitAltitude = simParams.SimulationBody.atmosphere ? simParams.SimulationBody.atmosphereDepth + 20000 : 20000;
                 else
                     simParams.SimOrbitAltitude = Math.Min(Math.Max(1000 * simParams.SimOrbitAltitude, simParams.SimulationBody.atmosphereDepth), simParams.SimulationBody.sphereOfInfluence);
 

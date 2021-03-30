@@ -4623,6 +4623,29 @@
         ]
     },
     {
+        "name": "mediumDishAntenna",
+        "title": "Communotron DTS-M1",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": 50,
+        "entry_cost": 0,
+        "category": "COMMS",
+        "info": "Dish",
+        "year": "1965",
+        "technology": "improvedComms",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ROC-GeminiAntenna",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    },
+    {
         "name": "microEngine",
         "title": "1kN Thruster",
         "description": "Thruster for orbital maneuvers, similar to ones used in the Galileo probe. Plume configured by RealPlume.",

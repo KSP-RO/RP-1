@@ -788,6 +788,29 @@
         ]
     },
     {
+        "name": "ROE-AJ60",
+        "title": "AJ-60A",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "2400",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "SRB",
+        "year": "2002",
+        "technology": "solids1998",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Atlas V",
+        "engine_config": "AJ60A",
+        "upgrade": false,
+        "entry_cost_mods": "AJ-60A",
+        "identical_part_name": "AJ-60A",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Aerobee",
         "title": "Aerobee Engine",
         "description": "",
@@ -2293,7 +2316,7 @@
         "info": "",
         "year": "1998",
         "technology": "solids1998",
-        "ro": false,
+        "ro": true,
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
@@ -2317,7 +2340,7 @@
         "year": "2002",
         "technology": "solids1998",
         "ro": true,
-        "orphan": true,
+        "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "GEM-60",

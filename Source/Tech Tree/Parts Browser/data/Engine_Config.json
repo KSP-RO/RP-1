@@ -319,7 +319,7 @@
         "spacecraft": "",
         "engine_config": "AJ60A",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsHTPB",
+        "entry_cost_mods": "48000,SolidsHTPB",
         "identical_part_name": "",
         "module_tags": []
     },

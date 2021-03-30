@@ -986,7 +986,7 @@
         "description": "The AJ-60A was developed for the Atlas V, which can be configured with up to five boosters. Plume configured by RealPlume.",
         "mod": "KW Rocketry",
         "cost": "2400",
-        "entry_cost": "48000",
+        "entry_cost": "0",
         "category": "SOLID",
         "info": "SRB",
         "year": "2002",
@@ -999,7 +999,7 @@
         "spacecraft": "Atlas V (AJ-60A)",
         "engine_config": "INTERNAL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ-60A",
         "identical_part_name": "AJ-60A",
         "module_tags": [
             "EngineSolid"

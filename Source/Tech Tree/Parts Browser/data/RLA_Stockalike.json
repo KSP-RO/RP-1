@@ -243,7 +243,7 @@
         "description": "Deeply throttleable pressure-fed vacuum engine used for the descent module of the Apollo lunar lander. Uses storable propellants which are not subject to boiloff, but are far less efficient than hydrolox or even kerolox. The version used on J-class missions had slightly higher specific impulse (this, along with other changes, gave enough payload capacity for the rover, for example). A later variant (TR-201) was used on Delta as an upper stage engine (on Delta P series); this was a low-cost model with more restarts (4 instead of 2) and slightly higher thrust but lower efficiency and no throttling capability. Diameter: [1.5 m]. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
         "cost": "900",
-        "entry_cost": "18000",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "Engine",
         "year": "1972",
@@ -256,7 +256,7 @@
         "spacecraft": "TR-201",
         "engine_config": "LMDE (Only the TR-201 Config)",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "TR-201",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"

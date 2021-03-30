@@ -249,6 +249,29 @@
         ]
     },
     {
+        "name": "ROC-ApolloEngineBlockV",
+        "title": "Apollo Block V Service Engine (TR-201)",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "900",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1996",
+        "technology": "orbitalRocketry1992",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Apollo",
+        "engine_config": "LMDE",
+        "upgrade": false,
+        "entry_cost_mods": "TR-201",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROC-ApolloForwardHS",
         "title": "Apollo Command Module Forward Heat Shield",
         "description": "This heat shield protects the earth landing (recovery) system components and everything else in the forward compartment.",

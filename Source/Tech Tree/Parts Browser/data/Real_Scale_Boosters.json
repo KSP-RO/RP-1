@@ -1537,7 +1537,7 @@
         "description": "AJ-60A is a solid rocket booster produced by Aerojet Rocketdyne. They are currently used as strap-on boosters on United Launch Alliance's Atlas V rocket. Diameter: [1.6 m]. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": "2400",
-        "entry_cost": "48000",
+        "entry_cost": "0",
         "category": "SOLID",
         "info": "SRB",
         "year": "2002",

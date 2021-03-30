@@ -1714,6 +1714,31 @@
         ]
     },
     {
+        "name": "RO-RD-0105",
+        "title": "RD-0105/0109 Series",
+        "description": "Kerolox gas generator vacuum engine which served in R-7 upper stages (Luna, Vostok). The RD-0105 was designed for Luna launches; it was the first upper stage for the R-7 series and was reused for uncrewed Vostok tests. An enhanced version, the RD-0109, was used for crewed Vostok launches. Diameter: [2.56 m]. Plume configured by RealPlume.",
+        "mod": "Stock (RO Config)",
+        "cost": "250",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1958",
+        "technology": "orbitalRocketry1958",
+        "era": "02-SAT",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Luna, Vostok",
+        "engine_config": "RD0105",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0105",
+        "identical_part_name": "RD-0105",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "RO-RD-0210",
         "title": "RD-0210/0211",
         "description": "A staged combustion, hypergolic vacuum rocket engine. Used as a power plant on the second stage of the Proton launch vehicle family. Features a two-axis gimbal mechanism for attitude control. Diameter: 1.47 m. Plume configured by RealPlume.",
@@ -4545,31 +4570,6 @@
         "identical_part_name": "Apollo LMDE",
         "module_tags": [
             "EngineLiquidPF"
-        ]
-    },
-    {
-        "name": "liquidEngine3_v2",
-        "title": "RD-0105/0109 Series",
-        "description": "Kerolox gas generator vacuum engine which served in R-7 upper stages (Luna, Vostok). The RD-0105 was designed for Luna launches; it was the first upper stage for the R-7 series and was reused for uncrewed Vostok tests. An enhanced version, the RD-0109, was used for crewed Vostok launches. Diameter: [2.56 m]. Plume configured by RealPlume.",
-        "mod": "Stock (RO Config)",
-        "cost": "250",
-        "entry_cost": "0",
-        "category": "ORBITAL",
-        "info": "",
-        "year": "1958",
-        "technology": "orbitalRocketry1958",
-        "era": "02-SAT",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "Luna, Vostok",
-        "engine_config": "RD0105",
-        "upgrade": false,
-        "entry_cost_mods": "RD-0105",
-        "identical_part_name": "RD-0105",
-        "module_tags": [
-            "EngineLiquidTurbo"
         ]
     },
     {

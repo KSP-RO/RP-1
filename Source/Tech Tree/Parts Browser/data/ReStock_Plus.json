@@ -443,6 +443,30 @@
         ]
     },
     {
+        "name": "restock-engine-125-valiant",
+        "title": "Viking Series engine",
+        "description": "",
+        "mod": "ReStock Plus",
+        "cost": 300,
+        "entry_cost": 0,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Ariane",
+        "engine_config": "Viking",
+        "upgrade": false,
+        "entry_cost_mods": "Viking-2",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "restock-engine-375-corgi",
         "title": "Exploration Upper Stage Engines",
         "description": "",

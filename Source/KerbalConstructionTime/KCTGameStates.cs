@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToolbarControl_NS;
+using Upgradeables;
 
 namespace KerbalConstructionTime
 {
@@ -84,7 +85,7 @@ namespace KerbalConstructionTime
                 TechList = new KCTObservableList<TechItem>();
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
         }
-
+      
         public static void ClearVesselEditMode()
         {
             EditorShipEditingMode = false;
@@ -95,6 +96,22 @@ namespace KerbalConstructionTime
             InputLockManager.RemoveControlLock("KCTEditNew");
             InputLockManager.RemoveControlLock("KCTEditLaunch");
             EditorLogic.fetch?.Unlock("KCTEditorMouseLock");
+        }
+
+        public static void CreateNewPad(string padName, int padLevel)
+        {
+            KCT_LaunchPad lp = ActiveKSC.ActiveLPInstance;
+
+            if (lp.GetUpgradeableFacilityReferences()?[0]?.UpgradeLevels is UpgradeableObject.UpgradeLevel[] padUpgdLvls)
+            {
+                padLevel = UnityEngine.Mathf.Clamp(padLevel, 1, padUpgdLvls.Length);
+                ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
+            }
+        }
+
+        public static void ClearLaunchpadList()
+        {
+            ActiveKSC.LaunchPads.Clear();
         }
     }
 

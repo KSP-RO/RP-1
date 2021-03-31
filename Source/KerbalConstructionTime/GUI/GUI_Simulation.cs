@@ -217,7 +217,7 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            if (Utilities.IsPrincipiaInstalled && simParams.SimulationUT < currentUT + 0.5)
+            if (Utilities.IsPrincipiaInstalled && simParams.SimulationUT != 0 && simParams.SimulationUT < currentUT + 0.5)
             {
                 var message = new ScreenMessage("Going backwards in time isn't allowed with Principia", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);

@@ -33,13 +33,13 @@ namespace KerbalConstructionTime
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
+        public static bool IsSimulatedFlight = false;
         public static IKCTBuildItem TargetedItem = null;
         public static double EditorBuildTime = 0;
         public static double EditorIntegrationTime = 0;
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorIntegrationCosts = 0;
-        public static bool LaunchFromTS = false;
 
         public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();
 
@@ -54,11 +54,15 @@ namespace KerbalConstructionTime
         public static bool IsRefunding = false;
 
         public static AirlaunchParams AirlaunchParams;
+        public static SimulationParams SimulationParams = new SimulationParams();
 
         public static void Reset()
         {
             IsFirstStart = false;
             VesselErrorAlerted = false;
+
+            IsSimulatedFlight = false;
+            SimulationParams.Reset();
 
             PurchasedUpgrades = new List<int>() { 0, 0 };
             TargetedItem = null;
@@ -80,6 +84,18 @@ namespace KerbalConstructionTime
             else
                 TechList = new KCTObservableList<TechItem>();
             TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
+        }
+      
+        public static void ClearVesselEditMode()
+        {
+            EditorShipEditingMode = false;
+            EditedVessel = null;
+
+            InputLockManager.RemoveControlLock("KCTEditExit");
+            InputLockManager.RemoveControlLock("KCTEditLoad");
+            InputLockManager.RemoveControlLock("KCTEditNew");
+            InputLockManager.RemoveControlLock("KCTEditLaunch");
+            EditorLogic.fetch?.Unlock("KCTEditorMouseLock");
         }
 
         public static void CreateNewPad(string padName, int padLevel)

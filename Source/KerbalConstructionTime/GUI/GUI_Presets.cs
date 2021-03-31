@@ -18,7 +18,7 @@ namespace KerbalConstructionTime
         private static bool _saveCareer, _saveScience, _saveSandbox;
         private static KCT_Preset _toSave;
 
-        private static bool _forceStopWarp, _disableAllMsgs, _debug, _overrideLaunchBtn, _autoAlarms;
+        private static bool _forceStopWarp, _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms;
         private static int _newTimewarp;
 
         public static void DrawPresetWindow(int windowID)
@@ -279,6 +279,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.Settings.MaxTimeWarp = _newTimewarp;
                 KCTGameStates.Settings.ForceStopWarp = _forceStopWarp;
                 KCTGameStates.Settings.DisableAllMessages = _disableAllMsgs;
+                KCTGameStates.Settings.ShowSimWatermark = _showSimWatermark;
                 KCTGameStates.Settings.OverrideLaunchButton = _overrideLaunchBtn;
                 KCTGameStates.Settings.Debug = _debug;
                 KCTGameStates.Settings.AutoKACAlarms = _autoAlarms;
@@ -346,6 +347,7 @@ namespace KerbalConstructionTime
             _overrideLaunchBtn = GUILayout.Toggle(_overrideLaunchBtn, "Override Launch Button", HighLogic.Skin.button);
             //useBlizzyToolbar = GUILayout.Toggle(useBlizzyToolbar, "Use Toolbar Mod", HighLogic.Skin.button);
             _disableAllMsgs = !GUILayout.Toggle(!_disableAllMsgs, "Use Message System", HighLogic.Skin.button);
+            _showSimWatermark = GUILayout.Toggle(_showSimWatermark, "Show sim watermark", HighLogic.Skin.button);
             _debug = GUILayout.Toggle(_debug, "Debug Logging", HighLogic.Skin.button);
 
             GUILayout.EndVertical();
@@ -469,6 +471,7 @@ namespace KerbalConstructionTime
             _newTimewarp = KCTGameStates.Settings.MaxTimeWarp;
             _forceStopWarp = KCTGameStates.Settings.ForceStopWarp;
             _disableAllMsgs = KCTGameStates.Settings.DisableAllMessages;
+            _showSimWatermark = KCTGameStates.Settings.ShowSimWatermark;
             _debug = KCTGameStates.Settings.Debug;
             _overrideLaunchBtn = KCTGameStates.Settings.OverrideLaunchButton;
             _autoAlarms = KCTGameStates.Settings.AutoKACAlarms;

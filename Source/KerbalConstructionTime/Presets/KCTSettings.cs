@@ -15,6 +15,8 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool DisableAllMessages;
         [Persistent]
+        public bool ShowSimWatermark;
+        [Persistent]
         public bool AutoKACAlarms;
         [Persistent]
         public bool Debug;
@@ -29,9 +31,9 @@ namespace KerbalConstructionTime
 
         public KCTSettings()
         {
-            MaxTimeWarp = TimeWarp.fetch.warpRates.Count() - 1;
             ForceStopWarp = false;
             DisableAllMessages = false;
+            ShowSimWatermark = true;
             Debug = false;
             OverrideLaunchButton = true;
             AutoKACAlarms = false;
@@ -40,6 +42,11 @@ namespace KerbalConstructionTime
 
         public void Load()
         {
+            if (TimeWarp.fetch != null)
+            {
+                MaxTimeWarp = TimeWarp.fetch.warpRates.Length - 1;
+            }
+
             if (File.Exists(Path.Combine(_directory, _fileName)))
             {
                 ConfigNode cnToLoad = ConfigNode.Load(Path.Combine(_directory, _fileName));

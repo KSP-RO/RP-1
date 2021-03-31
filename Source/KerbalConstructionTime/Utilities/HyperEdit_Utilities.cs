@@ -9,6 +9,17 @@ namespace KerbalConstructionTime
     // The Lander code has been modified to simulate doing airlaunches from a carrier plane.
     public static class HyperEdit_Utilities
     {
+        public static void PutInOrbitAround(CelestialBody body, double altitude)
+        {
+            PutInOrbitAround(body, altitude, 0);
+        }
+
+        public static void PutInOrbitAround(CelestialBody body, double altitude, double inclination)
+        {
+            FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, 0, altitude + body.Radius, inclination, 0, 0, 0, 0);
+            FloatingOrigin.ResetTerrainShaderOffset();
+        }
+
         public static Orbit Clone(this Orbit o)
         {
             return new Orbit(o.inclination, o.eccentricity, o.semiMajorAxis, o.LAN,
@@ -62,6 +73,15 @@ namespace KerbalConstructionTime
         private static void HardsetOrbit(OrbitDriver orbitDriver, Orbit newOrbit)
         {
             var orbit = orbitDriver.orbit;
+            HardsetOrbit(orbit, newOrbit);
+            if (orbit.referenceBody != newOrbit.referenceBody)
+            {
+                orbitDriver.OnReferenceBodyChange?.Invoke(newOrbit.referenceBody);
+            }
+        }
+
+        private static void HardsetOrbit(Orbit orbit, Orbit newOrbit)
+        {
             orbit.inclination = newOrbit.inclination;
             orbit.eccentricity = newOrbit.eccentricity;
             orbit.semiMajorAxis = newOrbit.semiMajorAxis;
@@ -72,10 +92,6 @@ namespace KerbalConstructionTime
             orbit.referenceBody = newOrbit.referenceBody;
             orbit.Init();
             orbit.UpdateFromUT(Planetarium.GetUniversalTime());
-            if (orbit.referenceBody != newOrbit.referenceBody)
-            {
-                orbitDriver.OnReferenceBodyChange?.Invoke(newOrbit.referenceBody);
-            }
         }
 
         public static void PrepVesselTeleport(this Vessel vessel)

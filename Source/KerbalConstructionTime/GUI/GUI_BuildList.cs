@@ -173,7 +173,7 @@ namespace KerbalConstructionTime
 
                 if (KCTGameStates.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
-                    double UT = Planetarium.GetUniversalTime();
+                    double UT = Utilities.GetUT();
                     if (!Utilities.IsApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         KCTDebug.Log("KAC Alarm being created!");
@@ -1215,6 +1215,11 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Duplicate"))
             {
                 Utilities.AddVesselToBuildList(b.CreateCopy(true));
+            }
+
+            if (GUILayout.Button("Add to Plans"))
+            {
+                AddVesselToPlansList(b.CreateCopy(true));
             }
 
             if (KCTGameStates.ActiveKSC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()) != null && GUILayout.Button("Rollback"))

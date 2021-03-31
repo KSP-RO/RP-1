@@ -1,117 +1,138 @@
-﻿using System;
+﻿using ClickThroughFix;
+using System;
 using UnityEngine;
-using KSP.UI.Screens;
 
 namespace RP0
 {
     public class TopWindow : UIBase
     {
-        // GUI
-        static Rect windowPos = new Rect(500, 240, 0, 0);
-        private MaintenanceGUI maintUI = new MaintenanceGUI();
-        private ToolingGUI toolUI = new ToolingGUI();
-        private Crew.FSGUI fsUI = new RP0.Crew.FSGUI();
-        private AvionicsGUI avUI = new AvionicsGUI();
-        private CareerLogGUI logUI = new CareerLogGUI();
-        private static Tabs currentTab;
+        private static Rect _windowPos = new Rect(500, 240, 0, 0);
+        private static readonly int _windowId = "RP0Top".GetHashCode();
+        private static UITab _currentTab;
+        private static bool _shouldResetUISize;
+
+        private readonly MaintenanceGUI _maintUI = new MaintenanceGUI();
+        private readonly ToolingGUI _toolUI = new ToolingGUI();
+        private readonly Crew.FSGUI _fsUI = new Crew.FSGUI();
+        private readonly AvionicsGUI _avUI = new AvionicsGUI();
+        private readonly CareerLogGUI _logUI = new CareerLogGUI();
 
         public TopWindow()
         {
             // Reset the tab on scene changes
-            currentTab = default(Tabs);
+            _currentTab = HighLogic.LoadedSceneIsEditor ? UITab.Tooling : default;
+            _shouldResetUISize = true;
         }
 
         public void OnGUI()
         {
-            windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+            if (_shouldResetUISize && Event.current.type == EventType.Layout)
+            {
+                _windowPos.width = 0;
+                _windowPos.height = 0;
+                _shouldResetUISize = false;
+            }
+            _windowPos = ClickThruBlocker.GUILayoutWindow(_windowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
         }
 
-        public static void SwitchTabTo(Tabs newTab)
+        protected override void OnStart()
         {
-            currentTab = newTab;
+            _maintUI.Start();
+            _toolUI.Start();
+            _fsUI.Start();
+            _avUI.Start();
+            _logUI.Start();
         }
 
-        private void tabSelector()
+        public static void SwitchTabTo(UITab newTab)
+        {
+            if (newTab == _currentTab)
+                return;
+            _currentTab = newTab;
+            _shouldResetUISize = true;
+        }
+
+        private void UpdateSelectedTab()
         {
             GUILayout.BeginHorizontal();
-            try {
-                if (showTab(Tabs.Maintenance) && toggleButton("Maintenance", currentTab == Tabs.Maintenance))
-                    currentTab = Tabs.Maintenance;
-                if (showTab(Tabs.Tooling) && toggleButton("Tooling", currentTab == Tabs.Tooling))
-                    currentTab = Tabs.Tooling;
-                if (showTab(Tabs.Training) && toggleButton("Astronauts", currentTab == Tabs.Training))
-                    currentTab = Tabs.Training;
-                if (showTab(Tabs.Courses) && toggleButton("Courses", currentTab == Tabs.Courses))
-                    currentTab = Tabs.Courses;
-                if (showTab(Tabs.Avionics) && toggleButton("Avionics", currentTab == Tabs.Avionics))
-                    currentTab = Tabs.Avionics;
-                if (showTab(Tabs.CareerLog) && toggleButton("Career Log", currentTab == Tabs.CareerLog))
-                    currentTab = Tabs.CareerLog;
-            } finally {
-                GUILayout.EndHorizontal();
-            }
+            if (ShouldShowTab(UITab.Maintenance) && RenderToggleButton("Maintenance", _currentTab == UITab.Maintenance))
+                SwitchTabTo(UITab.Maintenance);
+            if (ShouldShowTab(UITab.Tooling) && RenderToggleButton("Tooling", _currentTab == UITab.Tooling))
+                SwitchTabTo(UITab.Tooling);
+            if (ShouldShowTab(UITab.Training) && RenderToggleButton("Astronauts", _currentTab == UITab.Training))
+                SwitchTabTo(UITab.Training);
+            if (ShouldShowTab(UITab.Courses) && RenderToggleButton("Courses", _currentTab == UITab.Courses))
+                SwitchTabTo(UITab.Courses);
+            if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
+                SwitchTabTo(UITab.Avionics);
+            if (ShouldShowTab(UITab.CareerLog) && RenderToggleButton("Career Log", _currentTab == UITab.CareerLog))
+                SwitchTabTo(UITab.CareerLog);
+            GUILayout.EndHorizontal();
         }
 
         public void DrawWindow(int windowID)
         {
-            try {
-                GUILayout.BeginVertical();
-                try {
-                    /* If totalUpkeep is zero, we probably haven't calculated the upkeeps yet, so recalculate now */
-                    if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER && MaintenanceHandler.Instance.totalUpkeep == 0d)
-                        MaintenanceHandler.Instance.UpdateUpkeep();
+            GUILayout.BeginVertical();
+            try
+            {
+                // If TotalUpkeep is zero, we probably haven't calculated the upkeeps yet, so recalculate now
+                if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER && MaintenanceHandler.Instance.TotalUpkeep == 0)
+                    MaintenanceHandler.Instance?.UpdateUpkeep();
 
-                    tabSelector();
-                    if (showTab(currentTab)) {
-                        switch (currentTab) {
-                        case Tabs.Maintenance:
-                            maintUI.summaryTab();
+                UpdateSelectedTab();
+                if (ShouldShowTab(_currentTab))
+                {
+                    switch (_currentTab)
+                    {
+                        case UITab.Maintenance:
+                            _maintUI.RenderSummaryTab();
                             break;
-                        case Tabs.Facilities:
-                            maintUI.facilitiesTab();
+                        case UITab.Facilities:
+                            _maintUI.RenderFacilitiesTab();
                             break;
-                        case Tabs.Integration:
-                            maintUI.integrationTab();
+                        case UITab.Integration:
+                            _maintUI.RenderIntegrationTab();
                             break;
-                        case Tabs.Astronauts:
-                            maintUI.astronautsTab();
+                        case UITab.Astronauts:
+                            _maintUI.RenderAstronautsTab();
                             break;
-                        case Tabs.Tooling:
-                            currentTab = toolUI.RenderToolingTab();
+                        case UITab.Tooling:
+                            SwitchTabTo(_toolUI.RenderToolingTab());
                             break;
-                        case Tabs.ToolingType:
-                            toolUI.DisplayTypeTab();
+                        case UITab.ToolingType:
+                            _toolUI.RenderTypeTab();
                             break;
-                        case Tabs.Training:
-                            currentTab = fsUI.summaryTab();
+                        case UITab.Training:
+                            SwitchTabTo(_fsUI.RenderSummaryTab());
                             break;
-                        case Tabs.Courses:
-                            currentTab = fsUI.coursesTab();
+                        case UITab.Courses:
+                            SwitchTabTo(_fsUI.RenderCoursesTab());
                             break;
-                        case Tabs.NewCourse:
-                            currentTab = fsUI.newCourseTab();
+                        case UITab.NewCourse:
+                            SwitchTabTo(_fsUI.RenderNewCourseTab());
                             break;
-                        case Tabs.Naut:
-                            fsUI.nautTab();
+                        case UITab.Naut:
+                            _fsUI.RenderNautTab();
                             break;
-                        case Tabs.Avionics:
-                            avUI.avionicsTab();
+                        case UITab.Avionics:
+                            _avUI.RenderAvionicsTab();
                             break;
-                        case Tabs.CareerLog:
-                            logUI.RenderTab();
+                        case UITab.CareerLog:
+                            _logUI.RenderTab();
                             break;
-                        default: // can't happen
+                        default:    // can't happen
                             break;
-                        }
                     }
-                } finally {
-                    GUILayout.FlexibleSpace();
-                    GUILayout.EndVertical();
                 }
-            } finally {
-                GUI.DragWindow();
             }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
+            GUI.DragWindow();
         }
     }
 }
-

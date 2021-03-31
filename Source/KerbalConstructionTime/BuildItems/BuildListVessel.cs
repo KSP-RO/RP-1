@@ -320,6 +320,16 @@ namespace KerbalConstructionTime
                 {
                     SanitizeNode(Utilities.GetPartNameFromNode(part), module, templates);
                 }
+
+                // Remove all waste resources
+                var resList = part.GetNodes("RESOURCE");
+                foreach (var res in resList)
+                {
+                    if (GuiDataAndWhitelistItemsDatabase.WasteRes.Contains(res.GetValue("name")))
+                    {
+                        res.SetValue("amount", 0);
+                    }
+                }
             }
             return node;
         }
@@ -461,7 +471,6 @@ namespace KerbalConstructionTime
                 FillUnlockedFuelTanks();
             ShipNode.Save(tempFile);
             FlightDriver.StartWithNewLaunch(tempFile, Flag, LaunchSite, new VesselCrewManifest());
-            KCTGameStates.LaunchFromTS = false;
             if (KCTGameStates.AirlaunchParams != null) KCTGameStates.AirlaunchParams.KSPVesselId = null;
         }
 
@@ -542,7 +551,7 @@ namespace KerbalConstructionTime
                         if (module.HasValue("timestamp"))
                         {
                             KCTDebug.Log("Updating RF timestamp on a part");
-                            module.SetValue("timestamp", Planetarium.GetUniversalTime().ToString());
+                            module.SetValue("timestamp", Utilities.GetUT().ToString());
                         }
                     }
                 }

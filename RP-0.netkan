@@ -18,38 +18,39 @@
 		{ "name" : "SXTContinued" },
 		{ "name" : "ContractConfigurator" },
 		{ "name" : "CustomBarnKit" },
-		{ "name" : "DeadlyReentry" },
 		{ "name" : "VenStockRevamp-NewParts" },
-		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "RealSolarSystem" },
 		{ "name" : "DMagicOrbitalScience" },
-		{ "name" : "DMagicScienceAnimate" }
+		{ "name" : "DMagicScienceAnimate" },
+		{ "name" : "MagiCore" },
+		{ "name" : "ClickThroughBlocker" },
+		{ "name" : "ToolbarController" }
 	],
 	"recommends" : [
+		{ "name" : "RSSDateTimeFormatter" },
 		{ "any_of": [
 			{ "name" : "VenStockRevamp" },
 			{ "name" : "ReStock" }
 		] },
+		{ "name" : "DeadlyReentry" },
 		{ "name" : "ROEngines" },
 		{ "name" : "ROTanks" },
 		{ "name" : "ROCapsules" },
 		{ "name" : "ROSolar" },
 		{ "name" : "B9-PWings-Fork" },
-		{ "name" : "PersistentRotation" },
+		{ "name" : "KSPWheel" },
+		{ "name" : "PersistentRotationUpgraded" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },
 		{ "name" : "KerbalRenamer" },
-		{ "name" : "KRASH" },
 		{ "name" : "KSCSwitcher" },
 		{ "name" : "MechJeb2" },
 		{ "name" : "AtmosphereAutopilot" },
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
+		{ "name" : "RCSBuildAid" },
 		{ "name" : "RCSBuildAidCont" },
-		{ "any_of": [
-			{ "name" : "RealAntennas" },
-			{ "name" : "RemoteTech" }
-		] },
+		{ "name" : "RealAntennas" },
 		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
@@ -92,6 +93,7 @@
 		{ "name" : "NavHudRenewed" }
 	],
 	"conflicts" : [
+		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
 		{ "name" : "MechJebForAll" }

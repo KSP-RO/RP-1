@@ -1,11 +1,15 @@
 ﻿using Contracts;
 using Csv;
+using KerbalConstructionTime;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace RP0
 {
@@ -23,8 +27,11 @@ namespace RP0
 
         public bool IsEnabled = false;
 
-        private static readonly DateTime _epoch = new DateTime(1951, 1, 1);
+        private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+        private EventData<ProtoTechNode> onKctTechCompletedEvent;
+        private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
+        private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
         private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
         private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
@@ -37,16 +44,13 @@ namespace RP0
         private TransactionReasons _prevFundsChangeReason;
         private LogPeriod _currentPeriod;
 
-        public static Func<SpaceCenterFacility, int> FnGetKCTUpgdCounts;
-        public static Func<float> FnGetKCTSciPoints;
-
         public static CareerLog Instance { get; private set; }
 
         public LogPeriod CurrentPeriod
         { 
             get
             {
-                double time = Planetarium.GetUniversalTime();
+                double time = KSPUtils.GetUT();
                 while (time > NextPeriodStart)
                 {
                     SwitchToNextPeriod();
@@ -73,10 +77,35 @@ namespace RP0
             GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
+        public void Start()
+        {
+            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<ProtoTechNode>>("OnKctTechCompleted");
+            if (onKctTechCompletedEvent != null)
+            {
+                onKctTechCompletedEvent.Add(OnKctTechCompleted);
+            }
+
+            onKctFacilityUpgradeQueuedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeQueued");
+            if (onKctFacilityUpgradeQueuedEvent != null)
+            {
+                onKctFacilityUpgradeQueuedEvent.Add(OnKctFacilityUpgdQueued);
+            }
+
+            onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeComplete");
+            if (onKctFacilityUpgradeCompletedEvent != null)
+            {
+                onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
+            }
+        }
+
         public void OnDestroy()
         {
             GameEvents.onGameStateLoad.Remove(LoadSettings);
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
+
+            if (onKctTechCompletedEvent != null) onKctTechCompletedEvent.Remove(OnKctTechCompleted);
+            if (onKctFacilityUpgradeQueuedEvent != null) onKctFacilityUpgradeQueuedEvent.Remove(OnKctFacilityUpgdQueued);
+            if (onKctFacilityUpgradeCompletedEvent != null) onKctFacilityUpgradeCompletedEvent.Remove(OnKctFacilityUpgdComplete);
 
             if (_eventsBound)
             {
@@ -182,11 +211,16 @@ namespace RP0
             }
         }
 
+        public static DateTime UTToDate(double ut)
+        {
+            return _epoch.AddSeconds(ut);
+        }
+
         public void AddTechEvent(string nodeName)
         {
             if (!IsEnabled) return;
 
-            _techEvents.Add(new TechResearchEvent(Planetarium.GetUniversalTime())
+            _techEvents.Add(new TechResearchEvent(KSPUtils.GetUT())
             {
                 NodeName = nodeName
             });
@@ -196,7 +230,7 @@ namespace RP0
         {
             if (!IsEnabled) return;
 
-            _facilityConstructions.Add(new FacilityConstructionEvent(Planetarium.GetUniversalTime())
+            _facilityConstructions.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
             {
                 Facility = facility,
                 NewLevel = newLevel,
@@ -227,7 +261,7 @@ namespace RP0
                                                                 .Sum();
                 return new[]
                 {
-                    _epoch.AddSeconds(p.StartUT).ToString("yyyy-MM"),
+                    UTToDate(p.StartUT).ToString("yyyy-MM"),
                     p.VABUpgrades.ToString(),
                     p.SPHUpgrades.ToString(),
                     p.RnDUpgrades.ToString(),
@@ -267,6 +301,139 @@ namespace RP0
             File.WriteAllText(path, csv);
         }
 
+        public void ExportToWeb(string serverUrl, string token)
+        {
+            string url = $"{serverUrl.TrimEnd('/')}/{token}";
+            StartCoroutine(PostRequestCareerLog(url));
+        }
+
+        private IEnumerator PostRequestCareerLog(string url)
+        {
+            var logPeriods = _periodDict.Select(p => p.Value)
+                .Select(CreateLogDto).ToArray();
+
+            // Create JSON structure for arrays - afaict not supported on this unity version out of the box
+            var jsonToSend = "{ \"periods\": [";
+
+            for (var i = 0; i < logPeriods.Length; i++)
+            {
+                if (i < logPeriods.Length - 1) jsonToSend += JsonUtility.ToJson(logPeriods[i]) + ",";
+                else jsonToSend += JsonUtility.ToJson(logPeriods[i]);
+            }
+
+            jsonToSend += "], \"contractEvents\": [";
+
+            for (var i = 0; i < _contractDict.Count; i++)
+            {
+                var dto = new ContractEventDto(_contractDict[i]);
+                if (i < _contractDict.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"facilityEvents\": [";
+
+            for (var i = 0; i < _facilityConstructions.Count; i++)
+            {
+                var dto = new FacilityConstructionEventDto(_facilityConstructions[i]);
+                if (i < _facilityConstructions.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"techEvents\": [";
+
+            for (var i = 0; i < _techEvents.Count; i++)
+            {
+                var dto = new TechResearchEventDto(_techEvents[i]);
+                if (i < _techEvents.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"launchEvents\": [";
+
+            for (var i = 0; i < _launchedVessels.Count; i++)
+            {
+                var dto = new LaunchEventDto(_launchedVessels[i]);
+                if (i < _launchedVessels.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "] }";
+
+            Debug.Log("[RP-0] Request payload: " + jsonToSend);
+
+            var byteJson = new UTF8Encoding().GetBytes(jsonToSend);
+
+            var uwr = new UnityWebRequest(url, "PATCH")
+            {
+                downloadHandler = new DownloadHandlerBuffer(),
+                uploadHandler = new UploadHandlerRaw(byteJson)
+            };
+
+            #if DEBUG
+            uwr.certificateHandler = new BypassCertificateHandler();
+            #endif
+
+            uwr.SetRequestHeader("Content-Type", "application/json");
+
+            yield return uwr.SendWebRequest();
+
+            if (uwr.isNetworkError)
+            {
+                Debug.Log("Error While Sending: " + uwr.error);
+            }
+            else
+            {
+                Debug.Log("Received: " + uwr.downloadHandler.text);
+            }
+        }
+
+        private CareerLogDto CreateLogDto(LogPeriod logPeriod)
+        {
+            double advanceFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double rewardFunds = _contractDict
+                .Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double failureFunds = -_contractDict.Where(c =>
+                    (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(logPeriod))
+                .Select(c => c.FundsChange)
+                .Sum();
+
+            double constructionFees = _facilityConstructions
+                .Where(f => f.State == ConstructionState.Started && f.IsInPeriod(logPeriod))
+                .Select(c => c.Cost)
+                .Sum();
+
+            return new CareerLogDto
+            {
+                careerUuid = SystemInfo.deviceUniqueIdentifier,
+                startDate = UTToDate(logPeriod.StartUT).ToString("o"),
+                endDate = UTToDate(logPeriod.EndUT).ToString("o"),
+                vabUpgrades = logPeriod.VABUpgrades,
+                sphUpgrades = logPeriod.SPHUpgrades,
+                rndUpgrades = logPeriod.RnDUpgrades,
+                currentFunds = logPeriod.CurrentFunds,
+                currentSci = logPeriod.CurrentSci,
+                scienceEarned = logPeriod.ScienceEarned,
+                advanceFunds = advanceFunds,
+                rewardFunds = rewardFunds,
+                failureFunds = failureFunds,
+                otherFundsEarned = logPeriod.OtherFundsEarned,
+                launchFees = logPeriod.LaunchFees,
+                maintenanceFees = logPeriod.MaintenanceFees,
+                toolingFees = logPeriod.ToolingFees,
+                entryCosts = logPeriod.EntryCosts,
+                constructionFees = logPeriod.OtherFees,
+                otherFees = logPeriod.OtherFees - constructionFees,
+                fundsGainMult = logPeriod.FundsGainMult
+            };
+        }
+
         private void SwitchToNextPeriod()
         {
             LogPeriod _prevPeriod = _currentPeriod ?? GetOrCreatePeriod(CurPeriodStart);
@@ -278,6 +445,7 @@ namespace RP0
                 _prevPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
                 _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
+                _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);
@@ -289,7 +457,7 @@ namespace RP0
         {
             if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
             {
-                DateTime dtNextPeriod = _epoch.AddSeconds(periodStartUt).AddMonths(LogPeriodMonths);
+                DateTime dtNextPeriod = UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
                 double nextPeriodStart = (dtNextPeriod - _epoch).TotalSeconds;
                 period = new LogPeriod(periodStartUt, nextPeriodStart);
                 _periodDict.Add(periodStartUt, period);
@@ -377,7 +545,7 @@ namespace RP0
         {
             if (c.AutoAccept) return;   // Do not record the Accept event for record contracts
 
-            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
+            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Accept,
                 FundsChange = c.FundsAdvance,
@@ -389,7 +557,7 @@ namespace RP0
 
         private void ContractCompleted(Contract c)
         {
-            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
+            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Complete,
                 FundsChange = c.FundsCompletion,
@@ -409,7 +577,7 @@ namespace RP0
                 fundsChange = _prevFundsChangeAmount;
             }
 
-            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
+            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Cancel,
                 FundsChange = fundsChange,
@@ -422,7 +590,7 @@ namespace RP0
         private void ContractFailed(Contract c)
         {
             string internalName = GetContractInternalName(c);
-            double ut = Planetarium.GetUniversalTime();
+            double ut = KSPUtils.GetUT();
             if (_contractDict.Any(c2 => c2.UT == ut && c2.InternalName == internalName))
             {
                 // This contract was actually cancelled, not failed
@@ -447,7 +615,7 @@ namespace RP0
                 Debug.Log($"[RP-0] Launching {FlightGlobals.ActiveVessel?.vesselName}");
 
                 _launched = true;
-                _launchedVessels.Add(new LaunchEvent(Planetarium.GetUniversalTime())
+                _launchedVessels.Add(new LaunchEvent(KSPUtils.GetUT())
                 {
                     VesselName = FlightGlobals.ActiveVessel?.vesselName
                 });
@@ -470,7 +638,7 @@ namespace RP0
         {
             try
             {
-                return FnGetKCTUpgdCounts == null ? 0 : FnGetKCTUpgdCounts(facility);
+                return KerbalConstructionTime.Utilities.GetSpentUpgradesFor(facility);
             }
             catch (Exception ex)
             {
@@ -483,13 +651,33 @@ namespace RP0
         {
             try
             {
-                return FnGetKCTSciPoints == null ? 0 : FnGetKCTSciPoints();
+                // KCT returns -1 if the player hasn't earned any sci yet
+                return Math.Max(0, KCTGameStates.SciPointsTotal);
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
                 return 0;
             }
+        }
+
+        private void OnKctTechCompleted(ProtoTechNode data)
+        {
+            AddTechEvent(data.techID);
+        }
+
+        private void OnKctFacilityUpgdQueued(FacilityUpgrade data)
+        {
+            if (!data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+
+            AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Started);
+        }
+
+        private void OnKctFacilityUpgdComplete(FacilityUpgrade data)
+        {
+            if (!data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+
+            AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Completed);
         }
     }
 }

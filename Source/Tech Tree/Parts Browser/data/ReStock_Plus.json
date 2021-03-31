@@ -322,6 +322,52 @@
         "module_tags": []
     },
     {
+        "name": "restock-antenna-stack-2",
+        "title": "Communotron DTS-J1",
+        "description": "",
+        "mod": "ReStock Plus",
+        "cost": 5,
+        "entry_cost": 500,
+        "category": "COMMS",
+        "info": "Dish",
+        "year": "1961",
+        "technology": "interplanetaryComms",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    },
+    {
+        "name": "restock-antenna-stack-3",
+        "title": "Communotron HG-61",
+        "description": "",
+        "mod": "ReStock Plus",
+        "cost": 10,
+        "entry_cost": 1000,
+        "category": "COMMS",
+        "info": "Dish",
+        "year": "1962",
+        "technology": "interplanetaryComms",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    },
+    {
         "name": "restock-battery-375-1",
         "title": "3.75m Rechargeable Battery",
         "description": "",
@@ -436,6 +482,30 @@
         "engine_config": "Aestus",
         "upgrade": false,
         "entry_cost_mods": "Aestus",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "restock-engine-125-valiant",
+        "title": "Viking Series engine",
+        "description": "",
+        "mod": "ReStock Plus",
+        "cost": 300,
+        "entry_cost": 0,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Ariane",
+        "engine_config": "Viking",
+        "upgrade": false,
+        "entry_cost_mods": "Viking-2",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -586,6 +656,32 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "restock-pod-sphere-1",
+        "title": "Vostok Capsule",
+        "description": "",
+        "mod": "ReStock Plus",
+        "cost": "1600",
+        "entry_cost": "0",
+        "category": "COMMAND",
+        "info": "",
+        "year": "1961",
+        "technology": "basicCapsules",
+        "ro": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Vostok",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "capsulesVostok",
+        "identical_part_name": "VostokCapsule",
+        "module_tags": [
+            "HumanRated",
+            "NoEVA",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
     },
     {
         "name": "restock-rcs-block-dual-1",
@@ -859,6 +955,29 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "restock-relay-radial-2",
+        "title": "HG-20 High Gain Antenna",
+        "description": "",
+        "mod": "ReStock Plus",
+        "cost": 5,
+        "entry_cost": 500,
+        "category": "COMMS",
+        "info": "Dish",
+        "year": "1962",
+        "technology": "interplanetaryComms",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
     },
     {
         "name": "restock-separator-1875-1",

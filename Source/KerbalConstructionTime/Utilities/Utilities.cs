@@ -3,10 +3,12 @@ using KSP.UI.Screens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 namespace KerbalConstructionTime
@@ -16,8 +18,15 @@ namespace KerbalConstructionTime
         private static bool? _isKSCSwitcherInstalled = null;
         private static bool? _isKRASHInstalled = null;
         private static bool? _isPrincipiaInstalled = null;
-        private static DateTime _startedFlashing;
+        private static bool? _isTestFlightInstalled = null;
+        private static bool? _isTestLiteInstalled = null;
 
+        private static PropertyInfo _piTFInstance;
+        private static PropertyInfo _piTFSettingsEnabled;
+        private static Type _tlSettingsType;
+        private static FieldInfo _fiTLSettingsDisabled;
+
+        private static DateTime _startedFlashing;
         internal const string _legacyDefaultKscId = "Stock";
         internal const string _defaultKscId = "us_cape_canaveral";
         internal const string _icon_KCT_Off_24 = "RP-0/PluginData/Icons/KCT_off-24";
@@ -372,6 +381,7 @@ namespace KerbalConstructionTime
 
         public static void ProgressBuildTime()
         {
+            Profiler.BeginSample("KCT ProgressBuildTime");
             double UT = 0;
             if (HighLogic.LoadedSceneIsEditor) //support for EditorTime
                 UT = HighLogic.CurrentGame.flightState.universalTime;
@@ -398,7 +408,7 @@ namespace KerbalConstructionTime
                         rr.IncrementProgress(UTDiff);
                     }
                     //Reset the associated launchpad id when rollback completes
-                    ksc.Recon_Rollout.ForEach(delegate(ReconRollout rr)
+                    ksc.Recon_Rollout.ForEach(delegate (ReconRollout rr)
                     {
                         if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete())
                         {
@@ -437,6 +447,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.WarpInitiated = false;
             }
             KCTGameStates.LastUT = UT;
+            Profiler.EndSample();
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
@@ -485,7 +496,7 @@ namespace KerbalConstructionTime
                 return 0;
             ShipConstruction.GetPartCostsAndMass(part, aPart, out _, out _, out float dryMass, out float fuelMass);
             if (includeFuel)
-                return dryMass+fuelMass;
+                return dryMass + fuelMass;
             else
                 return dryMass;
         }
@@ -657,6 +668,16 @@ namespace KerbalConstructionTime
             return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
         }
 
+        /// <summary>
+        /// Use this method instead of Planetarium.GetUniversalTime().
+        /// Fixes the KSP stupidity where wrong UT can be returned when reverting back to the Editor.
+        /// </summary>
+        /// <returns></returns>
+        public static double GetUT()
+        {
+            return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
+        }
+
         public static string AddScienceWithMessage(float science, TransactionReasons reason)
         {
             if (science > 0)
@@ -697,7 +718,7 @@ namespace KerbalConstructionTime
                 KSC.VABWarehouse.Add(vessel);
 
                 Message.AppendLine(vessel.ShipName);
-                Message.AppendLine("Please check the VAB Storage at "+KSC.KSCName+" to launch it.");
+                Message.AppendLine("Please check the VAB Storage at " + KSC.KSCName + " to launch it.");
 
             }
             else if (ListIdentifier == BuildListVessel.ListType.SPH)
@@ -891,11 +912,27 @@ namespace KerbalConstructionTime
 
                     var unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
                     int n = unlockableParts.Count();
+                    int unlockCost = FindUnlockCost(unlockableParts);
+                    string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
                     if (unlockableParts.Any())
                     {
                         buttons = new DialogGUIButton[] {
                             new DialogGUIButton("Acknowledged", () => { }),
-                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {FindUnlockCost(unlockableParts)} Funds and Build", () => { UnlockExperimentalParts(unlockableParts); AddVesselToBuildList(blv); })
+                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
+                            {
+                                if (Funding.Instance.Funds > unlockCost)
+                                {
+                                    UnlockExperimentalParts(unlockableParts);
+                                    if (!KCTGameStates.EditorShipEditingMode)
+                                        AddVesselToBuildList(blv);
+                                    else SaveShipEdits(KCTGameStates.EditedVessel);
+                                }
+                                else
+                                {
+                                    var msg = new ScreenMessage("Insufficient funds to unlock parts", 5f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessages.PostScreenMessage(msg);
+                                }
+                            })
                         };
                     }
                     else
@@ -915,7 +952,6 @@ namespace KerbalConstructionTime
                         HighLogic.UISkin);
                     return null;
                 }
-
 
                 double totalCost = blv.GetTotalCost();
                 double prevFunds = Funding.Instance.Funds;
@@ -946,14 +982,43 @@ namespace KerbalConstructionTime
                 KCTGameStates.ActiveKSC.SPHList.Add(blv);
                 type = "SPH";
             }
-
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
             KCTDebug.Log("Launch site is " + blv.LaunchSite);
-            var message = new ScreenMessage($"[KCT] Added {blv.ShipName} to {type} build list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+            bool isCommonLine = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;
+            string text = isCommonLine ? $"Added {blv.ShipName} to build list." : $"Added {blv.ShipName} to {type} build list.";
+            var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
             return blv;
+        }
+
+        public static void SaveShipEdits(BuildListVessel ship)
+        {
+            AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+            BuildListVessel newShip = AddVesselToBuildList();
+            if (newShip == null)
+            {
+                SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                return;
+            }
+
+            ship.RemoveFromBuildList();
+
+            GetShipEditProgress(ship, out double progressBP, out _, out _);
+            newShip.Progress = progressBP;
+            newShip.RushBuildClicks = ship.RushBuildClicks;
+            KCTDebug.Log($"Finished? {ship.IsFinished}");
+            if (ship.IsFinished)
+                newShip.CannotEarnScience = true;
+
+            GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+
+            KCTGameStates.ClearVesselEditMode();
+
+            KCTDebug.Log("Edits saved.");
+
+            HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
         public static Dictionary<string, ProtoTechNode> GetUnlockedProtoTechNodes()
@@ -970,21 +1035,46 @@ namespace KerbalConstructionTime
             return protoTechNodes;
         }
 
+        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        {
+            double origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
+            double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
+            double oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+            newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
+            originalCompletionPercent = oldProgressBP / origTotalBP;
+            newCompletionPercent = newProgressBP / newTotalBP;
+        }
+
         public static int FindUnlockCost(List<AvailablePart> availableParts)
         {
-            int cost = 0;
-            foreach(var p in availableParts)
+            Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RealFuels", StringComparison.OrdinalIgnoreCase))?.assembly;
+            Type t = a?.GetType("RealFuels.EntryCostManager");
+            var mi = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
+            if (mi != null)    // Older RF versions lack this method
             {
-                cost += p.entryCost;
+                var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                object instance = pi.GetValue(null);
+                IEnumerable<string> partNames = availableParts.Select(p => p.name);
+                double sum = (double)mi.Invoke(instance, new[] { partNames });
+                return (int)sum;
             }
-            return cost;
+            else
+            {
+                int cost = 0;
+                foreach (var p in availableParts)
+                {
+                    cost += p.entryCost;
+                }
+                return cost;
+            }
         }
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
         {
             foreach (var ap in availableParts)
             {
-                ProtoTechNode protoNode = AssetBase.RnDTechTree.FindTech(ap.TechRequired);
+                ProtoTechNode protoNode = ResearchAndDevelopment.Instance.GetTechState(ap.TechRequired);
 
                 if (!protoNode.partsPurchased.Contains(ap))
                 {
@@ -997,8 +1087,8 @@ namespace KerbalConstructionTime
                 RemoveExperimentalPart(ap);
             }
 
-            EditorPartList.Instance.Refresh();
-            EditorPartList.Instance.Refresh(EditorPartList.State.PartsList);
+            EditorPartList.Instance?.Refresh();
+            EditorPartList.Instance?.Refresh(EditorPartList.State.PartsList);
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
         }
 
@@ -1061,11 +1151,11 @@ namespace KerbalConstructionTime
         {
             ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(partInfo.TechRequired);
 
-            string[] indenticalPartsNames = partInfo.identicalParts.Split(',');
+            string[] identicalPartsNames = partInfo.identicalParts.Split(',');
 
-            for (int i = indenticalPartsNames.Length;  i-- > 0;)
+            for (int i = identicalPartsNames.Length; i-- > 0;)
             {
-                AvailablePart partInfoByName = PartLoader.getPartInfoByName(indenticalPartsNames[i].Replace('_', '.').Trim());
+                AvailablePart partInfoByName = PartLoader.getPartInfoByName(identicalPartsNames[i].Replace('_', '.').Trim());
                 if (partInfoByName != null && partInfoByName.TechRequired == partInfo.TechRequired)
                 {
                     partInfoByName.costsFunds = false;
@@ -1178,6 +1268,7 @@ namespace KerbalConstructionTime
 
         public static void DisableModFunctionality()
         {
+            DisableSimulationLocks();
             InputLockManager.RemoveControlLock("KCTLaunchLock");
             KCT_GUI.HideAll();
         }
@@ -1324,10 +1415,12 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static bool IsKRASHSimActive
+        public static bool IsSimulationActive
         {
             get
             {
+                if (KCTGameStates.IsSimulatedFlight) return true;
+
                 Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KRASH", StringComparison.OrdinalIgnoreCase))?.assembly;
                 Type t = a?.GetType("KRASH.KRASHShelter");
                 FieldInfo fi = t?.GetField("persistent", BindingFlags.Public | BindingFlags.Static);
@@ -1369,8 +1462,10 @@ namespace KerbalConstructionTime
 
         public static void SetActiveKSCToRSS()
         {
+            Profiler.BeginSample("KCT SetActiveKSCToRSS");
             string site = GetActiveRSSKSC();
             SetActiveKSC(site);
+            Profiler.EndSample();
         }
 
         public static void SetActiveKSC(string site)
@@ -1461,14 +1556,24 @@ namespace KerbalConstructionTime
             var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildTime, EditorLogic.FlagURL);
 
             KCTGameStates.EditorIntegrationTime = MathParser.ParseIntegrationTimeFormula(kctVessel);
-            KCTGameStates.EditorRolloutCosts = MathParser.ParseRolloutCostFormula(kctVessel);
             KCTGameStates.EditorIntegrationCosts = MathParser.ParseIntegrationCostFormula(kctVessel);
-            KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
+
+            if (EditorDriver.editorFacility == EditorFacility.VAB)
+            {
+                KCTGameStates.EditorRolloutCosts = MathParser.ParseRolloutCostFormula(kctVessel);
+                KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
+            }
+            else
+            {
+                // SPH lacks rollout times and costs
+                KCTGameStates.EditorRolloutCosts = 0;
+                KCTGameStates.EditorRolloutTime = 0;
+            }
         }
 
-        public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01 )
+        public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
         {
-            return (1-error) <= (d1 / d2) && (d1 / d2) <= (1+error);
+            return (1 - error) <= (d1 / d2) && (d1 / d2) <= (1 + error);
         }
 
         public static float GetParachuteDragFromPart(AvailablePart parachute)
@@ -1477,7 +1582,7 @@ namespace KerbalConstructionTime
             {
                 if (mi.info.Contains("Fully-Deployed Drag"))
                 {
-                    string[] split = mi.info.Split(new char[] {':', '\n'});
+                    string[] split = mi.info.Split(new char[] { ':', '\n' });
                     //TODO: Get SR code and put that in here, maybe with TryParse instead of Parse
                     for (int i = 0; i < split.Length; i++)
                     {
@@ -1636,7 +1741,7 @@ namespace KerbalConstructionTime
         {
             if (part?.Modules != null)
             {
-                for (int i = 0; i < part.Modules.Count; i++ )
+                for (int i = 0; i < part.Modules.Count; i++)
                 {
                     if (part.Modules[i]?.moduleName?.IndexOf("procedural", StringComparison.OrdinalIgnoreCase) >= 0)
                         return true;
@@ -1675,7 +1780,7 @@ namespace KerbalConstructionTime
 
             foreach (KeyValuePair<AvailablePart, int> kvp in devPartsOnShip)
             {
-                if(ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
                     sb.Append($" <color=green><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
                 else
                     sb.Append($" <color=orange><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
@@ -1954,6 +2059,146 @@ namespace KerbalConstructionTime
             return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
                    FlightGlobals.ActiveVessel.IsRecoverable &&
                    FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
+        }
+
+        public static void EnableSimulationLocks()
+        {
+            InputLockManager.SetControlLock(ControlTypes.QUICKSAVE, "KCTLockSimQS");
+            InputLockManager.SetControlLock(ControlTypes.QUICKLOAD, "KCTLockSimQL");
+        }
+
+        public static void DisableSimulationLocks()
+        {
+            InputLockManager.RemoveControlLock("KCTLockSimQS");
+            InputLockManager.RemoveControlLock("KCTLockSimQL");
+        }
+
+        public static void MakeSimulationSave()
+        {
+            KCTDebug.Log("Making simulation backup file.");
+            GamePersistence.SaveGame("KCT_simulation_backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+        }
+
+        public static bool SimulationSaveExists()
+        {
+            return File.Exists($"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs");
+        }
+
+        /// <summary>
+        /// Copies the simulation save to /Backup/ folder and deletes it from the main savegame folder.
+        /// </summary>
+        public static void DeleteSimulationSave()
+        {
+            string preSimFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs";
+            string backupFolderPath = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup";
+            string backupFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup/KCT_simulation_backup.sfs";
+
+            Directory.CreateDirectory(backupFolderPath);
+            File.Delete(backupFile);
+            File.Move(preSimFile, backupFile);
+        }
+
+        public static void LoadSimulationSave(bool useNewMethod)
+        {
+            string backupFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs";
+            string saveFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/persistent.sfs";
+            DisableSimulationLocks();
+
+            if (FlightGlobals.fetch != null)
+            {
+                FlightGlobals.PersistentVesselIds.Clear();
+                FlightGlobals.PersistentLoadedPartIds.Clear();
+                FlightGlobals.PersistentUnloadedPartIds.Clear();
+            }
+
+            KCTDebug.Log("Swapping persistent.sfs with simulation backup file.");
+            if (useNewMethod)
+            {
+                ConfigNode lastShip = ShipConstruction.ShipConfig;
+                EditorFacility lastEditor = HighLogic.CurrentGame.editorFacility;
+
+                Game newGame = GamePersistence.LoadGame("KCT_simulation_backup", HighLogic.SaveFolder, true, false);
+                GamePersistence.SaveGame(newGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+                GameScenes targetScene = HighLogic.LoadedScene;
+                newGame.startScene = targetScene;
+
+                // This has to be before... newGame.Start()
+                if (targetScene == GameScenes.EDITOR)
+                {
+                    newGame.editorFacility = lastEditor;
+                }
+                newGame.Start();
+
+                // ... And this has to be after. <3 KSP
+                if (targetScene == GameScenes.EDITOR)
+                {
+                    EditorDriver.StartupBehaviour = EditorDriver.StartupBehaviours.LOAD_FROM_CACHE;
+                    ShipConstruction.ShipConfig = lastShip;
+                }
+            }
+            else
+            {
+                File.Copy(backupFile, saveFile, true);
+                Game newGame = GamePersistence.LoadGame("KCT_simulation_backup", HighLogic.SaveFolder, true, false);
+                GameEvents.onGameStatePostLoad.Fire(newGame.config);
+            }
+
+            DeleteSimulationSave();
+        }
+
+        public static bool IsTestFlightInstalled
+        {
+            get
+            {
+                if (!_isTestFlightInstalled.HasValue)
+                {
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestFlightCore", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isTestFlightInstalled = a != null;
+                    if (_isTestFlightInstalled.Value)
+                    {
+                        Type t = a.GetType("TestFlightCore.TestFlightManagerScenario");
+                        _piTFInstance = t?.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                        _piTFSettingsEnabled = t?.GetProperty("SettingsEnabled", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                    }
+                }
+                return _isTestFlightInstalled.Value;
+            }
+        }
+
+        public static bool IsTestLiteInstalled
+        {
+            get
+            {
+                if (!_isTestLiteInstalled.HasValue)
+                {
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestLite", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isTestLiteInstalled = a != null;
+                    if (_isTestLiteInstalled.Value)
+                    {
+                        _tlSettingsType = a.GetType("TestLite.TestLiteGameSettings");
+                        _fiTLSettingsDisabled = _tlSettingsType?.GetField("disabled");
+                    }
+                }
+                return _isTestLiteInstalled.Value;
+            }
+        }
+
+        public static void ToggleFailures(bool isEnabled)
+        {
+            if (IsTestFlightInstalled) ToggleTFFailures(isEnabled);
+            else if (IsTestLiteInstalled) ToggleTLFailures(isEnabled);
+        }
+
+        public static void ToggleTFFailures(bool isEnabled)
+        {
+            object tfInstance = _piTFInstance.GetValue(null);
+            _piTFSettingsEnabled.SetValue(tfInstance, isEnabled);
+        }
+
+        private static void ToggleTLFailures(bool isEnabled)
+        {
+            _fiTLSettingsDisabled.SetValue(HighLogic.CurrentGame.Parameters.CustomParams(_tlSettingsType), !isEnabled);
+            GameEvents.OnGameSettingsApplied.Fire();
         }
     }
 }

@@ -18,7 +18,7 @@
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\GameData\RP-0\Plugins\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ENABLE_PROFILER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -93,6 +93,9 @@
     <Reference Include="MagiCore">
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirlaunchParams.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="GUI\GUI_Editor.cs" />
     <Compile Include="GUI\GUI_FirstRun.cs" />
     <Compile Include="GUI\GUI_NewPad.cs" />
+    <Compile Include="GUI\GUI_Simulation.cs" />
     <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
     <Compile Include="KCTOnLoadError.cs" />
@@ -116,6 +120,8 @@
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
     <Compile Include="KCTObservableList.cs" />
+    <Compile Include="SceneAddons\MainMenuAddon.cs" />
+    <Compile Include="SimulationParams.cs" />
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="BuildItems\IKCTBuildItem.cs" />
     <Compile Include="InstallChecker.cs" />

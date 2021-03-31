@@ -168,7 +168,7 @@ namespace RP0.Crew
             if (Started)
                 start = startTime;
             else
-                start = Planetarium.GetUniversalTime();
+                start = KSPUtils.GetUT();
             length = GetTime();
             return start + length;
         }
@@ -231,7 +231,7 @@ namespace RP0.Crew
                                 exp.Expiration *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
                                     CrewHandler.Settings.trainingProficiencyStupidMax,
                                     student.stupidity);
-                            exp.Expiration += Planetarium.GetUniversalTime();
+                            exp.Expiration += KSPUtils.GetUT();
                         }
 
                         bool prevMissionsAlreadyExpired = false;
@@ -241,13 +241,13 @@ namespace RP0.Crew
                             string trainingType = s[0];
                             string trainingTarget = s.Length == 1 ? null : s[1];
 
-                            if (!prevMissionsAlreadyExpired && trainingType == "TRAINING_mission")
+                            if (!prevMissionsAlreadyExpired && trainingType == CrewHandler.TrainingType_Mission)
                             {
                                 // Expire any previous mission trainings because only 1 should be active at a time
                                 for (int i = student.careerLog.Count; i-- > 0;)
                                 {
                                     FlightLog.Entry e = student.careerLog.Entries[i];
-                                    if (e.type == "TRAINING_mission")
+                                    if (e.type == CrewHandler.TrainingType_Mission)
                                     {
                                         e.type = "expired_" + e.type;
                                         CrewHandler.Instance.RemoveExpiration(student.name, v.value);
@@ -293,7 +293,7 @@ namespace RP0.Crew
 
             Started = true;
 
-            startTime = Planetarium.GetUniversalTime();
+            startTime = KSPUtils.GetUT();
 
             foreach (ProtoCrewMember student in Students)
                 student.SetInactive(GetTime(Students) + 1d);

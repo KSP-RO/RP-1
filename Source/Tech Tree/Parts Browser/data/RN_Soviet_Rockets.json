@@ -278,7 +278,9 @@
         "upgrade": false,
         "entry_cost_mods": "S5.98M",
         "identical_part_name": "S5.98M",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "rn_brizm_tank",
@@ -3499,7 +3501,7 @@
         "description": "RD-120 second stage engine for Zenit-2 rocket. Plume configured by RealPlume.",
         "mod": "RN Soviet Rockets",
         "cost": "750",
-        "entry_cost": "4200",
+        "entry_cost": 3500,
         "category": "STAGED",
         "info": "",
         "year": "1985",
@@ -3510,11 +3512,13 @@
         "orphan": false,
         "rp0_conf": false,
         "spacecraft": "Zenit-2",
-        "engine_config": "",
+        "engine_config": "RD120",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
-        "module_tags": []
+        "entry_cost_mods": "RD-120",
+        "identical_part_name": "RD-120",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "rn_zenit_rd171",
@@ -3546,7 +3550,7 @@
         "title": "Zenit-2 RD-8",
         "description": "RD-8 second stage vernier engine for Zenit-2 rocket. Four of these nozzles make up one RD-8 engine. Plume configured by RealPlume.",
         "mod": "RN Soviet Rockets",
-        "cost": "750",
+        "cost": 0,
         "entry_cost": "4200",
         "category": "STAGED",
         "info": "",
@@ -3562,7 +3566,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "rn_zenit_stg1",

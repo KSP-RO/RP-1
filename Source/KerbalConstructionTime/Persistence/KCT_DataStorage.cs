@@ -22,6 +22,8 @@ namespace KerbalConstructionTime
         [Persistent] public string activeKSC = string.Empty;
         [Persistent] public float SciPoints = -1f;
         [Persistent] public int UpgradesResetCounter = 0, TechUpgrades = 0;
+        [Persistent] public bool IsSimulation;
+        [Persistent] public bool DisableFailuresInSim = true;
 
         public override void OnDecodeFromConfigNode()
         {
@@ -30,6 +32,8 @@ namespace KerbalConstructionTime
             KCTGameStates.UpgradesResetCounter = UpgradesResetCounter;
             KCTGameStates.TechUpgradesTotal = TechUpgrades;
             KCTGameStates.SciPointsTotal = SciPoints;
+            KCTGameStates.IsSimulatedFlight = IsSimulation;
+            KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
         }
 
         public override void OnEncodeToConfigNode()
@@ -39,6 +43,8 @@ namespace KerbalConstructionTime
             SciPoints = KCTGameStates.SciPointsTotal;
             activeKSC = KCTGameStates.ActiveKSC.KSCName;
             UpgradesResetCounter = KCTGameStates.UpgradesResetCounter;
+            IsSimulation = KCTGameStates.IsSimulatedFlight;
+            DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
         }
     }
 }

@@ -22,11 +22,11 @@ namespace RP0
         private bool _isToolingTempDisabled = false;
         private float _nextUpdate = 0f;
         private float _allTooledCost;
-        private List<UntooledPart> _untooledParts = new List<UntooledPart>();
+        private readonly List<UntooledPart> _untooledParts = new List<UntooledPart>();
         private Vector2 _toolingTypesScroll = new Vector2();
         private Vector2 _untooledTypesScroll = new Vector2();
 
-        public Tabs RenderToolingTab()
+        public UITab RenderToolingTab()
         {
             MaybeUpdate();
 
@@ -38,7 +38,7 @@ namespace RP0
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
 
-                return Tabs.Tooling;
+                return UITab.Tooling;
             }
 
             _currentToolingType = null;
@@ -67,20 +67,20 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Untooled Parts:", HighLogic.Skin.label, GUILayout.Width(312));
-                GUILayout.Label("Tooling cost", rightLabel, GUILayout.Width(72));
-                GUILayout.Label("Untooled", rightLabel, GUILayout.Width(72));
-                GUILayout.Label("Tooled", rightLabel, GUILayout.Width(72));
+                GUILayout.Label("Tooling cost", RightLabel, GUILayout.Width(72));
+                GUILayout.Label("Untooled", RightLabel, GUILayout.Width(72));
+                GUILayout.Label("Tooled", RightLabel, GUILayout.Width(72));
                 GUILayout.EndHorizontal();
 
                 _untooledTypesScroll = GUILayout.BeginScrollView(_untooledTypesScroll, GUILayout.Height(204), GUILayout.Width(572));
                 foreach (UntooledPart up in _untooledParts)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label(up.Name, boldLabel, GUILayout.Width(312));
-                    GUILayout.Label($"{up.ToolingCost:N0}f", rightLabel, GUILayout.Width(72));
+                    GUILayout.Label(up.Name, BoldLabel, GUILayout.Width(312));
+                    GUILayout.Label($"{up.ToolingCost:N0}f", RightLabel, GUILayout.Width(72));
                     float untooledExtraCost = GetUntooledExtraCost(up);
-                    GUILayout.Label($"{up.TotalCost:N0}f", rightLabel, GUILayout.Width(72));
-                    GUILayout.Label($"{(up.TotalCost - untooledExtraCost):N0}f", rightLabel, GUILayout.Width(72));
+                    GUILayout.Label($"{up.TotalCost:N0}f", RightLabel, GUILayout.Width(72));
+                    GUILayout.Label($"{(up.TotalCost - untooledExtraCost):N0}f", RightLabel, GUILayout.Width(72));
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.EndScrollView();
@@ -102,10 +102,10 @@ namespace RP0
                 GUILayout.EndVertical();
             }
 
-            return _currentToolingType == null ? Tabs.Tooling : Tabs.ToolingType;
+            return _currentToolingType == null ? UITab.Tooling : UITab.ToolingType;
         }
 
-        public void DisplayTypeTab()
+        public void RenderTypeTab()
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();

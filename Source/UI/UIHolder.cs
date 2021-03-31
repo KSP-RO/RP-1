@@ -5,36 +5,59 @@ using KSP.UI.Screens;
 namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.FlightEditorAndKSC, false)]
-    class UIHolder : MonoBehaviour
+    public class UIHolder : MonoBehaviour
     {
-        // GUI
-        private bool guiEnabled = false;
-        private ApplicationLauncherButton button;
-        private TopWindow tw;
+        private bool _isGuiEnabled = false;
+        private ApplicationLauncherButton _button;
+        private TopWindow _tw;
 
         protected void Awake()
         {
-            try {
-                GameEvents.onGUIApplicationLauncherReady.Add(this.OnGuiAppLauncherReady);
-            } catch (Exception ex) {
-                Debug.LogError("RP0 failed to register UIHolder.OnGuiAppLauncherReady");
+            try
+            {
+                GameEvents.onGUIApplicationLauncherReady.Add(OnGuiAppLauncherReady);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("[RP-0] failed to register UIHolder.OnGuiAppLauncherReady");
                 Debug.LogException(ex);
             }
         }
 
         protected void Start()
         {
-            tw = new TopWindow();
+            _tw = new TopWindow();
+            _tw.Start();
+        }
+
+        protected void OnDestroy()
+        {
+            try
+            {
+                GameEvents.onGUIApplicationLauncherReady.Remove(OnGuiAppLauncherReady);
+                if (_button != null)
+                    ApplicationLauncher.Instance.RemoveModApplication(_button);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        protected void OnGUI()
+        {
+            if (_isGuiEnabled)
+                _tw.OnGUI();
         }
 
         private void ShowWindow()
         {
-            guiEnabled = true;
+            _isGuiEnabled = true;
         }
 
         private void HideWindow()
         {
-            guiEnabled = false;
+            _isGuiEnabled = false;
         }
 
         private void OnSceneChange(GameScenes s)
@@ -45,8 +68,9 @@ namespace RP0
 
         private void OnGuiAppLauncherReady()
         {
-            try {
-                button = ApplicationLauncher.Instance.AddModApplication(
+            try
+            {
+                _button = ApplicationLauncher.Instance.AddModApplication(
                     ShowWindow,
                     HideWindow,
                     null,
@@ -55,29 +79,13 @@ namespace RP0
                     null,
                     ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
                     GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
-                GameEvents.onGameSceneLoadRequested.Add(this.OnSceneChange);
-            } catch (Exception ex) {
-                Debug.LogError("RP0 failed to register UIHolder");
+                GameEvents.onGameSceneLoadRequested.Add(OnSceneChange);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("[RP-0] failed to register UIHolder");
                 Debug.LogException(ex);
             }
-        }
-
-        public void OnDestroy()
-        {
-            try {
-                GameEvents.onGUIApplicationLauncherReady.Remove(this.OnGuiAppLauncherReady);
-                if (button != null)
-                    ApplicationLauncher.Instance.RemoveModApplication(button);
-            } catch (Exception ex) {
-                Debug.LogException(ex);
-            }
-        }
-
-        public void OnGUI()
-        {
-            if (guiEnabled)
-                tw.OnGUI();
         }
     }
 }
-

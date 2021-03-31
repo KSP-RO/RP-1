@@ -16,7 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\GameData\RP-0\Plugins\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ENABLE_PROFILER</DefineConstants>
     <DebugType>portable</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>preview</LangVersion>
@@ -38,6 +38,7 @@
     <Compile Include="CareerLog\CareerEvent.cs" />
     <Compile Include="CareerLog\CareerEventScope.cs" />
     <Compile Include="CareerLog\CareerLog.cs" />
+    <Compile Include="CareerLog\CareerLogDto.cs" />
     <Compile Include="CareerLog\CareerLogGUI.cs" />
     <Compile Include="CareerLog\ContractEvent.cs" />
     <Compile Include="CareerLog\FacilityConstructionEvent.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Tooling\ToolingDefinition.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />
+    <Compile Include="Utilities\BypassCertificateHandler.cs" />
     <Compile Include="Utilities\CSV\CsvWriter.cs" />
     <Compile Include="Utilities\SphericalTankUtilities.cs" />
     <Compile Include="Utilities\KACWrapper.cs" />
@@ -120,6 +122,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ClickThroughBlocker">
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="ModularFlightIntegrator">
@@ -157,6 +163,19 @@
     <Reference Include="UnityEngine.UI">
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="KerbalConstructionTime\KerbalConstructionTime.csproj">
+      <Project>{93908b2a-0859-4dab-8873-d32a4c633308}</Project>
+      <Name>KerbalConstructionTime</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,32 +1,36 @@
-﻿using System;
-using UnityEngine;
-using KSP.UI.Screens;
+﻿using UnityEngine;
 
 namespace RP0
 {
-    public class UIBase
+    public abstract class UIBase
     {
-        protected GUIStyle rightLabel, boldLabel, boldRightLabel, pressedButton, infoButton;
+        public enum UITab
+        {
+            Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType,
+            Training, Courses, NewCourse, Naut, Avionics, CareerLog
+        };
+
+        protected GUIStyle RightLabel, BoldLabel, BoldRightLabel, PressedButton, InfoButton;
 
         public UIBase()
         {
-            rightLabel = new GUIStyle(HighLogic.Skin.label)
+            RightLabel = new GUIStyle(HighLogic.Skin.label)
             {
                 alignment = TextAnchor.MiddleRight
             };
-            boldLabel = new GUIStyle(HighLogic.Skin.label)
+            BoldLabel = new GUIStyle(HighLogic.Skin.label)
             {
                 fontStyle = FontStyle.Bold
             };
-            boldRightLabel = new GUIStyle(rightLabel)
+            BoldRightLabel = new GUIStyle(RightLabel)
             {
                 fontStyle = FontStyle.Bold
             };
 
-            pressedButton = new GUIStyle(HighLogic.Skin.button);
-            pressedButton.normal = pressedButton.active;
+            PressedButton = new GUIStyle(HighLogic.Skin.button);
+            PressedButton.normal = PressedButton.active;
 
-            infoButton = new GUIStyle(HighLogic.Skin.button)
+            InfoButton = new GUIStyle(HighLogic.Skin.button)
             {
                 alignment = TextAnchor.MiddleCenter,
                 fixedHeight = 17f,
@@ -36,40 +40,41 @@ namespace RP0
             };
         }
 
-        public enum Tabs
-        { 
-            Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType, 
-            Training, Courses, NewCourse, Naut, Avionics, CareerLog
-        };
-
-        protected bool showTab(Tabs tab)
+        internal void Start()
         {
-            switch (tab) {
-                case Tabs.Maintenance:
-                case Tabs.Facilities:
-                case Tabs.Integration:
+            OnStart();
+        }
+
+        protected virtual void OnStart() { }
+
+        protected bool ShouldShowTab(UITab tab)
+        {
+            switch (tab)
+            {
+                case UITab.Maintenance:
+                case UITab.Facilities:
+                case UITab.Integration:
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
-                case Tabs.Tooling:
-                case Tabs.ToolingType:
+                case UITab.Tooling:
+                case UITab.ToolingType:
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
-                case Tabs.Avionics:
+                case UITab.Avionics:
                     return HighLogic.LoadedSceneIsEditor;
-                case Tabs.Astronauts:
+                case UITab.Astronauts:
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER;
-                case Tabs.Training:
-                case Tabs.Courses:
-                case Tabs.NewCourse:
-                case Tabs.Naut:
-                case Tabs.CareerLog:
+                case UITab.Training:
+                case UITab.Courses:
+                case UITab.NewCourse:
+                case UITab.Naut:
+                case UITab.CareerLog:
                 default:
                     return true;
             }
         }
 
-        public bool toggleButton(string text, bool selected, params GUILayoutOption[] options)
+        public bool RenderToggleButton(string text, bool selected, params GUILayoutOption[] options)
         {
-            return GUILayout.Button(text, selected ? pressedButton : HighLogic.Skin.button, options);
+            return GUILayout.Button(text, selected ? PressedButton : HighLogic.Skin.button, options);
         }
     }
 }
-

@@ -1158,7 +1158,7 @@
         "title": "Skylab Orbital Workshop",
         "description": "Hold 8 peole with 155 days (5 months) of supplies. A large crew compartment designed for larger, more permanent space stations. Designed and launched in 1973, the Skylab orbital station was the wider space station ever. Given the 270m3 pressurised volume, there is plenty of room for all your IVA activies. It even features a orbital laboratory!",
         "mod": "SXT",
-        "cost": "0",
+        "cost": 17400,
         "entry_cost": "200000",
         "category": "STATIONS",
         "info": "Station",

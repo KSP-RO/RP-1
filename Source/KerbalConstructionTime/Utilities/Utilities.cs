@@ -137,7 +137,7 @@ namespace KerbalConstructionTime
             if (InvEff != 0)
                 inventorySample.Remove(partRef);
 
-            if (effectiveCost < 0) 
+            if (effectiveCost < 0)
                 effectiveCost = 0;
             return effectiveCost;
         }
@@ -193,7 +193,7 @@ namespace KerbalConstructionTime
 
         public static double ApplyGlobalCostModifiers(HashSet<string> modifiers)
         {
-            double res = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(modifiers.ToList()); 
+            double res = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(modifiers.ToList());
             foreach (var x in modifiers)
                 if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
                     res *= mod.globalMult;
@@ -1003,7 +1003,7 @@ namespace KerbalConstructionTime
 
             foreach (var name in partInfo.identicalParts.Split(','))
             {
-                if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info 
+                if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info
                     && info.TechRequired == partInfo.TechRequired)
                 {
                     info.costsFunds = false;

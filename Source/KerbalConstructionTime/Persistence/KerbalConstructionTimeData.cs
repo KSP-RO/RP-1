@@ -130,7 +130,10 @@ namespace KerbalConstructionTime
                         inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
                     }
                 }
-                // get the nodes that have been researched from ResearchAndDevelopment
+
+                if (!HighLogic.LoadedSceneIsEditor)
+                    return;
+
                 protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
                 // iterate through all loaded parts to check if any of them should be experimental
                 foreach (AvailablePart ap in PartLoader.LoadedPartsList)

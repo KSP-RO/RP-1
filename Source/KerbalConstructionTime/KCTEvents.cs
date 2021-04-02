@@ -272,12 +272,6 @@ namespace KerbalConstructionTime
                         double timeLeft = tech.BuildRate > 0 ? tech.TimeLeft : tech.EstimatedTimeLeft;
                         ScreenMessages.PostScreenMessage($"[KCT] Node will unlock in {MagiCore.Utilities.GetFormattedTime(timeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
 
-                        foreach (AvailablePart ap in ev.host.partsAssigned)
-                        {
-                            if (Utilities.AddExperimentalPart(ap))
-                                KCTDebug.Log($"{ap.name} added to ExpParts: {ResearchAndDevelopment.IsExperimentalPart(ap)}");
-                        }
-
                         OnTechQueued.Fire(ev.host);
                     }
                 }

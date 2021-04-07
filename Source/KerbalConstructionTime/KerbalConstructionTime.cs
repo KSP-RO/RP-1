@@ -578,8 +578,7 @@ namespace KerbalConstructionTime
                 }
                 else if (DateTime.Now.CompareTo(_simMoveDeferTime.AddSeconds(secondsForMove)) > 0)
                 {
-                    KCTDebug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-                    HyperEdit_Utilities.PutInOrbitAround(simParams.SimulationBody, simParams.SimOrbitAltitude, simParams.SimInclination);
+                    StartCoroutine(SetSimOrbit(simParams));
                     simParams.IsVesselMoved = true;
                     _simMoveDeferTime = DateTime.MaxValue;
                 }
@@ -591,6 +590,13 @@ namespace KerbalConstructionTime
                     _simMoveSecondsRemain = (int)remaining;
                 }
             }
+        }
+
+        private static IEnumerator SetSimOrbit(SimulationParams simParams)
+        {
+            yield return new WaitForEndOfFrame();
+            KCTDebug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
+            HyperEdit_Utilities.PutInOrbitAround(simParams.SimulationBody, simParams.SimOrbitAltitude, simParams.SimInclination);
         }
 
         private void AddSimulationWatermark()

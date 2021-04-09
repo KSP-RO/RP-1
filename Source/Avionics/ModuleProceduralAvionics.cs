@@ -47,7 +47,7 @@ namespace RP0.ProceduralAvionics
         [KSPField(guiActiveEditor = true, guiName = "Configure", groupName = PAWGroup)]
         [UI_Toggle(enabledText = "Hide GUI", disabledText = "Show GUI")]
         [NonSerialized]
-        public bool showGUI;
+        public bool showGUI;        
 
         public bool IsScienceCore => CurrentProceduralAvionicsTechNode.massExponent == 0 && CurrentProceduralAvionicsTechNode.powerExponent == 0 && CurrentProceduralAvionicsTechNode.costExponent == 0;
 

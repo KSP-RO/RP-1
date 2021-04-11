@@ -22,7 +22,6 @@ namespace RP0
         public double gDamageAdder = 0d;
 
         protected System.Random rnd;
-        protected double pressureAtKillAltitude;
 
         private static bool? _origDoStockGCalcs;
 
@@ -50,14 +49,14 @@ namespace RP0
                     nextCheck = UT + checkInterval;
                 else if (UT > nextCheck)
                 {
-                    if (pressureAtKillAltitude == default)
+                    if (!_origDoStockGCalcs.HasValue)
                     {
-                        pressureAtKillAltitude = FlightGlobals.GetHomeBody().GetPressureAtm(crewDeathAltitude);
                         _origDoStockGCalcs = ProtoCrewMember.doStockGCalcs;
                     }
 
                     nextCheck = UT + checkInterval;
-                    if (part.staticPressureAtm < pressureAtKillAltitude)
+                    double curAltitute = part.vessel.altitude;
+                    if (curAltitute > crewDeathAltitude)
                     {
                         ScreenMessages.PostScreenMessage($"Cockpit is above the safe altitude which will lead to crew incapacitation and eventually to death", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
 
@@ -73,7 +72,8 @@ namespace RP0
                             ProtoCrewMember pcm = part.protoModuleCrew[i];
 
                             double highGPenalty = vessel.geeForce > 3 ? vessel.geeForce : 1;
-                            pcm.gExperienced += (0.5d + rnd.NextDouble()) * gDamageAdder * highGPenalty;
+                            double altitudeMult = (curAltitute - crewDeathAltitude) / crewDeathAltitude * 15;
+                            pcm.gExperienced += (0.5d + rnd.NextDouble()) * gDamageAdder * highGPenalty * altitudeMult;
 
                             double gMult = ProtoCrewMember.GToleranceMult(pcm) * HighLogic.CurrentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().KerbalGToleranceMult;
                             _anyCrewAboveWarnThreshold = pcm.gExperienced > PhysicsGlobals.KerbalGThresholdWarn * gMult;
@@ -86,7 +86,7 @@ namespace RP0
                             }
 
                             // There's at least one cycle of delay after passing out before the death chance rolls start
-                            if (pcm.outDueToG && rnd.NextDouble() < crewDeathChance)
+                            if (pcm.outDueToG && rnd.NextDouble() < crewDeathChance * altitudeMult)
                             {
                                 killed = true;
                                 ScreenMessages.PostScreenMessage($"{vessel.vesselName}: Crewmember {pcm.name} has died from exposure to near-vacuum.", 30.0f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);

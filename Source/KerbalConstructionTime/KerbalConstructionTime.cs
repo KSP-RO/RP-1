@@ -410,7 +410,10 @@ namespace KerbalConstructionTime
 
         private IEnumerator UpdateBuildRates()
         {
-            yield return new WaitForFixedUpdate();  // TODO: Check why we stall here versus run in Start()
+            // It takes exactly 2 updates for KSP to initialize ScenarioUpgradeableFacilities
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER
                 && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) >= 0)
             {

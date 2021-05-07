@@ -1309,7 +1309,7 @@
         "description": "The Vernier System as used on the Surveyor Probes. Uses storable hypergolic propellants, has infinite restarts and is not subject to ullage. Throttleable down to 30%. Historically 3 of them were used on the Surveyor probes which landed on the Moon. Diameter: [0.13 m]. Plume configured by RealPlume.",
         "mod": "Coatl Aerospace",
         "cost": "30",
-        "entry_cost": "600",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "",
         "year": "1965",
@@ -1322,9 +1322,11 @@
         "spacecraft": "Surveyor",
         "engine_config": "TD339",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "TD-339",
         "identical_part_name": "TD-339",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ca_linkor",
@@ -2014,11 +2016,11 @@
         "description": "A gas generator hypergolic vacuum engine designed for use in the 3MV, 4MV and 5MV spacecraft buses of the Mars and Venera probes.",
         "mod": "Coatl Aerospace",
         "cost": 100,
-        "entry_cost": 50000,
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "SM Engine",
-        "year": "1975",
-        "technology": "orbitalRocketry1972",
+        "year": "1970",
+        "technology": "orbitalRocketry1970",
         "era": "06-STATION",
         "ro": true,
         "rp0": true,
@@ -2027,9 +2029,11 @@
         "spacecraft": "Venera 9",
         "engine_config": "INTERNAL",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
-        "module_tags": []
+        "entry_cost_mods": "KTDU-425",
+        "identical_part_name": "KTDU-425",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "ca_vor_mptank",

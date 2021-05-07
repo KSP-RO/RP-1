@@ -850,7 +850,7 @@
         "description": "The Vernier System as used on the Surveyor Probes. Uses storable hypergolic propellants, has infinite restarts and is not subject to ullage. Throttleable down to 30%. Historically 3 of them were used on the Surveyor probes which landed on the Moon. Diameter: [0.13 m]. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": "30",
-        "entry_cost": "600",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "RCS Engine",
         "year": "1965",
@@ -861,9 +861,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Surveyor",
-        "engine_config": "",
+        "engine_config": "TD339",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "TD-339",
         "identical_part_name": "TD-339",
         "module_tags": [
             "EngineLiquidPF"

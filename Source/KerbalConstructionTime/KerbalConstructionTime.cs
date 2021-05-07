@@ -530,12 +530,16 @@ namespace KerbalConstructionTime
             {
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
-                    foreach (var x in ksc.VABList)
-                        x.IncrementProgress(UTDiff);
-                    foreach (var x in ksc.SPHList)
-                        x.IncrementProgress(UTDiff);
-                    foreach (ReconRollout rr in ksc.Recon_Rollout)
+                    for (int i = ksc.VABList.Count - 1; i >= 0; i--)
+                        ksc.VABList[i].IncrementProgress(UTDiff);
+
+                    for (int i = ksc.SPHList.Count - 1; i >= 0; i--)
+                        ksc.SPHList[i].IncrementProgress(UTDiff);
+
+
+                    for (int i = ksc.Recon_Rollout.Count - 1; i >= 0; i--)
                     {
+                        var rr = ksc.Recon_Rollout[i];
                         rr.IncrementProgress(UTDiff);
                         //Reset the associated launchpad id when rollback completes
                         Profiler.BeginSample("KCT ProgressBuildTime.ReconRollout.FindBLVesselByID");
@@ -550,19 +554,19 @@ namespace KerbalConstructionTime
                     ksc.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes ||
                                                         (rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete()));
 
-                    foreach (var x in ksc.AirlaunchPrep)
-                        x.IncrementProgress(UTDiff);
+                    for (int i = ksc.AirlaunchPrep.Count - 1; i >= 0; i--)
+                        ksc.AirlaunchPrep[i].IncrementProgress(UTDiff);
 
                     ksc.AirlaunchPrep.RemoveAll(ap => ap.Direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
 
-                    foreach (var x in ksc.KSCTech)
-                        x.IncrementProgress(UTDiff);
+                    for (int i = ksc.KSCTech.Count - 1; i >= 0; i--)
+                        ksc.KSCTech[i].IncrementProgress(UTDiff);
 
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                         ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
 
-                    foreach (var x in KCTGameStates.TechList)
-                        x.IncrementProgress(UTDiff);
+                    for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
+                        KCTGameStates.TechList[i].IncrementProgress(UTDiff);
                 }
             }
 

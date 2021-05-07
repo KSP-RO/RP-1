@@ -284,7 +284,6 @@ namespace KerbalConstructionTime
 
             DelayedStart();
 
-            UpdateTechlistIconColor();
             StartCoroutine(HandleEditorButton_Coroutine());
         }
 
@@ -372,6 +371,8 @@ namespace KerbalConstructionTime
                 VesselSpawnDialog.Instance.ButtonClose();
                 KCTDebug.Log("Attempting to close spawn dialog!");
             }
+
+            UpdateRndScreen();
         }
 
         public void FixedUpdate()
@@ -519,6 +520,30 @@ namespace KerbalConstructionTime
             }
         }
 
+        public void UpdateRndScreen()
+        {
+            if (Utilities.CurrentGameIsMission()) return;
+
+            // If we're in the R&D and we haven't reset the tech node colors yet, do so.
+            // Note: the nodes list is initialized at a later frame than RDController.Instance becomes available.
+            if (!_isIconUpdated && RDController.Instance?.nodes?.Count > 0)
+            {
+                StartCoroutine(UpdateTechlistIconColorDelayed());
+                _isIconUpdated = true;
+            }
+
+            if (RDController.Instance == null)
+            {
+                _isIconUpdated = false;
+            }
+        }
+
+        public void ForceUpdateRndScreen()
+        {
+            _isIconUpdated = false;
+            UpdateRndScreen();
+        }
+
         public void ProgressBuildTime()
         {
             Profiler.BeginSample("KCT ProgressBuildTime");
@@ -574,19 +599,13 @@ namespace KerbalConstructionTime
             Profiler.EndSample();
         }
 
-        public void LateUpdate()
+        private IEnumerator UpdateTechlistIconColorDelayed()
         {
-            if (Utilities.CurrentGameIsMission()) return;
-
-            // If we're in the R&D and we haven't reset the tech node colors yet, do so
-            if (RDController.Instance != null && !_isIconUpdated)
-                UpdateTechlistIconColor();
-
-            // Unset as soon as we leave R&D
-            _isIconUpdated = RDController.Instance is RDController;
+            yield return new WaitForEndOfFrame();
+            UpdateTechlistIconColor();
         }
 
-        public void UpdateTechlistIconColor()
+        private void UpdateTechlistIconColor()
         {
             foreach (var node in RDController.Instance?.nodes.Where(x => x?.tech is RDTech) ?? Enumerable.Empty<RDNode>())
             {

@@ -284,7 +284,6 @@ namespace KerbalConstructionTime
 
             DelayedStart();
 
-            UpdateTechlistIconColor();
             StartCoroutine(HandleEditorButton_Coroutine());
         }
 
@@ -372,6 +371,8 @@ namespace KerbalConstructionTime
                 VesselSpawnDialog.Instance.ButtonClose();
                 KCTDebug.Log("Attempting to close spawn dialog!");
             }
+
+            UpdateRndScreen();
         }
 
         public void FixedUpdate()
@@ -410,9 +411,10 @@ namespace KerbalConstructionTime
 
         private IEnumerator UpdateBuildRates()
         {
-            // It takes exactly 2 updates for KSP to initialize ScenarioUpgradeableFacilities
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
+            do
+            {
+                yield return new WaitForFixedUpdate();    // No way to know when KSP has finally initialized the ScenarioUpgradeableFacilities data
+            } while (HighLogic.LoadedScene == GameScenes.SPACECENTER && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) < 0);
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER
                 && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) >= 0)
@@ -518,6 +520,30 @@ namespace KerbalConstructionTime
             }
         }
 
+        public void UpdateRndScreen()
+        {
+            if (Utilities.CurrentGameIsMission()) return;
+
+            // If we're in the R&D and we haven't reset the tech node colors yet, do so.
+            // Note: the nodes list is initialized at a later frame than RDController.Instance becomes available.
+            if (!_isIconUpdated && RDController.Instance?.nodes?.Count > 0)
+            {
+                StartCoroutine(UpdateTechlistIconColorDelayed());
+                _isIconUpdated = true;
+            }
+
+            if (RDController.Instance == null)
+            {
+                _isIconUpdated = false;
+            }
+        }
+
+        public void ForceUpdateRndScreen()
+        {
+            _isIconUpdated = false;
+            UpdateRndScreen();
+        }
+
         public void ProgressBuildTime()
         {
             Profiler.BeginSample("KCT ProgressBuildTime");
@@ -529,12 +555,16 @@ namespace KerbalConstructionTime
             {
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
-                    foreach (var x in ksc.VABList)
-                        x.IncrementProgress(UTDiff);
-                    foreach (var x in ksc.SPHList)
-                        x.IncrementProgress(UTDiff);
-                    foreach (ReconRollout rr in ksc.Recon_Rollout)
+                    for (int i = ksc.VABList.Count - 1; i >= 0; i--)
+                        ksc.VABList[i].IncrementProgress(UTDiff);
+
+                    for (int i = ksc.SPHList.Count - 1; i >= 0; i--)
+                        ksc.SPHList[i].IncrementProgress(UTDiff);
+
+
+                    for (int i = ksc.Recon_Rollout.Count - 1; i >= 0; i--)
                     {
+                        var rr = ksc.Recon_Rollout[i];
                         rr.IncrementProgress(UTDiff);
                         //Reset the associated launchpad id when rollback completes
                         Profiler.BeginSample("KCT ProgressBuildTime.ReconRollout.FindBLVesselByID");
@@ -549,19 +579,19 @@ namespace KerbalConstructionTime
                     ksc.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes ||
                                                         (rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete()));
 
-                    foreach (var x in ksc.AirlaunchPrep)
-                        x.IncrementProgress(UTDiff);
+                    for (int i = ksc.AirlaunchPrep.Count - 1; i >= 0; i--)
+                        ksc.AirlaunchPrep[i].IncrementProgress(UTDiff);
 
                     ksc.AirlaunchPrep.RemoveAll(ap => ap.Direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
 
-                    foreach (var x in ksc.KSCTech)
-                        x.IncrementProgress(UTDiff);
+                    for (int i = ksc.KSCTech.Count - 1; i >= 0; i--)
+                        ksc.KSCTech[i].IncrementProgress(UTDiff);
 
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                         ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
 
-                    foreach (var x in KCTGameStates.TechList)
-                        x.IncrementProgress(UTDiff);
+                    for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
+                        KCTGameStates.TechList[i].IncrementProgress(UTDiff);
                 }
             }
 
@@ -569,19 +599,13 @@ namespace KerbalConstructionTime
             Profiler.EndSample();
         }
 
-        public void LateUpdate()
+        private IEnumerator UpdateTechlistIconColorDelayed()
         {
-            if (Utilities.CurrentGameIsMission()) return;
-
-            // If we're in the R&D and we haven't reset the tech node colors yet, do so
-            if (RDController.Instance != null && !_isIconUpdated)
-                UpdateTechlistIconColor();
-
-            // Unset as soon as we leave R&D
-            _isIconUpdated = RDController.Instance is RDController;
+            yield return new WaitForEndOfFrame();
+            UpdateTechlistIconColor();
         }
 
-        public void UpdateTechlistIconColor()
+        private void UpdateTechlistIconColor()
         {
             foreach (var node in RDController.Instance?.nodes.Where(x => x?.tech is RDTech) ?? Enumerable.Empty<RDNode>())
             {

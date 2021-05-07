@@ -72,9 +72,9 @@ namespace KerbalConstructionTime
         public static void InitAndClearTechList()
         {
             TechList = new KCTObservableList<TechItem>();
-            TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
+            TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
         }
-      
+
         public static void ClearVesselEditMode()
         {
             EditorShipEditingMode = false;

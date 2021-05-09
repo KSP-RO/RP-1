@@ -34,7 +34,7 @@ namespace RP0.Crew
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
         public bool RetirementEnabled = true;
-
+        public bool IsMissionTrainingEnabled;
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
         private HashSet<string> _retirees = new HashSet<string>();
@@ -267,7 +267,7 @@ namespace RP0.Crew
                 bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap) && !ResearchAndDevelopment.IsExperimentalPart(ap);
 
                 GenerateCourseProf(ap, !isPartUnlocked);
-                if (isPartUnlocked)
+                if (isPartUnlocked && IsMissionTrainingEnabled)
                 {
                     GenerateCourseMission(ap);
                 }
@@ -296,7 +296,7 @@ namespace RP0.Crew
             if (ent == null)
                 return false;
 
-            bool lacksMission = true;
+            bool lacksMission = IsMissionTrainingEnabled;
             for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
             {
                 FlightLog.Entry e = pcm.careerLog.Entries[i];
@@ -412,6 +412,12 @@ namespace RP0.Crew
         private void LoadSettings()
         {
             RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
+            bool prevIsMissionTrainingEnabled = IsMissionTrainingEnabled;
+            IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
+            if (IsMissionTrainingEnabled && !prevIsMissionTrainingEnabled)
+            {
+                GenerateOfferedCourses();
+            }
         }
 
         private void VesselRecoveryProcessing(ProtoVessel v, MissionRecoveryDialog mrDialog, float data)
@@ -958,6 +964,7 @@ namespace RP0.Crew
                     OfferedCourses.Add(duplicate);
             }
 
+            _partSynsHandled.Clear();
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
                 if (ap.partPrefab.CrewCapacity > 0 &&

@@ -953,6 +953,9 @@ namespace KerbalConstructionTime
                 return;
             }
 
+            newShip.FacilityBuiltIn = ship.FacilityBuiltIn;
+            newShip.KCTPersistentID = ship.KCTPersistentID;
+
             ship.RemoveFromBuildList();
 
             GetShipEditProgress(ship, out double progressBP, out _, out _);
@@ -1741,6 +1744,10 @@ namespace KerbalConstructionTime
 
                 KCTGameStates.RecoveredVessel = new BuildListVessel(FlightGlobals.ActiveVessel, listType);
 
+                KCTVesselData vData = FlightGlobals.ActiveVessel.GetKCTVesselData();
+                KCTGameStates.RecoveredVessel.KCTPersistentID = vData?.VesselID;
+                KCTGameStates.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
+
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == BuildListVessel.ListType.VAB)
                     KCTGameStates.RecoveredVessel.LaunchSite = "LaunchPad";
@@ -1912,6 +1919,17 @@ namespace KerbalConstructionTime
         {
             ModuleTagList mTags = p.FindModuleImplementing<ModuleTagList>();
             return mTags?.tags.Contains(tag) ?? false;
+        }
+
+        public static KCTVesselData GetKCTVesselData(this Vessel v)
+        {
+            var kctvm = (KCTVesselTracker)v.vesselModules.FirstOrDefault(vm => vm is KCTVesselTracker);
+            return kctvm?.Data;
+        }
+
+        public static string GetKCTVesselId(this Vessel v)
+        {
+            return v.GetKCTVesselData()?.VesselID;
         }
 
         public static bool IsVabRecoveryAvailable()

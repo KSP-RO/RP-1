@@ -26,6 +26,8 @@ namespace KerbalConstructionTime
         public double StagePartCost = 0;
         public float EmptyCost = 0, EmptyMass = 0;
         public int BuildListIndex = -1;
+        public EditorFacility FacilityBuiltIn;
+        public string KCTPersistentID;
 
         internal ShipConstruct _ship;
         private double _rushCost = -1;
@@ -133,12 +135,19 @@ namespace KerbalConstructionTime
             Progress = 0;
             Flag = flagURL;
             if (s.shipFacility == EditorFacility.VAB)
+            {
                 Type = ListType.VAB;
+                FacilityBuiltIn = EditorFacility.VAB;
+            }
             else if (s.shipFacility == EditorFacility.SPH)
+            {
                 Type = ListType.SPH;
+                FacilityBuiltIn = EditorFacility.SPH;
+            }
             else
                 Type = ListType.None;
             Id = Guid.NewGuid();
+            KCTPersistentID = Guid.NewGuid().ToString();
             CannotEarnScience = false;
 
             //get the crew from the editorlogic
@@ -182,54 +191,6 @@ namespace KerbalConstructionTime
             IntegrationCost = integrCost;
         }
 
-        public BuildListVessel(ProtoVessel pvessel, ConfigNode vesselNode, ListType listType = ListType.None) //For recovered vessels
-        {
-            Id = Guid.NewGuid();
-            ShipName = pvessel.vesselName;
-            ShipNode = vesselNode;
-
-            if (listType != ListType.None)
-                Type = listType;
-
-            Cost = Utilities.GetTotalVesselCost(ShipNode);
-            EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
-            TotalMass = 0;
-            EmptyMass = 0;
-
-            HashSet<int> stages = new HashSet<int>();
-
-            foreach (ProtoPartSnapshot p in pvessel.protoPartSnapshots)
-            {
-                stages.Add(p.inverseStageIndex);
-
-                if (p.partPrefab != null)
-                {
-                    if (p.partPrefab.Modules.Contains<LaunchClamp>() || p.partPrefab.HasTag("PadInfrastructure"))
-                        continue;
-                }
-
-                TotalMass += p.mass;
-                EmptyMass += p.mass;
-
-                foreach (ProtoPartResourceSnapshot rsc in p.resources)
-                {
-                    PartResourceDefinition def = PartResourceLibrary.Instance.GetDefinition(rsc.resourceName);
-                    if (def != null)
-                        TotalMass += def.density * (float)rsc.amount;
-                }
-            }
-            CannotEarnScience = true;
-            NumStages = stages.Count;
-            // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
-
-            BuildPoints = Utilities.GetBuildTime(ShipNode.GetNodes("PART").ToList());
-            Flag = HighLogic.CurrentGame.flagURL;
-            Progress = BuildPoints;
-
-            DistanceFromKSC = 0; // (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
-            RushBuildClicks = 0;
-        }
-
         /// <summary>
         /// For recovered vessels
         /// </summary>
@@ -238,6 +199,7 @@ namespace KerbalConstructionTime
         public BuildListVessel(Vessel vessel, ListType listType = ListType.None)
         {
             Id = Guid.NewGuid();
+            KCTPersistentID = Guid.NewGuid().ToString();
             ShipName = vessel.vesselName;
             ShipNode = FromInFlightVessel(vessel, listType);
             if (listType != ListType.None)
@@ -397,6 +359,7 @@ namespace KerbalConstructionTime
             }
 
             ret.Id = Guid.NewGuid();
+            ret.KCTPersistentID = Guid.NewGuid().ToString();
             ret.TotalMass = TotalMass;
             ret.EmptyMass = EmptyMass;
             ret.Cost = Cost;

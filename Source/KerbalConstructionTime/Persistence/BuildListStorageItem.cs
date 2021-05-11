@@ -29,6 +29,10 @@ namespace KerbalConstructionTime
         int BuildListIndex = -1;
         [Persistent]
         List<string> desiredManifest = new List<string>();
+        [Persistent]
+        string KCTPersistentID;
+        [Persistent]
+        EditorFacility FacilityBuiltIn;
 
         public BuildListVessel ToBuildListVessel()
         {
@@ -45,7 +49,9 @@ namespace KerbalConstructionTime
                 RushBuildClicks = rushBuildClicks,
                 LaunchSiteID = LaunchPadID,
                 BuildListIndex = BuildListIndex,
-                DesiredManifest = desiredManifest
+                DesiredManifest = desiredManifest,
+                KCTPersistentID = KCTPersistentID,
+                FacilityBuiltIn = FacilityBuiltIn
             };
             return ret;
         }
@@ -73,6 +79,8 @@ namespace KerbalConstructionTime
             BuildListIndex = blv.BuildListIndex;
             LaunchPadID = blv.LaunchSiteID;
             desiredManifest = blv.DesiredManifest;
+            KCTPersistentID = blv.KCTPersistentID;
+            FacilityBuiltIn = blv.FacilityBuiltIn;
             return this;
         }
     }

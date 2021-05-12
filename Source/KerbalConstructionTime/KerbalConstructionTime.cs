@@ -589,10 +589,10 @@ namespace KerbalConstructionTime
 
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                         ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
-
-                    for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
-                        KCTGameStates.TechList[i].IncrementProgress(UTDiff);
                 }
+
+                for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
+                    KCTGameStates.TechList[i].IncrementProgress(UTDiff);
             }
 
             _lastUT = UT;

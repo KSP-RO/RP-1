@@ -1026,6 +1026,29 @@
         ]
     },
     {
+        "name": "sepMotorSmall",
+        "title": "Radial Separation Motor (Small)",
+        "description": "Small solid motor use to help separate one stage from another or perform ullage. Best used with others.",
+        "mod": "Realism Overhaul",
+        "cost": "10",
+        "entry_cost": "100",
+        "category": "SOLID",
+        "info": "",
+        "year": "1950",
+        "technology": "earlySolids",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "solarPanels5HiTech",
         "title": "ST2 Solar Panel",
         "description": "Static Level 2 solar panel. 0.2m^2.",

@@ -4705,7 +4705,7 @@
         "year": "0",
         "technology": "orphanParts",
         "era": "00-START",
-        "ro": true,
+        "ro": false,
         "rp0": true,
         "orphan": false,
         "rp0_conf": false,

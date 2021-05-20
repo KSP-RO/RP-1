@@ -8,6 +8,7 @@ namespace KerbalConstructionTime
     public static partial class KCT_GUI
     {
         private static Rect _buildPlansWindowPosition = new Rect(Screen.width - 300, 40, 300, 1);
+        private static Vector2 _buildPlansScrollPos;
         private static GUIStyle _buildPlansbutton;
         private static Texture2D _background;
         private static GUIContent _upContent;
@@ -174,7 +175,7 @@ namespace KerbalConstructionTime
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Name:");
                     GUILayout.EndHorizontal();
-                    _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+                    _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
                     if (_plansList == null || _plansList.Count == 0)
                     {

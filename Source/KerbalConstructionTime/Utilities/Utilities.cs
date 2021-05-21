@@ -48,7 +48,9 @@ namespace KerbalConstructionTime
         /// <param name="parts"></param>
         /// <returns></returns>
         public static double GetBuildTime(List<Part> parts) => GetBuildTime(GetEffectiveCost(parts));
+
         public static double GetBuildTime(List<ConfigNode> parts) => GetBuildTime(GetEffectiveCost(parts));
+
         public static double GetBuildTime(double totalEffectiveCost)
         {
             var formulaParams = new Dictionary<string, string>()
@@ -57,6 +59,7 @@ namespace KerbalConstructionTime
                 { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() }
             };
             double finalBP = MathParser.GetStandardFormulaValue("BP", formulaParams);
+            KCTDebug.Log($"BP: {finalBP}");
             return finalBP;
         }
 
@@ -87,16 +90,16 @@ namespace KerbalConstructionTime
             if (o is ConfigNode)
                 ShipConstruction.GetPartCostsAndMass(o as ConfigNode, GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
             else
-                Utilities.GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass);
+                GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass);
 
             float wetMass = dryMass + fuelMass;
             float cost = dryCost + fuelCost;
 
-            double PartMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
-            double ModuleMultiplier = ApplyModuleCostModifiers(partRef, out bool applyResourceMods);
+            double partMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
+            double moduleMultiplier = ApplyModuleCostModifiers(partRef, out bool applyResourceMods);
 
             // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
-            double ResourceMultiplier = 1d;
+            double resourceMultiplier = 1d;
             if (applyResourceMods)
             {
                 if (o is ConfigNode)
@@ -104,10 +107,10 @@ namespace KerbalConstructionTime
                     var resourceNames = new List<string>();
                     foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
                         resourceNames.Add(rNode.GetValue("name"));
-                    ResourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
+                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
                 }
                 else
-                    ResourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
+                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
             }
 
             GatherGlobalModifiers(globalMods, partRef);
@@ -129,16 +132,19 @@ namespace KerbalConstructionTime
                         {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
                         {"I", InvEff.ToString()},
                         {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
-                        {"PV", PartMultiplier.ToString()},
-                        {"RV", ResourceMultiplier.ToString()},
-                        {"MV", ModuleMultiplier.ToString()}
+                        {"PV", partMultiplier.ToString()},
+                        {"RV", resourceMultiplier.ToString()},
+                        {"MV", moduleMultiplier.ToString()}
                 });
 
             if (InvEff != 0)
                 inventorySample.Remove(partRef);
 
-            if (effectiveCost < 0) 
+            if (effectiveCost < 0)
                 effectiveCost = 0;
+
+            KCTDebug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
+
             return effectiveCost;
         }
 
@@ -154,7 +160,10 @@ namespace KerbalConstructionTime
             }
 
             double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
-            return totalEffectiveCost * globalMultiplier;
+            double multipliedCost = totalEffectiveCost * globalMultiplier;
+            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+
+            return multipliedCost;
         }
 
 
@@ -169,7 +178,6 @@ namespace KerbalConstructionTime
                     apList.Add(ap.partPrefab);
             }
 
-            //IList<ConfigNode> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<ConfigNode>();
             IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(apList, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
             var globalVariables = new HashSet<string>();
             double totalEffectiveCost = 0;
@@ -179,7 +187,10 @@ namespace KerbalConstructionTime
             }
 
             double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
-            return totalEffectiveCost * globalMultiplier;
+            double multipliedCost = totalEffectiveCost * globalMultiplier;
+            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+
+            return multipliedCost;
         }
 
         public static void GatherGlobalModifiers(HashSet<string> modifiers, Part p)

@@ -587,6 +587,29 @@
         ]
     },
     {
+        "name": "ROC-ApolloSMBlockIII",
+        "title": "Apollo Block III+ Service Module",
+        "description": "Significant changes were made to better adapt Apollo to its new role as a crew shuttle for LEO and the Service Module was decreased in size and weight. FICTIONAL (Eyes Turned Skyward)",
+        "mod": "ROCapsules",
+        "cost": "4000",
+        "entry_cost": "0",
+        "category": "COMMAND",
+        "info": "Service Module",
+        "year": "1976",
+        "technology": "improvedCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "10000, ApolloSM",
+        "identical_part_name": "",
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
+    },
+    {
         "name": "ROC-ApolloSolarBlockV",
         "title": "Apollo Block V Solar Array",
         "description": "",

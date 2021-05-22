@@ -164,6 +164,7 @@ namespace KerbalConstructionTime
                 else if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex > 0 && GUILayout.Button($"Stop{Environment.NewLine}Warp"))
                 {
                     KCTWarpController.Instance?.StopWarp();
+                    TimeWarp.SetRate(0, true);  // If the controller doesn't exist, stop warp anyway.
                 }
 
                 if (KCTGameStates.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing

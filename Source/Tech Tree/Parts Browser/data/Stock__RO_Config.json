@@ -1564,6 +1564,52 @@
         ]
     },
     {
+        "name": "RO-KDU414",
+        "title": "KDU-414",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "60",
+        "entry_cost": "0",
+        "category": "RCS",
+        "info": "",
+        "year": "1961",
+        "technology": "stabilityRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "1MV",
+        "engine_config": "KDU414",
+        "upgrade": false,
+        "entry_cost_mods": "KDU-414",
+        "identical_part_name": "KDU-414",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "RO-KTDU417",
+        "title": "KTDU-417",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "EDL",
+        "info": "",
+        "year": "1968",
+        "technology": "lunarLanding",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Luna 15",
+        "engine_config": "KTDU417",
+        "upgrade": false,
+        "entry_cost_mods": "11D417",
+        "identical_part_name": "KTDU-417",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "RO-LMAE",
         "title": "Lunar Module Ascent Engine",
         "description": "Pressure-fed engine used for the ascent module of the Apollo lunar lander. Diameter: [0.86 m]. Plume configured by RealPlume.",
@@ -1814,6 +1860,29 @@
         ]
     },
     {
+        "name": "RO-RangerRetro",
+        "title": "Ranger/Mariner Propulsion System",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "30",
+        "entry_cost": "0",
+        "category": "RCS",
+        "info": "",
+        "year": "1961",
+        "technology": "stabilityRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Ranger",
+        "engine_config": "RangerRetro",
+        "upgrade": false,
+        "entry_cost_mods": "RangerRetro",
+        "identical_part_name": "Ranger/Mariner Propulsion System",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "RO-STAR-37",
         "title": "STAR 37FM",
         "description": "The STAR 37FM is an improved version of the venerable STAR 37 solid rocket motor, featuring increased propellant loading, higher efficiency and vacuum thrust. First used on the FTLSATCOM satellites as an apogee motor. Diameter: 0.93 m. Plume configured by RealPlume.",
@@ -1844,7 +1913,7 @@
         "description": "The Vernier System as used on the Surveyor Probes. Uses storable hypergolic propellants, has infinite restarts and is not subject to ullage. Throttleable down to 30%. Historically 3 of them were used on the Surveyor probes which landed on the Moon. Diameter: [0.13 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
         "cost": "30",
-        "entry_cost": "600",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "",
         "year": "1965",
@@ -1857,7 +1926,7 @@
         "spacecraft": "Surveyor",
         "engine_config": "TD339",
         "upgrade": false,
-        "entry_cost_mods": "500, MMHRCS, throttlingPF",
+        "entry_cost_mods": "TD-339",
         "identical_part_name": "TD-339",
         "module_tags": [
             "EngineLiquidPF"

@@ -1442,7 +1442,7 @@
         "description": "Single version of the surveyor engine, can be used for anything. Do NOT use on my surveyor, use the cluster of 3. Plume configured by RealPlume.",
         "mod": "RN US Probes",
         "cost": "103",
-        "entry_cost": "2066",
+        "entry_cost": "0",
         "category": "EDL",
         "info": "",
         "year": "1965",
@@ -1453,9 +1453,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Surveyor",
-        "engine_config": "",
+        "engine_config": "TD339",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "TD-339",
         "identical_part_name": "TD-339",
         "module_tags": [
             "EngineLiquidPF"

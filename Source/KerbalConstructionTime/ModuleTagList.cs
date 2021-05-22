@@ -9,7 +9,10 @@ namespace KerbalConstructionTime
 
         public override void OnLoad(ConfigNode node)
         {
-            tags = node.GetValuesList("tag");
+            if (node.name != "CURRENTUPGRADE")
+                tags = HighLogic.LoadedScene == GameScenes.LOADING ? node.GetValuesList("tag") : part.partInfo.partPrefab.GetComponent<ModuleTagList>()?.tags;
+            else
+                tags.AddRange(node.GetValuesList("tag"));
         }
 
         public override string GetInfo()

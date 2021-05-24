@@ -159,16 +159,12 @@ namespace KerbalConstructionTime
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button($"Warp to{Environment.NewLine}Complete"))
                 {
-                    KCTGameStates.TargetedItem = buildItem;
-                    KCTGameStates.CanWarp = true;
-                    Utilities.RampUpWarp();
-                    KCTGameStates.WarpInitiated = true;
+                    KCTWarpController.Create(buildItem);
                 }
                 else if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex > 0 && GUILayout.Button($"Stop{Environment.NewLine}Warp"))
                 {
-                    KCTGameStates.CanWarp = false;
-                    TimeWarp.SetRate(0, true);
-                    KCTGameStates.LastWarpRate = 0;
+                    KCTWarpController.Instance?.StopWarp();
+                    TimeWarp.SetRate(0, true);  // If the controller doesn't exist, stop warp anyway.
                 }
 
                 if (KCTGameStates.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
@@ -351,10 +347,7 @@ namespace KerbalConstructionTime
                     GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(KCTTech.GetTimeLeft()), GUILayout.Width(_width1));
                     if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp", GUILayout.Width(70)))
                     {
-                        KCTGameStates.TargetedItem = KCTTech;
-                        KCTGameStates.CanWarp = true;
-                        Utilities.RampUpWarp(KCTTech);
-                        KCTGameStates.WarpInitiated = true;
+                        KCTWarpController.Create(KCTTech);
                     }
                     else if (HighLogic.LoadedSceneIsEditor)
                         GUILayout.Space(70);
@@ -474,10 +467,7 @@ namespace KerbalConstructionTime
                 {
                     if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp", GUILayout.Width(45)))
                     {
-                        KCTGameStates.TargetedItem = t;
-                        KCTGameStates.CanWarp = true;
-                        Utilities.RampUpWarp(t);
-                        KCTGameStates.WarpInitiated = true;
+                        KCTWarpController.Create(t);
                     }
                     else if (HighLogic.LoadedSceneIsEditor)
                         GUILayout.Space(45);
@@ -524,10 +514,7 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp To", GUILayout.Width((_butW + 4) * 3)))
                 {
-                    KCTGameStates.TargetedItem = reconditioning;
-                    KCTGameStates.CanWarp = true;
-                    Utilities.RampUpWarp(reconditioning);
-                    KCTGameStates.WarpInitiated = true;
+                    KCTWarpController.Create(reconditioning);
                 }
 
                 GUILayout.Label($"Reconditioning: {reconditioning.LaunchPadID}");
@@ -651,7 +638,6 @@ namespace KerbalConstructionTime
                 else
                     launchSite = KCTGameStates.ActiveKSC.ActiveLPInstance.name;
             }
-            KCTDebug.Log($"Rolling out, 2 to: {launchSite}");
             ReconRollout rollout = KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
             ReconRollout rollback = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Rollback);
             ReconRollout recovery = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
@@ -715,7 +701,7 @@ namespace KerbalConstructionTime
                         ub.IsLaunchpad
                         && ub.LaunchpadID == KCTGameStates.ActiveKSC.LaunchPads.IndexOf(KCTGameStates.ActiveKSC.ActiveLPInstance)) != null) != null;
                 GUIStyle btnColor = _greenButton;
-                if (KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed || KCTGameStates.ActiveKSC.ActiveLPInstance.upgradeRepair || isUpgrading)
+                if (KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed || isUpgrading)
                     btnColor = _redButton;
                 else if (hasRecond = KCTGameStates.ActiveKSC.GetReconditioning(KCTGameStates.ActiveKSC.ActiveLPInstance.name) != null)
                     btnColor = _yellowButton;
@@ -1230,10 +1216,7 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished && GUILayout.Button("Warp To"))
             {
-                KCTGameStates.TargetedItem = b;
-                KCTGameStates.CanWarp = true;
-                Utilities.RampUpWarp(b);
-                KCTGameStates.WarpInitiated = true;
+                KCTWarpController.Create(b);
                 GUIStates.ShowBLPlus = false;
             }
 

@@ -97,13 +97,13 @@ namespace KerbalConstructionTime
                 {
                     if (!_isKSCLocked)
                     {
-                        InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, "KCTKSCLock");
+                        InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, KerbalConstructionTime.KCTKSCLock);
                         _isKSCLocked = true;
                     }
                 }
                 else if (_isKSCLocked)
                 {
-                    InputLockManager.RemoveControlLock("KCTKSCLock");
+                    InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
                     _isKSCLocked = false;
                 }
                 GUI.skin = oldSkin;

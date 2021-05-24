@@ -5,7 +5,7 @@ namespace KerbalConstructionTime
 {
     public class AirlaunchPrep : IKCTBuildItem
     {
-        public string Name = string.Empty;
+        public string Name => Direction == PrepDirection.Mount ? Name_Mount : Name_Unmount;
         public double BP = 0, Progress = 0, Cost = 0;
         public string AssociatedID = string.Empty;
 
@@ -21,7 +21,6 @@ namespace KerbalConstructionTime
 
         public AirlaunchPrep()
         {
-            Name = Name_Mount;
             Progress = 0;
             BP = 0;
             Cost = 0;
@@ -37,7 +36,6 @@ namespace KerbalConstructionTime
 
             BP = MathParser.ParseAirlaunchTimeFormula(vessel);
             Cost = MathParser.ParseAirlaunchCostFormula(vessel);
-            Name = Name_Mount;
         }
 
         public double GetBuildRate()
@@ -50,31 +48,17 @@ namespace KerbalConstructionTime
             return buildRate;
         }
 
-        public string GetItemName()
-        {
-            return Name;
-        }
+        public string GetItemName() => Name;
 
-        public BuildListVessel.ListType GetListType()
-        {
-            return BuildListVessel.ListType.SPH;
-        }
+        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.SPH;
 
         public double GetTimeLeft()
         {
-            double timeLeft = (BP - Progress) / GetBuildRate();
-            if (Direction == PrepDirection.Unmount)
-                timeLeft = (-Progress) / GetBuildRate();
-            return timeLeft;
+            var goal = Direction == PrepDirection.Mount ? BP : 0;
+            return (goal - Progress) / GetBuildRate();
         }
 
-        public bool IsComplete()
-        {
-            bool complete = Progress >= BP;
-            if (Direction == PrepDirection.Unmount)
-                complete = Progress <= 0;
-            return complete;
-        }
+        public bool IsComplete() => Direction == PrepDirection.Mount ? Progress >= BP : Progress <= 0;
 
         public void IncrementProgress(double UTDiff)
         {
@@ -90,11 +74,10 @@ namespace KerbalConstructionTime
                     if (Funding.Instance.Funds < Cost / 10)    //If they can't afford to continue the rollout, progress stops
                     {
                         Progress = progBefore;
-                        if (TimeWarp.CurrentRate > 1f && KCTGameStates.WarpInitiated && this == KCTGameStates.TargetedItem)
+                        if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                         {
                             ScreenMessages.PostScreenMessage("Timewarp was stopped because there's insufficient funds to continue the airlaunch preparations");
-                            TimeWarp.SetRate(0, true);
-                            KCTGameStates.WarpInitiated = false;
+                            KCTWarpController.Instance.StopWarp();
                         }
                     }
                     else
@@ -106,15 +89,9 @@ namespace KerbalConstructionTime
         public void SwitchDirection()
         {
             if (Direction == PrepDirection.Mount)
-            {
                 Direction = PrepDirection.Unmount;
-                Name = Name_Unmount;
-            }
             else
-            {
                 Direction = PrepDirection.Mount;
-                Name = Name_Mount;
-            }
         }
     }
 }

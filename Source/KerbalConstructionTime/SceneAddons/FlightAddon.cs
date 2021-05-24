@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using KSP.UI.Screens;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace KerbalConstructionTime
 {
@@ -15,8 +16,7 @@ namespace KerbalConstructionTime
             if (KCT_GUI.IsPrimarilyDisabled)
                 return;
             KCTDebug.Log("KCT_Flight, Start");
-            var altimeter = FindObjectOfType<AltimeterSliderButtons>();
-            if (altimeter != null)
+            if (FindObjectOfType<AltimeterSliderButtons>() is AltimeterSliderButtons altimeter)
             {
                 _originalCallback = altimeter.vesselRecoveryButton.onClick;
 
@@ -48,38 +48,26 @@ namespace KerbalConstructionTime
 
         public void RecoverVessel()
         {
-            bool isSPH = FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.IsRecoverable && 
+            bool isSPH = FlightGlobals.ActiveVessel?.IsRecoverable == true && 
                          FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
             bool isVAB = Utilities.IsVabRecoveryAvailable();
-
-            int cnt = 2;
-            if (!FlightGlobals.ActiveVessel.isEVA)
-            {
-                if (isSPH) cnt++;
-                if (isVAB) cnt++;
-            }
-            DialogGUIBase[] options = new DialogGUIBase[cnt];
-            cnt = 0;
+            var options = new List<DialogGUIBase>();
             if (!FlightGlobals.ActiveVessel.isEVA)
             {
                 if (isSPH)
-                {
-                    options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
-                }
+                    options.Add(new DialogGUIButton("Recover to SPH", RecoverToSPH));
                 if (isVAB)
-                {
-                    options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
-                }
-                options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
-            } 
+                    options.Add(new DialogGUIButton("Recover to VAB", RecoverToVAB));
+                options.Add(new DialogGUIButton("Normal recovery", DoNormalRecovery));
+            }
             else
-                options[cnt++] = new DialogGUIButton("Recover", DoNormalRecovery);
-            options[cnt] = new DialogGUIButton("Cancel", () => { });
+                options.Add(new DialogGUIButton("Recover", DoNormalRecovery));
+            options.Add(new DialogGUIButton("Cancel", () => { }));
 
             var diag = new MultiOptionDialog("RecoverVesselPopup",
                 "Do you want KCT to do the recovery?", 
                 "RP-1's KCT", 
-                null, options: options);
+                null, options: options.ToArray());
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }
     }

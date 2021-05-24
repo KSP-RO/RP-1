@@ -111,8 +111,9 @@
     <Compile Include="GUI\GUI_Simulation.cs" />
     <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
-    <Compile Include="KCTOnLoadError.cs" />
+    <Compile Include="KCTCostModifier.cs" />
     <Compile Include="ModIntegrations\CTIWrapper.cs" />
+    <Compile Include="ModuleTagList.cs" />
     <Compile Include="Persistence\AirlaunchPrepStorageItem.cs" />
     <Compile Include="Persistence\BuildListStorageItem.cs" />
     <Compile Include="Persistence\ConfigNodeStorage.cs" />
@@ -134,7 +135,7 @@
     <Compile Include="SceneAddons\EditorAddon.cs" />
     <Compile Include="KCTEvents.cs" />
     <Compile Include="SceneAddons\FlightAddon.cs" />
-    <Compile Include="FuelWhitelistLoader.cs" />
+    <Compile Include="KCTDataLoader.cs" />
     <Compile Include="KCTGameStates.cs" />
     <Compile Include="GUI\GUI_Main.cs" />
     <Compile Include="Persistence\KCT_DataStorage.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="KSCItem.cs" />
     <Compile Include="KSCContextMenuOverrider.cs" />
     <Compile Include="Persistence\KCT_LaunchPad.cs" />
+    <Compile Include="KCTWarpController.cs" />
     <Compile Include="Utilities\MathParser.cs" />
     <Compile Include="Presets\PresetManager.cs" />
     <Compile Include="BuildItems\ReconRollout.cs" />

@@ -292,7 +292,7 @@ namespace KerbalConstructionTime
                     GUIStates.ShowBuildList = true;
                     RefreshToolbarState();
                 }
-                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock("KCTKSCLock");
+                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
 
                 for (int j = 0; j < KCTGameStates.TechList.Count; j++)
                     KCTGameStates.TechList[j].UpdateBuildRate(j);

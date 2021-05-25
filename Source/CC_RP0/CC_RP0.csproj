@@ -64,6 +64,8 @@
     <Compile Include="DownrangeDistanceVesselParam.cs" />
     <Compile Include="ImpactCBFactory.cs" />
     <Compile Include="ImpactCBParam.cs" />
+    <Compile Include="ReachMachFactory.cs" />
+    <Compile Include="ReachMachVesselParam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

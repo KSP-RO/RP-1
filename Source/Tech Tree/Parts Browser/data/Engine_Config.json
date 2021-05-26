@@ -5713,7 +5713,7 @@
         "title": "Nike-M5E1",
         "description": "Solid Sounding Rocket Motor",
         "mod": "Engine_Config",
-        "cost": 180,
+        "cost": "50",
         "entry_cost": "0",
         "category": "SOLID",
         "info": "",
@@ -5727,7 +5727,7 @@
         "spacecraft": "Nike SR",
         "engine_config": "Nike-M5E1",
         "upgrade": false,
-        "entry_cost_mods": "900, SolidsFiber, SolidsHollow",
+        "entry_cost_mods": "2000",
         "identical_part_name": "",
         "module_tags": []
     },

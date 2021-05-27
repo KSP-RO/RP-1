@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KSP-RO")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright © KSP-RO 2014-2020 CC-BY-NC-SA 4.0")]
+[assembly: AssemblyCopyright("Copyright © KSP-RO 2014-2021 CC-BY-NC-SA 4.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.8.1.0")]
+[assembly: AssemblyFileVersion("1.9.0.0")]
 
 [assembly: KSPAssembly("RP-0", 1, 0)]
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]

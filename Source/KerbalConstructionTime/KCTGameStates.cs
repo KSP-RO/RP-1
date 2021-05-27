@@ -9,19 +9,15 @@ namespace KerbalConstructionTime
         internal const string _modId = "KCT_NS";
         internal const string _modName = "Kerbal Construction Time";
 
-        public static double UT, LastUT = 0;
-        public static bool CanWarp = false, WarpInitiated = false;
-        public static int LastWarpRate = 0;
         public static KCTSettings Settings = new KCTSettings();
 
         public static KSCItem ActiveKSC = null;
         public static List<KSCItem> KSCs = new List<KSCItem>();
         public static string ActiveKSCName = string.Empty;
-        public static bool UpdateLaunchpadDestructionState = false;
         public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
 
-        public static KCTObservableList<TechItem> TechList;
+        public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 
         public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
         public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
@@ -34,7 +30,6 @@ namespace KerbalConstructionTime
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
         public static bool IsSimulatedFlight = false;
-        public static IKCTBuildItem TargetedItem = null;
         public static double EditorBuildTime = 0;
         public static double EditorIntegrationTime = 0;
         public static double EditorRolloutCosts = 0;
@@ -47,7 +42,7 @@ namespace KerbalConstructionTime
         public static string KACAlarmId = string.Empty;
         public static double KACAlarmUT = 0;
 
-        public static KCTOnLoadError ErroredDuringOnLoad = new KCTOnLoadError();
+        public static bool ErroredDuringOnLoad = false;
 
         public static bool VesselErrorAlerted = false;
         public static bool PersistenceLoaded = false;
@@ -65,27 +60,21 @@ namespace KerbalConstructionTime
             SimulationParams.Reset();
 
             PurchasedUpgrades = new List<int>() { 0, 0 };
-            TargetedItem = null;
             KCT_GUI.ResetFormulaRateHolders();
 
             MiscellaneousTempUpgrades = 0;
 
             BuildingMaxLevelCache.Clear();
 
-            LastUT = 0;
-
             InitAndClearTechList();
         }
 
         public static void InitAndClearTechList()
         {
-            if (TechList != null)
-                TechList.Clear();
-            else
-                TechList = new KCTObservableList<TechItem>();
-            TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
+            TechList = new KCTObservableList<TechItem>();
+            TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
         }
-      
+
         public static void ClearVesselEditMode()
         {
             EditorShipEditingMode = false;

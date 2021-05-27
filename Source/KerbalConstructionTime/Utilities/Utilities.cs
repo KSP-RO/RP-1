@@ -213,8 +213,10 @@ namespace KerbalConstructionTime
 
         public static double ApplyModuleCostModifiers(Part p, out bool useResourceMult)
         {
-            double res = PresetManager.Instance.ActivePreset.PartVariables.GetModuleVariable(p.Modules, out useResourceMult);
+            double res = 1;
+            useResourceMult = false;
             if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+            {
                 foreach (var x in pm.tags)
                 {
                     if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
@@ -222,6 +224,7 @@ namespace KerbalConstructionTime
 
                     useResourceMult &= !x.Equals("NoResourceCostMult", StringComparison.OrdinalIgnoreCase);
                 }
+            }
             return res;
         }
 

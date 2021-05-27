@@ -329,9 +329,8 @@ namespace KerbalConstructionTime
 
     public class KCT_Preset_Part_Variables
     {
-        //provides the variables [PV] and [MV] to the EffectiveCost functions
+        //provides the variables [PV] and [RV] to the EffectiveCost functions
         public Dictionary<string, double> Part_Variables = new Dictionary<string, double>();
-        public Dictionary<string, double> Module_Variables = new Dictionary<string, double>();
         public Dictionary<string, double> Resource_Variables = new Dictionary<string, double>();
 
         public Dictionary<string, double> Global_Variables = new Dictionary<string, double>();
@@ -362,7 +361,6 @@ namespace KerbalConstructionTime
         {
             var node = new ConfigNode("KCT_Preset_Part_Variables");
             node.AddNode(DictionaryToNode(Part_Variables, "Part_Variables"));
-            node.AddNode(DictionaryToNode(Module_Variables, "Module_Variables"));
             node.AddNode(DictionaryToNode(Resource_Variables, "Resource_Variables"));
             node.AddNode(DictionaryToNode(Global_Variables, "Global_Variables"));
 
@@ -372,14 +370,11 @@ namespace KerbalConstructionTime
         public void FromConfigNode(ConfigNode node)
         {
             Part_Variables.Clear();
-            Module_Variables.Clear();
             Resource_Variables.Clear();
             Global_Variables.Clear();
 
             if (node.HasNode("Part_Variables"))
                 Part_Variables = NodeToDictionary(node.GetNode("Part_Variables"));
-            if (node.HasNode("Module_Variables"))
-                Module_Variables = NodeToDictionary(node.GetNode("Module_Variables"));
             if (node.HasNode("Resource_Variables"))
                 Resource_Variables = NodeToDictionary(node.GetNode("Resource_Variables"));
             if (node.HasNode("Global_Variables"))
@@ -405,26 +400,10 @@ namespace KerbalConstructionTime
 
         }
 
-        //These are all multiplied in case multiple modules exist on one part
-        public double GetModuleVariable(List<string> moduleNames) => GetValueModifier(Module_Variables, moduleNames);
+        //These are all multiplied in case multiple variables exist on one part
         public double GetResourceVariable(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
+
         public double GetGlobalVariable(List<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
-
-        //These are all multiplied in case multiple modules exist on one part (this one takes a PartModuleList instead)
-        public double GetModuleVariable(PartModuleList modules, out bool hasResourceMult)
-        {
-            double value = 1.0;
-            hasResourceMult = true;
-            foreach (PartModule mod in modules)
-            {
-                if (mod.moduleName == "ModuleTagNoResourceCostMult")
-                    hasResourceMult = false;
-
-                if (Module_Variables.ContainsKey(mod.moduleName))
-                    value *= Module_Variables[mod.moduleName];
-            }
-            return value;
-        }
 
         public double GetResourceVariable(PartResourceList resources)
         {

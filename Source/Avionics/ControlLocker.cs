@@ -68,7 +68,7 @@ namespace RP0
                 if (cmd && avionics && mC.minimumCrew > crewCount) // check if need crew
                     avionics = false; // not operational
                 if (avionics)
-                    maxMass += partAvionicsMass;
+                    maxMass = Math.Max(maxMass, partAvionicsMass);
             }
             return (!forceUnlock && vesselMass > maxMass);  // Lock if vessel mass is greater than controlled mass.
         }

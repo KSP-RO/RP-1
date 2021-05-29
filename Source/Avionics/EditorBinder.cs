@@ -23,7 +23,7 @@ namespace RP0.Avionics
             if (!part.Modules.Contains(nameof(ModuleProceduralAvionics))) return;
 
             var pm = (ModuleProceduralAvionics)part.Modules[nameof(ModuleProceduralAvionics)];
-            if (pm != null && !HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsProcAvionicsAutoShown) pm.showGUI = true;
+            if (pm != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsProcAvionicsAutoShown) pm.showGUI = true;
         }
 
         private void OnPartActionUIDismiss(Part part)

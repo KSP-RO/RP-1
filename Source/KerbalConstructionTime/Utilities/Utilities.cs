@@ -214,7 +214,7 @@ namespace KerbalConstructionTime
         public static double ApplyModuleCostModifiers(Part p, out bool useResourceMult)
         {
             double res = 1;
-            useResourceMult = false;
+            useResourceMult = true;
             if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
             {
                 foreach (var x in pm.tags)

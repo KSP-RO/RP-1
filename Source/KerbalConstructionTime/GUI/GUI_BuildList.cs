@@ -1222,7 +1222,12 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished && GUILayout.Button("Move to Top"))
             {
-                if (b.Type == BuildListVessel.ListType.VAB)
+                if (_combineVabAndSph)
+                {
+                    if (KCTGameStates.ActiveKSC.BuildList.Remove(b))
+                        KCTGameStates.ActiveKSC.BuildList.Insert(0, b);
+                }
+                else if (b.Type == BuildListVessel.ListType.VAB)
                 {
                     b.RemoveFromBuildList();
                     KCTGameStates.ActiveKSC.VABList.Insert(0, b);

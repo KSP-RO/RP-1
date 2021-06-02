@@ -48,6 +48,12 @@ namespace KerbalConstructionTime
 
         public void RecoverVessel()
         {
+            if (KCTGameStates.IsSimulatedFlight)
+            {
+                KCT_GUI.GUIStates.ShowSimulationGUI = true;
+                return;
+            }
+
             bool isSPH = FlightGlobals.ActiveVessel?.IsRecoverable == true && 
                          FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
             bool isVAB = Utilities.IsVabRecoveryAvailable();

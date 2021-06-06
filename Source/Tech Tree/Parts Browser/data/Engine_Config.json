@@ -113,6 +113,52 @@
         ]
     },
     {
+        "name": "1_8KS7800",
+        "title": "1_8KS7800",
+        "description": "Solid Sounding Rocket Motor / AIM-7 motor",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1955",
+        "technology": "basicSolids",
+        "era": "",
+        "ro": false,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Aerobee 300A, AIM-7",
+        "engine_config": "1_8KS7800",
+        "upgrade": false,
+        "entry_cost_mods": "500, SolidsHollow",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "2_5KS18000",
+        "title": "2_5KS18000",
+        "description": "Solid Sounding Rocket Booster",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1950",
+        "technology": "earlySolids",
+        "era": "",
+        "ro": false,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Aerobee",
+        "engine_config": "2_5KS18000",
+        "upgrade": false,
+        "entry_cost_mods": "300, SolidsHollow",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "30x_NK-15",
         "title": "30x_NK-15",
         "description": "",
@@ -255,7 +301,7 @@
         "title": "A-4",
         "description": "",
         "mod": "Engine_Config",
-        "cost": 0,
+        "cost": "0",
         "entry_cost": 1,
         "category": "ORBITAL",
         "info": "",
@@ -1083,7 +1129,7 @@
         "spacecraft": "Scout E-1",
         "engine_config": "Alcyone",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "10000, SolidsHTPB",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1175,7 +1221,7 @@
         "spacecraft": "Vanguard",
         "engine_config": "Altair",
         "upgrade": false,
-        "entry_cost_mods": "1000, SolidsFiber, SolidsHollow",
+        "entry_cost_mods": "1000, SolidsFiber, SolidsHollow, SolidsComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1221,7 +1267,7 @@
         "spacecraft": "Altair II",
         "engine_config": "Altair-III",
         "upgrade": false,
-        "entry_cost_mods": "10000, Altair-II",
+        "entry_cost_mods": "10000, Altair-II, SolidsPBAN",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1244,7 +1290,7 @@
         "spacecraft": "Scout X-1",
         "engine_config": "Antares-I",
         "upgrade": false,
-        "entry_cost_mods": "STARComposite",
+        "entry_cost_mods": "10000, Altair",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1267,7 +1313,7 @@
         "spacecraft": "Scout X-2",
         "engine_config": "Antares-II",
         "upgrade": false,
-        "entry_cost_mods": "Antares-I",
+        "entry_cost_mods": "15000, SolidsPBAN, Antares-I",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1290,7 +1336,7 @@
         "spacecraft": "Scout G",
         "engine_config": "Antares-III",
         "upgrade": false,
-        "entry_cost_mods": "Antares-II",
+        "entry_cost_mods": "15000, Antares-II",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1934,7 +1980,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "E-1A_KS",
         "title": "E-1A_KS",
         "description": "",
@@ -2091,7 +2137,7 @@
         "spacecraft": "Vanguard",
         "engine_config": "GCRC",
         "upgrade": false,
-        "entry_cost_mods": "900, SolidsFiber, SolidsHollow",
+        "entry_cost_mods": "5000, SolidsHollow, SolidsComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4724,7 +4770,7 @@
         "module_tags": []
     },
     {
-        "name": "MMH+MON3",
+        "name": "MMH+MON10",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -4746,8 +4792,8 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
-        "name": "MMH+MON10",
+    {
+        "name": "MMH+MON3",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -5759,7 +5805,7 @@
         "title": "Nike-M5E1",
         "description": "Solid Sounding Rocket Motor",
         "mod": "Engine_Config",
-        "cost": 180,
+        "cost": "0",
         "entry_cost": "0",
         "category": "SOLID",
         "info": "",
@@ -5773,7 +5819,7 @@
         "spacecraft": "Nike SR",
         "engine_config": "Nike-M5E1",
         "upgrade": false,
-        "entry_cost_mods": "900, SolidsFiber, SolidsHollow",
+        "entry_cost_mods": "1500, SolidsHollow",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9754,7 +9800,7 @@
         "spacecraft": "Surveyor",
         "engine_config": "Star-37",
         "upgrade": false,
-        "entry_cost_mods": "0,STAR",
+        "entry_cost_mods": "5000, Altair-III",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9777,7 +9823,7 @@
         "spacecraft": "Delta 1000",
         "engine_config": "Star-37E",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "5000, STAR-37",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9800,7 +9846,7 @@
         "spacecraft": "FTLSATCOM",
         "engine_config": "Star-37FM",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "5000, STAR-37E, STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9907,7 +9953,7 @@
         "spacecraft": "Satellites",
         "engine_config": "Star-13B",
         "upgrade": false,
-        "entry_cost_mods": "0,STAR",
+        "entry_cost_mods": "10000,STAR",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9930,7 +9976,7 @@
         "spacecraft": "",
         "engine_config": "Star-15G",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "10000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9953,7 +9999,7 @@
         "spacecraft": "Satellites",
         "engine_config": "Star-17A",
         "upgrade": false,
-        "entry_cost_mods": "0,STAR",
+        "entry_cost_mods": "10000,STAR",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9976,7 +10022,7 @@
         "spacecraft": "",
         "engine_config": "Star-20",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "10000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9999,7 +10045,7 @@
         "spacecraft": "Satellites",
         "engine_config": "Star-27",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "10000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10022,7 +10068,7 @@
         "spacecraft": "Mars Exploration Rover",
         "engine_config": "Star-3",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "2000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10045,7 +10091,7 @@
         "spacecraft": "",
         "engine_config": "Star-30",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "10000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10068,7 +10114,7 @@
         "spacecraft": "",
         "engine_config": "Star-31",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "10000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10091,7 +10137,7 @@
         "spacecraft": "",
         "engine_config": "Star-48B",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "7000,Star-48B/Short",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10114,7 +10160,7 @@
         "spacecraft": "PAM B",
         "engine_config": "Star-48B",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "15000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10137,7 +10183,7 @@
         "spacecraft": "Nanosatellites (2000)",
         "engine_config": "Star-4G",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "10000,Star-5D",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10160,7 +10206,7 @@
         "spacecraft": "Titan II",
         "engine_config": "Star-5C",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "6000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10183,7 +10229,7 @@
         "spacecraft": "",
         "engine_config": "Star-5D",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "8000,Star-5C",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10206,7 +10252,7 @@
         "spacecraft": "Pam D-2 (1985)",
         "engine_config": "Star-63",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "20000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10229,7 +10275,7 @@
         "spacecraft": "Satellites (1985)",
         "engine_config": "Star-6B",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "5000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10252,7 +10298,7 @@
         "spacecraft": "",
         "engine_config": "Star-8",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "6000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10275,7 +10321,7 @@
         "spacecraft": "Satellites (1993)",
         "engine_config": "Star-9",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite",
+        "entry_cost_mods": "6000,STARComposite",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10298,7 +10344,7 @@
         "spacecraft": "",
         "engine_config": "Star-48B",
         "upgrade": false,
-        "entry_cost_mods": "0,STARComposite,SolidsTVC",
+        "entry_cost_mods": "20000,STARComposite,SolidsTVC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10365,7 +10411,7 @@
         "spacecraft": "Baby Sergeant",
         "engine_config": "BabySergeant",
         "upgrade": false,
-        "entry_cost_mods": "10000, SolidsHollow",
+        "entry_cost_mods": "3000, SolidsHollow, XM-20",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -11142,7 +11188,7 @@
         "spacecraft": "Black Arrow",
         "engine_config": "Waxwing",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "10000, SolidsHTPB",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -11704,7 +11750,7 @@
         "spacecraft": "",
         "engine_config": "Castor-1",
         "upgrade": false,
-        "entry_cost_mods": "4000, SolidsHollow",
+        "entry_cost_mods": "4000, SolidsHollow, SolidsComposite",
         "identical_part_name": "",
         "module_tags": []
     },

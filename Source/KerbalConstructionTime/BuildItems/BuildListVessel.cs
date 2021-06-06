@@ -196,8 +196,15 @@ namespace KerbalConstructionTime
             {
                 stages.Add(p.inverseStageIndex);
 
-                if (p.partPrefab != null && p.partPrefab.Modules.Contains<LaunchClamp>())
-                    continue;
+                if (p.partPrefab != null)
+                {
+                    if (p.partPrefab.Modules.Contains<LaunchClamp>())
+                        continue;
+
+                    ModuleTagList mTags = p.partPrefab.FindModuleImplementing<ModuleTagList>();
+                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                        continue;
+                }
 
                 TotalMass += p.mass;
                 EmptyMass += p.mass;
@@ -245,8 +252,15 @@ namespace KerbalConstructionTime
             {
                 stages.Add(p.inverseStageIndex);
 
-                if (p.partPrefab != null && p.partPrefab.Modules.Contains<LaunchClamp>())
-                    continue;
+                if (p.partPrefab != null)
+                {
+                    if (p.partPrefab.Modules.Contains<LaunchClamp>())
+                        continue;
+
+                    ModuleTagList mTags = p.partPrefab.FindModuleImplementing<ModuleTagList>();
+                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                        continue;
+                }
 
                 TotalMass += p.mass;
                 EmptyMass += p.mass;

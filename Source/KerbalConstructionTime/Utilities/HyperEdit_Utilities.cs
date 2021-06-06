@@ -111,9 +111,23 @@ namespace KerbalConstructionTime
             var parts = vessel.parts;
             if (parts != null)
             {
-                foreach (var part in parts.Where(part => part.Modules.OfType<LaunchClamp>().Any()).ToList())
+                foreach (var part in parts)
                 {
-                    part.Die();
+                    bool kill = false;
+                    if (part.Modules.Contains<LaunchClamp>())
+                    {
+                        kill = true;
+                    }
+                    else
+                    {
+                        ModuleTagList mTags = part.FindModuleImplementing<ModuleTagList>();
+                        if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                            kill = true;
+                    }
+                    if (kill)
+                    {
+                        part.Die();
+                    }
                 }
             }
         }

@@ -395,8 +395,19 @@ namespace KerbalConstructionTime
         {
             AvailablePart aPart = GetAvailablePartByName(GetPartNameFromNode(part));
 
-            if (aPart == null || (!includeClamps && (aPart?.partPrefab?.Modules.Contains<LaunchClamp>() == true)))
+            if (aPart == null)
+            {
                 return 0;
+            }
+            else if (!includeClamps)
+            {
+                if (aPart.partPrefab.Modules.Contains<LaunchClamp>())
+                    return 0;
+
+                ModuleTagList mTags = aPart.partPrefab.FindModuleImplementing<ModuleTagList>();
+                if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                    return 0;
+            }
             ShipConstruction.GetPartCostsAndMass(part, aPart, out _, out _, out float dryMass, out float fuelMass);
             return includeFuel ? dryMass + fuelMass : dryMass;
         }
@@ -409,8 +420,15 @@ namespace KerbalConstructionTime
             {
                 AvailablePart partInfo = part.partInfo;
 
-                if (excludeClamps && part.partInfo.partPrefab.Modules.Contains<LaunchClamp>())
-                    continue;
+                if (excludeClamps)
+                {
+                    if (part.partInfo.partPrefab.Modules.Contains<LaunchClamp>())
+                        continue;
+
+                    ModuleTagList mTags = part.partInfo.partPrefab.FindModuleImplementing<ModuleTagList>();
+                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                        continue;
+                }
 
                 float partDryMass = partInfo.partPrefab.mass + part.GetModuleMass(partInfo.partPrefab.mass, ModifierStagingSituation.CURRENT);
                 float partFuelMass = 0f;

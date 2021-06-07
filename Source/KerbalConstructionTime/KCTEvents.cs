@@ -36,11 +36,14 @@ namespace KerbalConstructionTime
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
             GameEvents.OnTechnologyResearched.Add(TechUnlockEvent);
             GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
+            GameEvents.onEditorShowPartList.Add(PartListEvent);
             GameEvents.OnPartPurchased.Add(PartPurchasedEvent);
             GameEvents.onGUIRnDComplexSpawn.Add(TechEnableEvent);
             GameEvents.onGUIRnDComplexDespawn.Add(TechDisableEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
             GameEvents.onGameStateLoad.Add(PersistenceLoadEvent);
+
+            GameEvents.onGUIEngineersReportReady.Add(EngineersReportReady);
 
             GameEvents.OnKSCStructureRepaired.Add(FaciliyRepaired);
             GameEvents.OnKSCStructureCollapsed.Add(FacilityDestroyed);
@@ -82,6 +85,7 @@ namespace KerbalConstructionTime
         private void OnEditorStarted()
         {
             Utilities.HandleEditorButton();
+            KerbalConstructionTime.Instance.EditorStarted();
         }
 
         public void CreateEvents()
@@ -212,21 +216,35 @@ namespace KerbalConstructionTime
         private void ShipModifiedEvent(ShipConstruct vessel)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.IsEngineersReportRecalcuationRequired = true;
+        }
+
+        private void PartListEvent()
+        {
+            KerbalConstructionTime.Instance.IsEngineersReportRecalcuationRequired = true;
+        }
+
+        private void EngineersReportReady()
+        {
+            KerbalConstructionTime.Instance.BindToEngineersReport();
         }
 
         private void StageCountChangedEvent(int num)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.IsEngineersReportRecalcuationRequired = true;
         }
 
         private void StagingOrderChangedEvent()
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.IsEngineersReportRecalcuationRequired = true;
         }
 
         private void PartStageabilityChangedEvent(Part p)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.IsEngineersReportRecalcuationRequired = true;
         }
 
         public void PartPurchasedEvent(AvailablePart part)

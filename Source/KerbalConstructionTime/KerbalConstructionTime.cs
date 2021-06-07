@@ -8,6 +8,7 @@ using ToolbarControl_NS;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
+using System.Reflection;
 
 namespace KerbalConstructionTime
 {
@@ -16,6 +17,11 @@ namespace KerbalConstructionTime
         public static KerbalConstructionTime Instance { get; private set; }
 
         public bool IsEditorRecalcuationRequired;
+        public bool IsEngineersReportRecalcuationRequired;
+
+        private TMPro.TextMeshProUGUI refERpartMassLH, refERpartMassRH, refERsizeLH, refERsizeRH;
+        private KSP.UI.GenericAppFrame refERappFrame;
+        private bool wasERActive = false;
 
         private static bool _isGUIInitialized = false;
 
@@ -32,6 +38,8 @@ namespace KerbalConstructionTime
         private int _simMoveSecondsRemain = 0;
 
         private GameObject _simWatermark;
+
+        private Coroutine clobberEngineersReportCoroutine = null;
 
         internal void OnFacilityContextMenuSpawn(KSCFacilityContextMenu menu)
         {
@@ -212,7 +220,7 @@ namespace KerbalConstructionTime
                         foreach (Part p in FlightGlobals.ActiveVessel.parts)
                         {
                             KCTDebug.Log("Part being tested: " + p.partInfo.title);
-                            if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is CrewedPart cp)) 
+                            if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is CrewedPart cp))
                                 continue;
                             List<ProtoCrewMember> crewList = cp.CrewList;
                             KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
@@ -337,10 +345,166 @@ namespace KerbalConstructionTime
 
         protected void EditorRecalculation()
         {
-            if (IsEditorRecalcuationRequired && !KCT_GUI.IsPrimarilyDisabled)
+            if (IsEditorRecalcuationRequired)
             {
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                 IsEditorRecalcuationRequired = false;
+            }
+            if (IsEngineersReportRecalcuationRequired)
+            {
+                StartERClobberCoroutine();
+                IsEngineersReportRecalcuationRequired = false;
+            }
+        }
+
+        private void StartERClobberCoroutine()
+        {
+            if (clobberEngineersReportCoroutine != null)
+                StopCoroutine(clobberEngineersReportCoroutine);
+
+            clobberEngineersReportCoroutine = StartCoroutine(ClobberEngineersReport_Coroutine());
+        }
+
+        /// <summary>
+        /// When notified the Engineer's Report app is ready, bind to it and set up a clobber.
+        /// </summary>
+        public void BindToEngineersReport()
+        {
+            // Set up all our fields
+            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            Type typeER = EngineersReport.Instance.GetType();
+            refERsizeLH = (TMPro.TextMeshProUGUI)typeER.GetField("sizeLH", flags).GetValue(EngineersReport.Instance);
+            refERsizeRH = (TMPro.TextMeshProUGUI)typeER.GetField("sizeRH", flags).GetValue(EngineersReport.Instance);
+            refERpartMassLH = (TMPro.TextMeshProUGUI)typeER.GetField("partMassLH", flags).GetValue(EngineersReport.Instance);
+            refERpartMassRH = (TMPro.TextMeshProUGUI)typeER.GetField("partMassRH", flags).GetValue(EngineersReport.Instance);
+            refERappFrame = (KSP.UI.GenericAppFrame)typeER.GetField("appFrame", flags).GetValue(EngineersReport.Instance);
+
+            EditorStarted();
+        }
+
+        public void EditorStarted()
+        {
+            // The ER, on startup, sets a 3s delayed callback. We run right after it.
+            StartCoroutine(CallbackUtil.DelayedCallback(3.1f, () => { ClobberEngineersReport(); }));
+        }
+
+        /// <summary>
+        /// Coroutine to override the Engineer's Report craft stats
+        /// Needed because we disagree about craft size and mass.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator ClobberEngineersReport_Coroutine()
+        {
+            // Just in case
+            while (EngineersReport.Instance == null)
+                yield return new WaitForSeconds(0.1f);
+
+            // Skip past Engineer report update. Yes there will be a few frames of wrongness, but better that
+            // than have it clobber us instead!
+            yield return null;
+            //yield return new WaitForSeconds(0.05f);
+            yield return null;
+
+            ClobberEngineersReport();
+
+            // For some reason, we get re-clobbered. FIXME as a hack, just do it again.
+            StartCoroutine(CallbackUtil.DelayedCallback(0.2f, () => { ClobberEngineersReport(); }));
+        }
+
+        private void ClobberEngineersReport()
+        {
+            if (!HighLogic.LoadedSceneIsEditor)
+                return;
+
+            ShipConstruct ship = EditorLogic.fetch.ship;
+
+            SpaceCenterFacility launchFacility;
+            switch (EditorDriver.editorFacility)
+            {
+                default:
+                case EditorFacility.VAB:
+                    launchFacility = SpaceCenterFacility.LaunchPad;
+                    break;
+                case EditorFacility.SPH:
+                    launchFacility = SpaceCenterFacility.Runway;
+                    break;
+            }
+
+            //partCount = ship.parts.Count;
+            //partLimit = GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(editorFacility), editorFacility == SpaceCenterFacility.VehicleAssemblyBuilding);
+
+            float totalMass = Utilities.GetShipMass(ship, true, out _, out _);
+            float massLimit = GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), launchFacility == SpaceCenterFacility.LaunchPad);
+
+            Vector3 craftSize = Utilities.GetShipSize(ship, true);
+            Vector3 maxSize = GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), launchFacility == SpaceCenterFacility.LaunchPad);
+
+            string neutralColorHex = XKCDColors.HexFormat.KSPNeutralUIGrey;
+
+            //string partCountColorHex = partCount <= partLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
+            //partCountLH.text = "<color=" + neutralColorHex + ">Parts:</color>";
+
+            //if (partLimit < int.MaxValue)
+            //{
+            //    partCountRH.text = "<color=" + partCountColorHex + ">" + partCount.ToString("0") + " / " + partLimit.ToString("0") + "</color>";
+            //}
+            //else
+            //{
+            //    partCountRH.text = "<color=" + partCountColorHex + ">" + partCount.ToString("0") + "</color>";
+            //}
+
+            string partMassColorHex = totalMass <= massLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
+            refERpartMassLH.text = "<color=" + neutralColorHex + ">Mass:</color>";
+
+            if (massLimit < float.MaxValue)
+            {
+                refERpartMassRH.text = "<color=" + partMassColorHex + ">" + totalMass.ToString("N3") + "t / " + massLimit.ToString("N1") + "t</color>";
+            }
+            else
+            {
+                refERpartMassRH.text = "<color=" + partMassColorHex + ">" + totalMass.ToString("N3") + "t</color>";
+            }
+
+            string sizeForeAftHex = craftSize.y <= maxSize.y ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
+            string sizeSpanHex = craftSize.x <= maxSize.x ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
+            string sizeTHgtHex = craftSize.z <= maxSize.z ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
+
+
+            refERsizeLH.text = "<color=" + neutralColorHex + ">Size</color>\n" +
+                                "<color=" + neutralColorHex + ">Height:</color>\n" +
+                                "<color=" + neutralColorHex + ">Width:</color>\n" +
+                                "<color=" + neutralColorHex + ">Length:</color>";
+
+            if (maxSize.x < float.MaxValue && maxSize.y < float.MaxValue && maxSize.z < float.MaxValue)
+            {
+                refERsizeRH.text = " \n" +
+                                     "<color=" + sizeForeAftHex + ">" + craftSize.y.ToString("0.0") + "m / " + maxSize.y.ToString("0.0") + "m</color>\n" +
+                                     "<color=" + sizeSpanHex + ">" + craftSize.x.ToString("0.0") + "m / " + maxSize.x.ToString("0.0") + "m</color>\n" +
+                                     "<color=" + sizeTHgtHex + ">" + craftSize.z.ToString("0.0") + "m / " + maxSize.z.ToString("0.0") + "m</color>";
+            }
+            else
+            {
+                refERsizeRH.text = " \n" +
+                                     "<color=" + sizeForeAftHex + ">" + craftSize.y.ToString("0.0") + "m</color>\n" +
+                                     "<color=" + sizeSpanHex + ">" + craftSize.x.ToString("0.0") + "m</color>\n" +
+                                     "<color=" + sizeTHgtHex + ">" + craftSize.z.ToString("0.0") + "m</color>";
+            }
+
+            bool allGood = //partCount <= partLimit &&
+                            totalMass <= massLimit &&
+                              craftSize.x <= maxSize.x &&
+                                craftSize.y <= maxSize.y &&
+                                 craftSize.z <= maxSize.z;
+
+            refERappFrame.header.color = allGood ? XKCDColors.ElectricLime : XKCDColors.Orange;
+
+            if (!allGood)
+            {
+                EngineersReport.Instance.appLauncherButton.sprite.color = XKCDColors.Orange;
+            }
+            if (allGood)
+            {
+                EngineersReport.Instance.appLauncherButton.sprite.color = Color.white;
             }
         }
 
@@ -364,6 +528,25 @@ namespace KerbalConstructionTime
             // Move constantly-checked things that don't need physics precision to here.
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
                 Utilities.SetActiveKSCToRSS();
+
+            // Polling sucks, but there's no event I can find for when an applauncher app gets displayed.
+            if (HighLogic.LoadedSceneIsEditor && EngineersReport.Instance != null)
+            {
+                if (refERappFrame != null)
+                {
+                    bool isERActive = refERappFrame.gameObject.activeSelf;
+
+                    if (isERActive && !wasERActive)
+                    {
+                        StartERClobberCoroutine();
+                    }
+                    wasERActive = isERActive;
+                }
+            }
+            else
+            {
+                wasERActive = false;
+            }
 
             if (!KCT_GUI.IsPrimarilyDisabled && HighLogic.LoadedScene == GameScenes.SPACECENTER &&
                 VesselSpawnDialog.Instance?.Visible == true)

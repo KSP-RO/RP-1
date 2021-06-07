@@ -422,10 +422,10 @@ namespace KerbalConstructionTime
 
                 if (excludeClamps)
                 {
-                    if (part.partInfo.partPrefab.Modules.Contains<LaunchClamp>())
+                    if (part.Modules.Contains<LaunchClamp>())
                         continue;
 
-                    ModuleTagList mTags = part.partInfo.partPrefab.FindModuleImplementing<ModuleTagList>();
+                    ModuleTagList mTags = part.FindModuleImplementing<ModuleTagList>();
                     if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
                         continue;
                 }
@@ -440,6 +440,53 @@ namespace KerbalConstructionTime
                 fuelMass += partFuelMass;
             }
             return dryMass + fuelMass;
+        }
+
+        public static Vector3 GetShipSize(ShipConstruct ship, bool excludeClamps)
+        {
+            if (ship.parts.Count == 0)
+                return Vector3.zero;
+
+            Bounds craftBounds = new Bounds();
+            Vector3 rootPos = ship.parts[0].orgPos;
+            craftBounds.center = rootPos;
+
+
+            List<Bounds> pBounds = new List<Bounds>();
+            Vector3 sz;
+
+            Part p;
+            int iC = ship.parts.Count;
+            for (int i = 0; i < iC; ++i)
+            {
+                p = ship.parts[i];
+                if (excludeClamps)
+                {
+                    if (p.Modules.Contains<LaunchClamp>())
+                        continue;
+
+                    ModuleTagList mTags = p.FindModuleImplementing<ModuleTagList>();
+                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                        continue;
+                }
+
+                Bounds[] bounds = PartGeometryUtil.GetPartRendererBounds(p);
+                Bounds b;
+                Bounds cb;
+                int jC = bounds.Length;
+                for (int j = 0; j < jC; ++j)
+                {
+                    b = bounds[j];
+                    cb = b;
+                    cb.size *= p.boundsMultiplier;
+                    sz = cb.size;
+                    cb.Expand(p.GetModuleSize(sz));
+                    pBounds.Add(b);
+                }
+            }
+            craftBounds = PartGeometryUtil.MergeBounds(pBounds.ToArray(), ship.parts[0].transform.root);
+
+            return craftBounds.size;
         }
 
         public static string GetTweakScaleSize(ProtoPartSnapshot part)

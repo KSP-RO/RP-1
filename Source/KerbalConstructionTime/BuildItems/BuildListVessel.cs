@@ -102,9 +102,12 @@ namespace KerbalConstructionTime
         {
             _ship = s;
             ShipNode = s.SaveShip();
+            // Override KSP sizing of the ship construct
+            ShipNode.SetValue("size", KSPUtil.WriteVector(Utilities.GetShipSize(s, true)));
             ShipName = s.shipName;
-            Cost = s.GetShipCosts(out EmptyCost, out _);
-            TotalMass = s.GetShipMass(true, out EmptyMass, out _);
+            Cost = Utilities.GetTotalVesselCost(ShipNode, true);
+            EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
+            TotalMass = Utilities.GetShipMass(s, true, out EmptyMass, out _);
 
             HashSet<int> stages = new HashSet<int>();
             NumStageParts = 0;
@@ -314,6 +317,8 @@ namespace KerbalConstructionTime
 
             ConfigNode cn = ConstructToSave.SaveShip();
             SanitizeShipNode(cn);
+            // override KSP sizing of the ship construct
+            cn.SetValue("size", KSPUtil.WriteVector(Utilities.GetShipSize(ConstructToSave, true)));
             // These are actually needed, do not comment them out
             VesselToSave.SetRotation(OriginalRotation);
             VesselToSave.SetPosition(OriginalPosition);

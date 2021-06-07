@@ -17,7 +17,6 @@ namespace KerbalConstructionTime
         public static KerbalConstructionTime Instance { get; private set; }
 
         public bool IsEditorRecalcuationRequired;
-        public bool IsEngineersReportRecalcuationRequired;
 
         private TMPro.TextMeshProUGUI refERpartMassLH, refERpartMassRH, refERsizeLH, refERsizeRH;
         private KSP.UI.GenericAppFrame refERappFrame;
@@ -350,14 +349,9 @@ namespace KerbalConstructionTime
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                 IsEditorRecalcuationRequired = false;
             }
-            if (IsEngineersReportRecalcuationRequired)
-            {
-                StartERClobberCoroutine();
-                IsEngineersReportRecalcuationRequired = false;
-            }
         }
 
-        private void StartERClobberCoroutine()
+        public void StartEngineersReportClobberCoroutine()
         {
             if (clobberEngineersReportCoroutine != null)
                 StopCoroutine(clobberEngineersReportCoroutine);
@@ -402,19 +396,34 @@ namespace KerbalConstructionTime
             // Skip past Engineer report update. Yes there will be a few frames of wrongness, but better that
             // than have it clobber us instead!
             yield return null;
-            //yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.05f);
             yield return null;
 
             ClobberEngineersReport();
-
-            // For some reason, we get re-clobbered. FIXME as a hack, just do it again.
-            StartCoroutine(CallbackUtil.DelayedCallback(0.2f, () => { ClobberEngineersReport(); }));
         }
+
+        private static bool engineerLocCached = false;
+        private static string cacheAutoLOC_443417;
+        private static string cacheAutoLOC_443418;
+        private static string cacheAutoLOC_443419;
+        private static string cacheAutoLOC_443420;
+        private static string cacheAutoLOC_7001411;
 
         private void ClobberEngineersReport()
         {
             if (!HighLogic.LoadedSceneIsEditor)
                 return;
+
+            if (!engineerLocCached)
+            {
+                engineerLocCached = true;
+
+                cacheAutoLOC_443417 = KSP.Localization.Localizer.Format("#autoLOC_443417");
+                cacheAutoLOC_443418 = KSP.Localization.Localizer.Format("#autoLOC_443418");
+                cacheAutoLOC_443419 = KSP.Localization.Localizer.Format("#autoLOC_443419");
+                cacheAutoLOC_443420 = KSP.Localization.Localizer.Format("#autoLOC_443420");
+                cacheAutoLOC_7001411 = KSP.Localization.Localizer.Format("#autoLOC_7001411");
+            }
 
             ShipConstruct ship = EditorLogic.fetch.ship;
 
@@ -442,7 +451,7 @@ namespace KerbalConstructionTime
             string neutralColorHex = XKCDColors.HexFormat.KSPNeutralUIGrey;
 
             //string partCountColorHex = partCount <= partLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-            //partCountLH.text = "<color=" + neutralColorHex + ">Parts:</color>";
+            //partCountLH.text = partCountLH.text = KSP.Localization.Localizer.Format("#autoLOC_443389", neutralColorHex);
 
             //if (partLimit < int.MaxValue)
             //{
@@ -454,15 +463,15 @@ namespace KerbalConstructionTime
             //}
 
             string partMassColorHex = totalMass <= massLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-            refERpartMassLH.text = "<color=" + neutralColorHex + ">Mass:</color>";
+            refERpartMassLH.text = KSP.Localization.Localizer.Format("#autoLOC_443401", neutralColorHex);
 
             if (massLimit < float.MaxValue)
             {
-                refERpartMassRH.text = "<color=" + partMassColorHex + ">" + totalMass.ToString("N3") + "t / " + massLimit.ToString("N1") + "t</color>";
+                refERpartMassRH.text = KSP.Localization.Localizer.Format("#autoLOC_443405", partMassColorHex, totalMass.ToString("N3"), massLimit.ToString("N1"));
             }
             else
             {
-                refERpartMassRH.text = "<color=" + partMassColorHex + ">" + totalMass.ToString("N3") + "t</color>";
+                refERpartMassRH.text = KSP.Localization.Localizer.Format("#autoLOC_443409", partMassColorHex, totalMass.ToString("N3"));
             }
 
             string sizeForeAftHex = craftSize.y <= maxSize.y ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
@@ -470,24 +479,26 @@ namespace KerbalConstructionTime
             string sizeTHgtHex = craftSize.z <= maxSize.z ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
 
 
-            refERsizeLH.text = "<color=" + neutralColorHex + ">Size</color>\n" +
-                                "<color=" + neutralColorHex + ">Height:</color>\n" +
-                                "<color=" + neutralColorHex + ">Width:</color>\n" +
-                                "<color=" + neutralColorHex + ">Length:</color>";
+            refERsizeLH.text = "<line-height=110%><color=" + neutralColorHex + ">" + cacheAutoLOC_443417 + "</color>\n<color=" +
+                neutralColorHex + ">" + cacheAutoLOC_443418 + "</color>\n<color=" +
+                neutralColorHex + ">" + cacheAutoLOC_443419 + "</color>\n<color=" +
+                neutralColorHex + ">" + cacheAutoLOC_443420 + "</color></line-height>";
 
             if (maxSize.x < float.MaxValue && maxSize.y < float.MaxValue && maxSize.z < float.MaxValue)
             {
-                refERsizeRH.text = " \n" +
-                                     "<color=" + sizeForeAftHex + ">" + craftSize.y.ToString("0.0") + "m / " + maxSize.y.ToString("0.0") + "m</color>\n" +
-                                     "<color=" + sizeSpanHex + ">" + craftSize.x.ToString("0.0") + "m / " + maxSize.x.ToString("0.0") + "m</color>\n" +
-                                     "<color=" + sizeTHgtHex + ">" + craftSize.z.ToString("0.0") + "m / " + maxSize.z.ToString("0.0") + "m</color>";
+                refERsizeRH.text =
+                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 + 
+                                " / " + KSPUtil.LocalizeNumber(maxSize.y, "0.0") + cacheAutoLOC_7001411 + "</color>\n<color=" +
+                            sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 + " / " +
+                            KSPUtil.LocalizeNumber(maxSize.x, "0.0") +
+                            cacheAutoLOC_7001411 + "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + cacheAutoLOC_7001411 + " / " +
+                            KSPUtil.LocalizeNumber(maxSize.z, "0.0") + cacheAutoLOC_7001411 + "</color></line-height>";
             }
             else
             {
-                refERsizeRH.text = " \n" +
-                                     "<color=" + sizeForeAftHex + ">" + craftSize.y.ToString("0.0") + "m</color>\n" +
-                                     "<color=" + sizeSpanHex + ">" + craftSize.x.ToString("0.0") + "m</color>\n" +
-                                     "<color=" + sizeTHgtHex + ">" + craftSize.z.ToString("0.0") + "m</color>";
+                refERsizeRH.text = "<line-height=110%> \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 +
+                "</color>\n<color=" + sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 +
+                "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + cacheAutoLOC_7001411 + "</color></line-height>";
             }
 
             bool allGood = //partCount <= partLimit &&
@@ -538,7 +549,7 @@ namespace KerbalConstructionTime
 
                     if (isERActive && !wasERActive)
                     {
-                        StartERClobberCoroutine();
+                        StartEngineersReportClobberCoroutine();
                     }
                     wasERActive = isERActive;
                 }

@@ -52,7 +52,6 @@
 		{ "name" : "RCSBuildAid" },
 		{ "name" : "RCSBuildAidCont" },
 		{ "name" : "RealAntennas" },
-		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
 		{ "any_of": [
@@ -77,6 +76,7 @@
 		{ "name" : "ProbesPlus" },
 		{ "name" : "ATKPropulsionPack" },
 		{ "name" : "WaypointManager" },
+		{ "name" : "SCANsat" },
 		{ "name" : "NavHudRenewed" }
 	],
 	"conflicts" : [

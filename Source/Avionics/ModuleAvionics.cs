@@ -11,7 +11,7 @@ namespace RP0
         #region Members
         protected const string PAWGroup = "Avionics";
 
-        [KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N2", guiUnits = "T", groupName = PAWGroup, groupDisplayName = PAWGroup)]
+        [KSPField(isPersistant = false, guiActive = true, guiActiveEditor = true, guiName = "Controllable", guiFormat = "N2", guiUnits = "T", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float massLimit = float.MaxValue; // default is unlimited
 
         [KSPField]

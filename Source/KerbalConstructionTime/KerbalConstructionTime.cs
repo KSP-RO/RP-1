@@ -395,8 +395,7 @@ namespace KerbalConstructionTime
 
             // Skip past Engineer report update. Yes there will be a few frames of wrongness, but better that
             // than have it clobber us instead!
-            yield return null;
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForEndOfFrame();
             yield return null;
 
             ClobberEngineersReport();
@@ -549,7 +548,7 @@ namespace KerbalConstructionTime
 
                     if (isERActive && !wasERActive)
                     {
-                        StartEngineersReportClobberCoroutine();
+                        ClobberEngineersReport();
                     }
                     wasERActive = isERActive;
                 }

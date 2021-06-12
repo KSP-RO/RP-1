@@ -24,7 +24,8 @@
 		{ "name" : "DMagicScienceAnimate" },
 		{ "name" : "MagiCore" },
 		{ "name" : "ClickThroughBlocker" },
-		{ "name" : "ToolbarController" }
+		{ "name" : "ToolbarController" },
+		{ "name" : "Kerbalism-Config-RO" }
 	],
 	"recommends" : [
 		{ "name" : "RSSDateTimeFormatter" },
@@ -51,13 +52,8 @@
 		{ "name" : "RCSBuildAid" },
 		{ "name" : "RCSBuildAidCont" },
 		{ "name" : "RealAntennas" },
-		{ "name" : "SCANsat" },
 		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
-		{ "any_of": [
-			{ "name" : "Kerbalism-Config-RO" },
-			{ "name" : "TACLS" }
-		] },
 		{ "any_of": [
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }
@@ -74,28 +70,20 @@
 		{ "name" : "KerbalEngineerRedux" },
 		{ "name" : "kOS" },
 		{ "name" : "RealScaleBoosters" },
-		{ "name" : "RN-SalyutStations" },
-		{ "name" : "RN-Skylab" },
-		{ "name" : "RN-SPP" },
-		{ "name" : "RN-SovietProbes" },
-		{ "name" : "RN-SovietRockets" },
-		{ "name" : "RN-SovietSpacecraft" },
-		{ "name" : "RN-USProbesPack" },
-		{ "name" : "RN-USRockets" },
-		{ "name" : "SovietEnginePack" },
-		{ "name" : "Taerobee" },
 		{ "name" : "NearFutureSolar" },
 		{ "name" : "NearFutureConstruction" },
 		{ "name" : "InternalRCS" },
 		{ "name" : "ProbesPlus" },
 		{ "name" : "ATKPropulsionPack" },
 		{ "name" : "WaypointManager" },
+		{ "name" : "SCANsat" },
 		{ "name" : "NavHudRenewed" }
 	],
 	"conflicts" : [
 		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
-		{ "name" : "MechJebForAll" }
+		{ "name" : "MechJebForAll" },
+		{ "name" : "KRASH" }
 	]
 }

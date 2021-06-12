@@ -881,7 +881,7 @@
         "spacecraft": "Salyut",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "50000, stationsDevScience",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
@@ -3670,7 +3670,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "40000, stationsDev",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",

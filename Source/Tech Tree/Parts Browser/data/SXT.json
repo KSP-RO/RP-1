@@ -62,10 +62,10 @@
         "title": "Station Science Module (Early)",
         "description": "This module, designed for use on space stations, contains various planetary science and space science equipment designed for use in repeatable experiments. However, all data must be returned to the surface, you can't exactly beam samples back and forth. Unlike other science equipment which records all data instantly, experimenents using this equipment may be repeated multiple times (on subsequent crew rotations) for further scientific value. Don't forget to transfer all the data to the RV before the crew returns home!",
         "mod": "SXT",
-        "cost": "6000",
+        "cost": "8000",
         "entry_cost": "200000",
         "category": "STATIONS",
-        "info": "",
+        "info": "Station",
         "year": "1967",
         "technology": "spaceStationPrototypes",
         "era": "05-LUNAR",
@@ -76,10 +76,12 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "20000, stationsProto",
+        "entry_cost_mods": "20000, stationsProtoScience",
         "identical_part_name": "",
         "module_tags": [
-            "Instruments"
+            "HumanRated",
+            "Instruments",
+            "NoResourceCostMult"
         ]
     },
     {
@@ -240,12 +242,12 @@
         "era": "05-LUNAR",
         "ro": true,
         "rp0": true,
-        "orphan": true,
+        "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "4000, stationsProto",
         "identical_part_name": "",
         "module_tags": [
             "NoResourceCostMult"
@@ -953,7 +955,7 @@
         "title": "PPD-4 Crew Cabin",
         "description": "Hold 2 people with 23 days of supplies. A slightly cramped early station module. Features usable handle bars around the side.",
         "mod": "SXT",
-        "cost": "5000",
+        "cost": "7500",
         "entry_cost": "200000",
         "category": "STATIONS",
         "info": "Station",
@@ -967,7 +969,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "5000, stationsProto, longTermHab",
+        "entry_cost_mods": "20000, stationsProto",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
@@ -979,7 +981,7 @@
         "title": "PPD-6 Crew Cabin",
         "description": "Hold 4 people with 23 days of supplies. A slightly cramped early station module. Features usable handle bars around the side.",
         "mod": "SXT",
-        "cost": 8000,
+        "cost": "10000",
         "entry_cost": "230000",
         "category": "STATIONS",
         "info": "Station",
@@ -993,7 +995,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "8000, stationsProto, longTermHab",
+        "entry_cost_mods": "30000, stationsProto",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",

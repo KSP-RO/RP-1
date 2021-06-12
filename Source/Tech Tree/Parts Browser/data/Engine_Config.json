@@ -1934,7 +1934,7 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
+    {
         "name": "E-1A_KS",
         "title": "E-1A_KS",
         "description": "",
@@ -4724,7 +4724,7 @@
         "module_tags": []
     },
     {
-        "name": "MMH+MON3",
+        "name": "MMH+MON10",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -4746,8 +4746,8 @@
         "identical_part_name": "",
         "module_tags": []
     },
-	{
-        "name": "MMH+MON10",
+    {
+        "name": "MMH+MON3",
         "title": "",
         "description": "",
         "mod": "Engine_Config",

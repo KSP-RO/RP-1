@@ -76,14 +76,6 @@ namespace RP0.Crew
 
         public void Start()
         {
-            double ut = KSPUtils.GetUT();
-            if (NextUpdate > ut + UpdateInterval)
-            {
-                // KRASH has a bad habit of not reverting state properly when exiting sims.
-                // This means that the updateInterval could end up years into the future.
-                NextUpdate = ut + 5;
-            }
-
             onKctTechQueuedEvent = GameEvents.FindEvent<EventData<RDTech>>("OnKctTechQueued");
             if (onKctTechQueuedEvent != null)
             {

@@ -48,6 +48,8 @@ namespace RP0.Crew
         private AstronautComplex _astronautComplex = null;
         private FieldInfo _cliTooltip;
 
+        public bool CurrentSceneAllowsCrewManagement => HighLogic.LoadedSceneIsEditor || HighLogic.LoadedScene == GameScenes.SPACECENTER;
+
         public override void OnAwake()
         {
             if (Instance != null)
@@ -88,7 +90,7 @@ namespace RP0.Crew
                 onKctTechQueuedEvent.Add(AddCoursesForTechNode);
             }
 
-            StartCoroutine(CreateCoursesRoutine());
+            if (CurrentSceneAllowsCrewManagement) StartCoroutine(CreateUnderResearchCoursesRoutine());
             StartCoroutine(EnsureActiveCrewInSimulationRoutine());
         }
 
@@ -953,6 +955,8 @@ namespace RP0.Crew
             OfferedCourses.Clear();
             _partSynsHandled.Clear();
 
+            if (!CurrentSceneAllowsCrewManagement) return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
+
             //convert the saved configs to course offerings
             foreach (CourseTemplate template in CourseTemplates)
             {
@@ -1038,7 +1042,7 @@ namespace RP0.Crew
             }
         }
 
-        private IEnumerator CreateCoursesRoutine()
+        private IEnumerator CreateUnderResearchCoursesRoutine()
         {
             yield return new WaitForFixedUpdate();
 

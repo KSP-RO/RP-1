@@ -157,7 +157,6 @@ namespace RP0.Crew
             }
 
             TrainingDatabase.EnsureInitialized();
-            GenerateOfferedCourses();
             KACWrapper.InitKACWrapper();
         }
 
@@ -412,12 +411,8 @@ namespace RP0.Crew
         private void LoadSettings()
         {
             RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
-            bool prevIsMissionTrainingEnabled = IsMissionTrainingEnabled;
             IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
-            if (IsMissionTrainingEnabled && !prevIsMissionTrainingEnabled)
-            {
-                GenerateOfferedCourses();
-            }
+            GenerateOfferedCourses();
         }
 
         private void VesselRecoveryProcessing(ProtoVessel v, MissionRecoveryDialog mrDialog, float data)
@@ -955,6 +950,9 @@ namespace RP0.Crew
 
         private void GenerateOfferedCourses()
         {
+            OfferedCourses.Clear();
+            _partSynsHandled.Clear();
+
             //convert the saved configs to course offerings
             foreach (CourseTemplate template in CourseTemplates)
             {
@@ -964,7 +962,6 @@ namespace RP0.Crew
                     OfferedCourses.Add(duplicate);
             }
 
-            _partSynsHandled.Clear();
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
                 if (ap.partPrefab.CrewCapacity > 0 &&

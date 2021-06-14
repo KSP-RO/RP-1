@@ -1129,7 +1129,7 @@
         "spacecraft": "Scout E-1",
         "engine_config": "Alcyone",
         "upgrade": false,
-        "entry_cost_mods": "10000, SolidsHTPB",
+        "entry_cost_mods": "10000, SolidsPBAA",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1198,7 +1198,7 @@
         "spacecraft": "Scout D, E, F, G",
         "engine_config": "Algol-III",
         "upgrade": false,
-        "entry_cost_mods": "10000, Algol-II",
+        "entry_cost_mods": "10000, Algol-II, SolidsPBAN",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1244,7 +1244,7 @@
         "spacecraft": "Altair II",
         "engine_config": "Altair-II",
         "upgrade": false,
-        "entry_cost_mods": "10000, Altair",
+        "entry_cost_mods": "10000, Altair, SolidsPBAA",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1290,7 +1290,7 @@
         "spacecraft": "Scout X-1",
         "engine_config": "Antares-I",
         "upgrade": false,
-        "entry_cost_mods": "10000, Altair",
+        "entry_cost_mods": "5000, Altair, SolidsPBAA",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1313,7 +1313,7 @@
         "spacecraft": "Scout X-2",
         "engine_config": "Antares-II",
         "upgrade": false,
-        "entry_cost_mods": "15000, SolidsPBAN, Antares-I",
+        "entry_cost_mods": "15000, Antares-I",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1336,7 +1336,7 @@
         "spacecraft": "Scout G",
         "engine_config": "Antares-III",
         "upgrade": false,
-        "entry_cost_mods": "15000, Antares-II",
+        "entry_cost_mods": "15000, Antares-II, SolidsPBAN",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1705,8 +1705,8 @@
         "module_tags": []
     },
     {
-        "name": "Castor-2",
-        "title": "Castor-2",
+        "name": "Castor-2-SL",
+        "title": "Castor-2-SL",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",
@@ -1721,9 +1721,32 @@
         "orphan": false,
         "rp0_conf": false,
         "spacecraft": "Delta E, Scouts",
-        "engine_config": "Castor-2",
+        "engine_config": "Castor-2-SL",
         "upgrade": false,
-        "entry_cost_mods": "10000, Castor-1",
+        "entry_cost_mods": "Castor-2",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "Castor-2-Vac",
+        "title": "Castor-2-Vac",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1965",
+        "technology": "solids1964",
+        "era": "04-ADV",
+        "ro": true,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Delta E, Scouts",
+        "engine_config": "Castor-2-Vac",
+        "upgrade": false,
+        "entry_cost_mods": "Castor-2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9777,7 +9800,7 @@
         "spacecraft": "Satellites (1968)",
         "engine_config": "Star-17",
         "upgrade": false,
-        "entry_cost_mods": "0,STAR",
+        "entry_cost_mods": "15000,STARCTPB",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9800,7 +9823,7 @@
         "spacecraft": "Surveyor",
         "engine_config": "Star-37",
         "upgrade": false,
-        "entry_cost_mods": "5000, Altair-III",
+        "entry_cost_mods": "5000, Altair-III, SolidsPBAN",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9953,7 +9976,7 @@
         "spacecraft": "Satellites",
         "engine_config": "Star-13B",
         "upgrade": false,
-        "entry_cost_mods": "10000,STAR",
+        "entry_cost_mods": "10000,STARCTPB",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9999,7 +10022,7 @@
         "spacecraft": "Satellites",
         "engine_config": "Star-17A",
         "upgrade": false,
-        "entry_cost_mods": "10000,STAR",
+        "entry_cost_mods": "10000,STAR-17",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10022,7 +10045,7 @@
         "spacecraft": "",
         "engine_config": "Star-20",
         "upgrade": false,
-        "entry_cost_mods": "10000,STARComposite",
+        "entry_cost_mods": "Altair-III",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10196,8 +10219,8 @@
         "entry_cost": "0",
         "category": "SOLID",
         "info": "",
-        "year": "1989",
-        "technology": "solids1986",
+        "year": "1964",
+        "technology": "solids1964",
         "era": "08-LONGTERM",
         "ro": true,
         "rp0": false,
@@ -10206,7 +10229,7 @@
         "spacecraft": "Titan II",
         "engine_config": "Star-5C",
         "upgrade": false,
-        "entry_cost_mods": "6000,STARComposite",
+        "entry_cost_mods": "6000,STARCTPB",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -11188,7 +11211,7 @@
         "spacecraft": "Black Arrow",
         "engine_config": "Waxwing",
         "upgrade": false,
-        "entry_cost_mods": "10000, SolidsHTPB",
+        "entry_cost_mods": "10000, SolidsCTPB",
         "identical_part_name": "",
         "module_tags": []
     },

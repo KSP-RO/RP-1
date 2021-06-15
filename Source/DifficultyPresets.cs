@@ -68,6 +68,9 @@ namespace RP0
         [GameParameters.CustomParameterUI("Procedural avionics window auto opens", toolTip = "When enabled, the Procedural Avionics configuration window is automatically opened when you right click on a part with Proc Avionics.")]
         public bool IsProcAvionicsAutoShown = true;
 
+        [GameParameters.CustomParameterUI("Avionics Units Stack", toolTip = "When enabled, multiple avionics units stack their controllable mass.")]
+        public bool IsAvionicsStackable = true;
+
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;
         public bool AvionicsWindow_ShowInfo3 = true;
@@ -84,24 +87,28 @@ namespace RP0
                     IsMissionTrainingEnabled = false;
                     IsRetirementEnabled = false;
                     ContractDeadlineMult = 1.7f;
+                    IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Normal:
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 1.3f;
+                    IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Moderate:
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 1f;
+                    IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Hard:
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 0.8f;
+                    IsAvionicsStackable = false;
                     break;
             }
         }

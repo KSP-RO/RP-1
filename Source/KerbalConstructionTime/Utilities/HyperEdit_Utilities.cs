@@ -113,18 +113,7 @@ namespace KerbalConstructionTime
             {
                 foreach (var part in parts)
                 {
-                    bool kill = false;
-                    if (part.Modules.Contains<LaunchClamp>())
-                    {
-                        kill = true;
-                    }
-                    else
-                    {
-                        ModuleTagList mTags = part.FindModuleImplementing<ModuleTagList>();
-                        if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
-                            kill = true;
-                    }
-                    if (kill)
+                    if (part.Modules.Contains<LaunchClamp>() || part.HasTag("PadInfrastructure"))
                     {
                         part.Die();
                     }

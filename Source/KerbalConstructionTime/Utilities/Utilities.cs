@@ -401,11 +401,7 @@ namespace KerbalConstructionTime
             }
             else if (!includeClamps)
             {
-                if (aPart.partPrefab.Modules.Contains<LaunchClamp>())
-                    return 0;
-
-                ModuleTagList mTags = aPart.partPrefab.FindModuleImplementing<ModuleTagList>();
-                if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                if (aPart.partPrefab.Modules.Contains<LaunchClamp>() || aPart.partPrefab.HasTag("PadInfrastructure"))
                     return 0;
             }
             ShipConstruction.GetPartCostsAndMass(part, aPart, out _, out _, out float dryMass, out float fuelMass);
@@ -422,11 +418,7 @@ namespace KerbalConstructionTime
 
                 if (excludeClamps)
                 {
-                    if (part.Modules.Contains<LaunchClamp>())
-                        continue;
-
-                    ModuleTagList mTags = part.FindModuleImplementing<ModuleTagList>();
-                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                    if (part.Modules.Contains<LaunchClamp>() || part.HasTag("PadInfrastructure"))
                         continue;
                 }
 
@@ -462,11 +454,7 @@ namespace KerbalConstructionTime
                 p = ship.parts[i];
                 if (excludeClamps)
                 {
-                    if (p.Modules.Contains<LaunchClamp>())
-                        continue;
-
-                    ModuleTagList mTags = p.FindModuleImplementing<ModuleTagList>();
-                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                    if (p.Modules.Contains<LaunchClamp>() || p.HasTag("PadInfrastructure"))
                         continue;
                 }
 
@@ -1879,6 +1867,18 @@ namespace KerbalConstructionTime
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Check whether the part has a tag with specified name defined using the ModuleTagList PartModule.
+        /// </summary>
+        /// <param name="p">Part to check</param>
+        /// <param name="tag">Name of the tag to check</param>
+        /// <returns>True if Part has ModuleTagList PM and a tag with given name is defined in that PM</returns>
+        public static bool HasTag(this Part p, string tag)
+        {
+            ModuleTagList mTags = p.FindModuleImplementing<ModuleTagList>();
+            return mTags?.tags.Contains(tag) ?? false;
         }
 
         public static bool IsVabRecoveryAvailable()

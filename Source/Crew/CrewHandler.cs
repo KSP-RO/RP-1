@@ -253,6 +253,9 @@ namespace RP0.Crew
 
         public void AddPartCourses(AvailablePart ap)
         {
+            if (ap.partPrefab.isVesselEVA || ap.partPrefab.Modules.Contains<KerbalSeat>() ||
+                ap.partPrefab.Modules.Contains<LaunchClamp>() || ap.partPrefab.HasTag("PadInfrastructure")) return;
+
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.Contains(name))
             {

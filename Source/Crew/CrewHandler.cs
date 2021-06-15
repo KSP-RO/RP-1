@@ -253,7 +253,7 @@ namespace RP0.Crew
 
         public void AddPartCourses(AvailablePart ap)
         {
-            string name = TrainingDatabase.SynonymReplace(ap.name);
+            TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.Contains(name))
             {
                 _partSynsHandled.Add(name);
@@ -283,7 +283,7 @@ namespace RP0.Crew
 
         public bool NautHasTrainingForPart(ProtoCrewMember pcm, string partName)
         {
-            partName = TrainingDatabase.SynonymReplace(partName);
+            TrainingDatabase.SynonymReplace(partName, out partName);
 
             FlightLog.Entry ent = pcm.careerLog.Last();
             if (ent == null)
@@ -972,10 +972,10 @@ namespace RP0.Crew
         private void GenerateCourseProf(AvailablePart ap, bool isTemporary)
         {
             var n = new ConfigNode("FS_COURSE");
-            string name = TrainingDatabase.SynonymReplace(ap.name);
+            bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
 
             n.AddValue("id", "prof_" + name);
-            n.AddValue("name", "Proficiency: " + name);
+            n.AddValue("name", "Proficiency: " + (found ? name : ap.title));
             n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400));
             n.AddValue("isTemporary", isTemporary);
             n.AddValue("conflicts", $"{TrainingType_Proficiency}:{name}");
@@ -993,10 +993,10 @@ namespace RP0.Crew
         private void GenerateCourseMission(AvailablePart ap)
         {
             var n = new ConfigNode("FS_COURSE");
-            string name = TrainingDatabase.SynonymReplace(ap.name);
+            bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
 
             n.AddValue("id", "msn_" + name);
-            n.AddValue("name", "Mission: " + name);
+            n.AddValue("name", "Mission: " + (found ? name : ap.title));
             n.AddValue("time", 1 + TrainingDatabase.GetTime(name + "-Mission") * 86400);
             n.AddValue("isTemporary", false);
             n.AddValue("timeUseStupid", true);

@@ -150,20 +150,20 @@ namespace RP0.Crew
             return false;
         }
 
-        public static string SynonymReplace(string name)
+        public static bool SynonymReplace(string name, out string result)
         {
             EnsureInitialized();
 
-            name = Sanitize(name);
-            TrainingHolder h;
-            if (holders.TryGetValue(name, out h))
+            result = Sanitize(name);
+            if (holders.TryGetValue(result, out TrainingHolder h))
             {
                 if (h.children.Count == 1)
                 {
-                    return h.children[0];
+                    result = h.children[0];
+                    return true;
                 }
             }
-            return name;
+            return false;
         }
 
         protected static string Sanitize(string partName)

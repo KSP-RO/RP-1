@@ -84,6 +84,7 @@ namespace RP0.Crew
             if (!isInitialized)
             {
                 Initialize();
+                isInitialized = true;
             }
         }
 

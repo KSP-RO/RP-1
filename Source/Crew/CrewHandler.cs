@@ -48,6 +48,8 @@ namespace RP0.Crew
         private AstronautComplex _astronautComplex = null;
         private FieldInfo _cliTooltip;
 
+        public bool CurrentSceneAllowsCrewManagement => HighLogic.LoadedSceneIsEditor || HighLogic.LoadedScene == GameScenes.SPACECENTER;
+
         public override void OnAwake()
         {
             if (Instance != null)
@@ -74,21 +76,13 @@ namespace RP0.Crew
 
         public void Start()
         {
-            double ut = KSPUtils.GetUT();
-            if (NextUpdate > ut + UpdateInterval)
-            {
-                // KRASH has a bad habit of not reverting state properly when exiting sims.
-                // This means that the updateInterval could end up years into the future.
-                NextUpdate = ut + 5;
-            }
-
             onKctTechQueuedEvent = GameEvents.FindEvent<EventData<RDTech>>("OnKctTechQueued");
             if (onKctTechQueuedEvent != null)
             {
                 onKctTechQueuedEvent.Add(AddCoursesForTechNode);
             }
 
-            StartCoroutine(CreateCoursesRoutine());
+            if (CurrentSceneAllowsCrewManagement) StartCoroutine(CreateUnderResearchCoursesRoutine());
             StartCoroutine(EnsureActiveCrewInSimulationRoutine());
         }
 
@@ -157,7 +151,6 @@ namespace RP0.Crew
             }
 
             TrainingDatabase.EnsureInitialized();
-            GenerateOfferedCourses();
             KACWrapper.InitKACWrapper();
         }
 
@@ -412,12 +405,8 @@ namespace RP0.Crew
         private void LoadSettings()
         {
             RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
-            bool prevIsMissionTrainingEnabled = IsMissionTrainingEnabled;
             IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
-            if (IsMissionTrainingEnabled && !prevIsMissionTrainingEnabled)
-            {
-                GenerateOfferedCourses();
-            }
+            GenerateOfferedCourses();
         }
 
         private void VesselRecoveryProcessing(ProtoVessel v, MissionRecoveryDialog mrDialog, float data)
@@ -955,6 +944,11 @@ namespace RP0.Crew
 
         private void GenerateOfferedCourses()
         {
+            OfferedCourses.Clear();
+            _partSynsHandled.Clear();
+
+            if (!CurrentSceneAllowsCrewManagement) return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
+
             //convert the saved configs to course offerings
             foreach (CourseTemplate template in CourseTemplates)
             {
@@ -964,7 +958,6 @@ namespace RP0.Crew
                     OfferedCourses.Add(duplicate);
             }
 
-            _partSynsHandled.Clear();
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
                 if (ap.partPrefab.CrewCapacity > 0 &&
@@ -1041,7 +1034,7 @@ namespace RP0.Crew
             }
         }
 
-        private IEnumerator CreateCoursesRoutine()
+        private IEnumerator CreateUnderResearchCoursesRoutine()
         {
             yield return new WaitForFixedUpdate();
 

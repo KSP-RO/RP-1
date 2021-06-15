@@ -11,6 +11,11 @@ namespace RP0
         public static int CommsPayload = MinPayload;
         public static int WeatherPayload = MinPayload;
 
+        public static Func<string, bool> WithdrawContractAction;
+
+        private static string[] _comSatContracts = new[] { "GEORepeatComSats", "TundraRepeatComSats", "MolniyaRepeatComSats" };
+        private static string[] _weatherSatContracts = new[] { "GEOWeather" };
+
         private RP0Settings _settings;
 
         protected override void OnStart()
@@ -35,6 +40,22 @@ namespace RP0
                 GUILayout.Label($"WeatherSat Payload range: {Math.Max(WeatherPayload / 2, 300)} - {WeatherPayload}", HighLogic.Skin.label, GUILayout.Width(250));
                 float weatherAmnt = GUILayout.HorizontalSlider(WeatherPayload, MinPayload, MaxPayload, HighLogic.Skin.horizontalSlider, HighLogic.Skin.horizontalSliderThumb);
                 WeatherPayload = Mathf.RoundToInt(weatherAmnt / 100) * 100;
+
+                if (_settings.CommsPayload != CommsPayload)
+                {
+                    foreach (string contractName in _comSatContracts)
+                    {
+                        WithdrawContractAction?.Invoke(contractName);
+                    }
+                }
+
+                if (_settings.WeatherPayload != WeatherPayload)
+                {
+                    foreach (string contractName in _weatherSatContracts)
+                    {
+                        WithdrawContractAction?.Invoke(contractName);
+                    }
+                }
 
                 _settings.CommsPayload = CommsPayload;
                 _settings.WeatherPayload = WeatherPayload;

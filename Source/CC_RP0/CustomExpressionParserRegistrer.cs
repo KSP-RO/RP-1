@@ -29,6 +29,7 @@ namespace ContractConfigurator.RP0
         static CustomExpressionParserRegistrer()
         {
             RegisterMethods();
+            RegisterRP0Hooks();
         }
 
         public override void ExecuteAndStoreExpression(string key, string expression, DataNode dataNode)
@@ -54,6 +55,11 @@ namespace ContractConfigurator.RP0
             RegisterGlobalFunction(new Function<int>("RP1WeatherPayload", GetWeatherPayload, false));
         }
 
+        private static void RegisterRP0Hooks()
+        {
+            ContractGUI.WithdrawContractAction = WithdrawContract;
+        }
+
         private static float GetDeadlineMult()
         {
             return HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.ContractDeadlineMult ?? 1;
@@ -67,6 +73,22 @@ namespace ContractConfigurator.RP0
         private static int GetWeatherPayload()
         {
             return ContractGUI.WeatherPayload;
+        }
+
+        private static bool WithdrawContract(string contractName)
+        {
+            if (ContractPreLoader.Instance == null) return false;
+            foreach (ConfiguredContract cc in ContractPreLoader.Instance.PendingContracts())
+            {
+                string name = cc?.contractType?.name;
+                if (name == contractName)
+                {
+                    cc.Withdraw();
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

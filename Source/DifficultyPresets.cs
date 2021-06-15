@@ -65,11 +65,11 @@ namespace RP0
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
         public bool avionicsUseKerbalism = true;
 
-        [GameParameters.CustomParameterUI("Procedural avionics window auto opens", toolTip = "When enabled, the Procedural Avionics configuration window is automatically opened when you right click on a part with Proc Avionics.")]
-        public bool IsProcAvionicsAutoShown = true;
-
         [GameParameters.CustomParameterUI("Avionics Units Stack", toolTip = "When enabled, multiple avionics units stack their controllable mass.")]
         public bool IsAvionicsStackable = true;
+
+        [GameParameters.CustomParameterUI("Procedural avionics window auto opens", toolTip = "When enabled, the Procedural Avionics configuration window is automatically opened when you right click on a part with Proc Avionics.")]
+        public bool IsProcAvionicsAutoShown = true;
 
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;

@@ -61,6 +61,18 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public bool interplanetary = true;
 
+        [Persistent]
+        public int kosDiskSpace = 500;
+
+        [Persistent]
+        public float kosSpaceCostFactor = 0.1f;
+
+        [Persistent]
+        public float kosSpaceMassFactor = 0.0001f;
+
+        [Persistent]
+        public float kosECPerInstruction = 0.000001f;
+
         public bool IsAvailable => ResearchAndDevelopment.GetTechnologyState(name) == RDTech.State.Available;
 
         public void Load(ConfigNode node)

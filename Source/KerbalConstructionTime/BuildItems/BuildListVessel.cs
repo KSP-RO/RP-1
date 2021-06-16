@@ -201,11 +201,7 @@ namespace KerbalConstructionTime
 
                 if (p.partPrefab != null)
                 {
-                    if (p.partPrefab.Modules.Contains<LaunchClamp>())
-                        continue;
-
-                    ModuleTagList mTags = p.partPrefab.FindModuleImplementing<ModuleTagList>();
-                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                    if (p.partPrefab.Modules.Contains<LaunchClamp>() || p.partPrefab.HasTag("PadInfrastructure"))
                         continue;
                 }
 
@@ -257,11 +253,7 @@ namespace KerbalConstructionTime
 
                 if (p.partPrefab != null)
                 {
-                    if (p.partPrefab.Modules.Contains<LaunchClamp>())
-                        continue;
-
-                    ModuleTagList mTags = p.partPrefab.FindModuleImplementing<ModuleTagList>();
-                    if (mTags != null && mTags.tags.Contains("PadInfrastructure"))
+                    if (p.partPrefab.Modules.Contains<LaunchClamp>() || p.partPrefab.HasTag("PadInfrastructure"))
                         continue;
                 }
 

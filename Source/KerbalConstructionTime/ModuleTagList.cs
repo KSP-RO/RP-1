@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    class ModuleTagList : PartModule
+    public class ModuleTagList : PartModule
     {
         [SerializeField] public List<string> tags;
 

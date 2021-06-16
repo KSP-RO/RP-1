@@ -160,7 +160,7 @@ namespace RP0
             {
                 apInfo = $"Tech Required: {ap.TechRequired}";
                 if (part.CrewCapacity > 0)
-                    apInfo = $"Training course: {TrainingDatabase.SynonymReplace(part.name)}\n{apInfo}";
+                    apInfo = $"Training course: {(TrainingDatabase.SynonymReplace(part.name, out string name) ? name : ap.title)}\n{apInfo}";
             }
             string res = $"Part name: {part.name}\n{apInfo}\n{data}";
             return res;

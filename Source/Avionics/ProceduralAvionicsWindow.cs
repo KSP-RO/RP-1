@@ -224,7 +224,7 @@ namespace RP0.ProceduralAvionics
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(
                             "ConfirmProceduralAvionicsClose",
-                            "Your selected avion ics type does not match the current tab shown. Close window anyway?",
+                            "Your selected avionics type does not match the current tab shown. Close window anyway?",
                             "Avionics Mismatch",
                             HighLogic.UISkin,
                             new Rect(0.5f, 0.5f, 150f, 60f),
@@ -234,6 +234,11 @@ namespace RP0.ProceduralAvionics
                                 new DialogGUIButton("Yes",
                                     () =>
                                     {
+                                        // Reset tab
+                                        curCfgName = avionicsConfigName;
+                                        _selectedConfigIndex = _avionicsConfigNames.IndexOf(curCfgName);
+                                        _shouldResetUIHeight = true;
+
                                         showGUI = false;
                                     }, 140.0f, 30.0f, true),
                                 new DialogGUIButton("Cancel", () => { }, 140.0f, 30.0f, true)

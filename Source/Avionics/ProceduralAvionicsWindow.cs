@@ -218,7 +218,33 @@ namespace RP0.ProceduralAvionics
 
             if (GUILayout.Button("Close", HighLogic.Skin.button))
             {
-                showGUI = false;
+                if (!avionicsConfigName.Equals(curCfgName))
+                {
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                        new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog(
+                            "ConfirmProceduralAvionicsClose",
+                            "Your selected avion ics type does not match the current tab shown. Close window anyway?",
+                            "Avionics Mismatch",
+                            HighLogic.UISkin,
+                            new Rect(0.5f, 0.5f, 150f, 60f),
+                            new DialogGUIFlexibleSpace(),
+                            new DialogGUIVerticalLayout(
+                                new DialogGUIFlexibleSpace(),
+                                new DialogGUIButton("Yes",
+                                    () =>
+                                    {
+                                        showGUI = false;
+                                    }, 140.0f, 30.0f, true),
+                                new DialogGUIButton("Cancel", () => { }, 140.0f, 30.0f, true)
+                                )),
+                        false,
+                        HighLogic.UISkin);
+                }
+                else
+                {
+                    showGUI = false;
+                }
             }
             GUILayout.EndHorizontal();
 

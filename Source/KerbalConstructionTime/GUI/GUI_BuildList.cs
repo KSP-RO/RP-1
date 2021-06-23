@@ -705,6 +705,8 @@ namespace KerbalConstructionTime
                     btnColor = _redButton;
                 else if (hasRecond = KCTGameStates.ActiveKSC.GetReconditioning(KCTGameStates.ActiveKSC.ActiveLPInstance.name) != null)
                     btnColor = _yellowButton;
+                else if (b.MeetsFacilityRequirements(false).Count != 0)
+                    btnColor = _yellowButton;
                 ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, b.Id.ToString(), launchSite);
                 if (tmpRollout.Cost > 0d)
                     GUILayout.Label("√" + tmpRollout.Cost.ToString("N0"));

@@ -2595,7 +2595,7 @@
         "title": "Star 31/Antares III",
         "description": "Antares III is the third-generation third stage for Vought Corporation's Scout launch vehicle. The design incorporates an 89-percent-solids HTPB propellant in a Kevlar(r) filament-wound case insulated with silica-filled EPDM rubber. Diameter: [0.76 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
-        "cost": "150",
+        "cost": "250",
         "entry_cost": "200",
         "category": "SOLID",
         "info": "",

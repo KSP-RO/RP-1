@@ -1312,6 +1312,52 @@
         ]
     },
     {
+        "name": "ROE-Antares3",
+        "title": "Star 31/Antares III",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "250",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1979",
+        "technology": "solids1976",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Scout",
+        "engine_config": "Star-31",
+        "upgrade": false,
+        "entry_cost_mods": "Star-31",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Antares3_Inline",
+        "title": "Star 31/Antares III",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "240",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1979",
+        "technology": "solids1976",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Scout",
+        "engine_config": "Star-31",
+        "upgrade": false,
+        "entry_cost_mods": "1000, Star-31",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-BE3",
         "title": "BE-3",
         "description": "The BE-3 (Blue Engine 3) is a LH2/LOX rocket engine developed by Blue Origin. The BE-3 uses a combustion tap-off cycle engine design which takes a small amount of combustion gases from the main combustion chamber in order to power the engine turbopumps. Plume configured by RealPlume.",

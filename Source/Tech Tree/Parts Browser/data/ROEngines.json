@@ -6099,6 +6099,30 @@
         ]
     },
     {
+        "name": "ROE-SNTPPFE100",
+        "title": "SNTP-PFE100",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "6751",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "Nuclear Engine",
+        "year": "1998",
+        "technology": "advancedNuclearPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SNTPPFE100",
+        "upgrade": false,
+        "entry_cost_mods": "SNTPPFE100-Prototype",
+        "identical_part_name": "SNTP",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
+        ]
+    },
+    {
         "name": "ROE-SRMU",
         "title": "SRMU",
         "description": "",

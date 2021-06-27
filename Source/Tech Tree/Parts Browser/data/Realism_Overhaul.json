@@ -516,7 +516,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -541,7 +541,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -566,7 +566,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -591,7 +591,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -616,7 +616,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -641,7 +641,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -666,7 +666,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -691,7 +691,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -716,7 +716,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -741,7 +741,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -766,7 +766,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "heatshieldsLEO",
+        "entry_cost_mods": "heatshieldsLifting",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"

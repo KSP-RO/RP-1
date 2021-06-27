@@ -30,6 +30,8 @@ namespace KerbalConstructionTime
         internal ShipConstruct _ship;
         private double _rushCost = -1;
 
+        public Vector3 ShipSize = Vector3.zero;
+
         public double BuildRate => Utilities.GetBuildRate(this);
 
         public double TimeLeft
@@ -103,7 +105,8 @@ namespace KerbalConstructionTime
             _ship = s;
             ShipNode = s.SaveShip();
             // Override KSP sizing of the ship construct
-            ShipNode.SetValue("size", KSPUtil.WriteVector(Utilities.GetShipSize(s, true)));
+            ShipSize = Utilities.GetShipSize(s, true);
+            ShipNode.SetValue("size", KSPUtil.WriteVector(ShipSize));
             ShipName = s.shipName;
             Cost = Utilities.GetTotalVesselCost(ShipNode, true);
             EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
@@ -402,6 +405,7 @@ namespace KerbalConstructionTime
             ret.NumStageParts = NumStageParts;
             ret.NumStages = NumStages;
             ret.StagePartCost = StagePartCost;
+            ret.ShipSize = ShipSize;
 
             if (RecalcTime)
             {
@@ -490,9 +494,6 @@ namespace KerbalConstructionTime
             if (!Utilities.CurrentGameIsCareer())
                 return failedReasons;
 
-            ShipTemplate template = new ShipTemplate();
-            template.LoadShip(ShipNode);
-
             if (Type == ListType.VAB)
             {
                 KCT_LaunchPad selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchPad() : KCTGameStates.ActiveKSC.ActiveLPInstance;
@@ -507,7 +508,7 @@ namespace KerbalConstructionTime
                 {
                     failedReasons.Add("Part Count limit exceeded");
                 }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(template, SpaceCenterFacility.LaunchPad, GameVariables.Instance.GetCraftSizeLimit(launchpadNormalizedLevel, true));
+                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, GameVariables.Instance.GetCraftSizeLimit(launchpadNormalizedLevel, true));
                 if (!sizeCheck.Test())
                 {
                     failedReasons.Add("Size limits exceeded");
@@ -524,7 +525,7 @@ namespace KerbalConstructionTime
                 {
                     failedReasons.Add("Part Count limit exceeded");
                 }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(template, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false));
+                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false));
                 if (!sizeCheck.Test())
                 {
                     failedReasons.Add("Size limits exceeded");
@@ -612,6 +613,18 @@ namespace KerbalConstructionTime
             TotalMass = Math.Max(TotalMass, 0);
             EmptyMass = Math.Max(EmptyMass, 0);
             return TotalMass;
+        }
+
+        public Vector3 GetShipSize()
+        {
+            if (ShipSize.sqrMagnitude > 0)
+                return ShipSize;
+
+            ShipTemplate template = new ShipTemplate();
+            template.LoadShip(ShipNode);
+            ShipSize = template.GetShipSize();
+            
+            return ShipSize;
         }
 
         public double GetTotalCost()

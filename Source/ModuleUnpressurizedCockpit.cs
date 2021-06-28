@@ -17,7 +17,10 @@ namespace RP0
         public double crewDeathAltitude = 16000;
 
         public double nextCheck = -1d;
+        public double timeSinceHypoxiaStarted = 0d;
         public double checkInterval = 1d;
+        public double referenceDensity = -1d;
+        public double referenceDensityMin;
 
         public double gDamageAdder = 0d;
 
@@ -54,10 +57,20 @@ namespace RP0
                         _origDoStockGCalcs = ProtoCrewMember.doStockGCalcs;
                     }
 
+                    double deltaTime = UT - nextCheck;
                     nextCheck = UT + checkInterval;
                     double curAltitute = part.vessel.altitude;
                     if (curAltitute > crewDeathAltitude)
                     {
+                        // Assume the standard atmosphere
+                        if (referenceDensity < 0d)
+                        {
+                            referenceDensity = Planetarium.fetch.Home.GetDensity(Planetarium.fetch.Home.GetPressure(crewDeathAltitude), Planetarium.fetch.Home.GetTemperature(crewDeathAltitude));
+                            referenceDensityMin = referenceDensity * 0.02d;
+                        }
+
+                        timeSinceHypoxiaStarted += deltaTime;
+
                         ScreenMessages.PostScreenMessage($"Cockpit is above the safe altitude which will lead to crew incapacitation and eventually to death", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
 
                         if (!_origDoStockGCalcs.HasValue)
@@ -71,9 +84,17 @@ namespace RP0
                         {
                             ProtoCrewMember pcm = part.protoModuleCrew[i];
 
-                            double highGPenalty = vessel.geeForce > 3 ? vessel.geeForce : 1;
-                            double altitudeMult = (curAltitute - crewDeathAltitude) / crewDeathAltitude * 15;
-                            pcm.gExperienced += (0.5d + rnd.NextDouble()) * gDamageAdder * highGPenalty * altitudeMult;
+                            double highGPenalty = vessel.geeForce > 3d ? System.Math.Pow(vessel.geeForce - 2d, 2d) : 1;
+
+                            double curDensity = part.atmDensity;
+                            if (curDensity < referenceDensityMin)
+                                curDensity = referenceDensityMin;
+
+                            double altitudeMult = (curAltitute - crewDeathAltitude) / crewDeathAltitude * 10d + referenceDensity / curDensity - 1d;
+
+                            double timeMult = System.Math.Pow(timeSinceHypoxiaStarted, 1.5d) * 0.01d;
+
+                            pcm.gExperienced += (0.5d + rnd.NextDouble()) * gDamageAdder * highGPenalty * altitudeMult * timeMult;
 
                             double gMult = ProtoCrewMember.GToleranceMult(pcm) * HighLogic.CurrentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().KerbalGToleranceMult;
                             _anyCrewAboveWarnThreshold = pcm.gExperienced > PhysicsGlobals.KerbalGThresholdWarn * gMult;
@@ -86,7 +107,7 @@ namespace RP0
                             }
 
                             // There's at least one cycle of delay after passing out before the death chance rolls start
-                            if (pcm.outDueToG && rnd.NextDouble() < crewDeathChance * altitudeMult)
+                            if (pcm.outDueToG && rnd.NextDouble() < crewDeathChance * altitudeMult * timeMult)
                             {
                                 killed = true;
                                 ScreenMessages.PostScreenMessage($"{vessel.vesselName}: Crewmember {pcm.name} has died from exposure to near-vacuum.", 30.0f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
@@ -103,6 +124,8 @@ namespace RP0
                     }
                     else
                     {
+                        timeSinceHypoxiaStarted = 0d;
+
                         if (_origDoStockGCalcs.HasValue)
                         {
                             ProtoCrewMember.doStockGCalcs = _origDoStockGCalcs.Value;

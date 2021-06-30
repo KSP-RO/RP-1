@@ -5737,6 +5737,29 @@
         ]
     },
     {
+        "name": "ROE-RangerRetro",
+        "title": "Ranger/Mariner Propulsion System",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "30",
+        "entry_cost": "0",
+        "category": "RCS",
+        "info": "",
+        "year": "1961",
+        "technology": "stabilityRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Ranger",
+        "engine_config": "RangerRetro",
+        "upgrade": false,
+        "entry_cost_mods": "RangerRetro",
+        "identical_part_name": "Ranger/Mariner Propulsion System",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROE-Raptor",
         "title": "Raptor Engine",
         "description": "",

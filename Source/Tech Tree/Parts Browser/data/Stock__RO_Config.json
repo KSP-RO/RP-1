@@ -1860,6 +1860,29 @@
         ]
     },
     {
+        "name": "RO-RSRM",
+        "title": "RSRM",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1981",
+        "technology": "solids1981",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Shuttle",
+        "engine_config": "RSRM-1981",
+        "upgrade": false,
+        "entry_cost_mods": "RSRM-1981",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "RO-RangerRetro",
         "title": "Ranger/Mariner Propulsion System",
         "description": "",

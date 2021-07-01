@@ -23,6 +23,7 @@ namespace KerbalConstructionTime
 
         private static PropertyInfo _piTFInstance;
         private static PropertyInfo _piTFSettingsEnabled;
+        private static MethodInfo _tfSetDataRateLimit;
         private static Type _tlSettingsType;
         private static FieldInfo _fiTLSettingsDisabled;
 
@@ -2032,6 +2033,12 @@ namespace KerbalConstructionTime
                         _piTFSettingsEnabled = t?.GetProperty("SettingsEnabled", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
                     }
                 }
+                var tfInterface = Type.GetType("TestFlightCore.TestFlightInterface, TestFlightCore", false);
+                if (tfInterface != null)
+                {
+                    Type[] argumentTypes = new[] { typeof(Part), typeof(string), typeof(string), typeof(string) };
+                    _tfSetDataRateLimit = tfInterface.GetMethod("SetDataRateLimit", BindingFlags.Public | BindingFlags.Static, null, argumentTypes, null);
+                }
                 return _isTestFlightInstalled.Value;
             }
         }
@@ -2064,6 +2071,22 @@ namespace KerbalConstructionTime
         {
             object tfInstance = _piTFInstance.GetValue(null);
             _piTFSettingsEnabled.SetValue(tfInstance, isEnabled);
+            if (!isEnabled)
+            {
+                if (_tfSetDataRateLimit != null)
+                {
+                    object[] parameters = { 0f };
+                    _tfSetDataRateLimit.Invoke(null, parameters);
+                }
+            }
+            else
+            {
+                if (_tfSetDataRateLimit != null)
+                {
+                    object[] parameters = { 1f };
+                    _tfSetDataRateLimit.Invoke(null, parameters);
+                }
+            }
         }
 
         private static void ToggleTLFailures(bool isEnabled)

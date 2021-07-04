@@ -378,6 +378,7 @@ namespace RP0.ProceduralAvionics
             CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
             Log($"Avionics Config changed to: {avionicsConfigName}. Tech: {avionicsTechLevel}");
             interplanetary = CurrentProceduralAvionicsTechNode.interplanetary;
+            allowAxial = CurrentProceduralAvionicsTechNode.allowAxial;
             if (_started && HighLogic.LoadedSceneIsEditor)
             {
                 // Don't fire these if cachedVolume isn't known yet.

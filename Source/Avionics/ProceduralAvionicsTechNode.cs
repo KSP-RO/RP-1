@@ -61,6 +61,10 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public bool interplanetary = true;
 
+        // allow axial translation (for science cores)
+        [Persistent]
+        public bool allowAxial = false;
+
         [Persistent]
         public int kosDiskSpace = 500;
 

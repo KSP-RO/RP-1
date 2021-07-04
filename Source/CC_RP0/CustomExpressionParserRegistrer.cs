@@ -53,6 +53,7 @@ namespace ContractConfigurator.RP0
             RegisterGlobalFunction(new Function<float>("RP1DeadlineMult", GetDeadlineMult, false));
             RegisterGlobalFunction(new Function<int>("RP1CommsPayload", GetCommsPayload, false));
             RegisterGlobalFunction(new Function<int>("RP1WeatherPayload", GetWeatherPayload, false));
+            RegisterGlobalFunction(new Function<bool>("RP1YesPlanes", GetPlaneContractsEnabled, false));
         }
 
         private static void RegisterRP0Hooks()
@@ -73,6 +74,11 @@ namespace ContractConfigurator.RP0
         private static int GetWeatherPayload()
         {
             return ContractGUI.WeatherPayload;
+        }
+
+        private static bool GetPlaneContractsEnabled()
+        {
+            return HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.PlaneContractsEnabled ?? true;
         }
 
         private static bool WithdrawContract(string contractName)

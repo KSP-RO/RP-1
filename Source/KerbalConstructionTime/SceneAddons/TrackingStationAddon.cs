@@ -60,25 +60,16 @@ namespace KerbalConstructionTime
         public void NewRecoveryFunctionTrackingStation()
         {
             if (!(FindObjectOfType(typeof(SpaceTracking)) is SpaceTracking ts
-                && ts.SelectedVessel is Vessel _selectedVessel))
+                && ts.SelectedVessel is Vessel selectedVessel))
             {
                 Debug.LogError("[KCT] No Vessel selected.");
                 return;
             }
 
-            bool canRecoverToSPH = _selectedVessel.IsRecoverable && _selectedVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
-
-            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
-            bool canRecoverToVAB = _selectedVessel.IsRecoverable &&
-                                   _selectedVessel.IsClearToSave() == ClearToSaveStatus.CLEAR &&
-                                   (_selectedVessel.situation == Vessel.Situations.PRELAUNCH ||
-                                    string.IsNullOrEmpty(reqTech) ||
-                                    ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
-
             var options = new List<DialogGUIBase>();
-            if (canRecoverToSPH)
+            if (Utilities.IsSphRecoveryAvailable(selectedVessel))
                 options.Add(new DialogGUIButton("Recover to SPH", RecoverToSPH));
-            if (canRecoverToVAB)
+            if (Utilities.IsVabRecoveryAvailable(selectedVessel))
                 options.Add(new DialogGUIButton("Recover to VAB", RecoverToVAB));
             options.Add(new DialogGUIButton("Normal recovery", DoNormalRecovery));
             options.Add(new DialogGUIButton("Cancel", () => { }));

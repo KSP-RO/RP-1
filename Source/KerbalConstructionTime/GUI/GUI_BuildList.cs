@@ -607,7 +607,8 @@ namespace KerbalConstructionTime
             GUILayout.Label(_rocketTexture, GUILayout.ExpandWidth(false));
             GUILayout.Label("VAB Storage");
             GUILayout.EndHorizontal();
-            if (Utilities.IsVabRecoveryAvailable() && GUILayout.Button("Recover Active Vessel To VAB"))
+            if (HighLogic.LoadedSceneIsFlight && Utilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) &&
+                GUILayout.Button("Recover Active Vessel To VAB"))
             {
                 if (!Utilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.VAB))
                 {
@@ -868,7 +869,8 @@ namespace KerbalConstructionTime
             GUILayout.Label(_planeTexture, GUILayout.ExpandWidth(false));
             GUILayout.Label("SPH Storage");
             GUILayout.EndHorizontal();
-            if (Utilities.IsSphRecoveryAvailable() && GUILayout.Button("Recover Active Vessel To SPH"))
+            if (HighLogic.LoadedSceneIsFlight && Utilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) &&
+                GUILayout.Button("Recover Active Vessel To SPH"))
             {
                 if (!Utilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.SPH))
                 {

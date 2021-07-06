@@ -20,6 +20,9 @@ namespace RP0
         [KSPField]
         public float disabledkW = -1f;
 
+        [KSPField]
+        public bool allowAxial = true;
+
         [KSPField(isPersistant = true, guiActive = true, guiName = "Power", guiFormat = "N1", guiUnits = "\u2009W", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public float currentWatts = 0f;
 

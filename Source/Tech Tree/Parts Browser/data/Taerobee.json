@@ -248,7 +248,7 @@
         "title": "Aerojet X103C10 [2.5KS18000]",
         "description": "A solid rocket booster motor for sounding rockets. Plume configured by RealPlume.",
         "mod": "Taerobee",
-        "cost": 40,
+        "cost": "30",
         "entry_cost": "800",
         "category": "SOLID",
         "info": "SRB",
@@ -260,9 +260,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
-        "engine_config": "",
+        "engine_config": "2_5KS18000",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "2-5KS18000",
         "identical_part_name": "AerobeeBooster",
         "module_tags": [
             "EngineSolid"

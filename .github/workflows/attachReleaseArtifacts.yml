@@ -33,7 +33,7 @@ jobs:
                     
       - name: Build mod solution
         run: |
-          rm -f -r ${GITHUB_WORKSPACE}/GameData/RP-0/
+          rm -f ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/*.dll
           msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
           cp -v ${GITHUB_WORKSPACE}/Source/ClearInputLocks/obj/x64/Release/ClearInputLocks.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/ClearInputLocks.dll
           cp -v ${GITHUB_WORKSPACE}/Source/CC_RP0/obj/x64/Release/CC_RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/CC_RP0.dll

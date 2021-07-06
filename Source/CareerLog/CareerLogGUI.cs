@@ -58,11 +58,18 @@ namespace RP0
                     settings.CareerLog_URL = Convert.ToBase64String(Encoding.UTF8.GetBytes(_serverUrl));    // KSP really doesn't like the symbols that a typical URL contains
                     settings.CareerLog_Token = _token;
 
-                    CareerLog.Instance.ExportToWeb(_serverUrl, _token);
-                    _exportStatusWeb = "Career progress exported to web.";
+                    _exportStatusWeb = null;
+                    CareerLog.Instance.ExportToWeb(_serverUrl, _token, () =>
+                    {
+                        _exportStatusWeb = "Career progress exported to web.";
+                    }, (errorMsg) =>
+                    {
+                        _exportStatusWeb = $"Career progress export failed. {errorMsg}";
+                    });
                 }
                 catch (Exception ex)
                 {
+                    Debug.LogError($"[RP-0] {ex}");
                     _exportStatusWeb = $"Export failed: {ex.Message}";
                 }
             }

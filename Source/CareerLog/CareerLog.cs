@@ -301,13 +301,13 @@ namespace RP0
             File.WriteAllText(path, csv);
         }
 
-        public void ExportToWeb(string serverUrl, string token)
+        public void ExportToWeb(string serverUrl, string token, Action onRequestSuccess, Action<string> onRequestFail)
         {
             string url = $"{serverUrl.TrimEnd('/')}/{token}";
-            StartCoroutine(PostRequestCareerLog(url));
+            StartCoroutine(PostRequestCareerLog(url, onRequestSuccess, onRequestFail));
         }
 
-        private IEnumerator PostRequestCareerLog(string url)
+        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
         {
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
@@ -377,12 +377,14 @@ namespace RP0
 
             yield return uwr.SendWebRequest();
 
-            if (uwr.isNetworkError)
+            if (uwr.isNetworkError || uwr.isHttpError)
             {
-                Debug.Log("Error While Sending: " + uwr.error);
+                onRequestFail(uwr.error);
+                Debug.Log($"Error While Sending: {uwr.error}; {uwr.downloadHandler.text}");
             }
             else
             {
+                onRequestSuccess();
                 Debug.Log("Received: " + uwr.downloadHandler.text);
             }
         }

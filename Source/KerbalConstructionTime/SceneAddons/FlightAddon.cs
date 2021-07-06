@@ -54,15 +54,14 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            bool isSPH = FlightGlobals.ActiveVessel?.IsRecoverable == true && 
-                         FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
-            bool isVAB = Utilities.IsVabRecoveryAvailable();
+            bool isSPHAllowed = Utilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel);
+            bool isVABAllowed = Utilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel);
             var options = new List<DialogGUIBase>();
             if (!FlightGlobals.ActiveVessel.isEVA)
             {
-                if (isSPH)
+                if (isSPHAllowed)
                     options.Add(new DialogGUIButton("Recover to SPH", RecoverToSPH));
-                if (isVAB)
+                if (isVABAllowed)
                     options.Add(new DialogGUIButton("Recover to VAB", RecoverToVAB));
                 options.Add(new DialogGUIButton("Normal recovery", DoNormalRecovery));
             }

@@ -953,6 +953,9 @@ namespace KerbalConstructionTime
                 return;
             }
 
+            newShip.FacilityBuiltIn = ship.FacilityBuiltIn;
+            newShip.KCTPersistentID = ship.KCTPersistentID;
+
             ship.RemoveFromBuildList();
 
             GetShipEditProgress(ship, out double progressBP, out _, out _);
@@ -1741,6 +1744,10 @@ namespace KerbalConstructionTime
 
                 KCTGameStates.RecoveredVessel = new BuildListVessel(FlightGlobals.ActiveVessel, listType);
 
+                KCTVesselData vData = FlightGlobals.ActiveVessel.GetKCTVesselData();
+                KCTGameStates.RecoveredVessel.KCTPersistentID = vData?.VesselID;
+                KCTGameStates.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
+
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == BuildListVessel.ListType.VAB)
                     KCTGameStates.RecoveredVessel.LaunchSite = "LaunchPad";
@@ -1914,22 +1921,36 @@ namespace KerbalConstructionTime
             return mTags?.tags.Contains(tag) ?? false;
         }
 
-        public static bool IsVabRecoveryAvailable()
+        public static KCTVesselData GetKCTVesselData(this Vessel v)
+        {
+            var kctvm = (KCTVesselTracker)v.vesselModules.FirstOrDefault(vm => vm is KCTVesselTracker);
+            return kctvm?.Data;
+        }
+
+        public static string GetKCTVesselId(this Vessel v)
+        {
+            return v.GetKCTVesselData()?.VesselID;
+        }
+
+        public static EditorFacility? GetVesselBuiltAt(this Vessel v)
+        {
+            return v.GetKCTVesselData()?.FacilityBuiltIn;
+        }
+
+        public static bool IsVabRecoveryAvailable(Vessel v)
         {
             string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
-            return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
-                   FlightGlobals.ActiveVessel.IsRecoverable &&
-                   FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR &&
-                   (FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH ||
+            return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
+                   v.GetVesselBuiltAt() != EditorFacility.SPH &&
+                   (v.situation == Vessel.Situations.PRELAUNCH ||
                     string.IsNullOrEmpty(reqTech) ||
                     ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
         }
 
-        public static bool IsSphRecoveryAvailable()
+        public static bool IsSphRecoveryAvailable(Vessel v)
         {
-            return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
-                   FlightGlobals.ActiveVessel.IsRecoverable &&
-                   FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
+            return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
+                   v.GetVesselBuiltAt() != EditorFacility.VAB;
         }
 
         public static void EnableSimulationLocks()

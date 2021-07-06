@@ -119,6 +119,7 @@
     <Compile Include="Persistence\ConfigNodeStorage.cs" />
     <Compile Include="Persistence\FacilityUpgradeStorageItem.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
+    <Compile Include="Persistence\KCTVesselData.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
     <Compile Include="KCTObservableList.cs" />
     <Compile Include="SceneAddons\MainMenuAddon.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
+    <Compile Include="KCTVesselTracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

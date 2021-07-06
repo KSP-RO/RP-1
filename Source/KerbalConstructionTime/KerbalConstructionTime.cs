@@ -211,87 +211,104 @@ namespace KerbalConstructionTime
                     KCTGameStates.ClearVesselEditMode();
                     break;
                 case GameScenes.FLIGHT:
-                    if (!KCTGameStates.IsSimulatedFlight &&
-                        FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH &&
-                        FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
-                    {
-                        KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
-                        foreach (Part p in FlightGlobals.ActiveVessel.parts)
-                        {
-                            KCTDebug.Log("Part being tested: " + p.partInfo.title);
-                            if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is CrewedPart cp))
-                                continue;
-                            List<ProtoCrewMember> crewList = cp.CrewList;
-                            KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
-                            foreach (ProtoCrewMember crewMember in crewList)
-                            {
-                                if (crewMember != null)     // Can this list can have null ProtoCrewMembers?
-                                {
-                                    ProtoCrewMember finalCrewMember = crewMember;
-                                    if (crewMember.type == ProtoCrewMember.KerbalType.Crew)
-                                    {
-                                        finalCrewMember = roster.Crew.FirstOrDefault(c => c.name == crewMember.name);
-                                    }
-                                    else if (crewMember.type == ProtoCrewMember.KerbalType.Tourist)
-                                    {
-                                        finalCrewMember = roster.Tourist.FirstOrDefault(c => c.name == crewMember.name);
-                                    }
-                                    try
-                                    {
-                                        if (finalCrewMember is ProtoCrewMember && p.AddCrewmember(finalCrewMember))
-                                        {
-                                            KCTDebug.Log($"Assigned {finalCrewMember.name } to {p.partInfo.name}");
-                                            finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
-                                            finalCrewMember.seat?.SpawnCrew();
-                                        } else
-                                        {
-                                            KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
-                                            finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
-                                        finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
-                                    }
-                                }
-                            }
-                        }
-                        KCTGameStates.LaunchedCrew.Clear();
-                    }
-
                     KCT_GUI.HideAll();
-                    if (!KCTGameStates.IsSimulatedFlight && KCTGameStates.LaunchedVessel != null && FlightGlobals.ActiveVessel?.situation == Vessel.Situations.PRELAUNCH)
-                    {
-                        KCTGameStates.LaunchedVessel.KSC = null; //it's invalid now
-                        KCTDebug.Log("Attempting to remove launched vessel from build list");
-                        if (KCTGameStates.LaunchedVessel.RemoveFromBuildList()) //Only do these when the vessel is first removed from the list
-                        {
-                            //Add the cost of the ship to the funds so it can be removed again by KSP
-                            Utilities.AddFunds(KCTGameStates.LaunchedVessel.Cost, TransactionReasons.VesselRollout);
-                            FlightGlobals.ActiveVessel.vesselName = KCTGameStates.LaunchedVessel.ShipName;
-                        }
-
-                        if (KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is ReconRollout rollout)
-                            KCTGameStates.ActiveKSC.Recon_Rollout.Remove(rollout);
-
-                        if (KCTGameStates.ActiveKSC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is AirlaunchPrep alPrep)
-                            KCTGameStates.ActiveKSC.AirlaunchPrep.Remove(alPrep);
-
-                        if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KCTGameStates.LaunchedVessel.Id &&
-                            (!alParams.KSPVesselId.HasValue || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
-                        {
-                            if (!alParams.KSPVesselId.HasValue) alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
-                            StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
-                        }
-                    }
+                    ProcessFlightStart();
                     break;
             }
             KCTDebug.Log("Start finished");
 
             DelayedStart();
 
+            UpdateTechlistIconColor();
             StartCoroutine(HandleEditorButton_Coroutine());
+        }
+
+        private void ProcessFlightStart()
+        {
+            if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.situation != Vessel.Situations.PRELAUNCH || KCT_GUI.IsPrimarilyDisabled) return;
+
+            if (!KCTGameStates.IsSimulatedFlight &&
+                FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
+            {
+                KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
+                foreach (Part p in FlightGlobals.ActiveVessel.parts)
+                {
+                    KCTDebug.Log("Part being tested: " + p.partInfo.title);
+                    if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is CrewedPart cp))
+                        continue;
+                    List<ProtoCrewMember> crewList = cp.CrewList;
+                    KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
+                    foreach (ProtoCrewMember crewMember in crewList)
+                    {
+                        if (crewMember != null)     // Can this list can have null ProtoCrewMembers?
+                        {
+                            ProtoCrewMember finalCrewMember = crewMember;
+                            if (crewMember.type == ProtoCrewMember.KerbalType.Crew)
+                            {
+                                finalCrewMember = roster.Crew.FirstOrDefault(c => c.name == crewMember.name);
+                            }
+                            else if (crewMember.type == ProtoCrewMember.KerbalType.Tourist)
+                            {
+                                finalCrewMember = roster.Tourist.FirstOrDefault(c => c.name == crewMember.name);
+                            }
+                            try
+                            {
+                                if (finalCrewMember is ProtoCrewMember && p.AddCrewmember(finalCrewMember))
+                                {
+                                    KCTDebug.Log($"Assigned {finalCrewMember.name } to {p.partInfo.name}");
+                                    finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
+                                    finalCrewMember.seat?.SpawnCrew();
+                                }
+                                else
+                                {
+                                    KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
+                                    finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
+                                finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
+                            }
+                        }
+                    }
+                }
+                KCTGameStates.LaunchedCrew.Clear();
+            }
+
+            if (KCTGameStates.LaunchedVessel == null) return;
+
+            var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
+            if (dataModule != null)
+            {
+                dataModule.Data.FacilityBuiltIn = KCTGameStates.LaunchedVessel.FacilityBuiltIn;
+                dataModule.Data.VesselID = KCTGameStates.LaunchedVessel.KCTPersistentID;
+            }
+
+            if (!KCTGameStates.IsSimulatedFlight)
+            {
+                KCTGameStates.LaunchedVessel.KSC = null; //it's invalid now
+                KCTDebug.Log("Attempting to remove launched vessel from build list");
+                if (KCTGameStates.LaunchedVessel.RemoveFromBuildList()) //Only do these when the vessel is first removed from the list
+                {
+                    //Add the cost of the ship to the funds so it can be removed again by KSP
+                    Utilities.AddFunds(KCTGameStates.LaunchedVessel.Cost, TransactionReasons.VesselRollout);
+                    FlightGlobals.ActiveVessel.vesselName = KCTGameStates.LaunchedVessel.ShipName;
+                }
+
+                if (KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is ReconRollout rollout)
+                    KCTGameStates.ActiveKSC.Recon_Rollout.Remove(rollout);
+
+                if (KCTGameStates.ActiveKSC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is AirlaunchPrep alPrep)
+                    KCTGameStates.ActiveKSC.AirlaunchPrep.Remove(alPrep);
+
+                if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KCTGameStates.LaunchedVessel.Id &&
+                    (!alParams.KSPVesselId.HasValue || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
+                {
+                    if (!alParams.KSPVesselId.HasValue) alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
+                    StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
+                }
+            }
         }
 
         internal IEnumerator AirlaunchRoutine(AirlaunchParams launchParams, Guid vesselId, bool skipCountdown = false)

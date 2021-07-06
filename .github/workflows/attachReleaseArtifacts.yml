@@ -1,0 +1,73 @@
+name: "Attach Release Artifacts"
+
+# Controls when the action will run. 
+on:
+  release:
+    types: [published]
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  attach-release-artifacts:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 100
+        
+      - name: Download required assemblies
+        id: download-assemblies
+        shell: bash
+        env: 
+          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+        run: |
+          curl https://ksp-ro.s3-us-west-2.amazonaws.com/KSPAssemblies-1.10.zip --output /tmp/bins.zip
+          KSP_DLL_PATH="/opt/ksp/assembly"
+          echo "::set-output name=ksp-dll-path::${KSP_DLL_PATH}"
+          mkdir -p "${KSP_DLL_PATH}"
+          unzip -P "${KSP_ZIP_PASSWORD}" '/tmp/bins.zip' -d "${KSP_DLL_PATH}"
+          rm '/tmp/bins.zip'          
+                    
+      - name: Build mod solution
+        run: |
+          rm -f ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/*.dll
+          msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+          cp -v ${GITHUB_WORKSPACE}/Source/ClearInputLocks/obj/x64/Release/ClearInputLocks.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/ClearInputLocks.dll
+          cp -v ${GITHUB_WORKSPACE}/Source/CC_RP0/obj/x64/Release/CC_RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/CC_RP0.dll
+          cp -v ${GITHUB_WORKSPACE}/Source/KerbalConstructionTime/obj/Release/RP0KCT.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0KCT.dll
+          cp -v ${GITHUB_WORKSPACE}/Source/obj/x64/Release/RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0.dll
+        
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.0
+          
+      - name: Make metadata
+        run: |
+          python ${GITHUB_WORKSPACE}/makeMeta.py ${{ github.event.release.tag_name }}
+          
+      - name: Assemble release
+        id: assemble-release
+        run: |
+          RELEASE_DIR="${RUNNER_TEMP}/release"
+          echo "Release dir: ${RELEASE_DIR}"
+          echo "Release zip: ${RELEASE_DIR}/RP-1-${{ github.event.release.tag_name }}.zip"
+          mkdir -v "${RELEASE_DIR}"
+          echo "::set-output name=release-dir::${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/RP-1.version" "${RELEASE_DIR}/GameData/RP-0/RP-1.version"
+          cd ${RELEASE_DIR}
+          zip -r RP-1-${{ github.event.release.tag_name }}.zip GameData
+        
+      - name: Upload package to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.assemble-release.outputs.release-dir }}/RP-1-${{ github.event.release.tag_name }}.zip
+          asset_name: RP-1-${{ github.event.release.tag_name }}.zip
+          asset_content_type: application/zip

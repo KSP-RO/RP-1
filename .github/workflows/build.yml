@@ -1,0 +1,76 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 100
+          
+      - name: Download required assemblies
+        id: download-assemblies
+        shell: bash
+        env: 
+          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+        run: |
+          curl https://ksp-ro.s3-us-west-2.amazonaws.com/KSPAssemblies-1.10.zip --output /tmp/bins.zip
+          KSP_DLL_PATH="/opt/ksp/assembly"
+          echo "::set-output name=ksp-dll-path::${KSP_DLL_PATH}"
+          mkdir -p "${KSP_DLL_PATH}"
+          unzip -P "${KSP_ZIP_PASSWORD}" '/tmp/bins.zip' -d "${KSP_DLL_PATH}"
+          rm '/tmp/bins.zip'          
+                    
+      - name: Build mod solution
+        run: |
+          rm -f -r ${GITHUB_WORKSPACE}/GameData/RP-0/
+          msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+          cp -v ${GITHUB_WORKSPACE}/Source/ClearInputLocks/obj/x64/Release/ClearInputLocks.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/ClearInputLocks.dll
+          cp -v ${GITHUB_WORKSPACE}/Source/CC_RP0/obj/x64/Release/CC_RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/CC_RP0.dll
+          cp -v ${GITHUB_WORKSPACE}/Source/KerbalConstructionTime/obj/Release/RP0KCT.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0KCT.dll
+          cp -v ${GITHUB_WORKSPACE}/Source/obj/x64/Release/RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0.dll
+        
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.0
+        
+      - name: Build metadata
+        shell: bash
+        run: |
+          python ${GITHUB_WORKSPACE}/makeMeta.py 2.0.0.0
+          
+      - name: Assemble release
+        id: assemble-release
+        run: |
+          RELEASE_DIR="${RUNNER_TEMP}/release"
+          echo "Release dir: ${RELEASE_DIR}"
+          mkdir -v "${RELEASE_DIR}"
+          echo "::set-output name=release-dir::${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: RP-1
+          path: ${{ steps.assemble-release.outputs.release-dir }}

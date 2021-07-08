@@ -7,12 +7,18 @@ RP-1 is a community effort, and your contributions are appreciated. You can repo
 When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production.
 
 Tooling: Tooling costs significantly adjust the play cost of craft. As you adjust tank sizes, wait till the end of craft saving to tool the tanks so you do not waste funds.
+
 Maintenance: A small cost of the infrastructure and wage cost is rolled into play. This puts a minimal drag on program growth.
+
 KCT Integration: KCT is heavily integrated and using the RP-0 Settings is important. Make sure you have lower rated launch pads available and don't just focus on one maximum upgraded pad for all use. This will lower costs and rollout times if you use the smallest pad needed for the craft launched. There are 7 levels of pad and R&D.
+
 Crew Training: Each 'naut needs to be proficient and mission trained to fly on a craft. Proficiency training will end after a time and mission training is good for one mission and is then lost after recovery.
+
 Crew readiness and retirement: After each recovery crew are on leave for a short time. Each crew also has a retirement date that rolls forward after each mission.
 Contracts: Many contracts leading through a rough historical path are available. One contract will add a beginning node of parts that are available from the start but you may not want cluttering the VAB/SPH. Parts in this node have a purchase price of 1 fund and this contract will auto-complete seconds after leaving the mission control the first time.
+
 Tree: A massive tree organized along a historical frame. Two gating tech paths (Material Science, and Electronics) limit what nodes are available in a general sense. Most nodes have custom icons usually taken from the profile of relevant hardware from the node. Using KCT the nodes will have an orange interior when purchased with points and the normal purchased colors after KCT delay times pass.
+
 Part Tags: launch costs are significantly affected by the types of systems on the craft. For instance toxic hypergolics require special handling and disposal. So a solid rocket motor driven craft may at first glance seem more expensive but my indeed be less costly due to reduce launch costs.
 Engine Variations: Many engine variations are available and purchased via the Engine GUI. In the Tech tree these will appear and may have some variable cost however this cost is not real and purchasing this "Part" will have no cost or impact whether it is purchased when looking in the Engine GUI.
 

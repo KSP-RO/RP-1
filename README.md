@@ -1,19 +1,19 @@
-Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Space Program's Realism Overhaul.
+Welcome to Realistic Progression One, the heavyweight career add-on for Kerbal Space Program's Realism Overhaul.
 
-RP-1 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-1 works with as many additional mods as possible; we use a fresh fully icon rebuilt Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a historical fashion.  Right now a good number of nodes lack much in the way of parts allowing for placement of balanced historically appropriate parts in those nodes. 
+RP-1 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However, we also wish to ensure that RP-1 works with as many additional mods as possible; we use a fresh fully icon rebuilt Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a historical fashion.  Right now a good number of nodes lack much in the way of parts allowing for placement of balanced historically appropriate parts in those nodes.
 
-RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/issues), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/master). 
+RP-1 is a community effort, and your contributions are appreciated. You can report issues [on our issues page](https://github.com/KSP-RO/RP-0/issues), and access the [source code on github](https://github.com/KSP-RO/RP-0/tree/master).
 
-When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production. 
+When starting the game, the balance should be similar to KSP's normal career, so we recommend "Moderate" or "Hard" settings. If playing without part unlock costs, it's recommended you drop contract funds payouts to 20% or less to maintain balance, since in real life the research programs and the setting up of factories cost much more than serial production.
 
-Tooling: Tooling costs significantly adjust the play cost of craft. As you adjust tank sizes wait till the end of craft saving to tool the tanks so you do not waste funds. 
+Tooling: Tooling costs significantly adjust the play cost of craft. As you adjust tank sizes, wait till the end of craft saving to tool the tanks so you do not waste funds.
 Maintenance: A small cost of the infrastructure and wage cost is rolled into play. This puts a minimal drag on program growth.
-KCT Integration: KCT is heavily integrated and using the RP-0 Settings is important. Make sure you have lower rated launch pads availble and don't just focus on one maximum upgraded pad for all use. This will lower costs and rollout times if you use the smallest pad needed for the craft launched. There are 7 levels of pad and R&D.
+KCT Integration: KCT is heavily integrated and using the RP-0 Settings is important. Make sure you have lower rated launch pads available and don't just focus on one maximum upgraded pad for all use. This will lower costs and rollout times if you use the smallest pad needed for the craft launched. There are 7 levels of pad and R&D.
 Crew Training: Each 'naut needs to be proficient and mission trained to fly on a craft. Proficiency training will end after a time and mission training is good for one mission and is then lost after recovery.
 Crew readiness and retirement: After each recovery crew are on leave for a short time. Each crew also has a retirement date that rolls forward after each mission.
 Contracts: Many contracts leading through a rough historical path are available. One contract will add a beginning node of parts that are available from the start but you may not want cluttering the VAB/SPH. Parts in this node have a purchase price of 1 fund and this contract will auto-complete seconds after leaving the mission control the first time.
-Tree: A massive tree orginized along a historical frame. Two gating tech patchs (Material Science, and Electronics) limit what nodes are available in a general sense. Most nodes have custom icons usually taken from the profile of relavent hardware from the node. Using KCT the nodes will have an orange interior when purchased with points and the normal purchased colors after KCT delay times pass.
-Part Tags: launch costs are significanlty affected by the types of systems on the craft. For instance toxic hypergolics require special handling and disposal. So a solid rocket motor driven craft may at first glance seem more expensive but my indeed be less costly due to reduce launch costs.
+Tree: A massive tree organized along a historical frame. Two gating tech paths (Material Science, and Electronics) limit what nodes are available in a general sense. Most nodes have custom icons usually taken from the profile of relevant hardware from the node. Using KCT the nodes will have an orange interior when purchased with points and the normal purchased colors after KCT delay times pass.
+Part Tags: launch costs are significantly affected by the types of systems on the craft. For instance toxic hypergolics require special handling and disposal. So a solid rocket motor driven craft may at first glance seem more expensive but my indeed be less costly due to reduce launch costs.
 Engine Variations: Many engine variations are available and purchased via the Engine GUI. In the Tech tree these will appear and may have some variable cost however this cost is not real and purchasing this "Part" will have no cost or impact whether it is purchased when looking in the Engine GUI.
 
 
@@ -34,7 +34,7 @@ Discord Link: https://discord.gg/V73jjNd
 - Contract Configurator
 - Custom Barn Kit
 - Deadly Reentry
-- Ven's Stock Revamp (Needed for engines)
+- Ven's Stock Revamp Core (Needed for engines)
 - DMagic Orbital Science (Science parts)
 - DMModuleScienceAnimateGeneric
 
@@ -43,21 +43,18 @@ Discord Link: https://discord.gg/V73jjNd
 - Connected Living Space
 - Hangar Extender
 - Kerbal Alarm Clock
-- KRASH
 - KSCSwitcher
 - MechJeb
 - Procedural Fairings
 - Procedural Parts
 - RCS Build Aid
 - RealAntennas
-- RemoteTech
+- ROx Mods: ROEngines, ROCapsules, ROSolar, ROTanks
 - SCANsat
 - Science Situation Info (tells you what science parts work where)
 - Ship Manifest
 - ROKerbalism
-- TAC Life Support
-- TestLite
-- Test Flight
+- TestLite or TestFlight
 - Texture Replacer
 - Toolbar
 
@@ -68,8 +65,6 @@ Discord Link: https://discord.gg/V73jjNd
 - Kerbal Engineer Redux
 - Kerbal Renamer
 - kOS
-- ROEngines
-- ROCapsules
 - Real Scale Boosters
 - Bluedog Design Bureau
 - Soviet Engine Pack
@@ -122,13 +117,13 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
     {
         name = ModuleProceduralAvionics
 
-        AVIONICSCONFIG  # A Procedural Avionics unit can have 
+        AVIONICSCONFIG  # A Procedural Avionics unit can have
                         # multiple AVIONICSCONFIG nodes
         {
             name = booster  # The name of this config
 
             TECHLIMIT  # Guidance Unit (Starting), 1m
-                       # We'll define our efficiencies per tech level 
+                       # We'll define our efficiencies per tech level
                        # Sandbox play will pick the best TECHLIMIT per AVIONICSCONFIG
                        # We generally try to add a comment saying what this confic
                        # was created from (in this case, the first Guidance Unit)
@@ -136,32 +131,32 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 name = start                # This is the name of the technology that
                                             # should be unlocked for this to be
                                             # available.
-                                            
+
                 unlockCost = 0              # This node is free
 
-                tonnageToMassRatio = 26.13  # This is how efficient this node is mass 
-                                            # wise at 100% utilization. A higher number 
+                tonnageToMassRatio = 26.13  # This is how efficient this node is mass
+                                            # wise at 100% utilization. A higher number
                                             # here is more efficient. More than 100%
                                             # utilization will cause this to be
                                             # effectively higher too.
-                                            
-                costPerControlledTon = 13   # This is how much the avionics portion of 
+
+                costPerControlledTon = 13   # This is how much the avionics portion of
                                             # this part costs at 100% utilization.
                                             # Lower is better. This goes up exponentially
-                                            # as utilization goes up. 
-                                            
-                enabledProceduralW = 150    # This is the power drain per controllable 
-                                            # ton when this part is active, 
+                                            # as utilization goes up.
+
+                enabledProceduralW = 150    # This is the power drain per controllable
+                                            # ton when this part is active,
                                             # again at 100% utilization.
-                                            
+
                 standardAvionicsDensity = 5 # This helps make procedural avionics
                                             # match up to their in-game counterparts.
                                             # It's pretty much part mass / part volume.
                                             #
-                                            # Another note about this value: generally, 
+                                            # Another note about this value: generally,
                                             # it has no effect on performance efficiency,
                                             # since this just ties the weight of avionics
-                                            # to the size of the part. In the end, 
+                                            # to the size of the part. In the end,
                                             # avionics is still dependant on part mass.
 
                 minimumTonnage = 15         # No matter what values you have set elsewhere,
@@ -173,7 +168,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                 maximumTonnage = 40         # No matter what values you have set elsewhere,
                                             # this is the maximum amout of control you can
                                             # set this part to.
-                                            # This prevents you from using unrealistic 
+                                            # This prevents you from using unrealistic
                                             # sized avioncs units early on.
 
                 SASServiceLevel = 0         # The service level of the built in SAS Module.
@@ -181,7 +176,7 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
                                             # this value can range from 0-3
             }
             TECHLIMIT # Guidance Unit (Early), 1m
-                      # An example of another, more efficient 
+                      # An example of another, more efficient
                       # tech node for the same config
             {
                 name = earlyAvionics
@@ -217,8 +212,8 @@ Let's take a look at a sample MM config for procedural avionics.  I'll annotate 
 
             TECHLIMIT # Able Avionics Package
             {
-                name = earlyAvionics             # Notice there is no node with the name 
-                                                 # of "start".  This will cause the 
+                name = earlyAvionics             # Notice there is no node with the name
+                                                 # of "start".  This will cause the
                                                  # upperStage config not to be
                                                  # unlocked until later in the gameplay
 

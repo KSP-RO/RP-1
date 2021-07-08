@@ -27,7 +27,7 @@ Release Thread: https://forum.kerbalspaceprogram.com/index.php?/topic/190040-161
 Github Repo:  https://github.com/KSP-RO/RP-0
 Discord Link: https://discord.gg/V73jjNd
 
-**Requirements:**
+**Requirements:** (See the [Installation Guide](https://github.com/KSP-RO/RP-0/wiki/Installation) for up-to-date information)
 - Realism Overhaul and all of its required mods (including Real Solar System)
 - Module Manager
 - SXT Continued (Needed for engines)
@@ -50,8 +50,6 @@ Discord Link: https://discord.gg/V73jjNd
 - RCS Build Aid
 - RealAntennas
 - ROx Mods: ROEngines, ROCapsules, ROSolar, ROTanks
-- SCANsat
-- Science Situation Info (tells you what science parts work where)
 - Ship Manifest
 - ROKerbalism
 - TestLite or TestFlight
@@ -65,11 +63,13 @@ Discord Link: https://discord.gg/V73jjNd
 - Kerbal Engineer Redux
 - Kerbal Renamer
 - kOS
+- SCANsat
 - Real Scale Boosters
 - Bluedog Design Bureau
 - Soviet Engine Pack
 - Taerobee
 - Waypoint Manager
+- Science Situation Info (tells you what science parts work where)
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!
 

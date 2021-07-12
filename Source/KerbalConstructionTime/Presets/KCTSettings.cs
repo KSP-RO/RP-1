@@ -11,8 +11,6 @@ namespace KerbalConstructionTime
         [Persistent]
         public int MaxTimeWarp;
         [Persistent]
-        public bool ForceStopWarp;
-        [Persistent]
         public bool DisableAllMessages;
         [Persistent]
         public bool ShowSimWatermark;
@@ -31,7 +29,6 @@ namespace KerbalConstructionTime
 
         public KCTSettings()
         {
-            ForceStopWarp = false;
             DisableAllMessages = false;
             ShowSimWatermark = true;
             Debug = false;

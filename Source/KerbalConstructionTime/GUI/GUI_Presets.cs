@@ -18,7 +18,7 @@ namespace KerbalConstructionTime
         private static bool _saveCareer, _saveScience, _saveSandbox;
         private static KCT_Preset _toSave;
 
-        private static bool _forceStopWarp, _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms;
+        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms;
         private static int _newTimewarp;
 
         public static void DrawPresetWindow(int windowID)
@@ -277,7 +277,6 @@ namespace KerbalConstructionTime
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     Utilities.DisableModFunctionality();
                 KCTGameStates.Settings.MaxTimeWarp = _newTimewarp;
-                KCTGameStates.Settings.ForceStopWarp = _forceStopWarp;
                 KCTGameStates.Settings.DisableAllMessages = _disableAllMsgs;
                 KCTGameStates.Settings.ShowSimWatermark = _showSimWatermark;
                 KCTGameStates.Settings.OverrideLaunchButton = _overrideLaunchBtn;
@@ -342,7 +341,6 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            _forceStopWarp = GUILayout.Toggle(_forceStopWarp, "Auto Stop TimeWarp", HighLogic.Skin.button);
             _autoAlarms = GUILayout.Toggle(_autoAlarms, "Auto KAC Alarms", HighLogic.Skin.button);
             _overrideLaunchBtn = GUILayout.Toggle(_overrideLaunchBtn, "Override Launch Button", HighLogic.Skin.button);
             //useBlizzyToolbar = GUILayout.Toggle(useBlizzyToolbar, "Use Toolbar Mod", HighLogic.Skin.button);
@@ -469,7 +467,6 @@ namespace KerbalConstructionTime
         private static void ShowSettings()
         {
             _newTimewarp = KCTGameStates.Settings.MaxTimeWarp;
-            _forceStopWarp = KCTGameStates.Settings.ForceStopWarp;
             _disableAllMsgs = KCTGameStates.Settings.DisableAllMessages;
             _showSimWatermark = KCTGameStates.Settings.ShowSimWatermark;
             _debug = KCTGameStates.Settings.Debug;

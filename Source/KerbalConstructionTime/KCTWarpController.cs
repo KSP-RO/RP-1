@@ -65,8 +65,8 @@ namespace KerbalConstructionTime
                 return;
             }
             // If the warp target has been reached, exit.
-            // If we aren't warping AND ForceStopWarp is false, we should have already exited.
-            if (target.IsComplete() || !(warping || KCTGameStates.Settings.ForceStopWarp))
+            // Or if the player (or something else) has warped us down to 1x, exit.
+            if (target.IsComplete() || TimeWarp.CurrentRateIndex == 0)
             {
                 Instance.gameObject.DestroyGameObject();
                 return;
@@ -81,11 +81,12 @@ namespace KerbalConstructionTime
                 int warpRate = TimeWarp.CurrentRateIndex;
                 if (warpRate < desiredWarpRate) //if something else changes the warp rate then release control to them, such as Kerbal Alarm Clock
                 {
+                    // This will prevent us warping up again--but note this does _not_ make us exit.
                     Debug.Log($"{ModTag} External warp change detected, backing off control.");
                     warping = false;
                 }
                 int nBuffer = 3;   // TODO: Make configurable
-                if (!warping && KCTGameStates.Settings.ForceStopWarp)
+                if (!warping )
                     nBuffer = 1;
                 if (warpRate > 0 && dT * nBuffer > Math.Max(remaining, 0))
                 {

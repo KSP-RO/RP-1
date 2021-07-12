@@ -111,8 +111,6 @@ namespace KerbalConstructionTime
             Progress += BuildRate * UTDiff;
             if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
             {
-                if (KCTGameStates.Settings.ForceStopWarp && TimeWarp.CurrentRate > 1f)
-                    TimeWarp.SetRate(0, true);
                 if (ProtoNode == null) return;
                 EnableTech();
 

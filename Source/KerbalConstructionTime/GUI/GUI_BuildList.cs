@@ -248,7 +248,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
             }
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.FLIGHT)
             {
                 if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
                 {
@@ -256,7 +256,9 @@ namespace KerbalConstructionTime
                     GUIStates.ShowBuildList = false;
                     GUIStates.ShowBLPlus = false;
                 }
-
+            }
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+            {
                 if (GUILayout.Button(_settingsTexture, GUILayout.ExpandWidth(false)))
                 {
                     GUIStates.ShowBuildList = false;

@@ -79,7 +79,7 @@ namespace KerbalConstructionTime
             if (dT > 0)
             {
                 int warpRate = TimeWarp.CurrentRateIndex;
-                if (warpRate < desiredWarpRate) //if something else changes the warp rate then release control to them, such as Kerbal Alarm Clock
+                if (warping && warpRate < desiredWarpRate) //if something else changes the warp rate then release control to them, such as Kerbal Alarm Clock
                 {
                     // This will prevent us warping up again--but note this does _not_ make us exit.
                     Debug.Log($"{ModTag} External warp change detected, backing off control.");

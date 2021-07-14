@@ -9,6 +9,12 @@ namespace RP0
         [Persistent]
         public string VesselName;
 
+        [Persistent]
+        public string VesselUID;
+
+        [Persistent]
+        public string LaunchID;
+
         public LaunchEvent(double UT) : base(UT)
         {
         }

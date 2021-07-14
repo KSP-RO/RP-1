@@ -631,7 +631,9 @@ namespace RP0
                 _launched = true;
                 _launchedVessels.Add(new LaunchEvent(KSPUtils.GetUT())
                 {
-                    VesselName = FlightGlobals.ActiveVessel?.vesselName
+                    VesselName = FlightGlobals.ActiveVessel?.vesselName,
+                    VesselUID = KerbalConstructionTime.Utilities.GetKCTVesselId(ev.host),
+                    LaunchID = Guid.NewGuid().ToString("N")
                 });
             }
         }

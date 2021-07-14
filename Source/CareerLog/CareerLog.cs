@@ -35,6 +35,7 @@ namespace RP0
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
         private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
         private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
+        private readonly List<FailureEvent> _failures = new List<FailureEvent>();
         private readonly List<FacilityConstructionEvent> _facilityConstructions = new List<FacilityConstructionEvent>();
         private readonly List<TechResearchEvent> _techEvents = new List<TechResearchEvent>();
         private bool _eventsBound = false;
@@ -157,6 +158,15 @@ namespace RP0
                 }
             }
 
+            foreach (ConfigNode n in node.GetNodes("FAILUREEVENTS"))
+            {
+                foreach (ConfigNode fn in n.GetNodes("FAILUREEVENT"))
+                {
+                    var f = new FailureEvent(fn);
+                    _failures.Add(f);
+                }
+            }
+
             foreach (ConfigNode n in node.GetNodes("FACILITYCONSTRUCTIONS"))
             {
                 foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTRUCTION"))
@@ -198,6 +208,12 @@ namespace RP0
                 l.Save(n.AddNode("LAUNCHEVENT"));
             }
 
+            n = node.AddNode("FAILUREEVENTS");
+            foreach (FailureEvent f in _failures)
+            {
+                f.Save(n.AddNode("FAILUREEVENT"));
+            }
+
             n = node.AddNode("FACILITYCONSTRUCTIONS");
             foreach (FacilityConstructionEvent fc in _facilityConstructions)
             {
@@ -236,6 +252,18 @@ namespace RP0
                 NewLevel = newLevel,
                 Cost = cost,
                 State = state
+            });
+        }
+
+        public void AddFailureEvent(Vessel v, string part, string type)
+        {
+            if (!IsEnabled) return;
+
+            _failures.Add(new FailureEvent(KSPUtils.GetUT())
+            {
+                VesselUID = v.GetKCTVesselId(),
+                Part = part,
+                Type = type
             });
         }
 
@@ -354,6 +382,15 @@ namespace RP0
             {
                 var dto = new LaunchEventDto(_launchedVessels[i]);
                 if (i < _launchedVessels.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"failureEvents\": [";
+
+            for (var i = 0; i < _failures.Count; i++)
+            {
+                var dto = new FailureEventDto(_failures[i]);
+                if (i < _failures.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
                 else jsonToSend += JsonUtility.ToJson(dto);
             }
 

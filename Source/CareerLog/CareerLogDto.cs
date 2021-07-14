@@ -171,4 +171,34 @@ namespace RP0
                 $"{nameof(launchID)}: {launchID}";
         }
     }
+
+    [Serializable]
+    internal class FailureEventDto
+    {
+        public string date;
+        public string vesselUID;
+        public string part;
+        public string type;
+
+        public FailureEventDto()
+        {
+        }
+
+        public FailureEventDto(FailureEvent fe)
+        {
+            date = CareerLog.UTToDate(fe.UT).ToString("o");
+            vesselUID = fe.VesselUID;
+            part = fe.Part;
+            type = fe.Type;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(part)}: {part}, " +
+                $"{nameof(type)}: {type}, " +
+                $"{nameof(vesselUID)}: {vesselUID}";
+        }
+    }
 }

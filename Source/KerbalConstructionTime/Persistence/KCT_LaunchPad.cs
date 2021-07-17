@@ -18,6 +18,11 @@ namespace KerbalConstructionTime
         /// </summary>
         [Persistent] public string name = "LaunchPad";
 
+        /// <summary>
+        /// The default launchsite this pad is hooked up to.
+        /// </summary>
+        [Persistent] public string launchSiteName = "LaunchPad";
+
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
 
         public bool IsDestroyed

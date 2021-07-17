@@ -447,7 +447,18 @@ namespace KerbalConstructionTime
             if (fillFuel)
                 FillUnlockedFuelTanks();
             ShipNode.Save(tempFile);
-            FlightDriver.StartWithNewLaunch(tempFile, Flag, LaunchSite, new VesselCrewManifest());
+            string launchSite = LaunchSite;
+            if (launchSite == "LaunchPad")
+            {
+                KCT_LaunchPad pad = null;
+                if (LaunchSiteID >= 0)
+                    pad = KCTGameStates.ActiveKSC.LaunchPads[LaunchSiteID];
+                else
+                    pad = KCTGameStates.ActiveKSC.ActiveLPInstance;
+                
+                launchSite = pad.launchSiteName;
+            }
+            FlightDriver.StartWithNewLaunch(tempFile, Flag, launchSite, new VesselCrewManifest());
             if (KCTGameStates.AirlaunchParams != null) KCTGameStates.AirlaunchParams.KSPVesselId = null;
         }
 

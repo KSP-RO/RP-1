@@ -18,6 +18,7 @@ namespace KerbalConstructionTime
         private static bool _combineVabAndSph, _isVABSelected, _isSPHSelected, _isTechSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
+        private static bool _isSelectingLaunchSiteForVessel = true;
         private static double _costOfNewLP = int.MinValue;
 
         private static GUIStyle _redText, _yellowText, _greenText, _yellowButton, _redButton, _greenButton;
@@ -1058,6 +1059,20 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
             }
+            if (GUILayout.Button("Location", GUILayout.ExpandWidth(false)))
+            {
+                _launchSites = Utilities.GetLaunchSites(true);
+                if (_launchSites.Any())
+                {
+                    _isSelectingLaunchSiteForVessel = false;
+                    GUIStates.ShowLaunchSiteSelector = true;
+                    _centralWindowPosition.width = 300;
+                }
+                else
+                {
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                }
+            }
             if (_costOfNewLP >= 0 && GUILayout.Button("New", GUILayout.ExpandWidth(false)))
             {
                 _newName = $"LaunchPad {(KCTGameStates.ActiveKSC.LaunchPads.Count + 1)}";
@@ -1273,9 +1288,17 @@ namespace KerbalConstructionTime
             {
                 if (GUILayout.Button(launchsite))
                 {
-                    //Set the chosen vessel's launch site to the selected site
-                    BuildListVessel blv = Utilities.FindBLVesselByID(_selectedVesselId);
-                    blv.LaunchSite = launchsite;
+                    if (_isSelectingLaunchSiteForVessel)
+                    {
+                        //Set the chosen vessel's launch site to the selected site
+                        BuildListVessel blv = Utilities.FindBLVesselByID(_selectedVesselId);
+                        blv.LaunchSite = launchsite;
+                    }
+                    else
+                    {
+                        KCTGameStates.ActiveKSC.ActiveLPInstance.launchSiteName = launchsite;
+                        _isSelectingLaunchSiteForVessel = true; // reset
+                    }
                     GUIStates.ShowLaunchSiteSelector = false;
                 }
             }

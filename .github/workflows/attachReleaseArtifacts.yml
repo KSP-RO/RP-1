@@ -58,6 +58,7 @@ jobs:
           mkdir -v "${RELEASE_DIR}"
           echo "::set-output name=release-dir::${RELEASE_DIR}"
           cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/LICENSE.md" "${RELEASE_DIR}/GameData/LICENSE.md"
           cp -v -R "${GITHUB_WORKSPACE}/RP-1.version" "${RELEASE_DIR}/GameData/RP-0/RP-1.version"
           cd ${RELEASE_DIR}
           zip -r RP-1-${{ github.event.release.tag_name }}.zip GameData

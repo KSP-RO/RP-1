@@ -171,7 +171,7 @@ namespace KerbalConstructionTime
             IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(this);
         }
 
-        public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int EditorFacility)
+        public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int editorFacility)
         {
             LaunchSite = ls;
             ShipName = name;
@@ -180,10 +180,16 @@ namespace KerbalConstructionTime
             IntegrationPoints = integrP;
             Progress = 0;
             Flag = flagURL;
-            if (EditorFacility == (int)EditorFacilities.VAB)
+            if (editorFacility == (int)EditorFacilities.VAB)
+            {
                 Type = ListType.VAB;
-            else if (EditorFacility == (int)EditorFacilities.SPH)
+                FacilityBuiltIn = EditorFacility.VAB;
+            }
+            else if (editorFacility == (int)EditorFacilities.SPH)
+            {
                 Type = ListType.SPH;
+                FacilityBuiltIn = EditorFacility.SPH;
+            }
             else
                 Type = ListType.None;
             CannotEarnScience = false;

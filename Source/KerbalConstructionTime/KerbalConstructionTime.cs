@@ -249,54 +249,7 @@ namespace KerbalConstructionTime
 
             if (KCT_GUI.IsPrimarilyDisabled) return;
 
-            if (!KCTGameStates.IsSimulatedFlight &&
-                FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
-            {
-                KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
-                foreach (Part p in FlightGlobals.ActiveVessel.parts)
-                {
-                    KCTDebug.Log("Part being tested: " + p.partInfo.title);
-                    if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is CrewedPart cp))
-                        continue;
-                    List<ProtoCrewMember> crewList = cp.CrewList;
-                    KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
-                    foreach (ProtoCrewMember crewMember in crewList)
-                    {
-                        if (crewMember != null)     // Can this list can have null ProtoCrewMembers?
-                        {
-                            ProtoCrewMember finalCrewMember = crewMember;
-                            if (crewMember.type == ProtoCrewMember.KerbalType.Crew)
-                            {
-                                finalCrewMember = roster.Crew.FirstOrDefault(c => c.name == crewMember.name);
-                            }
-                            else if (crewMember.type == ProtoCrewMember.KerbalType.Tourist)
-                            {
-                                finalCrewMember = roster.Tourist.FirstOrDefault(c => c.name == crewMember.name);
-                            }
-                            try
-                            {
-                                if (finalCrewMember is ProtoCrewMember && p.AddCrewmember(finalCrewMember))
-                                {
-                                    KCTDebug.Log($"Assigned {finalCrewMember.name } to {p.partInfo.name}");
-                                    finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
-                                    finalCrewMember.seat?.SpawnCrew();
-                                }
-                                else
-                                {
-                                    KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
-                                    finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
-                                finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
-                            }
-                        }
-                    }
-                }
-                KCTGameStates.LaunchedCrew.Clear();
-            }
+            AssignCrewToCurrentVessel();
 
             if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.IsSimulatedFlight)
             {
@@ -321,6 +274,50 @@ namespace KerbalConstructionTime
                     if (!alParams.KSPVesselId.HasValue) alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
                     StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
                 }
+            }
+        }
+
+        private static void AssignCrewToCurrentVessel()
+        {
+            if (!KCTGameStates.IsSimulatedFlight &&
+                FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
+            {
+                KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
+                foreach (Part p in FlightGlobals.ActiveVessel.parts)
+                {
+                    KCTDebug.Log("Part being tested: " + p.partInfo.title);
+                    if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is PartCrewAssignment cp))
+                        continue;
+                    List<CrewMemberAssignment> crewList = cp.CrewList;
+                    KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
+                    foreach (CrewMemberAssignment assign in crewList)
+                    {
+                        ProtoCrewMember crewMember = assign.PCM;
+                        if (crewMember == null) continue;
+
+                        // CrewRoster isn't reloaded from ConfigNode when starting flight. Can use the same instances as the previous scene.
+                        try
+                        {
+                            if (crewMember is ProtoCrewMember && p.AddCrewmember(crewMember))
+                            {
+                                KCTDebug.Log($"Assigned {crewMember.name} to {p.partInfo.name}");
+                                crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
+                                crewMember.seat?.SpawnCrew();
+                            }
+                            else
+                            {
+                                KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
+                                crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
+                            crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
+                        }
+                    }
+                }
+                KCTGameStates.LaunchedCrew.Clear();
             }
         }
 

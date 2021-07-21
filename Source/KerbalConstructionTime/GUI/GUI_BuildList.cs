@@ -1198,6 +1198,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.EditedVessel = b;
                 KCTGameStates.EditedVessel.KSC = null;
                 KCTGameStates.EditorShipEditingMode = true;
+                KCTGameStates.mergingAvailable = b.IsFinished;
 
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_EXIT, "KCTEditExit");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_NEW, "KCTEditNew");

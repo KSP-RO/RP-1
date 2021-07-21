@@ -16,6 +16,8 @@ namespace KerbalConstructionTime
         public static string ActiveKSCName = string.Empty;
         public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
+        public static bool mergingAvailable;
+        public static List<BuildListVessel> mergedVessels = new List<BuildListVessel>();
 
         public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 

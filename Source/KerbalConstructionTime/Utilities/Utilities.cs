@@ -945,11 +945,17 @@ namespace KerbalConstructionTime
 
         public static void SaveShipEdits(BuildListVessel ship)
         {
-            AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+            double usedShipsCost = ship.GetTotalCost();
+            foreach (BuildListVessel v in KCTGameStates.mergedVessels)
+            {
+                usedShipsCost += v.GetTotalCost();
+                v.RemoveFromBuildList();
+            }
+            AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
             BuildListVessel newShip = AddVesselToBuildList();
             if (newShip == null)
             {
-                SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
                 return;
             }
 
@@ -970,6 +976,8 @@ namespace KerbalConstructionTime
             KCTGameStates.ClearVesselEditMode();
 
             KCTDebug.Log("Edits saved.");
+
+            KCTGameStates.mergedVessels = new List<BuildListVessel>();
 
             HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
@@ -993,7 +1001,21 @@ namespace KerbalConstructionTime
             double origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
             double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
-            double oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+            double oldProgressBP;
+            if (KCTGameStates.mergedVessels.Count() == 0)
+            {
+                oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+            }
+            else
+            {
+                double mergedCost = ship.EffectiveCost;
+                foreach (BuildListVessel v in KCTGameStates.mergedVessels)
+                {
+                    mergedCost += v.EffectiveCost;
+                }
+                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.mergedVessels) + GetBuildTime(mergedCost);
+                oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePercent / 100);
+            }
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;

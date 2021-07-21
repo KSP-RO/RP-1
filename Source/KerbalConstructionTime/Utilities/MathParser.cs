@@ -131,7 +131,7 @@ namespace KerbalConstructionTime
             return GetStandardFormulaValue("IntegrationCost", variables);
         }
 
-        public static double ParseIntegrationTimeFormula(BuildListVessel vessel)
+        public static double ParseIntegrationTimeFormula(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                 string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.IntegrationTimeFormula) ||
@@ -140,7 +140,7 @@ namespace KerbalConstructionTime
                 return 0;
             }
 
-            Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel);
+            Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel, mergedVessels);
             return GetStandardFormulaValue("IntegrationTime", variables);
         }
 
@@ -182,13 +182,24 @@ namespace KerbalConstructionTime
             return GetStandardFormulaValue("AirlaunchTime", variables);
         }
 
-        private static Dictionary<string, string> GetIntegrationRolloutVariables(BuildListVessel vessel)
+        private static Dictionary<string, string> GetIntegrationRolloutVariables(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)
         {
             double loadedMass, emptyMass, loadedCost, emptyCost;
             loadedCost = vessel.Cost;
             emptyCost = vessel.EmptyCost;
             loadedMass = vessel.GetTotalMass();
             emptyMass = vessel.EmptyMass;
+
+            if (mergedVessels != null)
+            {
+                foreach (BuildListVessel v in mergedVessels)
+                {
+                    loadedCost += v.Cost;
+                    emptyCost += v.EmptyCost;
+                    loadedMass += v.GetTotalMass();
+                    emptyMass += v.EmptyMass;
+                }
+            }
 
             int EditorLevel = 0, LaunchSiteLvl = 0, EditorMax = 0, LaunchSiteMax = 0;
             int isVABVessel = 0;

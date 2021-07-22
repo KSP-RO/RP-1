@@ -996,26 +996,30 @@ namespace KerbalConstructionTime
             return protoTechNodes;
         }
 
-        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent) 
         {
-            double origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
-            double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
-            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
+            double origTotalBP; 
             double oldProgressBP;
+
             if (KCTGameStates.mergedVessels.Count() == 0)
             {
+                origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
                 oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
             }
             else
             {
-                double mergedCost = ship.EffectiveCost;
+                double totalEffectiveCost = ship.EffectiveCost;
                 foreach (BuildListVessel v in KCTGameStates.mergedVessels)
                 {
-                    mergedCost += v.EffectiveCost;
+                    totalEffectiveCost += v.EffectiveCost;
                 }
-                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.mergedVessels) + GetBuildTime(mergedCost);
+
+                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.mergedVessels) + GetBuildTime(totalEffectiveCost);
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePercent / 100);
             }
+
+            double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;

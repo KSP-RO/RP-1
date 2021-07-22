@@ -184,11 +184,12 @@ namespace KerbalConstructionTime
 
         private static Dictionary<string, string> GetIntegrationRolloutVariables(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)
         {
-            double loadedMass, emptyMass, loadedCost, emptyCost;
+            double loadedMass, emptyMass, loadedCost, emptyCost, effectiveCost;
             loadedCost = vessel.Cost;
             emptyCost = vessel.EmptyCost;
             loadedMass = vessel.GetTotalMass();
             emptyMass = vessel.EmptyMass;
+            effectiveCost = vessel.EffectiveCost;
 
             if (mergedVessels != null)
             {
@@ -198,6 +199,7 @@ namespace KerbalConstructionTime
                     emptyCost += v.EmptyCost;
                     loadedMass += v.GetTotalMass();
                     emptyMass += v.EmptyMass;
+                    effectiveCost += v.EffectiveCost;
                 }
             }
 
@@ -220,7 +222,7 @@ namespace KerbalConstructionTime
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.SpaceplaneHangar);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.Runway);
             }
-            double BP = vessel.BuildPoints;
+            double BP = Utilities.GetBuildTime(effectiveCost);
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;
 
             var variables = new Dictionary<string, string>

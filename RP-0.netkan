@@ -50,7 +50,6 @@
 		{ "name" : "RCSBuildAid" },
 		{ "name" : "RCSBuildAidCont" },
 		{ "name" : "RealAntennas" },
-		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
 		{ "any_of": [
 			{ "name" : "TestFlight" },

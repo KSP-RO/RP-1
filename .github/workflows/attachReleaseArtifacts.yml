@@ -16,7 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          fetch-depth: 100
+          fetch-depth: 0
+          
+      - name: Get Branch
+        shell: bash
+        run: |
+          releaseBranch=$(git branch -a --contains ${GITHUB_SHA} | head -n 2 | tail -n 1 | sed -e "s/\s*//" | sed -e "s/remotes\/origin\///")
+          echo "Found branch ${releaseBranch}"
+          echo "tagged_branch=${releaseBranch}" >> $GITHUB_ENV
         
       - name: Download required assemblies
         id: download-assemblies
@@ -32,7 +39,28 @@ jobs:
           rm '/tmp/bins.zip'          
                     
       - name: Build mod solution
+        env:
+          TAG_STRING: ${{ github.event.release.tag_name }}
         run: |
+          VFULL="$(echo $TAG_STRING | sed -e s/v//)"
+          VMAJOR="$(echo $VFULL | cut -f 1 -d '.')"
+          VMINOR="$(echo $VFULL | cut -f 2 -d '.')"
+          VPATCH="$(echo $VFULL | cut -f 3 -d '.')"
+          VBUILD="$(echo $VFULL | cut -f 4 -d '.')"
+          
+          echo "Version string: $TAG_STRING"
+          echo "Version is $VMAJOR dot $VMINOR dot $VPATCH dot $VBUILD"
+          sed \
+            -e "s/CIBUILD_disabled/CIBUILD/" \
+            -e "s/@MAJOR@/$VMAJOR/" \
+            -e "s/@MINOR@/$VMINOR/" \
+            -e "s/@PATCH/$VPATCH/" \
+            -e "s/@BUILD@/$VBUILD/" \
+            -i ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+            
+          grep CIBUILD ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+          grep AssemblyFileVersion ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+          
           rm -f ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/*.dll
           msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
           cp -v ${GITHUB_WORKSPACE}/Source/ClearInputLocks/obj/x64/Release/ClearInputLocks.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/ClearInputLocks.dll
@@ -72,3 +100,22 @@ jobs:
           asset_path: ${{ steps.assemble-release.outputs.release-dir }}/RP-1-${{ github.event.release.tag_name }}.zip
           asset_name: RP-1-${{ github.event.release.tag_name }}.zip
           asset_content_type: application/zip
+          
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          
+      - name: Commit new version file
+        shell: bash
+        env:
+          TAG_STRING: ${{ github.event.release.tag_name }}
+        run: |
+          RELEASEBRANCH=${{ env.tagged_branch }}
+          echo "Checking out branch ${RELEASEBRANCH}"
+          git checkout $RELEASEBRANCH
+          git reset --hard origin/$RELEASEBRANCH
+          cp -v "${GITHUB_WORKSPACE}/RP-1.version" "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
+          git add "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
+          git commit -m "Update version to $TAG_STRING"
+          git push origin $RELEASEBRANCH

@@ -1,4 +1,0 @@
-citationcockpit = Cessna Citation (2 Crew) 1972
-oldfightercockpit = 
-zerocockpit = A6M Zero (1 Crew) 1940's
-x1cockpit = X-1 Bell

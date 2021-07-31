@@ -82,7 +82,6 @@
 		{ "name" : "HideEmptyTechNodes" },
 		{ "name" : "MechJebForAll" },
 		{ "name" : "DynamicBatteryStorage" },
-		{ "name" : "HideEmptyTechNodes" },
 		{ "name" : "KRASH" }
 	]
 }

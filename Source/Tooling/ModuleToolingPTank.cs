@@ -87,7 +87,8 @@ namespace RP0
             diam = 0f;
             len = 0f;
             object host = null;
-            bool cone = false;
+            bool isCone = false;
+            bool isHollow = false;
 
             if (procTank == null)
             {
@@ -103,9 +104,13 @@ namespace RP0
                     "Cone" => part.Modules["ProceduralShapeCone"],
                     "Fillet Cylinder" => part.Modules["ProceduralShapePill"],
                     "Polygon" => part.Modules["ProceduralShapePolygon"],
+                    "Hollow Cylinder" => part.Modules["ProceduralShapeHollowCylinder"],
+                    "Hollow Cone" => part.Modules["ProceduralShapeHollowCone"],
+                    "Hollow Fillet Cylinder" => part.Modules["ProceduralShapeHollowPill"],
                     _ => part.Modules["ProceduralShapeCylinder"]
                 };
-                cone = shapeName.Contains("Cone");
+                isCone = shapeName.Contains("Cone");
+                isHollow = shapeName.Contains("Hollow");
 
                 if (procShape == null)
                 {
@@ -113,8 +118,8 @@ namespace RP0
                     return;
                 }
                 length = procShape.Fields["length"];
-                diam1 = cone ? procShape.Fields["topDiameter"] : procShape.Fields["diameter"];
-                diam2 = cone ? procShape.Fields["bottomDiameter"] : null;
+                diam1 = GetPrimaryDiameterFieldForShape(procShape, isCone, isHollow);
+                diam2 = GetSecondaryDiameterFieldForShape(procShape, isCone, isHollow);
                 host = procShape;
             } else if (TTank == TankType.ROTank)
             {
@@ -129,8 +134,25 @@ namespace RP0
                 Debug.LogError($"[ModuleTooling] Could not bind to length or diamater fields for {host} on {part}");
                 return;
             }
-            diam = Mathf.Max(diam1.GetValue<float>(host), (cone && procShape) ? diam2.GetValue<float>(host) : 0);
+            diam = Mathf.Max(diam1.GetValue<float>(host), (isCone && procShape) ? diam2.GetValue<float>(host) : 0);
             len = length.GetValue<float>(host);
         }
+
+        private static BaseField GetPrimaryDiameterFieldForShape(PartModule shape, bool isCone, bool isHollow)
+        => (isCone, isHollow) switch
+        {
+            (false, false) => shape.Fields["diameter"],
+            (false, true)  => shape.Fields["outerDiameter"],
+            (true, false)  => shape.Fields["topDiameter"],
+            (true, true)   => shape.Fields["topOuterDiameter"]
+        };
+
+        private static BaseField GetSecondaryDiameterFieldForShape(PartModule shape, bool isCone, bool isHollow)
+        => (isCone, isHollow) switch
+        {
+            (false, _)    => null,
+            (true, false) => shape.Fields["bottomDiameter"],
+            (true, true)  => shape.Fields["bottomOuterDiameter"]
+        };
     }
 }

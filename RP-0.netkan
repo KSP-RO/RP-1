@@ -54,7 +54,8 @@
 		{ "any_of": [
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }
-		] }
+		] },
+		{ "name" : "RSSVE-Textures" }
 	],
 	"suggests" : [
 		{ "name" : "BluedogDB" },

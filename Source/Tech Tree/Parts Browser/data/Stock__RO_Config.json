@@ -2180,6 +2180,29 @@
         ]
     },
     {
+        "name": "RP0HumanRatedFlag",
+        "title": "Human Rated Flag",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "COMMAND",
+        "info": "",
+        "year": "1961",
+        "technology": "basicCapsules",
+        "ro": false,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated"
+        ]
+    },
+    {
         "name": "RP0aerobeeSounding",
         "title": "Aerobee Sounding Rocket Telemetry Unit",
         "description": "A simple RF receiver and time-delay circuit for sounding rockets. Allows staging and for information to be reported, but no yaw/pitch/roll control. [0.380m diameter] ",

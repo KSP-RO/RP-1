@@ -31,7 +31,6 @@
 			{ "name" : "VenStockRevamp" },
 			{ "name" : "ReStock" }
 		] },
-		{ "name" : "DeadlyReentry" },
 		{ "name" : "ROEngines" },
 		{ "name" : "ROTanks" },
 		{ "name" : "ROCapsules" },

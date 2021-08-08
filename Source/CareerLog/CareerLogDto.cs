@@ -177,6 +177,7 @@ namespace RP0
     {
         public string date;
         public string vesselUID;
+        public string launchID;
         public string part;
         public string type;
 
@@ -188,6 +189,7 @@ namespace RP0
         {
             date = CareerLog.UTToDate(fe.UT).ToString("o");
             vesselUID = fe.VesselUID;
+            launchID = fe.LaunchID;
             part = fe.Part;
             type = fe.Type;
         }
@@ -198,7 +200,8 @@ namespace RP0
                 $"{nameof(date)}: {date}, " +
                 $"{nameof(part)}: {part}, " +
                 $"{nameof(type)}: {type}, " +
-                $"{nameof(vesselUID)}: {vesselUID}";
+                $"{nameof(vesselUID)}: {vesselUID}, " +
+                $"{nameof(launchID)}: {launchID}";
         }
     }
 }

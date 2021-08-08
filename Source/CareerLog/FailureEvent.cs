@@ -10,6 +10,9 @@ namespace RP0
         public string VesselUID;
 
         [Persistent]
+        public string LaunchID;
+
+        [Persistent]
         public string Part;
 
         [Persistent]

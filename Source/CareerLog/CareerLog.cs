@@ -262,6 +262,7 @@ namespace RP0
             _failures.Add(new FailureEvent(KSPUtils.GetUT())
             {
                 VesselUID = v.GetKCTVesselId(),
+                LaunchID = v.GetVesselLaunchId(),
                 Part = part,
                 Type = type
             });
@@ -669,8 +670,8 @@ namespace RP0
                 _launchedVessels.Add(new LaunchEvent(KSPUtils.GetUT())
                 {
                     VesselName = FlightGlobals.ActiveVessel?.vesselName,
-                    VesselUID = KerbalConstructionTime.Utilities.GetKCTVesselId(ev.host),
-                    LaunchID = Guid.NewGuid().ToString("N")
+                    VesselUID = ev.host.GetKCTVesselId(),
+                    LaunchID = ev.host.GetVesselLaunchId()
                 });
             }
         }

@@ -1932,6 +1932,11 @@ namespace KerbalConstructionTime
             return v.GetKCTVesselData()?.VesselID;
         }
 
+        public static string GetVesselLaunchId(this Vessel v)
+        {
+            return v.GetKCTVesselData()?.LaunchID;
+        }
+
         public static EditorFacility? GetVesselBuiltAt(this Vessel v)
         {
             return v.GetKCTVesselData()?.FacilityBuiltIn;

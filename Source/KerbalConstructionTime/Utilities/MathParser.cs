@@ -29,6 +29,8 @@ namespace KerbalConstructionTime
                 case "RushCost": return MathParsing.ParseMath("KCT_RUSH_COST", formulaSettings.RushCostFormula, variables);
                 case "AirlaunchCost": return MathParsing.ParseMath("KCT_AIRLAUNCH_COST", formulaSettings.AirlaunchCostFormula, variables);
                 case "AirlaunchTime": return MathParsing.ParseMath("KCT_AIRLAUNCH_TIME", formulaSettings.AirlaunchTimeFormula, variables);
+                case "EngineRefurb": return MathParsing.ParseMath("KCT_ENGINE_REFURB", formulaSettings.EngineRefurbFormula, variables);
+
                 default: return 0;
             }
         }
@@ -180,6 +182,13 @@ namespace KerbalConstructionTime
 
             Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel);
             return GetStandardFormulaValue("AirlaunchTime", variables);
+        }
+
+        public static double ParseEngineRefurbFormula(double runTime)
+        {
+            Dictionary<string, string> variables = new Dictionary<string, string>();
+            variables.Add("RT", runTime.ToString());
+            return GetStandardFormulaValue("EngineRefurb", variables);
         }
 
         private static Dictionary<string, string> GetIntegrationRolloutVariables(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)

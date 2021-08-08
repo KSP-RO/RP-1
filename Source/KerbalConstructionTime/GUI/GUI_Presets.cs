@@ -263,6 +263,11 @@ namespace KerbalConstructionTime
                 GUILayout.Label("AirlaunchTime: ");
                 _workingPreset.FormulaSettings.AirlaunchTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.AirlaunchTimeFormula, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("EngineRefurbCredit: ");
+                _workingPreset.FormulaSettings.EngineRefurbFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EngineRefurbFormula, GUILayout.Width(textWidth));
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndVertical();

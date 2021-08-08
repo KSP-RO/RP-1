@@ -324,7 +324,8 @@ namespace KerbalConstructionTime
             NewLaunchPadCostFormula = "100000*([N]^3)",    //[N]=total number of unlocked launchpads (negative disables)
             RushCostFormula = "[TC]*0.2",
             AirlaunchCostFormula = "[E]*0.25",
-            AirlaunchTimeFormula = "[BP]*0.25";
+            AirlaunchTimeFormula = "[BP]*0.25",
+            EngineRefurbFormula = ".5*(1+max(0,1-([RT]/10)))";//[RT]=Runtime of used engine
     }
 
     public class KCT_Preset_Part_Variables

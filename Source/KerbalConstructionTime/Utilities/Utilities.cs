@@ -2092,6 +2092,63 @@ namespace KerbalConstructionTime
             _fiTLSettingsDisabled.SetValue(HighLogic.CurrentGame.Parameters.CustomParams(_tlSettingsType), !isEnabled);
             GameEvents.OnGameSettingsApplied.Fire();
         }
+
+        public static void CleanupDebris(string launchSiteName)
+        {
+            if (KCTGameStates.Settings.CleanUpKSCDebris)
+            {
+                PSystemSetup.SpaceCenterFacility launchFacility = PSystemSetup.Instance.GetSpaceCenterFacility(launchSiteName);
+                double lat = 0, lon = 0;
+                bool foundSite = false;
+                if (launchFacility != null)
+                {
+                    PSystemSetup.SpaceCenterFacility.SpawnPoint sp = launchFacility.GetSpawnPoint(launchSiteName);
+                    lat = sp.latitude;
+                    lon = sp.longitude;
+                    foundSite = true;
+                }
+                if (!foundSite)
+                {
+                    LaunchSite launchSite = PSystemSetup.Instance.GetLaunchSite(launchSiteName);
+                    if (launchSite != null)
+                    {
+                        LaunchSite.SpawnPoint sp = launchSite.GetSpawnPoint(launchSiteName);
+                        lat = sp.latitude;
+                        lon = sp.longitude;
+                        foundSite = true;
+                    }
+                }
+                if (foundSite)
+                {
+                    const string msg = "it was debris cluttering up KSC";
+                    foreach (Vessel v in FlightGlobals.Vessels)
+                    {
+                        // TODO: check isPersistent?
+                        if (v.loaded)
+                        {
+                            if (v.vesselType == VesselType.Debris && v.LandedOrSplashed && v.mainBody == Planetarium.fetch.Home)
+                            {
+                                if (Math.Abs(v.latitude - lat) < 1d && Math.Abs(v.longitude - lon) < 1d)
+                                    v.SetAutoClean(msg);
+                            }
+                        }
+                        else if (v.protoVessel != null)
+                        {
+                            if (v.protoVessel.vesselType == VesselType.Debris && (v.protoVessel.landed || v.protoVessel.splashed)
+                                && FlightGlobals.Bodies[v.protoVessel.orbitSnapShot.ReferenceBodyIndex] == Planetarium.fetch.Home)
+                            {
+                                if (Math.Abs(v.protoVessel.latitude - lat) < 1d && Math.Abs(v.protoVessel.longitude - lon) < 1d)
+                                {
+                                    v.SetAutoClean(msg);
+                                    v.protoVessel.autoClean = true;
+                                    v.protoVessel.autoCleanReason = msg;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

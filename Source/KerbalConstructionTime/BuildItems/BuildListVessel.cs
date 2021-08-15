@@ -147,7 +147,7 @@ namespace KerbalConstructionTime
             else
                 Type = ListType.None;
             Id = Guid.NewGuid();
-            KCTPersistentID = Guid.NewGuid().ToString();
+            KCTPersistentID = Guid.NewGuid().ToString("N");
             CannotEarnScience = false;
 
             //get the crew from the editorlogic
@@ -205,7 +205,7 @@ namespace KerbalConstructionTime
         public BuildListVessel(Vessel vessel, ListType listType = ListType.None)
         {
             Id = Guid.NewGuid();
-            KCTPersistentID = Guid.NewGuid().ToString();
+            KCTPersistentID = Guid.NewGuid().ToString("N");
             ShipName = vessel.vesselName;
             ShipNode = FromInFlightVessel(vessel, listType);
             if (listType != ListType.None)
@@ -365,7 +365,7 @@ namespace KerbalConstructionTime
             }
 
             ret.Id = Guid.NewGuid();
-            ret.KCTPersistentID = Guid.NewGuid().ToString();
+            ret.KCTPersistentID = Guid.NewGuid().ToString("N");
             ret.TotalMass = TotalMass;
             ret.EmptyMass = EmptyMass;
             ret.Cost = Cost;

@@ -6,10 +6,20 @@ namespace RP0
 {
     public class TopWindow : UIBase
     {
+        private const float TooltipMaxWidth = 200f;
+        private const double TooltipShowDelay = 500;
+
         private static Rect _windowPos = new Rect(500, 240, 0, 0);
-        private static readonly int _windowId = "RP0Top".GetHashCode();
+        private static readonly int _mainWindowId = "RP0Top".GetHashCode();
+        private static readonly int _tooltipWindowId = "RP0Tooltip".GetHashCode();
         private static UITab _currentTab;
         private static bool _shouldResetUISize;
+
+        private Rect _tooltipRect;
+        private GUIStyle _tooltipStyle;
+        private DateTime _tooltipBeginDt;
+        private string _tooltipText = string.Empty;
+        private bool _isTooltipChanged;
 
         private readonly MaintenanceGUI _maintUI = new MaintenanceGUI();
         private readonly ToolingGUI _toolUI = new ToolingGUI();
@@ -33,7 +43,8 @@ namespace RP0
                 _windowPos.height = 0;
                 _shouldResetUISize = false;
             }
-            _windowPos = ClickThruBlocker.GUILayoutWindow(_windowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+            _windowPos = ClickThruBlocker.GUILayoutWindow(_mainWindowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+            ShowTooltip();
         }
 
         protected override void OnStart()
@@ -140,6 +151,67 @@ namespace RP0
             GUILayout.FlexibleSpace();
             GUILayout.EndVertical();
             GUI.DragWindow();
+
+            RecordTooltip();
+        }
+
+        protected void RecordTooltip()
+        {
+            if (Event.current.type == EventType.Repaint && _tooltipText != GUI.tooltip)
+            {
+                _isTooltipChanged = true;
+                if (!string.IsNullOrEmpty(_tooltipText))
+                {
+                    _tooltipBeginDt = DateTime.UtcNow;
+                }
+                _tooltipText = GUI.tooltip;
+            }
+        }
+
+        protected void ShowTooltip()
+        {
+            if (!string.IsNullOrEmpty(_tooltipText) &&
+                (DateTime.UtcNow - _tooltipBeginDt).TotalMilliseconds > TooltipShowDelay)
+            {
+                if (_isTooltipChanged)
+                {
+                    var c = new GUIContent(_tooltipText);
+                    GetTooltipStyle().CalcMinMaxWidth(c, out _, out float width);
+
+                    width = Math.Min(width, TooltipMaxWidth);
+                    float height = GetTooltipStyle().CalcHeight(c, TooltipMaxWidth);
+                    _tooltipRect = new Rect(
+                        Input.mousePosition.x + 15,
+                        Screen.height - Input.mousePosition.y + 10,
+                        width, height);
+                    _isTooltipChanged = false;
+                }
+
+                GUI.Window(
+                    _tooltipWindowId,
+                    _tooltipRect,
+                    (_) => { },
+                    _tooltipText,
+                    GetTooltipStyle());
+                GUI.BringWindowToFront(_tooltipWindowId);
+            }
+        }
+
+        protected GUIStyle GetTooltipStyle()
+        {
+            if (_tooltipStyle == null)
+            {
+                Texture2D backTex = new Texture2D(1, 1, TextureFormat.ARGB32, false);
+                backTex.SetPixel(0, 0, new Color(0.5f, 0.5f, 0.5f));
+                backTex.Apply();
+
+                _tooltipStyle = new GUIStyle(HighLogic.Skin.label);
+                _tooltipStyle.normal.background = backTex;
+                _tooltipStyle.normal.textColor = new Color32(224, 224, 224, 255);
+                _tooltipStyle.padding = new RectOffset(3, 3, 3, 3);
+                _tooltipStyle.alignment = TextAnchor.MiddleCenter;
+            }
+            return _tooltipStyle;
         }
     }
 }

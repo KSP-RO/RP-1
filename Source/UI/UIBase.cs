@@ -77,5 +77,10 @@ namespace RP0
         {
             return GUILayout.Button(text, selected ? PressedButton : HighLogic.Skin.button, options);
         }
+
+        public bool RenderToggleButton(GUIContent c, bool selected, params GUILayoutOption[] options)
+        {
+            return GUILayout.Button(c, selected ? PressedButton : HighLogic.Skin.button, options);
+        }
     }
 }

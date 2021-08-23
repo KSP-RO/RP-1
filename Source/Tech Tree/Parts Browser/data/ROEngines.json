@@ -7083,7 +7083,7 @@
         "title": "XLR43 Series",
         "description": "First large, single chamber engine developed in the US, based off of the A-4.",
         "mod": "ROEngines",
-        "cost": "300",
+        "cost": "350",
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "0",

@@ -11672,7 +11672,7 @@
         "title": "XLR43-NA-3",
         "description": "Improved XLR43 with brazed chamber walls and burning 90% Ethanol.",
         "mod": "Engine_Config",
-        "cost": "50",
+        "cost": "150",
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",

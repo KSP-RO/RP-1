@@ -1,4 +1,4 @@
-using KSP.UI.Screens;
+﻿using KSP.UI.Screens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -511,7 +511,7 @@ namespace KerbalConstructionTime
             if (maxSize.x < float.MaxValue && maxSize.y < float.MaxValue && maxSize.z < float.MaxValue)
             {
                 refERsizeRH.text =
-                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 + 
+                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 +
                                 " / " + KSPUtil.LocalizeNumber(maxSize.y, "0.0") + cacheAutoLOC_7001411 + "</color>\n<color=" +
                             sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 + " / " +
                             KSPUtil.LocalizeNumber(maxSize.x, "0.0") +
@@ -982,9 +982,7 @@ namespace KerbalConstructionTime
                     if (!Utilities.IsPrincipiaInstalled)
                         Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);
                     else
-                        StartCoroutine(EaseSimulationUT_Coroutine(
-                            Planetarium.GetUniversalTime(),
-                            KCTGameStates.SimulationParams.SimulationUT));
+                        StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), KCTGameStates.SimulationParams.SimulationUT));
                 }
 
                 AddSimulationWatermark();
@@ -1001,15 +999,15 @@ namespace KerbalConstructionTime
 
         private IEnumerator EaseSimulationUT_Coroutine(double startUT, double targetUT)
         {
-            const double DAY = 86_400;
+            const double dayInSeconds = 86_400;
 
-            KCTDebug.Log($"Easing jump to simulation UT in {DAY}s steps");
+            KCTDebug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
 
             int currentFrame = Time.frameCount;
             double nextUT = startUT;
-            while (targetUT - nextUT > DAY)
+            while (targetUT - nextUT > dayInSeconds)
             {
-                nextUT += DAY;
+                nextUT += dayInSeconds;
 
                 FlightDriver.fetch.framesBeforeInitialSave += Time.frameCount - currentFrame;
                 currentFrame = Time.frameCount;

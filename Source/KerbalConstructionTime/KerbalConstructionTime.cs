@@ -1,4 +1,4 @@
-﻿using KSP.UI.Screens;
+using KSP.UI.Screens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -979,7 +979,12 @@ namespace KerbalConstructionTime
                     FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
                     KCTDebug.Log($"Setting simulation UT to {KCTGameStates.SimulationParams.SimulationUT}");
-                    Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);
+                    if (!Utilities.IsPrincipiaInstalled)
+                        Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);
+                    else
+                        StartCoroutine(EaseSimulationUT_Coroutine(
+                            Planetarium.GetUniversalTime(),
+                            KCTGameStates.SimulationParams.SimulationUT));
                 }
 
                 AddSimulationWatermark();
@@ -992,6 +997,30 @@ namespace KerbalConstructionTime
             }
 
             KCTDebug.Log("DelayedStart finished");
+        }
+
+        private IEnumerator EaseSimulationUT_Coroutine(double startUT, double targetUT)
+        {
+            const double DAY = 86_400;
+
+            KCTDebug.Log($"Easing jump to simulation UT in {DAY}s steps");
+
+            int currentFrame = Time.frameCount;
+            double nextUT = startUT;
+            while (targetUT - nextUT > DAY)
+            {
+                nextUT += DAY;
+
+                FlightDriver.fetch.framesBeforeInitialSave += Time.frameCount - currentFrame;
+                currentFrame = Time.frameCount;
+                OrbitPhysicsManager.HoldVesselUnpack();
+                Planetarium.SetUniversalTime(nextUT);
+
+                yield return new WaitForFixedUpdate();
+            }
+
+            OrbitPhysicsManager.HoldVesselUnpack();
+            Planetarium.SetUniversalTime(targetUT);
         }
 
         public static void PopUpVesselError(List<BuildListVessel> errored)

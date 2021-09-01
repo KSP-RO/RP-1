@@ -140,7 +140,6 @@ namespace KerbalConstructionTime
             if (InvEff != 0)
                 inventorySample.Remove(partRef);
 
-            double effectiveCostTmp = effectiveCost; // Since there can be more than one TestLite module per node
             double runTime = 0;
             if (o is Part)
             {
@@ -151,6 +150,8 @@ namespace KerbalConstructionTime
                         runTime = Convert.ToDouble(modNode.Fields.GetValue("operatingTime"));
                     else if (s == "ModuleTestLite")
                         runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
+                    if (runTime > 0)  //There can be more than one TestLite module per part
+                        break;
                 }
             } else
             {
@@ -161,10 +162,12 @@ namespace KerbalConstructionTime
                         double.TryParse(modNode.GetValue("operatingTime"), out runTime);
                     else if (s == "ModuleTestLite")
                         double.TryParse(modNode.GetValue("runTime"), out runTime);
+                    if (runTime > 0) //There can be more than one TestLite module per part
+                        break;
                 }
             }
-            if (runTime > .01)
-                effectiveCost = MathParser.ParseEngineRefurbFormula(runTime) * effectiveCostTmp;
+            if (runTime > 0)
+                effectiveCost = MathParser.ParseEngineRefurbFormula(runTime) * effectiveCost;
 
             if (effectiveCost < 0)
                 effectiveCost = 0;

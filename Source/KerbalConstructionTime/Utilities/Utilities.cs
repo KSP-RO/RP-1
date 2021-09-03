@@ -146,8 +146,8 @@ namespace KerbalConstructionTime
                 foreach (PartModule modNode in (o as Part).Modules)
                 {
                     string s = modNode.moduleName;
-                    if (s == "TestFlightCore")
-                        runTime = Convert.ToDouble(modNode.Fields.GetValue("operatingTime"));
+                    if (s == "TestFlightReliability_EngineCycle")
+                        runTime = Convert.ToDouble(modNode.Fields.GetValue("engineOperatingTime"));
                     else if (s == "ModuleTestLite")
                         runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
                     if (runTime > 0)  //There can be more than one TestLite module per part
@@ -158,8 +158,8 @@ namespace KerbalConstructionTime
                 foreach (ConfigNode modNode in (o as ConfigNode).GetNodes("MODULE"))
                 {
                     string s = modNode.GetValue("name");
-                    if (s == "TestFlightCore")
-                        double.TryParse(modNode.GetValue("operatingTime"), out runTime);
+                    if (s == "TestFlightReliability_EngineCycle")
+                        double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
                     else if (s == "ModuleTestLite")
                         double.TryParse(modNode.GetValue("runTime"), out runTime);
                     if (runTime > 0) //There can be more than one TestLite module per part

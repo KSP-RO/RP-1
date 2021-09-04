@@ -60,17 +60,19 @@ namespace RP0.Crew
                 }
 
                 string course, complete, retires;
+                bool isInactive = false;
                 if (currentCourse == null)
                 {
                     if (student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
                     {
                         course = "(in-flight)";
-                        complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
+                        complete = "(n/a)";
                     }
                     else if (student.inactive)
                     {
                         course = "(inactive)";
                         complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
+                        isInactive = true;
                     }
                     else
                     {
@@ -113,6 +115,10 @@ namespace RP0.Crew
                     {
                         CreateCourseFinishAlarm(student, currentCourse);
                     }
+                }
+                else if (KACWrapper.APIReady && isInactive && GUILayout.Button(_nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                {
+                    CreateReturnToDutyAlarm(student);
                 }
             }
             catch (Exception ex)
@@ -346,6 +352,12 @@ namespace RP0.Crew
             double alarmUT = CrewHandler.Instance.NextUpdate + timesChRun * CrewHandler.UpdateInterval;
             string alarmTxt = $"{currentCourse.name} - {student.name}";
             KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, alarmUT);
+        }
+
+        private static void CreateReturnToDutyAlarm(ProtoCrewMember crew)
+        {
+            string alarmTxt = $"Return to duty - {crew.name}";
+            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, crew.inactiveTimeEnd);
         }
 
         private void UpdateActiveCourseMap()

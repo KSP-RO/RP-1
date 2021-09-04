@@ -18,7 +18,7 @@ namespace KerbalConstructionTime
         private static bool _saveCareer, _saveScience, _saveSandbox;
         private static KCT_Preset _toSave;
 
-        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms;
+        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms, _cleanUpKSCDebris;
         private static int _newTimewarp;
 
         public static void DrawPresetWindow(int windowID)
@@ -291,6 +291,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.Settings.OverrideLaunchButton = _overrideLaunchBtn;
                 KCTGameStates.Settings.Debug = _debug;
                 KCTGameStates.Settings.AutoKACAlarms = _autoAlarms;
+                KCTGameStates.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
 
                 KCTGameStates.Settings.Save();
                 GUIStates.ShowSettings = false;
@@ -356,6 +357,7 @@ namespace KerbalConstructionTime
             _disableAllMsgs = !GUILayout.Toggle(!_disableAllMsgs, "Use Message System", HighLogic.Skin.button);
             _showSimWatermark = GUILayout.Toggle(_showSimWatermark, "Show sim watermark", HighLogic.Skin.button);
             _debug = GUILayout.Toggle(_debug, "Debug Logging", HighLogic.Skin.button);
+            _cleanUpKSCDebris = GUILayout.Toggle(_cleanUpKSCDebris, "Autoclean KSC Debris", HighLogic.Skin.button);
 
             GUILayout.EndVertical();
             GUILayout.EndVertical();
@@ -482,6 +484,7 @@ namespace KerbalConstructionTime
             _debug = KCTGameStates.Settings.Debug;
             _overrideLaunchBtn = KCTGameStates.Settings.OverrideLaunchButton;
             _autoAlarms = KCTGameStates.Settings.AutoKACAlarms;
+            _cleanUpKSCDebris = KCTGameStates.Settings.CleanUpKSCDebris;
 
             GUIStates.ShowSettings = !GUIStates.ShowSettings;
         }

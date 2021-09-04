@@ -8,12 +8,16 @@
         [Persistent]
         public string VesselID = string.Empty;
 
+        [Persistent]
+        public string LaunchID = string.Empty;
+
         public static KCTVesselData Parse(KCTVesselTracker d)
         {
             return new KCTVesselData
             {
                 FacilityBuiltIn = d.Data.FacilityBuiltIn,
-                VesselID = d.Data.VesselID
+                VesselID = d.Data.VesselID,
+                LaunchID = d.Data.LaunchID
             };
         }
 

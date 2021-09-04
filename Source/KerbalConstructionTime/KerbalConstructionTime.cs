@@ -136,7 +136,6 @@ namespace KerbalConstructionTime
             if (KCTGameStates.IsFirstStart)
             {
                 PresetManager.Instance.SaveActiveToSaveData();
-
             }
 
             // Ghetto event queue
@@ -225,7 +224,25 @@ namespace KerbalConstructionTime
 
         private void ProcessFlightStart()
         {
-            if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.situation != Vessel.Situations.PRELAUNCH || KCT_GUI.IsPrimarilyDisabled) return;
+            if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.situation != Vessel.Situations.PRELAUNCH) return;
+
+            var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
+            if (dataModule != null)
+            {
+                if (string.IsNullOrWhiteSpace(dataModule.Data.LaunchID))
+                {
+                    dataModule.Data.LaunchID = Guid.NewGuid().ToString("N");
+                    KCTDebug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
+                }
+
+                if (KCTGameStates.LaunchedVessel != null)
+                {
+                    dataModule.Data.FacilityBuiltIn = KCTGameStates.LaunchedVessel.FacilityBuiltIn;
+                    dataModule.Data.VesselID = KCTGameStates.LaunchedVessel.KCTPersistentID;
+                }
+            }
+
+            if (KCT_GUI.IsPrimarilyDisabled) return;
 
             if (!KCTGameStates.IsSimulatedFlight &&
                 FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
@@ -276,18 +293,9 @@ namespace KerbalConstructionTime
                 KCTGameStates.LaunchedCrew.Clear();
             }
 
-            if (KCTGameStates.LaunchedVessel == null) return;
-
-            var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
-            if (dataModule != null)
+            if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.IsSimulatedFlight)
             {
-                dataModule.Data.FacilityBuiltIn = KCTGameStates.LaunchedVessel.FacilityBuiltIn;
-                dataModule.Data.VesselID = KCTGameStates.LaunchedVessel.KCTPersistentID;
-            }
-
-            if (!KCTGameStates.IsSimulatedFlight)
-            {
-                KCTGameStates.LaunchedVessel.KSC = null; //it's invalid now
+                KCTGameStates.LaunchedVessel.KSC = null;    //it's invalid now
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
                 if (KCTGameStates.LaunchedVessel.RemoveFromBuildList()) //Only do these when the vessel is first removed from the list
                 {

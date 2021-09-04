@@ -26,6 +26,8 @@ namespace KerbalConstructionTime
         public bool RandomizeCrew;
         [Persistent]
         public int WindowMode = 1;
+        [Persistent]
+        public bool CleanUpKSCDebris;
 
         public KCTSettings()
         {
@@ -35,6 +37,7 @@ namespace KerbalConstructionTime
             OverrideLaunchButton = true;
             AutoKACAlarms = false;
             PreferBlizzyToolbar = false;
+            CleanUpKSCDebris = true;
         }
 
         public void Load()

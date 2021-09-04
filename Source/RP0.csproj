@@ -42,6 +42,7 @@
     <Compile Include="CareerLog\CareerLogGUI.cs" />
     <Compile Include="CareerLog\ContractEvent.cs" />
     <Compile Include="CareerLog\FacilityConstructionEvent.cs" />
+    <Compile Include="CareerLog\FailureEvent.cs" />
     <Compile Include="CareerLog\LaunchEvent.cs" />
     <Compile Include="CareerLog\LogPeriod.cs" />
     <Compile Include="CareerLog\TechResearchEvent.cs" />

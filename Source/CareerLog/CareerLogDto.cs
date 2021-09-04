@@ -147,6 +147,8 @@ namespace RP0
     {
         public string date;
         public string vesselName;
+        public string vesselUID;
+        public string launchID;
 
         public LaunchEventDto()
         {
@@ -156,13 +158,50 @@ namespace RP0
         {
             date = CareerLog.UTToDate(le.UT).ToString("o");
             vesselName = le.VesselName;
+            vesselUID = le.VesselUID;
+            launchID = le.LaunchID;
         }
 
         public override string ToString()
         {
             return
                 $"{nameof(date)}: {date}, " +
-                $"{nameof(vesselName)}: {vesselName}";
+                $"{nameof(vesselName)}: {vesselName}, " +
+                $"{nameof(vesselUID)}: {vesselUID}, " +
+                $"{nameof(launchID)}: {launchID}";
+        }
+    }
+
+    [Serializable]
+    internal class FailureEventDto
+    {
+        public string date;
+        public string vesselUID;
+        public string launchID;
+        public string part;
+        public string type;
+
+        public FailureEventDto()
+        {
+        }
+
+        public FailureEventDto(FailureEvent fe)
+        {
+            date = CareerLog.UTToDate(fe.UT).ToString("o");
+            vesselUID = fe.VesselUID;
+            launchID = fe.LaunchID;
+            part = fe.Part;
+            type = fe.Type;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(part)}: {part}, " +
+                $"{nameof(type)}: {type}, " +
+                $"{nameof(vesselUID)}: {vesselUID}, " +
+                $"{nameof(launchID)}: {launchID}";
         }
     }
 }

@@ -4,22 +4,25 @@ using System.Linq;
 
 namespace RP0
 {
-    public class LaunchEvent : CareerEvent
+    public class FailureEvent : CareerEvent
     {
-        [Persistent]
-        public string VesselName;
-
         [Persistent]
         public string VesselUID;
 
         [Persistent]
         public string LaunchID;
 
-        public LaunchEvent(double UT) : base(UT)
+        [Persistent]
+        public string Part;
+
+        [Persistent]
+        public string Type;
+
+        public FailureEvent(double UT) : base(UT)
         {
         }
 
-        public LaunchEvent(ConfigNode n) : base(n)
+        public FailureEvent(ConfigNode n) : base(n)
         {
         }
     }

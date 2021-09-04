@@ -31,7 +31,6 @@
 			{ "name" : "VenStockRevamp" },
 			{ "name" : "ReStock" }
 		] },
-		{ "name" : "DeadlyReentry" },
 		{ "name" : "ROEngines" },
 		{ "name" : "ROTanks" },
 		{ "name" : "ROCapsules" },
@@ -54,7 +53,8 @@
 		{ "any_of": [
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }
-		] }
+		] },
+		{ "name" : "RSSVE-Textures" }
 	],
 	"suggests" : [
 		{ "name" : "BluedogDB" },

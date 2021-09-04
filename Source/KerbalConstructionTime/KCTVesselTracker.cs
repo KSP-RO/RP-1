@@ -171,6 +171,7 @@ namespace KerbalConstructionTime
             if (vm1 != null && vm2 != null)
             {
                 vm2.Data.VesselID = vm1.Data.VesselID;
+                vm2.Data.LaunchID = vm1.Data.LaunchID;
                 vm2.Data.FacilityBuiltIn = vm1.Data.FacilityBuiltIn;
             }
          }

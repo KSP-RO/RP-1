@@ -59,7 +59,7 @@ namespace KerbalConstructionTime
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button("*", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
                 {
                     _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
                     bR = rates[_rateIndexHolder];
@@ -138,7 +138,7 @@ namespace KerbalConstructionTime
             else rates = Utilities.GetSPHBuildRates(null);
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button("*", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
                 {
                     _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
                     bR = rates[_rateIndexHolder];

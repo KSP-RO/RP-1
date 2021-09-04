@@ -149,6 +149,7 @@ namespace RP0
         public string vesselName;
         public string vesselUID;
         public string launchID;
+        public EditorFacility builtAt;
 
         public LaunchEventDto()
         {
@@ -160,6 +161,7 @@ namespace RP0
             vesselName = le.VesselName;
             vesselUID = le.VesselUID;
             launchID = le.LaunchID;
+            builtAt = le.BuiltAt;
         }
 
         public override string ToString()
@@ -168,7 +170,8 @@ namespace RP0
                 $"{nameof(date)}: {date}, " +
                 $"{nameof(vesselName)}: {vesselName}, " +
                 $"{nameof(vesselUID)}: {vesselUID}, " +
-                $"{nameof(launchID)}: {launchID}";
+                $"{nameof(launchID)}: {launchID}, " +
+                $"{nameof(builtAt)}: {builtAt}";
         }
     }
 

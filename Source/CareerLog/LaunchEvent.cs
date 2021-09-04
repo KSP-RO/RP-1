@@ -15,6 +15,9 @@ namespace RP0
         [Persistent]
         public string LaunchID;
 
+        [Persistent]
+        public EditorFacility BuiltAt;
+
         public LaunchEvent(double UT) : base(UT)
         {
         }

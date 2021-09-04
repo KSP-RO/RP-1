@@ -671,7 +671,8 @@ namespace RP0
                 {
                     VesselName = FlightGlobals.ActiveVessel?.vesselName,
                     VesselUID = ev.host.GetKCTVesselId(),
-                    LaunchID = ev.host.GetVesselLaunchId()
+                    LaunchID = ev.host.GetVesselLaunchId(),
+                    BuiltAt = ev.host.GetVesselBuiltAt() ?? EditorFacility.None    // KSP can't serialize nullables
                 });
             }
         }

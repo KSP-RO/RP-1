@@ -1576,7 +1576,7 @@
         "technology": "stabilityRP0",
         "ro": true,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "1MV",
         "engine_config": "KDU414",
         "upgrade": false,

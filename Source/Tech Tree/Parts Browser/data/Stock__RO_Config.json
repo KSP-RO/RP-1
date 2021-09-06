@@ -4919,7 +4919,7 @@
         "spacecraft": "Apollo",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "75000,capsulesMature,heatshieldsLunar",
+        "entry_cost_mods": "200000, capsulesMature",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",

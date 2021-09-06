@@ -58,7 +58,7 @@
         "technology": "lunarOrbiterCapsules",
         "ro": true,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Soyuz",
         "engine_config": "",
         "upgrade": false,

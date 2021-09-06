@@ -620,7 +620,7 @@
         "spacecraft": "",
         "engine_config": "AJ260FL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-FL",
         "identical_part_name": "AJ-260FL",
         "module_tags": [
             "EngineSolid"
@@ -643,7 +643,7 @@
         "spacecraft": "",
         "engine_config": "AJ260FL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-FL",
         "identical_part_name": "AJ-260FL",
         "module_tags": [
             "EngineSolid"
@@ -666,7 +666,7 @@
         "spacecraft": "",
         "engine_config": "AJ260FL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-FL",
         "identical_part_name": "AJ-260FL",
         "module_tags": [
             "EngineSolid"
@@ -689,7 +689,7 @@
         "spacecraft": "",
         "engine_config": "AJ260FL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-FL",
         "identical_part_name": "AJ-260FL",
         "module_tags": [
             "EngineSolid"
@@ -712,7 +712,7 @@
         "spacecraft": "",
         "engine_config": "AJ260SL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-SL1",
         "identical_part_name": "AJ-260SL",
         "module_tags": [
             "EngineSolid"
@@ -735,7 +735,7 @@
         "spacecraft": "",
         "engine_config": "AJ260SL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-SL1",
         "identical_part_name": "AJ-260SL",
         "module_tags": [
             "EngineSolid"
@@ -758,7 +758,7 @@
         "spacecraft": "",
         "engine_config": "AJ260SL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-SL1",
         "identical_part_name": "AJ-260SL",
         "module_tags": [
             "EngineSolid"
@@ -781,7 +781,7 @@
         "spacecraft": "",
         "engine_config": "AJ260SL",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AJ260-SL1",
         "identical_part_name": "AJ-260SL",
         "module_tags": [
             "EngineSolid"

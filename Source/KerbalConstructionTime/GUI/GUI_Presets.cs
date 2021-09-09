@@ -123,8 +123,8 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
             GUILayout.Label("Overall Multiplier: ");
             double.TryParse(_oMultTmp = GUILayout.TextField(_oMultTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.OverallMultiplier);
-            GUILayout.Label("Merging Time Percent: ");
-            double.TryParse(_mTimePTmp = GUILayout.TextField(_mTimePTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MergingTimePercent);
+            GUILayout.Label("Merging Time Penalty: ");
+            double.TryParse(_mTimePTmp = GUILayout.TextField(_mTimePTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MergingTimePenalty);
             GUILayout.EndVertical(); 
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
@@ -385,7 +385,7 @@ namespace KerbalConstructionTime
             }
 
             _oMultTmp = _workingPreset.TimeSettings.OverallMultiplier.ToString();
-            _mTimePTmp = _workingPreset.TimeSettings.MergingTimePercent.ToString(); 
+            _mTimePTmp = _workingPreset.TimeSettings.MergingTimePenalty.ToString(); 
             _bEffTmp = _workingPreset.TimeSettings.BuildEffect.ToString();
             _iEffTmp = _workingPreset.TimeSettings.InventoryEffect.ToString();
             _reEffTmp = _workingPreset.TimeSettings.ReconditioningEffect.ToString();

@@ -186,14 +186,16 @@ namespace KerbalConstructionTime
 
         public static double ParseEngineRefurbFormula(double runTime)
         {
-            Dictionary<string, string> variables = new Dictionary<string, string>();
-            variables.Add("RT", runTime.ToString());
+            Dictionary<string, string> variables = new Dictionary<string, string>
+            {
+                { "RT", runTime.ToString() }
+            };
             return GetStandardFormulaValue("EngineRefurb", variables);
         }
 
         private static Dictionary<string, string> GetIntegrationRolloutVariables(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)
         {
-            double loadedMass, emptyMass, loadedCost, emptyCost, effectiveCost;
+            double loadedMass, emptyMass, loadedCost, emptyCost, effectiveCost, BP;
             loadedCost = vessel.Cost;
             emptyCost = vessel.EmptyCost;
             loadedMass = vessel.GetTotalMass();
@@ -210,6 +212,11 @@ namespace KerbalConstructionTime
                     emptyMass += v.EmptyMass;
                     effectiveCost += v.EffectiveCost;
                 }
+                BP = Utilities.GetBuildTime(effectiveCost);
+            }
+            else
+            {
+                BP = vessel.BuildPoints;
             }
 
             int EditorLevel = 0, LaunchSiteLvl = 0, EditorMax = 0, LaunchSiteMax = 0;
@@ -231,7 +238,7 @@ namespace KerbalConstructionTime
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.SpaceplaneHangar);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.Runway);
             }
-            double BP = Utilities.GetBuildTime(effectiveCost);
+
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;
 
             var variables = new Dictionary<string, string>

@@ -300,7 +300,7 @@ namespace KerbalConstructionTime
     public class KCT_Preset_Time : ConfigNodeStorage
     {
         [Persistent]
-        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25, MergingTimePercent = 5;
+        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25, MergingTimePenalty = 0.05;
     }
 
     public class KCT_Preset_Formula : ConfigNodeStorage
@@ -325,7 +325,7 @@ namespace KerbalConstructionTime
             RushCostFormula = "[TC]*0.2",
             AirlaunchCostFormula = "[E]*0.25",
             AirlaunchTimeFormula = "[BP]*0.25",
-            EngineRefurbFormula = ".5*(1+max(0,1-([RT]/10)))";//[RT]=Runtime of used engine
+            EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))"; //[RT]=Runtime of used engine
     }
 
     public class KCT_Preset_Part_Variables

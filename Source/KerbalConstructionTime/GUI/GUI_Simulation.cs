@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
     {
         private static Rect _simulationWindowPosition = new Rect((Screen.width - 250) / 2, (Screen.height - 250) / 2, 250, 1);
         private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
-        private static Vector2 _bodyChooserScrollPos, VABMergeScroll, SPHMergeScroll;
+        private static Vector2 _bodyChooserScrollPos;
 
         private static string _sOrbitAlt = "", _sOrbitInc = "", _UTString = "", _sDelay = "0";
         private static bool _fromCurrentUT = true;

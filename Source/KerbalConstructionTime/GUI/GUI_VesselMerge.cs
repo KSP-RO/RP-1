@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
         private static Vector2 _vabMergeScroll, _sphMergeScroll;
         private static bool _showMergeSelectionList = false;
 
-    private static void RenderMergeSection(BuildListVessel ship)
+        private static void RenderMergeSection(BuildListVessel ship)
         {
             if (!_showMergeSelectionList && KCTGameStates.MergingAvailable && GUILayout.Button("Merge Built Vessel"))
             {

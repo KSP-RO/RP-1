@@ -202,7 +202,7 @@ namespace KerbalConstructionTime
             emptyMass = vessel.EmptyMass;
             effectiveCost = vessel.EffectiveCost;
 
-            if (mergedVessels != null)
+            if (mergedVessels?.Count > 0)
             {
                 foreach (BuildListVessel v in mergedVessels)
                 {

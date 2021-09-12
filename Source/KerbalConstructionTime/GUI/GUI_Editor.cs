@@ -13,7 +13,6 @@ namespace KerbalConstructionTime
         private static int _rateIndexHolder = 0;
         private static double _finishedShipBP = -1;
         private static bool _isEditorLocked = false;
-        private static bool _showMergeSelectionList = false;
 
         public static void DrawEditorGUI(int windowID)
         {
@@ -216,60 +215,7 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (!_showMergeSelectionList && KCTGameStates.MergingAvailable && GUILayout.Button("Merge Built Vessel"))
-            {
-                    _showMergeSelectionList = true;
-            }
-
-            if (_showMergeSelectionList && KCTGameStates.MergingAvailable)
-            {
-                if (GUILayout.Button("Hide Merge Selection"))
-                {
-                    _showMergeSelectionList = false;
-                }
-
-                GUILayout.BeginVertical();
-                GUILayout.Label("Choose a vessel");
-
-                GUILayout.Label("VAB");
-                _vABMergeScroll = GUILayout.BeginScrollView(_vABMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
-
-                foreach (BuildListVessel vessel in KCTGameStates.ActiveKSC.VABWarehouse)
-                {
-                    if (vessel.Id != ship.Id && !KCTGameStates.MergedVessels.Exists(x => x.Id == vessel.Id))
-                    {
-                        if (GUILayout.Button(vessel.ShipName))
-                        {
-                            ShipConstruct mergedShip = new ShipConstruct();
-                            mergedShip.LoadShip(vessel.ShipNode);
-                            EditorLogic.fetch.SpawnConstruct(mergedShip);
-
-                            KCTGameStates.MergedVessels.Add(vessel);
-                        }
-                    }
-                }
-                GUILayout.EndScrollView();
-
-                GUILayout.Label("SPH");
-                _sPHMergeScroll = GUILayout.BeginScrollView(_sPHMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
-
-                foreach (BuildListVessel vessel in KCTGameStates.ActiveKSC.SPHWarehouse)
-                {
-                    if (vessel.Id != ship.Id && !KCTGameStates.MergedVessels.Exists(x => x.Id == vessel.Id))
-                    {
-                        if (GUILayout.Button(vessel.ShipName))
-                        {
-                            ShipConstruct mergedShip = new ShipConstruct();
-                            mergedShip.LoadShip(vessel.ShipNode);
-                            EditorLogic.fetch.SpawnConstruct(mergedShip);
-
-                            KCTGameStates.MergedVessels.Add(vessel);
-                        }
-                    }
-                }
-                GUILayout.EndScrollView();
-                GUILayout.EndVertical();
-            }
+            RenderMergeSection(ship);
         }
 
         private static void CheckEditorLock()

@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-
-namespace KerbalConstructionTime
+﻿namespace KerbalConstructionTime
 {
     public class KCT_TechStorageItem
     {
         [Persistent] string techName, techID;
         [Persistent] int scienceCost;
         [Persistent] double progress;
+        [Persistent] int startYear, endYear;
 
         public TechItem ToTechItem()
         {
-            var ret = new TechItem(techID, techName, progress, scienceCost);
-            return ret;
+            return new TechItem(techID, techName, progress, scienceCost, startYear, endYear);
         }
 
         public KCT_TechStorageItem FromTechItem(TechItem techItem)
@@ -20,6 +18,8 @@ namespace KerbalConstructionTime
             techID = techItem.TechID;
             progress = techItem.Progress;
             scienceCost = techItem.ScienceCost;
+            startYear = techItem.StartYear;
+            endYear = techItem.EndYear;
 
             return this;
         }

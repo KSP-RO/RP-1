@@ -21,7 +21,7 @@ namespace KerbalConstructionTime
         private static bool _isSelectingLaunchSiteForVessel = true;
         private static double _costOfNewLP = int.MinValue;
 
-        private static GUIStyle _redText, _yellowText, _greenText, _yellowButton, _redButton, _greenButton;
+        private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
         private static GUIContent _settingsTexture, _planeTexture, _rocketTexture;
         private const int _width1 = 120;
         private const int _width2 = 100;
@@ -83,6 +83,10 @@ namespace KerbalConstructionTime
             _yellowText.normal.textColor = Color.yellow;
             _greenText = new GUIStyle(GUI.skin.label);
             _greenText.normal.textColor = Color.green;
+            _blobText = new GUIStyle(GUI.skin.label);
+            _blobText.fontSize = 30;
+            _blobText.fixedHeight = 20;
+            _blobText.alignment = TextAnchor.MiddleCenter;
 
             _yellowButton = new GUIStyle(GUI.skin.button);
             _yellowButton.normal.textColor = Color.yellow;
@@ -457,6 +461,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"{Math.Round(100 * t.Progress / t.ScienceCost, 2)} %", GUILayout.Width(_width1 / 2));
                 if (t.BuildRate > 0)
                 {
+                    DrawYearBasedMult(t);
                     if (blockingPrereq == null)
                         GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(t.TimeLeft), GUILayout.Width(_width1));
                     else
@@ -464,6 +469,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
+                    DrawYearBasedMult(t);
                     GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(t.EstimatedTimeLeft)}", GUILayout.Width(_width1));
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
@@ -481,6 +487,36 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
+        }
+
+        private static void DrawYearBasedMult(TechItem t)
+        {
+            double mult = t.YearBasedRateMult;
+
+            string rateDesc;
+            if (mult < 0.5)
+            {
+                _blobText.normal.textColor = Color.red;
+                rateDesc = "Speculative R&D";
+            }
+            else if (mult < 0.85)
+            {
+                _blobText.normal.textColor = XKCDColors.Orange;
+                rateDesc = "Bleeding edge R&D";
+            }
+            else if (mult > 1.15)
+            {
+                _blobText.normal.textColor = Color.green;
+                rateDesc = "Catching up with competition";
+            }
+            else 
+            { 
+                _blobText.normal.textColor = Color.yellow;
+                rateDesc = "State-of-the art R&D";
+            }
+
+            string txt = $"{rateDesc}\nResearch rate: {mult:F2}x";
+            GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.ExpandWidth(false));
         }
 
         private static void RenderCombinedBuildList()

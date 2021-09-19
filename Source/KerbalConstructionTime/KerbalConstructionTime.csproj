@@ -113,6 +113,7 @@
     <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
     <Compile Include="KCTCostModifier.cs" />
+    <Compile Include="KCTTechNodePeriod.cs" />
     <Compile Include="ModIntegrations\CTIWrapper.cs" />
     <Compile Include="ModuleTagList.cs" />
     <Compile Include="Persistence\AirlaunchPrepStorageItem.cs" />

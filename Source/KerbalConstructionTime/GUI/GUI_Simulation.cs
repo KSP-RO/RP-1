@@ -115,9 +115,9 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Time: ");
             _UTString = GUILayout.TextField(_UTString, GUILayout.Width(100));
-            _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, " From Now");
+            _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Accepts values with format \"1y 2d 3h 4s\"");
+            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\"");
             GUILayout.Space(4);
 
             if (Utilities.IsTestFlightInstalled || Utilities.IsTestLiteInstalled)

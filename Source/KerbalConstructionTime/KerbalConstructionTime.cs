@@ -125,6 +125,8 @@ namespace KerbalConstructionTime
             _wfsTwo = new WaitForSeconds(2f);
             _wfsHalf = new WaitForSeconds(0.5f);
 
+            KCT_GUI.InitTooltips();
+
             if (Utilities.CurrentGameIsMission()) return;
 
             // Subscribe to events from KSP and other mods

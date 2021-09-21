@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -80,9 +81,19 @@ namespace KerbalConstructionTime
             return true;
         }
 
+        public bool IsUnlocked => ResearchAndDevelopment.GetTechnologyState(TechRequired) == RDTech.State.Available;
+
+        public bool IsUnderResearch => KCTGameStates.TechList.Any(tech => tech.TechID == TechRequired);
+
         public static bool AnyUnlocked()
         {
             return GetCurrentLevel() != null;
+        }
+
+        public static bool AnyUnderResearch()
+        {
+            EnsureLevelsLoaded();
+            return _techLevels.Any(tl => KCTGameStates.TechList.Any(tech => tech.TechID == tl.TechRequired));
         }
 
         public static AirlaunchTechLevel GetCurrentLevel()
@@ -92,7 +103,23 @@ namespace KerbalConstructionTime
             {
                 // Assume that levels are configured in the order of progression
                 var level = _techLevels[i];
-                if (ResearchAndDevelopment.GetTechnologyState(level.TechRequired) == RDTech.State.Available)
+                if (level.IsUnlocked)
+                {
+                    return level;
+                }
+            }
+
+            return null;
+        }
+
+        public static AirlaunchTechLevel GetHighestLevelIncludingUnderResearch()
+        {
+            EnsureLevelsLoaded();
+            for (int i = _techLevels.Count - 1; i >= 0; i--)
+            {
+                // Assume that levels are configured in the order of progression
+                var level = _techLevels[i];
+                if (level.IsUnderResearch || level.IsUnlocked)
                 {
                     return level;
                 }

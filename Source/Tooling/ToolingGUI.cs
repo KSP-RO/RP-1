@@ -183,7 +183,8 @@ namespace RP0
 
         private void RenderToolingPreviewButton()
         {
-            if (GUILayout.RepeatButton("Press to preview fully tooled build time & cost", HighLogic.Skin.button))
+            var c = new GUIContent("Press to preview fully tooled build time & cost", "Hold the button pressed and watch the cost & time values change in the KCT window");
+            if (GUILayout.RepeatButton(c, HighLogic.Skin.button))
             {
                 if (!_isToolingTempDisabled)
                 {

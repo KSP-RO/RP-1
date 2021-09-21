@@ -397,8 +397,8 @@
         "entry_cost": "0",
         "category": "EDL",
         "info": "Heat Shield",
-        "year": "1968",
-        "technology": "lunarLanding",
+        "year": "1967",
+        "technology": "lunarRatedHeatshields",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,
@@ -2044,7 +2044,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "STAR",
+        "entry_cost_mods": "10000, STARCTPB",
         "identical_part_name": "",
         "module_tags": [
             "EngineSolid"

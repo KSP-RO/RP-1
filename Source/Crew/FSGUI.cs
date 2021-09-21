@@ -14,7 +14,7 @@ namespace RP0.Crew
         private Vector2 _courseSelectorScroll = new Vector2();
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
-        private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false));
+        private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false), "Add alarm");
 
         protected void RenderNautListHeading()
         {
@@ -39,7 +39,8 @@ namespace RP0.Crew
                 GUILayout.Label($"{student.trait.Substring(0, 1)} {student.experienceLevel}", GUILayout.Width(24));
                 if (currentCourse == null && _selectedCourse != null && (selectedForCourse || _selectedCourse.MeetsStudentReqs(student)))
                 {
-                    if (RenderToggleButton(student.name, selectedForCourse, GUILayout.Width(144)))
+                    var c = new GUIContent(student.name, "Select for course");
+                    if (RenderToggleButton(c, selectedForCourse, GUILayout.Width(144)))
                     {
                         if (selectedForCourse)
                             _selectedCourse.RemoveStudent(student);
@@ -102,12 +103,12 @@ namespace RP0.Crew
                 {
                     if (currentCourse.seatMin > 1)
                     {
-                        if (GUILayout.Button("X", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button(new GUIContent("X", "Cancel course"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             CancelCourse(currentCourse);
                     }
                     else
                     {
-                        if (GUILayout.Button("X", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button(new GUIContent("X", "Remove from course"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             LeaveCourse(currentCourse, student);
                     }
 

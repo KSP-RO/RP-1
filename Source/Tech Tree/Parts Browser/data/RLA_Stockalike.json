@@ -672,12 +672,12 @@
         "title": "AJ-260 FL [6.55 m]",
         "description": "The largest solid rocket motor ever designed, intended for uprated Saturn and Nova applications.  Full-length version, burn time 140s.",
         "mod": "RLA Stockalike",
-        "cost": "0",
+        "cost": "9000",
         "entry_cost": "661620",
         "category": "SOLID",
         "info": "SRB",
-        "year": "1981",
-        "technology": "solids1981",
+        "year": "1972",
+        "technology": "solids1972",
         "era": "07-SPCPLANES",
         "ro": true,
         "rp0": true,
@@ -686,8 +686,8 @@
         "spacecraft": "Saturn INT",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "AJ260-FL",
+        "identical_part_name": "AJ-260FL",
         "module_tags": [
             "EngineSolid"
         ]
@@ -697,12 +697,12 @@
         "title": "AJ-260 HL [6.55 m]",
         "description": "The largest solid rocket motor ever designed, intended for uprated Saturn and Nova applications.  Half-length version, burn time 114s or 140s.",
         "mod": "RLA Stockalike",
-        "cost": "22054",
+        "cost": "6000",
         "entry_cost": "441080",
         "category": "SOLID",
         "info": "SRB",
-        "year": "1981",
-        "technology": "solids1981",
+        "year": "1966",
+        "technology": "solids1966",
         "era": "07-SPCPLANES",
         "ro": true,
         "rp0": true,
@@ -711,8 +711,8 @@
         "spacecraft": "Saturn INT",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "AJ260-SL1",
+        "identical_part_name": "AJ-260SL",
         "module_tags": [
             "EngineSolid"
         ]

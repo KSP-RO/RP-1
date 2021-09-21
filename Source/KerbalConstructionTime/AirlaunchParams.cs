@@ -14,7 +14,8 @@ namespace KerbalConstructionTime
 
         public bool Validate(out string errorMsg)
         {
-            AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
+            AirlaunchTechLevel lvl = Utilities.IsSimulationActive ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+                                                                    AirlaunchTechLevel.GetCurrentLevel();
             if (lvl == null)
             {
                 errorMsg = "No valid airlaunch configuration found";

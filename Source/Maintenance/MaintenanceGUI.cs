@@ -9,6 +9,7 @@ namespace RP0
 
         private Vector2 _nautListScroll = new Vector2();
         private MaintenancePeriod _selectedPeriod = MaintenancePeriod.Year;
+        private readonly GUIContent _infoBtnContent = new GUIContent("ⓘ", "View details");
 
         private double PeriodFactor
         {
@@ -53,7 +54,7 @@ namespace RP0
             {
                 GUILayout.Label("Facilities", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.FacilityUpkeep * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-                if (GUILayout.Button("ⓘ", InfoButton))
+                if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Facilities);
                 }
@@ -69,7 +70,7 @@ namespace RP0
             {
                 GUILayout.Label("Integration", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.IntegrationUpkeep * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-                if (GUILayout.Button("ⓘ", InfoButton))
+                if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Integration);
                 }
@@ -97,7 +98,7 @@ namespace RP0
             {
                 GUILayout.Label("Astronauts", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label((MaintenanceHandler.Instance.NautTotalUpkeep * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-                if (GUILayout.Button("ⓘ", InfoButton))
+                if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Astronauts);
                 }

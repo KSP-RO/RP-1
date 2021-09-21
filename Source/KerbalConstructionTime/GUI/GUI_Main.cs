@@ -1,5 +1,4 @@
-﻿using ClickThroughFix;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -33,52 +32,52 @@ namespace KerbalConstructionTime
             if (_validScenes.Contains(HighLogic.LoadedScene))
             {
                 if (GUIStates.ShowSettings)
-                    _presetPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawPresetWindow"), _presetPosition, DrawPresetWindow, "KCT Settings", HighLogic.Skin.window);
+                    _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "KCT Settings", DrawPresetWindow);
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     return;
 
                 if (GUIStates.ShowEditorGUI)
-                    EditorWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawEditorGUI"), EditorWindowPosition, DrawEditorGUI, "Kerbal Construction Time", HighLogic.Skin.window);
+                    EditorWindowPosition = DrawWindowWithTooltipSupport(EditorWindowPosition, "DrawEditorGUI", "Kerbal Construction Time", DrawEditorGUI);
                 if (GUIStates.ShowSimulationGUI)
-                    _simulationWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawSimGUI"), _simulationWindowPosition, DrawSimulationWindow, "KCT Simulation", HighLogic.Skin.window);
+                    _simulationWindowPosition = DrawWindowWithTooltipSupport(_simulationWindowPosition, "DrawSimGUI", "KCT Simulation", DrawSimulationWindow);
                 if (GUIStates.ShowSimConfig)
-                    _simulationConfigPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawSimConfGUI"), _simulationConfigPosition, DrawSimulationConfigure, "Simulation Configuration", HighLogic.Skin.window);
+                    _simulationConfigPosition = DrawWindowWithTooltipSupport(_simulationConfigPosition, "DrawSimConfGUI", "Simulation Configuration", DrawSimulationConfigure);
                 if (GUIStates.ShowSimBodyChooser)
-                    _centralWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawSimBodyGUI"), _centralWindowPosition, DrawBodyChooser, "Choose Body", HighLogic.Skin.window);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawSimBodyGUI", "Choose Body", DrawBodyChooser);
                 if (GUIStates.ShowBuildList)
                 {
                     ref Rect pos = ref (HighLogic.LoadedSceneIsEditor ? ref EditorBuildListWindowPosition : ref BuildListWindowPosition);
-                    pos = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawBuildListWindow"), pos, DrawBuildListWindow, "Build List", HighLogic.Skin.window);
+                    pos = DrawWindowWithTooltipSupport(pos, "DrawBuildListWindow", "Build List", DrawBuildListWindow);
                 }
                 if (GUIStates.ShowClearLaunch)
-                    _centralWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawClearLaunch"), _centralWindowPosition, DrawClearLaunch, "Launch site not clear!", HighLogic.Skin.window);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawClearLaunch", "Launch site not clear!", DrawClearLaunch);
                 if (GUIStates.ShowShipRoster)
-                    _crewListWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawShipRoster"), _crewListWindowPosition, DrawShipRoster, "Select Crew", HighLogic.Skin.window);
+                    _crewListWindowPosition = DrawWindowWithTooltipSupport(_crewListWindowPosition, "DrawShipRoster", "Select Crew", DrawShipRoster);
                 if (GUIStates.ShowCrewSelect)
-                    _crewListWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawCrewSelect"), _crewListWindowPosition, DrawCrewSelect, "Select Crew & Launch", HighLogic.Skin.window);
+                    _crewListWindowPosition = DrawWindowWithTooltipSupport(_crewListWindowPosition, "DrawCrewSelect", "Select Crew & Launch", DrawCrewSelect);
                 if (GUIStates.ShowUpgradeWindow)
-                    _upgradePosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawUpgradeWindow"), _upgradePosition, DrawUpgradeWindow, "Upgrades", HighLogic.Skin.window);
+                    _upgradePosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawUpgradeWindow", "Upgrades", DrawUpgradeWindow);
                 if (GUIStates.ShowBLPlus)
-                    _blPlusPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawBLPlusWindow"), _blPlusPosition, DrawBLPlusWindow, "Options", HighLogic.Skin.window);
+                    _blPlusPosition = DrawWindowWithTooltipSupport(_blPlusPosition, "DrawBLPlusWindow", "Options", DrawBLPlusWindow);
                 if (GUIStates.ShowDismantlePad)
-                    _centralWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawDismantlePadWindow"), _centralWindowPosition, DrawDismantlePadWindow, "Dismantle pad", HighLogic.Skin.window);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle pad", DrawDismantlePadWindow);
                 if (GUIStates.ShowRename)
-                    _centralWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawRenameWindow"), _centralWindowPosition, DrawRenameWindow, "Rename", HighLogic.Skin.window);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawRenameWindow", "Rename", DrawRenameWindow);
                 if (GUIStates.ShowNewPad)
-                    _centralWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawNewPadWindow"), _centralWindowPosition, DrawNewPadWindow, "New launch pad", HighLogic.Skin.window);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewPadWindow", "New launch pad", DrawNewPadWindow);
                 if (GUIStates.ShowFirstRun)
-                    _firstRunWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawFirstRun"), _firstRunWindowPosition, DrawFirstRun, "Kerbal Construction Time", HighLogic.Skin.window);
+                    _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Kerbal Construction Time", DrawFirstRun);
                 if (GUIStates.ShowPresetSaver)
-                    _presetNamingWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawPresetSaveWindow"), _presetNamingWindowPosition, DrawPresetSaveWindow, "Save as New Preset", HighLogic.Skin.window);
+                    _presetNamingWindowPosition = DrawWindowWithTooltipSupport(_presetNamingWindowPosition, "DrawPresetSaveWindow", "Save as New Preset", DrawPresetSaveWindow);
                 if (GUIStates.ShowLaunchSiteSelector)
-                    _centralWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawLaunchSiteChooser"), _centralWindowPosition, DrawLaunchSiteChooser, "Select Site", HighLogic.Skin.window);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawLaunchSiteChooser", "Select Site", DrawLaunchSiteChooser);
 
                 if (GUIStates.ShowBuildPlansWindow)
-                    _buildPlansWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawBuildPlansWindow"), _buildPlansWindowPosition, DrawBuildPlansWindow, "Building Plans & Construction", HighLogic.Skin.window);
+                    _buildPlansWindowPosition = DrawWindowWithTooltipSupport(_buildPlansWindowPosition, "DrawBuildPlansWindow", "Building Plans & Construction", DrawBuildPlansWindow);
 
                 // both flags can be true when it's necessary to first show ClearLaunch and then Airlaunch right after that
                 if (GUIStates.ShowAirlaunch && !GUIStates.ShowClearLaunch)
-                    _airlaunchWindowPosition = ClickThruBlocker.GUILayoutWindow(WindowHelper.NextWindowId("DrawAirlaunchWindow"), _airlaunchWindowPosition, DrawAirlaunchWindow, "Airlaunch", HighLogic.Skin.window);
+                    _airlaunchWindowPosition = DrawWindowWithTooltipSupport(_airlaunchWindowPosition, "DrawAirlaunchWindow", "Airlaunch", DrawAirlaunchWindow);
 
                 if (_unlockEditor)
                 {
@@ -106,6 +105,7 @@ namespace KerbalConstructionTime
                     InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
                     _isKSCLocked = false;
                 }
+
                 GUI.skin = oldSkin;
             }
         }
@@ -127,7 +127,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
 
-                if (Utilities.IsSimulationActive && AirlaunchTechLevel.AnyUnlocked())
+                if (Utilities.IsSimulationActive && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
                 {
                     GUIStates.ShowAirlaunch = isVisible;
                 }

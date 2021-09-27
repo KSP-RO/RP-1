@@ -1001,6 +1001,8 @@ namespace KerbalConstructionTime
         {
             const double dayInSeconds = 86_400;
 
+            if (targetUT <= Planetarium.GetUniversalTime()) yield break;
+
             KCTDebug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
 
             int currentFrame = Time.frameCount;

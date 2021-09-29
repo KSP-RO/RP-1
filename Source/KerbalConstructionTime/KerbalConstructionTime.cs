@@ -992,7 +992,7 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.IsSimulatedFlight && HighLogic.LoadedSceneIsGame && !HighLogic.LoadedSceneIsFlight)
             {
-                string msg = "Current save appears to be a simulation with no way to automatically revert to the pre-simulation state. An older save needs to be loaded manually now.";
+                string msg = $"The current save appears to be a simulation and KCT cannot automatically find a suitable pre-simulation save. Please load an older save manually; we recommend the backup that should have been saved to \\saves\\{HighLogic.SaveFolder}\\Backup\\KCT_simulation_backup.sfs";
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "KCT Simulation error", msg, "Understood", false, HighLogic.UISkin);
             }
 

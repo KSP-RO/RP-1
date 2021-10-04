@@ -513,7 +513,7 @@ namespace KerbalConstructionTime
             if (maxSize.x < float.MaxValue && maxSize.y < float.MaxValue && maxSize.z < float.MaxValue)
             {
                 refERsizeRH.text =
-                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 + 
+                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 +
                                 " / " + KSPUtil.LocalizeNumber(maxSize.y, "0.0") + cacheAutoLOC_7001411 + "</color>\n<color=" +
                             sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 + " / " +
                             KSPUtil.LocalizeNumber(maxSize.x, "0.0") +
@@ -981,7 +981,10 @@ namespace KerbalConstructionTime
                     FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
                     KCTDebug.Log($"Setting simulation UT to {KCTGameStates.SimulationParams.SimulationUT}");
-                    Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);
+                    if (!Utilities.IsPrincipiaInstalled)
+                        Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);
+                    else
+                        StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), KCTGameStates.SimulationParams.SimulationUT));
                 }
 
                 AddSimulationWatermark();
@@ -989,11 +992,37 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.IsSimulatedFlight && HighLogic.LoadedSceneIsGame && !HighLogic.LoadedSceneIsFlight)
             {
-                string msg = "Current save appears to be a simulation with no way to automatically revert to the pre-simulation state. An older save needs to be loaded manually now.";
+                string msg = $"The current save appears to be a simulation and KCT cannot automatically find a suitable pre-simulation save. Please load an older save manually; we recommend the backup that should have been saved to \\saves\\{HighLogic.SaveFolder}\\Backup\\KCT_simulation_backup.sfs";
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "KCT Simulation error", msg, "Understood", false, HighLogic.UISkin);
             }
 
             KCTDebug.Log("DelayedStart finished");
+        }
+
+        private IEnumerator EaseSimulationUT_Coroutine(double startUT, double targetUT)
+        {
+            const double dayInSeconds = 86_400;
+
+            if (targetUT <= Planetarium.GetUniversalTime()) yield break;
+
+            KCTDebug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
+
+            int currentFrame = Time.frameCount;
+            double nextUT = startUT;
+            while (targetUT - nextUT > dayInSeconds)
+            {
+                nextUT += dayInSeconds;
+
+                FlightDriver.fetch.framesBeforeInitialSave += Time.frameCount - currentFrame;
+                currentFrame = Time.frameCount;
+                OrbitPhysicsManager.HoldVesselUnpack();
+                Planetarium.SetUniversalTime(nextUT);
+
+                yield return new WaitForFixedUpdate();
+            }
+
+            OrbitPhysicsManager.HoldVesselUnpack();
+            Planetarium.SetUniversalTime(targetUT);
         }
 
         public static void PopUpVesselError(List<BuildListVessel> errored)

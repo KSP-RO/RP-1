@@ -338,7 +338,7 @@
         "spacecraft": "Redstone",
         "engine_config": "NAA75_110",
         "upgrade": true,
-        "entry_cost_mods": "15000, XLR43-NA-1",
+        "entry_cost_mods": "5000, XLR43-NA-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -11663,7 +11663,7 @@
         "spacecraft": "",
         "engine_config": "NAA75_110",
         "upgrade": false,
-        "entry_cost_mods": "Navaho-PhaseIII-TP",
+        "entry_cost_mods": "5000, Navaho-PhaseIII-TP",
         "identical_part_name": "",
         "module_tags": []
     },

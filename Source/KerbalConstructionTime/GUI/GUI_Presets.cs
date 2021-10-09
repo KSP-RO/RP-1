@@ -12,7 +12,7 @@ namespace KerbalConstructionTime
         private static KCT_Preset _workingPreset;
         private static Vector2 _presetScrollView, _presetMainScroll;
         private static bool _isChanged = false, _showFormula = false;
-        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _reEffTmp = "", _maxReTmp = "";
+        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _reEffTmp = "", _maxReTmp = "", _mTimePTmp = "";
 
         private static string _saveName, _saveShort, _saveDesc, _saveAuthor;
         private static bool _saveCareer, _saveScience, _saveSandbox;
@@ -120,8 +120,12 @@ namespace KerbalConstructionTime
             GUILayout.Label("Time Settings", yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical();
             GUILayout.Label("Overall Multiplier: ");
             double.TryParse(_oMultTmp = GUILayout.TextField(_oMultTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.OverallMultiplier);
+            GUILayout.Label("Merging Time Penalty: ");
+            double.TryParse(_mTimePTmp = GUILayout.TextField(_mTimePTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MergingTimePenalty);
+            GUILayout.EndVertical(); 
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Effect: ");
@@ -259,6 +263,11 @@ namespace KerbalConstructionTime
                 GUILayout.Label("AirlaunchTime: ");
                 _workingPreset.FormulaSettings.AirlaunchTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.AirlaunchTimeFormula, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("EngineRefurbCredit: ");
+                _workingPreset.FormulaSettings.EngineRefurbFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EngineRefurbFormula, GUILayout.Width(textWidth));
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndVertical();
@@ -376,6 +385,7 @@ namespace KerbalConstructionTime
             }
 
             _oMultTmp = _workingPreset.TimeSettings.OverallMultiplier.ToString();
+            _mTimePTmp = _workingPreset.TimeSettings.MergingTimePenalty.ToString(); 
             _bEffTmp = _workingPreset.TimeSettings.BuildEffect.ToString();
             _iEffTmp = _workingPreset.TimeSettings.InventoryEffect.ToString();
             _reEffTmp = _workingPreset.TimeSettings.ReconditioningEffect.ToString();

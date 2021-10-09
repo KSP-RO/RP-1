@@ -175,7 +175,7 @@ namespace RP0
 
         private void OnSettingsApplied()
         {
-            useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().avionicsUseKerbalism;
+            useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().AvionicsUseKerbalism;
             UpdateRate(onRailsCached);
         }
         private void OnShipModified(ShipConstruct _) => UpdateRate(onRailsCached);

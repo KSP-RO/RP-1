@@ -19,7 +19,9 @@ namespace KerbalConstructionTime
             if (_airlaunchParams == null)
             {
                 _airlaunchParams = new AirlaunchParams();
-                var lvl = AirlaunchTechLevel.GetCurrentLevel();
+
+                AirlaunchTechLevel lvl = Utilities.IsSimulationActive ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+                                                                        AirlaunchTechLevel.GetCurrentLevel();
                 if (lvl != null)
                 {
                     _sKscDistance = (lvl.MaxKscDistance / 1000).ToString();

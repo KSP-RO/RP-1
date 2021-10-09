@@ -140,6 +140,36 @@ namespace KerbalConstructionTime
             if (InvEff != 0)
                 inventorySample.Remove(partRef);
 
+            double runTime = 0;
+            if (o is Part)
+            {
+                foreach (PartModule modNode in (o as Part).Modules)
+                {
+                    string s = modNode.moduleName;
+                    if (s == "TestFlightReliability_EngineCycle")
+                        runTime = Convert.ToDouble(modNode.Fields.GetValue("engineOperatingTime"));
+                    else if (s == "ModuleTestLite")
+                        runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
+                    if (runTime > 0)  //There can be more than one TestLite module per part
+                        break;
+                }
+            }
+            else
+            {
+                foreach (ConfigNode modNode in (o as ConfigNode).GetNodes("MODULE"))
+                {
+                    string s = modNode.GetValue("name");
+                    if (s == "TestFlightReliability_EngineCycle")
+                        double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
+                    else if (s == "ModuleTestLite")
+                        double.TryParse(modNode.GetValue("runTime"), out runTime);
+                    if (runTime > 0) //There can be more than one TestLite module per part
+                        break;
+                }
+            }
+            if (runTime > 0)
+                effectiveCost = MathParser.ParseEngineRefurbFormula(runTime) * effectiveCost;
+
             if (effectiveCost < 0)
                 effectiveCost = 0;
 
@@ -945,11 +975,17 @@ namespace KerbalConstructionTime
 
         public static void SaveShipEdits(BuildListVessel ship)
         {
-            AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+            double usedShipsCost = ship.GetTotalCost();
+            foreach (BuildListVessel v in KCTGameStates.MergedVessels)
+            {
+                usedShipsCost += v.GetTotalCost();
+                v.RemoveFromBuildList();
+            }
+            AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
             BuildListVessel newShip = AddVesselToBuildList();
             if (newShip == null)
             {
-                SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
+                SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
                 return;
             }
 
@@ -988,12 +1024,30 @@ namespace KerbalConstructionTime
             return protoTechNodes;
         }
 
-        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent) 
         {
-            double origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
+            double origTotalBP; 
+            double oldProgressBP;
+
+            if (KCTGameStates.MergedVessels.Count == 0)
+            {
+                origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
+                oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+            }
+            else
+            {
+                double totalEffectiveCost = ship.EffectiveCost;
+                foreach (BuildListVessel v in KCTGameStates.MergedVessels)
+                {
+                    totalEffectiveCost += v.EffectiveCost;
+                }
+
+                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.MergedVessels) + GetBuildTime(totalEffectiveCost);
+                oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePenalty);
+            }
+
             double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
-            double oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;

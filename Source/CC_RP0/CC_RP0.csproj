@@ -62,6 +62,8 @@
     <Compile Include="CustomExpressionParserRegistrer.cs" />
     <Compile Include="DownrangeDistanceFactory.cs" />
     <Compile Include="DownrangeDistanceVesselParam.cs" />
+    <Compile Include="HorizontalLandingFactory.cs" />
+    <Compile Include="HorizontalLandingVesselParam.cs" />
     <Compile Include="RP1FixedResourceConsumptionFactory.cs" />
     <Compile Include="RP1RendezvousFactory.cs" />
     <Compile Include="RP1FixedResourceConsumptionVesselParam.cs" />

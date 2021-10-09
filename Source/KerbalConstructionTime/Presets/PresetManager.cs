@@ -319,7 +319,7 @@ namespace KerbalConstructionTime
     public class KCT_Preset_Time : ConfigNodeStorage
     {
         [Persistent]
-        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25;
+        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25, MergingTimePenalty = 0.05;
     }
 
     public class KCT_Preset_Formula : ConfigNodeStorage
@@ -342,8 +342,8 @@ namespace KerbalConstructionTime
             IntegrationCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
             NewLaunchPadCostFormula = "100000*([N]^3)",    //[N]=total number of unlocked launchpads (negative disables)
             RushCostFormula = "[TC]*0.2",
-            AirlaunchCostFormula = "[E]*0.25",
-            AirlaunchTimeFormula = "[BP]*0.25";
+            AirlaunchTimeFormula = "[BP]*0.25",
+            EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))";    //[RT]=Runtime of used engine
 
         [Persistent]
         public FloatCurve YearBasedRateMult = null;

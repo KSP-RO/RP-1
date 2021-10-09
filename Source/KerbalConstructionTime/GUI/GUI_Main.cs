@@ -127,7 +127,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
 
-                if (Utilities.IsSimulationActive && AirlaunchTechLevel.AnyUnlocked())
+                if (Utilities.IsSimulationActive && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
                 {
                     GUIStates.ShowAirlaunch = isVisible;
                 }

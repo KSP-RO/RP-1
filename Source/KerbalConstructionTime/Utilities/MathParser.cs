@@ -29,6 +29,8 @@ namespace KerbalConstructionTime
                 case "RushCost": return MathParsing.ParseMath("KCT_RUSH_COST", formulaSettings.RushCostFormula, variables);
                 case "AirlaunchCost": return MathParsing.ParseMath("KCT_AIRLAUNCH_COST", formulaSettings.AirlaunchCostFormula, variables);
                 case "AirlaunchTime": return MathParsing.ParseMath("KCT_AIRLAUNCH_TIME", formulaSettings.AirlaunchTimeFormula, variables);
+                case "EngineRefurb": return MathParsing.ParseMath("KCT_ENGINE_REFURB", formulaSettings.EngineRefurbFormula, variables);
+
                 default: return 0;
             }
         }
@@ -131,7 +133,7 @@ namespace KerbalConstructionTime
             return GetStandardFormulaValue("IntegrationCost", variables);
         }
 
-        public static double ParseIntegrationTimeFormula(BuildListVessel vessel)
+        public static double ParseIntegrationTimeFormula(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                 string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.IntegrationTimeFormula) ||
@@ -140,7 +142,7 @@ namespace KerbalConstructionTime
                 return 0;
             }
 
-            Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel);
+            Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel, mergedVessels);
             return GetStandardFormulaValue("IntegrationTime", variables);
         }
 
@@ -182,13 +184,40 @@ namespace KerbalConstructionTime
             return GetStandardFormulaValue("AirlaunchTime", variables);
         }
 
-        private static Dictionary<string, string> GetIntegrationRolloutVariables(BuildListVessel vessel)
+        public static double ParseEngineRefurbFormula(double runTime)
         {
-            double loadedMass, emptyMass, loadedCost, emptyCost;
+            Dictionary<string, string> variables = new Dictionary<string, string>
+            {
+                { "RT", runTime.ToString() }
+            };
+            return GetStandardFormulaValue("EngineRefurb", variables);
+        }
+
+        private static Dictionary<string, string> GetIntegrationRolloutVariables(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)
+        {
+            double loadedMass, emptyMass, loadedCost, emptyCost, effectiveCost, BP;
             loadedCost = vessel.Cost;
             emptyCost = vessel.EmptyCost;
             loadedMass = vessel.GetTotalMass();
             emptyMass = vessel.EmptyMass;
+            effectiveCost = vessel.EffectiveCost;
+
+            if (mergedVessels?.Count > 0)
+            {
+                foreach (BuildListVessel v in mergedVessels)
+                {
+                    loadedCost += v.Cost;
+                    emptyCost += v.EmptyCost;
+                    loadedMass += v.GetTotalMass();
+                    emptyMass += v.EmptyMass;
+                    effectiveCost += v.EffectiveCost;
+                }
+                BP = Utilities.GetBuildTime(effectiveCost);
+            }
+            else
+            {
+                BP = vessel.BuildPoints;
+            }
 
             int EditorLevel = 0, LaunchSiteLvl = 0, EditorMax = 0, LaunchSiteMax = 0;
             int isVABVessel = 0;
@@ -209,7 +238,7 @@ namespace KerbalConstructionTime
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.SpaceplaneHangar);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.Runway);
             }
-            double BP = vessel.BuildPoints;
+
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;
 
             var variables = new Dictionary<string, string>

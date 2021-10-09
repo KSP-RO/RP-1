@@ -26,12 +26,15 @@ namespace KerbalConstructionTime
 
         private WaitForSeconds _wfsHalf = null, _wfsOne = null, _wfsTwo = null;
         private bool _isIconUpdated = false;
-        private double _lastUT = 0;
+        private double _lastRateUpdateUT = 0;
+        private double _lastYearMultUpdateUT = 0;
 
         internal const string KCTLaunchLock = "KCTLaunchLock";
         internal const string KCTKSCLock = "KCTKSCLock";
         private const float BUILD_TIME_INTERVAL = 0.5f;
+        private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
         public static readonly Dictionary<string, KCTCostModifier> KCTCostModifiers = new Dictionary<string, KCTCostModifier>();
+        public static readonly Dictionary<string, KCTTechNodePeriod> TechNodePeriods = new Dictionary<string, KCTTechNodePeriod>();
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
@@ -601,8 +604,13 @@ namespace KerbalConstructionTime
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
             double UT = Utilities.GetUT();
-            if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UT - _lastUT > BUILD_TIME_INTERVAL))
+            if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UT - _lastRateUpdateUT > BUILD_TIME_INTERVAL))
+            {
                 ProgressBuildTime();
+
+                if (UT - _lastYearMultUpdateUT > YEAR_MULT_TIME_INTERVAL)
+                    UpdateTechYearMults();
+            }
 
             if (HighLogic.LoadedSceneIsFlight && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
             {
@@ -768,9 +776,9 @@ namespace KerbalConstructionTime
         {
             Profiler.BeginSample("KCT ProgressBuildTime");
             double UT = Utilities.GetUT();
-            if (_lastUT == 0)
-                _lastUT = UT;
-            double UTDiff = UT - _lastUT;
+            if (_lastRateUpdateUT == 0)
+                _lastRateUpdateUT = UT;
+            double UTDiff = UT - _lastRateUpdateUT;
             if (UTDiff > 0)
             {
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
@@ -815,8 +823,17 @@ namespace KerbalConstructionTime
                     KCTGameStates.TechList[i].IncrementProgress(UTDiff);
             }
 
-            _lastUT = UT;
+            _lastRateUpdateUT = UT;
             Profiler.EndSample();
+        }
+
+        private void UpdateTechYearMults()
+        {
+            for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
+            {
+                var t = KCTGameStates.TechList[i];
+                t.UpdateBuildRate(i);
+            }
         }
 
         private IEnumerator UpdateTechlistIconColorDelayed()

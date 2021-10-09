@@ -58,6 +58,17 @@ namespace KerbalConstructionTime
                     KerbalConstructionTime.KCTCostModifiers[x.name] = x;
                 }
             }
+
+            KerbalConstructionTime.TechNodePeriods.Clear();
+            nodes = GameDatabase.Instance.GetConfigNodes("KCT_TECH_NODE_PERIODS")?.FirstOrDefault();
+            foreach (var node in nodes?.GetNodes("TECHNode") ?? Enumerable.Empty<ConfigNode>())
+            {
+                KCTTechNodePeriod x = new KCTTechNodePeriod();
+                if (ConfigNode.LoadObjectFromConfig(x, node) && !string.IsNullOrEmpty(x.id))
+                {
+                    KerbalConstructionTime.TechNodePeriods[x.id] = x;
+                }
+            }
         }
 
         public override bool IsReady() => LoadingScreen.Instance?.loaders != null;

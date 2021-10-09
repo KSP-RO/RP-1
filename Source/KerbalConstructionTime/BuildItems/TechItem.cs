@@ -8,11 +8,14 @@ namespace KerbalConstructionTime
     public class TechItem : IKCTBuildItem
     {
         public int ScienceCost;
+        public int StartYear;
+        public int EndYear;
         public string TechName, TechID;
         public double Progress;
         public ProtoTechNode ProtoNode;
 
         private double _buildRate = -1;
+        private double _yearMult = -1;
 
         public double BuildRate
         {
@@ -39,8 +42,21 @@ namespace KerbalConstructionTime
                 else
                 {
                     double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0);
+                    rate *= YearBasedRateMult;
                     return (ScienceCost - Progress) / rate;
                 }
+            }
+        }
+
+        public double YearBasedRateMult
+        {
+            get
+            {
+                if (_yearMult < 0)
+                {
+                    _yearMult = CalculateYearBasedRateMult();
+                }
+                return _yearMult;
             }
         }
 
@@ -52,27 +68,62 @@ namespace KerbalConstructionTime
             Progress = 0;
             ProtoNode = ResearchAndDevelopment.Instance.GetTechState(TechID);
 
+            if (KerbalConstructionTime.TechNodePeriods.TryGetValue(TechID, out KCTTechNodePeriod period))
+            {
+                StartYear = period.startYear;
+                EndYear = period.endYear;
+            }
+
             KCTDebug.Log("techID = " + TechID);
             KCTDebug.Log("TimeLeft = " + TimeLeft);
         }
 
         public TechItem() {}
 
-        public TechItem(string ID, string name, double prog, int sci)
+        public TechItem(string ID, string name, double prog, int sci, int startYear, int endYear)
         {
             TechID = ID;
             TechName = name;
             Progress = prog;
             ScienceCost = sci;
+            StartYear = startYear;
+            EndYear = endYear;
         }
 
         public double UpdateBuildRate(int index)
         {
+            ForceRecalculateYearBasedRateMult();
             double rate = MathParser.ParseNodeRateFormula(ScienceCost, index);
             if (rate < 0)
                 rate = 0;
+
+            if (rate != 0)
+                rate *= YearBasedRateMult;
+
             _buildRate = rate;
             return _buildRate;
+        }
+
+        public void ForceRecalculateYearBasedRateMult()
+        {
+            _yearMult = -1;
+        }
+
+        public double CalculateYearBasedRateMult()
+        {
+            if (StartYear < 1) return 1;
+
+            DateTime epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var curDate = epoch.AddSeconds(Utilities.GetUT());
+
+            var diffYears = (curDate - new DateTime(StartYear, 1, 1)).TotalDays / 365.25;
+            if (diffYears > 0)
+            {
+                diffYears = (curDate - new DateTime(EndYear, 1, 1)).TotalDays / 365.25;
+                diffYears = Math.Max(0, diffYears);
+            }
+            var v = PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult?.Evaluate((float)diffYears);
+            return v ?? 1;
         }
 
         public void DisableTech()

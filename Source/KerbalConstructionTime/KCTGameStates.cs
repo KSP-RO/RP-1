@@ -16,6 +16,8 @@ namespace KerbalConstructionTime
         public static string ActiveKSCName = string.Empty;
         public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
+        public static bool MergingAvailable;
+        public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
         public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 
@@ -79,6 +81,7 @@ namespace KerbalConstructionTime
         {
             EditorShipEditingMode = false;
             EditedVessel = null;
+            MergedVessels.Clear();
 
             InputLockManager.RemoveControlLock("KCTEditExit");
             InputLockManager.RemoveControlLock("KCTEditLoad");

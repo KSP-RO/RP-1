@@ -609,7 +609,10 @@ namespace KerbalConstructionTime
                 ProgressBuildTime();
 
                 if (UT - _lastYearMultUpdateUT > YEAR_MULT_TIME_INTERVAL)
+                {
                     UpdateTechYearMults();
+                    _lastYearMultUpdateUT = UT;
+                }
             }
 
             if (HighLogic.LoadedSceneIsFlight && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)

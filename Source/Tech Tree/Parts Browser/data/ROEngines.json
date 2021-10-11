@@ -861,6 +861,30 @@
         ]
     },
     {
+        "name": "ROE-Agena",
+        "title": "ROEngines Agena Engine",
+        "description": "Unified model",
+        "mod": "ROEngines",
+        "cost": "150",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1958",
+        "technology": "orbitalRocketry1958",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Agena",
+        "upgrade": false,
+        "entry_cost_mods": "Model117",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-Agena8048",
         "title": "ROEngines XLR81 Agena A/B Vacuum Engine",
         "description": "",
@@ -2708,6 +2732,30 @@
         "upgrade": false,
         "entry_cost_mods": "J-2-200K",
         "identical_part_name": "J-2",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-J2T",
+        "title": "J-2T-200/250K",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "2235",
+        "entry_cost": "66000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1977",
+        "technology": "hydrolox1976",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "J2T",
+        "upgrade": false,
+        "entry_cost_mods": "J-2T-200K",
+        "identical_part_name": "J-2T",
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
@@ -5411,6 +5459,30 @@
         ]
     },
     {
+        "name": "ROE-RL10A4N",
+        "title": "RL10A-4N Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "60000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1992",
+        "technology": "hydrolox1992",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10A-4N",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-RL10A5",
         "title": "RL10A-5 Engine",
         "description": "",
@@ -5532,6 +5604,30 @@
         "engine_config": "RL10",
         "upgrade": false,
         "entry_cost_mods": "RL10C-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-RL10Fixed",
+        "title": "RL10 Engine",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "60000",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1962",
+        "technology": "prototypeHydrolox",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "RL10A-1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -6305,6 +6401,98 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "ROE-Star37",
+        "title": "Star 37",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "220",
+        "entry_cost": "3600",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-37",
+        "upgrade": false,
+        "entry_cost_mods": "STAR-37",
+        "identical_part_name": "Star-37",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star37E",
+        "title": "STAR-37E",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "220",
+        "entry_cost": "3600",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-37E",
+        "upgrade": false,
+        "entry_cost_mods": "STAR-37E",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star37FM",
+        "title": "STAR-37FM",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "180",
+        "entry_cost": "3600",
+        "category": "SOLID",
+        "info": "",
+        "year": "1984",
+        "technology": "solids1981",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-37FM",
+        "upgrade": false,
+        "entry_cost_mods": "STAR-37FM",
+        "identical_part_name": "STAR 37FM",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star48B",
+        "title": "Star 48B",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "1203",
+        "entry_cost": "24060",
+        "category": "SOLID",
+        "info": "",
+        "year": "1985",
+        "technology": "solids1981",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-48B",
+        "upgrade": false,
+        "entry_cost_mods": "Star-48B/Short",
+        "identical_part_name": "Star 48B",
+        "module_tags": [
+            "EngineSolid"
+        ]
     },
     {
         "name": "ROE-Star5D",

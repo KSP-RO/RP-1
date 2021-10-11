@@ -7,6 +7,8 @@ namespace KerbalConstructionTime
 {
     public class TechItem : IKCTBuildItem
     {
+        private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         public int ScienceCost;
         public int StartYear;
         public int EndYear;
@@ -113,16 +115,15 @@ namespace KerbalConstructionTime
         {
             if (StartYear < 1) return 1;
 
-            DateTime epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var curDate = epoch.AddSeconds(Utilities.GetUT());
+            DateTime curDate = _epoch.AddSeconds(Utilities.GetUT());
 
-            var diffYears = (curDate - new DateTime(StartYear, 1, 1)).TotalDays / 365.25;
+            double diffYears = (curDate - new DateTime(StartYear, 1, 1)).TotalDays / 365.25;
             if (diffYears > 0)
             {
-                diffYears = (curDate - new DateTime(EndYear, 1, 1)).TotalDays / 365.25;
+                diffYears = (curDate - new DateTime(EndYear, 12, 31, 23, 59, 59)).TotalDays / 365.25;
                 diffYears = Math.Max(0, diffYears);
             }
-            var v = PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult?.Evaluate((float)diffYears);
+            float? v = PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult?.Evaluate((float)diffYears);
             return v ?? 1;
         }
 

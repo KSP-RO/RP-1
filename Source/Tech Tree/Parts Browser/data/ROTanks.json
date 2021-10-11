@@ -325,7 +325,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankServiceModule"
+        ]
     },
     {
         "name": "ROT-LanderTank-Separate",
@@ -535,7 +537,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankServiceModule"
+        ]
     },
     {
         "name": "ROT-SphericalTank",

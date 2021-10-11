@@ -650,7 +650,7 @@
     },
     {
         "name": "RO-RFTank-SM",
-        "title": "",
+        "title": "Procedural Service Module",
         "description": "",
         "mod": "RealFuels",
         "cost": "0",

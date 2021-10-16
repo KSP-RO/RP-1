@@ -295,9 +295,10 @@ namespace RP0
 
             using (new CareerEventScope(CareerEventType.Maintenance))
             {
-                double cost = -timePassed * ((TotalUpkeep + Settings.maintenanceOffset) * (1d / 86400d));
-                Debug.Log($"[RP-0] MaintenanceHandler removing {cost} funds");
-                Funding.Instance.AddFunds(cost, TransactionReasons.StructureRepair);
+                double costPerDay = Math.Max(0, TotalUpkeep + Settings.maintenanceOffset);
+                double costForPassedSeconds = -timePassed * (costPerDay * (1d / 86400d));
+                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedSeconds} funds");
+                Funding.Instance.AddFunds(costForPassedSeconds, TransactionReasons.StructureRepair);
             }
 
             lastUpdate = time;

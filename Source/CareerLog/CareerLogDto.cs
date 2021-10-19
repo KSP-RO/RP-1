@@ -123,6 +123,8 @@ namespace RP0
     {
         public string date;
         public string nodeName;
+        public double yearMult;
+        public double researchRate;
 
         public TechResearchEventDto()
         {
@@ -132,13 +134,17 @@ namespace RP0
         {
             date = CareerLog.UTToDate(tre.UT).ToString("o");
             nodeName = tre.NodeName;
+            yearMult = tre.YearMult;
+            researchRate = tre.ResearchRate;
         }
 
         public override string ToString()
         {
             return
                 $"{nameof(date)}: {date}, " +
-                $"{nameof(nodeName)}: {nodeName}";
+                $"{nameof(nodeName)}: {nodeName}, " +
+                $"{nameof(yearMult)}: {yearMult}, " +
+                $"{nameof(researchRate)}: {researchRate}";
         }
     }
 

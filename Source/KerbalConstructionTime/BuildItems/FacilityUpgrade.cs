@@ -41,7 +41,7 @@ namespace KerbalConstructionTime
                     return;
                 }
             }
-            foreach (UpgradeableFacility facility in GetFacilityReferences())
+            foreach (UpgradeableFacility facility in GetFacilityReferencesById(Id))
             {
                 KCTEvents.AllowedToUpgrade = true;
                 facility.SetLevel(CurrentLevel);
@@ -62,20 +62,36 @@ namespace KerbalConstructionTime
                 }
                 KSC.LaunchPads[LaunchpadID].Upgrade(UpgradeLevel);
             }
+
+            List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(Id);
+            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
+                FacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
+            {
+                // Also upgrade the SPH to the same level as VAB when playing with unified build queue
+                facilityRefs.AddRange(GetFacilityReferencesByType(SpaceCenterFacility.SpaceplaneHangar));
+            }
+
             KCTEvents.AllowedToUpgrade = true;
-            foreach (UpgradeableFacility facility in GetFacilityReferences())
+            foreach (UpgradeableFacility facility in facilityRefs)
             {
                 facility.SetLevel(UpgradeLevel);
             }
+
             int newLvl = Utilities.GetBuildingUpgradeLevel(Id);
             UpgradeProcessed = newLvl == UpgradeLevel;
 
             KCTDebug.Log($"Upgrade processed: {UpgradeProcessed} Current: {newLvl} Desired: {UpgradeLevel}");
         }
 
-        public List<UpgradeableFacility> GetFacilityReferences()
+        public static List<UpgradeableFacility> GetFacilityReferencesById(string id)
         {
-            return ScenarioUpgradeableFacilities.protoUpgradeables[Id].facilityRefs;
+            return ScenarioUpgradeableFacilities.protoUpgradeables[id].facilityRefs;
+        }
+
+        public static List<UpgradeableFacility> GetFacilityReferencesByType(SpaceCenterFacility facilityType)
+        {
+            string internalId = ScenarioUpgradeableFacilities.SlashSanitize(facilityType.ToString());
+            return GetFacilityReferencesById(internalId);
         }
 
         public void SetBP(double cost)

@@ -15,7 +15,7 @@ namespace KerbalConstructionTime
         public bool KCTButtonStockImportant { get; set; }
 
         public static EventData<RDTech> OnTechQueued;
-        public static EventData<TechItem> OnTechCompleted;
+        public static EventData<ProtoTechNode> OnTechCompleted;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeQueued;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeComplete;
 
@@ -92,7 +92,7 @@ namespace KerbalConstructionTime
         public void CreateEvents()
         {
             OnTechQueued = new EventData<RDTech>("OnKctTechQueued");
-            OnTechCompleted = new EventData<TechItem>("OnKctTechCompleted");
+            OnTechCompleted = new EventData<ProtoTechNode>("OnKctTechCompleted");
             OnFacilityUpgradeQueued = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeQueued");
             OnFacilityUpgradeComplete = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeComplete");
             CreatedEvents = true;

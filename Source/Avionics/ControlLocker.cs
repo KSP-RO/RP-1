@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -100,15 +99,8 @@ namespace RP0
             return _cachedLockResult;
         }
 
-        private IEnumerator CheckLockCR()
+        private System.Collections.IEnumerator CheckLockCR()
         {
-            const int maxFramesWaited = 250;
-            int i = 0;
-            do
-            {
-                yield return new WaitForFixedUpdate();
-            } while ((FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.packed) && i++ < maxFramesWaited);
-
             while (HighLogic.LoadedSceneIsFlight)
             {
                 yield return new WaitForSeconds(UpdateFrequency);

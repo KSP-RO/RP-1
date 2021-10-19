@@ -168,7 +168,7 @@ namespace KerbalConstructionTime
 
                 try
                 {
-                    KCTEvents.OnTechCompleted?.Fire(this);
+                    KCTEvents.OnTechCompleted?.Fire(ProtoNode);
                 }
                 catch (Exception ex)
                 {

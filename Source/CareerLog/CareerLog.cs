@@ -29,7 +29,7 @@ namespace RP0
 
         private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        private EventData<ProtoTechNode> onKctTechCompletedEvent;
+        private EventData<TechItem> onKctTechCompletedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
@@ -80,7 +80,7 @@ namespace RP0
 
         public void Start()
         {
-            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<ProtoTechNode>>("OnKctTechCompleted");
+            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<TechItem>>("OnKctTechCompleted");
             if (onKctTechCompletedEvent != null)
             {
                 onKctTechCompletedEvent.Add(OnKctTechCompleted);
@@ -232,13 +232,15 @@ namespace RP0
             return _epoch.AddSeconds(ut);
         }
 
-        public void AddTechEvent(string nodeName)
+        public void AddTechEvent(TechItem tech)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             _techEvents.Add(new TechResearchEvent(KSPUtils.GetUT())
             {
-                NodeName = nodeName
+                NodeName = tech.ProtoNode.techID,
+                YearMult = tech.YearBasedRateMult,
+                ResearchRate = tech.BuildRate
             });
         }
 
@@ -716,11 +718,11 @@ namespace RP0
             }
         }
 
-        private void OnKctTechCompleted(ProtoTechNode data)
+        private void OnKctTechCompleted(TechItem tech)
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            AddTechEvent(data.techID);
+            AddTechEvent(tech);
         }
 
         private void OnKctFacilityUpgdQueued(FacilityUpgrade data)

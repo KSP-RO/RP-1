@@ -80,9 +80,7 @@ namespace KerbalConstructionTime
             AssociatedID = id;
             LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.LaunchSite : launchSite;    //For when we add custom launchpads
             Progress = 0;
-            BP = MathParser.ParseReconditioningFormula(vessel, true);
-            //if (type != RolloutReconType.Reconditioning)
-                //BP *= KCT_PresetManager.Instance.ActivePreset.timeSettings.RolloutReconSplit;
+            BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
             if (type == RolloutReconType.Reconditioning)
             {

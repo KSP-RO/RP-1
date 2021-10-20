@@ -4060,7 +4060,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-11",
+        "entry_cost_mods": "2000, AJTitan-11, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4083,7 +4083,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-11A",
+        "entry_cost_mods": "2000, AJTitan-11A, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4129,7 +4129,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-5",
+        "entry_cost_mods": "2000, AJTitan-5, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4152,7 +4152,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-7",
+        "entry_cost_mods": "2000, AJTitan-7, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4175,7 +4175,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-9",
+        "entry_cost_mods": "2000, AJTitan-9, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4451,7 +4451,7 @@
         "spacecraft": "",
         "engine_config": "LR91",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-11",
+        "entry_cost_mods": "2000, AJTitan-11, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4474,7 +4474,7 @@
         "spacecraft": "",
         "engine_config": "LR91",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-11A",
+        "entry_cost_mods": "2000, AJTitan-11A, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4520,7 +4520,7 @@
         "spacecraft": "",
         "engine_config": "LR91",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-5",
+        "entry_cost_mods": "2000, AJTitan-5, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4543,7 +4543,7 @@
         "spacecraft": "",
         "engine_config": "LR91",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-7",
+        "entry_cost_mods": "2000, AJTitan-7, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4566,7 +4566,7 @@
         "spacecraft": "",
         "engine_config": "LR91",
         "upgrade": true,
-        "entry_cost_mods": "2000, AJTitan-9",
+        "entry_cost_mods": "2000, AJTitan-9, HypergolicPumps, AerozineFuel",
         "identical_part_name": "",
         "module_tags": []
     },

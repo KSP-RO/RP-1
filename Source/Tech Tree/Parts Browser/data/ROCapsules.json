@@ -2142,7 +2142,7 @@
     },
     {
         "name": "ROC-LEM-LMDE",
-        "title": "Lunar Module Descent Engine",
+        "title": "Lunar Module Descent Engine (LM Mount)",
         "description": "Deeply throttleable pressure-fed vacuum engine used for the descent module of the Apollo lunar lander. Uses storable propellants which are not subject to boiloff, but are far less efficient than hydrolox or even kerolox. The version used on J-class missions had slightly higher specific impulse (this, along with other changes, gave enough payload capacity for the rover, for example). A later variant (TR-201) was used on Delta as an upper stage engine (on Delta P series); this was a low-cost model with more restarts (4 instead of 2) and slightly higher thrust but lower efficiency and no throttling capability. Diameter: [1.5 m]. Plume configured by RealPlume.",
         "mod": "ROCapsules",
         "cost": "900",
@@ -2184,7 +2184,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "LunarModuleAscent, LMAE",
         "identical_part_name": "Apollo LEM Ascent",
         "module_tags": [
             "HumanRated",
@@ -2233,7 +2233,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "LunarModuleDescent",
         "identical_part_name": "Apollo LEM Descent",
         "module_tags": []
     },

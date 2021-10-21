@@ -62,7 +62,7 @@ Discord Link: https://discord.gg/V73jjNd
 - Toolbar
 
 **Suggested Mods**
-- Raidernick's Mods (especially US Probes and Soviet Probes)
+- Raidernick's Mods (See Notes [here](https://github.com/KSP-RO/RP-0/wiki/Recommended-Extra-Mods#6-the-blacklist-mods-to-avoid))
 - FASA
 - Janitors Closet
 - Kerbal Engineer Redux

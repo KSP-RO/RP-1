@@ -785,11 +785,9 @@ namespace KerbalConstructionTime
             return missing;
         }
 
-        public bool AreAllPartsUnlocked() => GetControlledParts(locked: true).Count == 0;
-
-        private Dictionary<AvailablePart, int> GetControlledParts(bool locked = false, bool experimental = false)
+        public Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability()
         {
-            var res = new Dictionary<AvailablePart, int>();
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
 
             if (ResearchAndDevelopment.Instance == null)
                 return res;
@@ -797,21 +795,26 @@ namespace KerbalConstructionTime
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
                 string partName = Utilities.GetPartNameFromNode(pNode);
-                if ((locked && !Utilities.PartIsUnlocked(partName)) ||
-                    (experimental && Utilities.PartIsExperimental(partName)))
+                AvailablePart part = PartLoader.getPartInfoByName(partName);
+                if (res.TryGetValue(part, out PartPurchasability pp))
                 {
-                    AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
-                    if (!res.ContainsKey(partInfoByName))
-                        res.Add(partInfoByName, 1);
-                    else
-                        ++res[partInfoByName];
+                    pp.PartCount++;
+                }
+                else
+                {
+                    PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
+                    if (Utilities.PartIsUnlocked(part))
+                        status = PurchasabilityStatus.Purchased;
+                    else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
+                        status = PurchasabilityStatus.Purchasable;
+
+                    res.Add(part, new PartPurchasability(status, 1));
                 }
             }
             return res;
         }
 
-        public Dictionary<AvailablePart, int> GetLockedParts() => GetControlledParts(locked: true);
-        public Dictionary<AvailablePart, int> GetExperimentalParts() => GetControlledParts(experimental: true);
+        public bool AreAllPartsUnlocked() => GetPartsWithPurchasability().Values.All(v => v.Status == PurchasabilityStatus.Purchased);
 
         public double ProgressPercent()
         {
@@ -852,6 +855,20 @@ namespace KerbalConstructionTime
         {
             Name = PartName;
             Uid = uint.Parse(ID);
+        }
+    }
+
+    public enum PurchasabilityStatus { Unavailable = 0, Purchasable = 1, Purchased = 2 }
+
+    public struct PartPurchasability
+    {
+        public PurchasabilityStatus Status;
+        public int PartCount;
+
+        public PartPurchasability(PurchasabilityStatus status, int partCount)
+        {
+            Status = status;
+            PartCount = partCount;
         }
     }
 }

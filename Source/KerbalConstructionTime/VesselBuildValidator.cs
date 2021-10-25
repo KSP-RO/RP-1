@@ -98,14 +98,15 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            //Check if vessel contains locked or experimental parts, and therefore cannot be built
-            Dictionary<AvailablePart, int> lockedParts = blv.GetLockedParts();
-            if (lockedParts?.Count > 0)
+            // Check if vessel contains locked parts, and therefore cannot be built
+            Dictionary<AvailablePart, PartPurchasability> partStatuses = blv.GetPartsWithPurchasability();
+            IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable);
+            if (lockedParts.Any())
             {
                 KCTDebug.Log($"Tried to add {blv.ShipName} to build list but it contains locked parts.");
 
-                //Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
-                string lockedMsg = Utilities.ConstructLockedPartsWarning(lockedParts);
+                // Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
+                string lockedMsg = ConstructLockedPartsWarning(lockedParts);
                 var msg = new ScreenMessage(lockedMsg, 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(msg);
 
@@ -113,47 +114,36 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            Dictionary<AvailablePart, int> devParts = blv.GetExperimentalParts();
-            if (devParts.Count == 0)
+            IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> purchasableParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable);
+            if (!purchasableParts.Any())
             {
                 _validationResult = ValidationResult.Success;
                 return;
             }
 
-            DialogGUIButton[] buttons;
-            string devPartsMsg = Utilities.ConstructExperimentalPartsWarning(devParts);
-            List<AvailablePart> unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
-            int n = unlockableParts.Count();
-            if (n > 0)
-            {
-                //PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
-                int unlockCost = Utilities.FindUnlockCost(unlockableParts);
-                string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
-                buttons = new DialogGUIButton[] {
-                    new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                    new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
+            string devPartsMsg = ConstructUnlockablePartsWarning(purchasableParts);
+            List<AvailablePart> partList = purchasableParts.Select(kvp => kvp.Key).ToList();
+            // PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
+            int unlockCost = Utilities.FindUnlockCost(partList);
+            int partCount = purchasableParts.Count();
+            string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
+            var buttons = new DialogGUIButton[] {
+                new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
+                {
+                    if (Funding.Instance.Funds > unlockCost)
                     {
-                        if (Funding.Instance.Funds > unlockCost)
-                        {
-                            Utilities.UnlockExperimentalParts(unlockableParts);
-                            _validationResult = ValidationResult.Success;
-                        }
-                        else
-                        {
-                            var msg = new ScreenMessage("Insufficient funds to unlock parts", 5f, ScreenMessageStyle.UPPER_CENTER);
-                            ScreenMessages.PostScreenMessage(msg);
-                            _validationResult = ValidationResult.Fail;
-                        }
-                    })
-                };
-            }
-            else
-            {
-                _validationResult = ValidationResult.Fail;
-                buttons = new DialogGUIButton[] {
-                    new DialogGUIButton("Acknowledged", () => { })
-                };
-            }
+                        Utilities.UnlockExperimentalParts(partList);
+                        _validationResult = ValidationResult.Success;
+                    }
+                    else
+                    {
+                        var msg = new ScreenMessage("Insufficient funds to unlock parts", 5f, ScreenMessageStyle.UPPER_CENTER);
+                        ScreenMessages.PostScreenMessage(msg);
+                        _validationResult = ValidationResult.Fail;
+                    }
+                })
+            };
 
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                 new MultiOptionDialog("devPartsCheckFailedPopup",
@@ -163,7 +153,6 @@ namespace KerbalConstructionTime
                     buttons),
                 false,
                 HighLogic.UISkin);
-
         }
 
         private ValidationResult ProcessFundsChecks(BuildListVessel blv)
@@ -184,6 +173,39 @@ namespace KerbalConstructionTime
             }
 
             return ValidationResult.Success;
+        }
+
+        private static string ConstructLockedPartsWarning(IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedPartsOnShip)
+        {
+            var sb = StringBuilderCache.Acquire();
+            sb.Append("Warning! This vessel cannot be built. It contains parts which are not available at the moment:\n");
+
+            foreach (KeyValuePair<AvailablePart, PartPurchasability> kvp in lockedPartsOnShip)
+            {
+                sb.Append($" <color=orange><b>{kvp.Value.PartCount}x {kvp.Key.title}</b></color>\n");
+            }
+
+            return sb.ToStringAndRelease();
+        }
+
+        private static string ConstructUnlockablePartsWarning(IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> unlockablePartsOnShip)
+        {
+            var sb = StringBuilderCache.Acquire();
+            sb.Append("This vessel contains parts that are still in development. ");
+            if (unlockablePartsOnShip.Any(kvp => ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available))
+                sb.Append("Green parts have been researched and can be unlocked.\n");
+            else
+                sb.Append("\n");
+
+            foreach (KeyValuePair<AvailablePart, PartPurchasability> kvp in unlockablePartsOnShip)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
+                    sb.Append($" <color=green><b>{kvp.Value.PartCount}x {kvp.Key.title}</b></color>\n");
+                else
+                    sb.Append($" <color=orange><b>{kvp.Value.PartCount}x {kvp.Key.title}</b></color>\n");
+            }
+
+            return sb.ToStringAndRelease();
         }
     }
 }

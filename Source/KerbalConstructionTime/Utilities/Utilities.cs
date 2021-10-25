@@ -1537,15 +1537,19 @@ namespace KerbalConstructionTime
             if (partName == null) return false;
 
             AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
-            if (partInfoByName == null) return false;
+            return PartIsUnlocked(partInfoByName);
+        }
 
-            ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(partInfoByName.TechRequired);
+        public static bool PartIsUnlocked(AvailablePart ap)
+        {
+            if (ap == null) return false;
+
+            string partName = ap.name;
+            ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(ap.TechRequired);
             bool partIsUnlocked = techState != null && techState.state == RDTech.State.Available &&
                                   RUIutils.Any(techState.partsPurchased, (a => a.name == partName));
 
-            bool partIsExperimental = ResearchAndDevelopment.IsExperimentalPart(partInfoByName);
-
-            return partIsUnlocked || partIsExperimental;
+            return partIsUnlocked;
         }
 
         public static bool PartIsExperimental(string partName)
@@ -1595,45 +1599,6 @@ namespace KerbalConstructionTime
                 }
             }
             return false;
-        }
-
-        public static string ConstructLockedPartsWarning(Dictionary<AvailablePart, int> lockedPartsOnShip)
-        {
-            if (lockedPartsOnShip == null || lockedPartsOnShip.Count == 0)
-                return null;
-
-            var sb = StringBuilderCache.Acquire();
-            sb.Append("Warning! This vessel cannot be built. It contains parts which are not available at the moment:\n");
-
-            foreach (KeyValuePair<AvailablePart, int> kvp in lockedPartsOnShip)
-            {
-                sb.Append($" <color=orange><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
-            }
-
-            return sb.ToStringAndRelease();
-        }
-
-        public static string ConstructExperimentalPartsWarning(Dictionary<AvailablePart, int> devPartsOnShip)
-        {
-            if (devPartsOnShip == null || devPartsOnShip.Count == 0)
-                return null;
-
-            var sb = StringBuilderCache.Acquire();
-            sb.Append("This vessel contains parts that are still in development. ");
-            if (devPartsOnShip.Any(kvp => ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available))
-                sb.Append("Green parts have been researched and can be unlocked.\n");
-            else
-                sb.Append("\n");
-
-            foreach (KeyValuePair<AvailablePart, int> kvp in devPartsOnShip)
-            {
-                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
-                    sb.Append($" <color=green><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
-                else
-                    sb.Append($" <color=orange><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
-            }
-
-            return sb.ToStringAndRelease();
         }
 
         public static int GetBuildingUpgradeLevel(SpaceCenterFacility facility)

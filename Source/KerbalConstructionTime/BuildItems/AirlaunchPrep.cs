@@ -40,7 +40,7 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double buildRate = Utilities.GetSPHBuildRateSum(KSC);
+            double buildRate = Utilities.GetBuildRateForFastestSPHLine(KSC);
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;

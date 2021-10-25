@@ -112,7 +112,7 @@ namespace KerbalConstructionTime
         public double GetBuildRate()
         {
             double buildRate = AssociatedBLV?.Type == BuildListVessel.ListType.SPH
-                                ? Utilities.GetSPHBuildRateSum(KSC) : Utilities.GetVABBuildRateSum(KSC);
+                                ? Utilities.GetBuildRateForFastestSPHLine(KSC) : Utilities.GetBuildRateForFastestVABLine(KSC);
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

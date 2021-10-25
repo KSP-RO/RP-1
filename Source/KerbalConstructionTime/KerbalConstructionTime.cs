@@ -181,7 +181,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.SimulationParams.Reset();
                 if (b && KCTGameStates.LaunchedVessel != null)
                 {
-                    Utilities.AddVesselToBuildList(KCTGameStates.LaunchedVessel);
+                    Utilities.TryAddVesselToBuildList(KCTGameStates.LaunchedVessel);
                 }
             }
 
@@ -1114,7 +1114,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                Utilities.AddVesselToBuildList(launchSite);
+                Utilities.TryAddVesselToBuildList(launchSite);
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             }
         }

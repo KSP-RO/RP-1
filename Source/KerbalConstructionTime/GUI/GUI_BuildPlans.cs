@@ -130,7 +130,7 @@ namespace KerbalConstructionTime
                         GUILayout.BeginHorizontal();
                         if (GUILayout.Button("Build", GUILayout.Height(2 * 22)))
                         {
-                            Utilities.AddVesselToBuildList();
+                            Utilities.TryAddVesselToBuildList();
                             Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                         }
                         GUILayout.EndHorizontal();
@@ -202,7 +202,7 @@ namespace KerbalConstructionTime
 
                             if (GUILayout.Button(b.ShipName))
                             {
-                                Utilities.AddVesselToBuildList(b.CreateCopy(true));
+                                Utilities.TryAddVesselToBuildList(b.CreateCopy(true));
                             }
                         }
 

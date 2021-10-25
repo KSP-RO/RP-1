@@ -835,8 +835,9 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static BuildListVessel AddVesselToBuildList() => AddVesselToBuildList(EditorLogic.fetch.launchSiteName);
-        public static BuildListVessel AddVesselToBuildList(string launchSite)
+        public static void TryAddVesselToBuildList() => TryAddVesselToBuildList(EditorLogic.fetch.launchSiteName);
+
+        public static void TryAddVesselToBuildList(string launchSite)
         {
             if (string.IsNullOrEmpty(launchSite))
             {
@@ -850,104 +851,19 @@ namespace KerbalConstructionTime
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
 
-            return AddVesselToBuildList(blv);
+            TryAddVesselToBuildList(blv);
         }
 
-        public static BuildListVessel AddVesselToBuildList(BuildListVessel blv)
+        public static void TryAddVesselToBuildList(BuildListVessel blv)
         {
-            if (CurrentGameIsCareer())
-            {
-                //Check if vessel fails facility checks but can still be built
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
-                if (facilityChecks.Count != 0)
-                {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
-                        "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
-                        + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
-                        "Acknowledged",
-                        false,
-                        HighLogic.UISkin);
-                }
+            var v = new VesselBuildValidator();
+            v.SuccessAction = AddVesselToBuildList;
+            v.ProcessVessel(blv);
+        }
 
-                //Check if vessel contains locked or experimental parts, and therefore cannot be built
-                Dictionary<AvailablePart, int> lockedParts = blv.GetLockedParts();
-                if (lockedParts?.Count > 0)
-                {
-                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but it contains locked parts.");
-
-                    //Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
-                    var lockedMsg = ConstructLockedPartsWarning(lockedParts);
-                    var msg = new ScreenMessage(lockedMsg, 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(msg);
-                    return null;
-                }
-                Dictionary<AvailablePart, int> devParts = blv.GetExperimentalParts();
-                if (devParts?.Count > 0)
-                {
-                    var devMsg = ConstructExperimentalPartsWarning(devParts);
-
-                    //PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
-                    DialogGUIButton[] buttons;
-
-                    var unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
-                    int n = unlockableParts.Count();
-                    int unlockCost = FindUnlockCost(unlockableParts);
-                    string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
-                    if (unlockableParts.Any())
-                    {
-                        buttons = new DialogGUIButton[] {
-                            new DialogGUIButton("Acknowledged", () => { }),
-                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
-                            {
-                                if (Funding.Instance.Funds > unlockCost)
-                                {
-                                    UnlockExperimentalParts(unlockableParts);
-                                    if (!KCTGameStates.EditorShipEditingMode)
-                                        AddVesselToBuildList(blv);
-                                    else SaveShipEdits(KCTGameStates.EditedVessel);
-                                }
-                                else
-                                {
-                                    var msg = new ScreenMessage("Insufficient funds to unlock parts", 5f, ScreenMessageStyle.UPPER_CENTER);
-                                    ScreenMessages.PostScreenMessage(msg);
-                                }
-                            })
-                        };
-                    }
-                    else
-                    {
-                        buttons = new DialogGUIButton[] {
-                            new DialogGUIButton("Acknowledged", () => { })
-                        };
-                    }
-
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                        new MultiOptionDialog("devPartsCheckFailedPopup",
-                            devMsg,
-                            "Vessel cannot be built!",
-                            HighLogic.UISkin,
-                            buttons),
-                        false,
-                        HighLogic.UISkin);
-                    return null;
-                }
-
-                double totalCost = blv.GetTotalCost();
-                double prevFunds = Funding.Instance.Funds;
-                if (totalCost > prevFunds)
-                {
-                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but not enough funds.");
-                    KCTDebug.Log($"Vessel cost: {GetTotalVesselCost(blv.ShipNode)}, Current funds: {prevFunds}");
-                    var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(msg);
-                    return null;
-                }
-                else
-                {
-                    SpendFunds(totalCost, TransactionReasons.VesselRollout);
-                }
-            }
+        private static void AddVesselToBuildList(BuildListVessel blv)
+        {
+            SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 
             string type = string.Empty;
             if (blv.Type == BuildListVessel.ListType.VAB)
@@ -970,35 +886,50 @@ namespace KerbalConstructionTime
             string text = isCommonLine ? $"Added {blv.ShipName} to build list." : $"Added {blv.ShipName} to {type} build list.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
-            return blv;
         }
 
-        public static void SaveShipEdits(BuildListVessel ship)
+        /// <summary>
+        /// Validates and saves the vessel edits as a new buildlist item.
+        /// </summary>
+        /// <param name="editableShip">Must be the pre-edits (i.e what was initially loaded into the edit session) state of the vessel</param>
+        public static void TrySaveShipEdits(BuildListVessel editableShip)
         {
-            double usedShipsCost = ship.GetTotalCost();
+            // Load the current editor state as a fresh BuildListVessel
+            string launchSite = EditorLogic.fetch.launchSiteName;
+            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            double bp = GetBuildTime(effCost);
+            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
+            {
+                ShipName = EditorLogic.fetch.shipNameField.text
+            };
+
+            double usedShipsCost = editableShip.GetTotalCost();
             foreach (BuildListVessel v in KCTGameStates.MergedVessels)
             {
                 usedShipsCost += v.GetTotalCost();
                 v.RemoveFromBuildList();
             }
             AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
-            BuildListVessel newShip = AddVesselToBuildList();
-            if (newShip == null)
-            {
-                SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
-                return;
-            }
 
-            newShip.FacilityBuiltIn = ship.FacilityBuiltIn;
-            newShip.KCTPersistentID = ship.KCTPersistentID;
+            var validator = new VesselBuildValidator();
+            validator.SuccessAction = (postEditShip2) => SaveShipEdits(editableShip, postEditShip2);
+            validator.FailureAction = () => SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
 
-            ship.RemoveFromBuildList();
+            validator.ProcessVessel(postEditShip);
+        }
 
-            GetShipEditProgress(ship, out double progressBP, out _, out _);
+        private static void SaveShipEdits(BuildListVessel editableShip, BuildListVessel newShip)
+        {
+            newShip.FacilityBuiltIn = editableShip.FacilityBuiltIn;
+            newShip.KCTPersistentID = editableShip.KCTPersistentID;
+
+            editableShip.RemoveFromBuildList();
+
+            GetShipEditProgress(editableShip, out double progressBP, out _, out _);
             newShip.Progress = progressBP;
-            newShip.RushBuildClicks = ship.RushBuildClicks;
-            KCTDebug.Log($"Finished? {ship.IsFinished}");
-            if (ship.IsFinished)
+            newShip.RushBuildClicks = editableShip.RushBuildClicks;
+            KCTDebug.Log($"Finished? {editableShip.IsFinished}");
+            if (editableShip.IsFinished)
                 newShip.CannotEarnScience = true;
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);

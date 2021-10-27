@@ -930,6 +930,8 @@ namespace KerbalConstructionTime
 
         private static void SaveShipEdits(BuildListVessel editableShip, BuildListVessel newShip)
         {
+            AddVesselToBuildList(newShip);
+
             newShip.FacilityBuiltIn = editableShip.FacilityBuiltIn;
             newShip.KCTPersistentID = editableShip.KCTPersistentID;
 

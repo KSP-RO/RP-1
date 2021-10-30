@@ -18,6 +18,8 @@ namespace KerbalConstructionTime
         public static EventData<TechItem> OnTechCompleted;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeQueued;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeComplete;
+        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionQueued;
+        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
 
 
         public KCTEvents()
@@ -95,6 +97,8 @@ namespace KerbalConstructionTime
             OnTechCompleted = new EventData<TechItem>("OnKctTechCompleted");
             OnFacilityUpgradeQueued = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeQueued");
             OnFacilityUpgradeComplete = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeComplete");
+            OnPadConstructionQueued = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionQueued");
+            OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
             CreatedEvents = true;
         }
 
@@ -123,23 +127,9 @@ namespace KerbalConstructionTime
 
         public void FacilityUpgradedEvent(Upgradeables.UpgradeableFacility facility, int lvl)
         {
-            if (KCT_GUI.IsPrimarilyDisabled)
-            {
-                bool isLaunchpad = facility.id.ToLower().Contains("launchpad");
-                if (!isLaunchpad)
-                    return;
-
-                KCTGameStates.ActiveKSC.ActiveLPInstance.Upgrade(lvl);
-            }
+            if (KCT_GUI.IsPrimarilyDisabled) return;
 
             KCTDebug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
-            if (facility.id.ToLower().Contains("launchpad"))
-            {
-                if (!AllowedToUpgrade)
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.Upgrade(lvl);    //also repairs the launchpad
-                else
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.level = lvl;
-            }
             AllowedToUpgrade = false;
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {

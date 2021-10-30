@@ -472,10 +472,10 @@ namespace KerbalConstructionTime
             //partLimit = GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(editorFacility), editorFacility == SpaceCenterFacility.VehicleAssemblyBuilding);
 
             float totalMass = Utilities.GetShipMass(ship, true, out _, out _);
-            float massLimit = GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), launchFacility == SpaceCenterFacility.LaunchPad);
+            float massLimit = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.supportedMass : GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
 
             Vector3 craftSize = Utilities.GetShipSize(ship, true);
-            Vector3 maxSize = GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), launchFacility == SpaceCenterFacility.LaunchPad);
+            Vector3 maxSize = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.supportedSize : GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
 
             string neutralColorHex = XKCDColors.HexFormat.KSPNeutralUIGrey;
 
@@ -820,6 +820,12 @@ namespace KerbalConstructionTime
 
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                         ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
+
+                    for (int i = ksc.PadConstructions.Count - 1; i >= 0; i--)
+                        ksc.PadConstructions[i].IncrementProgress(UTDiff);
+
+                    if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                        ksc.PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                 }
 
                 for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
@@ -958,9 +964,7 @@ namespace KerbalConstructionTime
                     KCTDebug.Log("Showing first start.");
                     KCTGameStates.IsFirstStart = false;
                     KCT_GUI.GUIStates.ShowFirstRun = true;
-
-                    //initialize the proper launchpad
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad);
+                    KCTGameStates.ActiveKSC.EnsureStartingLaunchPad();
                 }
 
                 KCTDebug.Log("SP switch starting");

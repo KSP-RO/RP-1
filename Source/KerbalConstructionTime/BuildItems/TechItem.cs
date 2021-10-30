@@ -31,6 +31,8 @@ namespace KerbalConstructionTime
             }
         }
 
+        public double GetFractionComplete() => Progress / ScienceCost;
+
         public double TimeLeft => (ScienceCost - Progress) / BuildRate;
 
         public double EstimatedTimeLeft

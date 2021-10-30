@@ -102,7 +102,7 @@ namespace RP0
         {
             date = CareerLog.UTToDate(fce.UT).ToString("o");
             facility = fce.Facility;
-            newLevel = fce.NewLevel;
+            newLevel = (int)fce.NewLevel;
             cost = fce.Cost;
             state = fce.State;
         }

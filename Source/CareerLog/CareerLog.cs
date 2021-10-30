@@ -32,6 +32,8 @@ namespace RP0
         private EventData<TechItem> onKctTechCompletedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
+        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionQueuedEvent;
+        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCompletedEvent;
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
         private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
         private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
@@ -97,6 +99,18 @@ namespace RP0
             {
                 onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
             }
+
+            onKctPadConstructionQueuedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>> ("OnKctPadConstructionQueued");
+            if (onKctPadConstructionQueuedEvent != null)
+            {
+                onKctPadConstructionQueuedEvent.Add(OnKctPadConstructionQueued);
+            }
+
+            onKctPadConstructionCompletedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionComplete");
+            if (onKctPadConstructionCompletedEvent != null)
+            {
+                onKctPadConstructionCompletedEvent.Add(OnKctPadConstructionComplete);
+            }
         }
 
         public void OnDestroy()
@@ -107,6 +121,8 @@ namespace RP0
             if (onKctTechCompletedEvent != null) onKctTechCompletedEvent.Remove(OnKctTechCompleted);
             if (onKctFacilityUpgradeQueuedEvent != null) onKctFacilityUpgradeQueuedEvent.Remove(OnKctFacilityUpgdQueued);
             if (onKctFacilityUpgradeCompletedEvent != null) onKctFacilityUpgradeCompletedEvent.Remove(OnKctFacilityUpgdComplete);
+            if (onKctPadConstructionQueuedEvent != null) onKctPadConstructionQueuedEvent.Remove(OnKctPadConstructionQueued);
+            if (onKctPadConstructionCompletedEvent != null) onKctPadConstructionCompletedEvent.Remove(OnKctPadConstructionComplete);
 
             if (_eventsBound)
             {
@@ -244,7 +260,7 @@ namespace RP0
             });
         }
 
-        public void AddFacilityConstructionEvent(SpaceCenterFacility facility, int newLevel, double cost, ConstructionState state)
+        public void AddFacilityConstructionEvent(SpaceCenterFacility facility, float newLevel, double cost, ConstructionState state)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
@@ -737,6 +753,20 @@ namespace RP0
             if (CareerEventScope.ShouldIgnore || !data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
 
             AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Completed);
+        }
+
+        private void OnKctPadConstructionQueued(PadConstruction data, KCT_LaunchPad lp)
+        {
+            if (CareerEventScope.ShouldIgnore) return;
+
+            AddFacilityConstructionEvent(SpaceCenterFacility.LaunchPad, lp.fractionalLevel, data.Cost, ConstructionState.Started);
+        }
+
+        private void OnKctPadConstructionComplete(PadConstruction data, KCT_LaunchPad lp)
+        {
+            if (CareerEventScope.ShouldIgnore) return;
+
+            AddFacilityConstructionEvent(SpaceCenterFacility.LaunchPad, lp.fractionalLevel, data.Cost, ConstructionState.Completed);
         }
     }
 }

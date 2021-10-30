@@ -90,15 +90,14 @@ namespace KerbalConstructionTime
             EditorLogic.fetch?.Unlock("KCTEditorMouseLock");
         }
 
+        /// <summary>
+        /// API for creating new launch pads. ConfigurableStart mod is know to use this.
+        /// </summary>
+        /// <param name="padName"></param>
+        /// <param name="padLevel"></param>
         public static void CreateNewPad(string padName, int padLevel)
         {
-            KCT_LaunchPad lp = ActiveKSC.ActiveLPInstance;
-
-            if (lp.GetUpgradeableFacilityReferences()?[0]?.UpgradeLevels is UpgradeableObject.UpgradeLevel[] padUpgdLvls)
-            {
-                padLevel = UnityEngine.Mathf.Clamp(padLevel, 1, padUpgdLvls.Length);
-                ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
-            }
+            ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
         }
 
         public static void ClearLaunchpadList()

@@ -8551,7 +8551,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "30000,RL10A-4-1-2",
+        "entry_cost_mods": "RL10A-4-1-2,RL10A-4N",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8572,7 +8572,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "30000,RL10A-4-1-2",
+        "entry_cost_mods": "RL10A-4-1N",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8593,7 +8593,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": true,
-        "entry_cost_mods": "30000,RL10A-4",
+        "entry_cost_mods": "40000,RL10A-4",
         "identical_part_name": "",
         "module_tags": []
     },

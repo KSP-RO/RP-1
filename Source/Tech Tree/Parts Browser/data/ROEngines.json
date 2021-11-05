@@ -4800,7 +4800,7 @@
         "spacecraft": "UR-200",
         "engine_config": "RD0213",
         "upgrade": false,
-        "entry_cost_mods": "RD-0213",
+        "entry_cost_mods": "RD-0206",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -4824,7 +4824,7 @@
         "spacecraft": "UR-200",
         "engine_config": "RD0214",
         "upgrade": false,
-        "entry_cost_mods": "RD-0214",
+        "entry_cost_mods": "RD-0207",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",

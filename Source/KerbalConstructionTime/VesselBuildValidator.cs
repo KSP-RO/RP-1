@@ -11,6 +11,10 @@ namespace KerbalConstructionTime
         private enum ValidationResult { Undecided, Fail, Success };
 
         public bool CheckFacilityRequirements { get; set; } = true;
+        /// <summary>
+        /// If true, will only give a warning message to the user and not fail the validation.
+        /// </summary>
+        public bool BypassFacilityRequirements { get; set; } = true;
         public bool CheckPartAvailability { get; set; } = true;
         public bool CheckAvailableFunds { get; set; } = true;
         public Action<BuildListVessel> SuccessAction { get; set; }
@@ -81,8 +85,11 @@ namespace KerbalConstructionTime
                         false,
                         HighLogic.UISkin);
 
-                    FailureAction();
-                    return ValidationResult.Fail;
+                    if (!BypassFacilityRequirements)
+                    {
+                        FailureAction();
+                        return ValidationResult.Fail;
+                    }
                 }
             }
 

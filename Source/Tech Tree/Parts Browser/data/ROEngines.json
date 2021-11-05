@@ -4784,6 +4784,54 @@
         "description": ""
     },
     {
+        "name": "ROE-RD0213",
+        "title": "RD-0206/0213",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "10",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1964",
+        "technology": "stagedCombustion1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "UR-200",
+        "engine_config": "RD0213",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0213",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-RD0214",
+        "title": "RD-0207/0214",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "260",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1964",
+        "technology": "stagedCombustion1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "UR-200",
+        "engine_config": "RD0214",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0214",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROE-RD100",
         "title": "RD-100 Series Engine",
         "description": "",

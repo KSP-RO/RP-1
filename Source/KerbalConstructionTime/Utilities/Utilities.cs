@@ -1815,52 +1815,27 @@ namespace KerbalConstructionTime
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
 
-                if (!kctInstance.IsLaunchSiteControllerBound)
+                if (!kctInstance.IsLaunchSiteControllerDisabled)
                 {
-                    kctInstance.IsLaunchSiteControllerBound = true;
-                    KCTDebug.Log("Attempting to take control of launchsite specific buttons");
-                    //delete listeners to the launchsite specific buttons
+                    kctInstance.IsLaunchSiteControllerDisabled = true;
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller == null)
-                        KCTDebug.Log("HandleEditorButton.controller is null");
+                    {
+                        KCTDebug.Log("UILaunchsiteController is null");
+                    }
                     else
                     {
-                        // Need to use the try/catch because if multiple launch sites are disabled, then this would generate
-                        // the following error:
-                        //                          Cannot cast from source type to destination type
-                        // which happens because the private member "launchPadItems" is a list, and if it is null, then it is
-                        // not castable to a IEnumerable
-                        try
-                        {
-                            if (controller.GetType().GetPrivateMemberValue("launchPadItems", controller, 4) is IEnumerable list)
-                            {
-                                foreach (object site in list)
-                                {
-                                    //find and disable the button
-                                    //why isn't EditorLaunchPadItem public despite all of its members being public?
-                                    Button button = site.GetType().GetPublicValue<Button>("buttonLaunch", site);
-                                    if (button != null)
-                                    {
-                                        button.onClick.RemoveAllListeners();
-                                        string siteName = site.GetType().GetPublicValue<string>("siteName", site);
-                                        button.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(siteName); });
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            KCTDebug.Log("HandleEditorButton: Exception: " + ex);
-                        }
+                        KCTDebug.Log("Killing UILaunchsiteController");
+                        UnityEngine.Object.Destroy(controller);
                     }
                 }
             }
             else
             {
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, KerbalConstructionTime.KCTLaunchLock);
-                if (!kctInstance.IsLaunchSiteControllerBound)
+                if (!kctInstance.IsLaunchSiteControllerDisabled)
                 {
-                    kctInstance.IsLaunchSiteControllerBound = true;
+                    kctInstance.IsLaunchSiteControllerDisabled = true;
                     KCTDebug.Log("Attempting to disable launchsite specific buttons");
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller != null)

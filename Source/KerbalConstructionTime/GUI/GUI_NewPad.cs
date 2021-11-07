@@ -29,7 +29,6 @@ namespace KerbalConstructionTime
             GUILayout.Label("Pad level:");
             _selectedPadIdx = GUILayout.SelectionGrid(_selectedPadIdx, _padLvlOptions, 2);
 
-            const float unlimitedTonnageThreshold = 3500;
             Vector3 unlimitedSizeThreshold = new Vector3(70, 130, 70);
 
             double curPadCost;
@@ -46,6 +45,7 @@ namespace KerbalConstructionTime
                 _tonnageLimit = GUILayout.TextField(_tonnageLimit);
                 if (float.TryParse(_tonnageLimit, out tonnageLimit) && tonnageLimit >= _padTons[0])
                 {
+                    float unlimitedTonnageThreshold = PresetManager.Instance.ActivePreset.GeneralSettings.PadUnlimitedTonnageThreshold;
                     if (tonnageLimit >= unlimitedTonnageThreshold)
                     {
                         int padLvl = _padLvlOptions.Length - 2;

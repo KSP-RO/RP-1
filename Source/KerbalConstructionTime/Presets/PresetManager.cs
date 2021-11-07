@@ -314,6 +314,8 @@ namespace KerbalConstructionTime
             VABRecoveryTech = null;
         [Persistent]
         public int MaxRushClicks = 0;
+        [Persistent]
+        public float PadUnlimitedTonnageThreshold = 3500;
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage

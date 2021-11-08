@@ -54,6 +54,9 @@ namespace RP0
         [Persistent]
         public double FundsGainMult;
 
+        [Persistent]
+        public int NumNautsKilled;
+
         public LogPeriod()
         {
         }

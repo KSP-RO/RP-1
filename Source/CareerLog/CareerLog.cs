@@ -111,6 +111,7 @@ namespace RP0
             if (_eventsBound)
             {
                 GameEvents.onVesselSituationChange.Remove(VesselSituationChange);
+                GameEvents.onCrewKilled.Remove(CrewKilled);
                 GameEvents.Modifiers.OnCurrencyModified.Remove(CurrenciesModified);
                 GameEvents.Contract.onAccepted.Remove(ContractAccepted);
                 GameEvents.Contract.onCompleted.Remove(ContractCompleted);
@@ -472,7 +473,8 @@ namespace RP0
                 entryCosts = logPeriod.EntryCosts,
                 constructionFees = logPeriod.OtherFees,
                 otherFees = logPeriod.OtherFees - constructionFees,
-                fundsGainMult = logPeriod.FundsGainMult
+                fundsGainMult = logPeriod.FundsGainMult,
+                numNautsKilled = logPeriod.NumNautsKilled
             };
         }
 
@@ -515,6 +517,7 @@ namespace RP0
             {
                 _eventsBound = true;
                 GameEvents.onVesselSituationChange.Add(VesselSituationChange);
+                GameEvents.onCrewKilled.Add(CrewKilled);
                 GameEvents.Modifiers.OnCurrencyModified.Add(CurrenciesModified);
                 GameEvents.Contract.onAccepted.Add(ContractAccepted);
                 GameEvents.Contract.onCompleted.Add(ContractCompleted);
@@ -677,6 +680,13 @@ namespace RP0
                     BuiltAt = ev.host.GetVesselBuiltAt() ?? EditorFacility.None    // KSP can't serialize nullables
                 });
             }
+        }
+
+        private void CrewKilled(EventReport data)
+        {
+            if (CareerEventScope.ShouldIgnore) return;
+
+            CurrentPeriod.NumNautsKilled++;
         }
 
         private string GetContractInternalName(Contract c)

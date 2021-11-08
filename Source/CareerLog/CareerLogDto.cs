@@ -11,6 +11,7 @@ namespace RP0
         public int vabUpgrades;
         public int sphUpgrades;
         public int rndUpgrades;
+        public int numNautsKilled;
         public double currentFunds;
         public double currentSci;
         public double scienceEarned;
@@ -35,6 +36,7 @@ namespace RP0
                 $"{nameof(vabUpgrades)}: {vabUpgrades}, " +
                 $"{nameof(sphUpgrades)}: {sphUpgrades}, " +
                 $"{nameof(rndUpgrades)}: {rndUpgrades}, " +
+                $"{nameof(numNautsKilled)}: {numNautsKilled}, " +
                 $"{nameof(currentFunds)}: {currentFunds}, " +
                 $"{nameof(currentSci)}: {currentSci}, " +
                 $"{nameof(scienceEarned)}: {scienceEarned}, " +

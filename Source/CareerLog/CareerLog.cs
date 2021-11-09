@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Csv;
+using Headlines;
 using KerbalConstructionTime;
 using System;
 using System.Collections;
@@ -307,6 +308,8 @@ namespace RP0
                     p.EntryCosts.ToString("F0"),
                     constructionFees.ToString("F0"),
                     (p.OtherFees - constructionFees).ToString("F0"),
+                    p.KSPReputation.ToString("F1"),
+                    p.HeadlinesReputation.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
                                                       .Select(l => l.VesselName)
                                                       .ToArray()),
@@ -325,7 +328,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Reputation", "Headlines Reputation" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -470,7 +473,9 @@ namespace RP0
                 entryCosts = logPeriod.EntryCosts,
                 constructionFees = logPeriod.OtherFees,
                 otherFees = logPeriod.OtherFees - constructionFees,
-                fundsGainMult = logPeriod.FundsGainMult
+                fundsGainMult = logPeriod.FundsGainMult,
+                KSPReputation = logPeriod.KSPReputation,
+                HeadlinesReputation = logPeriod.HeadlinesReputation
             };
         }
 
@@ -486,6 +491,11 @@ namespace RP0
                 _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+                _prevPeriod.KSPReputation = Reputation.CurrentRep;
+                if (AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.name, "Headlines", StringComparison.OrdinalIgnoreCase)))
+                {
+                    _prevPeriod.HeadlinesReputation = StoryEngine.Instance.GetHeadlinesReputation();
+                }
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);

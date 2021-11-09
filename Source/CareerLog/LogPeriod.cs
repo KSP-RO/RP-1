@@ -54,6 +54,12 @@ namespace RP0
         [Persistent]
         public double FundsGainMult;
 
+        [Persistent] 
+        public double KSPReputation;
+
+        [Persistent] 
+        public double HeadlinesReputation;
+
         public LogPeriod()
         {
         }

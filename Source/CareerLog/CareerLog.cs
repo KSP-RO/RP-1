@@ -328,7 +328,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Reputation", "Headlines Reputation" };
+            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -495,6 +495,10 @@ namespace RP0
                 if (AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.name, "Headlines", StringComparison.OrdinalIgnoreCase)))
                 {
                     _prevPeriod.HeadlinesReputation = StoryEngine.Instance.GetHeadlinesReputation();
+                }
+                else
+                {
+                    _prevPeriod.HeadlinesReputation = 0;
                 }
             }
 

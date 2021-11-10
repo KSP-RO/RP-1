@@ -1,6 +1,5 @@
 ﻿using Contracts;
 using Csv;
-using Headlines;
 using KerbalConstructionTime;
 using System;
 using System.Collections;
@@ -47,6 +46,11 @@ namespace RP0
         private LogPeriod _currentPeriod;
 
         public static CareerLog Instance { get; private set; }
+
+        /// <summary>
+        /// Default means to get hype for career not using Headlines
+        /// </summary>
+        public static Func<double> GetHeadlinesHype = () => { return 0; };
 
         public LogPeriod CurrentPeriod
         { 
@@ -496,14 +500,7 @@ namespace RP0
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.KSPReputation = Reputation.CurrentRep;
-                if (AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.name, "Headlines", StringComparison.OrdinalIgnoreCase)))
-                {
-                    _prevPeriod.HeadlinesReputation = StoryEngine.Instance.GetHeadlinesReputation();
-                }
-                else
-                {
-                    _prevPeriod.HeadlinesReputation = 0;
-                }
+                _prevPeriod.HeadlinesReputation = GetHeadlinesHype();
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);

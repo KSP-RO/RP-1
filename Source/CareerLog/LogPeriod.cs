@@ -61,7 +61,7 @@ namespace RP0
         public double KSPReputation;
 
         [Persistent] 
-        public double HeadlinesReputation;
+        public double HeadlinesHype;
 
         public LogPeriod()
         {

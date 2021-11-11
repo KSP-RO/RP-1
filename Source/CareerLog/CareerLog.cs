@@ -316,7 +316,7 @@ namespace RP0
                     constructionFees.ToString("F0"),
                     (p.OtherFees - constructionFees).ToString("F0"),
                     p.KSPReputation.ToString("F1"),
-                    p.HeadlinesReputation.ToString("F1"),
+                    p.HeadlinesHype.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
                                                       .Select(l => l.VesselName)
                                                       .ToArray()),
@@ -483,7 +483,7 @@ namespace RP0
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
                 KSPReputation = logPeriod.KSPReputation,
-                HeadlinesReputation = logPeriod.HeadlinesReputation
+                HeadlinesReputation = logPeriod.HeadlinesHype
             };
         }
 
@@ -500,7 +500,7 @@ namespace RP0
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.KSPReputation = Reputation.CurrentRep;
-                _prevPeriod.HeadlinesReputation = GetHeadlinesHype();
+                _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);

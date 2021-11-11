@@ -482,7 +482,7 @@ namespace RP0
                 otherFees = logPeriod.OtherFees - constructionFees,
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
-                Reputation = logPeriod.Reputation,
+                reputation = logPeriod.Reputation,
                 headlinesHype = logPeriod.HeadlinesHype
             };
         }

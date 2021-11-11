@@ -58,7 +58,7 @@ namespace RP0
         public int NumNautsKilled;
 
         [Persistent] 
-        public double KSPReputation;
+        public double Reputation;
 
         [Persistent] 
         public double HeadlinesHype;

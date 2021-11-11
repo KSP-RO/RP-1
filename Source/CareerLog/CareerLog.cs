@@ -482,8 +482,8 @@ namespace RP0
                 otherFees = logPeriod.OtherFees - constructionFees,
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
-                KSPReputation = logPeriod.KSPReputation,
-                HeadlinesReputation = logPeriod.HeadlinesHype
+                kspReputation = logPeriod.KSPReputation,
+                headlinesHype = logPeriod.HeadlinesHype
             };
         }
 

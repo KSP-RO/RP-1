@@ -368,10 +368,10 @@ namespace KerbalConstructionTime
 
         public static double GetBuildRateForFastestVABLine(KSCItem KSC)
         {
-            return GetSPHBuildRates(KSC).FirstOrDefault();
+            return GetVABBuildRates(KSC).FirstOrDefault();
         }
 
-        public static  double GetBuildRateForFastestSPHLine(KSCItem KSC)
+        public static double GetBuildRateForFastestSPHLine(KSCItem KSC)
         {
             return GetSPHBuildRates(KSC).FirstOrDefault();
         }

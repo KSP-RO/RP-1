@@ -4198,7 +4198,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": true,
-        "entry_cost_mods": "28000, AJTitan-9",
+        "entry_cost_mods": "2000, AJTitan-9",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4221,7 +4221,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": true,
-        "entry_cost_mods": "28000, AJTitan-9",
+        "entry_cost_mods": "2000, AJTitan-9",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4589,7 +4589,7 @@
         "spacecraft": "",
         "engine_config": "LR91",
         "upgrade": true,
-        "entry_cost_mods": "14000, AJTitan-9",
+        "entry_cost_mods": "2000, AJTitan-9",
         "identical_part_name": "",
         "module_tags": []
     },

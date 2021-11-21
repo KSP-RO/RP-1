@@ -5156,10 +5156,10 @@
     },
     {
         "name": "ROE-RD215",
-        "title": "RD-215 Series",
+        "title": "dual-RD-215 Series",
         "description": "",
         "mod": "ROEngines",
-        "cost": "350",
+        "cost": 700,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",

@@ -47,6 +47,11 @@ namespace RP0
 
         public static CareerLog Instance { get; private set; }
 
+        /// <summary>
+        /// Default means to get hype for career not using Headlines
+        /// </summary>
+        public static Func<double> GetHeadlinesHype = () => { return 0; };
+
         public LogPeriod CurrentPeriod
         { 
             get
@@ -310,6 +315,8 @@ namespace RP0
                     p.EntryCosts.ToString("F0"),
                     constructionFees.ToString("F0"),
                     (p.OtherFees - constructionFees).ToString("F0"),
+                    p.Reputation.ToString("F1"),
+                    p.HeadlinesHype.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
                                                       .Select(l => l.VesselName)
                                                       .ToArray()),
@@ -328,7 +335,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -474,7 +481,9 @@ namespace RP0
                 constructionFees = logPeriod.OtherFees,
                 otherFees = logPeriod.OtherFees - constructionFees,
                 fundsGainMult = logPeriod.FundsGainMult,
-                numNautsKilled = logPeriod.NumNautsKilled
+                numNautsKilled = logPeriod.NumNautsKilled,
+                reputation = logPeriod.Reputation,
+                headlinesHype = logPeriod.HeadlinesHype
             };
         }
 
@@ -490,6 +499,8 @@ namespace RP0
                 _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+                _prevPeriod.Reputation = Reputation.CurrentRep;
+                _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);

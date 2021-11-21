@@ -57,6 +57,12 @@ namespace RP0
         [Persistent]
         public int NumNautsKilled;
 
+        [Persistent] 
+        public double Reputation;
+
+        [Persistent] 
+        public double HeadlinesHype;
+
         public LogPeriod()
         {
         }

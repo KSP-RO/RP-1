@@ -26,6 +26,8 @@ namespace RP0
         public double constructionFees;
         public double otherFees;
         public double fundsGainMult;
+        public double reputation;
+        public double headlinesHype;
 
         public override string ToString()
         {
@@ -50,7 +52,9 @@ namespace RP0
                 $"{nameof(entryCosts)}: {entryCosts}, " +
                 $"{nameof(constructionFees)}: {constructionFees}, " +
                 $"{nameof(otherFees)}: {otherFees}, " +
-                $"{nameof(fundsGainMult)}: {fundsGainMult}";
+                $"{nameof(fundsGainMult)}: {fundsGainMult}, " +
+                $"{nameof(reputation)}: {reputation}, " +
+                $"{nameof(headlinesHype)}: {headlinesHype}";
         }
     }
 

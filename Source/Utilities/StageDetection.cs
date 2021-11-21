@@ -23,8 +23,8 @@ namespace RP0
             }
 
             private StageNode root;
-            private DictionaryValueList<Part, StageNode> rootDict;
-            public StageTree(StageNode root, DictionaryValueList<Part, StageNode> rootDict)
+            private Dictionary<Part, StageNode> rootDict;
+            public StageTree(StageNode root, Dictionary<Part, StageNode> rootDict)
             {
                 this.root = root;
                 this.rootDict = rootDict;
@@ -82,7 +82,7 @@ namespace RP0
             public StageTree BuildTree(Part root)
             {
                 Debug.Log("[RP-0] Stage detection: Started BuildTree with root: "+root.name);
-                var stageDictionary = new DictionaryValueList<Part, StageTree.StageNode>();
+                var stageDictionary = new Dictionary<Part, StageTree.StageNode>();
                 // One queue to store new stages, one to store parts in current stage
                 Queue<StageTree.StageNode> newStages = new Queue<StageTree.StageNode>();
                 Queue<Part> partsInStage = new Queue<Part>();

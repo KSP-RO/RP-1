@@ -8,8 +8,11 @@ namespace KerbalConstructionTime
         private static int _selectedPadIdx = 0;
         private static string[] _padLvlOptions = null;
         private static double[] _padCosts = null;
+        private static float[] _padTons = null;
+        private static Vector3[] _padSizes;
 
         private static string _newName = "";
+        private static string _tonnageLimit = "60";
         private static bool _isRenamingLaunchPad = false;
 
         public static void DrawNewPadWindow(int windowID)
@@ -24,33 +27,87 @@ namespace KerbalConstructionTime
             _newName = GUILayout.TextField(_newName);
 
             GUILayout.Label("Pad level:");
-            _selectedPadIdx = GUILayout.SelectionGrid(_selectedPadIdx, _padLvlOptions, 1);
+            _selectedPadIdx = GUILayout.SelectionGrid(_selectedPadIdx, _padLvlOptions, 2);
 
-            double curPadCost = _padCosts[_selectedPadIdx];
-            double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(curPadCost, SpaceCenterFacility.LaunchPad);
-            string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, true);
+            Vector3 unlimitedSizeThreshold = new Vector3(70, 130, 70);
 
-            GUILayout.Label($"It will cost {Math.Round(curPadCost, 2):N} funds to build the new launchpad. " +
-                            $"Estimated construction time is {sBuildTime}. Would you like to build it?");
+            double curPadCost;
+            float fractionalPadLvl = -1;
+            float tonnageLimit = 0;
+            Vector3 curPadSize = Vector3.zero;
 
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Yes"))
+            int customPadIdx = _padLvlOptions.Length - 1;
+            if (_selectedPadIdx == customPadIdx)
             {
-                if (string.IsNullOrEmpty(_newName))
-                {
-                    ScreenMessages.PostScreenMessage("Enter a name for the new launchpad");
-                    return;
-                }
+                curPadCost = 0;
 
-                for (int i = 0; i < KCTGameStates.ActiveKSC.LaunchPads.Count; i++)
+                GUILayout.Label("Tonnage limit:");
+                _tonnageLimit = GUILayout.TextField(_tonnageLimit);
+                if (float.TryParse(_tonnageLimit, out tonnageLimit) && tonnageLimit >= _padTons[0])
                 {
-                    var lp = KCTGameStates.ActiveKSC.LaunchPads[i];
-                    if (string.Equals(lp.name, _newName, StringComparison.OrdinalIgnoreCase))
+                    float unlimitedTonnageThreshold = PresetManager.Instance.ActivePreset.GeneralSettings.PadUnlimitedTonnageThreshold;
+                    if (tonnageLimit >= unlimitedTonnageThreshold)
                     {
-                        ScreenMessages.PostScreenMessage("Another launchpad with the same name already exists");
-                        return;
+                        int padLvl = _padLvlOptions.Length - 2;
+                        tonnageLimit = unlimitedTonnageThreshold;
+                        curPadSize = _padSizes[padLvl];
+                        curPadCost = _padCosts[padLvl];
+                        fractionalPadLvl = padLvl;
+                    }
+                    else
+                    {
+                        for (int i = 1; i < _padTons.Length; i++)
+                        {
+                            if (tonnageLimit < _padTons[i])
+                            {
+                                float lowerBound = _padTons[i - 1];
+                                float upperBound = Math.Min(_padTons[i], unlimitedTonnageThreshold);
+                                float fractionOverFullLvl = (tonnageLimit - lowerBound) / (upperBound - lowerBound);
+                                fractionalPadLvl = (i - 1) + fractionOverFullLvl;
+
+                                var s1 = _padSizes[i - 1];
+                                var s2 = Vector3.Min(_padSizes[i], unlimitedSizeThreshold);
+                                curPadSize = s1 + (s2 - s1) * fractionOverFullLvl;
+
+                                var c1 = _padCosts[i - 1];
+                                var c2 = _padCosts[i];
+                                curPadCost = c1 + (c2 - c1) * fractionOverFullLvl;
+                                break;
+                            }
+                        }
                     }
                 }
+            }
+            else
+            {
+                curPadSize = _padSizes[_selectedPadIdx];
+                curPadCost = _padCosts[_selectedPadIdx];
+            }
+
+            if (curPadSize != Vector3.zero)
+            {
+                if (curPadSize.y == float.MaxValue)
+                {
+                    GUILayout.Label($"Size limit: unlimited");
+                }
+                else
+                {
+                    GUILayout.Label($"Size limit: {curPadSize.x:#.#}x{curPadSize.y:#.#}m");
+                }
+            }
+
+            if (curPadCost > 0)
+            {
+                double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(curPadCost, SpaceCenterFacility.LaunchPad);
+                string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
+                GUILayout.Label($"It will cost {Math.Round(curPadCost):N} funds to build the new launchpad. " +
+                                $"Estimated construction time is {sBuildTime}.");
+            }
+
+            GUILayout.Label("Would you like to build it?");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Yes") && ValidatePadCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize))
+            {
 
                 GUIStates.ShowNewPad = false;
                 _centralWindowPosition.height = 1;
@@ -61,34 +118,32 @@ namespace KerbalConstructionTime
                 if (!Utilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log("Building new launchpad!");
-                    KCTGameStates.ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(_newName, _selectedPadIdx));
+                    KCTGameStates.ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(_newName, fractionalPadLvl, tonnageLimit, curPadSize));
                 }
                 else if (Funding.CanAfford((float)curPadCost))
                 {
                     KCTDebug.Log("Building new launchpad!");
                     Utilities.SpendFunds(curPadCost, TransactionReasons.StructureConstruction);
-                    KCTGameStates.ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(_newName, -1));
-                    FacilityUpgrade newPad = new FacilityUpgrade
+                    var lp = new KCT_LaunchPad(_newName, fractionalPadLvl, tonnageLimit, curPadSize);
+                    KCTGameStates.ActiveKSC.LaunchPads.Add(lp);
+
+                    var padConstr = new PadConstruction
                     {
-                        FacilityType = SpaceCenterFacility.LaunchPad,
-                        Id = KCT_LaunchPad.LPID,
-                        IsLaunchpad = true,
-                        LaunchpadID = KCTGameStates.ActiveKSC.LaunchPads.Count - 1,
-                        UpgradeLevel = _selectedPadIdx,
-                        CurrentLevel = -1,
+                        LaunchpadIndex = KCTGameStates.ActiveKSC.LaunchPads.Count - 1,
                         Cost = curPadCost,
-                        CommonName = _newName
+                        Name = _newName
                     };
-                    newPad.SetBP(curPadCost);
+                    padConstr.SetBP(curPadCost);
+                    KCTGameStates.ActiveKSC.PadConstructions.Add(padConstr);
+
                     try
                     {
-                        KCTEvents.OnFacilityUpgradeQueued?.Fire(newPad);
+                        KCTEvents.OnPadConstructionQueued?.Fire(padConstr, lp);
                     }
                     catch (Exception ex)
                     {
                         Debug.LogException(ex);
                     }
-                    KCTGameStates.ActiveKSC.KSCTech.Add(newPad);
                 }
                 else
                 {
@@ -99,6 +154,7 @@ namespace KerbalConstructionTime
                 _padLvlOptions = null;
                 _costOfNewLP = int.MinValue;
             }
+
             if (GUILayout.Button("No"))
             {
                 _centralWindowPosition.height = 1;
@@ -109,6 +165,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowBuildList = true;
             }
+
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             CenterWindow(ref _centralWindowPosition);
@@ -152,19 +209,25 @@ namespace KerbalConstructionTime
 
         private static void LoadPadNamesAndCosts()
         {
-            KCT_LaunchPad lp = KCTGameStates.ActiveKSC.ActiveLPInstance;
-            var list = lp.GetUpgradeableFacilityReferences();
-            var upgdFacility = list[0];
+            var upgdFacility = KCT_LaunchPad.GetUpgradeableFacilityReference();
             var padUpgdLvls = upgdFacility.UpgradeLevels;
 
-            _padLvlOptions = new string[padUpgdLvls.Length];
+            _padLvlOptions = new string[padUpgdLvls.Length + 1];
+            _padLvlOptions[padUpgdLvls.Length] = "Custom";
             _padCosts = new double[padUpgdLvls.Length];
+            _padSizes = new Vector3[padUpgdLvls.Length];
+            _padTons = new float[padUpgdLvls.Length];
 
             for (int i = 0; i < padUpgdLvls.Length; i++)
             {
-                float limit = GameVariables.Instance.GetCraftMassLimit((float)i / (float)upgdFacility.MaxLevel, true);
+                float normalizedLevel = (float)i / (float)upgdFacility.MaxLevel;
+                float limit = GameVariables.Instance.GetCraftMassLimit(normalizedLevel, true);
+                _padTons[i] = limit;
                 var sLimit = limit == float.MaxValue ? "unlimited" : $"max {limit} tons";
                 _padLvlOptions[i] = $"Level {i + 1} ({sLimit})";
+
+                Vector3 sizeLimit = GameVariables.Instance.GetCraftSizeLimit(normalizedLevel, true);
+                _padSizes[i] = sizeLimit;
 
                 if (i > 0)
                 {
@@ -177,6 +240,33 @@ namespace KerbalConstructionTime
                     _padCosts[0] = _costOfNewLP;
                 }
             }
+        }
+
+        private static bool ValidatePadCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize)
+        {
+            if (fractionalPadLvl == -1 || tonnageLimit == 0 || curPadSize == Vector3.zero)
+            {
+                ScreenMessages.PostScreenMessage("Please enter a valid pad size");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(_newName))
+            {
+                ScreenMessages.PostScreenMessage("Enter a name for the new launchpad");
+                return false;
+            }
+
+            for (int i = 0; i < KCTGameStates.ActiveKSC.LaunchPads.Count; i++)
+            {
+                var lp = KCTGameStates.ActiveKSC.LaunchPads[i];
+                if (string.Equals(lp.name, _newName, StringComparison.OrdinalIgnoreCase))
+                {
+                    ScreenMessages.PostScreenMessage("Another launchpad with the same name already exists");
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

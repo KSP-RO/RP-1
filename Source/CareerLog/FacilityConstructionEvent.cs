@@ -10,7 +10,7 @@ namespace RP0
         public SpaceCenterFacility Facility;
 
         [Persistent]
-        public int NewLevel;
+        public double NewLevel;
 
         [Persistent]
         public double Cost;

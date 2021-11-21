@@ -101,6 +101,7 @@
     <Compile Include="AirlaunchParams.cs" />
     <Compile Include="AirlaunchTechLevel.cs" />
     <Compile Include="PartCrewAssignment.cs" />
+    <Compile Include="BuildItems\PadConstruction.cs" />
     <Compile Include="GUI\GUI_Tooltip.cs" />
     <Compile Include="GUI\GUIStates.cs" />
     <Compile Include="GUI\GUI_Airlaunch.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Persistence\FacilityUpgradeStorageItem.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\KCTVesselData.cs" />
+    <Compile Include="Persistence\PadConstructionStorageItem.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
     <Compile Include="KCTObservableList.cs" />
     <Compile Include="SceneAddons\MainMenuAddon.cs" />

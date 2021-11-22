@@ -254,7 +254,7 @@ namespace KerbalConstructionTime
         public static UpgradeableFacility GetUpgradeableFacilityReference()
         {
             //return GameObject.FindObjectsOfType<UpgradeableFacility>().FirstOrDefault(f => f.id == LPID);
-            return ScenarioUpgradeableFacilities.protoUpgradeables[LPID].facilityRefs.FirstOrDefault();
+            return ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(LPID, out var f) ? f.facilityRefs.FirstOrDefault() : null;
         }
 
         public void MigrateFromOldState()

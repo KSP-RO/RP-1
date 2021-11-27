@@ -93,7 +93,7 @@
         "description": "",
         "mod": "reDIRECT",
         "cost": "0",
-        "entry_cost": "0",
+        "entry_cost": "1250000",
         "category": "MATERIALS",
         "info": "",
         "year": "1981",
@@ -105,7 +105,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "SWT",
         "module_tags": []
     },
     {
@@ -213,7 +213,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "LWT",
         "module_tags": []
     },
     {
@@ -234,7 +234,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "SLWT",
         "module_tags": []
     },
     {

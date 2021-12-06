@@ -80,25 +80,43 @@ namespace KerbalConstructionTime
             }
         }
 
+        /// <summary>
+        /// Used for deserializing from ConfigNodes.
+        /// </summary>
+        /// <param name="name"></param>
         public KCT_LaunchPad(string name)
         {
             this.name = name;
         }
 
+        /// <summary>
+        /// Creates a new pad with non-fractional level. Will also mark it as built/operational.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="lvl">0-based level</param>
         public KCT_LaunchPad(string name, int lvl)
         {
             this.name = name;
             fractionalLevel = lvl;
             level = lvl;
+            isOperational = true;
 
             EnsureMassAndSizeInitialized();
         }
 
+        /// <summary>
+        /// Creates a new pad with fractional level. Will NOT mark it as built/operational.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="lvl">0-based level, can be fractional</param>
+        /// <param name="supportedMass"></param>
+        /// <param name="supportedSize"></param>
         public KCT_LaunchPad(string name, float lvl, float supportedMass, Vector3 supportedSize)
         {
             this.name = name;
             fractionalLevel = lvl;
             level = (int)lvl;
+            isOperational = false;
             this.supportedMass = supportedMass;
             this.supportedSize = supportedSize;
         }
@@ -234,6 +252,10 @@ namespace KerbalConstructionTime
             }
         }
 
+        /// <summary>
+        /// Will read the per-component destruction state of the LP and save that to the current pad item.
+        /// It is used for keeping track of which pads are damaged.
+        /// </summary>
         public void RefreshDestructionNode()
         {
             DestructionNode = new ConfigNode("DestructionState");
@@ -253,7 +275,6 @@ namespace KerbalConstructionTime
 
         public static UpgradeableFacility GetUpgradeableFacilityReference()
         {
-            //return GameObject.FindObjectsOfType<UpgradeableFacility>().FirstOrDefault(f => f.id == LPID);
             return ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(LPID, out var f) ? f.facilityRefs.FirstOrDefault() : null;
         }
 

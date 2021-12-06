@@ -625,7 +625,13 @@ namespace KerbalConstructionTime
         private IEnumerator UpdateActiveLPLevel()
         {
             // Only run during Space Center in career mode
+            // Also need to wait a bunch of frames until KSP has initialized Upgradable and Destructible facilities
             yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+
             while (HighLogic.LoadedScene == GameScenes.SPACECENTER && Utilities.CurrentGameIsCareer())
             {
                 if (KCTGameStates.ActiveKSC?.ActiveLPInstance is KCT_LaunchPad pad)
@@ -966,10 +972,6 @@ namespace KerbalConstructionTime
                     KCT_GUI.GUIStates.ShowFirstRun = true;
                     KCTGameStates.ActiveKSC.EnsureStartingLaunchPad();
                 }
-
-                KCTDebug.Log("SP switch starting");
-                KCTGameStates.ActiveKSC.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchPadID);
-                KCTDebug.Log("SP switch done");
 
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {

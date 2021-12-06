@@ -252,6 +252,10 @@ namespace KerbalConstructionTime
             }
         }
 
+        /// <summary>
+        /// Will read the per-component destruction state of the LP and save that to the current pad item.
+        /// It is used for keeping track of which pads are damaged.
+        /// </summary>
         public void RefreshDestructionNode()
         {
             DestructionNode = new ConfigNode("DestructionState");

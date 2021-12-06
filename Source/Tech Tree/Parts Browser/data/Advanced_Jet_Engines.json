@@ -49,7 +49,7 @@
         "cost": "65",
         "entry_cost": "0",
         "category": "FLIGHT",
-        "info": "",
+        "info": "Engine",
         "year": "1951",
         "technology": "supersonicFlightRP0",
         "ro": true,
@@ -58,7 +58,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "2000",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -1815,8 +1815,6 @@ namespace KerbalConstructionTime
                     });
                 }
 
-                KCTDebug.Log("Attempting to take control of launch button");
-
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
 

@@ -1,5 +1,28 @@
 [
     {
+        "name": "ShuttleBodyFlap",
+        "title": "Shuttle Body Flap",
+        "description": "",
+        "mod": "SpaceShuttleSystem",
+        "cost": "2536",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "STS",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "STS",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
         "name": "ShuttleCabin",
         "title": "Shuttle Crew Module",
         "description": "",
@@ -21,7 +44,6 @@
         "module_tags": [
             "Cockpit",
             "HumanRated",
-            "NoEVA",
             "NoResourceCostMult",
             "Reentry"
         ]
@@ -47,6 +69,52 @@
         "identical_part_name": "",
         "module_tags": [
             "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
+        "name": "ShuttleElevonL",
+        "title": "Shuttle Left Elevon",
+        "description": "",
+        "mod": "SpaceShuttleSystem",
+        "cost": "3170",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "STS",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "STS",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
+        "name": "ShuttleElevonR",
+        "title": "Shuttle Right Elevon",
+        "description": "",
+        "mod": "SpaceShuttleSystem",
+        "cost": "3170",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "STS",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "STS",
+        "identical_part_name": "",
+        "module_tags": [
             "Reentry"
         ]
     },
@@ -118,75 +186,6 @@
         "identical_part_name": "",
         "module_tags": [
             "NoResourceCostMult",
-            "Reentry"
-        ]
-    },
-    {
-        "name": "ShuttleBodyFlap",
-        "title": "Shuttle Body Flap",
-        "description": "",
-        "mod": "SpaceShuttleSystem",
-        "cost": "2536",
-        "entry_cost": "0",
-        "category": "SPACEPLANES",
-        "info": "",
-        "year": "1981",
-        "technology": "spaceShuttles",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "STS",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "STS",
-        "identical_part_name": "",
-        "module_tags": [
-            "Reentry"
-        ]
-    },
-    {
-        "name": "ShuttleElevonL",
-        "title": "Shuttle Left Elevon",
-        "description": "",
-        "mod": "SpaceShuttleSystem",
-        "cost": "3170",
-        "entry_cost": "0",
-        "category": "SPACEPLANES",
-        "info": "",
-        "year": "1981",
-        "technology": "spaceShuttles",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "STS",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "STS",
-        "identical_part_name": "",
-        "module_tags": [
-            "Reentry"
-        ]
-    },
-    {
-        "name": "ShuttleElevonR",
-        "title": "Shuttle Right Elevon",
-        "description": "",
-        "mod": "SpaceShuttleSystem",
-        "cost": "3170",
-        "entry_cost": "0",
-        "category": "SPACEPLANES",
-        "info": "",
-        "year": "1981",
-        "technology": "spaceShuttles",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "STS",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "STS",
-        "identical_part_name": "",
-        "module_tags": [
             "Reentry"
         ]
     },

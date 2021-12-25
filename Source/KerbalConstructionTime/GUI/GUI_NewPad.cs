@@ -37,7 +37,8 @@ namespace KerbalConstructionTime
             Vector3 curPadSize = Vector3.zero;
 
             int customPadIdx = _padLvlOptions.Length - 1;
-            if (_selectedPadIdx == customPadIdx)
+            bool isCustom = _selectedPadIdx == customPadIdx;
+            if (isCustom)
             {
                 curPadCost = 0;
 
@@ -80,8 +81,10 @@ namespace KerbalConstructionTime
             }
             else
             {
+                fractionalPadLvl = _selectedPadIdx;
                 curPadSize = _padSizes[_selectedPadIdx];
                 curPadCost = _padCosts[_selectedPadIdx];
+                tonnageLimit = _padTons[_selectedPadIdx];
             }
 
             if (curPadSize != Vector3.zero)

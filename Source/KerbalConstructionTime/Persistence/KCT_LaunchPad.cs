@@ -65,9 +65,9 @@ namespace KerbalConstructionTime
             }
         }
 
-        public string SupportedMassAsPrettyText => $"{SupportedMass:#.#}t";
+        public string SupportedMassAsPrettyText => SupportedMass == float.MaxValue ? "unlimited" : $"{SupportedMass:#.#}t";
 
-        public string SupportedSizeAsPrettyText => $"{SupportedSize.x:#.#}x{SupportedSize.y:#.#}m";
+        public string SupportedSizeAsPrettyText => SupportedSize.y == float.MaxValue ? "unlimited" : $"{SupportedSize.x:#.#}x{SupportedSize.y:#.#}m";
 
         public bool IsDestroyed
         {

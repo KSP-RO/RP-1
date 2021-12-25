@@ -50,7 +50,6 @@ Discord Link: https://discord.gg/V73jjNd
 - Procedural Parts
 - RCS Build Aid
 - RealAntennas
-- RemoteTech
 - SCANsat
 - Science Situation Info (tells you what science parts work where)
 - Ship Manifest

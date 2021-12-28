@@ -1147,6 +1147,8 @@ namespace KerbalConstructionTime
                     _checkTime(ap, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ub in KSC.KSCTech)
                     _checkTime(ub, ref shortestTime, ref thing);
+                foreach (IKCTBuildItem pc in KSC.PadConstructions)
+                    _checkTime(pc, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
             {
@@ -1357,18 +1359,17 @@ namespace KerbalConstructionTime
             if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
             {
                 KCTDebug.Log($"Setting active site to {site}");
-                KSCItem setActive = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
-                if (setActive != null)
+                KSCItem newKsc = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                if (newKsc != null)
                 {
-                    SetActiveKSC(setActive);
+                    SetActiveKSC(newKsc);
                 }
                 else
                 {
-                    setActive = new KSCItem(site);
-                    if (CurrentGameIsCareer())
-                        setActive.ActiveLPInstance.level = 0;
-                    KCTGameStates.KSCs.Add(setActive);
-                    SetActiveKSC(setActive);
+                    newKsc = new KSCItem(site);
+                    newKsc.EnsureStartingLaunchPad();
+                    KCTGameStates.KSCs.Add(newKsc);
+                    SetActiveKSC(newKsc);
                 }
             }
         }

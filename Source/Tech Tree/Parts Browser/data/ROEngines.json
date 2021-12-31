@@ -7018,7 +7018,7 @@
         "spacecraft": "Veronique",
         "engine_config": "Veronique",
         "upgrade": false,
-        "entry_cost_mods": "VeroniqueR",
+        "entry_cost_mods": "Veronique",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF",

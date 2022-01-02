@@ -1760,6 +1760,27 @@
         ]
     },
     {
+        "name": "RO-R15BD",
+        "title": "R-15BD",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "800",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "Engine",
+        "year": "1964",
+        "technology": "advancedJetEngines",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "20000",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RO-RD-0105",
         "title": "RD-0105/0109 Series",
         "description": "Kerolox gas generator vacuum engine which served in R-7 upper stages (Luna, Vostok). The RD-0105 was designed for Luna launches; it was the first upper stage for the R-7 series and was reused for uncrewed Vostok tests. An enhanced version, the RD-0109, was used for crewed Vostok launches. Diameter: [2.56 m]. Plume configured by RealPlume.",

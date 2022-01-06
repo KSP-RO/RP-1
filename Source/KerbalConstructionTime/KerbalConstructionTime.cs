@@ -469,10 +469,10 @@ namespace KerbalConstructionTime
             //partLimit = GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(editorFacility), editorFacility == SpaceCenterFacility.VehicleAssemblyBuilding);
 
             float totalMass = Utilities.GetShipMass(ship, true, out _, out _);
-            float massLimit = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.supportedMass : GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
+            float massLimit = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedMass : GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
 
             Vector3 craftSize = Utilities.GetShipSize(ship, true);
-            Vector3 maxSize = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.supportedSize : GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
+            Vector3 maxSize = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedSize : GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
 
             string neutralColorHex = XKCDColors.HexFormat.KSPNeutralUIGrey;
 

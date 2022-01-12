@@ -457,7 +457,7 @@
         "description": "",
         "mod": "SXT",
         "cost": "60",
-        "entry_cost": "5000",
+        "entry_cost": "0",
         "category": "FLIGHT",
         "info": "Engine",
         "year": "PW",
@@ -468,7 +468,7 @@
         "spacecraft": "F-86F Sabre",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "2200",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -489,7 +489,7 @@
         "spacecraft": "MiG-15",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "4000, RO-Derwent",
+        "entry_cost_mods": "4000, RO-DerwentV",
         "identical_part_name": "",
         "module_tags": []
     },

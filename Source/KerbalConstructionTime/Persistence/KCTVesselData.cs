@@ -11,6 +11,8 @@
         [Persistent]
         public string LaunchID = string.Empty;
 
+        public bool IsInitialized => FacilityBuiltIn != default || VesselID != string.Empty || LaunchID != string.Empty;
+
         public static KCTVesselData Parse(KCTVesselTracker d)
         {
             return new KCTVesselData

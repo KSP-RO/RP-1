@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("8948e0bc-0f9b-4ef5-b8d5-00724749e46e")]
 
 [assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.3.1.0")]
+[assembly: AssemblyFileVersion("2.3.2.0")]
 
 [assembly: KSPAssembly("KerbalConstructionTime", 2, 0)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]

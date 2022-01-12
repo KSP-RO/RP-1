@@ -964,7 +964,11 @@ namespace RP0.Crew
             OfferedCourses.Clear();
             _partSynsHandled.Clear();
 
-            if (!CurrentSceneAllowsCrewManagement) return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
+            if (!CurrentSceneAllowsCrewManagement)
+            {
+                Profiler.EndSample();
+                return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
+            }
 
             //convert the saved configs to course offerings
             foreach (CourseTemplate template in CourseTemplates)

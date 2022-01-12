@@ -181,7 +181,6 @@
         "module_tags": [
             "Cockpit",
             "HumanRated",
-            "NoEVA",
             "NoResourceCostMult",
             "Reentry"
         ]

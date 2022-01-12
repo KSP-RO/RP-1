@@ -25,6 +25,10 @@ namespace KerbalConstructionTime
         private static PropertyInfo _piTFSettingsEnabled;
         private static Type _tlSettingsType;
         private static FieldInfo _fiTLSettingsDisabled;
+        private static FieldInfo _fiKSCSwInstance;
+        private static FieldInfo _fiKSCSwSites;
+        private static FieldInfo _fiKSCSwLastSite;
+        private static FieldInfo _fiKSCSwDefaultSite;
 
         private static DateTime _startedFlashing;
         internal const string _legacyDefaultKscId = "Stock";
@@ -1143,6 +1147,8 @@ namespace KerbalConstructionTime
                     _checkTime(ap, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ub in KSC.KSCTech)
                     _checkTime(ub, ref shortestTime, ref thing);
+                foreach (IKCTBuildItem pc in KSC.PadConstructions)
+                    _checkTime(pc, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
             {
@@ -1256,16 +1262,24 @@ namespace KerbalConstructionTime
             {
                 if (!_isKSCSwitcherInstalled.HasValue)
                 {
-                    Type Switcher = null;
-                    AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KSCSwitcher", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isKSCSwitcherInstalled = a != null;
+                    if (_isKSCSwitcherInstalled.Value)
                     {
-                        if (t.FullName == "regexKSP.KSCSwitcher")
-                        {
-                            Switcher = t;
-                        }
-                    });
+                        Type t = a.GetType("regexKSP.KSCLoader");
+                        _fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
+                        _fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-                    _isKSCSwitcherInstalled = Switcher != null;
+                        t = a.GetType("regexKSP.KSCSiteManager");
+                        _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                        _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                        if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
+                        {
+                            KCTDebug.LogError("Failed to bind to KSCSwitcher");
+                            _isKSCSwitcherInstalled = false;
+                        }
+                    }
                 }
                 return _isKSCSwitcherInstalled.Value;
             }
@@ -1316,24 +1330,17 @@ namespace KerbalConstructionTime
         {
             if (!IsKSCSwitcherInstalled) return null;
 
-            //get the LastKSC.KSCLoader.instance object
-            //check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
-            Type Loader = null;
-            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
-            {
-                if (t.FullName == "regexKSP.KSCLoader")
-                {
-                    Loader = t;
-                }
-            });
-            object LoaderInstance = GetMemberInfoValue(Loader.GetMember("instance")[0], null);
-            if (LoaderInstance == null)
+            // get the LastKSC.KSCLoader.instance object
+            // check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
+
+            object loaderInstance = _fiKSCSwInstance.GetValue(null);
+            if (loaderInstance == null)
                 return null;
-            object sitesObj = GetMemberInfoValue(Loader.GetMember("Sites")[0], LoaderInstance);
-            string lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("lastSite")[0], sitesObj);
+            object sites = _fiKSCSwSites.GetValue(loaderInstance);
+            string lastSite = _fiKSCSwLastSite.GetValue(sites) as string;
 
             if (lastSite == string.Empty)
-                lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("defaultSite")[0], sitesObj);
+                lastSite = _fiKSCSwDefaultSite.GetValue(sites) as string;
             return lastSite;
         }
 
@@ -1352,18 +1359,17 @@ namespace KerbalConstructionTime
             if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
             {
                 KCTDebug.Log($"Setting active site to {site}");
-                KSCItem setActive = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
-                if (setActive != null)
+                KSCItem newKsc = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                if (newKsc != null)
                 {
-                    SetActiveKSC(setActive);
+                    SetActiveKSC(newKsc);
                 }
                 else
                 {
-                    setActive = new KSCItem(site);
-                    if (CurrentGameIsCareer())
-                        setActive.ActiveLPInstance.level = 0;
-                    KCTGameStates.KSCs.Add(setActive);
-                    SetActiveKSC(setActive);
+                    newKsc = new KSCItem(site);
+                    newKsc.EnsureStartingLaunchPad();
+                    KCTGameStates.KSCs.Add(newKsc);
+                    SetActiveKSC(newKsc);
                 }
             }
         }
@@ -1809,8 +1815,6 @@ namespace KerbalConstructionTime
                             "Acknowledged", false, HighLogic.UISkin);
                     });
                 }
-
-                KCTDebug.Log("Attempting to take control of launch button");
 
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });

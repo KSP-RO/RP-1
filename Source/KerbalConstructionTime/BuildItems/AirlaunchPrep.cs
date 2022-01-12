@@ -52,9 +52,11 @@ namespace KerbalConstructionTime
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.SPH;
 
+        public double GetFractionComplete() => Direction == PrepDirection.Mount ? Progress / BP : (BP - Progress) / BP;
+
         public double GetTimeLeft()
         {
-            var goal = Direction == PrepDirection.Mount ? BP : 0;
+            double goal = Direction == PrepDirection.Mount ? BP : 0;
             return (goal - Progress) / GetBuildRate();
         }
 

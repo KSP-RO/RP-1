@@ -23,9 +23,6 @@ namespace KerbalConstructionTime
 
         public static void DrawPresetWindow(int windowID)
         {
-            GUIStyle yellowText = new GUIStyle(GUI.skin.label);
-            yellowText.normal.textColor = Color.yellow;
-
             if (_workingPreset == null)
             {
                 SetNewWorkingPreset(new KCT_Preset(PresetManager.Instance.ActivePreset), false); //might need to copy instead of assign here
@@ -37,7 +34,7 @@ namespace KerbalConstructionTime
 
             //preset selector
             GUILayout.BeginVertical();
-            GUILayout.Label("Presets", yellowText, GUILayout.ExpandHeight(false));
+            GUILayout.Label("Presets", _yellowText, GUILayout.ExpandHeight(false));
             //preset toolbar in a scrollview
             _presetScrollView = GUILayout.BeginScrollView(_presetScrollView, GUILayout.Width(_presetPosition.width / 6f)); //TODO: update HighLogic.Skin.textArea
             string[] presetShortNames = PresetManager.Instance.PresetShortNames(true);

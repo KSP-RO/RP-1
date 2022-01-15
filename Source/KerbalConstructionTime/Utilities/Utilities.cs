@@ -1885,18 +1885,22 @@ namespace KerbalConstructionTime
 
         public static bool IsVabRecoveryAvailable(Vessel v)
         {
-            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.SPH &&
-                   (v.situation == Vessel.Situations.PRELAUNCH ||
-                    string.IsNullOrEmpty(reqTech) ||
-                    ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
+                   (v.situation == Vessel.Situations.PRELAUNCH || IsVabRecoveryTechResearched());
         }
 
         public static bool IsSphRecoveryAvailable(Vessel v)
         {
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.VAB;
+        }
+
+        public static bool IsVabRecoveryTechResearched()
+        {
+            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
+            return string.IsNullOrEmpty(reqTech) ||
+                   ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available;
         }
 
         public static void EnableSimulationLocks()

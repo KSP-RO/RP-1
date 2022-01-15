@@ -101,6 +101,7 @@
     <Compile Include="AirlaunchParams.cs" />
     <Compile Include="AirlaunchTechLevel.cs" />
     <Compile Include="BuildItems\PadConstruction.cs" />
+    <Compile Include="GUI\DialogGUIButtonWithTooltip.cs" />
     <Compile Include="GUI\GUI_Tooltip.cs" />
     <Compile Include="GUI\GUIStates.cs" />
     <Compile Include="GUI\GUI_Airlaunch.cs" />

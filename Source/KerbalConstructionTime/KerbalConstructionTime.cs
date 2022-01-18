@@ -285,14 +285,14 @@ namespace KerbalConstructionTime
                 KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
                 foreach (Part p in FlightGlobals.ActiveVessel.parts)
                 {
-                    KCTDebug.Log("Part being tested: " + p.partInfo.title);
-                    if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is PartCrewAssignment cp))
+                    KCTDebug.Log($"Part being tested: {p.partInfo.title}");
+                    if (p.CrewCapacity == 0 || !(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is PartCrewAssignment cp))
                         continue;
                     List<CrewMemberAssignment> crewList = cp.CrewList;
-                    KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
+                    KCTDebug.Log($"cP.crewList.Count: {cp.CrewList.Count}");
                     foreach (CrewMemberAssignment assign in crewList)
                     {
-                        ProtoCrewMember crewMember = assign.PCM;
+                        ProtoCrewMember crewMember = assign?.PCM;
                         if (crewMember == null) continue;
 
                         // CrewRoster isn't reloaded from ConfigNode when starting flight. Can use the same instances as the previous scene.

@@ -1004,13 +1004,23 @@ namespace KerbalConstructionTime
         {
             Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RealFuels", StringComparison.OrdinalIgnoreCase))?.assembly;
             Type t = a?.GetType("RealFuels.EntryCostManager");
-            var mi = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
-            if (mi != null)    // Older RF versions lack this method
+
+            // Older RF versions can lack these methods
+            var bestMethodInf = t?.GetMethod("EntryCostForParts", new Type[] { typeof(IEnumerable<AvailablePart>) });
+            var worseMethodInf = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
+
+            var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            object instance = pi.GetValue(null);
+
+            if (bestMethodInf != null)
             {
-                var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                object instance = pi.GetValue(null);
+                double sum = (double)bestMethodInf.Invoke(instance, new[] { availableParts });
+                return (int)sum;
+            }
+            else if (worseMethodInf != null)    // Worse than the one above but probably still better than the 3rd one.
+            {
                 IEnumerable<string> partNames = availableParts.Select(p => p.name);
-                double sum = (double)mi.Invoke(instance, new[] { partNames });
+                double sum = (double)worseMethodInf.Invoke(instance, new[] { partNames });
                 return (int)sum;
             }
             else

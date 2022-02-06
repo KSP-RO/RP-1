@@ -2165,6 +2165,27 @@
         "module_tags": []
     },
     {
+        "name": "FWC-SRM",
+        "title": "FWC-SRM config",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "6780",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1992",
+        "technology": "solids1992",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "STS",
+        "engine_config": "RSRM",
+        "upgrade": true,
+        "entry_cost_mods": "RSRM-1981",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "GCRC",
         "title": "GCRC",
         "description": "",

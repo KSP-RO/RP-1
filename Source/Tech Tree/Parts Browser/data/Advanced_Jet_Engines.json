@@ -126,27 +126,6 @@
         "module_tags": []
     },
     {
-        "name": "RO-model304",
-        "title": "Model 304-2 Turbojet",
-        "description": "",
-        "mod": "Advanced Jet Engines",
-        "cost": "200",
-        "entry_cost": "0",
-        "category": "FLIGHT",
-        "info": "Engine",
-        "year": "1959",
-        "technology": "highSpeedFlight",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "SUNTAN",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "10000,HydroloxPumps",
-        "identical_part_name": "",
-        "module_tags": []
-    },
-    {
         "name": "aje_al31",
         "title": "AL-31FM turbofan",
         "description": "Modern afterburning turbofan used on the Su-27M, Su-30, and Su-34 featuring vector thrust.  122.4 kN wet, 76.2 kN dry, SFC 0.75/1.92 lb/lb hr. Max 2.5 Mach.",

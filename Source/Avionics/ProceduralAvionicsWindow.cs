@@ -11,20 +11,25 @@ namespace RP0.ProceduralAvionics
 {
     public partial class ModuleProceduralAvionics
     {
+        private static readonly int _windowId = "RP0ProcAviWindow".GetHashCode();
+
         [KSPField]
         public string info1Text = string.Empty;
         [KSPField]
         public string info3Text = string.Empty;
 
         private Rect _windowRect = new Rect(267, 104, 400, 300);
+        private GUIContent _gc;
         private string[] _avionicsConfigNames;
         private int _selectedConfigIndex = 0;
         private string _sControllableMass = "0";
+        private float _newControlMass;
         private string _sECAmount = "400";
         private string _sExtraVolume = "0";
         private bool _showInfo1, _showInfo2, _showInfo3;
         private bool _showROTankSizeWarning;
         private bool _shouldResetUIHeight;
+        private Dictionary<string, string> _tooltipTexts;
 
         public void OnGUI()
         {
@@ -34,6 +39,7 @@ namespace RP0.ProceduralAvionics
                 {
                     _avionicsConfigNames = ProceduralAvionicsTechManager.GetAvailableConfigs().ToArray();
                     _selectedConfigIndex = _avionicsConfigNames.IndexOf(avionicsConfigName);
+                    _tooltipTexts = new Dictionary<string, string>();
                 }
 
                 if (_shouldResetUIHeight && Event.current.type == EventType.Layout)
@@ -41,9 +47,11 @@ namespace RP0.ProceduralAvionics
                     _windowRect.height = 300;
                     _shouldResetUIHeight = false;
                 }
-                _windowRect = ClickThruBlocker.GUILayoutWindow(GetInstanceID(), _windowRect, WindowFunction, "Configure Procedural Avionics", HighLogic.Skin.window);
+                _windowRect = ClickThruBlocker.GUILayoutWindow(_windowId, _windowRect, WindowFunction, "Configure Procedural Avionics", HighLogic.Skin.window);
+                Tooltip.Instance.ShowTooltip(_windowId, contentAlignment: TextAnchor.MiddleLeft);
             }
         }
+
 
         private void WindowFunction(int windowID)
         {
@@ -67,7 +75,10 @@ namespace RP0.ProceduralAvionics
             int oldConfigIdx = _selectedConfigIndex;
             _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames, HighLogic.Skin.button);
             if (oldConfigIdx != _selectedConfigIndex)
+            {
                 _shouldResetUIHeight = true;
+                _tooltipTexts.Clear();
+            }
 
             string curCfgName = _avionicsConfigNames[_selectedConfigIndex];
             ProceduralAvionicsConfig curCfg = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(curCfgName);
@@ -92,55 +103,9 @@ namespace RP0.ProceduralAvionics
 
             GUILayout.BeginVertical(HighLogic.Skin.box);
             GUILayout.Label("Choose the tech level:", HighLogic.Skin.label);
-            foreach (var techNode in curCfg.TechNodes.Values)
+            foreach (ProceduralAvionicsTechNode techNode in curCfg.TechNodes.Values)
             {
-                if (!techNode.IsAvailable) continue;
-
-                bool switchedConfig = false;
-                int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(curCfgName, techNode);
-                if (unlockCost == 0)
-                {
-                    bool isCurrent = techNode == CurrentProceduralAvionicsTechNode;
-                    if (isCurrent)
-                    {
-                        GUILayout.Toggle(true, BuildTechName(techNode), HighLogic.Skin.button);
-                        GUILayout.Label("Sample container: " + (techNode.hasScienceContainer ? "Yes" : "No"), HighLogic.Skin.label);
-                        GUILayout.Label("Can hibernate: " + (techNode.disabledPowerFactor > 0 ? "Yes" : "No"), HighLogic.Skin.label);
-                    }
-                    else if (GUILayout.Button("Switch to " + BuildTechName(techNode), HighLogic.Skin.button))
-                    {
-                        switchedConfig = true;
-                    }
-                }
-                else if (Funding.Instance.Funds < unlockCost)
-                {
-                    GUILayout.Label($"Can't afford {BuildTechName(techNode)} {BuildCostString(unlockCost)}", HighLogic.Skin.label);
-                }
-                else if (GUILayout.Button($"Purchase {BuildTechName(techNode)} {BuildCostString(unlockCost)}", HighLogic.Skin.button))
-                {
-                    switchedConfig = true;
-                    if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
-                    {
-                        switchedConfig = ProceduralAvionicsTechManager.PurchaseConfig(curCfgName, techNode);
-                    }
-                    if (switchedConfig)
-                    {
-                        ProceduralAvionicsTechManager.SetMaxUnlockedTech(curCfgName, techNode.name);
-                    }
-                }
-
-                if (switchedConfig)
-                {
-                    Log("Configuration window changed, updating part window");
-                    _shouldResetUIHeight = true;
-                    _showROTankSizeWarning = false;
-                    SetupConfigNameFields();
-                    avionicsTechLevel = techNode.name;
-                    CurrentProceduralAvionicsConfig = curCfg;
-                    avionicsConfigName = curCfgName;
-                    AvionicsConfigChanged();
-                    MonoUtilities.RefreshContextWindows(part);
-                }
+                DrawAvionicsConfigSelector(curCfg, techNode);
             }
             GUILayout.EndVertical();
 
@@ -172,11 +137,18 @@ namespace RP0.ProceduralAvionics
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
-                if (float.TryParse(_sControllableMass, out float newControlMass))
+                float oldControlMass = _newControlMass;
+                if (float.TryParse(_sControllableMass, out _newControlMass))
                 {
-                    float avionicsMass = GetShieldedAvionicsMass(newControlMass);
+                    float avionicsMass = GetShieldedAvionicsMass(_newControlMass);
                     GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
                 }
+
+                if (oldControlMass != _newControlMass)
+                {
+                    _tooltipTexts.Clear();
+                }
+
                 GUILayout.EndHorizontal();
                 GUILayout.EndHorizontal();
             }
@@ -254,6 +226,85 @@ namespace RP0.ProceduralAvionics
             GUILayout.EndHorizontal();
 
             GUI.DragWindow();
+
+            Tooltip.Instance.RecordTooltip(_windowId);
+        }
+
+        private void DrawAvionicsConfigSelector(ProceduralAvionicsConfig curCfg, ProceduralAvionicsTechNode techNode)
+        {
+            if (!techNode.IsAvailable) return;
+
+            bool switchedConfig = false;
+            int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(curCfg.name, techNode);
+
+            _gc ??= new GUIContent();
+            _gc.tooltip = GetTooltipTextForTechNode(techNode);
+
+            if (unlockCost == 0)
+            {
+                bool isCurrent = techNode == CurrentProceduralAvionicsTechNode;
+                if (isCurrent)
+                {
+                    _gc.text = BuildTechName(techNode);
+                    GUILayout.Toggle(true, _gc, HighLogic.Skin.button);
+
+                    _gc.text = $"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}";
+                    _gc.tooltip = "Whether samples can be transferred and stored in the avionics unit.";
+                    GUILayout.Label(_gc, HighLogic.Skin.label);
+
+                    _gc.text = $"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}";
+                    _gc.tooltip = "Whether the avionics unit can enter hibernation mode that greatly reduces power consumption.";
+                    GUILayout.Label(_gc, HighLogic.Skin.label);
+
+                    _gc.text = $"Axial control: {BoolToYesNoString(techNode.allowAxial)}";
+                    _gc.tooltip = "Whether fore-aft translation is allowed despite having insufficient controllable mass or being outside the max range of Near-Earth avionics.";
+                    GUILayout.Label(_gc, HighLogic.Skin.label);
+                }
+                else
+                {
+                    _gc.text = $"Switch to {BuildTechName(techNode)}";
+                    if (GUILayout.Button(_gc, HighLogic.Skin.button))
+                    {
+                        switchedConfig = true;
+                    }
+                }
+            }
+            else if (Funding.Instance.Funds < unlockCost)
+            {
+                _gc.text = $"Can't afford {BuildTechName(techNode)} {BuildCostString(unlockCost)}";
+                GUI.enabled = false;
+                GUILayout.Button(_gc, HighLogic.Skin.button);
+                GUI.enabled = true;
+            }
+            else
+            {
+                _gc.text = $"Purchase {BuildTechName(techNode)} {BuildCostString(unlockCost)}";
+                if (GUILayout.Button(_gc, HighLogic.Skin.button))
+                {
+                    switchedConfig = true;
+                    if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
+                    {
+                        switchedConfig = ProceduralAvionicsTechManager.PurchaseConfig(curCfg.name, techNode);
+                    }
+                    if (switchedConfig)
+                    {
+                        ProceduralAvionicsTechManager.SetMaxUnlockedTech(curCfg.name, techNode.name);
+                    }
+                }
+            }
+
+            if (switchedConfig)
+            {
+                Log("Configuration window changed, updating part window");
+                _shouldResetUIHeight = true;
+                _showROTankSizeWarning = false;
+                SetupConfigNameFields();
+                avionicsTechLevel = techNode.name;
+                CurrentProceduralAvionicsConfig = curCfg;
+                avionicsConfigName = curCfg.name;
+                AvionicsConfigChanged();
+                MonoUtilities.RefreshContextWindows(part);
+            }
         }
 
         private void ApplyAvionicsSettings()
@@ -342,9 +393,46 @@ namespace RP0.ProceduralAvionics
             SeekVolume(m3TotalVolume);
         }
 
+        private string GetTooltipTextForTechNode(ProceduralAvionicsTechNode techNode)
+        {
+            if (!_tooltipTexts.TryGetValue(techNode.name, out string tooltip))
+            {
+                tooltip = ConstructTooltipForAvionicsTL(techNode);
+                _tooltipTexts[techNode.name] = tooltip;
+            }
+
+            return tooltip;
+        }
+
         private string BuildTechName(ProceduralAvionicsTechNode techNode) => techNode.dispName ?? techNode.name;
 
         private string BuildCostString(int cost) =>
             (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $" ({cost:N})";
+
+        private string ConstructTooltipForAvionicsTL(ProceduralAvionicsTechNode techNode)
+        {
+            var sb = StringBuilderCache.Acquire();
+            if (techNode.IsScienceCore)
+            {
+                sb.AppendLine($"Mass: {GetAvionicsMass(techNode, 0) * 1000:0.#}kg");
+                sb.AppendLine($"Power consumption: {GetEnabledkW(techNode, 0) * 1000:0.#}W");
+            }
+            else
+            {
+                float calcMass = _newControlMass;
+                if (calcMass <= 0) calcMass = techNode.interplanetary ? 0.5f : 100f;
+                sb.AppendLine($"At {calcMass:0.##}t controllable mass:");
+                sb.AppendLine($"  Mass: {GetAvionicsMass(techNode, calcMass) * 1000:0.#}kg");
+                sb.AppendLine($"  Power consumption: {GetEnabledkW(techNode, calcMass) * 1000:0.#}W");
+            }
+
+            sb.AppendLine($"Axial control: {BoolToYesNoString(techNode.allowAxial)}");
+            sb.AppendLine($"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}");
+            sb.Append($"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}");
+
+            return sb.ToStringAndRelease();
+        }
+
+        private static string BoolToYesNoString(bool b) => b ? "Yes" : "No";
     }
 }

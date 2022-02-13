@@ -74,7 +74,10 @@ namespace KerbalConstructionTime
         public static void InitAndClearTechList()
         {
             TechList = new KCTObservableList<TechItem>();
-            TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
+            if (KerbalConstructionTime.Instance != null)    // Can be null/destroyed in the main menu scene
+            {
+                TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
+            }
         }
 
         public static void ClearVesselEditMode()

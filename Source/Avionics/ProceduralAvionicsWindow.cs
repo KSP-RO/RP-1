@@ -28,6 +28,7 @@ namespace RP0.ProceduralAvionics
         private string _sExtraVolume = "0";
         private bool _showInfo1, _showInfo2, _showInfo3;
         private bool _showROTankSizeWarning;
+        private bool _showSizeWarning;
         private bool _shouldResetUIHeight;
         private Dictionary<string, string> _tooltipTexts;
 
@@ -168,7 +169,10 @@ namespace RP0.ProceduralAvionics
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(250));
-            GUILayout.Label("Additional tank volume: ", HighLogic.Skin.label, GUILayout.Width(150));
+            _gc ??= new GUIContent();
+            _gc.text = "Additional tank volume: ";
+            _gc.tooltip = "How much tank volume will be left for other resources after applying the desired controllable mass and amount of EC.";
+            GUILayout.Label(_gc, HighLogic.Skin.label, GUILayout.Width(150));
             GUI.enabled = _seekVolumeMethod != null;
             _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);
             GUI.enabled = true;
@@ -179,13 +183,26 @@ namespace RP0.ProceduralAvionics
             {
                 GUILayout.Label("ROTanks does not currently support automatic resizing to correct dimensions. Increase the part size manually until it has sufficient volume.", HighLogic.Skin.label);
             }
+            else if (_showSizeWarning)
+            {
+                GUILayout.Label("Not enough volume to apply parameters. Increase the part size manually until it has sufficient volume.", HighLogic.Skin.label);
+            }
 
             GUILayout.EndVertical();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Apply", HighLogic.Skin.button))
+            _gc.text = "Apply (resize to fit)";
+            _gc.tooltip = "Applies the parameters above and resizes the part to have the correct amount of volume";
+            if (GUILayout.Button(_gc, HighLogic.Skin.button))
             {
-                ApplyAvionicsSettings();
+                ApplyAvionicsSettings(shouldSeekVolume: true);
+            }
+
+            _gc.text = "Apply (preserve dimensions)";
+            _gc.tooltip = "Tries to apply the parameters above but doesn't resize the part even if there isn't enough volume, or if there's extra volume";
+            if (GUILayout.Button(_gc, HighLogic.Skin.button))
+            {
+                ApplyAvionicsSettings(shouldSeekVolume: false);
             }
 
             if (GUILayout.Button("Close", HighLogic.Skin.button))
@@ -298,6 +315,7 @@ namespace RP0.ProceduralAvionics
                 Log("Configuration window changed, updating part window");
                 _shouldResetUIHeight = true;
                 _showROTankSizeWarning = false;
+                _showSizeWarning = false;
                 SetupConfigNameFields();
                 avionicsTechLevel = techNode.name;
                 CurrentProceduralAvionicsConfig = curCfg;
@@ -307,7 +325,7 @@ namespace RP0.ProceduralAvionics
             }
         }
 
-        private void ApplyAvionicsSettings()
+        private void ApplyAvionicsSettings(bool shouldSeekVolume)
         {
             if (!float.TryParse(_sControllableMass, out float newControlMass) || newControlMass < 0)
             {
@@ -329,7 +347,8 @@ namespace RP0.ProceduralAvionics
             }
 
             controllableMass = newControlMass;
-            if (_seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2)
+            bool canSeekVolume = _seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2;
+            if (shouldSeekVolume && canSeekVolume)
             {
                 // Store and sum together the volume of all resources other than EC on this part
                 double otherFuelVolume = 0;
@@ -353,8 +372,16 @@ namespace RP0.ProceduralAvionics
             }
             else
             {
+                bool isOverVolumeLimit = ClampControllableMass();
+                if (isOverVolumeLimit)
+                    SetProcPartVolumeLimit();
+
                 // ROTank probe cores do not support SeekVolume()
-                _showROTankSizeWarning = ClampControllableMass();
+                _showROTankSizeWarning = isOverVolumeLimit && shouldSeekVolume && !canSeekVolume;
+                _showSizeWarning = isOverVolumeLimit && !shouldSeekVolume;
+                UpdateControllableMassSlider();
+                SendRemainingVolume();
+
                 _shouldResetUIHeight = true;
                 MonoUtilities.RefreshContextWindows(part);
             }

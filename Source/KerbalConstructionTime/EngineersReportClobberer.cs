@@ -105,16 +105,7 @@ namespace KerbalConstructionTime
             if (!HighLogic.LoadedSceneIsEditor)
                 return;
 
-            if (!_engineerLocCached)
-            {
-                _engineerLocCached = true;
-
-                _cacheAutoLOC_443417 = KSP.Localization.Localizer.Format("#autoLOC_443417");
-                _cacheAutoLOC_443418 = KSP.Localization.Localizer.Format("#autoLOC_443418");
-                _cacheAutoLOC_443419 = KSP.Localization.Localizer.Format("#autoLOC_443419");
-                _cacheAutoLOC_443420 = KSP.Localization.Localizer.Format("#autoLOC_443420");
-                _cacheAutoLOC_7001411 = KSP.Localization.Localizer.Format("#autoLOC_7001411");
-            }
+            EnsureLocalizationsCached();
 
             ShipConstruct ship = EditorLogic.fetch.ship;
 
@@ -130,14 +121,25 @@ namespace KerbalConstructionTime
                     break;
             }
 
+            bool isLP = launchFacility == SpaceCenterFacility.LaunchPad;
             //partCount = ship.parts.Count;
             //partLimit = GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(editorFacility), editorFacility == SpaceCenterFacility.VehicleAssemblyBuilding);
 
             float totalMass = Utilities.GetShipMass(ship, true, out _, out _);
-            float massLimit = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedMass : GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
-
             Vector3 craftSize = Utilities.GetShipSize(ship, true);
-            Vector3 maxSize = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedSize : GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
+
+            float massLimit;
+            Vector3 maxSize;
+            if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
+            {
+                massLimit = isLP ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedMass : GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
+                maxSize = isLP ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedSize : GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
+            }
+            else
+            {
+                massLimit = GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), isLP);
+                maxSize = GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), isLP);
+            }
 
             string neutralColorHex = XKCDColors.HexFormat.KSPNeutralUIGrey;
 
@@ -207,6 +209,20 @@ namespace KerbalConstructionTime
             if (allGood)
             {
                 EngineersReport.Instance.appLauncherButton.sprite.color = Color.white;
+            }
+        }
+
+        private static void EnsureLocalizationsCached()
+        {
+            if (!_engineerLocCached)
+            {
+                _engineerLocCached = true;
+
+                _cacheAutoLOC_443417 = KSP.Localization.Localizer.Format("#autoLOC_443417");
+                _cacheAutoLOC_443418 = KSP.Localization.Localizer.Format("#autoLOC_443418");
+                _cacheAutoLOC_443419 = KSP.Localization.Localizer.Format("#autoLOC_443419");
+                _cacheAutoLOC_443420 = KSP.Localization.Localizer.Format("#autoLOC_443420");
+                _cacheAutoLOC_7001411 = KSP.Localization.Localizer.Format("#autoLOC_7001411");
             }
         }
     }

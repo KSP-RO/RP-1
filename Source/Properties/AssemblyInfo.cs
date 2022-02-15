@@ -36,7 +36,7 @@ using System.Runtime.InteropServices;
 #if CIBUILD
 [assembly: AssemblyFileVersion("@MAJOR@.@MINOR@.@PATCH.@BUILD@")]
 #else
-[assembly: AssemblyFileVersion("1.11.2.0")]
+[assembly: AssemblyFileVersion("1.11.6.0")]
 #endif
 
 [assembly: KSPAssembly("RP-0", 1, 0)]

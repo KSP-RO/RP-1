@@ -581,5 +581,51 @@ namespace RP0.ProceduralAvionics
             }
             Log($"Setting science container to {(CurrentProceduralAvionicsTechNode.hasScienceContainer ? "enabled." : "disabled.")}");
         }
+
+        public virtual bool Validate(out string validationError, out bool canBeResolved, out float costToResolve)
+        {
+            validationError = null;
+            canBeResolved = false;
+            costToResolve = 0;
+
+            if (CurrentProceduralAvionicsConfig == null && !string.IsNullOrEmpty(avionicsConfigName))
+                CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
+
+            if (!CurrentProceduralAvionicsTechNode.IsAvailable)
+            {
+                validationError = $"unlock tech {ResearchAndDevelopment.GetTechnologyTitle(CurrentProceduralAvionicsTechNode.name)}";
+                return false;
+            }
+
+            int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(CurrentProceduralAvionicsConfig.name, CurrentProceduralAvionicsTechNode);
+            if (unlockCost == 0) return true;
+
+            canBeResolved = true;
+            costToResolve = unlockCost;
+            validationError = $"purchase config {CurrentProceduralAvionicsTechNode.dispName}";
+
+            return false;
+        }
+
+        public virtual bool ResolveValidationError()
+        {
+            return PurchaseConfig(avionicsConfigName, CurrentProceduralAvionicsTechNode);
+        }
+
+        private static bool PurchaseConfig(string curCfgName, ProceduralAvionicsTechNode techNode)
+        {
+            bool success = false;
+            if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
+            {
+                success = ProceduralAvionicsTechManager.PurchaseConfig(curCfgName, techNode);
+            }
+
+            if (success)
+            {
+                ProceduralAvionicsTechManager.SetMaxUnlockedTech(curCfgName, techNode.name);
+            }
+
+            return success;
+        }
     }
 }

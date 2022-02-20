@@ -34,7 +34,7 @@ namespace RP0
                 _shouldResetUISize = false;
             }
             _windowPos = ClickThruBlocker.GUILayoutWindow(_mainWindowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
-            Tooltip.Instance.ShowTooltip();
+            Tooltip.Instance.ShowTooltip(_mainWindowId);
         }
 
         protected override void OnStart()
@@ -142,7 +142,7 @@ namespace RP0
             GUILayout.EndVertical();
             GUI.DragWindow();
 
-            Tooltip.Instance.RecordTooltip();
+            Tooltip.Instance.RecordTooltip(_mainWindowId);
         }
     }
 }

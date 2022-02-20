@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RP0
@@ -12,9 +13,9 @@ namespace RP0
         private static GUIStyle _tooltipStyle;
         private static Tooltip _instance;
 
+        private readonly Dictionary<int, string> _windowTooltipTexts = new Dictionary<int, string>();
         private Rect _tooltipRect;
         private DateTime _tooltipBeginDt;
-        private string _tooltipText = string.Empty;
         private bool _isTooltipChanged;
 
         public static Tooltip Instance
@@ -48,28 +49,36 @@ namespace RP0
             Instance = new Tooltip();
         }
 
-        public void RecordTooltip()
+        public void RecordTooltip(int windowId)
         {
-            if (Event.current.type == EventType.Repaint && _tooltipText != GUI.tooltip)
+            if (Event.current.type != EventType.Repaint) return;
+
+            if (!_windowTooltipTexts.TryGetValue(windowId, out string tooltipText))
+            {
+                tooltipText = string.Empty;
+            }
+
+            if (tooltipText != GUI.tooltip)
             {
                 _isTooltipChanged = true;
-                if (!string.IsNullOrEmpty(_tooltipText))
+                if (!string.IsNullOrEmpty(tooltipText))
                 {
                     _tooltipBeginDt = DateTime.UtcNow;
                 }
-                _tooltipText = GUI.tooltip;
+                _windowTooltipTexts[windowId] = GUI.tooltip;
             }
         }
 
-        public void ShowTooltip()
+        public void ShowTooltip(int windowId, TextAnchor contentAlignment = TextAnchor.MiddleCenter)
         {
-            if (!string.IsNullOrEmpty(_tooltipText) &&
+            if (_windowTooltipTexts.TryGetValue(windowId, out string tooltipText) && !string.IsNullOrEmpty(tooltipText) &&
                 (DateTime.UtcNow - _tooltipBeginDt).TotalMilliseconds > TooltipShowDelay)
             {
                 if (_isTooltipChanged)
                 {
-                    var c = new GUIContent(_tooltipText);
+                    var c = new GUIContent(tooltipText);
                     _tooltipStyle.CalcMinMaxWidth(c, out _, out float width);
+                    _tooltipStyle.alignment = contentAlignment;
 
                     width = Math.Min(width, TooltipMaxWidth);
                     float height = _tooltipStyle.CalcHeight(c, TooltipMaxWidth);
@@ -84,7 +93,7 @@ namespace RP0
                     _tooltipWindowId,
                     _tooltipRect,
                     (_) => { },
-                    _tooltipText,
+                    tooltipText,
                     _tooltipStyle);
                 GUI.BringWindowToFront(_tooltipWindowId);
             }

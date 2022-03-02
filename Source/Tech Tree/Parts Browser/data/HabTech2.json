@@ -16,7 +16,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -37,7 +37,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -58,7 +58,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -79,7 +79,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -100,7 +100,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -121,7 +121,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -142,7 +142,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -163,7 +163,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -184,7 +184,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -205,7 +205,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -226,7 +226,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -247,7 +247,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -268,7 +268,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -289,7 +289,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -310,7 +310,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -331,7 +331,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -352,7 +352,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -373,7 +373,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -394,7 +394,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -415,7 +415,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -436,7 +436,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -457,7 +457,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -478,7 +478,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -499,7 +499,7 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "issInternational",
         "identical_part_name": "",
         "module_tags": []
     }

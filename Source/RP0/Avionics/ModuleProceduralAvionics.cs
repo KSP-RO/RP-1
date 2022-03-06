@@ -139,7 +139,7 @@ namespace RP0.ProceduralAvionics
         private static float GetPolynomial(float value, float exponent, float constant, float factor) => (Mathf.Pow(value, exponent) + constant) * factor;
         private static float GetInversePolynomial(float value, float exponent, float constant, float factor) => Mathf.Pow(value / factor - constant, 1 / exponent);
 
-        protected override bool GetToggleable() => CurrentProceduralAvionicsTechNode.disabledPowerFactor > 0;
+        protected override bool GetToggleable() => !dead && CurrentProceduralAvionicsTechNode.disabledPowerFactor > 0;
 
         protected override string GetTonnageString() => "This part can be configured to allow control of vessels up to any mass.";
 

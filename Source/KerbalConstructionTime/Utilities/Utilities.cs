@@ -1004,13 +1004,23 @@ namespace KerbalConstructionTime
         {
             Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RealFuels", StringComparison.OrdinalIgnoreCase))?.assembly;
             Type t = a?.GetType("RealFuels.EntryCostManager");
-            var mi = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
-            if (mi != null)    // Older RF versions lack this method
+
+            // Older RF versions can lack these methods
+            var bestMethodInf = t?.GetMethod("EntryCostForParts", new Type[] { typeof(IEnumerable<AvailablePart>) });
+            var worseMethodInf = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
+
+            var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            object instance = pi.GetValue(null);
+
+            if (bestMethodInf != null)
             {
-                var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                object instance = pi.GetValue(null);
+                double sum = (double)bestMethodInf.Invoke(instance, new[] { availableParts });
+                return (int)sum;
+            }
+            else if (worseMethodInf != null)    // Worse than the one above but probably still better than the 3rd one.
+            {
                 IEnumerable<string> partNames = availableParts.Select(p => p.name);
-                double sum = (double)mi.Invoke(instance, new[] { partNames });
+                double sum = (double)worseMethodInf.Invoke(instance, new[] { partNames });
                 return (int)sum;
             }
             else
@@ -1885,18 +1895,22 @@ namespace KerbalConstructionTime
 
         public static bool IsVabRecoveryAvailable(Vessel v)
         {
-            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.SPH &&
-                   (v.situation == Vessel.Situations.PRELAUNCH ||
-                    string.IsNullOrEmpty(reqTech) ||
-                    ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
+                   (v.situation == Vessel.Situations.PRELAUNCH || IsVabRecoveryTechResearched());
         }
 
         public static bool IsSphRecoveryAvailable(Vessel v)
         {
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.VAB;
+        }
+
+        public static bool IsVabRecoveryTechResearched()
+        {
+            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
+            return string.IsNullOrEmpty(reqTech) ||
+                   ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available;
         }
 
         public static void EnableSimulationLocks()

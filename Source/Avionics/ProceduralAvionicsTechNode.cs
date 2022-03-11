@@ -53,7 +53,9 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public float reservedRFTankVolume = 0.0015f;
 
-        // Controls whether or not this part has a science return container 
+        /// <summary>
+        /// Controls whether or not this part has a science return container
+        /// </summary>
         [Persistent]
         public bool hasScienceContainer = false;
 
@@ -61,7 +63,9 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public bool interplanetary = true;
 
-        // allow axial translation (for science cores)
+        /// <summary>
+        /// Allow axial translation (for science cores)
+        /// </summary>
         [Persistent]
         public bool allowAxial = false;
 
@@ -78,6 +82,8 @@ namespace RP0.ProceduralAvionics
         public float kosECPerInstruction = 0.000001f;
 
         public bool IsAvailable => ResearchAndDevelopment.GetTechnologyState(name) == RDTech.State.Available;
+
+        public bool IsScienceCore => massExponent == 0 && powerExponent == 0 && costExponent == 0;
 
         public void Load(ConfigNode node)
         {

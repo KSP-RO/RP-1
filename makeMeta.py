@@ -41,18 +41,18 @@ avc = {
 	},
   "KSP_VERSION" : {
       "MAJOR": "1",
-      "MINOR": "10",
-      "PATCH": "0"
+      "MINOR": "12",
+      "PATCH": "3"
   },
 	"KSP_VERSION_MIN": {
 		"MAJOR": "1",
-		"MINOR": "10",
+		"MINOR": "12",
 		"PATCH": "0"
 	},
 	"KSP_VERSION_MAX": {
 		"MAJOR": "1",
-		"MINOR": "10",
-		"PATCH": "1"
+		"MINOR": "12",
+		"PATCH": "99"
 	}
 }
 with open("RP-1.version", "w") as f:

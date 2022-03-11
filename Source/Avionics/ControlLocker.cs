@@ -23,6 +23,8 @@ namespace RP0
         private ControlLockerUtils.LockLevel _cachedLockResult = ControlLockerUtils.LockLevel.Unlocked;
         private const string LockID = "RP0ControlLocker";
         private float _maxMass, _vesselMass;
+        private bool _isLimitedByNonInterplanetary;
+        private bool _isInterplanetaryWarningShown;
 
         private const float UpdateFrequency = 1; // Default check interval
 
@@ -58,6 +60,7 @@ namespace RP0
             GameEvents.onVesselSwitching.Add(OnVesselSwitchingHandler);
             GameEvents.onVesselGoOnRails.Add(OnRailsHandler);
             GameEvents.onVesselGoOffRails.Add(OffRailsHandler);
+            _isInterplanetaryWarningShown = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().Avionics_InterplanetaryWarningShown;
             Vessel = FlightGlobals.ActiveVessel;
             if (Vessel && Vessel.loaded) Vessel.OnPostAutopilotUpdate += FlightInputModifier;
             StartCoroutine(CheckLockCR());
@@ -74,7 +77,7 @@ namespace RP0
         private void OffRailsHandler(Vessel v)
         {
             _onRails = false;
-            if (!CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(Vessel.Parts, true, out float _, out float _) != ControlLockerUtils.LockLevel.Unlocked)
+            if (!CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _, out _, out _) != ControlLockerUtils.LockLevel.Unlocked)
                 DisableAutopilot();
         }
 
@@ -95,7 +98,7 @@ namespace RP0
             if (Vessel is null)
                 return _cachedLockResult = ControlLockerUtils.LockLevel.Unlocked;
             if (_requested)
-                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass);
+                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass, out _isLimitedByNonInterplanetary);
             _requested = false;
             return _cachedLockResult;
         }
@@ -112,7 +115,7 @@ namespace RP0
             while (HighLogic.LoadedSceneIsFlight)
             {
                 yield return new WaitForSeconds(UpdateFrequency);
-                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass);
+                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass, out _isLimitedByNonInterplanetary);
             }
         }
 
@@ -128,7 +131,12 @@ namespace RP0
                 Vessel = FlightGlobals.ActiveVessel;
                 _masterMechJeb = null;
             }
+
             ControlLockerUtils.LockLevel lockLevel = ShouldLock();
+
+            if (_isLimitedByNonInterplanetary && !_isInterplanetaryWarningShown)
+                ShowInterplanetaryAvionicsReminder();
+
             if (lockLevel != _oldLockLevel)
             {
                 if (_oldLockLevel != ControlLockerUtils.LockLevel.Unlocked)
@@ -172,6 +180,25 @@ namespace RP0
         {
             Vessel.Autopilot.Disable();
             Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, false);
+        }
+
+        private void ShowInterplanetaryAvionicsReminder()
+        {
+            _isInterplanetaryWarningShown = true;
+            HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().Avionics_InterplanetaryWarningShown = true;
+
+            string altitudeThreshold = $"{ModuleAvionics.InterplanetaryAltitudeThreshold / 1000:N0} km";
+            string msg = $"Near-Earth Avionics only provide control closer than {altitudeThreshold} from {Planetarium.fetch.Home.name}. " +
+                         $"Only fore/aft translation is available at this point." +
+                         $"\nConfigure the avionics as Deep Space for full control.";
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "ShowInterplanetaryAvionicsReminder",
+                                         "Deep Space Avionics",
+                                         msg,
+                                         "OK",
+                                         false,
+                                         HighLogic.UISkin);
         }
     }
 }

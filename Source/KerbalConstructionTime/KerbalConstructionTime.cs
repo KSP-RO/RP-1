@@ -16,11 +16,9 @@ namespace KerbalConstructionTime
     {
         public static KerbalConstructionTime Instance { get; private set; }
 
-        public bool IsEditorRecalcuationRequired;
+        public EngineersReportClobberer ERClobberer { get; private set; }
 
-        private TMPro.TextMeshProUGUI refERpartMassLH, refERpartMassRH, refERsizeLH, refERsizeRH;
-        private KSP.UI.GenericAppFrame refERappFrame;
-        private bool wasERActive = false;
+        public bool IsEditorRecalcuationRequired;
 
         private static bool _isGUIInitialized = false;
 
@@ -40,8 +38,6 @@ namespace KerbalConstructionTime
         private int _simMoveSecondsRemain = 0;
 
         private GameObject _simWatermark;
-
-        private Coroutine clobberEngineersReportCoroutine = null;
 
         internal void OnFacilityContextMenuSpawn(KSCFacilityContextMenu menu)
         {
@@ -84,6 +80,7 @@ namespace KerbalConstructionTime
             KCTGameStates.PersistenceLoaded = false;
 
             Instance = this;
+            ERClobberer = new EngineersReportClobberer(this);
 
             KCTGameStates.Settings.Load();
 
@@ -249,54 +246,7 @@ namespace KerbalConstructionTime
 
             if (KCT_GUI.IsPrimarilyDisabled) return;
 
-            if (!KCTGameStates.IsSimulatedFlight &&
-                FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
-            {
-                KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
-                foreach (Part p in FlightGlobals.ActiveVessel.parts)
-                {
-                    KCTDebug.Log("Part being tested: " + p.partInfo.title);
-                    if (!(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is CrewedPart cp))
-                        continue;
-                    List<ProtoCrewMember> crewList = cp.CrewList;
-                    KCTDebug.Log("cP.crewList.Count: " + cp.CrewList.Count);
-                    foreach (ProtoCrewMember crewMember in crewList)
-                    {
-                        if (crewMember != null)     // Can this list can have null ProtoCrewMembers?
-                        {
-                            ProtoCrewMember finalCrewMember = crewMember;
-                            if (crewMember.type == ProtoCrewMember.KerbalType.Crew)
-                            {
-                                finalCrewMember = roster.Crew.FirstOrDefault(c => c.name == crewMember.name);
-                            }
-                            else if (crewMember.type == ProtoCrewMember.KerbalType.Tourist)
-                            {
-                                finalCrewMember = roster.Tourist.FirstOrDefault(c => c.name == crewMember.name);
-                            }
-                            try
-                            {
-                                if (finalCrewMember is ProtoCrewMember && p.AddCrewmember(finalCrewMember))
-                                {
-                                    KCTDebug.Log($"Assigned {finalCrewMember.name } to {p.partInfo.name}");
-                                    finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
-                                    finalCrewMember.seat?.SpawnCrew();
-                                }
-                                else
-                                {
-                                    KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
-                                    finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
-                                finalCrewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
-                            }
-                        }
-                    }
-                }
-                KCTGameStates.LaunchedCrew.Clear();
-            }
+            AssignCrewToCurrentVessel();
 
             if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.IsSimulatedFlight)
             {
@@ -321,6 +271,50 @@ namespace KerbalConstructionTime
                     if (!alParams.KSPVesselId.HasValue) alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
                     StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
                 }
+            }
+        }
+
+        private static void AssignCrewToCurrentVessel()
+        {
+            if (!KCTGameStates.IsSimulatedFlight &&
+                FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
+            {
+                KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
+                foreach (Part p in FlightGlobals.ActiveVessel.parts)
+                {
+                    KCTDebug.Log($"Part being tested: {p.partInfo.title}");
+                    if (p.CrewCapacity == 0 || !(KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) is PartCrewAssignment cp))
+                        continue;
+                    List<CrewMemberAssignment> crewList = cp.CrewList;
+                    KCTDebug.Log($"cP.crewList.Count: {cp.CrewList.Count}");
+                    foreach (CrewMemberAssignment assign in crewList)
+                    {
+                        ProtoCrewMember crewMember = assign?.PCM;
+                        if (crewMember == null) continue;
+
+                        // CrewRoster isn't reloaded from ConfigNode when starting flight. Can use the same instances as the previous scene.
+                        try
+                        {
+                            if (crewMember is ProtoCrewMember && p.AddCrewmember(crewMember))
+                            {
+                                KCTDebug.Log($"Assigned {crewMember.name} to {p.partInfo.name}");
+                                crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
+                                crewMember.seat?.SpawnCrew();
+                            }
+                            else
+                            {
+                                KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
+                                crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
+                            crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
+                        }
+                    }
+                }
+                KCTGameStates.LaunchedCrew.Clear();
             }
         }
 
@@ -381,173 +375,6 @@ namespace KerbalConstructionTime
             }
         }
 
-        public void StartEngineersReportClobberCoroutine()
-        {
-            if (clobberEngineersReportCoroutine != null)
-                StopCoroutine(clobberEngineersReportCoroutine);
-
-            clobberEngineersReportCoroutine = StartCoroutine(ClobberEngineersReport_Coroutine());
-        }
-
-        /// <summary>
-        /// When notified the Engineer's Report app is ready, bind to it and set up a clobber.
-        /// </summary>
-        public void BindToEngineersReport()
-        {
-            // Set up all our fields
-            BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
-            Type typeER = EngineersReport.Instance.GetType();
-            refERsizeLH = (TMPro.TextMeshProUGUI)typeER.GetField("sizeLH", flags).GetValue(EngineersReport.Instance);
-            refERsizeRH = (TMPro.TextMeshProUGUI)typeER.GetField("sizeRH", flags).GetValue(EngineersReport.Instance);
-            refERpartMassLH = (TMPro.TextMeshProUGUI)typeER.GetField("partMassLH", flags).GetValue(EngineersReport.Instance);
-            refERpartMassRH = (TMPro.TextMeshProUGUI)typeER.GetField("partMassRH", flags).GetValue(EngineersReport.Instance);
-            refERappFrame = (KSP.UI.GenericAppFrame)typeER.GetField("appFrame", flags).GetValue(EngineersReport.Instance);
-
-            EditorStarted();
-        }
-
-        public void EditorStarted()
-        {
-            // The ER, on startup, sets a 3s delayed callback. We run right after it.
-            StartCoroutine(CallbackUtil.DelayedCallback(3.1f, () => { ClobberEngineersReport(); }));
-        }
-
-        /// <summary>
-        /// Coroutine to override the Engineer's Report craft stats
-        /// Needed because we disagree about craft size and mass.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator ClobberEngineersReport_Coroutine()
-        {
-            // Just in case
-            while (EngineersReport.Instance == null)
-                yield return new WaitForSeconds(0.1f);
-
-            // Skip past Engineer report update. Yes there will be a few frames of wrongness, but better that
-            // than have it clobber us instead!
-            yield return new WaitForEndOfFrame();
-            yield return null;
-
-            ClobberEngineersReport();
-        }
-
-        private static bool engineerLocCached = false;
-        private static string cacheAutoLOC_443417;
-        private static string cacheAutoLOC_443418;
-        private static string cacheAutoLOC_443419;
-        private static string cacheAutoLOC_443420;
-        private static string cacheAutoLOC_7001411;
-
-        private void ClobberEngineersReport()
-        {
-            if (!HighLogic.LoadedSceneIsEditor)
-                return;
-
-            if (!engineerLocCached)
-            {
-                engineerLocCached = true;
-
-                cacheAutoLOC_443417 = KSP.Localization.Localizer.Format("#autoLOC_443417");
-                cacheAutoLOC_443418 = KSP.Localization.Localizer.Format("#autoLOC_443418");
-                cacheAutoLOC_443419 = KSP.Localization.Localizer.Format("#autoLOC_443419");
-                cacheAutoLOC_443420 = KSP.Localization.Localizer.Format("#autoLOC_443420");
-                cacheAutoLOC_7001411 = KSP.Localization.Localizer.Format("#autoLOC_7001411");
-            }
-
-            ShipConstruct ship = EditorLogic.fetch.ship;
-
-            SpaceCenterFacility launchFacility;
-            switch (EditorDriver.editorFacility)
-            {
-                default:
-                case EditorFacility.VAB:
-                    launchFacility = SpaceCenterFacility.LaunchPad;
-                    break;
-                case EditorFacility.SPH:
-                    launchFacility = SpaceCenterFacility.Runway;
-                    break;
-            }
-
-            //partCount = ship.parts.Count;
-            //partLimit = GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(editorFacility), editorFacility == SpaceCenterFacility.VehicleAssemblyBuilding);
-
-            float totalMass = Utilities.GetShipMass(ship, true, out _, out _);
-            float massLimit = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedMass : GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
-
-            Vector3 craftSize = Utilities.GetShipSize(ship, true);
-            Vector3 maxSize = launchFacility == SpaceCenterFacility.LaunchPad ? KCTGameStates.ActiveKSC.ActiveLPInstance.SupportedSize : GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), false);
-
-            string neutralColorHex = XKCDColors.HexFormat.KSPNeutralUIGrey;
-
-            //string partCountColorHex = partCount <= partLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-            //partCountLH.text = partCountLH.text = KSP.Localization.Localizer.Format("#autoLOC_443389", neutralColorHex);
-
-            //if (partLimit < int.MaxValue)
-            //{
-            //    partCountRH.text = "<color=" + partCountColorHex + ">" + partCount.ToString("0") + " / " + partLimit.ToString("0") + "</color>";
-            //}
-            //else
-            //{
-            //    partCountRH.text = "<color=" + partCountColorHex + ">" + partCount.ToString("0") + "</color>";
-            //}
-
-            string partMassColorHex = totalMass <= massLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-            refERpartMassLH.text = KSP.Localization.Localizer.Format("#autoLOC_443401", neutralColorHex);
-
-            if (massLimit < float.MaxValue)
-            {
-                refERpartMassRH.text = KSP.Localization.Localizer.Format("#autoLOC_443405", partMassColorHex, totalMass.ToString("N3"), massLimit.ToString("N1"));
-            }
-            else
-            {
-                refERpartMassRH.text = KSP.Localization.Localizer.Format("#autoLOC_443409", partMassColorHex, totalMass.ToString("N3"));
-            }
-
-            string sizeForeAftHex = craftSize.y <= maxSize.y ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-            string sizeSpanHex = craftSize.x <= maxSize.x ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-            string sizeTHgtHex = craftSize.z <= maxSize.z ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-
-
-            refERsizeLH.text = "<line-height=110%><color=" + neutralColorHex + ">" + cacheAutoLOC_443417 + "</color>\n<color=" +
-                neutralColorHex + ">" + cacheAutoLOC_443418 + "</color>\n<color=" +
-                neutralColorHex + ">" + cacheAutoLOC_443419 + "</color>\n<color=" +
-                neutralColorHex + ">" + cacheAutoLOC_443420 + "</color></line-height>";
-
-            if (maxSize.x < float.MaxValue && maxSize.y < float.MaxValue && maxSize.z < float.MaxValue)
-            {
-                refERsizeRH.text =
-                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 +
-                                " / " + KSPUtil.LocalizeNumber(maxSize.y, "0.0") + cacheAutoLOC_7001411 + "</color>\n<color=" +
-                            sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 + " / " +
-                            KSPUtil.LocalizeNumber(maxSize.x, "0.0") +
-                            cacheAutoLOC_7001411 + "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + cacheAutoLOC_7001411 + " / " +
-                            KSPUtil.LocalizeNumber(maxSize.z, "0.0") + cacheAutoLOC_7001411 + "</color></line-height>";
-            }
-            else
-            {
-                refERsizeRH.text = "<line-height=110%> \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 +
-                "</color>\n<color=" + sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 +
-                "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + cacheAutoLOC_7001411 + "</color></line-height>";
-            }
-
-            bool allGood = //partCount <= partLimit &&
-                            totalMass <= massLimit &&
-                              craftSize.x <= maxSize.x &&
-                                craftSize.y <= maxSize.y &&
-                                 craftSize.z <= maxSize.z;
-
-            refERappFrame.header.color = allGood ? XKCDColors.ElectricLime : XKCDColors.Orange;
-
-            if (!allGood)
-            {
-                EngineersReport.Instance.appLauncherButton.sprite.color = XKCDColors.Orange;
-            }
-            if (allGood)
-            {
-                EngineersReport.Instance.appLauncherButton.sprite.color = Color.white;
-            }
-        }
-
         /// <summary>
         /// Coroutine to reset the launch button handlers every 1/2 second
         /// Needed because KSP seems to change them behind the scene sometimes
@@ -569,24 +396,7 @@ namespace KerbalConstructionTime
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
                 Utilities.SetActiveKSCToRSS();
 
-            // Polling sucks, but there's no event I can find for when an applauncher app gets displayed.
-            if (HighLogic.LoadedSceneIsEditor && EngineersReport.Instance != null)
-            {
-                if (refERappFrame != null)
-                {
-                    bool isERActive = refERappFrame.gameObject.activeSelf;
-
-                    if (isERActive && !wasERActive)
-                    {
-                        ClobberEngineersReport();
-                    }
-                    wasERActive = isERActive;
-                }
-            }
-            else
-            {
-                wasERActive = false;
-            }
+            ERClobberer.PollForChanges();
 
             if (!KCT_GUI.IsPrimarilyDisabled && HighLogic.LoadedScene == GameScenes.SPACECENTER &&
                 VesselSpawnDialog.Instance?.Visible == true)

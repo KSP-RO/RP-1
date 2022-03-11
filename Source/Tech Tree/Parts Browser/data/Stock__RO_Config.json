@@ -4579,8 +4579,8 @@
         "title": "NSTAR Ion Thruster",
         "description": "Small lightweight efficient ion engine. Takes a bit of power though and doesn't provide much thrust. Diameter: [0.3 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
-        "cost": "380",
-        "entry_cost": "7600",
+        "cost": "6080",
+        "entry_cost": "0",
         "category": "ION",
         "info": "Electric Engine",
         "year": "1998",
@@ -4593,10 +4593,10 @@
         "spacecraft": "Deep Space 1",
         "engine_config": "NSTAR",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "76000",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo"
+            "EngineLiquidPF"
         ]
     },
     {

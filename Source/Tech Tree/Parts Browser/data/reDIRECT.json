@@ -154,6 +154,29 @@
         "module_tags": []
     },
     {
+        "name": "ROT-reDIRECTTank-Balloon",
+        "title": "reDIRECT Modular Tank (Balloon)",
+        "description": "",
+        "mod": "reDIRECT",
+        "cost": "0",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "1957",
+        "technology": "materialsScienceSatellite",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "BalloonTanks-SatMat",
+        "identical_part_name": "",
+        "module_tags": [
+            "TankBalloon"
+        ]
+    },
+    {
         "name": "ROT-reDIRECTTank-Integral",
         "title": "Modular reDIRECT Integral Tank",
         "description": "",

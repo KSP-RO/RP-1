@@ -22,15 +22,18 @@ namespace KerbalConstructionTime
         /// </summary>
         public static void InitTooltips()
         {
+            if (_tooltipStyle == null)
+            {
+                _tooltipStyle = new GUIStyle(HighLogic.Skin.label);
+                _tooltipStyle.normal.textColor = new Color32(224, 224, 224, 255);
+                _tooltipStyle.padding = new RectOffset(3, 3, 3, 3);
+                _tooltipStyle.alignment = TextAnchor.MiddleCenter;
+            }
+
             Texture2D backTex = new Texture2D(1, 1, TextureFormat.ARGB32, false);
             backTex.SetPixel(0, 0, new Color(0.5f, 0.5f, 0.5f));
             backTex.Apply();
-
-            _tooltipStyle = new GUIStyle(HighLogic.Skin.label);
             _tooltipStyle.normal.background = backTex;
-            _tooltipStyle.normal.textColor = new Color32(224, 224, 224, 255);
-            _tooltipStyle.padding = new RectOffset(3, 3, 3, 3);
-            _tooltipStyle.alignment = TextAnchor.MiddleCenter;
         }
 
         private static Rect DrawWindowWithTooltipSupport(Rect pos, string windowName, string windowTitle, Action<int> drawWindow)

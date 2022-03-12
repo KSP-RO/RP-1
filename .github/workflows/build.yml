@@ -34,7 +34,7 @@ jobs:
         env: 
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
         run: |
-          curl https://ksp-ro.s3-us-west-2.amazonaws.com/KSPAssemblies-1.10.zip --output /tmp/bins.zip
+          curl https://ksp-ro.s3-us-west-2.amazonaws.com/KSPAssemblies-1.12.zip --output /tmp/bins.zip
           KSP_DLL_PATH="/opt/ksp/assembly"
           echo "::set-output name=ksp-dll-path::${KSP_DLL_PATH}"
           mkdir -p "${KSP_DLL_PATH}"

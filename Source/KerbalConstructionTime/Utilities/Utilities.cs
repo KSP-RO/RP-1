@@ -25,6 +25,10 @@ namespace KerbalConstructionTime
         private static PropertyInfo _piTFSettingsEnabled;
         private static Type _tlSettingsType;
         private static FieldInfo _fiTLSettingsDisabled;
+        private static FieldInfo _fiKSCSwInstance;
+        private static FieldInfo _fiKSCSwSites;
+        private static FieldInfo _fiKSCSwLastSite;
+        private static FieldInfo _fiKSCSwDefaultSite;
 
         private static DateTime _startedFlashing;
         internal const string _legacyDefaultKscId = "Stock";
@@ -1000,13 +1004,23 @@ namespace KerbalConstructionTime
         {
             Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RealFuels", StringComparison.OrdinalIgnoreCase))?.assembly;
             Type t = a?.GetType("RealFuels.EntryCostManager");
-            var mi = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
-            if (mi != null)    // Older RF versions lack this method
+
+            // Older RF versions can lack these methods
+            var bestMethodInf = t?.GetMethod("EntryCostForParts", new Type[] { typeof(IEnumerable<AvailablePart>) });
+            var worseMethodInf = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
+
+            var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            object instance = pi.GetValue(null);
+
+            if (bestMethodInf != null)
             {
-                var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                object instance = pi.GetValue(null);
+                double sum = (double)bestMethodInf.Invoke(instance, new[] { availableParts });
+                return (int)sum;
+            }
+            else if (worseMethodInf != null)    // Worse than the one above but probably still better than the 3rd one.
+            {
                 IEnumerable<string> partNames = availableParts.Select(p => p.name);
-                double sum = (double)mi.Invoke(instance, new[] { partNames });
+                double sum = (double)worseMethodInf.Invoke(instance, new[] { partNames });
                 return (int)sum;
             }
             else
@@ -1143,6 +1157,8 @@ namespace KerbalConstructionTime
                     _checkTime(ap, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ub in KSC.KSCTech)
                     _checkTime(ub, ref shortestTime, ref thing);
+                foreach (IKCTBuildItem pc in KSC.PadConstructions)
+                    _checkTime(pc, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
             {
@@ -1256,16 +1272,24 @@ namespace KerbalConstructionTime
             {
                 if (!_isKSCSwitcherInstalled.HasValue)
                 {
-                    Type Switcher = null;
-                    AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KSCSwitcher", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isKSCSwitcherInstalled = a != null;
+                    if (_isKSCSwitcherInstalled.Value)
                     {
-                        if (t.FullName == "regexKSP.KSCSwitcher")
-                        {
-                            Switcher = t;
-                        }
-                    });
+                        Type t = a.GetType("regexKSP.KSCLoader");
+                        _fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
+                        _fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-                    _isKSCSwitcherInstalled = Switcher != null;
+                        t = a.GetType("regexKSP.KSCSiteManager");
+                        _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                        _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                        if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
+                        {
+                            KCTDebug.LogError("Failed to bind to KSCSwitcher");
+                            _isKSCSwitcherInstalled = false;
+                        }
+                    }
                 }
                 return _isKSCSwitcherInstalled.Value;
             }
@@ -1316,24 +1340,17 @@ namespace KerbalConstructionTime
         {
             if (!IsKSCSwitcherInstalled) return null;
 
-            //get the LastKSC.KSCLoader.instance object
-            //check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
-            Type Loader = null;
-            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
-            {
-                if (t.FullName == "regexKSP.KSCLoader")
-                {
-                    Loader = t;
-                }
-            });
-            object LoaderInstance = GetMemberInfoValue(Loader.GetMember("instance")[0], null);
-            if (LoaderInstance == null)
+            // get the LastKSC.KSCLoader.instance object
+            // check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
+
+            object loaderInstance = _fiKSCSwInstance.GetValue(null);
+            if (loaderInstance == null)
                 return null;
-            object sitesObj = GetMemberInfoValue(Loader.GetMember("Sites")[0], LoaderInstance);
-            string lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("lastSite")[0], sitesObj);
+            object sites = _fiKSCSwSites.GetValue(loaderInstance);
+            string lastSite = _fiKSCSwLastSite.GetValue(sites) as string;
 
             if (lastSite == string.Empty)
-                lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("defaultSite")[0], sitesObj);
+                lastSite = _fiKSCSwDefaultSite.GetValue(sites) as string;
             return lastSite;
         }
 
@@ -1352,18 +1369,17 @@ namespace KerbalConstructionTime
             if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
             {
                 KCTDebug.Log($"Setting active site to {site}");
-                KSCItem setActive = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
-                if (setActive != null)
+                KSCItem newKsc = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                if (newKsc != null)
                 {
-                    SetActiveKSC(setActive);
+                    SetActiveKSC(newKsc);
                 }
                 else
                 {
-                    setActive = new KSCItem(site);
-                    if (CurrentGameIsCareer())
-                        setActive.ActiveLPInstance.level = 0;
-                    KCTGameStates.KSCs.Add(setActive);
-                    SetActiveKSC(setActive);
+                    newKsc = new KSCItem(site);
+                    newKsc.EnsureStartingLaunchPad();
+                    KCTGameStates.KSCs.Add(newKsc);
+                    SetActiveKSC(newKsc);
                 }
             }
         }
@@ -1810,8 +1826,6 @@ namespace KerbalConstructionTime
                     });
                 }
 
-                KCTDebug.Log("Attempting to take control of launch button");
-
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
 
@@ -1881,18 +1895,22 @@ namespace KerbalConstructionTime
 
         public static bool IsVabRecoveryAvailable(Vessel v)
         {
-            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.SPH &&
-                   (v.situation == Vessel.Situations.PRELAUNCH ||
-                    string.IsNullOrEmpty(reqTech) ||
-                    ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
+                   (v.situation == Vessel.Situations.PRELAUNCH || IsVabRecoveryTechResearched());
         }
 
         public static bool IsSphRecoveryAvailable(Vessel v)
         {
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.VAB;
+        }
+
+        public static bool IsVabRecoveryTechResearched()
+        {
+            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
+            return string.IsNullOrEmpty(reqTech) ||
+                   ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available;
         }
 
         public static void EnableSimulationLocks()

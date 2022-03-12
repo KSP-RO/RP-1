@@ -19,7 +19,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "RCS_275",
         "module_tags": [
             "EngineLiquidPF"
         ]
@@ -44,7 +44,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "RCS_550",
         "module_tags": [
             "EngineLiquidPF"
         ]
@@ -657,8 +657,8 @@
         "entry_cost": "4000",
         "category": "STATIONS",
         "info": "Station",
-        "year": "1972",
-        "technology": "earlySpaceStations",
+        "year": "1986",
+        "technology": "modularSpaceStations",
         "era": "06-STATION",
         "ro": true,
         "rp0": true,

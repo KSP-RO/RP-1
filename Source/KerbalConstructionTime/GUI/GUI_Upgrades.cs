@@ -81,7 +81,7 @@ namespace KerbalConstructionTime
             vabPoints += sphPoints;
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Points in VAB:", GUILayout.Width(90));
+            GUILayout.Label("Integration Pts:", GUILayout.Width(90));
             GUILayout.Label(vabPoints.ToString());
             GUILayout.EndHorizontal();
 
@@ -126,7 +126,7 @@ namespace KerbalConstructionTime
             RenderPointResetSection();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("VAB")) { _upgradeWindowHolder = 0; _upgradePosition.height = 1; }
+            if (GUILayout.Button("Integ.")) { _upgradeWindowHolder = 0; _upgradePosition.height = 1; }
             if (Utilities.CurrentGameHasScience() && GUILayout.Button("R&D")) { _upgradeWindowHolder = 2; _upgradePosition.height = 1; }
             GUILayout.EndHorizontal();
 

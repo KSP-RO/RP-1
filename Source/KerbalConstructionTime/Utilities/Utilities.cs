@@ -343,19 +343,7 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
-            {
-                return GetBuildRate(ship.KSC.BuildList.IndexOf(ship), BuildListVessel.ListType.VAB, ship.KSC);
-            }
-            else
-            {
-                if (ship.Type == BuildListVessel.ListType.VAB)
-                    return GetBuildRate(ship.KSC.VABList.IndexOf(ship), ship.Type, ship.KSC);
-                else if (ship.Type == BuildListVessel.ListType.SPH)
-                    return GetBuildRate(ship.KSC.SPHList.IndexOf(ship), ship.Type, ship.KSC);
-            }
-
-            return 0;
+            return GetBuildRate(ship.KSC.BuildList.IndexOf(ship), BuildListVessel.ListType.VAB, ship.KSC);
         }
 
         public static List<double> GetVABBuildRates(KSCItem KSC)
@@ -399,9 +387,6 @@ namespace KerbalConstructionTime
         public static double GetBothBuildRateSum(KSCItem KSC)
         {
             double rateTotal = GetVABBuildRateSum(KSC);
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
-                rateTotal += GetSPHBuildRateSum(KSC);
-
             return rateTotal;
         }
 
@@ -909,8 +894,7 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
             KCTDebug.Log("Launch site is " + blv.LaunchSite);
-            bool isCommonLine = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;
-            string text = isCommonLine ? $"Added {blv.ShipName} to build list." : $"Added {blv.ShipName} to {type} build list.";
+            string text = $"Added {blv.ShipName} to build list.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }

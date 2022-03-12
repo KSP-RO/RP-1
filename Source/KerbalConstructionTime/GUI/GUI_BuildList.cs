@@ -15,7 +15,7 @@ namespace KerbalConstructionTime
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
         private static int _mouseOnAirlaunchButton = -1;
-        private static bool _combineVabAndSph, _isVABSelected, _isSPHSelected, _isTechSelected;
+        private static bool _combineVabAndSph, _isTechSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
@@ -35,7 +35,7 @@ namespace KerbalConstructionTime
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
             switch (list)
             {
-                case "Combined":
+                case "Vessels":
                     _combineVabAndSph = !_combineVabAndSph;
                     _isTechSelected = false;
                     break;
@@ -213,7 +213,7 @@ namespace KerbalConstructionTime
             
             bool commonSelectedNew = GUILayout.Toggle(_combineVabAndSph, "Vessels", GUI.skin.button);
             if (commonSelectedNew != _combineVabAndSph)
-                SelectList("Combined");
+                SelectList("Vessels");
 
             bool techSelectedNew = false;
             if (Utilities.CurrentGameHasScience())

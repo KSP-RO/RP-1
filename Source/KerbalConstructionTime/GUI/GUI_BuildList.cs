@@ -33,35 +33,18 @@ namespace KerbalConstructionTime
         public static void SelectList(string list)
         {
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
-            bool isCommon = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;
             switch (list)
             {
                 case "Combined":
-                    _combineVabAndSph = isCommon && !_combineVabAndSph;
-                    _isVABSelected = false;
-                    _isSPHSelected = false;
-                    _isTechSelected = false;
-                    break;
-                case "VAB":
-                    _combineVabAndSph = isCommon;
-                    _isVABSelected = !isCommon && !_isVABSelected;
-                    _isSPHSelected = false;
-                    _isTechSelected = false;
-                    break;
-                case "SPH":
-                    _combineVabAndSph = isCommon;
-                    _isVABSelected = false;
-                    _isSPHSelected = !isCommon && !_isSPHSelected;
+                    _combineVabAndSph = !_combineVabAndSph;
                     _isTechSelected = false;
                     break;
                 case "Tech":
                     _combineVabAndSph = false;
-                    _isVABSelected = false;
-                    _isSPHSelected = false;
                     _isTechSelected = !_isTechSelected;
                     break;
                 default:
-                    _combineVabAndSph = _isTechSelected = _isVABSelected = _isSPHSelected = false;
+                    _combineVabAndSph = _isTechSelected = false;
                     break;
             }
         }
@@ -227,21 +210,10 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
 
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
-            {
-                bool commonSelectedNew = GUILayout.Toggle(_combineVabAndSph, "Vessels", GUI.skin.button);
-                if (commonSelectedNew != _combineVabAndSph)
-                    SelectList("Combined");
-            }
-            else
-            {
-                bool VABSelectedNew = GUILayout.Toggle(_isVABSelected, "VAB", GUI.skin.button);
-                bool SPHSelectedNew = GUILayout.Toggle(_isSPHSelected, "SPH", GUI.skin.button);
-                if (VABSelectedNew != _isVABSelected)
-                    SelectList("VAB");
-                else if (SPHSelectedNew != _isSPHSelected)
-                    SelectList("SPH");
-            }
+            
+            bool commonSelectedNew = GUILayout.Toggle(_combineVabAndSph, "Vessels", GUI.skin.button);
+            if (commonSelectedNew != _combineVabAndSph)
+                SelectList("Combined");
 
             bool techSelectedNew = false;
             if (Utilities.CurrentGameHasScience())
@@ -276,14 +248,6 @@ namespace KerbalConstructionTime
             if (_combineVabAndSph)
             {
                 RenderCombinedBuildList();
-            }
-            else if(_isVABSelected)
-            {
-                RenderVABBuildList();
-            }
-            else if (_isSPHSelected)
-            {
-                RenderSPHBuildList();
             }
             else if (_isTechSelected)
             {

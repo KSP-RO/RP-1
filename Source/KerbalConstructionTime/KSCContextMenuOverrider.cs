@@ -53,8 +53,7 @@ namespace KerbalConstructionTime
                     button.onClick.AddListener(HandleUpgrade);
 
                     if (GetFacilityID().IndexOf("launchpad", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                        (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
-                         GetFacilityID().IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0))
+                         GetFacilityID().IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         button.interactable = false;
                         var hov = button.gameObject.GetComponent<UIOnHover>();
@@ -119,8 +118,7 @@ namespace KerbalConstructionTime
             if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding ||
                 facilityType == SpaceCenterFacility.SpaceplaneHangar)
             {
-                if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
-                    facilityType == SpaceCenterFacility.SpaceplaneHangar)
+                if (facilityType == SpaceCenterFacility.SpaceplaneHangar)
                 {
                     lvl.levelStats.linePrefix = string.Empty;
                     lvl.levelStats.textBase = "Upgrade the VAB instead";

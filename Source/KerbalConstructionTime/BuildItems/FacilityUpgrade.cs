@@ -50,8 +50,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Upgrading {CommonName} to level {UpgradeLevel}");
 
             List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(Id);
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
-                FacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
+            if (FacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
             {
                 // Also upgrade the SPH to the same level as VAB when playing with unified build queue
                 facilityRefs.AddRange(GetFacilityReferencesByType(SpaceCenterFacility.SpaceplaneHangar));

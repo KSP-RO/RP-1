@@ -4172,7 +4172,7 @@
         "spacecraft": "",
         "engine_config": "LR129",
         "upgrade": true,
-        "entry_cost_mods": "5000,XLR129-P-1",
+        "entry_cost_mods": "50000,XLR129-P-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4193,7 +4193,7 @@
         "spacecraft": "",
         "engine_config": "LR129",
         "upgrade": true,
-        "entry_cost_mods": "100000,LR129-P-1",
+        "entry_cost_mods": "200000,LR129-P-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8610,7 +8610,7 @@
         "spacecraft": "",
         "engine_config": "RD270M",
         "upgrade": false,
-        "entry_cost_mods": "25000,RD-270",
+        "entry_cost_mods": "50000,RD-270",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -8663,6 +8663,27 @@
         "module_tags": [
             "EngineLiquidTurbo"
         ]
+    },
+    {
+        "name": "RD-301",
+        "title": "RD-301",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1978",
+        "technology": "stagedCombustion1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "RD301",
+        "upgrade": false,
+        "entry_cost_mods": "100000,StagedHypergolic",
+        "identical_part_name": "",
+        "module_tags": []
     },
     {
         "name": "RD-56",
@@ -12475,12 +12496,9 @@
         "spacecraft": "",
         "engine_config": "LR129",
         "upgrade": false,
-        "entry_cost_mods": "100000,StagedHydrolox",
+        "entry_cost_mods": "200000,StagedHydrolox",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo",
-            "Hydrolox"
-        ]
+        "module_tags": []
     },
     {
         "name": "XLR132",

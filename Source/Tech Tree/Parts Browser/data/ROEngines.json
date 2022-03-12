@@ -3221,6 +3221,30 @@
         ]
     },
     {
+        "name": "ROE-LR129",
+        "title": "LR129",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "5000",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1974",
+        "technology": "hydrolox1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR129",
+        "upgrade": false,
+        "entry_cost_mods": "XLR129-P-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-LR79",
         "title": "LR79 Engine",
         "description": "",
@@ -5251,6 +5275,52 @@
         ]
     },
     {
+        "name": "ROE-RD270",
+        "title": "RD-270",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "4500",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1974",
+        "technology": "stagedCombustion1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD270",
+        "upgrade": false,
+        "entry_cost_mods": "RD-270",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD270M",
+        "title": "RD-270M",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "4500",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1974",
+        "technology": "stagedCombustion1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD270M",
+        "upgrade": false,
+        "entry_cost_mods": "RD-270M",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD275",
         "title": "RD-253/RD-275",
         "description": "A high thrust engine designed for use with storable propellants. In use with the Proton series of rockets. Diameter: [2.0 m]. Plume configured by RealPlume.",
@@ -5271,6 +5341,29 @@
         "upgrade": false,
         "entry_cost_mods": "RD-253",
         "identical_part_name": "RD253",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD301",
+        "title": "RD-301",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "800",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1978",
+        "technology": "stagedCombustion1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD301",
+        "upgrade": false,
+        "entry_cost_mods": "RD-301",
+        "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

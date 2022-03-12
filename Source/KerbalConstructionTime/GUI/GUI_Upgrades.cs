@@ -76,24 +76,14 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Available: {AvailablePoints}");
             GUILayout.EndHorizontal();
 
-            bool combineSphAndVab = PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine;
             int vabPoints = Utilities.GetSpentUpgradesFor(SpaceCenterFacility.VehicleAssemblyBuilding);
             int sphPoints = Utilities.GetSpentUpgradesFor(SpaceCenterFacility.SpaceplaneHangar);
-            if (combineSphAndVab)
-                vabPoints += sphPoints;
+            vabPoints += sphPoints;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Points in VAB:", GUILayout.Width(90));
             GUILayout.Label(vabPoints.ToString());
             GUILayout.EndHorizontal();
-
-            if (!combineSphAndVab)
-            {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Points in SPH:", GUILayout.Width(90));
-                GUILayout.Label(sphPoints.ToString());
-                GUILayout.EndHorizontal();
-            }
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Points in R&D:", GUILayout.Width(90));
@@ -137,7 +127,6 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("VAB")) { _upgradeWindowHolder = 0; _upgradePosition.height = 1; }
-            if (!combineSphAndVab && GUILayout.Button("SPH")) { _upgradeWindowHolder = 1; _upgradePosition.height = 1; }
             if (Utilities.CurrentGameHasScience() && GUILayout.Button("R&D")) { _upgradeWindowHolder = 2; _upgradePosition.height = 1; }
             GUILayout.EndHorizontal();
 

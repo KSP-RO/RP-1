@@ -103,7 +103,6 @@ namespace KerbalConstructionTime
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.TechUpgrades = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUpgrades, "Upgrades From Tech Tree", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.SharedUpgradePool = GUILayout.Toggle(_workingPreset.GeneralSettings.SharedUpgradePool, "Shared Upgrade Pool (KSCSwitcher)", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.CommonBuildLine = GUILayout.Toggle(_workingPreset.GeneralSettings.CommonBuildLine, "Common build line for SPH+VAB", HighLogic.Skin.button);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Starting Upgrades:");

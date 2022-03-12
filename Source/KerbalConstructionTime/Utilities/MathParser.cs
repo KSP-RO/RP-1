@@ -46,29 +46,11 @@ namespace KerbalConstructionTime
             int level = 0, upgrades = 0;
             var variables = new Dictionary<string, string>();
 
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
+            level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+            if (KSC.VABUpgrades.Count > index)
             {
-                level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                if (KSC.VABUpgrades.Count > index)
-                {
-                    upgrades = KSC.VABUpgrades[index];
-                    upgrades += KSC.SPHUpgrades.Count > index ? KSC.SPHUpgrades[index] : 0;
-                }
-            }
-            else
-            {
-                if (type == BuildListVessel.ListType.VAB)
-                {
-                    level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                    if (KSC.VABUpgrades.Count > index)
-                        upgrades = KSC.VABUpgrades[index];
-                }
-                else if (type == BuildListVessel.ListType.SPH)
-                {
-                    level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.SpaceplaneHangar);
-                    if (KSC.SPHUpgrades.Count > index)
-                        upgrades = KSC.SPHUpgrades[index];
-                }
+                upgrades = KSC.VABUpgrades[index];
+                upgrades += KSC.SPHUpgrades.Count > index ? KSC.SPHUpgrades[index] : 0;
             }
             upgrades += upgradeDelta;
             variables.Add("L", level.ToString());

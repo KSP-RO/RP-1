@@ -51,6 +51,11 @@ namespace KerbalConstructionTime
             }
         }
 
+        public LCItem(KSCItem ksc)
+        {
+            _ksc = ksc;
+        }
+
         public LCItem(string name, float mMax, Vector3 sMax, bool isLCPad, KSCItem ksc)
         {
             LCName = name;
@@ -249,6 +254,11 @@ namespace KerbalConstructionTime
             var node = new ConfigNode("LaunchComplex");
             node.AddValue("LCName", LCName);
             node.AddValue("ActiveLPID", ActiveLaunchPadID);
+            node.AddValue("operational", isOperational);
+            node.AddValue("isPad", isPad);
+            node.AddValue("massMax", massMax);
+            node.AddValue("massMin", massMin);
+            node.AddValue("sizeMax", sizeMax);
 
             var cnVABUp = new ConfigNode("VABUpgrades");
             foreach (int upgrade in VABUpgrades)
@@ -384,8 +394,14 @@ namespace KerbalConstructionTime
             SPHRates.Clear();
 
             LCName = node.GetValue("LCName");
-            if (!int.TryParse(node.GetValue("ActiveLPID"), out ActiveLaunchPadID))
-                ActiveLaunchPadID = 0;
+            ActiveLaunchPadID = 0;
+            node.TryGetValue("ActiveLPID", ref ActiveLaunchPadID);
+            node.TryGetValue("operational", ref isOperational);
+            node.TryGetValue("isPad", ref isPad);
+            node.TryGetValue("massMax", ref massMax);
+            node.TryGetValue("massMin", ref massMin);
+            node.TryGetValue("sizeMax", ref sizeMax);
+
             ConfigNode vabUp = node.GetNode("VABUpgrades");
             foreach (string upgrade in vabUp.GetValues("Upgrade"))
             {

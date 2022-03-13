@@ -12,9 +12,9 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Yes"))
             {
-                if (KCTGameStates.ActiveKSC.LaunchPadCount < 2) return;
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPadCount < 2) return;
 
-                KCT_LaunchPad lpToDel = KCTGameStates.ActiveKSC.ActiveLPInstance;
+                KCT_LaunchPad lpToDel = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
                 if (!lpToDel.Delete(out string err))
                 {
                     ScreenMessages.PostScreenMessage("Dismantle failed: " + err, 5f, ScreenMessageStyle.UPPER_CENTER);

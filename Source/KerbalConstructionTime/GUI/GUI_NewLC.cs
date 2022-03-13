@@ -31,25 +31,37 @@ namespace KerbalConstructionTime
             curVABCost = padSize.sqrMagnitude * 2d;
             fractionalPadLvl = 0f;
 
-            float unlimitedTonnageThreshold = 3500f;
-
-            if (tonnageLimit >= unlimitedTonnageThreshold)
+            if (_padLvlOptions == null)
             {
-                int padLvl = _padLvlOptions.Length - 2;
-                fractionalPadLvl = padLvl;
+                LoadPadData();
+            }
+
+            if (_padLvlOptions == null)
+            {
+                fractionalPadLvl = 0f;
             }
             else
             {
-                for (int i = 1; i < _padTons.Length; i++)
-                {
-                    if (tonnageLimit < _padTons[i])
-                    {
-                        float lowerBound = _padTons[i - 1];
-                        float upperBound = Math.Min(_padTons[i], unlimitedTonnageThreshold);
-                        float fractionOverFullLvl = (tonnageLimit - lowerBound) / (upperBound - lowerBound);
-                        fractionalPadLvl = (i - 1) + fractionOverFullLvl;
+                float unlimitedTonnageThreshold = 3500f;
 
-                        break;
+                if (tonnageLimit >= unlimitedTonnageThreshold)
+                {
+                    int padLvl = _padLvlOptions.Length - 2;
+                    fractionalPadLvl = padLvl;
+                }
+                else
+                {
+                    for (int i = 1; i < _padTons.Length; i++)
+                    {
+                        if (tonnageLimit < _padTons[i])
+                        {
+                            float lowerBound = _padTons[i - 1];
+                            float upperBound = Math.Min(_padTons[i], unlimitedTonnageThreshold);
+                            float fractionOverFullLvl = (tonnageLimit - lowerBound) / (upperBound - lowerBound);
+                            fractionalPadLvl = (i - 1) + fractionOverFullLvl;
+
+                            break;
+                        }
                     }
                 }
             }
@@ -57,11 +69,6 @@ namespace KerbalConstructionTime
 
         public static void DrawNewLCWindow(int windowID)
         {
-            if (_padLvlOptions == null)
-            {
-                LoadPadData();
-            }
-
             GUILayout.BeginVertical();
             GUILayout.Label("Name:");
             _newName = GUILayout.TextField(_newName);
@@ -165,6 +172,9 @@ namespace KerbalConstructionTime
         private static void LoadPadData()
         {
             var upgdFacility = KCT_LaunchPad.GetUpgradeableFacilityReference();
+            if (upgdFacility == null)
+                return;
+
             var padUpgdLvls = upgdFacility.UpgradeLevels;
 
             _padLvlOptions = new string[padUpgdLvls.Length + 1];

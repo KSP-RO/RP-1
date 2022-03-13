@@ -1,6 +1,7 @@
-﻿using RealFuels;
+﻿using KerbalConstructionTime;
+using RealFuels;
+using System.Linq;
 using UnityEngine;
-using KerbalConstructionTime;
 
 namespace RP0
 {
@@ -9,6 +10,8 @@ namespace RP0
     {
         private static bool _airlaunchTipShown;
         private static bool _isInterplanetaryWarningShown;
+
+        private EventData<BuildListVessel> _onKctVesselAddedToBuildQueueEvent;
 
         public static GameplayTips Instance { get; private set; }
 
@@ -38,6 +41,12 @@ namespace RP0
             }
             _airlaunchTipShown |= rp0Settings.AirlaunchTipShown;
 
+            _onKctVesselAddedToBuildQueueEvent = GameEvents.FindEvent<EventData<BuildListVessel>>("OnKctVesselAddedToBuildQueue");
+            if (_onKctVesselAddedToBuildQueueEvent != null)
+            {
+                _onKctVesselAddedToBuildQueueEvent.Add(OnKctVesselAddedToBuildQueue);
+            }
+
             var vessel = FlightGlobals.ActiveVessel;
             if (!_airlaunchTipShown && vessel &&
                 KerbalConstructionTime.Utilities.IsSimulationActive &&
@@ -46,6 +55,11 @@ namespace RP0
             {
                 ShowAirlaunchTip();
             }
+        }
+
+        public void OnDestroy()
+        {
+            if (_onKctVesselAddedToBuildQueueEvent != null) _onKctVesselAddedToBuildQueueEvent.Remove(OnKctVesselAddedToBuildQueue);
         }
 
         public void ShowInterplanetaryAvionicsReminder()
@@ -84,6 +98,27 @@ namespace RP0
                                          "OK",
                                          false,
                                          HighLogic.UISkin);
+        }
+
+        private void OnKctVesselAddedToBuildQueue(BuildListVessel data)
+        {
+            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders) return;
+
+            bool hasUntooledParts = EditorLogic.fetch.ship.Parts.Any(p => p.FindModuleImplementing<ModuleTooling>()?.IsUnlocked() == false);
+            if (hasUntooledParts)
+            {
+                ShowUntooledPartsReminder();
+            }
+        }
+
+        private static void ShowUntooledPartsReminder()
+        {
+            string msg = $"Tool them in the RP-1 menu to reduce vessel cost and build time.";
+            DialogGUIBase[] options = new DialogGUIBase[2];
+            options[0] = new DialogGUIButton("OK", () => { });
+            options[1] = new DialogGUIButton("Never remind me again", () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders = true; });
+            MultiOptionDialog diag = new MultiOptionDialog("ShowUntooledPartsReminder", msg, "Untooled parts", null, 300, options);
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
     }
 }

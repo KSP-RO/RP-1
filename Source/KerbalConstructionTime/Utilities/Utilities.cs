@@ -894,6 +894,15 @@ namespace KerbalConstructionTime
             }
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
+            try
+            {
+                KCTEvents.OnVesselAddedToBuildQueue.Fire(blv);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
             KCTDebug.Log("Launch site is " + blv.LaunchSite);
             bool isCommonLine = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;

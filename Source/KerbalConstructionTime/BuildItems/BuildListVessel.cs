@@ -504,10 +504,10 @@ namespace KerbalConstructionTime
 
             if (Type == ListType.VAB)
             {
-                KCT_LaunchPad selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchPad() : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
+                LCItem selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
                 double totalMass = GetTotalMass();
-                if (totalMass > selectedPad.SupportedMass)
+                if (totalMass > selectedPad.massMax)
                 {
                     failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons");
                 }
@@ -515,7 +515,7 @@ namespace KerbalConstructionTime
                 {
                     failedReasons.Add("Part Count limit exceeded");
                 }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedPad.SupportedSize);
+                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedPad.sizeMax);
                 if (!sizeCheck.Test())
                 {
                     failedReasons.Add("Size limits exceeded");

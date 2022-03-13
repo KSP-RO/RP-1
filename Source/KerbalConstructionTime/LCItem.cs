@@ -31,9 +31,9 @@ namespace KerbalConstructionTime
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
         public int ActiveLaunchPadID = 0;
 
-        public string SupportedMassAsPrettyText => massMax == float.MaxValue ? "unlimited" : $"{massMin:#.#}-{massMax:#.#}t";
+        public string SupportedMassAsPrettyText => massMax == -1f ? "unlimited" : $"{massMin:N0}-{massMax:N0}t";
 
-        public string SupportedSizeAsPrettyText => sizeMax.y == float.MaxValue ? "unlimited" : $"{sizeMax.x:#.#}x{sizeMax.y:#.#}m";
+        public string SupportedSizeAsPrettyText => sizeMax.y == float.MaxValue ? "unlimited" : $"{sizeMax.x:N0}x{sizeMax.y:N0}m";
 
         private KSCItem _ksc = null;
 
@@ -57,16 +57,17 @@ namespace KerbalConstructionTime
             _ksc = ksc;
             isPad = isLCPad;
             massMax = mMax;
+            float fracLevel;
 
-            KCT_GUI.GetPadStats(massMax, sMax, out massMin, out _, out _, out _);
+            KCT_GUI.GetPadStats(massMax, sMax, out massMin, out _, out _, out fracLevel);
 
             sizeMax = sMax;
 
             if (isPad)
             {
-                float fracLevel;
-                KCT_GUI.GetPadStats(massMax, sizeMax, out _, out _, out _, out fracLevel);
-                LaunchPads.Add(new KCT_LaunchPad(LCName + "A", fracLevel, massMax, sizeMax));
+                var pad = new KCT_LaunchPad(LCName + "A", fracLevel, massMax, sizeMax);
+                pad.isOperational = true;
+                LaunchPads.Add(pad);
             }
 
             VABList.Added += added;
@@ -217,7 +218,7 @@ namespace KerbalConstructionTime
             if (updateDestrNode)
                 ActiveLPInstance?.RefreshDestructionNode();
 
-            LaunchPads[LP_ID].SetActive();
+            ActiveLPInstance?.SetActive();
         }
 
         private void BuildVesselAndShipNodeConfigs(BuildListVessel blv, ref ConfigNode node)

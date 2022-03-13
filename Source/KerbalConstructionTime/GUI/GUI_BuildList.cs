@@ -277,6 +277,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndScrollView();
 
+            RenderLaunchComplexControls();
             RenderLaunchPadControls();
         }
 
@@ -513,6 +514,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndScrollView();
 
+            RenderLaunchComplexControls();
             RenderLaunchPadControls();
         }
 
@@ -1058,7 +1060,7 @@ namespace KerbalConstructionTime
             }
             if (GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
             {
-                _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count + 1)}";
+                _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = true;
@@ -1066,19 +1068,20 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
             }
-            if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
-            {
-                GUIStates.ShowDismantlePad = true;
-                GUIStates.ShowNewPad = false;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowRename = false;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-            }
+            // TODO: allow mothballing and upgrading
+            //if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
+            //{
+            //    GUIStates.ShowDismantlePad = true;
+            //    GUIStates.ShowNewPad = false;
+            //    GUIStates.ShowNewLC = false;
+            //    GUIStates.ShowRename = false;
+            //    GUIStates.ShowBuildList = false;
+            //    GUIStates.ShowBLPlus = false;
+            //}
             GUILayout.FlexibleSpace();
             if (lpCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchToNextLaunchPad();
+                KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
                 if (HighLogic.LoadedSceneIsEditor)
                 {
                     Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
@@ -1090,6 +1093,8 @@ namespace KerbalConstructionTime
         private static void RenderLaunchPadControls()
         {
             KCT_LaunchPad activePad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
+            if (activePad == null)
+                return;
 
             GUILayout.BeginHorizontal();
             int lpCount = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPadCount;

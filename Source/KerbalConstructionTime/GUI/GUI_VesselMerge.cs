@@ -27,7 +27,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label("VAB");
                 _vabMergeScroll = GUILayout.BeginScrollView(_vabMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
 
-                foreach (BuildListVessel vessel in KCTGameStates.ActiveKSC.VABWarehouse)
+                foreach (BuildListVessel vessel in KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABWarehouse)
                 {
                     if (vessel.Id != ship.Id && !KCTGameStates.MergedVessels.Exists(x => x.Id == vessel.Id) && GUILayout.Button(vessel.ShipName))
                     {
@@ -43,7 +43,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label("SPH");
                 _sphMergeScroll = GUILayout.BeginScrollView(_sphMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
 
-                foreach (BuildListVessel vessel in KCTGameStates.ActiveKSC.SPHWarehouse)
+                foreach (BuildListVessel vessel in KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHWarehouse)
                 {
                     if (vessel.Id != ship.Id && !KCTGameStates.MergedVessels.Exists(x => x.Id == vessel.Id) && GUILayout.Button(vessel.ShipName))
                     {

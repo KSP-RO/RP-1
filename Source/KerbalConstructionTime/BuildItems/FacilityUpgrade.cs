@@ -108,7 +108,7 @@ namespace KerbalConstructionTime
             double rateTotal = 0;
             if (KSC != null)
             {
-                rateTotal = Utilities.GetBothBuildRateSum(KSC);
+                rateTotal = Utilities.GetConstructionRate(KSC);
             }
             return rateTotal;
         }
@@ -204,7 +204,7 @@ namespace KerbalConstructionTime
         public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
         {
             double bp = CalculateBP(cost, facilityType);
-            double rateTotal = Utilities.GetBothBuildRateSum(KSC ?? KCTGameStates.ActiveKSC);
+            double rateTotal = Utilities.GetConstructionRate(KSC ?? KCTGameStates.ActiveKSC);
 
             return bp / rateTotal;
         }

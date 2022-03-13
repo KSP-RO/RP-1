@@ -102,12 +102,12 @@ namespace KerbalConstructionTime
         /// <param name="padLevel"></param>
         public static void CreateNewPad(string padName, int padLevel)
         {
-            ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
+            ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
         }
 
         public static void ClearLaunchpadList()
         {
-            ActiveKSC.LaunchPads.Clear();
+            ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Clear();
         }
     }
 }

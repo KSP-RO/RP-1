@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class PadConstructionStorageItem
+    public class LCConstructionStorageItem
     {
         [Persistent]
-        public int launchpadID = 0;
+        public int launchComplexID = 0;
 
         [Persistent]
         public string name;
@@ -21,11 +21,11 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool upgradeProcessed = false;
 
-        public PadConstruction ToPadConstruction()
+        public LCConstruction ToLCConstruction()
         {
-            return new PadConstruction
+            return new LCConstruction
             {
-                LaunchpadIndex = launchpadID,
+                LaunchComplexIndex = launchComplexID,
                 Name = name,
                 Progress = progress,
                 BP = BP,
@@ -34,9 +34,9 @@ namespace KerbalConstructionTime
             };
         }
 
-        public PadConstructionStorageItem FromPadConstruction(PadConstruction pc)
+        public LCConstructionStorageItem FromLCConstruction(LCConstruction pc)
         {
-            launchpadID = pc.LaunchpadIndex;
+            launchComplexID = pc.LaunchComplexIndex;
             name = pc.Name;
             progress = pc.Progress;
             BP = pc.BP;

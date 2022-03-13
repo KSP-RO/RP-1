@@ -83,7 +83,7 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.EditorRolloutTime > 0)
             {
-                bR = Utilities.GetBuildRateForFastestVABLine(KCTGameStates.ActiveKSC);
+                bR = Utilities.GetBuildRateForFastestVABLine(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
                 GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
             }
 

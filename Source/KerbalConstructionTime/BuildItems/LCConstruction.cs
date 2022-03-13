@@ -4,45 +4,35 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class PadConstruction : IKCTBuildItem
+    public class LCConstruction : IKCTBuildItem
     {
         /// <summary>
-        /// Index of the pad in KSCItem.LaunchPads.
+        /// Index of the LC in KSCItem.LaunchComplexes.
         /// </summary>
-        public int LaunchpadIndex = 0;
+        public int LaunchComplexIndex = 0;
         public double Progress = 0, BP = 0, Cost = 0;
         public string Name;
         public bool UpgradeProcessed = false;
 
-        private LCItem _lc = null;
+        private KSCItem _ksc = null;
 
-        public LCItem LC
+        public KSCItem KSC
         {
             get
             {
-                if (_lc == null)
+                if (_ksc == null)
                 {
-                    foreach (var ksc in KCTGameStates.KSCs)
-                    {
-                        foreach (var lc in ksc.LaunchComplexes)
-                        {
-                            if (lc.PadConstructions.Contains(this))
-                            {
-                                _lc = lc;
-                                break;
-                            }
-                        }
-                    }
+                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.LCConstructions.Contains(this));
                 }
-                return _lc;
+                return _ksc;
             }
         }
 
-        public PadConstruction()
+        public LCConstruction()
         {
         }
 
-        public PadConstruction(string name)
+        public LCConstruction(string name)
         {
             Name = name;
         }
@@ -50,9 +40,9 @@ namespace KerbalConstructionTime
         public double GetBuildRate()
         {
             double rateTotal = 0;
-            if (LC != null)
+            if (KSC != null)
             {
-                rateTotal = Utilities.GetConstructionRate(LC.KSC);
+                rateTotal = Utilities.GetConstructionRate(KSC);
             }
             return rateTotal;
         }
@@ -68,18 +58,17 @@ namespace KerbalConstructionTime
         public void IncrementProgress(double UTDiff)
         {
             if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes))
+            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
             {
-                if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
+                if (!KCTGameStates.ErroredDuringOnLoad)
                 {
-                    KCT_LaunchPad lp = LC.LaunchPads[LaunchpadIndex];
+                    LCItem lp = KSC.LaunchComplexes[LaunchComplexIndex];
                     lp.isOperational = true;
-                    lp.DestructionNode = new ConfigNode("DestructionState");
                     UpgradeProcessed = true;
 
                     try
                     {
-                        KCTEvents.OnPadConstructionComplete?.Fire(this, lp);
+                        KCTEvents.OnLCConstructionComplete?.Fire(this, lp);
                     }
                     catch (Exception ex)
                     {

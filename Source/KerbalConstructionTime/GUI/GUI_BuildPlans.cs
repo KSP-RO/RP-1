@@ -167,9 +167,9 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
             {
                 if (isVABSelectedNew)
-                    _plansList = KCTGameStates.ActiveKSC.VABPlans;
+                    _plansList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans;
                 else if (isSPHSelectedNew)
-                    _plansList = KCTGameStates.ActiveKSC.SPHPlans;
+                    _plansList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans;
                 if (_isVABSelectedInPlans || _isSPHSelectedInPlans)
                 {
                     GUILayout.BeginHorizontal();
@@ -267,24 +267,24 @@ namespace KerbalConstructionTime
             string type = "";
             if (blv.Type == BuildListVessel.ListType.VAB)
             {
-                if (KCTGameStates.ActiveKSC.VABPlans.ContainsKey(blv.ShipName))
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans.ContainsKey(blv.ShipName))
                 {
-                    KCTGameStates.ActiveKSC.VABPlans.Remove(blv.ShipName);
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans.Remove(blv.ShipName);
                     message = new ScreenMessage($"[KCT] Replacing previous plan for {blv.ShipName} in the VAB Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(message);
                 }
-                KCTGameStates.ActiveKSC.VABPlans.Add(blv.ShipName, blv);
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans.Add(blv.ShipName, blv);
                 type = "VAB";
             }
             else if (blv.Type == BuildListVessel.ListType.SPH)
             {
-                if (KCTGameStates.ActiveKSC.SPHPlans.ContainsKey(blv.ShipName))
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans.ContainsKey(blv.ShipName))
                 {
-                    KCTGameStates.ActiveKSC.SPHPlans.Remove(blv.ShipName);
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans.Remove(blv.ShipName);
                     message = new ScreenMessage($"[KCT] Replacing previous plan for {blv.ShipName} in the SPH Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(message);
                 }
-                    KCTGameStates.ActiveKSC.SPHPlans.Add(blv.ShipName, blv);
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans.Add(blv.ShipName, blv);
                 type = "SPH";
             }
 

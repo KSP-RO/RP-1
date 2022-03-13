@@ -65,6 +65,8 @@ namespace KerbalConstructionTime
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawRenameWindow", "Rename", DrawRenameWindow);
                 if (GUIStates.ShowNewPad)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewPadWindow", "New launch pad", DrawNewPadWindow);
+                if (GUIStates.ShowNewLC)
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewLCWindow", "New launch complex", DrawNewLCWindow);
                 if (GUIStates.ShowFirstRun)
                     _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Kerbal Construction Time", DrawFirstRun);
                 if (GUIStates.ShowPresetSaver)
@@ -92,7 +94,7 @@ namespace KerbalConstructionTime
                 }
 
                 //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch)
+                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch)
                 {
                     if (!_isKSCLocked)
                     {
@@ -239,9 +241,6 @@ namespace KerbalConstructionTime
             _fundsCost = int.MinValue;
             _nodeRate = int.MinValue;
             _upNodeRate = int.MinValue;
-            _researchRate = int.MinValue;
-            _upResearchRate = int.MinValue;
-            _costOfNewLP = int.MinValue;
         }
 
         public static void CenterWindow(ref Rect window)

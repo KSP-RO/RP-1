@@ -284,28 +284,28 @@ namespace KerbalConstructionTime
             return cost;
         }
 
-        public static double GetBuildRate(int index, BuildListVessel.ListType type, KSCItem KSC, bool UpgradedRate = false)
+        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool UpgradedRate = false)
         {
-            return GetBuildRate(index, type, KSC, UpgradedRate ? 1 : 0);
+            return GetBuildRate(index, type, LC, UpgradedRate ? 1 : 0);
         }
 
-        public static double GetBuildRate(int index, BuildListVessel.ListType type, KSCItem KSC, int upgradeDelta)
+        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, int upgradeDelta)
         {
-            if (KSC == null) KSC = KCTGameStates.ActiveKSC;
+            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             double ret = 0;
             if (type == BuildListVessel.ListType.VAB)
             {
-                if (upgradeDelta == 0 && KSC.VABRates.Count > index)
+                if (upgradeDelta == 0 && LC.VABRates.Count > index)
                 {
-                    return KSC.VABRates[index];
+                    return LC.VABRates[index];
                 }
-                else if (upgradeDelta == 1 && KSC.UpVABRates.Count > index)
+                else if (upgradeDelta == 1 && LC.UpVABRates.Count > index)
                 {
-                    return KSC.UpVABRates[index];
+                    return LC.UpVABRates[index];
                 }
                 else if (upgradeDelta > 1)
                 {
-                    return MathParser.ParseBuildRateFormula(BuildListVessel.ListType.VAB, index, KSC, upgradeDelta);
+                    return MathParser.ParseBuildRateFormula(BuildListVessel.ListType.VAB, index, LC, upgradeDelta);
                 }
                 else
                 {
@@ -314,17 +314,17 @@ namespace KerbalConstructionTime
             }
             else if (type == BuildListVessel.ListType.SPH)
             {
-                if (upgradeDelta == 0 && KSC.SPHRates.Count > index)
+                if (upgradeDelta == 0 && LC.SPHRates.Count > index)
                 {
-                    return KSC.SPHRates[index];
+                    return LC.SPHRates[index];
                 }
-                else if (upgradeDelta == 1 && KSC.UpSPHRates.Count > index)
+                else if (upgradeDelta == 1 && LC.UpSPHRates.Count > index)
                 {
-                    return KSC.UpSPHRates[index];
+                    return LC.UpSPHRates[index];
                 }
                 else if (upgradeDelta > 1)
                 {
-                    return MathParser.ParseBuildRateFormula(BuildListVessel.ListType.SPH, index, KSC, upgradeDelta);
+                    return MathParser.ParseBuildRateFormula(BuildListVessel.ListType.SPH, index, LC, upgradeDelta);
                 }
                 else
                 {
@@ -343,50 +343,65 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return GetBuildRate(ship.KSC.BuildList.IndexOf(ship), BuildListVessel.ListType.VAB, ship.KSC);
+            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), BuildListVessel.ListType.VAB, ship.LC);
         }
 
-        public static List<double> GetVABBuildRates(KSCItem KSC)
+        public static List<double> GetVABBuildRates(LCItem LC)
         {
-            if (KSC == null) KSC = KCTGameStates.ActiveKSC;
-            return KSC.VABRates;
+            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            if (!LC.isPad)
+                LC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(l => l.isPad && l.isOperational);
+            return LC.VABRates;
         }
 
-        public static List<double> GetSPHBuildRates(KSCItem KSC)
+        public static List<double> GetSPHBuildRates(LCItem LC)
         {
-            if (KSC == null) KSC = KCTGameStates.ActiveKSC;
-            return KSC.SPHRates;
+            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            if (LC.isPad)
+                LC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(l => !l.isPad && l.isOperational);
+            return LC.SPHRates;
         }
 
-        public static double GetBuildRateForFastestVABLine(KSCItem KSC)
+        public static double GetBuildRateForFastestVABLine(LCItem LC)
         {
-            return GetVABBuildRates(KSC).FirstOrDefault();
+            return GetVABBuildRates(LC).FirstOrDefault();
         }
 
-        public static double GetBuildRateForFastestSPHLine(KSCItem KSC)
+        public static double GetBuildRateForFastestSPHLine(LCItem LC)
         {
-            return GetSPHBuildRates(KSC).FirstOrDefault();
+            return GetSPHBuildRates(LC).FirstOrDefault();
         }
 
-        public static double GetVABBuildRateSum(KSCItem KSC)
+        public static double GetVABBuildRateSum(LCItem LC)
         {
             double rateTotal = 0;
-            foreach (var rate in GetVABBuildRates(KSC))
+            foreach (var rate in GetVABBuildRates(LC))
                 rateTotal += rate;
             return rateTotal;
         }
 
-        public static double GetSPHBuildRateSum(KSCItem KSC)
+        public static double GetSPHBuildRateSum(LCItem LC)
         {
             double rateTotal = 0;
-            foreach (var rate in GetSPHBuildRates(KSC))
+            foreach (var rate in GetSPHBuildRates(LC))
                 rateTotal += rate;
             return rateTotal;
         }
 
-        public static double GetBothBuildRateSum(KSCItem KSC)
+        public static double GetBothBuildRateSum(LCItem LC)
         {
-            double rateTotal = GetVABBuildRateSum(KSC);
+            double rateTotal = GetVABBuildRateSum(LC);
+            return rateTotal;
+        }
+
+        public static double GetConstructionRate(KSCItem KSC)
+        {
+            // TODO: worker allocations
+            double rateTotal = 0;
+            foreach (LCItem lc in KSC.LaunchComplexes)
+                if (lc.isOperational)
+                    rateTotal += GetVABBuildRateSum(lc);
+
             return rateTotal;
         }
 
@@ -695,55 +710,35 @@ namespace KerbalConstructionTime
                 ship.FindTypeFromLists();
             if (ship.Type != BuildListVessel.ListType.VAB && ship.Type != BuildListVessel.ListType.SPH)
                 return;
-            var list = ship.Type == BuildListVessel.ListType.VAB ? ship.KSC.VABList : ship.KSC.SPHList;
-            MoveVesselToWarehouse(ship.Type, list.IndexOf(ship), ship.KSC);
-        }
-
-        public static void MoveVesselToWarehouse(BuildListVessel.ListType ListIdentifier, int index, KSCItem KSC)
-        {
-            if (KSC == null) KSC = KCTGameStates.ActiveKSC;
-            if (ListIdentifier != BuildListVessel.ListType.VAB && ListIdentifier != BuildListVessel.ListType.SPH)
-                return;
-
+            // will also return if ship.LC==null
+            
             KCTEvents.Instance.KCTButtonStockImportant = true;
             _startedFlashing = DateTime.Now;    //Set the time to start flashing
 
             var Message = new StringBuilder();
             Message.AppendLine("The following vessel is complete:");
-            BuildListVessel vessel;
-            string stor = ListIdentifier == BuildListVessel.ListType.VAB ? "VAB" : "SPH";
-            if (ListIdentifier == BuildListVessel.ListType.VAB)
+            if (ship.Type == BuildListVessel.ListType.VAB)
             {
-                vessel = KSC.VABList[index];
-                KSC.VABList.RemoveAt(index);
-                KSC.VABWarehouse.Add(vessel);
+                int index = ship.LC.VABList.IndexOf(ship);
+                ship.LC.VABList.RemoveAt(index);
+                ship.LC.VABWarehouse.Add(ship);
             }
             else
             {
-                vessel = KSC.SPHList[index];
-                KSC.SPHList.RemoveAt(index);
-                KSC.SPHWarehouse.Add(vessel);
+                int index = ship.LC.SPHList.IndexOf(ship);
+                ship.LC.SPHList.RemoveAt(index);
+                ship.LC.SPHWarehouse.Add(ship);
             }
-            Message.AppendLine(vessel.ShipName);
-            Message.AppendLine($"Please check the {stor} Storage at {KSC.KSCName} to launch it.");
-
-            //Assign science based on science rate
-            if (CurrentGameHasScience() && !vessel.CannotEarnScience)
-            {
-                double rate = MathParser.GetStandardFormulaValue("Research", new Dictionary<string, string>() { { "N", KSC.RDUpgrades[0].ToString() }, { "R", GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString() } });
-                if (rate > 0)
-                {
-                    Message.AppendLine(AddScienceWithMessage((float)(rate * vessel.BuildPoints), TransactionReasons.None));
-                }
-            }
+            Message.AppendLine(ship.ShipName);
+            Message.AppendLine($"Please check the Storage at {ship.LC.LCName} at {ship.KSC.KSCName} to launch it.");
 
             //Add parts to the tracker
-            if (!vessel.CannotEarnScience) //if the vessel was previously completed, then we shouldn't register it as a new build
+            if (!ship.CannotEarnScience) //if the vessel was previously completed, then we shouldn't register it as a new build
             {
-                ScrapYardWrapper.RecordBuild(vessel.ExtractedPartNodes);
+                ScrapYardWrapper.RecordBuild(ship.ExtractedPartNodes);
             }
 
-            KCTDebug.Log($"Moved vessel {vessel.ShipName} to {KSC.KSCName}'s {stor} storage.");
+            KCTDebug.Log($"Moved vessel {ship.ShipName} to {ship.KSC.KSCName}'s {ship.LC.LCName} storage.");
 
             KCT_GUI.ResetBLWindow(false);
             if (!KCTGameStates.Settings.DisableAllMessages)
@@ -872,13 +867,13 @@ namespace KerbalConstructionTime
             if (blv.Type == BuildListVessel.ListType.VAB)
             {
                 blv.LaunchSite = "LaunchPad";
-                KCTGameStates.ActiveKSC.VABList.Add(blv);
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABList.Add(blv);
                 type = "VAB";
             }
             else if (blv.Type == BuildListVessel.ListType.SPH)
             {
                 blv.LaunchSite = "Runway";
-                KCTGameStates.ActiveKSC.SPHList.Add(blv);
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHList.Add(blv);
                 type = "SPH";
             }
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
@@ -1144,17 +1139,24 @@ namespace KerbalConstructionTime
             double shortestTime = double.PositiveInfinity;
             foreach (KSCItem KSC in KCTGameStates.KSCs)
             {
-                foreach (IKCTBuildItem blv in KSC.VABList)
-                    _checkTime(blv, ref shortestTime, ref thing);
-                foreach (IKCTBuildItem blv in KSC.SPHList)
-                    _checkTime(blv, ref shortestTime, ref thing);
-                foreach (IKCTBuildItem rr in KSC.Recon_Rollout)
-                    _checkTime(rr, ref shortestTime, ref thing);
-                foreach (IKCTBuildItem ap in KSC.AirlaunchPrep)
-                    _checkTime(ap, ref shortestTime, ref thing);
+                foreach (LCItem LC in KSC.LaunchComplexes)
+                {
+                    if (!LC.isOperational)
+                        continue;
+                    foreach (IKCTBuildItem blv in LC.VABList)
+                        _checkTime(blv, ref shortestTime, ref thing);
+                    foreach (IKCTBuildItem blv in LC.SPHList)
+                        _checkTime(blv, ref shortestTime, ref thing);
+                    foreach (IKCTBuildItem rr in LC.Recon_Rollout)
+                        _checkTime(rr, ref shortestTime, ref thing);
+                    foreach (IKCTBuildItem ap in LC.AirlaunchPrep)
+                        _checkTime(ap, ref shortestTime, ref thing);
+                    foreach (IKCTBuildItem pc in LC.PadConstructions)
+                        _checkTime(pc, ref shortestTime, ref thing);
+                }
                 foreach (IKCTBuildItem ub in KSC.KSCTech)
                     _checkTime(ub, ref shortestTime, ref thing);
-                foreach (IKCTBuildItem pc in KSC.PadConstructions)
+                foreach (IKCTBuildItem pc in KSC.LCConstructions)
                     _checkTime(pc, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
@@ -1186,22 +1188,16 @@ namespace KerbalConstructionTime
         {
             if (ksc == null) ksc = KCTGameStates.ActiveKSC;
             int spentPoints = 0;
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
+            foreach (var KSC in KCTGameStates.KSCs)
             {
-                foreach (var KSC in KCTGameStates.KSCs)
+                foreach (var LC in KSC.LaunchComplexes)
                 {
-                    foreach (var vabPoints in KSC.VABUpgrades) spentPoints += vabPoints;
-                    foreach (var sphPoints in KSC.SPHUpgrades) spentPoints += sphPoints;
-                    spentPoints += KSC.RDUpgrades[0];
+                    foreach (var vabPoints in LC.VABUpgrades) spentPoints += vabPoints;
+                    foreach (var sphPoints in LC.SPHUpgrades) spentPoints += sphPoints;
                 }
-                spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
+                spentPoints += KSC.RDUpgrades[0];
             }
-            else
-            {
-                foreach (var vabPoints in ksc.VABUpgrades) spentPoints += vabPoints;
-                foreach (var sphPoints in ksc.SPHUpgrades) spentPoints += sphPoints;
-                foreach (var rndPoints in ksc.RDUpgrades) spentPoints += rndPoints;
-            }
+            spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
             return spentPoints;
         }
 
@@ -1212,41 +1208,22 @@ namespace KerbalConstructionTime
             switch (facility)
             {
                 case SpaceCenterFacility.ResearchAndDevelopment:
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
-                    {
-                        foreach (var KSC in KCTGameStates.KSCs)
-                            spentPoints += KSC.RDUpgrades[0];
-                        spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
-                    }
-                    else
-                    {
-                        foreach (var rndPoints in ksc.RDUpgrades) spentPoints += rndPoints;
-                    }
+                    foreach (var KSC in KCTGameStates.KSCs)
+                        spentPoints += KSC.RDUpgrades[0];
+                    spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
                     break;
                 case SpaceCenterFacility.SpaceplaneHangar:
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
+                    foreach (var KSC in KCTGameStates.KSCs)
                     {
-                        foreach (var KSC in KCTGameStates.KSCs)
-                        {
-                            foreach (var points in KSC.SPHUpgrades) spentPoints += points;
-                        }
-                    }
-                    else
-                    {
-                        foreach (var points in ksc.SPHUpgrades) spentPoints += points;
+                        foreach (var LC in KSC.LaunchComplexes)
+                            foreach (var points in LC.SPHUpgrades) spentPoints += points;
                     }
                     break;
                 case SpaceCenterFacility.VehicleAssemblyBuilding:
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
+                    foreach (var KSC in KCTGameStates.KSCs)
                     {
-                        foreach (var KSC in KCTGameStates.KSCs)
-                        {
-                            foreach (var points in KSC.VABUpgrades) spentPoints += points;
-                        }
-                    }
-                    else
-                    {
-                        foreach (var points in ksc.VABUpgrades) spentPoints += points;
+                        foreach (var LC in KSC.LaunchComplexes)
+                            foreach (var points in LC.VABUpgrades) spentPoints += points;
                     }
                     break;
                 default:
@@ -1374,7 +1351,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     newKsc = new KSCItem(site);
-                    newKsc.EnsureStartingLaunchPad();
+                    newKsc.EnsureStartingLaunchComplexes();
                     KCTGameStates.KSCs.Add(newKsc);
                     SetActiveKSC(newKsc);
                 }
@@ -1492,10 +1469,10 @@ namespace KerbalConstructionTime
             return false;
         }
 
-        public static bool ReconditioningActive(KSCItem KSC, string launchSite = "LaunchPad")
+        public static bool ReconditioningActive(LCItem LC, string launchSite = "LaunchPad")
         {
-            if (KSC == null) KSC = KCTGameStates.ActiveKSC;
-            return KSC.GetReconditioning(launchSite) is ReconRollout;
+            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            return LC.GetReconditioning(launchSite) is ReconRollout;
         }
 
         public static BuildListVessel FindBLVesselByID(Guid id)
@@ -1513,21 +1490,24 @@ namespace KerbalConstructionTime
         {
             if (ksc != null)
             {
-                BuildListVessel ves = ksc.VABWarehouse.Find(blv => blv.Id == id);
-                if (ves != null)
-                    return ves;
+                foreach (LCItem lc in ksc.LaunchComplexes)
+                {
+                    BuildListVessel ves = lc.VABWarehouse.Find(blv => blv.Id == id);
+                    if (ves != null)
+                        return ves;
 
-                ves = ksc.VABList.Find(blv => blv.Id == id);
-                if (ves != null)
-                    return ves;
+                    ves = lc.VABList.Find(blv => blv.Id == id);
+                    if (ves != null)
+                        return ves;
 
-                ves = ksc.SPHWarehouse.Find(blv => blv.Id == id);
-                if (ves != null)
-                    return ves;
+                    ves = lc.SPHWarehouse.Find(blv => blv.Id == id);
+                    if (ves != null)
+                        return ves;
 
-                ves = ksc.SPHList.Find(blv => blv.Id == id);
-                if (ves != null)
-                    return ves;
+                    ves = lc.SPHList.Find(blv => blv.Id == id);
+                    if (ves != null)
+                        return ves;
+                }
             }
 
             return null;

@@ -245,7 +245,7 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.IsSimulatedFlight)
             {
-                KCTGameStates.LaunchedVessel.KSC = null;    //it's invalid now
+                KCTGameStates.LaunchedVessel.LC = null;    //it's invalid now
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
                 if (KCTGameStates.LaunchedVessel.RemoveFromBuildList()) //Only do these when the vessel is first removed from the list
                 {
@@ -254,11 +254,11 @@ namespace KerbalConstructionTime
                     FlightGlobals.ActiveVessel.vesselName = KCTGameStates.LaunchedVessel.ShipName;
                 }
 
-                if (KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is ReconRollout rollout)
-                    KCTGameStates.ActiveKSC.Recon_Rollout.Remove(rollout);
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is ReconRollout rollout)
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Remove(rollout);
 
-                if (KCTGameStates.ActiveKSC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is AirlaunchPrep alPrep)
-                    KCTGameStates.ActiveKSC.AirlaunchPrep.Remove(alPrep);
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is AirlaunchPrep alPrep)
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.AirlaunchPrep.Remove(alPrep);
 
                 if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KCTGameStates.LaunchedVessel.Id &&
                     (!alParams.KSPVesselId.HasValue || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
@@ -449,11 +449,11 @@ namespace KerbalConstructionTime
 
             while (HighLogic.LoadedScene == GameScenes.SPACECENTER && Utilities.CurrentGameIsCareer())
             {
-                if (KCTGameStates.ActiveKSC?.ActiveLPInstance is KCT_LaunchPad pad)
+                if (KCTGameStates.ActiveKSC?.ActiveLaunchComplexInstance?.ActiveLPInstance is KCT_LaunchPad pad)
                 {
                     if (Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
                     {
-                        KCTGameStates.ActiveKSC.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchPadID, false);
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID, false);
                         pad.UpdateLaunchpadDestructionState(false);
                     }
                 }
@@ -607,46 +607,57 @@ namespace KerbalConstructionTime
             {
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
-                    for (int i = ksc.VABList.Count - 1; i >= 0; i--)
-                        ksc.VABList[i].IncrementProgress(UTDiff);
-
-                    for (int i = ksc.SPHList.Count - 1; i >= 0; i--)
-                        ksc.SPHList[i].IncrementProgress(UTDiff);
-
-
-                    for (int i = ksc.Recon_Rollout.Count - 1; i >= 0; i--)
+                    for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
-                        var rr = ksc.Recon_Rollout[i];
-                        rr.IncrementProgress(UTDiff);
-                        //Reset the associated launchpad id when rollback completes
-                        Profiler.BeginSample("KCT ProgressBuildTime.ReconRollout.FindBLVesselByID");
-                        if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
-                            && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) is BuildListVessel blv)
+                        LCItem currentLC = ksc.LaunchComplexes[j];
+                        for (int i = currentLC.VABList.Count - 1; i >= 0; i--)
+                            currentLC.VABList[i].IncrementProgress(UTDiff);
+
+                        for (int i = currentLC.SPHList.Count - 1; i >= 0; i--)
+                            currentLC.SPHList[i].IncrementProgress(UTDiff);
+
+
+
+                        for (int i = currentLC.Recon_Rollout.Count - 1; i >= 0; i--)
                         {
-                            blv.LaunchSiteID = -1;
+                            var rr = currentLC.Recon_Rollout[i];
+                            rr.IncrementProgress(UTDiff);
+                            //Reset the associated launchpad id when rollback completes
+                            Profiler.BeginSample("KCT ProgressBuildTime.ReconRollout.FindBLVesselByID");
+                            if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
+                                && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) is BuildListVessel blv)
+                            {
+                                blv.LaunchSiteID = -1;
+                            }
+                            Profiler.EndSample();
                         }
-                        Profiler.EndSample();
+
+                        currentLC.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes ||
+                                                            (rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete()));
+
+                        for (int i = currentLC.AirlaunchPrep.Count - 1; i >= 0; i--)
+                            currentLC.AirlaunchPrep[i].IncrementProgress(UTDiff);
+
+                        currentLC.AirlaunchPrep.RemoveAll(ap => ap.Direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
+
+                        for (int i = currentLC.PadConstructions.Count - 1; i >= 0; i--)
+                            currentLC.PadConstructions[i].IncrementProgress(UTDiff);
+
+                        if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                            currentLC.PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                     }
 
-                    ksc.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes ||
-                                                        (rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete()));
-
-                    for (int i = ksc.AirlaunchPrep.Count - 1; i >= 0; i--)
-                        ksc.AirlaunchPrep[i].IncrementProgress(UTDiff);
-
-                    ksc.AirlaunchPrep.RemoveAll(ap => ap.Direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
+                    for (int i = ksc.LCConstructions.Count - 1; i >= 0; i--)
+                        ksc.LCConstructions[i].IncrementProgress(UTDiff);
 
                     for (int i = ksc.KSCTech.Count - 1; i >= 0; i--)
                         ksc.KSCTech[i].IncrementProgress(UTDiff);
 
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                    {
                         ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
-
-                    for (int i = ksc.PadConstructions.Count - 1; i >= 0; i--)
-                        ksc.PadConstructions[i].IncrementProgress(UTDiff);
-
-                    if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                        ksc.PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
+                        ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
+                    }
                 }
 
                 for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
@@ -709,36 +720,39 @@ namespace KerbalConstructionTime
                 var erroredVessels = new List<BuildListVessel>();
                 foreach (KSCItem KSC in KCTGameStates.KSCs) //this is faster on subsequent scene changes
                 {
-                    foreach (BuildListVessel blv in KSC.VABList)
+                    foreach (LCItem currentLC in KSC.LaunchComplexes)
                     {
-                        if (!blv.AllPartsValid)
+                        foreach (BuildListVessel blv in currentLC.VABList)
                         {
-                            KCTDebug.Log(blv.ShipName + " contains invalid parts!");
-                            erroredVessels.Add(blv);
+                            if (!blv.AllPartsValid)
+                            {
+                                KCTDebug.Log(blv.ShipName + " contains invalid parts!");
+                                erroredVessels.Add(blv);
+                            }
                         }
-                    }
-                    foreach (BuildListVessel blv in KSC.VABWarehouse)
-                    {
-                        if (!blv.AllPartsValid)
+                        foreach (BuildListVessel blv in currentLC.VABWarehouse)
                         {
-                            KCTDebug.Log(blv.ShipName + " contains invalid parts!");
-                            erroredVessels.Add(blv);
+                            if (!blv.AllPartsValid)
+                            {
+                                KCTDebug.Log(blv.ShipName + " contains invalid parts!");
+                                erroredVessels.Add(blv);
+                            }
                         }
-                    }
-                    foreach (BuildListVessel blv in KSC.SPHList)
-                    {
-                        if (!blv.AllPartsValid)
+                        foreach (BuildListVessel blv in currentLC.SPHList)
                         {
-                            KCTDebug.Log(blv.ShipName + " contains invalid parts!");
-                            erroredVessels.Add(blv);
+                            if (!blv.AllPartsValid)
+                            {
+                                KCTDebug.Log(blv.ShipName + " contains invalid parts!");
+                                erroredVessels.Add(blv);
+                            }
                         }
-                    }
-                    foreach (BuildListVessel blv in KSC.SPHWarehouse)
-                    {
-                        if (!blv.AllPartsValid)
+                        foreach (BuildListVessel blv in currentLC.SPHWarehouse)
                         {
-                            KCTDebug.Log(blv.ShipName + " contains invalid parts!");
-                            erroredVessels.Add(blv);
+                            if (!blv.AllPartsValid)
+                            {
+                                KCTDebug.Log(blv.ShipName + " contains invalid parts!");
+                                erroredVessels.Add(blv);
+                            }
                         }
                     }
                 }
@@ -785,30 +799,33 @@ namespace KerbalConstructionTime
                     KCTDebug.Log("Showing first start.");
                     KCTGameStates.IsFirstStart = false;
                     KCT_GUI.GUIStates.ShowFirstRun = true;
-                    KCTGameStates.ActiveKSC.EnsureStartingLaunchPad();
+                    KCTGameStates.ActiveKSC.EnsureStartingLaunchComplexes();
                 }
 
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
-                    for (int i = 0; i < ksc.Recon_Rollout.Count; i++)
+                    foreach (LCItem currentLC in ksc.LaunchComplexes)
                     {
-                        ReconRollout rr = ksc.Recon_Rollout[i];
-                        if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) == null)
+                        for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
                         {
-                            KCTDebug.Log($"Invalid Recon_Rollout at {ksc.KSCName}. ID {rr.AssociatedID} not found.");
-                            ksc.Recon_Rollout.Remove(rr);
-                            i--;
+                            ReconRollout rr = currentLC.Recon_Rollout[i];
+                            if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) == null)
+                            {
+                                KCTDebug.Log($"Invalid Recon_Rollout at {ksc.KSCName}. ID {rr.AssociatedID} not found.");
+                                currentLC.Recon_Rollout.Remove(rr);
+                                i--;
+                            }
                         }
-                    }
 
-                    for (int i = 0; i < ksc.AirlaunchPrep.Count; i++)
-                    {
-                        AirlaunchPrep ap = ksc.AirlaunchPrep[i];
-                        if (Utilities.FindBLVesselByID(new Guid(ap.AssociatedID)) == null)
+                        for (int i = 0; i < currentLC.AirlaunchPrep.Count; i++)
                         {
-                            KCTDebug.Log($"Invalid KCT_AirlaunchPrep at {ksc.KSCName}. ID {ap.AssociatedID} not found.");
-                            ksc.AirlaunchPrep.Remove(ap);
-                            i--;
+                            AirlaunchPrep ap = currentLC.AirlaunchPrep[i];
+                            if (Utilities.FindBLVesselByID(new Guid(ap.AssociatedID)) == null)
+                            {
+                                KCTDebug.Log($"Invalid KCT_AirlaunchPrep at {ksc.KSCName}. ID {ap.AssociatedID} not found.");
+                                currentLC.AirlaunchPrep.Remove(ap);
+                                i--;
+                            }
                         }
                     }
                 }
@@ -900,23 +917,26 @@ namespace KerbalConstructionTime
                 //remove any associated recon_rollout
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
-                    for (int i = 0; i < ksc.Recon_Rollout.Count; i++)
+                    foreach (LCItem currentLC in ksc.LaunchComplexes)
                     {
-                        ReconRollout rr = ksc.Recon_Rollout[i];
-                        if (rr.AssociatedID == blv.Id.ToString())
+                        for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
                         {
-                            ksc.Recon_Rollout.Remove(rr);
-                            i--;
+                            ReconRollout rr = currentLC.Recon_Rollout[i];
+                            if (rr.AssociatedID == blv.Id.ToString())
+                            {
+                                currentLC.Recon_Rollout.Remove(rr);
+                                i--;
+                            }
                         }
-                    }
 
-                    for (int i = 0; i < ksc.AirlaunchPrep.Count; i++)
-                    {
-                        AirlaunchPrep ap = ksc.AirlaunchPrep[i];
-                        if (ap.AssociatedID == blv.Id.ToString())
+                        for (int i = 0; i < currentLC.AirlaunchPrep.Count; i++)
                         {
-                            ksc.AirlaunchPrep.Remove(ap);
-                            i--;
+                            AirlaunchPrep ap = currentLC.AirlaunchPrep[i];
+                            if (ap.AssociatedID == blv.Id.ToString())
+                            {
+                                currentLC.AirlaunchPrep.Remove(ap);
+                                i--;
+                            }
                         }
                     }
                 }

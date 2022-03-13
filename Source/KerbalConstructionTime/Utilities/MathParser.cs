@@ -13,7 +13,6 @@ namespace KerbalConstructionTime
                 case "Node": return MathParsing.ParseMath("KCT_NODE", formulaSettings.NodeFormula, variables);
                 case "UpgradeFunds": return MathParsing.ParseMath("KCT_UPGRADE_FUNDS", formulaSettings.UpgradeFundsFormula, variables);
                 case "UpgradesForScience": return MathParsing.ParseMath("KCT_UPGRADES_FOR_SCIENCE", formulaSettings.UpgradesForScience, variables);
-                case "Research": return MathParsing.ParseMath("KCT_RESEARCH", formulaSettings.ResearchFormula, variables);
                 case "EffectivePart": return MathParsing.ParseMath("KCT_EFFECTIVE_PART", formulaSettings.EffectivePartFormula, variables);
                 case "ProceduralPart": return MathParsing.ParseMath("KCT_PROCEDURAL_PART", formulaSettings.ProceduralPartFormula, variables);
                 case "BP": return MathParsing.ParseMath("KCT_BP", formulaSettings.BPFormula, variables);
@@ -25,7 +24,6 @@ namespace KerbalConstructionTime
                 case "IntegrationTime": return MathParsing.ParseMath("KCT_INTEGRATION_TIME", formulaSettings.IntegrationTimeFormula, variables);
                 case "IntegrationCost": return MathParsing.ParseMath("KCT_INTEGRATION_COST", formulaSettings.IntegrationCostFormula, variables);
                 case "RolloutCost": return MathParsing.ParseMath("KCT_ROLLOUT_COST", formulaSettings.RolloutCostFormula, variables);
-                case "NewLaunchPadCost": return MathParsing.ParseMath("KCT_NEW_LAUNCHPAD_COST", formulaSettings.NewLaunchPadCostFormula, variables);
                 case "RushCost": return MathParsing.ParseMath("KCT_RUSH_COST", formulaSettings.RushCostFormula, variables);
                 case "AirlaunchCost": return MathParsing.ParseMath("KCT_AIRLAUNCH_COST", formulaSettings.AirlaunchCostFormula, variables);
                 case "AirlaunchTime": return MathParsing.ParseMath("KCT_AIRLAUNCH_TIME", formulaSettings.AirlaunchTimeFormula, variables);
@@ -35,12 +33,12 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, KSCItem KSC, bool UpgradedRates = false)
+        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem KSC, bool UpgradedRates = false)
         {
             return ParseBuildRateFormula(type, index, KSC, UpgradedRates ? 1 : 0);
         }
 
-        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, KSCItem KSC, int upgradeDelta)
+        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem KSC, int upgradeDelta)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             int level = 0, upgrades = 0;
@@ -209,7 +207,7 @@ namespace KerbalConstructionTime
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
                 EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.fractionalLevel;
+                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.fractionalLevel;
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
                 isVABVessel = 1;
@@ -263,7 +261,7 @@ namespace KerbalConstructionTime
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
                 EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.fractionalLevel;
+                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.fractionalLevel;
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
                 isVABVessel = 1;

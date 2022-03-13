@@ -146,27 +146,33 @@ namespace RP0
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 double buildRate = 0d;
-
-                for (int i = ksc.VABRates.Count; i-- > 0;)
-                    buildRate += Math.Max(0d, ksc.VABRates[i] + BuildRateOffset);
-
-                for (int i = ksc.SPHRates.Count; i-- > 0;)
-                    buildRate += Math.Max(0d, ksc.SPHRates[i] + BuildRateOffset);
-
-                if (buildRate < 0.01d) continue;
-
-                KCTBuildRates[ksc.KSCName] = buildRate;
-
-                for (int i = ksc.LaunchPads.Count; i-- > 0;)
+                for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
                 {
-                    KCT_LaunchPad pad = ksc.LaunchPads[i];
-                    int roundedPadLvl = (int)Math.Round(pad.fractionalLevel);
-                    if (pad.isOperational && roundedPadLvl < PadLevelCount)
+                    LCItem lc = ksc.LaunchComplexes[j];
+                    if (!lc.isOperational)
+                        continue;
+
+                    for (int i = lc.VABRates.Count; i-- > 0;)
+                        buildRate += Math.Max(0d, lc.VABRates[i] + BuildRateOffset);
+
+                    for (int i = lc.SPHRates.Count; i-- > 0;)
+                        buildRate += Math.Max(0d, lc.SPHRates[i] + BuildRateOffset);
+
+                    if (buildRate < 0.01d) continue;
+
+                    for (int i = lc.LaunchPads.Count; i-- > 0;)
                     {
-                        ++KCTPadCounts[roundedPadLvl];
-                        KCTPadLevels.Add(pad.fractionalLevel);
+                        KCT_LaunchPad pad = lc.LaunchPads[i];
+                        int roundedPadLvl = (int)Math.Round(pad.fractionalLevel);
+                        if (pad.isOperational && roundedPadLvl < PadLevelCount)
+                        {
+                            ++KCTPadCounts[roundedPadLvl];
+                            KCTPadLevels.Add(pad.fractionalLevel);
+                        }
                     }
                 }
+
+                KCTBuildRates[ksc.KSCName] = buildRate;
             }
 
             KCTResearchRate = MathParser.ParseNodeRateFormula(10);

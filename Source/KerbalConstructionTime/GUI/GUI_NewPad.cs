@@ -10,11 +10,6 @@ namespace KerbalConstructionTime
 
         public static void DrawNewPadWindow(int windowID)
         {
-            if (_padLvlOptions == null)
-            {
-                LoadPadData();
-            }
-
             GUILayout.BeginVertical();
             GUILayout.Label("Name:");
             _newName = GUILayout.TextField(_newName);

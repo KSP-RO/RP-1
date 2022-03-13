@@ -28,7 +28,7 @@ namespace KerbalConstructionTime
 
             double mass = tonnageLimit;
             curPadCost = Math.Pow(mass, 0.5d) * 2500d + Math.Pow(mass, 1.5d) * 1.5d;
-            curVABCost = padSize.sqrMagnitude * 2d;
+            curVABCost = Math.Pow(padSize.magnitude, 2.5d) * 2d;
             fractionalPadLvl = 0f;
 
             if (_padLvlOptions == null)
@@ -88,6 +88,8 @@ namespace KerbalConstructionTime
             _tonnageLimit = GUILayout.TextField(_tonnageLimit);
             if (float.TryParse(_tonnageLimit, out tonnageLimit) && float.TryParse(_heightLimit, out heightLimit) && float.TryParse(_widthLimit, out widthLimit))
             {
+                curPadSize.x = curPadSize.z = widthLimit;
+                curPadSize.y = heightLimit;
                 GetPadStats(tonnageLimit, new Vector3(widthLimit, heightLimit, widthLimit), out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
             }
             GUILayout.Label($"Minimum tonnage: {minTonnage:N}");

@@ -39,10 +39,10 @@ namespace KerbalConstructionTime
         {
             if (LaunchComplexes.Count > 1) return;
 
-            LCItem sph = new LCItem("Launch Complex", -1f, new Vector3(40f, 15f, 40f), false, this);
+            LCItem sph = new LCItem("Hangar", -1f, new Vector3(40f, 15f, 40f), false, this);
             sph.isOperational = true;
             LaunchComplexes.Add(sph);
-            LCItem starterLC = new LCItem("Launch Complex", 15f, new Vector3(5f, 20f, 5f), true, this);
+            LCItem starterLC = new LCItem("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, this);
             starterLC.isOperational = true;
             LaunchComplexes.Add(starterLC);
         }
@@ -88,6 +88,7 @@ namespace KerbalConstructionTime
 
         public void SwitchLaunchComplex(int LC_ID, bool updateDestrNode = true)
         {
+            ActiveLaunchComplexID = LC_ID;
             LaunchComplexes[LC_ID].SwitchLaunchPad();
         }
 
@@ -95,13 +96,13 @@ namespace KerbalConstructionTime
         /// Finds the highest level LaunchPad on the KSC
         /// </summary>
         /// <returns>The instance of the highest level LaunchPad</returns>
-        public KCT_LaunchPad GetHighestLevelLaunchPad()
+        public LCItem GetHighestLevelLaunchComplex()
         {
             LCItem highest = LaunchComplexes.First(p => p.isPad && p.isOperational);
             foreach (var lc in LaunchComplexes)
                 if (lc.isPad && lc.isOperational && lc.massMax > highest.massMax)
                     highest = lc;
-            return highest.LaunchPads.First(p => p.isOperational);
+            return highest;
         }
 
         public ConfigNode AsConfigNode()

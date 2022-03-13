@@ -132,8 +132,8 @@ namespace KerbalConstructionTime
             Vector3 maxSize;
             if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
-                massLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.SupportedMass;
-                maxSize = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.SupportedSize;
+                massLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMax;
+                maxSize = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.sizeMax;
             }
             else
             {

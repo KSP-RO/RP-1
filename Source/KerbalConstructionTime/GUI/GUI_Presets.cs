@@ -102,7 +102,6 @@ namespace KerbalConstructionTime
             _workingPreset.GeneralSettings.TechUnlockTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUnlockTimes, "Tech Unlock Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.TechUpgrades = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUpgrades, "Upgrades From Tech Tree", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.SharedUpgradePool = GUILayout.Toggle(_workingPreset.GeneralSettings.SharedUpgradePool, "Shared Upgrade Pool (KSCSwitcher)", HighLogic.Skin.button);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Starting Upgrades:");
@@ -181,11 +180,6 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("ResearchFormula: ");
-                _workingPreset.FormulaSettings.ResearchFormula = GUILayout.TextField(_workingPreset.FormulaSettings.ResearchFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
                 GUILayout.Label("EffectivePart: ");
                 _workingPreset.FormulaSettings.EffectivePartFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EffectivePartFormula, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();
@@ -238,11 +232,6 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("IntegrationTime: ");
                 _workingPreset.FormulaSettings.IntegrationTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.IntegrationTimeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("NewLaunchPadCost: ");
-                _workingPreset.FormulaSettings.NewLaunchPadCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.NewLaunchPadCostFormula, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();

@@ -66,26 +66,47 @@ namespace KerbalConstructionTime
 
         public bool IsFinished => Progress >= BuildPoints + IntegrationPoints;
 
-        private KSCItem _ksc = null;
         public KSCItem KSC
         {
             get
             {
-                if (_ksc == null)
-                {
-                    _ksc = KCTGameStates.KSCs.FirstOrDefault(k => k.VABList.FirstOrDefault(s => s.Id == Id) != null ||
-                                                                   k.VABWarehouse.FirstOrDefault(s => s.Id == Id) != null ||
-                                                                   k.SPHList.FirstOrDefault(s => s.Id == Id) != null ||
-                                                                   k.SPHWarehouse.FirstOrDefault(s => s.Id == Id) != null);
-                }
-                return _ksc;
-            }
-            set
-            {
-                _ksc = value;
+                if (LC == null)
+                    return null;
+
+                return LC.KSC;
             }
         }
 
+        private LCItem _lc = null;
+
+        public LCItem LC
+        {
+            get
+            {
+                if (_lc == null)
+                {
+                    foreach (var ksc in KCTGameStates.KSCs)
+                    {
+                        foreach (var lc in ksc.LaunchComplexes)
+                        {
+                            if (lc.VABList.FirstOrDefault(s => s.Id == Id) != null ||
+                                    lc.VABWarehouse.FirstOrDefault(s => s.Id == Id) != null ||
+                                    lc.SPHList.FirstOrDefault(s => s.Id == Id) != null ||
+                                    lc.SPHWarehouse.FirstOrDefault(s => s.Id == Id) != null)
+                            {
+                                _lc = lc;
+                                break;
+                            }
+                        }
+                    }
+                }
+                return _lc;
+            }
+            set
+            {
+                _lc = value;
+            }
+        }
         private bool? _allPartsValid;
         public bool AllPartsValid
         {
@@ -407,15 +428,20 @@ namespace KerbalConstructionTime
         {
             KCTDebug.Log($"Brute force looking for {ShipName}");
             bool found = false;
-            found = KSC.VABList.Exists(b => b.Id == Id);
-            if (found) { Type = ListType.VAB; return; }
-            found = KSC.VABWarehouse.Exists(b => b.Id == Id);
-            if (found) { Type = ListType.VAB; return; }
+            // This is weird, but we're forcing a reacquire of the LC
+            LC = null;
+            if (LC != null)
+            {
+                found = LC.VABList.Exists(b => b.Id == Id);
+                if (found) { Type = ListType.VAB; return; }
+                found = LC.VABWarehouse.Exists(b => b.Id == Id);
+                if (found) { Type = ListType.VAB; return; }
 
-            found = KSC.SPHList.Exists(b => b.Id == Id);
-            if (found) { Type = ListType.SPH; return; }
-            found = KSC.SPHWarehouse.Exists(b => b.Id == Id);
-            if (found) { Type = ListType.SPH; return; }
+                found = LC.SPHList.Exists(b => b.Id == Id);
+                if (found) { Type = ListType.SPH; return; }
+                found = LC.SPHWarehouse.Exists(b => b.Id == Id);
+                if (found) { Type = ListType.SPH; return; }
+            }
 
             if (!found)
             {
@@ -458,9 +484,9 @@ namespace KerbalConstructionTime
             {
                 KCT_LaunchPad pad = null;
                 if (LaunchSiteID >= 0)
-                    pad = KCTGameStates.ActiveKSC.LaunchPads[LaunchSiteID];
+                    pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[LaunchSiteID];
                 else
-                    pad = KCTGameStates.ActiveKSC.ActiveLPInstance;
+                    pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
                 
                 launchSiteName = pad.launchSiteName;
             }
@@ -478,7 +504,7 @@ namespace KerbalConstructionTime
 
             if (Type == ListType.VAB)
             {
-                KCT_LaunchPad selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchPad() : KCTGameStates.ActiveKSC.ActiveLPInstance;
+                KCT_LaunchPad selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchPad() : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
 
                 double totalMass = GetTotalMass();
                 if (totalMass > selectedPad.SupportedMass)
@@ -518,11 +544,7 @@ namespace KerbalConstructionTime
 
         public ListType FindTypeFromLists()
         {
-            if (KSC == null  || KSC.VABList == null || KSC.SPHList == null)
-            {
-                Type = ListType.None;
-                return Type;
-            }
+            Type = ListType.None;
             BruteForceLocateVessel();
             return Type;
         }
@@ -646,28 +668,28 @@ namespace KerbalConstructionTime
         {
             string typeName="";
             bool removed = false;
-            KSC = null; //force a refind
-            if (KSC == null) //I know this looks goofy, but it's a self-caching property that caches on "get"
+            LC = null; //force a refind
+            if (LC == null) //I know this looks goofy, but it's a self-caching property that caches on "get"
             {
-                KCTDebug.Log("Could not find the KSC to remove vessel!");
+                KCTDebug.Log("Could not find the LC to remove vessel!");
                 return false;
             }
             if (Type == ListType.SPH)
             {
 
-                removed = KSC.SPHWarehouse.Remove(this);
+                removed = LC.SPHWarehouse.Remove(this);
                 if (!removed)
                 {
-                    removed = KSC.SPHList.Remove(this);
+                    removed = LC.SPHList.Remove(this);
                 }
                 typeName="SPH";
             }
             else if (Type == ListType.VAB)
             {
-                removed = KSC.VABWarehouse.Remove(this);
+                removed = LC.VABWarehouse.Remove(this);
                 if (!removed)
                 {
-                    removed = KSC.VABList.Remove(this);
+                    removed = LC.VABList.Remove(this);
                 }
                 typeName="VAB";
             }
@@ -675,47 +697,47 @@ namespace KerbalConstructionTime
             if (!removed)
             {
                 KCTDebug.Log("Failed to remove ship from list! Performing direct comparison of ids...");
-                foreach (BuildListVessel blv in KSC.SPHWarehouse)
+                foreach (BuildListVessel blv in LC.SPHWarehouse)
                 {
                     if (blv.Id == Id)
                     {
                         KCTDebug.Log("Ship found in SPH storage. Removing...");
-                        removed = KSC.SPHWarehouse.Remove(blv);
+                        removed = LC.SPHWarehouse.Remove(blv);
                         break;
                     }
                 }
                 if (!removed)
                 {
-                    foreach (BuildListVessel blv in KSC.VABWarehouse)
+                    foreach (BuildListVessel blv in LC.VABWarehouse)
                     {
                         if (blv.Id == Id)
                         {
                             KCTDebug.Log("Ship found in VAB storage. Removing...");
-                            removed = KSC.VABWarehouse.Remove(blv);
+                            removed = LC.VABWarehouse.Remove(blv);
                             break;
                         }
                     }
                 }
                 if (!removed)
                 {
-                    foreach (BuildListVessel blv in KSC.VABList)
+                    foreach (BuildListVessel blv in LC.VABList)
                     {
                         if (blv.Id == Id)
                         {
                             KCTDebug.Log("Ship found in VAB List. Removing...");
-                            removed = KSC.VABList.Remove(blv);
+                            removed = LC.VABList.Remove(blv);
                             break;
                         }
                     }
                 }
                 if (!removed)
                 {
-                    foreach (BuildListVessel blv in KSC.SPHList)
+                    foreach (BuildListVessel blv in LC.SPHList)
                     {
                         if (blv.Id == Id)
                         {
                             KCTDebug.Log("Ship found in SPH list. Removing...");
-                            removed = KSC.SPHList.Remove(blv);
+                            removed = LC.SPHList.Remove(blv);
                             break;
                         }
                     }

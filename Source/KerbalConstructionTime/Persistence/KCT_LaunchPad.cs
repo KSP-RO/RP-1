@@ -124,36 +124,39 @@ namespace KerbalConstructionTime
         public bool Delete(out string failReason)
         {
             bool found = false;
-            foreach (KSCItem ksc in KCTGameStates.KSCs)
+            foreach (KSCItem currentKSC in KCTGameStates.KSCs)
             {
-                int idx = ksc.LaunchPads.IndexOf(this);
-                if (idx < 0) continue;
+                foreach (LCItem currentLC in currentKSC.LaunchComplexes)
+                {
+                    int idx = currentLC.LaunchPads.IndexOf(this);
+                    if (idx < 0) continue;
 
-                var rr = ksc.Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == name);
-                if (rr != null)
-                {
-                    failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout or reconditioning";
-                    return false;
-                }
+                    var rr = currentLC.Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == name);
+                    if (rr != null)
+                    {
+                        failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout or reconditioning";
+                        return false;
+                    }
 
-                foreach (BuildListVessel vessel in ksc.VABWarehouse)
-                {
-                    if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
-                }
-                foreach (BuildListVessel vessel in ksc.VABList)
-                {
-                    if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
-                }
-                foreach (PadConstruction building in ksc.PadConstructions)
-                {
-                    if (building.LaunchpadIndex > idx) building.LaunchpadIndex--;
-                }
+                    foreach (BuildListVessel vessel in currentLC.VABWarehouse)
+                    {
+                        if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
+                    }
+                    foreach (BuildListVessel vessel in currentLC.VABList)
+                    {
+                        if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
+                    }
+                    foreach (PadConstruction building in currentLC.PadConstructions)
+                    {
+                        if (building.LaunchpadIndex > idx) building.LaunchpadIndex--;
+                    }
 
-                ksc.LaunchPads.RemoveAt(idx);
+                    currentLC.LaunchPads.RemoveAt(idx);
 
-                if (ksc == KCTGameStates.ActiveKSC)
-                {
-                    ksc.SwitchLaunchPad(0);
+                    if (currentLC == KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance)
+                    {
+                        currentLC.SwitchLaunchPad(0);
+                    }
                 }
             }
 
@@ -164,21 +167,31 @@ namespace KerbalConstructionTime
         public void Rename(string newName)
         {
             //find everything that references this launchpad by name and update the name reference
-            if (KCTGameStates.KSCs.FirstOrDefault(x => x.LaunchPads.Contains(this)) is KSCItem ksc)
+
+            LCItem lc = null;
+            foreach (KSCItem currentKSC in KCTGameStates.KSCs)
             {
-                if (ksc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
+                if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
+                {
+                    lc = currentLC;
+                    break;
+                }
+            }
+            if(lc != null)
+            {
+                if (lc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
                     return; //can't name it something that already is named that
 
-                foreach (ReconRollout rr in ksc.Recon_Rollout)
+                foreach (ReconRollout rr in lc.Recon_Rollout)
                 {
                     if (rr.LaunchPadID == name)
                     {
                         rr.LaunchPadID = newName;
                     }
                 }
-                foreach (PadConstruction pc in ksc.PadConstructions)
+                foreach (PadConstruction pc in lc.PadConstructions)
                 {
-                    if (pc.LaunchpadIndex == ksc.LaunchPads.IndexOf(this))
+                    if (pc.LaunchpadIndex == lc.LaunchPads.IndexOf(this))
                     {
                         pc.Name = newName;
                     }
@@ -194,7 +207,7 @@ namespace KerbalConstructionTime
                 EnsureMassAndSizeInitialized();
 
                 KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}");
-                KCTGameStates.ActiveKSC.ActiveLaunchPadID = KCTGameStates.ActiveKSC.LaunchPads.IndexOf(this);
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
 
                 //set the level to this level
                 if (Utilities.CurrentGameIsCareer())

@@ -206,8 +206,9 @@ namespace KerbalConstructionTime
             {
                 EnsureMassAndSizeInitialized();
 
-                KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}");
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
+                int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
+                KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID = idx;
 
                 //set the level to this level
                 if (Utilities.CurrentGameIsCareer())

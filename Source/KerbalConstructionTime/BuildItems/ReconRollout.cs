@@ -38,7 +38,18 @@ namespace KerbalConstructionTime
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
 
-        public KSCItem KSC => KCTGameStates.KSCs.FirstOrDefault(k => k.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID));
+        public LCItem LC
+        {
+            get
+            {
+                foreach (var ksc in KCTGameStates.KSCs)
+                    foreach (var lc in ksc.LaunchComplexes)
+                        if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
+                            return lc;
+                
+                return null;
+            }
+        }
 
         public ReconRollout()
         {
@@ -112,7 +123,7 @@ namespace KerbalConstructionTime
         public double GetBuildRate()
         {
             double buildRate = AssociatedBLV?.Type == BuildListVessel.ListType.SPH
-                                ? Utilities.GetBuildRateForFastestSPHLine(KSC) : Utilities.GetBuildRateForFastestVABLine(KSC);
+                                ? Utilities.GetBuildRateForFastestSPHLine(LC) : Utilities.GetBuildRateForFastestVABLine(LC);
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

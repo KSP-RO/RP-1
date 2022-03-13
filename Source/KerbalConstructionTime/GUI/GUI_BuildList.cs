@@ -8,6 +8,7 @@ namespace KerbalConstructionTime
     public static partial class KCT_GUI
     {
         public enum VesselPadStatus { InStorage, RollingOut, RolledOut, RollingBack, Recovering };
+        public enum RenameType { None, Vessel, Pad, LaunchComplex };
 
         public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, 400, 1);
         public static Rect EditorBuildListWindowPosition = new Rect(Screen.width - 400, 40, 400, 1);
@@ -19,7 +20,6 @@ namespace KerbalConstructionTime
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
-        private static double _costOfNewLP = int.MinValue;
 
         private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
         private static GUIContent _settingsTexture, _planeTexture, _rocketTexture;
@@ -109,13 +109,13 @@ namespace KerbalConstructionTime
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                     {
-                        BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
+                        BuildListVessel associated = reconRoll.LC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
                         txt = $"{associated.ShipName} Rollout";
                         locTxt = reconRoll.LaunchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                     {
-                        BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
+                        BuildListVessel associated = reconRoll.LC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
                         txt = $"{associated.ShipName} Rollback";
                         locTxt = reconRoll.LaunchPadID;
                     }
@@ -182,12 +182,12 @@ namespace KerbalConstructionTime
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                             {
-                                BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
+                                BuildListVessel associated = reconRoll.LC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
                                 txt += $"{associated.ShipName} rollout at {reconRoll.LaunchPadID}";
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                             {
-                                BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
+                                BuildListVessel associated = reconRoll.LC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
                                 txt += $"{associated.ShipName} rollback at {reconRoll.LaunchPadID}";
                             }
                             else
@@ -265,7 +265,7 @@ namespace KerbalConstructionTime
 
         private static void RenderVABBuildList()
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.VABList;
+            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABList;
 
             RenderBuildlistHeader();
             RenderRollouts();
@@ -282,7 +282,7 @@ namespace KerbalConstructionTime
 
         private static void RenderSPHBuildList()
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.SPHList;
+            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHList;
 
             RenderBuildlistHeader();
 
@@ -297,7 +297,8 @@ namespace KerbalConstructionTime
         private static void RenderTechList()
         {
             List<FacilityUpgrade> facilityItems = KCTGameStates.ActiveKSC.KSCTech;
-            List<PadConstruction> padItems = KCTGameStates.ActiveKSC.PadConstructions;
+            List<PadConstruction> padItems = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.PadConstructions;
+            List<LCConstruction> lcItems = KCTGameStates.ActiveKSC.LCConstructions;
             KCTObservableList<TechItem> techList = KCTGameStates.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
@@ -309,9 +310,13 @@ namespace KerbalConstructionTime
 
             if (Utilities.CurrentGameIsCareer())
             {
-                if (facilityItems.Count == 0 && padItems.Count == 0)
+                if (facilityItems.Count == 0 && padItems.Count == 0 && lcItems.Count == 0)
                     GUILayout.Label("No KSC upgrade projects are currently underway.");
                 foreach (PadConstruction pItem in padItems)
+                {
+                    RenderInProgressFacilityItem(pItem);
+                }
+                foreach (LCConstruction pItem in lcItems)
                 {
                     RenderInProgressFacilityItem(pItem);
                 }
@@ -495,7 +500,7 @@ namespace KerbalConstructionTime
 
         private static void RenderCombinedBuildList()
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.BuildList;
+            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.BuildList;
 
             RenderBuildlistHeader();
             RenderRollouts();
@@ -522,7 +527,7 @@ namespace KerbalConstructionTime
 
         private static void RenderRollouts()
         {
-            foreach (ReconRollout reconditioning in KCTGameStates.ActiveKSC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
+            foreach (ReconRollout reconditioning in KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
                 if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp To", GUILayout.Width((_butW + 4) * 3)))
@@ -614,7 +619,7 @@ namespace KerbalConstructionTime
 
         private static void RenderVabWarehouse()
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.VABWarehouse;
+            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABWarehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
             GUILayout.Label(_rocketTexture, GUILayout.ExpandWidth(false));
@@ -648,13 +653,13 @@ namespace KerbalConstructionTime
             if (launchSite == "LaunchPad")
             {
                 if (b.LaunchSiteID >= 0)
-                    launchSite = KCTGameStates.ActiveKSC.LaunchPads[b.LaunchSiteID].name;
+                    launchSite = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[b.LaunchSiteID].name;
                 else
-                    launchSite = KCTGameStates.ActiveKSC.ActiveLPInstance.name;
+                    launchSite = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
             }
-            ReconRollout rollout = KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
-            ReconRollout rollback = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Rollback);
-            ReconRollout recovery = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
+            ReconRollout rollout = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
+            ReconRollout rollback = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Rollback);
+            ReconRollout recovery = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
 
             VesselPadStatus padStatus = VesselPadStatus.InStorage;
             if (rollback != null)
@@ -704,14 +709,14 @@ namespace KerbalConstructionTime
 
             GUILayout.Label(b.ShipName, textColor);
             GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
-            bool siteHasActiveRolloutOrRollback = rollout != null || KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) != null;
+            bool siteHasActiveRolloutOrRollback = rollout != null || KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) != null;
             if (IsRolloutEnabled && !HighLogic.LoadedSceneIsEditor && recovery == null && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
             {
                 bool hasRecond = false;
                 GUIStyle btnColor = _greenButton;
-                if (KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed)
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.IsDestroyed)
                     btnColor = _redButton;
-                else if (hasRecond = KCTGameStates.ActiveKSC.GetReconditioning(KCTGameStates.ActiveKSC.ActiveLPInstance.name) != null)
+                else if (hasRecond = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.GetReconditioning(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.name) != null)
                     btnColor = _yellowButton;
                 else if (b.MeetsFacilityRequirements(false).Count != 0)
                     btnColor = _yellowButton;
@@ -730,16 +735,16 @@ namespace KerbalConstructionTime
                         List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                         if (facilityChecks.Count == 0)
                         {
-                            if (!KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed)
+                            if (!KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.IsDestroyed)
                             {
-                                b.LaunchSiteID = KCTGameStates.ActiveKSC.ActiveLaunchPadID;
+                                b.LaunchSiteID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID;
 
                                 if (rollout != null)
                                 {
                                     rollout.SwapRolloutType();
                                 }
-                                // tmpRollout.launchPadID = KCT_GameStates.ActiveKSC.ActiveLPInstance.name;
-                                KCTGameStates.ActiveKSC.Recon_Rollout.Add(tmpRollout);
+                                // tmpRollout.launchPadID = KCT_GameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
+                                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Add(tmpRollout);
                             }
                             else
                             {
@@ -779,8 +784,8 @@ namespace KerbalConstructionTime
             else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION && recovery == null &&
                      (!IsRolloutEnabled || (rollout != null && b.Id.ToString() == rollout.AssociatedID && rollout.IsComplete())))
             {
-                KCT_LaunchPad pad = KCTGameStates.ActiveKSC.LaunchPads.Find(lp => lp.name == launchSite);
-                bool operational = pad != null ? !pad.IsDestroyed : !KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed;
+                KCT_LaunchPad pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Find(lp => lp.name == launchSite);
+                bool operational = pad != null ? !pad.IsDestroyed : !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.IsDestroyed;
                 GUIStyle btnColor = _greenButton;
                 string launchTxt = "Launch";
                 if (!operational)
@@ -801,9 +806,9 @@ namespace KerbalConstructionTime
                 {
                     if (b.LaunchSiteID >= 0)
                     {
-                        KCTGameStates.ActiveKSC.SwitchLaunchPad(b.LaunchSiteID);
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(b.LaunchSiteID);
                     }
-                    b.LaunchSiteID = KCTGameStates.ActiveKSC.ActiveLaunchPadID;
+                    b.LaunchSiteID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID;
 
                     List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                     if (facilityChecks.Count == 0)
@@ -814,13 +819,13 @@ namespace KerbalConstructionTime
                         }
                         else if (Utilities.ReconditioningActive(null, launchSite))
                         {
-                            ScreenMessage message = new ScreenMessage($"[KCT] Cannot launch while LaunchPad is being reconditioned. It will be finished in {MagiCore.Utilities.GetFormattedTime(KCTGameStates.ActiveKSC.GetReconditioning(launchSite).GetTimeLeft())}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                            ScreenMessage message = new ScreenMessage($"[KCT] Cannot launch while LaunchPad is being reconditioned. It will be finished in {MagiCore.Utilities.GetFormattedTime(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.GetReconditioning(launchSite).GetTimeLeft())}", 4f, ScreenMessageStyle.UPPER_CENTER);
                             ScreenMessages.PostScreenMessage(message);
                         }
                         else
                         {
                             KCTGameStates.LaunchedVessel = b;
-                            KCTGameStates.LaunchedVessel.KSC = null;
+                            KCTGameStates.LaunchedVessel.LC = null;
                             if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, b.LaunchSite).Count == 0)
                             {
                                 GUIStates.ShowBLPlus = false;
@@ -860,7 +865,7 @@ namespace KerbalConstructionTime
 
         private static void RenderSphWarehouse()
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.SPHWarehouse;
+            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHWarehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
             GUILayout.Label(_planeTexture, GUILayout.ExpandWidth(false));
@@ -892,12 +897,12 @@ namespace KerbalConstructionTime
                 return;
             string status = string.Empty;
 
-            ReconRollout recovery = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
+            ReconRollout recovery = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
             if (recovery != null)
                 status = "Recovering";
 
             GUIStyle textColor = GUI.skin.label;
-            AirlaunchPrep airlaunchPrep = KCTGameStates.ActiveKSC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == b.Id.ToString());
+            AirlaunchPrep airlaunchPrep = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == b.Id.ToString());
             if (airlaunchPrep != null)
             {
                 if (airlaunchPrep.IsComplete())
@@ -945,7 +950,7 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        KCTGameStates.ActiveKSC.AirlaunchPrep.Add(tmpPrep);
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.AirlaunchPrep.Add(tmpPrep);
                     }
                 }
                 if (Event.current.type == EventType.Repaint)
@@ -979,7 +984,7 @@ namespace KerbalConstructionTime
                     {
                         GUIStates.ShowBLPlus = false;
                         KCTGameStates.LaunchedVessel = b;
-                        KCTGameStates.LaunchedVessel.KSC = null;
+                        KCTGameStates.LaunchedVessel.LC = null;
 
                         if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
                         {
@@ -1021,15 +1026,76 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
         }
 
-        private static void RenderLaunchPadControls()
+        private static void RenderLaunchComplexControls()
         {
-            KCT_LaunchPad activePad = KCTGameStates.ActiveKSC.ActiveLPInstance;
+            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
-            int lpCount = KCTGameStates.ActiveKSC.LaunchPadCount;
+            int lpCount = KCTGameStates.ActiveKSC.LaunchComplexCount;
             if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
-                KCTGameStates.ActiveKSC.SwitchToPrevLaunchPad();
+                KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+                if (HighLogic.LoadedSceneIsEditor)
+                {
+                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                }
+            }
+            GUILayout.FlexibleSpace();
+            string padTxt = $"Current: {activeLC.LCName} ({activeLC.SupportedMassAsPrettyText})";
+            string padDesc = $"Size limit: {activeLC.SupportedSizeAsPrettyText}";
+            GUILayout.Label(new GUIContent(padTxt, padDesc));
+
+            if (GUILayout.Button(new GUIContent("Rename", "Rename Complex"), GUILayout.ExpandWidth(false)))
+            {
+                _renameType = RenameType.LaunchComplex;
+                _newName = activeLC.LCName;
+                GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowRename = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+            }
+            if (GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
+            {
+                _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count + 1)}";
+                GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = true;
+                GUIStates.ShowRename = false;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+            }
+            if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
+            {
+                GUIStates.ShowDismantlePad = true;
+                GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowRename = false;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+            }
+            GUILayout.FlexibleSpace();
+            if (lpCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            {
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchToNextLaunchPad();
+                if (HighLogic.LoadedSceneIsEditor)
+                {
+                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                }
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        private static void RenderLaunchPadControls()
+        {
+            KCT_LaunchPad activePad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
+
+            GUILayout.BeginHorizontal();
+            int lpCount = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPadCount;
+            if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+            {
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchToPrevLaunchPad();
                 if (HighLogic.LoadedSceneIsEditor)
                 {
                     Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
@@ -1039,20 +1105,14 @@ namespace KerbalConstructionTime
             string padTxt = $"Current: {activePad.name} ({activePad.SupportedMassAsPrettyText})";
             string padDesc = $"Size limit: {activePad.SupportedSizeAsPrettyText}";
             GUILayout.Label(new GUIContent(padTxt, padDesc));
-            if (_costOfNewLP == int.MinValue)
-            {
-                _costOfNewLP = MathParser.GetStandardFormulaValue("NewLaunchPadCost", new Dictionary<string, string>
-                {
-                    { "N", KCTGameStates.ActiveKSC.LaunchPads.Count.ToString() }
-                });
-            }
 
             if (GUILayout.Button(new GUIContent("Rename", "Rename pad"), GUILayout.ExpandWidth(false)))
             {
-                _isRenamingLaunchPad = true;
+                _renameType = RenameType.Pad;
                 _newName = activePad.name;
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1071,11 +1131,12 @@ namespace KerbalConstructionTime
                     PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
                 }
             }
-            if (_costOfNewLP >= 0 && GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
             {
-                _newName = $"LaunchPad {(KCTGameStates.ActiveKSC.LaunchPads.Count + 1)}";
+                _newName = $"LaunchPad {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Count + 1)}";
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowNewPad = true;
+                GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1084,6 +1145,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowDismantlePad = true;
                 GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1091,7 +1153,7 @@ namespace KerbalConstructionTime
             GUILayout.FlexibleSpace();
             if (lpCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
-                KCTGameStates.ActiveKSC.SwitchToNextLaunchPad();
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchToNextLaunchPad();
                 if (HighLogic.LoadedSceneIsEditor)
                 {
                     Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
@@ -1150,11 +1212,11 @@ namespace KerbalConstructionTime
             if (launchSite == "LaunchPad")
             {
                 if (b.LaunchSiteID >= 0)
-                    launchSite = b.KSC.LaunchPads[b.LaunchSiteID].name;
+                    launchSite = b.KSC.ActiveLaunchComplexInstance.LaunchPads[b.LaunchSiteID].name;
                 else
-                    launchSite = b.KSC.ActiveLPInstance.name;
+                    launchSite = b.KSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
             }
-            ReconRollout rollout = KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
+            ReconRollout rollout = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
             bool onPad = rollout != null && rollout.IsComplete() && rollout.AssociatedID == b.Id.ToString();
             //This vessel is rolled out onto the pad
 
@@ -1194,7 +1256,7 @@ namespace KerbalConstructionTime
                 b.ShipNode.Save(tempFile);
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 KCTGameStates.EditedVessel = b;
-                KCTGameStates.EditedVessel.KSC = null;
+                KCTGameStates.EditedVessel.LC = null;
                 KCTGameStates.EditorShipEditingMode = true;
                 KCTGameStates.MergingAvailable = b.IsFinished;
 
@@ -1213,9 +1275,10 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = true;
                 _newName = b.ShipName;
-                _isRenamingLaunchPad = false;
+                _renameType = RenameType.Vessel;
             }
 
             if (GUILayout.Button("Duplicate"))
@@ -1228,9 +1291,9 @@ namespace KerbalConstructionTime
                 AddVesselToPlansList(b.CreateCopy(true));
             }
 
-            if (KCTGameStates.ActiveKSC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()) != null && GUILayout.Button("Rollback"))
+            if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()) != null && GUILayout.Button("Rollback"))
             {
-                KCTGameStates.ActiveKSC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()).SwapRolloutType();
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()).SwapRolloutType();
                 GUIStates.ShowBLPlus = false;
             }
 
@@ -1244,18 +1307,8 @@ namespace KerbalConstructionTime
             {
                 if (_combineVabAndSph)
                 {
-                    if (KCTGameStates.ActiveKSC.BuildList.Remove(b))
-                        KCTGameStates.ActiveKSC.BuildList.Insert(0, b);
-                }
-                else if (b.Type == BuildListVessel.ListType.VAB)
-                {
-                    b.RemoveFromBuildList();
-                    KCTGameStates.ActiveKSC.VABList.Insert(0, b);
-                }
-                else if (b.Type == BuildListVessel.ListType.SPH)
-                {
-                    b.RemoveFromBuildList();
-                    KCTGameStates.ActiveKSC.SPHList.Insert(0, b);
+                    if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.BuildList.Remove(b))
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.BuildList.Insert(0, b);
                 }
             }
 
@@ -1295,7 +1348,7 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        KCTGameStates.ActiveKSC.ActiveLPInstance.launchSiteName = launchsite;
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.launchSiteName = launchsite;
                         _isSelectingLaunchSiteForVessel = true; // reset
                     }
                     GUIStates.ShowLaunchSiteSelector = false;

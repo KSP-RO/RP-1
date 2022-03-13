@@ -17,7 +17,18 @@ namespace KerbalConstructionTime
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
 
-        public KSCItem KSC => KCTGameStates.KSCs.FirstOrDefault(k => k.AirlaunchPrep.Exists(r => r.AssociatedID == AssociatedID));
+        public LCItem LC
+        {
+            get
+            {
+                foreach (var ksc in KCTGameStates.KSCs)
+                    foreach (var lc in ksc.LaunchComplexes)
+                        if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
+                            return lc;
+
+                return null;
+            }
+        }
 
         public AirlaunchPrep()
         {
@@ -40,7 +51,7 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double buildRate = Utilities.GetBuildRateForFastestSPHLine(KSC);
+            double buildRate = Utilities.GetBuildRateForFastestSPHLine(LC);
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;

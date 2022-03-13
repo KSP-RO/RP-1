@@ -308,14 +308,12 @@ namespace KerbalConstructionTime
     {
         [Persistent]
         public bool Enabled = true, BuildTimes = true, ReconditioningTimes = true, ReconditioningBlocksPad = false, TechUnlockTimes = true, KSCUpgradeTimes = true,
-            TechUpgrades = true, SharedUpgradePool = false;
+            TechUpgrades = true;
         [Persistent]
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
             VABRecoveryTech = null;
         [Persistent]
         public int MaxRushClicks = 0;
-        [Persistent]
-        public float PadUnlimitedTonnageThreshold = 3500;
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage
@@ -330,7 +328,6 @@ namespace KerbalConstructionTime
         public string NodeFormula = "2^([N]+1) / 86400",
             UpgradeFundsFormula = "min(2^([N]+4) * 1000, 1024000)",
             UpgradesForScience = "0",
-            ResearchFormula = "[N]*0.5/86400",
             EffectivePartFormula = "min([C]/([I] + ([B]*([U]+1))) *[MV]*[PV], [C])",
             ProceduralPartFormula = "(([C]-[A]) + ([A]*10/max([I],1))) / max([B]*([U]+1),1) *[MV]*[PV]",
             BPFormula = "([E]^(1/2))*2000*[O]",
@@ -342,7 +339,6 @@ namespace KerbalConstructionTime
             IntegrationTimeFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
             RolloutCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
             IntegrationCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
-            NewLaunchPadCostFormula = "100000*([N]^3)",    //[N]=total number of unlocked launchpads (negative disables)
             RushCostFormula = "[TC]*0.2",
             AirlaunchCostFormula = "[E]*0.25",
             AirlaunchTimeFormula = "[BP]*0.25",

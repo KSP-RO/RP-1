@@ -5,7 +5,6 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static int _selectedPadIdx = 0;
         private static string _newName = "";
         private static RenameType _renameType = RenameType.None;
 

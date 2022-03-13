@@ -21,6 +21,8 @@ namespace KerbalConstructionTime
         public static EventData<FacilityUpgrade> OnFacilityUpgradeComplete;
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionQueued;
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
+        public static EventData<LCConstruction, LCItem> OnLCConstructionQueued;
+        public static EventData<LCConstruction, LCItem> OnLCConstructionComplete;
 
 
         public KCTEvents()
@@ -101,6 +103,8 @@ namespace KerbalConstructionTime
             OnFacilityUpgradeComplete = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeComplete");
             OnPadConstructionQueued = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionQueued");
             OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
+            OnLCConstructionQueued = new EventData<LCConstruction, LCItem>("OnKctLCConstructionQueued");
+            OnLCConstructionComplete = new EventData<LCConstruction, LCItem>("OnKctLCConstructionComplete");
             CreatedEvents = true;
         }
 
@@ -150,8 +154,8 @@ namespace KerbalConstructionTime
             if (facility.id.Contains("LaunchPad"))
             {
                 KCTDebug.Log("LaunchPad was repaired.");
-                KCTGameStates.ActiveKSC.ActiveLPInstance.RefreshDestructionNode();
-                KCTGameStates.ActiveKSC.ActiveLPInstance.CompletelyRepairNode();
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.CompletelyRepairNode();
             }
         }
 
@@ -160,7 +164,7 @@ namespace KerbalConstructionTime
             if (facility.id.Contains("LaunchPad"))
             {
                 KCTDebug.Log("LaunchPad was damaged.");
-                KCTGameStates.ActiveKSC.ActiveLPInstance.RefreshDestructionNode();
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
             }
         }
 
@@ -413,8 +417,8 @@ namespace KerbalConstructionTime
                     if (HighLogic.CurrentGame.editorFacility == EditorFacility.VAB)
                     {
                         string launchSite = FlightDriver.LaunchSiteName;
-                        if (launchSite == "LaunchPad") launchSite = KCTGameStates.ActiveKSC.ActiveLPInstance.name;
-                        KCTGameStates.ActiveKSC.Recon_Rollout.Add(new ReconRollout(ev.host, ReconRollout.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite));
+                        if (launchSite == "LaunchPad") launchSite = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Add(new ReconRollout(ev.host, ReconRollout.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite));
                     }
                 }
             }
@@ -464,14 +468,14 @@ namespace KerbalConstructionTime
 
                     if (KCTGameStates.RecoveredVessel.Type == BuildListVessel.ListType.VAB)
                     {
-                        KCTGameStates.ActiveKSC.VABWarehouse.Add(KCTGameStates.RecoveredVessel);
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABWarehouse.Add(KCTGameStates.RecoveredVessel);
                     }
                     else
                     {
-                        KCTGameStates.ActiveKSC.SPHWarehouse.Add(KCTGameStates.RecoveredVessel);
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHWarehouse.Add(KCTGameStates.RecoveredVessel);
                     }
 
-                    KCTGameStates.ActiveKSC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
                     KCTGameStates.RecoveredVessel = null;
                 }
             }

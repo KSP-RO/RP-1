@@ -152,11 +152,8 @@ namespace RP0
                     if (!lc.isOperational)
                         continue;
 
-                    for (int i = lc.VABRates.Count; i-- > 0;)
-                        buildRate += Math.Max(0d, lc.VABRates[i] + BuildRateOffset);
-
-                    for (int i = lc.SPHRates.Count; i-- > 0;)
-                        buildRate += Math.Max(0d, lc.SPHRates[i] + BuildRateOffset);
+                    for (int i = lc.Rates.Count; i-- > 0;)
+                        buildRate += Math.Max(0d, lc.Rates[i] + BuildRateOffset);
 
                     if (buildRate < 0.01d) continue;
 

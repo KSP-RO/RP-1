@@ -15,20 +15,6 @@ namespace KerbalConstructionTime
         public string LaunchSite, Flag, ShipName;
         public int LaunchSiteID = -1;
         public ListType Type;
-        public Guid LCID
-        {
-            get
-            {
-                return LC == null ? Guid.Empty : LC.ID;
-            }
-            set
-            {
-                if(value != Guid.Empty)
-                {
-                    _lc = KCTGameStates.ActiveKSC.FindLCFromID(value);
-                }
-            }
-        }
         public ConfigNode ShipNode;
         public Guid Id;
         public bool CannotEarnScience;
@@ -90,6 +76,19 @@ namespace KerbalConstructionTime
             }
         }
 
+        private Guid _lcID;
+        public Guid LCID
+        {
+            get
+            {
+                return _lcID;
+            }
+            set
+            {
+                _lc = null; // force a refind
+                _lcID = value;
+            }
+        }
         private LCItem _lc = null;
 
         public LCItem LC
@@ -110,14 +109,26 @@ namespace KerbalConstructionTime
                             }
                         }
                     }
+                    if (_lc == null)
+                    {
+                        foreach (var ksc in KCTGameStates.KSCs)
+                        {
+                            _lc = ksc.FindLCFromID(_lcID);
+                            if (_lc != null)
+                                break;
+                        }
+                    }
                 }
                 return _lc;
             }
             set
             {
                 _lc = value;
+                if (_lc != null)
+                    _lcID = _lc.ID;
             }
         }
+
         private bool? _allPartsValid;
         public bool AllPartsValid
         {

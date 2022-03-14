@@ -236,7 +236,7 @@ namespace KerbalConstructionTime
                 {
                     dataModule.Data.FacilityBuiltIn = KCTGameStates.LaunchedVessel.FacilityBuiltIn;
                     dataModule.Data.VesselID = KCTGameStates.LaunchedVessel.KCTPersistentID;
-                    dataModule.Data.LCID = KCTGameStates.LaunchedVessel.LC.ID.ToString("N");
+                    dataModule.Data.LCID = KCTGameStates.LaunchedVessel.LCID.ToString("N");
                 }
             }
 
@@ -246,7 +246,7 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.IsSimulatedFlight)
             {
-                KCTGameStates.LaunchedVessel.LC = null;    //it's invalid now
+                KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
                 if (KCTGameStates.LaunchedVessel.RemoveFromBuildList()) //Only do these when the vessel is first removed from the list
                 {

@@ -118,7 +118,7 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        locTxt = "VAB";
+                        locTxt = "Storage";
                     }
                 }
                 else if (buildItem.GetListType() == BuildListVessel.ListType.VAB || buildItem.GetListType() == BuildListVessel.ListType.SPH)

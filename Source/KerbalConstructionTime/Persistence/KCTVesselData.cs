@@ -11,6 +11,9 @@
         [Persistent]
         public string LaunchID = string.Empty;
 
+        [Persistent]
+        public string LCID = string.Empty;
+
         public bool IsInitialized => FacilityBuiltIn != default || VesselID != string.Empty || LaunchID != string.Empty;
 
         public static KCTVesselData Parse(KCTVesselTracker d)
@@ -19,7 +22,8 @@
             {
                 FacilityBuiltIn = d.Data.FacilityBuiltIn,
                 VesselID = d.Data.VesselID,
-                LaunchID = d.Data.LaunchID
+                LaunchID = d.Data.LaunchID,
+                LCID = d.Data.LCID
             };
         }
 

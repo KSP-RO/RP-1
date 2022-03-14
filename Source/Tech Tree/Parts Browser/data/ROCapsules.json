@@ -3625,5 +3625,29 @@
         "module_tags": [
             "NoResourceCostMult"
         ]
+    },
+    {
+        "name": "ROC-ZenitCapsule",
+        "title": "Zenit Descent Module (Improved Film Camera)",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "1000",
+        "entry_cost": "0",
+        "category": "COMMAND",
+        "info": "Photography",
+        "year": "1961",
+        "technology": "basicCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Zenit",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "capsulesVostok,RO-ImprovedFilmCamera",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments",
+            "Reentry"
+        ]
     }
 ]

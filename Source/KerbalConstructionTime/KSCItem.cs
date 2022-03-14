@@ -12,7 +12,9 @@ namespace KerbalConstructionTime
         public List<FacilityUpgrade> KSCTech = new List<FacilityUpgrade>();
         public List<int> RDUpgrades = new List<int>() { 0, 0 }; //research/development
         
-        public int ActiveLaunchComplexID = 0;
+        public int ActiveLaunchComplexID = 1;
+
+        public LCItem Hangar => LaunchComplexes[0];
 
         public KSCItem(string name)
         {

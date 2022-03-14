@@ -116,6 +116,12 @@ namespace KerbalConstructionTime
                         txt = $"{associated.ShipName} Rollback";
                         locTxt = reconRoll.LaunchPadID;
                     }
+                    else if (reconRoll.RRType == ReconRollout.RolloutReconType.Recovery)
+                    {
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
+                        txt = $"{associated.ShipName} Recovery";
+                        locTxt = associated.LC.Name;
+                    }
                     else
                     {
                         locTxt = "Storage";
@@ -822,7 +828,7 @@ namespace KerbalConstructionTime
                                 else
                                 {
                                     KCTGameStates.LaunchedVessel = b;
-                                    KCTGameStates.LaunchedVessel.LC = null;
+                                    KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
                                     if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, b.LaunchSite).Count == 0)
                                     {
                                         GUIStates.ShowBLPlus = false;
@@ -907,7 +913,7 @@ namespace KerbalConstructionTime
                             {
                                 GUIStates.ShowBLPlus = false;
                                 KCTGameStates.LaunchedVessel = b;
-                                KCTGameStates.LaunchedVessel.LC = null;
+                                KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
 
                                 if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
                                 {
@@ -1186,7 +1192,7 @@ namespace KerbalConstructionTime
                 b.ShipNode.Save(tempFile);
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 KCTGameStates.EditedVessel = b;
-                KCTGameStates.EditedVessel.LC = null;
+                KCTGameStates.EditedVessel.LCID = KCTGameStates.EditedVessel.LC.ID; // clear LC and force refind later.
                 KCTGameStates.EditorShipEditingMode = true;
                 KCTGameStates.MergingAvailable = b.IsFinished;
 

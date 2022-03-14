@@ -19,7 +19,6 @@ namespace KerbalConstructionTime
                 case "KSCUpgrade": return MathParsing.ParseMath("KCT_KSC_UPGRADE", formulaSettings.KSCUpgradeFormula, variables);
                 case "Reconditioning": return MathParsing.ParseMath("KCT_RECONDITIONING", formulaSettings.ReconditioningFormula, variables);
                 case "BuildRate": return MathParsing.ParseMath("KCT_BUILD_RATE", formulaSettings.BuildRateFormula, variables);
-                case "UpgradeReset": return MathParsing.ParseMath("KCT_UPGRADE_RESET", formulaSettings.UpgradeResetFormula, variables);
                 case "InventorySales": return MathParsing.ParseMath("KCT_INVENTORY_SALES", formulaSettings.InventorySaleFormula, variables);
                 case "IntegrationTime": return MathParsing.ParseMath("KCT_INTEGRATION_TIME", formulaSettings.IntegrationTimeFormula, variables);
                 case "IntegrationCost": return MathParsing.ParseMath("KCT_INTEGRATION_COST", formulaSettings.IntegrationCostFormula, variables);
@@ -38,17 +37,16 @@ namespace KerbalConstructionTime
             return ParseBuildRateFormula(type, index, KSC, UpgradedRates ? 1 : 0);
         }
 
-        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem KSC, int upgradeDelta)
+        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem LC, int upgradeDelta)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             int level = 0, upgrades = 0;
             var variables = new Dictionary<string, string>();
 
             level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-            if (KSC.VABUpgrades.Count > index)
+            if (LC.Upgrades.Count > index)
             {
-                upgrades = KSC.VABUpgrades[index];
-                upgrades += KSC.SPHUpgrades.Count > index ? KSC.SPHUpgrades[index] : 0;
+                upgrades = LC.Upgrades[index];
             }
             upgrades += upgradeDelta;
             variables.Add("L", level.ToString());
@@ -93,7 +91,7 @@ namespace KerbalConstructionTime
 
         public static double ParseRolloutCostFormula(BuildListVessel vessel)
         {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled || !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes)
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
             Dictionary<string, string> variables = GetIntegrationRolloutVariables(vessel);

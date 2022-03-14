@@ -15,6 +15,20 @@ namespace KerbalConstructionTime
         public string LaunchSite, Flag, ShipName;
         public int LaunchSiteID = -1;
         public ListType Type;
+        public Guid LCID
+        {
+            get
+            {
+                return LC == null ? Guid.Empty : LC.ID;
+            }
+            set
+            {
+                if(value != Guid.Empty)
+                {
+                    _lc = KCTGameStates.ActiveKSC.FindLCFromID(value);
+                }
+            }
+        }
         public ConfigNode ShipNode;
         public Guid Id;
         public bool CannotEarnScience;
@@ -25,7 +39,6 @@ namespace KerbalConstructionTime
         public int NumStageParts = 0;
         public double StagePartCost = 0;
         public float EmptyCost = 0, EmptyMass = 0;
-        public int BuildListIndex = -1;
         public EditorFacility FacilityBuiltIn;
         public string KCTPersistentID;
 
@@ -89,10 +102,8 @@ namespace KerbalConstructionTime
                     {
                         foreach (var lc in ksc.LaunchComplexes)
                         {
-                            if (lc.VABList.FirstOrDefault(s => s.Id == Id) != null ||
-                                    lc.VABWarehouse.FirstOrDefault(s => s.Id == Id) != null ||
-                                    lc.SPHList.FirstOrDefault(s => s.Id == Id) != null ||
-                                    lc.SPHWarehouse.FirstOrDefault(s => s.Id == Id) != null)
+                            if (lc.BuildList.FirstOrDefault(s => s.Id == Id) != null ||
+                                    lc.Warehouse.FirstOrDefault(s => s.Id == Id) != null)
                             {
                                 _lc = lc;
                                 break;
@@ -159,11 +170,13 @@ namespace KerbalConstructionTime
             {
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
+                _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             }
             else if (s.shipFacility == EditorFacility.SPH)
             {
                 Type = ListType.SPH;
                 FacilityBuiltIn = EditorFacility.SPH;
+                _lc = KCTGameStates.ActiveKSC.Hangar;
             }
             else
                 Type = ListType.None;
@@ -376,7 +389,8 @@ namespace KerbalConstructionTime
         {
             BuildListVessel ret = new BuildListVessel(ShipName, LaunchSite, EffectiveCost, BuildPoints, IntegrationPoints, Flag, Cost, IntegrationCost, (int)GetEditorFacility())
             {
-                ShipNode = ShipNode.CreateCopy()
+                ShipNode = ShipNode.CreateCopy(),
+                _lc = _lc
             };
 
             //refresh all inventory parts to new
@@ -432,15 +446,10 @@ namespace KerbalConstructionTime
             LC = null;
             if (LC != null)
             {
-                found = LC.VABList.Exists(b => b.Id == Id);
+                found = LC.BuildList.Exists(b => b.Id == Id);
                 if (found) { Type = ListType.VAB; return; }
-                found = LC.VABWarehouse.Exists(b => b.Id == Id);
+                found = LC.Warehouse.Exists(b => b.Id == Id);
                 if (found) { Type = ListType.VAB; return; }
-
-                found = LC.SPHList.Exists(b => b.Id == Id);
-                if (found) { Type = ListType.SPH; return; }
-                found = LC.SPHWarehouse.Exists(b => b.Id == Id);
-                if (found) { Type = ListType.SPH; return; }
             }
 
             if (!found)
@@ -496,47 +505,33 @@ namespace KerbalConstructionTime
             if (KCTGameStates.AirlaunchParams != null) KCTGameStates.AirlaunchParams.KSPVesselId = null;
         }
 
-        public List<string> MeetsFacilityRequirements(bool highestFacility = true)
+        public List<string> MeetsFacilityRequirements(bool skipMinMass, bool highestFacility = false)
         {
             List<string> failedReasons = new List<string>();
             if (!Utilities.CurrentGameIsCareer())
                 return failedReasons;
 
-            if (Type == ListType.VAB)
-            {
-                LCItem selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            // TODO: Should we just use this.LC ? It will be correct even if we're in the editor.
+            LCItem selectedLC = Type == ListType.VAB ?
+                highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance :
+                Type == ListType.SPH ?
+                    KCTGameStates.ActiveKSC.Hangar :
+                    null;
 
-                double totalMass = GetTotalMass();
-                if (totalMass > selectedPad.massMax)
-                {
-                    failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons");
-                }
-                if (ExtractedPartNodes.Count > GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding), true))
-                {
-                    failedReasons.Add("Part Count limit exceeded");
-                }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedPad.sizeMax);
-                if (!sizeCheck.Test())
-                {
-                    failedReasons.Add("Size limits exceeded");
-                }
-            }
-            else if (Type == ListType.SPH)
+            double totalMass = GetTotalMass();
+            if (totalMass > selectedLC.massMax)
             {
-                double totalMass = GetTotalMass();
-                if (totalMass > GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false))
-                {
-                    failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons");
-                }
-                if (ExtractedPartNodes.Count > GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar), false))
-                {
-                    failedReasons.Add("Part Count limit exceeded");
-                }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false));
-                if (!sizeCheck.Test())
-                {
-                    failedReasons.Add("Size limits exceeded");
-                }
+                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.massMax:N}");
+            }
+            if (!skipMinMass && totalMass < selectedLC.massMin)
+            {
+                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.massMin:N}");
+            }
+            // Facility doesn't matter here.
+            CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.sizeMax);
+            if (!sizeCheck.Test())
+            {
+                failedReasons.Add("Size limits exceeded");
             }
 
             return failedReasons;
@@ -666,7 +661,6 @@ namespace KerbalConstructionTime
 
         public bool RemoveFromBuildList()
         {
-            string typeName="";
             bool removed = false;
             LC = null; //force a refind
             if (LC == null) //I know this looks goofy, but it's a self-caching property that caches on "get"
@@ -674,70 +668,38 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("Could not find the LC to remove vessel!");
                 return false;
             }
-            if (Type == ListType.SPH)
+            else
             {
-
-                removed = LC.SPHWarehouse.Remove(this);
+                removed = LC.Warehouse.Remove(this);
                 if (!removed)
                 {
-                    removed = LC.SPHList.Remove(this);
+                    removed = LC.BuildList.Remove(this);
                 }
-                typeName="SPH";
             }
-            else if (Type == ListType.VAB)
-            {
-                removed = LC.VABWarehouse.Remove(this);
-                if (!removed)
-                {
-                    removed = LC.VABList.Remove(this);
-                }
-                typeName="VAB";
-            }
-            KCTDebug.Log($"Removing {ShipName} from {typeName} storage/list.");
+            KCTDebug.Log($"Removing {ShipName} from {LC.Name} storage/list.");
             if (!removed)
             {
                 KCTDebug.Log("Failed to remove ship from list! Performing direct comparison of ids...");
-                foreach (BuildListVessel blv in LC.SPHWarehouse)
+
+                for (int i = LC.BuildList.Count; i-- > 0;)
                 {
+                    BuildListVessel blv = LC.BuildList[i];
                     if (blv.Id == Id)
                     {
-                        KCTDebug.Log("Ship found in SPH storage. Removing...");
-                        removed = LC.SPHWarehouse.Remove(blv);
+                        KCTDebug.Log("Ship found in BuildList. Removing...");
+                        removed = LC.BuildList.Remove(blv);
                         break;
                     }
                 }
                 if (!removed)
                 {
-                    foreach (BuildListVessel blv in LC.VABWarehouse)
+                    for( int i = LC.Warehouse.Count; i-- > 0;)
                     {
+                        BuildListVessel blv = LC.Warehouse[i];
                         if (blv.Id == Id)
                         {
-                            KCTDebug.Log("Ship found in VAB storage. Removing...");
-                            removed = LC.VABWarehouse.Remove(blv);
-                            break;
-                        }
-                    }
-                }
-                if (!removed)
-                {
-                    foreach (BuildListVessel blv in LC.VABList)
-                    {
-                        if (blv.Id == Id)
-                        {
-                            KCTDebug.Log("Ship found in VAB List. Removing...");
-                            removed = LC.VABList.Remove(blv);
-                            break;
-                        }
-                    }
-                }
-                if (!removed)
-                {
-                    foreach (BuildListVessel blv in LC.SPHList)
-                    {
-                        if (blv.Id == Id)
-                        {
-                            KCTDebug.Log("Ship found in SPH list. Removing...");
-                            removed = LC.SPHList.Remove(blv);
+                            KCTDebug.Log("Ship found in Warehouse list. Removing...");
+                            removed = LC.Warehouse.Remove(blv);
                             break;
                         }
                     }

@@ -123,7 +123,7 @@ namespace KerbalConstructionTime
                     KCTDebug.Log("Building new launch complex!");
                     KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, curPadSize, true, KCTGameStates.ActiveKSC));
                 }
-                else if (Funding.CanAfford((float)curPadCost))
+                else if (Funding.CanAfford((float)curLCCost))
                 {
                     KCTDebug.Log("Building new launch complex!");
                     Utilities.SpendFunds(curLCCost, TransactionReasons.StructureConstruction);
@@ -136,7 +136,7 @@ namespace KerbalConstructionTime
                         Cost = curLCCost,
                         Name = _newName
                     };
-                    lcConstr.SetBP(curPadCost);
+                    lcConstr.SetBP(curLCCost);
                     KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
 
                     try
@@ -214,7 +214,7 @@ namespace KerbalConstructionTime
             for (int i = 0; i < KCTGameStates.ActiveKSC.LaunchComplexes.Count; i++)
             {
                 var lp = KCTGameStates.ActiveKSC.LaunchComplexes[i];
-                if (string.Equals(lp.LCName, _newName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(lp.Name, _newName, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launch complex with the same name already exists");
                     return false;

@@ -35,13 +35,22 @@ namespace KerbalConstructionTime
             }
         }
 
+        public LCItem FindLCFromID(System.Guid guid)
+        {
+            foreach (LCItem lc in LaunchComplexes)
+                if (lc.ID == guid)
+                    return lc;
+
+            return null;
+        }
+
         public bool IsEmpty => !KSCTech.Any() && !LCConstructions.Any() && LaunchComplexes.All(lc => lc.IsEmpty);
 
         public void EnsureStartingLaunchComplexes()
         {
             if (LaunchComplexes.Count > 1) return;
 
-            LCItem sph = new LCItem("Hangar", -1f, new Vector3(40f, 15f, 40f), false, this);
+            LCItem sph = new LCItem("Hangar", -1f, new Vector3(40f, 10f, 40f), false, this);
             sph.isOperational = true;
             LaunchComplexes.Add(sph);
             LCItem starterLC = new LCItem("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, this);
@@ -64,34 +73,40 @@ namespace KerbalConstructionTime
         public void SwitchToPrevLaunchComplex() => SwitchLaunchComplex(false);
         public void SwitchToNextLaunchComplex() => SwitchLaunchComplex(true);
 
-        public void SwitchLaunchComplex(bool forwardDirection)
+        public int SwitchLaunchComplex(bool forwardDirection, int startIndex = -1, bool doSwitch = true)
         {
-            if (KCTGameStates.ActiveKSC.LaunchComplexCount < 2) return;
+            if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexID : startIndex;
 
-            int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+            if (startIndex < 0)
+                startIndex = ActiveLaunchComplexID;
+
             LCItem lc;
             do
             {
                 if (forwardDirection)
                 {
-                    idx = (idx + 1) % LaunchComplexes.Count;
+                    startIndex = (startIndex + 1) % LaunchComplexes.Count;
                 }
                 else
                 {
                     //Simple fix for mod function being "weird" in the negative direction
                     //http://stackoverflow.com/questions/1082917/mod-of-negative-number-is-melting-my-brain
-                    idx = ((idx - 1) % LaunchComplexes.Count + LaunchComplexes.Count) % LaunchComplexes.Count;
+                    startIndex = ((startIndex - 1) % LaunchComplexes.Count + LaunchComplexes.Count) % LaunchComplexes.Count;
                 }
-                lc = LaunchComplexes[idx];
+                lc = LaunchComplexes[startIndex];
             } while (!lc.isOperational);
 
-            KCTGameStates.ActiveKSC.SwitchLaunchComplex(idx);
+            if (doSwitch)
+                SwitchLaunchComplex(startIndex);
+
+            return startIndex;
         }
 
         public void SwitchLaunchComplex(int LC_ID, bool updateDestrNode = true)
         {
             ActiveLaunchComplexID = LC_ID;
             LaunchComplexes[LC_ID].SwitchLaunchPad();
+            KCT_GUI._LCIndex = LC_ID;
         }
 
         /// <summary>

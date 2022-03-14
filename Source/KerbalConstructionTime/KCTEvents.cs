@@ -411,8 +411,7 @@ namespace KerbalConstructionTime
         {
             if (ev.from == Vessel.Situations.PRELAUNCH && ev.host == FlightGlobals.ActiveVessel)
             {
-                if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled &&
-                    PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes)
+                if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 {
                     if (HighLogic.CurrentGame.editorFacility == EditorFacility.VAB)
                     {
@@ -466,16 +465,30 @@ namespace KerbalConstructionTime
                         KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(KCTGameStates.RecoveredVessel);
                     }
 
-                    if (KCTGameStates.RecoveredVessel.Type == BuildListVessel.ListType.VAB)
+                    LCItem targetLC = KCTGameStates.RecoveredVessel.LC;
+                    if (targetLC == null)
                     {
-                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABWarehouse.Add(KCTGameStates.RecoveredVessel);
-                    }
-                    else
-                    {
-                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHWarehouse.Add(KCTGameStates.RecoveredVessel);
+                        if (KCTGameStates.RecoveredVessel.Type == BuildListVessel.ListType.VAB)
+                        {
+                            double mass = KCTGameStates.RecoveredVessel.GetTotalMass();
+                            if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMax >= mass &&
+                                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMin <= mass)
+                                targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                            else
+                                targetLC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(lc => lc.isOperational && lc.isPad && lc.massMax >= mass && lc.massMin <= mass);
+
+                            // If we still can't find a match, just recover it to the current launch complex.
+                            if (targetLC == null)
+                                targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                        }
+                        else
+                        {
+                            targetLC = KCTGameStates.ActiveKSC.Hangar;
+                        }
                     }
 
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
+                    targetLC.Warehouse.Add(KCTGameStates.RecoveredVessel);
+                    targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
                     KCTGameStates.RecoveredVessel = null;
                 }
             }

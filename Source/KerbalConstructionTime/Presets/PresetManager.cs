@@ -307,7 +307,7 @@ namespace KerbalConstructionTime
     public class KCT_Preset_General : ConfigNodeStorage
     {
         [Persistent]
-        public bool Enabled = true, BuildTimes = true, ReconditioningTimes = true, ReconditioningBlocksPad = false, TechUnlockTimes = true, KSCUpgradeTimes = true,
+        public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true,
             TechUpgrades = true;
         [Persistent]
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
@@ -334,7 +334,6 @@ namespace KerbalConstructionTime
             KSCUpgradeFormula = "([C]^(1/2))*1000*[O]",
             ReconditioningFormula = "min([M]*[O]*[E], [X])*abs([RE]-[S])",
             BuildRateFormula = "(([I]+1)*0.05*[N] + max(0.1-[I], 0))*sign(2*[L]-[I]+1)",
-            UpgradeResetFormula = "2*([N]+1)",    //N = number of times it's been reset
             InventorySaleFormula = "([V]+[P] / 10000)^(0.5)",    //Gives the TOTAL amount of points, decimals are kept //[V] = inventory value in funds, [P] = Value of all previous sales combined
             IntegrationTimeFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
             RolloutCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH

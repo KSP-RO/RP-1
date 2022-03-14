@@ -48,7 +48,6 @@ namespace KerbalConstructionTime
                 DistanceFromKSC = kscDistance,
                 RushBuildClicks = rushBuildClicks,
                 LaunchSiteID = LaunchPadID,
-                BuildListIndex = BuildListIndex,
                 DesiredManifest = desiredManifest,
                 KCTPersistentID = KCTPersistentID,
                 FacilityBuiltIn = FacilityBuiltIn
@@ -76,7 +75,6 @@ namespace KerbalConstructionTime
             stagePartCost = blv.StagePartCost;
             kscDistance = blv.DistanceFromKSC;
             EditorFacility = (int)blv.GetEditorFacility();
-            BuildListIndex = blv.BuildListIndex;
             LaunchPadID = blv.LaunchSiteID;
             desiredManifest = blv.DesiredManifest;
             KCTPersistentID = blv.KCTPersistentID;

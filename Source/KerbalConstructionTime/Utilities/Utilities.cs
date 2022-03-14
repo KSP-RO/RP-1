@@ -930,7 +930,7 @@ namespace KerbalConstructionTime
 
             newShip.FacilityBuiltIn = editableShip.FacilityBuiltIn;
             newShip.KCTPersistentID = editableShip.KCTPersistentID;
-            newShip.LC = editableShip.LC;
+            newShip.LCID = editableShip.LCID;
 
             editableShip.RemoveFromBuildList();
 
@@ -1690,7 +1690,7 @@ namespace KerbalConstructionTime
                 KCTVesselData vData = FlightGlobals.ActiveVessel.GetKCTVesselData();
                 KCTGameStates.RecoveredVessel.KCTPersistentID = vData?.VesselID;
                 KCTGameStates.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
-                KCTGameStates.RecoveredVessel.LCID = vData == null ? Guid.Empty : new Guid(vData.LCID); // this will set the LC
+                KCTGameStates.RecoveredVessel.LCID = vData == null ? Guid.Empty : new Guid(vData.LCID);
 
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == BuildListVessel.ListType.VAB)

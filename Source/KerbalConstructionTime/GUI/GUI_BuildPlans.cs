@@ -17,8 +17,6 @@ namespace KerbalConstructionTime
         private static float _scale;
         private static GUIContent _content;
 
-        private static bool _isVABSelectedInPlans;
-        private static bool _isSPHSelectedInPlans;
         private static SortedList<string, BuildListVessel> _plansList = null;
         private static int _planToDelete;
         private static Texture2D _up;
@@ -149,56 +147,39 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
 
-            bool isVABSelectedNew = GUILayout.Toggle(_isVABSelectedInPlans, "VAB", GUI.skin.button);
-            bool isSPHSelectedNew = GUILayout.Toggle(_isSPHSelectedInPlans, "SPH", GUI.skin.button);
-            if (isVABSelectedNew != _isVABSelectedInPlans)
-            {
-                _isVABSelectedInPlans = isVABSelectedNew;
-                _isSPHSelectedInPlans = false;
-                SelectList("VAB");
-            }
-            else if (isSPHSelectedNew != _isSPHSelectedInPlans)
-            {
-                _isSPHSelectedInPlans = isSPHSelectedNew;
-                _isVABSelectedInPlans = false;
-                SelectList("SPH");
-            }
+            BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
 
             GUILayout.EndHorizontal();
             {
-                if (isVABSelectedNew)
-                    _plansList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans;
-                else if (isSPHSelectedNew)
-                    _plansList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans;
-                if (_isVABSelectedInPlans || _isSPHSelectedInPlans)
-                {
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Name:");
-                    GUILayout.EndHorizontal();
-                    _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
+                _plansList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Plans;
 
-                    if (_plansList == null || _plansList.Count == 0)
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Name:");
+                GUILayout.EndHorizontal();
+                _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
+
+                if (_plansList == null || _plansList.Count == 0)
+                {
+                    GUILayout.Label("No vessels in plans.");
+                }
+                for (int i = 0; i < _plansList.Count; i++)
+                {
+                    BuildListVessel b = _plansList.Values[i];
+                    if (!b.AllPartsValid)
+                        continue;
+                    GUILayout.BeginHorizontal();
                     {
-                        GUILayout.Label("No vessels in plans.");
-                    }
-                    for (int i = 0; i < _plansList.Count; i++)
-                    {
-                        BuildListVessel b = _plansList.Values[i];
-                        if (!b.AllPartsValid)
-                            continue;
-                        GUILayout.BeginHorizontal();
+                        if (GUILayout.Button("X", _redButton, GUILayout.Width(butW)))
                         {
-                            if (GUILayout.Button("X", _redButton,  GUILayout.Width(butW)))
-                            {
-                                _planToDelete = i;
-                                InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
-                                _selectedVesselId = b.Id;
-                                DialogGUIBase[] options = new DialogGUIBase[2];
-                                options[0] = new DialogGUIButton("Yes", RemoveVesselFromPlans);
-                                options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to remove this vessel from the plans?", "Delete plan", null, options: options);
-                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
-                            }
+                            _planToDelete = i;
+                            InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
+                            _selectedVesselId = b.Id;
+                            DialogGUIBase[] options = new DialogGUIBase[2];
+                            options[0] = new DialogGUIButton("Yes", RemoveVesselFromPlans);
+                            options[1] = new DialogGUIButton("No", RemoveInputLocks);
+                            MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to remove this vessel from the plans?", "Delete plan", null, options: options);
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+                        }
 
                             if (GUILayout.Button(b.ShipName))
                             {
@@ -206,10 +187,9 @@ namespace KerbalConstructionTime
                             }
                         }
 
-                        GUILayout.EndHorizontal();
-                    }
-                    GUILayout.EndScrollView();
+                    GUILayout.EndHorizontal();
                 }
+                GUILayout.EndScrollView();
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Close"))
                 {
@@ -256,43 +236,29 @@ namespace KerbalConstructionTime
             {
                 //Check upgrades
                 //First, mass limit
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
+                List<string> facilityChecks = blv.MeetsFacilityRequirements(false);
                 if (facilityChecks.Count != 0)
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be added to the plans, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
+                        "Warning! This vessel did not pass the editor checks! Listed below are the failed checks:\n"
                         + string.Join("\n", facilityChecks.ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                    return;
                 }
-            }
-            string type = "";
-            if (blv.Type == BuildListVessel.ListType.VAB)
-            {
-                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans.ContainsKey(blv.ShipName))
-                {
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans.Remove(blv.ShipName);
-                    message = new ScreenMessage($"[KCT] Replacing previous plan for {blv.ShipName} in the VAB Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(message);
-                }
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.VABPlans.Add(blv.ShipName, blv);
-                type = "VAB";
-            }
-            else if (blv.Type == BuildListVessel.ListType.SPH)
-            {
-                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans.ContainsKey(blv.ShipName))
-                {
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans.Remove(blv.ShipName);
-                    message = new ScreenMessage($"[KCT] Replacing previous plan for {blv.ShipName} in the SPH Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(message);
-                }
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SPHPlans.Add(blv.ShipName, blv);
-                type = "SPH";
             }
 
+            if (blv.LC.Plans.ContainsKey(blv.ShipName))
+            {
+                blv.LC.Plans.Remove(blv.ShipName);
+                message = new ScreenMessage($"[KCT] Replacing previous plan for {blv.ShipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+            }
+            blv.LC.Plans.Add(blv.ShipName, blv);
+            
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
-            KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
+            KCTDebug.Log($"Added {blv.ShipName} to {blv.LC.Name} plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
             KCTDebug.Log($"Launch site is {blv.LaunchSite}");
-            string text = $"Added {blv.ShipName} to build list.";
+            string text = $"Added {blv.ShipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }

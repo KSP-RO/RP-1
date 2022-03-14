@@ -93,11 +93,7 @@ namespace KerbalConstructionTime
             Progress = 0;
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
-            if (type == RolloutReconType.Reconditioning)
-            {
-                //BP *= (1 - KCT_PresetManager.Instance.ActivePreset.timeSettings.RolloutReconSplit);
-            }
-            else if (type == RolloutReconType.Rollout)
+            if (type == RolloutReconType.Rollout)
                 Cost = MathParser.ParseRolloutCostFormula(vessel);
             else if (type == RolloutReconType.Rollback)
                 Progress = BP;

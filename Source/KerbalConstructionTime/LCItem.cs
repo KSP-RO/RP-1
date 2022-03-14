@@ -54,9 +54,9 @@ namespace KerbalConstructionTime
             _ksc = ksc;
         }
 
-        public LCItem(string name, float mMax, Vector3 sMax, bool isLCPad, KSCItem ksc)
+        public LCItem(string lcName, float mMax, Vector3 sMax, bool isLCPad, KSCItem ksc)
         {
-            this.Name = name;
+            Name = lcName;
 
             _id = Guid.NewGuid();
             _ksc = ksc;
@@ -70,7 +70,7 @@ namespace KerbalConstructionTime
 
             if (isPad)
             {
-                var pad = new KCT_LaunchPad(this.Name + "A", fracLevel, massMax, sizeMax);
+                var pad = new KCT_LaunchPad(Name + "A", fracLevel, massMax, sizeMax);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
@@ -341,15 +341,12 @@ namespace KerbalConstructionTime
                 Warehouse.Add(CreateBLVFromNode(cn));
             }
 
-            if (node.TryGetNode("Plans", ref tmp))
+            tmp = node.GetNode("Plans");
+            foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
-                if (tmp.HasNode("KCTVessel"))
-                    foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
-                    {
-                        var blv = CreateBLVFromNode(cn);
-                        Plans.Remove(blv.ShipName); 
-                        Plans.Add(blv.ShipName, blv);
-                    }
+                var blv = CreateBLVFromNode(cn);
+                Plans.Remove(blv.ShipName); 
+                Plans.Add(blv.ShipName, blv);
             }
 
             tmp = node.GetNode("Recon_Rollout");

@@ -147,12 +147,10 @@ namespace KerbalConstructionTime
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
-            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, type, null).ToString();
+            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, ship.LC).ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
-            List<double> rates = new List<double>();
-            if (ship.Type == BuildListVessel.ListType.VAB) rates = Utilities.GetVABBuildRates(null);
-            else rates = Utilities.GetSPHBuildRates(null);
+            List<double> rates = ship.LC.Rates;
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
                 if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))

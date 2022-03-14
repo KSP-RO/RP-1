@@ -21,7 +21,7 @@ namespace KerbalConstructionTime
         [Persistent] public List<string> PartInventory = new List<string>();
         [Persistent] public string activeKSC = string.Empty;
         [Persistent] public float SciPoints = -1f;
-        [Persistent] public int UpgradesResetCounter = 0, TechUpgrades = 0;
+        [Persistent] public int TechUpgrades = 0;
         [Persistent] public bool IsSimulation;
         [Persistent] public bool DisableFailuresInSim = true;
 
@@ -29,7 +29,6 @@ namespace KerbalConstructionTime
         {
             KCTGameStates.PurchasedUpgrades = PurchasedUpgrades;
             KCTGameStates.ActiveKSCName = activeKSC;
-            KCTGameStates.UpgradesResetCounter = UpgradesResetCounter;
             KCTGameStates.TechUpgradesTotal = TechUpgrades;
             KCTGameStates.SciPointsTotal = SciPoints;
             KCTGameStates.IsSimulatedFlight = IsSimulation;
@@ -42,7 +41,6 @@ namespace KerbalConstructionTime
             PurchasedUpgrades = KCTGameStates.PurchasedUpgrades;
             SciPoints = KCTGameStates.SciPointsTotal;
             activeKSC = KCTGameStates.ActiveKSC.KSCName;
-            UpgradesResetCounter = KCTGameStates.UpgradesResetCounter;
             IsSimulation = KCTGameStates.IsSimulatedFlight;
             DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
         }

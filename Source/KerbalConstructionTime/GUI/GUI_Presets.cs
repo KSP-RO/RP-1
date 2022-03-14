@@ -97,8 +97,6 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             _workingPreset.GeneralSettings.Enabled = GUILayout.Toggle(_workingPreset.GeneralSettings.Enabled, "Mod Enabled", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.BuildTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.BuildTimes, "Build Times", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.ReconditioningTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.ReconditioningTimes, "Launchpad Reconditioning", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.ReconditioningBlocksPad = GUILayout.Toggle(_workingPreset.GeneralSettings.ReconditioningBlocksPad, "Reconditioning Blocks Pad", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.TechUnlockTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUnlockTimes, "Tech Unlock Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.TechUpgrades = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUpgrades, "Upgrades From Tech Tree", HighLogic.Skin.button);
@@ -138,13 +136,6 @@ namespace KerbalConstructionTime
             GUILayout.Label("Max Reconditioning: ");
             double.TryParse(_maxReTmp = GUILayout.TextField(_maxReTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MaxReconditioning);
             GUILayout.EndHorizontal();
-            GUILayout.Label("Rollout-Reconditioning Split:");
-            GUILayout.BeginHorizontal();
-            //GUILayout.Label("Rollout", GUILayout.ExpandWidth(false));
-            _workingPreset.TimeSettings.RolloutReconSplit = GUILayout.HorizontalSlider((float)Math.Floor(_workingPreset.TimeSettings.RolloutReconSplit * 100f), 0, 100)/100.0;
-            //GUILayout.Label("Recon.", GUILayout.ExpandWidth(false));
-            GUILayout.EndHorizontal();
-            GUILayout.Label((Math.Floor(_workingPreset.TimeSettings.RolloutReconSplit*100))+"% Rollout, "+(100-Math.Floor(_workingPreset.TimeSettings.RolloutReconSplit*100))+"% Reconditioning");
             GUILayout.EndVertical(); //end time settings
             GUILayout.EndVertical();
             GUILayout.EndHorizontal(); //end feature/time setting split
@@ -207,11 +198,6 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("BuildRate: ");
                 _workingPreset.FormulaSettings.BuildRateFormula = GUILayout.TextField(_workingPreset.FormulaSettings.BuildRateFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("UpgradeReset: ");
-                _workingPreset.FormulaSettings.UpgradeResetFormula = GUILayout.TextField(_workingPreset.FormulaSettings.UpgradeResetFormula, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();

@@ -41,12 +41,6 @@ namespace KerbalConstructionTime
                 InputLockManager.RemoveControlLock(InputLockID);
             });
 
-            if (!Utilities.CurrentGameIsCareer())
-            {
-                _successActions(blv);
-                return;
-            }
-
             if (_routine != null)
                 KerbalConstructionTime.Instance.StopCoroutine(_routine);
 
@@ -60,6 +54,11 @@ namespace KerbalConstructionTime
             if (ProcessFacilityChecks(blv) != ValidationResult.Success)
             {
                 _failureActions();
+                yield break;
+            }
+            if (!Utilities.CurrentGameIsCareer())
+            {
+                _successActions(blv);
                 yield break;
             }
 

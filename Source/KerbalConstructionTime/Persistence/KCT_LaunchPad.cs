@@ -138,11 +138,11 @@ namespace KerbalConstructionTime
                         return false;
                     }
 
-                    foreach (BuildListVessel vessel in currentLC.VABWarehouse)
+                    foreach (BuildListVessel vessel in currentLC.Warehouse)
                     {
                         if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
                     }
-                    foreach (BuildListVessel vessel in currentLC.VABList)
+                    foreach (BuildListVessel vessel in currentLC.BuildList)
                     {
                         if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
                     }

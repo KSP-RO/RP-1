@@ -425,73 +425,96 @@ namespace KerbalConstructionTime
 
         public void VesselRecoverEvent(ProtoVessel v, bool unknownAsOfNow)
         {
-            KCTDebug.Log("VesselRecoverEvent");
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
-            if (!KCTGameStates.IsSimulatedFlight && !v.vesselRef.isEVA)
+            KCTDebug.Log($"VesselRecoverEvent for {v.vesselName}");
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
             {
-                if (KCTGameStates.RecoveredVessel != null && v.vesselName == KCTGameStates.RecoveredVessel.ShipName)
-                {
-                    //rebuy the ship if ScrapYard isn't overriding funds
-                    if (!ScrapYardWrapper.OverrideFunds)
-                    {
-                        Utilities.SpendFunds(KCTGameStates.RecoveredVessel.Cost, TransactionReasons.VesselRollout);    //pay for the ship again
-                    }
-
-                    //pull all of the parts out of the inventory
-                    //This is a bit funky since we grab the part id from our part, grab the inventory part out, then try to reapply that ontop of our part
-                    if (ScrapYardWrapper.Available)
-                    {
-                        foreach (ConfigNode partNode in KCTGameStates.RecoveredVessel.ExtractedPartNodes)
-                        {
-                            string id = ScrapYardWrapper.GetPartID(partNode);
-                            ConfigNode inventoryVersion = ScrapYardWrapper.FindInventoryPart(id);
-                            if (inventoryVersion != null)
-                            {
-                                //apply it to our copy of the part
-                                ConfigNode ourTracker = partNode.GetNodes("MODULE").FirstOrDefault(n => string.Equals(n.GetValue("name"), "ModuleSYPartTracker", StringComparison.Ordinal));
-                                if (ourTracker != null)
-                                {
-                                    ourTracker.SetValue("TimesRecovered", inventoryVersion.GetValue("_timesRecovered"));
-                                    ourTracker.SetValue("Inventoried", inventoryVersion.GetValue("_inventoried"));
-                                }
-                            }
-                        }
-
-                        //process the vessel in ScrapYard
-                        ScrapYardWrapper.ProcessVessel(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
-
-                        //reset the BP
-                        KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetBuildTime(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
-                        KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(KCTGameStates.RecoveredVessel);
-                    }
-
-                    LCItem targetLC = KCTGameStates.RecoveredVessel.LC;
-                    if (targetLC == null)
-                    {
-                        if (KCTGameStates.RecoveredVessel.Type == BuildListVessel.ListType.VAB)
-                        {
-                            double mass = KCTGameStates.RecoveredVessel.GetTotalMass();
-                            if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMax >= mass &&
-                                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMin <= mass)
-                                targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                            else
-                                targetLC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(lc => lc.isOperational && lc.isPad && lc.massMax >= mass && lc.massMin <= mass);
-
-                            // If we still can't find a match, just recover it to the current launch complex.
-                            if (targetLC == null)
-                                targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                        }
-                        else
-                        {
-                            targetLC = KCTGameStates.ActiveKSC.Hangar;
-                        }
-                    }
-
-                    targetLC.Warehouse.Add(KCTGameStates.RecoveredVessel);
-                    targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
-                    KCTGameStates.RecoveredVessel = null;
-                }
+                //KCTDebug.LogError("Disabled!");
+                return;
             }
+            if (KCTGameStates.IsSimulatedFlight)
+            {
+                //KCTDebug.LogError("Sim!");
+                return;
+            }
+
+            if (v.vesselRef.isEVA)
+            {
+                //KCTDebug.LogError("Is eva!");
+                return;
+            }
+            if (KCTGameStates.RecoveredVessel == null)
+            {
+                //KCTDebug.LogError("Recovered vessel is null!");
+                return;
+            }
+            if (v.vesselName != KCTGameStates.RecoveredVessel.ShipName)
+            {
+                //KCTDebug.LogError("Recovered vessel, " + KCTGameStates.RecoveredVessel.ShipName +", doesn't match!");
+                return;
+            }
+            //rebuy the ship if ScrapYard isn't overriding funds
+            if (!ScrapYardWrapper.OverrideFunds)
+            {
+                Utilities.SpendFunds(KCTGameStates.RecoveredVessel.Cost, TransactionReasons.VesselRollout);    //pay for the ship again
+            }
+
+            //pull all of the parts out of the inventory
+            //This is a bit funky since we grab the part id from our part, grab the inventory part out, then try to reapply that ontop of our part
+            if (ScrapYardWrapper.Available)
+            {
+                foreach (ConfigNode partNode in KCTGameStates.RecoveredVessel.ExtractedPartNodes)
+                {
+                    string id = ScrapYardWrapper.GetPartID(partNode);
+                    ConfigNode inventoryVersion = ScrapYardWrapper.FindInventoryPart(id);
+                    if (inventoryVersion != null)
+                    {
+                        //apply it to our copy of the part
+                        ConfigNode ourTracker = partNode.GetNodes("MODULE").FirstOrDefault(n => string.Equals(n.GetValue("name"), "ModuleSYPartTracker", StringComparison.Ordinal));
+                        if (ourTracker != null)
+                        {
+                            ourTracker.SetValue("TimesRecovered", inventoryVersion.GetValue("_timesRecovered"));
+                            ourTracker.SetValue("Inventoried", inventoryVersion.GetValue("_inventoried"));
+                        }
+                    }
+                }
+
+                //process the vessel in ScrapYard
+                ScrapYardWrapper.ProcessVessel(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
+
+                //reset the BP
+                KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetBuildTime(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
+                KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(KCTGameStates.RecoveredVessel);
+            }
+
+            LCItem targetLC = KCTGameStates.RecoveredVessel.LC;
+            if (targetLC == null)
+            {
+                if (KCTGameStates.RecoveredVessel.Type == BuildListVessel.ListType.VAB)
+                {
+                    double mass = KCTGameStates.RecoveredVessel.GetTotalMass();
+                    if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMax >= mass &&
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMin <= mass)
+                        targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                    else
+                    {
+                        targetLC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(lc => lc.isOperational && lc.isPad && lc.massMax >= mass && lc.massMin <= mass);
+
+                        // If we still can't find a match, just recover it to the current launch complex.
+                        if (targetLC == null)
+                            targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                    }
+                }
+                else
+                {
+                    targetLC = KCTGameStates.ActiveKSC.Hangar;
+                }
+
+                KCTGameStates.RecoveredVessel.LC = targetLC;
+            }
+
+            targetLC.Warehouse.Add(KCTGameStates.RecoveredVessel);
+            targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
+            KCTGameStates.RecoveredVessel = null;
         }
     }
 }

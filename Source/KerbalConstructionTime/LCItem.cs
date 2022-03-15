@@ -7,6 +7,27 @@ namespace KerbalConstructionTime
 {
     public class LCItem
     {
+        public struct StartingLCData
+        {
+            public string Name;
+            public float massMax;
+            public Vector3 sizeMax;
+            public bool isPad;
+
+            public StartingLCData(string Name, float massMax, Vector3 sizeMax, bool isPad)
+            {
+                this.Name = Name;
+                this.massMax = massMax;
+                this.sizeMax = sizeMax;
+                this.isPad = isPad;
+            }
+
+            // NOTE: Not comparing name, which I think is correct here.
+            public bool Compare(LCItem lc) => massMax == lc.massMax && sizeMax == lc.sizeMax;
+        }
+        public static StartingLCData StartingHangar = new StartingLCData("Hangar", -1f, new Vector3(40f, 10f, 40f), false);
+        public static StartingLCData StartingLC = new StartingLCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true);
+
         public string Name;
         protected Guid _id;
         public Guid ID => _id;
@@ -54,6 +75,8 @@ namespace KerbalConstructionTime
             _ksc = ksc;
         }
 
+        public LCItem(StartingLCData lcData, KSCItem ksc) : this(lcData.Name, lcData.massMax, lcData.sizeMax, lcData.isPad, ksc) { }
+
         public LCItem(string lcName, float mMax, Vector3 sMax, bool isLCPad, KSCItem ksc)
         {
             Name = lcName;
@@ -76,6 +99,24 @@ namespace KerbalConstructionTime
             }
         }
 
+        public void Modify(float mMax, Vector3 sMax)
+        {
+            massMax = mMax;
+            float fracLevel;
+
+            KCT_GUI.GetPadStats(massMax, sMax, out massMin, out _, out _, out fracLevel);
+
+            sizeMax = sMax;
+
+            foreach (var pad in LaunchPads)
+            {
+                pad.fractionalLevel = fracLevel;
+                pad.level = (int)fracLevel;
+                pad.supportedMass = mMax;
+                pad.supportedSize = sMax;
+            }
+        }
+
         public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadID ? LaunchPads[ActiveLaunchPadID] : null;
 
         public int LaunchPadCount
@@ -91,7 +132,9 @@ namespace KerbalConstructionTime
 
         public bool IsEmpty => !BuildList.Any() && !Warehouse.Any() &&
                     Upgrades.All(i => i == 0) && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
-                    !PadConstructions.Any() && LaunchPads.Count < 2 && LaunchPads.All(lp => lp.level < 1);
+                    !PadConstructions.Any() && LaunchPads.Count < 2 && (isPad ? StartingLC : StartingHangar).Compare(this);
+
+        public bool CanModify => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() && !PadConstructions.Any();
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
             Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");

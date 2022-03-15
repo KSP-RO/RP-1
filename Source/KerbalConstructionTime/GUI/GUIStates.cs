@@ -15,6 +15,8 @@
         public bool ShowBLPlus;
         public bool ShowNewPad;
         public bool ShowNewLC;
+        public bool ShowModifyLC;
+        public bool ShowDismantleLC;
         public bool ShowRename;
         public bool ShowDismantlePad;
         public bool ShowFirstRun;

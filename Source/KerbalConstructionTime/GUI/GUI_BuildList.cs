@@ -970,7 +970,7 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.FlexibleSpace();
-            string padTxt = $"Current: {activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
+            string padTxt = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
             string padDesc = $"Size limit: {activeLC.SupportedSizeAsPrettyText}";
             GUILayout.Label(new GUIContent(padTxt, padDesc));
 
@@ -979,26 +979,51 @@ namespace KerbalConstructionTime
                 _renameType = RenameType.LaunchComplex;
                 _newName = activeLC.Name;
                 GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowMothballLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
             }
-            if (GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
+            bool canModify = activeLC.CanModify;
+            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", "Modify " + (activeLC.isPad ? "launch complex limits" : "hangar limits")), 
+                canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
+            {
+                if (canModify)
+                {
+                    GUIStates.ShowDismantlePad = false;
+                    GUIStates.ShowModifyLC = true;
+                    GUIStates.ShowMothballLC = false;
+                    GUIStates.ShowNewPad = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowRename = false;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                }
+                else
+                {
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", $"{activeLC.Name} is currently in use! No projects can be underway when modifying, though vessels can be in storage.", "Can't Modify", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                }
+            }
+            if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
             {
                 _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
                 GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowMothballLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
             }
-            // TODO: allow mothballing and upgrading
-            //if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
+            //if (!HighLogic.LoadedSceneIsEditor && canModify && activeLC.KSC.LaunchComplexCount > 1 && GUILayout.Button(new GUIContent("Mothball", "Mothball this facility. Can be used to lower maintenance costs."), GUILayout.ExpandWidth(false)))
             //{
-            //    GUIStates.ShowDismantlePad = true;
+            //    GUIStates.ShowDismantlePad = false;
+            //    GUIStates.ShowModifyLC = false;
+            //    GUIStates.ShowMothballLC = true;
             //    GUIStates.ShowNewPad = false;
             //    GUIStates.ShowNewLC = false;
             //    GUIStates.ShowRename = false;
@@ -1036,7 +1061,7 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.FlexibleSpace();
-            string padTxt = $"Current: {activePad.name} ({activePad.SupportedMassAsPrettyText})";
+            string padTxt = $"{activePad.name} ({activePad.SupportedMassAsPrettyText})";
             string padDesc = $"Size limit: {activePad.SupportedSizeAsPrettyText}";
             GUILayout.Label(new GUIContent(padTxt, padDesc));
 
@@ -1045,6 +1070,8 @@ namespace KerbalConstructionTime
                 _renameType = RenameType.Pad;
                 _newName = activePad.name;
                 GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowMothballLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = true;
@@ -1069,6 +1096,8 @@ namespace KerbalConstructionTime
             {
                 _newName = $"LaunchPad {(activeLC.LaunchPads.Count + 1)}";
                 GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowMothballLC = false;
                 GUIStates.ShowNewPad = true;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = false;
@@ -1078,6 +1107,8 @@ namespace KerbalConstructionTime
             if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
             {
                 GUIStates.ShowDismantlePad = true;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowMothballLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = false;

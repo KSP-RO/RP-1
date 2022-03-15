@@ -53,7 +53,8 @@ namespace KerbalConstructionTime
                     button.onClick.AddListener(HandleUpgrade);
 
                     if (GetFacilityID().IndexOf("launchpad", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                         GetFacilityID().IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0)
+                         GetFacilityID().IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                         GetFacilityID().IndexOf("VehicleAssemblyBuilding", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         button.interactable = false;
                         var hov = button.gameObject.GetComponent<UIOnHover>();
@@ -115,20 +116,15 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Overriding level stats text for {lvl.levelStats.facility} lvl {lvlIdx}");
 
             SpaceCenterFacility facilityType = lvl.levelStats.facility;
-            if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding ||
-                facilityType == SpaceCenterFacility.SpaceplaneHangar)
+            if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding || facilityType == SpaceCenterFacility.LaunchPad)
             {
-                if (facilityType == SpaceCenterFacility.SpaceplaneHangar)
-                {
-                    lvl.levelStats.linePrefix = string.Empty;
-                    lvl.levelStats.textBase = "Upgrade the VAB instead";
-                }
-                else
-                {
-                    lvl.levelStats.textBase += $"\n{lvlIdx + 1} build queue{(lvlIdx > 0 ? "s" : string.Empty)}";
-                    if (lvlIdx > 0)
-                        lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% build rate";
-                }
+                lvl.levelStats.linePrefix = string.Empty;
+                lvl.levelStats.textBase = "Modify the appropriate launch complex from the Space Center Management window instead.";
+            }
+            else if(facilityType == SpaceCenterFacility.SpaceplaneHangar)
+            {
+                lvl.levelStats.linePrefix = string.Empty;
+                lvl.levelStats.textBase = "Modify the Hangar from the Space Center Management window.";
             }
             else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment &&
                      lvlIdx > 0)
@@ -145,11 +141,6 @@ namespace KerbalConstructionTime
             {
                 lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter R&R times";
                 lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter training times";
-            }
-            else if (facilityType == SpaceCenterFacility.LaunchPad)
-            {
-                lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "<color=\"red\"><b>Launchpads cannot be upgraded. Build a new launchpad from the KCT Build List tab instead.</b></color>";
             }
         }
 

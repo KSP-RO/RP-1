@@ -38,7 +38,7 @@ namespace KerbalConstructionTime
             options[0] = new DialogGUIButton("Go to Flight scene", Fly);
             options[1] = new DialogGUIButton("Cancel", () => { });
 
-            var diag = new MultiOptionDialog("scrapVesselPopup", "KCT can only recover vessels in the Flight scene", "Recover Vessel", null, options: options);
+            var diag = new MultiOptionDialog("recoverVesselPopup", "Vessels can only be recovered for reuse in the Flight scene", "Recover Vessel", null, options: options);
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }
 
@@ -66,15 +66,18 @@ namespace KerbalConstructionTime
                 return;
             }
 
+            bool canRecoverSPH = Utilities.IsSphRecoveryAvailable(selectedVessel);
+            bool canRecoverVAB = Utilities.IsVabRecoveryAvailable(selectedVessel);
+
             var options = new List<DialogGUIBase>();
-            if (Utilities.IsSphRecoveryAvailable(selectedVessel))
+            if (canRecoverSPH)
                 options.Add(new DialogGUIButton("Recover to SPH", RecoverToSPH));
-            if (Utilities.IsVabRecoveryAvailable(selectedVessel))
+            if (canRecoverVAB)
                 options.Add(new DialogGUIButton("Recover to VAB", RecoverToVAB));
             options.Add(new DialogGUIButton("Normal recovery", DoNormalRecovery));
             options.Add(new DialogGUIButton("Cancel", () => { }));
 
-            var diag = new MultiOptionDialog("scrapVesselPopup", "Do you want KCT to do the recovery?", "Recover Vessel", null, options: options.ToArray());
+            var diag = new MultiOptionDialog("scrapVesselPopup", string.Empty, "Recover Vessel", null, options: options.ToArray());
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }
     }

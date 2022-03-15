@@ -32,14 +32,14 @@ namespace KerbalConstructionTime
             if (_validScenes.Contains(HighLogic.LoadedScene))
             {
                 if (GUIStates.ShowSettings)
-                    _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "KCT Settings", DrawPresetWindow);
+                    _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "Settings", DrawPresetWindow);
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     return;
 
                 if (GUIStates.ShowEditorGUI)
-                    EditorWindowPosition = DrawWindowWithTooltipSupport(EditorWindowPosition, "DrawEditorGUI", "Kerbal Construction Time", DrawEditorGUI);
+                    EditorWindowPosition = DrawWindowWithTooltipSupport(EditorWindowPosition, "DrawEditorGUI", "Integration Info", DrawEditorGUI);
                 if (GUIStates.ShowSimulationGUI)
-                    _simulationWindowPosition = DrawWindowWithTooltipSupport(_simulationWindowPosition, "DrawSimGUI", "KCT Simulation", DrawSimulationWindow);
+                    _simulationWindowPosition = DrawWindowWithTooltipSupport(_simulationWindowPosition, "DrawSimGUI", "Simulation", DrawSimulationWindow);
                 if (GUIStates.ShowSimConfig)
                     _simulationConfigPosition = DrawWindowWithTooltipSupport(_simulationConfigPosition, "DrawSimConfGUI", "Simulation Configuration", DrawSimulationConfigure);
                 if (GUIStates.ShowSimBodyChooser)
@@ -60,21 +60,26 @@ namespace KerbalConstructionTime
                 if (GUIStates.ShowBLPlus)
                     _blPlusPosition = DrawWindowWithTooltipSupport(_blPlusPosition, "DrawBLPlusWindow", "Options", DrawBLPlusWindow);
                 if (GUIStates.ShowDismantlePad)
-                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle pad", DrawDismantlePadWindow);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle Pad", DrawDismantlePadWindow);
+                if (GUIStates.ShowDismantleLC)
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle Launch Complex", DrawDismantlePadWindow);
                 if (GUIStates.ShowRename)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawRenameWindow", "Rename", DrawRenameWindow);
                 if (GUIStates.ShowNewPad)
-                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewPadWindow", "New launch pad", DrawNewPadWindow);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewPadWindow", "New Launch Pad", DrawNewPadWindow);
                 if (GUIStates.ShowNewLC)
-                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewLCWindow", "New launch complex", DrawNewLCWindow);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewLCWindow", "New Launch Complex", DrawNewLCWindow);
+                if (GUIStates.ShowModifyLC)
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawModifyLCWindow", "Modify Launch Complex", DrawNewLCWindow);
                 if (GUIStates.ShowFirstRun)
-                    _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Kerbal Construction Time", DrawFirstRun);
+                    _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Space Center Management", DrawFirstRun);
                 if (GUIStates.ShowPresetSaver)
                     _presetNamingWindowPosition = DrawWindowWithTooltipSupport(_presetNamingWindowPosition, "DrawPresetSaveWindow", "Save as New Preset", DrawPresetSaveWindow);
                 if (GUIStates.ShowLaunchSiteSelector)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawLaunchSiteChooser", "Select Site", DrawLaunchSiteChooser);
 
-                if (GUIStates.ShowBuildPlansWindow)
+                // Only show plans if we don't have a popup
+                if (GUIStates.ShowBuildPlansWindow && !_isKSCLocked)
                     _buildPlansWindowPosition = DrawWindowWithTooltipSupport(_buildPlansWindowPosition, "DrawBuildPlansWindow", "Building Plans & Construction", DrawBuildPlansWindow);
 
                 // both flags can be true when it's necessary to first show ClearLaunch and then Airlaunch right after that
@@ -94,7 +99,7 @@ namespace KerbalConstructionTime
                 }
 
                 //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch)
+                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
                 {
                     if (!_isKSCLocked)
                     {

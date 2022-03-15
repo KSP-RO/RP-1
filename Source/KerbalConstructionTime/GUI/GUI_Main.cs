@@ -9,7 +9,7 @@ namespace KerbalConstructionTime
         public static GUIStates PrevGUIStates = null;
         public static GUIDataSaver GuiDataSaver = new GUIDataSaver();
 
-        private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 150, 50);
+        private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 300, 50);
         private static Rect _blPlusPosition = new Rect(Screen.width - 500, 40, 100, 1);
         private static Vector2 _scrollPos;
         private static GUISkin _windowSkin;
@@ -66,7 +66,9 @@ namespace KerbalConstructionTime
                 if (GUIStates.ShowNewPad)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewPadWindow", "New launch pad", DrawNewPadWindow);
                 if (GUIStates.ShowNewLC)
-                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewLCWindow", "New launch complex", DrawNewLCWindow);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewLCWindow", "New LC", DrawNewLCWindow);
+                if (GUIStates.ShowModifyLC)
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawModifyLCWindow", "Modify LC", DrawNewLCWindow);
                 if (GUIStates.ShowFirstRun)
                     _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Kerbal Construction Time", DrawFirstRun);
                 if (GUIStates.ShowPresetSaver)
@@ -74,7 +76,8 @@ namespace KerbalConstructionTime
                 if (GUIStates.ShowLaunchSiteSelector)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawLaunchSiteChooser", "Select Site", DrawLaunchSiteChooser);
 
-                if (GUIStates.ShowBuildPlansWindow)
+                // Only show plans if we don't have a popup
+                if (GUIStates.ShowBuildPlansWindow && !_isKSCLocked)
                     _buildPlansWindowPosition = DrawWindowWithTooltipSupport(_buildPlansWindowPosition, "DrawBuildPlansWindow", "Building Plans & Construction", DrawBuildPlansWindow);
 
                 // both flags can be true when it's necessary to first show ClearLaunch and then Airlaunch right after that
@@ -94,7 +97,7 @@ namespace KerbalConstructionTime
                 }
 
                 //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch)
+                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowMothballLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
                 {
                     if (!_isKSCLocked)
                     {

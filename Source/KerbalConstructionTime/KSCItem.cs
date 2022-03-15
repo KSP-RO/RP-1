@@ -50,10 +50,10 @@ namespace KerbalConstructionTime
         {
             if (LaunchComplexes.Count > 1) return;
 
-            LCItem sph = new LCItem("Hangar", -1f, new Vector3(40f, 10f, 40f), false, this);
+            LCItem sph = new LCItem(LCItem.StartingHangar, this);
             sph.isOperational = true;
             LaunchComplexes.Add(sph);
-            LCItem starterLC = new LCItem("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, this);
+            LCItem starterLC = new LCItem(LCItem.StartingLC, this);
             starterLC.isOperational = true;
             LaunchComplexes.Add(starterLC);
         }

@@ -26,8 +26,6 @@ namespace KerbalConstructionTime
         [Persistent]
         int EditorFacility = 0, LaunchPadID = -1;
         [Persistent]
-        int BuildListIndex = -1;
-        [Persistent]
         List<string> desiredManifest = new List<string>();
         [Persistent]
         string KCTPersistentID;

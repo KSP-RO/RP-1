@@ -11,6 +11,8 @@ namespace KerbalConstructionTime
         public List<LCConstruction> LCConstructions = new List<LCConstruction>();
         public List<FacilityUpgrade> KSCTech = new List<FacilityUpgrade>();
         public List<int> RDUpgrades = new List<int>() { 0, 0 }; //research/development
+        public int Personnel = 0;
+        public int FreePersonnel => Personnel - LaunchComplexes.Sum(lc => lc.Personnel);
         
         public int ActiveLaunchComplexID = 1;
 
@@ -128,6 +130,7 @@ namespace KerbalConstructionTime
             var node = new ConfigNode("KSC");
             node.AddValue("KSCName", KSCName);
             node.AddValue("ActiveLCID", ActiveLaunchComplexID);
+            node.AddValue("Personnel", Personnel);
 
             var cnLCs = new ConfigNode("LaunchComplexes");
             foreach (LCItem lc in LaunchComplexes)
@@ -178,6 +181,9 @@ namespace KerbalConstructionTime
             KSCName = node.GetValue("KSCName");
             if (!int.TryParse(node.GetValue("ActiveLCID"), out ActiveLaunchComplexID))
                 ActiveLaunchComplexID = 0;
+
+            Personnel = 0;
+            node.TryGetValue("Personnel", ref Personnel);
 
             ConfigNode rdUp = node.GetNode("RDUpgrades");
             foreach (string upgrade in rdUp.GetValues("Upgrade"))

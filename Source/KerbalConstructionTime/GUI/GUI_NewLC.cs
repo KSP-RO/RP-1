@@ -18,8 +18,8 @@ namespace KerbalConstructionTime
             fractionalPadLvl = 0f;
             if (tonnageLimit > 0f)
             {
-                minTonnage = Mathf.Floor(tonnageLimit * 0.5f);
-                if (minTonnage < 10f)
+                minTonnage = Mathf.Floor(tonnageLimit * 0.75f);
+                if (minTonnage < 12f)
                     minTonnage = 0f;
 
                 double mass = tonnageLimit;

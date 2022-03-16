@@ -21,6 +21,9 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool upgradeProcessed = false;
 
+        [Persistent]
+        public int buildListIndex = -1;
+
         public LCConstruction ToLCConstruction()
         {
             return new LCConstruction
@@ -30,18 +33,20 @@ namespace KerbalConstructionTime
                 Progress = progress,
                 BP = BP,
                 Cost = cost,
-                UpgradeProcessed = upgradeProcessed
+                UpgradeProcessed = upgradeProcessed,
+                BuildListIndex = buildListIndex
             };
         }
 
-        public LCConstructionStorageItem FromLCConstruction(LCConstruction pc)
+        public LCConstructionStorageItem FromLCConstruction(LCConstruction lcc)
         {
-            launchComplexID = pc.LaunchComplexIndex;
-            name = pc.Name;
-            progress = pc.Progress;
-            BP = pc.BP;
-            cost = pc.Cost;
-            upgradeProcessed = pc.UpgradeProcessed;
+            launchComplexID = lcc.LaunchComplexIndex;
+            name = lcc.Name;
+            progress = lcc.Progress;
+            BP = lcc.BP;
+            cost = lcc.Cost;
+            upgradeProcessed = lcc.UpgradeProcessed;
+            buildListIndex = lcc.BuildListIndex;
             return this;
         }
     }

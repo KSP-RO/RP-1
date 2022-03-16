@@ -254,7 +254,7 @@ namespace KerbalConstructionTime
                 if (Funding.CanAfford(cost))
                 {
                     Utilities.SpendFunds(cost, TransactionReasons.Structures);
-                    KCTGameStates.ActiveKSC.KSCTech.Add(upgrading);
+                    KCTGameStates.ActiveKSC.FacilityUpgrades.Add(upgrading);
                     upgrading.SetBP(cost);
                     upgrading.Cost = cost;
 

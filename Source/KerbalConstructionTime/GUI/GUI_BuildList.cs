@@ -960,8 +960,8 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             // Don't allow switching in edit mode
-            int lpCount = KCTGameStates.EditorShipEditingMode ? 1 : KCTGameStates.ActiveKSC.LaunchComplexCount;
-            if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+            int lcCount = KCTGameStates.EditorShipEditingMode ? 1 : KCTGameStates.ActiveKSC.LaunchComplexCount;
+            if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
                 KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                 if (HighLogic.LoadedSceneIsEditor)
@@ -980,31 +980,34 @@ namespace KerbalConstructionTime
                 _newName = activeLC.Name;
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;
-                GUIStates.ShowMothballLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
+                _centralWindowPosition.width = 300;
             }
             bool canModify = activeLC.CanModify;
-            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", "Modify " + (activeLC.isPad ? "launch complex limits" : "hangar limits")), 
+            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads, though vessels can be in storage.";
+            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.isPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
                 {
                     GUIStates.ShowDismantlePad = false;
                     GUIStates.ShowModifyLC = true;
-                    GUIStates.ShowMothballLC = false;
+                    GUIStates.ShowDismantleLC = false;
                     GUIStates.ShowNewPad = false;
                     GUIStates.ShowNewLC = false;
                     GUIStates.ShowRename = false;
                     GUIStates.ShowBuildList = false;
                     GUIStates.ShowBLPlus = false;
+                    _centralWindowPosition.width = 300;
                 }
                 else
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", $"{activeLC.Name} is currently in use! No projects can be underway when modifying, though vessels can be in storage.", "Can't Modify", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Modify", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
                 }
             }
             if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
@@ -1012,26 +1015,36 @@ namespace KerbalConstructionTime
                 _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;
-                GUIStates.ShowMothballLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
+                _centralWindowPosition.width = 300;
             }
-            //if (!HighLogic.LoadedSceneIsEditor && canModify && activeLC.KSC.LaunchComplexCount > 1 && GUILayout.Button(new GUIContent("Mothball", "Mothball this facility. Can be used to lower maintenance costs."), GUILayout.ExpandWidth(false)))
-            //{
-            //    GUIStates.ShowDismantlePad = false;
-            //    GUIStates.ShowModifyLC = false;
-            //    GUIStates.ShowMothballLC = true;
-            //    GUIStates.ShowNewPad = false;
-            //    GUIStates.ShowNewLC = false;
-            //    GUIStates.ShowRename = false;
-            //    GUIStates.ShowBuildList = false;
-            //    GUIStates.ShowBLPlus = false;
-            //}
+            if (!HighLogic.LoadedSceneIsEditor && activeLC.isPad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
+                canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
+            {
+                if (canModify)
+                {
+                    GUIStates.ShowDismantlePad = false;
+                    GUIStates.ShowModifyLC = false;
+                    GUIStates.ShowDismantleLC = true;
+                    GUIStates.ShowNewPad = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowRename = false;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    _centralWindowPosition.width = 300;
+                }
+                else
+                {
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Dismantle", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                }
+            }
             GUILayout.FlexibleSpace();
-            if (lpCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
                 KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
                 if (HighLogic.LoadedSceneIsEditor)
@@ -1071,7 +1084,7 @@ namespace KerbalConstructionTime
                 _newName = activePad.name;
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;
-                GUIStates.ShowMothballLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = true;
@@ -1097,18 +1110,19 @@ namespace KerbalConstructionTime
                 _newName = $"LaunchPad {(activeLC.LaunchPads.Count + 1)}";
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;
-                GUIStates.ShowMothballLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = true;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
+                _centralWindowPosition.width = 300;
             }
             if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
             {
                 GUIStates.ShowDismantlePad = true;
                 GUIStates.ShowModifyLC = false;
-                GUIStates.ShowMothballLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowRename = false;
@@ -1337,36 +1351,7 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("Tried to remove a vessel that doesn't exist!");
                 return;
             }
-            KCTDebug.Log($"Scrapping {b.ShipName}");
-            if (!b.IsFinished)
-            {
-                List<ConfigNode> parts = b.ExtractedPartNodes;
-                b.RemoveFromBuildList();
-
-                //only add parts that were already a part of the inventory
-                if (ScrapYardWrapper.Available)
-                {
-                    List<ConfigNode> partsToReturn = new List<ConfigNode>();
-                    foreach (ConfigNode partNode in parts)
-                    {
-                        if (ScrapYardWrapper.PartIsFromInventory(partNode))
-                        {
-                            partsToReturn.Add(partNode);
-                        }
-                    }
-                    if (partsToReturn.Any())
-                    {
-                        ScrapYardWrapper.AddPartsToInventory(partsToReturn, false);
-                    }
-                }
-            }
-            else
-            {
-                b.RemoveFromBuildList();
-                ScrapYardWrapper.AddPartsToInventory(b.ExtractedPartNodes, false);    //don't count as a recovery
-            }
-            ScrapYardWrapper.SetProcessedStatus(ScrapYardWrapper.GetPartID(b.ExtractedPartNodes[0]), false);
-            Utilities.AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
+            Utilities.ScrapVessel(b);
         }
     }
 }

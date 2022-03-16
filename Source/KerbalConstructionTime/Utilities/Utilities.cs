@@ -345,7 +345,18 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), BuildListVessel.ListType.VAB, ship.LC);
+            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC);
+        }
+
+        public static double GetBuildRateSum(LCItem LC)
+        {
+            if (!LC.isOperational)
+                return 0d;
+
+            double rateTotal = 0d;
+            foreach (var rate in LC.Rates)
+                rateTotal += rate;
+            return rateTotal;
         }
 
         private static List<double> _minBuildRate = new List<double>( new double[] {0.0001d} );
@@ -392,20 +403,10 @@ namespace KerbalConstructionTime
             return rateTotal;
         }
 
-        public static double GetBothBuildRateSum(LCItem LC)
-        {
-            double rateTotal = GetVABBuildRateSum(LC);
-            return rateTotal;
-        }
-
         public static double GetConstructionRate(KSCItem KSC)
         {
-            // TODO: worker allocations
-            double rateTotal = 0;
-            foreach (LCItem lc in KSC.LaunchComplexes)
-                if (lc.isOperational)
-                    rateTotal += GetVABBuildRateSum(lc);
-
+            // we pass Type KSC; the LC passed is just to point it at the right KSC.
+            double rateTotal = MathParser.ParseBuildRateFormula(BuildListVessel.ListType.KSC, 0, KSC == null ? null : KSC.Hangar, 0);
             return rateTotal;
         }
 
@@ -701,7 +702,7 @@ namespace KerbalConstructionTime
             if (science > 0)
             {
                 ResearchAndDevelopment.Instance.AddScience(science, reason);
-                var message = new ScreenMessage($"[KCT] {science} science added.", 4f, ScreenMessageStyle.UPPER_LEFT);
+                var message = new ScreenMessage($"{science} science added.", 4f, ScreenMessageStyle.UPPER_LEFT);
                 ScreenMessages.PostScreenMessage(message);
                 return message.ToString();
             }
@@ -779,7 +780,6 @@ namespace KerbalConstructionTime
             int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
             if (upgradesToAdd > 0)
             {
-                KCT_GUI.ResetUpgradePointCounts();
                 KCTDebug.Log($"Added {upgradesToAdd} upgrade points");
                 ScreenMessages.PostScreenMessage($"{upgradesToAdd} Upgrade Point{(upgradesToAdd > 1 ? "s" : string.Empty)} Added!", 8f, ScreenMessageStyle.UPPER_LEFT);
             }
@@ -1153,7 +1153,7 @@ namespace KerbalConstructionTime
                     foreach (IKCTBuildItem pc in LC.PadConstructions)
                         _checkTime(pc, ref shortestTime, ref thing);
                 }
-                foreach (IKCTBuildItem ub in KSC.KSCTech)
+                foreach (IKCTBuildItem ub in KSC.FacilityUpgrades)
                     _checkTime(ub, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem pc in KSC.LCConstructions)
                     _checkTime(pc, ref shortestTime, ref thing);
@@ -1193,9 +1193,7 @@ namespace KerbalConstructionTime
                 {
                     foreach (var vabPoints in LC.Upgrades) spentPoints += vabPoints;
                 }
-                spentPoints += KSC.RDUpgrades[0];
             }
-            spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
             return spentPoints;
         }
 
@@ -1206,9 +1204,6 @@ namespace KerbalConstructionTime
             switch (facility)
             {
                 case SpaceCenterFacility.ResearchAndDevelopment:
-                    foreach (var KSC in KCTGameStates.KSCs)
-                        spentPoints += KSC.RDUpgrades[0];
-                    spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
                     break;
                 case SpaceCenterFacility.VehicleAssemblyBuilding:
                 case SpaceCenterFacility.SpaceplaneHangar:
@@ -1650,30 +1645,11 @@ namespace KerbalConstructionTime
             //Starting points
             total += PresetManager.Instance.StartingUpgrades(HighLogic.CurrentGame.Mode);
             //R&D
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUpgrades)
-            {
-                //Completed tech nodes
-                if (CurrentGameHasScience())
-                {
-                    total += KCTGameStates.LastKnownTechCount;
-                    if (KCTGameStates.LastKnownTechCount == 0)
-                        total += ResearchAndDevelopment.Instance != null ? ResearchAndDevelopment.Instance.snapshot.GetData().GetNodes("Tech").Length : 0;
-                }
-
-                //In progress tech nodes
-                total += KCTGameStates.TechList.Count;
-            }
             total += (int)MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>()
             {
                 { "N", KCTGameStates.SciPointsTotal.ToString() }
             });
-            //Purchased funds
-            total += KCTGameStates.PurchasedUpgrades[0];
-            //Purchased science
-            total += KCTGameStates.PurchasedUpgrades[1];
-            //Temp upgrades (currently for when tech nodes finish)
-            total += KCTGameStates.MiscellaneousTempUpgrades;
-
+            
             return total;
         }
 

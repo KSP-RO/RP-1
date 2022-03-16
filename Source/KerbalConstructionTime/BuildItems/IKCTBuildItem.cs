@@ -10,6 +10,13 @@
         bool IsComplete();
         void IncrementProgress(double UTDiff);
     }
+
+    public interface IConstructionBuildItem : IKCTBuildItem
+    {
+        int BuildListIndex { get; set; }
+        double UpdateBuildRate(int index);
+        double EstimatedTimeLeft { get; }
+    }
 }
 
 /*

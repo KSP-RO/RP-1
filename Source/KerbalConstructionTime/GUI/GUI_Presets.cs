@@ -161,11 +161,6 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("UpgradeFunds: ");
-                _workingPreset.FormulaSettings.UpgradeFundsFormula = GUILayout.TextField(_workingPreset.FormulaSettings.UpgradeFundsFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
                 GUILayout.Label("UpgradesForScience: ");
                 _workingPreset.FormulaSettings.UpgradesForScience = GUILayout.TextField(_workingPreset.FormulaSettings.UpgradesForScience, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();

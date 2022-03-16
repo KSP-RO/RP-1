@@ -165,14 +165,14 @@ namespace KerbalConstructionTime
                         KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KCTGameStates.KACAlarmId);
                         if (alarm == null)
                         {
-                            alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.StartsWith("KCT: "));
+                            alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.StartsWith("RP-1: "));
                         }
                         if (alarm != null)
                         {
                             KCTDebug.Log("Removing existing alarm");
                             KACWrapper.KAC.DeleteAlarm(alarm.ID);
                         }
-                        txt = "KCT: ";
+                        txt = "RP-1: ";
                         if (buildItem.GetListType() == BuildListVessel.ListType.Reconditioning)
                         {
                             ReconRollout reconRoll = buildItem as ReconRollout;
@@ -225,14 +225,20 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
             }
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.FLIGHT)
+            if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
             {
-                if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
-                {
-                    GUIStates.ShowUpgradeWindow = true;
-                    GUIStates.ShowBuildList = false;
-                    GUIStates.ShowBLPlus = false;
-                }
+                GUIStates.ShowUpgradeWindow = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+            }
+            // TODO: Color button based on workers in construction?
+            if (GUILayout.Button("Personnel", GUI.skin.button))
+            {
+                GUIStates.ShowPersonnelWindow = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
             }
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
@@ -822,7 +828,7 @@ namespace KerbalConstructionTime
                                 }
                                 else if (Utilities.ReconditioningActive(null, launchSite))
                                 {
-                                    ScreenMessage message = new ScreenMessage($"[KCT] Cannot launch while LaunchPad is being reconditioned. It will be finished in {MagiCore.Utilities.GetFormattedTime(activeLC.GetReconditioning(launchSite).GetTimeLeft())}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {MagiCore.Utilities.GetFormattedTime(activeLC.GetReconditioning(launchSite).GetTimeLeft())}", 4f, ScreenMessageStyle.UPPER_CENTER);
                                     ScreenMessages.PostScreenMessage(message);
                                 }
                                 else

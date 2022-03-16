@@ -108,11 +108,11 @@ namespace KerbalConstructionTime
                         {
                             if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft")
                             {
-                                var message = new ScreenMessage("[KCT] Vessel must have a name other than 'Untitled Space Craft'.", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                var message = new ScreenMessage("Vessel must have a name other than 'Untitled Space Craft'.", 4f, ScreenMessageStyle.UPPER_CENTER);
                                 ScreenMessages.PostScreenMessage(message);
                             } else
                             {
-                                var message = new ScreenMessage("[KCT] Vessel must have a name", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                var message = new ScreenMessage("Vessel must have a name", 4f, ScreenMessageStyle.UPPER_CENTER);
                                 ScreenMessages.PostScreenMessage(message);
                             }
                         }
@@ -249,7 +249,7 @@ namespace KerbalConstructionTime
             if (blv.LC.Plans.ContainsKey(blv.ShipName))
             {
                 blv.LC.Plans.Remove(blv.ShipName);
-                message = new ScreenMessage($"[KCT] Replacing previous plan for {blv.ShipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+                message = new ScreenMessage($"Replacing previous plan for {blv.ShipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
             blv.LC.Plans.Add(blv.ShipName, blv);

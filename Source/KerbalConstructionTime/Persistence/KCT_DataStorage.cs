@@ -24,6 +24,7 @@ namespace KerbalConstructionTime
         [Persistent] public int TechUpgrades = 0;
         [Persistent] public bool IsSimulation;
         [Persistent] public bool DisableFailuresInSim = true;
+        [Persistent] public int HiredPersonnel;
 
         public override void OnDecodeFromConfigNode()
         {
@@ -33,6 +34,7 @@ namespace KerbalConstructionTime
             KCTGameStates.SciPointsTotal = SciPoints;
             KCTGameStates.IsSimulatedFlight = IsSimulation;
             KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
+            KCTGameStates.HiredPersonnel = HiredPersonnel;
         }
 
         public override void OnEncodeToConfigNode()
@@ -43,6 +45,7 @@ namespace KerbalConstructionTime
             activeKSC = KCTGameStates.ActiveKSC.KSCName;
             IsSimulation = KCTGameStates.IsSimulatedFlight;
             DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
+            HiredPersonnel = KCTGameStates.HiredPersonnel;
         }
     }
 }

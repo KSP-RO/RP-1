@@ -1,53 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _upgradePosition = new Rect((Screen.width - 450) / 2, Screen.height / 4, 450, 1);
-        private static int _upgradeWindowHolder = 0;
-        private static double _fundsCost = int.MinValue;
-        private static double _nodeRate = int.MinValue, _upNodeRate = int.MinValue;
-        private static int _spentPoints = int.MinValue;
-        private static int _totalPoints = int.MinValue;
-        private static int _buyModifier = 1;
-        private static int _fundsDelta = 1;
-        private static int _nodeDelta = 1;
-        public static int _LCIndex = 0;
-        private static GUIStyle _cannotAffordStyle;
+        private static Rect _personnelPosition = new Rect((Screen.width - 450) / 2, Screen.height / 4, 450, 1);
+        private static int _personnelWindowHolder = 0;
 
-        private static int SpentPoints
-        {
-            get
-            {
-                if (_spentPoints == int.MinValue) 
-                    _spentPoints = Utilities.GetTotalSpentUpgrades();
-                return _spentPoints;
-            }
-        }
+        private static int TotalPersonnel => KCTGameStates.KSCs.Sum(k => k.Personnel);
+        private static int ConstructionPersonnel => KCTGameStates.KSCs.Sum(k => k.FreePersonnel);
 
-        private static int TotalPoints
-        {
-            get
-            {
-                if (_totalPoints == int.MinValue)
-                    _totalPoints = Utilities.GetTotalUpgradePoints();
-                return _totalPoints;
-            }
-        }
-
-        private static int AvailablePoints => TotalPoints - SpentPoints;
-
-        public static void ResetUpgradePointCounts()
-        {
-            _spentPoints = int.MinValue;
-            _totalPoints = int.MinValue;
-            _fundsCost = int.MinValue;
-        }
-
-        private static void DrawUpgradeWindow(int windowID)
+        private static void DrawPersonnelWindow(int windowID)
         {
             int oldByModifier = _buyModifier;
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
@@ -105,7 +71,7 @@ namespace KerbalConstructionTime
                 if (_fundsCost == int.MinValue || isCostCacheInvalid)
                 {
                     _fundsDelta = _buyModifier;
-                    _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.UpgradeCost * _fundsDelta;
+                    _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * _fundsDelta;
                 }
                 if (_fundsCost >= 0)
                 {
@@ -136,12 +102,12 @@ namespace KerbalConstructionTime
 
             if (_upgradeWindowHolder == 0)    //VAB
             {
-                RenderBuildRateSection(currentLC);
+                RenderPersonnelBuildRateSection(currentLC);
             }
 
             if (_upgradeWindowHolder == 2)    //R&D
             {
-                RenderRnDSection(isCostCacheInvalid, KSC);
+                RenderPersonnelRnDSection(isCostCacheInvalid, KSC);
             }
 
             if (GUILayout.Button("Close"))
@@ -158,7 +124,7 @@ namespace KerbalConstructionTime
                 GUI.DragWindow();
         }
 
-        private static void RenderBuildRateSection(LCItem LC)
+        private static void RenderPersonnelBuildRateSection(LCItem LC)
         {
             
             GUILayout.BeginHorizontal();
@@ -216,7 +182,7 @@ namespace KerbalConstructionTime
             GUILayout.EndScrollView();
         }
 
-        private static void RenderRnDSection(bool isCostCacheInvalid, KSCItem KSC)
+        private static void RenderPersonnelRnDSection(bool isCostCacheInvalid, KSCItem KSC)
         {
             int labelDelta = _buyModifier < 0 ? AvailablePoints : _buyModifier;
             GUILayout.BeginHorizontal();
@@ -287,18 +253,6 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.EndHorizontal();
-        }
-
-        private static GUIStyle GetCannotAffordStyle()
-        {
-            if (_cannotAffordStyle == null)
-            {
-                _cannotAffordStyle = new GUIStyle(GUI.skin.button);
-                _cannotAffordStyle.normal.textColor = Color.red;
-                _cannotAffordStyle.active.textColor = _cannotAffordStyle.normal.textColor;
-                _cannotAffordStyle.hover.textColor = _cannotAffordStyle.normal.textColor;
-            }
-            return _cannotAffordStyle;
         }
     }
 }

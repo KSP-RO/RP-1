@@ -9,7 +9,7 @@ namespace KerbalConstructionTime
         public static void DrawFirstRun(int windowID)
         {
             GUILayout.BeginVertical();
-            GUILayout.Label("Welcome to RP-1's KCT! Follow the steps below to get set up.");
+            GUILayout.Label("Follow the steps below to get set up.");
 
             int step = 1;
             if (PresetManager.Instance.Presets.Count > 1 && GUILayout.Button($"{step++}) Choose a Preset", HighLogic.Skin.button))
@@ -23,6 +23,11 @@ namespace KerbalConstructionTime
                 GUILayout.Button($"{step++}) Spend your {Utilities.GetTotalUpgradePoints()} upgrade points", HighLogic.Skin.button))
             {
                 GUIStates.ShowUpgradeWindow = true;
+            }
+
+            if (!IsPrimarilyDisabled && KCTGameStates.ActiveKSC.Personnel == 0)
+            {
+                GUIStates.ShowPersonnelWindow = true;
             }
 
             if (GUILayout.Button("Understood", HighLogic.Skin.button))

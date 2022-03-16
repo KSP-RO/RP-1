@@ -40,6 +40,8 @@ namespace KerbalConstructionTime
         public List<AirlaunchPrep> AirlaunchPrep = new List<AirlaunchPrep>();
         public List<double> Rates = new List<double>();
         public List<double> UpRates = new List<double>();
+        public int Personnel = 0;
+        public int MaxPersonnel => (int)(Utilities.GetBuildRateSum(this) * 1000d);
 
         public bool isOperational = false;
         public bool isPad = true;
@@ -263,6 +265,7 @@ namespace KerbalConstructionTime
             node.AddValue("massMin", massMin);
             node.AddValue("sizeMax", sizeMax);
             node.AddValue("id", _id);
+            node.AddValue("Personnel", Personnel);
 
             var cnVABUp = new ConfigNode("Upgrades");
             foreach (int upgrade in Upgrades)
@@ -355,6 +358,7 @@ namespace KerbalConstructionTime
             Recon_Rollout.Clear();
             AirlaunchPrep.Clear();
             Rates.Clear();
+            Personnel = 0;
 
             Name = node.GetValue("LCName");
             ActiveLaunchPadID = 0;
@@ -365,6 +369,7 @@ namespace KerbalConstructionTime
             node.TryGetValue("massMin", ref massMin);
             node.TryGetValue("sizeMax", ref sizeMax);
             node.TryGetValue("id", ref _id);
+            node.TryGetValue("Personnel", ref Personnel);
 
             ConfigNode vabUp = node.GetNode("Upgrades");
             foreach (string upgrade in vabUp.GetValues("Upgrade"))

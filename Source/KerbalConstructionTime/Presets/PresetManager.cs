@@ -313,7 +313,7 @@ namespace KerbalConstructionTime
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
             VABRecoveryTech = null;
         [Persistent]
-        public int MaxRushClicks = 0;
+        public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage
@@ -326,7 +326,6 @@ namespace KerbalConstructionTime
     {
         [Persistent]
         public string NodeFormula = "2^([N]+1) / 86400",
-            UpgradeFundsFormula = "min(2^([N]+4) * 1000, 1024000)",
             UpgradesForScience = "0",
             EffectivePartFormula = "min([C]/([I] + ([B]*([U]+1))) *[MV]*[PV], [C])",
             ProceduralPartFormula = "(([C]-[A]) + ([A]*10/max([I],1))) / max([B]*([U]+1),1) *[MV]*[PV]",

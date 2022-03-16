@@ -11,7 +11,6 @@ namespace KerbalConstructionTime
             switch (formulaName)
             {
                 case "Node": return MathParsing.ParseMath("KCT_NODE", formulaSettings.NodeFormula, variables);
-                case "UpgradeFunds": return MathParsing.ParseMath("KCT_UPGRADE_FUNDS", formulaSettings.UpgradeFundsFormula, variables);
                 case "UpgradesForScience": return MathParsing.ParseMath("KCT_UPGRADES_FOR_SCIENCE", formulaSettings.UpgradesForScience, variables);
                 case "EffectivePart": return MathParsing.ParseMath("KCT_EFFECTIVE_PART", formulaSettings.EffectivePartFormula, variables);
                 case "ProceduralPart": return MathParsing.ParseMath("KCT_PROCEDURAL_PART", formulaSettings.ProceduralPartFormula, variables);

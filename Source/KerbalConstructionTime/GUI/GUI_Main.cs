@@ -57,6 +57,8 @@ namespace KerbalConstructionTime
                     _crewListWindowPosition = DrawWindowWithTooltipSupport(_crewListWindowPosition, "DrawCrewSelect", "Select Crew & Launch", DrawCrewSelect);
                 if (GUIStates.ShowUpgradeWindow)
                     _upgradePosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawUpgradeWindow", "Upgrades", DrawUpgradeWindow);
+                if (GUIStates.ShowPersonnelWindow)
+                    _personnelPosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawPersonnelWindow", "Personnel", DrawPersonnelWindow);
                 if (GUIStates.ShowBLPlus)
                     _blPlusPosition = DrawWindowWithTooltipSupport(_blPlusPosition, "DrawBLPlusWindow", "Options", DrawBLPlusWindow);
                 if (GUIStates.ShowDismantlePad)
@@ -99,7 +101,7 @@ namespace KerbalConstructionTime
                 }
 
                 //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
+                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowPersonnelWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
                 {
                     if (!_isKSCLocked)
                     {
@@ -228,9 +230,14 @@ namespace KerbalConstructionTime
             GUIStates.ShowCrewSelect = false;
             GUIStates.ShowSettings = false;
             GUIStates.ShowUpgradeWindow = false;
+            GUIStates.ShowPersonnelWindow = false;
             GUIStates.ShowBLPlus = false;
             GUIStates.ShowRename = false;
             GUIStates.ShowDismantlePad = false;
+            GUIStates.ShowDismantleLC = false;
+            GUIStates.ShowNewLC = false;
+            GUIStates.ShowNewPad = false;
+            GUIStates.ShowModifyLC = false;
             GUIStates.ShowFirstRun = false;
             GUIStates.ShowPresetSaver = false;
             GUIStates.ShowLaunchSiteSelector = false;

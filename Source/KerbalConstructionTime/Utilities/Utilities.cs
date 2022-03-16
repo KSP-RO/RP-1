@@ -781,7 +781,7 @@ namespace KerbalConstructionTime
             {
                 KCT_GUI.ResetUpgradePointCounts();
                 KCTDebug.Log($"Added {upgradesToAdd} upgrade points");
-                ScreenMessages.PostScreenMessage($"{upgradesToAdd} KCT Upgrade Point{(upgradesToAdd > 1 ? "s" : string.Empty)} Added!", 8f, ScreenMessageStyle.UPPER_LEFT);
+                ScreenMessages.PostScreenMessage($"{upgradesToAdd} Upgrade Point{(upgradesToAdd > 1 ? "s" : string.Empty)} Added!", 8f, ScreenMessageStyle.UPPER_LEFT);
             }
         }
 
@@ -2223,6 +2223,40 @@ namespace KerbalConstructionTime
                 }
             }
             return res;
+        }
+        
+        public static void ScrapVessel(BuildListVessel b)
+        {
+            KCTDebug.Log($"Scrapping {b.ShipName}");
+            if (!b.IsFinished)
+            {
+                List<ConfigNode> parts = b.ExtractedPartNodes;
+                b.RemoveFromBuildList();
+
+                //only add parts that were already a part of the inventory
+                if (ScrapYardWrapper.Available)
+                {
+                    List<ConfigNode> partsToReturn = new List<ConfigNode>();
+                    foreach (ConfigNode partNode in parts)
+                    {
+                        if (ScrapYardWrapper.PartIsFromInventory(partNode))
+                        {
+                            partsToReturn.Add(partNode);
+                        }
+                    }
+                    if (partsToReturn.Any())
+                    {
+                        ScrapYardWrapper.AddPartsToInventory(partsToReturn, false);
+                    }
+                }
+            }
+            else
+            {
+                b.RemoveFromBuildList();
+                ScrapYardWrapper.AddPartsToInventory(b.ExtractedPartNodes, false);    //don't count as a recovery
+            }
+            ScrapYardWrapper.SetProcessedStatus(ScrapYardWrapper.GetPartID(b.ExtractedPartNodes[0]), false);
+            Utilities.AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
         }
     }
 }

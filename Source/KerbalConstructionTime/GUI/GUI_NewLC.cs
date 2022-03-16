@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    float unlimitedTonnageThreshold = 3500f;
+                    float unlimitedTonnageThreshold = 2500f;
 
                     if (tonnageLimit >= unlimitedTonnageThreshold)
                     {

@@ -646,12 +646,12 @@ namespace KerbalConstructionTime
                     for (int i = ksc.LCConstructions.Count - 1; i >= 0; i--)
                         ksc.LCConstructions[i].IncrementProgress(UTDiff);
 
-                    for (int i = ksc.KSCTech.Count - 1; i >= 0; i--)
-                        ksc.KSCTech[i].IncrementProgress(UTDiff);
+                    for (int i = ksc.FacilityUpgrades.Count - 1; i >= 0; i--)
+                        ksc.FacilityUpgrades[i].IncrementProgress(UTDiff);
 
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
-                        ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
+                        ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
                         ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                     }
                 }

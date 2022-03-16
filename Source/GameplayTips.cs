@@ -104,7 +104,7 @@ namespace RP0
             _airlaunchTipShown = true;
             HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().AirlaunchTipShown = true;
 
-            string msg = $"Did you know that you can simulate airlaunches by clicking on the KCT button?\n" +
+            string msg = $"Did you know that you can simulate airlaunches by clicking on the Space Center Management button?\n" +
                          $"Tech levels that are in the research queue will be available for simulation purposes.";
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                          new Vector2(0.5f, 0.5f),

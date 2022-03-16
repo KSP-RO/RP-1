@@ -345,7 +345,18 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), BuildListVessel.ListType.VAB, ship.LC);
+            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC);
+        }
+
+        public static double GetBuildRateSum(LCItem LC)
+        {
+            if (!LC.isOperational)
+                return 0d;
+
+            double rateTotal = 0d;
+            foreach (var rate in LC.Rates)
+                rateTotal += rate;
+            return rateTotal;
         }
 
         private static List<double> _minBuildRate = new List<double>( new double[] {0.0001d} );
@@ -392,19 +403,13 @@ namespace KerbalConstructionTime
             return rateTotal;
         }
 
-        public static double GetBothBuildRateSum(LCItem LC)
-        {
-            double rateTotal = GetVABBuildRateSum(LC);
-            return rateTotal;
-        }
-
         public static double GetConstructionRate(KSCItem KSC)
         {
             // TODO: worker allocations
             double rateTotal = 0;
             foreach (LCItem lc in KSC.LaunchComplexes)
                 if (lc.isOperational)
-                    rateTotal += GetVABBuildRateSum(lc);
+                    rateTotal += GetBuildRateSum(lc);
 
             return rateTotal;
         }
@@ -701,7 +706,7 @@ namespace KerbalConstructionTime
             if (science > 0)
             {
                 ResearchAndDevelopment.Instance.AddScience(science, reason);
-                var message = new ScreenMessage($"[KCT] {science} science added.", 4f, ScreenMessageStyle.UPPER_LEFT);
+                var message = new ScreenMessage($"{science} science added.", 4f, ScreenMessageStyle.UPPER_LEFT);
                 ScreenMessages.PostScreenMessage(message);
                 return message.ToString();
             }

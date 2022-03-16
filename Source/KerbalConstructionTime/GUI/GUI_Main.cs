@@ -18,6 +18,9 @@ namespace KerbalConstructionTime
         private static bool _unlockEditor;
         private static bool _isKSCLocked = false;
         private static readonly List<GameScenes> _validScenes = new List<GameScenes> { GameScenes.FLIGHT, GameScenes.EDITOR, GameScenes.SPACECENTER, GameScenes.TRACKSTATION };
+        private static GUIStyle _styleTextAreaRightAlign;
+        private static GUIStyle _styleTextFieldCenterAlign;
+        private static GUIStyle _styleTextFieldRightAlign;
 
         public static bool IsPrimarilyDisabled => PresetManager.PresetLoaded() && (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                                                                                    !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes);
@@ -55,8 +58,10 @@ namespace KerbalConstructionTime
                     _crewListWindowPosition = DrawWindowWithTooltipSupport(_crewListWindowPosition, "DrawShipRoster", "Select Crew", DrawShipRoster);
                 if (GUIStates.ShowCrewSelect)
                     _crewListWindowPosition = DrawWindowWithTooltipSupport(_crewListWindowPosition, "DrawCrewSelect", "Select Crew & Launch", DrawCrewSelect);
-                if (GUIStates.ShowUpgradeWindow)
-                    _upgradePosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawUpgradeWindow", "Upgrades", DrawUpgradeWindow);
+                //if (GUIStates.ShowUpgradeWindow)
+                //    _upgradePosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawUpgradeWindow", "Upgrades", DrawUpgradeWindow);
+                if (GUIStates.ShowPersonnelWindow)
+                    _personnelPosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawPersonnelWindow", "Personnel", DrawPersonnelWindow);
                 if (GUIStates.ShowBLPlus)
                     _blPlusPosition = DrawWindowWithTooltipSupport(_blPlusPosition, "DrawBLPlusWindow", "Options", DrawBLPlusWindow);
                 if (GUIStates.ShowDismantlePad)
@@ -99,7 +104,7 @@ namespace KerbalConstructionTime
                 }
 
                 //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
+                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowPersonnelWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
                 {
                     if (!_isKSCLocked)
                     {
@@ -228,9 +233,14 @@ namespace KerbalConstructionTime
             GUIStates.ShowCrewSelect = false;
             GUIStates.ShowSettings = false;
             GUIStates.ShowUpgradeWindow = false;
+            GUIStates.ShowPersonnelWindow = false;
             GUIStates.ShowBLPlus = false;
             GUIStates.ShowRename = false;
             GUIStates.ShowDismantlePad = false;
+            GUIStates.ShowDismantleLC = false;
+            GUIStates.ShowNewLC = false;
+            GUIStates.ShowNewPad = false;
+            GUIStates.ShowModifyLC = false;
             GUIStates.ShowFirstRun = false;
             GUIStates.ShowPresetSaver = false;
             GUIStates.ShowLaunchSiteSelector = false;
@@ -288,6 +298,36 @@ namespace KerbalConstructionTime
                 if (window.y + halfH > Screen.height)
                     window.y = Screen.height - halfH;
             }
+        }
+
+        private static GUIStyle GetTextAreaRightAlignStyle()
+        {
+            if (_styleTextAreaRightAlign == null)
+            {
+                _styleTextAreaRightAlign = new GUIStyle(GUI.skin.textArea);
+                _styleTextAreaRightAlign.alignment = TextAnchor.LowerRight;
+            }
+            return _styleTextAreaRightAlign;
+        }
+
+        private static GUIStyle GetTextFieldCenterAlignStyle()
+        {
+            if (_styleTextFieldCenterAlign == null)
+            {
+                _styleTextFieldCenterAlign = new GUIStyle(GUI.skin.textField);
+                _styleTextFieldCenterAlign.alignment = TextAnchor.LowerCenter;
+            }
+            return _styleTextFieldCenterAlign;
+        }
+
+        private static GUIStyle GetTextFieldRightAlignStyle()
+        {
+            if (_styleTextFieldRightAlign == null)
+            {
+                _styleTextFieldRightAlign = new GUIStyle(GUI.skin.textField);
+                _styleTextFieldRightAlign.alignment = TextAnchor.LowerRight;
+            }
+            return _styleTextFieldRightAlign;
         }
     }
 }

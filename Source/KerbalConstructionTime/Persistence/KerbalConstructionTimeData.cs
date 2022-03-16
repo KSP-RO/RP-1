@@ -85,9 +85,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.KSCs.Clear();
                 KCTGameStates.ActiveKSC = null;
                 KCTGameStates.InitAndClearTechList();
-                KCTGameStates.TechUpgradesTotal = 0;
                 KCTGameStates.SciPointsTotal = -1;
-                KCT_GUI.ResetUpgradePointCounts();
 
                 var kctVS = new KCT_DataStorage();
                 if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
@@ -101,7 +99,6 @@ namespace KerbalConstructionTime
                     loaded_KSC.FromConfigNode(ksc);
                     if (loaded_KSC?.KSCName?.Length > 0)
                     {
-                        loaded_KSC.RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
                         if (KCTGameStates.KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
                             KCTGameStates.KSCs.Add(loaded_KSC);
                         foundStockKSC |= string.Equals(loaded_KSC.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);

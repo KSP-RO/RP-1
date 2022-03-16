@@ -5,7 +5,7 @@ using Upgradeables;
 
 namespace KerbalConstructionTime
 {
-    public class FacilityUpgrade : IKCTBuildItem
+    public class FacilityUpgrade : IConstructionBuildItem
     {
         public SpaceCenterFacility? FacilityType;
         public int UpgradeLevel, CurrentLevel;
@@ -17,6 +17,26 @@ namespace KerbalConstructionTime
         public int LaunchpadID = 0;
         [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
         public bool IsLaunchpad = false;
+
+        public int BuildListIndex { get; set; }
+
+        private double _buildRate = -1d;
+
+        public double EstimatedTimeLeft
+        {
+            get
+            {
+                if (_buildRate > 0)
+                {
+                    return GetTimeLeft();
+                }
+                else
+                {
+                    double rate = Utilities.GetConstructionRate(KSC);
+                    return (BP - Progress) / rate;
+                }
+            }
+        }
 
         private KSCItem _ksc = null;
 
@@ -95,7 +115,7 @@ namespace KerbalConstructionTime
             {
                 if (_ksc == null)
                 {
-                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.KSCTech.Find(ub => ub.Id == this.Id) != null);
+                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.Id == this.Id) != null);
                 }
                 return _ksc;
             }
@@ -105,12 +125,19 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double rateTotal = 0;
-            if (KSC != null)
-            {
-                rateTotal = Utilities.GetConstructionRate(KSC);
-            }
-            return rateTotal;
+            if (_buildRate < 0)
+                _buildRate = UpdateBuildRate(KSC.Constructions.IndexOf(this));
+            return _buildRate;
+        }
+
+        public double UpdateBuildRate(int index)
+        {
+            double rate = MathParser.ParseBuildRateFormula(BuildListVessel.ListType.KSC, index, null, 0);
+            if (rate < 0)
+                rate = 0;
+
+            _buildRate = rate;
+            return _buildRate;
         }
 
         public double GetFractionComplete() => Progress / BP;
@@ -204,7 +231,7 @@ namespace KerbalConstructionTime
         public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
         {
             double bp = CalculateBP(cost, facilityType);
-            double rateTotal = Utilities.GetConstructionRate(KSC ?? KCTGameStates.ActiveKSC);
+            double rateTotal = Utilities.GetConstructionRate(KSC);
 
             return bp / rateTotal;
         }

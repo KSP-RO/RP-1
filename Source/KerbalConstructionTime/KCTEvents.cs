@@ -47,7 +47,6 @@ namespace KerbalConstructionTime
             GameEvents.onGUIRnDComplexSpawn.Add(TechEnableEvent);
             GameEvents.onGUIRnDComplexDespawn.Add(TechDisableEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
-            GameEvents.onGameStateLoad.Add(PersistenceLoadEvent);
 
             GameEvents.onGUIEngineersReportReady.Add(EngineersReportReady);
 
@@ -117,18 +116,6 @@ namespace KerbalConstructionTime
         private void RestoreAllGUIs()
         {
             KCT_GUI.RestorePrevUIState();
-        }
-
-        public void PersistenceLoadEvent(ConfigNode node)
-        {
-            KCTDebug.Log("Looking for tech nodes.");
-            ConfigNode rnd = node.GetNodes("SCENARIO").FirstOrDefault(n => n.GetValue("name") == "ResearchAndDevelopment");
-            if (rnd != null)
-            {
-                KCTGameStates.LastKnownTechCount = rnd.GetNodes("Tech").Length;
-                KCTDebug.Log($"Counting {KCTGameStates.LastKnownTechCount} tech nodes.");
-            }
-            KCTGameStates.PersistenceLoaded = true;
         }
 
         public void FacilityUpgradedEvent(Upgradeables.UpgradeableFacility facility, int lvl)
@@ -256,7 +243,7 @@ namespace KerbalConstructionTime
             TechItem tech = KCTGameStates.TechList.OfType<TechItem>().FirstOrDefault(t => t.TechID == part.TechRequired);
             if (tech != null && tech.IsInList())
             {
-                ScreenMessages.PostScreenMessage("[KCT] You must wait until the node is fully researched to purchase parts!", 4f, ScreenMessageStyle.UPPER_LEFT);
+                ScreenMessages.PostScreenMessage("You must wait until the node is fully researched to purchase parts!", 4f, ScreenMessageStyle.UPPER_LEFT);
                 if (part.costsFunds)
                 {
                     Utilities.AddFunds(part.entryCost, TransactionReasons.RnDPartPurchase);
@@ -281,16 +268,13 @@ namespace KerbalConstructionTime
 
                 if (!tech.IsInList())
                 {
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUpgrades)
-                        ScreenMessages.PostScreenMessage("[KCT] Upgrade Point Added!", 4f, ScreenMessageStyle.UPPER_LEFT);
-
                     if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
                     {
                         KCTGameStates.TechList.Add(tech);
                         foreach (TechItem techItem in KCTGameStates.TechList)
                             techItem.UpdateBuildRate(KCTGameStates.TechList.IndexOf(techItem));
                         double timeLeft = tech.BuildRate > 0 ? tech.TimeLeft : tech.EstimatedTimeLeft;
-                        ScreenMessages.PostScreenMessage($"[KCT] Node will unlock in {MagiCore.Utilities.GetFormattedTime(timeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
+                        ScreenMessages.PostScreenMessage($"Node will unlock in {MagiCore.Utilities.GetFormattedTime(timeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
 
                         OnTechQueued.Fire(ev.host);
                     }
@@ -298,8 +282,8 @@ namespace KerbalConstructionTime
                 else
                 {
                     ResearchAndDevelopment.Instance.AddScience(tech.ScienceCost, TransactionReasons.RnDTechResearch);
-                    ScreenMessages.PostScreenMessage("[KCT] This node is already being researched!", 4f, ScreenMessageStyle.UPPER_LEFT);
-                    ScreenMessages.PostScreenMessage($"[KCT] It will unlock in {MagiCore.Utilities.GetFormattedTime((KCTGameStates.TechList.First(t => t.TechID == ev.host.techID)).TimeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
+                    ScreenMessages.PostScreenMessage("This node is already being researched!", 4f, ScreenMessageStyle.UPPER_LEFT);
+                    ScreenMessages.PostScreenMessage($"It will unlock in {MagiCore.Utilities.GetFormattedTime((KCTGameStates.TechList.First(t => t.TechID == ev.host.techID)).TimeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
                 }
             }
         }
@@ -355,7 +339,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.ActiveKSCName = Utilities._defaultKscId;
                 KCTGameStates.ActiveKSC = new KSCItem(Utilities._defaultKscId);
                 KCTGameStates.KSCs = new List<KSCItem>() { KCTGameStates.ActiveKSC };
-                KCTGameStates.LastKnownTechCount = 0;
 
                 if (PresetManager.Instance != null)
                 {
@@ -365,8 +348,6 @@ namespace KerbalConstructionTime
 
                 return;
             }
-
-            KCTGameStates.MiscellaneousTempUpgrades = 0;
 
             if (PresetManager.PresetLoaded() && !PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
             var validScenes = new List<GameScenes> { GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.EDITOR };
@@ -402,7 +383,7 @@ namespace KerbalConstructionTime
                 string selection = v.craftSubfolder.Contains("SPH") ? "SPH" : "VAB";
                 KCT_GUI.ToggleVisibility(true);
                 KCT_GUI.SelectList("");
-                KCT_GUI.SelectList(selection);
+                KCT_GUI.SelectList("Vessels");
                 KCTDebug.Log($"Opening the GUI to the {selection}");
             }
         }

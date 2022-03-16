@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class PadConstruction : IKCTBuildItem
+    public class PadConstruction : IConstructionBuildItem
     {
         /// <summary>
         /// Index of the pad in KSCItem.LaunchPads.
@@ -13,6 +13,26 @@ namespace KerbalConstructionTime
         public double Progress = 0, BP = 0, Cost = 0;
         public string Name;
         public bool UpgradeProcessed = false;
+
+        private double _buildRate = -1d;
+
+        public int BuildListIndex { get; set; }
+
+        public double EstimatedTimeLeft
+        {
+            get
+            {
+                if (_buildRate > 0)
+                {
+                    return GetTimeLeft();
+                }
+                else
+                {
+                    double rate = Utilities.GetConstructionRate(LC.KSC);
+                    return (BP - Progress) / rate;
+                }
+            }
+        }
 
         private LCItem _lc = null;
 
@@ -49,12 +69,19 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double rateTotal = 0;
-            if (LC != null)
-            {
-                rateTotal = Utilities.GetConstructionRate(LC.KSC);
-            }
-            return rateTotal;
+            if (_buildRate < 0)
+                _buildRate = UpdateBuildRate(LC.KSC.Constructions.IndexOf(this));
+            return _buildRate;
+        }
+
+        public double UpdateBuildRate(int index)
+        {
+            double rate = MathParser.ParseBuildRateFormula(BuildListVessel.ListType.KSC, index, null, 0);
+            if (rate < 0)
+                rate = 0;
+
+            _buildRate = rate;
+            return _buildRate;
         }
 
         public string GetItemName() => Name;

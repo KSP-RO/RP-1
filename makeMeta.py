@@ -39,10 +39,10 @@ avc = {
 		"PATCH" : patch,
 		"BUILD" : build
 	},
-  "KSP_VERSION" : {
-      "MAJOR": "1",
-      "MINOR": "12",
-      "PATCH": "3"
+	"KSP_VERSION" : {
+		"MAJOR": "1",
+		"MINOR": "12",
+		"PATCH": "3"
   },
 	"KSP_VERSION_MIN": {
 		"MAJOR": "1",

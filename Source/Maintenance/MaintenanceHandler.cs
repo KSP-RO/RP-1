@@ -13,8 +13,6 @@ namespace RP0
     public class MaintenanceHandler : ScenarioModule
     {
         public const double UpdateInterval = 3600d;
-        public const int PadLevelCount = 7;
-        public const double BuildRateOffset = -0.0001d;    // if we change the min build rate, FIX THIS.
 
         public static MaintenanceHandler Instance { get; private set; } = null;
         public static MaintenanceSettings Settings { get; private set; } = null;
@@ -28,10 +26,12 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public double lastUpdate = 0d;
 
-        public readonly Dictionary<string, double> KCTBuildRates = new Dictionary<string, double>();
-        public int[] KCTPadCounts = new int[PadLevelCount];
-        public List<float> KCTPadLevels = new List<float>();
-        public double KCTResearchRate = 0;
+        public readonly Dictionary<string, double> Engineers = new Dictionary<string, double>();
+        public double Researchers = 0d;
+        //public readonly Dictionary<string, double> KCTBuildRates = new Dictionary<string, double>();
+        //public int[] KCTPadCounts = new int[PadLevelCount];
+        //public List<float> KCTPadLevels = new List<float>();
+        //public double KCTResearchRate = 0;
 
         private double _maintenanceCostMult = 1d;
         private bool _wasWarpingHigh = false;
@@ -41,11 +41,6 @@ namespace RP0
 
         #region Component costs
 
-        public double[] PadCosts = new double[PadLevelCount];
-        public double PadCost = 0d;
-        public double RunwayCost = 0d;
-        public double VabCost = 0d;
-        public double SphCost = 0d;
         public double RndCost = 0d;
         public double McCost = 0d;
         public double TsCost = 0d;
@@ -58,16 +53,16 @@ namespace RP0
         public double NautTotalUpkeep = 0d;
         public double TotalUpkeep = 0d;
 
-        public double FacilityUpkeep => PadCost + RunwayCost + VabCost + SphCost + RndCost + McCost + TsCost + AcCost;
+        public double FacilityUpkeep => RndCost + McCost + TsCost + AcCost;
 
-        public double IntegrationUpkeep
+        public double EngineerSalaryTotal
         {
             get
             {
                 double tmp = 0d;
-                foreach (double d in KCTBuildRates.Values)
+                foreach (double d in Engineers.Values)
                     tmp += d;
-                return tmp * Settings.kctBPMult * _maintenanceCostMult;
+                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365d;
             }
         }
 
@@ -136,43 +131,23 @@ namespace RP0
             nextUpdate = 0;
         }
 
-        private void UpdateKCTRates()
+        private void UpdateKCTSalaries()
         {
-            Profiler.BeginSample("RP0Maintenance UpdateKCTRates");
-            KCTPadLevels.Clear();
-            for (int i = KCTPadCounts.Length; i-- > 0;)
-                KCTPadCounts[i] = 0;
-
+            Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
-                double buildRate = 0d;
-                for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
-                {
-                    LCItem lc = ksc.LaunchComplexes[j];
-                    if (!lc.isOperational)
-                        continue;
+                Engineers[ksc.KSCName] = ksc.Personnel;
+                //for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
+                //{
+                //    LCItem lc = ksc.LaunchComplexes[j];
+                //    if (!lc.isOperational)
+                //        continue;
 
-                    for (int i = lc.Rates.Count; i-- > 0;)
-                        buildRate += Math.Max(0d, lc.Rates[i] + BuildRateOffset);
-
-                    if (buildRate < 0.01d) continue;
-
-                    for (int i = lc.LaunchPads.Count; i-- > 0;)
-                    {
-                        KCT_LaunchPad pad = lc.LaunchPads[i];
-                        int roundedPadLvl = (int)Math.Round(pad.fractionalLevel);
-                        if (pad.isOperational && roundedPadLvl < PadLevelCount)
-                        {
-                            ++KCTPadCounts[roundedPadLvl];
-                            KCTPadLevels.Add(pad.fractionalLevel);
-                        }
-                    }
-                }
-
-                KCTBuildRates[ksc.KSCName] = buildRate;
+                //    int lpCount = lc.LaunchPadCount;
+                //}
             }
 
-            KCTResearchRate = MathParser.ParseNodeRateFormula(10);
+            Researchers = KCTGameStates.RDPersonnel;
             Profiler.EndSample();
         }
 
@@ -181,33 +156,33 @@ namespace RP0
             Profiler.BeginSample("RP0Maintenance UpdateUpkeep");
             EnsureFacilityLvlCostsLoaded();
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out float[] costs))
-            {
-                for (int i = 0; i < PadLevelCount; i++)
-                {
-                    PadCosts[i] = 0d;
-                }
+            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out float[] costs))
+            //{
+            //    for (int i = 0; i < PadLevelCount; i++)
+            //    {
+            //        PadCosts[i] = 0d;
+            //    }
 
-                foreach (float lvl in KCTPadLevels)
-                {
-                    int roundedPadLvl = (int)Math.Round(lvl);
-                    PadCosts[roundedPadLvl] += _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, lvl), Settings.facilityLevelCostPow);
-                }
-                PadCost = 0;
-                for (int i = PadLevelCount; i-- > 0;)
-                    PadCost += PadCosts[i];
-            }
+            //    foreach (float lvl in KCTPadLevels)
+            //    {
+            //        int roundedPadLvl = (int)Math.Round(lvl);
+            //        PadCosts[roundedPadLvl] += _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, lvl), Settings.facilityLevelCostPow);
+            //    }
+            //    PadCost = 0;
+            //    for (int i = PadLevelCount; i-- > 0;)
+            //        PadCost += PadCosts[i];
+            //}
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.Runway, out costs))
-                RunwayCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
+            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.Runway, out costs))
+            //    RunwayCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out costs))
-                VabCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
+            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out costs))
+            //    VabCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
-                SphCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
+            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
+            //    SphCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out costs))
+            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out float[] costs))
                 RndCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.MissionControl, out costs))
@@ -271,9 +246,9 @@ namespace RP0
             NautBaseUpkeep += nautCount * perNaut;
             NautTotalUpkeep = NautBaseUpkeep + TrainingUpkeep + NautInFlightUpkeep;
 
-            ResearchUpkeep = _maintenanceCostMult * KCTResearchRate * Settings.kctResearchMult;
+            ResearchUpkeep = _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365d;
 
-            TotalUpkeep = FacilityUpkeep + IntegrationUpkeep + ResearchUpkeep + NautTotalUpkeep;
+            TotalUpkeep = FacilityUpkeep + EngineerSalaryTotal + ResearchUpkeep + NautTotalUpkeep;
             Profiler.EndSample();
         }
 
@@ -297,7 +272,7 @@ namespace RP0
                 }
 
                 _skipThree = false;
-                UpdateKCTRates();
+                UpdateKCTSalaries();
                 return;
             }
 
@@ -312,7 +287,7 @@ namespace RP0
                     return;
             }
 
-            UpdateKCTRates();
+            UpdateKCTSalaries();
             UpdateUpkeep();
 
             double timePassed = time - lastUpdate;

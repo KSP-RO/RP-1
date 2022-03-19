@@ -10,7 +10,6 @@ namespace KerbalConstructionTime
         public static Rect EditorWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, 275, 135);
         public static string BuildRateForDisplay;
 
-        private static int _rateIndexHolder = 0;
         private static double _finishedShipBP = -1;
         private static bool _isEditorLocked = false;
 
@@ -49,42 +48,36 @@ namespace KerbalConstructionTime
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
-            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, type, null).ToString();
+            if (BuildRateForDisplay == null)
+                BuildRateForDisplay = Utilities.GetBuildRate(0, type, null).ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
 
-            List<double> rates;
-            if (type == BuildListVessel.ListType.VAB) rates = Utilities.GetVABBuildRates(null);
-            else rates = Utilities.GetSPHBuildRates(null);
+            double rate;
+            if (type == BuildListVessel.ListType.VAB)
+                rate = Utilities.GetVABBuildRate(null);
+            else
+                rate = Utilities.GetSPHBuildRate(null);
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
                 {
-                    _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                    bR = rates[_rateIndexHolder];
-                    if (bR > 0)
-                        BuildRateForDisplay = bR.ToString();
-                    else
-                    {
-                        _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                        bR = rates[_rateIndexHolder];
-                        BuildRateForDisplay = bR.ToString();
-                    }
+                    bR = rate;
+                    BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
                 GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildTime / bR));
+
+                if (KCTGameStates.EditorRolloutTime > 0)
+                {
+                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
+                }
             }
             else
             {
                 GUILayout.EndHorizontal();
                 GUILayout.Label("Invalid Build Rate");
-            }
-
-            if (KCTGameStates.EditorRolloutTime > 0)
-            {
-                bR = Utilities.GetBuildRateForFastestVABLine(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
-                GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
             }
 
             if (KCTGameStates.EditorIntegrationCosts > 0)
@@ -147,20 +140,26 @@ namespace KerbalConstructionTime
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
-            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, ship.LC).ToString();
+            if (BuildRateForDisplay == null)
+                BuildRateForDisplay = Utilities.GetBuildRate(0, ship.LC).ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
-            List<double> rates = ship.LC.Rates;
+
+            double rate = Utilities.GetBuildRate(0, ship.LC);
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
                 {
-                    _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                    bR = rates[_rateIndexHolder];
+                    bR = rate;
                     BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
                 GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime - newProgressBP) / bR));
+
+                if (KCTGameStates.EditorRolloutTime > 0)
+                {
+                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
+                }
             }
             else
             {

@@ -14,16 +14,17 @@ namespace KerbalConstructionTime
         public static KSCItem ActiveKSC = null;
         public static List<KSCItem> KSCs = new List<KSCItem>();
         public static string ActiveKSCName = string.Empty;
-        public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
+        //public static int TechUpgradesTotal = 0;
+        //public static float SciPointsTotal = -1f;
         public static bool MergingAvailable;
         public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
         public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 
-        public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
-        public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
-        public static int HiredPersonnel = 0;
+        //public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
+        //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
+        public static int RDPersonnel = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
 
@@ -63,10 +64,7 @@ namespace KerbalConstructionTime
             IsSimulatedFlight = false;
             SimulationParams.Reset();
 
-            PurchasedUpgrades = new List<int>() { 0, 0 };
             KCT_GUI.ResetFormulaRateHolders();
-
-            MiscellaneousTempUpgrades = 0;
 
             BuildingMaxLevelCache.Clear();
 

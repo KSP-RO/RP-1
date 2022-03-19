@@ -47,7 +47,6 @@ namespace KerbalConstructionTime
             GameEvents.onGUIRnDComplexSpawn.Add(TechEnableEvent);
             GameEvents.onGUIRnDComplexDespawn.Add(TechDisableEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
-            GameEvents.onGameStateLoad.Add(PersistenceLoadEvent);
 
             GameEvents.onGUIEngineersReportReady.Add(EngineersReportReady);
 
@@ -117,18 +116,6 @@ namespace KerbalConstructionTime
         private void RestoreAllGUIs()
         {
             KCT_GUI.RestorePrevUIState();
-        }
-
-        public void PersistenceLoadEvent(ConfigNode node)
-        {
-            KCTDebug.Log("Looking for tech nodes.");
-            ConfigNode rnd = node.GetNodes("SCENARIO").FirstOrDefault(n => n.GetValue("name") == "ResearchAndDevelopment");
-            if (rnd != null)
-            {
-                KCTGameStates.LastKnownTechCount = rnd.GetNodes("Tech").Length;
-                KCTDebug.Log($"Counting {KCTGameStates.LastKnownTechCount} tech nodes.");
-            }
-            KCTGameStates.PersistenceLoaded = true;
         }
 
         public void FacilityUpgradedEvent(Upgradeables.UpgradeableFacility facility, int lvl)
@@ -281,9 +268,6 @@ namespace KerbalConstructionTime
 
                 if (!tech.IsInList())
                 {
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUpgrades)
-                        ScreenMessages.PostScreenMessage("Upgrade Point Added!", 4f, ScreenMessageStyle.UPPER_LEFT);
-
                     if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
                     {
                         KCTGameStates.TechList.Add(tech);
@@ -355,7 +339,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.ActiveKSCName = Utilities._defaultKscId;
                 KCTGameStates.ActiveKSC = new KSCItem(Utilities._defaultKscId);
                 KCTGameStates.KSCs = new List<KSCItem>() { KCTGameStates.ActiveKSC };
-                KCTGameStates.LastKnownTechCount = 0;
 
                 if (PresetManager.Instance != null)
                 {
@@ -365,8 +348,6 @@ namespace KerbalConstructionTime
 
                 return;
             }
-
-            KCTGameStates.MiscellaneousTempUpgrades = 0;
 
             if (PresetManager.PresetLoaded() && !PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
             var validScenes = new List<GameScenes> { GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.EDITOR };

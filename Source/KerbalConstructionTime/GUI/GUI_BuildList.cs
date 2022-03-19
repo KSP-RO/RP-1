@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
         private static int _mouseOnAirlaunchButton = -1;
-        private static bool _combineVabAndSph, _isTechSelected;
+        private static bool _isVesselsSelected, _isConstructionSelected, _isTechSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
@@ -33,15 +33,22 @@ namespace KerbalConstructionTime
             switch (list)
             {
                 case "Vessels":
-                    _combineVabAndSph = !_combineVabAndSph;
+                    _isVesselsSelected = !_isVesselsSelected;
+                    _isConstructionSelected = false;
+                    _isTechSelected = false;
+                    break;
+                case "Construction":
+                    _isVesselsSelected = false;
+                    _isConstructionSelected = !_isConstructionSelected;
                     _isTechSelected = false;
                     break;
                 case "Tech":
-                    _combineVabAndSph = false;
+                    _isVesselsSelected = false;
+                    _isConstructionSelected = false;
                     _isTechSelected = !_isTechSelected;
                     break;
                 default:
-                    _combineVabAndSph = _isTechSelected = false;
+                    _isVesselsSelected = _isConstructionSelected = _isTechSelected = false;
                     break;
             }
         }
@@ -211,9 +218,15 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
 
             
-            bool commonSelectedNew = GUILayout.Toggle(_combineVabAndSph, "Vessels", GUI.skin.button);
-            if (commonSelectedNew != _combineVabAndSph)
+            bool vesselsSelectedNew = GUILayout.Toggle(_isVesselsSelected, "Vessels", GUI.skin.button);
+            if (vesselsSelectedNew != _isVesselsSelected)
                 SelectList("Vessels");
+
+            bool constructionSelectedNew = false;
+            if (Utilities.CurrentGameIsCareer())
+                constructionSelectedNew = GUILayout.Toggle(_isConstructionSelected, "Construction", GUI.skin.button);
+            if(constructionSelectedNew != _isConstructionSelected)
+                SelectList("Construction");
 
             bool techSelectedNew = false;
             if (Utilities.CurrentGameHasScience())
@@ -221,19 +234,20 @@ namespace KerbalConstructionTime
 
             if (techSelectedNew != _isTechSelected)
                 SelectList("Tech");
+
             if (GUILayout.Button("Plans"))
             {
                 GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
             }
-            if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
-            {
-                GUIStates.ShowUpgradeWindow = true;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
-            }
-            // TODO: Color button based on workers in construction?
-            if (GUILayout.Button("Personnel", GUI.skin.button))
+            //if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
+            //{
+            //    GUIStates.ShowUpgradeWindow = true;
+            //    GUIStates.ShowBuildList = false;
+            //    GUIStates.ShowBLPlus = false;
+            //    _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+            //}
+            // TODO: Color button based on something?
+            if (GUILayout.Button("Personnel" /*, AvailablePoints > 0 ? _greenButton : GUI.skin.button*/))
             {
                 GUIStates.ShowPersonnelWindow = true;
                 GUIStates.ShowBuildList = false;
@@ -251,9 +265,13 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            if (_combineVabAndSph)
+            if (_isVesselsSelected)
             {
                 RenderCombinedBuildList();
+            }
+            else if (_isConstructionSelected)
+            {
+                RenderConstructionList();
             }
             else if (_isTechSelected)
             {
@@ -269,14 +287,10 @@ namespace KerbalConstructionTime
             ClampWindow(ref pos, strict: true);
         }
 
-        private static void RenderTechList()
+        private static void RenderConstructionList()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            KSCItem ksc = KCTGameStates.ActiveKSC;
 
-            List<FacilityUpgrade> facilityItems = KCTGameStates.ActiveKSC.KSCTech;
-            List<PadConstruction> padItems = activeLC.PadConstructions;
-            List<LCConstruction> lcItems = KCTGameStates.ActiveKSC.LCConstructions;
-            KCTObservableList<TechItem> techList = KCTGameStates.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
@@ -285,23 +299,82 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 
-            if (Utilities.CurrentGameIsCareer())
+            if (ksc.Constructions.Count == 0)
+                GUILayout.Label("No KSC upgrade projects are currently underway.");
+
+            bool forceRecheck = false;
+            int cancelID = -1;
+            for (int i = 0; i < ksc.Constructions.Count; i++)
             {
-                if (facilityItems.Count == 0 && padItems.Count == 0 && lcItems.Count == 0)
-                    GUILayout.Label("No KSC upgrade projects are currently underway.");
-                foreach (PadConstruction pItem in padItems)
+                IConstructionBuildItem pItem = ksc.Constructions[i];
+                GUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
-                    RenderInProgressFacilityItem(pItem);
+                    forceRecheck = true;
+                    cancelID = i;
+                    DialogGUIBase[] options = new DialogGUIBase[2];
+                    options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
+                    options[1] = new DialogGUIButton("No", RemoveInputLocks);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?", "Cancel Construction?", null, 300, options);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
-                foreach (LCConstruction pItem in lcItems)
+
+                double buildRate = pItem.GetBuildRate();
+                if (i > 0 && buildRate != ksc.Constructions[0].GetBuildRate())
                 {
-                    RenderInProgressFacilityItem(pItem);
+                    if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
+                    {
+                        ksc.Constructions.RemoveAt(i);
+                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, pItem);
+                        forceRecheck = true;
+                    }
                 }
-                foreach (FacilityUpgrade fItem in facilityItems)
+
+                if (buildRate != ksc.Constructions[ksc.Constructions.Count - 1].GetBuildRate())
                 {
-                    RenderInProgressFacilityItem(fItem);
+                    if (i < ksc.Constructions.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
+                    {
+                        ksc.Constructions.RemoveAt(i);
+                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, pItem);
+                        forceRecheck = true;
+                    }
                 }
+
+                if (forceRecheck)
+                {
+                    forceRecheck = false;
+                    for (int j = 0; j < ksc.Constructions.Count; j++)
+                        ksc.Constructions[j].UpdateBuildRate(j);
+                }
+
+                GUILayout.Label(pItem.GetItemName());
+                GUILayout.Label($"{(pItem.GetFractionComplete() * 100d):N2} %", GUILayout.Width(_width1 / 2));
+                if (buildRate > 0d)
+                    GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));
+                else
+                    GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(pItem.EstimatedTimeLeft)}", GUILayout.Width(_width1));
+                if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d && GUILayout.Button("Warp", GUILayout.Width(45)))
+                {
+                    KCTWarpController.Create(pItem);
+                }
+                else if (HighLogic.LoadedSceneIsEditor)
+                    GUILayout.Space(45);
+                GUILayout.EndHorizontal();
             }
+            GUILayout.EndScrollView();
+        }
+
+        private static void RenderTechList()
+        {
+            KCTObservableList<TechItem> techList = KCTGameStates.TechList;
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Name:");
+            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
+            GUILayout.Label("Time Left:", GUILayout.Width(_width1));
+            GUILayout.Space(70);
+            GUILayout.EndHorizontal();
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 
             if (techList.Count == 0)
                 GUILayout.Label("No tech nodes are being researched!\nBegin research by unlocking tech in the R&D building.");
@@ -428,21 +501,6 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
-        }
-
-        private static void RenderInProgressFacilityItem(IKCTBuildItem item)
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(item.GetItemName());
-            GUILayout.Label($"{Math.Round(100 * item.GetFractionComplete(), 2)} %", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(item.GetTimeLeft()), GUILayout.Width(_width1));
-            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp", GUILayout.Width(70)))
-            {
-                KCTWarpController.Create(item);
-            }
-            else if (HighLogic.LoadedSceneIsEditor)
-                GUILayout.Space(70);
-            GUILayout.EndHorizontal();
         }
 
         private static void DrawYearBasedMult(TechItem t)
@@ -1185,6 +1243,37 @@ namespace KerbalConstructionTime
             }
         }
 
+        public static void CancelConstruction(int index)
+        {
+            if (KCTGameStates.ActiveKSC.Constructions.Count > index)
+            {
+                IConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
+                KCTDebug.Log($"Cancelling construction: {item.GetItemName()}");
+
+                double cost = 0;
+                if (item is PadConstruction pc)
+                {
+                    cost = pc.Cost;
+                    pc.LC.PadConstructions.Remove(pc);
+                }
+                else if (item is LCConstruction lcc)
+                {
+                    cost = lcc.Cost;
+                    lcc.KSC.Constructions.Remove(lcc);
+                }
+                else if (item is FacilityUpgrade fac)
+                {
+                    cost = fac.Cost;
+                    fac.KSC.Constructions.Remove(fac);
+                }
+
+                if (cost > 0d && Utilities.CurrentGameIsCareer())
+                    Utilities.AddFunds(cost, TransactionReasons.StructureConstruction);
+
+                KCTGameStates.ActiveKSC.Constructions.RemoveAt(index);
+            }
+        }
+
         private static void DrawBLPlusWindow(int windowID)
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
@@ -1292,7 +1381,7 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished && GUILayout.Button("Move to Top"))
             {
-                if (_combineVabAndSph)
+                if (_isVesselsSelected)
                 {
                     if (activeLC.BuildList.Remove(b))
                         activeLC.BuildList.Insert(0, b);

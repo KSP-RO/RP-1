@@ -307,8 +307,7 @@ namespace KerbalConstructionTime
     public class KCT_Preset_General : ConfigNodeStorage
     {
         [Persistent]
-        public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true,
-            TechUpgrades = true;
+        public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true;
         [Persistent]
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
             VABRecoveryTech = null;

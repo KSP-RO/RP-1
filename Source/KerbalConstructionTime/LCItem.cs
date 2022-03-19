@@ -318,6 +318,7 @@ namespace KerbalConstructionTime
             PadConstructions.Clear();
             Recon_Rollout.Clear();
             AirlaunchPrep.Clear();
+            LaunchPads.Clear();
             _rate = 0;
             Personnel = 0;
 

@@ -127,7 +127,6 @@ namespace KerbalConstructionTime
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 ksc.RecalculateBuildRates();
-                ksc.RecalculateUpgradedBuildRates();
             }
             for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
             {
@@ -463,7 +462,7 @@ namespace KerbalConstructionTime
                 ScrapYardWrapper.ProcessVessel(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
 
                 //reset the BP
-                KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetBuildTime(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
+                KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetBuildPoints(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
                 KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(KCTGameStates.RecoveredVessel);
             }
 

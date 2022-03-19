@@ -44,15 +44,6 @@ namespace KerbalConstructionTime
             }
         }
 
-        public LCItem FindLCFromID(System.Guid guid)
-        {
-            foreach (LCItem lc in LaunchComplexes)
-                if (lc.ID == guid)
-                    return lc;
-
-            return null;
-        }
-
         public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.All(lc => lc.IsEmpty);
 
         public void EnsureStartingLaunchComplexes()
@@ -67,16 +58,14 @@ namespace KerbalConstructionTime
             LaunchComplexes.Add(starterLC);
         }
 
-        public void RecalculateBuildRates()
+        public void RecalculateBuildRates(bool all = true)
         {
-            foreach (LCItem lc in LaunchComplexes)
-                lc.RecalculateBuildRates();
-        }
+            if(all)
+                foreach (LCItem lc in LaunchComplexes)
+                    lc.RecalculateBuildRates();
 
-        public void RecalculateUpgradedBuildRates()
-        {
-            foreach (LCItem lc in LaunchComplexes)
-                lc.RecalculateUpgradedBuildRates();
+            for (int j = 0; j < Constructions.Count; j++)
+                Constructions[j].UpdateBuildRate(j);
         }
 
         public void SwitchToPrevLaunchComplex() => SwitchLaunchComplex(false);
@@ -151,7 +140,7 @@ namespace KerbalConstructionTime
             }
             node.AddNode(cnLCs);
 
-            var cnUpgradeables = new ConfigNode("KSCTech");
+            var cnUpgradeables = new ConfigNode("FacilityUpgrades");
             foreach (FacilityUpgrade facUpgd in FacilityUpgrades)
             {
                 facUpgd.BuildListIndex = Constructions.IndexOf(facUpgd);

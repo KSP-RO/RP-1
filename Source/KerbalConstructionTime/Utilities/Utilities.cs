@@ -284,25 +284,13 @@ namespace KerbalConstructionTime
             return cost;
         }
 
-        public static double GetBuildRate(int index, LCItem LC, bool UpgradedRate = false)
+        public static double GetBuildRate(int index, LCItem LC, bool forceRecalc = false)
         {
-            int upgradeDelta = UpgradedRate ? 1 : 0;
-            if (upgradeDelta == 0 && LC.Rates.Count > index)
-            {
-                return LC.Rates[index];
-            }
-            else if (upgradeDelta == 1 && LC.UpRates.Count > index)
-            {
-                return LC.UpRates[index];
-            }
-            else if (upgradeDelta > 1)
-            {
-                return MathParser.ParseBuildRateFormula(LC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, index, LC, upgradeDelta);
-            }
-            else
-            {
-                return 0;
-            }
+            // optimization: if we are checking index 0 use the cached rate, otherwise recalc
+            if (forceRecalc || index != 0 || LC != null)
+                return MathParser.ParseBuildRateFormula(LC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, index, LC, 0);
+
+            return LC.Rate;
         }
 
         public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool UpgradedRate = false)
@@ -316,22 +304,7 @@ namespace KerbalConstructionTime
             double ret = 0;
             if (type == BuildListVessel.ListType.VAB || type == BuildListVessel.ListType.SPH)
             {
-                if (upgradeDelta == 0 && LC.Rates.Count > index)
-                {
-                    return LC.Rates[index];
-                }
-                else if (upgradeDelta == 1 && LC.UpRates.Count > index)
-                {
-                    return LC.UpRates[index];
-                }
-                else if (upgradeDelta > 1)
-                {
-                    return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta);
-                }
-                else
-                {
-                    return 0;
-                }
+                return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta);
             }
             else if (type == BuildListVessel.ListType.TechNode)
             {
@@ -348,64 +321,26 @@ namespace KerbalConstructionTime
             return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC);
         }
 
-        public static double GetBuildRateSum(LCItem LC)
-        {
-            if (!LC.isOperational)
-                return 0d;
-
-            double rateTotal = 0d;
-            foreach (var rate in LC.Rates)
-                rateTotal += rate;
-            return rateTotal;
-        }
-
-        private static List<double> _minBuildRate = new List<double>( new double[] {0.0001d} );
-        public static List<double> GetVABBuildRates(LCItem LC)
+        public static double GetVABBuildRate(LCItem LC)
         {
             if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             if (!LC.isPad)
-                return _minBuildRate;
-            return LC.Rates;
+                return 0.0001d;
+            return GetBuildRate(0, LC);
         }
 
-        public static List<double> GetSPHBuildRates(LCItem LC)
+        public static double GetSPHBuildRate(LCItem LC)
         {
             if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             if (LC.isPad)
-                return _minBuildRate;
+                return 0.0001d;
 
-            return LC.Rates;
-        }
-
-        public static double GetBuildRateForFastestVABLine(LCItem LC)
-        {
-            return GetVABBuildRates(LC).FirstOrDefault();
-        }
-
-        public static double GetBuildRateForFastestSPHLine(LCItem LC)
-        {
-            return GetSPHBuildRates(LC).FirstOrDefault();
-        }
-
-        public static double GetVABBuildRateSum(LCItem LC)
-        {
-            double rateTotal = 0;
-            foreach (var rate in GetVABBuildRates(LC))
-                rateTotal += rate;
-            return rateTotal;
-        }
-
-        public static double GetSPHBuildRateSum(LCItem LC)
-        {
-            double rateTotal = 0;
-            foreach (var rate in GetSPHBuildRates(LC))
-                rateTotal += rate;
-            return rateTotal;
+            return GetBuildRate(0, LC);
         }
 
         public static double GetConstructionRate(KSCItem KSC)
         {
-            // we pass Type KSC; the LC passed is just to point it at the right KSC.
+            // we get passed KSC; the LC passed here is just to point it at the right KSC.
             double rateTotal = MathParser.ParseBuildRateFormula(BuildListVessel.ListType.KSC, 0, KSC == null ? null : KSC.Hangar, 0);
             return rateTotal;
         }
@@ -1187,13 +1122,13 @@ namespace KerbalConstructionTime
         {
             if (ksc == null) ksc = KCTGameStates.ActiveKSC;
             int spentPoints = 0;
-            foreach (var KSC in KCTGameStates.KSCs)
-            {
-                foreach (var LC in KSC.LaunchComplexes)
-                {
-                    foreach (var vabPoints in LC.Upgrades) spentPoints += vabPoints;
-                }
-            }
+            //foreach (var KSC in KCTGameStates.KSCs)
+            //{
+            //    foreach (var LC in KSC.LaunchComplexes)
+            //    {
+            //        foreach (var vabPoints in LC.Upgrades) spentPoints += vabPoints;
+            //    }
+            //}
             return spentPoints;
         }
 
@@ -1207,11 +1142,11 @@ namespace KerbalConstructionTime
                     break;
                 case SpaceCenterFacility.VehicleAssemblyBuilding:
                 case SpaceCenterFacility.SpaceplaneHangar:
-                    foreach (var KSC in KCTGameStates.KSCs)
-                    {
-                        foreach (var LC in KSC.LaunchComplexes)
-                            foreach (var points in LC.Upgrades) spentPoints += points;
-                    }
+                    //foreach (var KSC in KCTGameStates.KSCs)
+                    //{
+                    //    foreach (var LC in KSC.LaunchComplexes)
+                    //        foreach (var points in LC.Upgrades) spentPoints += points;
+                    //}
                     break;
                 default:
                     throw new ArgumentException("invalid facility");

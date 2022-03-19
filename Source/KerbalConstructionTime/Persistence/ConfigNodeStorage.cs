@@ -23,7 +23,7 @@ namespace KerbalConstructionTime
 
         public virtual void OnEncodeToConfigNode() { }
 
-        public ConfigNode AsConfigNode()
+        public virtual ConfigNode AsConfigNode()
         {
             try
             {

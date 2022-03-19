@@ -127,7 +127,6 @@ namespace KerbalConstructionTime
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 ksc.RecalculateBuildRates();
-                ksc.RecalculateUpgradedBuildRates();
             }
             for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
             {

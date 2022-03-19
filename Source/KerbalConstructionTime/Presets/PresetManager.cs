@@ -218,9 +218,17 @@ namespace KerbalConstructionTime
             SandboxEnabled = Source.SandboxEnabled;
 
             ConfigNode.LoadObjectFromConfig(GeneralSettings, Source.GeneralSettings.AsConfigNode());
+            ConfigNode tmp = new ConfigNode();
+            Source.GeneralSettings.EngineerSkillupRate.Save(tmp);
+            GeneralSettings.EngineerSkillupRate.Load(tmp);
+            tmp.ClearData();
+            Source.GeneralSettings.ResearcherSkillupRate.Save(tmp);
+            GeneralSettings.ResearcherSkillupRate.Load(tmp);
+            tmp.ClearData();
             ConfigNode.LoadObjectFromConfig(TimeSettings, Source.TimeSettings.AsConfigNode());
             ConfigNode.LoadObjectFromConfig(FormulaSettings, Source.FormulaSettings.AsConfigNode());
-            FormulaSettings.YearBasedRateMult = Source.FormulaSettings.YearBasedRateMult;
+            Source.FormulaSettings.YearBasedRateMult.Save(tmp);
+            FormulaSettings.YearBasedRateMult.Load(tmp);
             PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
@@ -266,7 +274,21 @@ namespace KerbalConstructionTime
             bool.TryParse(node.GetValue("science"), out ScienceEnabled);
             bool.TryParse(node.GetValue("sandbox"), out SandboxEnabled);
 
-            ConfigNode.LoadObjectFromConfig(GeneralSettings, node.GetNode("KCT_Preset_General"));
+            ConfigNode gNode = node.GetNode("KCT_Preset_General");
+            ConfigNode.LoadObjectFromConfig(GeneralSettings, gNode);
+            ConfigNode tmp = gNode.GetNode("EngineerSkillupRate");
+            if (tmp != null)
+            {
+                GeneralSettings.EngineerSkillupRate = new FloatCurve();
+                GeneralSettings.EngineerSkillupRate.Load(tmp);
+            }
+            tmp = gNode.GetNode("ResearcherSkillupRate");
+            if (tmp != null)
+            {
+                GeneralSettings.ResearcherSkillupRate = new FloatCurve();
+                GeneralSettings.ResearcherSkillupRate.Load(tmp);
+            }
+
             ConfigNode.LoadObjectFromConfig(TimeSettings, node.GetNode("KCT_Preset_Time"));
 
             ConfigNode fNode = node.GetNode("KCT_Preset_Formula");
@@ -313,12 +335,39 @@ namespace KerbalConstructionTime
             VABRecoveryTech = null;
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
+        [Persistent]
+        public double EngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, EngineerMaxEfficiency = 2.0, ResearcherMaxEfficiency = 2.0;
+        [Persistent]
+        public FloatCurve EngineerSkillupRate = new FloatCurve();
+        [Persistent]
+        public FloatCurve ResearcherSkillupRate = new FloatCurve();
+
+        public override ConfigNode AsConfigNode()
+        {
+            ConfigNode node = base.AsConfigNode();
+            ConfigNode tmp = node.GetNode("EngineerSkillupRate");
+            if (tmp == null)
+            {
+                tmp = new ConfigNode("EngineerSkillupRate");
+                EngineerSkillupRate.Save(tmp);
+                node.AddNode(tmp);
+            }
+            tmp = node.GetNode("ResearcherSkillupRate");
+            if (tmp == null)
+            {
+                tmp = new ConfigNode("ResearcherSkillupRate");
+                ResearcherSkillupRate.Save(tmp);
+                node.AddNode(tmp);
+            }
+
+            return node;
+        }
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage
     {
         [Persistent]
-        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25, MergingTimePenalty = 0.05;
+        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, MergingTimePenalty = 0.05;
     }
 
     public class KCT_Preset_Formula : ConfigNodeStorage
@@ -332,6 +381,7 @@ namespace KerbalConstructionTime
             KSCUpgradeFormula = "([C]^(1/2))*1000*[O]",
             ReconditioningFormula = "min([M]*[O]*[E], [X])*abs([RE]-[S])",
             BuildRateFormula = "(([I]+1)*0.05*[N] + max(0.1-[I], 0))*sign(2*[L]-[I]+1)",
+            ConstructionRateFormula = "([N]*0.005)^0.625",
             InventorySaleFormula = "([V]+[P] / 10000)^(0.5)",    //Gives the TOTAL amount of points, decimals are kept //[V] = inventory value in funds, [P] = Value of all previous sales combined
             IntegrationTimeFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
             RolloutCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
@@ -342,7 +392,7 @@ namespace KerbalConstructionTime
             EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))";    //[RT]=Runtime of used engine
 
         [Persistent]
-        public FloatCurve YearBasedRateMult = null;
+        public FloatCurve YearBasedRateMult = new FloatCurve();
     }
 
     public class KCT_Preset_Part_Variables

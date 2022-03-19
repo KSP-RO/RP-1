@@ -20,6 +20,9 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool UpgradeProcessed = false, isLaunchpad = false;
 
+        [Persistent]
+        public int buildListIndex = -1;
+
         public FacilityUpgrade ToFacilityUpgrade()
         {
             // KSP doesn't support automatically persisting nullable enum values.
@@ -49,7 +52,8 @@ namespace KerbalConstructionTime
                 BP = BP,
                 Cost = cost,
                 UpgradeProcessed = UpgradeProcessed,
-                IsLaunchpad = isLaunchpad
+                IsLaunchpad = isLaunchpad,
+                BuildListIndex = buildListIndex
             };
             return ret;
         }
@@ -67,6 +71,7 @@ namespace KerbalConstructionTime
             cost = fu.Cost;
             UpgradeProcessed = fu.UpgradeProcessed;
             isLaunchpad = fu.IsLaunchpad;
+            buildListIndex = fu.BuildListIndex;
             return this;
         }
     }

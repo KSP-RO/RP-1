@@ -78,6 +78,8 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID; // reset to current active LC
+
                 if (!IsPrimarilyDisabled)
                 {
                     KCTGameStates.ToolbarControl?.SetTrue();

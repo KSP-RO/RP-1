@@ -6,7 +6,7 @@ namespace KerbalConstructionTime
     public class AirlaunchPrep : IKCTBuildItem
     {
         public string Name => Direction == PrepDirection.Mount ? Name_Mount : Name_Unmount;
-        public double BP = 0, Progress = 0, Cost = 0;
+        public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
         public string AssociatedID = string.Empty;
 
         public const string Name_Mount = "Mounting to carrier";
@@ -35,6 +35,8 @@ namespace KerbalConstructionTime
             Progress = 0;
             BP = 0;
             Cost = 0;
+            Mass = 0;
+            VesselBP = 0;
             Direction = PrepDirection.Mount;
             AssociatedID = string.Empty;
         }
@@ -47,11 +49,13 @@ namespace KerbalConstructionTime
 
             BP = MathParser.ParseAirlaunchTimeFormula(vessel);
             Cost = MathParser.ParseAirlaunchCostFormula(vessel);
+            Mass = vessel.GetTotalMass();
+            VesselBP = vessel.BuildPoints;
         }
 
         public double GetBuildRate()
         {
-            double buildRate = Utilities.GetBuildRateForFastestSPHLine(LC);
+            double buildRate = Math.Min(Utilities.GetBuildRate(0, LC), Utilities.GetBuildRateCap(VesselBP, Mass, LC));
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;

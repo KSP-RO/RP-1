@@ -234,11 +234,6 @@ namespace KerbalConstructionTime
 
             if (techSelectedNew != _isTechSelected)
                 SelectList("Tech");
-
-            if (GUILayout.Button("Plans"))
-            {
-                GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
-            }
             //if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
             //{
             //    GUIStates.ShowUpgradeWindow = true;
@@ -253,6 +248,10 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+            }
+            if (GUILayout.Button("Plans"))
+            {
+                GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
             }
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
@@ -344,11 +343,12 @@ namespace KerbalConstructionTime
                 if (forceRecheck)
                 {
                     forceRecheck = false;
-                    for (int j = 0; j < ksc.Constructions.Count; j++)
-                        ksc.Constructions[j].UpdateBuildRate(j);
+                    ksc.RecalculateBuildRates(false);
                 }
-
-                GUILayout.Label(pItem.GetItemName());
+                if (pItem is PadConstruction pc)
+                    GUILayout.Label($"{pc.LC.Name}: {pc.GetItemName()}");
+                else
+                    GUILayout.Label(pItem.GetItemName());
                 GUILayout.Label($"{(pItem.GetFractionComplete() * 100d):N2} %", GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                     GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));
@@ -465,8 +465,7 @@ namespace KerbalConstructionTime
                 if (forceRecheck)
                 {
                     forceRecheck = false;
-                    for (int j = 0; j < techList.Count; j++)
-                        techList[j].UpdateBuildRate(j);
+                    KCTGameStates.UpdateTechTimes();
                 }
 
                 string blockingPrereq = t.GetBlockingTech(techList);
@@ -586,6 +585,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.Label("No vessels under construction! Go to the Editor to build more.");
             }
+            bool recalc = false;
             for (int i = 0; i < buildList.Count; i++)
             {
                 BuildListVessel b = buildList[i];
@@ -619,10 +619,12 @@ namespace KerbalConstructionTime
                 {
                     buildList.RemoveAt(i);
                     buildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
+                    recalc = true;
                 }
 
                 if (i < buildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                 {
+                    recalc = true;
                     buildList.RemoveAt(i);
                     if (GameSettings.MODIFIER_KEY.GetKey())
                     {
@@ -646,11 +648,16 @@ namespace KerbalConstructionTime
                 else
                 {
                     double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                    double buildRate = Utilities.GetBuildRate(0, b.GetListType(), null);
+                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC), Utilities.GetBuildRateCap(b.BuildPoints, b.GetTotalMass(), b.LC));
                     string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }
                 GUILayout.EndHorizontal();
+            }
+            if (recalc)
+            {
+                for (int i = buildList.Count; i-- > 0;)
+                    buildList[i].UpdateBuildRate();
             }
         }
 
@@ -1385,6 +1392,7 @@ namespace KerbalConstructionTime
                 {
                     if (activeLC.BuildList.Remove(b))
                         activeLC.BuildList.Insert(0, b);
+                    activeLC.RecalculateBuildRates();
                 }
             }
 

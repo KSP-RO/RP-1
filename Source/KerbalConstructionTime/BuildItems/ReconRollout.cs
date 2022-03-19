@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
     public class ReconRollout : IKCTBuildItem
     {
         public string Name => RRInverseDict[RRType];
-        public double BP = 0, Progress = 0, Cost = 0;
+        public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
         public string AssociatedID = string.Empty;
         public string LaunchPadID = "LaunchPad";
         public const string ReconditioningStr = "LaunchPad Reconditioning";
@@ -38,16 +38,27 @@ namespace KerbalConstructionTime
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
 
+        private LCItem _lc = null;
         public LCItem LC
         {
             get
             {
-                foreach (var ksc in KCTGameStates.KSCs)
-                    foreach (var lc in ksc.LaunchComplexes)
-                        if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
-                            return lc;
+                if (_lc == null)
+                {
+                    foreach (var ksc in KCTGameStates.KSCs)
+                        foreach (var lc in ksc.LaunchComplexes)
+                            if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
+                            {
+                                _lc = lc;
+                                break;
+                            }
+                }
                 
-                return null;
+                return _lc;
+            }
+            set
+            {
+                _lc = value;
             }
         }
 
@@ -56,6 +67,8 @@ namespace KerbalConstructionTime
             Progress = 0;
             BP = 0;
             Cost = 0;
+            Mass = 0;
+            VesselBP = 0;
             RRType = RolloutReconType.None;
             AssociatedID = "";
             LaunchPadID = "LaunchPad";
@@ -68,9 +81,14 @@ namespace KerbalConstructionTime
             LaunchPadID = launchSite;
             KCTDebug.Log("New recon_rollout at launchsite: " + LaunchPadID);
             Progress = 0;
+            _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+
+            Mass = vessel.GetTotalMass();
             try
             {
-                BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), true);
+                var blv = new BuildListVessel(vessel);
+                BP = MathParser.ParseReconditioningFormula(blv, true);
+                VesselBP = blv.BuildPoints;
             }
             catch
             {
@@ -91,6 +109,9 @@ namespace KerbalConstructionTime
             AssociatedID = id;
             LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.LaunchSite : launchSite;    //For when we add custom launchpads
             Progress = 0;
+            Mass = vessel.GetTotalMass();
+            _lc = vessel.LC;
+            VesselBP = vessel.BuildPoints;
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
             if (type == RolloutReconType.Rollout)
@@ -118,8 +139,9 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double buildRate = AssociatedBLV?.Type == BuildListVessel.ListType.SPH
-                                ? Utilities.GetBuildRateForFastestSPHLine(LC) : Utilities.GetBuildRateForFastestVABLine(LC);
+            double buildRate = Utilities.GetBuildRate(0, LC);
+            if (RRType != RolloutReconType.Reconditioning)
+                buildRate = Math.Min(buildRate, Utilities.GetBuildRateCap(VesselBP, Mass, LC));
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

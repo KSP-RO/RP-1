@@ -8,7 +8,7 @@ namespace KerbalConstructionTime
         [Persistent]
         string shipName, shipID;
         [Persistent]
-        double progress, effectiveCost, buildTime, integrationTime;
+        double progress, effectiveCost, buildPoints, integrationPoints;
         [Persistent]
         string launchSite, flag;
         [Persistent]
@@ -34,7 +34,7 @@ namespace KerbalConstructionTime
 
         public BuildListVessel ToBuildListVessel()
         {
-            var ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildTime, integrationTime, flag, cost, integrationCost, EditorFacility)
+            var ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, EditorFacility)
             {
                 Progress = progress,
                 Id = new Guid(shipID),
@@ -57,8 +57,8 @@ namespace KerbalConstructionTime
         {
             progress = blv.Progress;
             effectiveCost = blv.EffectiveCost;
-            buildTime = blv.BuildPoints;
-            integrationTime = blv.IntegrationPoints;
+            buildPoints = blv.BuildPoints;
+            integrationPoints = blv.IntegrationPoints;
             launchSite = blv.LaunchSite;
             flag = blv.Flag;
             shipName = blv.ShipName;

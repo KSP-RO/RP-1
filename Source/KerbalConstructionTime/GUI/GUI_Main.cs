@@ -61,7 +61,7 @@ namespace KerbalConstructionTime
                 //if (GUIStates.ShowUpgradeWindow)
                 //    _upgradePosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawUpgradeWindow", "Upgrades", DrawUpgradeWindow);
                 if (GUIStates.ShowPersonnelWindow)
-                    _personnelPosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawPersonnelWindow", "Personnel", DrawPersonnelWindow);
+                    _personnelPosition = DrawWindowWithTooltipSupport(_personnelPosition, "DrawPersonnelWindow", "Personnel", DrawPersonnelWindow);
                 if (GUIStates.ShowBLPlus)
                     _blPlusPosition = DrawWindowWithTooltipSupport(_blPlusPosition, "DrawBLPlusWindow", "Options", DrawBLPlusWindow);
                 if (GUIStates.ShowDismantlePad)
@@ -255,7 +255,6 @@ namespace KerbalConstructionTime
         {
             _fundsCost = int.MinValue;
             _nodeRate = int.MinValue;
-            _upNodeRate = int.MinValue;
         }
 
         public static void CenterWindow(ref Rect window)

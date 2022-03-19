@@ -19,10 +19,10 @@ namespace RP0
         public double facilityLevelCostPow = 1d;
 
         [Persistent]
-        public double kctBPMult = 20d;
+        public double salaryEngineers = 1000d;
 
         [Persistent]
-        public double kctResearchMult = 100d * 86400d;
+        public double salaryResearchers = 1000d;
 
         [Persistent]
         public double nautYearlyUpkeepAdd = 5000d;

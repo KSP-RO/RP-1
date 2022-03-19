@@ -6,7 +6,7 @@ namespace RP0
     {
         public enum UITab
         {
-            Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType,
+            Maintenance, Facilities, Integration, Construction, Astronauts, Tooling, ToolingType,
             Training, Courses, NewCourse, Naut, Avionics, Contracts, CareerLog
         };
 
@@ -54,6 +54,7 @@ namespace RP0
                 case UITab.Maintenance:
                 case UITab.Facilities:
                 case UITab.Integration:
+                case UITab.Construction:
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Tooling:
                 case UITab.ToolingType:

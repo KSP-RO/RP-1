@@ -3,7 +3,7 @@
     public class AirlaunchPrepStorageItem
     {
         [Persistent] private string name = "";
-        [Persistent] public double BP = 0, progress = 0, cost = 0;
+        [Persistent] public double BP = 0, progress = 0, cost = 0, mass = 0, vesselBP = 0;
         [Persistent] public string associatedID = "";
 
         public AirlaunchPrep ToAirlaunchPrep()
@@ -14,7 +14,9 @@
                 Progress = progress,
                 Cost = cost,
                 Direction = name == AirlaunchPrep.Name_Mount ? AirlaunchPrep.PrepDirection.Mount : AirlaunchPrep.PrepDirection.Unmount,
-                AssociatedID = associatedID
+                AssociatedID = associatedID,
+                Mass = mass,
+                VesselBP = vesselBP
             };
             return ret;
         }
@@ -26,6 +28,8 @@
             progress = ap.Progress;
             cost = ap.Cost;
             associatedID = ap.AssociatedID;
+            mass = ap.Mass;
+            vesselBP = ap.VesselBP;
             return this;
         }
     }

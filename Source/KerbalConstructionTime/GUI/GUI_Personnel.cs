@@ -9,110 +9,75 @@ namespace KerbalConstructionTime
     {
         private static Rect _personnelPosition = new Rect((Screen.width - 450) / 2, Screen.height / 4, 450, 1);
         private static int _personnelWindowHolder = 0;
+        private static double _fundsCost = int.MinValue;
+        private static double _nodeRate = int.MinValue, _upNodeRate = int.MinValue;
+        private static int _buyModifier;
+        private static int _nodeDelta = 1;
+        public static int _LCIndex = 0;
+        private static GUIStyle _cannotAffordStyle;
+        private static readonly int[] _buyModifierMultsPersonnel = { 5, 50, 500, int.MaxValue };
 
-        private static int TotalPersonnel => KCTGameStates.KSCs.Sum(k => k.Personnel);
-        private static int ConstructionPersonnel => KCTGameStates.KSCs.Sum(k => k.FreePersonnel);
+        private static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Personnel);
 
         private static void DrawPersonnelWindow(int windowID)
         {
             int oldByModifier = _buyModifier;
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                _buyModifier = 5;
+                _buyModifier = _buyModifierMultsPersonnel[1];
             }
             else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
             {
-                _buyModifier = 100;
+                _buyModifier = _buyModifierMultsPersonnel[2];
             }
             else if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
             {
-                _buyModifier = -1;
+                _buyModifier = _buyModifierMultsPersonnel[3];
             }
             else
             {
-                _buyModifier = 1;
+                _buyModifier = _buyModifierMultsPersonnel[0];
             }
-
             bool isCostCacheInvalid = _buyModifier != oldByModifier;
-            KSCItem KSC = KCTGameStates.ActiveKSC;
-            bool hasLC = KSC.LaunchComplexCount > 0;
-            LCItem currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Total Points:", GUILayout.Width(90));
-            GUILayout.Label(TotalPoints.ToString());
-            GUILayout.Label($"Available: {AvailablePoints}");
+            GUILayout.Label("Total Engineers:", GUILayout.Width(120));
+            GUILayout.Label(TotalEngineers.ToString("N0"), GetTextFieldRightAlignStyle());
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Total Researchers:", GUILayout.Width(120));
+            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetTextFieldRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            int integPoints = Utilities.GetSpentUpgradesFor(SpaceCenterFacility.VehicleAssemblyBuilding);
+            //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
+            //    KCTGameStates.SciPointsTotal >= 0)
+            //{
+            //    GUILayout.BeginHorizontal();
+            //    GUILayout.Label("Total science:", GUILayout.Width(90));
+            //    GUILayout.Label(((int)KCTGameStates.SciPointsTotal).ToString("N0"));
+            //    GUILayout.EndHorizontal();
+            //}
+
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Integration Pts:", GUILayout.Width(90));
-            GUILayout.Label(integPoints.ToString());
+            if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
+            if (Utilities.CurrentGameHasScience() && GUILayout.Button("Reserachers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Points in R&D:", GUILayout.Width(90));
-            GUILayout.Label(Utilities.GetSpentUpgradesFor(SpaceCenterFacility.ResearchAndDevelopment).ToString());
-            GUILayout.EndHorizontal();
-
-            if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
-                KCTGameStates.SciPointsTotal >= 0)
+            if (_personnelWindowHolder == 0)    //VAB
             {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Total science:", GUILayout.Width(90));
-                GUILayout.Label(((int)KCTGameStates.SciPointsTotal).ToString());
-                GUILayout.EndHorizontal();
+                RenderEngineersSection(isCostCacheInvalid);
             }
 
-            if (Utilities.CurrentGameIsCareer())
+            if (_personnelWindowHolder == 2)    //R&D
             {
-                if (_fundsCost == int.MinValue || isCostCacheInvalid)
-                {
-                    _fundsDelta = _buyModifier;
-                    _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * _fundsDelta;
-                }
-                if (_fundsCost >= 0)
-                {
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label(_fundsDelta > 1 ? $"Buy {_fundsDelta} Points: " : "Buy 1 Point: ");
-                    bool canAfford = Funding.Instance.Funds >= _fundsCost;
-                    GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                    if (GUILayout.Button($"{Math.Round(_fundsCost, 0)} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
-                    {
-                        Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
-                        KCTGameStates.PurchasedUpgrades[1] += _fundsDelta;
-
-                        _fundsCost = _spentPoints = _totalPoints = int.MinValue;
-                    }
-                    GUILayout.EndHorizontal();
-                }
-            }
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"LC: {currentLC.Name}");
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); _upgradeWindowHolder = 0; _upgradePosition.height = 1; }
-            if (GUILayout.Button("Integration at LC", GUILayout.ExpandWidth(false))) { _upgradeWindowHolder = 0; _upgradePosition.height = 1; }
-            if (GUILayout.Button(">>", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(true, _LCIndex, false); _upgradeWindowHolder = 0; _upgradePosition.height = 1; }
-            if (Utilities.CurrentGameHasScience() && GUILayout.Button("R&D")) { _upgradeWindowHolder = 2; _upgradePosition.height = 1; }
-            GUILayout.EndHorizontal();
-
-            if (_upgradeWindowHolder == 0)    //VAB
-            {
-                RenderPersonnelBuildRateSection(currentLC);
-            }
-
-            if (_upgradeWindowHolder == 2)    //R&D
-            {
-                RenderPersonnelRnDSection(isCostCacheInvalid, KSC);
+                RenderResearchersSection(isCostCacheInvalid);
             }
 
             if (GUILayout.Button("Close"))
             {
-                GUIStates.ShowUpgradeWindow = false;
+                GUIStates.ShowPersonnelWindow = false;
                 if (!IsPrimarilyDisabled)
                 {
                     KCTGameStates.ToolbarControl?.SetTrue();
@@ -124,135 +89,163 @@ namespace KerbalConstructionTime
                 GUI.DragWindow();
         }
 
-        private static void RenderPersonnelBuildRateSection(LCItem LC)
+        private static void RenderEngineersSection(bool isCostCacheInvalid)
         {
-            
+            KSCItem KSC = KCTGameStates.ActiveKSC;
+            LCItem currentLC = KSC.LaunchComplexes[_LCIndex];
+
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Integration Upgrades");
-            GUILayout.Label($"+{(_buyModifier < 0 ? "MAX" : _buyModifier.ToString())} Point{(_buyModifier == 1 ? "" : "s")}", GUILayout.ExpandWidth(false));
+            GUILayout.Label("Engineers:", GUILayout.Width(90));
+            GUILayout.Label(KSC.Personnel.ToString("N0"), GetTextFieldRightAlignStyle());
+            GUILayout.Label($"Free for Construction: {KSC.FreePersonnel} ({Utilities.GetConstructionRate(KSC):N2} BP/sec)", GetTextFieldRightAlignStyle());
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height((LC.Upgrades.Count + 1) * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
-            GUILayout.BeginVertical();
-            
-            BuildListVessel.ListType type = LC == LC.KSC.Hangar ? BuildListVessel.ListType.SPH : BuildListVessel.ListType.VAB;
 
-            for (int i = 0; i < LC.Rates.Count; i++)
+            RenderHireFire(false);
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); }
+            GUILayout.Label(currentLC.Name);
+            if (GUILayout.Button(">>", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(true, _LCIndex, false); }
+            GUILayout.EndHorizontal();
+
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Assigned:");
+            int delta;
+            bool recalc = false;
+            BuildListVessel.ListType type = currentLC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            if (GUILayout.Button(GetAssignText(true, currentLC, out delta))) { currentLC.Personnel += delta; recalc = true; }
+            GUILayout.Label($"{currentLC.Personnel:N}: {Utilities.GetBuildRate(0, type, currentLC):N2}BP/sec");
+            if (GUILayout.Button(GetAssignText(false, currentLC, out delta))) { currentLC.Personnel -= delta; recalc = true; }
+            GUILayout.EndHorizontal();
+
+            if (recalc)
             {
-                int pointsDelta = _buyModifier;
-                if (pointsDelta < 0)
-                {
-                    if (i == 0) pointsDelta = AvailablePoints;
-                    else if (i > LC.Rates.Count) pointsDelta = 0;
-                    else
-                    {
-                        pointsDelta = 1;
-                        while (pointsDelta < AvailablePoints && Utilities.GetBuildRate(i, type, LC, pointsDelta + 1) <= LC.Rates[i - 1])
-                        {
-                            pointsDelta++;
-                        }
-                    }
-                }
-                
-                double rate = Utilities.GetBuildRate(i, type, LC);
-                double upgraded = Utilities.GetBuildRate(i, type, LC, true);
-                double deltaUpgraded = Utilities.GetBuildRate(i, type, LC, pointsDelta);
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"Rate {i + 1}");
-                GUILayout.Label($"{rate} BP/s");
-                if (AvailablePoints > 0 && (i == 0 || upgraded <= Utilities.GetBuildRate(i - 1, type, LC)) && upgraded - rate > 0)
-                {
-                    bool canAfford = AvailablePoints >= pointsDelta && (i == 0 || deltaUpgraded <= Utilities.GetBuildRate(i - 1, type, LC));
-                    GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                    if (GUILayout.Button($"+{Math.Round(deltaUpgraded - rate, 3)}", style, GUILayout.Width(55)) && canAfford)
-                    {
-                        if (i >= LC.Upgrades.Count)
-                            LC.Upgrades.Add(pointsDelta);
-                        else
-                            LC.Upgrades[i] += pointsDelta;
-
-                        LC.RecalculateBuildRates();
-                        LC.RecalculateUpgradedBuildRates();
-                        _fundsCost = _spentPoints = _totalPoints = int.MinValue;
-                    }
-                }
-                GUILayout.EndHorizontal();
+                currentLC.RecalculateBuildRates();
+                currentLC.RecalculateUpgradedBuildRates();
             }
-
-            GUILayout.EndVertical();
-            GUILayout.EndScrollView();
         }
 
-        private static void RenderPersonnelRnDSection(bool isCostCacheInvalid, KSCItem KSC)
+        private static void RenderResearchersSection(bool isCostCacheInvalid)
         {
-            int labelDelta = _buyModifier < 0 ? AvailablePoints : _buyModifier;
+            KSCItem KSC = KCTGameStates.ActiveKSC;
+
             GUILayout.BeginHorizontal();
-            GUILayout.Label("R&D Upgrades");
-            GUILayout.Label($"+{labelDelta} Point{(labelDelta == 1 ? "" : "s")}", GUILayout.ExpandWidth(false));
+            GUILayout.Label("Researchers:", GUILayout.Width(90));
+            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetTextFieldRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            double days = GameSettings.KERBIN_TIME ? 4 : 1;
-            if (_nodeRate == int.MinValue || isCostCacheInvalid)
-            {
-                _nodeDelta = _buyModifier < 0 ? AvailablePoints : _buyModifier;
-                _nodeRate = MathParser.ParseNodeRateFormula(0);
-                _upNodeRate = MathParser.ParseNodeRateFormula(0, 0, _nodeDelta);
-            }
+            RenderHireFire(true);
 
+            double days = GameSettings.KERBIN_TIME ? 4 : 1;
+            //if (_nodeRate == int.MinValue || isCostCacheInvalid)
+            //{
+            //    _nodeDelta = _buyModifier == int.MaxValue ? AvailablePoints : _buyModifier;
+            //    _nodeRate = MathParser.ParseNodeRateFormula(0);
+            //    _upNodeRate = MathParser.ParseNodeRateFormula(0, 0, _nodeDelta);
+            //}
+            _nodeRate = MathParser.ParseNodeRateFormula(0, 0, 0);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Rate");
-            bool usingPerYear = false;
+            //bool usingPerYear = false;
             if (sciPerDay > 0.1)
             {
-                GUILayout.Label(Math.Round(sciPerDay * 1000) / 1000 + " sci/day");
+                GUILayout.Label($"{sciPerDay:N3} sci/day", GetTextFieldRightAlignStyle());
             }
             else
             {
                 //Well, looks like we need sci/year instead
                 int daysPerYear = KSPUtil.dateTimeFormatter.Year / KSPUtil.dateTimeFormatter.Day;
-                GUILayout.Label(Math.Round(sciPerDay * daysPerYear * 1000) / 1000 + " sci/yr");
-                usingPerYear = true;
-            }
-            if (_upNodeRate != _nodeRate && AvailablePoints > 0)
-            {
-                bool everyKSCCanUpgrade = true;
-                foreach (KSCItem ksc in KCTGameStates.KSCs)
-                {
-                    if (TotalPoints - Utilities.GetTotalSpentUpgrades(ksc) <= 0)
-                    {
-                        everyKSCCanUpgrade = false;
-                        break;
-                    }
-                }
-                if (everyKSCCanUpgrade)
-                {
-                    double upSciPerDay = 86400 * _upNodeRate / days;
-                    string buttonText = $"{Math.Round(1000 * upSciPerDay) / 1000} sci/day";
-                    if (usingPerYear)
-                    {
-                        int daysPerYear = KSPUtil.dateTimeFormatter.Year / KSPUtil.dateTimeFormatter.Day;
-                        buttonText = $"{Math.Round(upSciPerDay * daysPerYear * 1000) / 1000} sci/yr";
-                    }
-                    bool canAfford = AvailablePoints >= _nodeDelta;
-                    GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                    if (GUILayout.Button(buttonText, style, GUILayout.ExpandWidth(false)) && canAfford)
-                    {
-                        KCTGameStates.TechUpgradesTotal += _nodeDelta;
-                        foreach (KSCItem ksc in KCTGameStates.KSCs)
-                            ksc.RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
-
-                        _nodeRate = _upNodeRate = int.MinValue;
-                        _fundsCost = _spentPoints = _totalPoints = int.MinValue;
-
-                        foreach (TechItem tech in KCTGameStates.TechList)
-                        {
-                            tech.UpdateBuildRate(KCTGameStates.TechList.IndexOf(tech));
-                        }
-                    }
-                }
+                GUILayout.Label($"{(sciPerDay * daysPerYear):N3} sci/yr", GetTextFieldRightAlignStyle());
+                //usingPerYear = true;
             }
             GUILayout.EndHorizontal();
+        }
+
+        private static void RenderHireFire(bool research)
+        {
+            if (Utilities.CurrentGameIsCareer())
+            {
+                int workers = _buyModifier;
+                if (workers == int.MaxValue)
+                    workers = Math.Max(_buyModifierMultsPersonnel[0], (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost));
+
+                _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * workers;
+
+                string title = research ? "Researchers" : "Engineers";
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"Hire {workers:N0} {title}: ");
+                bool canAfford = Funding.Instance.Funds >= _fundsCost;
+                GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                if (GUILayout.Button($"{Math.Round(_fundsCost, 0)} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
+                {
+                    Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
+                    if (research)
+                        KCTGameStates.RDPersonnel += workers;
+                    else
+                        KCTGameStates.ActiveKSC.Personnel += workers;
+
+                    _fundsCost = int.MinValue;
+                }
+                GUILayout.Label(" ===== ", GetTextFieldCenterAlignStyle());
+
+                int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
+                workers = _buyModifier;
+                if (workers == int.MaxValue)
+                    workers = limit;
+
+                canAfford = workers <= limit;
+                style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                if (GUILayout.Button($"Fire {workers:N0} {title}", style, GUILayout.ExpandWidth(false)) && canAfford)
+                {
+                    if (research)
+                        KCTGameStates.RDPersonnel -= workers;
+                    else
+                        KCTGameStates.ActiveKSC.Personnel -= workers;
+                }
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        private static string GetAssignText(bool add, LCItem currentLC, out int mod)
+        {
+            string signChar;
+            int limit;
+            mod = _buyModifierMultsPersonnel[0]; // default
+            if (add)
+            {
+                signChar = "+";
+                limit = currentLC.KSC.FreePersonnel;
+            }
+            else
+            {
+                signChar = "-";
+                limit = currentLC.Personnel;
+            }
+            for (int i = 0; i < _buyModifierMultsPersonnel.Length; ++i)
+            {
+                if (_buyModifierMultsPersonnel[i] != _buyModifier)
+                    continue;
+
+                mod = Math.Min(limit, _buyModifier);
+                break;
+            }
+            return $"{signChar}{mod:N0}";
+        }
+
+        private static GUIStyle GetCannotAffordStyle()
+        {
+            if (_cannotAffordStyle == null)
+            {
+                _cannotAffordStyle = new GUIStyle(GUI.skin.button);
+                _cannotAffordStyle.normal.textColor = Color.red;
+                _cannotAffordStyle.active.textColor = _cannotAffordStyle.normal.textColor;
+                _cannotAffordStyle.hover.textColor = _cannotAffordStyle.normal.textColor;
+            }
+            return _cannotAffordStyle;
         }
     }
 }

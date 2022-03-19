@@ -99,7 +99,6 @@ namespace KerbalConstructionTime
             _workingPreset.GeneralSettings.BuildTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.BuildTimes, "Build Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.TechUnlockTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUnlockTimes, "Tech Unlock Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.TechUpgrades = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUpgrades, "Upgrades From Tech Tree", HighLogic.Skin.button);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Starting Upgrades:");

@@ -23,7 +23,7 @@ namespace KerbalConstructionTime
                     minTonnage = 0f;
 
                 double mass = tonnageLimit;
-                curPadCost = Math.Pow(mass, 0.5d) * 2500d + Math.Pow(mass, 1.5d) * 1.5d;
+                curPadCost = Math.Max(0d, Math.Min(1d, Math.Max(15d, mass) * 0.05d) * Math.Sqrt(mass) * 4000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 10000d) + 2000d;
 
                 if (_padLvlOptions == null)
                 {
@@ -67,7 +67,7 @@ namespace KerbalConstructionTime
                 curPadCost = 0f;
                 padSize.y *= 5f;
             }
-            curVABCost = Math.Pow(padSize.magnitude, 2.5d) * 2d;
+            curVABCost = padSize.sqrMagnitude * 20d;
         }
 
         public static void DrawNewLCWindow(int windowID)
@@ -115,7 +115,7 @@ namespace KerbalConstructionTime
                 GetPadStats(tonnageLimit, new Vector3(widthLimit, heightLimit, widthLimit), out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
             }
             if (hasTonnage)
-                GUILayout.Label($"Minimum tonnage: {minTonnage:N}");
+                GUILayout.Label($"Minimum tonnage: {minTonnage:N0}");
             else
                 tonnageLimit = -1f;
 
@@ -123,7 +123,17 @@ namespace KerbalConstructionTime
             _widthLimit = GUILayout.TextField(_widthLimit);
             _heightLimit = GUILayout.TextField(_heightLimit);
 
-            double totalCost = Math.Abs(curVABCost - oldVABCost) + Math.Abs(curPadCost - oldPadCost) * lpMult;
+            double totalCost;
+            if (curPadCost > oldPadCost)
+                totalCost = curPadCost - oldPadCost;
+            else
+                totalCost = (oldPadCost - curPadCost) * 0.5d;
+            totalCost *= lpMult;
+
+            if (curVABCost > oldVABCost)
+                totalCost += curVABCost - oldVABCost;
+            else
+                totalCost += (oldVABCost - curVABCost) * 0.5d;
 
             if (totalCost > 0)
             {
@@ -132,13 +142,13 @@ namespace KerbalConstructionTime
                 string costString;
                 if (GUIStates.ShowModifyLC)
                 {
-                    costString = $"It will cost {Math.Round(totalCost):N0} funds to renovate {activeLC.Name}.";
+                    costString = $"It will cost {totalCost:N0} funds to renovate {activeLC.Name}.";
                     if (activeLC.isPad)
-                        costString += $" Additional pads there will now cost {Math.Round(curPadCost):N}.";
+                        costString += $" Additional pads there will now cost {curPadCost:N0}.";
                 }
                 else
                 {
-                    costString = $"It will cost {Math.Round(totalCost):N0} funds to build the new launch complex, and additional pads there will cost {Math.Round(curPadCost):N0}.";
+                    costString = $"It will cost {totalCost:N0} funds to build the new launch complex, and additional pads there will cost {curPadCost:N0}.";
                 }
                 GUILayout.Label(costString + $" Estimated construction time is {sBuildTime}.");
             }

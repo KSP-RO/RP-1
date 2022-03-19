@@ -21,6 +21,11 @@ namespace KerbalConstructionTime
         public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
         public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
+        public static void UpdateTechTimes()
+        {
+            for (int j = 0; j < TechList.Count; j++)
+                TechList[j].UpdateBuildRate(j);
+        }
 
         //public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
         //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;

@@ -344,8 +344,7 @@ namespace KerbalConstructionTime
                 if (forceRecheck)
                 {
                     forceRecheck = false;
-                    for (int j = 0; j < ksc.Constructions.Count; j++)
-                        ksc.Constructions[j].UpdateBuildRate(j);
+                    ksc.RecalculateBuildRates(false);
                 }
 
                 GUILayout.Label(pItem.GetItemName());
@@ -465,8 +464,7 @@ namespace KerbalConstructionTime
                 if (forceRecheck)
                 {
                     forceRecheck = false;
-                    for (int j = 0; j < techList.Count; j++)
-                        techList[j].UpdateBuildRate(j);
+                    KCTGameStates.UpdateTechTimes();
                 }
 
                 string blockingPrereq = t.GetBlockingTech(techList);

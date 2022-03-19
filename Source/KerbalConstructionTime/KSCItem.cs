@@ -113,7 +113,11 @@ namespace KerbalConstructionTime
 
         public void SwitchLaunchComplex(int LC_ID, bool updateDestrNode = true)
         {
-            ActiveLaunchComplexID = LC_ID;
+            if (LC_ID < 0)
+                LC_ID = ActiveLaunchComplexID;
+            else
+                ActiveLaunchComplexID = LC_ID;
+
             LaunchComplexes[LC_ID].SwitchLaunchPad();
             KCT_GUI._LCIndex = LC_ID;
         }

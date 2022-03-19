@@ -10,9 +10,8 @@ namespace KerbalConstructionTime
         private static Rect _personnelPosition = new Rect((Screen.width - 450) / 2, Screen.height / 4, 450, 1);
         private static int _personnelWindowHolder = 0;
         private static double _fundsCost = int.MinValue;
-        private static double _nodeRate = int.MinValue, _upNodeRate = int.MinValue;
+        private static double _nodeRate = int.MinValue;
         private static int _buyModifier;
-        private static int _nodeDelta = 1;
         public static int _LCIndex = 0;
         private static GUIStyle _cannotAffordStyle;
         private static readonly int[] _buyModifierMultsPersonnel = { 5, 50, 500, int.MaxValue };
@@ -43,11 +42,11 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(TotalEngineers.ToString("N0"), GetTextFieldRightAlignStyle());
+            GUILayout.Label(TotalEngineers.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetTextFieldRightAlignStyle());
+            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
@@ -98,8 +97,8 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Engineers:", GUILayout.Width(90));
-            GUILayout.Label(KSC.Personnel.ToString("N0"), GetTextFieldRightAlignStyle());
-            GUILayout.Label($"Free for Construction: {KSC.FreePersonnel} ({Utilities.GetConstructionRate(KSC):N2} BP/sec)", GetTextFieldRightAlignStyle());
+            GUILayout.Label(KSC.Personnel.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label($"Free for Construction: {KSC.FreePersonnel} ({Utilities.GetConstructionRate(KSC):N2} BP/sec)", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             RenderHireFire(false);
@@ -116,15 +115,22 @@ namespace KerbalConstructionTime
             int delta;
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            if (GUILayout.Button(GetAssignText(true, currentLC, out delta))) { currentLC.Personnel += delta; recalc = true; }
-            GUILayout.Label($"{currentLC.Personnel:N}: {Utilities.GetBuildRate(0, type, currentLC):N2}BP/sec");
-            if (GUILayout.Button(GetAssignText(false, currentLC, out delta))) { currentLC.Personnel -= delta; recalc = true; }
+            if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, -delta); recalc = true; }
+            GUILayout.Label($"{currentLC.Personnel:N0}", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
+            if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, delta); recalc = true; }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}%");
+            GUILayout.Label("Rate:", GetLabelCenterAlignStyle());
+            double rate = Utilities.GetBuildRate(0, type, currentLC);
+            GUILayout.Label($"{rate:N3} => {(rate * currentLC.EfficiencyPersonnel):N3} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             if (recalc)
             {
                 currentLC.RecalculateBuildRates();
-                currentLC.RecalculateUpgradedBuildRates();
+                currentLC.KSC.RecalculateBuildRates(false);
             }
         }
 
@@ -134,7 +140,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Researchers:", GUILayout.Width(90));
-            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetTextFieldRightAlignStyle());
+            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             RenderHireFire(true);
@@ -149,18 +155,20 @@ namespace KerbalConstructionTime
             _nodeRate = MathParser.ParseNodeRateFormula(0, 0, 0);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
+            double sciPerDayEffic = sciPerDay * KCTGameStates.EfficiencyRDPersonnel;
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Rate");
+            GUILayout.Label($"Efficiency: {(KCTGameStates.EfficiencyRDPersonnel * 100d):N0}%");
+            GUILayout.Label("Rate", GetLabelCenterAlignStyle());
             //bool usingPerYear = false;
-            if (sciPerDay > 0.1)
+            if (sciPerDay > 0.1 && sciPerDayEffic > 0.1)
             {
-                GUILayout.Label($"{sciPerDay:N3} sci/day", GetTextFieldRightAlignStyle());
+                GUILayout.Label($"{sciPerDay:N3} => {sciPerDayEffic:N3} sci/day", GetLabelRightAlignStyle());
             }
             else
             {
                 //Well, looks like we need sci/year instead
                 int daysPerYear = KSPUtil.dateTimeFormatter.Year / KSPUtil.dateTimeFormatter.Day;
-                GUILayout.Label($"{(sciPerDay * daysPerYear):N3} sci/yr", GetTextFieldRightAlignStyle());
+                GUILayout.Label($"{(sciPerDay * daysPerYear):N3} => {(sciPerDayEffic * daysPerYear):N3} sci/yr", GetLabelRightAlignStyle());
                 //usingPerYear = true;
             }
             GUILayout.EndHorizontal();
@@ -170,43 +178,58 @@ namespace KerbalConstructionTime
         {
             if (Utilities.CurrentGameIsCareer())
             {
+                GUILayout.BeginHorizontal();
+
+                string title = research ? "Researchers" : "Engineers";
+                GUILayout.Label($"Hire/Fire {title}");
+
+                int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
                 int workers = _buyModifier;
+                if (workers == int.MaxValue)
+                    workers = limit;
+
+                bool canAfford = workers <= limit;
+                GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                if (GUILayout.Button($"Fire {workers:N0} {title}", style, GUILayout.ExpandWidth(false)) && canAfford)
+                {
+                    if (research)
+                    {
+                        ChangeResearchers(-workers);
+                        KCTGameStates.UpdateTechTimes();
+                    }
+                    else
+                    {
+                        KSCItem ksc = KCTGameStates.ActiveKSC;
+                        ksc.Personnel -= workers;
+                        ksc.RecalculateBuildRates(false);
+                    }
+                }
+
+                workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = Math.Max(_buyModifierMultsPersonnel[0], (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost));
 
                 _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * workers;
 
-                string title = research ? "Researchers" : "Engineers";
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"Hire {workers:N0} {title}: ");
-                bool canAfford = Funding.Instance.Funds >= _fundsCost;
-                GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                if (GUILayout.Button($"{Math.Round(_fundsCost, 0)} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
+                
+                canAfford = Funding.Instance.Funds >= _fundsCost;
+                style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                if (GUILayout.Button($"Hire {workers:N0} {title}: {_fundsCost:N0} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
                     Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
                     if (research)
-                        KCTGameStates.RDPersonnel += workers;
+                    {
+                        ChangeResearchers(workers);
+                        KCTGameStates.UpdateTechTimes();
+                    }
                     else
-                        KCTGameStates.ActiveKSC.Personnel += workers;
+                    {
+                        KSCItem ksc = KCTGameStates.ActiveKSC;
+                        ksc.Personnel += workers;
+                        ksc.RecalculateBuildRates(false);
+                    }
 
                     _fundsCost = int.MinValue;
-                }
-                GUILayout.Label(" ===== ", GetLabelCenterAlignStyle());
-
-                int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
-                workers = _buyModifier;
-                if (workers == int.MaxValue)
-                    workers = limit;
-
-                canAfford = workers <= limit;
-                style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                if (GUILayout.Button($"Fire {workers:N0} {title}", style, GUILayout.ExpandWidth(false)) && canAfford)
-                {
-                    if (research)
-                        KCTGameStates.RDPersonnel -= workers;
-                    else
-                        KCTGameStates.ActiveKSC.Personnel -= workers;
                 }
                 GUILayout.EndHorizontal();
             }
@@ -236,6 +259,25 @@ namespace KerbalConstructionTime
                 break;
             }
             return $"{signChar}{mod:N0}";
+        }
+
+        private static void ChangeEngineers(LCItem currentLC, int delta)
+        {
+            int oldNum = currentLC.Personnel;
+            double newNum = oldNum + delta;
+            if (delta > 0)
+                currentLC.EfficiencyPersonnel = ((currentLC.EfficiencyPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / newNum;
+            currentLC.Personnel += delta;
+        }
+
+        private static void ChangeResearchers(int delta)
+        {
+            int oldNum = KCTGameStates.RDPersonnel;
+            double newNum = oldNum + delta;
+            if (delta > 0)
+                KCTGameStates.EfficiencyRDPersonnel = ((KCTGameStates.EfficiencyRDPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / newNum;
+
+            KCTGameStates.RDPersonnel += delta;
         }
 
         private static GUIStyle GetCannotAffordStyle()

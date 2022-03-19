@@ -54,7 +54,8 @@ namespace KerbalConstructionTime
 
                     if (GetFacilityID().IndexOf("launchpad", StringComparison.OrdinalIgnoreCase) >= 0 ||
                          GetFacilityID().IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                         GetFacilityID().IndexOf("VehicleAssemblyBuilding", StringComparison.OrdinalIgnoreCase) >= 0)
+                         GetFacilityID().IndexOf("VehicleAssemblyBuilding", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                         GetFacilityID().IndexOf("runway", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         button.interactable = false;
                         var hov = button.gameObject.GetComponent<UIOnHover>();
@@ -119,18 +120,18 @@ namespace KerbalConstructionTime
             if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding || facilityType == SpaceCenterFacility.LaunchPad)
             {
                 lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "Modify the appropriate launch complex from the Space Center Management window instead.";
+                lvl.levelStats.textBase = "Modify a launch complex from the Space Center Management window instead.";
             }
-            else if(facilityType == SpaceCenterFacility.SpaceplaneHangar)
+            else if(facilityType == SpaceCenterFacility.SpaceplaneHangar || facilityType == SpaceCenterFacility.Runway)
             {
                 lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "Modify the Hangar from the Space Center Management window.";
+                lvl.levelStats.textBase = "Modify the Hangar from the Space Center Management window instead.";
             }
-            else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment &&
-                     lvlIdx > 0)
-            {
-                lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% research rate";
-            }
+            //else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment &&
+            //         lvlIdx > 0)
+            //{
+            //    lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% research rate";
+            //}
             else if (facilityType == SpaceCenterFacility.Administration)
             {
                 lvl.levelStats.linePrefix = string.Empty;

@@ -21,10 +21,16 @@ namespace KerbalConstructionTime
         public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
         public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
+        public static void UpdateTechTimes()
+        {
+            for (int j = 0; j < TechList.Count; j++)
+                TechList[j].UpdateBuildRate(j);
+        }
 
         //public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
         //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int RDPersonnel = 0;
+        public static double EfficiencyRDPersonnel = 1d;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
 
@@ -33,8 +39,8 @@ namespace KerbalConstructionTime
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
         public static bool IsSimulatedFlight = false;
-        public static double EditorBuildTime = 0;
-        public static double EditorIntegrationTime = 0;
+        public static double EditorBuildPoints = 0;
+        public static double EditorIntegrationPoints = 0;
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorIntegrationCosts = 0;
@@ -106,6 +112,16 @@ namespace KerbalConstructionTime
         public static void ClearLaunchpadList()
         {
             ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Clear();
+        }
+
+        public static LCItem FindLCFromID(System.Guid guid)
+        {
+            foreach (var ksc in KSCs)
+                foreach (LCItem lc in ksc.LaunchComplexes)
+                    if (lc.ID == guid)
+                        return lc;
+
+            return null;
         }
     }
 }

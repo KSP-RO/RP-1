@@ -10,7 +10,6 @@ namespace KerbalConstructionTime
         public static Rect EditorWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, 275, 135);
         public static string BuildRateForDisplay;
 
-        private static int _rateIndexHolder = 0;
         private static double _finishedShipBP = -1;
         private static bool _isEditorLocked = false;
 
@@ -45,46 +44,36 @@ namespace KerbalConstructionTime
 
         private static void RenderBuildMode()
         {
-            double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double buildPoints = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
-            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, type, null).ToString();
+            if (BuildRateForDisplay == null)
+                BuildRateForDisplay = (rate * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyPersonnel).ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
 
-            List<double> rates;
-            if (type == BuildListVessel.ListType.VAB) rates = Utilities.GetVABBuildRates(null);
-            else rates = Utilities.GetSPHBuildRates(null);
-
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
                 {
-                    _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                    bR = rates[_rateIndexHolder];
-                    if (bR > 0)
-                        BuildRateForDisplay = bR.ToString();
-                    else
-                    {
-                        _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                        bR = rates[_rateIndexHolder];
-                        BuildRateForDisplay = bR.ToString();
-                    }
+                    bR = rate;
+                    BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildTime / bR));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildPoints /
+                    Math.Min(bR, Utilities.GetBuildRateCap(buildPoints, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _), KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance))));
+
+                if (KCTGameStates.EditorRolloutTime > 0)
+                {
+                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
+                }
             }
             else
             {
                 GUILayout.EndHorizontal();
                 GUILayout.Label("Invalid Build Rate");
-            }
-
-            if (KCTGameStates.EditorRolloutTime > 0)
-            {
-                bR = Utilities.GetBuildRateForFastestVABLine(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
-                GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
             }
 
             if (KCTGameStates.EditorIntegrationCosts > 0)
@@ -135,7 +124,7 @@ namespace KerbalConstructionTime
             if (_finishedShipBP < 0 && ship.IsFinished)
             {
                 // If ship is finished, then both build and integration times can be refreshed with newly calculated values
-                _finishedShipBP = Utilities.GetBuildTime(ship.ExtractedPartNodes);
+                _finishedShipBP = Utilities.GetBuildPoints(ship.ExtractedPartNodes);
                 ship.BuildPoints = _finishedShipBP;
                 ship.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ship);
             }
@@ -144,23 +133,30 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * originalCompletionPercent, 2))}%");
             GUILayout.Label($"Edited: {Math.Round(100 * newCompletionPercent, 2)}%");
 
-            BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, 0);
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
-            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, ship.LC).ToString();
+            if (BuildRateForDisplay == null)
+                BuildRateForDisplay = rate.ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
-            List<double> rates = ship.LC.Rates;
+            
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
                 {
-                    _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                    bR = rates[_rateIndexHolder];
+                    bR = rate;
                     BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime - newProgressBP) / bR));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) /
+                    Math.Min(bR, Utilities.GetBuildRateCap(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _), KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance))));
+
+                if (KCTGameStates.EditorRolloutTime > 0)
+                {
+                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
+                }
             }
             else
             {
@@ -194,7 +190,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowSimConfig = true;
 
                 double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
-                double bp = Utilities.GetBuildTime(effCost);
+                double bp = Utilities.GetBuildPoints(effCost);
                 KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL);
             }
             GUILayout.EndHorizontal();

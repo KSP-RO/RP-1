@@ -36,21 +36,17 @@ namespace KerbalConstructionTime
             return ParseBuildRateFormula(type, index, KSC, UpgradedRates ? 1 : 0);
         }
 
-        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem LC, int upgradeDelta)
+        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem LC, int persDelta)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
-            int level = 0, upgrades = 0;
+            int personnel = LC == null ? KCTGameStates.ActiveKSC.FreePersonnel : (type == BuildListVessel.ListType.KSC ? LC.KSC.FreePersonnel : LC.Personnel);
             var variables = new Dictionary<string, string>();
 
-            level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-            if (LC.Upgrades.Count > index)
-            {
-                upgrades = LC.Upgrades[index];
-            }
-            upgrades += upgradeDelta;
+            int level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
+            personnel += persDelta;
             variables.Add("L", level.ToString());
             variables.Add("LM", level.ToString());
-            variables.Add("N", upgrades.ToString());
+            variables.Add("N", personnel.ToString());
             variables.Add("I", index.ToString());
             variables.Add("R", Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment).ToString());
             int numNodes = 0;
@@ -72,11 +68,11 @@ namespace KerbalConstructionTime
         {
             int RnDLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
             int RnDMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            int upgrades = KCTGameStates.TechUpgradesTotal + upgradeDelta;
+            int Personnel = KCTGameStates.RDPersonnel;
             var variables = new Dictionary<string, string>
             {
                 { "S", ScienceValue.ToString() },
-                { "N", upgrades.ToString() },
+                { "N", Personnel.ToString() },
                 { "R", RnDLvl.ToString() },
                 { "RM", RnDMax.ToString() },
                 { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() },

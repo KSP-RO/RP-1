@@ -190,7 +190,7 @@ namespace KerbalConstructionTime
 
                     _fundsCost = int.MinValue;
                 }
-                GUILayout.Label(" ===== ", GetTextFieldCenterAlignStyle());
+                GUILayout.Label(" ===== ", GetLabelCenterAlignStyle());
 
                 int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
                 workers = _buyModifier;

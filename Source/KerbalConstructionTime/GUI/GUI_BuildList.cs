@@ -346,7 +346,7 @@ namespace KerbalConstructionTime
                     ksc.RecalculateBuildRates(false);
                 }
                 if (pItem is PadConstruction pc)
-                    GUILayout.Label($"{pc.LC}: {pc.GetItemName()}");
+                    GUILayout.Label($"{pc.LC.Name}: {pc.GetItemName()}");
                 else
                     GUILayout.Label(pItem.GetItemName());
                 GUILayout.Label($"{(pItem.GetFractionComplete() * 100d):N2} %", GUILayout.Width(_width1 / 2));

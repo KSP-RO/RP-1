@@ -27,13 +27,14 @@ namespace KerbalConstructionTime
         public float EmptyCost = 0, EmptyMass = 0;
         public EditorFacility FacilityBuiltIn;
         public string KCTPersistentID;
+        private double _buildRate = -1d;
 
         internal ShipConstruct _ship;
         private double _rushCost = -1;
 
         public Vector3 ShipSize = Vector3.zero;
 
-        public double BuildRate => Utilities.GetBuildRate(this);
+        public double BuildRate => _buildRate < 0 ? UpdateBuildRate() : _buildRate;
 
         public double TimeLeft
         {
@@ -111,12 +112,7 @@ namespace KerbalConstructionTime
                     }
                     if (_lc == null)
                     {
-                        foreach (var ksc in KCTGameStates.KSCs)
-                        {
-                            _lc = ksc.FindLCFromID(_lcID);
-                            if (_lc != null)
-                                break;
-                        }
+                        _lc = KCTGameStates.FindLCFromID(_lcID);
                     }
                 }
                 return _lc;
@@ -288,7 +284,7 @@ namespace KerbalConstructionTime
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
             EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList());
-            BuildPoints = Utilities.GetBuildTime(EffectiveCost);
+            BuildPoints = Utilities.GetBuildPoints(EffectiveCost);
             Flag = HighLogic.CurrentGame.flagURL;
 
             DistanceFromKSC = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
@@ -425,7 +421,7 @@ namespace KerbalConstructionTime
             if (RecalcTime)
             {
                 ret.EffectiveCost = Utilities.GetEffectiveCost(ret.ExtractedPartNodes);
-                ret.BuildPoints = Utilities.GetBuildTime(ret.EffectiveCost);
+                ret.BuildPoints = Utilities.GetBuildPoints(ret.EffectiveCost);
                 ret.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ret);
                 ret.IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(ret);
             }
@@ -685,6 +681,8 @@ namespace KerbalConstructionTime
                 if (!removed)
                 {
                     removed = LC.BuildList.Remove(this);
+                    if (removed)
+                        LC.RecalculateBuildRates();
                 }
             }
             KCTDebug.Log($"Removing {ShipName} from {LC.Name} storage/list.");
@@ -702,7 +700,9 @@ namespace KerbalConstructionTime
                         break;
                     }
                 }
-                if (!removed)
+                if (removed)
+                    LC.RecalculateBuildRates();
+                else
                 {
                     for( int i = LC.Warehouse.Count; i-- > 0;)
                     {
@@ -716,8 +716,12 @@ namespace KerbalConstructionTime
                     }
                 }
             }
-            if (removed) KCTDebug.Log("Sucessfully removed ship from storage.");
-            else KCTDebug.Log("Still couldn't remove ship!");
+            if (removed)
+            {
+                KCTDebug.Log("Sucessfully removed vessel from LC.");
+            }
+            else 
+                KCTDebug.Log("Still couldn't remove ship!");
             return removed;
         }
 
@@ -809,6 +813,15 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate() => BuildRate;
 
+        public double UpdateBuildRate()
+        {
+            _buildRate = Utilities.GetBuildRate(this);
+            if (_buildRate < 0d)
+                _buildRate = 0d;
+
+            return _buildRate;
+        }
+
         public double GetFractionComplete() => Progress / (BuildPoints + IntegrationPoints);
 
         public double GetTimeLeft() => TimeLeft;
@@ -819,8 +832,7 @@ namespace KerbalConstructionTime
 
         public void IncrementProgress(double UTDiff)
         {
-            double buildRate = Utilities.GetBuildRate(this);
-            Progress += buildRate * UTDiff;
+            Progress += _buildRate * UTDiff;
             if (IsComplete())
                 Utilities.MoveVesselToWarehouse(this);
         }

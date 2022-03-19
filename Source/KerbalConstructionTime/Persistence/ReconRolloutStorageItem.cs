@@ -3,9 +3,10 @@
     public class ReconRolloutStorageItem
     {
         [Persistent] private string name = "";
-        [Persistent] public double BP = 0, progress = 0, cost = 0;
+        [Persistent] public double BP = 0, progress = 0, cost = 0, mass = 0, vesselBP = 0;
         [Persistent] public string associatedID = "";
         [Persistent] public string launchPadID = "LaunchPad";
+        [Persistent] public string lcID = "";
 
         public ReconRollout ToReconRollout()
         {
@@ -15,8 +16,11 @@
                 Progress = progress,
                 Cost = cost,
                 RRType = ReconRollout.RRDict.ContainsKey(name) ? ReconRollout.RRDict[name] : ReconRollout.RolloutReconType.None,
+                Mass = mass,
                 AssociatedID = associatedID,
-                LaunchPadID = launchPadID
+                LaunchPadID = launchPadID,
+                VesselBP = vesselBP,
+                LC = KCTGameStates.FindLCFromID(new System.Guid(lcID))
             };
         }
 
@@ -28,6 +32,9 @@
             cost = rr.Cost;
             associatedID = rr.AssociatedID;
             launchPadID = rr.LaunchPadID;
+            mass = rr.Mass;
+            vesselBP = rr.VesselBP;
+            lcID = rr.LC.ID.ToString("N");
             return this;
         }
     }

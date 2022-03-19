@@ -78,6 +78,8 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID; // reset to current active LC
+
                 if (!IsPrimarilyDisabled)
                 {
                     KCTGameStates.ToolbarControl?.SetTrue();
@@ -190,7 +192,7 @@ namespace KerbalConstructionTime
 
                     _fundsCost = int.MinValue;
                 }
-                GUILayout.Label(" ===== ", GetTextFieldCenterAlignStyle());
+                GUILayout.Label(" ===== ", GetLabelCenterAlignStyle());
 
                 int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
                 workers = _buyModifier;

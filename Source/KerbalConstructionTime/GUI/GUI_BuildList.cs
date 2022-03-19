@@ -234,11 +234,6 @@ namespace KerbalConstructionTime
 
             if (techSelectedNew != _isTechSelected)
                 SelectList("Tech");
-
-            if (GUILayout.Button("Plans"))
-            {
-                GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
-            }
             //if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
             //{
             //    GUIStates.ShowUpgradeWindow = true;
@@ -253,6 +248,10 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+            }
+            if (GUILayout.Button("Plans"))
+            {
+                GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
             }
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
@@ -346,8 +345,10 @@ namespace KerbalConstructionTime
                     forceRecheck = false;
                     ksc.RecalculateBuildRates(false);
                 }
-
-                GUILayout.Label(pItem.GetItemName());
+                if (pItem is PadConstruction pc)
+                    GUILayout.Label($"{pc.LC}: {pc.GetItemName()}");
+                else
+                    GUILayout.Label(pItem.GetItemName());
                 GUILayout.Label($"{(pItem.GetFractionComplete() * 100d):N2} %", GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                     GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));

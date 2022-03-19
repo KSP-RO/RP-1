@@ -75,8 +75,10 @@ namespace KerbalConstructionTime
             LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             double oldVABCost = 0, oldPadCost = 0, lpMult = 1;
 
+            bool isModify = GUIStates.ShowModifyLC;
+
             GUILayout.BeginVertical();
-            if (GUIStates.ShowModifyLC)
+            if (isModify)
             {
                 GUILayout.Label(activeLC.Name);
                 GUILayout.Label($"Tonnage limits: {activeLC.SupportedMassAsPrettyText}");
@@ -91,7 +93,7 @@ namespace KerbalConstructionTime
                 _newName = GUILayout.TextField(_newName);
             }
 
-            GUILayout.Label(GUIStates.ShowModifyLC ? "New Limits" : "Launch Complex Limits:");
+            GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
 
             double curPadCost = 0;
             double curVABCost = 0;
@@ -102,7 +104,7 @@ namespace KerbalConstructionTime
             float minTonnage = 0f;
             Vector3 curPadSize = Vector3.zero;
 
-            bool hasTonnage = !GUIStates.ShowModifyLC || activeLC.isPad;
+            bool hasTonnage = !isModify || activeLC.isPad;
             if (hasTonnage)
             {
                 GUILayout.Label("Maximum tonnage:");
@@ -140,7 +142,7 @@ namespace KerbalConstructionTime
                 double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
                 string costString;
-                if (GUIStates.ShowModifyLC)
+                if (isModify)
                 {
                     costString = $"It will cost {totalCost:N0} funds to renovate {activeLC.Name}.";
                     if (activeLC.isPad)
@@ -153,16 +155,16 @@ namespace KerbalConstructionTime
                 GUILayout.Label(costString + $" Estimated construction time is {sBuildTime}.");
             }
 
-            GUILayout.Label("Would you like to " + (GUIStates.ShowModifyLC ? "renovate it?" : "build it?"));
+            GUILayout.Label("Would you like to " + (isModify ? "renovate it?" : "build it?"));
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Yes") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, GUIStates.ShowModifyLC))
+            if (GUILayout.Button("Yes") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify))
             {
 
-                string lcName = GUIStates.ShowModifyLC ? activeLC.Name : _newName;
+                string lcName = isModify ? activeLC.Name : _newName;
                 if (!Utilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {lcName}");
-                    if (GUIStates.ShowModifyLC)
+                    if (isModify)
                         activeLC.Modify(tonnageLimit, curPadSize);
                     else
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, curPadSize, true, KCTGameStates.ActiveKSC));
@@ -172,7 +174,7 @@ namespace KerbalConstructionTime
                     KCTDebug.Log($"Building/Modifying launch complex {lcName}");
                     Utilities.SpendFunds(totalCost, TransactionReasons.StructureConstruction);
                     LCItem lc;
-                    if (GUIStates.ShowModifyLC)
+                    if (isModify)
                     {
                         lc = activeLC;
                         activeLC.Modify(tonnageLimit, curPadSize);

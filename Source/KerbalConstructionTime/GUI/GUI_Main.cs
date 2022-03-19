@@ -18,8 +18,8 @@ namespace KerbalConstructionTime
         private static bool _unlockEditor;
         private static bool _isKSCLocked = false;
         private static readonly List<GameScenes> _validScenes = new List<GameScenes> { GameScenes.FLIGHT, GameScenes.EDITOR, GameScenes.SPACECENTER, GameScenes.TRACKSTATION };
-        private static GUIStyle _styleTextAreaRightAlign;
-        private static GUIStyle _styleTextFieldCenterAlign;
+        private static GUIStyle _styleLabelRightAlign;
+        private static GUIStyle _styleLabelCenterAlign;
         private static GUIStyle _styleTextFieldRightAlign;
 
         public static bool IsPrimarilyDisabled => PresetManager.PresetLoaded() && (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
@@ -300,24 +300,24 @@ namespace KerbalConstructionTime
             }
         }
 
-        private static GUIStyle GetTextAreaRightAlignStyle()
+        private static GUIStyle GetLabelRightAlignStyle()
         {
-            if (_styleTextAreaRightAlign == null)
+            if (_styleLabelRightAlign == null)
             {
-                _styleTextAreaRightAlign = new GUIStyle(GUI.skin.textArea);
-                _styleTextAreaRightAlign.alignment = TextAnchor.LowerRight;
+                _styleLabelRightAlign = new GUIStyle(GUI.skin.label);
+                _styleLabelRightAlign.alignment = TextAnchor.LowerRight;
             }
-            return _styleTextAreaRightAlign;
+            return _styleLabelRightAlign;
         }
 
-        private static GUIStyle GetTextFieldCenterAlignStyle()
+        private static GUIStyle GetLabelCenterAlignStyle()
         {
-            if (_styleTextFieldCenterAlign == null)
+            if (_styleLabelCenterAlign == null)
             {
-                _styleTextFieldCenterAlign = new GUIStyle(GUI.skin.textField);
-                _styleTextFieldCenterAlign.alignment = TextAnchor.LowerCenter;
+                _styleLabelCenterAlign = new GUIStyle(GUI.skin.label);
+                _styleLabelCenterAlign.alignment = TextAnchor.LowerCenter;
             }
-            return _styleTextFieldCenterAlign;
+            return _styleLabelCenterAlign;
         }
 
         private static GUIStyle GetTextFieldRightAlignStyle()

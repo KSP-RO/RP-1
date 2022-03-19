@@ -69,7 +69,7 @@ namespace RP0
             try
             {
                 GUILayout.Label("Integration", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.IntegrationUpkeep * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.EngineerSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Integration);
@@ -131,70 +131,70 @@ namespace RP0
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Launch Pads", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.PadCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
+            //GUILayout.BeginHorizontal();
+            //try
+            //{
+            //    GUILayout.Label("Launch Pads", HighLogic.Skin.label, GUILayout.Width(160));
+            //    GUILayout.Label((MaintenanceHandler.Instance.PadCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.LogException(ex);
+            //}
+            //GUILayout.EndHorizontal();
 
-            for (int i = 0; i < MaintenanceHandler.PadLevelCount; i++)
-            {
-                if (MaintenanceHandler.Instance.PadCosts[i] == 0d)
-                    continue;
-                GUILayout.BeginHorizontal();
-                try
-                {
-                    GUILayout.Label(String.Format("  level {0} × {1}", i + 1, MaintenanceHandler.Instance.KCTPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((MaintenanceHandler.Instance.PadCosts[i] * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
-                GUILayout.EndHorizontal();
-            }
+            //for (int i = 0; i < MaintenanceHandler.PadLevelCount; i++)
+            //{
+            //    if (MaintenanceHandler.Instance.PadCosts[i] == 0d)
+            //        continue;
+            //    GUILayout.BeginHorizontal();
+            //    try
+            //    {
+            //        GUILayout.Label(String.Format("  level {0} × {1}", i + 1, MaintenanceHandler.Instance.KCTPadCounts[i]), HighLogic.Skin.label, GUILayout.Width(160));
+            //        GUILayout.Label((MaintenanceHandler.Instance.PadCosts[i] * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Debug.LogException(ex);
+            //    }
+            //    GUILayout.EndHorizontal();
+            //}
 
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Runway", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.RunwayCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
+            //GUILayout.BeginHorizontal();
+            //try
+            //{
+            //    GUILayout.Label("Runway", HighLogic.Skin.label, GUILayout.Width(160));
+            //    GUILayout.Label((MaintenanceHandler.Instance.RunwayCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.LogException(ex);
+            //}
+            //GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Vertical Assembly Building", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.VabCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
+            //GUILayout.BeginHorizontal();
+            //try
+            //{
+            //    GUILayout.Label("Vertical Assembly Building", HighLogic.Skin.label, GUILayout.Width(160));
+            //    GUILayout.Label((MaintenanceHandler.Instance.VabCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.LogException(ex);
+            //}
+            //GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Spaceplane Hangar", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.SphCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
+            //GUILayout.BeginHorizontal();
+            //try
+            //{
+            //    GUILayout.Label("Spaceplane Hangar", HighLogic.Skin.label, GUILayout.Width(160));
+            //    GUILayout.Label((MaintenanceHandler.Instance.SphCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.LogException(ex);
+            //}
+            //GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             try
@@ -260,19 +260,19 @@ namespace RP0
         public void RenderIntegrationTab()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Integration Team costs (per ", HighLogic.Skin.label);
+            GUILayout.Label("Engineer Salaries (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (string site in MaintenanceHandler.Instance.KCTBuildRates.Keys)
+            foreach (string site in MaintenanceHandler.Instance.Engineers.Keys)
             {
-                double rate = MaintenanceHandler.Instance.KCTBuildRates[site];
+                double rate = MaintenanceHandler.Instance.Engineers[site];
                 GUILayout.BeginHorizontal();
                 try
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((rate * MaintenanceHandler.Settings.kctBPMult * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.Label((rate * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -285,7 +285,7 @@ namespace RP0
             try
             {
                 GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.IntegrationUpkeep * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.EngineerSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {

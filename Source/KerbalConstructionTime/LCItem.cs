@@ -227,6 +227,8 @@ namespace KerbalConstructionTime
         {
             if (LP_ID < 0)
                 LP_ID = ActiveLaunchPadID;
+            else
+                ActiveLaunchPadID = LP_ID;
 
             //set the active LP's new state
             //activate new pad

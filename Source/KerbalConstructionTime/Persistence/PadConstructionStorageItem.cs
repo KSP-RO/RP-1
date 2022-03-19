@@ -21,6 +21,9 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool upgradeProcessed = false;
 
+        [Persistent]
+        public int buildListIndex = -1;
+
         public PadConstruction ToPadConstruction()
         {
             return new PadConstruction
@@ -30,7 +33,8 @@ namespace KerbalConstructionTime
                 Progress = progress,
                 BP = BP,
                 Cost = cost,
-                UpgradeProcessed = upgradeProcessed
+                UpgradeProcessed = upgradeProcessed,
+                BuildListIndex = buildListIndex
             };
         }
 
@@ -42,6 +46,7 @@ namespace KerbalConstructionTime
             BP = pc.BP;
             cost = pc.Cost;
             upgradeProcessed = pc.UpgradeProcessed;
+            buildListIndex = pc.BuildListIndex;
             return this;
         }
     }

@@ -34,14 +34,14 @@ namespace KerbalConstructionTime
         public List<BuildListVessel> BuildList = new List<BuildListVessel>();
         public List<BuildListVessel> Warehouse = new List<BuildListVessel>();
         public SortedList<string, BuildListVessel> Plans = new SortedList<string, BuildListVessel>();
-        public List<PadConstruction> PadConstructions = new List<PadConstruction>();
+        public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
         public List<int> Upgrades = new List<int>() { 0 };
         public List<ReconRollout> Recon_Rollout = new List<ReconRollout>();
         public List<AirlaunchPrep> AirlaunchPrep = new List<AirlaunchPrep>();
         public List<double> Rates = new List<double>();
         public List<double> UpRates = new List<double>();
         public int Personnel = 0;
-        public int MaxPersonnel => (int)(Utilities.GetBuildRateSum(this) * 1000d);
+        public int MaxPersonnel => Math.Max(1, (int)Math.Ceiling(massMax > 0f ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.2d)) * 5;
 
         public bool isOperational = false;
         public bool isPad = true;
@@ -99,6 +99,12 @@ namespace KerbalConstructionTime
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
+
+            PadConstructions.Added += added;
+            PadConstructions.Removed += removed;
+
+            void added(int idx, IConstructionBuildItem pc) { ksc.Constructions.Add(pc); }
+            void removed(int idx, IConstructionBuildItem pc) { ksc.Constructions.Remove(pc); }
         }
 
         public void Modify(float mMax, Vector3 sMax)
@@ -291,6 +297,7 @@ namespace KerbalConstructionTime
             var cnPadConstructions = new ConfigNode("PadConstructions");
             foreach (PadConstruction pc in PadConstructions)
             {
+                pc.BuildListIndex = _ksc.Constructions.IndexOf(pc);
                 var storageItem = new PadConstructionStorageItem();
                 storageItem.FromPadConstruction(pc);
                 var cn = new ConfigNode("PadConstruction");

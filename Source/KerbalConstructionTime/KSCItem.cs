@@ -7,10 +7,10 @@ namespace KerbalConstructionTime
     public class KSCItem
     {
         public string KSCName;
+        public List<IConstructionBuildItem> Constructions = new List<IConstructionBuildItem>();
         public List<LCItem> LaunchComplexes = new List<LCItem>();
-        public List<LCConstruction> LCConstructions = new List<LCConstruction>();
-        public List<FacilityUpgrade> KSCTech = new List<FacilityUpgrade>();
-        public List<int> RDUpgrades = new List<int>() { 0, 0 }; //research/development
+        public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
+        public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
         public int Personnel = 0;
         public int FreePersonnel => Personnel - LaunchComplexes.Sum(lc => lc.Personnel);
         
@@ -21,7 +21,14 @@ namespace KerbalConstructionTime
         public KSCItem(string name)
         {
             KSCName = name;
-            RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
+
+            LCConstructions.Added += added;
+            LCConstructions.Removed += removed;
+            FacilityUpgrades.Added += added;
+            FacilityUpgrades.Removed += removed;
+
+            void added(int idx, IConstructionBuildItem item) { Constructions.Add(item); }
+            void removed(int idx, IConstructionBuildItem item) { Constructions.Remove(item); }
         }
 
         public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexID ? LaunchComplexes[ActiveLaunchComplexID] : null;
@@ -46,7 +53,7 @@ namespace KerbalConstructionTime
             return null;
         }
 
-        public bool IsEmpty => !KSCTech.Any() && !LCConstructions.Any() && LaunchComplexes.All(lc => lc.IsEmpty);
+        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.All(lc => lc.IsEmpty);
 
         public void EnsureStartingLaunchComplexes()
         {
@@ -140,18 +147,12 @@ namespace KerbalConstructionTime
             }
             node.AddNode(cnLCs);
 
-            var cnRDUp = new ConfigNode("RDUpgrades");
-            foreach (int upgrade in RDUpgrades)
-            {
-                cnRDUp.AddValue("Upgrade", upgrade.ToString());
-            }
-            node.AddNode(cnRDUp);
-
             var cnUpgradeables = new ConfigNode("KSCTech");
-            foreach (FacilityUpgrade buildingTech in KSCTech)
+            foreach (FacilityUpgrade facUpgd in FacilityUpgrades)
             {
+                facUpgd.BuildListIndex = Constructions.IndexOf(facUpgd);
                 var storageItem = new FacilityUpgradeStorageItem();
-                storageItem.FromFacilityUpgrade(buildingTech);
+                storageItem.FromFacilityUpgrade(facUpgd);
                 var cn = new ConfigNode("UpgradingBuilding");
                 cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
                 cnUpgradeables.AddNode(cn);
@@ -159,10 +160,11 @@ namespace KerbalConstructionTime
             node.AddNode(cnUpgradeables);
 
             var cnLCConstructions = new ConfigNode("LCConstructions");
-            foreach (LCConstruction pc in LCConstructions)
+            foreach (LCConstruction lcc in LCConstructions)
             {
+                lcc.BuildListIndex = Constructions.IndexOf(lcc);
                 var storageItem = new LCConstructionStorageItem();
-                storageItem.FromLCConstruction(pc);
+                storageItem.FromLCConstruction(lcc);
                 var cn = new ConfigNode("LCConstruction");
                 cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
                 cnLCConstructions.AddNode(cn);
@@ -174,8 +176,7 @@ namespace KerbalConstructionTime
 
         public KSCItem FromConfigNode(ConfigNode node)
         {
-            RDUpgrades.Clear();
-            KSCTech.Clear();
+            FacilityUpgrades.Clear();
             LCConstructions.Clear();
 
             KSCName = node.GetValue("KSCName");
@@ -184,12 +185,6 @@ namespace KerbalConstructionTime
 
             Personnel = 0;
             node.TryGetValue("Personnel", ref Personnel);
-
-            ConfigNode rdUp = node.GetNode("RDUpgrades");
-            foreach (string upgrade in rdUp.GetValues("Upgrade"))
-            {
-                RDUpgrades.Add(int.Parse(upgrade));
-            }
 
             ConfigNode tmp = node.GetNode("LaunchComplexes");
             if (tmp != null)
@@ -203,9 +198,9 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (node.HasNode("LCConstructions"))
+            tmp = node.GetNode("LCConstructions");
+            if (tmp != null)
             {
-                tmp = node.GetNode("LCConstructions");
                 foreach (ConfigNode cn in tmp.GetNodes("LCConstruction"))
                 {
                     var storageItem = new LCConstructionStorageItem();
@@ -214,16 +209,18 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (node.HasNode("KSCTech"))
+            tmp = node.GetNode("FacilityUpgrades");
+            if (tmp != null)
             {
-                tmp = node.GetNode("KSCTech");
                 foreach (ConfigNode cn in tmp.GetNodes("UpgradingBuilding"))
                 {
                     var storageItem = new FacilityUpgradeStorageItem();
                     ConfigNode.LoadObjectFromConfig(storageItem, cn);
-                    KSCTech.Add(storageItem.ToFacilityUpgrade());
+                    FacilityUpgrades.Add(storageItem.ToFacilityUpgrade());
                 }
             }
+
+            Constructions.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
 
             return this;
         }

@@ -13,39 +13,30 @@ namespace KerbalConstructionTime
                                      HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX ||
                                      HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX;
 
-        [Persistent] public List<int> VABUpgrades = new List<int>() {0};
-        [Persistent] public List<int> SPHUpgrades = new List<int>() {0};
-        [Persistent] public List<int> RDUpgrades = new List<int>() {0,0};
-        [Persistent] public List<int> PurchasedUpgrades = new List<int>() {0,0};
         [Persistent] public List<string> PartTracker = new List<string>();
         [Persistent] public List<string> PartInventory = new List<string>();
         [Persistent] public string activeKSC = string.Empty;
         [Persistent] public float SciPoints = -1f;
-        [Persistent] public int TechUpgrades = 0;
         [Persistent] public bool IsSimulation;
         [Persistent] public bool DisableFailuresInSim = true;
-        [Persistent] public int HiredPersonnel;
+        [Persistent] public int RDPersonnel;
 
         public override void OnDecodeFromConfigNode()
         {
-            KCTGameStates.PurchasedUpgrades = PurchasedUpgrades;
             KCTGameStates.ActiveKSCName = activeKSC;
-            KCTGameStates.TechUpgradesTotal = TechUpgrades;
             KCTGameStates.SciPointsTotal = SciPoints;
             KCTGameStates.IsSimulatedFlight = IsSimulation;
             KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
-            KCTGameStates.HiredPersonnel = HiredPersonnel;
+            KCTGameStates.RDPersonnel = RDPersonnel;
         }
 
         public override void OnEncodeToConfigNode()
         {
-            TechUpgrades = KCTGameStates.TechUpgradesTotal;
-            PurchasedUpgrades = KCTGameStates.PurchasedUpgrades;
             SciPoints = KCTGameStates.SciPointsTotal;
             activeKSC = KCTGameStates.ActiveKSC.KSCName;
             IsSimulation = KCTGameStates.IsSimulatedFlight;
             DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
-            HiredPersonnel = KCTGameStates.HiredPersonnel;
+            RDPersonnel = KCTGameStates.RDPersonnel;
         }
     }
 }

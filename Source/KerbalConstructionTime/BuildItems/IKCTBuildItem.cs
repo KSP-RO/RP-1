@@ -16,6 +16,7 @@
         int BuildListIndex { get; set; }
         double UpdateBuildRate(int index);
         double EstimatedTimeLeft { get; }
+        void Cancel();
     }
 }
 

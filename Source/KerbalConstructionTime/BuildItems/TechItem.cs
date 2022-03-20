@@ -45,7 +45,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0) * KCTGameStates.EfficiencyRDPersonnel;
+                    double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0, 0) * KCTGameStates.EfficiencyRDPersonnel;
                     rate *= YearBasedRateMult;
                     return (ScienceCost - Progress) / rate;
                 }
@@ -97,7 +97,7 @@ namespace KerbalConstructionTime
         public double UpdateBuildRate(int index)
         {
             ForceRecalculateYearBasedRateMult();
-            double rate = MathParser.ParseNodeRateFormula(ScienceCost, index) * KCTGameStates.EfficiencyRDPersonnel;
+            double rate = MathParser.ParseNodeRateFormula(ScienceCost, index, 0) * KCTGameStates.EfficiencyRDPersonnel;
             if (rate < 0)
                 rate = 0;
 
@@ -162,29 +162,32 @@ namespace KerbalConstructionTime
             if (GetBlockingTech(KCTGameStates.TechList) != null)
                 return;
 
-            KCTGameStates.EfficiencyRDPersonnel = Math.Min(PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherMaxEfficiency,
-                KCTGameStates.EfficiencyRDPersonnel + PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherSkillupRate.Evaluate((float)KCTGameStates.EfficiencyRDPersonnel) *
-                    UTDiff / (365d * 86400d));
-
-            Progress += BuildRate * UTDiff;
-            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
+            if (BuildRate > 0d)
             {
-                if (ProtoNode == null) return;
-                EnableTech();
+                KCTGameStates.EfficiencyRDPersonnel = Math.Min(PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherMaxEfficiency,
+                    KCTGameStates.EfficiencyRDPersonnel + PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherSkillupRate.Evaluate((float)KCTGameStates.EfficiencyRDPersonnel) *
+                        UTDiff / (365d * 86400d));
 
-                try
+                Progress += BuildRate * UTDiff;
+                if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
                 {
-                    KCTEvents.OnTechCompleted?.Fire(this);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
+                    if (ProtoNode == null) return;
+                    EnableTech();
 
-                KCTGameStates.TechList.Remove(this);
+                    try
+                    {
+                        KCTEvents.OnTechCompleted?.Fire(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                    }
 
-                for (int j = 0; j < KCTGameStates.TechList.Count; j++)
-                    KCTGameStates.TechList[j].UpdateBuildRate(j);
+                    KCTGameStates.TechList.Remove(this);
+
+                    for (int j = 0; j < KCTGameStates.TechList.Count; j++)
+                        KCTGameStates.TechList[j].UpdateBuildRate(j);
+                }
             }
         }
 

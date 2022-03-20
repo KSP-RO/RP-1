@@ -70,11 +70,6 @@ namespace KerbalConstructionTime
             return GetStandardFormulaValue("ConstructionRate", variables);
         }
 
-        public static double ParseNodeRateFormula(double ScienceValue, int index = 0, bool UpgradedRates = false)
-        {
-            return ParseNodeRateFormula(ScienceValue, index, UpgradedRates ? 1 : 0);
-        }
-
         public static double ParseNodeRateFormula(double ScienceValue, int index, int upgradeDelta)
         {
             int RnDLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);

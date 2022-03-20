@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
     public class ReconRollout : IKCTBuildItem
     {
         public string Name => RRInverseDict[RRType];
-        public double BP = 0, Progress = 0, Cost = 0;
+        public double BP = 0, Progress = 0, Cost = 0, Mass = 0;
         public string AssociatedID = string.Empty;
         public string LaunchPadID = "LaunchPad";
         public const string ReconditioningStr = "LaunchPad Reconditioning";
@@ -56,6 +56,7 @@ namespace KerbalConstructionTime
             Progress = 0;
             BP = 0;
             Cost = 0;
+            Mass = 0;
             RRType = RolloutReconType.None;
             AssociatedID = "";
             LaunchPadID = "LaunchPad";
@@ -68,6 +69,7 @@ namespace KerbalConstructionTime
             LaunchPadID = launchSite;
             KCTDebug.Log("New recon_rollout at launchsite: " + LaunchPadID);
             Progress = 0;
+            Mass = vessel.GetTotalMass();
             try
             {
                 BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), true);
@@ -91,6 +93,7 @@ namespace KerbalConstructionTime
             AssociatedID = id;
             LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.LaunchSite : launchSite;    //For when we add custom launchpads
             Progress = 0;
+            Mass = vessel.GetTotalMass();
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
             if (type == RolloutReconType.Rollout)
@@ -118,7 +121,7 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double buildRate = Utilities.GetBuildRate(0, LC);
+            double buildRate = Math.Min(Utilities.GetBuildRate(0, LC), PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Mass);
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

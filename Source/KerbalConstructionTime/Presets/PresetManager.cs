@@ -313,6 +313,8 @@ namespace KerbalConstructionTime
             VABRecoveryTech = null;
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
+        [Persistent]
+        public double MaxBuildRatePerTon = 0.02d;
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage

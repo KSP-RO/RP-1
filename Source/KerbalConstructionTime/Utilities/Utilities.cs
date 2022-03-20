@@ -54,8 +54,7 @@ namespace KerbalConstructionTime
         public static double GetBuildTime(List<Part> parts) => GetBuildTime(GetEffectiveCost(parts));
 
         public static double GetBuildTime(List<ConfigNode> parts) => GetBuildTime(GetEffectiveCost(parts));
-
-        public static double GetBuildTime(double totalEffectiveCost)
+        public static double GetBuildPoints(double totalEffectiveCost)
         {
             var formulaParams = new Dictionary<string, string>()
             {
@@ -287,30 +286,18 @@ namespace KerbalConstructionTime
         public static double GetBuildRate(int index, LCItem LC, bool forceRecalc = false)
         {
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
-            if (forceRecalc || index != 0 || LC != null)
+            if (forceRecalc || index != 0)
                 return MathParser.ParseBuildRateFormula(LC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, index, LC, 0);
 
             return LC.Rate;
         }
 
-        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool UpgradedRate = false)
+        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, int upgradeDelta = 0)
         {
-            return GetBuildRate(index, type, LC, UpgradedRate ? 1 : 0);
-        }
+            if (type == BuildListVessel.ListType.VAB ? !LC.isPad : LC.isPad)
+                return 0.0001d;
 
-        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, int upgradeDelta)
-        {
-            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            double ret = 0;
-            if (type == BuildListVessel.ListType.VAB || type == BuildListVessel.ListType.SPH)
-            {
-                return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta);
-            }
-            else if (type == BuildListVessel.ListType.TechNode)
-            {
-                ret = KCTGameStates.TechList[index].BuildRate;
-            }
-            return ret;
+            return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta);
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -321,28 +308,9 @@ namespace KerbalConstructionTime
             return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC);
         }
 
-        public static double GetVABBuildRate(LCItem LC)
-        {
-            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            if (!LC.isPad)
-                return 0.0001d;
-            return GetBuildRate(0, LC);
-        }
-
-        public static double GetSPHBuildRate(LCItem LC)
-        {
-            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            if (LC.isPad)
-                return 0.0001d;
-
-            return GetBuildRate(0, LC);
-        }
-
         public static double GetConstructionRate(KSCItem KSC)
         {
-            // we get passed KSC; the LC passed here is just to point it at the right KSC.
-            double rateTotal = MathParser.ParseBuildRateFormula(BuildListVessel.ListType.KSC, 0, KSC == null ? null : KSC.Hangar, 0);
-            return rateTotal;
+            return MathParser.ParseConstructionRateFormula(0, KSC, 0);
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
@@ -769,7 +737,7 @@ namespace KerbalConstructionTime
             }
 
             double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
-            double bp = GetBuildTime(effCost);
+            double bp = GetBuildPoints(effCost);
             var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
@@ -838,7 +806,7 @@ namespace KerbalConstructionTime
             // Load the current editor state as a fresh BuildListVessel
             string launchSite = EditorLogic.fetch.launchSiteName;
             double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
-            double bp = GetBuildTime(effCost);
+            double bp = GetBuildPoints(effCost);
             var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
@@ -917,7 +885,7 @@ namespace KerbalConstructionTime
                     totalEffectiveCost += v.EffectiveCost;
                 }
 
-                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.MergedVessels) + GetBuildTime(totalEffectiveCost);
+                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.MergedVessels) + GetBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePenalty);
             }
 
@@ -1325,7 +1293,7 @@ namespace KerbalConstructionTime
             if (!HighLogic.LoadedSceneIsEditor) return;
 
             double effCost = GetEffectiveCost(ship.Parts);
-            KCTGameStates.EditorBuildTime = GetBuildTime(effCost);
+            KCTGameStates.EditorBuildTime = GetBuildPoints(effCost);
             var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildTime, EditorLogic.FlagURL);
 
             KCTGameStates.EditorIntegrationTime = MathParser.ParseIntegrationTimeFormula(kctVessel);

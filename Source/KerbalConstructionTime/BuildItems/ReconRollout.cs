@@ -15,6 +15,7 @@ namespace KerbalConstructionTime
         public const string RollbackStr = "Vessel Rollback";
         public const string RecoveryStr = "Vessel Recovery";
         public const string UnknownStr = "Unknown Situation";
+        public bool IsHumanRated;
 
         public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
         public RolloutReconType RRType = RolloutReconType.None;
@@ -71,6 +72,7 @@ namespace KerbalConstructionTime
             VesselBP = 0;
             RRType = RolloutReconType.None;
             AssociatedID = "";
+            IsHumanRated = false;
             LaunchPadID = "LaunchPad";
         }
 
@@ -87,6 +89,7 @@ namespace KerbalConstructionTime
             try
             {
                 var blv = new BuildListVessel(vessel);
+                IsHumanRated = blv.IsHumanRated;
                 BP = MathParser.ParseReconditioningFormula(blv, true);
                 VesselBP = blv.BuildPoints;
             }
@@ -112,6 +115,7 @@ namespace KerbalConstructionTime
             Mass = vessel.GetTotalMass();
             _lc = vessel.LC;
             VesselBP = vessel.BuildPoints;
+            IsHumanRated = vessel.IsHumanRated;
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
             if (type == RolloutReconType.Rollout)
@@ -139,7 +143,7 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double buildRate = Utilities.GetBuildRate(0, LC);
+            double buildRate = Utilities.GetBuildRate(0, LC, IsHumanRated, false);
             if (RRType != RolloutReconType.Reconditioning)
                 buildRate = Math.Min(buildRate, Utilities.GetBuildRateCap(VesselBP, Mass, LC));
 

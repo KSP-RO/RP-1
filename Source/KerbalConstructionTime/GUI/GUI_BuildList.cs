@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
         private static int _mouseOnAirlaunchButton = -1;
-        private static bool _isVesselsSelected, _isConstructionSelected, _isTechSelected;
+        private static bool _isOperationsSelected, _isConstructionSelected, _isResearchSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
@@ -32,23 +32,23 @@ namespace KerbalConstructionTime
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
             switch (list)
             {
-                case "Vessels":
-                    _isVesselsSelected = !_isVesselsSelected;
+                case "Operations":
+                    _isOperationsSelected = !_isOperationsSelected;
                     _isConstructionSelected = false;
-                    _isTechSelected = false;
+                    _isResearchSelected = false;
                     break;
                 case "Construction":
-                    _isVesselsSelected = false;
+                    _isOperationsSelected = false;
                     _isConstructionSelected = !_isConstructionSelected;
-                    _isTechSelected = false;
+                    _isResearchSelected = false;
                     break;
-                case "Tech":
-                    _isVesselsSelected = false;
+                case "Research":
+                    _isOperationsSelected = false;
                     _isConstructionSelected = false;
-                    _isTechSelected = !_isTechSelected;
+                    _isResearchSelected = !_isResearchSelected;
                     break;
                 default:
-                    _isVesselsSelected = _isConstructionSelected = _isTechSelected = false;
+                    _isOperationsSelected = _isConstructionSelected = _isResearchSelected = false;
                     break;
             }
         }
@@ -218,9 +218,9 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
 
             
-            bool vesselsSelectedNew = GUILayout.Toggle(_isVesselsSelected, "Vessels", GUI.skin.button);
-            if (vesselsSelectedNew != _isVesselsSelected)
-                SelectList("Vessels");
+            bool operationsSelectedNew = GUILayout.Toggle(_isOperationsSelected, "Operations", GUI.skin.button);
+            if (operationsSelectedNew != _isOperationsSelected)
+                SelectList("Operations");
 
             bool constructionSelectedNew = false;
             if (Utilities.CurrentGameIsCareer())
@@ -230,10 +230,10 @@ namespace KerbalConstructionTime
 
             bool techSelectedNew = false;
             if (Utilities.CurrentGameHasScience())
-                techSelectedNew = GUILayout.Toggle(_isTechSelected, "Tech", GUI.skin.button);
+                techSelectedNew = GUILayout.Toggle(_isResearchSelected, "Research", GUI.skin.button);
 
-            if (techSelectedNew != _isTechSelected)
-                SelectList("Tech");
+            if (techSelectedNew != _isResearchSelected)
+                SelectList("Research");
             //if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
             //{
             //    GUIStates.ShowUpgradeWindow = true;
@@ -247,7 +247,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowPersonnelWindow = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
-                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex;
             }
             if (GUILayout.Button("Plans"))
             {
@@ -264,7 +264,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            if (_isVesselsSelected)
+            if (_isOperationsSelected)
             {
                 RenderCombinedBuildList();
             }
@@ -272,7 +272,7 @@ namespace KerbalConstructionTime
             {
                 RenderConstructionList();
             }
-            else if (_isTechSelected)
+            else if (_isResearchSelected)
             {
                 RenderTechList();
             }
@@ -537,7 +537,7 @@ namespace KerbalConstructionTime
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
-            if (activeLC.isPad)
+            if (activeLC.IsPad)
                 RenderRollouts();
 
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(275));
@@ -648,7 +648,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC), Utilities.GetBuildRateCap(b.BuildPoints, b.GetTotalMass(), b.LC));
+                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC, b.IsHumanRated), Utilities.GetBuildRateCap(b.BuildPoints, b.GetTotalMass(), b.LC));
                     string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }
@@ -664,7 +664,7 @@ namespace KerbalConstructionTime
         private static void RenderWarehouse()
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            bool isPad = activeLC.isPad;
+            bool isPad = activeLC.IsPad;
             List<BuildListVessel> buildList = activeLC.Warehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
@@ -704,8 +704,8 @@ namespace KerbalConstructionTime
             string launchSite = b.LaunchSite;
             if (launchSite == "LaunchPad" && isPad)
             {
-                if (b.LaunchSiteID >= 0)
-                    launchSite = b.LC.LaunchPads[b.LaunchSiteID].name;
+                if (b.LaunchSiteIndex >= 0)
+                    launchSite = b.LC.LaunchPads[b.LaunchSiteIndex].name;
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
@@ -787,12 +787,13 @@ namespace KerbalConstructionTime
                     if (!HighLogic.LoadedSceneIsEditor && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
                     {
                         bool hasRecond = false;
+                        List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                         GUIStyle btnColor = _greenButton;
                         if (activeLC.ActiveLPInstance.IsDestroyed)
                             btnColor = _redButton;
                         else if (hasRecond = activeLC.GetReconditioning(activeLC.ActiveLPInstance.name) != null)
                             btnColor = _yellowButton;
-                        else if (b.MeetsFacilityRequirements(false).Count != 0)
+                        else if (facilityChecks.Count != 0)
                             btnColor = _yellowButton;
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, b.Id.ToString(), launchSite);
                         if (tmpRollout.Cost > 0d)
@@ -806,12 +807,11 @@ namespace KerbalConstructionTime
                             }
                             else
                             {
-                                List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                                 if (facilityChecks.Count == 0)
                                 {
                                     if (!activeLC.ActiveLPInstance.IsDestroyed)
                                     {
-                                        b.LaunchSiteID = activeLC.ActiveLaunchPadID;
+                                        b.LaunchSiteIndex = activeLC.ActiveLaunchPadIndex;
 
                                         if (rollout != null)
                                         {
@@ -878,11 +878,11 @@ namespace KerbalConstructionTime
                         }
                         else if (!GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
                         {
-                            if (b.LaunchSiteID >= 0)
+                            if (b.LaunchSiteIndex >= 0)
                             {
-                                activeLC.SwitchLaunchPad(b.LaunchSiteID);
+                                activeLC.SwitchLaunchPad(b.LaunchSiteIndex);
                             }
-                            b.LaunchSiteID = activeLC.ActiveLaunchPadID;
+                            b.LaunchSiteIndex = activeLC.ActiveLaunchPadIndex;
 
                             List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                             if (facilityChecks.Count == 0)
@@ -1060,16 +1060,17 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.width = 300;
             }
             bool canModify = activeLC.CanModify;
-            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads, though vessels can be in storage.";
-            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.isPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
+            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
+            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
                 {
-                    _lengthLimit = activeLC.sizeMax.z.ToString("N0");
-                    _widthLimit = activeLC.sizeMax.x.ToString("N0");
-                    _heightLimit = activeLC.sizeMax.y.ToString("N0");
-                    _tonnageLimit = activeLC.massMax.ToString("N0");
+                    _lengthLimit = activeLC.SizeMax.z.ToString("N0");
+                    _widthLimit = activeLC.SizeMax.x.ToString("N0");
+                    _heightLimit = activeLC.SizeMax.y.ToString("N0");
+                    _tonnageLimit = activeLC.MassMax.ToString("N0");
+                    _isHumanRated = activeLC.IsHumanRated;
                     
                     GUIStates.ShowDismantlePad = false;
                     GUIStates.ShowModifyLC = true;
@@ -1093,6 +1094,7 @@ namespace KerbalConstructionTime
                 _widthLimit = "8";
                 _heightLimit = "33";
                 _tonnageLimit = "60";
+                _isHumanRated = false;
 
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;
@@ -1104,7 +1106,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            if (!HighLogic.LoadedSceneIsEditor && activeLC.isPad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
+            if (!HighLogic.LoadedSceneIsEditor && activeLC.IsPad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
@@ -1266,28 +1268,7 @@ namespace KerbalConstructionTime
             {
                 IConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
                 KCTDebug.Log($"Cancelling construction: {item.GetItemName()}");
-
-                double cost = 0;
-                if (item is PadConstruction pc)
-                {
-                    cost = pc.Cost;
-                    pc.LC.PadConstructions.Remove(pc);
-                }
-                else if (item is LCConstruction lcc)
-                {
-                    cost = lcc.Cost;
-                    lcc.KSC.Constructions.Remove(lcc);
-                }
-                else if (item is FacilityUpgrade fac)
-                {
-                    cost = fac.Cost;
-                    fac.KSC.Constructions.Remove(fac);
-                }
-
-                if (cost > 0d && Utilities.CurrentGameIsCareer())
-                    Utilities.AddFunds(cost, TransactionReasons.StructureConstruction);
-
-                KCTGameStates.ActiveKSC.Constructions.RemoveAt(index);
+                item.Cancel();
             }
         }
 
@@ -1304,8 +1285,8 @@ namespace KerbalConstructionTime
 
             if (launchSite == "LaunchPad")
             {
-                if (b.LaunchSiteID >= 0)
-                    launchSite = b.KSC.ActiveLaunchComplexInstance.LaunchPads[b.LaunchSiteID].name;
+                if (b.LaunchSiteIndex >= 0)
+                    launchSite = b.KSC.ActiveLaunchComplexInstance.LaunchPads[b.LaunchSiteIndex].name;
                 else
                     launchSite = b.KSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
             }
@@ -1338,7 +1319,7 @@ namespace KerbalConstructionTime
                 MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, 300, options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
-                ResetBLWindow();
+                ResetBLWindow(false);
             }
 
             if (!onPad && GUILayout.Button("Edit"))
@@ -1398,7 +1379,7 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished && GUILayout.Button("Move to Top"))
             {
-                if (_isVesselsSelected)
+                if (_isOperationsSelected)
                 {
                     if (activeLC.BuildList.Remove(b))
                         activeLC.BuildList.Insert(0, b);

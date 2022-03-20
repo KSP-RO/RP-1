@@ -175,7 +175,7 @@ namespace KerbalConstructionTime
             return effectiveCost;
         }
 
-        public static double GetEffectiveCost(List<Part> parts)
+        public static double GetEffectiveCost(List<Part> parts, out bool isHumanRated)
         {
             //get list of parts that are in the inventory
             IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
@@ -185,8 +185,8 @@ namespace KerbalConstructionTime
             {
                 totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
-
-            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
+            
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
@@ -213,7 +213,8 @@ namespace KerbalConstructionTime
                 totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
 
-            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
+            bool isHumanRated;
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
@@ -229,12 +230,16 @@ namespace KerbalConstructionTime
                         modifiers.Add(mod.name);
         }
 
-        public static double ApplyGlobalCostModifiers(HashSet<string> modifiers)
+        public static double ApplyGlobalCostModifiers(HashSet<string> modifiers, out bool isHumanRated)
         {
+            isHumanRated = false;
             double res = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(modifiers.ToList());
             foreach (var x in modifiers)
                 if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                {
                     res *= mod.globalMult;
+                    isHumanRated |= mod.isHumanRating;
+                }
             return res;
         }
 
@@ -277,21 +282,24 @@ namespace KerbalConstructionTime
             return cost;
         }
 
-        public static double GetBuildRate(int index, LCItem LC, bool forceRecalc = false)
+        public static double GetBuildRate(int index, LCItem LC, bool isHumanRated, bool forceRecalc)
         {
+            bool useCap = LC.IsHumanRated && !isHumanRated;
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
-                return MathParser.ParseBuildRateFormula(LC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, index, LC, 0) * LC.EfficiencyPersonnel;
+            {
+                return MathParser.ParseBuildRateFormula(index, LC, useCap, 0) * LC.EfficiencyPersonnel;
+            }
 
-            return LC.Rate;
+            return useCap ? LC.Rate : LC.RateHRCapped;
         }
 
-        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, int upgradeDelta = 0)
+        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool isHumanRated, int upgradeDelta = 0)
         {
-            if (type == BuildListVessel.ListType.VAB ? !LC.isPad : LC.isPad)
+            if (type == BuildListVessel.ListType.VAB ? !LC.IsPad : LC.IsPad)
                 return 0.0001d;
 
-            return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta) * LC.EfficiencyPersonnel;
+            return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta) * LC.EfficiencyPersonnel;
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -299,7 +307,7 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC), GetBuildRateCap(ship.BuildPoints, ship.GetTotalMass(), ship.LC));
+            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated), GetBuildRateCap(ship.BuildPoints + ship.IntegrationPoints, ship.GetTotalMass(), ship.LC));
         }
 
         public static double GetConstructionRate(KSCItem KSC)
@@ -619,6 +627,7 @@ namespace KerbalConstructionTime
 
             ship.LC.BuildList.Remove(ship);
             ship.LC.Warehouse.Add(ship);
+            ship.LC.RecalculateBuildRates();
 
             var Message = new StringBuilder();
             Message.AppendLine("The following vessel is complete:");
@@ -730,9 +739,39 @@ namespace KerbalConstructionTime
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
 
-            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            BuildListVessel.ListType type = launchSite == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+
+            if ((type == BuildListVessel.ListType.VAB) != KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
+            {
+                string dialogStr;
+                if (type == BuildListVessel.ListType.VAB)
+                {
+                    if (KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() == null)
+                        dialogStr = $"a launch complex. You must wait for a launch complex to finish building or renovating before you can build this vessel.";
+                    else
+                        dialogStr = $"a launch complex. Please switch to a launch complex in the Space Center Management window's Operations tab and try again.";
+                }
+                else
+                {
+                    if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                        dialogStr = $"the Hangar. Please switch to the Hangar in the Space Center Management window's Operations tab and try again.";
+                    else
+                        dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can build this vessel.";
+                }
+
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
+                        "Wrong Launch Complex!",
+                            $"Warning! This vessel needs to be built in {dialogStr}",
+                        "Acknowledged",
+                        false,
+                        HighLogic.UISkin);
+                return;
+            }
+
+            bool humanRated;
+            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
             double bp = GetBuildPoints(effCost);
-            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
+            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, humanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
@@ -755,23 +794,21 @@ namespace KerbalConstructionTime
         {
             SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 
-            string type = string.Empty;
             if (blv.Type == BuildListVessel.ListType.VAB)
-            {
                 blv.LaunchSite = "LaunchPad";
-                type = "VAB";
-            }
             else if (blv.Type == BuildListVessel.ListType.SPH)
-            {
                 blv.LaunchSite = "Runway";
-                type = "SPH";
-            }
+
             LCItem lc = blv.LC;
-            // TODO: This shouldn't be needed, and adding it can lead to weird issues?
-            //if (lc == null)
-            //    lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             if (lc != null)
+            {
                 lc.BuildList.Add(blv);
+            }
+            else
+            {
+                KCTDebug.LogError($"Error! Tried to add {blv.ShipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
+                return;
+            }
 
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
@@ -784,7 +821,7 @@ namespace KerbalConstructionTime
                 Debug.LogException(ex);
             }
 
-            KCTDebug.Log($"Added {blv.ShipName} to {type} build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
+            KCTDebug.Log($"Added {blv.ShipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
             KCTDebug.Log("Launch site is " + blv.LaunchSite);
             string text = $"Added {blv.ShipName} to build list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -799,9 +836,10 @@ namespace KerbalConstructionTime
         {
             // Load the current editor state as a fresh BuildListVessel
             string launchSite = EditorLogic.fetch.launchSiteName;
-            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            bool humanRated;
+            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
             double bp = GetBuildPoints(effCost);
-            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
+            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, humanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
@@ -1039,7 +1077,7 @@ namespace KerbalConstructionTime
             {
                 foreach (LCItem LC in KSC.LaunchComplexes)
                 {
-                    if (!LC.isOperational)
+                    if (!LC.IsOperational)
                         continue;
                     foreach (IKCTBuildItem blv in LC.BuildList)
                         _checkTime(blv, ref shortestTime, ref thing);
@@ -1282,12 +1320,12 @@ namespace KerbalConstructionTime
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
-            double effCost = GetEffectiveCost(ship.Parts);
+            double effCost = GetEffectiveCost(ship.Parts, out KCTGameStates.EditorIsHumanRated);
             KCTGameStates.EditorBuildPoints = GetBuildPoints(effCost);
-            var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL);
-
-            KCTGameStates.EditorIntegrationPoints = MathParser.ParseIntegrationTimeFormula(kctVessel);
-            KCTGameStates.EditorIntegrationCosts = MathParser.ParseIntegrationCostFormula(kctVessel);
+            var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL, KCTGameStates.EditorIsHumanRated);
+            KCTGameStates.EditorShipMass = kctVessel.GetTotalMass();
+            KCTGameStates.EditorIntegrationPoints = kctVessel.IntegrationPoints;
+            KCTGameStates.EditorIntegrationCosts = kctVessel.IntegrationCost;
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
@@ -2130,7 +2168,7 @@ namespace KerbalConstructionTime
 
         public static double GetBuildRateCap(double bp, double mass, LCItem LC)
         {
-            double cap1 = bp > 0 ? 0.0000002755731922d * bp : double.MaxValue;
+            double cap1 = bp > 0 ? (1d / (86400d * 42d)) * bp : double.MaxValue;
             double cap2 = mass > 0 ? Math.Pow(mass, 0.75d) * 0.05d : double.MaxValue;
             if (cap1 == cap2 && cap1 == double.MaxValue)
                 return double.MaxValue;

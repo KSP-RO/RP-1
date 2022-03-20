@@ -7,6 +7,7 @@
         [Persistent] public string associatedID = "";
         [Persistent] public string launchPadID = "LaunchPad";
         [Persistent] public string lcID = "";
+        [Persistent] public bool isHumanRated;
 
         public ReconRollout ToReconRollout()
         {
@@ -20,6 +21,7 @@
                 AssociatedID = associatedID,
                 LaunchPadID = launchPadID,
                 VesselBP = vesselBP,
+                IsHumanRated = isHumanRated,
                 LC = KCTGameStates.FindLCFromID(new System.Guid(lcID))
             };
         }
@@ -34,6 +36,7 @@
             launchPadID = rr.LaunchPadID;
             mass = rr.Mass;
             vesselBP = rr.VesselBP;
+            isHumanRated = rr.IsHumanRated;
             lcID = rr.LC.ID.ToString("N");
             return this;
         }

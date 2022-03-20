@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;
-                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID; // reset to current active LC
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex; // reset to current active LC
 
                 if (!IsPrimarilyDisabled)
                 {
@@ -114,16 +114,17 @@ namespace KerbalConstructionTime
             GUILayout.Label("Assigned:");
             int delta;
             bool recalc = false;
-            BuildListVessel.ListType type = currentLC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, -delta); recalc = true; }
             GUILayout.Label($"{currentLC.Personnel:N0}", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
             if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, delta); recalc = true; }
+            GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}%");
             GUILayout.Label("Rate:", GetLabelCenterAlignStyle());
-            double rate = Utilities.GetBuildRate(0, type, currentLC);
+            double rate = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated);
             double rateFull = rate / currentLC.EfficiencyPersonnel;
             GUILayout.Label($"{rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();

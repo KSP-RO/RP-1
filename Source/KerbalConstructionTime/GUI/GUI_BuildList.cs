@@ -247,7 +247,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowPersonnelWindow = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
-                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex;
             }
             if (GUILayout.Button("Plans"))
             {
@@ -537,7 +537,7 @@ namespace KerbalConstructionTime
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
-            if (activeLC.isPad)
+            if (activeLC.IsPad)
                 RenderRollouts();
 
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(275));
@@ -648,7 +648,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC), Utilities.GetBuildRateCap(b.BuildPoints, b.GetTotalMass(), b.LC));
+                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC, b.IsHumanRated), Utilities.GetBuildRateCap(b.BuildPoints, b.GetTotalMass(), b.LC));
                     string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }
@@ -664,7 +664,7 @@ namespace KerbalConstructionTime
         private static void RenderWarehouse()
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            bool isPad = activeLC.isPad;
+            bool isPad = activeLC.IsPad;
             List<BuildListVessel> buildList = activeLC.Warehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
@@ -811,7 +811,7 @@ namespace KerbalConstructionTime
                                 {
                                     if (!activeLC.ActiveLPInstance.IsDestroyed)
                                     {
-                                        b.LaunchSiteID = activeLC.ActiveLaunchPadID;
+                                        b.LaunchSiteID = activeLC.ActiveLaunchPadIndex;
 
                                         if (rollout != null)
                                         {
@@ -882,7 +882,7 @@ namespace KerbalConstructionTime
                             {
                                 activeLC.SwitchLaunchPad(b.LaunchSiteID);
                             }
-                            b.LaunchSiteID = activeLC.ActiveLaunchPadID;
+                            b.LaunchSiteID = activeLC.ActiveLaunchPadIndex;
 
                             List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                             if (facilityChecks.Count == 0)
@@ -1061,15 +1061,16 @@ namespace KerbalConstructionTime
             }
             bool canModify = activeLC.CanModify;
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads, though vessels can be in storage.";
-            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.isPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
+            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
                 {
-                    _lengthLimit = activeLC.sizeMax.z.ToString("N0");
-                    _widthLimit = activeLC.sizeMax.x.ToString("N0");
-                    _heightLimit = activeLC.sizeMax.y.ToString("N0");
-                    _tonnageLimit = activeLC.massMax.ToString("N0");
+                    _lengthLimit = activeLC.SizeMax.z.ToString("N0");
+                    _widthLimit = activeLC.SizeMax.x.ToString("N0");
+                    _heightLimit = activeLC.SizeMax.y.ToString("N0");
+                    _tonnageLimit = activeLC.MassMax.ToString("N0");
+                    _isHumanRated = activeLC.IsHumanRated;
                     
                     GUIStates.ShowDismantlePad = false;
                     GUIStates.ShowModifyLC = true;
@@ -1093,6 +1094,7 @@ namespace KerbalConstructionTime
                 _widthLimit = "8";
                 _heightLimit = "33";
                 _tonnageLimit = "60";
+                _isHumanRated = false;
 
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;
@@ -1104,7 +1106,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            if (!HighLogic.LoadedSceneIsEditor && activeLC.isPad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
+            if (!HighLogic.LoadedSceneIsEditor && activeLC.IsPad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
@@ -1266,28 +1268,7 @@ namespace KerbalConstructionTime
             {
                 IConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
                 KCTDebug.Log($"Cancelling construction: {item.GetItemName()}");
-
-                double cost = 0;
-                if (item is PadConstruction pc)
-                {
-                    cost = pc.Cost;
-                    pc.LC.PadConstructions.Remove(pc);
-                }
-                else if (item is LCConstruction lcc)
-                {
-                    cost = lcc.Cost;
-                    lcc.KSC.Constructions.Remove(lcc);
-                }
-                else if (item is FacilityUpgrade fac)
-                {
-                    cost = fac.Cost;
-                    fac.KSC.Constructions.Remove(fac);
-                }
-
-                if (cost > 0d && Utilities.CurrentGameIsCareer())
-                    Utilities.AddFunds(cost, TransactionReasons.StructureConstruction);
-
-                KCTGameStates.ActiveKSC.Constructions.RemoveAt(index);
+                item.Cancel();
             }
         }
 

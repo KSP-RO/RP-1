@@ -13,8 +13,9 @@ namespace KerbalConstructionTime
         private static string _heightLimit = "33";
         private static string _widthLimit = "8";
         private static string _lengthLimit = "8";
+        private static bool _isHumanRated = false;
 
-        public static void GetPadStats(float tonnageLimit, Vector3 padSize, out float minTonnage, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
+        public static void GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out float minTonnage, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
         {
             fractionalPadLvl = 0f;
             if (tonnageLimit > 0f)
@@ -69,6 +70,11 @@ namespace KerbalConstructionTime
                 padSize.y *= 5f;
             }
             curVABCost = padSize.sqrMagnitude * 20d;
+            if (humanRated)
+            {
+                curPadCost *= 1.5d;
+                curVABCost *= 2d;
+            }
         }
 
         public static void DrawNewLCWindow(int windowID)
@@ -92,7 +98,12 @@ namespace KerbalConstructionTime
                 GUILayout.Label(activeLC.SupportedSizeAsPrettyText, GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
 
-                GetPadStats(activeLC.massMax, activeLC.sizeMax, out _, out oldPadCost, out oldVABCost, out _);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Human Rated:");
+                GUILayout.Label(activeLC.IsHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+
+                GetPadStats(activeLC.MassMax, activeLC.SizeMax, activeLC.IsHumanRated, out _, out oldPadCost, out oldVABCost, out _);
                 lpMult = activeLC.LaunchPads.Count;
             }
             else
@@ -115,7 +126,7 @@ namespace KerbalConstructionTime
             float minTonnage = 0f;
             Vector3 curPadSize = Vector3.zero;
 
-            bool hasTonnage = !isModify || activeLC.isPad;
+            bool hasTonnage = !isModify || activeLC.IsPad;
             if (hasTonnage)
             {
                 GUILayout.BeginHorizontal();
@@ -131,7 +142,7 @@ namespace KerbalConstructionTime
                 curPadSize.x = widthLimit;
                 curPadSize.y = heightLimit;
                 curPadSize.z = lengthLimit;
-                GetPadStats(tonnageLimit, curPadSize, out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
+                GetPadStats(tonnageLimit, curPadSize, _isHumanRated, out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
             }
             if (hasTonnage)
             {
@@ -161,6 +172,13 @@ namespace KerbalConstructionTime
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
+            if (!isModify || activeLC.IsPad)
+            {
+                GUILayout.BeginHorizontal();
+                _isHumanRated = GUILayout.Toggle(_isHumanRated, "Human-Rated");
+                GUILayout.EndHorizontal();
+            }
+
             double totalCost;
             if (curPadCost > oldPadCost)
                 totalCost = curPadCost - oldPadCost;
@@ -182,7 +200,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
                 GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
-                if (!isModify || activeLC.isPad)
+                if (!isModify || activeLC.IsPad)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Extra Pad Cost:", GUILayout.ExpandWidth(false));
@@ -198,15 +216,14 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify))
             {
-
                 string lcName = isModify ? activeLC.Name : _newName;
                 if (!Utilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {lcName}");
                     if (isModify)
-                        activeLC.Modify(tonnageLimit, curPadSize);
+                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, curPadSize, activeLC.IsPad, _isHumanRated));
                     else
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, curPadSize, true, KCTGameStates.ActiveKSC));
+                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC));
                 }
                 else if (Funding.CanAfford((float)totalCost))
                 {
@@ -216,21 +233,22 @@ namespace KerbalConstructionTime
                     if (isModify)
                     {
                         lc = activeLC;
-                        activeLC.Modify(tonnageLimit, curPadSize);
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                     }
                     else
                     {
-                        lc = new LCItem(_newName, tonnageLimit, curPadSize, true, KCTGameStates.ActiveKSC);
+                        lc = new LCItem(_newName, tonnageLimit, curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC);
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                     }
-                    lc.isOperational = false;
+                    lc.IsOperational = false;
 
                     var lcConstr = new LCConstruction
                     {
                         LaunchComplexIndex = KCTGameStates.ActiveKSC.LaunchComplexes.IndexOf(lc),
                         Cost = totalCost,
-                        Name = lcName
+                        Name = lcName,
+                        IsModify = isModify,
+                        LCData = new LCItem.LCData(activeLC.Name, tonnageLimit, curPadSize, activeLC.IsPad, _isHumanRated)
                     };
                     lcConstr.SetBP(totalCost);
                     KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);

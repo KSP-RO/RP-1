@@ -30,6 +30,7 @@ namespace KerbalConstructionTime
         //public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
         //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int RDPersonnel = 0;
+        public static double EfficiencyRDPersonnel = 1d;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
 

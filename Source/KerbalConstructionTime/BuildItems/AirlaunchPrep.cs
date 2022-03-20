@@ -8,6 +8,7 @@ namespace KerbalConstructionTime
         public string Name => Direction == PrepDirection.Mount ? Name_Mount : Name_Unmount;
         public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
         public string AssociatedID = string.Empty;
+        public bool IsHumanRated = false;
 
         public const string Name_Mount = "Mounting to carrier";
         public const string Name_Unmount = "Unmounting";
@@ -37,6 +38,7 @@ namespace KerbalConstructionTime
             Cost = 0;
             Mass = 0;
             VesselBP = 0;
+            IsHumanRated = false;
             Direction = PrepDirection.Mount;
             AssociatedID = string.Empty;
         }
@@ -50,12 +52,13 @@ namespace KerbalConstructionTime
             BP = MathParser.ParseAirlaunchTimeFormula(vessel);
             Cost = MathParser.ParseAirlaunchCostFormula(vessel);
             Mass = vessel.GetTotalMass();
+            IsHumanRated = vessel.IsHumanRated;
             VesselBP = vessel.BuildPoints;
         }
 
         public double GetBuildRate()
         {
-            double buildRate = Math.Min(Utilities.GetBuildRate(0, LC), Utilities.GetBuildRateCap(VesselBP, Mass, LC));
+            double buildRate = Math.Min(Utilities.GetBuildRate(0, LC, IsHumanRated, false), Utilities.GetBuildRateCap(VesselBP, Mass, LC));
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;

@@ -214,9 +214,10 @@ namespace KerbalConstructionTime
             {
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
-            double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            bool isHumanRated;
+            double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out isHumanRated);
             double bp = Utilities.GetBuildPoints(effCost);
-            BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
+            BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, isHumanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
@@ -225,7 +226,7 @@ namespace KerbalConstructionTime
             {
                 SuccessAction = AddVesselToPlansList,
                 CheckAvailableFunds = false,
-                CheckFacilityRequirements = false
+                BypassFacilityRequirements = true
             };
             v.ProcessVessel(blv);
         }

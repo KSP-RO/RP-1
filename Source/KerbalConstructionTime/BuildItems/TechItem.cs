@@ -45,7 +45,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0);
+                    double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0) * KCTGameStates.EfficiencyRDPersonnel;
                     rate *= YearBasedRateMult;
                     return (ScienceCost - Progress) / rate;
                 }
@@ -97,7 +97,7 @@ namespace KerbalConstructionTime
         public double UpdateBuildRate(int index)
         {
             ForceRecalculateYearBasedRateMult();
-            double rate = MathParser.ParseNodeRateFormula(ScienceCost, index);
+            double rate = MathParser.ParseNodeRateFormula(ScienceCost, index) * KCTGameStates.EfficiencyRDPersonnel;
             if (rate < 0)
                 rate = 0;
 
@@ -161,6 +161,10 @@ namespace KerbalConstructionTime
             // Don't progress blocked items
             if (GetBlockingTech(KCTGameStates.TechList) != null)
                 return;
+
+            KCTGameStates.EfficiencyRDPersonnel = Math.Min(PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherMaxEfficiency,
+                KCTGameStates.EfficiencyRDPersonnel + PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherSkillupRate.Evaluate((float)KCTGameStates.EfficiencyRDPersonnel) *
+                    UTDiff / (365d * 86400d));
 
             Progress += BuildRate * UTDiff;
             if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)

@@ -382,7 +382,7 @@ namespace KerbalConstructionTime
                 string selection = v.craftSubfolder.Contains("SPH") ? "SPH" : "VAB";
                 KCT_GUI.ToggleVisibility(true);
                 KCT_GUI.SelectList("");
-                KCT_GUI.SelectList("Vessels");
+                KCT_GUI.SelectList("Operations");
                 KCTDebug.Log($"Opening the GUI to the {selection}");
             }
         }
@@ -472,12 +472,12 @@ namespace KerbalConstructionTime
                 if (KCTGameStates.RecoveredVessel.Type == BuildListVessel.ListType.VAB)
                 {
                     double mass = KCTGameStates.RecoveredVessel.GetTotalMass();
-                    if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMax >= mass &&
-                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.massMin <= mass)
+                    if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMax >= mass &&
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMin <= mass)
                         targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
                     else
                     {
-                        targetLC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(lc => lc.isOperational && lc.isPad && lc.massMax >= mass && lc.massMin <= mass);
+                        targetLC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(lc => lc.IsOperational && lc.IsPad && lc.MassMax >= mass && lc.MassMin <= mass);
 
                         // If we still can't find a match, just recover it to the current launch complex.
                         if (targetLC == null)

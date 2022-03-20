@@ -274,8 +274,6 @@ namespace KerbalConstructionTime
             }
             double BP = vessel.BuildPoints;
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;
-            double ReconEffect = PresetManager.Instance.ActivePreset.TimeSettings.ReconditioningEffect;
-            double MaxRecon = PresetManager.Instance.ActivePreset.TimeSettings.MaxReconditioning;
 
             var variables = new Dictionary<string, string>
             {
@@ -290,10 +288,7 @@ namespace KerbalConstructionTime
                 { "EL", EditorLevel.ToString() },
                 { "ELM", EditorMax.ToString() },
                 { "O", OverallMult.ToString() },
-                { "E", ReconEffect.ToString() },
-                { "X", MaxRecon.ToString() },
                 { "RE", (isReconditioning ? 1 : 0).ToString() },
-                { "S", PresetManager.Instance.ActivePreset.TimeSettings.RolloutReconSplit.ToString() },
                 { "SN", vessel.NumStages.ToString() },
                 { "SP", vessel.NumStageParts.ToString() },
                 { "SC", vessel.StagePartCost.ToString() }

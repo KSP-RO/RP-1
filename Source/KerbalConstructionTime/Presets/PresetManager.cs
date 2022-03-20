@@ -336,7 +336,7 @@ namespace KerbalConstructionTime
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
         [Persistent]
-        public double MaxBuildRatePerTon = 0.02d, EngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, EngineerMaxEfficiency = 2.0, ResearcherMaxEfficiency = 2.0;
+        public double EngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, EngineerMaxEfficiency = 2.0, ResearcherMaxEfficiency = 2.0;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
@@ -367,7 +367,7 @@ namespace KerbalConstructionTime
     public class KCT_Preset_Time : ConfigNodeStorage
     {
         [Persistent]
-        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25, MergingTimePenalty = 0.05;
+        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, MergingTimePenalty = 0.05;
     }
 
     public class KCT_Preset_Formula : ConfigNodeStorage

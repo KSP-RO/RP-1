@@ -124,7 +124,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}%");
             GUILayout.Label("Rate:", GetLabelCenterAlignStyle());
             double rate = Utilities.GetBuildRate(0, type, currentLC);
-            GUILayout.Label($"{rate:N2} => {(rate * currentLC.EfficiencyPersonnel):N2} BP/sec", GetLabelRightAlignStyle());
+            GUILayout.Label($"{rate:N3} => {(rate * currentLC.EfficiencyPersonnel):N3} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             if (recalc)

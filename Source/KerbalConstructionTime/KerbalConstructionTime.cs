@@ -610,6 +610,17 @@ namespace KerbalConstructionTime
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
                         LCItem currentLC = ksc.LaunchComplexes[j];
+                        if (!currentLC.isOperational)
+                            continue;
+
+                        if (!currentLC.CanModify &&  currentLC.Personnel > 0)
+                        {
+                            double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
+                            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyPersonnel);
+                            double delta = eval * UTDiff / (365d * 86400d);
+                            //KCTDebug.Log($"For LC {currentLC.Name}, effic {currentLC.EfficiencyPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
+                            currentLC.EfficiencyPersonnel = Math.Min(max, currentLC.EfficiencyPersonnel + delta);
+                        }
 
                         for (int i = currentLC.BuildList.Count - 1; i >= 0; i--)
                             currentLC.BuildList[i].IncrementProgress(UTDiff);
@@ -655,7 +666,16 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
+                int techCount = KCTGameStates.TechList.Count;
+                if (techCount > 0 && KCTGameStates.RDPersonnel > 0)
+                {
+                    double max = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherMaxEfficiency;
+                    double eval = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherSkillupRate.Evaluate((float)KCTGameStates.EfficiencyRDPersonnel);
+                    double delta = eval * UTDiff / (365d * 86400d);
+                    //KCTDebug.Log($"For Researchers, effic {KCTGameStates.EfficiencyRDPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
+                    KCTGameStates.EfficiencyRDPersonnel = Math.Min(max, KCTGameStates.EfficiencyRDPersonnel + delta);
+                }
+                for (int i = techCount - 1; i >= 0; i--)
                     KCTGameStates.TechList[i].IncrementProgress(UTDiff);
             }
 

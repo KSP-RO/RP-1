@@ -44,13 +44,13 @@ namespace KerbalConstructionTime
 
         private static void RenderBuildMode()
         {
-            double buildTime = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
+            double buildPoints = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
-                BuildRateForDisplay = rate.ToString();
+                BuildRateForDisplay = (rate * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyPersonnel).ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
 
@@ -62,8 +62,8 @@ namespace KerbalConstructionTime
                     BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildTime /
-                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _)))));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildPoints /
+                    Math.Min(bR, Utilities.GetBuildRateCap(buildPoints, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _), KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance))));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {
@@ -151,7 +151,7 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.EndHorizontal();
                 GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) /
-                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _)))));
+                    Math.Min(bR, Utilities.GetBuildRateCap(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _), KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance))));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {

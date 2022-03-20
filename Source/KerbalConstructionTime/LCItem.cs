@@ -123,6 +123,8 @@ namespace KerbalConstructionTime
                 pad.supportedMass = mMax;
                 pad.supportedSize = sMax;
             }
+
+            Personnel = 0;
         }
 
         public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadID ? LaunchPads[ActiveLaunchPadID] : null;

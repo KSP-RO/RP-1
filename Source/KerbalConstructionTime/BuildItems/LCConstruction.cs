@@ -14,6 +14,9 @@ namespace KerbalConstructionTime
         public string Name;
         public bool UpgradeProcessed = false;
         private double _buildRate = -1d;
+        public bool IsModify;
+
+        public LCItem.LCData LCData;
 
         public int BuildListIndex { get; set; }
 
@@ -81,6 +84,28 @@ namespace KerbalConstructionTime
 
         public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
 
+        public void Cancel()
+        {
+            if (Cost > 0d && Utilities.CurrentGameIsCareer())
+                Utilities.AddFunds(Cost, TransactionReasons.StructureConstruction);
+
+            LCItem lc = KSC.LaunchComplexes[LaunchComplexIndex];
+            if (IsModify)
+            {
+                lc.IsOperational = true;
+            }
+            else
+            {
+                int index = KSC.LaunchComplexes.IndexOf(lc);
+                KSC.LaunchComplexes.RemoveAt(index);
+                if (KSC.ActiveLaunchComplexIndex >= index)
+                    KSC.ActiveLaunchComplexIndex--; // should not change active LC.
+            }
+
+            KSC.LCConstructions.Remove(this);
+            KSC.RecalculateBuildRates(false);
+        }
+
         public void IncrementProgress(double UTDiff)
         {
             if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
@@ -88,13 +113,15 @@ namespace KerbalConstructionTime
             {
                 if (!KCTGameStates.ErroredDuringOnLoad)
                 {
-                    LCItem lp = KSC.LaunchComplexes[LaunchComplexIndex];
-                    lp.isOperational = true;
+                    LCItem lc = KSC.LaunchComplexes[LaunchComplexIndex];
+                    lc.IsOperational = true;
                     UpgradeProcessed = true;
+                    if (IsModify)
+                        lc.Modify(LCData);
 
                     try
                     {
-                        KCTEvents.OnLCConstructionComplete?.Fire(this, lp);
+                        KCTEvents.OnLCConstructionComplete?.Fire(this, lc);
                     }
                     catch (Exception ex)
                     {

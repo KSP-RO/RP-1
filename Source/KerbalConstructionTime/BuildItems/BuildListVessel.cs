@@ -112,12 +112,7 @@ namespace KerbalConstructionTime
                     }
                     if (_lc == null)
                     {
-                        foreach (var ksc in KCTGameStates.KSCs)
-                        {
-                            _lc = ksc.FindLCFromID(_lcID);
-                            if (_lc != null)
-                                break;
-                        }
+                        _lc = KCTGameStates.FindLCFromID(_lcID);
                     }
                 }
                 return _lc;

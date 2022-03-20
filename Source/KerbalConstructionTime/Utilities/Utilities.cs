@@ -175,7 +175,7 @@ namespace KerbalConstructionTime
             return effectiveCost;
         }
 
-        public static double GetEffectiveCost(List<Part> parts)
+        public static double GetEffectiveCost(List<Part> parts, out bool isHumanRated)
         {
             //get list of parts that are in the inventory
             IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
@@ -185,8 +185,8 @@ namespace KerbalConstructionTime
             {
                 totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
-
-            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
+            
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
@@ -213,7 +213,8 @@ namespace KerbalConstructionTime
                 totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
 
-            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
+            bool isHumanRated;
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
@@ -229,12 +230,16 @@ namespace KerbalConstructionTime
                         modifiers.Add(mod.name);
         }
 
-        public static double ApplyGlobalCostModifiers(HashSet<string> modifiers)
+        public static double ApplyGlobalCostModifiers(HashSet<string> modifiers, out bool isHumanRated)
         {
+            isHumanRated = false;
             double res = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(modifiers.ToList());
             foreach (var x in modifiers)
                 if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                {
                     res *= mod.globalMult;
+                    isHumanRated |= mod.isHumanRating;
+                }
             return res;
         }
 
@@ -277,21 +282,24 @@ namespace KerbalConstructionTime
             return cost;
         }
 
-        public static double GetBuildRate(int index, LCItem LC, bool forceRecalc = false)
+        public static double GetBuildRate(int index, LCItem LC, bool isHumanRated, bool forceRecalc)
         {
+            bool useCap = LC.IsHumanRated && !isHumanRated;
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
-                return MathParser.ParseBuildRateFormula(LC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, index, LC, 0) * LC.EfficiencyPersonnel;
+            {
+                return MathParser.ParseBuildRateFormula(index, LC, useCap, 0) * LC.EfficiencyPersonnel;
+            }
 
-            return LC.Rate;
+            return useCap ? LC.Rate : LC.RateHRCapped;
         }
 
-        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, int upgradeDelta = 0)
+        public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool isHumanRated, int upgradeDelta = 0)
         {
-            if (type == BuildListVessel.ListType.VAB ? !LC.isPad : LC.isPad)
+            if (type == BuildListVessel.ListType.VAB ? !LC.IsPad : LC.IsPad)
                 return 0.0001d;
 
-            return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta) * LC.EfficiencyPersonnel;
+            return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta) * LC.EfficiencyPersonnel;
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -299,7 +307,7 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC), GetBuildRateCap(ship.BuildPoints, ship.GetTotalMass(), ship.LC));
+            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated), GetBuildRateCap(ship.BuildPoints, ship.GetTotalMass(), ship.LC));
         }
 
         public static double GetConstructionRate(KSCItem KSC)
@@ -730,9 +738,10 @@ namespace KerbalConstructionTime
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
 
-            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            bool humanRated;
+            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
             double bp = GetBuildPoints(effCost);
-            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
+            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, humanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
@@ -799,9 +808,10 @@ namespace KerbalConstructionTime
         {
             // Load the current editor state as a fresh BuildListVessel
             string launchSite = EditorLogic.fetch.launchSiteName;
-            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            bool humanRated;
+            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
             double bp = GetBuildPoints(effCost);
-            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
+            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, humanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
@@ -1039,7 +1049,7 @@ namespace KerbalConstructionTime
             {
                 foreach (LCItem LC in KSC.LaunchComplexes)
                 {
-                    if (!LC.isOperational)
+                    if (!LC.IsOperational)
                         continue;
                     foreach (IKCTBuildItem blv in LC.BuildList)
                         _checkTime(blv, ref shortestTime, ref thing);
@@ -1282,9 +1292,9 @@ namespace KerbalConstructionTime
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
-            double effCost = GetEffectiveCost(ship.Parts);
+            double effCost = GetEffectiveCost(ship.Parts, out KCTGameStates.EditorIsHumanRated);
             KCTGameStates.EditorBuildPoints = GetBuildPoints(effCost);
-            var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL);
+            var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL, KCTGameStates.EditorIsHumanRated);
 
             KCTGameStates.EditorIntegrationPoints = MathParser.ParseIntegrationTimeFormula(kctVessel);
             KCTGameStates.EditorIntegrationCosts = MathParser.ParseIntegrationCostFormula(kctVessel);

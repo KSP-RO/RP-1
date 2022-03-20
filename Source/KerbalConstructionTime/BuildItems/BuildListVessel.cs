@@ -18,6 +18,7 @@ namespace KerbalConstructionTime
         public ConfigNode ShipNode;
         public Guid Id;
         public bool CannotEarnScience;
+        public bool IsHumanRated;
         public float Cost = 0, IntegrationCost;
         public float TotalMass = 0, DistanceFromKSC = 0;
         public int RushBuildClicks = 0;
@@ -141,7 +142,7 @@ namespace KerbalConstructionTime
         /// </summary>
         public List<string> DesiredManifest { set; get; } = new List<string>();
 
-        public BuildListVessel(ShipConstruct s, string ls, double effCost, double bP, string flagURL)
+        public BuildListVessel(ShipConstruct s, string ls, double effCost, double bP, string flagURL, bool isHuman)
         {
             _ship = s;
             ShipNode = s.SaveShip();
@@ -152,6 +153,7 @@ namespace KerbalConstructionTime
             Cost = Utilities.GetTotalVesselCost(ShipNode, true);
             EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
             TotalMass = Utilities.GetShipMass(s, true, out EmptyMass, out _);
+            IsHumanRated = isHuman;
 
             HashSet<int> stages = new HashSet<int>();
             NumStageParts = 0;
@@ -526,16 +528,16 @@ namespace KerbalConstructionTime
                     null;
 
             double totalMass = GetTotalMass();
-            if (totalMass > selectedLC.massMax)
+            if (totalMass > selectedLC.MassMax)
             {
-                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.massMax:N}");
+                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.MassMax:N}");
             }
-            if (!skipMinMass && totalMass < selectedLC.massMin)
+            if (!skipMinMass && totalMass < selectedLC.MassMin)
             {
-                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.massMin:N}");
+                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
             }
             // Facility doesn't matter here.
-            CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.sizeMax);
+            CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.SizeMax);
             if (!sizeCheck.Test())
             {
                 failedReasons.Add("Size limits exceeded");

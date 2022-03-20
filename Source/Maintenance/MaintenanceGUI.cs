@@ -69,10 +69,26 @@ namespace RP0
             try
             {
                 GUILayout.Label("Integration", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.EngineerSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.IntegrationSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Integration);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            try
+            {
+                GUILayout.Label("Construction", HighLogic.Skin.label, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.ConstructionSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                if (GUILayout.Button(_infoBtnContent, InfoButton))
+                {
+                    TopWindow.SwitchTabTo(UITab.Construction);
                 }
             }
             catch (Exception ex)
@@ -260,14 +276,15 @@ namespace RP0
         public void RenderIntegrationTab()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Engineer Salaries (per ", HighLogic.Skin.label);
+            GUILayout.Label("Integration Engineer Salaries (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (string site in MaintenanceHandler.Instance.Engineers.Keys)
+            foreach (var kvp in MaintenanceHandler.Instance.Integration)
             {
-                double rate = MaintenanceHandler.Instance.Engineers[site];
+                string site = kvp.Key;
+                double rate = kvp.Value;
                 GUILayout.BeginHorizontal();
                 try
                 {
@@ -285,7 +302,45 @@ namespace RP0
             try
             {
                 GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.EngineerSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.IntegrationSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        public void RenderConstructionTab()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Construction Engineer Salaries (per ", HighLogic.Skin.label);
+            RenderPeriodSelector();
+            GUILayout.Label(")", HighLogic.Skin.label);
+            GUILayout.EndHorizontal();
+
+            foreach (var kvp in MaintenanceHandler.Instance.Construction)
+            {
+                string site = kvp.Key;
+                double rate = kvp.Value;
+                GUILayout.BeginHorizontal();
+                try
+                {
+                    GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label((rate * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.BeginHorizontal();
+            try
+            {
+                GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.ConstructionSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {

@@ -82,6 +82,12 @@ namespace KerbalConstructionTime
             if (KCTGameStates.EditorRolloutCosts > 0)
                 GUILayout.Label($"Rollout Cost: {Math.Round(KCTGameStates.EditorRolloutCosts, 1)}");
 
+            if (KCTGameStates.EditorIsHumanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
+            {
+                GUILayout.Label("WARNING: Cannot build vessel!");
+                GUILayout.Label("Select a human-rated Launch Complex.");
+            }
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {

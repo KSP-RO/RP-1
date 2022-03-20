@@ -162,32 +162,25 @@ namespace KerbalConstructionTime
             if (GetBlockingTech(KCTGameStates.TechList) != null)
                 return;
 
-            if (BuildRate > 0d)
+            Progress += BuildRate * UTDiff;
+            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
             {
-                KCTGameStates.EfficiencyRDPersonnel = Math.Min(PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherMaxEfficiency,
-                    KCTGameStates.EfficiencyRDPersonnel + PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherSkillupRate.Evaluate((float)KCTGameStates.EfficiencyRDPersonnel) *
-                        UTDiff / (365d * 86400d));
+                if (ProtoNode == null) return;
+                EnableTech();
 
-                Progress += BuildRate * UTDiff;
-                if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
+                try
                 {
-                    if (ProtoNode == null) return;
-                    EnableTech();
-
-                    try
-                    {
-                        KCTEvents.OnTechCompleted?.Fire(this);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogException(ex);
-                    }
-
-                    KCTGameStates.TechList.Remove(this);
-
-                    for (int j = 0; j < KCTGameStates.TechList.Count; j++)
-                        KCTGameStates.TechList[j].UpdateBuildRate(j);
+                    KCTEvents.OnTechCompleted?.Fire(this);
                 }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+
+                KCTGameStates.TechList.Remove(this);
+
+                for (int j = 0; j < KCTGameStates.TechList.Count; j++)
+                    KCTGameStates.TechList[j].UpdateBuildRate(j);
             }
         }
 

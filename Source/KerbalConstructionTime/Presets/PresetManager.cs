@@ -314,7 +314,11 @@ namespace KerbalConstructionTime
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
         [Persistent]
-        public double MaxBuildRatePerTon = 0.02d;
+        public double MaxBuildRatePerTon = 0.02d, EngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, EngineerMaxEfficiency = 2.0, ResearcherMaxEfficiency = 2.0;
+        [Persistent]
+        public FloatCurve EngineerSkillupRate;
+        [Persistent]
+        public FloatCurve ResearcherSkillupRate;
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage

@@ -543,6 +543,11 @@ namespace KerbalConstructionTime
                 failedReasons.Add("Size limits exceeded");
             }
 
+            if (IsHumanRated && !selectedLC.IsHumanRated)
+            {
+                failedReasons.Add("Vessel is human-rated but launch complex is not");
+            }
+
             return failedReasons;
         }
 

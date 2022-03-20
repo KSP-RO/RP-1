@@ -10,14 +10,28 @@ namespace KerbalConstructionTime
 
         public static void DrawNewPadWindow(int windowID)
         {
-            GUILayout.BeginVertical();
-            GUILayout.Label("Name:");
-            _newName = GUILayout.TextField(_newName);
             LCItem curLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            
-            GUILayout.Label($"Maximum tonnage: {curLC.massMax:N}");
-            GUILayout.Label($"Minimum tonnage: {curLC.massMin:N}");
-            GUILayout.Label($"Size limit: {curLC.sizeMax.x:#.#}x{curLC.sizeMax.y:#.#}m");
+
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Name:", GUILayout.ExpandWidth(false));
+            _newName = GUILayout.TextField(_newName);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
+            GUILayout.Label($"{curLC.massMax:N0}", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Minimum tonnage:", GUILayout.ExpandWidth(false));
+            GUILayout.Label($"{curLC.massMin:N0}", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Size Limits:", GUILayout.ExpandWidth(false));
+            GUILayout.Label(curLC.SupportedSizeAsPrettyText, GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
 
             double curPadCost;
             float fractionalPadLvl;
@@ -27,13 +41,20 @@ namespace KerbalConstructionTime
             {
                 double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(curPadCost, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
-                GUILayout.Label($"It will cost {Math.Round(curPadCost):N} funds to build the new launchpad. " +
-                                $"Estimated construction time is {sBuildTime}.");
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Cost:", GUILayout.ExpandWidth(false));
+                GUILayout.Label($"√{curPadCost:N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Est. construction time:", GUILayout.ExpandWidth(false));
+                GUILayout.Label(sBuildTime, GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
             }
 
-            GUILayout.Label("Would you like to build it?");
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Yes") && ValidatePadCreationParameters())
+            if (GUILayout.Button("Build") && ValidatePadCreationParameters())
             {
 
                 GUIStates.ShowNewPad = false;
@@ -80,7 +101,7 @@ namespace KerbalConstructionTime
                 _padLvlOptions = null;
             }
 
-            if (GUILayout.Button("No"))
+            if (GUILayout.Button("Cancel"))
             {
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 150;

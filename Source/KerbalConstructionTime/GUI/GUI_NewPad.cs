@@ -20,12 +20,12 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
-            GUILayout.Label($"{curLC.massMax:N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"{curLC.MassMax:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Minimum tonnage:", GUILayout.ExpandWidth(false));
-            GUILayout.Label($"{curLC.massMin:N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"{curLC.MassMin:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -33,9 +33,14 @@ namespace KerbalConstructionTime
             GUILayout.Label(curLC.SupportedSizeAsPrettyText, GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Human Rated:");
+            GUILayout.Label(curLC.IsHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+            GUILayout.EndHorizontal();
+
             double curPadCost;
             float fractionalPadLvl;
-            GetPadStats(curLC.massMax, curLC.sizeMax, out _, out curPadCost, out _, out fractionalPadLvl);
+            GetPadStats(curLC.MassMax, curLC.SizeMax, curLC.IsHumanRated, out _, out curPadCost, out _, out fractionalPadLvl);
 
             if (curPadCost > 0)
             {
@@ -66,13 +71,13 @@ namespace KerbalConstructionTime
                 if (!Utilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log("Building new launchpad!");
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(_newName, fractionalPadLvl, curLC.massMax, curLC.sizeMax));
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(_newName, fractionalPadLvl, curLC.MassMax, curLC.SizeMax));
                 }
                 else if (Funding.CanAfford((float)curPadCost))
                 {
                     KCTDebug.Log("Building new launchpad!");
                     Utilities.SpendFunds(curPadCost, TransactionReasons.StructureConstruction);
-                    var lp = new KCT_LaunchPad(_newName, fractionalPadLvl, curLC.massMax, curLC.sizeMax);
+                    var lp = new KCT_LaunchPad(_newName, fractionalPadLvl, curLC.MassMax, curLC.SizeMax);
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
 
                     var padConstr = new PadConstruction

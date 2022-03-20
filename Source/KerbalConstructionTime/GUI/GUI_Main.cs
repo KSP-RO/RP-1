@@ -50,7 +50,7 @@ namespace KerbalConstructionTime
                 if (GUIStates.ShowBuildList)
                 {
                     ref Rect pos = ref (HighLogic.LoadedSceneIsEditor ? ref EditorBuildListWindowPosition : ref BuildListWindowPosition);
-                    pos = DrawWindowWithTooltipSupport(pos, "DrawBuildListWindow", "Build List", DrawBuildListWindow);
+                    pos = DrawWindowWithTooltipSupport(pos, "DrawBuildListWindow", "Space Center Management", DrawBuildListWindow);
                 }
                 if (GUIStates.ShowClearLaunch)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawClearLaunch", "Launch site not clear!", DrawClearLaunch);

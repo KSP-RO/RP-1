@@ -61,7 +61,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
-            if (Utilities.CurrentGameHasScience() && GUILayout.Button("Reserachers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
+            if (Utilities.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
             if (_personnelWindowHolder == 0)    //VAB
@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;
-                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID; // reset to current active LC
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex; // reset to current active LC
 
                 if (!IsPrimarilyDisabled)
                 {
@@ -114,16 +114,17 @@ namespace KerbalConstructionTime
             GUILayout.Label("Assigned:");
             int delta;
             bool recalc = false;
-            BuildListVessel.ListType type = currentLC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, -delta); recalc = true; }
-            GUILayout.Label($"{currentLC.Personnel:N0}", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
+            GUILayout.Label($"  {currentLC.Personnel:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
             if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, delta); recalc = true; }
+            GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}%");
             GUILayout.Label("Rate:", GetLabelCenterAlignStyle());
-            double rate = Utilities.GetBuildRate(0, type, currentLC);
+            double rate = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated);
             double rateFull = rate / currentLC.EfficiencyPersonnel;
             GUILayout.Label($"{rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -182,7 +183,7 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
 
                 string title = research ? "Researchers" : "Engineers";
-                GUILayout.Label($"Hire/Fire {title}");
+                GUILayout.Label($"Hire/Fire {title}:");
 
                 int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
                 int workers = _buyModifier;
@@ -191,7 +192,7 @@ namespace KerbalConstructionTime
 
                 bool canAfford = workers <= limit;
                 GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                if (GUILayout.Button($"Fire {workers:N0} {title}", style, GUILayout.ExpandWidth(false)) && canAfford)
+                if (GUILayout.Button($"Fire {workers:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
                     if (research)
                     {
@@ -215,7 +216,7 @@ namespace KerbalConstructionTime
                 
                 canAfford = Funding.Instance.Funds >= _fundsCost;
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                if (GUILayout.Button($"Hire {workers:N0} {title}: {_fundsCost:N0} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
+                if (GUILayout.Button($"Hire {workers:N0}: {_fundsCost:N0} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
                     Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
                     if (research)

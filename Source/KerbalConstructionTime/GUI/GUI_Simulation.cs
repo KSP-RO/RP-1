@@ -226,9 +226,10 @@ namespace KerbalConstructionTime
             Utilities.MakeSimulationSave();
 
             Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-            double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            bool humanRated;
+            double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
             double bp = Utilities.GetBuildPoints(effCost);
-            KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL);
+            KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL, humanRated);
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)

@@ -32,10 +32,13 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem LC, int persDelta)
+        public static double ParseBuildRateFormula(int index, LCItem LC, bool isHumanRatedCapped, int persDelta)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
-            int personnel = LC == null ? KCTGameStates.ActiveKSC.FreePersonnel : (type == BuildListVessel.ListType.KSC ? LC.KSC.FreePersonnel : LC.Personnel);
+            int personnel = LC.Personnel;
+            if (isHumanRatedCapped)
+                personnel = System.Math.Min(personnel, LC.MaxPersonnelNonHR);
+
             var variables = new Dictionary<string, string>();
 
             int level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);

@@ -46,7 +46,7 @@ namespace KerbalConstructionTime
         {
             double buildPoints = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
+            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorIsHumanRated, 0);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
@@ -54,20 +54,21 @@ namespace KerbalConstructionTime
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
 
-            if (double.TryParse(BuildRateForDisplay, out double bR))
+            double bR;
+            if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
             {
-                if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
-                {
-                    bR = rate;
-                    BuildRateForDisplay = bR.ToString();
-                }
+                bR = rate;
+                BuildRateForDisplay = bR.ToString();
+            }
+            if (double.TryParse(BuildRateForDisplay, out bR))
+            {
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildPoints /
-                    Math.Min(bR, Utilities.GetBuildRateCap(buildPoints, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _), KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance))));
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRateCap(buildPoints, KCTGameStates.EditorShipMass, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildPoints / buildRateCapped));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
+                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / buildRateCapped)}");
                 }
             }
             else
@@ -99,6 +100,13 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.Label(techLabel);
             }
+
+            if (KCTGameStates.EditorIsHumanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
+            {
+                GUILayout.Label("WARNING: Cannot build vessel!");
+                GUILayout.Label("Select a human-rated Launch Complex.");
+            }
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {
@@ -112,7 +120,7 @@ namespace KerbalConstructionTime
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             }
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Show/Hide Build List"))
+            if (GUILayout.Button("Show/Hide Management"))
             {
                 GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
             }
@@ -133,7 +141,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * originalCompletionPercent, 2))}%");
             GUILayout.Label($"Edited: {Math.Round(100 * newCompletionPercent, 2)}%");
 
-            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, 0);
+            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorIsHumanRated, 0);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
@@ -141,21 +149,23 @@ namespace KerbalConstructionTime
                 BuildRateForDisplay = rate.ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
-            
-            if (double.TryParse(BuildRateForDisplay, out double bR))
+
+            double bR;
+            if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
             {
-                if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
-                {
-                    bR = rate;
-                    BuildRateForDisplay = bR.ToString();
-                }
+                bR = rate;
+                BuildRateForDisplay = bR.ToString();
+            }
+
+            if (double.TryParse(BuildRateForDisplay, out bR))
+            {
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) /
-                    Math.Min(bR, Utilities.GetBuildRateCap(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _), KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance))));
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRateCap(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, KCTGameStates.EditorShipMass, ship.LC));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) / buildRateCapped));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
+                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / buildRateCapped)}");
                 }
             }
             else
@@ -189,9 +199,10 @@ namespace KerbalConstructionTime
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
 
-                double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+                bool isHumanRated;
+                double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out isHumanRated);
                 double bp = Utilities.GetBuildPoints(effCost);
-                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL);
+                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL, isHumanRated);
             }
             GUILayout.EndHorizontal();
 

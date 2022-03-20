@@ -462,7 +462,7 @@ namespace KerbalConstructionTime
                 ScrapYardWrapper.ProcessVessel(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
 
                 //reset the BP
-                KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetBuildTime(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
+                KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetBuildPoints(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
                 KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(KCTGameStates.RecoveredVessel);
             }
 

@@ -288,7 +288,7 @@ namespace KerbalConstructionTime
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
             EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList());
-            BuildPoints = Utilities.GetBuildTime(EffectiveCost);
+            BuildPoints = Utilities.GetBuildPoints(EffectiveCost);
             Flag = HighLogic.CurrentGame.flagURL;
 
             DistanceFromKSC = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
@@ -425,7 +425,7 @@ namespace KerbalConstructionTime
             if (RecalcTime)
             {
                 ret.EffectiveCost = Utilities.GetEffectiveCost(ret.ExtractedPartNodes);
-                ret.BuildPoints = Utilities.GetBuildTime(ret.EffectiveCost);
+                ret.BuildPoints = Utilities.GetBuildPoints(ret.EffectiveCost);
                 ret.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ret);
                 ret.IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(ret);
             }

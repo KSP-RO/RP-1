@@ -214,7 +214,7 @@ namespace KerbalConstructionTime
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
             double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
-            double bp = Utilities.GetBuildTime(effCost);
+            double bp = Utilities.GetBuildPoints(effCost);
             BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text

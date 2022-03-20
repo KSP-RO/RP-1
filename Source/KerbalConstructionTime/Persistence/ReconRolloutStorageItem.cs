@@ -3,7 +3,7 @@
     public class ReconRolloutStorageItem
     {
         [Persistent] private string name = "";
-        [Persistent] public double BP = 0, progress = 0, cost = 0;
+        [Persistent] public double BP = 0, progress = 0, cost = 0, mass = 0;
         [Persistent] public string associatedID = "";
         [Persistent] public string launchPadID = "LaunchPad";
 
@@ -15,6 +15,7 @@
                 Progress = progress,
                 Cost = cost,
                 RRType = ReconRollout.RRDict.ContainsKey(name) ? ReconRollout.RRDict[name] : ReconRollout.RolloutReconType.None,
+                Mass = mass,
                 AssociatedID = associatedID,
                 LaunchPadID = launchPadID
             };
@@ -28,6 +29,7 @@
             cost = rr.Cost;
             associatedID = rr.AssociatedID;
             launchPadID = rr.LaunchPadID;
+            mass = rr.Mass;
             return this;
         }
     }

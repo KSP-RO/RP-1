@@ -12,6 +12,7 @@ namespace KerbalConstructionTime
         private static string _tonnageLimit = "60";
         private static string _heightLimit = "33";
         private static string _widthLimit = "8";
+        private static string _lengthLimit = "8";
 
         public static void GetPadStats(float tonnageLimit, Vector3 padSize, out float minTonnage, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
         {
@@ -81,16 +82,25 @@ namespace KerbalConstructionTime
             if (isModify)
             {
                 GUILayout.Label(activeLC.Name);
-                GUILayout.Label($"Tonnage limits: {activeLC.SupportedMassAsPrettyText}");
-                GUILayout.Label($"Size limits: {activeLC.SupportedSizeAsPrettyText}");
-                                
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Tonnage limits:");
+                GUILayout.Label(activeLC.SupportedMassAsPrettyText, GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Size limits:");
+                GUILayout.Label(activeLC.SupportedSizeAsPrettyText, GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+
                 GetPadStats(activeLC.massMax, activeLC.sizeMax, out _, out oldPadCost, out oldVABCost, out _);
                 lpMult = activeLC.LaunchPads.Count;
             }
             else
             {
-                GUILayout.Label("Name:");
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Name:", GUILayout.ExpandWidth(false));
                 _newName = GUILayout.TextField(_newName);
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
@@ -101,29 +111,55 @@ namespace KerbalConstructionTime
             float tonnageLimit = 0;
             float heightLimit = 0;
             float widthLimit = 0;
+            float lengthLimit = 0;
             float minTonnage = 0f;
             Vector3 curPadSize = Vector3.zero;
 
             bool hasTonnage = !isModify || activeLC.isPad;
             if (hasTonnage)
             {
-                GUILayout.Label("Maximum tonnage:");
-                _tonnageLimit = GUILayout.TextField(_tonnageLimit);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
+                _tonnageLimit = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle());
+                GUILayout.EndHorizontal();
             }
-            if ((!hasTonnage || float.TryParse(_tonnageLimit, out tonnageLimit)) && float.TryParse(_heightLimit, out heightLimit) && float.TryParse(_widthLimit, out widthLimit))
+            if ((!hasTonnage || float.TryParse(_tonnageLimit, out tonnageLimit)) &&
+                float.TryParse(_lengthLimit, out lengthLimit) &&
+                float.TryParse(_widthLimit, out widthLimit) &&
+                float.TryParse(_heightLimit, out heightLimit))
             {
-                curPadSize.x = curPadSize.z = widthLimit;
+                curPadSize.x = widthLimit;
                 curPadSize.y = heightLimit;
-                GetPadStats(tonnageLimit, new Vector3(widthLimit, heightLimit, widthLimit), out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
+                curPadSize.z = lengthLimit;
+                GetPadStats(tonnageLimit, curPadSize, out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
             }
             if (hasTonnage)
-                GUILayout.Label($"Minimum tonnage: {minTonnage:N0}");
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Minimum tonnage:");
+                GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+            }
             else
                 tonnageLimit = -1f;
 
-            GUILayout.Label("Size Limits:");
-            _widthLimit = GUILayout.TextField(_widthLimit);
-            _heightLimit = GUILayout.TextField(_heightLimit);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));
+            _lengthLimit = GUILayout.TextField(_lengthLimit, GetTextFieldRightAlignStyle());
+            GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Wdith limit:", GUILayout.ExpandWidth(false));
+            _widthLimit = GUILayout.TextField(_widthLimit, GetTextFieldRightAlignStyle());
+            GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Height limit:", GUILayout.ExpandWidth(false));
+            _heightLimit = GUILayout.TextField(_heightLimit, GetTextFieldRightAlignStyle());
+            GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+            GUILayout.EndHorizontal();
 
             double totalCost;
             if (curPadCost > oldPadCost)
@@ -141,23 +177,26 @@ namespace KerbalConstructionTime
             {
                 double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
-                string costString;
-                if (isModify)
+                string costString = isModify ? "Renovate Cost:" : "Build Cost:";
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(costString, GUILayout.ExpandWidth(false));
+                GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+                if (!isModify || activeLC.isPad)
                 {
-                    costString = $"It will cost {totalCost:N0} funds to renovate {activeLC.Name}.";
-                    if (activeLC.isPad)
-                        costString += $" Additional pads there will now cost {curPadCost:N0}.";
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Extra Pad Cost:", GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"√{curPadCost:N0}", GetLabelRightAlignStyle());
+                    GUILayout.EndHorizontal();
                 }
-                else
-                {
-                    costString = $"It will cost {totalCost:N0} funds to build the new launch complex, and additional pads there will cost {curPadCost:N0}.";
-                }
-                GUILayout.Label(costString + $" Estimated construction time is {sBuildTime}.");
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Est. construction time:", GUILayout.ExpandWidth(false));
+                GUILayout.Label(sBuildTime, GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
             }
 
-            GUILayout.Label("Would you like to " + (isModify ? "renovate it?" : "build it?"));
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Yes") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify))
+            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify))
             {
 
                 string lcName = isModify ? activeLC.Name : _newName;
@@ -219,7 +258,7 @@ namespace KerbalConstructionTime
                 _padLvlOptions = null;
             }
 
-            if (GUILayout.Button("No"))
+            if (GUILayout.Button("Cancel"))
             {
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 150;

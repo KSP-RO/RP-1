@@ -627,6 +627,7 @@ namespace KerbalConstructionTime
 
             ship.LC.BuildList.Remove(ship);
             ship.LC.Warehouse.Add(ship);
+            ship.LC.RecalculateBuildRates();
 
             var Message = new StringBuilder();
             Message.AppendLine("The following vessel is complete:");

@@ -18,6 +18,7 @@ namespace KerbalConstructionTime
                 case "KSCUpgrade": return MathParsing.ParseMath("KCT_KSC_UPGRADE", formulaSettings.KSCUpgradeFormula, variables);
                 case "Reconditioning": return MathParsing.ParseMath("KCT_RECONDITIONING", formulaSettings.ReconditioningFormula, variables);
                 case "BuildRate": return MathParsing.ParseMath("KCT_BUILD_RATE", formulaSettings.BuildRateFormula, variables);
+                case "ConstructionRate": return MathParsing.ParseMath("KCT_CONSTRUCTION_RATE", formulaSettings.ConstructionRateFormula, variables);
                 case "InventorySales": return MathParsing.ParseMath("KCT_INVENTORY_SALES", formulaSettings.InventorySaleFormula, variables);
                 case "IntegrationTime": return MathParsing.ParseMath("KCT_INTEGRATION_TIME", formulaSettings.IntegrationTimeFormula, variables);
                 case "IntegrationCost": return MathParsing.ParseMath("KCT_INTEGRATION_COST", formulaSettings.IntegrationCostFormula, variables);
@@ -29,11 +30,6 @@ namespace KerbalConstructionTime
 
                 default: return 0;
             }
-        }
-
-        public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem KSC, bool UpgradedRates = false)
-        {
-            return ParseBuildRateFormula(type, index, KSC, UpgradedRates ? 1 : 0);
         }
 
         public static double ParseBuildRateFormula(BuildListVessel.ListType type, int index, LCItem LC, int persDelta)
@@ -57,6 +53,21 @@ namespace KerbalConstructionTime
             AddCrewVariables(variables);
 
             return GetStandardFormulaValue("BuildRate", variables);
+        }
+
+        public static double ParseConstructionRateFormula(int index, KSCItem KSC, int persDelta)
+        {
+            //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
+            if (KSC == null)
+                KSC = KCTGameStates.ActiveKSC;
+            int personnel = KSC.FreePersonnel + persDelta;
+
+            var variables = new Dictionary<string, string>();
+            variables.Add("N", personnel.ToString());
+            variables.Add("I", index.ToString());
+            AddCrewVariables(variables);
+
+            return GetStandardFormulaValue("ConstructionRate", variables);
         }
 
         public static double ParseNodeRateFormula(double ScienceValue, int index = 0, bool UpgradedRates = false)
@@ -185,7 +196,7 @@ namespace KerbalConstructionTime
                     emptyMass += v.EmptyMass;
                     effectiveCost += v.EffectiveCost;
                 }
-                BP = Utilities.GetBuildTime(effectiveCost);
+                BP = Utilities.GetBuildPoints(effectiveCost);
             }
             else
             {

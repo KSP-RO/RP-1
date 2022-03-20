@@ -63,7 +63,7 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.EndHorizontal();
                 GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildTime /
-                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _))));
+                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _)))));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {
@@ -151,7 +151,7 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.EndHorizontal();
                 GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) /
-                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _))));
+                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _)))));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {

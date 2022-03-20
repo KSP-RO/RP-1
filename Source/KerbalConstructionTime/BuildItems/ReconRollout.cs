@@ -69,7 +69,7 @@ namespace KerbalConstructionTime
             LaunchPadID = launchSite;
             KCTDebug.Log("New recon_rollout at launchsite: " + LaunchPadID);
             Progress = 0;
-            Mass = vessel.GetTotalMass();
+            Mass = Math.Max(0.001d, vessel.GetTotalMass());
             try
             {
                 BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), true);

@@ -648,7 +648,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC), PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, b.GetTotalMass()));
+                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC), Utilities.GetBuildRateCap(b.BuildPoints, b.GetTotalMass(), b.LC));
                     string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }

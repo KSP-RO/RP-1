@@ -116,15 +116,13 @@ namespace KerbalConstructionTime
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, -delta); recalc = true; }
-            GUILayout.Label($"{currentLC.Personnel:N0}");
+            GUILayout.Label($"{currentLC.Personnel:N0}", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
             if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, delta); recalc = true; }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}%", GetLabelCenterAlignStyle());
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}%");
+            GUILayout.Label("Rate:", GetLabelCenterAlignStyle());
             GUILayout.Label($"{Utilities.GetBuildRate(0, type, currentLC):N2}BP/sec");
             GUILayout.EndHorizontal();
 
@@ -146,10 +144,6 @@ namespace KerbalConstructionTime
 
             RenderHireFire(true);
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {(KCTGameStates.EfficiencyRDPersonnel * 100d):N0}%", GetLabelCenterAlignStyle());
-            GUILayout.EndHorizontal();
-
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
             //if (_nodeRate == int.MinValue || isCostCacheInvalid)
             //{
@@ -161,7 +155,8 @@ namespace KerbalConstructionTime
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Rate");
+            GUILayout.Label($"Efficiency: {(KCTGameStates.EfficiencyRDPersonnel * 100d):N0}%");
+            GUILayout.Label("Rate", GetLabelCenterAlignStyle());
             //bool usingPerYear = false;
             if (sciPerDay > 0.1)
             {
@@ -184,6 +179,7 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
 
                 string title = research ? "Researchers" : "Engineers";
+                GUILayout.Label($"Hire/Fire {title}");
 
                 int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
                 int workers = _buyModifier;
@@ -206,8 +202,6 @@ namespace KerbalConstructionTime
                         ksc.RecalculateBuildRates(false);
                     }
                 }
-
-                GUILayout.FlexibleSpace();
 
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
@@ -281,7 +275,7 @@ namespace KerbalConstructionTime
             if (delta > 0)
                 KCTGameStates.EfficiencyRDPersonnel = ((KCTGameStates.EfficiencyRDPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / newNum;
 
-            KCTGameStates.EfficiencyRDPersonnel += delta;
+            KCTGameStates.RDPersonnel += delta;
         }
 
         private static GUIStyle GetCannotAffordStyle()

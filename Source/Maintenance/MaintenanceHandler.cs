@@ -26,7 +26,8 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public double lastUpdate = 0d;
 
-        public readonly Dictionary<string, double> Engineers = new Dictionary<string, double>();
+        public readonly Dictionary<string, double> Integration = new Dictionary<string, double>();
+        public readonly Dictionary<string, double> Construction = new Dictionary<string, double>();
         public double Researchers = 0d;
         //public readonly Dictionary<string, double> KCTBuildRates = new Dictionary<string, double>();
         //public int[] KCTPadCounts = new int[PadLevelCount];
@@ -55,12 +56,23 @@ namespace RP0
 
         public double FacilityUpkeep => RndCost + McCost + TsCost + AcCost;
 
-        public double EngineerSalaryTotal
+        public double IntegrationSalaryTotal
         {
             get
             {
                 double tmp = 0d;
-                foreach (double d in Engineers.Values)
+                foreach (double d in Integration.Values)
+                    tmp += d;
+                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365d;
+            }
+        }
+
+        public double ConstructionSalaryTotal
+        {
+            get
+            {
+                double tmp = 0d;
+                foreach (double d in Construction.Values)
                     tmp += d;
                 return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365d;
             }
@@ -136,7 +148,9 @@ namespace RP0
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
-                Engineers[ksc.KSCName] = ksc.Personnel;
+                int constructionWorkers = ksc.FreePersonnel;
+                Construction[ksc.KSCName] = constructionWorkers;
+                Integration[ksc.KSCName] = ksc.Personnel - constructionWorkers;
                 //for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
                 //{
                 //    LCItem lc = ksc.LaunchComplexes[j];
@@ -248,7 +262,7 @@ namespace RP0
 
             ResearchUpkeep = _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365d;
 
-            TotalUpkeep = FacilityUpkeep + EngineerSalaryTotal + ResearchUpkeep + NautTotalUpkeep;
+            TotalUpkeep = FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchUpkeep + NautTotalUpkeep;
             Profiler.EndSample();
         }
 

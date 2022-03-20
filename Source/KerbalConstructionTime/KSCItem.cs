@@ -15,6 +15,7 @@ namespace KerbalConstructionTime
         public int FreePersonnel => Personnel - LaunchComplexes.Sum(lc => lc.Personnel);
         
         public int ActiveLaunchComplexIndex = 1;
+        private bool _allowRecalcConstructions = true;
 
         public LCItem Hangar => LaunchComplexes[0];
 
@@ -24,11 +25,14 @@ namespace KerbalConstructionTime
 
             LCConstructions.Added += added;
             LCConstructions.Removed += removed;
+            LCConstructions.Updated += updated;
             FacilityUpgrades.Added += added;
             FacilityUpgrades.Removed += removed;
+            FacilityUpgrades.Updated += updated;
 
             void added(int idx, IConstructionBuildItem item) { Constructions.Add(item); }
             void removed(int idx, IConstructionBuildItem item) { Constructions.Remove(item); }
+            void updated() { if (_allowRecalcConstructions) RecalculateBuildRates(false); }
         }
 
         public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;
@@ -169,6 +173,8 @@ namespace KerbalConstructionTime
 
         public KSCItem FromConfigNode(ConfigNode node)
         {
+            _allowRecalcConstructions = false;
+
             FacilityUpgrades.Clear();
             LCConstructions.Clear();
 
@@ -214,6 +220,8 @@ namespace KerbalConstructionTime
             }
 
             Constructions.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
+            _allowRecalcConstructions = true;
+            RecalculateBuildRates(true);
 
             return this;
         }

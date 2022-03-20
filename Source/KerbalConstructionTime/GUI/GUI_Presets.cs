@@ -195,6 +195,11 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
+                GUILayout.Label("ConstructionRate: ");
+                _workingPreset.FormulaSettings.ConstructionRateFormula= GUILayout.TextField(_workingPreset.FormulaSettings.ConstructionRateFormula, GUILayout.Width(textWidth));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
                 GUILayout.Label("InventorySale: ");
                 _workingPreset.FormulaSettings.InventorySaleFormula = GUILayout.TextField(_workingPreset.FormulaSettings.InventorySaleFormula, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();

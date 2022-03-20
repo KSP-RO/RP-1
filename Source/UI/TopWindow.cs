@@ -98,6 +98,9 @@ namespace RP0
                         case UITab.Integration:
                             _maintUI.RenderIntegrationTab();
                             break;
+                        case UITab.Construction:
+                            _maintUI.RenderConstructionTab();
+                            break;
                         case UITab.Astronauts:
                             _maintUI.RenderAstronautsTab();
                             break;

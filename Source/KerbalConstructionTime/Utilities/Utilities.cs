@@ -281,7 +281,7 @@ namespace KerbalConstructionTime
         {
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
-                return MathParser.ParseBuildRateFormula(LC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, index, LC, 0);
+                return MathParser.ParseBuildRateFormula(LC.isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, index, LC, 0) * LC.EfficiencyPersonnel;
 
             return LC.Rate;
         }
@@ -291,7 +291,7 @@ namespace KerbalConstructionTime
             if (type == BuildListVessel.ListType.VAB ? !LC.isPad : LC.isPad)
                 return 0.0001d;
 
-            return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta);
+            return MathParser.ParseBuildRateFormula(type, index, LC, upgradeDelta) * LC.EfficiencyPersonnel;
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -1047,13 +1047,9 @@ namespace KerbalConstructionTime
                         _checkTime(rr, ref shortestTime, ref thing);
                     foreach (IKCTBuildItem ap in LC.AirlaunchPrep)
                         _checkTime(ap, ref shortestTime, ref thing);
-                    foreach (IKCTBuildItem pc in LC.PadConstructions)
-                        _checkTime(pc, ref shortestTime, ref thing);
                 }
-                foreach (IKCTBuildItem ub in KSC.FacilityUpgrades)
+                foreach (IKCTBuildItem ub in KSC.Constructions)
                     _checkTime(ub, ref shortestTime, ref thing);
-                foreach (IKCTBuildItem pc in KSC.LCConstructions)
-                    _checkTime(pc, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
             {

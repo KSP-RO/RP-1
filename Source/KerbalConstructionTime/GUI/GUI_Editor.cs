@@ -50,7 +50,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
-                BuildRateForDisplay = (rate * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyPersonnel).ToString();
+                BuildRateForDisplay = rate.ToString();
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
 

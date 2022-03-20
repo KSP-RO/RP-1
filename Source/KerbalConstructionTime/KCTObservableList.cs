@@ -93,7 +93,8 @@ namespace KerbalConstructionTime
             {
                 Remove(item);
             }
-            Updated();
+            if (found.Count > 0)
+                Updated();
         }
 
         public new T this[int index]

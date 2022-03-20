@@ -704,8 +704,8 @@ namespace KerbalConstructionTime
             string launchSite = b.LaunchSite;
             if (launchSite == "LaunchPad" && isPad)
             {
-                if (b.LaunchSiteID >= 0)
-                    launchSite = b.LC.LaunchPads[b.LaunchSiteID].name;
+                if (b.LaunchSiteIndex >= 0)
+                    launchSite = b.LC.LaunchPads[b.LaunchSiteIndex].name;
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
@@ -787,12 +787,13 @@ namespace KerbalConstructionTime
                     if (!HighLogic.LoadedSceneIsEditor && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
                     {
                         bool hasRecond = false;
+                        List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                         GUIStyle btnColor = _greenButton;
                         if (activeLC.ActiveLPInstance.IsDestroyed)
                             btnColor = _redButton;
                         else if (hasRecond = activeLC.GetReconditioning(activeLC.ActiveLPInstance.name) != null)
                             btnColor = _yellowButton;
-                        else if (b.MeetsFacilityRequirements(false).Count != 0)
+                        else if (facilityChecks.Count != 0)
                             btnColor = _yellowButton;
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, b.Id.ToString(), launchSite);
                         if (tmpRollout.Cost > 0d)
@@ -806,12 +807,11 @@ namespace KerbalConstructionTime
                             }
                             else
                             {
-                                List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                                 if (facilityChecks.Count == 0)
                                 {
                                     if (!activeLC.ActiveLPInstance.IsDestroyed)
                                     {
-                                        b.LaunchSiteID = activeLC.ActiveLaunchPadIndex;
+                                        b.LaunchSiteIndex = activeLC.ActiveLaunchPadIndex;
 
                                         if (rollout != null)
                                         {
@@ -878,11 +878,11 @@ namespace KerbalConstructionTime
                         }
                         else if (!GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
                         {
-                            if (b.LaunchSiteID >= 0)
+                            if (b.LaunchSiteIndex >= 0)
                             {
-                                activeLC.SwitchLaunchPad(b.LaunchSiteID);
+                                activeLC.SwitchLaunchPad(b.LaunchSiteIndex);
                             }
-                            b.LaunchSiteID = activeLC.ActiveLaunchPadIndex;
+                            b.LaunchSiteIndex = activeLC.ActiveLaunchPadIndex;
 
                             List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                             if (facilityChecks.Count == 0)
@@ -1285,8 +1285,8 @@ namespace KerbalConstructionTime
 
             if (launchSite == "LaunchPad")
             {
-                if (b.LaunchSiteID >= 0)
-                    launchSite = b.KSC.ActiveLaunchComplexInstance.LaunchPads[b.LaunchSiteID].name;
+                if (b.LaunchSiteIndex >= 0)
+                    launchSite = b.KSC.ActiveLaunchComplexInstance.LaunchPads[b.LaunchSiteIndex].name;
                 else
                     launchSite = b.KSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
             }

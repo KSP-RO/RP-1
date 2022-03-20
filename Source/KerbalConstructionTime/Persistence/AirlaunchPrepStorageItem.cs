@@ -5,6 +5,7 @@
         [Persistent] private string name = "";
         [Persistent] public double BP = 0, progress = 0, cost = 0, mass = 0, vesselBP = 0;
         [Persistent] public string associatedID = "";
+        [Persistent] public bool isHumanRated;
 
         public AirlaunchPrep ToAirlaunchPrep()
         {
@@ -16,7 +17,8 @@
                 Direction = name == AirlaunchPrep.Name_Mount ? AirlaunchPrep.PrepDirection.Mount : AirlaunchPrep.PrepDirection.Unmount,
                 AssociatedID = associatedID,
                 Mass = mass,
-                VesselBP = vesselBP
+                VesselBP = vesselBP,
+                IsHumanRated = isHumanRated
             };
             return ret;
         }
@@ -30,6 +32,7 @@
             associatedID = ap.AssociatedID;
             mass = ap.Mass;
             vesselBP = ap.VesselBP;
+            isHumanRated = ap.IsHumanRated;
             return this;
         }
     }

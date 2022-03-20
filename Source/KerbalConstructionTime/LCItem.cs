@@ -54,7 +54,7 @@ namespace KerbalConstructionTime
 
         public string SupportedMassAsPrettyText => massMax == -1f ? "unlimited" : $"{massMin:N0}-{massMax:N0}t";
 
-        public string SupportedSizeAsPrettyText => sizeMax.y == float.MaxValue ? "unlimited" : $"{sizeMax.x:N0}x{sizeMax.y:N0}m";
+        public string SupportedSizeAsPrettyText => sizeMax.y == float.MaxValue ? "unlimited" : $"{sizeMax.z:N0}x{sizeMax.x:N0}x{sizeMax.y:N0}m";
 
         private KSCItem _ksc = null;
 

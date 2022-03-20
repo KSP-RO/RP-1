@@ -208,7 +208,7 @@ namespace KerbalConstructionTime
 
                 int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
                 KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID = idx;
+                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex = idx;
 
                 //set the level to this level
                 if (Utilities.CurrentGameIsCareer())

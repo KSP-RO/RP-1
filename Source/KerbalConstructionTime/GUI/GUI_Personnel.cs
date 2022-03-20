@@ -123,7 +123,8 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}%");
             GUILayout.Label("Rate:", GetLabelCenterAlignStyle());
-            GUILayout.Label($"{Utilities.GetBuildRate(0, type, currentLC):N2}BP/sec");
+            double rate = Utilities.GetBuildRate(0, type, currentLC);
+            GUILayout.Label($"{rate:N2} => {(rate * currentLC.EfficiencyPersonnel):N2} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             if (recalc)
@@ -154,19 +155,20 @@ namespace KerbalConstructionTime
             _nodeRate = MathParser.ParseNodeRateFormula(0, 0, 0);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
+            double sciPerDayEffic = sciPerDay * KCTGameStates.EfficiencyRDPersonnel;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {(KCTGameStates.EfficiencyRDPersonnel * 100d):N0}%");
             GUILayout.Label("Rate", GetLabelCenterAlignStyle());
             //bool usingPerYear = false;
-            if (sciPerDay > 0.1)
+            if (sciPerDay > 0.1 && sciPerDayEffic > 0.1)
             {
-                GUILayout.Label($"{sciPerDay:N3} sci/day", GetLabelRightAlignStyle());
+                GUILayout.Label($"{sciPerDay:N3} => {sciPerDayEffic:N3} sci/day", GetLabelRightAlignStyle());
             }
             else
             {
                 //Well, looks like we need sci/year instead
                 int daysPerYear = KSPUtil.dateTimeFormatter.Year / KSPUtil.dateTimeFormatter.Day;
-                GUILayout.Label($"{(sciPerDay * daysPerYear):N3} sci/yr", GetLabelRightAlignStyle());
+                GUILayout.Label($"{(sciPerDay * daysPerYear):N3} => {(sciPerDayEffic * daysPerYear):N3} sci/yr", GetLabelRightAlignStyle());
                 //usingPerYear = true;
             }
             GUILayout.EndHorizontal();

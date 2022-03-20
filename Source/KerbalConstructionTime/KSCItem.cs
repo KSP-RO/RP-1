@@ -14,7 +14,8 @@ namespace KerbalConstructionTime
         public int Personnel = 0;
         public int FreePersonnel => Personnel - LaunchComplexes.Sum(lc => lc.Personnel);
         
-        public int ActiveLaunchComplexID = 1;
+        public int ActiveLaunchComplexIndex = 1;
+        private bool _allowRecalcConstructions = true;
 
         public LCItem Hangar => LaunchComplexes[0];
 
@@ -24,14 +25,17 @@ namespace KerbalConstructionTime
 
             LCConstructions.Added += added;
             LCConstructions.Removed += removed;
+            LCConstructions.Updated += updated;
             FacilityUpgrades.Added += added;
             FacilityUpgrades.Removed += removed;
+            FacilityUpgrades.Updated += updated;
 
             void added(int idx, IConstructionBuildItem item) { Constructions.Add(item); }
             void removed(int idx, IConstructionBuildItem item) { Constructions.Remove(item); }
+            void updated() { if (_allowRecalcConstructions) RecalculateBuildRates(false); }
         }
 
-        public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexID ? LaunchComplexes[ActiveLaunchComplexID] : null;
+        public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;
 
         public int LaunchComplexCount
         {
@@ -39,7 +43,7 @@ namespace KerbalConstructionTime
             {
                 int count = 0;
                 foreach (LCItem lc in LaunchComplexes)
-                    if (lc.isOperational) count++;
+                    if (lc.IsOperational) count++;
                 return count;
             }
         }
@@ -51,10 +55,10 @@ namespace KerbalConstructionTime
             if (LaunchComplexes.Count > 1) return;
 
             LCItem sph = new LCItem(LCItem.StartingHangar, this);
-            sph.isOperational = true;
+            sph.IsOperational = true;
             LaunchComplexes.Add(sph);
             LCItem starterLC = new LCItem(LCItem.StartingLC, this);
-            starterLC.isOperational = true;
+            starterLC.IsOperational = true;
             LaunchComplexes.Add(starterLC);
         }
 
@@ -73,10 +77,10 @@ namespace KerbalConstructionTime
 
         public int SwitchLaunchComplex(bool forwardDirection, int startIndex = -1, bool doSwitch = true)
         {
-            if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexID : startIndex;
+            if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexIndex : startIndex;
 
             if (startIndex < 0)
-                startIndex = ActiveLaunchComplexID;
+                startIndex = ActiveLaunchComplexIndex;
 
             LCItem lc;
             do
@@ -92,7 +96,7 @@ namespace KerbalConstructionTime
                     startIndex = ((startIndex - 1) % LaunchComplexes.Count + LaunchComplexes.Count) % LaunchComplexes.Count;
                 }
                 lc = LaunchComplexes[startIndex];
-            } while (!lc.isOperational);
+            } while (!lc.IsOperational);
 
             if (doSwitch)
                 SwitchLaunchComplex(startIndex);
@@ -103,9 +107,9 @@ namespace KerbalConstructionTime
         public void SwitchLaunchComplex(int LC_ID, bool updateDestrNode = true)
         {
             if (LC_ID < 0)
-                LC_ID = ActiveLaunchComplexID;
+                LC_ID = ActiveLaunchComplexIndex;
             else
-                ActiveLaunchComplexID = LC_ID;
+                ActiveLaunchComplexIndex = LC_ID;
 
             LaunchComplexes[LC_ID].SwitchLaunchPad();
             KCT_GUI._LCIndex = LC_ID;
@@ -117,9 +121,9 @@ namespace KerbalConstructionTime
         /// <returns>The instance of the highest level LaunchPad</returns>
         public LCItem GetHighestLevelLaunchComplex()
         {
-            LCItem highest = LaunchComplexes.First(p => p.isPad && p.isOperational);
+            LCItem highest = LaunchComplexes.First(p => p.IsPad && p.IsOperational);
             foreach (var lc in LaunchComplexes)
-                if (lc.isPad && lc.isOperational && lc.massMax > highest.massMax)
+                if (lc.IsPad && lc.IsOperational && lc.MassMax > highest.MassMax)
                     highest = lc;
             return highest;
         }
@@ -129,7 +133,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log("Saving KSC " + KSCName);
             var node = new ConfigNode("KSC");
             node.AddValue("KSCName", KSCName);
-            node.AddValue("ActiveLCID", ActiveLaunchComplexID);
+            node.AddValue("ActiveLCID", ActiveLaunchComplexIndex);
             node.AddValue("Personnel", Personnel);
 
             var cnLCs = new ConfigNode("LaunchComplexes");
@@ -169,12 +173,14 @@ namespace KerbalConstructionTime
 
         public KSCItem FromConfigNode(ConfigNode node)
         {
+            _allowRecalcConstructions = false;
+
             FacilityUpgrades.Clear();
             LCConstructions.Clear();
 
             KSCName = node.GetValue("KSCName");
-            if (!int.TryParse(node.GetValue("ActiveLCID"), out ActiveLaunchComplexID))
-                ActiveLaunchComplexID = 0;
+            if (!int.TryParse(node.GetValue("ActiveLCID"), out ActiveLaunchComplexIndex))
+                ActiveLaunchComplexIndex = 0;
 
             Personnel = 0;
             node.TryGetValue("Personnel", ref Personnel);
@@ -185,7 +191,7 @@ namespace KerbalConstructionTime
                 LaunchComplexes.Clear();
                 foreach (ConfigNode cn in tmp.GetNodes("LaunchComplex"))
                 {
-                    var tempLC = new LCItem("", 0f, Vector3.zero, true, this);
+                    var tempLC = new LCItem("", 0f, Vector3.zero, true, false, this);
                     tempLC.FromConfigNode(cn);
                     LaunchComplexes.Add(tempLC);
                 }
@@ -214,6 +220,8 @@ namespace KerbalConstructionTime
             }
 
             Constructions.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
+            _allowRecalcConstructions = true;
+            RecalculateBuildRates(true);
 
             return this;
         }

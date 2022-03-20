@@ -454,7 +454,7 @@ namespace KerbalConstructionTime
                 {
                     if (Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
                     {
-                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadID, false);
+                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex, false);
                         pad.UpdateLaunchpadDestructionState(false);
                     }
                 }
@@ -610,7 +610,7 @@ namespace KerbalConstructionTime
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
                         LCItem currentLC = ksc.LaunchComplexes[j];
-                        if (!currentLC.isOperational)
+                        if (!currentLC.IsOperational)
                             continue;
 
                         if (!currentLC.CanModify &&  currentLC.Personnel > 0)
@@ -634,7 +634,7 @@ namespace KerbalConstructionTime
                             if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
                                 && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) is BuildListVessel blv)
                             {
-                                blv.LaunchSiteID = -1;
+                                blv.LaunchSiteIndex = -1;
                             }
                             Profiler.EndSample();
                         }
@@ -649,8 +649,7 @@ namespace KerbalConstructionTime
                         for (int i = currentLC.PadConstructions.Count - 1; i >= 0; i--)
                             currentLC.PadConstructions[i].IncrementProgress(UTDiff);
 
-                        if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                            currentLC.PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
+                        currentLC.PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                     }
 
                     for (int i = ksc.LCConstructions.Count - 1; i >= 0; i--)
@@ -659,11 +658,8 @@ namespace KerbalConstructionTime
                     for (int i = ksc.FacilityUpgrades.Count - 1; i >= 0; i--)
                         ksc.FacilityUpgrades[i].IncrementProgress(UTDiff);
 
-                    if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                    {
-                        ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
-                        ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
-                    }
+                    ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
+                    ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                 }
 
                 int techCount = KCTGameStates.TechList.Count;

@@ -92,10 +92,25 @@ namespace KerbalConstructionTime
 
         public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
 
+        public void Cancel()
+        {
+            if (Cost > 0d && Utilities.CurrentGameIsCareer())
+                Utilities.AddFunds(Cost, TransactionReasons.StructureConstruction);
+
+            KCT_LaunchPad lp = LC.LaunchPads[LaunchpadIndex];
+            int index = LC.LaunchPads.IndexOf(lp);
+            LC.LaunchPads.RemoveAt(index);
+            if (LC.ActiveLaunchPadIndex >= index)
+                --LC.ActiveLaunchPadIndex; // should not change active pad.
+
+            LC.PadConstructions.Remove(this);
+            LC.KSC.RecalculateBuildRates(false);
+        }
+
         public void IncrementProgress(double UTDiff)
         {
             if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes))
+            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
             {
                 if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
                 {

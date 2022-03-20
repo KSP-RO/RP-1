@@ -12,7 +12,7 @@ namespace KerbalConstructionTime
         private static KCT_Preset _workingPreset;
         private static Vector2 _presetScrollView, _presetMainScroll;
         private static bool _isChanged = false, _showFormula = false;
-        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _reEffTmp = "", _maxReTmp = "", _mTimePTmp = "";
+        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _mTimePTmp = "";
 
         private static string _saveName, _saveShort, _saveDesc, _saveAuthor;
         private static bool _saveCareer, _saveScience, _saveSandbox;
@@ -126,14 +126,6 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Inventory Effect: ");
             double.TryParse(_iEffTmp = GUILayout.TextField(_iEffTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.InventoryEffect);
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Reconditioning Effect: ");
-            double.TryParse(_reEffTmp = GUILayout.TextField(_reEffTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.ReconditioningEffect);
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Max Reconditioning: ");
-            double.TryParse(_maxReTmp = GUILayout.TextField(_maxReTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MaxReconditioning);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical(); //end time settings
             GUILayout.EndVertical();
@@ -357,8 +349,6 @@ namespace KerbalConstructionTime
             _mTimePTmp = _workingPreset.TimeSettings.MergingTimePenalty.ToString(); 
             _bEffTmp = _workingPreset.TimeSettings.BuildEffect.ToString();
             _iEffTmp = _workingPreset.TimeSettings.InventoryEffect.ToString();
-            _reEffTmp = _workingPreset.TimeSettings.ReconditioningEffect.ToString();
-            _maxReTmp = _workingPreset.TimeSettings.MaxReconditioning.ToString();
         }
 
         public static void DrawPresetSaveWindow(int windowID)

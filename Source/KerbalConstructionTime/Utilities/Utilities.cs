@@ -299,8 +299,8 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            double rate = GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC);
-            return Math.Min(rate, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, ship.GetTotalMass()));
+            double rate = Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC), GetBuildRateCap(ship.BuildPoints, ship.GetTotalMass(), ship.LC));
+            return rate * ship.LC.EfficiencyPersonnel;
         }
 
         public static double GetConstructionRate(KSCItem KSC)
@@ -2127,6 +2127,16 @@ namespace KerbalConstructionTime
             }
             ScrapYardWrapper.SetProcessedStatus(ScrapYardWrapper.GetPartID(b.ExtractedPartNodes[0]), false);
             Utilities.AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
+        }
+
+        public static double GetBuildRateCap(double bp, double mass, LCItem LC)
+        {
+            double cap1 = bp > 0 ? 0.0000002755731922d * bp : double.MaxValue;
+            double cap2 = mass > 0 ? Math.Pow(mass, 0.75d) * 0.05d : double.MaxValue;
+            if (cap1 == cap2 && cap1 == double.MaxValue)
+                return double.MaxValue;
+
+            return (cap1 * 0.75d + cap2 * 0.25d) * LC.EfficiencyPersonnel;
         }
     }
 }

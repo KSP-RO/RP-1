@@ -7,26 +7,38 @@ namespace KerbalConstructionTime
 {
     public class LCItem
     {
-        public struct StartingLCData
+        public struct LCData : IConfigNode
         {
-            public string Name;
-            public float massMax;
-            public Vector3 sizeMax;
-            public bool isPad;
+            [Persistent] public string Name;
+            [Persistent] public float massMax;
+            [Persistent] public Vector3 sizeMax;
+            [Persistent] public bool isPad;
+            [Persistent] public bool isHumanRated;
 
-            public StartingLCData(string Name, float massMax, Vector3 sizeMax, bool isPad)
+            public LCData(string Name, float massMax, Vector3 sizeMax, bool isPad, bool isHumanRated)
             {
                 this.Name = Name;
                 this.massMax = massMax;
                 this.sizeMax = sizeMax;
                 this.isPad = isPad;
+                this.isHumanRated = isHumanRated;
+            }
+
+            public void Load(ConfigNode node)
+            {
+                ConfigNode.LoadObjectFromConfig(this, node);
+            }
+
+            public void Save(ConfigNode node)
+            {
+                ConfigNode.CreateConfigFromObject(this, node);
             }
 
             // NOTE: Not comparing name, which I think is correct here.
-            public bool Compare(LCItem lc) => massMax == lc.massMax && sizeMax == lc.sizeMax;
+            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
         }
-        public static StartingLCData StartingHangar = new StartingLCData("Hangar", -1f, new Vector3(40f, 10f, 40f), false);
-        public static StartingLCData StartingLC = new StartingLCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true);
+        public static LCData StartingHangar = new LCData("Hangar", -1f, new Vector3(40f, 10f, 40f), false, true);
+        public static LCData StartingLC = new LCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, false);
 
         public string Name;
         protected Guid _id;
@@ -37,65 +49,60 @@ namespace KerbalConstructionTime
         public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
         public List<ReconRollout> Recon_Rollout = new List<ReconRollout>();
         public List<AirlaunchPrep> AirlaunchPrep = new List<AirlaunchPrep>();
-        public double Rate => _rate;
         private double _rate;
+        private double _rateHRCapped;
+        public double Rate => _rate;
+        public double RateHRCapped => _rateHRCapped;
+        
         public int Personnel = 0;
-        public int MaxPersonnel => Math.Max(1, (int)Math.Ceiling(massMax > 0f ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.2d)) * 5;
+        private double _RawMaxPersonnel => MassMax > 0f ? Math.Pow(MassMax, 0.75d) : SizeMax.sqrMagnitude * 0.05d;
+        public int MaxPersonnel => Math.Max(5, (int)Math.Ceiling( _RawMaxPersonnel * (IsHumanRated ? 1.5d : 1d))) * 5;
+        public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
         public double EfficiencyPersonnel = 1d;
 
-        public bool isOperational = false;
-        public bool isPad = true;
+        public bool IsOperational = false;
+        public bool IsPad = true;
+        public bool IsHumanRated = false;
 
-        public float massMax, massMin;
-        public Vector3 sizeMax;
+        public float MassMax, MassMin;
+        public Vector3 SizeMax;
 
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
-        public int ActiveLaunchPadID = 0;
+        public int ActiveLaunchPadIndex = 0;
 
-        public string SupportedMassAsPrettyText => massMax == -1f ? "unlimited" : $"{massMin:N0}-{massMax:N0}t";
+        public string SupportedMassAsPrettyText => MassMax == -1f ? "unlimited" : $"{MassMin:N0}-{MassMax:N0}t";
 
-        public string SupportedSizeAsPrettyText => sizeMax.y == float.MaxValue ? "unlimited" : $"{sizeMax.z:N0}x{sizeMax.x:N0}x{sizeMax.y:N0}m";
+        public string SupportedSizeAsPrettyText => SizeMax.y == float.MaxValue ? "unlimited" : $"{SizeMax.z:N0}x{SizeMax.x:N0}x{SizeMax.y:N0}m";
 
         private KSCItem _ksc = null;
 
-        public KSCItem KSC
-        {
-            get
-            {
-                // Set on create, shouldn't be needed.
-
-                //if (_ksc == null)
-                //{
-                //    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.LaunchComplexes.Contains(this));
-                //}
-                return _ksc;
-            }
-        }
+        public KSCItem KSC => _ksc;
 
         public LCItem(KSCItem ksc)
         {
             _ksc = ksc;
         }
 
-        public LCItem(StartingLCData lcData, KSCItem ksc) : this(lcData.Name, lcData.massMax, lcData.sizeMax, lcData.isPad, ksc) { }
+        public LCItem(LCData lcData, KSCItem ksc) : this(lcData.Name, lcData.massMax, lcData.sizeMax, lcData.isPad, lcData.isHumanRated, ksc) { }
 
-        public LCItem(string lcName, float mMax, Vector3 sMax, bool isLCPad, KSCItem ksc)
+        public LCItem(string lcName, float mMax, Vector3 sMax, bool isLCPad, bool isHuman, KSCItem ksc)
         {
             Name = lcName;
 
             _id = Guid.NewGuid();
             _ksc = ksc;
-            isPad = isLCPad;
-            massMax = mMax;
+            IsPad = isLCPad;
+            IsHumanRated = isHuman;
+            MassMax = mMax;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(massMax, sMax, out massMin, out _, out _, out fracLevel);
+            KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out MassMin, out _, out _, out fracLevel);
 
-            sizeMax = sMax;
+            SizeMax = sMax;
 
-            if (isPad)
+            if (IsPad)
             {
-                var pad = new KCT_LaunchPad(Name + "A", fracLevel, massMax, sizeMax);
+                var pad = new KCT_LaunchPad(Name + "A", fracLevel, MassMax, SizeMax);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
@@ -107,27 +114,25 @@ namespace KerbalConstructionTime
             void removed(int idx, IConstructionBuildItem pc) { ksc.Constructions.Remove(pc); }
         }
 
-        public void Modify(float mMax, Vector3 sMax)
+        public void Modify(LCData data)
         {
-            massMax = mMax;
+            MassMax = data.massMax;
+            IsHumanRated = data.isHumanRated;
+            SizeMax = data.sizeMax;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(massMax, sMax, out massMin, out _, out _, out fracLevel);
-
-            sizeMax = sMax;
+            KCT_GUI.GetPadStats(MassMax, SizeMax, IsHumanRated, out MassMin, out _, out _, out fracLevel);
 
             foreach (var pad in LaunchPads)
             {
                 pad.fractionalLevel = fracLevel;
                 pad.level = (int)fracLevel;
-                pad.supportedMass = mMax;
-                pad.supportedSize = sMax;
+                pad.supportedMass = MassMax;
+                pad.supportedSize = SizeMax;
             }
-
-            Personnel = 0;
         }
 
-        public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadID ? LaunchPads[ActiveLaunchPadID] : null;
+        public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex ? LaunchPads[ActiveLaunchPadIndex] : null;
 
         public int LaunchPadCount
         {
@@ -141,7 +146,7 @@ namespace KerbalConstructionTime
         }
 
         public bool IsEmpty => !BuildList.Any() && !Warehouse.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
-                    !PadConstructions.Any() && LaunchPads.Count < 2 && (isPad ? StartingLC : StartingHangar).Compare(this);
+                    !PadConstructions.Any() && LaunchPads.Count < 2 && (IsPad ? StartingLC : StartingHangar).Compare(this);
 
         public bool CanModify => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() && !PadConstructions.Any();
 
@@ -153,11 +158,12 @@ namespace KerbalConstructionTime
 
         public void RecalculateBuildRates()
         {
-            _rate = Utilities.GetBuildRate(0, this, true);
+            _rate = Utilities.GetBuildRate(0, this, IsHumanRated, true);
+            _rateHRCapped = Utilities.GetBuildRate(0, this, false, true);
             foreach (var blv in BuildList)
                 blv.UpdateBuildRate();
 
-            KCTDebug.Log($"Build rate for {Name} = {_rate:N3}");
+            KCTDebug.Log($"Build rate for {Name} = {_rate:N3}, capped {_rateHRCapped:N3}");
         }
 
         public void SwitchToPrevLaunchPad() => SwitchLaunchPad(false);
@@ -167,7 +173,7 @@ namespace KerbalConstructionTime
         {
             if (LaunchPadCount < 2) return;
 
-            int idx = ActiveLaunchPadID;
+            int idx = ActiveLaunchPadIndex;
             KCT_LaunchPad pad;
             do
             {
@@ -198,9 +204,9 @@ namespace KerbalConstructionTime
         public void SwitchLaunchPad(int LP_ID = -1, bool updateDestrNode = true)
         {
             if (LP_ID < 0)
-                LP_ID = ActiveLaunchPadID;
+                LP_ID = ActiveLaunchPadIndex;
             else
-                ActiveLaunchPadID = LP_ID;
+                ActiveLaunchPadIndex = LP_ID;
 
             //set the active LP's new state
             //activate new pad
@@ -239,16 +245,18 @@ namespace KerbalConstructionTime
             KCTDebug.Log("Saving LC " + Name);
             var node = new ConfigNode("LaunchComplex");
             node.AddValue("LCName", Name);
-            node.AddValue("ActiveLPID", ActiveLaunchPadID);
-            node.AddValue("operational", isOperational);
-            node.AddValue("isPad", isPad);
-            node.AddValue("massMax", massMax);
-            node.AddValue("massMin", massMin);
-            node.AddValue("sizeMax", sizeMax);
+            node.AddValue("ActiveLPID", ActiveLaunchPadIndex);
+            node.AddValue("operational", IsOperational);
+            node.AddValue("isPad", IsPad);
+            node.AddValue("massMax", MassMax);
+            node.AddValue("massMin", MassMin);
+            node.AddValue("sizeMax", SizeMax);
             node.AddValue("id", _id);
             node.AddValue("Personnel", Personnel);
             node.AddValue("EfficiencyPersonnel", EfficiencyPersonnel);
             node.AddValue("BuildRate", _rate);
+            node.AddValue("BuildRateCapped", _rateHRCapped);
+            node.AddValue("IsHumanRated", IsHumanRated);
 
             var cnBuildl = new ConfigNode("BuildList");
             foreach (BuildListVessel blv in BuildList)
@@ -327,21 +335,28 @@ namespace KerbalConstructionTime
             AirlaunchPrep.Clear();
             LaunchPads.Clear();
             _rate = 0;
+            _rateHRCapped = 0;
             Personnel = 0;
             EfficiencyPersonnel = 1d;
+            IsHumanRated = false;
 
             Name = node.GetValue("LCName");
-            ActiveLaunchPadID = 0;
-            node.TryGetValue("ActiveLPID", ref ActiveLaunchPadID);
-            node.TryGetValue("operational", ref isOperational);
-            node.TryGetValue("isPad", ref isPad);
-            node.TryGetValue("massMax", ref massMax);
-            node.TryGetValue("massMin", ref massMin);
-            node.TryGetValue("sizeMax", ref sizeMax);
+            ActiveLaunchPadIndex = 0;
+            node.TryGetValue("ActiveLPID", ref ActiveLaunchPadIndex);
+            node.TryGetValue("operational", ref IsOperational);
+            node.TryGetValue("isPad", ref IsPad);
+            node.TryGetValue("massMax", ref MassMax);
+            node.TryGetValue("massMin", ref MassMin);
+            node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
             node.TryGetValue("Personnel", ref Personnel);
             node.TryGetValue("EfficiencyPersonnel", ref EfficiencyPersonnel);
             node.TryGetValue("BuildRate", ref _rate);
+            node.TryGetValue("BuildRateCapped", ref _rateHRCapped);
+            node.TryGetValue("IsHumanRated", ref IsHumanRated);
+            //back-Compat
+            if (!IsPad)
+                IsHumanRated = true;
 
             ConfigNode tmp = node.GetNode("BuildList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))

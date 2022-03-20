@@ -17,7 +17,7 @@ namespace KerbalConstructionTime
             {
                 if (isLC)
                 {
-                    if (!activeLC.isPad)
+                    if (!activeLC.IsPad)
                     {
                         ScreenMessages.PostScreenMessage("Dismantle failed: can't dismantle the Hangar", 5f, ScreenMessageStyle.UPPER_CENTER);
                         return;

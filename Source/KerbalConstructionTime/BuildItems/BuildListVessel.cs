@@ -13,11 +13,12 @@ namespace KerbalConstructionTime
 
         public double Progress, EffectiveCost, BuildPoints, IntegrationPoints;
         public string LaunchSite, Flag, ShipName;
-        public int LaunchSiteID = -1;
+        public int LaunchSiteIndex = -1;
         public ListType Type;
         public ConfigNode ShipNode;
         public Guid Id;
         public bool CannotEarnScience;
+        public bool IsHumanRated;
         public float Cost = 0, IntegrationCost;
         public float TotalMass = 0, DistanceFromKSC = 0;
         public int RushBuildClicks = 0;
@@ -141,7 +142,7 @@ namespace KerbalConstructionTime
         /// </summary>
         public List<string> DesiredManifest { set; get; } = new List<string>();
 
-        public BuildListVessel(ShipConstruct s, string ls, double effCost, double bP, string flagURL)
+        public BuildListVessel(ShipConstruct s, string ls, double effCost, double bP, string flagURL, bool isHuman)
         {
             _ship = s;
             ShipNode = s.SaveShip();
@@ -152,6 +153,7 @@ namespace KerbalConstructionTime
             Cost = Utilities.GetTotalVesselCost(ShipNode, true);
             EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
             TotalMass = Utilities.GetShipMass(s, true, out EmptyMass, out _);
+            IsHumanRated = isHuman;
 
             HashSet<int> stages = new HashSet<int>();
             NumStageParts = 0;
@@ -178,6 +180,8 @@ namespace KerbalConstructionTime
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
                 _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                if (!_lc.IsPad)
+                    KCTDebug.LogError($"ERROR: Tried to add vessel {ShipName} to LC {_lc.Name} but vessel is type VAB!");
             }
             else if (s.shipFacility == EditorFacility.SPH)
             {
@@ -187,6 +191,10 @@ namespace KerbalConstructionTime
             }
             else
                 Type = ListType.None;
+
+            if(_lc != null && !_lc.IsOperational)
+                KCTDebug.LogError($"ERROR: Tried to add vessel {ShipName} to LC {_lc.Name} but LC is not operational!");
+
             Id = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
             CannotEarnScience = false;
@@ -499,8 +507,8 @@ namespace KerbalConstructionTime
             if (launchSiteName == "LaunchPad")
             {
                 KCT_LaunchPad pad = null;
-                if (LaunchSiteID >= 0)
-                    pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[LaunchSiteID];
+                if (LaunchSiteIndex >= 0)
+                    pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[LaunchSiteIndex];
                 else
                     pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
                 
@@ -526,22 +534,45 @@ namespace KerbalConstructionTime
                     null;
 
             double totalMass = GetTotalMass();
-            if (totalMass > selectedLC.massMax)
+            if (totalMass > selectedLC.MassMax)
             {
-                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.massMax:N}");
+                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.MassMax:N}");
             }
-            if (!skipMinMass && totalMass < selectedLC.massMin)
+            if (!skipMinMass && totalMass < selectedLC.MassMin)
             {
-                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.massMin:N}");
+                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
             }
             // Facility doesn't matter here.
-            CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.sizeMax);
+            CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.SizeMax);
             if (!sizeCheck.Test())
             {
                 failedReasons.Add("Size limits exceeded");
             }
 
+            if (IsHumanRated && !selectedLC.IsHumanRated)
+            {
+                failedReasons.Add("Vessel is human-rated but launch complex is not");
+            }
+
+            if (HasClamps() && !selectedLC.IsPad)
+            {
+                failedReasons.Add("Has launch clamps/GSE but is launching from runway");
+            }
+
             return failedReasons;
+        }
+
+        private bool HasClamps()
+        {
+            foreach (var p in ExtractedPartNodes)
+            {
+                AvailablePart aPart = Utilities.GetAvailablePartByName(Utilities.GetPartNameFromNode(p));
+
+                if (aPart != null && (aPart.partPrefab.Modules.Contains<LaunchClamp>() || aPart.partPrefab.HasTag("PadInfrastructure") ))
+                    return true;
+            }
+
+            return false;
         }
 
         public ListType FindTypeFromLists()

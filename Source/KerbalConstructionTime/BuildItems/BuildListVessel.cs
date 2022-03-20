@@ -13,7 +13,7 @@ namespace KerbalConstructionTime
 
         public double Progress, EffectiveCost, BuildPoints, IntegrationPoints;
         public string LaunchSite, Flag, ShipName;
-        public int LaunchSiteID = -1;
+        public int LaunchSiteIndex = -1;
         public ListType Type;
         public ConfigNode ShipNode;
         public Guid Id;
@@ -501,8 +501,8 @@ namespace KerbalConstructionTime
             if (launchSiteName == "LaunchPad")
             {
                 KCT_LaunchPad pad = null;
-                if (LaunchSiteID >= 0)
-                    pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[LaunchSiteID];
+                if (LaunchSiteIndex >= 0)
+                    pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[LaunchSiteIndex];
                 else
                     pad = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
                 

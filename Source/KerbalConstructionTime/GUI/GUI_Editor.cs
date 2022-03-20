@@ -44,7 +44,7 @@ namespace KerbalConstructionTime
 
         private static void RenderBuildMode()
         {
-            double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double buildTime = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
             GUILayout.BeginHorizontal();
@@ -62,7 +62,8 @@ namespace KerbalConstructionTime
                     BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildTime / bR));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildTime /
+                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _))));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {
@@ -149,7 +150,8 @@ namespace KerbalConstructionTime
                     BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime - newProgressBP) / bR));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) /
+                    Math.Min(bR, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Utilities.GetShipMass(EditorLogic.fetch.ship, true, out _, out _))));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {

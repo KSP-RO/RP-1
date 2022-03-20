@@ -46,14 +46,8 @@ namespace KerbalConstructionTime
 
         public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
-        /// <summary>
-        /// Returns cost in BPs, used to calculate the ingame time to build the vessel.
-        /// </summary>
-        /// <param name="parts"></param>
-        /// <returns></returns>
-        public static double GetBuildTime(List<Part> parts) => GetBuildTime(GetEffectiveCost(parts));
+        public static double GetBuildPoints(List<ConfigNode> parts) => GetBuildPoints(GetEffectiveCost(parts));
 
-        public static double GetBuildTime(List<ConfigNode> parts) => GetBuildTime(GetEffectiveCost(parts));
         public static double GetBuildPoints(double totalEffectiveCost)
         {
             var formulaParams = new Dictionary<string, string>()
@@ -305,7 +299,7 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC);
+            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC), PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * ship.GetTotalMass());
         }
 
         public static double GetConstructionRate(KSCItem KSC)
@@ -889,7 +883,7 @@ namespace KerbalConstructionTime
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePenalty);
             }
 
-            double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double newTotalBP = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
@@ -1293,10 +1287,10 @@ namespace KerbalConstructionTime
             if (!HighLogic.LoadedSceneIsEditor) return;
 
             double effCost = GetEffectiveCost(ship.Parts);
-            KCTGameStates.EditorBuildTime = GetBuildPoints(effCost);
-            var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildTime, EditorLogic.FlagURL);
+            KCTGameStates.EditorBuildPoints = GetBuildPoints(effCost);
+            var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL);
 
-            KCTGameStates.EditorIntegrationTime = MathParser.ParseIntegrationTimeFormula(kctVessel);
+            KCTGameStates.EditorIntegrationPoints = MathParser.ParseIntegrationTimeFormula(kctVessel);
             KCTGameStates.EditorIntegrationCosts = MathParser.ParseIntegrationCostFormula(kctVessel);
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)

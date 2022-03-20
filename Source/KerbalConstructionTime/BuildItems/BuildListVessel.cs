@@ -27,13 +27,14 @@ namespace KerbalConstructionTime
         public float EmptyCost = 0, EmptyMass = 0;
         public EditorFacility FacilityBuiltIn;
         public string KCTPersistentID;
+        private double _buildRate = -1d;
 
         internal ShipConstruct _ship;
         private double _rushCost = -1;
 
         public Vector3 ShipSize = Vector3.zero;
 
-        public double BuildRate => Utilities.GetBuildRate(this);
+        public double BuildRate => _buildRate < 0 ? UpdateBuildRate() : _buildRate;
 
         public double TimeLeft
         {
@@ -685,6 +686,8 @@ namespace KerbalConstructionTime
                 if (!removed)
                 {
                     removed = LC.BuildList.Remove(this);
+                    if (removed)
+                        LC.RecalculateBuildRates();
                 }
             }
             KCTDebug.Log($"Removing {ShipName} from {LC.Name} storage/list.");
@@ -702,7 +705,9 @@ namespace KerbalConstructionTime
                         break;
                     }
                 }
-                if (!removed)
+                if (removed)
+                    LC.RecalculateBuildRates();
+                else
                 {
                     for( int i = LC.Warehouse.Count; i-- > 0;)
                     {
@@ -716,8 +721,12 @@ namespace KerbalConstructionTime
                     }
                 }
             }
-            if (removed) KCTDebug.Log("Sucessfully removed ship from storage.");
-            else KCTDebug.Log("Still couldn't remove ship!");
+            if (removed)
+            {
+                KCTDebug.Log("Sucessfully removed vessel from LC.");
+            }
+            else 
+                KCTDebug.Log("Still couldn't remove ship!");
             return removed;
         }
 
@@ -809,6 +818,15 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate() => BuildRate;
 
+        public double UpdateBuildRate()
+        {
+            _buildRate = Utilities.GetBuildRate(this);
+            if (_buildRate < 0d)
+                _buildRate = 0d;
+
+            return _buildRate;
+        }
+
         public double GetFractionComplete() => Progress / (BuildPoints + IntegrationPoints);
 
         public double GetTimeLeft() => TimeLeft;
@@ -819,13 +837,16 @@ namespace KerbalConstructionTime
 
         public void IncrementProgress(double UTDiff)
         {
-            LC.EfficiencyPersonnel = Math.Min(PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency,
-                LC.EfficiencyPersonnel + PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)LC.EfficiencyPersonnel) *
-                    UTDiff / (365d * 86400d));
-            double buildRate = Utilities.GetBuildRate(this);
-            Progress += buildRate * UTDiff;
-            if (IsComplete())
-                Utilities.MoveVesselToWarehouse(this);
+            if (BuildRate > 0d)
+            {
+                LC.EfficiencyPersonnel = Math.Min(PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency,
+                    LC.EfficiencyPersonnel + PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)LC.EfficiencyPersonnel) *
+                        UTDiff / (365d * 86400d));
+
+                Progress += _buildRate * UTDiff;
+                if (IsComplete())
+                    Utilities.MoveVesselToWarehouse(this);
+            }
         }
     }
 

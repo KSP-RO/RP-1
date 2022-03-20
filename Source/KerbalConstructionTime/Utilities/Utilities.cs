@@ -299,7 +299,8 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC), PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, ship.GetTotalMass()));
+            double rate = GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC);
+            return Math.Min(rate, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Math.Max(0.001d, ship.GetTotalMass()));
         }
 
         public static double GetConstructionRate(KSCItem KSC)

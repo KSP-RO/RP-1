@@ -585,6 +585,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.Label("No vessels under construction! Go to the Editor to build more.");
             }
+            bool recalc = false;
             for (int i = 0; i < buildList.Count; i++)
             {
                 BuildListVessel b = buildList[i];
@@ -618,10 +619,12 @@ namespace KerbalConstructionTime
                 {
                     buildList.RemoveAt(i);
                     buildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
+                    recalc = true;
                 }
 
                 if (i < buildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                 {
+                    recalc = true;
                     buildList.RemoveAt(i);
                     if (GameSettings.MODIFIER_KEY.GetKey())
                     {
@@ -650,6 +653,11 @@ namespace KerbalConstructionTime
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }
                 GUILayout.EndHorizontal();
+            }
+            if (recalc)
+            {
+                for (int i = buildList.Count; i-- > 0;)
+                    buildList[i].UpdateBuildRate();
             }
         }
 
@@ -1384,6 +1392,7 @@ namespace KerbalConstructionTime
                 {
                     if (activeLC.BuildList.Remove(b))
                         activeLC.BuildList.Insert(0, b);
+                    activeLC.RecalculateBuildRates();
                 }
             }
 

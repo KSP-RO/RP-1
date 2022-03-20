@@ -41,6 +41,7 @@ namespace KerbalConstructionTime
         private double _rate;
         public int Personnel = 0;
         public int MaxPersonnel => Math.Max(1, (int)Math.Ceiling(massMax > 0f ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.2d)) * 5;
+        public double EfficiencyPersonnel = 1d;
 
         public bool isOperational = false;
         public bool isPad = true;
@@ -150,7 +151,7 @@ namespace KerbalConstructionTime
 
         public void RecalculateBuildRates()
         {
-            _rate = Utilities.GetBuildRate(0, this, true); 
+            _rate = Utilities.GetBuildRate(0, this, true);
 
             KCTDebug.Log($"Build rate for {Name} = {_rate:N3}");
         }
@@ -241,6 +242,7 @@ namespace KerbalConstructionTime
             node.AddValue("sizeMax", sizeMax);
             node.AddValue("id", _id);
             node.AddValue("Personnel", Personnel);
+            node.AddValue("EfficiencyPersonnel", EfficiencyPersonnel);
             node.AddValue("BuildRate", _rate);
 
             var cnBuildl = new ConfigNode("BuildList");
@@ -321,6 +323,7 @@ namespace KerbalConstructionTime
             LaunchPads.Clear();
             _rate = 0;
             Personnel = 0;
+            EfficiencyPersonnel = 1d;
 
             Name = node.GetValue("LCName");
             ActiveLaunchPadID = 0;
@@ -332,6 +335,7 @@ namespace KerbalConstructionTime
             node.TryGetValue("sizeMax", ref sizeMax);
             node.TryGetValue("id", ref _id);
             node.TryGetValue("Personnel", ref Personnel);
+            node.TryGetValue("EfficiencyPersonnel", ref EfficiencyPersonnel);
             node.TryGetValue("BuildRate", ref _rate);
 
             ConfigNode tmp = node.GetNode("BuildList");

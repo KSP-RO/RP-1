@@ -39,8 +39,8 @@ namespace KerbalConstructionTime
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
         public static bool IsSimulatedFlight = false;
-        public static double EditorBuildTime = 0;
-        public static double EditorIntegrationTime = 0;
+        public static double EditorBuildPoints = 0;
+        public static double EditorIntegrationPoints = 0;
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorIntegrationCosts = 0;

@@ -160,7 +160,7 @@ namespace KerbalConstructionTime
         public void IncrementProgress(double UTDiff)
         {
             if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes))
+            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
             {
                 if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
                 {

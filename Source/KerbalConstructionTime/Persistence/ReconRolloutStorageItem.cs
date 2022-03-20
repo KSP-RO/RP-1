@@ -6,6 +6,7 @@
         [Persistent] public double BP = 0, progress = 0, cost = 0, mass = 0;
         [Persistent] public string associatedID = "";
         [Persistent] public string launchPadID = "LaunchPad";
+        [Persistent] public string lcID = "";
 
         public ReconRollout ToReconRollout()
         {
@@ -17,7 +18,8 @@
                 RRType = ReconRollout.RRDict.ContainsKey(name) ? ReconRollout.RRDict[name] : ReconRollout.RolloutReconType.None,
                 Mass = mass,
                 AssociatedID = associatedID,
-                LaunchPadID = launchPadID
+                LaunchPadID = launchPadID,
+                LC = KCTGameStates.FindLCFromID(new System.Guid(lcID))
             };
         }
 
@@ -30,6 +32,7 @@
             associatedID = rr.AssociatedID;
             launchPadID = rr.LaunchPadID;
             mass = rr.Mass;
+            lcID = rr.LC.ID.ToString("N");
             return this;
         }
     }

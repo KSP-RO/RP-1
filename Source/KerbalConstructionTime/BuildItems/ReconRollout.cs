@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
     public class ReconRollout : IKCTBuildItem
     {
         public string Name => RRInverseDict[RRType];
-        public double BP = 0, Progress = 0, Cost = 0, Mass = 0;
+        public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
         public string AssociatedID = string.Empty;
         public string LaunchPadID = "LaunchPad";
         public const string ReconditioningStr = "LaunchPad Reconditioning";
@@ -68,6 +68,7 @@ namespace KerbalConstructionTime
             BP = 0;
             Cost = 0;
             Mass = 0;
+            VesselBP = 0;
             RRType = RolloutReconType.None;
             AssociatedID = "";
             LaunchPadID = "LaunchPad";
@@ -82,10 +83,12 @@ namespace KerbalConstructionTime
             Progress = 0;
             _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
-            Mass = Math.Max(0.001d, vessel.GetTotalMass());
+            Mass = vessel.GetTotalMass();
             try
             {
-                BP = MathParser.ParseReconditioningFormula(new BuildListVessel(vessel), true);
+                var blv = new BuildListVessel(vessel);
+                BP = MathParser.ParseReconditioningFormula(blv, true);
+                VesselBP = blv.BuildPoints;
             }
             catch
             {
@@ -108,6 +111,7 @@ namespace KerbalConstructionTime
             Progress = 0;
             Mass = vessel.GetTotalMass();
             _lc = vessel.LC;
+            VesselBP = vessel.BuildPoints;
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
             if (type == RolloutReconType.Rollout)
@@ -136,8 +140,8 @@ namespace KerbalConstructionTime
         public double GetBuildRate()
         {
             double buildRate = Utilities.GetBuildRate(0, LC);
-            if (RRType != RolloutReconType.Recovery)
-                buildRate = Math.Min(buildRate, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Mass);
+            if (RRType != RolloutReconType.Reconditioning)
+                buildRate = Math.Min(buildRate, Utilities.GetBuildRateCap(VesselBP, Mass, LC));
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

@@ -44,15 +44,6 @@ namespace KerbalConstructionTime
             }
         }
 
-        public LCItem FindLCFromID(System.Guid guid)
-        {
-            foreach (LCItem lc in LaunchComplexes)
-                if (lc.ID == guid)
-                    return lc;
-
-            return null;
-        }
-
         public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.All(lc => lc.IsEmpty);
 
         public void EnsureStartingLaunchComplexes()

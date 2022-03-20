@@ -48,7 +48,7 @@ namespace KerbalConstructionTime
 
             BP = MathParser.ParseAirlaunchTimeFormula(vessel);
             Cost = MathParser.ParseAirlaunchCostFormula(vessel);
-            Mass = vessel.GetTotalMass();
+            Mass = Math.Max(0.001d, vessel.GetTotalMass());
         }
 
         public double GetBuildRate()

@@ -17,7 +17,7 @@ namespace KerbalConstructionTime
         /// <summary>
         /// If true, will only give a warning message to the user and not fail the validation.
         /// </summary>
-        public bool BypassFacilityRequirements { get; set; } = true;
+        public bool BypassFacilityRequirements { get; set; } = false;
         public bool CheckPartAvailability { get; set; } = true;
         public bool CheckPartConfigs { get; set; } = true;
         public bool CheckAvailableFunds { get; set; } = true;
@@ -102,12 +102,14 @@ namespace KerbalConstructionTime
             if (CheckFacilityRequirements)
             {
                 //Check if vessel fails facility checks but can still be built
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
+                List<string> facilityChecks = blv.MeetsFacilityRequirements(false);
                 if (facilityChecks.Count != 0)
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
                         "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
+                        "Warning! This vessel did not pass the editor checks! " 
+                            + (BypassFacilityRequirements ? "It will still be added to plans, but you cannot build it without rectifying these issues." : string.Empty)
+                            + "\nListed below are the failed checks:\n"
                         + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
                         "Acknowledged",
                         false,

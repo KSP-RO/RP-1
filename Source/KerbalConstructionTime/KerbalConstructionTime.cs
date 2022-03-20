@@ -649,8 +649,7 @@ namespace KerbalConstructionTime
                         for (int i = currentLC.PadConstructions.Count - 1; i >= 0; i--)
                             currentLC.PadConstructions[i].IncrementProgress(UTDiff);
 
-                        if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                            currentLC.PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
+                        currentLC.PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                     }
 
                     for (int i = ksc.LCConstructions.Count - 1; i >= 0; i--)
@@ -659,11 +658,8 @@ namespace KerbalConstructionTime
                     for (int i = ksc.FacilityUpgrades.Count - 1; i >= 0; i--)
                         ksc.FacilityUpgrades[i].IncrementProgress(UTDiff);
 
-                    if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                    {
-                        ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
-                        ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
-                    }
+                    ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
+                    ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                 }
 
                 int techCount = KCTGameStates.TechList.Count;

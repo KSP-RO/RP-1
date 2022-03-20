@@ -634,7 +634,7 @@ namespace KerbalConstructionTime
                             if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
                                 && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) is BuildListVessel blv)
                             {
-                                blv.LaunchSiteID = -1;
+                                blv.LaunchSiteIndex = -1;
                             }
                             Profiler.EndSample();
                         }

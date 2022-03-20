@@ -154,6 +154,8 @@ namespace KerbalConstructionTime
         public void RecalculateBuildRates()
         {
             _rate = Utilities.GetBuildRate(0, this, true);
+            foreach (var blv in BuildList)
+                blv.UpdateBuildRate();
 
             KCTDebug.Log($"Build rate for {Name} = {_rate:N3}");
         }
@@ -228,6 +230,7 @@ namespace KerbalConstructionTime
             BuildListVessel blv = listItem.ToBuildListVessel();
             blv.ShipNode = cn.GetNode("ShipNode");
             blv.LC = this;
+            blv.UpdateBuildRate();
             return blv;
         }
 

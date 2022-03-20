@@ -140,11 +140,11 @@ namespace KerbalConstructionTime
 
                     foreach (BuildListVessel vessel in currentLC.Warehouse)
                     {
-                        if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
+                        if (vessel.LaunchSiteIndex > idx) vessel.LaunchSiteIndex--;
                     }
                     foreach (BuildListVessel vessel in currentLC.BuildList)
                     {
-                        if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
+                        if (vessel.LaunchSiteIndex > idx) vessel.LaunchSiteIndex--;
                     }
                     foreach (PadConstruction building in currentLC.PadConstructions)
                     {

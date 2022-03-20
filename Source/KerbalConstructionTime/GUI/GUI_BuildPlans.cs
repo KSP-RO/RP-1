@@ -225,7 +225,7 @@ namespace KerbalConstructionTime
             {
                 SuccessAction = AddVesselToPlansList,
                 CheckAvailableFunds = false,
-                CheckFacilityRequirements = false
+                BypassFacilityRequirements = true
             };
             v.ProcessVessel(blv);
         }

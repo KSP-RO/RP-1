@@ -837,16 +837,9 @@ namespace KerbalConstructionTime
 
         public void IncrementProgress(double UTDiff)
         {
-            if (BuildRate > 0d)
-            {
-                LC.EfficiencyPersonnel = Math.Min(PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency,
-                    LC.EfficiencyPersonnel + PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)LC.EfficiencyPersonnel) *
-                        UTDiff / (365d * 86400d));
-
-                Progress += _buildRate * UTDiff;
-                if (IsComplete())
-                    Utilities.MoveVesselToWarehouse(this);
-            }
+            Progress += _buildRate * UTDiff;
+            if (IsComplete())
+                Utilities.MoveVesselToWarehouse(this);
         }
     }
 

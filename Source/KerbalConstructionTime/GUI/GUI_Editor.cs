@@ -99,6 +99,13 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.Label(techLabel);
             }
+
+            if (KCTGameStates.EditorIsHumanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
+            {
+                GUILayout.Label("WARNING: Cannot build vessel!");
+                GUILayout.Label("Select a human-rated Launch Complex.");
+            }
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {

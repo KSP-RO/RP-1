@@ -548,7 +548,25 @@ namespace KerbalConstructionTime
                 failedReasons.Add("Vessel is human-rated but launch complex is not");
             }
 
+            if (HasClamps() && !selectedLC.IsPad)
+            {
+                failedReasons.Add("Has launch clamps/GSE but is launching from runway");
+            }
+
             return failedReasons;
+        }
+
+        private bool HasClamps()
+        {
+            foreach (var p in ExtractedPartNodes)
+            {
+                AvailablePart aPart = Utilities.GetAvailablePartByName(Utilities.GetPartNameFromNode(p));
+
+                if (aPart != null && (aPart.partPrefab.Modules.Contains<LaunchClamp>() || aPart.partPrefab.HasTag("PadInfrastructure") ))
+                    return true;
+            }
+
+            return false;
         }
 
         public ListType FindTypeFromLists()

@@ -38,16 +38,27 @@ namespace KerbalConstructionTime
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
 
+        private LCItem _lc = null;
         public LCItem LC
         {
             get
             {
-                foreach (var ksc in KCTGameStates.KSCs)
-                    foreach (var lc in ksc.LaunchComplexes)
-                        if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
-                            return lc;
+                if (_lc == null)
+                {
+                    foreach (var ksc in KCTGameStates.KSCs)
+                        foreach (var lc in ksc.LaunchComplexes)
+                            if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
+                            {
+                                _lc = lc;
+                                break;
+                            }
+                }
                 
-                return null;
+                return _lc;
+            }
+            set
+            {
+                _lc = value;
             }
         }
 
@@ -69,6 +80,8 @@ namespace KerbalConstructionTime
             LaunchPadID = launchSite;
             KCTDebug.Log("New recon_rollout at launchsite: " + LaunchPadID);
             Progress = 0;
+            _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+
             Mass = Math.Max(0.001d, vessel.GetTotalMass());
             try
             {
@@ -94,6 +107,7 @@ namespace KerbalConstructionTime
             LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.LaunchSite : launchSite;    //For when we add custom launchpads
             Progress = 0;
             Mass = vessel.GetTotalMass();
+            _lc = vessel.LC;
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
             if (type == RolloutReconType.Rollout)
@@ -121,7 +135,9 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double buildRate = Math.Min(Utilities.GetBuildRate(0, LC), PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Mass);
+            double buildRate = Utilities.GetBuildRate(0, LC);
+            if (RRType != RolloutReconType.Recovery)
+                buildRate = Math.Min(buildRate, PresetManager.Instance.ActivePreset.GeneralSettings.MaxBuildRatePerTon * Mass);
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

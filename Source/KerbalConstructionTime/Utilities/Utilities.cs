@@ -288,7 +288,7 @@ namespace KerbalConstructionTime
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
             {
-                return MathParser.ParseBuildRateFormula(index, LC, useCap, 0) * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
+                return MathParser.ParseBuildRateFormula(index, LC, useCap, 0);
             }
 
             return useCap ? LC.Rate : LC.RateHRCapped;
@@ -299,7 +299,7 @@ namespace KerbalConstructionTime
             if (type == BuildListVessel.ListType.VAB ? !LC.IsPad : LC.IsPad)
                 return 0.0001d;
 
-            return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta) * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
+            return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta);
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -2180,7 +2180,7 @@ namespace KerbalConstructionTime
             if (cap1 == cap2 && cap1 == double.MaxValue)
                 return double.MaxValue;
 
-            return (cap1 * 0.75d + cap2 * 0.25d) * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
+            return (cap1 * 0.75d + cap2 * 0.25d);
         }
 
         public static void ChangeEngineers(LCItem currentLC, int delta)

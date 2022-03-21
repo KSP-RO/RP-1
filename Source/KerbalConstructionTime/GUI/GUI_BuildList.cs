@@ -241,8 +241,7 @@ namespace KerbalConstructionTime
             //    GUIStates.ShowBLPlus = false;
             //    _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
             //}
-            // TODO: Color button based on something?
-            if (GUILayout.Button("Personnel" /*, AvailablePoints > 0 ? _greenButton : GUI.skin.button*/))
+            if (GUILayout.Button("Personnel" , KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button))
             {
                 GUIStates.ShowPersonnelWindow = true;
                 GUIStates.ShowBuildList = false;
@@ -1157,9 +1156,7 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.FlexibleSpace();
-            string padTxt = $"{activePad.name} ({activePad.SupportedMassAsPrettyText})";
-            string padDesc = $"Size limit: {activePad.SupportedSizeAsPrettyText}";
-            GUILayout.Label(new GUIContent(padTxt, padDesc));
+            GUILayout.Label(new GUIContent(activePad.name, "Uses Launch Complex limits"));
 
             if (GUILayout.Button(new GUIContent("Rename", "Rename pad"), GUILayout.ExpandWidth(false)))
             {

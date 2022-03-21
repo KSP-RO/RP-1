@@ -874,7 +874,7 @@ namespace KerbalConstructionTime
 
         public void IncrementProgress(double UTDiff)
         {
-            Progress += _buildRate * UTDiff;
+            Progress += BuildRate * UTDiff;
             if (IsComplete())
                 Utilities.MoveVesselToWarehouse(this);
         }

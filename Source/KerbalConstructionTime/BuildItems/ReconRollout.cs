@@ -48,7 +48,7 @@ namespace KerbalConstructionTime
                 {
                     foreach (var ksc in KCTGameStates.KSCs)
                         foreach (var lc in ksc.LaunchComplexes)
-                            if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
+                            if (lc.Recon_Rollout.Contains(this))
                             {
                                 _lc = lc;
                                 break;
@@ -91,7 +91,7 @@ namespace KerbalConstructionTime
                 var blv = new BuildListVessel(vessel);
                 IsHumanRated = blv.IsHumanRated;
                 BP = MathParser.ParseReconditioningFormula(blv, true);
-                VesselBP = blv.BuildPoints;
+                VesselBP = blv.BuildPoints + blv.IntegrationPoints;
             }
             catch
             {
@@ -114,7 +114,7 @@ namespace KerbalConstructionTime
             Progress = 0;
             Mass = vessel.GetTotalMass();
             _lc = vessel.LC;
-            VesselBP = vessel.BuildPoints;
+            VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;
             IsHumanRated = vessel.IsHumanRated;
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 
@@ -146,6 +146,7 @@ namespace KerbalConstructionTime
             double buildRate = Utilities.GetBuildRate(0, LC, IsHumanRated, false);
             if (RRType != RolloutReconType.Reconditioning)
                 buildRate = Math.Min(buildRate, Utilities.GetBuildRateCap(VesselBP, Mass, LC));
+            buildRate *= LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

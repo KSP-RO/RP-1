@@ -31,7 +31,8 @@ namespace KerbalConstructionTime
         //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int UnassignedPersonnel = 0;
         public static int RDPersonnel = 0;
-        public static double EfficiencyRDPersonnel = 1d;
+        public static double EfficiencyRDPersonnel = 0.5d;
+        public static double EfficiecnyEngineers = 0.5d;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
 

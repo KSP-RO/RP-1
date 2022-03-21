@@ -18,16 +18,23 @@ namespace KerbalConstructionTime
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
 
+        private LCItem _lc = null;
         public LCItem LC
         {
             get
             {
-                foreach (var ksc in KCTGameStates.KSCs)
-                    foreach (var lc in ksc.LaunchComplexes)
-                        if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
-                            return lc;
+                if (_lc == null)
+                {
+                    foreach (var ksc in KCTGameStates.KSCs)
+                        foreach (var lc in ksc.LaunchComplexes)
+                            if (lc.AirlaunchPrep.Contains(this))
+                            {
+                                _lc = lc;
+                                break;
+                            }
+                }
 
-                return null;
+                return _lc;
             }
         }
 
@@ -53,12 +60,13 @@ namespace KerbalConstructionTime
             Cost = MathParser.ParseAirlaunchCostFormula(vessel);
             Mass = vessel.GetTotalMass();
             IsHumanRated = vessel.IsHumanRated;
-            VesselBP = vessel.BuildPoints;
+            VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;
         }
 
         public double GetBuildRate()
         {
-            double buildRate = Math.Min(Utilities.GetBuildRate(0, LC, IsHumanRated, false), Utilities.GetBuildRateCap(VesselBP, Mass, LC));
+            double buildRate = Math.Min(Utilities.GetBuildRate(0, LC, IsHumanRated, false), Utilities.GetBuildRateCap(VesselBP, Mass, LC))
+                * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;

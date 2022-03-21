@@ -794,7 +794,10 @@ namespace KerbalConstructionTime
                     KCTDebug.Log("Showing first start.");
                     KCTGameStates.IsFirstStart = false;
                     KCT_GUI.GUIStates.ShowFirstRun = true;
-                    KCTGameStates.ActiveKSC.EnsureStartingLaunchComplexes();
+                    foreach (var ksc in KCTGameStates.KSCs)
+                        ksc.EnsureStartingLaunchComplexes();
+
+                    KCTGameStates.UnassignedPersonnel = PresetManager.Instance.StartingPesronnel(HighLogic.CurrentGame.Mode);
                 }
 
                 foreach (KSCItem ksc in KCTGameStates.KSCs)

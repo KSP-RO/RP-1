@@ -613,7 +613,7 @@ namespace KerbalConstructionTime
                         if (!currentLC.IsOperational)
                             continue;
 
-                        if (!currentLC.CanModify &&  currentLC.Personnel > 0)
+                        if (currentLC.Personnel > 0 && currentLC.IsActive)
                         {
                             double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
                             double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyPersonnel);
@@ -794,7 +794,10 @@ namespace KerbalConstructionTime
                     KCTDebug.Log("Showing first start.");
                     KCTGameStates.IsFirstStart = false;
                     KCT_GUI.GUIStates.ShowFirstRun = true;
-                    KCTGameStates.ActiveKSC.EnsureStartingLaunchComplexes();
+                    foreach (var ksc in KCTGameStates.KSCs)
+                        ksc.EnsureStartingLaunchComplexes();
+
+                    KCTGameStates.UnassignedPersonnel = PresetManager.Instance.StartingPesronnel(HighLogic.CurrentGame.Mode);
                 }
 
                 foreach (KSCItem ksc in KCTGameStates.KSCs)

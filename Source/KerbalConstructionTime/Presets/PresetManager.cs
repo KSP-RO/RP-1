@@ -160,6 +160,21 @@ namespace KerbalConstructionTime
                 return ActivePreset.StartUpgrades[2];
             }
         }
+        public int StartingPesronnel(Game.Modes mode)
+        {
+            if (mode == Game.Modes.CAREER)
+            {
+                return ActivePreset.StartPersonnel[0];
+            }
+            else if (mode == Game.Modes.SCIENCE_SANDBOX)
+            {
+                return ActivePreset.StartPersonnel[1];
+            }
+            else
+            {
+                return ActivePreset.StartPersonnel[2];
+            }
+        }
     }
 
     public class KCT_Preset
@@ -189,6 +204,23 @@ namespace KerbalConstructionTime
                             _upgradesInternal[i] = 0;
                 }
                 return _upgradesInternal;
+            }
+        }
+
+        private int[] _personnelInternal;
+        public int[] StartPersonnel
+        {
+            get
+            {
+                if (_personnelInternal == null)
+                {
+                    _personnelInternal = new int[3] { 0, 0, 0 }; //career, science, sandbox
+                    string[] personnel = GeneralSettings.StartingPersonnel.Split(',');
+                    for (int i = 0; i < 3; i++)
+                        if (!int.TryParse(personnel[i], out _personnelInternal[i]))
+                            _personnelInternal[i] = 0;
+                }
+                return _personnelInternal;
             }
         }
 
@@ -332,6 +364,7 @@ namespace KerbalConstructionTime
         public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true;
         [Persistent]
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
+            StartingPersonnel = "20, 50, 10000",
             VABRecoveryTech = null;
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;

@@ -48,7 +48,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.All(lc => lc.IsEmpty);
+        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 2 && LaunchComplexes.All(lc => lc.IsEmpty);
 
         public void EnsureStartingLaunchComplexes()
         {
@@ -221,7 +221,6 @@ namespace KerbalConstructionTime
 
             Constructions.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
             _allowRecalcConstructions = true;
-            RecalculateBuildRates(true);
 
             return this;
         }

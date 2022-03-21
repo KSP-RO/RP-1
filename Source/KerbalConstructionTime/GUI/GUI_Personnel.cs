@@ -40,6 +40,12 @@ namespace KerbalConstructionTime
             bool isCostCacheInvalid = _buyModifier != oldByModifier;
 
             GUILayout.BeginVertical();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Unassigned:", GUILayout.Width(120));
+            GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
             GUILayout.Label(TotalEngineers.ToString("N0"), GetLabelRightAlignStyle());
@@ -209,14 +215,14 @@ namespace KerbalConstructionTime
 
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
-                    workers = Math.Max(_buyModifierMultsPersonnel[0], (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost));
+                    workers = Math.Max(_buyModifierMultsPersonnel[0], KCTGameStates.UnassignedPersonnel + (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost));
 
-                _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * workers;
+                _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * Math.Max(0, workers - KCTGameStates.UnassignedPersonnel);
 
                 
                 canAfford = Funding.Instance.Funds >= _fundsCost;
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                if (GUILayout.Button($"Hire {workers:N0}: {_fundsCost:N0} Funds", style, GUILayout.ExpandWidth(false)) && canAfford)
+                if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
                     Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
                     if (research)
@@ -230,6 +236,7 @@ namespace KerbalConstructionTime
                         ksc.Personnel += workers;
                         ksc.RecalculateBuildRates(false);
                     }
+                    KCTGameStates.UnassignedPersonnel = Math.Max(0, KCTGameStates.UnassignedPersonnel - workers);
 
                     _fundsCost = int.MinValue;
                 }

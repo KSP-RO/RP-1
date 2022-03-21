@@ -35,7 +35,8 @@ namespace KerbalConstructionTime
 
         public Vector3 ShipSize = Vector3.zero;
 
-        public double BuildRate => _buildRate < 0 ? UpdateBuildRate() : _buildRate;
+        public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
+            * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
 
         public double TimeLeft
         {

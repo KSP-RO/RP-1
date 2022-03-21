@@ -382,7 +382,7 @@ namespace KerbalConstructionTime
                 string selection = v.craftSubfolder.Contains("SPH") ? "SPH" : "VAB";
                 KCT_GUI.ToggleVisibility(true);
                 KCT_GUI.SelectList("");
-                KCT_GUI.SelectList("Vessels");
+                KCT_GUI.SelectList("Operations");
                 KCTDebug.Log($"Opening the GUI to the {selection}");
             }
         }

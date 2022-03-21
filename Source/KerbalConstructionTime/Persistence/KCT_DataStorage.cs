@@ -22,6 +22,7 @@ namespace KerbalConstructionTime
         [Persistent] public int RDPersonnel;
         [Persistent] public int UnassignedPersonnel;
         [Persistent] public double EfficiencyRDPersonnel = 1d;
+        [Persistent] public double EfficiecnyEngineers = 1d;
 
         public override void OnDecodeFromConfigNode()
         {
@@ -31,6 +32,7 @@ namespace KerbalConstructionTime
             KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
             KCTGameStates.RDPersonnel = RDPersonnel;
             KCTGameStates.EfficiencyRDPersonnel = EfficiencyRDPersonnel;
+            KCTGameStates.EfficiecnyEngineers = EfficiecnyEngineers;
         }
 
         public override void OnEncodeToConfigNode()
@@ -42,6 +44,7 @@ namespace KerbalConstructionTime
             RDPersonnel = KCTGameStates.RDPersonnel;
             UnassignedPersonnel = KCTGameStates.UnassignedPersonnel;
             EfficiencyRDPersonnel = KCTGameStates.EfficiencyRDPersonnel;
+            EfficiecnyEngineers = KCTGameStates.EfficiecnyEngineers;
         }
     }
 }

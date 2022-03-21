@@ -71,13 +71,13 @@ namespace KerbalConstructionTime
                 if (!Utilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log("Building new launchpad!");
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(_newName, fractionalPadLvl, curLC.MassMax, curLC.SizeMax));
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(_newName, fractionalPadLvl));
                 }
                 else if (Funding.CanAfford((float)curPadCost))
                 {
                     KCTDebug.Log("Building new launchpad!");
                     Utilities.SpendFunds(curPadCost, TransactionReasons.StructureConstruction);
-                    var lp = new KCT_LaunchPad(_newName, fractionalPadLvl, curLC.MassMax, curLC.SizeMax);
+                    var lp = new KCT_LaunchPad(_newName, fractionalPadLvl);
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
 
                     var padConstr = new PadConstruction

@@ -115,9 +115,9 @@ namespace KerbalConstructionTime
             int delta;
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, -delta); recalc = true; }
+            if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, -delta); recalc = true; }
             GUILayout.Label($"  {currentLC.Personnel:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
-            if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { ChangeEngineers(currentLC, delta); recalc = true; }
+            if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, delta); recalc = true; }
             GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
@@ -196,7 +196,7 @@ namespace KerbalConstructionTime
                 {
                     if (research)
                     {
-                        ChangeResearchers(-workers);
+                        Utilities.ChangeResearchers(-workers);
                         KCTGameStates.UpdateTechTimes();
                     }
                     else
@@ -221,7 +221,7 @@ namespace KerbalConstructionTime
                     Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
                     if (research)
                     {
-                        ChangeResearchers(workers);
+                        Utilities.ChangeResearchers(workers);
                         KCTGameStates.UpdateTechTimes();
                     }
                     else
@@ -261,25 +261,6 @@ namespace KerbalConstructionTime
                 break;
             }
             return $"{signChar}{mod:N0}";
-        }
-
-        private static void ChangeEngineers(LCItem currentLC, int delta)
-        {
-            int oldNum = currentLC.Personnel;
-            double newNum = oldNum + delta;
-            if (delta > 0)
-                currentLC.EfficiencyPersonnel = ((currentLC.EfficiencyPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / newNum;
-            currentLC.Personnel += delta;
-        }
-
-        private static void ChangeResearchers(int delta)
-        {
-            int oldNum = KCTGameStates.RDPersonnel;
-            double newNum = oldNum + delta;
-            if (delta > 0)
-                KCTGameStates.EfficiencyRDPersonnel = ((KCTGameStates.EfficiencyRDPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / newNum;
-
-            KCTGameStates.RDPersonnel += delta;
         }
 
         private static GUIStyle GetCannotAffordStyle()

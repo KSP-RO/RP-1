@@ -28,7 +28,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    double rate = Utilities.GetConstructionRate(LC.KSC);
+                    double rate = Utilities.GetConstructionRate(LC.KSC) * KCTGameStates.EfficiecnyEngineers;
                     return (BP - Progress) / rate;
                 }
             }
@@ -70,13 +70,13 @@ namespace KerbalConstructionTime
         public double GetBuildRate()
         {
             if (_buildRate < 0)
-                _buildRate = UpdateBuildRate(LC.KSC.Constructions.IndexOf(this));
-            return _buildRate;
+                UpdateBuildRate(LC.KSC.Constructions.IndexOf(this));
+            return _buildRate * KCTGameStates.EfficiecnyEngineers;
         }
 
         public double UpdateBuildRate(int index)
         {
-            double rate = MathParser.ParseConstructionRateFormula(index, LC.KSC, 0);
+            double rate = Utilities.GetConstructionRate(index, LC.KSC, 0);
             if (rate < 0)
                 rate = 0;
 

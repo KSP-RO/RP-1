@@ -18,7 +18,7 @@ namespace KerbalConstructionTime
         public static void GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out float minTonnage, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
         {
             fractionalPadLvl = 0f;
-            if (tonnageLimit > 0f)
+            if (tonnageLimit != float.MaxValue)
             {
                 minTonnage = Mathf.Floor(tonnageLimit * 0.75f);
                 if (minTonnage < 12f)
@@ -152,7 +152,7 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
             }
             else
-                tonnageLimit = -1f;
+                tonnageLimit = float.MaxValue;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));
@@ -234,6 +234,7 @@ namespace KerbalConstructionTime
                     if (isModify)
                     {
                         lc = activeLC;
+                        lc.Personnel = 0;
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                     }
                     else

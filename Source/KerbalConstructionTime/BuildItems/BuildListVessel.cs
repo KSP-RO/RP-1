@@ -533,17 +533,14 @@ namespace KerbalConstructionTime
                     KCTGameStates.ActiveKSC.Hangar :
                     null;
 
-            if (selectedLC.MassMax >= 0)
+            double totalMass = GetTotalMass();
+            if (totalMass > selectedLC.MassMax)
             {
-                double totalMass = GetTotalMass();
-                if (totalMass > selectedLC.MassMax)
-                {
-                    failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.MassMax:N}");
-                }
-                if (!skipMinMass && totalMass < selectedLC.MassMin)
-                {
-                    failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
-                }
+                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.MassMax:N}");
+            }
+            if (!skipMinMass && totalMass < selectedLC.MassMin)
+            {
+                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
             }
             // Facility doesn't matter here.
             CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.SizeMax);

@@ -26,16 +26,6 @@ namespace KerbalConstructionTime
         [Persistent] public bool isOperational = false;
 
         /// <summary>
-        /// Max mass in tons that can be launched from this pad
-        /// </summary>
-        [Persistent] public float supportedMass = 0;
-
-        /// <summary>
-        /// Max size of the vessel that can be launched from this pad (width x height x width)
-        /// </summary>
-        [Persistent] public Vector3 supportedSize;
-
-        /// <summary>
         /// Name given to the launch pad. Is also used for associating rollout/reconditioning with pads.
         /// </summary>
         [Persistent] public string name = "LaunchPad";
@@ -46,28 +36,6 @@ namespace KerbalConstructionTime
         [Persistent] public string launchSiteName = "LaunchPad";
 
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
-
-        public float SupportedMass
-        {
-            get
-            {
-                EnsureMassAndSizeInitialized();
-                return supportedMass;
-            }
-        }
-
-        public Vector3 SupportedSize
-        {
-            get
-            {
-                EnsureMassAndSizeInitialized();
-                return supportedSize;
-            }
-        }
-
-        public string SupportedMassAsPrettyText => SupportedMass == float.MaxValue ? "unlimited" : $"{SupportedMass:#.#}t";
-
-        public string SupportedSizeAsPrettyText => SupportedSize.y == float.MaxValue ? "unlimited" : $"{SupportedSize.x:#.#}x{SupportedSize.y:#.#}m";
 
         public bool IsDestroyed
         {
@@ -100,8 +68,6 @@ namespace KerbalConstructionTime
             fractionalLevel = lvl;
             level = lvl;
             isOperational = true;
-
-            EnsureMassAndSizeInitialized();
         }
 
         /// <summary>
@@ -111,14 +77,12 @@ namespace KerbalConstructionTime
         /// <param name="lvl">0-based level, can be fractional</param>
         /// <param name="supportedMass"></param>
         /// <param name="supportedSize"></param>
-        public KCT_LaunchPad(string name, float lvl, float supportedMass, Vector3 supportedSize)
+        public KCT_LaunchPad(string name, float lvl)
         {
             this.name = name;
             fractionalLevel = lvl;
             level = (int)lvl;
             isOperational = false;
-            this.supportedMass = supportedMass;
-            this.supportedSize = supportedSize;
         }
 
         public bool Delete(out string failReason)
@@ -204,8 +168,6 @@ namespace KerbalConstructionTime
         {
             try
             {
-                EnsureMassAndSizeInitialized();
-
                 int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
                 KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
                 KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex = idx;
@@ -224,23 +186,6 @@ namespace KerbalConstructionTime
             catch (Exception ex)
             {
                 KCTDebug.LogError("Error while calling SetActive: " + ex);
-            }
-        }
-
-        private void EnsureMassAndSizeInitialized()
-        {
-            if (supportedMass == default || supportedSize == default)
-            {
-                var upgdFacility = GetUpgradeableFacilityReference();
-                if (upgdFacility == null) return;   // Looks like facility upgrades are not initialized yet. Need to retry at a later time.
-
-                float normalizedLevel = (float)level / (float)upgdFacility.MaxLevel;
-                float massLimit = GameVariables.Instance.GetCraftMassLimit(normalizedLevel, true);
-                Vector3 sizeLimit = GameVariables.Instance.GetCraftSizeLimit(normalizedLevel, true);
-
-                supportedMass = massLimit;
-                supportedSize = sizeLimit;
-                fractionalLevel = level;
             }
         }
 
@@ -298,8 +243,6 @@ namespace KerbalConstructionTime
 
             fractionalLevel = level;
             if (level >= 0) isOperational = true;
-
-            EnsureMassAndSizeInitialized();
         }
 
         private List<DestructibleBuilding> GetDestructibleFacilityReferences()

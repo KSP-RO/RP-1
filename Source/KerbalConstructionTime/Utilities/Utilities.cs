@@ -307,7 +307,7 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated), GetBuildRateCap(ship.BuildPoints, ship.GetTotalMass(), ship.LC));
+            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated), GetBuildRateCap(ship.BuildPoints + ship.IntegrationPoints, ship.GetTotalMass(), ship.LC));
         }
 
         public static double GetConstructionRate(KSCItem KSC)
@@ -1296,9 +1296,9 @@ namespace KerbalConstructionTime
             double effCost = GetEffectiveCost(ship.Parts, out KCTGameStates.EditorIsHumanRated);
             KCTGameStates.EditorBuildPoints = GetBuildPoints(effCost);
             var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL, KCTGameStates.EditorIsHumanRated);
-
-            KCTGameStates.EditorIntegrationPoints = MathParser.ParseIntegrationTimeFormula(kctVessel);
-            KCTGameStates.EditorIntegrationCosts = MathParser.ParseIntegrationCostFormula(kctVessel);
+            KCTGameStates.EditorShipMass = kctVessel.GetTotalMass();
+            KCTGameStates.EditorIntegrationPoints = kctVessel.IntegrationPoints;
+            KCTGameStates.EditorIntegrationCosts = kctVessel.IntegrationCost;
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
@@ -2141,7 +2141,7 @@ namespace KerbalConstructionTime
 
         public static double GetBuildRateCap(double bp, double mass, LCItem LC)
         {
-            double cap1 = bp > 0 ? 0.0000002755731922d * bp : double.MaxValue;
+            double cap1 = bp > 0 ? (1d / (86400d * 42d)) * bp : double.MaxValue;
             double cap2 = mass > 0 ? Math.Pow(mass, 0.75d) * 0.05d : double.MaxValue;
             if (cap1 == cap2 && cap1 == double.MaxValue)
                 return double.MaxValue;

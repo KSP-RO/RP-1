@@ -741,7 +741,7 @@ namespace KerbalConstructionTime
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
 
-            BuildListVessel.ListType type = launchSite == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
 
             if ((type == BuildListVessel.ListType.VAB) != KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
             {

@@ -221,7 +221,6 @@ namespace KerbalConstructionTime
 
             Constructions.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
             _allowRecalcConstructions = true;
-            RecalculateBuildRates(true);
 
             return this;
         }

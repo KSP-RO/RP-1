@@ -1156,9 +1156,7 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.FlexibleSpace();
-            string padTxt = $"{activePad.name} ({activePad.SupportedMassAsPrettyText})";
-            string padDesc = $"Size limit: {activePad.SupportedSizeAsPrettyText}";
-            GUILayout.Label(new GUIContent(padTxt, padDesc));
+            GUILayout.Label(new GUIContent(activePad.name, "Uses Launch Complex limits"));
 
             if (GUILayout.Button(new GUIContent("Rename", "Rename pad"), GUILayout.ExpandWidth(false)))
             {

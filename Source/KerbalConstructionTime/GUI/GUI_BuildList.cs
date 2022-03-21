@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
         private static int _mouseOnAirlaunchButton = -1;
-        private static bool _isVesselsSelected, _isConstructionSelected, _isTechSelected;
+        private static bool _isOperationsSelected, _isConstructionSelected, _isResearchSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
@@ -32,23 +32,23 @@ namespace KerbalConstructionTime
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
             switch (list)
             {
-                case "Vessels":
-                    _isVesselsSelected = !_isVesselsSelected;
+                case "Operations":
+                    _isOperationsSelected = !_isOperationsSelected;
                     _isConstructionSelected = false;
-                    _isTechSelected = false;
+                    _isResearchSelected = false;
                     break;
                 case "Construction":
-                    _isVesselsSelected = false;
+                    _isOperationsSelected = false;
                     _isConstructionSelected = !_isConstructionSelected;
-                    _isTechSelected = false;
+                    _isResearchSelected = false;
                     break;
-                case "Tech":
-                    _isVesselsSelected = false;
+                case "Research":
+                    _isOperationsSelected = false;
                     _isConstructionSelected = false;
-                    _isTechSelected = !_isTechSelected;
+                    _isResearchSelected = !_isResearchSelected;
                     break;
                 default:
-                    _isVesselsSelected = _isConstructionSelected = _isTechSelected = false;
+                    _isOperationsSelected = _isConstructionSelected = _isResearchSelected = false;
                     break;
             }
         }
@@ -218,9 +218,9 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
 
             
-            bool vesselsSelectedNew = GUILayout.Toggle(_isVesselsSelected, "Vessels", GUI.skin.button);
-            if (vesselsSelectedNew != _isVesselsSelected)
-                SelectList("Vessels");
+            bool operationsSelectedNew = GUILayout.Toggle(_isOperationsSelected, "Operations", GUI.skin.button);
+            if (operationsSelectedNew != _isOperationsSelected)
+                SelectList("Operations");
 
             bool constructionSelectedNew = false;
             if (Utilities.CurrentGameIsCareer())
@@ -230,10 +230,10 @@ namespace KerbalConstructionTime
 
             bool techSelectedNew = false;
             if (Utilities.CurrentGameHasScience())
-                techSelectedNew = GUILayout.Toggle(_isTechSelected, "Tech", GUI.skin.button);
+                techSelectedNew = GUILayout.Toggle(_isResearchSelected, "Research", GUI.skin.button);
 
-            if (techSelectedNew != _isTechSelected)
-                SelectList("Tech");
+            if (techSelectedNew != _isResearchSelected)
+                SelectList("Research");
             //if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
             //{
             //    GUIStates.ShowUpgradeWindow = true;
@@ -264,7 +264,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            if (_isVesselsSelected)
+            if (_isOperationsSelected)
             {
                 RenderCombinedBuildList();
             }
@@ -272,7 +272,7 @@ namespace KerbalConstructionTime
             {
                 RenderConstructionList();
             }
-            else if (_isTechSelected)
+            else if (_isResearchSelected)
             {
                 RenderTechList();
             }
@@ -1060,7 +1060,7 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.width = 300;
             }
             bool canModify = activeLC.CanModify;
-            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads, though vessels can be in storage.";
+            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
             if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
@@ -1319,7 +1319,7 @@ namespace KerbalConstructionTime
                 MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, 300, options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
-                ResetBLWindow();
+                ResetBLWindow(false);
             }
 
             if (!onPad && GUILayout.Button("Edit"))
@@ -1379,7 +1379,7 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished && GUILayout.Button("Move to Top"))
             {
-                if (_isVesselsSelected)
+                if (_isOperationsSelected)
                 {
                     if (activeLC.BuildList.Remove(b))
                         activeLC.BuildList.Insert(0, b);

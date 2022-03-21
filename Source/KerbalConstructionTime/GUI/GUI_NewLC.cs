@@ -175,7 +175,8 @@ namespace KerbalConstructionTime
             if (!isModify || activeLC.IsPad)
             {
                 GUILayout.BeginHorizontal();
-                _isHumanRated = GUILayout.Toggle(_isHumanRated, "Human-Rated");
+                GUILayout.Label(" ");
+                _isHumanRated = GUILayout.Toggle(_isHumanRated, "Human-Rated", GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
             }
 

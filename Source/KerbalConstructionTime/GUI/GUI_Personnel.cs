@@ -111,9 +111,10 @@ namespace KerbalConstructionTime
             LCItem currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Engineers:", GUILayout.Width(90));
-            GUILayout.Label(KSC.Personnel.ToString("N0"), GetLabelRightAlignStyle());
-            GUILayout.Label($"Free for Construction: {KSC.FreePersonnel} ({Utilities.GetConstructionRate(KSC):N2} BP/sec)", GetLabelRightAlignStyle());
+            GUILayout.Label("Engineers:", GUILayout.ExpandWidth(false));
+            GUILayout.Label(KSC.Personnel.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(30));
+            double cRate = Utilities.GetConstructionRate(KSC);
+            GUILayout.Label($"Free for Construction: {KSC.FreePersonnel} ({cRate:N2} => {(cRate * KCTGameStates.EfficiecnyEngineers):N2} BP/sec)", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             RenderHireFire(false);
@@ -138,8 +139,8 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}% (LC) x {(KCTGameStates.EfficiecnyEngineers*100d):N0}% (global)");
-            double rate = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated);
-            double rateFull = rate / currentLC.EfficiencyPersonnel / KCTGameStates.EfficiecnyEngineers;
+            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated);
+            double rate = rateFull * currentLC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
             GUILayout.Label($"Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
@@ -198,7 +199,7 @@ namespace KerbalConstructionTime
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.Personnel;
+                int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.FreePersonnel;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = limit;

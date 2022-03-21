@@ -46,7 +46,7 @@ namespace KerbalConstructionTime
         {
             double buildPoints = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            double rate = Utilities.GetBuildRate(0, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorIsHumanRated, false);
+            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorIsHumanRated, 0);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
@@ -120,7 +120,7 @@ namespace KerbalConstructionTime
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             }
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Show/Hide Build List"))
+            if (GUILayout.Button("Show/Hide Management"))
             {
                 GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
             }

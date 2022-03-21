@@ -241,8 +241,7 @@ namespace KerbalConstructionTime
             //    GUIStates.ShowBLPlus = false;
             //    _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
             //}
-            // TODO: Color button based on something?
-            if (GUILayout.Button("Personnel" /*, AvailablePoints > 0 ? _greenButton : GUI.skin.button*/))
+            if (GUILayout.Button("Personnel" , KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button))
             {
                 GUIStates.ShowPersonnelWindow = true;
                 GUIStates.ShowBuildList = false;

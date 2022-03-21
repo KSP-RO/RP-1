@@ -180,6 +180,8 @@ namespace KerbalConstructionTime
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
                 _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                if (!_lc.IsPad)
+                    KCTDebug.LogError($"ERROR: Tried to add vessel {ShipName} to LC {_lc.Name} but vessel is type VAB!");
             }
             else if (s.shipFacility == EditorFacility.SPH)
             {
@@ -189,6 +191,10 @@ namespace KerbalConstructionTime
             }
             else
                 Type = ListType.None;
+
+            if(_lc != null && !_lc.IsOperational)
+                KCTDebug.LogError($"ERROR: Tried to add vessel {ShipName} to LC {_lc.Name} but LC is not operational!");
+
             Id = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
             CannotEarnScience = false;

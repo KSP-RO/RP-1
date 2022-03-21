@@ -605,8 +605,12 @@ namespace KerbalConstructionTime
             double UTDiff = UT - _lastRateUpdateUT;
             if (UTDiff > 0)
             {
+                bool skillupEng = false;
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
+                    if (ksc.Constructions.Count > 0 && ksc.FreePersonnel > 0)
+                        skillupEng = true;
+
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
                         LCItem currentLC = ksc.LaunchComplexes[j];
@@ -620,6 +624,8 @@ namespace KerbalConstructionTime
                             double delta = eval * UTDiff / (365d * 86400d);
                             //KCTDebug.Log($"For LC {currentLC.Name}, effic {currentLC.EfficiencyPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
                             currentLC.EfficiencyPersonnel = Math.Min(max, currentLC.EfficiencyPersonnel + delta);
+                            
+                            skillupEng = true;
                         }
 
                         for (int i = currentLC.BuildList.Count - 1; i >= 0; i--)
@@ -660,6 +666,14 @@ namespace KerbalConstructionTime
 
                     ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
                     ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
+                }
+                if (skillupEng)
+                {
+                    double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
+                    double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiecnyEngineers);
+                    double delta = eval * UTDiff / (365d * 86400d);
+                    //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiecnyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
+                    KCTGameStates.EfficiecnyEngineers = Math.Min(max, KCTGameStates.EfficiecnyEngineers + delta);
                 }
 
                 int techCount = KCTGameStates.TechList.Count;

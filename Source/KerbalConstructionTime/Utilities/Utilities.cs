@@ -686,8 +686,10 @@ namespace KerbalConstructionTime
             int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
             if (upgradesToAdd > 0)
             {
-                KCTDebug.Log($"Added {upgradesToAdd} upgrade points");
-                ScreenMessages.PostScreenMessage($"{upgradesToAdd} Upgrade Point{(upgradesToAdd > 1 ? "s" : string.Empty)} Added!", 8f, ScreenMessageStyle.UPPER_LEFT);
+                int numResearchers = upgradesToAdd * 5;
+                ChangeResearchers(numResearchers);
+                KCTDebug.Log($"Added {numResearchers} researchers");
+                ScreenMessages.PostScreenMessage($"Inspired by our latest scientific results, {numResearchers} researchers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
             }
         }
 
@@ -2174,6 +2176,25 @@ namespace KerbalConstructionTime
                 return double.MaxValue;
 
             return (cap1 * 0.75d + cap2 * 0.25d) * LC.EfficiencyPersonnel;
+        }
+
+        public static void ChangeEngineers(LCItem currentLC, int delta)
+        {
+            int oldNum = currentLC.Personnel;
+            double newNum = oldNum + delta;
+            if (delta > 0)
+                currentLC.EfficiencyPersonnel = ((currentLC.EfficiencyPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / newNum;
+            currentLC.Personnel += delta;
+        }
+
+        public static void ChangeResearchers(int delta)
+        {
+            int oldNum = KCTGameStates.RDPersonnel;
+            double newNum = oldNum + delta;
+            if (delta > 0)
+                KCTGameStates.EfficiencyRDPersonnel = ((KCTGameStates.EfficiencyRDPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / newNum;
+
+            KCTGameStates.RDPersonnel += delta;
         }
     }
 }

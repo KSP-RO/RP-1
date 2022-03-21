@@ -152,7 +152,7 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
             }
             else
-                tonnageLimit = -1f;
+                tonnageLimit = float.MaxValue;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));

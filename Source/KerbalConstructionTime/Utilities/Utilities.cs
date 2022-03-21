@@ -746,19 +746,17 @@ namespace KerbalConstructionTime
                 string dialogStr;
                 if (type == BuildListVessel.ListType.VAB)
                 {
-                    dialogStr = "a launch complex";
                     if (KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() == null)
-                        dialogStr = $"{dialogStr}. You must wait for a launch complex to finish building or renovating before you can build this vessel.";
+                        dialogStr = $"a launch complex. You must wait for a launch complex to finish building or renovating before you can build this vessel.";
                     else
-                        dialogStr = $"{dialogStr}. Please switch to a launch complex in the Space Center Management window's Vessels tab and try again.";
+                        dialogStr = $"a launch complex. Please switch to a launch complex in the Space Center Management window's Operations tab and try again.";
                 }
                 else
                 {
-                    dialogStr = "the Hangar";
                     if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
-                        dialogStr = $"{dialogStr}. Please switch to the Hangar in the Space Center Management window's Vessels tab and try again.";
+                        dialogStr = $"the Hangar. Please switch to the Hangar in the Space Center Management window's Operations tab and try again.";
                     else
-                        dialogStr = $"{dialogStr}. You must wait for the Hangar to finish renovating before you can build this vessel.";
+                        dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can build this vessel.";
                 }
 
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
@@ -796,23 +794,21 @@ namespace KerbalConstructionTime
         {
             SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 
-            string type = string.Empty;
             if (blv.Type == BuildListVessel.ListType.VAB)
-            {
                 blv.LaunchSite = "LaunchPad";
-                type = "VAB";
-            }
             else if (blv.Type == BuildListVessel.ListType.SPH)
-            {
                 blv.LaunchSite = "Runway";
-                type = "SPH";
-            }
+
             LCItem lc = blv.LC;
-            // TODO: This shouldn't be needed, and adding it can lead to weird issues?
-            //if (lc == null)
-            //    lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             if (lc != null)
+            {
                 lc.BuildList.Add(blv);
+            }
+            else
+            {
+                KCTDebug.LogError($"Error! Tried to add {blv.ShipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
+                return;
+            }
 
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
@@ -825,7 +821,7 @@ namespace KerbalConstructionTime
                 Debug.LogException(ex);
             }
 
-            KCTDebug.Log($"Added {blv.ShipName} to {type} build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
+            KCTDebug.Log($"Added {blv.ShipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
             KCTDebug.Log("Launch site is " + blv.LaunchSite);
             string text = $"Added {blv.ShipName} to build list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);

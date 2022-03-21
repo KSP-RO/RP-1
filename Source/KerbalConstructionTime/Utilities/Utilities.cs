@@ -739,6 +739,37 @@ namespace KerbalConstructionTime
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
 
+            BuildListVessel.ListType type = launchSite == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+
+            if ((type == BuildListVessel.ListType.VAB) != KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
+            {
+                string dialogStr;
+                if (type == BuildListVessel.ListType.VAB)
+                {
+                    dialogStr = "a launch complex";
+                    if (KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() == null)
+                        dialogStr = $"{dialogStr}. You must wait for a launch complex to finish building or renovating before you can build this vessel.";
+                    else
+                        dialogStr = $"{dialogStr}. Please switch to a launch complex in the Space Center Management window's Vessels tab and try again.";
+                }
+                else
+                {
+                    dialogStr = "the Hangar";
+                    if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                        dialogStr = $"{dialogStr}. Please switch to the Hangar in the Space Center Management window's Vessels tab and try again.";
+                    else
+                        dialogStr = $"{dialogStr}. You must wait for the Hangar to finish renovating before you can build this vessel.";
+                }
+
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
+                        "Wrong Launch Complex!",
+                            $"Warning! This vessel needs to be built in {dialogStr}",
+                        "Acknowledged",
+                        false,
+                        HighLogic.UISkin);
+                return;
+            }
+
             bool humanRated;
             double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
             double bp = GetBuildPoints(effCost);

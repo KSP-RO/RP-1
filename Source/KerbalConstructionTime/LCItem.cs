@@ -37,7 +37,7 @@ namespace KerbalConstructionTime
             // NOTE: Not comparing name, which I think is correct here.
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
         }
-        public static LCData StartingHangar = new LCData("Hangar", -1f, new Vector3(40f, 10f, 40f), false, true);
+        public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
         public static LCData StartingLC = new LCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, false);
 
         public string Name;
@@ -55,7 +55,7 @@ namespace KerbalConstructionTime
         public double RateHRCapped => _rateHRCapped;
         
         public int Personnel = 0;
-        private double _RawMaxPersonnel => MassMax > 0f ? Math.Pow(MassMax, 0.75d) : SizeMax.sqrMagnitude * 0.05d;
+        private double _RawMaxPersonnel => MassMax != float.MaxValue ? Math.Pow(MassMax, 0.75d) : SizeMax.sqrMagnitude * 0.05d;
         public int MaxPersonnel => Math.Max(5, (int)Math.Ceiling( _RawMaxPersonnel * (IsHumanRated ? 1.5d : 1d))) * 5;
         public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
         public double EfficiencyPersonnel = 1d;
@@ -70,7 +70,7 @@ namespace KerbalConstructionTime
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
         public int ActiveLaunchPadIndex = 0;
 
-        public string SupportedMassAsPrettyText => MassMax == -1f ? "unlimited" : $"{MassMin:N0}-{MassMax:N0}t";
+        public string SupportedMassAsPrettyText => MassMax == float.MaxValue ? "unlimited" : $"{MassMin:N0}-{MassMax:N0}t";
 
         public string SupportedSizeAsPrettyText => SizeMax.y == float.MaxValue ? "unlimited" : $"{SizeMax.z:N0}x{SizeMax.x:N0}x{SizeMax.y:N0}m";
 
@@ -102,7 +102,7 @@ namespace KerbalConstructionTime
 
             if (IsPad)
             {
-                var pad = new KCT_LaunchPad(Name + "A", fracLevel, MassMax, SizeMax);
+                var pad = new KCT_LaunchPad(Name + "A", fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
@@ -127,8 +127,6 @@ namespace KerbalConstructionTime
             {
                 pad.fractionalLevel = fracLevel;
                 pad.level = (int)fracLevel;
-                pad.supportedMass = MassMax;
-                pad.supportedSize = SizeMax;
             }
         }
 
@@ -356,9 +354,12 @@ namespace KerbalConstructionTime
             node.TryGetValue("BuildRate", ref _rate);
             node.TryGetValue("BuildRateCapped", ref _rateHRCapped);
             node.TryGetValue("IsHumanRated", ref IsHumanRated);
+            
             //back-Compat
             if (!IsPad)
                 IsHumanRated = true;
+            if (MassMax == -1f)
+                MassMax = float.MaxValue;
 
             ConfigNode tmp = node.GetNode("BuildList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))

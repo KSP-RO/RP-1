@@ -686,10 +686,10 @@ namespace KerbalConstructionTime
             int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
             if (upgradesToAdd > 0)
             {
-                int numResearchers = upgradesToAdd * 5;
-                ChangeResearchers(numResearchers);
-                KCTDebug.Log($"Added {numResearchers} researchers");
-                ScreenMessages.PostScreenMessage($"Inspired by our latest scientific results, {numResearchers} researchers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
+                int numWorkers = upgradesToAdd * 5;
+                KCTGameStates.UnassignedPersonnel += numWorkers;
+                KCTDebug.Log($"Added {numWorkers} workers from science points");
+                ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
             }
         }
 

@@ -68,7 +68,7 @@ namespace KerbalConstructionTime
 
         public double UpdateBuildRate(int index)
         {
-            double rate = MathParser.ParseConstructionRateFormula(index, KSC, 0);
+            double rate = Utilities.GetConstructionRate(index, KSC, 0);
             if (rate < 0)
                 rate = 0;
 

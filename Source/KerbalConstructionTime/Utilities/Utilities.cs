@@ -288,7 +288,7 @@ namespace KerbalConstructionTime
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
             {
-                return MathParser.ParseBuildRateFormula(index, LC, useCap, 0) * LC.EfficiencyPersonnel;
+                return MathParser.ParseBuildRateFormula(index, LC, useCap, 0) * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
             }
 
             return useCap ? LC.Rate : LC.RateHRCapped;
@@ -299,7 +299,7 @@ namespace KerbalConstructionTime
             if (type == BuildListVessel.ListType.VAB ? !LC.IsPad : LC.IsPad)
                 return 0.0001d;
 
-            return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta) * LC.EfficiencyPersonnel;
+            return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta) * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -312,7 +312,12 @@ namespace KerbalConstructionTime
 
         public static double GetConstructionRate(KSCItem KSC)
         {
-            return MathParser.ParseConstructionRateFormula(0, KSC, 0);
+            return GetConstructionRate(0, KSC, 0);
+        }
+
+        public static double GetConstructionRate(int index, KSCItem KSC, int delta)
+        {
+            return MathParser.ParseConstructionRateFormula(index, KSC, delta) * KCTGameStates.EfficiecnyEngineers;
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
@@ -2175,7 +2180,7 @@ namespace KerbalConstructionTime
             if (cap1 == cap2 && cap1 == double.MaxValue)
                 return double.MaxValue;
 
-            return (cap1 * 0.75d + cap2 * 0.25d) * LC.EfficiencyPersonnel;
+            return (cap1 * 0.75d + cap2 * 0.25d) * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
         }
 
         public static void ChangeEngineers(LCItem currentLC, int delta)
@@ -2185,6 +2190,15 @@ namespace KerbalConstructionTime
             if (delta > 0)
                 currentLC.EfficiencyPersonnel = ((currentLC.EfficiencyPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / newNum;
             currentLC.Personnel += delta;
+        }
+
+        public static void ChangeEngineers(KSCItem ksc, int delta)
+        {
+            int oldNum = KCT_GUI.TotalEngineers;
+            double newNum = oldNum + delta;
+            if (delta > 0)
+                KCTGameStates.EfficiecnyEngineers = ((KCTGameStates.EfficiecnyEngineers * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / newNum;
+            ksc.Personnel += delta;
         }
 
         public static void ChangeResearchers(int delta)

@@ -20,6 +20,7 @@ namespace KerbalConstructionTime
         [Persistent] public bool IsSimulation;
         [Persistent] public bool DisableFailuresInSim = true;
         [Persistent] public int RDPersonnel;
+        [Persistent] public int UnassignedPersonnel;
         [Persistent] public double EfficiencyRDPersonnel = 1d;
 
         public override void OnDecodeFromConfigNode()
@@ -39,6 +40,7 @@ namespace KerbalConstructionTime
             IsSimulation = KCTGameStates.IsSimulatedFlight;
             DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
             RDPersonnel = KCTGameStates.RDPersonnel;
+            UnassignedPersonnel = KCTGameStates.UnassignedPersonnel;
             EfficiencyRDPersonnel = KCTGameStates.EfficiencyRDPersonnel;
         }
     }

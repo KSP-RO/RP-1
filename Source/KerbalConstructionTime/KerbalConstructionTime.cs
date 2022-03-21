@@ -613,7 +613,7 @@ namespace KerbalConstructionTime
                         if (!currentLC.IsOperational)
                             continue;
 
-                        if (!currentLC.CanModify &&  currentLC.Personnel > 0)
+                        if (currentLC.Personnel > 0 && currentLC.IsActive)
                         {
                             double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
                             double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyPersonnel);

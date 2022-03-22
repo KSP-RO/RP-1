@@ -582,7 +582,10 @@ namespace KerbalConstructionTime
         {
             if (buildList.Count == 0)
             {
-                GUILayout.Label("No vessels under construction! Go to the Editor to build more.");
+                if (HighLogic.LoadedSceneIsEditor)
+                    GUILayout.Label("No vessels under construction!");
+                else
+                    GUILayout.Label($"No vessels under construction! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad ? "VAB" : "SPH")} to build more.");
             }
             bool recalc = false;
             for (int i = 0; i < buildList.Count; i++)
@@ -592,15 +595,7 @@ namespace KerbalConstructionTime
                     continue;
                 GUILayout.BeginHorizontal();
 
-                if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("*", GUILayout.Width(_butW)))
-                {
-                    if (_selectedVesselId == b.Id)
-                        GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
-                    else
-                        GUIStates.ShowBLPlus = true;
-                    _selectedVesselId = b.Id;
-                }
-                else if (HighLogic.LoadedSceneIsEditor)
+                if (HighLogic.LoadedSceneIsEditor)
                 {
                     if (GUILayout.Button("X", GUILayout.Width(_butW)))
                     {
@@ -611,6 +606,17 @@ namespace KerbalConstructionTime
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
                         MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+                    }
+                }
+                else
+                {
+                    if (GUILayout.Button("*", GUILayout.Width(_butW)))
+                    {
+                        if (_selectedVesselId == b.Id)
+                            GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
+                        else
+                            GUIStates.ShowBLPlus = true;
+                        _selectedVesselId = b.Id;
                     }
                 }
 
@@ -647,7 +653,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.GetListType(), b.LC, b.IsHumanRated), Utilities.GetBuildRateCap(b.BuildPoints, b.GetTotalMass(), b.LC))
+                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, b.LC, b.IsHumanRated), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), b.LC))
                         * b.LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
                     string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));

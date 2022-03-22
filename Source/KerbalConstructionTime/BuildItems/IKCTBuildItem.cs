@@ -17,6 +17,8 @@
         double UpdateBuildRate(int index);
         double EstimatedTimeLeft { get; }
         void Cancel();
+        double BuildPoints();
+        double CurrentProgress();
     }
 }
 

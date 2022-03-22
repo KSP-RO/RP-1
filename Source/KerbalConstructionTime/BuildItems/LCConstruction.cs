@@ -11,6 +11,8 @@ namespace KerbalConstructionTime
         /// </summary>
         public int LaunchComplexIndex = 0;
         public double Progress = 0, BP = 0, Cost = 0;
+        public double BuildPoints() => BP;
+        public double CurrentProgress() => Progress;
         public string Name;
         public bool UpgradeProcessed = false;
         private double _buildRate = -1d;

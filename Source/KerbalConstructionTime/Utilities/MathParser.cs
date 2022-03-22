@@ -1,5 +1,6 @@
 ﻿using MagiCore;
 using System.Collections.Generic;
+using System;
 
 namespace KerbalConstructionTime
 {
@@ -35,14 +36,13 @@ namespace KerbalConstructionTime
         public static double ParseBuildRateFormula(int index, LCItem LC, bool isHumanRatedCapped, int persDelta)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
-            int personnel = LC.Personnel;
+            int personnel = Math.Max(0, LC.Personnel + persDelta);
             if (isHumanRatedCapped)
-                personnel = System.Math.Min(personnel, LC.MaxPersonnelNonHR);
+                personnel = Math.Min(personnel, LC.MaxPersonnelNonHR);
 
             var variables = new Dictionary<string, string>();
 
             int level = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-            personnel += persDelta;
             variables.Add("L", level.ToString());
             variables.Add("LM", level.ToString());
             variables.Add("N", personnel.ToString());
@@ -63,7 +63,7 @@ namespace KerbalConstructionTime
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             if (KSC == null)
                 KSC = KCTGameStates.ActiveKSC;
-            int personnel = KSC.FreePersonnel + persDelta;
+            int personnel = Math.Max(0, KSC.FreePersonnel + persDelta);
 
             var variables = new Dictionary<string, string>();
             variables.Add("N", personnel.ToString());
@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
         {
             int RnDLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
             int RnDMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            int Personnel = KCTGameStates.RDPersonnel;
+            int Personnel = Math.Max(0, KCTGameStates.RDPersonnel + upgradeDelta);
             var variables = new Dictionary<string, string>
             {
                 { "S", ScienceValue.ToString() },
@@ -224,6 +224,10 @@ namespace KerbalConstructionTime
 
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;
 
+            LCItem vLC = vessel.LC;
+            if (vLC == null)
+                vLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+
             var variables = new Dictionary<string, string>
             {
                 { "M", loadedMass.ToString() },
@@ -241,8 +245,8 @@ namespace KerbalConstructionTime
                 { "SN", vessel.NumStages.ToString() },
                 { "SP", vessel.NumStageParts.ToString() },
                 { "SC", vessel.StagePartCost.ToString() },
-                { "LT", vessel.LC.IsPad ? vessel.LC.MassMax.ToString() : loadedMass.ToString() },
-                { "LH", vessel.LC.IsHumanRated ? "1" : "0" },
+                { "LT", vLC.IsPad ? vLC.MassMax.ToString() : loadedMass.ToString() },
+                { "LH", vLC.IsHumanRated ? "1" : "0" },
                 { "VH", vessel.IsHumanRated ? "1" : "0" }
             };
 

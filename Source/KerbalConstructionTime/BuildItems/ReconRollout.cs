@@ -76,14 +76,14 @@ namespace KerbalConstructionTime
             LaunchPadID = "LaunchPad";
         }
 
-        public ReconRollout(Vessel vessel, RolloutReconType type, string id, string launchSite)
+        public ReconRollout(Vessel vessel, RolloutReconType type, string id, string launchSite, LCItem lc)
         {
             RRType = type;
             AssociatedID = id;
             LaunchPadID = launchSite;
             KCTDebug.Log("New recon_rollout at launchsite: " + LaunchPadID);
             Progress = 0;
-            _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            _lc = lc;
 
             Mass = vessel.GetTotalMass();
             try

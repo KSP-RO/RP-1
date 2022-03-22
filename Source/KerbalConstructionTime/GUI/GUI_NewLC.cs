@@ -25,7 +25,7 @@ namespace KerbalConstructionTime
                     minTonnage = 0f;
 
                 double mass = tonnageLimit;
-                curPadCost = Math.Max(0d, Math.Min(1d, Math.Max(15d, mass) * 0.05d) * Math.Sqrt(mass) * 4000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 10000d) + 2000d;
+                curPadCost = Math.Max(0d, Math.Sqrt(mass) * 3200d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 4000d) + 1000d;
 
                 if (_padLvlOptions == null)
                 {
@@ -69,7 +69,7 @@ namespace KerbalConstructionTime
                 curPadCost = 0f;
                 padSize.y *= 5f;
             }
-            curVABCost = padSize.sqrMagnitude * 20d;
+            curVABCost = padSize.sqrMagnitude * 25d + 1000d;
             if (humanRated)
             {
                 curPadCost *= 1.5d;
@@ -116,25 +116,25 @@ namespace KerbalConstructionTime
 
             GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
 
+            bool isHangar = isModify && !activeLC.IsPad;
             double curPadCost = 0;
             double curVABCost = 0;
             float fractionalPadLvl = -1;
-            float tonnageLimit = 0;
+            float tonnageLimit = isHangar ? activeLC.MassMax : 0;
             float heightLimit = 0;
             float widthLimit = 0;
             float lengthLimit = 0;
             float minTonnage = 0f;
             Vector3 curPadSize = Vector3.zero;
-
-            bool hasTonnage = !isModify || activeLC.IsPad;
-            if (hasTonnage)
+            
+            if (!isHangar)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
                 _tonnageLimit = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle());
                 GUILayout.EndHorizontal();
             }
-            if ((!hasTonnage || float.TryParse(_tonnageLimit, out tonnageLimit)) &&
+            if ((isHangar || float.TryParse(_tonnageLimit, out tonnageLimit)) &&
                 float.TryParse(_lengthLimit, out lengthLimit) &&
                 float.TryParse(_widthLimit, out widthLimit) &&
                 float.TryParse(_heightLimit, out heightLimit))
@@ -144,15 +144,13 @@ namespace KerbalConstructionTime
                 curPadSize.z = lengthLimit;
                 GetPadStats(tonnageLimit, curPadSize, _isHumanRated, out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
             }
-            if (hasTonnage)
+            if (!isHangar)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Minimum tonnage:");
                 GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
             }
-            else
-                tonnageLimit = float.MaxValue;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));
@@ -187,13 +185,37 @@ namespace KerbalConstructionTime
                 totalCost = (oldPadCost - curPadCost) * 0.5d;
             totalCost *= lpMult;
 
-            if (curVABCost > oldVABCost)
-                totalCost += curVABCost - oldVABCost;
+            if (isModify)
+            {
+                double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
+                double renovateCost = Math.Abs(curVABCost - oldVABCost)
+                    + heightAbs * 1000d
+                    + Math.Abs(widthLimit - activeLC.SizeMax.x) * 500d
+                    + Math.Abs(lengthLimit - activeLC.SizeMax.z) * 500d;
+
+                // moving the roof
+                if (heightAbs > 0.1d)
+                    renovateCost += 10000d;
+
+                if (curVABCost < oldVABCost)
+                    renovateCost *= 0.5d;
+
+                totalCost += renovateCost;
+            }
             else
-                totalCost += (oldVABCost - curVABCost) * 0.5d;
+            {
+                totalCost += curVABCost;
+            }
 
             if (totalCost > 0)
             {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));
+                GUILayout.Label($"{LCItem.MaxPersonnelCalc(tonnageLimit, curPadSize, _isHumanRated):N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+
+                GUILayout.Label(" ");
+
                 double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
@@ -234,7 +256,7 @@ namespace KerbalConstructionTime
                     if (isModify)
                     {
                         lc = activeLC;
-                        lc.Personnel = 0;
+                        Utilities.ChangeEngineers(lc, -lc.Personnel);
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                     }
                     else

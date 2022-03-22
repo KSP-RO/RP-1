@@ -15,6 +15,8 @@ namespace KerbalConstructionTime
         public static int _LCIndex = 0;
         private static GUIStyle _cannotAffordStyle;
         private static readonly int[] _buyModifierMultsPersonnel = { 5, 50, 500, int.MaxValue };
+        private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
+        private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
 
         public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Personnel);
 
@@ -42,7 +44,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Unassigned:", GUILayout.Width(120));
+            GUILayout.Label("Applicants:", GUILayout.Width(120));
             GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
@@ -50,18 +52,10 @@ namespace KerbalConstructionTime
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
             GUILayout.Label(TotalEngineers.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Global Engineer Efficiency:");
-            GUILayout.Label($"{(KCTGameStates.EfficiecnyEngineers * 100d):N0}%", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
             GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Global Researcher Efficiency:");
-            GUILayout.Label($"{(KCTGameStates.EfficiencyRDPersonnel * 100d)}%", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
@@ -113,11 +107,11 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Engineers:", GUILayout.ExpandWidth(false));
             GUILayout.Label(KSC.Personnel.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(30));
-            double cRate = Utilities.GetConstructionRate(KSC);
-            GUILayout.Label($"Free for Construction: {KSC.FreePersonnel} ({cRate:N2} => {(cRate * KCTGameStates.EfficiecnyEngineers):N2} BP/sec)", GetLabelRightAlignStyle());
+            GUILayout.Label($"Free for Construction:", GetLabelRightAlignStyle());
+            GUILayout.Label($"{KSC.FreePersonnel}", GetLabelRightAlignStyle(), GUILayout.Width(30));
             GUILayout.EndHorizontal();
 
-            RenderHireFire(false);
+            RenderHireFire(false, out int fireAmount, out int hireAmount);
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); }
@@ -128,20 +122,33 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Assigned:");
-            int delta;
+            
+            string assignStr = GetAssignText(true, currentLC, out int assignAmt);
+            string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
+
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, -delta); recalc = true; }
-            GUILayout.Label($"  {currentLC.Personnel:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
-            if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, delta); recalc = true; }
-            GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
+            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                    _currentPersonnelHover = PersonnelButtonHover.Unassign;
+                else if (_currentPersonnelHover == PersonnelButtonHover.Unassign)
+                    _currentPersonnelHover = PersonnelButtonHover.None;
+            }
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {(currentLC.EfficiencyPersonnel * 100d):N0}% (LC) x {(KCTGameStates.EfficiecnyEngineers*100d):N0}% (global)");
-            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated);
-            double rate = rateFull * currentLC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
-            GUILayout.Label($"Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
+            GUILayout.Label($"  {currentLC.Personnel:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
+
+            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                    _currentPersonnelHover = PersonnelButtonHover.Assign;
+                else if (_currentPersonnelHover == PersonnelButtonHover.Assign)
+                    _currentPersonnelHover = PersonnelButtonHover.None;
+            }
+
+            GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             if (recalc)
@@ -149,18 +156,89 @@ namespace KerbalConstructionTime
                 currentLC.RecalculateBuildRates();
                 currentLC.KSC.RecalculateBuildRates(false);
             }
+
+            int assignDelta = 0;
+            if (_currentPersonnelHover == PersonnelButtonHover.Assign)
+                assignDelta = assignAmt;
+            else if (_currentPersonnelHover == PersonnelButtonHover.Unassign)
+                assignDelta = -unassignAmt;
+            int constructionDelta = 0;
+            switch (_currentPersonnelHover)
+            {
+                case PersonnelButtonHover.Assign: constructionDelta = -assignAmt; break;
+                case PersonnelButtonHover.Unassign: constructionDelta = unassignAmt; break;
+                case PersonnelButtonHover.Hire: constructionDelta = hireAmount; break;
+                case PersonnelButtonHover.Fire: constructionDelta = -fireAmount; break;
+            }
+
+            double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyPersonnel;
+            double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiecnyEngineers;
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Efficiency: {(efficLocal * 100d):N0}% (at {currentLC.Name}) x {(efficGlobal * 100d):N0}% (global)");
+            GUILayout.EndHorizontal();
+
+            double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta);
+            double cRate = cRateFull * efficGlobal;
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Construction Rate: {cRateFull:N2} => {cRate:N2} BP/sec)", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta);
+            double rate = rateFull * efficLocal * efficGlobal;
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (currentLC.BuildList.Count > 0)
+            {
+                BuildListVessel b = currentLC.BuildList[0];
+                GUILayout.Label($"Current Vessel: {b.ShipName}");
+                double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, assignDelta), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), currentLC))
+                    * efficLocal * efficGlobal;
+                double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
+                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate)}", GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label($"No vessels under construction at {currentLC.Name}");
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (KSC.Constructions.Count > 0)
+            {
+                IConstructionBuildItem b = KSC.Constructions[0];
+                GUILayout.Label($"Current Construction: {b.GetItemName()}");
+                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime((b.BuildPoints() - b.CurrentProgress()) / cRate)}", GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label($"No construction projects");
+            }
+            GUILayout.EndHorizontal();
         }
 
         private static void RenderResearchersSection(bool isCostCacheInvalid)
         {
-            KSCItem KSC = KCTGameStates.ActiveKSC;
+            if (_currentPersonnelHover == PersonnelButtonHover.Assign
+                || _currentPersonnelHover == PersonnelButtonHover.Unassign)
+                _currentPersonnelHover = PersonnelButtonHover.None;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Researchers:", GUILayout.Width(90));
             GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            RenderHireFire(true);
+            RenderHireFire(true, out int fireAmount, out int hireAmount);
+
+            int delta = 0;
+            if (_currentPersonnelHover == PersonnelButtonHover.Hire)
+                delta = hireAmount;
+            else if (_currentPersonnelHover == PersonnelButtonHover.Fire)
+                delta = -fireAmount;
+
+            double effic = Utilities.PredictEfficiencyResearchers(delta);
 
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
             //if (_nodeRate == int.MinValue || isCostCacheInvalid)
@@ -169,10 +247,10 @@ namespace KerbalConstructionTime
             //    _nodeRate = MathParser.ParseNodeRateFormula(0);
             //    _upNodeRate = MathParser.ParseNodeRateFormula(0, 0, _nodeDelta);
             //}
-            _nodeRate = MathParser.ParseNodeRateFormula(0, 0, 0);
+            _nodeRate = MathParser.ParseNodeRateFormula(0, 0, delta);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
-            double sciPerDayEffic = sciPerDay * KCTGameStates.EfficiencyRDPersonnel;
+            double sciPerDayEffic = sciPerDay * effic;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Rate: ", GetLabelRightAlignStyle());
             //bool usingPerYear = false;
@@ -188,9 +266,30 @@ namespace KerbalConstructionTime
                 //usingPerYear = true;
             }
             GUILayout.EndHorizontal();
+
+            
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Global Researcher Efficiency:");
+            GUILayout.Label($"{(effic * 100d):N0}%", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (KCTGameStates.TechList.Count > 0)
+            {
+                TechItem t = KCTGameStates.TechList[0];
+                GUILayout.Label($"Current Research: {t.TechName}");
+                double techRate = MathParser.ParseNodeRateFormula(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
+                double timeLeft = (t.ScienceCost - t.Progress) / techRate;
+                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(timeLeft)}", GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label("No current research");
+            }
+            GUILayout.EndHorizontal();
         }
 
-        private static void RenderHireFire(bool research)
+        private static void RenderHireFire(bool research, out int fireAmount, out int hireAmount)
         {
             if (Utilities.CurrentGameIsCareer())
             {
@@ -199,12 +298,12 @@ namespace KerbalConstructionTime
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                int limit = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.FreePersonnel;
+                fireAmount = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.FreePersonnel;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
-                    workers = limit;
+                    workers = fireAmount;
 
-                bool canAfford = workers <= limit;
+                bool canAfford = workers <= fireAmount;
                 GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                 if (GUILayout.Button($"Fire {workers:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
@@ -220,14 +319,23 @@ namespace KerbalConstructionTime
                         ksc.RecalculateBuildRates(false);
                     }
                 }
+                if (Event.current.type == EventType.Repaint)
+                {
+                    if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                        _currentPersonnelHover = PersonnelButtonHover.Fire;
+                    else if (_currentPersonnelHover == PersonnelButtonHover.Fire)
+                        _currentPersonnelHover = PersonnelButtonHover.None;
+                }
+                fireAmount = Math.Min(workers, fireAmount);
 
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = Math.Max(_buyModifierMultsPersonnel[0], KCTGameStates.UnassignedPersonnel + (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost));
 
                 _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * Math.Max(0, workers - KCTGameStates.UnassignedPersonnel);
+                // Show the result for whatever you're asking for, even if you can't afford it.
+                hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost) + KCTGameStates.UnassignedPersonnel);
 
-                
                 canAfford = Funding.Instance.Funds >= _fundsCost;
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                 if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
@@ -248,7 +356,20 @@ namespace KerbalConstructionTime
 
                     _fundsCost = int.MinValue;
                 }
+                if (Event.current.type == EventType.Repaint)
+                {
+                    if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                        _currentPersonnelHover = PersonnelButtonHover.Hire;
+                    else if (_currentPersonnelHover == PersonnelButtonHover.Hire)
+                        _currentPersonnelHover = PersonnelButtonHover.None;
+                }
+
                 GUILayout.EndHorizontal();
+            }
+            else
+            {
+                hireAmount = 0;
+                fireAmount = 0;
             }
         }
 

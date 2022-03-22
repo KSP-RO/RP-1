@@ -55,8 +55,13 @@ namespace KerbalConstructionTime
         public double RateHRCapped => _rateHRCapped;
         
         public int Personnel = 0;
-        private double _RawMaxPersonnel => MassMax != float.MaxValue ? Math.Pow(MassMax, 0.75d) : SizeMax.sqrMagnitude * 0.05d;
-        public int MaxPersonnel => Math.Max(5, (int)Math.Ceiling( _RawMaxPersonnel * (IsHumanRated ? 1.5d : 1d))) * 5;
+        private static double RawMaxPersonnel(float massMax, Vector3 sizeMax) =>
+            massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.05d;
+        public static int MaxPersonnelCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
+            Math.Max(5, (int)Math.Ceiling(RawMaxPersonnel(massMax, sizeMax) * (isHuman ? 1.5d : 1d))) * 5;
+
+        private double _RawMaxPersonnel => RawMaxPersonnel(MassMax, SizeMax);
+        public int MaxPersonnel => MaxPersonnelCalc(MassMax, SizeMax, IsHumanRated);
         public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
         public double EfficiencyPersonnel = 1d;
 

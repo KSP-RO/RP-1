@@ -11,6 +11,8 @@ namespace KerbalConstructionTime
         /// </summary>
         public int LaunchpadIndex = 0;
         public double Progress = 0, BP = 0, Cost = 0;
+        public double BuildPoints() => BP;
+        public double CurrentProgress() => Progress;
         public string Name;
         public bool UpgradeProcessed = false;
 
@@ -84,7 +86,7 @@ namespace KerbalConstructionTime
             return _buildRate;
         }
 
-        public string GetItemName() => Name;
+        public string GetItemName() => $"{LC.Name}: {Name}";
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
 

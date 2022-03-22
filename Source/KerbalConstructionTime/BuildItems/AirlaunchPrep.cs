@@ -60,7 +60,7 @@ namespace KerbalConstructionTime
             Cost = MathParser.ParseAirlaunchCostFormula(vessel);
             Mass = vessel.GetTotalMass();
             IsHumanRated = vessel.IsHumanRated;
-            VesselBP = vessel.BuildPoints;
+            VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;
         }
 
         public double GetBuildRate()

@@ -251,11 +251,12 @@ namespace KerbalConstructionTime
         public static double ParseReconditioningFormula(BuildListVessel vessel, bool isReconditioning)
         {
 
-            double loadedMass, emptyMass, loadedCost, emptyCost;
+            double loadedMass, emptyMass, loadedCost, emptyCost, effectiveCost;
             loadedCost = vessel.Cost;
             emptyCost = vessel.EmptyCost;
             loadedMass = vessel.GetTotalMass();
             emptyMass = vessel.EmptyMass;
+            effectiveCost = vessel.EffectiveCost;
 
             float LaunchSiteLvl;
             int EditorLevel, EditorMax, LaunchSiteMax;
@@ -284,6 +285,7 @@ namespace KerbalConstructionTime
                 { "m", emptyMass.ToString() },
                 { "C", loadedCost.ToString() },
                 { "c", emptyCost.ToString() },
+                { "EC", effectiveCost.ToString() },
                 { "VAB", isVABVessel.ToString() },
                 { "BP", BP.ToString() },
                 { "L", LaunchSiteLvl.ToString() },

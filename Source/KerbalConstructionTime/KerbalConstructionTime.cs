@@ -669,8 +669,8 @@ namespace KerbalConstructionTime
                 }
                 if (skillupEng)
                 {
-                    double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
-                    double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiecnyEngineers);
+                    double max = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerMaxEfficiency;
+                    double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiecnyEngineers);
                     double delta = eval * UTDiff / (365d * 86400d);
                     //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiecnyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
                     KCTGameStates.EfficiecnyEngineers = Math.Min(max, KCTGameStates.EfficiecnyEngineers + delta);

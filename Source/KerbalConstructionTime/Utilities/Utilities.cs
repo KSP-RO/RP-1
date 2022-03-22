@@ -2215,7 +2215,7 @@ namespace KerbalConstructionTime
             if (delta > 0)
                 return ((currentLC.EfficiencyPersonnel * currentLC.Personnel) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / (currentLC.Personnel + delta);
 
-            return 0d;
+            return currentLC.EfficiencyPersonnel;
         }
 
         public static double PredictEfficiencyEngineers(int delta)
@@ -2226,7 +2226,7 @@ namespace KerbalConstructionTime
                 return ((KCTGameStates.EfficiecnyEngineers * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency)) / (oldNum + delta);
             }
 
-            return 0d;
+            return KCTGameStates.EfficiecnyEngineers;
         }
 
         public static double PredictEfficiencyResearchers(int delta)
@@ -2234,7 +2234,7 @@ namespace KerbalConstructionTime
             if (delta > 0)
                 return ((KCTGameStates.EfficiencyRDPersonnel * KCTGameStates.RDPersonnel) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / (KCTGameStates.RDPersonnel + delta);
 
-            return 0d;
+            return KCTGameStates.EfficiencyRDPersonnel;
         }
     }
 }

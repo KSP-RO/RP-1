@@ -247,8 +247,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex;
-                _hireFireDelta = 0;
-                _assignDelta = 0;
+                _currentPersonnelHover = PersonnelButtonHover.None;
             }
             if (GUILayout.Button("Plans"))
             {

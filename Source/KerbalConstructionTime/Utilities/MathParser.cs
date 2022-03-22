@@ -241,7 +241,7 @@ namespace KerbalConstructionTime
                 { "SN", vessel.NumStages.ToString() },
                 { "SP", vessel.NumStageParts.ToString() },
                 { "SC", vessel.StagePartCost.ToString() },
-                { "LT", vessel.LC.MassMax.ToString() },
+                { "LT", vessel.LC.IsPad ? vessel.LC.MassMax.ToString() : "100" },
                 { "LH", vessel.LC.IsHumanRated ? "1" : "0" },
                 { "VH", vessel.IsHumanRated ? "1" : "0" }
             };

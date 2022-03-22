@@ -2197,7 +2197,7 @@ namespace KerbalConstructionTime
             int oldNum = KCT_GUI.TotalEngineers;
             double newNum = oldNum + delta;
             if (delta > 0)
-                KCTGameStates.EfficiecnyEngineers = ((KCTGameStates.EfficiecnyEngineers * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / newNum;
+                KCTGameStates.EfficiecnyEngineers = ((KCTGameStates.EfficiecnyEngineers * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency)) / newNum;
             ksc.Personnel += delta;
         }
 

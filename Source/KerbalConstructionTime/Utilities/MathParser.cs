@@ -240,7 +240,10 @@ namespace KerbalConstructionTime
                 { "O", OverallMult.ToString() },
                 { "SN", vessel.NumStages.ToString() },
                 { "SP", vessel.NumStageParts.ToString() },
-                { "SC", vessel.StagePartCost.ToString() }
+                { "SC", vessel.StagePartCost.ToString() },
+                { "LT", vessel.LC.MassMax.ToString() },
+                { "LH", vessel.LC.IsHumanRated ? "1" : "0" },
+                { "VH", vessel.IsHumanRated ? "1" : "0" }
             };
 
             AddCrewVariables(variables);

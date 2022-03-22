@@ -12,6 +12,8 @@ namespace KerbalConstructionTime
         public string Id, CommonName;
         public double Progress = 0, BP = 0, Cost = 0;
         public bool UpgradeProcessed = false;
+        public double BuildPoints() => BP;
+        public double CurrentProgress() => Progress;
 
         [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
         public int LaunchpadID = 0;

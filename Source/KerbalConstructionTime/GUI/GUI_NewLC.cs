@@ -116,25 +116,25 @@ namespace KerbalConstructionTime
 
             GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
 
+            bool isHangar = isModify && !activeLC.IsPad;
             double curPadCost = 0;
             double curVABCost = 0;
             float fractionalPadLvl = -1;
-            float tonnageLimit = 0;
+            float tonnageLimit = isHangar ? activeLC.MassMax : 0;
             float heightLimit = 0;
             float widthLimit = 0;
             float lengthLimit = 0;
             float minTonnage = 0f;
             Vector3 curPadSize = Vector3.zero;
-
-            bool hasTonnage = !isModify || activeLC.IsPad;
-            if (hasTonnage)
+            
+            if (!isHangar)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
                 _tonnageLimit = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle());
                 GUILayout.EndHorizontal();
             }
-            if ((!hasTonnage || float.TryParse(_tonnageLimit, out tonnageLimit)) &&
+            if ((isHangar || float.TryParse(_tonnageLimit, out tonnageLimit)) &&
                 float.TryParse(_lengthLimit, out lengthLimit) &&
                 float.TryParse(_widthLimit, out widthLimit) &&
                 float.TryParse(_heightLimit, out heightLimit))
@@ -144,15 +144,13 @@ namespace KerbalConstructionTime
                 curPadSize.z = lengthLimit;
                 GetPadStats(tonnageLimit, curPadSize, _isHumanRated, out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
             }
-            if (hasTonnage)
+            if (!isHangar)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Minimum tonnage:");
                 GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
             }
-            else
-                tonnageLimit = float.MaxValue;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));

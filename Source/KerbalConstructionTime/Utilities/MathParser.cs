@@ -224,6 +224,10 @@ namespace KerbalConstructionTime
 
             double OverallMult = PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier;
 
+            LCItem vLC = vessel.LC;
+            if (vLC == null)
+                vLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+
             var variables = new Dictionary<string, string>
             {
                 { "M", loadedMass.ToString() },
@@ -241,9 +245,9 @@ namespace KerbalConstructionTime
                 { "SN", vessel.NumStages.ToString() },
                 { "SP", vessel.NumStageParts.ToString() },
                 { "SC", vessel.StagePartCost.ToString() },
-                { "LT", vessel.LC.IsPad ? vessel.LC.MassMax.ToString() : loadedMass.ToString() },
-                { "LH", vessel.LC.IsHumanRated ? "1" : "0" },
-                { "VH", vessel.IsHumanRated ? "1" : "0" }
+                { "LT", vLC.IsPad ? vessel.LC.MassMax.ToString() : loadedMass.ToString() },
+                { "LH", vLC.IsHumanRated ? "1" : "0" },
+                { "VH", vLC.IsHumanRated ? "1" : "0" }
             };
 
             AddCrewVariables(variables);

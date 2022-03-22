@@ -48,7 +48,7 @@ namespace KerbalConstructionTime
                 {
                     foreach (var ksc in KCTGameStates.KSCs)
                         foreach (var lc in ksc.LaunchComplexes)
-                            if (lc.Recon_Rollout.Exists(r => r.AssociatedID == AssociatedID))
+                            if (lc.Recon_Rollout.Contains(this))
                             {
                                 _lc = lc;
                                 break;

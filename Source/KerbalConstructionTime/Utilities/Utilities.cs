@@ -2185,30 +2185,56 @@ namespace KerbalConstructionTime
 
         public static void ChangeEngineers(LCItem currentLC, int delta)
         {
-            int oldNum = currentLC.Personnel;
-            double newNum = oldNum + delta;
-            if (delta > 0)
-                currentLC.EfficiencyPersonnel = ((currentLC.EfficiencyPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / newNum;
+            currentLC.EfficiencyPersonnel = PredictEfficiencyEngineers(currentLC, delta);
+
             currentLC.Personnel += delta;
+            if (currentLC.Personnel == 0)
+                currentLC.EfficiencyPersonnel = 0d;
         }
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
         {
-            int oldNum = KCT_GUI.TotalEngineers;
-            double newNum = oldNum + delta;
-            if (delta > 0)
-                KCTGameStates.EfficiecnyEngineers = ((KCTGameStates.EfficiecnyEngineers * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency)) / newNum;
+            KCTGameStates.EfficiecnyEngineers = PredictEfficiencyEngineers(delta);
+
             ksc.Personnel += delta;
+            if (KCT_GUI.TotalEngineers == 0)
+                KCTGameStates.EfficiecnyEngineers = 0d;
         }
 
         public static void ChangeResearchers(int delta)
         {
-            int oldNum = KCTGameStates.RDPersonnel;
-            double newNum = oldNum + delta;
-            if (delta > 0)
-                KCTGameStates.EfficiencyRDPersonnel = ((KCTGameStates.EfficiencyRDPersonnel * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / newNum;
+            KCTGameStates.EfficiencyRDPersonnel = PredictEfficiencyResearchers(delta);
 
             KCTGameStates.RDPersonnel += delta;
+            if (KCTGameStates.RDPersonnel == 0)
+                KCTGameStates.EfficiencyRDPersonnel = 0d;
+        }
+
+        public static double PredictEfficiencyEngineers(LCItem currentLC, int delta)
+        {
+            if (delta > 0)
+                return ((currentLC.EfficiencyPersonnel * currentLC.Personnel) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / (currentLC.Personnel + delta);
+
+            return 0d;
+        }
+
+        public static double PredictEfficiencyEngineers(int delta)
+        {
+            if (delta > 0)
+            {
+                int oldNum = KCT_GUI.TotalEngineers;
+                return ((KCTGameStates.EfficiecnyEngineers * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency)) / (oldNum + delta);
+            }
+
+            return 0d;
+        }
+
+        public static double PredictEfficiencyResearchers(int delta)
+        {
+            if (delta > 0)
+                return ((KCTGameStates.EfficiencyRDPersonnel * KCTGameStates.RDPersonnel) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / (KCTGameStates.RDPersonnel + delta);
+
+            return 0d;
         }
     }
 }

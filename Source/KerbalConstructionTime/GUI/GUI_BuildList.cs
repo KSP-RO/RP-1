@@ -247,6 +247,8 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex;
+                _hireFireDelta = 0;
+                _assignDelta = 0;
             }
             if (GUILayout.Button("Plans"))
             {
@@ -344,10 +346,7 @@ namespace KerbalConstructionTime
                     forceRecheck = false;
                     ksc.RecalculateBuildRates(false);
                 }
-                if (pItem is PadConstruction pc)
-                    GUILayout.Label($"{pc.LC.Name}: {pc.GetItemName()}");
-                else
-                    GUILayout.Label(pItem.GetItemName());
+                GUILayout.Label(pItem.GetItemName());
                 GUILayout.Label($"{(pItem.GetFractionComplete() * 100d):N2} %", GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                     GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));

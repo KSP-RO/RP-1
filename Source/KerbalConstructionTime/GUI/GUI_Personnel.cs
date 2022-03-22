@@ -15,6 +15,8 @@ namespace KerbalConstructionTime
         public static int _LCIndex = 0;
         private static GUIStyle _cannotAffordStyle;
         private static readonly int[] _buyModifierMultsPersonnel = { 5, 50, 500, int.MaxValue };
+        private static int _hireFireDelta = 0;
+        private static int _assignDelta = 0;
 
         public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Personnel);
 
@@ -42,7 +44,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Unassigned:", GUILayout.Width(120));
+            GUILayout.Label("Applicants:", GUILayout.Width(120));
             GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
@@ -117,7 +119,10 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Free for Construction: {KSC.FreePersonnel} ({cRate:N2} => {(cRate * KCTGameStates.EfficiecnyEngineers):N2} BP/sec)", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            RenderHireFire(false);
+            int constructionDelta = RenderHireFire(false);
+
+            if (Event.current.type == EventType.Repaint)
+                _assignDelta = 0;
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); }
@@ -132,8 +137,12 @@ namespace KerbalConstructionTime
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             if (GUILayout.Button(GetAssignText(false, currentLC, out delta), GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, -delta); recalc = true; }
+            if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                _assignDelta = delta;
             GUILayout.Label($"  {currentLC.Personnel:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
             if (GUILayout.Button(GetAssignText(true, currentLC, out delta), GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, delta); recalc = true; }
+            if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                _assignDelta = delta;
             GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
@@ -149,18 +158,47 @@ namespace KerbalConstructionTime
                 currentLC.RecalculateBuildRates();
                 currentLC.KSC.RecalculateBuildRates(false);
             }
+
+            GUILayout.BeginHorizontal();
+            if (currentLC.BuildList.Count > 0)
+            {
+                BuildListVessel b = currentLC.BuildList[0];
+                GUILayout.Label($"Current Vessel: {b.ShipName}");
+                double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, _assignDelta), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), currentLC))
+                    * currentLC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
+                double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
+                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate)}", GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label($"No vessels under construction at {currentLC.Name}");
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (KSC.Constructions.Count > 0)
+            {
+                IConstructionBuildItem b = KSC.Constructions[0];
+                GUILayout.Label($"Current Construction: {b.GetItemName()}");
+
+                double buildRate = Utilities.GetConstructionRate(0, KSC, _hireFireDelta) * KCTGameStates.EfficiecnyEngineers;
+                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime((b.BuildPoints() - b.CurrentProgress()) / buildRate)}", GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label($"No construction projects");
+            }
+            GUILayout.EndHorizontal();
         }
 
         private static void RenderResearchersSection(bool isCostCacheInvalid)
         {
-            KSCItem KSC = KCTGameStates.ActiveKSC;
-
             GUILayout.BeginHorizontal();
             GUILayout.Label("Researchers:", GUILayout.Width(90));
             GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            RenderHireFire(true);
+            int delta = RenderHireFire(true);
 
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
             //if (_nodeRate == int.MinValue || isCostCacheInvalid)
@@ -188,10 +226,28 @@ namespace KerbalConstructionTime
                 //usingPerYear = true;
             }
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (KCTGameStates.TechList.Count > 0)
+            {
+                TechItem t = KCTGameStates.TechList[0];
+                GUILayout.Label($"Current Research: {t.TechName}");
+                double techRate = MathParser.ParseNodeRateFormula(t.ScienceCost, 0, delta) * KCTGameStates.EfficiencyRDPersonnel * t.YearBasedRateMult;
+                double timeLeft = (t.ScienceCost - t.Progress) / techRate;
+                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(timeLeft)}", GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label("No current research");
+            }
+            GUILayout.EndHorizontal();
         }
 
-        private static void RenderHireFire(bool research)
+        private static int RenderHireFire(bool research)
         {
+            if (Event.current.type == EventType.Repaint)
+                _hireFireDelta = 0;
+
             if (Utilities.CurrentGameIsCareer())
             {
                 GUILayout.BeginHorizontal();
@@ -220,6 +276,8 @@ namespace KerbalConstructionTime
                         ksc.RecalculateBuildRates(false);
                     }
                 }
+                if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                    _hireFireDelta = workers;
 
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
@@ -248,8 +306,12 @@ namespace KerbalConstructionTime
 
                     _fundsCost = int.MinValue;
                 }
+                if (Event.current.type == EventType.Repaint && GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                    _hireFireDelta = workers;
+
                 GUILayout.EndHorizontal();
             }
+            return _hireFireDelta;
         }
 
         private static string GetAssignText(bool add, LCItem currentLC, out int mod)

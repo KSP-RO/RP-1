@@ -91,7 +91,7 @@ namespace KerbalConstructionTime
                 var blv = new BuildListVessel(vessel);
                 IsHumanRated = blv.IsHumanRated;
                 BP = MathParser.ParseReconditioningFormula(blv, true);
-                VesselBP = blv.BuildPoints;
+                VesselBP = blv.BuildPoints + blv.IntegrationPoints;
             }
             catch
             {
@@ -114,7 +114,7 @@ namespace KerbalConstructionTime
             Progress = 0;
             Mass = vessel.GetTotalMass();
             _lc = vessel.LC;
-            VesselBP = vessel.BuildPoints;
+            VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;
             IsHumanRated = vessel.IsHumanRated;
             BP = MathParser.ParseReconditioningFormula(vessel, type == RolloutReconType.Reconditioning);
 

@@ -25,7 +25,7 @@ namespace KerbalConstructionTime
                     minTonnage = 0f;
 
                 double mass = tonnageLimit;
-                curPadCost = Math.Max(0d, Math.Min(1d, Math.Max(15d, mass) * 0.05d) * Math.Sqrt(mass) * 4000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 10000d) + 2000d;
+                curPadCost = Math.Max(0d, Math.Sqrt(mass) * 3200d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 4000d) + 1000d;
 
                 if (_padLvlOptions == null)
                 {
@@ -69,7 +69,7 @@ namespace KerbalConstructionTime
                 curPadCost = 0f;
                 padSize.y *= 5f;
             }
-            curVABCost = padSize.sqrMagnitude * 20d;
+            curVABCost = padSize.sqrMagnitude * 25d + 1000d;
             if (humanRated)
             {
                 curPadCost *= 1.5d;
@@ -187,13 +187,37 @@ namespace KerbalConstructionTime
                 totalCost = (oldPadCost - curPadCost) * 0.5d;
             totalCost *= lpMult;
 
-            if (curVABCost > oldVABCost)
-                totalCost += curVABCost - oldVABCost;
+            if (isModify)
+            {
+                double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
+                double renovateCost = Math.Abs(curVABCost - oldVABCost)
+                    + heightAbs * 1000d
+                    + Math.Abs(widthLimit - activeLC.SizeMax.x) * 500d
+                    + Math.Abs(lengthLimit - activeLC.SizeMax.z) * 500d;
+
+                // moving the roof
+                if (heightAbs > 0.1d)
+                    renovateCost += 10000d;
+
+                if (curVABCost < oldVABCost)
+                    renovateCost *= 0.5d;
+
+                totalCost += renovateCost;
+            }
             else
-                totalCost += (oldVABCost - curVABCost) * 0.5d;
+            {
+                totalCost += curVABCost;
+            }
 
             if (totalCost > 0)
             {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));
+                GUILayout.Label($"{LCItem.MaxPersonnelCalc(tonnageLimit, curPadSize, _isHumanRated):N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+
+                GUILayout.Label(" ");
+
                 double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
@@ -234,7 +258,7 @@ namespace KerbalConstructionTime
                     if (isModify)
                     {
                         lc = activeLC;
-                        lc.Personnel = 0;
+                        Utilities.ChangeEngineers(lc, -lc.Personnel);
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                     }
                     else

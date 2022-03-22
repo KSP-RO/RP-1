@@ -61,6 +61,7 @@ namespace KerbalConstructionTime
             Mass = vessel.GetTotalMass();
             IsHumanRated = vessel.IsHumanRated;
             VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;
+            _lc = vessel.LC;
         }
 
         public double GetBuildRate()

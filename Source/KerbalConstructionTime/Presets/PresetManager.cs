@@ -257,6 +257,9 @@ namespace KerbalConstructionTime
             Source.GeneralSettings.ResearcherSkillupRate.Save(tmp);
             GeneralSettings.ResearcherSkillupRate.Load(tmp);
             tmp.ClearData();
+            Source.GeneralSettings.GlobalEngineerSkillupRate.Save(tmp);
+            GeneralSettings.GlobalEngineerSkillupRate.Load(tmp);
+            tmp.ClearData();
             ConfigNode.LoadObjectFromConfig(TimeSettings, Source.TimeSettings.AsConfigNode());
             ConfigNode.LoadObjectFromConfig(FormulaSettings, Source.FormulaSettings.AsConfigNode());
             Source.FormulaSettings.YearBasedRateMult.Save(tmp);
@@ -320,6 +323,12 @@ namespace KerbalConstructionTime
                 GeneralSettings.ResearcherSkillupRate = new FloatCurve();
                 GeneralSettings.ResearcherSkillupRate.Load(tmp);
             }
+            tmp = gNode.GetNode("GlobalEngineerSkillupRate");
+            if (tmp != null)
+            {
+                GeneralSettings.GlobalEngineerSkillupRate = new FloatCurve();
+                GeneralSettings.GlobalEngineerSkillupRate.Load(tmp);
+            }
 
             ConfigNode.LoadObjectFromConfig(TimeSettings, node.GetNode("KCT_Preset_Time"));
 
@@ -369,11 +378,14 @@ namespace KerbalConstructionTime
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
         [Persistent]
-        public double EngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, EngineerMaxEfficiency = 2.0, ResearcherMaxEfficiency = 2.0;
+        public double EngineerStartEfficiency = 0.5, GlobalEngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, EngineerMaxEfficiency = 1.0, ResearcherMaxEfficiency = 1.0, GlobalEngineerMaxEfficiency = 1.0;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
+        public FloatCurve GlobalEngineerSkillupRate = new FloatCurve();
+        [Persistent]
         public FloatCurve ResearcherSkillupRate = new FloatCurve();
+
 
         public override ConfigNode AsConfigNode()
         {
@@ -390,6 +402,13 @@ namespace KerbalConstructionTime
             {
                 tmp = new ConfigNode("ResearcherSkillupRate");
                 ResearcherSkillupRate.Save(tmp);
+                node.AddNode(tmp);
+            }
+            tmp = node.GetNode("GlobalEngineerSkillupRate");
+            if (tmp == null)
+            {
+                tmp = new ConfigNode("GlobalEngineerSkillupRate");
+                GlobalEngineerSkillupRate.Save(tmp);
                 node.AddNode(tmp);
             }
 

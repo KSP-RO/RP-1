@@ -127,11 +127,17 @@ namespace KerbalConstructionTime
                 lvl.levelStats.linePrefix = string.Empty;
                 lvl.levelStats.textBase = "Modify the Hangar from the Space Center Management window instead.";
             }
-            //else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment &&
-            //         lvlIdx > 0)
-            //{
-            //    lvl.levelStats.textBase += $"\n+{lvlIdx * 25}% research rate";
-            //}
+            else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
+            {
+                if (PresetManager.Instance != null)
+                {
+                    int limit = PresetManager.Instance.ActivePreset.ResearcherCaps[lvlIdx];
+                    if (limit == -1)
+                        lvl.levelStats.textBase += $"\nResearcher Limit: unlimited";
+                    else
+                        lvl.levelStats.textBase += $"\nResearcher Limit: {limit:N0}";
+                }
+            }
             else if (facilityType == SpaceCenterFacility.Administration)
             {
                 lvl.levelStats.linePrefix = string.Empty;

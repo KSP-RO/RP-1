@@ -152,7 +152,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(locTxt, _windowSkin.label);
                 GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(buildItem.GetTimeLeft()));
 
-                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button($"Warp to{Environment.NewLine}Complete"))
+                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"Salary Cost: {(buildItem.GetTimeLeft() / (86400d * 365d) * GetTotalSalary()):N0}")))
                 {
                     KCTWarpController.Create(buildItem);
                 }
@@ -563,7 +563,7 @@ namespace KerbalConstructionTime
             foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
-                if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp To", GUILayout.Width((_butW + 4) * 3)))
+                if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(reconditioning.GetTimeLeft() / (86400d * 365d) * GetTotalSalary()):N0}"), GUILayout.Width((_butW + 4) * 3)))
                 {
                     KCTWarpController.Create(reconditioning);
                 }
@@ -1373,7 +1373,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
             }
 
-            if (!b.IsFinished && GUILayout.Button("Warp To"))
+            if (!b.IsFinished && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(b.GetTimeLeft() / (86400d * 365d) * GetTotalSalary()):N0}")))
             {
                 KCTWarpController.Create(b);
                 GUIStates.ShowBLPlus = false;

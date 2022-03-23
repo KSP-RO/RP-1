@@ -7,7 +7,16 @@ namespace KerbalConstructionTime
     public class PresetManager
     {
         public static PresetManager Instance;
-        public KCT_Preset ActivePreset;
+        public KCT_Preset ActivePreset
+        {
+            get { return _activePreset; }
+            set
+            {
+                _activePreset = value;
+                KSCContextMenuOverrider.AreTextsUpdated = false;
+            }
+        }
+        private KCT_Preset _activePreset;
         public List<KCT_Preset> Presets;
         public List<string> PresetPaths;
 
@@ -224,7 +233,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        private int[] _researcherCaps;
+        private int[] _researcherCaps = null;
         public int[] ResearcherCaps
         {
             get
@@ -397,7 +406,7 @@ namespace KerbalConstructionTime
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
             StartingPersonnel = "20, 50, 10000",
             VABRecoveryTech = null,
-            ResearcherCaps = null;
+            ResearcherCaps = "300, 500, 750, 1250, 2000, 3500, -1";
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
         [Persistent]

@@ -614,19 +614,22 @@ namespace KerbalConstructionTime
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
                         LCItem currentLC = ksc.LaunchComplexes[j];
-                        if (!currentLC.IsOperational)
-                            continue;
-
-                        if (currentLC.Personnel > 0 && currentLC.IsActive)
+                        if (currentLC.IsOperational && currentLC.Personnel > 0 && currentLC.IsActive)
                         {
                             double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
                             double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyPersonnel);
                             double delta = eval * UTDiff / (365d * 86400d);
                             //KCTDebug.Log($"For LC {currentLC.Name}, effic {currentLC.EfficiencyPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
                             currentLC.EfficiencyPersonnel = Math.Min(max, currentLC.EfficiencyPersonnel + delta);
-                            
+
                             skillupEng = true;
                         }
+                        //else
+                        //{
+                        //    // TODO tick efficiency down when not active. Somehow preserve for LCs being modified.
+                        //}
+                        if (!currentLC.IsOperational)
+                            continue;
 
                         for (int i = currentLC.BuildList.Count - 1; i >= 0; i--)
                             currentLC.BuildList[i].IncrementProgress(UTDiff);

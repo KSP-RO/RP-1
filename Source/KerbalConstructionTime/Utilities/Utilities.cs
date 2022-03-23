@@ -317,7 +317,7 @@ namespace KerbalConstructionTime
 
         public static double GetConstructionRate(int index, KSCItem KSC, int delta)
         {
-            return MathParser.ParseConstructionRateFormula(index, KSC, delta) * KCTGameStates.EfficiecnyEngineers;
+            return MathParser.ParseConstructionRateFormula(index, KSC, delta);
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)

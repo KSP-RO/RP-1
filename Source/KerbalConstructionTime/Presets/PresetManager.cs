@@ -215,12 +215,34 @@ namespace KerbalConstructionTime
                 if (_personnelInternal == null)
                 {
                     _personnelInternal = new int[3] { 0, 0, 0 }; //career, science, sandbox
-                    string[] personnel = GeneralSettings.StartingPersonnel.Split(',');
+                    string[] personnel = GeneralSettings.StartingPersonnel.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < 3; i++)
                         if (!int.TryParse(personnel[i], out _personnelInternal[i]))
                             _personnelInternal[i] = 0;
                 }
                 return _personnelInternal;
+            }
+        }
+
+        private int[] _researcherCaps;
+        public int[] ResearcherCaps
+        {
+            get
+            {
+                if (_researcherCaps == null)
+                {
+                    string[] caps = GeneralSettings.ResearcherCaps.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+                    _researcherCaps = new int[caps.Length];
+                    for (int i = 0; i < caps.Length; ++i)
+                        if (int.TryParse(caps[i], out _researcherCaps[i]))
+                        {
+                            if (_researcherCaps[i] == -1)
+                                _researcherCaps[i] = int.MaxValue;
+                        }
+                        else
+                            _researcherCaps[i] = 5;
+                }
+                return _researcherCaps;
             }
         }
 
@@ -374,7 +396,8 @@ namespace KerbalConstructionTime
         [Persistent]
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
             StartingPersonnel = "20, 50, 10000",
-            VABRecoveryTech = null;
+            VABRecoveryTech = null,
+            ResearcherCaps = null;
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
         [Persistent]

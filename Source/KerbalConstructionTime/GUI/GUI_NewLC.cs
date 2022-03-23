@@ -200,6 +200,9 @@ namespace KerbalConstructionTime
                 if (curVABCost < oldVABCost)
                     renovateCost *= 0.5d;
 
+                if (curVABCost > oldVABCost && renovateCost > curVABCost)
+                    renovateCost = curVABCost;
+
                 totalCost += renovateCost;
             }
             else

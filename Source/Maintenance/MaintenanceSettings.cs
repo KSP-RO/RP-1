@@ -19,10 +19,10 @@ namespace RP0
         public double facilityLevelCostPow = 1d;
 
         [Persistent]
-        public double salaryEngineers = 1000d;
+        public int salaryEngineers = 1000;
 
         [Persistent]
-        public double salaryResearchers = 1000d;
+        public int salaryResearchers = 1000;
 
         [Persistent]
         public double nautYearlyUpkeepAdd = 5000d;

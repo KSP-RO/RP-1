@@ -63,7 +63,7 @@ namespace KerbalConstructionTime
         private double _RawMaxPersonnel => RawMaxPersonnel(MassMax, SizeMax);
         public int MaxPersonnel => MaxPersonnelCalc(MassMax, SizeMax, IsHumanRated);
         public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
-        public double EfficiencyPersonnel = 1d;
+        public double EfficiencyPersonnel = 0d;
 
         public bool IsOperational = false;
         public bool IsPad = true;
@@ -342,7 +342,7 @@ namespace KerbalConstructionTime
             _rate = 0;
             _rateHRCapped = 0;
             Personnel = 0;
-            EfficiencyPersonnel = 1d;
+            EfficiencyPersonnel = 0d;
             IsHumanRated = false;
 
             Name = node.GetValue("LCName");

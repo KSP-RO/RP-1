@@ -195,10 +195,13 @@ namespace KerbalConstructionTime
 
                 // moving the roof
                 if (heightAbs > 0.1d)
-                    renovateCost += 10000d;
+                    renovateCost += 3000d;
 
                 if (curVABCost < oldVABCost)
                     renovateCost *= 0.5d;
+
+                if (curVABCost > oldVABCost && renovateCost > curVABCost)
+                    renovateCost = curVABCost;
 
                 totalCost += renovateCost;
             }

@@ -103,6 +103,9 @@ namespace RP0
                 Settings = new MaintenanceSettings();
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
                     Settings.Load(n);
+
+                KerbalConstructionTime.KCT_GUI.SalaryEngineers = Settings.salaryEngineers;
+                KerbalConstructionTime.KCT_GUI.SalaryResearchers = Settings.salaryResearchers;
             }
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)

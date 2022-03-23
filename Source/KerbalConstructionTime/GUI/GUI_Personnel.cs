@@ -18,6 +18,14 @@ namespace KerbalConstructionTime
         private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
         private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
 
+        public static int SalaryEngineers = -1;
+        public static int SalaryResearchers = -1;
+
+        public static int GetTotalSalary()
+        {
+            return TotalEngineers * SalaryEngineers + KCTGameStates.RDPersonnel * SalaryResearchers;
+        }
+
         public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Personnel);
 
         private static void DrawPersonnelWindow(int windowID)
@@ -48,14 +56,19 @@ namespace KerbalConstructionTime
             GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
+            int tE = TotalEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(TotalEngineers.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label(TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+            GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
+            GUILayout.Label($"√{(tE * SalaryEngineers):N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+            GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
+            GUILayout.Label($"√{(KCTGameStates.RDPersonnel * SalaryResearchers):N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&

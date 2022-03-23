@@ -33,6 +33,7 @@ namespace KerbalConstructionTime
             KCTGameStates.RDPersonnel = RDPersonnel;
             KCTGameStates.EfficiencyRDPersonnel = EfficiencyRDPersonnel;
             KCTGameStates.EfficiecnyEngineers = EfficiecnyEngineers;
+            KCTGameStates.UnassignedPersonnel = UnassignedPersonnel;
         }
 
         public override void OnEncodeToConfigNode()

@@ -152,7 +152,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(locTxt, _windowSkin.label);
                 GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(buildItem.GetTimeLeft()));
 
-                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"Salary Cost: {(buildItem.GetTimeLeft() / (86400d * 365d) * GetTotalSalary()):N0}")))
+                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"Salary Cost:\n√{(buildItem.GetTimeLeft() / (86400d * 365d) * GetTotalSalary()):N0}")))
                 {
                     KCTWarpController.Create(buildItem);
                 }
@@ -652,7 +652,7 @@ namespace KerbalConstructionTime
                 {
                     double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
                     double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, b.LC, b.IsHumanRated), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), b.LC))
-                        * b.LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
+                        * b.LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
                     string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }
@@ -1391,9 +1391,9 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished &&
                 (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
-                ( b.LC.Personnel == 0 ? GUILayout.Button(new GUIContent("Rush Build Unavailable", "Rush building requires Engineers!"), _redButton)
-                : GUILayout.Button(new GUIContent($"Rush Build {(b.LC.Personnel / b.LC.MaxPersonnel * 10d):N0}%\n√{Math.Round(b.GetRushCost())}",
-                    $"Progress proportional to Engineers.\nWill cause {b.GetRushEngineerCost():N} Engineers to quit!"))))
+                (b.LC.Engineers == 0 ? GUILayout.Button(new GUIContent("Rush Build\nUnavailable", "Rush building requires Engineers!"), _redButton)
+                : GUILayout.Button(new GUIContent($"Rush Build {((10d * b.LC.Engineers) / b.LC.MaxPersonnel):N0}%\n√{Math.Round(b.GetRushCost())}",
+                    $"Progress proportional to Engineers.\nWill cause {(b.GetRushEfficiencyCost() * 100d):N0}pt loss to efficiency\n at {b.LC.Name}."))))
             {
                 b.DoRushBuild();
             }

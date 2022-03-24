@@ -19,10 +19,12 @@ namespace KerbalConstructionTime
         [Persistent] public float SciPoints = -1f;
         [Persistent] public bool IsSimulation;
         [Persistent] public bool DisableFailuresInSim = true;
-        [Persistent] public int RDPersonnel;
+        [Persistent] public int Researchers;
         [Persistent] public int UnassignedPersonnel;
-        [Persistent] public double EfficiencyRDPersonnel = 1d;
-        [Persistent] public double EfficiecnyEngineers = 1d;
+        [Persistent] public double EfficiencyResearchers = 0.25d;
+        [Persistent] public double EfficiecnyEngineers = 0.5d;
+        [Persistent] public double LastEngineers = 0d;
+        [Persistent] public double LastResearchers = 0d;
 
         public override void OnDecodeFromConfigNode()
         {
@@ -30,10 +32,12 @@ namespace KerbalConstructionTime
             KCTGameStates.SciPointsTotal = SciPoints;
             KCTGameStates.IsSimulatedFlight = IsSimulation;
             KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
-            KCTGameStates.RDPersonnel = RDPersonnel;
-            KCTGameStates.EfficiencyRDPersonnel = EfficiencyRDPersonnel;
+            KCTGameStates.Researchers = Researchers;
+            KCTGameStates.EfficiencyResearchers = EfficiencyResearchers;
             KCTGameStates.EfficiecnyEngineers = EfficiecnyEngineers;
             KCTGameStates.UnassignedPersonnel = UnassignedPersonnel;
+            KCTGameStates.LastEngineers = LastEngineers;
+            KCTGameStates.LastResearchers = LastResearchers;
         }
 
         public override void OnEncodeToConfigNode()
@@ -42,10 +46,12 @@ namespace KerbalConstructionTime
             activeKSC = KCTGameStates.ActiveKSC.KSCName;
             IsSimulation = KCTGameStates.IsSimulatedFlight;
             DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
-            RDPersonnel = KCTGameStates.RDPersonnel;
+            Researchers = KCTGameStates.Researchers;
             UnassignedPersonnel = KCTGameStates.UnassignedPersonnel;
-            EfficiencyRDPersonnel = KCTGameStates.EfficiencyRDPersonnel;
+            EfficiencyResearchers = KCTGameStates.EfficiencyResearchers;
             EfficiecnyEngineers = KCTGameStates.EfficiecnyEngineers;
+            LastResearchers = KCTGameStates.LastResearchers;
+            LastEngineers = KCTGameStates.LastEngineers;
         }
     }
 }

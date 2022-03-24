@@ -54,7 +54,7 @@ namespace KerbalConstructionTime
         public double Rate => _rate;
         public double RateHRCapped => _rateHRCapped;
         
-        public int Personnel = 0;
+        public int Engineers = 0;
         private static double RawMaxPersonnel(float massMax, Vector3 sizeMax) =>
             massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.05d;
         public static int MaxPersonnelCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
@@ -63,7 +63,8 @@ namespace KerbalConstructionTime
         private double _RawMaxPersonnel => RawMaxPersonnel(MassMax, SizeMax);
         public int MaxPersonnel => MaxPersonnelCalc(MassMax, SizeMax, IsHumanRated);
         public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
-        public double EfficiencyPersonnel = 0d;
+        public double EfficiencyEngineers = 0d;
+        public double LastEngineers = 0d;
 
         public bool IsOperational = false;
         public bool IsPad = true;
@@ -257,8 +258,9 @@ namespace KerbalConstructionTime
             node.AddValue("massMin", MassMin);
             node.AddValue("sizeMax", SizeMax);
             node.AddValue("id", _id);
-            node.AddValue("Personnel", Personnel);
-            node.AddValue("EfficiencyPersonnel", EfficiencyPersonnel);
+            node.AddValue("Engineers", Engineers);
+            node.AddValue("EfficiencyEngineers", EfficiencyEngineers);
+            node.AddValue("LastEngineers", LastEngineers);
             node.AddValue("BuildRate", _rate);
             node.AddValue("BuildRateCapped", _rateHRCapped);
             node.AddValue("IsHumanRated", IsHumanRated);
@@ -341,8 +343,9 @@ namespace KerbalConstructionTime
             LaunchPads.Clear();
             _rate = 0;
             _rateHRCapped = 0;
-            Personnel = 0;
-            EfficiencyPersonnel = 0d;
+            Engineers = 0;
+            EfficiencyEngineers = 0d;
+            LastEngineers = 0;
             IsHumanRated = false;
 
             Name = node.GetValue("LCName");
@@ -354,8 +357,9 @@ namespace KerbalConstructionTime
             node.TryGetValue("massMin", ref MassMin);
             node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
-            node.TryGetValue("Personnel", ref Personnel);
-            node.TryGetValue("EfficiencyPersonnel", ref EfficiencyPersonnel);
+            node.TryGetValue("Engineers", ref Engineers);
+            node.TryGetValue("EfficiencyEngineers", ref EfficiencyEngineers);
+            node.TryGetValue("LastEngineers", ref LastEngineers);
             node.TryGetValue("BuildRate", ref _rate);
             node.TryGetValue("BuildRateCapped", ref _rateHRCapped);
             node.TryGetValue("IsHumanRated", ref IsHumanRated);
@@ -365,6 +369,11 @@ namespace KerbalConstructionTime
                 IsHumanRated = true;
             if (MassMax == -1f)
                 MassMax = float.MaxValue;
+            if (node.HasValue("Personnel"))
+            {
+                node.TryGetValue("Personnel", ref Engineers);
+                node.TryGetValue("EfficiencyPersonnel", ref EfficiencyEngineers);
+            }
 
             ConfigNode tmp = node.GetNode("BuildList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))

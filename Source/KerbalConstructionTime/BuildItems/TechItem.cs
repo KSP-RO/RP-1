@@ -45,7 +45,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0, 0) * KCTGameStates.EfficiencyRDPersonnel;
+                    double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0, 0) * KCTGameStates.EfficiencyResearchers;
                     rate *= YearBasedRateMult;
                     return (ScienceCost - Progress) / rate;
                 }
@@ -97,7 +97,7 @@ namespace KerbalConstructionTime
         public double UpdateBuildRate(int index)
         {
             ForceRecalculateYearBasedRateMult();
-            double rate = MathParser.ParseNodeRateFormula(ScienceCost, index, 0) * KCTGameStates.EfficiencyRDPersonnel;
+            double rate = MathParser.ParseNodeRateFormula(ScienceCost, index, 0) * KCTGameStates.EfficiencyResearchers;
             if (rate < 0)
                 rate = 0;
 

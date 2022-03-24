@@ -1389,12 +1389,14 @@ namespace KerbalConstructionTime
                 }
             }
 
-            //if (!b.IsFinished &&
-            //    (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
-            //    GUILayout.Button($"Rush Build 10%\n√{Math.Round(b.GetRushCost())}"))
-            //{
-            //    b.DoRushBuild();
-            //}
+            if (!b.IsFinished &&
+                (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
+                ( b.LC.Personnel == 0 ? GUILayout.Button(new GUIContent("Rush Build Unavailable", "Rush building requires Engineers!"), _redButton)
+                : GUILayout.Button(new GUIContent($"Rush Build {(b.LC.Personnel / b.LC.MaxPersonnel * 10d):N0}%\n√{Math.Round(b.GetRushCost())}",
+                    $"Progress proportional to Engineers.\nWill cause {b.GetRushEngineerCost():N} Engineers to quit!"))))
+            {
+                b.DoRushBuild();
+            }
 
             if (GUILayout.Button("Close"))
             {

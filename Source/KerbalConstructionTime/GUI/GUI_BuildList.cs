@@ -1389,12 +1389,12 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (!b.IsFinished &&
-                (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
-                GUILayout.Button($"Rush Build 10%\n√{Math.Round(b.GetRushCost())}"))
-            {
-                b.DoRushBuild();
-            }
+            //if (!b.IsFinished &&
+            //    (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
+            //    GUILayout.Button($"Rush Build 10%\n√{Math.Round(b.GetRushCost())}"))
+            //{
+            //    b.DoRushBuild();
+            //}
 
             if (GUILayout.Button("Close"))
             {

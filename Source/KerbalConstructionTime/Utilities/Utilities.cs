@@ -2185,11 +2185,9 @@ namespace KerbalConstructionTime
 
         public static void ChangeEngineers(LCItem currentLC, int delta)
         {
-            currentLC.EfficiencyPersonnel = PredictEfficiencyEngineers(currentLC, delta);
+            currentLC.EfficiencyEngineers = PredictEfficiencyEngineers(currentLC, delta);
 
-            currentLC.Personnel += delta;
-            if (currentLC.Personnel == 0)
-                currentLC.EfficiencyPersonnel = 0d;
+            currentLC.Engineers += delta;
         }
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
@@ -2197,34 +2195,31 @@ namespace KerbalConstructionTime
             KCTGameStates.EfficiecnyEngineers = PredictEfficiencyEngineers(delta);
 
             ksc.Personnel += delta;
-            if (KCT_GUI.TotalEngineers == 0)
-                KCTGameStates.EfficiecnyEngineers = 0d;
         }
 
         public static void ChangeResearchers(int delta)
         {
-            KCTGameStates.EfficiencyRDPersonnel = PredictEfficiencyResearchers(delta);
+            KCTGameStates.EfficiencyResearchers = PredictEfficiencyResearchers(delta);
 
-            KCTGameStates.RDPersonnel += delta;
-            if (KCTGameStates.RDPersonnel == 0)
-                KCTGameStates.EfficiencyRDPersonnel = 0d;
+            KCTGameStates.Researchers += delta;
         }
 
         public static double PredictEfficiencyEngineers(LCItem currentLC, int delta)
         {
             if (delta > 0)
-                return ((currentLC.EfficiencyPersonnel * currentLC.Personnel) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) / (currentLC.Personnel + delta);
+                return Math.Min(currentLC.EfficiencyEngineers, 
+                    ((currentLC.LastEngineers * currentLC.EfficiencyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) 
+                        / (currentLC.LastEngineers + delta));
 
-            return currentLC.EfficiencyPersonnel;
+            return currentLC.EfficiencyEngineers;
         }
 
         public static double PredictEfficiencyEngineers(int delta)
         {
             if (delta > 0)
-            {
-                int oldNum = KCT_GUI.TotalEngineers;
-                return ((KCTGameStates.EfficiecnyEngineers * oldNum) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency)) / (oldNum + delta);
-            }
+                return Math.Min(KCTGameStates.EfficiecnyEngineers,
+                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiecnyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency)) 
+                    / (KCTGameStates.LastEngineers + delta));
 
             return KCTGameStates.EfficiecnyEngineers;
         }
@@ -2232,9 +2227,11 @@ namespace KerbalConstructionTime
         public static double PredictEfficiencyResearchers(int delta)
         {
             if (delta > 0)
-                return ((KCTGameStates.EfficiencyRDPersonnel * KCTGameStates.RDPersonnel) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) / (KCTGameStates.RDPersonnel + delta);
+                return Math.Min(KCTGameStates.EfficiencyResearchers,
+                    ((KCTGameStates.LastResearchers * KCTGameStates.EfficiencyResearchers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) 
+                    / (KCTGameStates.LastResearchers + delta));
 
-            return KCTGameStates.EfficiencyRDPersonnel;
+            return KCTGameStates.EfficiencyResearchers;
         }
     }
 }

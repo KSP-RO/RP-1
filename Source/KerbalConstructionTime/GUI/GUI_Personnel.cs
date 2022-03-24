@@ -128,7 +128,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); }
-            GUILayout.Label(currentLC.Name);
+            GUILayout.Label(currentLC.Name, GetLabelCenterAlignStyle());
             if (GUILayout.Button(">>", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(true, _LCIndex, false); }
             GUILayout.EndHorizontal();
 
@@ -192,9 +192,6 @@ namespace KerbalConstructionTime
 
             double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta);
             double cRate = cRateFull * efficGlobal;
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Construction Rate: {cRateFull:N2} => {cRate:N2} BP/sec)", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
 
             double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta);
             double rate = rateFull * efficLocal * efficGlobal;
@@ -216,6 +213,10 @@ namespace KerbalConstructionTime
             {
                 GUILayout.Label($"No vessels under construction at {currentLC.Name}");
             }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label($"Construction Rate: {cRateFull:N2} => {cRate:N2} BP/sec)", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

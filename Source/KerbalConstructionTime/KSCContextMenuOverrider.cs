@@ -137,6 +137,7 @@ namespace KerbalConstructionTime
                     else
                         lvl.levelStats.textBase += $"\nResearcher Limit: {limit:N0}";
                 }
+                lvl.levelStats.textBase += $"\nResearch Boost: +{(lvlIdx * 25):N}% (total)";
             }
             else if (facilityType == SpaceCenterFacility.Administration)
             {

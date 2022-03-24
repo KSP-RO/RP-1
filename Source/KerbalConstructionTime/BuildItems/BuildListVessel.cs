@@ -678,22 +678,33 @@ namespace KerbalConstructionTime
 
         public double GetRushCost()
         {
-            if (_rushCost > -1) return _rushCost;
+            if (_rushCost < 0)
+                _rushCost = MathParser.ParseRushCostFormula(this);
 
-            _rushCost = MathParser.ParseRushCostFormula(this);
-            return _rushCost;
+            return _rushCost * LC.Personnel / LC.MaxPersonnel;
+        }
+
+        public int GetRushEngineerCost()
+        {
+            return (int)Math.Ceiling(LC.Personnel * 0.1d / 5) * 5;
         }
 
         public bool DoRushBuild()
         {
+            if (LC.Personnel == 0)
+                return false;
+
             double rushCost = GetRushCost();
-            if (Funding.Instance.Funds < rushCost) return false;
+            if (Funding.Instance.Funds < rushCost)
+                return false;
 
             double remainingBP = BuildPoints + IntegrationPoints - Progress;
-            Progress += remainingBP * 0.1;
+            Progress += remainingBP * 0.1d * LC.Personnel / LC.MaxPersonnel;
             Utilities.SpendFunds(rushCost, TransactionReasons.VesselRollout);
             ++RushBuildClicks;
             _rushCost = -1;    // force recalculation of rush cost
+
+            Utilities.ChangeEngineers(LC, -GetRushEngineerCost());
 
             return true;
         }

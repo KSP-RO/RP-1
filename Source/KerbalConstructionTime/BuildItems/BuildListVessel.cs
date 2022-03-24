@@ -684,9 +684,11 @@ namespace KerbalConstructionTime
             return _rushCost * LC.Personnel / LC.MaxPersonnel;
         }
 
-        public int GetRushEngineerCost()
+        public double GetRushEfficiencyCost()
         {
-            return (int)Math.Ceiling(LC.Personnel * 0.1d / 5) * 5;
+            double newEffic = Math.Max(LC.EfficiencyPersonnel * 0.9d,
+                PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency);
+            return LC.EfficiencyPersonnel - newEffic;
         }
 
         public bool DoRushBuild()
@@ -704,7 +706,7 @@ namespace KerbalConstructionTime
             ++RushBuildClicks;
             _rushCost = -1;    // force recalculation of rush cost
 
-            Utilities.ChangeEngineers(LC, -GetRushEngineerCost());
+            LC.EfficiencyPersonnel -= GetRushEfficiencyCost();
 
             return true;
         }

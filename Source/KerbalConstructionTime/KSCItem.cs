@@ -12,7 +12,7 @@ namespace KerbalConstructionTime
         public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
         public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
         public int Personnel = 0;
-        public int FreePersonnel => Personnel - LaunchComplexes.Sum(lc => lc.Personnel);
+        public int FreePersonnel => Personnel - LaunchComplexes.Sum(lc => lc.Engineers);
         
         public int ActiveLaunchComplexIndex = 1;
         private bool _allowRecalcConstructions = true;

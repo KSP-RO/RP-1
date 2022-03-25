@@ -23,7 +23,7 @@ namespace KerbalConstructionTime
 
         public static int GetTotalSalary()
         {
-            return TotalEngineers * SalaryEngineers + KCTGameStates.RDPersonnel * SalaryResearchers;
+            return TotalEngineers * SalaryEngineers + KCTGameStates.Researchers * SalaryResearchers;
         }
 
         public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Personnel);
@@ -66,9 +66,9 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+            GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{(KCTGameStates.RDPersonnel * SalaryResearchers):N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"√{(KCTGameStates.Researchers * SalaryResearchers):N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
@@ -150,7 +150,7 @@ namespace KerbalConstructionTime
                     _currentPersonnelHover = PersonnelButtonHover.None;
             }
 
-            GUILayout.Label($"  {currentLC.Personnel:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
+            GUILayout.Label($"  {currentLC.Engineers:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
 
             if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
@@ -184,7 +184,7 @@ namespace KerbalConstructionTime
                 case PersonnelButtonHover.Fire: constructionDelta = -fireAmount; break;
             }
 
-            double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyPersonnel;
+            double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiecnyEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {(efficLocal * 100d):N0}% (at {currentLC.Name}) x {(efficGlobal * 100d):N0}% (global)");
@@ -241,7 +241,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Researchers:", GUILayout.Width(90));
-            GUILayout.Label(KCTGameStates.RDPersonnel.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -317,7 +317,7 @@ namespace KerbalConstructionTime
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? KCTGameStates.RDPersonnel : KCTGameStates.ActiveKSC.FreePersonnel;
+                fireAmount = research ? KCTGameStates.Researchers : KCTGameStates.ActiveKSC.FreePersonnel;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -408,7 +408,7 @@ namespace KerbalConstructionTime
             else
             {
                 signChar = "-";
-                limit = currentLC.Personnel;
+                limit = currentLC.Engineers;
             }
             for (int i = 0; i < _buyModifierMultsPersonnel.Length; ++i)
             {

@@ -686,8 +686,7 @@ namespace KerbalConstructionTime
 
         public double GetRushEfficiencyCost()
         {
-            double newEffic = Math.Max(LC.EfficiencyEngineers * 0.9d,
-                PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency);
+            double newEffic = LC.EfficiencyEngineers * 0.9d;
             return LC.EfficiencyEngineers - newEffic;
         }
 

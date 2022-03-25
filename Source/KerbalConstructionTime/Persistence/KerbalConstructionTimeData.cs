@@ -86,10 +86,25 @@ namespace KerbalConstructionTime
                 KCTGameStates.ActiveKSC = null;
                 KCTGameStates.InitAndClearTechList();
                 KCTGameStates.SciPointsTotal = -1;
+                KCTGameStates.UnassignedPersonnel = 0;
+                KCTGameStates.Researchers = 0;
+                KCTGameStates.EfficiencyResearchers = 0.25d;
+                KCTGameStates.EfficiecnyEngineers = 0.5d;
+                KCTGameStates.LastEngineers = 0d;
+                KCTGameStates.LastResearchers = 0d;
 
                 var kctVS = new KCT_DataStorage();
                 if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
+                {
                     ConfigNode.LoadObjectFromConfig(kctVS, cn);
+                    // for back-compat
+                    if (cn.HasValue("RDPersonnel"))
+                    {
+                        node.TryGetValue("RDPersonnel", ref KCTGameStates.Researchers);
+                        node.TryGetValue("EfficiencyRDPersonnel", ref KCTGameStates.EfficiencyResearchers);
+                        KCTGameStates.EfficiencyResearchers -= 0.2d;
+                    }
+                }
 
                 bool foundStockKSC = false;
                 foreach (ConfigNode ksc in node.GetNodes("KSC"))

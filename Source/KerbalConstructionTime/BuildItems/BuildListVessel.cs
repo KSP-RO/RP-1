@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
         public Vector3 ShipSize = Vector3.zero;
 
         public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
-            * LC.EfficiencyPersonnel * KCTGameStates.EfficiecnyEngineers;
+            * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
 
         public double TimeLeft
         {
@@ -681,19 +681,19 @@ namespace KerbalConstructionTime
             if (_rushCost < 0)
                 _rushCost = MathParser.ParseRushCostFormula(this);
 
-            return _rushCost * LC.Personnel / LC.MaxPersonnel;
+            return _rushCost * LC.Engineers / LC.MaxPersonnel;
         }
 
         public double GetRushEfficiencyCost()
         {
-            double newEffic = Math.Max(LC.EfficiencyPersonnel * 0.9d,
+            double newEffic = Math.Max(LC.EfficiencyEngineers * 0.9d,
                 PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency);
-            return LC.EfficiencyPersonnel - newEffic;
+            return LC.EfficiencyEngineers - newEffic;
         }
 
         public bool DoRushBuild()
         {
-            if (LC.Personnel == 0)
+            if (LC.Engineers == 0)
                 return false;
 
             double rushCost = GetRushCost();
@@ -701,12 +701,12 @@ namespace KerbalConstructionTime
                 return false;
 
             double remainingBP = BuildPoints + IntegrationPoints - Progress;
-            Progress += remainingBP * 0.1d * LC.Personnel / LC.MaxPersonnel;
+            Progress += remainingBP * 0.1d * LC.Engineers / LC.MaxPersonnel;
             Utilities.SpendFunds(rushCost, TransactionReasons.VesselRollout);
             ++RushBuildClicks;
             _rushCost = -1;    // force recalculation of rush cost
 
-            LC.EfficiencyPersonnel -= GetRushEfficiencyCost();
+            LC.EfficiencyEngineers -= GetRushEfficiencyCost();
 
             return true;
         }

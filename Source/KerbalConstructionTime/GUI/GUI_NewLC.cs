@@ -259,7 +259,7 @@ namespace KerbalConstructionTime
                     if (isModify)
                     {
                         lc = activeLC;
-                        Utilities.ChangeEngineers(lc, -lc.Personnel);
+                        Utilities.ChangeEngineers(lc, -lc.Engineers);
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                     }
                     else

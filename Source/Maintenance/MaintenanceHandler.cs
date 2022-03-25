@@ -164,7 +164,7 @@ namespace RP0
                 //}
             }
 
-            Researchers = KCTGameStates.RDPersonnel;
+            Researchers = KCTGameStates.Researchers;
             Profiler.EndSample();
         }
 

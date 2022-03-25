@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
         public static double ParseBuildRateFormula(int index, LCItem LC, bool isHumanRatedCapped, int persDelta)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
-            int personnel = Math.Max(0, LC.Personnel + persDelta);
+            int personnel = Math.Max(0, LC.Engineers + persDelta);
             if (isHumanRatedCapped)
                 personnel = Math.Min(personnel, LC.MaxPersonnelNonHR);
 
@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
         {
             int RnDLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
             int RnDMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            int Personnel = Math.Max(0, KCTGameStates.RDPersonnel + upgradeDelta);
+            int Personnel = Math.Max(0, KCTGameStates.Researchers + upgradeDelta);
             var variables = new Dictionary<string, string>
             {
                 { "S", ScienceValue.ToString() },

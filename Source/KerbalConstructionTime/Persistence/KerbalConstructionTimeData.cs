@@ -100,8 +100,8 @@ namespace KerbalConstructionTime
                     // for back-compat
                     if (cn.HasValue("RDPersonnel"))
                     {
-                        node.TryGetValue("RDPersonnel", ref KCTGameStates.Researchers);
-                        node.TryGetValue("EfficiencyRDPersonnel", ref KCTGameStates.EfficiencyResearchers);
+                        cn.TryGetValue("RDPersonnel", ref KCTGameStates.Researchers);
+                        cn.TryGetValue("EfficiencyRDPersonnel", ref KCTGameStates.EfficiencyResearchers);
                         KCTGameStates.EfficiencyResearchers -= 0.2d;
                     }
                 }

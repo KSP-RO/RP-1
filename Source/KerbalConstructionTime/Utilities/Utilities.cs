@@ -185,7 +185,7 @@ namespace KerbalConstructionTime
             {
                 totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
-            
+
             double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
@@ -626,7 +626,7 @@ namespace KerbalConstructionTime
             if (ship.Type != BuildListVessel.ListType.VAB && ship.Type != BuildListVessel.ListType.SPH)
                 return;
             // will also return if ship.LC==null
-            
+
             KCTEvents.Instance.KCTButtonStockImportant = true;
             _startedFlashing = DateTime.Now;    //Set the time to start flashing
 
@@ -906,9 +906,9 @@ namespace KerbalConstructionTime
             return protoTechNodes;
         }
 
-        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent) 
+        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
         {
-            double origTotalBP; 
+            double origTotalBP;
             double oldProgressBP;
 
             if (KCTGameStates.MergedVessels.Count == 0)
@@ -1052,7 +1052,7 @@ namespace KerbalConstructionTime
 
             foreach (var name in partInfo.identicalParts.Split(','))
             {
-                if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info 
+                if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info
                     && info.TechRequired == partInfo.TechRequired)
                 {
                     info.costsFunds = false;
@@ -1400,13 +1400,35 @@ namespace KerbalConstructionTime
             return LC.GetReconditioning(launchSite) is ReconRollout;
         }
 
-        public static BuildListVessel FindBLVesselByID(Guid id)
+        public static BuildListVessel FindBLVesselByID(LCItem hintLC, Guid id)
         {
+            BuildListVessel b;
+            if (hintLC != null)
+            {
+                b = FindBLVesselByIDInLC(id, hintLC);
+                if (b != null)
+                    return b;
+            }
+
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 if (FindBLVesselByID(id, ksc) is BuildListVessel blv)
                     return blv;
             }
+
+            return null;
+        }
+
+        public static BuildListVessel FindBLVesselByIDInLC(Guid id, LCItem lc)
+        {
+
+            BuildListVessel ves = lc.Warehouse.Find(blv => blv.Id == id);
+            if (ves != null)
+                return ves;
+
+            ves = lc.BuildList.Find(blv => blv.Id == id);
+            if (ves != null)
+                return ves;
 
             return null;
         }
@@ -1417,11 +1439,7 @@ namespace KerbalConstructionTime
             {
                 foreach (LCItem lc in ksc.LaunchComplexes)
                 {
-                    BuildListVessel ves = lc.Warehouse.Find(blv => blv.Id == id);
-                    if (ves != null)
-                        return ves;
-
-                    ves = lc.BuildList.Find(blv => blv.Id == id);
+                    BuildListVessel ves = FindBLVesselByIDInLC(id, lc);
                     if (ves != null)
                         return ves;
                 }
@@ -1587,7 +1605,7 @@ namespace KerbalConstructionTime
             {
                 { "N", KCTGameStates.SciPointsTotal.ToString() }
             });
-            
+
             return total;
         }
 
@@ -2188,6 +2206,7 @@ namespace KerbalConstructionTime
             currentLC.EfficiencyEngineers = PredictEfficiencyEngineers(currentLC, delta);
 
             currentLC.Engineers += delta;
+            KCTEvents.OnPersonnelChange.Fire();
         }
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
@@ -2195,6 +2214,7 @@ namespace KerbalConstructionTime
             KCTGameStates.EfficiecnyEngineers = PredictEfficiencyEngineers(delta);
 
             ksc.Engineers += delta;
+            KCTEvents.OnPersonnelChange.Fire();
         }
 
         public static void ChangeResearchers(int delta)
@@ -2202,13 +2222,14 @@ namespace KerbalConstructionTime
             KCTGameStates.EfficiencyResearchers = PredictEfficiencyResearchers(delta);
 
             KCTGameStates.Researchers += delta;
+            KCTEvents.OnPersonnelChange.Fire();
         }
 
         public static double PredictEfficiencyEngineers(LCItem currentLC, int delta)
         {
             if (delta > 0)
-                return Math.Min(currentLC.EfficiencyEngineers, 
-                    ((currentLC.LastEngineers * currentLC.EfficiencyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency)) 
+                return Math.Min(currentLC.EfficiencyEngineers,
+                    ((currentLC.LastEngineers * currentLC.EfficiencyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency))
                         / (currentLC.LastEngineers + delta));
 
             return currentLC.EfficiencyEngineers;
@@ -2218,7 +2239,7 @@ namespace KerbalConstructionTime
         {
             if (delta > 0)
                 return Math.Min(KCTGameStates.EfficiecnyEngineers,
-                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiecnyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency)) 
+                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiecnyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency))
                     / (KCTGameStates.LastEngineers + delta));
 
             return KCTGameStates.EfficiecnyEngineers;
@@ -2228,10 +2249,58 @@ namespace KerbalConstructionTime
         {
             if (delta > 0)
                 return Math.Min(KCTGameStates.EfficiencyResearchers,
-                    ((KCTGameStates.LastResearchers * KCTGameStates.EfficiencyResearchers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency)) 
+                    ((KCTGameStates.LastResearchers * KCTGameStates.EfficiencyResearchers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency))
                     / (KCTGameStates.LastResearchers + delta));
 
             return KCTGameStates.EfficiencyResearchers;
+        }
+
+        private const double MaxSecondsForDayDisplay = 7d * 86400d;
+
+        public static string GetColonFormattedTime(double t, double extraTime = 0d, bool flip = false)
+        {
+            if (double.IsNaN(t) || double.IsInfinity(t))
+                return "(infinity)";
+
+            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay;
+            if (shouldUseDate ^ flip)
+                return KSPUtil.dateTimeFormatter.PrintDateCompact(t + extraTime + GetUT(), false, false);
+
+            return MagiCore.Utilities.GetColonFormattedTime(t);
+        }
+
+        public static string GetFormattedTime(double t, double extraTime = 0d, bool allowDate = true)
+        {
+            if (double.IsNaN(t) || double.IsInfinity(t))
+                return "(infinity)";
+
+            if (KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay && allowDate)
+                return KSPUtil.dateTimeFormatter.PrintDate(t + extraTime + GetUT(), false, false);
+            return MagiCore.Utilities.GetFormattedTime(t);
+        }
+
+        public static GUIContent GetColonFormattedTimeWithTooltip(double t, double extraTime = 0, bool showEst = false)
+        {
+            return new GUIContent(showEst ? $"Est: {GetColonFormattedTime(t, extraTime, false)}" : GetColonFormattedTime(t, extraTime, false), GetColonFormattedTime(t, extraTime, true));
+        }
+
+        public static string GetTechUnlockTime(TechItem tech)
+        {
+            double totalTime = 0d;
+            double nodeTime = 0d;
+            for (int i = 0; i < KCTGameStates.TechList.Count; ++i)
+            {
+                TechItem techItem = KCTGameStates.TechList[i];
+                nodeTime = techItem.GetTimeLeftEst(totalTime);
+                totalTime += nodeTime;
+                if (techItem == tech)
+                    break;
+            }
+
+            if (KCTGameStates.Settings.UseDates)
+                return $"on {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime, 0, true)})";
+            else
+                return $"in {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
     }
 }

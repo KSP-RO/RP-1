@@ -35,23 +35,6 @@ namespace KerbalConstructionTime
 
         public double TimeLeft => (ScienceCost - Progress) / BuildRate;
 
-        public double EstimatedTimeLeft
-        {
-            get
-            {
-                if (BuildRate > 0)
-                {
-                    return TimeLeft;
-                }
-                else
-                {
-                    double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0, 0) * KCTGameStates.EfficiencyResearchers;
-                    rate *= YearBasedRateMult;
-                    return (ScienceCost - Progress) / rate;
-                }
-            }
-        }
-
         public double YearBasedRateMult
         {
             get
@@ -113,11 +96,11 @@ namespace KerbalConstructionTime
             _yearMult = -1;
         }
 
-        public double CalculateYearBasedRateMult()
+        public double CalculateYearBasedRateMult(double offset = 0)
         {
             if (StartYear < 1) return 1;
 
-            DateTime curDate = _epoch.AddSeconds(Utilities.GetUT());
+            DateTime curDate = _epoch.AddSeconds(Utilities.GetUT() + offset);
 
             double diffYears = (curDate - new DateTime(StartYear, 1, 1)).TotalDays / 365.25;
             if (diffYears > 0)
@@ -151,7 +134,22 @@ namespace KerbalConstructionTime
         public double GetBuildRate() => BuildRate;
 
         public double GetTimeLeft() => TimeLeft;
-        public double GetTimeLeftEst() => EstimatedTimeLeft;
+        public double GetTimeLeftEst(double offset)
+        {
+            if (BuildRate > 0)
+            {
+                return TimeLeft;
+            }
+            else
+            {
+                double rate = MathParser.ParseNodeRateFormula(ScienceCost, 0, 0) * KCTGameStates.EfficiencyResearchers;
+                if (offset == 0d)
+                    rate *= YearBasedRateMult;
+                else
+                    rate *= CalculateYearBasedRateMult(offset);
+                return (ScienceCost - Progress) / rate;
+            }
+        }
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.TechNode;
 

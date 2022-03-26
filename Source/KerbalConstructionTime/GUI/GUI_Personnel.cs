@@ -177,7 +177,7 @@ namespace KerbalConstructionTime
             double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiecnyEngineers;
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {(efficLocal * 100d):N0}% (at {currentLC.Name}) x {(efficGlobal * 100d):N0}% (global)");
+            GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global)");
             GUILayout.EndHorizontal();
 
             double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta);
@@ -279,7 +279,7 @@ namespace KerbalConstructionTime
             
             GUILayout.BeginHorizontal();
             GUILayout.Label("Global Researcher Efficiency:");
-            GUILayout.Label($"{(effic * 100d):N0}%", GetLabelRightAlignStyle());
+            GUILayout.Label($"{effic:P1}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

@@ -9,7 +9,7 @@ namespace KerbalConstructionTime
 {
     public class BuildListVessel : IKCTBuildItem
     {
-        public enum ListType { None, VAB, SPH, TechNode, Reconditioning, KSC };
+        public enum ListType { None, VAB, SPH, TechNode, Reconditioning, KSC, AirLaunch };
 
         public double Progress, EffectiveCost, BuildPoints, IntegrationPoints;
         public string LaunchSite, Flag, ShipName;
@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
         public Vector3 ShipSize = Vector3.zero;
 
         public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
-            * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
+            * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers * LC.RushRate;
 
         public double TimeLeft
         {
@@ -848,11 +848,6 @@ namespace KerbalConstructionTime
 
         public bool AreAllPartsUnlocked() => GetPartsWithPurchasability().Values.All(v => v.Status == PurchasabilityStatus.Purchased);
 
-        public double ProgressPercent()
-        {
-            return 100 * GetFractionComplete();
-        }
-
         public string GetItemName() => ShipName;
 
         public double GetBuildRate() => BuildRate;
@@ -869,7 +864,7 @@ namespace KerbalConstructionTime
         public double GetFractionComplete() => Progress / (BuildPoints + IntegrationPoints);
 
         public double GetTimeLeft() => TimeLeft;
-        public double GetTimeLeftEst()
+        public double GetTimeLeftEst(double offset)
         {
             if (BuildRate > 0)
                 return TimeLeft;

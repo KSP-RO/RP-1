@@ -26,7 +26,7 @@ namespace KerbalConstructionTime
             return TotalEngineers * SalaryEngineers + KCTGameStates.Researchers * SalaryResearchers;
         }
 
-        public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Personnel);
+        public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Engineers);
 
         private static void DrawPersonnelWindow(int windowID)
         {
@@ -119,9 +119,9 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Engineers:", GUILayout.ExpandWidth(false));
-            GUILayout.Label(KSC.Personnel.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(30));
+            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(30));
             GUILayout.Label($"Free for Construction:", GetLabelRightAlignStyle());
-            GUILayout.Label($"{KSC.FreePersonnel}", GetLabelRightAlignStyle(), GUILayout.Width(30));
+            GUILayout.Label($"{KSC.ConstructionWorkers}", GetLabelRightAlignStyle(), GUILayout.Width(30));
             GUILayout.EndHorizontal();
 
             RenderHireFire(false, out int fireAmount, out int hireAmount);
@@ -317,7 +317,7 @@ namespace KerbalConstructionTime
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? KCTGameStates.Researchers : KCTGameStates.ActiveKSC.FreePersonnel;
+                fireAmount = research ? KCTGameStates.Researchers : KCTGameStates.ActiveKSC.ConstructionWorkers;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -403,7 +403,7 @@ namespace KerbalConstructionTime
             if (add)
             {
                 signChar = "+";
-                limit = currentLC.KSC.FreePersonnel;
+                limit = currentLC.KSC.ConstructionWorkers;
             }
             else
             {

@@ -2046,7 +2046,7 @@ namespace KerbalConstructionTime
         {
             KCTGameStates.EfficiecnyEngineers = PredictEfficiencyEngineers(delta);
 
-            ksc.Personnel += delta;
+            ksc.Engineers += delta;
         }
 
         public static void ChangeResearchers(int delta)

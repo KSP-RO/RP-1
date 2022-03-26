@@ -615,6 +615,8 @@ namespace KerbalConstructionTime
                     remainingUT = UTDiff - passes * 86400d;
                     ++passes;
                 }
+                double remainingRushEfficMult = Math.Pow(LCItem.RushEfficMult, remainingUT / 86400d);
+                int rushingEngs = 0;
 
                 int totalEngineers = 0;
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
@@ -630,16 +632,34 @@ namespace KerbalConstructionTime
                         bool increment = currentLC.IsOperational && currentLC.Engineers > 0 && currentLC.IsActive;
                         for (int p = 0; p < passes; ++p)
                         {
-                            double timestep = p == 0 ? remainingUT : 86400d;
+                            double timestep, rushEfficMult;
+                            if (p == 0)
+                            {
+                                timestep = remainingUT;
+                                rushEfficMult = remainingRushEfficMult;
+                            }
+                            else
+                            {
+                                timestep = 86400d;
+                                rushEfficMult = LCItem.RushEfficMult;
+                            }
                             if (increment)
                             {
-                                double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
-                                double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyEngineers);
-                                double delta = eval * timestep / (365d * 86400d);
-                                //KCTDebug.Log($"For LC {currentLC.Name}, effic {currentLC.EfficiencyPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
-                                currentLC.EfficiencyEngineers = Math.Min(max, currentLC.EfficiencyEngineers + delta);
-
                                 skillupEng = true;
+
+                                if (currentLC.IsRushing)
+                                {
+                                    currentLC.EfficiencyEngineers *= rushEfficMult;
+                                    rushingEngs += currentLC.Engineers;
+                                }
+                                else
+                                {
+                                    double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
+                                    double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyEngineers);
+                                    double delta = eval * timestep / (365d * 86400d);
+                                    //KCTDebug.Log($"For LC {currentLC.Name}, effic {currentLC.EfficiencyPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
+                                    currentLC.EfficiencyEngineers = Math.Min(max, currentLC.EfficiencyEngineers + delta);
+                                }
                             }
                             if (currentLC.LastEngineers < currentLC.Engineers)
                                 currentLC.LastEngineers = currentLC.Engineers;
@@ -693,13 +713,25 @@ namespace KerbalConstructionTime
 
                 for (int p = 0; p < passes; ++p)
                 {
-                    double timestep = p == 0 ? remainingUT : 86400d;
+                    double timestep, rushEfficMult;
+                    if (p == 0)
+                    {
+                        timestep = remainingUT;
+                        rushEfficMult = remainingRushEfficMult;
+                    }
+                    else
+                    {
+                        timestep = 86400d;
+                        rushEfficMult = LCItem.RushEfficMult;
+                    }
 
                     if (skillupEng)
                     {
                         double max = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerMaxEfficiency;
                         double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiecnyEngineers);
                         double delta = eval * UTDiff / (365d * 86400d);
+                        if (rushingEngs > 0)
+                            delta = UtilMath.LerpUnclamped(delta, KCTGameStates.EfficiecnyEngineers * rushEfficMult - KCTGameStates.EfficiecnyEngineers, rushingEngs / KCTGameStates.TotalEngineers);
                         //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiecnyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
                         KCTGameStates.EfficiecnyEngineers = Math.Min(max, KCTGameStates.EfficiecnyEngineers + delta);
                     }

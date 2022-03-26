@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         public enum PrepDirection { Mount, Unmount };
         public PrepDirection Direction = PrepDirection.Mount;
 
-        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
+        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
 
         private LCItem _lc = null;
         public LCItem LC
@@ -67,7 +67,7 @@ namespace KerbalConstructionTime
         public double GetBuildRate()
         {
             double buildRate = Math.Min(Utilities.GetBuildRate(0, LC, IsHumanRated, false), Utilities.GetBuildRateCap(VesselBP, Mass, LC))
-                * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
+                * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers * LC.RushRate;
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;
@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
 
         public string GetItemName() => Name;
 
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.SPH;
+        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.AirLaunch;
 
         public double GetFractionComplete() => Direction == PrepDirection.Mount ? Progress / BP : (BP - Progress) / BP;
 
@@ -87,7 +87,7 @@ namespace KerbalConstructionTime
             return (goal - Progress) / GetBuildRate();
         }
 
-        public double GetTimeLeftEst() => GetTimeLeft();
+        public double GetTimeLeftEst(double offset) => GetTimeLeft();
 
         public bool IsComplete() => Direction == PrepDirection.Mount ? Progress >= BP : Progress <= 0;
 

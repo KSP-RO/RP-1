@@ -37,7 +37,7 @@ namespace KerbalConstructionTime
             {  RolloutReconType.None, UnknownStr }
         };
 
-        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
+        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
 
         private LCItem _lc = null;
         public LCItem LC
@@ -137,8 +137,6 @@ namespace KerbalConstructionTime
                 RRType = RolloutReconType.Rollout;
         }
 
-        public double ProgressPercent() => Math.Round(100 * GetFractionComplete(), 2);
-
         public string GetItemName() => Name;
 
         public double GetBuildRate()
@@ -146,7 +144,7 @@ namespace KerbalConstructionTime
             double buildRate = Utilities.GetBuildRate(0, LC, IsHumanRated, false);
             if (RRType != RolloutReconType.Reconditioning)
                 buildRate = Math.Min(buildRate, Utilities.GetBuildRateCap(VesselBP, Mass, LC));
-            buildRate *= LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
+            buildRate *= LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers * LC.RushRate;
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;
@@ -160,7 +158,7 @@ namespace KerbalConstructionTime
             double n = RRType == RolloutReconType.Rollback ? 0 : BP;
             return (n - Progress) / GetBuildRate();
         }
-        public double GetTimeLeftEst() => GetTimeLeft();
+        public double GetTimeLeftEst(double offset) => GetTimeLeft();
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
 

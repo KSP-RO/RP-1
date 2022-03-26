@@ -64,7 +64,7 @@ namespace RP0
                 SwitchTabTo(UITab.Tooling);
             if (ShouldShowTab(UITab.Training) && RenderToggleButton("Astronauts", _currentTab == UITab.Training))
                 SwitchTabTo(UITab.Training);
-            if (ShouldShowTab(UITab.Courses) && RenderToggleButton("Courses", _currentTab == UITab.Courses))
+            if (ShouldShowTab(UITab.Courses) && RenderToggleButton("Training", _currentTab == UITab.Courses))
                 SwitchTabTo(UITab.Courses);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
                 SwitchTabTo(UITab.Avionics);

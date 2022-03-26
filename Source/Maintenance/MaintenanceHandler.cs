@@ -40,6 +40,8 @@ namespace RP0
         private bool _skipTwo = true;
         private bool _skipThree = true;
 
+        private EventVoid onKctPersonnelChangeEvent;
+
         #region Component costs
 
         public double RndCost = 0d;
@@ -47,15 +49,15 @@ namespace RP0
         public double TsCost = 0d;
         public double AcCost = 0d;
 
-        public double ResearchUpkeep = 0d;
         public double TrainingUpkeep = 0d;
         public double NautBaseUpkeep = 0d;
         public double NautInFlightUpkeep = 0d;
         public double NautTotalUpkeep = 0d;
-        public double TotalUpkeep = 0d;
+        public double TotalUpkeep => FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchSalaryTotal + NautTotalUpkeep;
 
         public double FacilityUpkeep => RndCost + McCost + TsCost + AcCost;
 
+        // TODO this is duplicate code with the KCT side
         public double IntegrationSalaryTotal
         {
             get
@@ -78,6 +80,8 @@ namespace RP0
             }
         }
 
+        public double ResearchSalaryTotal => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365d;
+
         #endregion
 
         #region Overrides and Monobehaviour methods
@@ -94,6 +98,17 @@ namespace RP0
             GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
+        public void Start()
+        {
+            onKctPersonnelChangeEvent = GameEvents.FindEvent<EventVoid>("OnKctPesonnelChange");
+            if (onKctPersonnelChangeEvent != null)
+            {
+                onKctPersonnelChangeEvent.Add(UpdateKCTSalaries);
+            }
+            else
+                Debug.LogError("RP-0: Couldn't find OnKctPesonnelChange!");
+        }
+
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
@@ -104,8 +119,7 @@ namespace RP0
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
                     Settings.Load(n);
 
-                KerbalConstructionTime.KCT_GUI.SalaryEngineers = Settings.salaryEngineers;
-                KerbalConstructionTime.KCT_GUI.SalaryResearchers = Settings.salaryResearchers;
+                UpdateKCTSalarySettings();
             }
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
@@ -149,11 +163,13 @@ namespace RP0
         private void UpdateKCTSalaries()
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
+            Construction.Clear();
+            Integration.Clear();
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 int constructionWorkers = ksc.ConstructionWorkers;
                 Construction[ksc.KSCName] = constructionWorkers;
-                Integration[ksc.KSCName] = ksc.Engineers - constructionWorkers;
+                Integration[ksc.KSCName] = KCTGameStates.GetEffectiveEngineersForSalary(ksc) - constructionWorkers;
                 //for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
                 //{
                 //    LCItem lc = ksc.LaunchComplexes[j];
@@ -171,6 +187,10 @@ namespace RP0
         public void UpdateUpkeep()
         {
             Profiler.BeginSample("RP0Maintenance UpdateUpkeep");
+
+            if (Integration.Count == 0)
+                UpdateKCTSalaries();
+
             EnsureFacilityLvlCostsLoaded();
 
             //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out float[] costs))
@@ -262,10 +282,7 @@ namespace RP0
 
             NautBaseUpkeep += nautCount * perNaut;
             NautTotalUpkeep = NautBaseUpkeep + TrainingUpkeep + NautInFlightUpkeep;
-
-            ResearchUpkeep = _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365d;
-
-            TotalUpkeep = FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchUpkeep + NautTotalUpkeep;
+            KCTGameStates.TotalMaintenancePerDay = FacilityUpkeep + NautTotalUpkeep + Settings.maintenanceOffset;
             Profiler.EndSample();
         }
 
@@ -336,6 +353,8 @@ namespace RP0
         {
             GameEvents.onGameStateLoad.Remove(LoadSettings);
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
+            if (onKctPersonnelChangeEvent != null)
+                onKctPersonnelChangeEvent.Remove(UpdateKCTSalaries);
         }
 
         #endregion
@@ -348,7 +367,15 @@ namespace RP0
         private void SettingsChanged()
         {
             LoadSettings(null);
+            UpdateKCTSalarySettings();
             UpdateUpkeep();
+        }
+
+        private void UpdateKCTSalarySettings()
+        {
+            KCTGameStates.SalaryEngineers = Settings.salaryEngineers;
+            KCTGameStates.SalaryResearchers = Settings.salaryResearchers;
+            KCTGameStates.SalaryMultiplier = _maintenanceCostMult;
         }
 
         private void EnsureFacilityLvlCostsLoaded()

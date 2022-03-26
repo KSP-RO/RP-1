@@ -101,7 +101,7 @@ namespace RP0
             try
             {
                 GUILayout.Label("Research Teams", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.ResearchUpkeep * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                GUILayout.Label((MaintenanceHandler.Instance.ResearchSalaryTotal * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {
@@ -289,12 +289,12 @@ namespace RP0
             foreach (var kvp in MaintenanceHandler.Instance.Integration)
             {
                 string site = kvp.Key;
-                double rate = kvp.Value;
+                double engineers = kvp.Value;
                 GUILayout.BeginHorizontal();
                 try
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((rate * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.Label((engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {

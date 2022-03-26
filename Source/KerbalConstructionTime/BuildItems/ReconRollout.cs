@@ -13,7 +13,7 @@ namespace KerbalConstructionTime
         public const string ReconditioningStr = "Reconditioning";
         public const string RolloutStr = "Rollout";
         public const string RollbackStr = "Rollback";
-        public const string RecoveryStr = "Recovery";
+        public const string RecoveryStr = "Recover";
         public const string UnknownStr = "Unknown Situation";
         public bool IsHumanRated;
 

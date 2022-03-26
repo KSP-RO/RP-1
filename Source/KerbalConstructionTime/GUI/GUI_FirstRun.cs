@@ -20,7 +20,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"{step++}) If you want to play from a different site than Cape Canaveral, switch to the Tracking Station and select a new site.");
 
             if (!IsPrimarilyDisabled && KCTGameStates.UnassignedPersonnel > 0 &&
-                GUILayout.Button($"{step++}) Assign your {KCTGameStates.UnassignedPersonnel} space center personnel", HighLogic.Skin.button))
+                GUILayout.Button($"{step++}) Assign your {KCTGameStates.UnassignedPersonnel} space center staff", HighLogic.Skin.button))
             {
                 GUIStates.ShowPersonnelWindow = true;
             }

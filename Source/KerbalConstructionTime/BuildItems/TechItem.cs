@@ -151,6 +151,7 @@ namespace KerbalConstructionTime
         public double GetBuildRate() => BuildRate;
 
         public double GetTimeLeft() => TimeLeft;
+        public double GetTimeLeftEst() => EstimatedTimeLeft;
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.TechNode;
 

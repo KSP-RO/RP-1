@@ -66,11 +66,11 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
                 double buildRateCapped = Math.Min(bR, Utilities.GetBuildRateCap(buildPoints, KCTGameStates.EditorShipMass, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance)
                     * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers);
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildPoints / buildRateCapped));
+                GUILayout.Label(Utilities.GetFormattedTime(buildPoints / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / buildRateCapped)}");
+                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / buildRateCapped, 0, false)}");
                 }
             }
             else
@@ -140,8 +140,8 @@ namespace KerbalConstructionTime
             }
 
             Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
-            GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * originalCompletionPercent, 2))}%");
-            GUILayout.Label($"Edited: {Math.Round(100 * newCompletionPercent, 2)}%");
+            GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
+            GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
             double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorIsHumanRated, 0)
                 * ship.LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
@@ -165,11 +165,11 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
                 double buildRateCapped = Math.Min(bR, Utilities.GetBuildRateCap(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, KCTGameStates.EditorShipMass, ship.LC)
                     * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers);
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) / buildRateCapped));
+                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / buildRateCapped)}");
+                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / buildRateCapped, 0, false)}");
                 }
             }
             else

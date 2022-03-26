@@ -619,10 +619,10 @@ namespace KerbalConstructionTime
                 int totalEngineers = 0;
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
-                    if (ksc.Constructions.Count > 0 && ksc.FreePersonnel > 0)
+                    if (ksc.Constructions.Count > 0 && ksc.ConstructionWorkers > 0)
                         skillupEng = true;
 
-                    totalEngineers += ksc.Personnel;
+                    totalEngineers += ksc.Engineers;
 
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {

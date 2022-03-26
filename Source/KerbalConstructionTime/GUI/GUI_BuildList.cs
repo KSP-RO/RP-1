@@ -521,11 +521,12 @@ namespace KerbalConstructionTime
             return a.GetTimeLeft().CompareTo(b.GetTimeLeft());
         }
 
+        private static List<IKCTBuildItem> _allItems = new List<IKCTBuildItem>();
         private static void RenderCombinedList()
         {
             // TODO don't rebuild this every frame >.>
-            List<IKCTBuildItem> allItems = new List<IKCTBuildItem>();
-            allItems.AddRange(KCTGameStates.TechList);
+            
+            _allItems.AddRange(KCTGameStates.TechList);
 
             foreach (var k in KCTGameStates.KSCs)
             {
@@ -533,16 +534,16 @@ namespace KerbalConstructionTime
                 {
                     if (l.IsOperational)
                     {
-                        allItems.AddRange(l.BuildList);
-                        allItems.AddRange(l.PadConstructions);
-                        allItems.AddRange(l.Recon_Rollout);
-                        allItems.AddRange(l.AirlaunchPrep);
+                        _allItems.AddRange(l.BuildList);
+                        _allItems.AddRange(l.PadConstructions);
+                        _allItems.AddRange(l.Recon_Rollout);
+                        _allItems.AddRange(l.AirlaunchPrep);
                     }
                 }
-                allItems.AddRange(k.LCConstructions);
-                allItems.AddRange(k.FacilityUpgrades);
+                _allItems.AddRange(k.LCConstructions);
+                _allItems.AddRange(k.FacilityUpgrades);
             }
-            allItems.Sort(CompareBuildItems);
+            _allItems.Sort(CompareBuildItems);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
@@ -552,18 +553,23 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 
-            for (int i = 0; i < allItems.Count; i++)
+            for (int i = 0; i < _allItems.Count; i++)
             {
-                IKCTBuildItem t = allItems[i];
+                IKCTBuildItem t = _allItems[i];
                 GUILayout.BeginHorizontal();
 
                 BuildListVessel blv;
                 if (t is ReconRollout r)
                 {
                     if (r.RRType == ReconRollout.RolloutReconType.Reconditioning)
-                        GUILayout.Label($"{r.GetItemName()}: {r.LC} {r.LaunchPadID}");
+                        GUILayout.Label($"{r.LC.Name}: {r.GetItemName()} {r.LaunchPadID}");
                     else if ((blv = r.AssociatedBLV) != null)
-                        GUILayout.Label($"{r.GetItemName()}: {blv.ShipName}");
+                    {
+                        if (r.RRType == ReconRollout.RolloutReconType.Rollout)
+                            GUILayout.Label($"{blv.LC.Name}: Rollout {blv.ShipName} to {r.LaunchPadID}");
+                        else
+                            GUILayout.Label($"{blv.LC.Name}: {r.GetItemName()} {blv.ShipName}");
+                    }
                     else
                         GUILayout.Label(r.GetItemName());
                 }
@@ -588,6 +594,7 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
+            _allItems.Clear();
         }
 
         private static void DrawYearBasedMult(TechItem t)

@@ -65,6 +65,7 @@ namespace KerbalConstructionTime
         public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
         public double EfficiencyEngineers = 0d;
         public double LastEngineers = 0d;
+        public bool IsRushing = false;
 
         public bool IsOperational = false;
         public bool IsPad = true;
@@ -261,6 +262,7 @@ namespace KerbalConstructionTime
             node.AddValue("Engineers", Engineers);
             node.AddValue("EfficiencyEngineers", EfficiencyEngineers);
             node.AddValue("LastEngineers", LastEngineers);
+            node.AddValue("IsRushing", IsRushing);
             node.AddValue("BuildRate", _rate);
             node.AddValue("BuildRateCapped", _rateHRCapped);
             node.AddValue("IsHumanRated", IsHumanRated);
@@ -345,6 +347,7 @@ namespace KerbalConstructionTime
             _rateHRCapped = 0;
             Engineers = 0;
             EfficiencyEngineers = 0d;
+            IsRushing = false;
             LastEngineers = 0;
             IsHumanRated = false;
 
@@ -359,6 +362,7 @@ namespace KerbalConstructionTime
             node.TryGetValue("id", ref _id);
             node.TryGetValue("Engineers", ref Engineers);
             node.TryGetValue("EfficiencyEngineers", ref EfficiencyEngineers);
+            node.TryGetValue("IsRushing", ref IsRushing);
             node.TryGetValue("LastEngineers", ref LastEngineers);
             node.TryGetValue("BuildRate", ref _rate);
             node.TryGetValue("BuildRateCapped", ref _rateHRCapped);

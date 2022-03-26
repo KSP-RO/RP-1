@@ -700,7 +700,7 @@ namespace KerbalConstructionTime
                 return false;
 
             double remainingBP = BuildPoints + IntegrationPoints - Progress;
-            Progress += remainingBP * 0.2d * LC.Engineers / LC.MaxPersonnel;
+            Progress += remainingBP * 0.2d; //* LC.Engineers / LC.MaxPersonnel;
             Utilities.SpendFunds(rushCost, TransactionReasons.VesselRollout);
             ++RushBuildClicks;
             _rushCost = -1;    // force recalculation of rush cost

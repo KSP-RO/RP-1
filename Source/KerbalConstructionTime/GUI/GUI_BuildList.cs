@@ -1392,7 +1392,7 @@ namespace KerbalConstructionTime
             if (!b.IsFinished &&
                 (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
                 (b.LC.Engineers == 0 ? GUILayout.Button(new GUIContent("Rush Build\nUnavailable", "Rush building requires Engineers!"), _redButton)
-                : GUILayout.Button(new GUIContent($"Rush Build {((10d * b.LC.Engineers) / b.LC.MaxPersonnel):N0}%\n√{Math.Round(b.GetRushCost())}",
+                : GUILayout.Button(new GUIContent($"Rush Build {(10d /** b.LC.Engineers / b.LC.MaxPersonnel*/):N0}%\n√{Math.Round(b.GetRushCost())}",
                     $"Progress proportional to Engineers.\nWill cause {(b.GetRushEfficiencyCost() * 100d):N0}pt loss to efficiency\n at {b.LC.Name}."))))
             {
                 b.DoRushBuild();

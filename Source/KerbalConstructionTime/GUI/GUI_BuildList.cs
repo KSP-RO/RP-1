@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
         private static int _mouseOnAirlaunchButton = -1;
-        private static bool _isOperationsSelected, _isConstructionSelected, _isResearchSelected;
+        private static bool _isOperationsSelected, _isConstructionSelected, _isResearchSelected, _isCombinedSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
@@ -36,19 +36,28 @@ namespace KerbalConstructionTime
                     _isOperationsSelected = !_isOperationsSelected;
                     _isConstructionSelected = false;
                     _isResearchSelected = false;
+                    _isCombinedSelected = false;
                     break;
                 case "Construction":
                     _isOperationsSelected = false;
                     _isConstructionSelected = !_isConstructionSelected;
                     _isResearchSelected = false;
+                    _isCombinedSelected = false;
                     break;
                 case "Research":
                     _isOperationsSelected = false;
                     _isConstructionSelected = false;
                     _isResearchSelected = !_isResearchSelected;
+                    _isCombinedSelected = false;
+                    break;
+                case "Combined":
+                    _isCombinedSelected = !_isCombinedSelected;
+                    _isOperationsSelected = false;
+                    _isConstructionSelected = false;
+                    _isResearchSelected = false;
                     break;
                 default:
-                    _isOperationsSelected = _isConstructionSelected = _isResearchSelected = false;
+                    _isOperationsSelected = _isConstructionSelected = _isResearchSelected = _isCombinedSelected = false;
                     break;
             }
         }
@@ -217,7 +226,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
 
-            
+
             bool operationsSelectedNew = GUILayout.Toggle(_isOperationsSelected, "Operations", GUI.skin.button);
             if (operationsSelectedNew != _isOperationsSelected)
                 SelectList("Operations");
@@ -225,15 +234,19 @@ namespace KerbalConstructionTime
             bool constructionSelectedNew = false;
             if (Utilities.CurrentGameIsCareer())
                 constructionSelectedNew = GUILayout.Toggle(_isConstructionSelected, "Construction", GUI.skin.button);
-            if(constructionSelectedNew != _isConstructionSelected)
+            if (constructionSelectedNew != _isConstructionSelected)
                 SelectList("Construction");
 
             bool techSelectedNew = false;
             if (Utilities.CurrentGameHasScience())
                 techSelectedNew = GUILayout.Toggle(_isResearchSelected, "Research", GUI.skin.button);
-
             if (techSelectedNew != _isResearchSelected)
                 SelectList("Research");
+
+            bool combinedSelectedNew = GUILayout.Toggle(_isCombinedSelected, "Combined", GUI.skin.button);
+            if (combinedSelectedNew != _isCombinedSelected)
+                SelectList("Combined");
+
             //if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
             //{
             //    GUIStates.ShowUpgradeWindow = true;
@@ -241,7 +254,7 @@ namespace KerbalConstructionTime
             //    GUIStates.ShowBLPlus = false;
             //    _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
             //}
-            if (GUILayout.Button("Personnel" , KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button))
+            if (GUILayout.Button("Staff", KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button))
             {
                 GUIStates.ShowPersonnelWindow = true;
                 GUIStates.ShowBuildList = false;
@@ -266,7 +279,7 @@ namespace KerbalConstructionTime
 
             if (_isOperationsSelected)
             {
-                RenderCombinedBuildList();
+                RenderBuildList();
             }
             else if (_isConstructionSelected)
             {
@@ -275,6 +288,10 @@ namespace KerbalConstructionTime
             else if (_isResearchSelected)
             {
                 RenderTechList();
+            }
+            else if (_isCombinedSelected)
+            {
+                RenderCombinedList();
             }
 
             GUILayout.EndVertical();
@@ -499,6 +516,80 @@ namespace KerbalConstructionTime
             GUILayout.EndScrollView();
         }
 
+        private static int CompareBuildItems(IKCTBuildItem a, IKCTBuildItem b)
+        {
+            return a.GetTimeLeft().CompareTo(b.GetTimeLeft());
+        }
+
+        private static void RenderCombinedList()
+        {
+            // TODO don't rebuild this every frame >.>
+            List<IKCTBuildItem> allItems = new List<IKCTBuildItem>();
+            allItems.AddRange(KCTGameStates.TechList);
+
+            foreach (var k in KCTGameStates.KSCs)
+            {
+                foreach (var l in k.LaunchComplexes)
+                {
+                    if (l.IsOperational)
+                    {
+                        allItems.AddRange(l.BuildList);
+                        allItems.AddRange(l.PadConstructions);
+                        allItems.AddRange(l.Recon_Rollout);
+                        allItems.AddRange(l.AirlaunchPrep);
+                    }
+                }
+                allItems.AddRange(k.LCConstructions);
+                allItems.AddRange(k.FacilityUpgrades);
+            }
+            allItems.Sort(CompareBuildItems);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Name:");
+            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
+            GUILayout.Label("Time Left:", GUILayout.Width(_width1));
+            GUILayout.Space(70);
+            GUILayout.EndHorizontal();
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+
+            for (int i = 0; i < allItems.Count; i++)
+            {
+                IKCTBuildItem t = allItems[i];
+                GUILayout.BeginHorizontal();
+
+                BuildListVessel blv;
+                if (t is ReconRollout r)
+                {
+                    if (r.RRType == ReconRollout.RolloutReconType.Reconditioning)
+                        GUILayout.Label($"{r.GetItemName()}: {r.LC} {r.LaunchPadID}");
+                    else if ((blv = r.AssociatedBLV) != null)
+                        GUILayout.Label($"{r.GetItemName()}: {blv.ShipName}");
+                    else
+                        GUILayout.Label(r.GetItemName());
+                }
+                else if (t is AirlaunchPrep a && (blv = a.AssociatedBLV) != null)
+                    GUILayout.Label($"{a.GetItemName()}: {blv.ShipName}");
+                else if (t is BuildListVessel b)
+                    GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
+                else
+                    GUILayout.Label(t.GetItemName());
+
+                GUILayout.Label($"{(100d * t.GetFractionComplete()):N2} %", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+
+                if(t is TechItem tech)
+                    DrawYearBasedMult(tech);
+                else
+                    GUILayout.Space(15);
+
+                if (t.GetBuildRate() > 0d)
+                    GUILayout.Label($"{MagiCore.Utilities.GetColonFormattedTime(t.GetTimeLeft())}", GUILayout.Width(_width1));
+                else
+                    GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(t.GetTimeLeftEst())}", GUILayout.Width(_width1));
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.EndScrollView();
+        }
+
         private static void DrawYearBasedMult(TechItem t)
         {
             double mult = t.YearBasedRateMult;
@@ -526,10 +617,10 @@ namespace KerbalConstructionTime
             }
 
             string txt = $"{rateDesc}\nResearch rate: {mult:F2}x";
-            GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.ExpandWidth(false));
+            GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.Width(15));
         }
 
-        private static void RenderCombinedBuildList()
+        private static void RenderBuildList()
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
@@ -650,10 +741,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                    double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, b.LC, b.IsHumanRated), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), b.LC))
-                        * b.LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
-                    string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
+                    string timeLeft = MagiCore.Utilities.GetColonFormattedTime(b.GetTimeLeftEst());
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }
                 GUILayout.EndHorizontal();

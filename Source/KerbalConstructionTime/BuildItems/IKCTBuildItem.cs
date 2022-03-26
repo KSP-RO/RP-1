@@ -6,6 +6,7 @@
         double GetBuildRate();
         double GetFractionComplete();
         double GetTimeLeft();
+        double GetTimeLeftEst();
         BuildListVessel.ListType GetListType();
         bool IsComplete();
         void IncrementProgress(double UTDiff);

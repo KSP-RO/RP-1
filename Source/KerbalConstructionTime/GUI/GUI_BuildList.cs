@@ -363,7 +363,7 @@ namespace KerbalConstructionTime
                     ksc.RecalculateBuildRates(false);
                 }
                 GUILayout.Label(pItem.GetItemName());
-                GUILayout.Label($"{(pItem.GetFractionComplete() * 100d):N2} %", GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{pItem.GetFractionComplete():P2} %", GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                     GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));
                 else
@@ -554,6 +554,9 @@ namespace KerbalConstructionTime
             for (int i = 0; i < _allItems.Count; i++)
             {
                 IKCTBuildItem t = _allItems[i];
+                if (t.IsComplete())
+                    continue;
+
                 GUILayout.BeginHorizontal();
 
                 BuildListVessel blv;
@@ -578,7 +581,7 @@ namespace KerbalConstructionTime
                 else
                     GUILayout.Label(t.GetItemName());
 
-                GUILayout.Label($"{(100d * t.GetFractionComplete()):N2} %", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{t.GetFractionComplete():P2} %", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
 
                 if(t is TechItem tech)
                     DrawYearBasedMult(tech);
@@ -1244,6 +1247,14 @@ namespace KerbalConstructionTime
                 return;
 
             GUILayout.BeginHorizontal();
+            bool oldRushing = activeLC.IsRushing;
+            activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
+                $"Enable rush building.\nRate: {LCItem.RushRateMult:N1}x\nCosts: Salary {LCItem.RushSalaryMult:N1}x,\n-{(1d - LCItem.RushEfficMult):P0} efficiency/day."));
+            if (oldRushing != activeLC.IsRushing)
+                Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
+            
+            GUILayout.Space(15);
+
             int lpCount = activeLC.LaunchPadCount;
             if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
@@ -1482,14 +1493,14 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (!b.IsFinished &&
-                (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
-                (b.LC.Engineers == 0 ? GUILayout.Button(new GUIContent("Rush Build\nUnavailable", "Rush building requires Engineers!"), _redButton)
-                : GUILayout.Button(new GUIContent($"Rush Build {(10d /** b.LC.Engineers / b.LC.MaxPersonnel*/):N0}%\n√{Math.Round(b.GetRushCost())}",
-                    $"Progress proportional to Engineers.\nWill cause {(b.GetRushEfficiencyCost() * 100d):N0}pt loss to efficiency\n at {b.LC.Name}."))))
-            {
-                b.DoRushBuild();
-            }
+            //if (!b.IsFinished &&
+            //    (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
+            //    (b.LC.Engineers == 0 ? GUILayout.Button(new GUIContent("Rush Build\nUnavailable", "Rush building requires Engineers!"), _redButton)
+            //    : GUILayout.Button(new GUIContent($"Rush Build {(10d /** b.LC.Engineers / b.LC.MaxPersonnel*/):N0}%\n√{Math.Round(b.GetRushCost())}",
+            //        $"Progress proportional to Engineers.\nWill cause {b.GetRushEfficiencyCost():P0}pt loss to efficiency\n at {b.LC.Name}."))))
+            //{
+            //    b.DoRushBuild();
+            //}
 
             if (GUILayout.Button("Close"))
             {

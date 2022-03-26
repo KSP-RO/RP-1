@@ -18,16 +18,6 @@ namespace KerbalConstructionTime
         private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
         private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
 
-        public static int SalaryEngineers = -1;
-        public static int SalaryResearchers = -1;
-
-        public static int GetTotalSalary()
-        {
-            return TotalEngineers * SalaryEngineers + KCTGameStates.Researchers * SalaryResearchers;
-        }
-
-        public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Engineers);
-
         private static void DrawPersonnelWindow(int windowID)
         {
             int oldByModifier = _buyModifier;
@@ -56,19 +46,19 @@ namespace KerbalConstructionTime
             GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            int tE = TotalEngineers;
+            int tE = KCTGameStates.TotalEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+            GUILayout.Label(tE.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{(tE * SalaryEngineers):N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"√{KCTGameStates.GetSalaryEngineers():N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
             GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{(KCTGameStates.Researchers * SalaryResearchers):N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"√{KCTGameStates.GetSalaryResearchers():N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
@@ -128,7 +118,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); }
-            GUILayout.Label(currentLC.Name, GetLabelCenterAlignStyle());
+            GUILayout.Label(currentLC.IsRushing ? $"{currentLC.Name} (rushing)" : currentLC.Name, GetLabelCenterAlignStyle());
             if (GUILayout.Button(">>", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(true, _LCIndex, false); }
             GUILayout.EndHorizontal();
 

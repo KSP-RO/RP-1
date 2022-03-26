@@ -23,6 +23,7 @@ namespace KerbalConstructionTime
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
         public static EventData<LCConstruction, LCItem> OnLCConstructionQueued;
         public static EventData<LCConstruction, LCItem> OnLCConstructionComplete;
+        public static EventVoid OnPersonnelChange;
 
 
         public KCTEvents()
@@ -104,6 +105,7 @@ namespace KerbalConstructionTime
             OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
             OnLCConstructionQueued = new EventData<LCConstruction, LCItem>("OnKctLCConstructionQueued");
             OnLCConstructionComplete = new EventData<LCConstruction, LCItem>("OnKctLCConstructionComplete");
+            OnPersonnelChange = new EventVoid("OnKctPesonnelChange");
             CreatedEvents = true;
         }
 

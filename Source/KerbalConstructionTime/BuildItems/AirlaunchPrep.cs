@@ -87,6 +87,8 @@ namespace KerbalConstructionTime
             return (goal - Progress) / GetBuildRate();
         }
 
+        public double GetTimeLeftEst() => GetTimeLeft();
+
         public bool IsComplete() => Direction == PrepDirection.Mount ? Progress >= BP : Progress <= 0;
 
         public void IncrementProgress(double UTDiff)

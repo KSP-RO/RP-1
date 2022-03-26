@@ -57,8 +57,8 @@ namespace KerbalConstructionTime
         {
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
             BuildListWindowPosition.width = EditorBuildListWindowPosition.width = 500;
-            if (deselectList)
-                SelectList("None");
+            //if (deselectList)
+            //    SelectList("None");
         }
 
         public static void InitBuildListVars()

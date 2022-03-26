@@ -18,16 +18,6 @@ namespace KerbalConstructionTime
         private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
         private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
 
-        public static int SalaryEngineers = -1;
-        public static int SalaryResearchers = -1;
-
-        public static int GetTotalSalary()
-        {
-            return TotalEngineers * SalaryEngineers + KCTGameStates.Researchers * SalaryResearchers;
-        }
-
-        public static int TotalEngineers => KCTGameStates.KSCs.Sum(k => k.Engineers);
-
         private static void DrawPersonnelWindow(int windowID)
         {
             int oldByModifier = _buyModifier;
@@ -56,19 +46,19 @@ namespace KerbalConstructionTime
             GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            int tE = TotalEngineers;
+            int tE = KCTGameStates.TotalEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+            GUILayout.Label(tE.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{(tE * SalaryEngineers):N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"√{KCTGameStates.GetSalaryEngineers():N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
             GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{(KCTGameStates.Researchers * SalaryResearchers):N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"√{KCTGameStates.GetSalaryResearchers():N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
@@ -127,9 +117,18 @@ namespace KerbalConstructionTime
             RenderHireFire(false, out int fireAmount, out int hireAmount);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); }
-            GUILayout.Label(currentLC.Name, GetLabelCenterAlignStyle());
-            if (GUILayout.Button(">>", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(true, _LCIndex, false); }
+            int lcCount = KSC.LaunchComplexCount;
+            if (lcCount > 1)
+            {
+                int idx = KSC.SwitchLaunchComplex(false, _LCIndex, false);
+                if (GUILayout.Button($"<<{KSC.LaunchComplexes[idx].Name}", GUILayout.ExpandWidth(false))) { _LCIndex = idx; }
+            }
+            GUILayout.Label(currentLC.IsRushing ? $"{currentLC.Name} (rushing)" : currentLC.Name, GetLabelCenterAlignStyle());
+            if (lcCount > 1)
+            {
+                int idx = KSC.SwitchLaunchComplex(true, _LCIndex, false);
+                if (GUILayout.Button($"{KSC.LaunchComplexes[idx].Name}>>", GUILayout.ExpandWidth(false))) { _LCIndex = idx; }
+            }
             GUILayout.EndHorizontal();
 
 
@@ -187,7 +186,7 @@ namespace KerbalConstructionTime
             double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiecnyEngineers;
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {(efficLocal * 100d):N0}% (at {currentLC.Name}) x {(efficGlobal * 100d):N0}% (global)");
+            GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global)");
             GUILayout.EndHorizontal();
 
             double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta);
@@ -207,7 +206,7 @@ namespace KerbalConstructionTime
                 double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, assignDelta), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), currentLC))
                     * efficLocal * efficGlobal;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate)}", GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate), GetLabelRightAlignStyle());
             }
             else
             {
@@ -224,7 +223,7 @@ namespace KerbalConstructionTime
             {
                 IConstructionBuildItem b = KSC.Constructions[0];
                 GUILayout.Label($"Current Construction: {b.GetItemName()}");
-                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime((b.BuildPoints() - b.CurrentProgress()) / cRate)}", GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BuildPoints() - b.CurrentProgress()) / cRate), GetLabelRightAlignStyle());
             }
             else
             {
@@ -289,7 +288,7 @@ namespace KerbalConstructionTime
             
             GUILayout.BeginHorizontal();
             GUILayout.Label("Global Researcher Efficiency:");
-            GUILayout.Label($"{(effic * 100d):N0}%", GetLabelRightAlignStyle());
+            GUILayout.Label($"{effic:P1}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -299,7 +298,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"Current Research: {t.TechName}");
                 double techRate = MathParser.ParseNodeRateFormula(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
                 double timeLeft = (t.ScienceCost - t.Progress) / techRate;
-                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(timeLeft)}", GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft), GetLabelRightAlignStyle());
             }
             else
             {

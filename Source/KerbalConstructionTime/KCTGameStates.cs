@@ -152,12 +152,7 @@ namespace KerbalConstructionTime
         public static double GetEffectiveEngineersForSalary(LCItem lc)
         {
             if (lc.IsOperational && lc.Engineers > 0)
-            {
-                if (lc.IsRushing)
-                    return lc.Engineers * 1.5d;
-                else
-                    return lc.Engineers;
-            }
+                return lc.Engineers * lc.RushSalary;
 
             return 0;
         }

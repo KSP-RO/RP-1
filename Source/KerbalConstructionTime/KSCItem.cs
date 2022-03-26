@@ -11,8 +11,8 @@ namespace KerbalConstructionTime
         public List<LCItem> LaunchComplexes = new List<LCItem>();
         public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
         public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
-        public int Personnel = 0;
-        public int FreePersonnel => Personnel - LaunchComplexes.Sum(lc => lc.Engineers);
+        public int Engineers = 0;
+        public int ConstructionWorkers => Engineers - LaunchComplexes.Sum(lc => lc.Engineers);
         
         public int ActiveLaunchComplexIndex = 1;
         private bool _allowRecalcConstructions = true;
@@ -134,7 +134,7 @@ namespace KerbalConstructionTime
             var node = new ConfigNode("KSC");
             node.AddValue("KSCName", KSCName);
             node.AddValue("ActiveLCID", ActiveLaunchComplexIndex);
-            node.AddValue("Personnel", Personnel);
+            node.AddValue("Engineers", Engineers);
 
             var cnLCs = new ConfigNode("LaunchComplexes");
             foreach (LCItem lc in LaunchComplexes)
@@ -182,8 +182,12 @@ namespace KerbalConstructionTime
             if (!int.TryParse(node.GetValue("ActiveLCID"), out ActiveLaunchComplexIndex))
                 ActiveLaunchComplexIndex = 0;
 
-            Personnel = 0;
-            node.TryGetValue("Personnel", ref Personnel);
+            Engineers = 0;
+            node.TryGetValue("Engineers", ref Engineers);
+
+            // back-compat
+            if (node.HasValue("Personnel"))
+                node.TryGetValue("Personnel", ref Engineers);
 
             ConfigNode tmp = node.GetNode("LaunchComplexes");
             if (tmp != null)

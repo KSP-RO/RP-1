@@ -151,9 +151,9 @@ namespace RP0
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
-                int constructionWorkers = ksc.FreePersonnel;
+                int constructionWorkers = ksc.ConstructionWorkers;
                 Construction[ksc.KSCName] = constructionWorkers;
-                Integration[ksc.KSCName] = ksc.Personnel - constructionWorkers;
+                Integration[ksc.KSCName] = ksc.Engineers - constructionWorkers;
                 //for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
                 //{
                 //    LCItem lc = ksc.LaunchComplexes[j];

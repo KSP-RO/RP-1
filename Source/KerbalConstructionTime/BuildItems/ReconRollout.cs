@@ -10,10 +10,10 @@ namespace KerbalConstructionTime
         public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
         public string AssociatedID = string.Empty;
         public string LaunchPadID = "LaunchPad";
-        public const string ReconditioningStr = "LaunchPad Reconditioning";
-        public const string RolloutStr = "Vessel Rollout";
-        public const string RollbackStr = "Vessel Rollback";
-        public const string RecoveryStr = "Vessel Recovery";
+        public const string ReconditioningStr = "Reconditioning";
+        public const string RolloutStr = "Rollout";
+        public const string RollbackStr = "Rollback";
+        public const string RecoveryStr = "Recovery";
         public const string UnknownStr = "Unknown Situation";
         public bool IsHumanRated;
 
@@ -160,6 +160,7 @@ namespace KerbalConstructionTime
             double n = RRType == RolloutReconType.Rollback ? 0 : BP;
             return (n - Progress) / GetBuildRate();
         }
+        public double GetTimeLeftEst() => GetTimeLeft();
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
 

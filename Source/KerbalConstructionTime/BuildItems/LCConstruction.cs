@@ -85,6 +85,7 @@ namespace KerbalConstructionTime
         public double GetFractionComplete() => Progress / BP;
 
         public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
+        public double GetTimeLeftEst() => EstimatedTimeLeft;
 
         public void Cancel()
         {

@@ -117,9 +117,18 @@ namespace KerbalConstructionTime
             RenderHireFire(false, out int fireAmount, out int hireAmount);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("<<", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(false, _LCIndex, false); }
+            int lcCount = KSC.LaunchComplexCount;
+            if (lcCount > 1)
+            {
+                int idx = KSC.SwitchLaunchComplex(false, _LCIndex, false);
+                if (GUILayout.Button($"<<{KSC.LaunchComplexes[idx].Name}", GUILayout.ExpandWidth(false))) { _LCIndex = idx; }
+            }
             GUILayout.Label(currentLC.IsRushing ? $"{currentLC.Name} (rushing)" : currentLC.Name, GetLabelCenterAlignStyle());
-            if (GUILayout.Button(">>", GUILayout.ExpandWidth(false))) { _LCIndex = KSC.SwitchLaunchComplex(true, _LCIndex, false); }
+            if (lcCount > 1)
+            {
+                int idx = KSC.SwitchLaunchComplex(true, _LCIndex, false);
+                if (GUILayout.Button($"{KSC.LaunchComplexes[idx].Name}>>", GUILayout.ExpandWidth(false))) { _LCIndex = idx; }
+            }
             GUILayout.EndHorizontal();
 
 

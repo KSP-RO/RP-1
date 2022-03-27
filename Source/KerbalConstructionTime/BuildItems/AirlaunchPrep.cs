@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         public enum PrepDirection { Mount, Unmount };
         public PrepDirection Direction = PrepDirection.Mount;
 
-        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
+        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
 
         private LCItem _lc = null;
         public LCItem LC
@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
 
         public string GetItemName() => Name;
 
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.SPH;
+        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.AirLaunch;
 
         public double GetFractionComplete() => Direction == PrepDirection.Mount ? Progress / BP : (BP - Progress) / BP;
 

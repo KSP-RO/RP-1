@@ -869,7 +869,7 @@ namespace KerbalConstructionTime
         public double GetFractionComplete() => Progress / (BuildPoints + IntegrationPoints);
 
         public double GetTimeLeft() => TimeLeft;
-        public double GetTimeLeftEst()
+        public double GetTimeLeftEst(double offset)
         {
             if (BuildRate > 0)
                 return TimeLeft;

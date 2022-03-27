@@ -22,7 +22,8 @@ namespace KerbalConstructionTime
         private static bool _isSelectingLaunchSiteForVessel = true;
 
         private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
-        private static GUIContent _settingsTexture, _planeTexture, _rocketTexture;
+        private static GUIContent _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
+            _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture;
         private const int _width1 = 120;
         private const int _width2 = 100;
         private const int _butW = 20;
@@ -98,9 +99,17 @@ namespace KerbalConstructionTime
             _greenButton.hover.textColor = Color.green;
             _greenButton.active.textColor = Color.green;
 
-            _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_settings16", false));
+            _airlaunchTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_airlaunch16", false));
+            _constructTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_construct16", false));
             _planeTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_flight16", false));
+            _hangarTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_hangar16", false));
+            _recoveryTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_landing16", false));
+            _reconTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_recon16", false));
             _rocketTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rocket16", false));
+            _rollbackTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rollback16", false));
+            _rolloutTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rollout16", false));
+            _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_settings16", false));
+            _techTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_tech16", false));
         }
 
         public static void DrawBuildListWindow(int windowID)
@@ -142,6 +151,23 @@ namespace KerbalConstructionTime
                     {
                         locTxt = "Storage";
                     }
+                }
+                else if (buildItem.GetListType() == BuildListVessel.ListType.AirLaunch)
+                {
+                    AirlaunchPrep ar = buildItem as AirlaunchPrep;
+                    BuildListVessel associated = ar.AssociatedBLV;
+                    if (associated != null)
+                    {
+                        if (ar.Direction == AirlaunchPrep.PrepDirection.Mount)
+                            txt = $"{associated.ShipName} Mounting";
+                        else
+                            txt = $"{associated.ShipName} Unmounting";
+                    }
+                    else
+                        txt = "Airlaunch Operations";
+
+                    locTxt = ar.LC.Name;
+
                 }
                 else if (buildItem.GetListType() == BuildListVessel.ListType.VAB || buildItem.GetListType() == BuildListVessel.ListType.SPH)
                 {
@@ -362,6 +388,7 @@ namespace KerbalConstructionTime
                     forceRecheck = false;
                     ksc.RecalculateBuildRates(false);
                 }
+                DrawTypeIcon(pItem);
                 GUILayout.Label(pItem.GetItemName());
                 GUILayout.Label($"{pItem.GetFractionComplete():P2} %", GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
@@ -484,6 +511,7 @@ namespace KerbalConstructionTime
 
                 string blockingPrereq = t.GetBlockingTech(techList);
 
+                DrawTypeIcon(t);
                 GUILayout.Label(t.TechName);
                 GUILayout.Label($"{Math.Round(100 * t.GetFractionComplete(), 2)} %", GUILayout.Width(_width1 / 2));
                 if (t.BuildRate > 0)
@@ -558,7 +586,7 @@ namespace KerbalConstructionTime
                     continue;
 
                 GUILayout.BeginHorizontal();
-
+                DrawTypeIcon(t);
                 BuildListVessel blv;
                 if (t is ReconRollout r)
                 {
@@ -628,6 +656,53 @@ namespace KerbalConstructionTime
             GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.Width(15));
         }
 
+        private static GUIContent GetTypeIcon(IKCTBuildItem b)
+        {
+            switch (b.GetListType())
+            {
+                case BuildListVessel.ListType.VAB:
+                    return _rocketTexture;
+
+                case BuildListVessel.ListType.SPH:
+                    return _planeTexture;
+
+                case BuildListVessel.ListType.Reconditioning:
+                    if (b is ReconRollout r)
+                    {
+                        switch (r.RRType)
+                        {
+                            case ReconRollout.RolloutReconType.Reconditioning:
+                                return _reconTexture;
+                            case ReconRollout.RolloutReconType.Recovery:
+                                return _recoveryTexture;
+                            case ReconRollout.RolloutReconType.Rollback:
+                                return _rollbackTexture;
+                            case ReconRollout.RolloutReconType.Rollout:
+                                return _rolloutTexture;
+                        }
+                    }
+                    return _rocketTexture;
+
+                case BuildListVessel.ListType.AirLaunch:
+                    if (b is AirlaunchPrep a && a.Direction == AirlaunchPrep.PrepDirection.Mount)
+                        return _airlaunchTexture;
+                    return _hangarTexture;
+
+                case BuildListVessel.ListType.KSC:
+                    return _constructTexture;
+
+                case BuildListVessel.ListType.TechNode:
+                    return _techTexture;
+            }
+
+            return _constructTexture;
+        }
+
+        private static void DrawTypeIcon(IKCTBuildItem b)
+        {
+            GUILayout.Label(GetTypeIcon(b), GUILayout.ExpandWidth(false));
+        }
+
         private static void RenderBuildList()
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
@@ -666,7 +741,7 @@ namespace KerbalConstructionTime
                 {
                     KCTWarpController.Create(reconditioning);
                 }
-
+                DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.LaunchPadID}");
                 GUILayout.Label($"{reconditioning.ProgressPercent()}%", GUILayout.Width(_width1 / 2));
                 GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(reconditioning.GetTimeLeft()), GUILayout.Width(_width2));
@@ -738,8 +813,7 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                GUIContent typeIcon = b.GetListType() == BuildListVessel.ListType.VAB ? _rocketTexture : _planeTexture;
-                GUILayout.Label(typeIcon, GUILayout.ExpandWidth(false));
+                DrawTypeIcon(b);
                 GUILayout.Label(b.ShipName);
                 GUILayout.Label($"{Math.Round(b.ProgressPercent(), 2)}%", GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
@@ -814,6 +888,10 @@ namespace KerbalConstructionTime
             ReconRollout recovery = activeLC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
             AirlaunchPrep airlaunchPrep = !isPad ? activeLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == b.Id.ToString()) : null;
 
+            IKCTBuildItem typeIcon = rollout ?? rollback ?? recovery ?? null;
+            typeIcon = typeIcon ?? airlaunchPrep;
+            typeIcon = typeIcon ?? b;
+
             VesselPadStatus padStatus = VesselPadStatus.InStorage;
             if ( isPad && rollback != null)
                 padStatus = VesselPadStatus.RollingBack;
@@ -873,6 +951,7 @@ namespace KerbalConstructionTime
             else
                 GUILayout.Space(_butW + 4);
 
+            DrawTypeIcon(typeIcon);
             GUILayout.Label(b.ShipName, textColor);
             GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
             if (recovery != null)
@@ -1385,7 +1464,7 @@ namespace KerbalConstructionTime
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225;
-            BuildListVessel b = Utilities.FindBLVesselByID(_selectedVesselId);
+            BuildListVessel b = Utilities.FindBLVesselByID(activeLC, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.LaunchSite;
 
@@ -1528,7 +1607,7 @@ namespace KerbalConstructionTime
                     if (_isSelectingLaunchSiteForVessel)
                     {
                         //Set the chosen vessel's launch site to the selected site
-                        BuildListVessel blv = Utilities.FindBLVesselByID(_selectedVesselId);
+                        BuildListVessel blv = Utilities.FindBLVesselByID(null, _selectedVesselId);
                         blv.LaunchSite = launchsite;
                     }
                     else
@@ -1547,7 +1626,7 @@ namespace KerbalConstructionTime
         private static void ScrapVessel()
         {
             InputLockManager.RemoveControlLock("KCTPopupLock");
-            BuildListVessel b = Utilities.FindBLVesselByID(_selectedVesselId);
+            BuildListVessel b = Utilities.FindBLVesselByID(null, _selectedVesselId);
             if (b == null)
             {
                 KCTDebug.Log("Tried to remove a vessel that doesn't exist!");

@@ -137,8 +137,6 @@ namespace KerbalConstructionTime
                 RRType = RolloutReconType.Rollout;
         }
 
-        public double ProgressPercent() => Math.Round(100 * GetFractionComplete(), 2);
-
         public string GetItemName() => Name;
 
         public double GetBuildRate()

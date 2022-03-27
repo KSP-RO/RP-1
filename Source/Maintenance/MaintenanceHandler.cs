@@ -119,8 +119,7 @@ namespace RP0
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
                     Settings.Load(n);
 
-                KerbalConstructionTime.KCTGameStates.SalaryEngineers = Settings.salaryEngineers;
-                KerbalConstructionTime.KCTGameStates.SalaryResearchers = Settings.salaryResearchers;
+                UpdateKCTSalarySettings();
             }
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
@@ -283,7 +282,7 @@ namespace RP0
 
             NautBaseUpkeep += nautCount * perNaut;
             NautTotalUpkeep = NautBaseUpkeep + TrainingUpkeep + NautInFlightUpkeep;
-
+            KCTGameStates.TotalMaintenancePerDay = FacilityUpkeep + NautTotalUpkeep + Settings.maintenanceOffset;
             Profiler.EndSample();
         }
 
@@ -368,7 +367,15 @@ namespace RP0
         private void SettingsChanged()
         {
             LoadSettings(null);
+            UpdateKCTSalarySettings();
             UpdateUpkeep();
+        }
+
+        private void UpdateKCTSalarySettings()
+        {
+            KCTGameStates.SalaryEngineers = Settings.salaryEngineers;
+            KCTGameStates.SalaryResearchers = Settings.salaryResearchers;
+            KCTGameStates.SalaryMultiplier = _maintenanceCostMult;
         }
 
         private void EnsureFacilityLvlCostsLoaded()

@@ -206,7 +206,7 @@ namespace KerbalConstructionTime
                 double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, assignDelta), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), currentLC))
                     * efficLocal * efficGlobal;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate)}", GetLabelRightAlignStyle());
+                GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(bpLeft / buildRate)}", GetLabelRightAlignStyle());
             }
             else
             {
@@ -223,7 +223,7 @@ namespace KerbalConstructionTime
             {
                 IConstructionBuildItem b = KSC.Constructions[0];
                 GUILayout.Label($"Current Construction: {b.GetItemName()}");
-                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime((b.BuildPoints() - b.CurrentProgress()) / cRate)}", GetLabelRightAlignStyle());
+                GUILayout.Label($"Est: {Utilities.GetColonFormattedTime((b.BuildPoints() - b.CurrentProgress()) / cRate)}", GetLabelRightAlignStyle());
             }
             else
             {
@@ -298,7 +298,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"Current Research: {t.TechName}");
                 double techRate = MathParser.ParseNodeRateFormula(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
                 double timeLeft = (t.ScienceCost - t.Progress) / techRate;
-                GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(timeLeft)}", GetLabelRightAlignStyle());
+                GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(timeLeft)}", GetLabelRightAlignStyle());
             }
             else
             {

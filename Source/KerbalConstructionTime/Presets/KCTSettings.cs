@@ -28,6 +28,8 @@ namespace KerbalConstructionTime
         public int WindowMode = 1;
         [Persistent]
         public bool CleanUpKSCDebris;
+        [Persistent]
+        public bool UseDates;
 
         public KCTSettings()
         {
@@ -38,6 +40,7 @@ namespace KerbalConstructionTime
             AutoKACAlarms = false;
             PreferBlizzyToolbar = false;
             CleanUpKSCDebris = true;
+            UseDates = false;
         }
 
         public void Load()

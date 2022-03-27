@@ -274,7 +274,7 @@ namespace KerbalConstructionTime
                         KCTGameStates.TechList.Add(tech);
                         foreach (TechItem techItem in KCTGameStates.TechList)
                             techItem.UpdateBuildRate(KCTGameStates.TechList.IndexOf(techItem));
-                        double timeLeft = tech.BuildRate > 0 ? tech.TimeLeft : tech.EstimatedTimeLeft;
+                        double timeLeft = tech.BuildRate > 0 ? tech.TimeLeft : tech.GetTimeLeftEst(0);
                         ScreenMessages.PostScreenMessage($"Node will unlock in {MagiCore.Utilities.GetFormattedTime(timeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
 
                         OnTechQueued.Fire(ev.host);

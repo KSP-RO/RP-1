@@ -2255,13 +2255,13 @@ namespace KerbalConstructionTime
             return KCTGameStates.EfficiencyResearchers;
         }
 
-        public static string GetColonFormattedTime(double t)
+        public static string GetColonFormattedTime(double t, double extraTime = 0d)
         {
             if (double.IsNaN(t) || double.IsInfinity(t))
                 return "(infinity)";
 
             if (KCTGameStates.Settings.UseDates && t > 86400d)
-                return KSPUtil.dateTimeFormatter.PrintDateCompact(t + (HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime()), false, false);
+                return KSPUtil.dateTimeFormatter.PrintDateCompact(t + extraTime + GetUT(), false, false);
             return MagiCore.Utilities.GetColonFormattedTime(t);
         }
     }

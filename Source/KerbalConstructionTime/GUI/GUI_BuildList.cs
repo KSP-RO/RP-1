@@ -394,7 +394,7 @@ namespace KerbalConstructionTime
                 }
                 DrawTypeIcon(pItem);
                 GUILayout.Label(pItem.GetItemName());
-                GUILayout.Label($"{pItem.GetFractionComplete():P2} %", GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{pItem.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                 {
                     double seconds = pItem.GetTimeLeft();
@@ -527,7 +527,7 @@ namespace KerbalConstructionTime
 
                 DrawTypeIcon(t);
                 GUILayout.Label(t.TechName);
-                GUILayout.Label($"{t.GetFractionComplete():P2}", GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (t.BuildRate > 0)
                 {
                     DrawYearBasedMult(t, 0);
@@ -787,7 +787,7 @@ namespace KerbalConstructionTime
                 }
                 DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.LaunchPadID}");
-                GUILayout.Label($"{reconditioning.ProgressPercent()}%", GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 GUILayout.Label(Utilities.GetColonFormattedTime(reconditioning.GetTimeLeft()), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
@@ -860,7 +860,7 @@ namespace KerbalConstructionTime
 
                 DrawTypeIcon(b);
                 GUILayout.Label(b.ShipName);
-                GUILayout.Label($"{Math.Round(b.ProgressPercent(), 2)}%", GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{b.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
                     double seconds = b.TimeLeft;

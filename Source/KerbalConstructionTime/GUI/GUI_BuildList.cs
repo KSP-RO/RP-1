@@ -185,7 +185,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(buildItem.GetTimeLeft()));
+                GUILayout.Label(Utilities.GetColonFormattedTime(buildItem.GetTimeLeft()));
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"Salary Cost:\n√{(buildItem.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}")))
                 {
@@ -392,9 +392,9 @@ namespace KerbalConstructionTime
                 GUILayout.Label(pItem.GetItemName());
                 GUILayout.Label($"{pItem.GetFractionComplete():P2} %", GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
-                    GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));
                 else
-                    GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(pItem.EstimatedTimeLeft)}", GUILayout.Width(_width1));
+                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(pItem.EstimatedTimeLeft)}", GUILayout.Width(_width1));
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d && GUILayout.Button("Warp", GUILayout.Width(45)))
                 {
                     KCTWarpController.Create(pItem);
@@ -518,14 +518,14 @@ namespace KerbalConstructionTime
                 {
                     DrawYearBasedMult(t);
                     if (blockingPrereq == null)
-                        GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(t.TimeLeft), GUILayout.Width(_width1));
+                        GUILayout.Label(Utilities.GetColonFormattedTime(t.TimeLeft), GUILayout.Width(_width1));
                     else
                         GUILayout.Label("Waiting for PreReq", GUILayout.Width(_width1));
                 }
                 else
                 {
                     DrawYearBasedMult(t);
-                    GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(t.EstimatedTimeLeft)}", GUILayout.Width(_width1));
+                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(t.EstimatedTimeLeft)}", GUILayout.Width(_width1));
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
                 {
@@ -617,9 +617,9 @@ namespace KerbalConstructionTime
                     GUILayout.Space(15);
 
                 if (t.GetBuildRate() > 0d)
-                    GUILayout.Label($"{MagiCore.Utilities.GetColonFormattedTime(t.GetTimeLeft())}", GUILayout.Width(_width1));
+                    GUILayout.Label($"{Utilities.GetColonFormattedTime(t.GetTimeLeft())}", GUILayout.Width(_width1));
                 else
-                    GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(t.GetTimeLeftEst())}", GUILayout.Width(_width1));
+                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(t.GetTimeLeftEst())}", GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
@@ -744,7 +744,7 @@ namespace KerbalConstructionTime
                 DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.LaunchPadID}");
                 GUILayout.Label($"{reconditioning.ProgressPercent()}%", GUILayout.Width(_width1 / 2));
-                GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(reconditioning.GetTimeLeft()), GUILayout.Width(_width2));
+                GUILayout.Label(Utilities.GetColonFormattedTime(reconditioning.GetTimeLeft()), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
@@ -818,12 +818,12 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"{Math.Round(b.ProgressPercent(), 2)}%", GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
-                    string timeLeft = MagiCore.Utilities.GetColonFormattedTime(b.TimeLeft);
+                    string timeLeft = Utilities.GetColonFormattedTime(b.TimeLeft);
                     GUILayout.Label(timeLeft, GUILayout.Width(_width2));
                 }
                 else
                 {
-                    string timeLeft = MagiCore.Utilities.GetColonFormattedTime(b.GetTimeLeftEst());
+                    string timeLeft = Utilities.GetColonFormattedTime(b.GetTimeLeftEst());
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
                 }
                 GUILayout.EndHorizontal();
@@ -956,7 +956,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
             if (recovery != null)
             {
-                GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(recovery.GetTimeLeft()), GUILayout.ExpandWidth(false));
+                GUILayout.Label(Utilities.GetColonFormattedTime(recovery.GetTimeLeft()), GUILayout.ExpandWidth(false));
             }
             else
             {
@@ -977,7 +977,7 @@ namespace KerbalConstructionTime
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, b.Id.ToString(), launchSite);
                         if (tmpRollout.Cost > 0d)
                             GUILayout.Label("√" + tmpRollout.Cost.ToString("N0"));
-                        string rolloutText = listIdx == _mouseOnRolloutButton ? MagiCore.Utilities.GetColonFormattedTime(tmpRollout.GetTimeLeft()) : "Rollout";
+                        string rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTime(tmpRollout.GetTimeLeft()) : "Rollout";
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
                             if (hasRecond)
@@ -1018,7 +1018,7 @@ namespace KerbalConstructionTime
                     }
                     else if (!HighLogic.LoadedSceneIsEditor && rollback == null &&
                              rollout != null && b.Id.ToString() == rollout.AssociatedID && !rollout.IsComplete() &&
-                             GUILayout.Button(MagiCore.Utilities.GetColonFormattedTime(rollout.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
+                             GUILayout.Button(Utilities.GetColonFormattedTime(rollout.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
                     {
                         rollout.SwapRolloutType();
                     }
@@ -1026,12 +1026,12 @@ namespace KerbalConstructionTime
                     {
                         if (rollout == null)
                         {
-                            if (GUILayout.Button(MagiCore.Utilities.GetColonFormattedTime(rollback.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
+                            if (GUILayout.Button(Utilities.GetColonFormattedTime(rollback.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
                                 rollback.SwapRolloutType();
                         }
                         else
                         {
-                            GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(rollback.GetTimeLeft()), GUILayout.ExpandWidth(false));
+                            GUILayout.Label(Utilities.GetColonFormattedTime(rollback.GetTimeLeft()), GUILayout.ExpandWidth(false));
                         }
                     }
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
@@ -1118,7 +1118,7 @@ namespace KerbalConstructionTime
                             var tmpPrep = new AirlaunchPrep(b, b.Id.ToString());
                             if (tmpPrep.Cost > 0d)
                                 GUILayout.Label("√" + tmpPrep.Cost.ToString("N0"));
-                            string airlaunchText = listIdx == _mouseOnAirlaunchButton ? MagiCore.Utilities.GetColonFormattedTime(tmpPrep.GetTimeLeft()) : "Prep for airlaunch";
+                            string airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTime(tmpPrep.GetTimeLeft()) : "Prep for airlaunch";
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
                                 AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
@@ -1139,7 +1139,7 @@ namespace KerbalConstructionTime
                         }
                         else if (airlaunchPrep != null)
                         {
-                            string btnText = airlaunchPrep.IsComplete() ? "Unmount" : MagiCore.Utilities.GetColonFormattedTime(airlaunchPrep.GetTimeLeft());
+                            string btnText = airlaunchPrep.IsComplete() ? "Unmount" : Utilities.GetColonFormattedTime(airlaunchPrep.GetTimeLeft());
                             if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
                             {
                                 airlaunchPrep.SwitchDirection();

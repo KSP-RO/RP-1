@@ -272,10 +272,8 @@ namespace KerbalConstructionTime
                     if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
                     {
                         KCTGameStates.TechList.Add(tech);
-                        foreach (TechItem techItem in KCTGameStates.TechList)
-                            techItem.UpdateBuildRate(KCTGameStates.TechList.IndexOf(techItem));
-                        double timeLeft = tech.BuildRate > 0 ? tech.TimeLeft : tech.GetTimeLeftEst(0);
-                        ScreenMessages.PostScreenMessage($"Node will unlock in {MagiCore.Utilities.GetFormattedTime(timeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
+                        tech.UpdateBuildRate(KCTGameStates.TechList.Count - 1);
+                        ScreenMessages.PostScreenMessage($"Node will unlock {Utilities.GetTechUnlockTime(tech)}", 4f, ScreenMessageStyle.UPPER_LEFT);
 
                         OnTechQueued.Fire(ev.host);
                     }
@@ -284,7 +282,7 @@ namespace KerbalConstructionTime
                 {
                     ResearchAndDevelopment.Instance.AddScience(tech.ScienceCost, TransactionReasons.RnDTechResearch);
                     ScreenMessages.PostScreenMessage("This node is already being researched!", 4f, ScreenMessageStyle.UPPER_LEFT);
-                    ScreenMessages.PostScreenMessage($"It will unlock in {MagiCore.Utilities.GetFormattedTime((KCTGameStates.TechList.First(t => t.TechID == ev.host.techID)).TimeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
+                    ScreenMessages.PostScreenMessage($"It will unlock {Utilities.GetTechUnlockTime(KCTGameStates.TechList.First(t => t.TechID == ev.host.techID))}", 4f, ScreenMessageStyle.UPPER_LEFT);
                 }
             }
         }

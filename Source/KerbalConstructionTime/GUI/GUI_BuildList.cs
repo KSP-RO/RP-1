@@ -21,6 +21,8 @@ namespace KerbalConstructionTime
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
 
+        private static double _accumulatedTimeBefore;
+
         private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
         private static GUIContent _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
             _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture;
@@ -331,6 +333,8 @@ namespace KerbalConstructionTime
 
         private static void RenderConstructionList()
         {
+            _accumulatedTimeBefore = 0;
+
             KSCItem ksc = KCTGameStates.ActiveKSC;
 
             GUILayout.BeginHorizontal();
@@ -392,9 +396,17 @@ namespace KerbalConstructionTime
                 GUILayout.Label(pItem.GetItemName());
                 GUILayout.Label($"{pItem.GetFractionComplete():P2} %", GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
-                    GUILayout.Label(Utilities.GetColonFormattedTime(pItem.GetTimeLeft()), GUILayout.Width(_width1));
+                {
+                    double seconds = pItem.GetTimeLeft();
+                    GUILayout.Label(Utilities.GetColonFormattedTime(seconds), GUILayout.Width(_width1));
+                    _accumulatedTimeBefore += seconds;
+                }
                 else
-                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(pItem.EstimatedTimeLeft)}", GUILayout.Width(_width1));
+                {
+                    double seconds = pItem.GetTimeLeftEst(_accumulatedTimeBefore);
+                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(seconds, _accumulatedTimeBefore)}", GUILayout.Width(_width1));
+                    _accumulatedTimeBefore += seconds;
+                }
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d && GUILayout.Button("Warp", GUILayout.Width(45)))
                 {
                     KCTWarpController.Create(pItem);
@@ -408,6 +420,8 @@ namespace KerbalConstructionTime
 
         private static void RenderTechList()
         {
+            _accumulatedTimeBefore = 0d;
+
             KCTObservableList<TechItem> techList = KCTGameStates.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
@@ -513,19 +527,25 @@ namespace KerbalConstructionTime
 
                 DrawTypeIcon(t);
                 GUILayout.Label(t.TechName);
-                GUILayout.Label($"{Math.Round(100 * t.GetFractionComplete(), 2)} %", GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{t.GetFractionComplete():P2}", GUILayout.Width(_width1 / 2));
                 if (t.BuildRate > 0)
                 {
-                    DrawYearBasedMult(t);
+                    DrawYearBasedMult(t, 0);
                     if (blockingPrereq == null)
-                        GUILayout.Label(Utilities.GetColonFormattedTime(t.TimeLeft), GUILayout.Width(_width1));
+                    {
+                        double seconds = t.TimeLeft;
+                        GUILayout.Label(Utilities.GetColonFormattedTime(seconds), GUILayout.Width(_width1));
+                        _accumulatedTimeBefore += seconds;
+                    }
                     else
                         GUILayout.Label("Waiting for PreReq", GUILayout.Width(_width1));
                 }
                 else
                 {
-                    DrawYearBasedMult(t);
-                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(t.EstimatedTimeLeft)}", GUILayout.Width(_width1));
+                    DrawYearBasedMult(t, _accumulatedTimeBefore);
+                    double seconds = t.GetTimeLeftEst(_accumulatedTimeBefore);
+                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(seconds, _accumulatedTimeBefore)}", GUILayout.Width(_width1));
+                    _accumulatedTimeBefore += seconds;
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
                 {
@@ -546,28 +566,49 @@ namespace KerbalConstructionTime
 
         private static int CompareBuildItems(IKCTBuildItem a, IKCTBuildItem b)
         {
-            return a.GetTimeLeft().CompareTo(b.GetTimeLeft());
+            double offA, offB;
+            _timeBeforeItem.TryGetValue(a, out offA);
+            _timeBeforeItem.TryGetValue(b, out offB);
+            return (offA + a.GetTimeLeftEst(offA)).CompareTo(offB + b.GetTimeLeftEst(offB));
         }
 
         private static List<IKCTBuildItem> _allItems = new List<IKCTBuildItem>();
+        private static Dictionary<IKCTBuildItem, double> _timeBeforeItem = new Dictionary<IKCTBuildItem, double>();
         private static void RenderCombinedList()
         {
-            _allItems.AddRange(KCTGameStates.TechList);
-
+            double accTime;
             foreach (var k in KCTGameStates.KSCs)
             {
                 foreach (var l in k.LaunchComplexes)
                 {
                     if (l.IsOperational)
                     {
-                        _allItems.AddRange(l.BuildList);
-                        _allItems.AddRange(l.PadConstructions);
+                        accTime = 0d;
+                        foreach (var b in l.BuildList)
+                        {
+                            // FIXME handle multiple rates
+                            _timeBeforeItem[b] = accTime;
+                            accTime += b.GetTimeLeftEst(accTime);
+                            _allItems.Add(b);
+                        }
                         _allItems.AddRange(l.Recon_Rollout);
                         _allItems.AddRange(l.AirlaunchPrep);
                     }
                 }
-                _allItems.AddRange(k.LCConstructions);
-                _allItems.AddRange(k.FacilityUpgrades);
+                accTime = 0d;
+                foreach (var c in k.Constructions)
+                {
+                    _timeBeforeItem[c] = accTime;
+                    accTime += c.GetTimeLeftEst(accTime);
+                    _allItems.Add(c);
+                }
+            }
+            accTime = 0d;
+            foreach (var t in KCTGameStates.TechList)
+            {
+                _timeBeforeItem[t] = accTime;
+                accTime += t.GetTimeLeftEst(accTime);
+                _allItems.Add(t);
             }
             _allItems.Sort(CompareBuildItems);
 
@@ -609,26 +650,29 @@ namespace KerbalConstructionTime
                 else
                     GUILayout.Label(t.GetItemName());
 
-                GUILayout.Label($"{t.GetFractionComplete():P2} %", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
 
-                if(t is TechItem tech)
-                    DrawYearBasedMult(tech);
+                double timeBeforeItem;
+                _timeBeforeItem.TryGetValue(t, out timeBeforeItem);
+                if (t is TechItem tech)
+                    DrawYearBasedMult(tech, timeBeforeItem);
                 else
-                    GUILayout.Space(15);
+                    GUILayout.Space(18);
 
                 if (t.GetBuildRate() > 0d)
                     GUILayout.Label($"{Utilities.GetColonFormattedTime(t.GetTimeLeft())}", GUILayout.Width(_width1));
                 else
-                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(t.GetTimeLeftEst())}", GUILayout.Width(_width1));
+                    GUILayout.Label($"Est: {Utilities.GetColonFormattedTime(t.GetTimeLeftEst(timeBeforeItem), timeBeforeItem)}", GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
             _allItems.Clear();
+            _timeBeforeItem.Clear();
         }
 
-        private static void DrawYearBasedMult(TechItem t)
+        private static void DrawYearBasedMult(TechItem t, double offset)
         {
-            double mult = t.YearBasedRateMult;
+            double mult = offset == 0 ? t.YearBasedRateMult : t.CalculateYearBasedRateMult(offset);
 
             string rateDesc;
             if (mult < 0.5)
@@ -752,6 +796,7 @@ namespace KerbalConstructionTime
 
         private static void RenderVesselsBeingBuilt(List<BuildListVessel> buildList)
         {
+            _accumulatedTimeBefore = 0d;
             if (buildList.Count == 0)
             {
                 if (HighLogic.LoadedSceneIsEditor)
@@ -818,13 +863,17 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"{Math.Round(b.ProgressPercent(), 2)}%", GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
-                    string timeLeft = Utilities.GetColonFormattedTime(b.TimeLeft);
+                    double seconds = b.TimeLeft;
+                    string timeLeft = Utilities.GetColonFormattedTime(seconds);
                     GUILayout.Label(timeLeft, GUILayout.Width(_width2));
+                    _accumulatedTimeBefore += seconds; // FIXME what to do with multiple lines? Min() I guess?
                 }
                 else
                 {
-                    string timeLeft = Utilities.GetColonFormattedTime(b.GetTimeLeftEst());
+                    double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore);
+                    string timeLeft = Utilities.GetColonFormattedTime(seconds, _accumulatedTimeBefore);
                     GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
+                    _accumulatedTimeBefore += seconds;
                 }
                 GUILayout.EndHorizontal();
             }

@@ -679,7 +679,7 @@ namespace KerbalConstructionTime
                             //Reset the associated launchpad id when rollback completes
                             Profiler.BeginSample("KCT ProgressBuildTime.ReconRollout.FindBLVesselByID");
                             if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
-                                && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) is BuildListVessel blv)
+                                && Utilities.FindBLVesselByID(rr.LC, new Guid(rr.AssociatedID)) is BuildListVessel blv)
                             {
                                 blv.LaunchSiteIndex = -1;
                             }
@@ -890,7 +890,7 @@ namespace KerbalConstructionTime
                         for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
                         {
                             ReconRollout rr = currentLC.Recon_Rollout[i];
-                            if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning && Utilities.FindBLVesselByID(new Guid(rr.AssociatedID)) == null)
+                            if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning && Utilities.FindBLVesselByID(rr.LC, new Guid(rr.AssociatedID)) == null)
                             {
                                 KCTDebug.Log($"Invalid Recon_Rollout at {ksc.KSCName}. ID {rr.AssociatedID} not found.");
                                 currentLC.Recon_Rollout.Remove(rr);
@@ -901,7 +901,7 @@ namespace KerbalConstructionTime
                         for (int i = 0; i < currentLC.AirlaunchPrep.Count; i++)
                         {
                             AirlaunchPrep ap = currentLC.AirlaunchPrep[i];
-                            if (Utilities.FindBLVesselByID(new Guid(ap.AssociatedID)) == null)
+                            if (Utilities.FindBLVesselByID(ap.LC, new Guid(ap.AssociatedID)) == null)
                             {
                                 KCTDebug.Log($"Invalid KCT_AirlaunchPrep at {ksc.KSCName}. ID {ap.AssociatedID} not found.");
                                 currentLC.AirlaunchPrep.Remove(ap);

@@ -130,6 +130,8 @@ namespace KerbalConstructionTime
 
         public static int SalaryEngineers = -1;
         public static int SalaryResearchers = -1;
+        public static double SalaryMultiplier = 1d;
+        public static double TotalMaintenancePerDay = 0d;
 
         public static int GetSalaryEngineers()
         {
@@ -137,7 +139,7 @@ namespace KerbalConstructionTime
             foreach (var ksc in KCTGameStates.KSCs)
                 engineers += GetEffectiveEngineersForSalary(ksc);
 
-            return (int)(engineers * SalaryEngineers);
+            return (int)(engineers * SalaryEngineers * SalaryMultiplier);
         }
 
         public static double GetEffectiveEngineersForSalary(KSCItem ksc)
@@ -157,8 +159,10 @@ namespace KerbalConstructionTime
             return 0;
         }
 
-        public static int GetSalaryResearchers() => KCTGameStates.Researchers * SalaryResearchers;
+        public static int GetSalaryResearchers() => (int)(KCTGameStates.Researchers * SalaryResearchers * SalaryMultiplier);
         public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
+
+        public static double GetTotalMaintenanceAndSalaryPerDay() => System.Math.Max(0d, TotalMaintenancePerDay + GetTotalSalary() / 365d);
 
         public static int TotalEngineers
         {

@@ -848,11 +848,6 @@ namespace KerbalConstructionTime
 
         public bool AreAllPartsUnlocked() => GetPartsWithPurchasability().Values.All(v => v.Status == PurchasabilityStatus.Purchased);
 
-        public double ProgressPercent()
-        {
-            return 100 * GetFractionComplete();
-        }
-
         public string GetItemName() => ShipName;
 
         public double GetBuildRate() => BuildRate;

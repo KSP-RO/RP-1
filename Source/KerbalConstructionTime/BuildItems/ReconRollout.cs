@@ -160,7 +160,7 @@ namespace KerbalConstructionTime
             double n = RRType == RolloutReconType.Rollback ? 0 : BP;
             return (n - Progress) / GetBuildRate();
         }
-        public double GetTimeLeftEst() => GetTimeLeft();
+        public double GetTimeLeftEst(double offset) => GetTimeLeft();
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
 

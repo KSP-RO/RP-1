@@ -1121,7 +1121,7 @@ namespace KerbalConstructionTime
                                 }
                                 else if (Utilities.ReconditioningActive(null, launchSite))
                                 {
-                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {MagiCore.Utilities.GetFormattedTime(activeLC.GetReconditioning(launchSite).GetTimeLeft())}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {Utilities.GetFormattedTime(activeLC.GetReconditioning(launchSite).GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
                                     ScreenMessages.PostScreenMessage(message);
                                 }
                                 else

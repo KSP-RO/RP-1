@@ -1400,13 +1400,35 @@ namespace KerbalConstructionTime
             return LC.GetReconditioning(launchSite) is ReconRollout;
         }
 
-        public static BuildListVessel FindBLVesselByID(Guid id)
+        public static BuildListVessel FindBLVesselByID(LCItem hintLC, Guid id)
         {
+            BuildListVessel b;
+            if (hintLC != null)
+            {
+                b = FindBLVesselByIDInLC(id, hintLC);
+                if (b != null)
+                    return b;
+            }
+
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 if (FindBLVesselByID(id, ksc) is BuildListVessel blv)
                     return blv;
             }
+
+            return null;
+        }
+
+        public static BuildListVessel FindBLVesselByIDInLC(Guid id, LCItem lc)
+        {
+
+            BuildListVessel ves = lc.Warehouse.Find(blv => blv.Id == id);
+            if (ves != null)
+                return ves;
+
+            ves = lc.BuildList.Find(blv => blv.Id == id);
+            if (ves != null)
+                return ves;
 
             return null;
         }
@@ -1417,11 +1439,7 @@ namespace KerbalConstructionTime
             {
                 foreach (LCItem lc in ksc.LaunchComplexes)
                 {
-                    BuildListVessel ves = lc.Warehouse.Find(blv => blv.Id == id);
-                    if (ves != null)
-                        return ves;
-
-                    ves = lc.BuildList.Find(blv => blv.Id == id);
+                    BuildListVessel ves = FindBLVesselByIDInLC(id, lc);
                     if (ves != null)
                         return ves;
                 }

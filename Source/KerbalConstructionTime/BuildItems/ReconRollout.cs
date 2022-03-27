@@ -37,7 +37,7 @@ namespace KerbalConstructionTime
             {  RolloutReconType.None, UnknownStr }
         };
 
-        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(new Guid(AssociatedID));
+        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
 
         private LCItem _lc = null;
         public LCItem LC

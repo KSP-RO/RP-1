@@ -140,8 +140,8 @@ namespace KerbalConstructionTime
             }
 
             Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
-            GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * originalCompletionPercent, 2))}%");
-            GUILayout.Label($"Edited: {Math.Round(100 * newCompletionPercent, 2)}%");
+            GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
+            GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
             double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorIsHumanRated, 0)
                 * ship.LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;

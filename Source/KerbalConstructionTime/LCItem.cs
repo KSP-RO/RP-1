@@ -7,13 +7,15 @@ namespace KerbalConstructionTime
 {
     public class LCItem
     {
-        public struct LCData : IConfigNode
+        public class LCData : IConfigNode
         {
             [Persistent] public string Name;
             [Persistent] public float massMax;
             [Persistent] public Vector3 sizeMax;
             [Persistent] public bool isPad;
             [Persistent] public bool isHumanRated;
+
+            public LCData() { }
 
             public LCData(string Name, float massMax, Vector3 sizeMax, bool isPad, bool isHumanRated)
             {
@@ -24,6 +26,18 @@ namespace KerbalConstructionTime
                 this.isHumanRated = isHumanRated;
             }
 
+            public LCData(LCData old)
+            {
+                Name = old.Name;
+                massMax = old.massMax;
+                sizeMax = old.sizeMax;
+                isPad = old.isPad;
+                isHumanRated = old.isHumanRated;
+            }
+
+            // NOTE: Not comparing name, which I think is correct here.
+            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
+
             public void Load(ConfigNode node)
             {
                 ConfigNode.LoadObjectFromConfig(this, node);
@@ -33,9 +47,6 @@ namespace KerbalConstructionTime
             {
                 ConfigNode.CreateConfigFromObject(this, node);
             }
-
-            // NOTE: Not comparing name, which I think is correct here.
-            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
         public static LCData StartingLC = new LCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, false);
@@ -55,15 +66,15 @@ namespace KerbalConstructionTime
         public double RateHRCapped => _rateHRCapped;
         
         public int Engineers = 0;
-        private static double RawMaxPersonnel(float massMax, Vector3 sizeMax) =>
+        private static double RawMaxEngineers(float massMax, Vector3 sizeMax) =>
             massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.05d;
-        public static int MaxPersonnelCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
-            Math.Max(5, (int)Math.Ceiling(RawMaxPersonnel(massMax, sizeMax) * (isHuman ? 1.5d : 1d))) * 5;
+        public static int MaxEngineersCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
+            Math.Max(5, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d))) * 5;
 
-        private double _RawMaxPersonnel => RawMaxPersonnel(MassMax, SizeMax);
-        public int MaxPersonnel => MaxPersonnelCalc(MassMax, SizeMax, IsHumanRated);
-        public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
-        public double EfficiencyEngineers = 0d;
+        private double _RawMaxEngineers => RawMaxEngineers(MassMax, SizeMax);
+        public int MaxEngineers => MaxEngineersCalc(MassMax, SizeMax, IsHumanRated);
+        public int MaxEngineersNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxEngineers)) * 5;
+        public double EfficiencyEngineers = 1d;
         public double LastEngineers = 0d;
         public bool IsRushing;
         public const double RushRateMult = 1.5d;
@@ -76,7 +87,9 @@ namespace KerbalConstructionTime
         public bool IsPad = true;
         public bool IsHumanRated = false;
 
-        public float MassMax, MassMin;
+        public float MassMax;
+        public static float CalcMassMin(float massMax) => (massMax == float.MaxValue || massMax <= 15f) ? 0f : Mathf.Floor(massMax * 0.75f);
+        public float MassMin => CalcMassMin(MassMax);
         public Vector3 SizeMax;
 
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
@@ -108,13 +121,13 @@ namespace KerbalConstructionTime
             MassMax = mMax;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out MassMin, out _, out _, out fracLevel);
+            KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out _, out _, out fracLevel);
 
             SizeMax = sMax;
 
             if (IsPad)
             {
-                var pad = new KCT_LaunchPad(Name + "A", fracLevel);
+                var pad = new KCT_LaunchPad(Name, fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
@@ -133,7 +146,7 @@ namespace KerbalConstructionTime
             SizeMax = data.sizeMax;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(MassMax, SizeMax, IsHumanRated, out MassMin, out _, out _, out fracLevel);
+            KCT_GUI.GetPadStats(MassMax, SizeMax, IsHumanRated, out _, out _, out fracLevel);
 
             foreach (var pad in LaunchPads)
             {
@@ -261,7 +274,6 @@ namespace KerbalConstructionTime
             node.AddValue("operational", IsOperational);
             node.AddValue("isPad", IsPad);
             node.AddValue("massMax", MassMax);
-            node.AddValue("massMin", MassMin);
             node.AddValue("sizeMax", SizeMax);
             node.AddValue("id", _id);
             node.AddValue("Engineers", Engineers);
@@ -362,7 +374,6 @@ namespace KerbalConstructionTime
             node.TryGetValue("operational", ref IsOperational);
             node.TryGetValue("isPad", ref IsPad);
             node.TryGetValue("massMax", ref MassMax);
-            node.TryGetValue("massMin", ref MassMin);
             node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
             node.TryGetValue("Engineers", ref Engineers);

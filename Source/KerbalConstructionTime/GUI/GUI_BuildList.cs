@@ -187,7 +187,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft()));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"Salary Cost:\n√{(buildItem.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}")))
                 {
@@ -398,13 +398,13 @@ namespace KerbalConstructionTime
                 if (buildRate > 0d)
                 {
                     double seconds = pItem.GetTimeLeft();
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, pItem.GetItemName()+i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 else
                 {
                     double seconds = pItem.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, pItem.GetItemName()+i, _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d && GUILayout.Button("Warp", GUILayout.Width(45)))
@@ -534,7 +534,7 @@ namespace KerbalConstructionTime
                     if (blockingPrereq == null)
                     {
                         double seconds = t.TimeLeft;
-                        GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                        GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                         _accumulatedTimeBefore += seconds;
                     }
                     else
@@ -544,7 +544,7 @@ namespace KerbalConstructionTime
                 {
                     DrawYearBasedMult(t, _accumulatedTimeBefore);
                     double seconds = t.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
@@ -660,9 +660,9 @@ namespace KerbalConstructionTime
                     GUILayout.Space(18);
 
                 if (t.GetBuildRate() > 0d)
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "comgbined"+i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined"+i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
@@ -788,7 +788,7 @@ namespace KerbalConstructionTime
                 DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.LaunchPadID}");
                 GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.LaunchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
@@ -864,13 +864,13 @@ namespace KerbalConstructionTime
                 if (b.BuildRate > 0)
                 {
                     double seconds = b.TimeLeft;
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.Id.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds; // FIXME what to do with multiple lines? Min() I guess?
                 }
                 else
                 {
                     double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.Id.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds;
                 }
                 GUILayout.EndHorizontal();
@@ -1003,7 +1003,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
             if (recovery != null)
             {
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft()), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+b.Id.ToString()), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             }
             else
             {
@@ -1024,7 +1024,7 @@ namespace KerbalConstructionTime
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, b.Id.ToString(), launchSite);
                         if (tmpRollout.Cost > 0d)
                             GUILayout.Label("√" + tmpRollout.Cost.ToString("N0"));
-                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft()) : new GUIContent("Rollout");
+                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+b.Id.ToString()) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
                             if (hasRecond)
@@ -1065,7 +1065,7 @@ namespace KerbalConstructionTime
                     }
                     else if (!HighLogic.LoadedSceneIsEditor && rollback == null &&
                              rollout != null && b.Id.ToString() == rollout.AssociatedID && !rollout.IsComplete() &&
-                             GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
+                             GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+b.Id.ToString()), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
                     {
                         rollout.SwapRolloutType();
                     }
@@ -1073,12 +1073,12 @@ namespace KerbalConstructionTime
                     {
                         if (rollout == null)
                         {
-                            if (GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
+                            if (GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+b.Id.ToString()), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
                                 rollback.SwapRolloutType();
                         }
                         else
                         {
-                            GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft()), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                            GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+b.Id.ToString()), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                         }
                     }
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
@@ -1165,7 +1165,7 @@ namespace KerbalConstructionTime
                             var tmpPrep = new AirlaunchPrep(b, b.Id.ToString());
                             if (tmpPrep.Cost > 0d)
                                 GUILayout.Label("√" + tmpPrep.Cost.ToString("N0"));
-                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft()) : new GUIContent("Prep for airlaunch");
+                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+b.Id.ToString()) : new GUIContent("Prep for airlaunch");
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
                                 AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
@@ -1186,7 +1186,7 @@ namespace KerbalConstructionTime
                         }
                         else if (airlaunchPrep != null)
                         {
-                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : Utilities.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft());
+                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : Utilities.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.AssociatedID);
                             if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
                             {
                                 airlaunchPrep.SwitchDirection();

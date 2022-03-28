@@ -140,7 +140,7 @@ namespace KerbalConstructionTime
 
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
+            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -151,7 +151,7 @@ namespace KerbalConstructionTime
 
             GUILayout.Label($"  {currentLC.Engineers:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
 
-            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
+            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0) { Utilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -160,7 +160,7 @@ namespace KerbalConstructionTime
                     _currentPersonnelHover = PersonnelButtonHover.None;
             }
 
-            GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"Max: {currentLC.MaxEngineers:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             if (recalc)
@@ -184,7 +184,7 @@ namespace KerbalConstructionTime
             }
 
             double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
-            double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiecnyEngineers;
+            double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiencyEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global)");
             GUILayout.EndHorizontal();
@@ -206,7 +206,7 @@ namespace KerbalConstructionTime
                 double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, assignDelta), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), currentLC))
                     * efficLocal * efficGlobal;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -223,7 +223,7 @@ namespace KerbalConstructionTime
             {
                 IConstructionBuildItem b = KSC.Constructions[0];
                 GUILayout.Label($"Current Construction: {b.GetItemName()}");
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BuildPoints() - b.CurrentProgress()) / cRate), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BuildPoints() - b.CurrentProgress()) / cRate, "PersonnelConstr"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -298,7 +298,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"Current Research: {t.TechName}");
                 double techRate = MathParser.ParseNodeRateFormula(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
                 double timeLeft = (t.ScienceCost - t.Progress) / techRate;
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -402,7 +402,7 @@ namespace KerbalConstructionTime
             if (add)
             {
                 signChar = "+";
-                limit = currentLC.KSC.ConstructionWorkers;
+                limit = Math.Min(currentLC.KSC.ConstructionWorkers, currentLC.MaxEngineers - currentLC.Engineers);
             }
             else
             {

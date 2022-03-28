@@ -144,7 +144,7 @@ namespace KerbalConstructionTime
             double buildRate = Utilities.GetBuildRate(0, LC, IsHumanRated, false);
             if (RRType != RolloutReconType.Reconditioning)
                 buildRate = Math.Min(buildRate, Utilities.GetBuildRateCap(VesselBP, Mass, LC));
-            buildRate *= LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers * LC.RushRate;
+            buildRate *= LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers * LC.RushRate;
 
             if (RRType == RolloutReconType.Rollback)
                 buildRate *= -1;

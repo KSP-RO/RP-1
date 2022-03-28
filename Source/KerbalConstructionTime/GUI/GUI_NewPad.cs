@@ -40,7 +40,8 @@ namespace KerbalConstructionTime
 
             double curPadCost;
             float fractionalPadLvl;
-            GetPadStats(curLC.MassMax, curLC.SizeMax, curLC.IsHumanRated, out _, out curPadCost, out _, out fractionalPadLvl);
+            GetPadStats(curLC.MassMax, curLC.SizeMax, curLC.IsHumanRated, out curPadCost, out _, out fractionalPadLvl);
+            curPadCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
 
             if (curPadCost > 0)
             {

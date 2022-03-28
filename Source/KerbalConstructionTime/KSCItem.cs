@@ -207,7 +207,7 @@ namespace KerbalConstructionTime
                 foreach (ConfigNode cn in tmp.GetNodes("LCConstruction"))
                 {
                     var storageItem = new LCConstructionStorageItem();
-                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    storageItem.Load(cn);
                     LCConstructions.Add(storageItem.ToLCConstruction());
                 }
             }

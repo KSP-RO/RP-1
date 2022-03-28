@@ -38,7 +38,7 @@ namespace KerbalConstructionTime
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             int personnel = Math.Max(0, LC.Engineers + persDelta);
             if (isHumanRatedCapped)
-                personnel = Math.Min(personnel, LC.MaxPersonnelNonHR);
+                personnel = Math.Min(personnel, LC.MaxEngineersNonHR);
 
             var variables = new Dictionary<string, string>();
 
@@ -209,7 +209,7 @@ namespace KerbalConstructionTime
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
                 EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.fractionalLevel;
+                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance != null ? KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.fractionalLevel : 0;
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
                 isVABVessel = 1;

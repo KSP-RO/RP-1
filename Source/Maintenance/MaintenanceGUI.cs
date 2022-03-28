@@ -156,13 +156,13 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Subsidy", HighLogic.Skin.label, GUILayout.Width(160));
-            GUILayout.Label((MaintenanceHandler.Settings.maintenanceOffset * -PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            GUILayout.Label((MaintenanceHandler.Instance.MaintenanceSubsidy * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             try
             {
-                double costPerDay = Math.Max(0, MaintenanceHandler.Instance.TotalUpkeep + MaintenanceHandler.Settings.maintenanceOffset);
+                double costPerDay = Math.Max(0, MaintenanceHandler.Instance.TotalUpkeep - MaintenanceHandler.Instance.MaintenanceSubsidy);
                 GUILayout.Label("Total (after subsidy)", BoldLabel, GUILayout.Width(160));
                 GUILayout.Label((costPerDay * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
             }

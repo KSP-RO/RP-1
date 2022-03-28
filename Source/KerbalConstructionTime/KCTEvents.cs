@@ -65,16 +65,16 @@ namespace KerbalConstructionTime
             GameEvents.FindEvent<EventVoid>("OnSYReady")?.Add(SYReady);
             GameEvents.FindEvent<EventData<Part>>("OnSYInventoryAppliedToPart")?.Add(OnSYInventoryAppliedToPart);
 
-            GameEvents.onGUIAdministrationFacilitySpawn.Add(HideAllGUIs);
-            GameEvents.onGUIAstronautComplexSpawn.Add(HideAllGUIs);
-            GameEvents.onGUIMissionControlSpawn.Add(HideAllGUIs);
-            GameEvents.onGUIRnDComplexSpawn.Add(HideAllGUIs);
+            GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIRnDComplexSpawn.Add(EnterSCSubscene);
             GameEvents.onGUIKSPediaSpawn.Add(HideAllGUIs);
 
-            GameEvents.onGUIAdministrationFacilityDespawn.Add(RestoreAllGUIs);
-            GameEvents.onGUIAstronautComplexDespawn.Add(RestoreAllGUIs);
-            GameEvents.onGUIMissionControlDespawn.Add(RestoreAllGUIs);
-            GameEvents.onGUIRnDComplexDespawn.Add(RestoreAllGUIs);
+            GameEvents.onGUIAdministrationFacilityDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIAstronautComplexDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubscene);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 
             GameEvents.onEditorStarted.Add(OnEditorStarted);
@@ -119,6 +119,17 @@ namespace KerbalConstructionTime
         {
             KCT_GUI.RestorePrevUIState();
         }
+
+        private void EnterSCSubscene()
+        {
+            KCT_GUI.EnterSCSubcene();
+        }
+
+        private void ExitSCSubscene()
+        {
+            KCT_GUI.ExitSCSubcene();
+        }
+
 
         public void FacilityUpgradedEvent(Upgradeables.UpgradeableFacility facility, int lvl)
         {
@@ -273,7 +284,7 @@ namespace KerbalConstructionTime
                     {
                         KCTGameStates.TechList.Add(tech);
                         tech.UpdateBuildRate(KCTGameStates.TechList.Count - 1);
-                        ScreenMessages.PostScreenMessage($"Node will unlock {Utilities.GetTechUnlockTime(tech)}", 4f, ScreenMessageStyle.UPPER_LEFT);
+                        ScreenMessages.PostScreenMessage(Utilities.GetTechUnlockTime(tech), 4f, ScreenMessageStyle.UPPER_LEFT);
 
                         OnTechQueued.Fire(ev.host);
                     }
@@ -282,7 +293,7 @@ namespace KerbalConstructionTime
                 {
                     ResearchAndDevelopment.Instance.AddScience(tech.ScienceCost, TransactionReasons.RnDTechResearch);
                     ScreenMessages.PostScreenMessage("This node is already being researched!", 4f, ScreenMessageStyle.UPPER_LEFT);
-                    ScreenMessages.PostScreenMessage($"It will unlock {Utilities.GetTechUnlockTime(KCTGameStates.TechList.First(t => t.TechID == ev.host.techID))}", 4f, ScreenMessageStyle.UPPER_LEFT);
+                    ScreenMessages.PostScreenMessage(Utilities.GetTechUnlockTime(KCTGameStates.TechList.First(t => t.TechID == ev.host.techID)), 4f, ScreenMessageStyle.UPPER_LEFT);
                 }
             }
         }

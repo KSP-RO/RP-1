@@ -66,6 +66,7 @@ namespace KerbalConstructionTime
             {
                 KCT_GUI.InitBuildListVars();
                 KCT_GUI.InitBuildPlans();
+                KCT_GUI.InitSubsceneToggleButton();
                 KCT_GUI.InitDevPartsToggle();
                 _isGUIInitialized = true;
             }
@@ -248,7 +249,7 @@ namespace KerbalConstructionTime
             {
                 KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
-                if (KCTGameStates.LaunchedVessel.RemoveFromBuildList()) //Only do these when the vessel is first removed from the list
+                if (KCTGameStates.LaunchedVessel.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
                 {
                     //Add the cost of the ship to the funds so it can be removed again by KSP
                     Utilities.AddFunds(KCTGameStates.LaunchedVessel.Cost, TransactionReasons.VesselRollout);
@@ -728,12 +729,12 @@ namespace KerbalConstructionTime
                     if (skillupEng)
                     {
                         double max = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerMaxEfficiency;
-                        double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiecnyEngineers);
+                        double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiencyEngineers);
                         double delta = eval * UTDiff / (365d * 86400d);
                         if (rushingEngs > 0)
-                            delta = UtilMath.LerpUnclamped(delta, KCTGameStates.EfficiecnyEngineers * rushEfficMult - KCTGameStates.EfficiecnyEngineers, rushingEngs / KCTGameStates.TotalEngineers);
-                        //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiecnyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
-                        KCTGameStates.EfficiecnyEngineers = Math.Min(max, KCTGameStates.EfficiecnyEngineers + delta);
+                            delta = UtilMath.LerpUnclamped(delta, KCTGameStates.EfficiencyEngineers * rushEfficMult - KCTGameStates.EfficiencyEngineers, rushingEngs / KCTGameStates.TotalEngineers);
+                        //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiencyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
+                        KCTGameStates.EfficiencyEngineers = Math.Min(max, KCTGameStates.EfficiencyEngineers + delta);
                     }
 
                     if (KCTGameStates.LastEngineers < totalEngineers)
@@ -972,7 +973,7 @@ namespace KerbalConstructionTime
             {
                 foreach (BuildListVessel blv in errored)
                 {
-                    blv.RemoveFromBuildList();
+                    blv.RemoveFromBuildList(out _);
                     Utilities.AddFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
                     //remove any associated recon_rollout
                 }

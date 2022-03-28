@@ -2264,7 +2264,7 @@ namespace KerbalConstructionTime
 
             bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay;
             if (shouldUseDate ^ flip)
-                return KSPUtil.dateTimeFormatter.PrintDateCompact(t + extraTime + GetUT(), false, false);
+                return KSPUtil.dateTimeFormatter.PrintDateCompact(GetUT() + extraTime + t, false, false);
 
             return MagiCore.Utilities.GetColonFormattedTime(t);
         }
@@ -2275,13 +2275,14 @@ namespace KerbalConstructionTime
                 return "(infinity)";
 
             if (KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay && allowDate)
-                return KSPUtil.dateTimeFormatter.PrintDate(t + extraTime + GetUT(), false, false);
+                return KSPUtil.dateTimeFormatter.PrintDate(GetUT() + extraTime + t, false, false);
+
             return MagiCore.Utilities.GetFormattedTime(t);
         }
 
-        public static GUIContent GetColonFormattedTimeWithTooltip(double t, double extraTime = 0, bool showEst = false)
+        public static GUIContent GetColonFormattedTimeWithTooltip(double t, string identifier, double extraTime = 0, bool showEst = false)
         {
-            return new GUIContent(showEst ? $"Est: {GetColonFormattedTime(t, extraTime, false)}" : GetColonFormattedTime(t, extraTime, false), GetColonFormattedTime(t, extraTime, true));
+            return new GUIContent(showEst ? $"Est: {GetColonFormattedTime(t, extraTime, false)}" : GetColonFormattedTime(t, extraTime, false), $"{identifier}¶{GetColonFormattedTime(t, extraTime, true)}");
         }
 
         public static string GetTechUnlockTime(TechItem tech)

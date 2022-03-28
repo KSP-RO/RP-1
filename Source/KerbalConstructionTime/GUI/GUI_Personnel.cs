@@ -206,7 +206,7 @@ namespace KerbalConstructionTime
                 double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, assignDelta), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), currentLC))
                     * efficLocal * efficGlobal;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -223,7 +223,7 @@ namespace KerbalConstructionTime
             {
                 IConstructionBuildItem b = KSC.Constructions[0];
                 GUILayout.Label($"Current Construction: {b.GetItemName()}");
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BuildPoints() - b.CurrentProgress()) / cRate), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BuildPoints() - b.CurrentProgress()) / cRate, "PersonnelConstr"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -298,7 +298,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"Current Research: {t.TechName}");
                 double techRate = MathParser.ParseNodeRateFormula(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
                 double timeLeft = (t.ScienceCost - t.Progress) / techRate;
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }
             else
             {

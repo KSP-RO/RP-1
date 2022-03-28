@@ -30,6 +30,8 @@ namespace KerbalConstructionTime
         public bool CleanUpKSCDebris;
         [Persistent]
         public bool UseDates;
+        [Persistent]
+        public bool InPlaceEdit;
 
         public KCTSettings()
         {
@@ -41,6 +43,7 @@ namespace KerbalConstructionTime
             PreferBlizzyToolbar = false;
             CleanUpKSCDebris = true;
             UseDates = false;
+            InPlaceEdit = false;
         }
 
         public void Load()

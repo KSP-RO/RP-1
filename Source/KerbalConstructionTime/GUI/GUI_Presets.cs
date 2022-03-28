@@ -18,7 +18,7 @@ namespace KerbalConstructionTime
         private static bool _saveCareer, _saveScience, _saveSandbox;
         private static KCT_Preset _toSave;
 
-        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms, _cleanUpKSCDebris, _useDates;
+        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms, _cleanUpKSCDebris, _useDates, _inPlaceEdit;
         private static int _newTimewarp;
 
         public static void DrawPresetWindow(int windowID)
@@ -255,6 +255,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.Settings.AutoKACAlarms = _autoAlarms;
                 KCTGameStates.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
                 KCTGameStates.Settings.UseDates = _useDates;
+                KCTGameStates.Settings.InPlaceEdit = _inPlaceEdit;
 
                 KCTGameStates.Settings.Save();
                 GUIStates.ShowSettings = false;
@@ -321,6 +322,7 @@ namespace KerbalConstructionTime
             _debug = GUILayout.Toggle(_debug, "Debug Logging", HighLogic.Skin.button);
             _cleanUpKSCDebris = GUILayout.Toggle(_cleanUpKSCDebris, "Autoclean KSC Debris", HighLogic.Skin.button);
             _useDates = GUILayout.Toggle(_useDates, "Use Dates Not +Days", HighLogic.Skin.button);
+            _inPlaceEdit = GUILayout.Toggle(_inPlaceEdit, "Edit Keeps Buildorder", HighLogic.Skin.button);
 
             GUILayout.EndVertical();
             GUILayout.EndVertical();
@@ -447,6 +449,7 @@ namespace KerbalConstructionTime
             _autoAlarms = KCTGameStates.Settings.AutoKACAlarms;
             _cleanUpKSCDebris = KCTGameStates.Settings.CleanUpKSCDebris;
             _useDates = KCTGameStates.Settings.UseDates;
+            _inPlaceEdit = KCTGameStates.Settings.InPlaceEdit;
 
             GUIStates.ShowSettings = !GUIStates.ShowSettings;
         }

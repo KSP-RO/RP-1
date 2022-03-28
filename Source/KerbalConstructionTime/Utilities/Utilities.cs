@@ -2255,13 +2255,17 @@ namespace KerbalConstructionTime
             return KCTGameStates.EfficiencyResearchers;
         }
 
-        public static string GetColonFormattedTime(double t, double extraTime = 0d, bool allowDate = true)
+        private const double MaxSecondsForDayDisplay = 7d * 86400d;
+
+        public static string GetColonFormattedTime(double t, double extraTime = 0d, bool flip = false)
         {
             if (double.IsNaN(t) || double.IsInfinity(t))
                 return "(infinity)";
 
-            if (KCTGameStates.Settings.UseDates && t > 86400d && allowDate)
+            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay;
+            if (shouldUseDate ^ flip)
                 return KSPUtil.dateTimeFormatter.PrintDateCompact(t + extraTime + GetUT(), false, false);
+
             return MagiCore.Utilities.GetColonFormattedTime(t);
         }
 
@@ -2270,9 +2274,14 @@ namespace KerbalConstructionTime
             if (double.IsNaN(t) || double.IsInfinity(t))
                 return "(infinity)";
 
-            if (KCTGameStates.Settings.UseDates && t > 86400d && allowDate)
-                return KSPUtil.dateTimeFormatter.PrintDateCompact(t + extraTime + GetUT(), false, false);
+            if (KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay && allowDate)
+                return KSPUtil.dateTimeFormatter.PrintDate(t + extraTime + GetUT(), false, false);
             return MagiCore.Utilities.GetFormattedTime(t);
+        }
+
+        public static GUIContent GetColonFormattedTimeWithTooltip(double t, double extraTime = 0, bool showEst = false)
+        {
+            return new GUIContent(showEst ? $"Est: {GetColonFormattedTime(t, extraTime, false)}" : GetColonFormattedTime(t, extraTime, false), GetColonFormattedTime(t, extraTime, true));
         }
 
         public static string GetTechUnlockTime(TechItem tech)
@@ -2284,12 +2293,14 @@ namespace KerbalConstructionTime
                 TechItem techItem = KCTGameStates.TechList[i];
                 nodeTime = techItem.GetTimeLeftEst(totalTime);
                 totalTime += nodeTime;
+                if (techItem == tech)
+                    break;
             }
 
             if (KCTGameStates.Settings.UseDates)
-                return $"on {GetFormattedTime(totalTime)}";
+                return $"on {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime, 0, true)})";
             else
-                return $"in {GetFormattedTime(nodeTime)} (total: {GetColonFormattedTime(totalTime)})";
+                return $"in {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
     }
 }

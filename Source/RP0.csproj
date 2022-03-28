@@ -82,6 +82,11 @@
     <Compile Include="Avionics\ProceduralAvionicsTechNode.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUnlockedNodes.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
+    <Compile Include="Programs\PredicateBuilder.cs" />
+    <Compile Include="Programs\Program.cs" />
+    <Compile Include="Programs\ProgramHandler.cs" />
+    <Compile Include="Programs\ProgramHandlerSettings.cs" />
+    <Compile Include="Programs\Requirements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
     <Compile Include="Tooling\ModuleTooling.cs" />
@@ -125,6 +130,9 @@
     </Reference>
     <Reference Include="ClickThroughBlocker">
       <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ContractConfigurator, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <Private>False</Private>
     </Reference>
     <Reference Include="ModularFlightIntegrator">

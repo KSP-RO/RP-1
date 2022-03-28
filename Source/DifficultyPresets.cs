@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -32,6 +33,31 @@ namespace RP0
 
             GameSettings.DELTAV_APP_ENABLED = false;
             GameSettings.DELTAV_CALCULATIONS_ENABLED = false;
+
+            var gv = GameVariables.Instance;
+            ConfigNode settingsCN = GameDatabase.Instance.GetConfigNodes("REPUTATION_SETTINGS").FirstOrDefault();
+            if (settingsCN != default)
+            {
+                float f = 0;
+                if (settingsCN.TryGetValue("reputationRange", ref f))
+                    Reputation.RepRange = f;
+
+                ConfigNode cn = settingsCN.GetNode("REPUTATION_ADDITION");
+                if (cn != default)
+                {
+                    var fc = new FloatCurve();
+                    fc.Load(cn);
+                    gv.reputationAddition = fc.Curve;
+                }
+
+                cn = settingsCN.GetNode("REPUTATION_SUBTRACTION");
+                if (cn != default)
+                {
+                    var fc = new FloatCurve();
+                    fc.Load(cn);
+                    gv.reputationSubtraction = fc.Curve;
+                }
+            }
         }
     }
 

@@ -140,7 +140,7 @@ namespace KerbalConstructionTime
 
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
+            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -151,7 +151,7 @@ namespace KerbalConstructionTime
 
             GUILayout.Label($"  {currentLC.Engineers:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
 
-            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false))) { Utilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
+            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0) { Utilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -160,7 +160,7 @@ namespace KerbalConstructionTime
                     _currentPersonnelHover = PersonnelButtonHover.None;
             }
 
-            GUILayout.Label($"Max: {currentLC.MaxPersonnel:N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"Max: {currentLC.MaxEngineers:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             if (recalc)
@@ -402,7 +402,7 @@ namespace KerbalConstructionTime
             if (add)
             {
                 signChar = "+";
-                limit = currentLC.KSC.ConstructionWorkers;
+                limit = Math.Min(currentLC.KSC.ConstructionWorkers, currentLC.MaxEngineers - currentLC.Engineers);
             }
             else
             {

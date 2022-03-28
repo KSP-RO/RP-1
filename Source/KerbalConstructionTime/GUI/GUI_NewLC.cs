@@ -214,7 +214,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));
-                GUILayout.Label($"{LCItem.MaxPersonnelCalc(tonnageLimit, curPadSize, _isHumanRated):N0}", GetLabelRightAlignStyle());
+                GUILayout.Label($"{LCItem.MaxEngineersCalc(tonnageLimit, curPadSize, _isHumanRated):N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 GUILayout.Label(" ");

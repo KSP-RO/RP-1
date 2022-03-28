@@ -63,7 +63,7 @@ namespace KerbalConstructionTime
         private double _RawMaxPersonnel => RawMaxPersonnel(MassMax, SizeMax);
         public int MaxPersonnel => MaxPersonnelCalc(MassMax, SizeMax, IsHumanRated);
         public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
-        public double EfficiencyEngineers = 0d;
+        public double EfficiencyEngineers = 1d;
         public double LastEngineers = 0d;
         public bool IsRushing;
         public const double RushRateMult = 1.5d;

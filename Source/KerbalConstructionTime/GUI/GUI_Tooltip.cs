@@ -56,22 +56,41 @@ namespace KerbalConstructionTime
         {
             if (Event.current.type == EventType.Repaint)
             {
-                _tooltipText = GUI.tooltip;
-                if (!string.IsNullOrEmpty(_tooltipText))
+                if (!string.IsNullOrEmpty(GUI.tooltip))
                 {
                     _tooltipActiveWindowId = windowID;
-                    if (_tooltipText != _prevNonEmptyTooltipText)
+                    if (GUI.tooltip != _prevNonEmptyTooltipText)
                     {
                         _isTooltipChanged = true;
-                        _tooltipBeginDt = DateTime.UtcNow;
-                        _prevNonEmptyTooltipText = _tooltipText;
+                        // Hack: If the tooltip identifier is unchanged, but the text is changed, *immediatley* show the replacement tooltip.
+                        int idx = GUI.tooltip.IndexOf('¶');
+                        if (idx == -1)
+                        {
+                            _tooltipBeginDt = DateTime.UtcNow;
+                            _tooltipText = GUI.tooltip;
+                        }
+                        else
+                        {
+                            ++idx;
+                            _tooltipText = GUI.tooltip.Substring(idx);
+
+                            if (_prevNonEmptyTooltipText.Length < idx || string.Compare(GUI.tooltip, 0, _prevNonEmptyTooltipText, 0, idx) != 0)
+                                _tooltipBeginDt = DateTime.UtcNow;
+                            else
+                                _tooltipBeginDt = DateTime.MinValue;
+                        }
+                        _prevNonEmptyTooltipText = GUI.tooltip;
                     }
                 }
-                else if (windowID == _tooltipActiveWindowId)
+                else
                 {
-                    _tooltipActiveWindowId = 0;
-                    _isTooltipChanged = true;
-                    _prevNonEmptyTooltipText = string.Empty;
+                    _tooltipText = string.Empty;
+                    if (windowID == _tooltipActiveWindowId)
+                    {
+                        _tooltipActiveWindowId = 0;
+                        _isTooltipChanged = true;
+                        _prevNonEmptyTooltipText = string.Empty;
+                    }
                 }
             }
         }

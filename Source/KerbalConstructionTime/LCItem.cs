@@ -55,14 +55,14 @@ namespace KerbalConstructionTime
         public double RateHRCapped => _rateHRCapped;
         
         public int Engineers = 0;
-        private static double RawMaxPersonnel(float massMax, Vector3 sizeMax) =>
+        private static double RawMaxEngineers(float massMax, Vector3 sizeMax) =>
             massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.05d;
-        public static int MaxPersonnelCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
-            Math.Max(5, (int)Math.Ceiling(RawMaxPersonnel(massMax, sizeMax) * (isHuman ? 1.5d : 1d))) * 5;
+        public static int MaxEngineersCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
+            Math.Max(5, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d))) * 5;
 
-        private double _RawMaxPersonnel => RawMaxPersonnel(MassMax, SizeMax);
-        public int MaxPersonnel => MaxPersonnelCalc(MassMax, SizeMax, IsHumanRated);
-        public int MaxPersonnelNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxPersonnel)) * 5;
+        private double _RawMaxEngineers => RawMaxEngineers(MassMax, SizeMax);
+        public int MaxEngineers => MaxEngineersCalc(MassMax, SizeMax, IsHumanRated);
+        public int MaxEngineersNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxEngineers)) * 5;
         public double EfficiencyEngineers = 1d;
         public double LastEngineers = 0d;
         public bool IsRushing;

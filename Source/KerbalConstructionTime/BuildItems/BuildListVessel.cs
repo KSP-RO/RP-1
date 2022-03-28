@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
         public Vector3 ShipSize = Vector3.zero;
 
         public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
-            * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers * LC.RushRate;
+            * LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers * LC.RushRate;
 
         public double TimeLeft
         {
@@ -681,7 +681,7 @@ namespace KerbalConstructionTime
             if (_rushCost < 0)
                 _rushCost = MathParser.ParseRushCostFormula(this);
 
-            return _rushCost * LC.Engineers / LC.MaxPersonnel;
+            return _rushCost * LC.Engineers / LC.MaxEngineers;
         }
 
         public double GetRushEfficiencyCost()
@@ -710,9 +710,10 @@ namespace KerbalConstructionTime
             return true;
         }
 
-        public bool RemoveFromBuildList()
+        public bool RemoveFromBuildList(out int oldIndex)
         {
             bool removed = false;
+            oldIndex = -1;
             LC = null; //force a refind
             if (LC == null) //I know this looks goofy, but it's a self-caching property that caches on "get"
             {
@@ -721,12 +722,22 @@ namespace KerbalConstructionTime
             }
             else
             {
-                removed = LC.Warehouse.Remove(this);
+                oldIndex = LC.Warehouse.IndexOf(this);
+                if (oldIndex >= 0)
+                {
+                    removed = true;
+                    LC.Warehouse.RemoveAt(oldIndex);
+                    oldIndex = -1; // report notfound for removed from warehouse
+                }
                 if (!removed)
                 {
-                    removed = LC.BuildList.Remove(this);
-                    if (removed)
+                    oldIndex = LC.BuildList.IndexOf(this);
+                    if (oldIndex >= 0)
+                    {
+                        removed = true;
+                        LC.BuildList.RemoveAt(oldIndex);
                         LC.RecalculateBuildRates();
+                    }
                 }
             }
             KCTDebug.Log($"Removing {ShipName} from {LC.Name} storage/list.");
@@ -740,13 +751,14 @@ namespace KerbalConstructionTime
                     if (blv.Id == Id)
                     {
                         KCTDebug.Log("Ship found in BuildList. Removing...");
-                        removed = LC.BuildList.Remove(blv);
+                        removed = true;
+                        LC.BuildList.RemoveAt(i);
+                        oldIndex = i;
+                        LC.RecalculateBuildRates();
                         break;
                     }
                 }
-                if (removed)
-                    LC.RecalculateBuildRates();
-                else
+                if (!removed)
                 {
                     for( int i = LC.Warehouse.Count; i-- > 0;)
                     {
@@ -754,7 +766,9 @@ namespace KerbalConstructionTime
                         if (blv.Id == Id)
                         {
                             KCTDebug.Log("Ship found in Warehouse list. Removing...");
-                            removed = LC.Warehouse.Remove(blv);
+                            oldIndex = -1; // report notfound for removed from warehouse
+                            removed = true;
+                            LC.Warehouse.RemoveAt(i);
                             break;
                         }
                     }
@@ -871,7 +885,7 @@ namespace KerbalConstructionTime
 
             double bp = BuildPoints + IntegrationPoints;
             double rate = Math.Min(Utilities.GetBuildRate(0, Type, LC, IsHumanRated), Utilities.GetBuildRateCap(bp, GetTotalMass(), LC))
-                        * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
+                        * LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers;
             return (bp - Progress) / rate;
         }
 

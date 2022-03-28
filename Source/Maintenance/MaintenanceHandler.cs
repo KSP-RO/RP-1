@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KerbalConstructionTime;
 using RP0.Crew;
+using RP0.Programs;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Upgradeables;
@@ -81,6 +82,15 @@ namespace RP0
         }
 
         public double ResearchSalaryTotal => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365d;
+
+        public double MaintenanceSubsidy
+        {
+            get
+            {
+                const double secsPerYear = 3600 * 24 * 365.25;
+                return Settings.subsidyCurve.Evaluate((float)(KSPUtils.GetUT() / secsPerYear)) / 365.25;
+            }
+        }
 
         #endregion
 
@@ -326,9 +336,12 @@ namespace RP0
 
             double timePassed = time - lastUpdate;
 
+            // Best to deduct maintenance fees and add program funding at the same time
+            ProgramHandler.Instance.ProcessFunding();
+
             using (new CareerEventScope(CareerEventType.Maintenance))
             {
-                double costPerDay = Math.Max(0, TotalUpkeep + Settings.maintenanceOffset);
+                double costPerDay = Math.Max(0, TotalUpkeep - MaintenanceSubsidy);
                 double costForPassedSeconds = -timePassed * (costPerDay * (1d / 86400d));
                 Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedSeconds} funds");
                 Funding.Instance.AddFunds(costForPassedSeconds, TransactionReasons.StructureRepair);

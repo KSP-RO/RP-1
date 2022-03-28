@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using KSP;
-using UnityEngine;
-using System.Reflection;
-
-namespace RP0
+﻿namespace RP0
 {
     public class MaintenanceSettings : IConfigNode
     {
-        [Persistent]
-        public double maintenanceOffset = -10d;
-
         [Persistent]
         public double facilityLevelCostMult = 0.00002d;
 
@@ -42,9 +32,16 @@ namespace RP0
         [Persistent]
         public double courseMultiplierDivisor = 3d;
 
+        [Persistent]
+        public FloatCurve subsidyCurve = new FloatCurve();
+
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
+
+            var fc = new FloatCurve();
+            fc.Load(node.GetNode("subsidyCurve"));
+            subsidyCurve = fc;
         }
 
         public void Save(ConfigNode node)

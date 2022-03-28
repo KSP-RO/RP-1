@@ -38,7 +38,7 @@ namespace KerbalConstructionTime
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             int personnel = Math.Max(0, LC.Engineers + persDelta);
             if (isHumanRatedCapped)
-                personnel = Math.Min(personnel, LC.MaxPersonnelNonHR);
+                personnel = Math.Min(personnel, LC.MaxEngineersNonHR);
 
             var variables = new Dictionary<string, string>();
 

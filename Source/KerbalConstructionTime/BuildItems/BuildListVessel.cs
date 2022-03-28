@@ -681,7 +681,7 @@ namespace KerbalConstructionTime
             if (_rushCost < 0)
                 _rushCost = MathParser.ParseRushCostFormula(this);
 
-            return _rushCost * LC.Engineers / LC.MaxPersonnel;
+            return _rushCost * LC.Engineers / LC.MaxEngineers;
         }
 
         public double GetRushEfficiencyCost()

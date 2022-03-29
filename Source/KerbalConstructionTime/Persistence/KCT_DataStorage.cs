@@ -22,7 +22,7 @@ namespace KerbalConstructionTime
         [Persistent] public int Researchers;
         [Persistent] public int UnassignedPersonnel;
         [Persistent] public double EfficiencyResearchers = 0.25d;
-        [Persistent] public double EfficiecnyEngineers = 0.5d;
+        [Persistent] public double EfficiecnyEngineers = 0.25d;
         [Persistent] public double LastEngineers = 0d;
         [Persistent] public double LastResearchers = 0d;
 

@@ -248,7 +248,7 @@ namespace KerbalConstructionTime
             {
                 KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
-                if (KCTGameStates.LaunchedVessel.RemoveFromBuildList()) //Only do these when the vessel is first removed from the list
+                if (KCTGameStates.LaunchedVessel.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
                 {
                     //Add the cost of the ship to the funds so it can be removed again by KSP
                     Utilities.AddFunds(KCTGameStates.LaunchedVessel.Cost, TransactionReasons.VesselRollout);
@@ -972,7 +972,7 @@ namespace KerbalConstructionTime
             {
                 foreach (BuildListVessel blv in errored)
                 {
-                    blv.RemoveFromBuildList();
+                    blv.RemoveFromBuildList(out _);
                     Utilities.AddFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
                     //remove any associated recon_rollout
                 }

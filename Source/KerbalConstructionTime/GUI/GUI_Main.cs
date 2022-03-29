@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
                 if (GUIStates.ShowModifyLC)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawModifyLCWindow", "Modify Launch Complex", DrawNewLCWindow);
                 if (GUIStates.ShowFirstRun)
-                    _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Space Center Management", DrawFirstRun);
+                    _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Space Center Setup", DrawFirstRun);
                 if (GUIStates.ShowPresetSaver)
                     _presetNamingWindowPosition = DrawWindowWithTooltipSupport(_presetNamingWindowPosition, "DrawPresetSaveWindow", "Save as New Preset", DrawPresetSaveWindow);
                 if (GUIStates.ShowLaunchSiteSelector)

@@ -855,7 +855,7 @@ namespace KerbalConstructionTime
             foreach (BuildListVessel v in KCTGameStates.MergedVessels)
             {
                 usedShipsCost += v.GetTotalCost();
-                v.RemoveFromBuildList();
+                v.RemoveFromBuildList(out _);
             }
             AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
 
@@ -874,7 +874,19 @@ namespace KerbalConstructionTime
             newShip.KCTPersistentID = editableShip.KCTPersistentID;
             newShip.LCID = editableShip.LCID;
 
-            editableShip.RemoveFromBuildList();
+            int oldIdx;
+            editableShip.RemoveFromBuildList(out oldIdx);
+            if (KCTGameStates.Settings.InPlaceEdit && oldIdx >= 0)
+            {
+                // Remove and reinsert at right place.
+                // We *could* insert at the right place to start with, but
+                // that requires changing AddVesselToBuildList, which is used as
+                // a void delegate elsewhere, so...
+                List<BuildListVessel> lst = newShip.LC.BuildList;
+                lst.RemoveAt(lst.Count - 1);
+                lst.Insert(oldIdx, newShip);
+            }
+            newShip.LC.RecalculateBuildRates();
 
             GetShipEditProgress(editableShip, out double progressBP, out _, out _);
             newShip.Progress = progressBP;
@@ -2163,7 +2175,7 @@ namespace KerbalConstructionTime
             if (!b.IsFinished)
             {
                 List<ConfigNode> parts = b.ExtractedPartNodes;
-                b.RemoveFromBuildList();
+                b.RemoveFromBuildList(out _);
 
                 //only add parts that were already a part of the inventory
                 if (ScrapYardWrapper.Available)
@@ -2184,7 +2196,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                b.RemoveFromBuildList();
+                b.RemoveFromBuildList(out _);
                 ScrapYardWrapper.AddPartsToInventory(b.ExtractedPartNodes, false);    //don't count as a recovery
             }
             ScrapYardWrapper.SetProcessedStatus(ScrapYardWrapper.GetPartID(b.ExtractedPartNodes[0]), false);

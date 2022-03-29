@@ -2311,9 +2311,9 @@ namespace KerbalConstructionTime
             }
 
             if (KCTGameStates.Settings.UseDates)
-                return $"on {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime, 0, true)})";
+                return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime, 0, true)})";
             else
-                return $"in {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
+                return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
     }
 }

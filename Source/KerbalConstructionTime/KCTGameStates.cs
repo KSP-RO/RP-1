@@ -33,7 +33,7 @@ namespace KerbalConstructionTime
         public static int Researchers = 0;
         public static double EfficiencyResearchers = 0.25d;
         public static double LastResearchers = 0;
-        public static double EfficiecnyEngineers = 0.5d;
+        public static double EfficiecnyEngineers = 0.25d;
         public static double LastEngineers = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();

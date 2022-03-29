@@ -7,13 +7,15 @@ namespace KerbalConstructionTime
 {
     public class LCItem
     {
-        public struct LCData : IConfigNode
+        public class LCData : IConfigNode
         {
             [Persistent] public string Name;
             [Persistent] public float massMax;
             [Persistent] public Vector3 sizeMax;
             [Persistent] public bool isPad;
             [Persistent] public bool isHumanRated;
+
+            public LCData() { }
 
             public LCData(string Name, float massMax, Vector3 sizeMax, bool isPad, bool isHumanRated)
             {
@@ -24,6 +26,18 @@ namespace KerbalConstructionTime
                 this.isHumanRated = isHumanRated;
             }
 
+            public LCData(LCData old)
+            {
+                Name = old.Name;
+                massMax = old.massMax;
+                sizeMax = old.sizeMax;
+                isPad = old.isPad;
+                isHumanRated = old.isHumanRated;
+            }
+
+            // NOTE: Not comparing name, which I think is correct here.
+            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
+
             public void Load(ConfigNode node)
             {
                 ConfigNode.LoadObjectFromConfig(this, node);
@@ -33,9 +47,6 @@ namespace KerbalConstructionTime
             {
                 ConfigNode.CreateConfigFromObject(this, node);
             }
-
-            // NOTE: Not comparing name, which I think is correct here.
-            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
         public static LCData StartingLC = new LCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, false);

@@ -273,7 +273,7 @@ namespace KerbalConstructionTime
                     {
                         KCTGameStates.TechList.Add(tech);
                         tech.UpdateBuildRate(KCTGameStates.TechList.Count - 1);
-                        ScreenMessages.PostScreenMessage(Utilities.GetTechUnlockTime(tech)", 4f, ScreenMessageStyle.UPPER_LEFT);
+                        ScreenMessages.PostScreenMessage(Utilities.GetTechUnlockTime(tech), 4f, ScreenMessageStyle.UPPER_LEFT);
 
                         OnTechQueued.Fire(ev.host);
                     }

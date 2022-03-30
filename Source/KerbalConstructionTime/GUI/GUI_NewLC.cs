@@ -15,15 +15,11 @@ namespace KerbalConstructionTime
         private static string _lengthLimit = "8";
         private static bool _isHumanRated = false;
 
-        public static void GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out float minTonnage, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
+        public static void GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
         {
             fractionalPadLvl = 0f;
             if (tonnageLimit != float.MaxValue)
             {
-                minTonnage = Mathf.Floor(tonnageLimit * 0.75f);
-                if (minTonnage < 12f)
-                    minTonnage = 0f;
-
                 double mass = tonnageLimit;
                 curPadCost = Math.Max(0d, Math.Sqrt(mass) * 3200d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 4000d) + 1000d;
 
@@ -65,7 +61,6 @@ namespace KerbalConstructionTime
             else
             {
                 // SPH case
-                minTonnage = 0f;
                 curPadCost = 0f;
                 padSize.y *= 5f;
             }
@@ -103,7 +98,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(activeLC.IsHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
 
-                GetPadStats(activeLC.MassMax, activeLC.SizeMax, activeLC.IsHumanRated, out _, out oldPadCost, out oldVABCost, out _);
+                GetPadStats(activeLC.MassMax, activeLC.SizeMax, activeLC.IsHumanRated, out oldPadCost, out oldVABCost, out _);
                 lpMult = activeLC.LaunchPads.Count;
             }
             else
@@ -142,7 +137,8 @@ namespace KerbalConstructionTime
                 curPadSize.x = widthLimit;
                 curPadSize.y = heightLimit;
                 curPadSize.z = lengthLimit;
-                GetPadStats(tonnageLimit, curPadSize, _isHumanRated, out minTonnage, out curPadCost, out curVABCost, out fractionalPadLvl);
+                GetPadStats(tonnageLimit, curPadSize, _isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
+                minTonnage = LCItem.CalcMassMin(tonnageLimit);
             }
             if (!isHangar)
             {
@@ -212,6 +208,9 @@ namespace KerbalConstructionTime
 
             if (totalCost > 0)
             {
+                // Additional pads cost less
+                curPadCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
+
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));
                 GUILayout.Label($"{LCItem.MaxEngineersCalc(tonnageLimit, curPadSize, _isHumanRated):N0}", GetLabelRightAlignStyle());

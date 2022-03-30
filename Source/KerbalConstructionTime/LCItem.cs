@@ -87,7 +87,9 @@ namespace KerbalConstructionTime
         public bool IsPad = true;
         public bool IsHumanRated = false;
 
-        public float MassMax, MassMin;
+        public float MassMax;
+        public static float CalcMassMin(float massMax) => (massMax == float.MaxValue || massMax <= 15f) ? 0f : Mathf.Floor(massMax * 0.75f);
+        public float MassMin => CalcMassMin(MassMax);
         public Vector3 SizeMax;
 
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
@@ -119,7 +121,7 @@ namespace KerbalConstructionTime
             MassMax = mMax;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out MassMin, out _, out _, out fracLevel);
+            KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out _, out _, out fracLevel);
 
             SizeMax = sMax;
 
@@ -144,7 +146,7 @@ namespace KerbalConstructionTime
             SizeMax = data.sizeMax;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(MassMax, SizeMax, IsHumanRated, out MassMin, out _, out _, out fracLevel);
+            KCT_GUI.GetPadStats(MassMax, SizeMax, IsHumanRated, out _, out _, out fracLevel);
 
             foreach (var pad in LaunchPads)
             {
@@ -272,7 +274,6 @@ namespace KerbalConstructionTime
             node.AddValue("operational", IsOperational);
             node.AddValue("isPad", IsPad);
             node.AddValue("massMax", MassMax);
-            node.AddValue("massMin", MassMin);
             node.AddValue("sizeMax", SizeMax);
             node.AddValue("id", _id);
             node.AddValue("Engineers", Engineers);
@@ -373,7 +374,6 @@ namespace KerbalConstructionTime
             node.TryGetValue("operational", ref IsOperational);
             node.TryGetValue("isPad", ref IsPad);
             node.TryGetValue("massMax", ref MassMax);
-            node.TryGetValue("massMin", ref MassMin);
             node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
             node.TryGetValue("Engineers", ref Engineers);

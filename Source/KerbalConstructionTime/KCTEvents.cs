@@ -65,16 +65,16 @@ namespace KerbalConstructionTime
             GameEvents.FindEvent<EventVoid>("OnSYReady")?.Add(SYReady);
             GameEvents.FindEvent<EventData<Part>>("OnSYInventoryAppliedToPart")?.Add(OnSYInventoryAppliedToPart);
 
-            GameEvents.onGUIAdministrationFacilitySpawn.Add(HideAllGUIs);
-            GameEvents.onGUIAstronautComplexSpawn.Add(HideAllGUIs);
-            GameEvents.onGUIMissionControlSpawn.Add(HideAllGUIs);
-            GameEvents.onGUIRnDComplexSpawn.Add(HideAllGUIs);
+            GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIRnDComplexSpawn.Add(EnterSCSubscene);
             GameEvents.onGUIKSPediaSpawn.Add(HideAllGUIs);
 
-            GameEvents.onGUIAdministrationFacilityDespawn.Add(RestoreAllGUIs);
-            GameEvents.onGUIAstronautComplexDespawn.Add(RestoreAllGUIs);
-            GameEvents.onGUIMissionControlDespawn.Add(RestoreAllGUIs);
-            GameEvents.onGUIRnDComplexDespawn.Add(RestoreAllGUIs);
+            GameEvents.onGUIAdministrationFacilityDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIAstronautComplexDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubscene);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 
             GameEvents.onEditorStarted.Add(OnEditorStarted);
@@ -119,6 +119,17 @@ namespace KerbalConstructionTime
         {
             KCT_GUI.RestorePrevUIState();
         }
+
+        private void EnterSCSubscene()
+        {
+            KCT_GUI.EnterSCSubcene();
+        }
+
+        private void ExitSCSubscene()
+        {
+            KCT_GUI.ExitSCSubcene();
+        }
+
 
         public void FacilityUpgradedEvent(Upgradeables.UpgradeableFacility facility, int lvl)
         {

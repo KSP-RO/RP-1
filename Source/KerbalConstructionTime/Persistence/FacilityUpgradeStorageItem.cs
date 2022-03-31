@@ -3,25 +3,19 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class FacilityUpgradeStorageItem
+    public class FacilityUpgradeStorageItem : ConstructionStorage
     {
         [Persistent]
         public string sFacilityType;
 
         [Persistent]
-        public int upgradeLevel, currentLevel, launchpadID = 0;
+        public int upgradeLevel, currentLevel;
 
         [Persistent]
         public string id, commonName;
 
         [Persistent]
-        public double progress = 0, BP = 0, cost = 0;
-
-        [Persistent]
-        public bool UpgradeProcessed = false, isLaunchpad = false;
-
-        [Persistent]
-        public int buildListIndex = -1;
+        public bool UpgradeProcessed;
 
         public FacilityUpgrade ToFacilityUpgrade()
         {
@@ -40,38 +34,28 @@ namespace KerbalConstructionTime
                 Debug.LogException(ex);
             }
 
-            var ret = new FacilityUpgrade
+            var ret = new FacilityUpgrade();
+            LoadFields(ret);
+            ret.FacilityType = facilityType;
+            ret.UpgradeLevel = upgradeLevel;
+            ret.CurrentLevel = currentLevel;
+            ret.Id = id;
+            // back-compat
+            if (!string.IsNullOrEmpty(commonName))
             {
-                FacilityType = facilityType,
-                UpgradeLevel = upgradeLevel,
-                CurrentLevel = currentLevel,
-                LaunchpadID = launchpadID,
-                Id = id,
-                CommonName = commonName,
-                Progress = progress,
-                BP = BP,
-                Cost = cost,
-                UpgradeProcessed = UpgradeProcessed,
-                IsLaunchpad = isLaunchpad,
-                BuildListIndex = buildListIndex
-            };
+                ret.Name = commonName;
+                ret.UpgradeProcessed = UpgradeProcessed;
+            }
             return ret;
         }
 
         public FacilityUpgradeStorageItem FromFacilityUpgrade(FacilityUpgrade fu)
         {
+            SaveFields(fu);
             sFacilityType = fu.FacilityType?.ToString();
             upgradeLevel = fu.UpgradeLevel;
             currentLevel = fu.CurrentLevel;
-            launchpadID = fu.LaunchpadID;
             id = fu.Id;
-            commonName = fu.CommonName;
-            progress = fu.Progress;
-            BP = fu.BP;
-            cost = fu.Cost;
-            UpgradeProcessed = fu.UpgradeProcessed;
-            isLaunchpad = fu.IsLaunchpad;
-            buildListIndex = fu.BuildListIndex;
             return this;
         }
     }

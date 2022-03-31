@@ -7,25 +7,14 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class LCConstructionStorageItem : IConfigNode
+    public class LCConstructionStorageItem : ConstructionStorage, IConfigNode
     {
         [Persistent]
         public int launchComplexID = 0;
 
         [Persistent]
-        public string name;
-
-        [Persistent]
-        public double progress = 0, BP = 0, cost = 0;
-
-        [Persistent]
-        public bool upgradeProcessed = false;
-
-        [Persistent]
         public bool isModify = false;
-
-        [Persistent]
-        public int buildListIndex = -1;
+        
 
         [Persistent]
         public LCItem.LCData lcData = new LCItem.LCData();
@@ -42,30 +31,20 @@ namespace KerbalConstructionTime
 
         public LCConstruction ToLCConstruction()
         {
-            return new LCConstruction
-            {
-                LaunchComplexIndex = launchComplexID,
-                Name = name,
-                Progress = progress,
-                BP = BP,
-                Cost = cost,
-                UpgradeProcessed = upgradeProcessed,
-                IsModify = isModify,
-                BuildListIndex = buildListIndex,
-                LCData = new LCItem.LCData(lcData)
-            };
+            var lc = new LCConstruction();
+            LoadFields(lc);
+            lc.LaunchComplexIndex = launchComplexID;
+            lc.IsModify = isModify;
+            lc.LCData = new LCItem.LCData(lcData);
+
+            return lc;
         }
 
         public LCConstructionStorageItem FromLCConstruction(LCConstruction lcc)
         {
+            SaveFields(lcc);
             launchComplexID = lcc.LaunchComplexIndex;
-            name = lcc.Name;
-            progress = lcc.Progress;
-            BP = lcc.BP;
-            cost = lcc.Cost;
-            upgradeProcessed = lcc.UpgradeProcessed;
             isModify = lcc.IsModify;
-            buildListIndex = lcc.BuildListIndex;
             lcData = new LCItem.LCData(lcc.LCData);
             return this;
         }

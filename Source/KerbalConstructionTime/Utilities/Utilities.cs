@@ -659,7 +659,7 @@ namespace KerbalConstructionTime
             if (!CurrentGameIsCareer())
                 return 0;
             KCTDebug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
-            if (toSpend < Funding.Instance.Funds)
+            if (toSpend <= Funding.Instance.Funds)
                 Funding.Instance.AddFunds(-toSpend, reason);
             return Funding.Instance.Funds;
         }

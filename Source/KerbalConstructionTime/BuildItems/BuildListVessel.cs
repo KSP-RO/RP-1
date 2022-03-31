@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
         public Vector3 ShipSize = Vector3.zero;
 
         public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
-            * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers * LC.RushRate;
+            * LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers * LC.RushRate;
 
         public double TimeLeft
         {
@@ -885,7 +885,7 @@ namespace KerbalConstructionTime
 
             double bp = BuildPoints + IntegrationPoints;
             double rate = Math.Min(Utilities.GetBuildRate(0, Type, LC, IsHumanRated), Utilities.GetBuildRateCap(bp, GetTotalMass(), LC))
-                        * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers;
+                        * LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers;
             return (bp - Progress) / rate;
         }
 

@@ -90,12 +90,6 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowPersonnelWindow = false;
                 _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex; // reset to current active LC
-
-                if (!IsPrimarilyDisabled)
-                {
-                    KCTGameStates.ToolbarControl?.SetTrue();
-                    GUIStates.ShowBuildList = true;
-                }
             }
             GUILayout.EndVertical();
             if (!Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
@@ -221,9 +215,9 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (KSC.Constructions.Count > 0)
             {
-                IConstructionBuildItem b = KSC.Constructions[0];
+                ConstructionBuildItem b = KSC.Constructions[0];
                 GUILayout.Label($"Current Construction: {b.GetItemName()}");
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BuildPoints() - b.CurrentProgress()) / cRate, "PersonnelConstr"), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BP - b.Progress) / cRate, "PersonnelConstr"), GetLabelRightAlignStyle());
             }
             else
             {

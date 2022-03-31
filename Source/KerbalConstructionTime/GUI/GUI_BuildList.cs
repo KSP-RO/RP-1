@@ -305,8 +305,8 @@ namespace KerbalConstructionTime
                 hasIdleEngineers ? _yellowButton : (KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button)))
             {
                 GUIStates.ShowPersonnelWindow = true;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
+                //GUIStates.ShowBuildList = false;
+                //GUIStates.ShowBLPlus = false;
                 _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex;
                 _currentPersonnelHover = PersonnelButtonHover.None;
             }
@@ -372,17 +372,19 @@ namespace KerbalConstructionTime
             int cancelID = -1;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
-                IConstructionBuildItem pItem = ksc.Constructions[i];
+                ConstructionBuildItem pItem = ksc.Constructions[i];
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
+                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
+
                     forceRecheck = true;
                     cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?", "Cancel Construction?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {pItem.SpentCost:N0} funds on this construction ({(pItem.SpentCost / pItem.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
@@ -462,6 +464,7 @@ namespace KerbalConstructionTime
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
+                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                     forceRecheck = true;
                     cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
@@ -841,7 +844,7 @@ namespace KerbalConstructionTime
                         DialogGUIBase[] options = new DialogGUIBase[2];
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, options: options);
+                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost}.", "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                     }
                 }
@@ -1307,7 +1310,7 @@ namespace KerbalConstructionTime
             }
             bool canModify = activeLC.CanModify;
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
-            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
+            if (!HighLogic.LoadedSceneIsEditor && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
@@ -1352,7 +1355,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            if (!HighLogic.LoadedSceneIsEditor && activeLC.IsPad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
+            if (!HighLogic.LoadedSceneIsEditor && activeLC.IsPad && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
@@ -1518,7 +1521,7 @@ namespace KerbalConstructionTime
         {
             if (KCTGameStates.ActiveKSC.Constructions.Count > index)
             {
-                IConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
+                ConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
                 KCTDebug.Log($"Cancelling construction: {item.GetItemName()}");
                 item.Cancel();
             }
@@ -1568,7 +1571,7 @@ namespace KerbalConstructionTime
                 DialogGUIBase[] options = new DialogGUIBase[2];
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, 300, options);
+                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost}.", "Scrap Vessel", null, 300, options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow(false);

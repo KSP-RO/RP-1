@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="AirlaunchParams.cs" />
     <Compile Include="AirlaunchTechLevel.cs" />
+    <Compile Include="BuildItems\ConstructionBuildItem.cs" />
     <Compile Include="BuildItems\LCConstruction.cs" />
     <Compile Include="EngineersReportClobberer.cs" />
     <Compile Include="GUI\GUI_NewLC.cs" />

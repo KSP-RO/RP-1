@@ -12237,6 +12237,27 @@
         "module_tags": []
     },
     {
+        "name": "X-405H-2",
+        "title": "X-405H-2",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "115",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "X405",
+        "upgrade": true,
+        "entry_cost_mods": "5000,X-405H",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "X-405H-3",
         "title": "X-405H-3",
         "description": "",
@@ -12253,7 +12274,7 @@
         "spacecraft": "Vega",
         "engine_config": "X405",
         "upgrade": true,
-        "entry_cost_mods": "10000,X-405H",
+        "entry_cost_mods": "10000,X-405H-2",
         "identical_part_name": "",
         "module_tags": []
     },

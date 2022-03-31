@@ -34,7 +34,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    double rate = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiecnyEngineers;
+                    double rate = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiencyEngineers;
                     return (BP - Progress) / rate;
                 }
             }
@@ -129,7 +129,7 @@ namespace KerbalConstructionTime
         {
             if (_buildRate < 0)
                 UpdateBuildRate(KSC.Constructions.IndexOf(this));
-            return _buildRate * KCTGameStates.EfficiecnyEngineers;
+            return _buildRate * KCTGameStates.EfficiencyEngineers;
         }
 
         public double UpdateBuildRate(int index)
@@ -243,7 +243,7 @@ namespace KerbalConstructionTime
         public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
         {
             double bp = CalculateBP(cost, facilityType);
-            double rateTotal = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiecnyEngineers;
+            double rateTotal = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiencyEngineers;
 
             return bp / rateTotal;
         }

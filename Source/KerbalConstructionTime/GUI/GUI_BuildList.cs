@@ -282,7 +282,27 @@ namespace KerbalConstructionTime
             //    GUIStates.ShowBLPlus = false;
             //    _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
             //}
-            if (GUILayout.Button("Staff", KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button))
+            bool hasIdleEngineers = false;
+            // This reimplements FreeEngineers for speed, since we also have to check LCs for idle
+            int engCount = KCTGameStates.ActiveKSC.Engineers;
+            foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
+            {
+                if (!lc.IsOperational || lc.Engineers == 0)
+                    continue;
+
+                engCount -= lc.Engineers;
+
+                if (!lc.IsActive)
+                {
+                    hasIdleEngineers = true;
+                    break;
+                }
+            }
+            if (!hasIdleEngineers && engCount > 0 && KCTGameStates.ActiveKSC.Constructions.Count == 0)
+                hasIdleEngineers = true;
+
+            if (GUILayout.Button(new GUIContent("Staff", hasIdleEngineers ? "Some engineers are idle!" : (KCTGameStates.UnassignedPersonnel > 0 ? "Applicants can be hired for free!" : "Hire/fire/reassign staff")),
+                hasIdleEngineers ? _yellowButton : (KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button)))
             {
                 GUIStates.ShowPersonnelWindow = true;
                 GUIStates.ShowBuildList = false;

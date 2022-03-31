@@ -221,9 +221,9 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (KSC.Constructions.Count > 0)
             {
-                IConstructionBuildItem b = KSC.Constructions[0];
+                ConstructionBuildItem b = KSC.Constructions[0];
                 GUILayout.Label($"Current Construction: {b.GetItemName()}");
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BuildPoints() - b.CurrentProgress()) / cRate, "PersonnelConstr"), GetLabelRightAlignStyle());
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BP - b.Progress) / cRate, "PersonnelConstr"), GetLabelRightAlignStyle());
             }
             else
             {

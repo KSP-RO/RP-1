@@ -250,10 +250,7 @@ namespace KerbalConstructionTime
                 }
             }
 
-            var upgrading = new FacilityUpgrade(facilityType, facilityID, oldLevel + 1, oldLevel, facilityID.Split('/').Last())
-            {
-                IsLaunchpad = false
-            };
+            var upgrading = new FacilityUpgrade(facilityType, facilityID, oldLevel + 1, oldLevel, facilityID.Split('/').Last());
 
             if (!upgrading.AlreadyInProgress())
             {

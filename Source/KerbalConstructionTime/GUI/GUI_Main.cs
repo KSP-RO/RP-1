@@ -17,6 +17,9 @@ namespace KerbalConstructionTime
 
         private static bool _unlockEditor;
         private static bool _isKSCLocked = false;
+        private static bool _inSCSubscene = false;
+        public static void EnterSCSubcene() { _inSCSubscene = true; }
+        public static void ExitSCSubcene() { _inSCSubscene = false; }
         private static readonly List<GameScenes> _validScenes = new List<GameScenes> { GameScenes.FLIGHT, GameScenes.EDITOR, GameScenes.SPACECENTER, GameScenes.TRACKSTATION };
         private static GUIStyle _styleLabelRightAlign;
         private static GUIStyle _styleLabelCenterAlign;
@@ -101,6 +104,10 @@ namespace KerbalConstructionTime
                 {
                     DoBuildPlansList();
                     CreateDevPartsToggle();
+                }
+                else if (HighLogic.LoadedScene == GameScenes.SPACECENTER && _inSCSubscene)
+                {
+                    DoSubsceneToggleIcon();
                 }
 
                 //Disable KSC things when certain windows are shown.

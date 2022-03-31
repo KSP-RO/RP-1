@@ -107,6 +107,7 @@
     <Compile Include="EngineersReportClobberer.cs" />
     <Compile Include="GUI\GUI_NewLC.cs" />
     <Compile Include="GUI\GUI_Personnel.cs" />
+    <Compile Include="GUI\GUI_SubsceneToggleButton.cs" />
     <Compile Include="LCItem.cs" />
     <Compile Include="PartCrewAssignment.cs" />
     <Compile Include="BuildItems\PadConstruction.cs" />

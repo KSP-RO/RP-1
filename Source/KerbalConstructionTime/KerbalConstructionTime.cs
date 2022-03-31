@@ -66,6 +66,7 @@ namespace KerbalConstructionTime
             {
                 KCT_GUI.InitBuildListVars();
                 KCT_GUI.InitBuildPlans();
+                KCT_GUI.InitSubsceneToggleButton();
                 KCT_GUI.InitDevPartsToggle();
                 _isGUIInitialized = true;
             }

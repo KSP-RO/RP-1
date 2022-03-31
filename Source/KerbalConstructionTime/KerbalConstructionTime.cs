@@ -728,12 +728,12 @@ namespace KerbalConstructionTime
                     if (skillupEng)
                     {
                         double max = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerMaxEfficiency;
-                        double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiecnyEngineers);
+                        double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiencyEngineers);
                         double delta = eval * UTDiff / (365d * 86400d);
                         if (rushingEngs > 0)
-                            delta = UtilMath.LerpUnclamped(delta, KCTGameStates.EfficiecnyEngineers * rushEfficMult - KCTGameStates.EfficiecnyEngineers, rushingEngs / KCTGameStates.TotalEngineers);
-                        //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiecnyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
-                        KCTGameStates.EfficiecnyEngineers = Math.Min(max, KCTGameStates.EfficiecnyEngineers + delta);
+                            delta = UtilMath.LerpUnclamped(delta, KCTGameStates.EfficiencyEngineers * rushEfficMult - KCTGameStates.EfficiencyEngineers, rushingEngs / KCTGameStates.TotalEngineers);
+                        //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiencyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
+                        KCTGameStates.EfficiencyEngineers = Math.Min(max, KCTGameStates.EfficiencyEngineers + delta);
                     }
 
                     if (KCTGameStates.LastEngineers < totalEngineers)

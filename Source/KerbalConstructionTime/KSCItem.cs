@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
     public class KSCItem
     {
         public string KSCName;
-        public List<IConstructionBuildItem> Constructions = new List<IConstructionBuildItem>();
+        public List<ConstructionBuildItem> Constructions = new List<ConstructionBuildItem>();
         public List<LCItem> LaunchComplexes = new List<LCItem>();
         public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
         public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
@@ -30,8 +30,8 @@ namespace KerbalConstructionTime
             FacilityUpgrades.Removed += removed;
             FacilityUpgrades.Updated += updated;
 
-            void added(int idx, IConstructionBuildItem item) { Constructions.Add(item); }
-            void removed(int idx, IConstructionBuildItem item) { Constructions.Remove(item); }
+            void added(int idx, ConstructionBuildItem item) { Constructions.Add(item); }
+            void removed(int idx, ConstructionBuildItem item) { Constructions.Remove(item); }
             void updated() { if (_allowRecalcConstructions) RecalculateBuildRates(false); }
         }
 

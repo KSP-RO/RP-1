@@ -5,42 +5,11 @@ using Upgradeables;
 
 namespace KerbalConstructionTime
 {
-    public class FacilityUpgrade : IConstructionBuildItem
+    public class FacilityUpgrade : ConstructionBuildItem
     {
         public SpaceCenterFacility? FacilityType;
         public int UpgradeLevel, CurrentLevel;
-        public string Id, CommonName;
-        public double Progress = 0, BP = 0, Cost = 0;
-        public bool UpgradeProcessed = false;
-        public double BuildPoints() => BP;
-        public double CurrentProgress() => Progress;
-
-        [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
-        public int LaunchpadID = 0;
-        [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
-        public bool IsLaunchpad = false;
-
-        public int BuildListIndex { get; set; }
-
-        private double _buildRate = -1d;
-
-        public double EstimatedTimeLeft
-        {
-            get
-            {
-                if (_buildRate > 0)
-                {
-                    return GetTimeLeft();
-                }
-                else
-                {
-                    double rate = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiencyEngineers;
-                    return (BP - Progress) / rate;
-                }
-            }
-        }
-
-        private KSCItem _ksc = null;
+        public string Id;
 
         public FacilityUpgrade()
         {
@@ -52,14 +21,14 @@ namespace KerbalConstructionTime
             Id = facilityID;
             UpgradeLevel = newLevel;
             CurrentLevel = oldLevel;
-            CommonName = name;
+            Name = name;
 
             KCTDebug.Log($"Upgrade of {name} requested from {oldLevel} to {newLevel}");
         }
 
         public void Downgrade()
         {
-            KCTDebug.Log($"Downgrading {CommonName} to level {CurrentLevel}");
+            KCTDebug.Log($"Downgrading {Name} to level {CurrentLevel}");
             foreach (UpgradeableFacility facility in GetFacilityReferencesById(Id))
             {
                 KCTEvents.AllowedToUpgrade = true;
@@ -69,7 +38,7 @@ namespace KerbalConstructionTime
 
         public void Upgrade()
         {
-            KCTDebug.Log($"Upgrading {CommonName} to level {UpgradeLevel}");
+            KCTDebug.Log($"Upgrading {Name} to level {UpgradeLevel}");
 
             List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(Id);
             if (FacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
@@ -101,82 +70,31 @@ namespace KerbalConstructionTime
             return GetFacilityReferencesById(internalId);
         }
 
-        public void SetBP(double cost)
-        {
-            BP = CalculateBP(cost, FacilityType);
-        }
-
         public bool AlreadyInProgress()
         {
             return KSC != null;
         }
 
-        public KSCItem KSC
+        protected override void ProcessCancel()
         {
-            get
-            {
-                if (_ksc == null)
-                {
-                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.Id == this.Id) != null);
-                }
-                return _ksc;
-            }
-        }
-
-        public string GetItemName() => CommonName;
-
-        public double GetBuildRate()
-        {
-            if (_buildRate < 0)
-                UpdateBuildRate(KSC.Constructions.IndexOf(this));
-            return _buildRate * KCTGameStates.EfficiencyEngineers;
-        }
-
-        public double UpdateBuildRate(int index)
-        {
-            double rate = Utilities.GetConstructionRate(index, KSC, 0);
-            if (rate < 0)
-                rate = 0;
-
-            _buildRate = rate;
-            return _buildRate;
-        }
-
-        public double GetFractionComplete() => Progress / BP;
-
-        public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
-        public double GetTimeLeftEst(double offset) => EstimatedTimeLeft;
-
-        public bool IsComplete() => Progress >= BP;
-
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
-
-        public void Cancel()
-        {
-            if (Cost > 0d && Utilities.CurrentGameIsCareer())
-                Utilities.AddFunds(Cost, TransactionReasons.StructureConstruction);
-
             KSC.FacilityUpgrades.Remove(this);
             KSC.RecalculateBuildRates(false);
         }
 
-        public void IncrementProgress(double UTDiff)
+        protected override void ProcessComplete()
         {
-            if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
-            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
-            {
-                if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
-                {
-                    Upgrade();
 
-                    try
-                    {
-                        KCTEvents.OnFacilityUpgradeComplete?.Fire(this);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogException(ex);
-                    }
+            if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
+            {
+                Upgrade();
+
+                try
+                {
+                    KCTEvents.OnFacilityUpgradeComplete?.Fire(this);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
                 }
             }
         }
@@ -246,12 +164,6 @@ namespace KerbalConstructionTime
             double rateTotal = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiencyEngineers;
 
             return bp / rateTotal;
-        }
-
-        private void AddProgress(double amt)
-        {
-            Progress += amt;
-            if (Progress > BP) Progress = BP;
         }
     }
 }

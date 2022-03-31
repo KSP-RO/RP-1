@@ -67,7 +67,7 @@ namespace KerbalConstructionTime
         public double GetBuildRate()
         {
             double buildRate = Math.Min(Utilities.GetBuildRate(0, LC, IsHumanRated, false), Utilities.GetBuildRateCap(VesselBP, Mass, LC))
-                * LC.EfficiencyEngineers * KCTGameStates.EfficiecnyEngineers * LC.RushRate;
+                * LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers * LC.RushRate;
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;

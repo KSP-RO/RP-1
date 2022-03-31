@@ -127,7 +127,7 @@ namespace KerbalConstructionTime
 
             if (IsPad)
             {
-                var pad = new KCT_LaunchPad(Name + "A", fracLevel);
+                var pad = new KCT_LaunchPad(Name, fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }

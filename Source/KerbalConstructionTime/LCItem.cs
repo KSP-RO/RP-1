@@ -135,8 +135,8 @@ namespace KerbalConstructionTime
             PadConstructions.Added += added;
             PadConstructions.Removed += removed;
 
-            void added(int idx, IConstructionBuildItem pc) { ksc.Constructions.Add(pc); }
-            void removed(int idx, IConstructionBuildItem pc) { ksc.Constructions.Remove(pc); }
+            void added(int idx, ConstructionBuildItem pc) { ksc.Constructions.Add(pc); }
+            void removed(int idx, ConstructionBuildItem pc) { ksc.Constructions.Remove(pc); }
         }
 
         public void Modify(LCData data)

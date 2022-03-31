@@ -2226,7 +2226,7 @@ namespace KerbalConstructionTime
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
         {
-            KCTGameStates.EfficiecnyEngineers = PredictEfficiencyEngineers(delta);
+            KCTGameStates.EfficiencyEngineers = PredictEfficiencyEngineers(delta);
 
             ksc.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
@@ -2253,11 +2253,11 @@ namespace KerbalConstructionTime
         public static double PredictEfficiencyEngineers(int delta)
         {
             if (delta > 0)
-                return Math.Min(KCTGameStates.EfficiecnyEngineers,
-                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiecnyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency))
+                return Math.Min(KCTGameStates.EfficiencyEngineers,
+                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiencyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency))
                     / (KCTGameStates.LastEngineers + delta));
 
-            return KCTGameStates.EfficiecnyEngineers;
+            return KCTGameStates.EfficiencyEngineers;
         }
 
         public static double PredictEfficiencyResearchers(int delta)

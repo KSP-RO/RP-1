@@ -2827,6 +2827,27 @@
         "module_tags": []
     },
     {
+        "name": "H-1-250K",
+        "title": "H-1-250K",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "25",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1976",
+        "technology": "orbitalRocketry1976",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "H1",
+        "upgrade": true,
+        "entry_cost_mods": "15000,H-1-205k",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "HERMeS",
         "title": "HERMeS",
         "description": "",

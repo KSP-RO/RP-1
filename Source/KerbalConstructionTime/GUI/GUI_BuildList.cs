@@ -372,7 +372,7 @@ namespace KerbalConstructionTime
             int cancelID = -1;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
-                IConstructionBuildItem pItem = ksc.Constructions[i];
+                ConstructionBuildItem pItem = ksc.Constructions[i];
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
@@ -382,7 +382,7 @@ namespace KerbalConstructionTime
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?", "Cancel Construction?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?\n\nYou will get back {(pItem.Cost - pItem.SpentCost):N0} funds ({((pItem.Cost - pItem.SpentCost)/pItem.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
@@ -1518,7 +1518,7 @@ namespace KerbalConstructionTime
         {
             if (KCTGameStates.ActiveKSC.Constructions.Count > index)
             {
-                IConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
+                ConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
                 KCTDebug.Log($"Cancelling construction: {item.GetItemName()}");
                 item.Cancel();
             }

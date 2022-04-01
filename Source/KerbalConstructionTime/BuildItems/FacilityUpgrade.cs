@@ -7,7 +7,12 @@ namespace KerbalConstructionTime
 {
     public class FacilityUpgrade : ConstructionBuildItem
     {
-        public SpaceCenterFacility? FacilityType;
+        protected SpaceCenterFacility? _facilityType;
+        public override SpaceCenterFacility? FacilityType
+        {
+            get { return _facilityType; }
+            set { _facilityType = value; }
+        }
         public int UpgradeLevel, CurrentLevel;
         public string Id;
 
@@ -17,7 +22,7 @@ namespace KerbalConstructionTime
 
         public FacilityUpgrade(SpaceCenterFacility? type, string facilityID, int newLevel, int oldLevel, string name)
         {
-            FacilityType = type;
+            _facilityType = type;
             Id = facilityID;
             UpgradeLevel = newLevel;
             CurrentLevel = oldLevel;
@@ -41,7 +46,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Upgrading {Name} to level {UpgradeLevel}");
 
             List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(Id);
-            if (FacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
+            if (_facilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
             {
                 // Also upgrade the SPH to the same level as VAB when playing with unified build queue
                 facilityRefs.AddRange(GetFacilityReferencesByType(SpaceCenterFacility.SpaceplaneHangar));
@@ -72,7 +77,7 @@ namespace KerbalConstructionTime
 
         public bool AlreadyInProgress()
         {
-            return KSC != null;
+            return KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.Id == this.Id) != null) != null;
         }
 
         protected override void ProcessCancel()
@@ -97,73 +102,6 @@ namespace KerbalConstructionTime
                     Debug.LogException(ex);
                 }
             }
-        }
-
-        public static double CalculateBP(double cost, SpaceCenterFacility? facilityType)
-        {
-            int isAdm = 0, isAC = 0, isLP = 0, isMC = 0, isRD = 0, isRW = 0, isTS = 0, isSPH = 0, isVAB = 0, isOther = 0;
-            switch (facilityType)
-            {
-                case SpaceCenterFacility.Administration:
-                    isAdm = 1;
-                    break;
-                case SpaceCenterFacility.AstronautComplex:
-                    isAC = 1;
-                    break;
-                case SpaceCenterFacility.LaunchPad:
-                    isLP = 1;
-                    break;
-                case SpaceCenterFacility.MissionControl:
-                    isMC = 1;
-                    break;
-                case SpaceCenterFacility.ResearchAndDevelopment:
-                    isRD = 1;
-                    break;
-                case SpaceCenterFacility.Runway:
-                    isRW = 1;
-                    break;
-                case SpaceCenterFacility.TrackingStation:
-                    isTS = 1;
-                    break;
-                case SpaceCenterFacility.SpaceplaneHangar:
-                    isSPH = 1;
-                    break;
-                case SpaceCenterFacility.VehicleAssemblyBuilding:
-                    isVAB = 1;
-                    break;
-                default:
-                    isOther = 1;
-                    break;
-            }
-
-            var variables = new Dictionary<string, string>()
-            {
-                { "C", cost.ToString() },
-                { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() },
-                { "Adm", isAdm.ToString() },
-                { "AC", isAC.ToString() },
-                { "LP", isLP.ToString() },
-                { "MC", isMC.ToString() },
-                { "RD", isRD.ToString() },
-                { "RW", isRW.ToString() },
-                { "TS", isTS.ToString() },
-                { "SPH", isSPH.ToString() },
-                { "VAB", isVAB.ToString() },
-                { "Other", isOther.ToString() }
-            };
-
-            double bp = MathParser.GetStandardFormulaValue("KSCUpgrade", variables);
-            if (bp <= 0) { bp = 1; }
-
-            return bp;
-        }
-
-        public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
-        {
-            double bp = CalculateBP(cost, facilityType);
-            double rateTotal = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiencyEngineers;
-
-            return bp / rateTotal;
         }
     }
 }

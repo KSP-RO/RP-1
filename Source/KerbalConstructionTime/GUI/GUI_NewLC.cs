@@ -218,7 +218,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(" ");
 
-                double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad);
+                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
@@ -250,10 +250,9 @@ namespace KerbalConstructionTime
                     else
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC));
                 }
-                else if (Funding.CanAfford((float)totalCost))
+                else
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {lcName}");
-                    Utilities.SpendFunds(totalCost, TransactionReasons.StructureConstruction);
                     LCItem lc;
                     if (isModify)
                     {
@@ -287,10 +286,6 @@ namespace KerbalConstructionTime
                     {
                         Debug.LogException(ex);
                     }
-                }
-                else
-                {
-                    ScreenMessages.PostScreenMessage("Not enough funds to " + (GUIStates.ShowModifyLC ? "renovate" : "build") + " this launch complex.");
                 }
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowModifyLC = false;

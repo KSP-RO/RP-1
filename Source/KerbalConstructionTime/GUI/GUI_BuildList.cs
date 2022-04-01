@@ -377,12 +377,14 @@ namespace KerbalConstructionTime
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
+                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
+
                     forceRecheck = true;
                     cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?\n\nYou will get back {(pItem.Cost - pItem.SpentCost):N0} funds ({((pItem.Cost - pItem.SpentCost)/pItem.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {pItem.SpentCost:N0} funds on this construction ({(pItem.SpentCost / pItem.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
@@ -462,6 +464,7 @@ namespace KerbalConstructionTime
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
+                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                     forceRecheck = true;
                     cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
@@ -841,7 +844,7 @@ namespace KerbalConstructionTime
                         DialogGUIBase[] options = new DialogGUIBase[2];
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, options: options);
+                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost}.", "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                     }
                 }
@@ -1568,7 +1571,7 @@ namespace KerbalConstructionTime
                 DialogGUIBase[] options = new DialogGUIBase[2];
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, 300, options);
+                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost}.", "Scrap Vessel", null, 300, options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow(false);

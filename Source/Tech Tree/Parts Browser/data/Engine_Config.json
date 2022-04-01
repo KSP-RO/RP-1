@@ -12232,7 +12232,7 @@
         "spacecraft": "",
         "engine_config": "X405",
         "upgrade": true,
-        "entry_cost_mods": "10000, PumpReignition, X-405",
+        "entry_cost_mods": "10000,X-405",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -12253,7 +12253,7 @@
         "spacecraft": "",
         "engine_config": "X405",
         "upgrade": true,
-        "entry_cost_mods": "5000,X-405H",
+        "entry_cost_mods": "5000,X-405H,PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },

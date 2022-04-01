@@ -45,7 +45,7 @@ namespace KerbalConstructionTime
 
             if (curPadCost > 0)
             {
-                double curPadBuildTime = FacilityUpgrade.CalculateBuildTime(curPadCost, SpaceCenterFacility.LaunchPad);
+                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(curPadCost, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
 
                 GUILayout.BeginHorizontal();
@@ -74,10 +74,9 @@ namespace KerbalConstructionTime
                     KCTDebug.Log("Building new launchpad!");
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(_newName, fractionalPadLvl));
                 }
-                else if (Funding.CanAfford((float)curPadCost))
+                else
                 {
                     KCTDebug.Log("Building new launchpad!");
-                    Utilities.SpendFunds(curPadCost, TransactionReasons.StructureConstruction);
                     var lp = new KCT_LaunchPad(_newName, fractionalPadLvl);
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
 
@@ -98,10 +97,6 @@ namespace KerbalConstructionTime
                     {
                         Debug.LogException(ex);
                     }
-                }
-                else
-                {
-                    ScreenMessages.PostScreenMessage("Not enough funds to build this launchpad.");
                 }
 
                 _padLvlOptions = null;

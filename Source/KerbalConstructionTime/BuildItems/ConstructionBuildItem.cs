@@ -27,6 +27,12 @@ namespace KerbalConstructionTime
         public int BuildListIndex { get; set; }
         public bool UpgradeProcessed = false;
 
+        public virtual SpaceCenterFacility? FacilityType
+        {
+            get { return SpaceCenterFacility.LaunchPad; }
+            set { }
+        }
+
 
         public double EstimatedTimeLeft
         {
@@ -79,9 +85,10 @@ namespace KerbalConstructionTime
         {
             if (Utilities.CurrentGameIsCareer())
             {
-                double reimburse = Cost - SpentCost;
-                if (reimburse > 0d)
-                    Utilities.AddFunds(reimburse, TransactionReasons.StructureConstruction);
+                // Nothing to reimburse - you don't get back what you've already paid.
+
+                //if (SpentCost > 0d)
+                //    Utilities.AddFunds(SpentCost, TransactionReasons.StructureConstruction);
             }
 
             ProcessCancel();
@@ -90,25 +97,60 @@ namespace KerbalConstructionTime
 
         public void SetBP(double cost)
         {
-            BP = CalculateBP(cost);
+            BP = CalculateBP(cost, FacilityType);
         }
 
-        public static double CalculateBP(double cost)
+        public static double CalculateBP(double cost, SpaceCenterFacility? facilityType)
         {
+            int isAdm = 0, isAC = 0, isLP = 0, isMC = 0, isRD = 0, isRW = 0, isTS = 0, isSPH = 0, isVAB = 0, isOther = 0;
+            switch (facilityType)
+            {
+                case SpaceCenterFacility.Administration:
+                    isAdm = 1;
+                    break;
+                case SpaceCenterFacility.AstronautComplex:
+                    isAC = 1;
+                    break;
+                case SpaceCenterFacility.LaunchPad:
+                    isLP = 1;
+                    break;
+                case SpaceCenterFacility.MissionControl:
+                    isMC = 1;
+                    break;
+                case SpaceCenterFacility.ResearchAndDevelopment:
+                    isRD = 1;
+                    break;
+                case SpaceCenterFacility.Runway:
+                    isRW = 1;
+                    break;
+                case SpaceCenterFacility.TrackingStation:
+                    isTS = 1;
+                    break;
+                case SpaceCenterFacility.SpaceplaneHangar:
+                    isSPH = 1;
+                    break;
+                case SpaceCenterFacility.VehicleAssemblyBuilding:
+                    isVAB = 1;
+                    break;
+                default:
+                    isOther = 1;
+                    break;
+            }
+
             var variables = new Dictionary<string, string>()
             {
                 { "C", cost.ToString() },
                 { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() },
-                { "Adm", "0" },
-                { "AC", "0" },
-                { "LP", "1" },
-                { "MC", "0" },
-                { "RD", "0" },
-                { "RW", "0" },
-                { "TS", "0" },
-                { "SPH", "0" },
-                { "VAB", "0" },
-                { "Other", "0" }
+                { "Adm", isAdm.ToString() },
+                { "AC", isAC.ToString() },
+                { "LP", isLP.ToString() },
+                { "MC", isMC.ToString() },
+                { "RD", isRD.ToString() },
+                { "RW", isRW.ToString() },
+                { "TS", isTS.ToString() },
+                { "SPH", isSPH.ToString() },
+                { "VAB", isVAB.ToString() },
+                { "Other", isOther.ToString() }
             };
 
             double bp = MathParser.GetStandardFormulaValue("KSCUpgrade", variables);
@@ -117,7 +159,15 @@ namespace KerbalConstructionTime
             return bp;
         }
 
-        
+        public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
+        {
+            double bp = CalculateBP(cost, facilityType);
+            double rateTotal = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiencyEngineers;
+
+            return bp / rateTotal;
+        }
+
+
         private void AddProgress(double amt)
         {
             double newProgress = Progress + amt;

@@ -40,6 +40,7 @@ namespace KerbalConstructionTime
                 SpaceCenterBuilding hostBuilding = GetMember<SpaceCenterBuilding>("host");
                 KCTDebug.Log($"Trying to override upgrade button of menu for {hostBuilding.facilityName}");
                 Button button = GetMember<Button>("UpgradeButton");
+                TMPro.TextMeshProUGUI buttonText = GetMember<TMPro.TextMeshProUGUI>("UpgradeButtonText");
                 if (button == null)
                 {
                     KCTDebug.Log("Could not find UpgradeButton by name, using index instead.");
@@ -49,6 +50,15 @@ namespace KerbalConstructionTime
                 if (button != null)
                 {
                     KCTDebug.Log("Found upgrade button, overriding it.");
+
+                    if (buttonText != null && hostBuilding != null)
+                    {
+                        float upgradeCost = hostBuilding.Facility.GetUpgradeCost();
+                        CurrencyModifierQuery upgradeQuery = CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -upgradeCost, 0f, 0f);
+                        string upgradeString = upgradeQuery.GetCostLine(true, true, false, false, "\n");
+                        buttonText.text = KSP.Localization.Localizer.Format("#autoLOC_475331", upgradeString);
+                    }
+
                     button.onClick = new Button.ButtonClickedEvent();    //Clear existing KSP listener
                     button.onClick.AddListener(HandleUpgrade);
 
@@ -238,7 +248,7 @@ namespace KerbalConstructionTime
             {
                 if (ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available)
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradeConfirm",
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradeLackTech",
                             $"Can't upgrade this facility. Requires {KerbalConstructionTimeData.techNameToTitle[gate]}.",
                             "Lack Tech to Upgrade",
                             HighLogic.UISkin,
@@ -256,9 +266,9 @@ namespace KerbalConstructionTime
             {
                 float cost = GetMember<float>("upgradeCost");
 
-                if (Funding.CanAfford(cost))
-                {
-                    Utilities.SpendFunds(cost, TransactionReasons.Structures);
+                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
+                DialogGUIBase[] options = new DialogGUIBase[2];
+                options[0] = new DialogGUIButton("Yes", () => {
                     KCTGameStates.ActiveKSC.FacilityUpgrades.Add(upgrading);
                     upgrading.SetBP(cost);
                     upgrading.Cost = cost;
@@ -274,12 +284,16 @@ namespace KerbalConstructionTime
 
                     ScreenMessages.PostScreenMessage("Facility upgrade requested!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     KCTDebug.Log($"Facility {facilityID} upgrade requested to lvl {oldLevel + 1} for {cost} funds, resulting in a BP of {upgrading.BP}");
-                }
-                else
-                {
-                    KCTDebug.Log("Couldn't afford to upgrade.");
-                    ScreenMessages.PostScreenMessage("Not enough funds to upgrade facility!", 4f, ScreenMessageStyle.UPPER_CENTER);
-                }
+                
+                });
+                options[1] = new DialogGUIButton("No", KCT_GUI.RemoveInputLocks);
+                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradeConfirm",
+                            "Upgrade facility?",
+                            "Upgrade",
+                            HighLogic.UISkin,
+                            options),
+                            false,
+                            HighLogic.UISkin);
             }
             else if (oldLevel + 1 != upgrading.CurrentLevel)
             {

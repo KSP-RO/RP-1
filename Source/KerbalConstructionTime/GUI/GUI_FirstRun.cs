@@ -19,8 +19,27 @@ namespace KerbalConstructionTime
 
             GUILayout.Label($"{step++}) If you want to play from a different site than Cape Canaveral, switch to the Tracking Station and select a new site.");
 
+            KSCItem ksc = KCTGameStates.KSCs.Find(k => k.LaunchComplexes.Count > 1);
+            if (ksc == null)
+            {
+                GUILayout.Label($"{step++}) Choose a starting Launch Complex:");
+                if (GUILayout.Button($"1t Capacity (for small rockets). Also gives √{PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds:N0}", HighLogic.Skin.button))
+                {
+                    LCItem starterLC = new LCItem(LCItem.StartingLC1, KCTGameStates.ActiveKSC);
+                    starterLC.IsOperational = true;
+                    KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
+                    Utilities.AddFunds(PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds, TransactionReasons.None);
+                }
+                if (GUILayout.Button($"15t Capacity (min: {LCItem.CalcMassMin(15):N0}t)", HighLogic.Skin.button))
+                {
+                    LCItem starterLC = new LCItem(LCItem.StartingLC15, KCTGameStates.ActiveKSC);
+                    starterLC.IsOperational = true;
+                    KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
+                }
+            }
+            
             if (!IsPrimarilyDisabled && KCTGameStates.UnassignedPersonnel > 0 &&
-                GUILayout.Button($"{step++}) Assign your {KCTGameStates.UnassignedPersonnel} space center staff", HighLogic.Skin.button))
+                GUILayout.Button($"{step++}) Assign your {KCTGameStates.UnassignedPersonnel} space center applicants", HighLogic.Skin.button))
             {
                 GUIStates.ShowPersonnelWindow = true;
             }

@@ -68,16 +68,18 @@ namespace KerbalConstructionTime
             GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubscene);
             GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubscene);
             GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubscene);
-            GameEvents.onGUIRnDComplexSpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIRnDComplexSpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIKSPediaSpawn.Add(HideAllGUIs);
 
             GameEvents.onGUIAdministrationFacilityDespawn.Add(ExitSCSubscene);
             GameEvents.onGUIAstronautComplexDespawn.Add(ExitSCSubscene);
             GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubscene);
-            GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 
             GameEvents.onEditorStarted.Add(OnEditorStarted);
+            GameEvents.onEditorRestart.Add(OnEditorRestarted);
+            GameEvents.onEditorLoad.Add(OnEditorLoad);
             GameEvents.onFacilityContextMenuSpawn.Add(FacilityContextMenuSpawn);
 
             SubscribedToEvents = true;
@@ -91,6 +93,16 @@ namespace KerbalConstructionTime
         private void OnEditorStarted()
         {
             Utilities.HandleEditorButton();
+            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
+        }
+
+        private void OnEditorRestarted()
+        {
+            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
+        }
+
+        private void OnEditorLoad(ShipConstruct c, CraftBrowserDialog.LoadType t)
+        {
             KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
         }
 
@@ -128,6 +140,18 @@ namespace KerbalConstructionTime
         private void ExitSCSubscene()
         {
             KCT_GUI.ExitSCSubcene();
+        }
+
+        private void EnterSCSubsceneAndHide()
+        {
+            EnterSCSubscene();
+            HideAllGUIs();
+        }
+
+        private void ExitSCSubsceneAndShow()
+        {
+            ExitSCSubscene();
+            RestoreAllGUIs();
         }
 
 

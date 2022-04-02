@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class LCConstructionStorageItem : ConstructionStorage, IConfigNode
+    public class LCConstructionStorageItem : ConstructionStorage
     {
         [Persistent]
         public int launchComplexID = 0;
@@ -18,16 +18,6 @@ namespace KerbalConstructionTime
 
         [Persistent]
         public LCItem.LCData lcData = new LCItem.LCData();
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
-        }
 
         public LCConstruction ToLCConstruction()
         {

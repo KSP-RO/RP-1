@@ -54,7 +54,13 @@ namespace KerbalConstructionTime
             var kctVS = new KCT_DataStorage();
             node.AddNode(kctVS.AsConfigNode());
             foreach (KSCItem KSC in KCTGameStates.KSCs.Where(x => x?.KSCName?.Length > 0))
+            {
+                // Don't bother saving KSCs that aren't active
+                if (KSC.IsEmpty && KSC != KCTGameStates.ActiveKSC)
+                    continue;
+
                 node.AddNode(KSC.AsConfigNode());
+            }
             var tech = new ConfigNode("TechList");
             foreach (TechItem techItem in KCTGameStates.TechList)
             {

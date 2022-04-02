@@ -11,6 +11,35 @@ namespace RP0
         private MaintenancePeriod _selectedPeriod = MaintenancePeriod.Year;
         private readonly GUIContent _infoBtnContent = new GUIContent("ⓘ", "View details");
 
+        private System.Collections.Generic.Dictionary<string, string> siteLocalizer = new System.Collections.Generic.Dictionary<string, string>();
+
+        private string LocalizeSiteName(string siteID)
+        {
+            if (siteLocalizer.Count == 0)
+            {
+                foreach (var c in GameDatabase.Instance.GetConfigNodes("KSCSWITCHER"))
+                {
+                    foreach (var l in c.GetNode("LaunchSites").GetNodes("Site"))
+                    {
+                        string dName = l.GetValue("displayName");
+                        if (!string.IsNullOrEmpty(dName))
+                        {
+                            if (dName[0] == '#')
+                                dName = KSP.Localization.Localizer.Format(dName);
+
+                            siteLocalizer[l.GetValue("name")] = dName;
+                        }
+                    }
+                }
+            }
+
+            string val;
+            if (siteLocalizer.TryGetValue(siteID, out val))
+                return val;
+
+            return siteID;
+        }
+
         private double PeriodFactor
         {
             get
@@ -288,8 +317,11 @@ namespace RP0
 
             foreach (var kvp in MaintenanceHandler.Instance.Integration)
             {
-                string site = kvp.Key;
+                string site = LocalizeSiteName(kvp.Key);
                 double engineers = kvp.Value;
+                if (engineers == 0)
+                    continue;
+
                 GUILayout.BeginHorizontal();
                 try
                 {
@@ -326,13 +358,16 @@ namespace RP0
 
             foreach (var kvp in MaintenanceHandler.Instance.Construction)
             {
-                string site = kvp.Key;
-                double rate = kvp.Value;
+                string site = LocalizeSiteName(kvp.Key);
+                double engineers = kvp.Value;
+                if (engineers == 0)
+                    continue;
+
                 GUILayout.BeginHorizontal();
                 try
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((rate * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.Label((engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {

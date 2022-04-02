@@ -14,7 +14,7 @@ namespace KerbalConstructionTime
         public int Engineers = 0;
         public int ConstructionWorkers => Engineers - LaunchComplexes.Sum(lc => lc.Engineers);
         
-        public int ActiveLaunchComplexIndex = 1;
+        public int ActiveLaunchComplexIndex = 0;
         private bool _allowRecalcConstructions = true;
 
         public LCItem Hangar => LaunchComplexes[0];
@@ -52,14 +52,11 @@ namespace KerbalConstructionTime
 
         public void EnsureStartingLaunchComplexes()
         {
-            if (LaunchComplexes.Count > 1) return;
+            if (LaunchComplexes.Count > 0) return;
 
             LCItem sph = new LCItem(LCItem.StartingHangar, this);
             sph.IsOperational = true;
             LaunchComplexes.Add(sph);
-            LCItem starterLC = new LCItem(LCItem.StartingLC, this);
-            starterLC.IsOperational = true;
-            LaunchComplexes.Add(starterLC);
         }
 
         public void RecalculateBuildRates(bool all = true)

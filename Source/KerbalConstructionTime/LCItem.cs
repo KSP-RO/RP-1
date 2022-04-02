@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
 {
     public class LCItem
     {
-        public class LCData : IConfigNode
+        public class LCData
         {
             [Persistent] public string Name;
             [Persistent] public float massMax;
@@ -37,19 +37,10 @@ namespace KerbalConstructionTime
 
             // NOTE: Not comparing name, which I think is correct here.
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
-
-            public void Load(ConfigNode node)
-            {
-                ConfigNode.LoadObjectFromConfig(this, node);
-            }
-
-            public void Save(ConfigNode node)
-            {
-                ConfigNode.CreateConfigFromObject(this, node);
-            }
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
-        public static LCData StartingLC = new LCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, false);
+        public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, new Vector3(2f, 10f, 2f), true, false);
+        public static LCData StartingLC15 = new LCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, false);
 
         public string Name;
         protected Guid _id;
@@ -67,13 +58,26 @@ namespace KerbalConstructionTime
         
         public int Engineers = 0;
         private static double RawMaxEngineers(float massMax, Vector3 sizeMax) =>
-            massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.05d;
+            massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.01d;
         public static int MaxEngineersCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
-            Math.Max(5, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d))) * 5;
+            Math.Max(5, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d)) * 5);
 
         private double _RawMaxEngineers => RawMaxEngineers(MassMax, SizeMax);
         public int MaxEngineers => MaxEngineersCalc(MassMax, SizeMax, IsHumanRated);
         public int MaxEngineersNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxEngineers)) * 5;
+        public int MaxEngineersFor(double mass, double bp, bool humanRated)
+        {
+            if (IsPad)
+                return IsHumanRated && !humanRated ? MaxEngineersNonHR : MaxEngineers;
+
+            double tngMax = RawMaxEngineers((float)mass, Vector3.zero);
+            if (IsHumanRated && humanRated)
+                tngMax *= 1.5d;
+            double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
+            return Math.Max(5, (int)Math.Ceiling(tngMax * 0.25d + bpMax * 0.75d) * 5);
+        }
+        public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints, blv.IsHumanRated);
+
         public double EfficiencyEngineers = 1d;
         public double LastEngineers = 0d;
         public bool IsRushing;
@@ -88,7 +92,7 @@ namespace KerbalConstructionTime
         public bool IsHumanRated = false;
 
         public float MassMax;
-        public static float CalcMassMin(float massMax) => (massMax == float.MaxValue || massMax <= 15f) ? 0f : Mathf.Floor(massMax * 0.75f);
+        public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
         public float MassMin => CalcMassMin(MassMax);
         public Vector3 SizeMax;
 
@@ -169,7 +173,7 @@ namespace KerbalConstructionTime
         }
 
         public bool IsEmpty => !BuildList.Any() && !Warehouse.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
-                    !PadConstructions.Any() && LaunchPads.Count < 2 && (IsPad ? StartingLC : StartingHangar).Compare(this);
+                    !PadConstructions.Any() && LaunchPads.Count < 2 && (IsPad ? StartingLC1.Compare(this) || StartingLC15.Compare(this) : StartingHangar.Compare(this));
 
         public bool IsActive => BuildList.Any() || Recon_Rollout.Any() || AirlaunchPrep.Any();
 

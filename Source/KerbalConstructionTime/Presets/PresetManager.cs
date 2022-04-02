@@ -281,20 +281,8 @@ namespace KerbalConstructionTime
             SandboxEnabled = Source.SandboxEnabled;
 
             ConfigNode.LoadObjectFromConfig(GeneralSettings, Source.GeneralSettings.AsConfigNode());
-            ConfigNode tmp = new ConfigNode();
-            Source.GeneralSettings.EngineerSkillupRate.Save(tmp);
-            GeneralSettings.EngineerSkillupRate.Load(tmp);
-            tmp.ClearData();
-            Source.GeneralSettings.ResearcherSkillupRate.Save(tmp);
-            GeneralSettings.ResearcherSkillupRate.Load(tmp);
-            tmp.ClearData();
-            Source.GeneralSettings.GlobalEngineerSkillupRate.Save(tmp);
-            GeneralSettings.GlobalEngineerSkillupRate.Load(tmp);
-            tmp.ClearData();
             ConfigNode.LoadObjectFromConfig(TimeSettings, Source.TimeSettings.AsConfigNode());
             ConfigNode.LoadObjectFromConfig(FormulaSettings, Source.FormulaSettings.AsConfigNode());
-            Source.FormulaSettings.YearBasedRateMult.Save(tmp);
-            FormulaSettings.YearBasedRateMult.Load(tmp);
             PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
@@ -342,36 +330,10 @@ namespace KerbalConstructionTime
 
             ConfigNode gNode = node.GetNode("KCT_Preset_General");
             ConfigNode.LoadObjectFromConfig(GeneralSettings, gNode);
-            ConfigNode tmp = gNode.GetNode("EngineerSkillupRate");
-            if (tmp != null)
-            {
-                GeneralSettings.EngineerSkillupRate = new FloatCurve();
-                GeneralSettings.EngineerSkillupRate.Load(tmp);
-            }
-            tmp = gNode.GetNode("ResearcherSkillupRate");
-            if (tmp != null)
-            {
-                GeneralSettings.ResearcherSkillupRate = new FloatCurve();
-                GeneralSettings.ResearcherSkillupRate.Load(tmp);
-            }
-            tmp = gNode.GetNode("GlobalEngineerSkillupRate");
-            if (tmp != null)
-            {
-                GeneralSettings.GlobalEngineerSkillupRate = new FloatCurve();
-                GeneralSettings.GlobalEngineerSkillupRate.Load(tmp);
-            }
-
             ConfigNode.LoadObjectFromConfig(TimeSettings, node.GetNode("KCT_Preset_Time"));
 
             ConfigNode fNode = node.GetNode("KCT_Preset_Formula");
             ConfigNode.LoadObjectFromConfig(FormulaSettings, fNode);
-            if (fNode.HasNode("YearBasedRateMult"))
-            {
-                var fc = new FloatCurve();
-                var rateNode = fNode.GetNode("YearBasedRateMult");
-                fc.Load(rateNode);
-                FormulaSettings.YearBasedRateMult = fc;
-            }
 
             if (node.HasNode("KCT_Preset_Part_Variables"))
                 PartVariables.FromConfigNode(node.GetNode("KCT_Preset_Part_Variables"));

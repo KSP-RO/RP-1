@@ -171,13 +171,12 @@ namespace KerbalConstructionTime
         private void AddProgress(double amt)
         {
             double newProgress = Progress + amt;
-            int newFrac = (int)(newProgress / BP * 10d);
-            int oldFrac = (int)(Progress / BP * 10d);
-            // back-compat
-            if (newFrac > oldFrac && SpentCost != Cost)
+            if (newProgress > BP)
+                newProgress = BP;
+            double costDelta = newProgress / BP * Cost - SpentCost;
+            if (costDelta > 1d)
             {
-                double spend = Cost * 0.1d;
-                if (Utilities.CurrentGameIsCareer() && !Funding.CanAfford((float)spend))
+                if (Utilities.CurrentGameIsCareer() && !Funding.CanAfford((float)costDelta))
                 {
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {
@@ -187,11 +186,10 @@ namespace KerbalConstructionTime
                     return;
                 }
 
-                Utilities.SpendFunds(spend, TransactionReasons.StructureConstruction);
-                SpentCost += spend;
+                Utilities.SpendFunds(costDelta, TransactionReasons.StructureConstruction);
+                SpentCost += costDelta;
             }
             Progress = newProgress;
-            if (Progress > BP) Progress = BP;
         }
     }
 

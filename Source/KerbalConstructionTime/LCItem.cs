@@ -78,7 +78,8 @@ namespace KerbalConstructionTime
         }
         public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints, blv.IsHumanRated);
 
-        public double EfficiencyEngineers = 1d;
+        public const double StartingEfficiency = 0.5d;
+        public double EfficiencyEngineers = StartingEfficiency;
         public double LastEngineers = 0d;
         public bool IsRushing;
         public const double RushRateMult = 1.5d;
@@ -173,7 +174,8 @@ namespace KerbalConstructionTime
         }
 
         public bool IsEmpty => !BuildList.Any() && !Warehouse.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
-                    !PadConstructions.Any() && LaunchPads.Count < 2 && (IsPad ? StartingLC1.Compare(this) || StartingLC15.Compare(this) : StartingHangar.Compare(this));
+                    !PadConstructions.Any() && LaunchPads.Count < 2 && EfficiencyEngineers == StartingEfficiency && LastEngineers < 0.001d &&
+                    (IsPad ? StartingLC1.Compare(this) || StartingLC15.Compare(this) : StartingHangar.Compare(this));
 
         public bool IsActive => BuildList.Any() || Recon_Rollout.Any() || AirlaunchPrep.Any();
 

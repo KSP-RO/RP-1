@@ -294,6 +294,22 @@ namespace KerbalConstructionTime
             return useCap ? LC.Rate : LC.RateHRCapped;
         }
 
+        public static double GetBuildRate(LCItem LC, double mass, double BP, bool isHumanRated)
+        {
+            bool useCap = LC.IsHumanRated && !isHumanRated;
+            int engCap = LC.MaxEngineersFor(mass, BP, isHumanRated);
+            int delta = 0;
+            if (engCap < LC.Engineers)
+                delta = engCap - LC.Engineers;
+
+            if (delta < 0)
+            {
+                return MathParser.ParseBuildRateFormula(0, LC, useCap, delta);
+            }
+
+            return useCap ? LC.Rate : LC.RateHRCapped;
+        }
+
         public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool isHumanRated, int upgradeDelta = 0)
         {
             if (type == BuildListVessel.ListType.VAB ? !LC.IsPad : LC.IsPad)
@@ -307,7 +323,12 @@ namespace KerbalConstructionTime
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
 
-            return Math.Min(GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated), GetBuildRateCap(ship.BuildPoints + ship.IntegrationPoints, ship.GetTotalMass(), ship.LC));
+            int engCap = ship.LC.MaxEngineersFor(ship);
+            int delta = 0;
+            if (engCap < ship.LC.Engineers)
+                delta = engCap - ship.LC.Engineers;
+
+            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated, delta);
         }
 
         public static double GetConstructionRate(KSCItem KSC)
@@ -2204,16 +2225,6 @@ namespace KerbalConstructionTime
             }
             ScrapYardWrapper.SetProcessedStatus(ScrapYardWrapper.GetPartID(b.ExtractedPartNodes[0]), false);
             Utilities.AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
-        }
-
-        public static double GetBuildRateCap(double bp, double mass, LCItem LC)
-        {
-            double cap1 = bp > 0 ? (1d / (86400d * 42d)) * bp : double.MaxValue;
-            double cap2 = mass > 0 ? Math.Pow(mass, 0.75d) * 0.05d : double.MaxValue;
-            if (cap1 == cap2 && cap1 == double.MaxValue)
-                return double.MaxValue;
-
-            return (cap1 * 0.75d + cap2 * 0.25d);
         }
 
         public static void ChangeEngineers(LCItem currentLC, int delta)

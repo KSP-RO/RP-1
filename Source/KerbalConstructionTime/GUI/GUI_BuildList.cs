@@ -305,8 +305,8 @@ namespace KerbalConstructionTime
                 hasIdleEngineers ? _yellowButton : (KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button)))
             {
                 GUIStates.ShowPersonnelWindow = true;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
+                //GUIStates.ShowBuildList = false;
+                //GUIStates.ShowBLPlus = false;
                 _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex;
                 _currentPersonnelHover = PersonnelButtonHover.None;
             }
@@ -1310,7 +1310,7 @@ namespace KerbalConstructionTime
             }
             bool canModify = activeLC.CanModify;
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
-            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
+            if (!HighLogic.LoadedSceneIsEditor && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
@@ -1355,7 +1355,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            if (!HighLogic.LoadedSceneIsEditor && activeLC.IsPad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
+            if (!HighLogic.LoadedSceneIsEditor && activeLC.IsPad && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)

@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
 {
     public class LCItem
     {
-        public class LCData : IConfigNode
+        public class LCData
         {
             [Persistent] public string Name;
             [Persistent] public float massMax;
@@ -37,16 +37,6 @@ namespace KerbalConstructionTime
 
             // NOTE: Not comparing name, which I think is correct here.
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
-
-            public void Load(ConfigNode node)
-            {
-                ConfigNode.LoadObjectFromConfig(this, node);
-            }
-
-            public void Save(ConfigNode node)
-            {
-                ConfigNode.CreateConfigFromObject(this, node);
-            }
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
         public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, new Vector3(2f, 10f, 2f), true, false);

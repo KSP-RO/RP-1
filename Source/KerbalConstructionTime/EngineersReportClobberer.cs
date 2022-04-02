@@ -129,14 +129,17 @@ namespace KerbalConstructionTime
             Vector3 craftSize = Utilities.GetShipSize(ship, true);
 
             float massLimit;
+            float minMassLimit;
             Vector3 maxSize;
             if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
                 massLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMax;
+                minMassLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMin;
                 maxSize = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SizeMax;
             }
             else
             {
+                minMassLimit = 0f;
                 massLimit = GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), isLP);
                 maxSize = GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), isLP);
             }
@@ -155,12 +158,12 @@ namespace KerbalConstructionTime
             //    partCountRH.text = "<color=" + partCountColorHex + ">" + partCount.ToString("0") + "</color>";
             //}
 
-            string partMassColorHex = totalMass <= massLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
+            string partMassColorHex = totalMass <= massLimit  && totalMass >= minMassLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
             _refERpartMassLH.text = KSP.Localization.Localizer.Format("#autoLOC_443401", neutralColorHex);
 
             if (massLimit < float.MaxValue)
             {
-                _refERpartMassRH.text = KSP.Localization.Localizer.Format("#autoLOC_443405", partMassColorHex, totalMass.ToString("N3"), massLimit.ToString("N1"));
+                _refERpartMassRH.text = KSP.Localization.Localizer.Format("#autoLOC_443405", partMassColorHex, totalMass.ToString("N3"), $"  {minMassLimit:N0} - {massLimit:N0}");
             }
             else
             {
@@ -196,6 +199,7 @@ namespace KerbalConstructionTime
 
             bool allGood = //partCount <= partLimit &&
                             totalMass <= massLimit &&
+                            totalMass >= minMassLimit &&
                               craftSize.x <= maxSize.x &&
                                 craftSize.y <= maxSize.y &&
                                  craftSize.z <= maxSize.z;

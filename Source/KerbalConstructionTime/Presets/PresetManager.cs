@@ -420,6 +420,9 @@ namespace KerbalConstructionTime
         [Persistent]
         public FloatCurve ResearcherSkillupRate = new FloatCurve();
 
+        [Persistent]
+        public double SmallLCExtraFunds = 10000d;
+
 
         public override ConfigNode AsConfigNode()
         {

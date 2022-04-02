@@ -78,6 +78,8 @@ namespace KerbalConstructionTime
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 
             GameEvents.onEditorStarted.Add(OnEditorStarted);
+            GameEvents.onEditorRestart.Add(OnEditorRestarted);
+            GameEvents.onEditorLoad.Add(OnEditorLoad);
             GameEvents.onFacilityContextMenuSpawn.Add(FacilityContextMenuSpawn);
 
             SubscribedToEvents = true;
@@ -91,6 +93,16 @@ namespace KerbalConstructionTime
         private void OnEditorStarted()
         {
             Utilities.HandleEditorButton();
+            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
+        }
+
+        private void OnEditorRestarted()
+        {
+            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
+        }
+
+        private void OnEditorLoad(ShipConstruct c, CraftBrowserDialog.LoadType t)
+        {
             KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
         }
 

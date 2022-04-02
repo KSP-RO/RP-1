@@ -1391,16 +1391,19 @@ namespace KerbalConstructionTime
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
-            KCT_LaunchPad activePad = activeLC.ActiveLPInstance;
-            if (activePad == null)
-                return;
-
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
             activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
                 $"Enable rush building.\nRate: {LCItem.RushRateMult:N1}x\nCosts: Salary {LCItem.RushSalaryMult:N1}x,\n-{(1d - LCItem.RushEfficMult):P0} efficiency/day."));
             if (oldRushing != activeLC.IsRushing)
                 Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
+
+            KCT_LaunchPad activePad = activeLC.ActiveLPInstance;
+            if (activePad == null)
+            {
+                GUILayout.EndHorizontal();
+                return;
+            }           
             
             GUILayout.Space(15);
 

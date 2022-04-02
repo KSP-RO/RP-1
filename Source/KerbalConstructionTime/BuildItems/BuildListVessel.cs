@@ -884,7 +884,7 @@ namespace KerbalConstructionTime
                 return TimeLeft;
 
             double bp = BuildPoints + IntegrationPoints;
-            double rate = Math.Min(Utilities.GetBuildRate(0, Type, LC, IsHumanRated), Utilities.GetBuildRateCap(bp, GetTotalMass(), LC))
+            double rate = Utilities.GetBuildRate(LC, GetTotalMass(), bp, IsHumanRated)
                         * LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers;
             return (bp - Progress) / rate;
         }

@@ -171,8 +171,9 @@ namespace KerbalConstructionTime
         private void AddProgress(double amt)
         {
             double newProgress = Progress + amt;
-            double newCost = newProgress / BP * Cost;
-            double costDelta = newCost - SpentCost;
+            if (newProgress > BP)
+                newProgress = BP;
+            double costDelta = newProgress / BP * Cost - SpentCost;
             if (costDelta > 1d)
             {
                 if (Utilities.CurrentGameIsCareer() && !Funding.CanAfford((float)costDelta))
@@ -189,7 +190,6 @@ namespace KerbalConstructionTime
                 SpentCost += costDelta;
             }
             Progress = newProgress;
-            if (Progress > BP) Progress = BP;
         }
     }
 

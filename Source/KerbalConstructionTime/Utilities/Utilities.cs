@@ -868,14 +868,18 @@ namespace KerbalConstructionTime
             TryAddVesselToBuildList(blv);
         }
 
-        public static void TryAddVesselToBuildList(BuildListVessel blv)
+        public static void TryAddVesselToBuildList(BuildListVessel blv, bool skipPartChecks = false)
         {
-            var v = new VesselBuildValidator();
-            v.SuccessAction = AddVesselToBuildList;
+            var v = new VesselBuildValidator
+            {
+                CheckPartAvailability = !skipPartChecks,
+                CheckPartConfigs = !skipPartChecks,
+                SuccessAction = AddVesselToBuildList
+            };
             v.ProcessVessel(blv);
         }
 
-        private static void AddVesselToBuildList(BuildListVessel blv)
+        public static void AddVesselToBuildList(BuildListVessel blv)
         {
             SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 

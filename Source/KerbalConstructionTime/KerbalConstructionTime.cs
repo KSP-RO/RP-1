@@ -174,12 +174,7 @@ namespace KerbalConstructionTime
 
             if (!HighLogic.LoadedSceneIsFlight)
             {
-                bool b = KCTGameStates.SimulationParams.BuildSimulatedVessel;
                 KCTGameStates.SimulationParams.Reset();
-                if (b && KCTGameStates.LaunchedVessel != null)
-                {
-                    Utilities.TryAddVesselToBuildList(KCTGameStates.LaunchedVessel);
-                }
             }
 
             switch (HighLogic.LoadedScene)

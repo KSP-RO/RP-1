@@ -68,13 +68,13 @@ namespace KerbalConstructionTime
             GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubscene);
             GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubscene);
             GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubscene);
-            GameEvents.onGUIRnDComplexSpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIRnDComplexSpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIKSPediaSpawn.Add(HideAllGUIs);
 
             GameEvents.onGUIAdministrationFacilityDespawn.Add(ExitSCSubscene);
             GameEvents.onGUIAstronautComplexDespawn.Add(ExitSCSubscene);
             GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubscene);
-            GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 
             GameEvents.onEditorStarted.Add(OnEditorStarted);
@@ -128,6 +128,18 @@ namespace KerbalConstructionTime
         private void ExitSCSubscene()
         {
             KCT_GUI.ExitSCSubcene();
+        }
+
+        private void EnterSCSubsceneAndHide()
+        {
+            EnterSCSubscene();
+            HideAllGUIs();
+        }
+
+        private void ExitSCSubsceneAndShow()
+        {
+            ExitSCSubscene();
+            RestoreAllGUIs();
         }
 
 

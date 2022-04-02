@@ -125,7 +125,6 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-
             GUILayout.BeginHorizontal();
             GUILayout.Label("Assigned:");
             
@@ -196,10 +195,17 @@ namespace KerbalConstructionTime
             if (currentLC.BuildList.Count > 0)
             {
                 BuildListVessel b = currentLC.BuildList[0];
+                int engCap = currentLC.MaxEngineersFor(b);
                 GUILayout.Label($"Current Vessel: {b.ShipName}");
-                double buildRate = Math.Min(Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, assignDelta), Utilities.GetBuildRateCap(b.BuildPoints + b.IntegrationPoints, b.GetTotalMass(), currentLC))
+                int delta = assignDelta;
+                if (engCap < currentLC.Engineers + assignDelta)
+                    delta = engCap - currentLC.Engineers;
+                double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, delta)
                     * efficLocal * efficGlobal;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
+                if (engCap != currentLC.MaxEngineers)
+                    GUILayout.Label($"(max of {engCap} eng.)");
+
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else

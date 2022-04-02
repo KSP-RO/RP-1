@@ -68,13 +68,26 @@ namespace KerbalConstructionTime
         
         public int Engineers = 0;
         private static double RawMaxEngineers(float massMax, Vector3 sizeMax) =>
-            massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.05d;
+            massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.01d;
         public static int MaxEngineersCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
-            Math.Max(5, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d))) * 5;
+            Math.Max(5, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d)) * 5);
 
         private double _RawMaxEngineers => RawMaxEngineers(MassMax, SizeMax);
         public int MaxEngineers => MaxEngineersCalc(MassMax, SizeMax, IsHumanRated);
         public int MaxEngineersNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxEngineers)) * 5;
+        public int MaxEngineersFor(double mass, double bp, bool humanRated)
+        {
+            if (IsPad)
+                return IsHumanRated && !humanRated ? MaxEngineersNonHR : MaxEngineers;
+
+            double tngMax = RawMaxEngineers((float)mass, Vector3.zero);
+            if (IsHumanRated && humanRated)
+                tngMax *= 1.5d;
+            double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
+            return Math.Max(5, (int)Math.Ceiling(tngMax * 0.25d + bpMax * 0.75d) * 5);
+        }
+        public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints, blv.IsHumanRated);
+
         public double EfficiencyEngineers = 1d;
         public double LastEngineers = 0d;
         public bool IsRushing;

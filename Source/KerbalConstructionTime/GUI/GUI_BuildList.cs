@@ -416,8 +416,9 @@ namespace KerbalConstructionTime
                 }
                 DrawTypeIcon(constr);
                 string identifier = constr.GetItemName() + i;
-                GUILayout.Label(constr.GetItemName());
-                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", $"{identifier}¶Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}") , GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                string costTooltip = $"{identifier}¶Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}";
+                GUILayout.Label(new GUIContent(constr.GetItemName(), costTooltip));
+                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                 {
                     double seconds = constr.GetTimeLeft();

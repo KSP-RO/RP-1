@@ -302,12 +302,12 @@ namespace KerbalConstructionTime
             if (engCap < LC.Engineers)
                 delta = engCap - LC.Engineers;
 
-            if (delta < 0)
+            if (delta != 0)
             {
                 return MathParser.ParseBuildRateFormula(0, LC, useCap, delta);
             }
 
-            return useCap ? LC.Rate : LC.RateHRCapped;
+            return useCap ? LC.RateHRCapped : LC.Rate;
         }
 
         public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool isHumanRated, int upgradeDelta = 0)

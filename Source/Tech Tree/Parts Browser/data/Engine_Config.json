@@ -2843,7 +2843,7 @@
         "spacecraft": "",
         "engine_config": "H1",
         "upgrade": true,
-        "entry_cost_mods": "15000,H-1-205k",
+        "entry_cost_mods": "15000,H-1-205K",
         "identical_part_name": "",
         "module_tags": []
     },

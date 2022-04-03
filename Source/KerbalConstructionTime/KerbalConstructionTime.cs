@@ -881,7 +881,11 @@ namespace KerbalConstructionTime
                     foreach (var ksc in KCTGameStates.KSCs)
                         ksc.EnsureStartingLaunchComplexes();
 
-                    KCTGameStates.UnassignedPersonnel = PresetManager.Instance.StartingPesronnel(HighLogic.CurrentGame.Mode);
+                    KCTGameStates.UnassignedPersonnel = PresetManager.Instance.StartingPersonnel(HighLogic.CurrentGame.Mode);
+                }
+                else if (KCTGameStates.KSCs.Find(k => k.LaunchComplexes.Count > 1) == null)
+                {
+                    KCT_GUI.GUIStates.ShowFirstRun = true;
                 }
 
                 foreach (KSCItem ksc in KCTGameStates.KSCs)

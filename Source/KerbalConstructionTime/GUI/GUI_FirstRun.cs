@@ -4,7 +4,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 150) / 2, Screen.height / 5, 150, 50);
+        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 150) / 2, Screen.height / 5, 300, 50);
 
         public static void DrawFirstRun(int windowID)
         {
@@ -23,13 +23,18 @@ namespace KerbalConstructionTime
             if (ksc == null)
             {
                 GUILayout.Label($"{step++}) Choose a starting Launch Complex:");
-                if (GUILayout.Button($"1t Capacity (for small rockets). Also gives √{PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds:N0}", HighLogic.Skin.button))
+
+                if (GUILayout.Button("1t Capacity (for small rockets)", HighLogic.Skin.button))
                 {
                     LCItem starterLC = new LCItem(LCItem.StartingLC1, KCTGameStates.ActiveKSC);
                     starterLC.IsOperational = true;
                     KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
                     Utilities.AddFunds(PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds, TransactionReasons.None);
                 }
+                GUILayout.Label($"Also gives √{PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds:N0}");
+
+                GUILayout.Label("or", GetLabelCenterAlignStyle());
+
                 if (GUILayout.Button($"15t Capacity (min: {LCItem.CalcMassMin(15):N0}t)", HighLogic.Skin.button))
                 {
                     LCItem starterLC = new LCItem(LCItem.StartingLC15, KCTGameStates.ActiveKSC);
@@ -38,11 +43,16 @@ namespace KerbalConstructionTime
                 }
             }
             
-            if (!IsPrimarilyDisabled && KCTGameStates.UnassignedPersonnel > 0 &&
-                GUILayout.Button($"{step++}) Assign your {KCTGameStates.UnassignedPersonnel} space center applicants", HighLogic.Skin.button))
+            if (!IsPrimarilyDisabled && KCTGameStates.UnassignedPersonnel > 0 )
             {
-                GUIStates.ShowPersonnelWindow = true;
+                GUILayout.Label($"{step++}) Assign your {KCTGameStates.UnassignedPersonnel} Applicants");
+                if (GUILayout.Button($"Go to Staffing", HighLogic.Skin.button))
+                {
+                    GUIStates.ShowPersonnelWindow = true;
+                }
             }
+
+            GUILayout.Label("");
 
             if (GUILayout.Button("Understood", HighLogic.Skin.button))
             {

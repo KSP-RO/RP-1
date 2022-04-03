@@ -372,7 +372,7 @@ namespace KerbalConstructionTime
             int cancelID = -1;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
-                ConstructionBuildItem pItem = ksc.Constructions[i];
+                ConstructionBuildItem constr = ksc.Constructions[i];
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
@@ -384,17 +384,17 @@ namespace KerbalConstructionTime
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {pItem.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {pItem.SpentCost:N0} funds on this construction ({(pItem.SpentCost / pItem.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.SpentCost:N0} funds on this construction ({(constr.SpentCost / constr.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
-                double buildRate = pItem.GetBuildRate();
+                double buildRate = constr.GetBuildRate();
                 if (i > 0 && buildRate != ksc.Constructions[0].GetBuildRate())
                 {
                     if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
                     {
                         ksc.Constructions.RemoveAt(i);
-                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, pItem);
+                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, constr);
                         forceRecheck = true;
                     }
                 }
@@ -404,7 +404,7 @@ namespace KerbalConstructionTime
                     if (i < ksc.Constructions.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                     {
                         ksc.Constructions.RemoveAt(i);
-                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, pItem);
+                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, constr);
                         forceRecheck = true;
                     }
                 }
@@ -414,30 +414,46 @@ namespace KerbalConstructionTime
                     forceRecheck = false;
                     ksc.RecalculateBuildRates(false);
                 }
-                DrawTypeIcon(pItem);
-                GUILayout.Label(pItem.GetItemName());
-                GUILayout.Label($"{pItem.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                DrawTypeIcon(constr);
+                string identifier = constr.GetItemName() + i;
+                GUILayout.Label(constr.GetItemName());
+                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", $"{identifier}¶Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}") , GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                 {
-                    double seconds = pItem.GetTimeLeft();
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, pItem.GetItemName()+i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    double seconds = constr.GetTimeLeft();
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 else
                 {
-                    double seconds = pItem.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, pItem.GetItemName()+i, _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    double seconds = constr.GetTimeLeftEst(_accumulatedTimeBefore);
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, constr.GetItemName()+i, _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d && GUILayout.Button("Warp", GUILayout.Width(45)))
                 {
-                    KCTWarpController.Create(pItem);
+                    KCTWarpController.Create(constr);
                 }
                 else if (HighLogic.LoadedSceneIsEditor)
                     GUILayout.Space(45);
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Cost/day for Materials:");
+            double costday = 0d;
+            if (ksc.Constructions.Count > 0)
+            {
+                var c = ksc.Constructions[0];
+                double br = c.GetBuildRate();
+                if (br > 0d)
+                {
+                    costday = br * 86400d / c.BP * c.Cost;
+                }
+            }
+            GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
         }
 
         private static void RenderTechList()
@@ -1484,6 +1500,8 @@ namespace KerbalConstructionTime
 
         public static void CancelTechNode(int index)
         {
+            RemoveInputLocks();
+
             if (KCTGameStates.TechList.Count > index)
             {
                 TechItem node = KCTGameStates.TechList[index];
@@ -1522,6 +1540,8 @@ namespace KerbalConstructionTime
 
         public static void CancelConstruction(int index)
         {
+            RemoveInputLocks();
+
             if (KCTGameStates.ActiveKSC.Constructions.Count > index)
             {
                 ConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
@@ -1698,7 +1718,7 @@ namespace KerbalConstructionTime
 
         private static void ScrapVessel()
         {
-            InputLockManager.RemoveControlLock("KCTPopupLock");
+            RemoveInputLocks();
             BuildListVessel b = Utilities.FindBLVesselByID(null, _selectedVesselId);
             if (b == null)
             {

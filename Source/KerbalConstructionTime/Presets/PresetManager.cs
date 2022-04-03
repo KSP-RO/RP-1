@@ -169,7 +169,7 @@ namespace KerbalConstructionTime
                 return ActivePreset.StartUpgrades[2];
             }
         }
-        public int StartingPesronnel(Game.Modes mode)
+        public int StartingPersonnel(Game.Modes mode)
         {
             if (mode == Game.Modes.CAREER)
             {

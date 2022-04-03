@@ -54,6 +54,10 @@ namespace KerbalConstructionTime
             if (LC.ActiveLaunchPadIndex >= index)
                 --LC.ActiveLaunchPadIndex; // should not change active pad.
 
+            foreach (var pc in LC.PadConstructions)
+                if (pc != this && pc.LaunchpadIndex >= index)
+                    --pc.LaunchpadIndex;
+
             LC.PadConstructions.Remove(this);
             LC.KSC.RecalculateBuildRates(false);
         }

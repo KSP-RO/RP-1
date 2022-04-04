@@ -1049,7 +1049,7 @@ namespace KerbalConstructionTime
             {
                 if (isPad)
                 {
-                    bool siteHasActiveRolloutOrRollback = rollout != null || activeLC.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) != null;
+                    bool siteHasActiveRolloutOrRollback = rollout != null || activeLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) != null;
                     if (!HighLogic.LoadedSceneIsEditor && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
                     {
                         bool hasRecond = false;

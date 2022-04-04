@@ -215,7 +215,7 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Construction Rate: {cRateFull:N2} => {cRate:N2} BP/sec)", GetLabelRightAlignStyle());
+            GUILayout.Label($"Construction Rate: {cRateFull:N3} => {cRate:N3} BP/sec)", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

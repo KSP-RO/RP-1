@@ -2253,30 +2253,33 @@ namespace KerbalConstructionTime
 
         public static double PredictEfficiencyEngineers(LCItem currentLC, int delta)
         {
-            if (delta > 0)
+            double correctedDelta = currentLC.Engineers + delta - currentLC.LastEngineers;
+            if (correctedDelta > 0)
                 return Math.Min(currentLC.EfficiencyEngineers,
-                    ((currentLC.LastEngineers * currentLC.EfficiencyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency))
-                        / (currentLC.LastEngineers + delta));
+                    ((currentLC.LastEngineers * currentLC.EfficiencyEngineers) + (correctedDelta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency))
+                        / (currentLC.LastEngineers + correctedDelta));
 
             return currentLC.EfficiencyEngineers;
         }
 
         public static double PredictEfficiencyEngineers(int delta)
         {
-            if (delta > 0)
+            double correctedDelta = KCTGameStates.TotalEngineers + delta - KCTGameStates.LastEngineers;
+            if (correctedDelta > 0)
                 return Math.Min(KCTGameStates.EfficiencyEngineers,
-                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiencyEngineers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency))
-                    / (KCTGameStates.LastEngineers + delta));
+                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiencyEngineers) + (correctedDelta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency))
+                    / (KCTGameStates.LastEngineers + correctedDelta));
 
             return KCTGameStates.EfficiencyEngineers;
         }
 
         public static double PredictEfficiencyResearchers(int delta)
         {
-            if (delta > 0)
+            double correctedDelta = KCTGameStates.Researchers + delta - KCTGameStates.LastResearchers;
+            if (correctedDelta > 0)
                 return Math.Min(KCTGameStates.EfficiencyResearchers,
-                    ((KCTGameStates.LastResearchers * KCTGameStates.EfficiencyResearchers) + (delta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency))
-                    / (KCTGameStates.LastResearchers + delta));
+                    ((KCTGameStates.LastResearchers * KCTGameStates.EfficiencyResearchers) + (correctedDelta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency))
+                    / (KCTGameStates.LastResearchers + correctedDelta));
 
             return KCTGameStates.EfficiencyResearchers;
         }

@@ -76,7 +76,7 @@ namespace KerbalConstructionTime
             double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
             return Math.Max(5, (int)Math.Ceiling(tngMax * 0.25d + bpMax * 0.75d) * 5);
         }
-        public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints, blv.IsHumanRated);
+        public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints + blv.IntegrationPoints, blv.IsHumanRated);
 
         public const double StartingEfficiency = 0.5d;
         public double EfficiencyEngineers = StartingEfficiency;

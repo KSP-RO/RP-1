@@ -185,7 +185,7 @@ namespace KerbalConstructionTime
             Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
 
         public ReconRollout GetReconRollout(ReconRollout.RolloutReconType type, string launchSite = "LaunchPad") =>
-            Recon_Rollout.FirstOrDefault(r => r.RRType == type && r.LaunchPadID == launchSite);
+            Recon_Rollout.FirstOrDefault(r => (type == ReconRollout.RolloutReconType.None ||  r.RRType == type) && r.LaunchPadID == launchSite);
 
         public void RecalculateBuildRates()
         {

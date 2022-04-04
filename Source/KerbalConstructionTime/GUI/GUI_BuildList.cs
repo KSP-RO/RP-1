@@ -370,9 +370,11 @@ namespace KerbalConstructionTime
 
             bool forceRecheck = false;
             int cancelID = -1;
+            double totalCost = 0d;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
                 ConstructionBuildItem constr = ksc.Constructions[i];
+                totalCost += (constr.Cost - constr.SpentCost);
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
@@ -389,24 +391,18 @@ namespace KerbalConstructionTime
                 }
 
                 double buildRate = constr.GetBuildRate();
-                if (i > 0 && buildRate != ksc.Constructions[0].GetBuildRate())
+                if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
                 {
-                    if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
-                    {
-                        ksc.Constructions.RemoveAt(i);
-                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, constr);
-                        forceRecheck = true;
-                    }
+                    ksc.Constructions.RemoveAt(i);
+                    ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, constr);
+                    forceRecheck = true;
                 }
 
-                if (buildRate != ksc.Constructions[ksc.Constructions.Count - 1].GetBuildRate())
+                if (i < ksc.Constructions.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                 {
-                    if (i < ksc.Constructions.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
-                    {
-                        ksc.Constructions.RemoveAt(i);
-                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, constr);
-                        forceRecheck = true;
-                    }
+                    ksc.Constructions.RemoveAt(i);
+                    ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, constr);
+                    forceRecheck = true;
                 }
 
                 if (forceRecheck)
@@ -454,6 +450,11 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Remaining cost of all constructions:");
+            GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
         }
 
@@ -861,7 +862,7 @@ namespace KerbalConstructionTime
                         DialogGUIBase[] options = new DialogGUIBase[2];
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost}.", "Scrap Vessel", null, options: options);
+                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost:N0}.", "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                     }
                 }
@@ -1049,7 +1050,7 @@ namespace KerbalConstructionTime
             {
                 if (isPad)
                 {
-                    bool siteHasActiveRolloutOrRollback = rollout != null || activeLC.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) != null;
+                    bool siteHasActiveRolloutOrRollback = rollout != null || activeLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) != null;
                     if (!HighLogic.LoadedSceneIsEditor && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
                     {
                         bool hasRecond = false;
@@ -1595,7 +1596,7 @@ namespace KerbalConstructionTime
                 DialogGUIBase[] options = new DialogGUIBase[2];
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost}.", "Scrap Vessel", null, 300, options);
+                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost:N0}.", "Scrap Vessel", null, 300, options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow(false);

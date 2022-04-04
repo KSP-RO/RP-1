@@ -64,8 +64,8 @@ namespace KerbalConstructionTime
             if (double.TryParse(BuildRateForDisplay, out bR))
             {
                 GUILayout.EndHorizontal();
-                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorShipMass, buildPoints, KCTGameStates.EditorIsHumanRated))
-                    * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers;
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorShipMass, buildPoints, KCTGameStates.EditorIsHumanRated)
+                    * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers);
                 GUILayout.Label(Utilities.GetFormattedTime(buildPoints / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
@@ -163,8 +163,8 @@ namespace KerbalConstructionTime
             if (double.TryParse(BuildRateForDisplay, out bR))
             {
                 GUILayout.EndHorizontal();
-                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KCTGameStates.EditorShipMass, KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, KCTGameStates.EditorIsHumanRated))
-                    * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers;
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KCTGameStates.EditorShipMass, KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, KCTGameStates.EditorIsHumanRated)
+                    * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers);
                 GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)

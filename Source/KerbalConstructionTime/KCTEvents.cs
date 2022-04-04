@@ -504,29 +504,7 @@ namespace KerbalConstructionTime
 
             LCItem targetLC = KCTGameStates.RecoveredVessel.LC;
             if (targetLC == null)
-            {
-                if (KCTGameStates.RecoveredVessel.Type == BuildListVessel.ListType.VAB)
-                {
-                    double mass = KCTGameStates.RecoveredVessel.GetTotalMass();
-                    if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMax >= mass &&
-                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMin <= mass)
-                        targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                    else
-                    {
-                        targetLC = KCTGameStates.ActiveKSC.LaunchComplexes.FirstOrDefault(lc => lc.IsOperational && lc.IsPad && lc.MassMax >= mass && lc.MassMin <= mass);
-
-                        // If we still can't find a match, just recover it to the current launch complex.
-                        if (targetLC == null)
-                            targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                    }
-                }
-                else
-                {
-                    targetLC = KCTGameStates.ActiveKSC.Hangar;
-                }
-
-                KCTGameStates.RecoveredVessel.LC = targetLC;
-            }
+                targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             targetLC.Warehouse.Add(KCTGameStates.RecoveredVessel);
             targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));

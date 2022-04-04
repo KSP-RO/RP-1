@@ -270,6 +270,8 @@ namespace KerbalConstructionTime
                 InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                 DialogGUIBase[] options = new DialogGUIBase[2];
                 options[0] = new DialogGUIButton("Yes", () => {
+                    KCT_GUI.RemoveInputLocks();
+
                     KCTGameStates.ActiveKSC.FacilityUpgrades.Add(upgrading);
                     upgrading.SetBP(cost);
                     upgrading.Cost = cost;

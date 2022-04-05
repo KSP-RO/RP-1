@@ -98,12 +98,9 @@ namespace KerbalConstructionTime
 
         public double CalculateYearBasedRateMult(double offset = 0)
         {
-            if (StartYear < 1) return 1;
-
-            if (PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult == null)
+            if (StartYear < 1d || PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult == null)
                 return 1d;
-
-
+            
             float maxTime = PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.maxTime;
             if (offset * (1d / (86400d * 365.25d)) > maxTime)
                 return PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.Evaluate(maxTime);

@@ -101,9 +101,8 @@ namespace KerbalConstructionTime
             if (StartYear < 1d || PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult == null)
                 return 1d;
             
-            float maxTime = PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.maxTime;
-            if (offset * (1d / (86400d * 365.25d)) > maxTime)
-                return PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.Evaluate(maxTime);
+            if (double.IsNaN(offset) || double.IsInfinity(offset) || offset * (1d / (86400d * 365.25d)) > 500d)
+                return PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.Evaluate(PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.maxTime);
 
             DateTime curDate = _epoch.AddSeconds(Utilities.GetUT() + offset);
 

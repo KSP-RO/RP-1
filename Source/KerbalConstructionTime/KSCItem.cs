@@ -109,7 +109,8 @@ namespace KerbalConstructionTime
                 ActiveLaunchComplexIndex = LC_ID;
 
             LaunchComplexes[LC_ID].SwitchLaunchPad();
-            KCT_GUI._LCIndex = LC_ID;
+            if (!KCT_GUI.GUIStates.ShowPersonnelWindow)
+                KCT_GUI._LCIndex = LC_ID;
         }
 
         /// <summary>

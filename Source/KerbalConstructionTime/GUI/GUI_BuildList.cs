@@ -370,9 +370,11 @@ namespace KerbalConstructionTime
 
             bool forceRecheck = false;
             int cancelID = -1;
+            double totalCost = 0d;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
                 ConstructionBuildItem constr = ksc.Constructions[i];
+                totalCost += (constr.Cost - constr.SpentCost);
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
@@ -389,24 +391,18 @@ namespace KerbalConstructionTime
                 }
 
                 double buildRate = constr.GetBuildRate();
-                if (i > 0 && buildRate != ksc.Constructions[0].GetBuildRate())
+                if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
                 {
-                    if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
-                    {
-                        ksc.Constructions.RemoveAt(i);
-                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, constr);
-                        forceRecheck = true;
-                    }
+                    ksc.Constructions.RemoveAt(i);
+                    ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, constr);
+                    forceRecheck = true;
                 }
 
-                if (buildRate != ksc.Constructions[ksc.Constructions.Count - 1].GetBuildRate())
+                if (i < ksc.Constructions.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                 {
-                    if (i < ksc.Constructions.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
-                    {
-                        ksc.Constructions.RemoveAt(i);
-                        ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, constr);
-                        forceRecheck = true;
-                    }
+                    ksc.Constructions.RemoveAt(i);
+                    ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, constr);
+                    forceRecheck = true;
                 }
 
                 if (forceRecheck)
@@ -454,6 +450,11 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Remaining cost of all constructions:");
+            GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
         }
 

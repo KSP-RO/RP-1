@@ -100,6 +100,14 @@ namespace KerbalConstructionTime
         {
             if (StartYear < 1) return 1;
 
+            if (PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult == null)
+                return 1d;
+
+
+            float maxTime = PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.maxTime;
+            if (offset * (1d / (86400d * 365.25d)) > maxTime)
+                return PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.Evaluate(maxTime);
+
             DateTime curDate = _epoch.AddSeconds(Utilities.GetUT() + offset);
 
             double diffYears = (curDate - new DateTime(StartYear, 1, 1)).TotalDays / 365.25;
@@ -108,8 +116,7 @@ namespace KerbalConstructionTime
                 diffYears = (curDate - new DateTime(EndYear, 12, 31, 23, 59, 59)).TotalDays / 365.25;
                 diffYears = Math.Max(0, diffYears);
             }
-            float? v = PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult?.Evaluate((float)diffYears);
-            return v ?? 1;
+            return PresetManager.Instance.ActivePreset.FormulaSettings.YearBasedRateMult.Evaluate((float)diffYears);
         }
 
         public void DisableTech()

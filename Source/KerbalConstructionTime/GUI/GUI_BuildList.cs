@@ -706,6 +706,23 @@ namespace KerbalConstructionTime
                     GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined"+i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
+
+            GUILayout.Label("__________________________________________________");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Storage");
+            GUILayout.EndHorizontal();
+
+            int idx = 0;
+            foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
+            {
+                if (!lc.IsOperational)
+                    continue;
+                foreach (var b in lc.Warehouse)
+                    RenderWarehouseRow(b, idx++);
+            }
+            if(idx == 0)
+                GUILayout.Label("No vessels in storage!");
+
             GUILayout.EndScrollView();
             _allItems.Clear();
             _timeBeforeItem.Clear();
@@ -1084,7 +1101,6 @@ namespace KerbalConstructionTime
                                         {
                                             rollout.SwapRolloutType();
                                         }
-                                        // tmpRollout.launchPadID = KCT_GameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
                                         activeLC.Recon_Rollout.Add(tmpRollout);
                                     }
                                     else

@@ -706,6 +706,23 @@ namespace KerbalConstructionTime
                     GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined"+i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
+
+            GUILayout.Label("__________________________________________________");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Storage");
+            GUILayout.EndHorizontal();
+
+            int idx = 0;
+            foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
+            {
+                if (!lc.IsOperational)
+                    continue;
+                foreach (var b in lc.Warehouse)
+                    RenderWarehouseRow(b, idx++);
+            }
+            if(idx == 0)
+                GUILayout.Label("No vessels in storage!");
+
             GUILayout.EndScrollView();
             _allItems.Clear();
             _timeBeforeItem.Clear();
@@ -822,7 +839,7 @@ namespace KerbalConstructionTime
             foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
-                if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(reconditioning.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}"), GUILayout.Width((_butW + 4) * 3)))
+                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(reconditioning.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}"), GUILayout.Width((_butW + 4) * 3)))
                 {
                     KCTWarpController.Create(reconditioning);
                 }
@@ -1084,7 +1101,6 @@ namespace KerbalConstructionTime
                                         {
                                             rollout.SwapRolloutType();
                                         }
-                                        // tmpRollout.launchPadID = KCT_GameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
                                         activeLC.Recon_Rollout.Add(tmpRollout);
                                     }
                                     else
@@ -1308,9 +1324,9 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.FlexibleSpace();
-            string padTxt = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
-            string padDesc = $"Size limit: {activeLC.SupportedSizeAsPrettyText}";
-            GUILayout.Label(new GUIContent(padTxt, padDesc));
+            string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
+            string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
+            GUILayout.Label(new GUIContent(lcText, lcTooltip));
 
             if (GUILayout.Button(new GUIContent("Rename", "Rename Complex"), GUILayout.ExpandWidth(false)))
             {
@@ -1651,7 +1667,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
             }
 
-            if (!b.IsFinished && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(b.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}")))
+            if (!b.IsFinished && b.BuildRate > 0 && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(b.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}")))
             {
                 KCTWarpController.Create(b);
                 GUIStates.ShowBLPlus = false;

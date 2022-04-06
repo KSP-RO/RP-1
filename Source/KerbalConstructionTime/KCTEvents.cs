@@ -439,7 +439,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public void VesselRecoverEvent(ProtoVessel v, bool unknownAsOfNow)
+        public void VesselRecoverEvent(ProtoVessel v, bool quick)
         {
             KCTDebug.Log($"VesselRecoverEvent for {v.vesselName}");
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)

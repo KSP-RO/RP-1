@@ -20,7 +20,7 @@ namespace KerbalConstructionTime
         private Coroutine _clobberEngineersReportCoroutine = null;
         private bool _wasERActive = false;
 
-        private TMPro.TextMeshProUGUI _refERpartMassLH, _refERpartMassRH, _refERsizeLH, _refERsizeRH;
+        private TMPro.TextMeshProUGUI _refERpartMassLH, _refERpartMassRH, _refERsizeLH, _refERsizeRH, _refERpartCountLH, _refERpartCountRH;
         private GenericAppFrame _refERappFrame;
 
         public EngineersReportClobberer(KerbalConstructionTime instance)
@@ -40,6 +40,8 @@ namespace KerbalConstructionTime
             _refERsizeRH = (TMPro.TextMeshProUGUI)typeER.GetField("sizeRH", flags).GetValue(EngineersReport.Instance);
             _refERpartMassLH = (TMPro.TextMeshProUGUI)typeER.GetField("partMassLH", flags).GetValue(EngineersReport.Instance);
             _refERpartMassRH = (TMPro.TextMeshProUGUI)typeER.GetField("partMassRH", flags).GetValue(EngineersReport.Instance);
+            _refERpartCountLH = (TMPro.TextMeshProUGUI)typeER.GetField("partCountLH", flags).GetValue(EngineersReport.Instance);
+            _refERpartCountRH = (TMPro.TextMeshProUGUI)typeER.GetField("partCountRH", flags).GetValue(EngineersReport.Instance);
             _refERappFrame = (GenericAppFrame)typeER.GetField("appFrame", flags).GetValue(EngineersReport.Instance);
 
             EditorStarted();
@@ -122,41 +124,39 @@ namespace KerbalConstructionTime
             }
 
             bool isLP = launchFacility == SpaceCenterFacility.LaunchPad;
-            //partCount = ship.parts.Count;
-            //partLimit = GameVariables.Instance.GetPartCountLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(editorFacility), editorFacility == SpaceCenterFacility.VehicleAssemblyBuilding);
 
             float totalMass = Utilities.GetShipMass(ship, true, out _, out _);
             Vector3 craftSize = Utilities.GetShipSize(ship, true);
+            bool vesselHumanRated = false;
 
             float massLimit;
             float minMassLimit;
             Vector3 maxSize;
+            bool lcHumanRated;
             if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
                 massLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMax;
                 minMassLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMin;
                 maxSize = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SizeMax;
+                lcHumanRated = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated;
+                vesselHumanRated = KCTGameStates.EditorIsHumanRated;
             }
             else
             {
                 minMassLimit = 0f;
                 massLimit = GameVariables.Instance.GetCraftMassLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), isLP);
                 maxSize = GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(launchFacility), isLP);
+                lcHumanRated = true;
             }
 
             string neutralColorHex = XKCDColors.HexFormat.KSPNeutralUIGrey;
 
-            //string partCountColorHex = partCount <= partLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
-            //partCountLH.text = partCountLH.text = KSP.Localization.Localizer.Format("#autoLOC_443389", neutralColorHex);
+            bool humanRatingOK = !vesselHumanRated || lcHumanRated;
+            string humanRatingColorHex = humanRatingOK ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
+            _refERpartCountLH.text = "<color=" + neutralColorHex + ">Human-Rated:</color>"; //KSP.Localization.Localizer.Format("#autoLOC_443389", neutralColorHex);
 
-            //if (partLimit < int.MaxValue)
-            //{
-            //    partCountRH.text = "<color=" + partCountColorHex + ">" + partCount.ToString("0") + " / " + partLimit.ToString("0") + "</color>";
-            //}
-            //else
-            //{
-            //    partCountRH.text = "<color=" + partCountColorHex + ">" + partCount.ToString("0") + "</color>";
-            //}
+            const string yes = "Yes", no = "No";
+            _refERpartCountRH.text = "<color=" + humanRatingColorHex + ">" + (vesselHumanRated ? yes : no) + " / LC: " + (lcHumanRated ? yes : no) + "</color>";
 
             string partMassColorHex = totalMass <= massLimit  && totalMass >= minMassLimit ? XKCDColors.HexFormat.KSPBadassGreen : XKCDColors.HexFormat.KSPNotSoGoodOrange;
             _refERpartMassLH.text = KSP.Localization.Localizer.Format("#autoLOC_443401", neutralColorHex);
@@ -197,7 +197,7 @@ namespace KerbalConstructionTime
                 "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + _cacheAutoLOC_7001411 + "</color></line-height>";
             }
 
-            bool allGood = //partCount <= partLimit &&
+            bool allGood = humanRatingOK &&
                             totalMass <= massLimit &&
                             totalMass >= minMassLimit &&
                               craftSize.x <= maxSize.x &&

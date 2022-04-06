@@ -83,8 +83,8 @@ namespace RP0
                     width = Math.Min(width, TooltipMaxWidth);
                     float height = _tooltipStyle.CalcHeight(c, TooltipMaxWidth);
                     _tooltipRect = new Rect(
-                        Input.mousePosition.x + 15,
-                        Screen.height - Input.mousePosition.y + 10,
+                        Math.Min(Screen.width - width, Input.mousePosition.x + 15),
+                        Math.Min(Screen.height - height, Screen.height - Input.mousePosition.y + 10),
                         width, height);
                     _isTooltipChanged = false;
                 }

@@ -3,12 +3,9 @@ using System.Linq;
 
 namespace KerbalConstructionTime
 {
-    public class AirlaunchPrep : IKCTBuildItem
+    public class AirlaunchPrep : LCProject
     {
-        public string Name => Direction == PrepDirection.Mount ? Name_Mount : Name_Unmount;
-        public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
-        public string AssociatedID = string.Empty;
-        public bool IsHumanRated = false;
+        public override string Name => Direction == PrepDirection.Mount ? Name_Mount : Name_Unmount;
 
         public const string Name_Mount = "Mounting to carrier";
         public const string Name_Unmount = "Unmounting";
@@ -16,38 +13,9 @@ namespace KerbalConstructionTime
         public enum PrepDirection { Mount, Unmount };
         public PrepDirection Direction = PrepDirection.Mount;
 
-        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
-
-        private LCItem _lc = null;
-        public LCItem LC
+        public AirlaunchPrep() : base()
         {
-            get
-            {
-                if (_lc == null)
-                {
-                    foreach (var ksc in KCTGameStates.KSCs)
-                        foreach (var lc in ksc.LaunchComplexes)
-                            if (lc.AirlaunchPrep.Contains(this))
-                            {
-                                _lc = lc;
-                                break;
-                            }
-                }
-
-                return _lc;
-            }
-        }
-
-        public AirlaunchPrep()
-        {
-            Progress = 0;
-            BP = 0;
-            Cost = 0;
-            Mass = 0;
-            VesselBP = 0;
-            IsHumanRated = false;
             Direction = PrepDirection.Mount;
-            AssociatedID = string.Empty;
         }
 
         public AirlaunchPrep(BuildListVessel vessel, string id)
@@ -64,58 +32,10 @@ namespace KerbalConstructionTime
             _lc = vessel.LC;
         }
 
-        public double GetBuildRate()
-        {
-            double buildRate = Utilities.GetBuildRate(LC, Mass, VesselBP, IsHumanRated)
-                * LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers * LC.RushRate;
+        public override bool IsReversed => Direction == PrepDirection.Unmount;
+        public override bool HasCost => Direction == PrepDirection.Mount;
 
-            if (Direction == PrepDirection.Unmount)
-                buildRate *= -1;
-
-            return buildRate;
-        }
-
-        public string GetItemName() => Name;
-
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.AirLaunch;
-
-        public double GetFractionComplete() => Direction == PrepDirection.Mount ? Progress / BP : (BP - Progress) / BP;
-
-        public double GetTimeLeft()
-        {
-            double goal = Direction == PrepDirection.Mount ? BP : 0;
-            return (goal - Progress) / GetBuildRate();
-        }
-
-        public double GetTimeLeftEst(double offset) => GetTimeLeft();
-
-        public bool IsComplete() => Direction == PrepDirection.Mount ? Progress >= BP : Progress <= 0;
-
-        public void IncrementProgress(double UTDiff)
-        {
-            double progBefore = Progress;
-            Progress += GetBuildRate() * UTDiff;
-            if (Progress > BP) Progress = BP;
-
-            if (Utilities.CurrentGameIsCareer() && Direction == PrepDirection.Mount && Cost > 0)
-            {
-                int steps;
-                if ((steps = (int)(Math.Floor(Progress / BP * 10) - Math.Floor(progBefore / BP * 10))) > 0)    //passed 10% of the progress
-                {
-                    if (Funding.Instance.Funds < Cost / 10)    //If they can't afford to continue the rollout, progress stops
-                    {
-                        Progress = progBefore;
-                        if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
-                        {
-                            ScreenMessages.PostScreenMessage("Timewarp was stopped because there's insufficient funds to continue the airlaunch preparations");
-                            KCTWarpController.Instance.StopWarp();
-                        }
-                    }
-                    else
-                        Utilities.SpendFunds(Cost / 10 * steps, TransactionReasons.VesselRollout);
-                }
-            }
-        }
+        public override BuildListVessel.ListType GetListType() => BuildListVessel.ListType.AirLaunch;
 
         public void SwitchDirection()
         {

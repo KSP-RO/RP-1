@@ -238,7 +238,12 @@ namespace KerbalConstructionTime
             }
             EditorLogic.fetch.ship.SaveShip().Save(tempFile);
             KCTGameStates.IsSimulatedFlight = true;
-            FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, EditorLogic.fetch.launchSiteName, manifest);
+            string launchSiteName = EditorLogic.fetch.launchSiteName;
+            if (launchSiteName == "LaunchPad" && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
+            {
+                launchSiteName = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.launchSiteName;
+            }
+            FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
         }
     }
 }

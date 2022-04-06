@@ -4,18 +4,15 @@ using System.Linq;
 
 namespace KerbalConstructionTime
 {
-    public class ReconRollout : IKCTBuildItem
+    public class ReconRollout : LCProject
     {
-        public string Name => RRInverseDict[RRType];
-        public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
-        public string AssociatedID = string.Empty;
+        public override string Name => RRInverseDict[RRType];
         public string LaunchPadID = "LaunchPad";
         public const string ReconditioningStr = "Reconditioning";
         public const string RolloutStr = "Rollout";
         public const string RollbackStr = "Rollback";
         public const string RecoveryStr = "Recover";
         public const string UnknownStr = "Unknown Situation";
-        public bool IsHumanRated;
 
         public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
         public RolloutReconType RRType = RolloutReconType.None;
@@ -37,42 +34,9 @@ namespace KerbalConstructionTime
             {  RolloutReconType.None, UnknownStr }
         };
 
-        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
-
-        private LCItem _lc = null;
-        public LCItem LC
+        public ReconRollout() : base()
         {
-            get
-            {
-                if (_lc == null)
-                {
-                    foreach (var ksc in KCTGameStates.KSCs)
-                        foreach (var lc in ksc.LaunchComplexes)
-                            if (lc.Recon_Rollout.Contains(this))
-                            {
-                                _lc = lc;
-                                break;
-                            }
-                }
-                
-                return _lc;
-            }
-            set
-            {
-                _lc = value;
-            }
-        }
-
-        public ReconRollout()
-        {
-            Progress = 0;
-            BP = 0;
-            Cost = 0;
-            Mass = 0;
-            VesselBP = 0;
             RRType = RolloutReconType.None;
-            AssociatedID = "";
-            IsHumanRated = false;
             LaunchPadID = "LaunchPad";
         }
 
@@ -106,7 +70,7 @@ namespace KerbalConstructionTime
                 BP += BP * (KSCDistance / maxDist);
             }
         }
-        public ReconRollout(BuildListVessel vessel, RolloutReconType type, string id, string launchSite="")
+        public ReconRollout(BuildListVessel vessel, RolloutReconType type, string id, string launchSite = "")
         {
             RRType = type;
             AssociatedID = id;
@@ -137,61 +101,13 @@ namespace KerbalConstructionTime
                 RRType = RolloutReconType.Rollout;
         }
 
-        public string GetItemName() => Name;
+        public override bool IsCapped => RRType != RolloutReconType.Reconditioning;
 
-        public double GetBuildRate()
-        {
-            double buildRate = Utilities.GetBuildRate(0, LC, IsHumanRated, false);
-            if (RRType != RolloutReconType.Reconditioning)
-                buildRate = Utilities.GetBuildRate(LC, Mass, VesselBP, IsHumanRated);
-            buildRate *= LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers * LC.RushRate;
+        public override bool IsReversed => RRType == RolloutReconType.Rollback;
 
-            if (RRType == RolloutReconType.Rollback)
-                buildRate *= -1;
-            return buildRate;
-        }
+        public override bool HasCost => RRType == RolloutReconType.Rollout;
 
-        public double GetFractionComplete() => RRType == RolloutReconType.Rollback ? (BP - Progress) / BP : Progress / BP;
-
-        public double GetTimeLeft()
-        {
-            double n = RRType == RolloutReconType.Rollback ? 0 : BP;
-            return (n - Progress) / GetBuildRate();
-        }
-        public double GetTimeLeftEst(double offset) => GetTimeLeft();
-
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
-
-        public bool IsComplete() => RRType == RolloutReconType.Rollback ? Progress <= 0 : Progress >= BP;
-
-        public void IncrementProgress(double UTDiff)
-        {
-            double progBefore = Progress;
-            Progress += GetBuildRate() * UTDiff;
-            if (Progress > BP) Progress = BP;
-
-            int prevStep = (int)Math.Floor(10 * progBefore / BP);
-            int curStep = (int)Math.Floor(10 * Progress / BP);
-
-            if (Utilities.CurrentGameIsCareer() && RRType == RolloutReconType.Rollout && Cost > 0)
-            {
-                int steps = curStep - prevStep;
-                if (steps > 0) //  Pay or halt at 10% intervals
-                {
-                    if (Funding.Instance.Funds < Cost / 10) //If they can't afford to continue the rollout, progress stops
-                    {
-                        Progress = progBefore;
-                        if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
-                        {
-                            ScreenMessages.PostScreenMessage("Timewarp was stopped because there's insufficient funds to continue the rollout");
-                            KCTWarpController.Instance.StopWarp();
-                        }
-                    }
-                    else
-                        Utilities.SpendFunds(steps * Cost / 10, TransactionReasons.VesselRollout);
-                }
-            }
-        }
+        public override BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
     }
 }
 

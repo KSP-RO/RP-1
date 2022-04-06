@@ -31,10 +31,12 @@ namespace KerbalConstructionTime
         string KCTPersistentID;
         [Persistent]
         EditorFacility FacilityBuiltIn;
+        [Persistent]
+        bool humanRated;
 
         public BuildListVessel ToBuildListVessel()
         {
-            var ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, EditorFacility)
+            var ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, EditorFacility, humanRated)
             {
                 Progress = progress,
                 Id = new Guid(shipID),
@@ -77,6 +79,7 @@ namespace KerbalConstructionTime
             desiredManifest = blv.DesiredManifest;
             KCTPersistentID = blv.KCTPersistentID;
             FacilityBuiltIn = blv.FacilityBuiltIn;
+            humanRated = blv.IsHumanRated;
             return this;
         }
     }

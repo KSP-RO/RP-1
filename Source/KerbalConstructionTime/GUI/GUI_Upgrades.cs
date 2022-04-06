@@ -6,11 +6,11 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _upgradePosition = new Rect((Screen.width - 450) / 2, Screen.height / 4, 450, 1);
-        private static int _upgradeWindowHolder = 0;
-        private static int _actionMultiplier;
-        private static int _spentPoints = int.MinValue;
-        private static int _totalPoints = int.MinValue;
+        //private static Rect _upgradePosition = new Rect((Screen.width - 450) / 2, Screen.height / 4, 450, 1);
+        //private static int _upgradeWindowHolder = 0;
+        //private static int _actionMultiplier;
+        //private static int _spentPoints = int.MinValue;
+        //private static int _totalPoints = int.MinValue;
 
         //private static int SpentPoints
         //{

@@ -159,10 +159,10 @@ namespace KerbalConstructionTime
             return bp;
         }
 
-        public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
+        public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null, int delta = 0)
         {
             double bp = CalculateBP(cost, facilityType);
-            double rateTotal = Utilities.GetConstructionRate(KSC) * KCTGameStates.EfficiencyEngineers;
+            double rateTotal = Utilities.GetConstructionRate(0, KSC, delta) * KCTGameStates.EfficiencyEngineers;
 
             return bp / rateTotal;
         }

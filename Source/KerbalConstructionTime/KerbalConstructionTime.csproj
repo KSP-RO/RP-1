@@ -105,6 +105,7 @@
     <Compile Include="AirlaunchTechLevel.cs" />
     <Compile Include="BuildItems\ConstructionBuildItem.cs" />
     <Compile Include="BuildItems\LCConstruction.cs" />
+    <Compile Include="BuildItems\LCProject.cs" />
     <Compile Include="EngineersReportClobberer.cs" />
     <Compile Include="GUI\GUI_NewLC.cs" />
     <Compile Include="GUI\GUI_Personnel.cs" />

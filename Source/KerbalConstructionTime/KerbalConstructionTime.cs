@@ -56,6 +56,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.ToolbarControl.OnDestroy();
                 Destroy(KCTGameStates.ToolbarControl);
             }
+            KCT_GUI.ClearTooltips();
         }
 
         internal void OnGUI()

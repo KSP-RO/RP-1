@@ -274,7 +274,7 @@ namespace KerbalConstructionTime
             return sb.ToStringAndRelease();
         }
 
-        private static Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(BuildListVessel blv)
+        private Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(BuildListVessel blv)
         {
             var dict = new Dictionary<Part, List<PartConfigValidationError>>();
 
@@ -305,19 +305,28 @@ namespace KerbalConstructionTime
 
                         if (!allSucceeded)
                         {
+                            var validationError = new PartConfigValidationError
+                            {
+                                PM = pm,
+                                Error = (string)parameters[0],
+                                CanBeResolved = (bool)parameters[1],
+                                CostToResolve = (float)parameters[2]
+                            };
+
+                            // Try to autoresolve issues that cost next to nothing
+                            if (validationError.CanBeResolved && validationError.CostToResolve <= 1.1 &&
+                                PurchaseConfig(pm))
+                            {
+                                continue;
+                            }
+
                             if (!dict.TryGetValue(part, out List<PartConfigValidationError> list))
                             {
                                 list = new List<PartConfigValidationError>(2);
                                 dict[part] = list;
                             }
 
-                            list.Add(new PartConfigValidationError
-                            {
-                                PM = pm,
-                                Error = (string)parameters[0],
-                                CanBeResolved = (bool)parameters[1],
-                                CostToResolve = (float)parameters[2]
-                            });
+                            list.Add(validationError);
                         }
                     }
                 }
@@ -348,7 +357,10 @@ namespace KerbalConstructionTime
                                      new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
                                      new DialogGUILabel(txt, expandW: true),
                                      new DialogGUIButton($"Unlock ({error.CostToResolve:N0})",
-                                                         () => { PurchaseConfig(error.PM); },
+                                                         () => {
+                                                             PurchaseConfig(error.PM);
+                                                             _validationResult = ValidationResult.Rerun;
+                                                         },
                                                          () => Funding.CanAfford(error.CostToResolve),
                                                          100, -1, true)));
                     }
@@ -369,11 +381,12 @@ namespace KerbalConstructionTime
             return list.ToArray();
         }
 
-        private void PurchaseConfig(PartModule pm)
+        private bool PurchaseConfig(PartModule pm)
         {
-            _validationResult = ValidationResult.Rerun;
             var mi = pm.GetType().GetMethod("ResolveValidationError", BindingFlags.Instance | BindingFlags.Public);
-            mi?.Invoke(pm, new object[] { });
+            object retVal = mi?.Invoke(pm, new object[] { });
+
+            return (retVal is bool b) && b;
         }
 
         private class PartConfigValidationError

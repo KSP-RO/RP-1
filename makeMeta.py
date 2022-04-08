@@ -43,7 +43,7 @@ avc = {
 		"MAJOR": "1",
 		"MINOR": "12",
 		"PATCH": "3"
-  },
+	},
 	"KSP_VERSION_MIN": {
 		"MAJOR": "1",
 		"MINOR": "12",
@@ -56,4 +56,4 @@ avc = {
 	}
 }
 with open("RP-1.version", "w") as f:
-	f.write(json.dumps(avc))
+	f.write(json.dumps(avc, indent=4))

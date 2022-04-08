@@ -1099,6 +1099,8 @@ namespace KerbalConstructionTime
         private static void _checkTime(in IKCTBuildItem item, ref double shortestTime, ref IKCTBuildItem closest)
         {
             if (item.IsComplete()) return;
+            if (item.GetBuildRate() == 0) return;
+
             double time = item.GetTimeLeft();
             if (time < shortestTime)
             {

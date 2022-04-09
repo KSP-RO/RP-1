@@ -10,7 +10,8 @@
 	"x_netkan_force_v": true,
 	"release_status" : "stable",
 	"resources": {
-		"homepage": "https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*"
+		"homepage": "https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*",
+		"manual": "https://github.com/KSP-RO/RP-0/wiki"
 	},
 	"depends" : [
 		{ "name" : "ModuleManager" },

@@ -593,7 +593,7 @@ namespace RP0.ProceduralAvionics
 
             if (!CurrentProceduralAvionicsTechNode.IsAvailable)
             {
-                validationError = $"unlock tech {ResearchAndDevelopment.GetTechnologyTitle(CurrentProceduralAvionicsTechNode.name)}";
+                validationError = $"unlock tech {CurrentProceduralAvionicsTechNode.TechNodeTitle}";
                 return false;
             }
 

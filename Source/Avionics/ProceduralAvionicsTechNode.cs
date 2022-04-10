@@ -81,14 +81,19 @@ namespace RP0.ProceduralAvionics
         [Persistent]
         public float kosECPerInstruction = 0.000001f;
 
-        public bool IsAvailable => ResearchAndDevelopment.GetTechnologyState(name) == RDTech.State.Available;
+        public string TechNodeName => name;
+
+        public string TechNodeTitle => ResearchAndDevelopment.GetTechnologyTitle(TechNodeName);
+
+        public bool IsAvailable => ResearchAndDevelopment.GetTechnologyState(TechNodeName) == RDTech.State.Available;
 
         public bool IsScienceCore => massExponent == 0 && powerExponent == 0 && costExponent == 0;
 
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            if (name == null) {
+            if (name == null)
+            {
                 name = node.GetValue("name");
             }
         }

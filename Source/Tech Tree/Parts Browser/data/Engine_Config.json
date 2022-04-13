@@ -1558,7 +1558,7 @@
         "spacecraft": "Bimodal NTR",
         "engine_config": "BNTR",
         "upgrade": false,
-        "entry_cost_mods": "400000, PEWEE100-Hydrogen",
+        "entry_cost_mods": "400000,PEWEE100-Hydrogen,TurbineReactors",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3576,7 +3576,7 @@
         "spacecraft": "",
         "engine_config": "KIWIA24",
         "upgrade": false,
-        "entry_cost_mods": "16000",
+        "entry_cost_mods": "16000,SpaceReactors",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7334,7 +7334,7 @@
         "spacecraft": "",
         "engine_config": "RD0410MID",
         "upgrade": false,
-        "entry_cost_mods": "9000",
+        "entry_cost_mods": "9000,SpaceReactors",
         "identical_part_name": "",
         "module_tags": []
     },

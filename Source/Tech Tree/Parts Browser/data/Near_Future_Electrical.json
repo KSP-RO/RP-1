@@ -16,7 +16,7 @@
         "spacecraft": "RORSAT",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "100000",
+        "entry_cost_mods": "100000,PowerReactors",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -39,7 +39,7 @@
         "spacecraft": "RORSAT",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "200000",
+        "entry_cost_mods": "200000,PowerReactors",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -85,7 +85,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "53850",
+        "entry_cost_mods": "15000,PowerReactors",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -108,7 +108,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1500000,RO-reactor-snap10a",
+        "entry_cost_mods": "300000,TurbineReactors",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"

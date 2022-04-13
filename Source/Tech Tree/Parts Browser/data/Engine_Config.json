@@ -7096,6 +7096,27 @@
         "module_tags": []
     },
     {
+        "name": "RD-0203U",
+        "title": "RD-0203U",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1967",
+        "technology": "stagedCombustion1967",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD0203",
+        "upgrade": true,
+        "entry_cost_mods": "5000,RD-0210",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RD-0205",
         "title": "RD-0205",
         "description": "",

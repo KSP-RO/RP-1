@@ -24,6 +24,7 @@ namespace RP0
         private const string LockID = "RP0ControlLocker";
         private float _maxMass, _vesselMass;
         private bool _isLimitedByNonInterplanetary;
+        private bool _isStartFinished;
 
         private const float UpdateFrequency = 1; // Default check interval
 
@@ -70,7 +71,7 @@ namespace RP0
             if (v1 && v2 && v2.loaded) v2.OnPostAutopilotUpdate += FlightInputModifier;
         }
 
-        protected void OnVesselModifiedHandler(Vessel v) => _requested = true;
+        protected void OnVesselModifiedHandler(Vessel v) => _requested = _isStartFinished;    // Other mods (looking at you B9PS!) can fire this event before everything has finished initializing. Need to ignore those until we have done our own first avionics check.
         private void OnRailsHandler(Vessel v) => _onRails = true;
         private void OffRailsHandler(Vessel v)
         {
@@ -109,6 +110,8 @@ namespace RP0
             {
                 yield return new WaitForFixedUpdate();
             } while ((FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.packed) && i++ < maxFramesWaited);
+
+            _isStartFinished = true;
 
             while (HighLogic.LoadedSceneIsFlight)
             {

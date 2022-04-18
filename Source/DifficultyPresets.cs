@@ -29,6 +29,8 @@ namespace RP0
             }
 
             Debug.Log("[RP-0] Reset difficulty presets.");
+
+            GameSettings.DELTAV_APP_ENABLED = false;
         }
     }
 

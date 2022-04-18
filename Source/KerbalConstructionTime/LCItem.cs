@@ -160,7 +160,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex ? LaunchPads[ActiveLaunchPadIndex] : null;
+        public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;
 
         public int LaunchPadCount
         {
@@ -234,10 +234,25 @@ namespace KerbalConstructionTime
 
         public void SwitchLaunchPad(int LP_ID = -1, bool updateDestrNode = true)
         {
-            if (LP_ID < 0)
-                LP_ID = ActiveLaunchPadIndex;
-            else
+            if (LP_ID >= 0)
                 ActiveLaunchPadIndex = LP_ID;
+
+            if (ActiveLPInstance == null)
+            {
+                for (ActiveLaunchPadIndex = 0; ActiveLaunchPadIndex < LaunchPads.Count; ++ActiveLaunchPadIndex)
+                {
+                    if (LaunchPads[ActiveLaunchPadIndex].isOperational)
+                    {
+                        break;
+                    }
+                }
+                // failed to find
+                if (ActiveLaunchPadIndex == LaunchPads.Count)
+                {
+                    ActiveLaunchPadIndex = 0;
+                    return;
+                }
+            }
 
             //set the active LP's new state
             //activate new pad

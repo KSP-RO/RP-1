@@ -294,12 +294,11 @@ namespace KerbalConstructionTime
             return useCap ? LC.Rate : LC.RateHRCapped;
         }
 
-        public static double GetBuildRate(LCItem LC, double mass, double BP, bool isHumanRated)
+        public static double GetBuildRate(LCItem LC, double mass, double BP, bool isHumanRated, int delta = 0)
         {
             bool useCap = LC.IsHumanRated && !isHumanRated;
             int engCap = LC.MaxEngineersFor(mass, BP, isHumanRated);
-            int delta = 0;
-            if (engCap < LC.Engineers)
+            if (engCap < LC.Engineers + delta)
                 delta = engCap - LC.Engineers;
 
             if (delta != 0)

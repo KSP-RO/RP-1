@@ -195,22 +195,54 @@ namespace KerbalConstructionTime
             if (currentLC.BuildList.Count > 0)
             {
                 BuildListVessel b = currentLC.BuildList[0];
-                int engCap = currentLC.MaxEngineersFor(b);
                 GUILayout.Label($"Current Vessel: {b.ShipName}");
+
+                int engCap = currentLC.MaxEngineersFor(b);
+                if (engCap != currentLC.MaxEngineers)
+                    GUILayout.Label($"(max of {engCap} eng.)");
+
                 int delta = assignDelta;
                 if (engCap < currentLC.Engineers + assignDelta)
                     delta = engCap - currentLC.Engineers;
                 double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, delta)
                     * efficLocal * efficGlobal;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                if (engCap != currentLC.MaxEngineers)
-                    GUILayout.Label($"(max of {engCap} eng.)");
-
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
             {
-                GUILayout.Label($"No vessels under construction at {currentLC.Name}");
+                LCProject lcp = null;
+                foreach (var r in currentLC.Recon_Rollout)
+                {
+                    if (!r.IsComplete() && (lcp == null || lcp.GetTimeLeft() < r.GetTimeLeft()))
+                        lcp = r;
+                }
+                foreach (var a in currentLC.AirlaunchPrep)
+                {
+                    if (!a.IsComplete() && (lcp == null || lcp.GetTimeLeft() < a.GetTimeLeft()))
+                        lcp = a;
+                }
+                if (lcp != null)
+                {
+                    int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.Mass, lcp.VesselBP, lcp.IsHumanRated) : int.MaxValue;
+                    GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedBLV == null ? string.Empty : lcp.AssociatedBLV.ShipName)}");
+                    
+                    int delta = assignDelta;
+                    if (engCap < currentLC.Engineers + assignDelta)
+                        delta = engCap - currentLC.Engineers;
+                    if (engCap < int.MaxValue && engCap != currentLC.MaxEngineers)
+                        GUILayout.Label($"(max of {engCap} eng.)");
+
+                    double buildRate = lcp.GetBuildRate(delta) 
+                        / (currentLC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers)
+                        * efficLocal * efficGlobal;
+                    double bpLeft = (lcp.IsReversed ? 0 : lcp.BP) - lcp.Progress;
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
+                }
+                else
+                {
+                    GUILayout.Label($"No current projects at {currentLC.Name}");
+                }
             }
             GUILayout.EndHorizontal();
 

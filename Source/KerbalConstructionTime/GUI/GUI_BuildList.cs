@@ -1324,9 +1324,9 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.FlexibleSpace();
-            string padTxt = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
-            string padDesc = $"Size limit: {activeLC.SupportedSizeAsPrettyText}";
-            GUILayout.Label(new GUIContent(padTxt, padDesc));
+            string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
+            string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
+            GUILayout.Label(new GUIContent(lcText, lcTooltip));
 
             if (GUILayout.Button(new GUIContent("Rename", "Rename Complex"), GUILayout.ExpandWidth(false)))
             {

@@ -54,6 +54,8 @@
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="EntryCostStorage.cs" />
+    <Compile Include="FirstStart.cs" />
+    <Compile Include="GameplayTips.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="UI\UIBase.cs" />
     <Compile Include="UI\UIHolder.cs" />
     <Compile Include="UI\ContractGUI.cs" />
+    <Compile Include="UI\Tooltip.cs" />
     <Compile Include="Tooling\ToolingGUI.cs" />
     <Compile Include="Avionics\AvionicsGUI.cs" />
   </ItemGroup>

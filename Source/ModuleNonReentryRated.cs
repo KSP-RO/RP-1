@@ -1,61 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using KSP;
 
 namespace RP0
 {
     public class ModuleNonReentryRated : PartModule
     {
+        public override void OnStart(StartState state)
+        {
+            if (HighLogic.LoadedSceneIsFlight)
+                RP0ThermoChanger.Instance?.RegisterPart(part);
+        }
+
         public override string GetInfo()
         {
             return "Part is not rated for reentry!";
         }
+
+        protected void OnDestroy()
+        {
+            if (HighLogic.LoadedSceneIsFlight)
+                RP0ThermoChanger.Instance?.UnregisterPart(part);
+        }
     }
 
-    [KSPAddon(KSPAddon.Startup.SpaceCentre, true)]
+    [KSPAddon(KSPAddon.Startup.FlightAndKSC, false)]
     public class RP0ThermoChanger : MonoBehaviour
     {
-        public void Start()
+        private static bool _isRegisteredWithMFI = false;
+        private static readonly List<Part> _registeredNonReentryParts = new List<Part>();
+
+        public static RP0ThermoChanger Instance { get; private set; } = null;
+
+        public void Awake()
         {
-            print("Registering RP-0 overrides with ModularFlightIntegrator");
-            ModularFI.ModularFlightIntegrator.RegisterUpdateThermodynamicsPre(UpdateThermodynamicsPre);
+            if (Instance != null)
+            {
+                Destroy(Instance);
+            }
+            Instance = this;
         }
 
-        protected static HashSet<Part> parts = new HashSet<Part>();
-        protected static Vessel lastVessel = null;
+        public void Start()
+        {
+            if (!_isRegisteredWithMFI)
+            {
+                Debug.Log("[RP-0] Registering overrides with ModularFlightIntegrator");
+                ModularFI.ModularFlightIntegrator.RegisterUpdateThermodynamicsPre(UpdateThermodynamicsPre);
+                _isRegisteredWithMFI = true;
+            }
+        }
+
+        public void Destroy()
+        {
+            _registeredNonReentryParts.Clear();
+        }
 
         public static void UpdateThermodynamicsPre(ModularFI.ModularFlightIntegrator fi)
         {
-            if (lastVessel != fi.Vessel || parts.Count != fi.partThermalDataList.Count)
+            foreach (Part part in _registeredNonReentryParts)
             {
-                parts.Clear();
-                lastVessel = fi.Vessel;
+                if (part.vessel != fi.Vessel) continue;
 
-                for (int i = fi.partThermalDataList.Count; i-- > 0;)
-                {
-                    var ptd = fi.partThermalDataList[i];
-                    var part = ptd.part;
-                    if (part.GetComponent<ModuleNonReentryRated>())
-                        parts.Add(part);
-                }
+                PartThermalData ptd = part.ptd;
+                ptd.convectionTempMultiplier = Math.Max(ptd.convectionTempMultiplier, 0.75d);
+                ptd.convectionCoeffMultiplier = Math.Max(ptd.convectionCoeffMultiplier, 0.75d);
+                ptd.convectionAreaMultiplier = Math.Max(ptd.convectionAreaMultiplier, 0.75d);
+
+                ptd.postShockExtTemp = UtilMath.LerpUnclamped(part.vessel.atmosphericTemperature, part.vessel.externalTemperature, ptd.convectionTempMultiplier);
+                ptd.finalCoeff = part.vessel.convectiveCoefficient * ptd.convectionArea * 0.001d * part.heatConvectiveConstant * ptd.convectionCoeffMultiplier;
             }
+        }
 
-            for (int i = fi.partThermalDataList.Count; i-- > 0;)
-            {
-                PartThermalData ptd = fi.partThermalDataList[i];
-                var part = ptd.part;
-                if(parts.Contains(part))
-                {
-                    ptd.convectionTempMultiplier = Math.Max(ptd.convectionTempMultiplier, 0.75d);
-                    ptd.convectionCoeffMultiplier = Math.Max(ptd.convectionCoeffMultiplier, 0.75d);
-                    ptd.convectionAreaMultiplier = Math.Max(ptd.convectionAreaMultiplier, 0.75d);
+        public void RegisterPart(Part part)
+        {
+            _registeredNonReentryParts.Add(part);
+        }
 
-                    ptd.postShockExtTemp = UtilMath.LerpUnclamped(part.vessel.atmosphericTemperature, part.vessel.externalTemperature, ptd.convectionTempMultiplier);
-                    ptd.finalCoeff = part.vessel.convectiveCoefficient * ptd.convectionArea * 0.001d * part.heatConvectiveConstant * ptd.convectionCoeffMultiplier;
-                }
-            }
+        public void UnregisterPart(Part part)
+        {
+            _registeredNonReentryParts.Remove(part);
         }
     }
 }

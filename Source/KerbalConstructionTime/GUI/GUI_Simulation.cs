@@ -18,15 +18,6 @@ namespace KerbalConstructionTime
             GUILayout.Label("This is a simulation.");
             GUILayout.Label("All progress will be lost after leaving the flight scene.");
 
-            // TODO: Disabled for now. Would require some changes to not allow building vessels with locked parts.
-            //if (!IsPrimarilyDisabled && !KCTGameStates.EditorShipEditingMode && GUILayout.Button("Build It!"))
-            //{
-            //    KCTGameStates.SimulationParams.BuildSimulatedVessel = true;
-            //    KCTDebug.Log("Ship added from simulation.");
-            //    var message = new ScreenMessage("Vessel will be added to the build queue after returning to the editor or space center", 6f, ScreenMessageStyle.UPPER_CENTER);
-            //    ScreenMessages.PostScreenMessage(message);
-            //}
-
             if (FlightDriver.CanRevertToPostInit && GUILayout.Button("Restart Simulation"))
             {
                 GUIStates.ShowSimulationGUI = false;

@@ -691,8 +691,6 @@ namespace KerbalConstructionTime
             ReconRollout rollout = KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
             ReconRollout rollback = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Rollback);
             ReconRollout recovery = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
-            GUIStyle textColor = new GUIStyle(GUI.skin.label);
-            GUIStyle buttonColor = new GUIStyle(GUI.skin.button);
 
             VesselPadStatus padStatus = VesselPadStatus.InStorage;
             if (rollback != null)
@@ -700,6 +698,7 @@ namespace KerbalConstructionTime
             if (recovery != null)
                 padStatus = VesselPadStatus.Recovering;
 
+            GUIStyle textColor = GUI.skin.label;
             string status = "In Storage";
             if (rollout != null && rollout.AssociatedID == b.Id.ToString())
             {
@@ -928,12 +927,12 @@ namespace KerbalConstructionTime
             if (!b.AllPartsValid)
                 return;
             string status = string.Empty;
-            GUIStyle textColor = new GUIStyle(GUI.skin.label);
 
             ReconRollout recovery = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
             if (recovery != null)
                 status = "Recovering";
 
+            GUIStyle textColor = GUI.skin.label;
             AirlaunchPrep airlaunchPrep = KCTGameStates.ActiveKSC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == b.Id.ToString());
             if (airlaunchPrep != null)
             {
@@ -1257,7 +1256,7 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Duplicate"))
             {
-                Utilities.TryAddVesselToBuildList(b.CreateCopy(true));
+                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true);
             }
 
             if (GUILayout.Button("Add to Plans"))

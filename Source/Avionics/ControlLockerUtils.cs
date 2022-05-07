@@ -15,9 +15,10 @@ namespace RP0
 
         private static PartResourceDefinition _electricChargeDef = null;
 
-        public static LockLevel ShouldLock(List<Part> parts, bool countClamps, out float maxMass, out float vesselMass)
+        public static LockLevel ShouldLock(List<Part> parts, bool countClamps, out float maxMass, out float vesselMass, out bool isLimitedByNonInterplanetary)
         {
             maxMass = vesselMass = 0f;
+            isLimitedByNonInterplanetary = false;
             bool forceUnlock = false;   // Defer return until maxMass and avionicsMass are fully calculated
             bool axial = false;
 
@@ -55,8 +56,7 @@ namespace RP0
                         if (ecResource > 0 || HighLogic.LoadedSceneIsEditor)
                         {
                             ModuleScienceCore mSC = m as ModuleScienceCore;
-                            if (mSC.allowAxial)
-                                axial = true;
+                            axial |= mSC.allowAxial;
                         }
                     }
                     if (m is ModuleAvionics)
@@ -66,8 +66,8 @@ namespace RP0
                         if (ecResource > 0 || HighLogic.LoadedSceneIsEditor)
                         {
                             partAvionicsMass += mA.CurrentMassLimit;
-                            if (mA.allowAxial)
-                                axial = true;
+                            axial |= mA.allowAxial;
+                            isLimitedByNonInterplanetary |= mA.IsNearEarthAndLockedByInterplanetary;
                         }
                     }
                     if (m is LaunchClamp)

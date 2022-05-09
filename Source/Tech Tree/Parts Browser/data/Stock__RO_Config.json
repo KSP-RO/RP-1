@@ -768,6 +768,29 @@
         ]
     },
     {
+        "name": "HighGainAntenna5_v2",
+        "title": "0.5 m Retractable Parabolic Antenna",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "2",
+        "entry_cost": "200",
+        "category": "COMMS",
+        "info": "Dish",
+        "year": "1962",
+        "technology": "interplanetaryComms",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    },
+    {
         "name": "IntakeRadialLong",
         "title": "Adjustable Ramp Intake (Radial)",
         "description": "This intake addresses those sometimes absurd contraptions that SSTO engineers designed in an attempt to pump more and more air into their engines. Optimized for supersonic flight.",

@@ -527,12 +527,12 @@ namespace KerbalConstructionTime
             if (!Utilities.CurrentGameIsCareer())
                 return failedReasons;
 
-            // TODO: Should we just use this.LC ? It will be correct even if we're in the editor.
-            LCItem selectedLC = Type == ListType.VAB ?
+            // Use blv's existing LC if available, else use active complex
+            LCItem selectedLC = LC != null ? LC : (Type == ListType.VAB ?
                 highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance :
                 Type == ListType.SPH ?
                     KCTGameStates.ActiveKSC.Hangar :
-                    null;
+                    null);
 
             double totalMass = GetTotalMass();
             if (totalMass > selectedLC.MassMax)

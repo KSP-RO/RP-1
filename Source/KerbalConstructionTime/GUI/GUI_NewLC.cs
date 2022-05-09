@@ -218,7 +218,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(" ");
 
-                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad);
+                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad, null, isModify ? activeLC.Engineers : 0);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
@@ -234,7 +234,7 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Est. construction time:", GUILayout.ExpandWidth(false));
-                GUILayout.Label(sBuildTime, GetLabelRightAlignStyle());
+                GUILayout.Label(new GUIContent( sBuildTime, isModify ? "With current construction engineers" : "With LC engineers as\nconstruction engineers"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
             }
 

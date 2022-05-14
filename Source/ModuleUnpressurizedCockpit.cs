@@ -16,7 +16,7 @@ namespace RP0
         [KSPField]
         public double crewDeathAltitude = 16000;
 
-        public double nextCheck = -1d;
+        public double lastCheck = -1d;
         public double timeSinceHypoxiaStarted = 0d;
         public double checkInterval = 1d;
         public double referenceDensity = -1d;
@@ -48,17 +48,18 @@ namespace RP0
             if (HighLogic.LoadedSceneIsFlight && part.CrewCapacity > 0 && (pC = part.protoModuleCrew.Count) > 0)
             {
                 double UT = KSPUtils.GetUT();
-                if (nextCheck < 0d)
-                    nextCheck = UT + checkInterval;
-                else if (UT > nextCheck)
+                if (lastCheck < 0d)
+                    lastCheck = UT;
+
+                double deltaTime = UT - lastCheck;
+                if (deltaTime > checkInterval)
                 {
                     if (!_origDoStockGCalcs.HasValue)
                     {
                         _origDoStockGCalcs = ProtoCrewMember.doStockGCalcs;
                     }
 
-                    double deltaTime = UT - nextCheck;
-                    nextCheck = UT + checkInterval;
+                    lastCheck = UT;
                     double curAltitute = part.vessel.altitude;
                     if (curAltitute > crewDeathAltitude)
                     {

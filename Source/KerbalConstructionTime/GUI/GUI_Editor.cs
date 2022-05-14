@@ -83,7 +83,7 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.EditorRolloutTime > 0)
             {
-                bR = Utilities.GetVABBuildRateSum(KCTGameStates.ActiveKSC);
+                bR = Utilities.GetBuildRateForFastestVABLine(KCTGameStates.ActiveKSC);
                 GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
             }
 
@@ -102,7 +102,7 @@ namespace KerbalConstructionTime
             }
             if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Build"))
             {
-                Utilities.AddVesselToBuildList();
+                Utilities.TryAddVesselToBuildList();
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             }
             GUILayout.EndHorizontal();
@@ -157,7 +157,7 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Save Edits"))
             {
                 _finishedShipBP = -1;
-                Utilities.SaveShipEdits(ship);
+                Utilities.TrySaveShipEdits(ship);
             }
             if (GUILayout.Button("Cancel Edits"))
             {

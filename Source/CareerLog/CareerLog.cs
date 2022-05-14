@@ -29,9 +29,11 @@ namespace RP0
 
         private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        private EventData<ProtoTechNode> onKctTechCompletedEvent;
+        private EventData<TechItem> onKctTechCompletedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
+        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionQueuedEvent;
+        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCompletedEvent;
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
         private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
         private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
@@ -46,6 +48,11 @@ namespace RP0
         private LogPeriod _currentPeriod;
 
         public static CareerLog Instance { get; private set; }
+
+        /// <summary>
+        /// Default means to get hype for career not using Headlines
+        /// </summary>
+        public static Func<double> GetHeadlinesHype = () => { return 0; };
 
         public LogPeriod CurrentPeriod
         { 
@@ -80,7 +87,7 @@ namespace RP0
 
         public void Start()
         {
-            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<ProtoTechNode>>("OnKctTechCompleted");
+            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<TechItem>>("OnKctTechCompleted");
             if (onKctTechCompletedEvent != null)
             {
                 onKctTechCompletedEvent.Add(OnKctTechCompleted);
@@ -97,6 +104,18 @@ namespace RP0
             {
                 onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
             }
+
+            onKctPadConstructionQueuedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>> ("OnKctPadConstructionQueued");
+            if (onKctPadConstructionQueuedEvent != null)
+            {
+                onKctPadConstructionQueuedEvent.Add(OnKctPadConstructionQueued);
+            }
+
+            onKctPadConstructionCompletedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionComplete");
+            if (onKctPadConstructionCompletedEvent != null)
+            {
+                onKctPadConstructionCompletedEvent.Add(OnKctPadConstructionComplete);
+            }
         }
 
         public void OnDestroy()
@@ -107,10 +126,13 @@ namespace RP0
             if (onKctTechCompletedEvent != null) onKctTechCompletedEvent.Remove(OnKctTechCompleted);
             if (onKctFacilityUpgradeQueuedEvent != null) onKctFacilityUpgradeQueuedEvent.Remove(OnKctFacilityUpgdQueued);
             if (onKctFacilityUpgradeCompletedEvent != null) onKctFacilityUpgradeCompletedEvent.Remove(OnKctFacilityUpgdComplete);
+            if (onKctPadConstructionQueuedEvent != null) onKctPadConstructionQueuedEvent.Remove(OnKctPadConstructionQueued);
+            if (onKctPadConstructionCompletedEvent != null) onKctPadConstructionCompletedEvent.Remove(OnKctPadConstructionComplete);
 
             if (_eventsBound)
             {
                 GameEvents.onVesselSituationChange.Remove(VesselSituationChange);
+                GameEvents.onCrewKilled.Remove(CrewKilled);
                 GameEvents.Modifiers.OnCurrencyModified.Remove(CurrenciesModified);
                 GameEvents.Contract.onAccepted.Remove(ContractAccepted);
                 GameEvents.Contract.onCompleted.Remove(ContractCompleted);
@@ -232,17 +254,19 @@ namespace RP0
             return _epoch.AddSeconds(ut);
         }
 
-        public void AddTechEvent(string nodeName)
+        public void AddTechEvent(TechItem tech)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             _techEvents.Add(new TechResearchEvent(KSPUtils.GetUT())
             {
-                NodeName = nodeName
+                NodeName = tech.ProtoNode.techID,
+                YearMult = tech.YearBasedRateMult,
+                ResearchRate = tech.BuildRate
             });
         }
 
-        public void AddFacilityConstructionEvent(SpaceCenterFacility facility, int newLevel, double cost, ConstructionState state)
+        public void AddFacilityConstructionEvent(SpaceCenterFacility facility, float newLevel, double cost, ConstructionState state)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
@@ -307,6 +331,8 @@ namespace RP0
                     p.EntryCosts.ToString("F0"),
                     constructionFees.ToString("F0"),
                     (p.OtherFees - constructionFees).ToString("F0"),
+                    p.Reputation.ToString("F1"),
+                    p.HeadlinesHype.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
                                                       .Select(l => l.VesselName)
                                                       .ToArray()),
@@ -325,7 +351,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -470,7 +496,10 @@ namespace RP0
                 entryCosts = logPeriod.EntryCosts,
                 constructionFees = logPeriod.OtherFees,
                 otherFees = logPeriod.OtherFees - constructionFees,
-                fundsGainMult = logPeriod.FundsGainMult
+                fundsGainMult = logPeriod.FundsGainMult,
+                numNautsKilled = logPeriod.NumNautsKilled,
+                reputation = logPeriod.Reputation,
+                headlinesHype = logPeriod.HeadlinesHype
             };
         }
 
@@ -486,6 +515,8 @@ namespace RP0
                 _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+                _prevPeriod.Reputation = Reputation.CurrentRep;
+                _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);
@@ -513,6 +544,7 @@ namespace RP0
             {
                 _eventsBound = true;
                 GameEvents.onVesselSituationChange.Add(VesselSituationChange);
+                GameEvents.onCrewKilled.Add(CrewKilled);
                 GameEvents.Modifiers.OnCurrencyModified.Add(CurrenciesModified);
                 GameEvents.Contract.onAccepted.Add(ContractAccepted);
                 GameEvents.Contract.onCompleted.Add(ContractCompleted);
@@ -677,6 +709,13 @@ namespace RP0
             }
         }
 
+        private void CrewKilled(EventReport data)
+        {
+            if (CareerEventScope.ShouldIgnore) return;
+
+            CurrentPeriod.NumNautsKilled++;
+        }
+
         private string GetContractInternalName(Contract c)
         {
             if (_mInfContractName == null)
@@ -716,11 +755,11 @@ namespace RP0
             }
         }
 
-        private void OnKctTechCompleted(ProtoTechNode data)
+        private void OnKctTechCompleted(TechItem tech)
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            AddTechEvent(data.techID);
+            AddTechEvent(tech);
         }
 
         private void OnKctFacilityUpgdQueued(FacilityUpgrade data)
@@ -735,6 +774,20 @@ namespace RP0
             if (CareerEventScope.ShouldIgnore || !data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
 
             AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Completed);
+        }
+
+        private void OnKctPadConstructionQueued(PadConstruction data, KCT_LaunchPad lp)
+        {
+            if (CareerEventScope.ShouldIgnore) return;
+
+            AddFacilityConstructionEvent(SpaceCenterFacility.LaunchPad, lp.fractionalLevel, data.Cost, ConstructionState.Started);
+        }
+
+        private void OnKctPadConstructionComplete(PadConstruction data, KCT_LaunchPad lp)
+        {
+            if (CareerEventScope.ShouldIgnore) return;
+
+            AddFacilityConstructionEvent(SpaceCenterFacility.LaunchPad, lp.fractionalLevel, data.Cost, ConstructionState.Completed);
         }
     }
 }

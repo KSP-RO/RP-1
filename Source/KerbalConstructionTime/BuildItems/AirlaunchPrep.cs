@@ -40,7 +40,7 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate()
         {
-            double buildRate = Utilities.GetSPHBuildRateSum(KSC);
+            double buildRate = Utilities.GetBuildRateForFastestSPHLine(KSC);
 
             if (Direction == PrepDirection.Unmount)
                 buildRate *= -1;
@@ -52,9 +52,11 @@ namespace KerbalConstructionTime
 
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.SPH;
 
+        public double GetFractionComplete() => Direction == PrepDirection.Mount ? Progress / BP : (BP - Progress) / BP;
+
         public double GetTimeLeft()
         {
-            var goal = Direction == PrepDirection.Mount ? BP : 0;
+            double goal = Direction == PrepDirection.Mount ? BP : 0;
             return (goal - Progress) / GetBuildRate();
         }
 

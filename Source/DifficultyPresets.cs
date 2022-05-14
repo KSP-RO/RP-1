@@ -15,7 +15,7 @@ namespace RP0
 
             if (paramsNode == null)
             {
-                Debug.LogError("[RP-0]: Could not find GAMEPARAMETERS node.");
+                Debug.LogError("[RP-0] Could not find GAMEPARAMETERS node.");
                 return;
             }
 
@@ -28,7 +28,10 @@ namespace RP0
                     kvp.Value.Load(n);
             }
 
-            Debug.Log("[RP-0]: Reset difficulty presets.");
+            Debug.Log("[RP-0] Reset difficulty presets.");
+
+            GameSettings.DELTAV_APP_ENABLED = false;
+            GameSettings.DELTAV_CALCULATIONS_ENABLED = false;
         }
     }
 
@@ -66,7 +69,7 @@ namespace RP0
         public bool CareerLogEnabled = true;
 
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
-        public bool avionicsUseKerbalism = true;
+        public bool AvionicsUseKerbalism = false;
 
         [GameParameters.CustomParameterUI("Avionics Units Stack", toolTip = "When enabled, multiple avionics units stack their controllable mass.")]
         public bool IsAvionicsStackable = true;
@@ -78,6 +81,9 @@ namespace RP0
         public int CommsPayload = ContractGUI.MinPayload;
         public int WeatherPayload = ContractGUI.MinPayload;
 
+        public bool AirlaunchTipShown = false;
+        public bool NeverShowToolingReminders = false;
+        public bool Avionics_InterplanetaryWarningShown = false;
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;
         public bool AvionicsWindow_ShowInfo3 = true;

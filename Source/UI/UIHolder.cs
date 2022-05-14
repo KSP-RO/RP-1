@@ -28,6 +28,8 @@ namespace RP0
         {
             _tw = new TopWindow();
             _tw.Start();
+
+            Tooltip.RecreateInstance();    // Need to make sure that a new Tooltip instance is created after every scene change
         }
 
         protected void OnDestroy()

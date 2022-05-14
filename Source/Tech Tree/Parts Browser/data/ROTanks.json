@@ -282,6 +282,71 @@
         "module_tags": []
     },
     {
+        "name": "ROT-KatnissTank-Balloon",
+        "title": "Katniss Modular Tank (Balloon)",
+        "description": "",
+        "mod": "ROTanks",
+        "cost": "0",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "1957",
+        "technology": "materialsScienceSatellite",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "BalloonTanks-SatMat",
+        "identical_part_name": "",
+        "module_tags": [
+            "TankBalloon"
+        ]
+    },
+    {
+        "name": "ROT-KatnissTank-Integral",
+        "title": "Katniss Modular Tank (Integral)",
+        "description": "",
+        "mod": "ROTanks",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "1957",
+        "technology": "materialsScienceSatellite",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Aluminum, Isogrids",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "ROT-KatnissTank-Separate",
+        "title": "Katniss Modular Tank (Conventional Structure)",
+        "description": "",
+        "mod": "ROTanks",
+        "cost": "1",
+        "entry_cost": "1",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "1957",
+        "technology": "materialsScienceSatellite",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "ROT-LanderTank-Integral",
         "title": "Modular Lander Tank (Integral)",
         "description": "",
@@ -325,7 +390,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankServiceModule"
+        ]
     },
     {
         "name": "ROT-LanderTank-Separate",
@@ -535,7 +602,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankServiceModule"
+        ]
     },
     {
         "name": "ROT-SphericalTank",

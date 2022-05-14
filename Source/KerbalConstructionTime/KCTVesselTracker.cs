@@ -143,6 +143,7 @@ namespace KerbalConstructionTime
         /// <summary>
         /// Removes all entries from the dictionary where no corresponding part with the same launchId is found on the vessel.
         /// After the cleaning process, dictionary will be assigned to vesselModule.
+        /// Will also make sure that the new vessel that was created during undocking will get correct data assigned to it.
         /// </summary>
         /// <param name="vm">Tracking VesselModule</param>
         /// <param name="dict">Docking history dictionary to clean and assign to vm</param>
@@ -157,6 +158,15 @@ namespace KerbalConstructionTime
                 {
                     dict.Remove(launchId);
                 }
+            }
+
+            // Need to fill the vessel data for the new vessel that was just created during undocking.
+            // Interestingly, OnPartDeCoupleNewVesselComplete doesn't get called for undocking.
+            if (!vm.Data.IsInitialized && dict.TryGetValue(rootPartLaunchId, out KCTVesselData data))
+            {
+                vm.Data.FacilityBuiltIn = data.FacilityBuiltIn;
+                vm.Data.LaunchID = data.LaunchID;
+                vm.Data.VesselID = data.VesselID;
             }
 
             if (dict.Count == 1) dict = null;    // Only has data for the current vessel so no need to keep history

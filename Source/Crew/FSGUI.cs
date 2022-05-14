@@ -177,7 +177,8 @@ namespace RP0.Crew
                 foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses)
                 {
                     var style = course.isTemporary ? _courseBtnStyle : HighLogic.Skin.button;
-                    if (GUILayout.Button(course.name, style))
+                    var c = new GUIContent(course.name, course.PartsTooltip);
+                    if (GUILayout.Button(c, style))
                         _selectedCourse = new ActiveCourse(course);
                 }
             }

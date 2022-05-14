@@ -1,146 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using KSP.UI;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace RP0
 {
-    public class ControlLockerUtils
-    {
-        public enum LockLevel
-        {
-            LOCKED,
-            AXIAL,
-            UNLOCKED
-        }
-
-        private static PartResourceDefinition electricChargeDef = null;
-        public static LockLevel ShouldLock(List<Part> parts, bool countClamps, out float maxMass, out float vesselMass)
-        {
-            maxMass = vesselMass = 0f;
-            bool forceUnlock = false;   // Defer return until maxMass and avionicsMass are fully calculated
-            bool axial = false;
-
-            if (parts == null || parts.Count <= 0)
-                return LockLevel.UNLOCKED;
-            if (!HighLogic.LoadedSceneIsFlight && !HighLogic.LoadedSceneIsEditor) return LockLevel.UNLOCKED;
-
-            int crewCount = (HighLogic.LoadedSceneIsFlight) ? parts[0].vessel.GetCrewCount() : CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
-            electricChargeDef ??= PartResourceLibrary.Instance.GetDefinition("ElectricCharge");
-
-            foreach (Part p in parts)
-            {
-                // add up mass
-                float partMass = p.mass + p.GetResourceMass();
-
-                // get modules
-                bool cmd = false, science = false, avionics = false, clamp = false;
-                float partAvionicsMass = 0f;
-                double ecResource = 0;
-                ModuleCommand mC = null;
-                foreach (PartModule m in p.Modules)
-                {
-                    if (m is KerbalEVA)
-                        forceUnlock = true;
-                    if (m is ModuleCommand || m is ModuleAvionics)
-                        p.GetConnectedResourceTotals(electricChargeDef.id, out ecResource, out double _);
-                    if (m is ModuleCommand && (ecResource > 0 || HighLogic.LoadedSceneIsEditor))
-                    {
-                        cmd = true;
-                        mC = m as ModuleCommand;
-                    }
-                    if (m is ModuleScienceCore)
-                    {
-                        science = true;
-                        if (ecResource > 0 || HighLogic.LoadedSceneIsEditor)
-                        {
-                            ModuleScienceCore mSC = m as ModuleScienceCore;
-                            if (mSC.allowAxial)
-                                axial = true;
-                        }
-                    }
-                    if (m is ModuleAvionics)
-                    {
-                        avionics = true;
-                        ModuleAvionics mA = m as ModuleAvionics;
-                        if (ecResource > 0 || HighLogic.LoadedSceneIsEditor)
-                        {
-                            partAvionicsMass += mA.CurrentMassLimit;
-                            if (mA.allowAxial)
-                                axial = true;
-                        }
-                    }
-                    if (m is LaunchClamp)
-                    {
-                        clamp = true;
-                        partMass = 0f;
-                    }
-                    if (m is ModuleAvionicsModifier)
-                    {
-                        partMass *= (m as ModuleAvionicsModifier).multiplier;
-                    }
-                }
-                vesselMass += partMass; // done after the clamp check
-
-                // Do we have an unencumbered command module?
-                // if we count clamps, they can give control. If we don't, this works only if the part isn't a clamp.
-                if ((countClamps || !clamp) && cmd && !science && !avionics)
-                    forceUnlock = true;
-                if (cmd && avionics && mC.minimumCrew > crewCount) // check if need crew
-                    avionics = false; // not operational
-                if (avionics)
-                    maxMass = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsAvionicsStackable ? maxMass + partAvionicsMass : Math.Max(maxMass, partAvionicsMass);
-            }
-
-            if (!forceUnlock && vesselMass > maxMass)  // Lock if vessel mass is greater than controlled mass.
-                return axial ? LockLevel.AXIAL : LockLevel.LOCKED;
-
-            return LockLevel.UNLOCKED;
-        }
-    }
-
     /// <summary>
     /// This class will lock controls if and only if avionics requirements exist and are not met
     /// </summary>
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     class ControlLocker : MonoBehaviour
     {
-        public Vessel vessel = null;
-        private ControlLockerUtils.LockLevel oldLockLevel = ControlLockerUtils.LockLevel.UNLOCKED;
-        private bool requested = false;
-        private bool onRails = false;
-        private ControlLockerUtils.LockLevel cachedLockResult = ControlLockerUtils.LockLevel.UNLOCKED;
-        private const ControlTypes lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS | 
-                                              ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
-        private const string lockID = "RP0ControlLocker";
-        private float maxMass, vesselMass;
-
-        private const float updateFrequency = 1; // Default check interval
-
-        private readonly ScreenMessage message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
         internal const string ModTag = "[RP-1 ControlLocker]";
+        private const ControlTypes Lockmask = ControlTypes.YAW | ControlTypes.PITCH | ControlTypes.ROLL | ControlTypes.SAS |
+                                              ControlTypes.THROTTLE | ControlTypes.WHEEL_STEER | ControlTypes.WHEEL_THROTTLE;
+
+        public Vessel Vessel = null;
+        private ControlLockerUtils.LockLevel _oldLockLevel = ControlLockerUtils.LockLevel.Unlocked;
+        private bool _requested = false;
+        private bool _onRails = false;
+        private ControlLockerUtils.LockLevel _cachedLockResult = ControlLockerUtils.LockLevel.Unlocked;
+        private const string LockID = "RP0ControlLocker";
+        private float _maxMass, _vesselMass;
+        private bool _isLimitedByNonInterplanetary;
+        private bool _isStartFinished;
+
+        private const float UpdateFrequency = 1; // Default check interval
+
+        private readonly ScreenMessage _message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
         // For locking MJ.
-        private static bool isFirstLoad = true;
-        private static MethodInfo getMasterMechJeb = null;
-        private static PropertyInfo mjDeactivateControl = null;
-        private object masterMechJeb = null;
+        private static bool _isFirstLoad = true;
+        private static MethodInfo _getMasterMechJeb = null;
+        private static PropertyInfo _mjDeactivateControl = null;
+        private object _masterMechJeb = null;
 
         private void Awake()
         {
-            if (!isFirstLoad) return;
-            isFirstLoad = false;
+            if (!_isFirstLoad) return;
+            _isFirstLoad = false;
 
             if (AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2") is var mechJebAssembly &&
                Type.GetType("MuMech.MechJebCore, MechJeb2") is Type mechJebCore &&
                Type.GetType("MuMech.VesselExtensions, MechJeb2") is Type mechJebVesselExtensions)
             {
-                mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
-                getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
+                _mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
+                _getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
             }
-            if (mjDeactivateControl != null && getMasterMechJeb != null)
+            if (_mjDeactivateControl != null && _getMasterMechJeb != null)
                 Debug.Log($"{ModTag} MechJeb methods found");
             else
                 Debug.Log($"{ModTag} MJ assembly or methods NOT found");
@@ -152,8 +60,8 @@ namespace RP0
             GameEvents.onVesselSwitching.Add(OnVesselSwitchingHandler);
             GameEvents.onVesselGoOnRails.Add(OnRailsHandler);
             GameEvents.onVesselGoOffRails.Add(OffRailsHandler);
-            vessel = FlightGlobals.ActiveVessel;
-            if (vessel && vessel.loaded) vessel.OnPostAutopilotUpdate += FlightInputModifier;
+            Vessel = FlightGlobals.ActiveVessel;
+            if (Vessel && Vessel.loaded) Vessel.OnPostAutopilotUpdate += FlightInputModifier;
             StartCoroutine(CheckLockCR());
         }
 
@@ -163,43 +71,52 @@ namespace RP0
             if (v1 && v2 && v2.loaded) v2.OnPostAutopilotUpdate += FlightInputModifier;
         }
 
-        protected void OnVesselModifiedHandler(Vessel v) => requested = true;
-        private void OnRailsHandler(Vessel v) => onRails = true;
+        protected void OnVesselModifiedHandler(Vessel v) => _requested = _isStartFinished;    // Other mods (looking at you B9PS!) can fire this event before everything has finished initializing. Need to ignore those until we have done our own first avionics check.
+        private void OnRailsHandler(Vessel v) => _onRails = true;
         private void OffRailsHandler(Vessel v)
         {
-            onRails = false;
-            if (!CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(vessel.Parts, true, out float _, out float _) != ControlLockerUtils.LockLevel.UNLOCKED)
+            _onRails = false;
+            if (!CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _, out _, out _) != ControlLockerUtils.LockLevel.Unlocked)
                 DisableAutopilot();
         }
 
         void FlightInputModifier(FlightCtrlState state)
         {
-            if (oldLockLevel != ControlLockerUtils.LockLevel.UNLOCKED)
+            if (_oldLockLevel != ControlLockerUtils.LockLevel.Unlocked)
             {
-                state.X = state.Y = 0;                      // Disable X/Y translation
-                if (oldLockLevel == ControlLockerUtils.LockLevel.LOCKED)                              // Allow Z(fwd/ reverse) only if science core allows it
+                state.X = state.Y = 0;                                      // Disable X/Y translation
+                if (_oldLockLevel == ControlLockerUtils.LockLevel.Locked)   // Allow Z(fwd/ reverse) only if science core allows it
                     state.Z = 0;
-                state.yaw = state.pitch = state.roll = 0;   // Disable roll control
+                state.yaw = state.pitch = state.roll = 0;                   // Disable roll control
             }
         }
 
         public ControlLockerUtils.LockLevel ShouldLock()
         {
             // if we have no active vessel, undo locks
-            if (vessel is null)
-                return cachedLockResult = ControlLockerUtils.LockLevel.UNLOCKED;
-            if (requested)
-                cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.UNLOCKED : ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
-            requested = false;
-            return cachedLockResult;
+            if (Vessel is null)
+                return _cachedLockResult = ControlLockerUtils.LockLevel.Unlocked;
+            if (_requested)
+                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass, out _isLimitedByNonInterplanetary);
+            _requested = false;
+            return _cachedLockResult;
         }
 
-        private System.Collections.IEnumerator CheckLockCR()
+        private IEnumerator CheckLockCR()
         {
+            const int maxFramesWaited = 250;
+            int i = 0;
+            do
+            {
+                yield return new WaitForFixedUpdate();
+            } while ((FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.packed) && i++ < maxFramesWaited);
+
+            _isStartFinished = true;
+
             while (HighLogic.LoadedSceneIsFlight)
             {
-                yield return new WaitForSeconds(updateFrequency);
-                cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.UNLOCKED : ControlLockerUtils.ShouldLock(vessel.Parts, true, out maxMass, out vesselMass);
+                yield return new WaitForSeconds(UpdateFrequency);
+                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass, out _isLimitedByNonInterplanetary);
             }
         }
 
@@ -207,48 +124,53 @@ namespace RP0
         {
             if (!HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready)
             {
-                InputLockManager.RemoveControlLock(lockID);
+                InputLockManager.RemoveControlLock(LockID);
                 return;
             }
-            if (vessel != FlightGlobals.ActiveVessel)
+            if (Vessel != FlightGlobals.ActiveVessel)
             {
-                vessel = FlightGlobals.ActiveVessel;
-                masterMechJeb = null;
+                Vessel = FlightGlobals.ActiveVessel;
+                _masterMechJeb = null;
             }
+
             ControlLockerUtils.LockLevel lockLevel = ShouldLock();
-            if (lockLevel != oldLockLevel)
+
+            if (_isLimitedByNonInterplanetary)
+                GameplayTips.Instance.ShowInterplanetaryAvionicsReminder();
+
+            if (lockLevel != _oldLockLevel)
             {
-                if (oldLockLevel != ControlLockerUtils.LockLevel.UNLOCKED)
+                if (_oldLockLevel != ControlLockerUtils.LockLevel.Unlocked)
                 {
-                    InputLockManager.RemoveControlLock(lockID);
-                    message.message = "Avionics: Unlocking Controls";
+                    InputLockManager.RemoveControlLock(LockID);
+                    _message.message = "Avionics: Unlocking Controls";
                 }
                 else
                 {
-                    InputLockManager.SetControlLock(lockmask, lockID);
-                    if (!onRails) 
+                    InputLockManager.SetControlLock(Lockmask, LockID);
+                    if (!_onRails) 
                         DisableAutopilot();
-                    message.message = $"Insufficient Avionics, Locking Controls (supports {maxMass:N3}t, vessel {vesselMass:N3}t)";
+                    _message.message = $"Insufficient Avionics, Locking Controls (supports {_maxMass:N3}t, vessel {_vesselMass:N3}t)";
                 }
-                ScreenMessages.PostScreenMessage(message);
-                FlightLogger.fetch.LogEvent(message.message);
-                oldLockLevel = lockLevel;
+                ScreenMessages.PostScreenMessage(_message);
+                FlightLogger.fetch.LogEvent(_message.message);
+                _oldLockLevel = lockLevel;
             }
 
-            if (masterMechJeb == null && getMasterMechJeb != null)
+            if (_masterMechJeb == null && _getMasterMechJeb != null)
             {
-                masterMechJeb = getMasterMechJeb.Invoke(null, new object[] { FlightGlobals.ActiveVessel });
+                _masterMechJeb = _getMasterMechJeb.Invoke(null, new object[] { FlightGlobals.ActiveVessel });
             }
-            if (masterMechJeb != null && mjDeactivateControl != null)
+            if (_masterMechJeb != null && _mjDeactivateControl != null)
             {
                 // Update MJ every tick, to make sure it gets correct state after separation / docking.
-                mjDeactivateControl.SetValue(masterMechJeb, lockLevel != ControlLockerUtils.LockLevel.UNLOCKED, index: null);
+                _mjDeactivateControl.SetValue(_masterMechJeb, lockLevel != ControlLockerUtils.LockLevel.Unlocked, index: null);
             }
         }
 
         public void OnDestroy()
         {
-            InputLockManager.RemoveControlLock(lockID);
+            InputLockManager.RemoveControlLock(LockID);
             GameEvents.onVesselWasModified.Remove(OnVesselModifiedHandler);
             GameEvents.onVesselSwitching.Remove(OnVesselSwitchingHandler);
             GameEvents.onVesselGoOnRails.Remove(OnRailsHandler);
@@ -257,8 +179,8 @@ namespace RP0
 
         private void DisableAutopilot()
         {
-            vessel.Autopilot.Disable();
-            vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, false);
+            Vessel.Autopilot.Disable();
+            Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, false);
         }
     }
 }

@@ -14,10 +14,13 @@ namespace KerbalConstructionTime
         public bool CreatedEvents { get; private set; }
         public bool KCTButtonStockImportant { get; set; }
 
+        public static EventData<BuildListVessel> OnVesselAddedToBuildQueue;
         public static EventData<RDTech> OnTechQueued;
-        public static EventData<ProtoTechNode> OnTechCompleted;
+        public static EventData<TechItem> OnTechCompleted;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeQueued;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeComplete;
+        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionQueued;
+        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
 
 
         public KCTEvents()
@@ -86,15 +89,18 @@ namespace KerbalConstructionTime
         private void OnEditorStarted()
         {
             Utilities.HandleEditorButton();
-            KerbalConstructionTime.Instance.EditorStarted();
+            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
         }
 
         public void CreateEvents()
         {
+            OnVesselAddedToBuildQueue = new EventData<BuildListVessel>("OnKctVesselAddedToBuildQueue");
             OnTechQueued = new EventData<RDTech>("OnKctTechQueued");
-            OnTechCompleted = new EventData<ProtoTechNode>("OnKctTechCompleted");
+            OnTechCompleted = new EventData<TechItem>("OnKctTechCompleted");
             OnFacilityUpgradeQueued = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeQueued");
             OnFacilityUpgradeComplete = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeComplete");
+            OnPadConstructionQueued = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionQueued");
+            OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
             CreatedEvents = true;
         }
 
@@ -123,23 +129,9 @@ namespace KerbalConstructionTime
 
         public void FacilityUpgradedEvent(Upgradeables.UpgradeableFacility facility, int lvl)
         {
-            if (KCT_GUI.IsPrimarilyDisabled)
-            {
-                bool isLaunchpad = facility.id.ToLower().Contains("launchpad");
-                if (!isLaunchpad)
-                    return;
-
-                KCTGameStates.ActiveKSC.ActiveLPInstance.Upgrade(lvl);
-            }
+            if (KCT_GUI.IsPrimarilyDisabled) return;
 
             KCTDebug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
-            if (facility.id.ToLower().Contains("launchpad"))
-            {
-                if (!AllowedToUpgrade)
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.Upgrade(lvl);    //also repairs the launchpad
-                else
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.level = lvl;
-            }
             AllowedToUpgrade = false;
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
@@ -217,40 +209,40 @@ namespace KerbalConstructionTime
         private void ShipModifiedEvent(ShipConstruct vessel)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.StartEngineersReportClobberCoroutine();
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void PartListEvent()
         {
-            KerbalConstructionTime.Instance.StartEngineersReportClobberCoroutine();
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void CrewDialogChange(VesselCrewManifest vcm)
         {
-            KerbalConstructionTime.Instance.StartEngineersReportClobberCoroutine();
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void EngineersReportReady()
         {
-            KerbalConstructionTime.Instance.BindToEngineersReport();
+            KerbalConstructionTime.Instance.ERClobberer.BindToEngineersReport();
         }
 
         private void StageCountChangedEvent(int num)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.StartEngineersReportClobberCoroutine();
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void StagingOrderChangedEvent()
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.StartEngineersReportClobberCoroutine();
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void PartStageabilityChangedEvent(Part p)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.StartEngineersReportClobberCoroutine();
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         public void PartPurchasedEvent(AvailablePart part)

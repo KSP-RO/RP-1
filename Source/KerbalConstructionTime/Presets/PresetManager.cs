@@ -220,6 +220,7 @@ namespace KerbalConstructionTime
             ConfigNode.LoadObjectFromConfig(GeneralSettings, Source.GeneralSettings.AsConfigNode());
             ConfigNode.LoadObjectFromConfig(TimeSettings, Source.TimeSettings.AsConfigNode());
             ConfigNode.LoadObjectFromConfig(FormulaSettings, Source.FormulaSettings.AsConfigNode());
+            FormulaSettings.YearBasedRateMult = Source.FormulaSettings.YearBasedRateMult;
             PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
@@ -239,7 +240,15 @@ namespace KerbalConstructionTime
 
             node.AddNode(GeneralSettings.AsConfigNode());
             node.AddNode(TimeSettings.AsConfigNode());
-            node.AddNode(FormulaSettings.AsConfigNode());
+
+            ConfigNode fNode = FormulaSettings.AsConfigNode();
+            if (FormulaSettings.YearBasedRateMult != null)
+            {
+                ConfigNode rateNode = fNode.AddNode("YearBasedRateMult");
+                FormulaSettings.YearBasedRateMult.Save(rateNode);
+            }
+            node.AddNode(fNode);
+
             node.AddNode(PartVariables.AsConfigNode());
             return node;
         }
@@ -259,7 +268,17 @@ namespace KerbalConstructionTime
 
             ConfigNode.LoadObjectFromConfig(GeneralSettings, node.GetNode("KCT_Preset_General"));
             ConfigNode.LoadObjectFromConfig(TimeSettings, node.GetNode("KCT_Preset_Time"));
-            ConfigNode.LoadObjectFromConfig(FormulaSettings, node.GetNode("KCT_Preset_Formula"));
+
+            ConfigNode fNode = node.GetNode("KCT_Preset_Formula");
+            ConfigNode.LoadObjectFromConfig(FormulaSettings, fNode);
+            if (fNode.HasNode("YearBasedRateMult"))
+            {
+                var fc = new FloatCurve();
+                var rateNode = fNode.GetNode("YearBasedRateMult");
+                fc.Load(rateNode);
+                FormulaSettings.YearBasedRateMult = fc;
+            }
+
             if (node.HasNode("KCT_Preset_Part_Variables"))
                 PartVariables.FromConfigNode(node.GetNode("KCT_Preset_Part_Variables"));
         }
@@ -289,12 +308,14 @@ namespace KerbalConstructionTime
     {
         [Persistent]
         public bool Enabled = true, BuildTimes = true, ReconditioningTimes = true, ReconditioningBlocksPad = false, TechUnlockTimes = true, KSCUpgradeTimes = true,
-            TechUpgrades = true, SharedUpgradePool = false, DisableLPUpgrades = false, CommonBuildLine = false;
+            TechUpgrades = true, SharedUpgradePool = false, CommonBuildLine = false;
         [Persistent]
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
             VABRecoveryTech = null;
         [Persistent]
         public int MaxRushClicks = 0;
+        [Persistent]
+        public float PadUnlimitedTonnageThreshold = 3500;
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage
@@ -325,7 +346,10 @@ namespace KerbalConstructionTime
             RushCostFormula = "[TC]*0.2",
             AirlaunchCostFormula = "[E]*0.25",
             AirlaunchTimeFormula = "[BP]*0.25",
-            EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))"; //[RT]=Runtime of used engine
+            EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))";    //[RT]=Runtime of used engine
+
+        [Persistent]
+        public FloatCurve YearBasedRateMult = null;
     }
 
     public class KCT_Preset_Part_Variables

@@ -55,19 +55,43 @@ namespace RP0
         protected virtual bool GetToggleable() => toggleable;
         internal bool TechAvailable => string.IsNullOrEmpty(techRequired) || HighLogic.CurrentGame == null || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX || ResearchAndDevelopment.GetTechnologyState(techRequired) == RDTech.State.Available;
 
-        // returns current limit, based on enabled/disabled
+        /// <summary>
+        /// Returns current limit, based on enabled/disabled.
+        /// Will be 0 if avionics is locked.
+        /// </summary>
         public float CurrentMassLimit
         {
             get
             {
-                if (currentlyEnabled && TechAvailable
-                    && (interplanetary || part.vessel == null || part.vessel.mainBody == null 
-                        || (part.vessel.mainBody.isHomeWorld && part.vessel.altitude < part.vessel.mainBody.scienceValues.spaceAltitudeThreshold * 2)))  // *2, so resonant satellite orbits can still be used
+                if (currentlyEnabled && TechAvailable && !IsLockedByInterplanetary)
                     return GetInternalMassLimit();
                 else
                     return 0f;
             }
         }
+
+        /// <summary>
+        /// Whether the control is locked because the avionics is non-interplanetary and the vessel is beyond what we consider near Earth orbit.
+        /// </summary>
+        public bool IsLockedByInterplanetary
+        {
+            get
+            {
+                return !interplanetary && part?.vessel != null &&
+                    (!part.vessel.mainBody.isHomeWorld || part.vessel.altitude > InterplanetaryAltitudeThreshold);
+            }
+        }
+
+        /// <summary>
+        /// Whether the avionics is NE with controllable mass > 0 and control is being locked by being interplanetary.
+        /// </summary>
+        public bool IsNearEarthAndLockedByInterplanetary => GetInternalMassLimit() > 0 && IsLockedByInterplanetary;
+
+        /// <summary>
+        /// The altitude threshold around home world above which interplanetary avionics is required.
+        /// </summary>
+        public static float InterplanetaryAltitudeThreshold => Planetarium.fetch.Home.scienceValues.spaceAltitudeThreshold * 2;  // *2, so resonant satellite orbits can still be used
+        
         #endregion
 
         protected void InitializeResourceRate()
@@ -175,7 +199,7 @@ namespace RP0
 
         private void OnSettingsApplied()
         {
-            useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().avionicsUseKerbalism;
+            useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().AvionicsUseKerbalism;
             UpdateRate(onRailsCached);
         }
         private void OnShipModified(ShipConstruct _) => UpdateRate(onRailsCached);

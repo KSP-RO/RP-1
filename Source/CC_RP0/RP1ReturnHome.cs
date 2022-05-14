@@ -67,8 +67,6 @@ namespace ContractConfigurator.RP0
         /// <returns>Whether the vessel meets the condition</returns>
         protected override bool VesselMeetsCondition(Vessel vessel)
         {
-            Debug.Log("[RP1ReturnHome] " + vessel.landedAt);
-
             return vessel.mainBody.isHomeWorld &&
                 (vessel.situation == Vessel.Situations.LANDED || vessel.situation == Vessel.Situations.SPLASHED) &&
                 vessel.srfSpeed < maxSpeed &&

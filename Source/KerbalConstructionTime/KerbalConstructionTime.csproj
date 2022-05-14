@@ -100,6 +100,10 @@
   <ItemGroup>
     <Compile Include="AirlaunchParams.cs" />
     <Compile Include="AirlaunchTechLevel.cs" />
+    <Compile Include="EngineersReportClobberer.cs" />
+    <Compile Include="PartCrewAssignment.cs" />
+    <Compile Include="BuildItems\PadConstruction.cs" />
+    <Compile Include="GUI\DialogGUIButtonWithTooltip.cs" />
     <Compile Include="GUI\GUI_Tooltip.cs" />
     <Compile Include="GUI\GUIStates.cs" />
     <Compile Include="GUI\GUI_Airlaunch.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
     <Compile Include="KCTCostModifier.cs" />
+    <Compile Include="KCTTechNodePeriod.cs" />
     <Compile Include="ModIntegrations\CTIWrapper.cs" />
     <Compile Include="ModuleTagList.cs" />
     <Compile Include="Persistence\AirlaunchPrepStorageItem.cs" />
@@ -122,6 +127,7 @@
     <Compile Include="Persistence\FacilityUpgradeStorageItem.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\KCTVesselData.cs" />
+    <Compile Include="Persistence\PadConstructionStorageItem.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
     <Compile Include="KCTObservableList.cs" />
     <Compile Include="SceneAddons\MainMenuAddon.cs" />
@@ -167,6 +173,7 @@
     <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="KCTVesselTracker.cs" />
+    <Compile Include="VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

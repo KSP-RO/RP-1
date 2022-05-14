@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Profiling;
 using KCTUtils = KerbalConstructionTime.Utilities;
 
 namespace RP0.Crew
@@ -38,7 +39,7 @@ namespace RP0.Crew
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
         private HashSet<string> _retirees = new HashSet<string>();
-        private HashSet<string> _partSynsHandled = new HashSet<string>();
+        private Dictionary<string, Tuple<CourseTemplate, CourseTemplate>> _partSynsHandled = new Dictionary<string, Tuple<CourseTemplate, CourseTemplate>>();
         private List<TrainingExpiration> _expireTimes = new List<TrainingExpiration>();
         private bool _isFirstLoad = true;    // true if it's a freshly started career
         private bool _inAC = false;
@@ -79,7 +80,7 @@ namespace RP0.Crew
             onKctTechQueuedEvent = GameEvents.FindEvent<EventData<RDTech>>("OnKctTechQueued");
             if (onKctTechQueuedEvent != null)
             {
-                onKctTechQueuedEvent.Add(AddCoursesForTechNode);
+                onKctTechQueuedEvent.Add(AddCoursesForQueuedTechNode);
             }
 
             if (CurrentSceneAllowsCrewManagement) StartCoroutine(CreateUnderResearchCoursesRoutine());
@@ -231,7 +232,7 @@ namespace RP0.Crew
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
 
-            if (onKctTechQueuedEvent != null) onKctTechQueuedEvent.Remove(AddCoursesForTechNode);
+            if (onKctTechQueuedEvent != null) onKctTechQueuedEvent.Remove(AddCoursesForQueuedTechNode);
         }
 
         public void AddExpiration(TrainingExpiration e)
@@ -239,34 +240,46 @@ namespace RP0.Crew
             _expireTimes.Add(e);
         }
 
-        public void AddCoursesForTechNode(RDTech tech)
+        public void AddCoursesForQueuedTechNode(RDTech tech)
         {
             for (int i = 0; i < tech.partsAssigned.Count; i++)
             {
                 AvailablePart ap = tech.partsAssigned[i];
-                if (ap.partPrefab.CrewCapacity > 0)
+                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0)
                 {
-                    AddPartCourses(ap);
+                    // KSP thinks that the node is actually unlocked at this point. Use a flag to indicate that KCT will override it later on.
+                    AddPartCourses(ap, isKCTExperimentalNode: true);
                 }
             }
         }
 
-        public void AddPartCourses(AvailablePart ap)
+        public void AddPartCourses(AvailablePart ap, bool isKCTExperimentalNode = false)
         {
-            if (ap.partPrefab.isVesselEVA || ap.partPrefab.Modules.Contains<KerbalSeat>() ||
+            if (ap.partPrefab.isVesselEVA || ap.name.StartsWith("kerbalEVA", StringComparison.OrdinalIgnoreCase) ||
+                ap.partPrefab.Modules.Contains<KerbalSeat>() ||
                 ap.partPrefab.Modules.Contains<LaunchClamp>() || ap.partPrefab.HasTag("PadInfrastructure")) return;
 
             TrainingDatabase.SynonymReplace(ap.name, out string name);
-            if (!_partSynsHandled.Contains(name))
+            if (!_partSynsHandled.TryGetValue(name, out var coursePair))
             {
-                _partSynsHandled.Add(name);
-                bool isPartUnlocked = ResearchAndDevelopment.PartModelPurchased(ap) && !ResearchAndDevelopment.IsExperimentalPart(ap);
+                bool isPartUnlocked = !isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available;
 
-                GenerateCourseProf(ap, !isPartUnlocked);
+                CourseTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
+                AppendToPartTooltip(ap, profCourse);
+                CourseTemplate missionCourse = null;
                 if (isPartUnlocked && IsMissionTrainingEnabled)
                 {
-                    GenerateCourseMission(ap);
+                    missionCourse = GenerateCourseMission(ap);
+                    AppendToPartTooltip(ap, missionCourse);
                 }
+                _partSynsHandled.Add(name, new Tuple<CourseTemplate, CourseTemplate>(profCourse, missionCourse));
+            }
+            else
+            {
+                CourseTemplate pc = coursePair.Item1;
+                CourseTemplate mc = coursePair.Item2;
+                AppendToPartTooltip(ap, pc);
+                if (mc != null) AppendToPartTooltip(ap, mc);
             }
         }
 
@@ -947,10 +960,15 @@ namespace RP0.Crew
 
         private void GenerateOfferedCourses()
         {
+            Profiler.BeginSample("RP0 GenerateOfferedCourses");
             OfferedCourses.Clear();
             _partSynsHandled.Clear();
 
-            if (!CurrentSceneAllowsCrewManagement) return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
+            if (!CurrentSceneAllowsCrewManagement)
+            {
+                Profiler.EndSample();
+                return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
+            }
 
             //convert the saved configs to course offerings
             foreach (CourseTemplate template in CourseTemplates)
@@ -963,16 +981,16 @@ namespace RP0.Crew
 
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
-                if (ap.partPrefab.CrewCapacity > 0 &&
-                    ResearchAndDevelopment.PartModelPurchased(ap) &&
-                    !ResearchAndDevelopment.IsExperimentalPart(ap))
+                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0 &&
+                    ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available)
                 {
                     AddPartCourses(ap);
                 }
             }
+            Profiler.EndSample();
         }
 
-        private void GenerateCourseProf(AvailablePart ap, bool isTemporary)
+        private CourseTemplate GenerateCourseProf(AvailablePart ap, bool isTemporary)
         {
             var n = new ConfigNode("FS_COURSE");
             bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
@@ -991,9 +1009,11 @@ namespace RP0.Crew
             var c = new CourseTemplate(n);
             c.PopulateFromSourceNode();
             OfferedCourses.Add(c);
+
+            return c;
         }
 
-        private void GenerateCourseMission(AvailablePart ap)
+        private CourseTemplate GenerateCourseMission(AvailablePart ap)
         {
             var n = new ConfigNode("FS_COURSE");
             bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
@@ -1014,6 +1034,8 @@ namespace RP0.Crew
             var c = new CourseTemplate(n);
             c.PopulateFromSourceNode();
             OfferedCourses.Add(c);
+
+            return c;
         }
 
         private void OnPartPurchased(AvailablePart ap)
@@ -1044,7 +1066,7 @@ namespace RP0.Crew
             for (int i = 0; i < PartLoader.LoadedPartsList.Count; i++)
             {
                 var ap = PartLoader.LoadedPartsList[i];
-                if (ap.partPrefab.CrewCapacity > 0)
+                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0)
                 {
                     var kctTech = KCTGameStates.TechList.Find(t => t.TechID == ap.TechRequired);
                     if (kctTech != null)
@@ -1067,6 +1089,12 @@ namespace RP0.Crew
                     pcm.inactive = false;
                 }
             }
+        }
+
+        private static void AppendToPartTooltip(AvailablePart ap, CourseTemplate ct)
+        {
+            ct.PartsTooltip = ct.PartsTooltip == null ? $"Applies to parts: {ap.title}" :
+                                                        $"{ct.PartsTooltip}, {ap.title}";
         }
     }
 }

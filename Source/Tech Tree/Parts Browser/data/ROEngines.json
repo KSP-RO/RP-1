@@ -5296,6 +5296,29 @@
         ]
     },
     {
+        "name": "ROE-RD254",
+        "title": "RD-254",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "525",
+        "entry_cost": "0",
+        "category": "STAGED",
+        "info": "",
+        "year": "1966",
+        "technology": "stagedCombustion1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD254",
+        "upgrade": false,
+        "entry_cost_mods": "RD-254",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD270",
         "title": "RD-270",
         "description": "",

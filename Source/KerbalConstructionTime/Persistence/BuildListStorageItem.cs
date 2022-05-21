@@ -31,6 +31,8 @@ namespace KerbalConstructionTime
         string KCTPersistentID;
         [Persistent]
         EditorFacility FacilityBuiltIn;
+        [Persistent]
+        bool humanRated;
 
         public BuildListVessel ToBuildListVessel()
         {
@@ -48,7 +50,8 @@ namespace KerbalConstructionTime
                 LaunchSiteIndex = LaunchPadID,
                 DesiredManifest = desiredManifest,
                 KCTPersistentID = KCTPersistentID,
-                FacilityBuiltIn = FacilityBuiltIn
+                FacilityBuiltIn = FacilityBuiltIn,
+                IsHumanRated = humanRated
             };
             return ret;
         }
@@ -77,6 +80,7 @@ namespace KerbalConstructionTime
             desiredManifest = blv.DesiredManifest;
             KCTPersistentID = blv.KCTPersistentID;
             FacilityBuiltIn = blv.FacilityBuiltIn;
+            humanRated = blv.IsHumanRated;
             return this;
         }
     }

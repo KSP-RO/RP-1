@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
 
         public BuildListVessel ToBuildListVessel()
         {
-            var ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, EditorFacility)
+            var ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, EditorFacility, humanRated)
             {
                 Progress = progress,
                 Id = new Guid(shipID),
@@ -50,8 +50,7 @@ namespace KerbalConstructionTime
                 LaunchSiteIndex = LaunchPadID,
                 DesiredManifest = desiredManifest,
                 KCTPersistentID = KCTPersistentID,
-                FacilityBuiltIn = FacilityBuiltIn,
-                IsHumanRated = humanRated
+                FacilityBuiltIn = FacilityBuiltIn
             };
             return ret;
         }

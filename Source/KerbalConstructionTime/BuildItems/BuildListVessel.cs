@@ -214,14 +214,14 @@ namespace KerbalConstructionTime
             {
                 // Can only happen in older saves that didn't have Effective cost persisted as a separate field
                 // This code should be safe to remove after a while.
-                EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList());
+                EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList(), out IsHumanRated);
             }
 
             IntegrationPoints = MathParser.ParseIntegrationTimeFormula(this);
             IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(this);
         }
 
-        public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int editorFacility)
+        public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int editorFacility, bool isHuman)
         {
             LaunchSite = ls;
             ShipName = name;
@@ -230,6 +230,7 @@ namespace KerbalConstructionTime
             IntegrationPoints = integrP;
             Progress = 0;
             Flag = flagURL;
+            IsHumanRated = isHuman;
             if (editorFacility == (int)EditorFacilities.VAB)
             {
                 Type = ListType.VAB;
@@ -292,7 +293,7 @@ namespace KerbalConstructionTime
             NumStages = stages.Count;
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
-            EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList());
+            EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList(), out IsHumanRated);
             BuildPoints = Utilities.GetBuildPoints(EffectiveCost);
             Flag = HighLogic.CurrentGame.flagURL;
 
@@ -403,10 +404,10 @@ namespace KerbalConstructionTime
 
         public BuildListVessel CreateCopy(bool RecalcTime)
         {
-            BuildListVessel ret = new BuildListVessel(ShipName, LaunchSite, EffectiveCost, BuildPoints, IntegrationPoints, Flag, Cost, IntegrationCost, (int)GetEditorFacility())
+            BuildListVessel ret = new BuildListVessel(ShipName, LaunchSite, EffectiveCost, BuildPoints, IntegrationPoints, Flag, Cost, IntegrationCost, (int)GetEditorFacility(), IsHumanRated)
             {
                 ShipNode = ShipNode.CreateCopy(),
-                _lc = _lc
+                _lc = _lc,
             };
 
             //refresh all inventory parts to new
@@ -429,7 +430,7 @@ namespace KerbalConstructionTime
 
             if (RecalcTime)
             {
-                ret.EffectiveCost = Utilities.GetEffectiveCost(ret.ExtractedPartNodes);
+                ret.EffectiveCost = Utilities.GetEffectiveCost(ret.ExtractedPartNodes, out IsHumanRated);
                 ret.BuildPoints = Utilities.GetBuildPoints(ret.EffectiveCost);
                 ret.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ret);
                 ret.IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(ret);

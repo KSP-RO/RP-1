@@ -46,7 +46,7 @@ namespace KerbalConstructionTime
 
         public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
-        public static double GetBuildPoints(List<ConfigNode> parts) => GetBuildPoints(GetEffectiveCost(parts));
+        public static double GetBuildPoints(List<ConfigNode> parts) => GetBuildPoints(GetEffectiveCost(parts, out _));
 
         public static double GetBuildPoints(double totalEffectiveCost)
         {
@@ -194,7 +194,7 @@ namespace KerbalConstructionTime
         }
 
 
-        public static double GetEffectiveCost(List<ConfigNode> parts)
+        public static double GetEffectiveCost(List<ConfigNode> parts, out bool isHumanRated)
         {
             //get list of parts that are in the inventory
             var apList = new List<Part>();
@@ -213,7 +213,6 @@ namespace KerbalConstructionTime
                 totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
 
-            bool isHumanRated;
             double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");

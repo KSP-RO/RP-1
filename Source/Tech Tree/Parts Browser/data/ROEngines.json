@@ -5312,7 +5312,7 @@
         "spacecraft": "",
         "engine_config": "RD254",
         "upgrade": false,
-        "entry_cost_mods": "RD-254",
+        "entry_cost_mods": "RD-254-11D44",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

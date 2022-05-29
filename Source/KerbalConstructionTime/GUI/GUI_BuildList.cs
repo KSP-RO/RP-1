@@ -1433,13 +1433,15 @@ namespace KerbalConstructionTime
                 Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
 
             KCT_LaunchPad activePad = activeLC.ActiveLPInstance;
-            if (activePad == null)
-            {
-                GUILayout.EndHorizontal();
-                return;
-            }           
             
             GUILayout.Space(15);
+
+            if (activePad == null)
+            {
+                // Hangar, no pads to switch
+                GUILayout.EndHorizontal();
+                return;
+            }
 
             int lpCount = activeLC.LaunchPadCount;
             if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))

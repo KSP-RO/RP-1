@@ -1428,7 +1428,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
             activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
-                $"Enable rush building.\nRate: {LCItem.RushRateMult:N1}x\nCosts: Salary {LCItem.RushSalaryMult:N1}x,\n-{(1d - LCItem.RushEfficMult):P0} efficiency/day."));
+                $"Enable rush building.\nRate: {PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult:N1}x\nCosts: Salary {PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult:N1}x,\n-{(1d - PresetManager.Instance.ActivePreset.GeneralSettings.RushEfficMult):P0} efficiency/day."));
             if (oldRushing != activeLC.IsRushing)
                 Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
 

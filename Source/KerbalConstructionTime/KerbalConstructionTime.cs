@@ -651,8 +651,9 @@ namespace KerbalConstructionTime
 
                                 if (currentLC.IsRushing)
                                 {
-                                    currentLC.EfficiencyEngineers *= rushEfficMult;
-                                    rushingEngs += currentLC.Engineers;
+                                    double tmp = currentLC.EfficiencyEngineers * rushEfficMult;
+                                    if (currentLC.EfficiencyEngineers > LCItem.RushEfficMin)
+                                        currentLC.EfficiencyEngineers = Math.Max(LCItem.RushEfficMin, tmp);
                                 }
                                 else
                                 {
@@ -668,6 +669,10 @@ namespace KerbalConstructionTime
                             else if (currentLC.LastEngineers > currentLC.Engineers)
                                 currentLC.LastEngineers = Math.Max(currentLC.Engineers, currentLC.LastEngineers * (1d - PresetManager.Instance.ActivePreset.GeneralSettings.EngineerDecayRate * timestep / 86400d));
                         }
+
+                        if (increment && currentLC.IsRushing)
+                            rushingEngs += currentLC.Engineers;
+
                         if (!currentLC.IsOperational)
                             continue;
 
@@ -733,7 +738,7 @@ namespace KerbalConstructionTime
                         double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiencyEngineers);
                         double delta = eval * UTDiff / (365d * 86400d);
                         if (rushingEngs > 0)
-                            delta = UtilMath.LerpUnclamped(delta, KCTGameStates.EfficiencyEngineers * rushEfficMult - KCTGameStates.EfficiencyEngineers, rushingEngs / KCTGameStates.TotalEngineers);
+                            delta = UtilMath.LerpUnclamped(delta, 0, rushingEngs / KCTGameStates.TotalEngineers);
                         //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiencyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
                         KCTGameStates.EfficiencyEngineers = Math.Min(max, KCTGameStates.EfficiencyEngineers + delta);
                     }

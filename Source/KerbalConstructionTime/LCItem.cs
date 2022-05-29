@@ -84,7 +84,8 @@ namespace KerbalConstructionTime
         public bool IsRushing;
         public const double RushRateMult = 1.5d;
         public const double RushSalaryMult = 2d;
-        public const double RushEfficMult = 0.95d;
+        public const double RushEfficMult = 0.985d;
+        public const double RushEfficMin = 0.6d;
         public double RushRate => IsRushing ? RushRateMult : 1d;
         public double RushSalary => IsRushing ? RushSalaryMult : 1d;
 

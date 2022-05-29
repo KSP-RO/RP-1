@@ -360,6 +360,38 @@ namespace KerbalConstructionTime
         }
     }
 
+    public class EngineeringUpgrades : IConfigNode
+    {
+        private Dictionary<string, double> upgradeMultipliers = new Dictionary<string, double>();
+
+        public void Load(ConfigNode node)
+        {
+            upgradeMultipliers.Clear();
+            foreach (ConfigNode.Value kvp in node.values)
+            {
+                if (double.TryParse(kvp.value, out double val))
+                    upgradeMultipliers[kvp.name] = val;
+            }
+        }
+
+        public void Save(ConfigNode node)
+        {
+            foreach (var kvp in upgradeMultipliers)
+                node.AddValue(kvp.Key, kvp.Value);
+        }
+
+        public double GetMultiplier()
+        {
+            double mult = 1d;
+            foreach (var kvp in upgradeMultipliers)
+            {
+                if (PartUpgradeManager.Handler.IsUnlocked(kvp.Key))
+                    mult *= kvp.Value;
+            }
+            return mult;
+        }
+    }
+
     public class KCT_Preset_General : ConfigNodeStorage
     {
         [Persistent]
@@ -382,9 +414,12 @@ namespace KerbalConstructionTime
         public FloatCurve GlobalEngineerSkillupRate = new FloatCurve();
         [Persistent]
         public FloatCurve ResearcherSkillupRate = new FloatCurve();
-
+        [Persistent]
+        public EngineeringUpgrades EngineerEfficiencyUpgrades = new EngineeringUpgrades();
         [Persistent]
         public double SmallLCExtraFunds = 10000d;
+
+        public double EngineeringMultiplier => EngineerEfficiencyUpgrades.GetMultiplier();
 
 
         public override ConfigNode AsConfigNode()

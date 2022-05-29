@@ -339,6 +339,17 @@ namespace KerbalConstructionTime
             return MathParser.ParseConstructionRateFormula(index, KSC, delta);
         }
 
+        public static double GetEfficiencyMultipliers(LCItem LC = null)
+        {
+            double mult = 1d;
+            if (LC != null)
+                mult *= LC.EfficiencyEngineers;
+            mult *= KCTGameStates.EfficiencyEngineers;
+            mult *= PresetManager.Instance.ActivePreset.GeneralSettings.EngineeringMultiplier;
+            
+            return mult;
+        }
+
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
         {
             float total = 0, totalDry = 0;

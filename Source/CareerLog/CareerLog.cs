@@ -315,9 +315,8 @@ namespace RP0
                 return new[]
                 {
                     UTToDate(p.StartUT).ToString("yyyy-MM"),
-                    p.VABUpgrades.ToString(),
-                    p.SPHUpgrades.ToString(),
-                    p.RnDUpgrades.ToString(),
+                    p.NumEngineers.ToString(),
+                    p.NumResearchers.ToString(),
                     p.CurrentFunds.ToString("F0"),
                     p.CurrentSci.ToString("F1"),
                     p.ScienceEarned.ToString("F1"),
@@ -480,9 +479,10 @@ namespace RP0
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
                 startDate = UTToDate(logPeriod.StartUT).ToString("o"),
                 endDate = UTToDate(logPeriod.EndUT).ToString("o"),
-                vabUpgrades = logPeriod.VABUpgrades,
-                sphUpgrades = logPeriod.SPHUpgrades,
-                rndUpgrades = logPeriod.RnDUpgrades,
+                numEngineers = logPeriod.NumEngineers,
+                numResearchers = logPeriod.NumResearchers,
+                efficiencyEngineers = logPeriod.EfficiencyEngineers,
+                efficiencyResearchers = logPeriod.EfficiencyResearchers,
                 currentFunds = logPeriod.CurrentFunds,
                 currentSci = logPeriod.CurrentSci,
                 scienceEarned = logPeriod.ScienceEarned,
@@ -510,9 +510,10 @@ namespace RP0
             {
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
-                _prevPeriod.VABUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.VehicleAssemblyBuilding);
-                _prevPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
-                _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
+                _prevPeriod.NumEngineers = KCTGameStates.TotalEngineers;
+                _prevPeriod.NumResearchers = KCTGameStates.Researchers;
+                _prevPeriod.EfficiencyEngineers = KCTGameStates.EfficiencyEngineers;
+                _prevPeriod.EfficiencyResearchers = KCTGameStates.EfficiencyResearchers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.Reputation = Reputation.CurrentRep;
@@ -726,19 +727,6 @@ namespace RP0
             }
 
             return (string)_mInfContractName.Invoke(null, new object[] { c });
-        }
-
-        private int GetKCTUpgradeCounts(SpaceCenterFacility facility)
-        {
-            try
-            {
-                return KerbalConstructionTime.Utilities.GetSpentUpgradesFor(facility);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-                return 0;
-            }
         }
 
         private float GetSciPointTotalFromKCT()

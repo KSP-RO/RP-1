@@ -43,13 +43,16 @@ namespace RP0
         public double OtherFees;
 
         [Persistent]
-        public int VABUpgrades;
+        public int NumEngineers;
 
         [Persistent]
-        public int SPHUpgrades;
+        public int NumResearchers;
 
         [Persistent]
-        public int RnDUpgrades;
+        public double EfficiencyResearchers;
+
+        [Persistent]
+        public double EfficiencyEngineers;
 
         [Persistent]
         public double FundsGainMult;
@@ -57,10 +60,10 @@ namespace RP0
         [Persistent]
         public int NumNautsKilled;
 
-        [Persistent] 
+        [Persistent]
         public double Reputation;
 
-        [Persistent] 
+        [Persistent]
         public double HeadlinesHype;
 
         public LogPeriod()

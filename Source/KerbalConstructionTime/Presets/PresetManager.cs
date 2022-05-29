@@ -360,6 +360,38 @@ namespace KerbalConstructionTime
         }
     }
 
+    public class EngineeringUpgrades : IConfigNode
+    {
+        private Dictionary<string, double> upgradeMultipliers = new Dictionary<string, double>();
+
+        public void Load(ConfigNode node)
+        {
+            upgradeMultipliers.Clear();
+            foreach (ConfigNode.Value kvp in node.values)
+            {
+                if (double.TryParse(kvp.value, out double val))
+                    upgradeMultipliers[kvp.name] = val;
+            }
+        }
+
+        public void Save(ConfigNode node)
+        {
+            foreach (var kvp in upgradeMultipliers)
+                node.AddValue(kvp.Key, kvp.Value);
+        }
+
+        public double GetMultiplier()
+        {
+            double mult = 1d;
+            foreach (var kvp in upgradeMultipliers)
+            {
+                if (PartUpgradeManager.Handler.IsUnlocked(kvp.Key))
+                    mult *= kvp.Value;
+            }
+            return mult;
+        }
+    }
+
     public class KCT_Preset_General : ConfigNodeStorage
     {
         [Persistent]
@@ -374,16 +406,20 @@ namespace KerbalConstructionTime
         [Persistent]
         public double EngineerStartEfficiency = 0.5, GlobalEngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, 
             EngineerMaxEfficiency = 1.0, ResearcherMaxEfficiency = 1.0, GlobalEngineerMaxEfficiency = 1.0,
-            EngineerDecayRate = 0.1, GlobalEngineerDecayRate = 0.1, ResearcherDecayRate = 0.1, AdditionalPadCostMult = 0.5d;
+            EngineerDecayRate = 0.1, GlobalEngineerDecayRate = 0.1, ResearcherDecayRate = 0.1, AdditionalPadCostMult = 0.5d,
+            RushRateMult = 1.5d, RushSalaryMult = 2d, RushEfficMult = 0.985d, RushEfficMin = 0.6d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
         public FloatCurve GlobalEngineerSkillupRate = new FloatCurve();
         [Persistent]
         public FloatCurve ResearcherSkillupRate = new FloatCurve();
-
+        [Persistent]
+        public EngineeringUpgrades EngineerEfficiencyUpgrades = new EngineeringUpgrades();
         [Persistent]
         public double SmallLCExtraFunds = 10000d;
+
+        public double EngineeringMultiplier => EngineerEfficiencyUpgrades.GetMultiplier();
 
 
         public override ConfigNode AsConfigNode()

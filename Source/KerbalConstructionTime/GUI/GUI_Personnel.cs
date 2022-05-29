@@ -178,14 +178,15 @@ namespace KerbalConstructionTime
 
             double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiencyEngineers;
+            double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineeringMultiplier;
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global)");
+            GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2}");
             GUILayout.EndHorizontal();
 
-            double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta);
+            double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta) * techMult;
             double cRate = cRateFull * efficGlobal;
 
-            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta);
+            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * techMult;
             double rate = rateFull * efficLocal * efficGlobal;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
@@ -205,7 +206,7 @@ namespace KerbalConstructionTime
                 if (engCap < currentLC.Engineers + assignDelta)
                     delta = engCap - currentLC.Engineers;
                 double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, delta)
-                    * efficLocal * efficGlobal;
+                    * efficLocal * efficGlobal * techMult;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }

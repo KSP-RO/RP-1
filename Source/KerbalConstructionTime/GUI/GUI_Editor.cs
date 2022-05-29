@@ -47,7 +47,7 @@ namespace KerbalConstructionTime
             double buildPoints = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorIsHumanRated, 0)
-                * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers;
+                * Utilities.GetEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
@@ -65,7 +65,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.EndHorizontal();
                 double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorShipMass, buildPoints, KCTGameStates.EditorIsHumanRated)
-                    * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers);
+                    * Utilities.GetEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance));
                 GUILayout.Label(Utilities.GetFormattedTime(buildPoints / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
@@ -144,7 +144,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
             double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorIsHumanRated, 0)
-                * ship.LC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers;
+                * Utilities.GetEfficiencyMultipliers(ship.LC);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
@@ -164,7 +164,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.EndHorizontal();
                 double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KCTGameStates.EditorShipMass, KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, KCTGameStates.EditorIsHumanRated)
-                    * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers);
+                    * Utilities.GetEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance));
                 GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)

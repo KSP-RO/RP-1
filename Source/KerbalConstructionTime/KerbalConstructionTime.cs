@@ -617,7 +617,7 @@ namespace KerbalConstructionTime
                     remainingUT = UTDiff - passes * 86400d;
                     ++passes;
                 }
-                double remainingRushEfficMult = Math.Pow(LCItem.RushEfficMult, remainingUT / 86400d);
+                double remainingRushEfficMult = Math.Pow(PresetManager.Instance.ActivePreset.GeneralSettings.RushEfficMult, remainingUT / 86400d);
                 int rushingEngs = 0;
 
                 int totalEngineers = 0;
@@ -643,7 +643,7 @@ namespace KerbalConstructionTime
                             else
                             {
                                 timestep = 86400d;
-                                rushEfficMult = LCItem.RushEfficMult;
+                                rushEfficMult = PresetManager.Instance.ActivePreset.GeneralSettings.RushEfficMult;
                             }
                             if (increment)
                             {
@@ -652,8 +652,8 @@ namespace KerbalConstructionTime
                                 if (currentLC.IsRushing)
                                 {
                                     double tmp = currentLC.EfficiencyEngineers * rushEfficMult;
-                                    if (currentLC.EfficiencyEngineers > LCItem.RushEfficMin)
-                                        currentLC.EfficiencyEngineers = Math.Max(LCItem.RushEfficMin, tmp);
+                                    if (currentLC.EfficiencyEngineers > PresetManager.Instance.ActivePreset.GeneralSettings.RushEfficMin)
+                                        currentLC.EfficiencyEngineers = Math.Max(PresetManager.Instance.ActivePreset.GeneralSettings.RushEfficMin, tmp);
                                 }
                                 else
                                 {
@@ -729,7 +729,7 @@ namespace KerbalConstructionTime
                     else
                     {
                         timestep = 86400d;
-                        rushEfficMult = LCItem.RushEfficMult;
+                        rushEfficMult = PresetManager.Instance.ActivePreset.GeneralSettings.RushEfficMult;
                     }
 
                     if (skillupEng)

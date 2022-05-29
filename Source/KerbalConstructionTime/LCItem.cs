@@ -82,12 +82,8 @@ namespace KerbalConstructionTime
         public double EfficiencyEngineers = StartingEfficiency;
         public double LastEngineers = 0d;
         public bool IsRushing;
-        public const double RushRateMult = 1.5d;
-        public const double RushSalaryMult = 2d;
-        public const double RushEfficMult = 0.985d;
-        public const double RushEfficMin = 0.6d;
-        public double RushRate => IsRushing ? RushRateMult : 1d;
-        public double RushSalary => IsRushing ? RushSalaryMult : 1d;
+        public double RushRate => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult : 1d;
+        public double RushSalary => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult : 1d;
 
         public bool IsOperational = false;
         public bool IsPad = true;

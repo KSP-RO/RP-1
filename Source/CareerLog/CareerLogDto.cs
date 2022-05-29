@@ -8,9 +8,10 @@ namespace RP0
         public string careerUuid;
         public string startDate;
         public string endDate;
-        public int vabUpgrades;
-        public int sphUpgrades;
-        public int rndUpgrades;
+        public int numEngineers;
+        public int numResearchers;
+        public double efficiencyEngineers;
+        public double efficiencyResearchers;
         public int numNautsKilled;
         public double currentFunds;
         public double currentSci;
@@ -35,9 +36,10 @@ namespace RP0
                 $"{nameof(careerUuid)}: {careerUuid}, " +
                 $"{nameof(startDate)}: {startDate}, " +
                 $"{nameof(endDate)}: {endDate}, " +
-                $"{nameof(vabUpgrades)}: {vabUpgrades}, " +
-                $"{nameof(sphUpgrades)}: {sphUpgrades}, " +
-                $"{nameof(rndUpgrades)}: {rndUpgrades}, " +
+                $"{nameof(numEngineers)}: {numEngineers}, " +
+                $"{nameof(numResearchers)}: {numResearchers}, " +
+                $"{nameof(efficiencyEngineers)}: {efficiencyEngineers}, " +
+                $"{nameof(efficiencyResearchers)}: {efficiencyResearchers}, " +
                 $"{nameof(numNautsKilled)}: {numNautsKilled}, " +
                 $"{nameof(currentFunds)}: {currentFunds}, " +
                 $"{nameof(currentSci)}: {currentSci}, " +

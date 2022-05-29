@@ -1165,43 +1165,6 @@ namespace KerbalConstructionTime
             return newVal;
         }
 
-        public static int GetTotalSpentUpgrades(KSCItem ksc = null)
-        {
-            if (ksc == null) ksc = KCTGameStates.ActiveKSC;
-            int spentPoints = 0;
-            //foreach (var KSC in KCTGameStates.KSCs)
-            //{
-            //    foreach (var LC in KSC.LaunchComplexes)
-            //    {
-            //        foreach (var vabPoints in LC.Upgrades) spentPoints += vabPoints;
-            //    }
-            //}
-            return spentPoints;
-        }
-
-        public static int GetSpentUpgradesFor(SpaceCenterFacility facility, KSCItem ksc = null)
-        {
-            if (ksc == null) ksc = KCTGameStates.ActiveKSC;
-            int spentPoints = 0;
-            switch (facility)
-            {
-                case SpaceCenterFacility.ResearchAndDevelopment:
-                    break;
-                case SpaceCenterFacility.VehicleAssemblyBuilding:
-                case SpaceCenterFacility.SpaceplaneHangar:
-                    //foreach (var KSC in KCTGameStates.KSCs)
-                    //{
-                    //    foreach (var LC in KSC.LaunchComplexes)
-                    //        foreach (var points in LC.Upgrades) spentPoints += points;
-                    //}
-                    break;
-                default:
-                    throw new ArgumentException("invalid facility");
-            }
-
-            return spentPoints;
-        }
-
         public static List<string> GetLaunchSites(bool isVAB)
         {
             EditorDriver.editorFacility = isVAB ? EditorFacility.VAB : EditorFacility.SPH;

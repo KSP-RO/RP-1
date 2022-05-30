@@ -49,14 +49,14 @@ namespace KerbalConstructionTime
             int tE = KCTGameStates.TotalEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(tE.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+            GUILayout.Label(tE.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
             GUILayout.Label($"√{KCTGameStates.GetSalaryEngineers():N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+            GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
             GUILayout.Label($"√{KCTGameStates.GetSalaryResearchers():N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -103,9 +103,9 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Engineers:", GUILayout.ExpandWidth(false));
-            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(30));
+            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.Label($"Free for Construction:", GetLabelRightAlignStyle());
-            GUILayout.Label($"{KSC.ConstructionWorkers}", GetLabelRightAlignStyle(), GUILayout.Width(30));
+            GUILayout.Label($"{KSC.ConstructionWorkers}", GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.EndHorizontal();
 
             RenderHireFire(false, out int fireAmount, out int hireAmount);
@@ -132,7 +132,7 @@ namespace KerbalConstructionTime
             string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
 
             bool recalc = false;
-            BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            BuildListVessel.ListType type = currentLC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {

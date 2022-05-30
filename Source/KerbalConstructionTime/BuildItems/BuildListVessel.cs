@@ -181,7 +181,7 @@ namespace KerbalConstructionTime
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
                 _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                if (!_lc.IsPad)
+                if (_lc.LCType == LaunchComplexType.Hangar)
                     KCTDebug.LogError($"ERROR: Tried to add vessel {ShipName} to LC {_lc.Name} but vessel is type VAB!");
             }
             else if (s.shipFacility == EditorFacility.SPH)
@@ -556,7 +556,7 @@ namespace KerbalConstructionTime
                 failedReasons.Add("Vessel is human-rated but launch complex is not");
             }
 
-            if (HasClamps() && !selectedLC.IsPad)
+            if (HasClamps() && selectedLC.LCType == LaunchComplexType.Hangar)
             {
                 failedReasons.Add("Has launch clamps/GSE but is launching from runway");
             }

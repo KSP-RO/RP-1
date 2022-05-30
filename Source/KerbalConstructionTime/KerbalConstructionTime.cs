@@ -239,6 +239,16 @@ namespace KerbalConstructionTime
                     dataModule.Data.FacilityBuiltIn = KCTGameStates.LaunchedVessel.FacilityBuiltIn;
                     dataModule.Data.VesselID = KCTGameStates.LaunchedVessel.KCTPersistentID;
                     dataModule.Data.LCID = KCTGameStates.LaunchedVessel.LCID.ToString("N");
+                    if (KCTGameStates.LaunchedVessel.LC == null)
+                    {
+                        LCItem lc = KCTGameStates.FindLCFromID(KCTGameStates.LaunchedVessel.LCID);
+                        if (lc != null)
+                            dataModule.Data.LCModID = lc.ModID.ToString("N");
+                    }
+                    else
+                    {
+                        dataModule.Data.LCModID = KCTGameStates.LaunchedVessel.LC.ModID.ToString("N");
+                    }
                 }
             }
 

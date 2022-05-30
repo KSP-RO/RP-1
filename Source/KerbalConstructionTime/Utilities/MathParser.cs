@@ -209,7 +209,7 @@ namespace KerbalConstructionTime
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
                 EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad)
                     LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.fractionalLevel;
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
@@ -246,7 +246,7 @@ namespace KerbalConstructionTime
                 { "SN", vessel.NumStages.ToString() },
                 { "SP", vessel.NumStageParts.ToString() },
                 { "SC", vessel.StagePartCost.ToString() },
-                { "LT", vLC.IsPad ? vLC.MassMax.ToString() : loadedMass.ToString() },
+                { "LT", vLC.LCType == LaunchComplexType.Pad ? vLC.MassMax.ToString() : loadedMass.ToString() },
                 { "LH", vLC.IsHumanRated ? "1" : "0" },
                 { "VH", vessel.IsHumanRated ? "1" : "0" }
             };
@@ -272,7 +272,7 @@ namespace KerbalConstructionTime
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
                 EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
+                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad)
                     LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.fractionalLevel;
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);

@@ -1352,7 +1352,7 @@ namespace KerbalConstructionTime
                     _lengthLimit = activeLC.SizeMax.z.ToString("N0");
                     _widthLimit = activeLC.SizeMax.x.ToString("N0");
                     _heightLimit = activeLC.SizeMax.y.ToString("N0");
-                    _tonnageLimit = activeLC.MassMax.ToString("N0");
+                    _tonnageLimit = ((int)Math.Ceiling(activeLC.MassMax)).ToString();
                     _isHumanRated = activeLC.IsHumanRated;
                     
                     GUIStates.ShowDismantlePad = false;

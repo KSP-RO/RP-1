@@ -191,7 +191,7 @@ namespace KerbalConstructionTime
                 LaunchComplexes.Clear();
                 foreach (ConfigNode cn in tmp.GetNodes("LaunchComplex"))
                 {
-                    var tempLC = new LCItem("", 0f, Vector3.zero, true, false, this);
+                    var tempLC = new LCItem(string.Empty, 0f, 0f, Vector3.zero, true, false, this);
                     tempLC.FromConfigNode(cn);
                     LaunchComplexes.Add(tempLC);
                 }

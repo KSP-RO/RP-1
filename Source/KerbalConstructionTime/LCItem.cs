@@ -11,16 +11,18 @@ namespace KerbalConstructionTime
         {
             [Persistent] public string Name;
             [Persistent] public float massMax;
+            [Persistent] public float massOrig;
             [Persistent] public Vector3 sizeMax;
             [Persistent] public bool isPad;
             [Persistent] public bool isHumanRated;
 
             public LCData() { }
 
-            public LCData(string Name, float massMax, Vector3 sizeMax, bool isPad, bool isHumanRated)
+            public LCData(string Name, float massMax, float massOrig, Vector3 sizeMax, bool isPad, bool isHumanRated)
             {
                 this.Name = Name;
                 this.massMax = massMax;
+                this.massOrig = massOrig;
                 this.sizeMax = sizeMax;
                 this.isPad = isPad;
                 this.isHumanRated = isHumanRated;
@@ -30,6 +32,7 @@ namespace KerbalConstructionTime
             {
                 Name = old.Name;
                 massMax = old.massMax;
+                massOrig = old.massOrig;
                 sizeMax = old.sizeMax;
                 isPad = old.isPad;
                 isHumanRated = old.isHumanRated;
@@ -38,9 +41,9 @@ namespace KerbalConstructionTime
             // NOTE: Not comparing name, which I think is correct here.
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
         }
-        public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
-        public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, new Vector3(2f, 10f, 2f), true, false);
-        public static LCData StartingLC15 = new LCData("Launch Complex 1", 15f, new Vector3(5f, 20f, 5f), true, false);
+        public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
+        public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, 1f, new Vector3(2f, 10f, 2f), true, false);
+        public static LCData StartingLC15 = new LCData("Launch Complex 1", 15f, 15f, new Vector3(5f, 20f, 5f), true, false);
 
         public string Name;
         protected Guid _id;
@@ -90,6 +93,7 @@ namespace KerbalConstructionTime
         public bool IsHumanRated = false;
 
         public float MassMax;
+        public float MassOrig;
         public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
         public float MassMin => CalcMassMin(MassMax);
         public Vector3 SizeMax;
@@ -110,9 +114,9 @@ namespace KerbalConstructionTime
             _ksc = ksc;
         }
 
-        public LCItem(LCData lcData, KSCItem ksc) : this(lcData.Name, lcData.massMax, lcData.sizeMax, lcData.isPad, lcData.isHumanRated, ksc) { }
+        public LCItem(LCData lcData, KSCItem ksc) : this(lcData.Name, lcData.massMax, lcData.massOrig, lcData.sizeMax, lcData.isPad, lcData.isHumanRated, ksc) { }
 
-        public LCItem(string lcName, float mMax, Vector3 sMax, bool isLCPad, bool isHuman, KSCItem ksc)
+        public LCItem(string lcName, float mMax, float mOrig, Vector3 sMax, bool isLCPad, bool isHuman, KSCItem ksc)
         {
             Name = lcName;
 
@@ -121,6 +125,10 @@ namespace KerbalConstructionTime
             IsPad = isLCPad;
             IsHumanRated = isHuman;
             MassMax = mMax;
+            MassOrig = mOrig;
+            // back-compat
+            if (mOrig == 0)
+                MassOrig = MassMax;
             float fracLevel;
 
             KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out _, out _, out fracLevel);
@@ -144,6 +152,10 @@ namespace KerbalConstructionTime
         public void Modify(LCData data)
         {
             MassMax = data.massMax;
+            MassOrig = data.massOrig;
+            // back-compat
+            if (MassOrig == 0)
+                MassOrig = MassMax;
             IsHumanRated = data.isHumanRated;
             SizeMax = data.sizeMax;
             float fracLevel;
@@ -292,6 +304,7 @@ namespace KerbalConstructionTime
             node.AddValue("operational", IsOperational);
             node.AddValue("isPad", IsPad);
             node.AddValue("massMax", MassMax);
+            node.AddValue("massOrig", MassOrig);
             node.AddValue("sizeMax", SizeMax);
             node.AddValue("id", _id);
             node.AddValue("Engineers", Engineers);
@@ -392,6 +405,7 @@ namespace KerbalConstructionTime
             node.TryGetValue("operational", ref IsOperational);
             node.TryGetValue("isPad", ref IsPad);
             node.TryGetValue("massMax", ref MassMax);
+            node.TryGetValue("massOrig", ref MassOrig);
             node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
             node.TryGetValue("Engineers", ref Engineers);
@@ -407,6 +421,8 @@ namespace KerbalConstructionTime
                 IsHumanRated = true;
             if (MassMax == -1f)
                 MassMax = float.MaxValue;
+            if (MassOrig == 0)
+                MassOrig = MassMax;
             if (node.HasValue("Personnel"))
             {
                 node.TryGetValue("Personnel", ref Engineers);

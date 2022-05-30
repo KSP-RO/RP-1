@@ -21,7 +21,7 @@ namespace KerbalConstructionTime
             if (tonnageLimit != float.MaxValue)
             {
                 double mass = tonnageLimit;
-                curPadCost = Math.Max(0d, Math.Sqrt(mass) * 3200d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 4000d) + 1000d;
+                curPadCost = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2000d) + 1000d;
 
                 if (_padLvlOptions == null)
                 {
@@ -111,29 +111,38 @@ namespace KerbalConstructionTime
 
             GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
 
-            bool isHangar = isModify && !activeLC.IsPad;
+            bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
             double curPadCost = 0;
             double curVABCost = 0;
             float fractionalPadLvl = -1;
             float tonnageLimit = isHangar ? activeLC.MassMax : 0;
+            int tonnageLimitInt = (int)tonnageLimit;
             float heightLimit = 0;
             float widthLimit = 0;
             float lengthLimit = 0;
             float minTonnage = 0f;
             Vector3 curPadSize = Vector3.zero;
-            
+
+            bool parsedTonnage = true;
             if (!isHangar)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
-                _tonnageLimit = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle());
+                string newStr = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle());
+                if (int.TryParse(newStr, out tonnageLimitInt))
+                {
+                    parsedTonnage = true;
+                    _tonnageLimit = tonnageLimitInt.ToString();
+                }
                 GUILayout.EndHorizontal();
             }
-            if ((isHangar || float.TryParse(_tonnageLimit, out tonnageLimit)) &&
+
+            if (parsedTonnage &&
                 float.TryParse(_lengthLimit, out lengthLimit) &&
                 float.TryParse(_widthLimit, out widthLimit) &&
                 float.TryParse(_heightLimit, out heightLimit))
             {
+                tonnageLimit = tonnageLimitInt;
                 curPadSize.x = widthLimit;
                 curPadSize.y = heightLimit;
                 curPadSize.z = lengthLimit;
@@ -142,6 +151,32 @@ namespace KerbalConstructionTime
             }
             if (!isHangar)
             {
+                if (isModify)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Tonnage limit, min:");
+                    GUILayout.Label($"{Math.Max(1, (int)(activeLC.MassOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Tonnage limit, max:");
+                    GUILayout.Label($"{(int)(activeLC.MassOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Tonnage limit range available");
+                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0} -", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("for subsequent modification:");
+                    GUILayout.Label($"{Math.Max(3, tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.EndHorizontal();
+                }
+
+
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Minimum tonnage:");
                 GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
@@ -155,7 +190,7 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Wdith limit:", GUILayout.ExpandWidth(false));
+            GUILayout.Label("Width limit:", GUILayout.ExpandWidth(false));
             _widthLimit = GUILayout.TextField(_widthLimit, GetTextFieldRightAlignStyle());
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
@@ -166,7 +201,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
-            if (!isModify || activeLC.IsPad)
+            if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" ");
@@ -179,10 +214,17 @@ namespace KerbalConstructionTime
                 totalCost = curPadCost - oldPadCost;
             else
                 totalCost = (oldPadCost - curPadCost) * 0.5d;
-            totalCost *= lpMult;
+            // Modify case: Additional pads cost less to build, so cost less to modify.
+            if(lpMult > 1)
+                totalCost *= 1d + (lpMult - 1d) * PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
 
             if (isModify)
             {
+                // Enforce a min cost for pad size changes
+                const double minPadModifyCost = 1000d;
+                if (activeLC.MassMax != tonnageLimit && totalCost < minPadModifyCost)
+                    totalCost = minPadModifyCost;
+
                 double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
                 double renovateCost = Math.Abs(curVABCost - oldVABCost)
                     + heightAbs * 1000d
@@ -225,7 +267,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
                 GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
-                if (!isModify || activeLC.IsPad)
+                if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Extra Pad Cost:", GUILayout.ExpandWidth(false));
@@ -239,16 +281,16 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify))
+            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify ? activeLC : null))
             {
                 string lcName = isModify ? activeLC.Name : _newName;
                 if (!Utilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {lcName}");
                     if (isModify)
-                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, curPadSize, activeLC.IsPad, _isHumanRated));
+                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, activeLC.MassOrig, curPadSize, activeLC.LCType, _isHumanRated));
                     else
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC));
+                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, tonnageLimit, curPadSize, LaunchComplexType.Pad, _isHumanRated, KCTGameStates.ActiveKSC));
                 }
                 else
                 {
@@ -262,7 +304,7 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        lc = new LCItem(_newName, tonnageLimit, curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC);
+                        lc = new LCItem(_newName, tonnageLimit, Math.Max(1.5f, tonnageLimit), curPadSize, LaunchComplexType.Pad, _isHumanRated, KCTGameStates.ActiveKSC);
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                     }
                     lc.IsOperational = false;
@@ -273,7 +315,7 @@ namespace KerbalConstructionTime
                         Cost = totalCost,
                         Name = lcName,
                         IsModify = isModify,
-                        LCData = new LCItem.LCData(activeLC.Name, tonnageLimit, curPadSize, activeLC.IsPad, _isHumanRated)
+                        LCData = new LCItem.LCData(lc.Name, tonnageLimit, lc.MassOrig, curPadSize, lc.LCType, _isHumanRated)
                     };
                     lcConstr.SetBP(totalCost);
                     KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
@@ -339,7 +381,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, bool modify)
+        private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LCItem lc)
         {
             if (curPadSize == Vector3.zero)
             {
@@ -347,14 +389,18 @@ namespace KerbalConstructionTime
                 return false;
             }
 
-            if (modify)
+            if (lc != null && lc.LCType == LaunchComplexType.Hangar)
                 return true;
 
-            if(fractionalPadLvl == -1 || tonnageLimit == 0)
+            if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < Math.Max(1, (int)lc.MassOrig / 2) || tonnageLimit > lc.MassOrig * 2)))
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid tonnage limit");
                 return false;
             }
+
+            // Don't bother with name if it's a modify.
+            if (lc != null)
+                return true;
 
             if (string.IsNullOrEmpty(_newName))
             {

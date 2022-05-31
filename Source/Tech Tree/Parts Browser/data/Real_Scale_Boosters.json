@@ -2106,7 +2106,7 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Shuttle",
-        "engine_config": "RSRM-1981",
+        "engine_config": "RSRM",
         "upgrade": false,
         "entry_cost_mods": "RSRM-1981",
         "identical_part_name": "",

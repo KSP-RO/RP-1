@@ -1,3 +1,8 @@
+[![Latest Build](https://badgen.net/badge/Latest%20build/download/blue)](https://nightly.link/KSP-RO/RP-0/workflows/build/master/RP-1.zip)
+[![Discord](https://badgen.net/discord/online-members/V73jjNd?icon=discord)](https://discord.gg/V73jjNd)
+
+[![Commits since release](https://img.shields.io/github/commits-since/KSP-RO/RP-0/latest)](https://github.com/KSP-RO/RP-0/compare/v1.11.10.0...master)
+
 Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Space Program's Realism Overhaul.
 
 RP-1 is a career mode for RealismOverhaul with minimal install requirements, and with fair and balanced gameplay. Our aim is to allow players to enjoy RealismOverhaul in career mode, without installing a huge number of modules on top of those required by RealismOverhaul itself. However we also wish to ensure that RP-1 works with as many additional mods as possible; we use a fresh fully icon rebuilt Tech Tree for the basis of career progression, and try to place as many parts from other mods as possible in a historical fashion.  Right now a good number of nodes lack much in the way of parts allowing for placement of balanced historically appropriate parts in those nodes. 

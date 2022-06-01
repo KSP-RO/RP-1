@@ -1,7 +1,11 @@
-[![Latest Build](https://badgen.net/badge/Latest%20build/download/blue)](https://nightly.link/KSP-RO/RP-0/workflows/build/master/RP-1.zip)
-[![Discord](https://badgen.net/discord/online-members/V73jjNd?icon=discord)](https://discord.gg/V73jjNd)
-
-[![Commits since release](https://img.shields.io/github/commits-since/KSP-RO/RP-0/latest)](https://github.com/KSP-RO/RP-0/compare/v1.11.10.0...master)
+<p align="center">
+ <img src="https://github.com/KSP-RO/RP-0/blob/master/Source/RP-1%20Logo.png" width=150 alt="RP-1 Logo"/>
+</p>
+<p align="center">
+ <a href="https://nightly.link/KSP-RO/RP-0/workflows/build/master/RP-1.zip" rel="nofollow"><img src="https://badgen.net/badge/Latest%20dev-build/download/blue"></a>
+ <a href="https://discord.gg/V73jjNd" rel="nofollow"><img src="https://badgen.net/discord/online-members/V73jjNd?icon=discord"></a>
+ <a href="https://github.com/KSP-RO/RP-0/compare/v1.11.10.0...master" rel="nofollow"><img src="https://img.shields.io/github/commits-since/KSP-RO/RP-0/latest"></a>
+</p>
 
 Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Space Program's Realism Overhaul.
 

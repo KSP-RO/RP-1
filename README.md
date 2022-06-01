@@ -20,7 +20,7 @@ Crew readiness and retirement: After each recovery crew are on leave for a short
 
 Contracts: Many contracts leading through a rough historical path are available. One contract will add a beginning node of parts that are available from the start but you may not want cluttering the VAB/SPH. Parts in this node have a purchase price of 1 fund and this contract will auto-complete seconds after leaving the mission control the first time.
 
-Tree: A massive tree orginized along a historical frame. Two gating tech patchs (Material Science, and Electronics) limit what nodes are available in a general sense. Most nodes have custom icons usually taken from the profile of relavent hardware from the node. Using KCT the nodes will have an orange interior when purchased with points and the normal purchased colors after KCT delay times pass.
+Tech Tree: A massive tree orginized along a historical frame. Two gating tech patchs (Material Science, and Electronics) limit what nodes are available in a general sense. Most nodes have custom icons usually taken from the profile of relavent hardware from the node. Using KCT the nodes will have an orange interior when purchased with points and the normal purchased colors after KCT delay times pass.
 
 Part Tags: launch costs are significanlty affected by the types of systems on the craft. For instance toxic hypergolics require special handling and disposal. So a solid rocket motor driven craft may at first glance seem more expensive but my indeed be less costly due to reduce launch costs.
 

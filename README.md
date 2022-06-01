@@ -9,13 +9,21 @@ When starting the game, we recommend "Easy" or "Normal" for players new to RP-1,
 RP-1 adds many new features to KSP career mode, including:
 
 Tooling: Tooling costs significantly adjust the play cost of craft. As you adjust tank sizes wait till the end of craft saving to tool the tanks so you do not waste funds. Once you have completed your design, tool your parts to greatly decrease cost and build time in the future.
+
 Maintenance: A small cost of the infrastructure and wage cost is rolled into play. This puts a minimal drag on program growth.
+
 KCT Integration: KCT is heavily integrated and using the RP-0 Settings is important. Make sure you have lower rated launch pads availble and don't just focus on one maximum upgraded pad for all use. This will lower costs and rollout times if you use the smallest pad needed for the craft launched. There are 7 levels of pad and R&D.
+
 Crew Training: Each 'naut needs to be proficient and mission trained to fly on a craft. Proficiency training will end after a time and mission training is good for one mission and is then lost after recovery.
+
 Crew readiness and retirement: After each recovery crew are on leave for a short time. Each crew also has a retirement date that rolls forward after each mission.
+
 Contracts: Many contracts leading through a rough historical path are available. One contract will add a beginning node of parts that are available from the start but you may not want cluttering the VAB/SPH. Parts in this node have a purchase price of 1 fund and this contract will auto-complete seconds after leaving the mission control the first time.
+
 Tree: A massive tree orginized along a historical frame. Two gating tech patchs (Material Science, and Electronics) limit what nodes are available in a general sense. Most nodes have custom icons usually taken from the profile of relavent hardware from the node. Using KCT the nodes will have an orange interior when purchased with points and the normal purchased colors after KCT delay times pass.
+
 Part Tags: launch costs are significanlty affected by the types of systems on the craft. For instance toxic hypergolics require special handling and disposal. So a solid rocket motor driven craft may at first glance seem more expensive but my indeed be less costly due to reduce launch costs.
+
 Engine Variations: Many engine variations are available and purchased via the Engine GUI. In the Tech tree these will appear and may have some variable cost however this cost is not real and purchasing this "Part" will have no cost or impact whether it is purchased when looking in the Engine GUI.
 
 

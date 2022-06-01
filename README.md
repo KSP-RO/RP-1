@@ -27,7 +27,7 @@ Part Tags: launch costs are significanlty affected by the types of systems on th
 Engine Variations: Many engine variations are available and purchased via the Engine GUI. In the Tech tree these will appear and may have some variable cost however this cost is not real and purchasing this "Part" will have no cost or impact whether it is purchased when looking in the Engine GUI.
 
 
-This top-post is jointly maintained by pjf and NathanKell and many others.
+This top-post is jointly maintained by pjf, NathanKell and many others.
 
 ---
 
@@ -38,6 +38,7 @@ Github Repo:  https://github.com/KSP-RO/RP-0
 Discord Link: https://discord.gg/V73jjNd
 
 **Requirements:**
+
 *These mods are required for RP-1 to function properly*
 - Realism Overhaul and all of its required mods (including Real Solar System)
 - Module Manager
@@ -53,6 +54,7 @@ Discord Link: https://discord.gg/V73jjNd
 - KSP Community Fixes
 
 **RO-Mods:**
+
 *These mods were created specifically for use with the RO/RP-1 mod suite, and provide high-quality and well-supported parts*
 - ROEngines
 - ROTanks
@@ -60,6 +62,7 @@ Discord Link: https://discord.gg/V73jjNd
 - ROSolar
 
 **Recommended Mods:**
+
 *These modes are strongly recommended for use with RP-1*
 - Atmosphere Autopilot
 - B9 Procedural Wings
@@ -82,6 +85,7 @@ Discord Link: https://discord.gg/V73jjNd
 - Ven's Stock Revamp OR Restock
 
 **Suggested Mods:**
+
 *These mods are suggested for use with RP-1, but may not be fully supported, and are not necessary for the full RP-1 experience*
 - Bluedog Design Bureau
 - Editor Extensions Redux
@@ -105,6 +109,7 @@ Discord Link: https://discord.gg/V73jjNd
 - Waypoint Manager
 
 **Incompatble Mods**
+
 *These mods are explicitly incompatible with RP-1, and should never be installed*
 - Crowd Sourced Science (RP-1 provides completely new science types. Any stock science mods are incompatible)
 - Dynamic Battery Storage (May conflict with Kerbalism, although newer versions should safely disable themselves if a conflict is detected)

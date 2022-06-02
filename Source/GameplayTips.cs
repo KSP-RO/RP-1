@@ -11,6 +11,7 @@ namespace RP0
         private static bool _airlaunchTipShown;
         private static bool _isInterplanetaryWarningShown;
 
+        private bool _subcribedToPAWEvent;
         private EventData<BuildListVessel> _onKctVesselAddedToBuildQueueEvent;
 
         public static GameplayTips Instance { get; private set; }
@@ -55,11 +56,26 @@ namespace RP0
             {
                 ShowAirlaunchTip();
             }
+
+            if (HighLogic.LoadedSceneIsEditor && !rp0Settings.RealChuteTipShown)
+            {
+                GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
+                _subcribedToPAWEvent = true;
+            }
         }
 
         public void OnDestroy()
         {
             if (_onKctVesselAddedToBuildQueueEvent != null) _onKctVesselAddedToBuildQueueEvent.Remove(OnKctVesselAddedToBuildQueue);
+            if (_subcribedToPAWEvent) GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
+        }
+
+        private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
+        {
+            if (part.Modules.Contains("RealChuteModule"))
+            {
+                ShowRealChuteTip();
+            }
         }
 
         public void ShowInterplanetaryAvionicsReminder()
@@ -119,6 +135,25 @@ namespace RP0
             options[1] = new DialogGUIButton("Never remind me again", () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders = true; });
             MultiOptionDialog diag = new MultiOptionDialog("ShowUntooledPartsReminder", msg, "Untooled parts", null, 300, options);
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
+        }
+
+        private void ShowRealChuteTip()
+        {
+            var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
+            if (rp0Settings.RealChuteTipShown) return;
+
+            rp0Settings.RealChuteTipShown = true;
+
+            string msg = "RealChute has very old UI. To resize and configure the chute, enter Action Groups mode by using the button in the top left corner. " +
+                         "Then click on the part to open up the configuration UI.";
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "ShowRealChuteTip",
+                                         "Configuring parachutes",
+                                         msg,
+                                         "OK",
+                                         false,
+                                         HighLogic.UISkin);
         }
     }
 }

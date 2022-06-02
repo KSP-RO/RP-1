@@ -8,16 +8,17 @@ When starting the game, we recommend "Easy" or "Normal" for players new to RP-1,
 
 Head to [the wiki](https://github.com/KSP-RO/RP-0/wiki) to learn more.
 
-
-This top-post is jointly maintained by pjf, NathanKell and many others.
-
 ---
 
 License: CC-BY-NC-SA-4.0
 
 Release Thread: https://forum.kerbalspaceprogram.com/index.php?/topic/190040-161-173-rp-1-realistic-progression-one-v12/
+
 Github Repo:  https://github.com/KSP-RO/RP-0
+
 Discord Link: https://discord.gg/V73jjNd
+
+---
 
 **Requirements:**
 

@@ -117,9 +117,9 @@ namespace KerbalConstructionTime
         /// <returns>The instance of the highest level LaunchPad</returns>
         public LCItem GetHighestLevelLaunchComplex()
         {
-            LCItem highest = LaunchComplexes.First(p => p.IsPad && p.IsOperational);
+            LCItem highest = LaunchComplexes.First(p => p.LCType == LaunchComplexType.Pad && p.IsOperational);
             foreach (var lc in LaunchComplexes)
-                if (lc.IsPad && lc.IsOperational && lc.MassMax > highest.MassMax)
+                if (lc.LCType == LaunchComplexType.Pad && lc.IsOperational && lc.MassMax > highest.MassMax)
                     highest = lc;
             return highest;
         }
@@ -191,7 +191,7 @@ namespace KerbalConstructionTime
                 LaunchComplexes.Clear();
                 foreach (ConfigNode cn in tmp.GetNodes("LaunchComplex"))
                 {
-                    var tempLC = new LCItem(string.Empty, 0f, 0f, Vector3.zero, true, false, this);
+                    var tempLC = new LCItem(string.Empty, 0f, 0f, Vector3.zero, LaunchComplexType.Pad, false, this);
                     tempLC.FromConfigNode(cn);
                     LaunchComplexes.Add(tempLC);
                 }

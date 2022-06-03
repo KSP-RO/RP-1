@@ -310,7 +310,7 @@ namespace KerbalConstructionTime
 
         public static double GetBuildRate(int index, BuildListVessel.ListType type, LCItem LC, bool isHumanRated, int upgradeDelta = 0)
         {
-            if (type == BuildListVessel.ListType.VAB ? !LC.IsPad : LC.IsPad)
+            if (type == BuildListVessel.ListType.VAB ? LC.LCType == LaunchComplexType.Hangar : LC.LCType == LaunchComplexType.Pad)
                 return 0.0001d;
 
             return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta);
@@ -778,7 +778,7 @@ namespace KerbalConstructionTime
 
             BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
 
-            if ((type == BuildListVessel.ListType.VAB) != KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
+            if ((type == BuildListVessel.ListType.VAB) != (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad))
             {
                 string dialogStr;
                 if (type == BuildListVessel.ListType.VAB)

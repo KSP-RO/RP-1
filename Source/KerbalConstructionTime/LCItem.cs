@@ -421,7 +421,7 @@ namespace KerbalConstructionTime
             node.TryGetValue("massOrig", ref MassOrig);
             node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
-            if (!node.TryGetValue("modID", ref _modID))
+            if (!node.TryGetValue("modID", ref _modID) || _modID == (new Guid()) )
                 _modID = Guid.NewGuid();
             node.TryGetValue("Engineers", ref Engineers);
             node.TryGetValue("EfficiencyEngineers", ref EfficiencyEngineers);

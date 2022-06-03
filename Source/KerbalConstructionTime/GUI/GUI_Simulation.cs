@@ -239,7 +239,7 @@ namespace KerbalConstructionTime
             EditorLogic.fetch.ship.SaveShip().Save(tempFile);
             KCTGameStates.IsSimulatedFlight = true;
             string launchSiteName = EditorLogic.fetch.launchSiteName;
-            if (launchSiteName == "LaunchPad" && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad)
+            if (launchSiteName == "LaunchPad" && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad)
             {
                 launchSiteName = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.launchSiteName;
             }

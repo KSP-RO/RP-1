@@ -393,6 +393,10 @@ namespace KerbalConstructionTime
                 return false;
             }
 
+            // Don't bother with name if it's a modify.
+            if (lc != null)
+                return true;
+
             if (string.IsNullOrEmpty(_newName))
             {
                 ScreenMessages.PostScreenMessage("Enter a name for the new launch complex");

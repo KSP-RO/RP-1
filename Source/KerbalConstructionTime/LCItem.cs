@@ -42,7 +42,7 @@ namespace KerbalConstructionTime
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), false, true);
-        public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, 1f, new Vector3(2f, 10f, 2f), true, false);
+        public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), true, false);
         public static LCData StartingLC15 = new LCData("Launch Complex 1", 15f, 15f, new Vector3(5f, 20f, 5f), true, false);
 
         public string Name;

@@ -80,7 +80,7 @@ namespace KerbalConstructionTime
                 buildRate = Utilities.GetBuildRate(LC, Mass, VesselBP, IsHumanRated, delta);
             else
                 buildRate = delta == 0 ? Utilities.GetBuildRate(0, LC, IsHumanRated, false)
-                : Utilities.GetBuildRate(0, LC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, LC, IsHumanRated, delta);
+                : Utilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, LC, IsHumanRated, delta);
             buildRate *= Utilities.GetEfficiencyMultipliers(LC) * LC.RushRate;
 
             if (IsReversed)

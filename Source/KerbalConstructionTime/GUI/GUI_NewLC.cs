@@ -111,7 +111,7 @@ namespace KerbalConstructionTime
 
             GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
 
-            bool isHangar = isModify && !activeLC.IsPad;
+            bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
             double curPadCost = 0;
             double curVABCost = 0;
             float fractionalPadLvl = -1;
@@ -201,7 +201,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
-            if (!isModify || activeLC.IsPad)
+            if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" ");
@@ -262,7 +262,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
                 GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
-                if (!isModify || activeLC.IsPad)
+                if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Extra Pad Cost:", GUILayout.ExpandWidth(false));
@@ -283,9 +283,9 @@ namespace KerbalConstructionTime
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {lcName}");
                     if (isModify)
-                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, activeLC.MassOrig, curPadSize, activeLC.IsPad, _isHumanRated));
+                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, activeLC.MassOrig, curPadSize, activeLC.LCType, _isHumanRated));
                     else
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, tonnageLimit, curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC));
+                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, tonnageLimit, curPadSize, LaunchComplexType.Pad, _isHumanRated, KCTGameStates.ActiveKSC));
                 }
                 else
                 {
@@ -299,7 +299,7 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        lc = new LCItem(_newName, tonnageLimit, Math.Max(1.5f, tonnageLimit), curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC);
+                        lc = new LCItem(_newName, tonnageLimit, Math.Max(1.5f, tonnageLimit), curPadSize, LaunchComplexType.Pad, _isHumanRated, KCTGameStates.ActiveKSC);
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                     }
                     lc.IsOperational = false;
@@ -310,7 +310,7 @@ namespace KerbalConstructionTime
                         Cost = totalCost,
                         Name = lcName,
                         IsModify = isModify,
-                        LCData = new LCItem.LCData(lc.Name, tonnageLimit, lc.MassOrig, curPadSize, lc.IsPad, _isHumanRated)
+                        LCData = new LCItem.LCData(lc.Name, tonnageLimit, lc.MassOrig, curPadSize, lc.LCType, _isHumanRated)
                     };
                     lcConstr.SetBP(totalCost);
                     KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
@@ -384,7 +384,7 @@ namespace KerbalConstructionTime
                 return false;
             }
 
-            if (lc != null && !lc.IsPad)
+            if (lc != null && lc.LCType == LaunchComplexType.Hangar)
                 return true;
 
             if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < Math.Max(1, (int)lc.MassOrig / 2) || tonnageLimit > lc.MassOrig * 2)))

@@ -168,6 +168,7 @@ namespace KerbalConstructionTime
                 vm.Data.LaunchID = data.LaunchID;
                 vm.Data.VesselID = data.VesselID;
                 vm.Data.LCID = data.LCID;
+                vm.Data.LCModID = data.LCModID;
             }
 
             if (dict.Count == 1) dict = null;    // Only has data for the current vessel so no need to keep history
@@ -185,6 +186,7 @@ namespace KerbalConstructionTime
                 vm2.Data.LaunchID = vm1.Data.LaunchID;
                 vm2.Data.FacilityBuiltIn = vm1.Data.FacilityBuiltIn;
                 vm2.Data.LCID = vm1.Data.LCID;
+                vm2.Data.LCModID = vm1.Data.LCModID;
             }
          }
     }

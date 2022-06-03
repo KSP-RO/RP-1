@@ -810,7 +810,7 @@ namespace KerbalConstructionTime
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
-            if (activeLC.IsPad)
+            if (activeLC.LCType == LaunchComplexType.Pad)
                 RenderRollouts();
 
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(275));
@@ -860,7 +860,7 @@ namespace KerbalConstructionTime
                 if (HighLogic.LoadedSceneIsEditor)
                     GUILayout.Label("No vessels under construction!");
                 else
-                    GUILayout.Label($"No vessels under construction! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsPad ? "VAB" : "SPH")} to build more.");
+                    GUILayout.Label($"No vessels under construction! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to build more.");
             }
             bool recalc = false;
             for (int i = 0; i < buildList.Count; i++)
@@ -943,7 +943,7 @@ namespace KerbalConstructionTime
         private static void RenderWarehouse()
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            bool isPad = activeLC.IsPad;
+            bool isPad = activeLC.LCType == LaunchComplexType.Pad;
             List<BuildListVessel> buildList = activeLC.Warehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
@@ -1344,7 +1344,7 @@ namespace KerbalConstructionTime
             }
             bool canModify = activeLC.CanModify;
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
-            if (!HighLogic.LoadedSceneIsEditor && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.IsPad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
+            if (!HighLogic.LoadedSceneIsEditor && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip), 
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
@@ -1389,7 +1389,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            if (!HighLogic.LoadedSceneIsEditor && activeLC.IsPad && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
+            if (!HighLogic.LoadedSceneIsEditor && activeLC.LCType == LaunchComplexType.Pad && !GUIStates.ShowPersonnelWindow && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)

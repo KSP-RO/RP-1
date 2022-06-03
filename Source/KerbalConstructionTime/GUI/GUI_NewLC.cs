@@ -172,7 +172,7 @@ namespace KerbalConstructionTime
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("for subsequent modification:");
-                    GUILayout.Label($"{(tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{Math.Max(3, tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
 
@@ -299,7 +299,7 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        lc = new LCItem(_newName, tonnageLimit, tonnageLimit, curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC);
+                        lc = new LCItem(_newName, tonnageLimit, Math.Max(1.5f, tonnageLimit), curPadSize, true, _isHumanRated, KCTGameStates.ActiveKSC);
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                     }
                     lc.IsOperational = false;

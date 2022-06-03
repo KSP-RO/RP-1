@@ -132,7 +132,7 @@ namespace KerbalConstructionTime
             string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
 
             bool recalc = false;
-            BuildListVessel.ListType type = currentLC.IsPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            BuildListVessel.ListType type = currentLC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {

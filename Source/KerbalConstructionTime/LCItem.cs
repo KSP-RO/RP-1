@@ -54,6 +54,8 @@ namespace KerbalConstructionTime
         public string Name;
         protected Guid _id;
         public Guid ID => _id;
+        protected Guid _modID;
+        public Guid ModID => _modID;
         public List<BuildListVessel> BuildList = new List<BuildListVessel>();
         public List<BuildListVessel> Warehouse = new List<BuildListVessel>();
         public SortedList<string, BuildListVessel> Plans = new SortedList<string, BuildListVessel>();
@@ -127,6 +129,7 @@ namespace KerbalConstructionTime
             Name = lcName;
 
             _id = Guid.NewGuid();
+            _modID = Guid.NewGuid();
             _ksc = ksc;
             LCType = lcType;
             IsHumanRated = isHuman;
@@ -157,6 +160,7 @@ namespace KerbalConstructionTime
 
         public void Modify(LCData data)
         {
+            _modID = Guid.NewGuid();
             MassMax = data.massMax;
             MassOrig = data.massOrig;
             // back-compat
@@ -313,6 +317,7 @@ namespace KerbalConstructionTime
             node.AddValue("massOrig", MassOrig);
             node.AddValue("sizeMax", SizeMax);
             node.AddValue("id", _id);
+            node.AddValue("modID", _modID);
             node.AddValue("Engineers", Engineers);
             node.AddValue("EfficiencyEngineers", EfficiencyEngineers);
             node.AddValue("LastEngineers", LastEngineers);
@@ -416,6 +421,8 @@ namespace KerbalConstructionTime
             node.TryGetValue("massOrig", ref MassOrig);
             node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
+            if (!node.TryGetValue("modID", ref _modID))
+                _modID = Guid.NewGuid();
             node.TryGetValue("Engineers", ref Engineers);
             node.TryGetValue("EfficiencyEngineers", ref EfficiencyEngineers);
             node.TryGetValue("IsRushing", ref IsRushing);

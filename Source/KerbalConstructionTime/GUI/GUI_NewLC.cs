@@ -21,7 +21,7 @@ namespace KerbalConstructionTime
             if (tonnageLimit != float.MaxValue)
             {
                 double mass = tonnageLimit;
-                curPadCost = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 4000d) + 1000d;
+                curPadCost = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2000d) + 1000d;
 
                 if (_padLvlOptions == null)
                 {
@@ -220,6 +220,11 @@ namespace KerbalConstructionTime
 
             if (isModify)
             {
+                // Enforce a min cost for pad size changes
+                const double minPadModifyCost = 1000d;
+                if (activeLC.MassMax != tonnageLimit && totalCost < minPadModifyCost)
+                    totalCost = minPadModifyCost;
+
                 double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
                 double renovateCost = Math.Abs(curVABCost - oldVABCost)
                     + heightAbs * 1000d

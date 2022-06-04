@@ -129,7 +129,7 @@ namespace KerbalConstructionTime
             Name = lcName;
 
             _id = Guid.NewGuid();
-            _modID = Guid.NewGuid();
+            _modID = _id;
             _ksc = ksc;
             LCType = lcType;
             IsHumanRated = isHuman;
@@ -146,7 +146,7 @@ namespace KerbalConstructionTime
 
             if (LCType == LaunchComplexType.Pad)
             {
-                var pad = new KCT_LaunchPad(Name, fracLevel);
+                var pad = new KCT_LaunchPad(_id, Name, fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
@@ -158,9 +158,9 @@ namespace KerbalConstructionTime
             void removed(int idx, ConstructionBuildItem pc) { ksc.Constructions.Remove(pc); }
         }
 
-        public void Modify(LCData data)
+        public void Modify(LCData data, Guid modId)
         {
-            _modID = Guid.NewGuid();
+            _modID = modId;
             MassMax = data.massMax;
             MassOrig = data.massOrig;
             // back-compat
@@ -347,7 +347,7 @@ namespace KerbalConstructionTime
                 var storageItem = new PadConstructionStorageItem();
                 storageItem.FromPadConstruction(pc);
                 var cn = new ConfigNode("PadConstruction");
-                cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
+                storageItem.Save(cn);
                 cnPadConstructions.AddNode(cn);
             }
             node.AddNode(cnPadConstructions);
@@ -365,7 +365,7 @@ namespace KerbalConstructionTime
                 var storageItem = new ReconRolloutStorageItem();
                 storageItem.FromReconRollout(rr);
                 var rrCN = new ConfigNode("Recon_Rollout_Item");
-                rrCN = ConfigNode.CreateConfigFromObject(storageItem, rrCN);
+                storageItem.Save(rrCN);
                 cnRR.AddNode(rrCN);
             }
             node.AddNode(cnRR);
@@ -376,7 +376,7 @@ namespace KerbalConstructionTime
                 var storageItem = new AirlaunchPrepStorageItem();
                 storageItem.FromAirlaunchPrep(ap);
                 var cn = new ConfigNode("Airlaunch_Prep_Item");
-                cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
+                storageItem.Save(cn);
                 cnAP.AddNode(cn);
             }
             node.AddNode(cnAP);
@@ -474,7 +474,7 @@ namespace KerbalConstructionTime
             foreach (ConfigNode RRCN in tmp.GetNodes("Recon_Rollout_Item"))
             {
                 var tempRR = new ReconRolloutStorageItem();
-                ConfigNode.LoadObjectFromConfig(tempRR, RRCN);
+                tempRR.Load(RRCN);
                 Recon_Rollout.Add(tempRR.ToReconRollout());
             }
 
@@ -483,7 +483,7 @@ namespace KerbalConstructionTime
                 foreach (ConfigNode cn in tmp.GetNodes("Airlaunch_Prep_Item"))
                 {
                     var storageItem = new AirlaunchPrepStorageItem();
-                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    storageItem.Load(cn);
                     AirlaunchPrep.Add(storageItem.ToAirlaunchPrep());
                 }
             }
@@ -495,6 +495,7 @@ namespace KerbalConstructionTime
                 {
                     var tempLP = new KCT_LaunchPad("LP0");
                     ConfigNode.LoadObjectFromConfig(tempLP, cn);
+                    cn.TryGetValue(nameof(KCT_LaunchPad.id), ref tempLP.id);
                     tempLP.DestructionNode = cn.GetNode("DestructionState");
                     if (tempLP.fractionalLevel == -1) tempLP.MigrateFromOldState();
                     LaunchPads.Add(tempLP);
@@ -507,7 +508,7 @@ namespace KerbalConstructionTime
                 foreach (ConfigNode cn in tmp.GetNodes("PadConstruction"))
                 {
                     var storageItem = new PadConstructionStorageItem();
-                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    storageItem.Load(cn);
                     PadConstructions.Add(storageItem.ToPadConstruction());
                 }
             }

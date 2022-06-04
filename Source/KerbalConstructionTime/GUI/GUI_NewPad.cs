@@ -69,19 +69,24 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.x = (Screen.width - 150) / 2;
                 GUIStates.ShowBuildList = true;
 
+                Guid id = Guid.NewGuid();
                 if (!Utilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log("Building new launchpad!");
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(_newName, fractionalPadLvl));
+                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(id, _newName, fractionalPadLvl)
+                    {
+                        isOperational = true
+                    });
                 }
                 else
                 {
                     KCTDebug.Log("Building new launchpad!");
-                    var lp = new KCT_LaunchPad(_newName, fractionalPadLvl);
+                    var lp = new KCT_LaunchPad(id, _newName, fractionalPadLvl);
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
 
                     var padConstr = new PadConstruction
                     {
+                        ID = id,
                         LaunchpadIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Count - 1,
                         Cost = curPadCost,
                         Name = _newName

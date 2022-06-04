@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 namespace KerbalConstructionTime
 {
@@ -14,7 +9,9 @@ namespace KerbalConstructionTime
 
         [Persistent]
         public bool isModify = false;
-        
+
+        [Persistent]
+        public Guid modId;
 
         [Persistent]
         public LCItem.LCData lcData = new LCItem.LCData();
@@ -25,6 +22,7 @@ namespace KerbalConstructionTime
             LoadFields(lc);
             lc.LaunchComplexIndex = launchComplexID;
             lc.IsModify = isModify;
+            lc.ModID = modId;
             lc.LCData = new LCItem.LCData(lcData);
 
             return lc;
@@ -35,8 +33,21 @@ namespace KerbalConstructionTime
             SaveFields(lcc);
             launchComplexID = lcc.LaunchComplexIndex;
             isModify = lcc.IsModify;
+            modId = lcc.ModID;
             lcData = new LCItem.LCData(lcc.LCData);
             return this;
+        }
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            node.TryGetValue(nameof(modId), ref modId);
+        }
+
+        public override void Save(ConfigNode node)
+        {
+            base.Save(node);
+            node.AddValue(nameof(modId), modId);
         }
     }
 }

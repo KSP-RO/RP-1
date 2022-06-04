@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace RP0
+﻿namespace RP0
 {
     public class LogPeriod : IConfigNode
     {
@@ -38,6 +34,9 @@ namespace RP0
 
         [Persistent]
         public double EntryCosts;
+
+        [Persistent]
+        public double ConstructionFees;
 
         [Persistent]
         public double OtherFees;

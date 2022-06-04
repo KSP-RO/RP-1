@@ -18,13 +18,15 @@ namespace KerbalConstructionTime
         public static EventData<RDTech> OnTechQueued;
         public static EventData<TechItem> OnTechCompleted;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeQueued;
+        public static EventData<FacilityUpgrade> OnFacilityUpgradeCancel;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeComplete;
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionQueued;
+        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionCancel;
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
         public static EventData<LCConstruction, LCItem> OnLCConstructionQueued;
+        public static EventData<LCConstruction, LCItem> OnLCConstructionCancel;
         public static EventData<LCConstruction, LCItem> OnLCConstructionComplete;
         public static EventVoid OnPersonnelChange;
-
 
         public KCTEvents()
         {
@@ -112,10 +114,13 @@ namespace KerbalConstructionTime
             OnTechQueued = new EventData<RDTech>("OnKctTechQueued");
             OnTechCompleted = new EventData<TechItem>("OnKctTechCompleted");
             OnFacilityUpgradeQueued = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeQueued");
+            OnFacilityUpgradeCancel = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeCancel");
             OnFacilityUpgradeComplete = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeComplete");
             OnPadConstructionQueued = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionQueued");
+            OnPadConstructionCancel = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionCancel");
             OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
             OnLCConstructionQueued = new EventData<LCConstruction, LCItem>("OnKctLCConstructionQueued");
+            OnLCConstructionCancel = new EventData<LCConstruction, LCItem>("OnKctLCConstructionCancel");
             OnLCConstructionComplete = new EventData<LCConstruction, LCItem>("OnKctLCConstructionComplete");
             OnPersonnelChange = new EventVoid("OnKctPesonnelChange");
             CreatedEvents = true;

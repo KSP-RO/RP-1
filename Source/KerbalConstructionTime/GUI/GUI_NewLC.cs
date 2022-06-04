@@ -288,7 +288,7 @@ namespace KerbalConstructionTime
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {lcName}");
                     if (isModify)
-                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, activeLC.MassOrig, curPadSize, activeLC.LCType, _isHumanRated));
+                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, activeLC.MassOrig, curPadSize, activeLC.LCType, _isHumanRated), Guid.NewGuid());
                     else
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, tonnageLimit, curPadSize, LaunchComplexType.Pad, _isHumanRated, KCTGameStates.ActiveKSC));
                 }
@@ -315,6 +315,7 @@ namespace KerbalConstructionTime
                         Cost = totalCost,
                         Name = lcName,
                         IsModify = isModify,
+                        ModID = isModify ? Guid.NewGuid() : lc.ModID,
                         LCData = new LCItem.LCData(lc.Name, tonnageLimit, lc.MassOrig, curPadSize, lc.LCType, _isHumanRated)
                     };
                     lcConstr.SetBP(totalCost);

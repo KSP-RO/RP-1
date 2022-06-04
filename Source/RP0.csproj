@@ -42,10 +42,13 @@
     <Compile Include="CareerLog\CareerLogDto.cs" />
     <Compile Include="CareerLog\CareerLogGUI.cs" />
     <Compile Include="CareerLog\ContractEvent.cs" />
+    <Compile Include="CareerLog\FacilityConstruction.cs" />
     <Compile Include="CareerLog\FacilityConstructionEvent.cs" />
     <Compile Include="CareerLog\FailureEvent.cs" />
     <Compile Include="CareerLog\LaunchEvent.cs" />
+    <Compile Include="CareerLog\LCLogItem.cs" />
     <Compile Include="CareerLog\LogPeriod.cs" />
+    <Compile Include="CareerLog\LPConstruction.cs" />
     <Compile Include="CareerLog\TechResearchEvent.cs" />
     <Compile Include="Crew\ActiveCourse.cs" />
     <Compile Include="Crew\CourseTemplate.cs" />

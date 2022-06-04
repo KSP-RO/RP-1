@@ -196,9 +196,9 @@ namespace KerbalConstructionTime
                     !PadConstructions.Any() && LaunchPads.Count < 2 && EfficiencyEngineers == StartingEfficiency && LastEngineers < 0.001d &&
                     (LCType == LaunchComplexType.Pad ? StartingLC1.Compare(this) || StartingLC15.Compare(this) : StartingHangar.Compare(this));
 
-        public bool IsActive => BuildList.Any() || Recon_Rollout.Any() || AirlaunchPrep.Any();
+        public bool IsActive => BuildList.Any() || Recon_Rollout.Any(r => !r.IsComplete()) || AirlaunchPrep.Any(a => !a.IsComplete());
 
-        public bool CanModify => !IsActive && !PadConstructions.Any();
+        public bool CanModify => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() && !PadConstructions.Any();
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
             Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");

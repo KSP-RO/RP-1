@@ -147,7 +147,7 @@ namespace KerbalConstructionTime
                 var storageItem = new FacilityUpgradeStorageItem();
                 storageItem.FromFacilityUpgrade(facUpgd);
                 var cn = new ConfigNode("UpgradingBuilding");
-                cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
+                storageItem.Save(cn);
                 cnUpgradeables.AddNode(cn);
             }
             node.AddNode(cnUpgradeables);
@@ -159,7 +159,7 @@ namespace KerbalConstructionTime
                 var storageItem = new LCConstructionStorageItem();
                 storageItem.FromLCConstruction(lcc);
                 var cn = new ConfigNode("LCConstruction");
-                cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
+                storageItem.Save(cn);
                 cnLCConstructions.AddNode(cn);
             }
             node.AddNode(cnLCConstructions);
@@ -203,7 +203,7 @@ namespace KerbalConstructionTime
                 foreach (ConfigNode cn in tmp.GetNodes("LCConstruction"))
                 {
                     var storageItem = new LCConstructionStorageItem();
-                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    storageItem.Load(cn);
                     LCConstructions.Add( storageItem.ToLCConstruction());
                 }
             }
@@ -214,7 +214,7 @@ namespace KerbalConstructionTime
                 foreach (ConfigNode cn in tmp.GetNodes("UpgradingBuilding"))
                 {
                     var storageItem = new FacilityUpgradeStorageItem();
-                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    storageItem.Load(cn);
                     FacilityUpgrades.Add(storageItem.ToFacilityUpgrade());
                 }
             }

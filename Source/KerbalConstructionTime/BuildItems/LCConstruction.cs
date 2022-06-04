@@ -10,6 +10,7 @@ namespace KerbalConstructionTime
         /// </summary>
         public int LaunchComplexIndex = 0;
         public bool IsModify;
+        public Guid ModID;
 
         public LCItem.LCData LCData;
 
@@ -32,7 +33,7 @@ namespace KerbalConstructionTime
                 lc.IsOperational = true;
                 UpgradeProcessed = true;
                 if (IsModify)
-                    lc.Modify(LCData);
+                    lc.Modify(LCData, ModID);
 
                 try
                 {
@@ -66,6 +67,16 @@ namespace KerbalConstructionTime
             }
 
             KSC.LCConstructions.Remove(this);
+
+            try
+            {
+                KCTEvents.OnLCConstructionCancel?.Fire(this, lc);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
             KSC.RecalculateBuildRates(false);
         }
     }

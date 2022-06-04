@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KerbalConstructionTime;
+using System;
+using UnityEngine;
 
 namespace RP0
 {
@@ -94,12 +96,116 @@ namespace RP0
     }
 
     [Serializable]
-    internal class FacilityConstructionEventDto
+    internal class FacilityConstructionDto
     {
-        public string date;
         public SpaceCenterFacility facility;
         public int newLevel;
         public double cost;
+        public string facilityID;
+
+        public FacilityConstructionDto()
+        {
+        }
+
+        public FacilityConstructionDto(FacilityConstruction fc)
+        {
+            facility = fc.Facility;
+            facilityID = fc.FacilityID.ToString();
+            newLevel = fc.NewLevel;
+            cost = fc.Cost;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(facility)}: {facility}, " +
+                $"{nameof(facilityID)}: {facilityID}, " +
+                $"{nameof(newLevel)}: {newLevel}, " +
+                $"{nameof(cost)}: {cost}";
+        }
+    }
+
+    [Serializable]
+    internal class LPConstructionDto
+    {
+        public double cost;
+        public string lpId;
+        public string lcId;
+        public string lcModId;
+
+        public LPConstructionDto()
+        {
+        }
+
+        public LPConstructionDto(LPConstruction lpc)
+        {
+            lpId = lpc.LPID.ToString();
+            lcId = lpc.LCID.ToString();
+            lcModId = lpc.LCModID.ToString();
+            cost = lpc.Cost;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(lpId)}: {lpId}, " +
+                $"{nameof(lcId)}: {lcId}, " +
+                $"{nameof(lcModId)}: {lcModId}, " +
+                $"{nameof(cost)}: {cost}";
+        }
+    }
+
+    [Serializable]
+    internal class LCDto
+    {
+        public string id;
+        public string modId;
+        public double modCost;
+        private string name;
+        private LaunchComplexType lcType;
+        public float massMax;
+        public float massOrig;
+        public Vector3 sizeMax;
+        public bool isHumanRated;
+
+        public LCDto()
+        {
+        }
+
+        public LCDto(LCLogItem lc)
+        {
+            name = lc.Name;
+            lcType = lc.LcType;
+            massMax = lc.MassMax;
+            massOrig = lc.MassOrig;
+            sizeMax = lc.SizeMax;
+            isHumanRated = lc.IsHumanRated;
+            id = lc.ID.ToString();
+            modId = lc.ModID.ToString();
+            modCost = lc.ModCost;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(id)}: {id}, " +
+                $"{nameof(modId)}: {modId}, " +
+                $"{nameof(modCost)}: {modCost}, " +
+                $"{nameof(name)}: {name}, " +
+                $"{nameof(lcType)}: {lcType}, " +
+                $"{nameof(massMax)}: {massMax}, " +
+                $"{nameof(massOrig)}: {massOrig}, " +
+                $"{nameof(sizeMax)}: {sizeMax}, " +
+                $"{nameof(isHumanRated)}: {isHumanRated}";
+        }
+    }
+
+    [Serializable]
+    internal class FacilityConstructionEventDto
+    {
+        public string date;
+        public FacilityType facility;
+        public string facilityID;
         public ConstructionState state;
 
         public FacilityConstructionEventDto()
@@ -110,8 +216,7 @@ namespace RP0
         {
             date = CareerLog.UTToDate(fce.UT).ToString("o");
             facility = fce.Facility;
-            newLevel = (int)fce.NewLevel;
-            cost = fce.Cost;
+            facilityID = fce.FacilityID.ToString();
             state = fce.State;
         }
 
@@ -120,8 +225,7 @@ namespace RP0
             return
                 $"{nameof(date)}: {date}, " +
                 $"{nameof(facility)}: {facility}, " +
-                $"{nameof(newLevel)}: {newLevel}, " +
-                $"{nameof(cost)}: {cost}, " +
+                $"{nameof(facilityID)}: {facilityID}, " +
                 $"{nameof(state)}: {state}";
         }
     }

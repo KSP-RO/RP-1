@@ -810,14 +810,14 @@ namespace KerbalConstructionTime
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
-            if (activeLC.LCType == LaunchComplexType.Pad)
-                RenderRollouts();
 
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(275));
-            {
-                RenderVesselsBeingBuilt(activeLC.BuildList);
-                RenderWarehouse();
-            }
+
+            if (activeLC.LCType == LaunchComplexType.Pad)
+                RenderRollouts();
+            RenderVesselsBeingBuilt(activeLC.BuildList);
+            RenderWarehouse();
+
             GUILayout.EndScrollView();
 
             RenderLaunchComplexControls();

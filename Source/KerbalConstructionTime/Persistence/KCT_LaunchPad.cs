@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Upgradeables;
 
 namespace KerbalConstructionTime
@@ -14,6 +13,11 @@ namespace KerbalConstructionTime
         /// Zero-based level of the launch pad
         /// </summary>
         [Persistent] public int level = 0;
+
+        /// <summary>
+        /// Unique ID of the launch pad
+        /// </summary>
+        [Persistent] public Guid id;
 
         /// <summary>
         /// Used for creating custom pad sizes that lie somewhere between the full levels
@@ -58,31 +62,25 @@ namespace KerbalConstructionTime
         }
 
         /// <summary>
-        /// Creates a new pad with non-fractional level. Will also mark it as built/operational.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="lvl">0-based level</param>
-        public KCT_LaunchPad(string name, int lvl)
-        {
-            this.name = name;
-            fractionalLevel = lvl;
-            level = lvl;
-            isOperational = true;
-        }
-
-        /// <summary>
         /// Creates a new pad with fractional level. Will NOT mark it as built/operational.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="lvl">0-based level, can be fractional</param>
-        /// <param name="supportedMass"></param>
-        /// <param name="supportedSize"></param>
-        public KCT_LaunchPad(string name, float lvl)
+        public KCT_LaunchPad(Guid id, string name, float lvl)
         {
+            this.id = id;
             this.name = name;
             fractionalLevel = lvl;
             level = (int)lvl;
             isOperational = false;
+        }
+
+        public override ConfigNode AsConfigNode()
+        {
+            ConfigNode cn = base.AsConfigNode();
+            cn.AddValue(nameof(id), id);
+            return cn;
         }
 
         public bool Delete(out string failReason)

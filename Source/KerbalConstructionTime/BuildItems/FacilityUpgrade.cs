@@ -14,7 +14,8 @@ namespace KerbalConstructionTime
             set { _facilityType = value; }
         }
         public int UpgradeLevel, CurrentLevel;
-        public string Id;
+        public string FacilityInternalID;
+        public Guid ID;
 
         public FacilityUpgrade()
         {
@@ -22,8 +23,9 @@ namespace KerbalConstructionTime
 
         public FacilityUpgrade(SpaceCenterFacility? type, string facilityID, int newLevel, int oldLevel, string name)
         {
+            ID = Guid.NewGuid();
             _facilityType = type;
-            Id = facilityID;
+            FacilityInternalID = facilityID;
             UpgradeLevel = newLevel;
             CurrentLevel = oldLevel;
             Name = name;
@@ -34,7 +36,7 @@ namespace KerbalConstructionTime
         public void Downgrade()
         {
             KCTDebug.Log($"Downgrading {Name} to level {CurrentLevel}");
-            foreach (UpgradeableFacility facility in GetFacilityReferencesById(Id))
+            foreach (UpgradeableFacility facility in GetFacilityReferencesById(FacilityInternalID))
             {
                 KCTEvents.AllowedToUpgrade = true;
                 facility.SetLevel(CurrentLevel);
@@ -45,7 +47,7 @@ namespace KerbalConstructionTime
         {
             KCTDebug.Log($"Upgrading {Name} to level {UpgradeLevel}");
 
-            List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(Id);
+            List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(FacilityInternalID);
             if (_facilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
             {
                 // Also upgrade the SPH to the same level as VAB when playing with unified build queue
@@ -58,7 +60,7 @@ namespace KerbalConstructionTime
                 facility.SetLevel(UpgradeLevel);
             }
 
-            int newLvl = Utilities.GetBuildingUpgradeLevel(Id);
+            int newLvl = Utilities.GetBuildingUpgradeLevel(FacilityInternalID);
             UpgradeProcessed = newLvl == UpgradeLevel;
 
             KCTDebug.Log($"Upgrade processed: {UpgradeProcessed} Current: {newLvl} Desired: {UpgradeLevel}");
@@ -77,12 +79,22 @@ namespace KerbalConstructionTime
 
         public bool AlreadyInProgress()
         {
-            return KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.Id == this.Id) != null) != null;
+            return KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.FacilityInternalID == this.FacilityInternalID) != null) != null;
         }
 
         protected override void ProcessCancel()
         {
             KSC.FacilityUpgrades.Remove(this);
+
+            try
+            {
+                KCTEvents.OnFacilityUpgradeCancel?.Fire(this);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
             KSC.RecalculateBuildRates(false);
         }
 

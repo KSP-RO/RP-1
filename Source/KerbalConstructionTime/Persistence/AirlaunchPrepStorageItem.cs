@@ -1,6 +1,6 @@
 ﻿namespace KerbalConstructionTime
 {
-    public class AirlaunchPrepStorageItem
+    public class AirlaunchPrepStorageItem : IConfigNode
     {
         [Persistent] private string name = "";
         [Persistent] public double BP = 0, progress = 0, cost = 0, mass = 0, vesselBP = 0;
@@ -34,6 +34,16 @@
             vesselBP = ap.VesselBP;
             isHumanRated = ap.IsHumanRated;
             return this;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+        }
+
+        public void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

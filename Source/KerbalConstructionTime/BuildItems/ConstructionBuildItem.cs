@@ -193,7 +193,7 @@ namespace KerbalConstructionTime
         }
     }
 
-    public abstract class ConstructionStorage
+    public abstract class ConstructionStorage : IConfigNode
     {
         [Persistent]
         public string name;
@@ -230,6 +230,16 @@ namespace KerbalConstructionTime
                 b.SpentCost = b.Cost;
             b.UpgradeProcessed = upgradeProcessed;
             b.BuildListIndex = buildListIndex;
+        }
+
+        public virtual void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+        }
+
+        public virtual void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

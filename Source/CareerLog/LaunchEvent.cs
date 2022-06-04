@@ -18,6 +18,12 @@ namespace RP0
         [Persistent]
         public EditorFacility BuiltAt;
 
+        [Persistent]
+        public string LCID;
+
+        [Persistent]
+        public string LCModID;
+
         public LaunchEvent(double UT) : base(UT)
         {
         }

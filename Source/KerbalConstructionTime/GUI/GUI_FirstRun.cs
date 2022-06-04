@@ -26,9 +26,7 @@ namespace KerbalConstructionTime
 
                 if (GUILayout.Button("1t Capacity (for small rockets)", HighLogic.Skin.button))
                 {
-                    LCItem starterLC = new LCItem(LCItem.StartingLC1, KCTGameStates.ActiveKSC);
-                    starterLC.IsOperational = true;
-                    KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
+                    CreateStartingPad(LCItem.StartingLC1);
                     Utilities.AddFunds(PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds, TransactionReasons.None);
                 }
                 GUILayout.Label($"Also gives √{PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds:N0}");
@@ -37,9 +35,7 @@ namespace KerbalConstructionTime
 
                 if (GUILayout.Button($"15t Capacity (min: {LCItem.CalcMassMin(15):N0}t)", HighLogic.Skin.button))
                 {
-                    LCItem starterLC = new LCItem(LCItem.StartingLC15, KCTGameStates.ActiveKSC);
-                    starterLC.IsOperational = true;
-                    KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
+                    CreateStartingPad(LCItem.StartingLC15);
                 }
             }
             
@@ -62,6 +58,16 @@ namespace KerbalConstructionTime
             GUILayout.EndVertical();
             if (!Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
                 GUI.DragWindow();
+        }
+
+        private static void CreateStartingPad(LCItem.LCData lcTemplate)
+        {
+            LCItem starterLC = new LCItem(lcTemplate, KCTGameStates.ActiveKSC)
+            {
+                IsOperational = true
+            };
+            KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
+            KCTEvents.OnLCConstructionComplete.Fire(null, starterLC);
         }
     }
 }

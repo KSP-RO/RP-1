@@ -66,5 +66,5 @@ with open("README.md", "r") as f:
 		replaced = re.sub(r'compare/v[\d|.]*...master', new_string, line)
 		new_readme.append(replaced)
 
-with open("README.md", "w") as f:
+with open("README_TEMP.md", "w") as f:
 	f.writelines(new_readme)

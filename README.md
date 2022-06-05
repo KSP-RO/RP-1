@@ -31,7 +31,7 @@ Discord Link: https://discord.gg/V73jjNd
 
 **Requirements:**
 
-*These mods are required for RP-1 to function properly*
+*These mods are required for RP-1 to function properly.*
 - Realism Overhaul and all of its required mods (including Real Solar System)
 - Module Manager
 - SXT Continued (Needed for engines)
@@ -47,7 +47,7 @@ Discord Link: https://discord.gg/V73jjNd
 
 **RO-Mods:**
 
-*These mods were created specifically for use with the RO/RP-1 mod suite, and provide high-quality and well-supported parts*
+*These mods were created specifically for use with the RO/RP-1 mod suite, and provide high-quality and well-supported parts.*
 - ROEngines
 - ROTanks
 - ROCapsules

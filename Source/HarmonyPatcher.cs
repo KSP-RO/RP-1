@@ -12,7 +12,7 @@ using UnityEngine.UI;
 namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
-    public class HarmonyPatcher : MonoBehaviour
+    public partial class HarmonyPatcher : MonoBehaviour
     {
         internal void Start()
         {

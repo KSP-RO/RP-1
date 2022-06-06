@@ -13,6 +13,7 @@ namespace RP0.Programs
     {
         private static readonly int _windowId = "RP0ProgramsWindow".GetHashCode();
 
+        public bool IsInAdmin => _showGUI;
         private bool _showGUI;
         private Rect _windowRect = new Rect(3, 40, 425, 600);
         private GUIContent _gc;
@@ -27,7 +28,19 @@ namespace RP0.Programs
 
         public List<Program> CompletedPrograms { get; private set; } = new List<Program>();
 
-        public int ActiveProgramLimit => 2;
+        public int ActiveProgramLimit => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
+
+        public static void EnsurePrograms()
+        {
+            if (Programs == null)
+            {
+                Programs = new List<Program>();
+                foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM"))
+                {
+                    Programs.Add(new Program(n));
+                }
+            }
+        }
 
         public override void OnAwake()
         {
@@ -37,15 +50,15 @@ namespace RP0.Programs
             }
             Instance = this;
 
-            GameEvents.onGUIMissionControlSpawn.Add(ShowMCGUI);
-            GameEvents.onGUIMissionControlDespawn.Add(HideMCGUI);
+            GameEvents.onGUIAdministrationFacilitySpawn.Add(ShowAdminGUI);
+            GameEvents.onGUIAdministrationFacilityDespawn.Add(HideAdminGUI);
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
         }
 
         public void OnDestroy()
         {
-            GameEvents.onGUIMissionControlSpawn.Remove(ShowMCGUI);
-            GameEvents.onGUIMissionControlDespawn.Remove(HideMCGUI);
+            GameEvents.onGUIAdministrationFacilitySpawn.Remove(ShowAdminGUI);
+            GameEvents.onGUIAdministrationFacilityDespawn.Remove(HideAdminGUI);
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
         }
 
@@ -60,14 +73,7 @@ namespace RP0.Programs
                     Settings.Load(cn);
             }
 
-            if (Programs == null)
-            {
-                Programs = new List<Program>();
-                foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM"))
-                {
-                    Programs.Add(new Program(n));
-                }
-            }
+            EnsurePrograms();
 
             foreach (ConfigNode cn in node.GetNodes("ACTIVEPROGRAM"))
             {
@@ -144,12 +150,12 @@ namespace RP0.Programs
             }
         }
 
-        private void ShowMCGUI()
+        private void ShowAdminGUI()
         {
             _showGUI = true;
         }
 
-        private void HideMCGUI()
+        private void HideAdminGUI()
         {
             _showGUI = false;
         }
@@ -214,8 +220,7 @@ namespace RP0.Programs
                 GUI.enabled = ActivePrograms.Count < ActiveProgramLimit;
                 if (GUILayout.Button("Accept", HighLogic.Skin.button))
                 {
-                    ActivePrograms.Add(p.Accept());
-                    ContractPreLoader.Instance.ResetGenerationFailure();
+                    ActivateProgram(p);
                 }
                 GUI.enabled = true;
             }
@@ -289,6 +294,32 @@ namespace RP0.Programs
             }
 
             GUILayout.EndVertical();
+        }
+
+        public bool ActivateProgram(string name)
+        {
+            Program p = Programs.Find(p2 => p2.name == name);
+            if (p == null)
+                return false;
+
+            ActivateProgram(p);
+            return true;
+        }
+
+        private void ActivateProgram(Program p)
+        {
+            ActivePrograms.Add(p.Accept());
+            ContractPreLoader.Instance.ResetGenerationFailure();
+        }
+
+        public bool CompleteProgram(string name)
+        {
+            Program p = ActivePrograms.Find(p2 => p2.name == name);
+            if (p == null)
+                return false;
+
+            CompleteProgram(p);
+            return true;
         }
 
         private void CompleteProgram(Program p)

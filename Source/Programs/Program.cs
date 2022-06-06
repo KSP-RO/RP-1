@@ -57,6 +57,12 @@ namespace RP0.Programs
         [Persistent]
         public double fundsPaidOut;
 
+        /// <summary>
+        /// Texture URL
+        /// </summary>
+        [Persistent]
+        public string icon;
+
         private Func<bool> _requirementsPredicate;
         private Func<bool> _objectivesPredicate;
 
@@ -87,6 +93,7 @@ namespace RP0.Programs
         {
             name = toCopy.name;
             title = toCopy.title;
+            icon = toCopy.icon;
             description = toCopy.description;
             requirementsPrettyText = toCopy.requirementsPrettyText;
             objectivesPrettyText = toCopy.objectivesPrettyText;

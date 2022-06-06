@@ -1568,6 +1568,32 @@
         ]
     },
     {
+        "name": "ROC-DynaCockpitAltMoroz",
+        "title": "Dynasoar Cockpit (Alt)",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "16000",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "Cockpit",
+        "year": "1966",
+        "technology": "prototypeSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "X-20",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "X20",
+        "identical_part_name": "X20Cockpit",
+        "module_tags": [
+            "Cockpit",
+            "HumanRated",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
         "name": "ROC-DynaCockpitMoroz",
         "title": "Dynasoar Cockpit",
         "description": "",
@@ -3624,6 +3650,30 @@
         "identical_part_name": "VostokServiceModule",
         "module_tags": [
             "NoResourceCostMult"
+        ]
+    },
+    {
+        "name": "ROC-ZenitCapsule",
+        "title": "Zenit Descent Module (Improved Film Camera)",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "1000",
+        "entry_cost": "0",
+        "category": "COMMAND",
+        "info": "Photography",
+        "year": "1961",
+        "technology": "basicCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Zenit",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "capsulesVostok,RO-ImprovedFilmCamera",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments",
+            "Reentry"
         ]
     }
 ]

@@ -174,12 +174,7 @@ namespace KerbalConstructionTime
 
             if (!HighLogic.LoadedSceneIsFlight)
             {
-                bool b = KCTGameStates.SimulationParams.BuildSimulatedVessel;
                 KCTGameStates.SimulationParams.Reset();
-                if (b && KCTGameStates.LaunchedVessel != null)
-                {
-                    Utilities.TryAddVesselToBuildList(KCTGameStates.LaunchedVessel);
-                }
             }
 
             switch (HighLogic.LoadedScene)
@@ -292,7 +287,17 @@ namespace KerbalConstructionTime
                         ProtoCrewMember crewMember = assign?.PCM;
                         if (crewMember == null) continue;
 
-                        // CrewRoster isn't reloaded from ConfigNode when starting flight. Can use the same instances as the previous scene.
+                        // We can't be sure that CrewRoster isn't reloaded from ConfigNode when starting flight.
+                        // Thus need to re-fetch every ProtoCrewMember instance from CrewRoster before spawning them inside the vessel.
+                        if (crewMember.type == ProtoCrewMember.KerbalType.Crew)
+                        {
+                            crewMember = roster.Crew.FirstOrDefault(c => c.name == crewMember.name);
+                        }
+                        else if (crewMember.type == ProtoCrewMember.KerbalType.Tourist)
+                        {
+                            crewMember = roster.Tourist.FirstOrDefault(c => c.name == crewMember.name);
+                        }
+
                         try
                         {
                             if (crewMember is ProtoCrewMember && p.AddCrewmember(crewMember))

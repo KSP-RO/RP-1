@@ -454,11 +454,11 @@
     },
     {
         "name": "RLA_small_ion",
-        "title": "XIPS ION Thruster",
+        "title": "XIPS Gridded Ion Thruster",
         "description": "Smaller cousin to the NSTAR or 30cm thruster good for station keeping or raising orbit. Diameter: [0.4 m]. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
-        "cost": "7000",
-        "entry_cost": "23000",
+        "cost": "1700",
+        "entry_cost": "0",
         "category": "ION",
         "info": "Electric Engine",
         "year": "1999",
@@ -467,13 +467,15 @@
         "ro": true,
         "rp0": false,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Boeing 702 Satellite",
         "engine_config": "XIPS_25cm",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "XIPS25cm",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RLA_small_ntr",

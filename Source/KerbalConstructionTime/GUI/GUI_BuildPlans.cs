@@ -202,7 +202,7 @@ namespace KerbalConstructionTime
 
                             if (GUILayout.Button(b.ShipName))
                             {
-                                Utilities.TryAddVesselToBuildList(b.CreateCopy(true));
+                                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks : true);
                             }
                         }
 

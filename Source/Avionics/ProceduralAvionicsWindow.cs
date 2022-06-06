@@ -249,65 +249,40 @@ namespace RP0.ProceduralAvionics
 
         private void DrawAvionicsConfigSelector(ProceduralAvionicsConfig curCfg, ProceduralAvionicsTechNode techNode)
         {
-            if (!techNode.IsAvailable) return;
-
             bool switchedConfig = false;
             int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(curCfg.name, techNode);
 
             _gc ??= new GUIContent();
             _gc.tooltip = GetTooltipTextForTechNode(techNode);
 
-            if (unlockCost == 0)
+            bool isCurrent = techNode == CurrentProceduralAvionicsTechNode;
+            if (isCurrent)
             {
-                bool isCurrent = techNode == CurrentProceduralAvionicsTechNode;
-                if (isCurrent)
-                {
-                    _gc.text = BuildTechName(techNode);
-                    GUILayout.Toggle(true, _gc, HighLogic.Skin.button);
+                _gc.text = BuildTechName(techNode);
+                GUILayout.BeginHorizontal();
+                GUILayout.Toggle(true, _gc, HighLogic.Skin.button);
+                DrawUnlockButton(curCfg.name, techNode, unlockCost);
+                GUILayout.EndHorizontal();
 
-                    _gc.text = $"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}";
-                    _gc.tooltip = "Whether samples can be transferred and stored in the avionics unit.";
-                    GUILayout.Label(_gc, HighLogic.Skin.label);
+                _gc.text = $"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}";
+                _gc.tooltip = "Whether samples can be transferred and stored in the avionics unit.";
+                GUILayout.Label(_gc, HighLogic.Skin.label);
 
-                    _gc.text = $"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}";
-                    _gc.tooltip = "Whether the avionics unit can enter hibernation mode that greatly reduces power consumption.";
-                    GUILayout.Label(_gc, HighLogic.Skin.label);
+                _gc.text = $"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}";
+                _gc.tooltip = "Whether the avionics unit can enter hibernation mode that greatly reduces power consumption.";
+                GUILayout.Label(_gc, HighLogic.Skin.label);
 
-                    _gc.text = $"Axial control: {BoolToYesNoString(techNode.allowAxial)}";
-                    _gc.tooltip = "Whether fore-aft translation is allowed despite having insufficient controllable mass or being outside the max range of Near-Earth avionics.";
-                    GUILayout.Label(_gc, HighLogic.Skin.label);
-                }
-                else
-                {
-                    _gc.text = $"Switch to {BuildTechName(techNode)}";
-                    if (GUILayout.Button(_gc, HighLogic.Skin.button))
-                    {
-                        switchedConfig = true;
-                    }
-                }
-            }
-            else if (Funding.Instance.Funds < unlockCost)
-            {
-                _gc.text = $"Can't afford {BuildTechName(techNode)} {BuildCostString(unlockCost)}";
-                GUI.enabled = false;
-                GUILayout.Button(_gc, HighLogic.Skin.button);
-                GUI.enabled = true;
+                _gc.text = $"Axial control: {BoolToYesNoString(techNode.allowAxial)}";
+                _gc.tooltip = "Whether fore-aft translation is allowed despite having insufficient controllable mass or being outside the max range of Near-Earth avionics.";
+                GUILayout.Label(_gc, HighLogic.Skin.label);
             }
             else
             {
-                _gc.text = $"Purchase {BuildTechName(techNode)} {BuildCostString(unlockCost)}";
-                if (GUILayout.Button(_gc, HighLogic.Skin.button))
-                {
-                    switchedConfig = true;
-                    if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
-                    {
-                        switchedConfig = ProceduralAvionicsTechManager.PurchaseConfig(curCfg.name, techNode);
-                    }
-                    if (switchedConfig)
-                    {
-                        ProceduralAvionicsTechManager.SetMaxUnlockedTech(curCfg.name, techNode.name);
-                    }
-                }
+                _gc.text = $"Switch to {BuildTechName(techNode)}";
+                GUILayout.BeginHorizontal();
+                switchedConfig = GUILayout.Button(_gc, HighLogic.Skin.button);
+                switchedConfig |= DrawUnlockButton(curCfg.name, techNode, unlockCost);
+                GUILayout.EndHorizontal();
             }
 
             if (switchedConfig)
@@ -323,6 +298,23 @@ namespace RP0.ProceduralAvionics
                 AvionicsConfigChanged();
                 MonoUtilities.RefreshContextWindows(part);
             }
+        }
+
+        private bool DrawUnlockButton(string curCfgName, ProceduralAvionicsTechNode techNode, int unlockCost)
+        {
+            bool switchedConfig = false;
+            if (unlockCost <= 0) return switchedConfig;
+
+            GUI.enabled = techNode.IsAvailable && Funding.Instance.Funds > unlockCost;
+            _gc.text = $"Unlock ({BuildCostString(unlockCost)})";
+            _gc.tooltip = techNode.IsAvailable ? string.Empty : $"Needs tech: {techNode.TechNodeTitle}";
+            if (GUILayout.Button(_gc, HighLogic.Skin.button, GUILayout.Width(120)))
+            {
+                switchedConfig = PurchaseConfig(curCfgName, techNode);
+            }
+            GUI.enabled = true;
+
+            return switchedConfig;
         }
 
         private void ApplyAvionicsSettings(bool shouldSeekVolume)
@@ -434,7 +426,7 @@ namespace RP0.ProceduralAvionics
         private string BuildTechName(ProceduralAvionicsTechNode techNode) => techNode.dispName ?? techNode.name;
 
         private string BuildCostString(int cost) =>
-            (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $" ({cost:N})";
+            (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $"{cost:N0}";
 
         private string ConstructTooltipForAvionicsTL(ProceduralAvionicsTechNode techNode)
         {

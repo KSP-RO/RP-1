@@ -59,6 +59,7 @@
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
     <Compile Include="GameplayTips.cs" />
+    <Compile Include="LocalizationPatcher.cs" />
     <Compile Include="HarmonyPatcher.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
@@ -82,6 +83,12 @@
     <Compile Include="Avionics\ProceduralAvionicsTechNode.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUnlockedNodes.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
+    <Compile Include="Programs\HarmonyPatches.cs" />
+    <Compile Include="Programs\AdminUIFixer.cs" />
+    <Compile Include="Programs\Strategies.cs" />
+    <Compile Include="Programs\ProgramStrategy.cs" />
+    <Compile Include="Programs\VirtualStrategy.cs" />
+    <Compile Include="Programs\StrategySystemFixer.cs" />
     <Compile Include="Programs\PredicateBuilder.cs" />
     <Compile Include="Programs\Program.cs" />
     <Compile Include="Programs\ProgramHandler.cs" />

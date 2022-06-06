@@ -21,7 +21,7 @@ jobs:
       - name: Get Branch
         shell: bash
         run: |
-          releaseBranch=$(git branch -a --contains ${GITHUB_SHA} | head -n 2 | tail -n 1 | sed -e "s/\s*//" | sed -e "s/remotes\/origin\///")
+          releaseBranch=${{ github.event.release.target_commitish }}
           echo "Found branch ${releaseBranch}"
           echo "tagged_branch=${releaseBranch}" >> $GITHUB_ENV
         

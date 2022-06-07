@@ -14,54 +14,62 @@ namespace RP0
 {
     public partial class HarmonyPatcher : MonoBehaviour
     {
-        //[HarmonyPatch(typeof(Administration))]
-        //internal class PatchAdministration
-        //{
-        //    [HarmonyPrefix]
-        //    [HarmonyPatch("UpdateStrategyCount")]
-        //    internal static bool Prefix_UpdateStrategyCount(Administration __instance)
-        //    {
-        //        __instance.activeStratCount.text = $"Active Programs: {Programs.ProgramHandler.Instance.ActivePrograms.Count} [Max: {Programs.ProgramHandler.Instance.ActiveProgramLimit}]";
-        //        return false;
-        //    }
+        [HarmonyPatch(typeof(Administration))]
+        internal class PatchAdministration
+        {
+            [HarmonyPrefix]
+            [HarmonyPatch("CreateActiveStratList")]
+            internal static bool Prefix_CreateActiveStratList(Administration __instance)
+            {
+                __instance.activeStratCount.text = KSP.Localization.Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
 
-        //    [HarmonyPrefix]
-        //    [HarmonyPatch("AddStrategiesListItem")]
-        //    internal static bool Prefix_AddStrategiesListItem(Administration __instance, ref UIList itemList, ref List<Strategies.Strategy> strategies)
-        //    {
-        //        if (strategies.Count == 0 || strategies[0].Department.Name != "Programs")
-        //            return true;
+                __instance.scrollListActive.Clear(true);
+                Administration.StrategyWrapper wrapper = null;
+                List<Program> programs = AdminUIFixer.Instance.ProgramTabShowActive ? ProgramHandler.Instance.ActivePrograms : ProgramHandler.Instance.CompletedPrograms;
+                foreach (Program p in programs)
+                {
+                    Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
+                    if (strategy == null)
+                        continue;
 
-        //        foreach (Program p in ProgramHandler.Programs)
-        //        {
-        //            if (p.IsActive)
-        //                continue;
+                    // Just in case. This should never happen unless you use the debugging UI...
+                    if (AdminUIFixer.Instance.ProgramTabShowActive && !strategy.IsActive)
+                    {
+                        strategy.Activate();
+                    }
 
-        //            VirtualStrategy strat;
-        //            if (!ProgramHandler.Instance.StubStrategies.TryGetValue(p.name, out strat))
-        //            {
-        //                Debug.LogError($"[RP-0] Error: Can't find stub strategy for program {p.name}");
-        //                continue;
-        //            }
+                    UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
+                    ActiveStrategyListItem stratItem = item.GetComponent<ActiveStrategyListItem>();
+                    UIRadioButton button = item.GetComponent<UIRadioButton>();
+                    wrapper = new Administration.StrategyWrapper(strategy, button);
+                    button.Data = wrapper;
+                    button.onTrue.AddListener(wrapper.OnTrue);
+                    button.onFalse.AddListener(wrapper.OnFalse);
+                    Texture icon = wrapper.strategy.Config.IconImage;
+                    if (icon == null)
+                    {
+                        icon = __instance.defaultIcon;
+                    }
+                    stratItem.Setup("<b><color=" + XKCDColors.HexFormat.KSPBadassGreen + ">" + strategy.Title + "</color></b>", strategy.Effect, icon as Texture2D);
 
-        //            Texture icon = strat.Config.IconImage;
-        //            if (icon == null)
-        //                icon = Administration.Instance.defaultIcon;
+                    __instance.scrollListActive.AddItem(item);
+                }
 
-        //            UIListItem item = Instantiate<UIListItem>(__instance.prefabStratListItem);
 
-        //            StrategyListItem stratListIcon = item.GetComponent<StrategyListItem>();
-        //            stratListIcon.Initialize(icon, strat.Title);
 
-        //            Administration.StrategyWrapper wrapper = new Administration.StrategyWrapper(strat, stratListIcon);
-        //            stratListIcon.SetupButton(p.CanAccept, wrapper, wrapper.OnTrue, wrapper.OnFalse);
+                return false;
+            }
 
-        //            itemList.AddItem(item);
-        //        }
-
-        //        return false;
-        //    }
-        //}
+            [HarmonyPostfix]
+            [HarmonyPatch("SetSelectedStrategy")]
+            internal static void Postfix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
+            {
+                string name = wrapper.strategy.Config.Name;
+                Program program = ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == name);
+                if (program != null)
+                    __instance.btnAcceptCancel.gameObject.SetActive(false);
+            }
+        }
 
         [HarmonyPatch(typeof(StrategySystemConfig))]
         internal class PatchStrategySystemConfig

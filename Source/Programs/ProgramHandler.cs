@@ -215,35 +215,39 @@ namespace RP0.Programs
             {
                 GUILayout.Label("Completed", HighLogic.Skin.label);
             }
-            else if (canAccept)
+            else if (!isActive)
             {
                 GUI.enabled = ActivePrograms.Count < ActiveProgramLimit;
-                if (GUILayout.Button("Accept", HighLogic.Skin.button))
+                if (GUILayout.Button(canAccept ? "Accept" : "CHTAccept", HighLogic.Skin.button))
                 {
                     ActivateProgram(p);
+                    if (KSP.UI.Screens.Administration.Instance != null)
+                        KSP.UI.Screens.Administration.Instance.RedrawPanels();
                 }
                 GUI.enabled = true;
             }
-            else if (canComplete)
+            else //if (canComplete)
             {
-                if (GUILayout.Button("Complete", HighLogic.Skin.button))
+                if (GUILayout.Button(canComplete ? "Complete" : "CHTComplete", HighLogic.Skin.button))
                 {
                     CompleteProgram(p);
+                    if (KSP.UI.Screens.Administration.Instance != null)
+                        KSP.UI.Screens.Administration.Instance.RedrawPanels();
                 }
             }
-            else if (isActive)
-            {
-                GUILayout.Label("Active", HighLogic.Skin.label);
-            }
-            else
-            {
-                _gc ??= new GUIContent();
-                _gc.text = "Unmet requirements";
-                _gc.tooltip = p.requirementsPrettyText;
-                GUI.enabled = false;
-                GUILayout.Button(_gc, HighLogic.Skin.button);
-                GUI.enabled = true;
-            }
+            //else if (isActive)
+            //{
+            //    GUILayout.Label("Active", HighLogic.Skin.label);
+            //}
+            //else
+            //{
+            //    _gc ??= new GUIContent();
+            //    _gc.text = "Unmet requirements";
+            //    _gc.tooltip = p.requirementsPrettyText;
+            //    GUI.enabled = false;
+            //    GUILayout.Button(_gc, HighLogic.Skin.button);
+            //    GUI.enabled = true;
+            //}
 
             GUILayout.EndHorizontal();
 

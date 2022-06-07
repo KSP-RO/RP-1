@@ -23,9 +23,31 @@ namespace RP0.Programs
     public class AdminUIFixer : MonoBehaviour
     {
         public static AdminUIFixer Instance;
-        public int ticks = 0;
+        protected int _ticks = 0;
+
+        protected bool _programTabShowActive = true;
+        public bool ProgramTabShowActive => _programTabShowActive;
+        protected Transform _tabTransform;
+        protected TextMeshProUGUI _tabText;
+
+        protected void ToggleProgramTab()
+        {
+            _programTabShowActive = !_programTabShowActive;
+            SetTabState();
+            Administration.Instance.RedrawPanels();
+        }
+
+        protected void SetTabState()
+        {
+            _tabText.text = _programTabShowActive ? "[Active] Programs" : "[Completed] Programs";
+        }
+        
         public void Awake()
         {
+            if (Instance != null)
+            {
+                GameObject.Destroy(Instance);
+            }
             Instance = this;
         }
 
@@ -34,11 +56,11 @@ namespace RP0.Programs
             // Wait for the admin UI to get loaded
             if (KSP.UI.Screens.Administration.Instance == null)
             {
-                ticks = 0;
+                _ticks = 0;
                 return;
             }
 
-            if (ticks++ == 0)
+            if (_ticks++ == 0)
             {
                 // Resize the root element that handles the width
                 Transform aspectFitter = KSP.UI.Screens.Administration.Instance.transform.FindDeepChild("bg and aspectFitter");
@@ -54,7 +76,11 @@ namespace RP0.Programs
                 }
 
                 // Fix text
-                //Administration.Instance.transform.FindDeepChild("ActiveStrategiesTab").Find("Text").GetComponent<TextMeshProUGUI>().text = "Active Programs";
+                _tabTransform = Administration.Instance.transform.FindDeepChild("ActiveStrategiesTab");
+                _tabText = _tabTransform.Find("Text").GetComponent<TextMeshProUGUI>();
+                SetTabState();
+                Button b = _tabTransform.gameObject.AddComponent<Button>();
+                b.onClick.AddListener(ToggleProgramTab);
                 
                 // Replace department avatars with images when necessary
                 Transform scrollListKerbals = KSP.UI.Screens.Administration.Instance.transform.FindDeepChild("scroll list kerbals");

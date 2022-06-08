@@ -17,27 +17,43 @@ namespace RP0
         [HarmonyPatch(typeof(Administration))]
         internal class PatchAdministration
         {
+            internal static FieldInfo activeStrategyCountField = typeof(Administration).GetField("activeStrategyCount", BindingFlags.NonPublic | BindingFlags.Instance);
+            internal static FieldInfo maxActiveStrategiesField = typeof(Administration).GetField("maxActiveStrategies", BindingFlags.NonPublic | BindingFlags.Instance);
+            internal static List<Strategy> strategies = new List<Strategy>();
+
             [HarmonyPrefix]
             [HarmonyPatch("CreateActiveStratList")]
             internal static bool Prefix_CreateActiveStratList(Administration __instance)
             {
-                __instance.activeStratCount.text = KSP.Localization.Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
-
                 __instance.scrollListActive.Clear(true);
                 Administration.StrategyWrapper wrapper = null;
-                List<Program> programs = AdminUIFixer.Instance.ProgramTabShowActive ? ProgramHandler.Instance.ActivePrograms : ProgramHandler.Instance.CompletedPrograms;
-                foreach (Program p in programs)
+
+                if (AdminUIFixer.Instance.ActiveTabView == AdministrationActiveTabView.Leaders)
                 {
-                    Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
-                    if (strategy == null)
-                        continue;
-
-                    // Just in case. This should never happen unless you use the debugging UI...
-                    if (AdminUIFixer.Instance.ProgramTabShowActive && !strategy.IsActive)
+                    foreach (var s in StrategySystem.Instance.Strategies)
+                        if (s.IsActive && !(s is ProgramStrategy))
+                            strategies.Add(s);
+                }
+                else
+                {
+                    List<Program> programs = AdminUIFixer.Instance.ActiveTabView == AdministrationActiveTabView.Active ? ProgramHandler.Instance.ActivePrograms : ProgramHandler.Instance.CompletedPrograms;
+                    foreach (Program p in programs)
                     {
-                        strategy.Activate();
-                    }
+                        Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
+                        if (strategy == null)
+                            continue;
 
+                        // Just in case. This should never happen unless you use the debugging UI...
+                        if (AdminUIFixer.Instance.ActiveTabView == AdministrationActiveTabView.Active && !strategy.IsActive)
+                        {
+                            strategy.Activate();
+                        }
+
+                        strategies.Add(strategy);
+                    }
+                }
+                foreach(Strategy strategy in strategies)
+                {
                     UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
                     ActiveStrategyListItem stratItem = item.GetComponent<ActiveStrategyListItem>();
                     UIRadioButton button = item.GetComponent<UIRadioButton>();
@@ -54,8 +70,11 @@ namespace RP0
 
                     __instance.scrollListActive.AddItem(item);
                 }
+                strategies.Clear();
 
-
+                activeStrategyCountField.SetValue(__instance, ProgramHandler.Instance.ActivePrograms.Count);
+                maxActiveStrategiesField.SetValue(__instance, ProgramHandler.Instance.ActiveProgramLimit);
+                __instance.activeStratCount.text = KSP.Localization.Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
 
                 return false;
             }
@@ -64,10 +83,15 @@ namespace RP0
             [HarmonyPatch("SetSelectedStrategy")]
             internal static void Postfix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
             {
-                string name = wrapper.strategy.Config.Name;
-                Program program = ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == name);
-                if (program != null)
-                    __instance.btnAcceptCancel.gameObject.SetActive(false);
+                if (wrapper.strategy is ProgramStrategy)
+                {
+                    string name = wrapper.strategy.Config.Name;
+                    Program program = ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == name);
+                    if (program != null)
+                        __instance.btnAcceptCancel.gameObject.SetActive(false);
+                    else if (__instance.btnAcceptCancel.currentState != "accept")
+                        __instance.btnAcceptCancel.SetState("accept");
+                }
             }
         }
 

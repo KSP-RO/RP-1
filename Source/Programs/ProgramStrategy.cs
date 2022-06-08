@@ -4,7 +4,7 @@ using UniLinq;
 
 namespace RP0.Programs
 {
-    public class ProgramStrategy : VirtualStrategy
+    public class ProgramStrategy : Strategy
     {
         protected override string GetEffectText()
         {
@@ -57,6 +57,19 @@ namespace RP0.Programs
                 return false;
             }
 
+            Program program = ProgramHandler.Programs.Find(p => p.name == Config.Name);
+            if (program == null)
+            {
+                reason = "An error occurred during loading. This Program cannot be found!";
+                return false;
+            }
+
+            if (!program.CanAccept)
+            {
+                reason = "This Program has unmet requirements.";
+                return false;
+            }
+
             // Handled by base in the Admin screen.
             //if (ProgramHandler.Instance.ActivePrograms.Count >= ProgramHandler.Instance.ActiveProgramLimit)
             //    return false;
@@ -81,7 +94,7 @@ namespace RP0.Programs
 
             if (!p.CanComplete)
             {
-                reason = "This Program cannot be completed yet: its requirements are unmet.";
+                reason = "This Program has unmet objectives.";
                 return false;
             }
 

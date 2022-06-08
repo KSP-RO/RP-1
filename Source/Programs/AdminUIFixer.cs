@@ -16,6 +16,14 @@ using ContractConfigurator.Util;
 
 namespace RP0.Programs
 {
+    public enum AdministrationActiveTabView
+    {
+        Active = 0,
+        Completed,
+        Leaders,
+
+        MAX
+    }
     /// <summary>
     /// Special MonoBehaviour to fix admin building UI.
     /// </summary>
@@ -25,21 +33,32 @@ namespace RP0.Programs
         public static AdminUIFixer Instance;
         protected int _ticks = 0;
 
-        protected bool _programTabShowActive = true;
-        public bool ProgramTabShowActive => _programTabShowActive;
+        protected AdministrationActiveTabView _activeTabView = AdministrationActiveTabView.Active;
+        public AdministrationActiveTabView ActiveTabView => _activeTabView;
         protected Transform _tabTransform;
         protected TextMeshProUGUI _tabText;
 
         protected void ToggleProgramTab()
         {
-            _programTabShowActive = !_programTabShowActive;
+            _activeTabView = (AdministrationActiveTabView)(_activeTabView + 1);
+            if (_activeTabView == AdministrationActiveTabView.MAX)
+                _activeTabView = AdministrationActiveTabView.Active;
+
             SetTabState();
             Administration.Instance.RedrawPanels();
         }
 
         protected void SetTabState()
         {
-            _tabText.text = _programTabShowActive ? "[Active] Programs" : "[Completed] Programs";
+            string s;
+            switch (_activeTabView)
+            {
+                default:
+                case AdministrationActiveTabView.Active: s = "[Active] Completed Staff"; break;
+                case AdministrationActiveTabView.Completed: s = "Active [Completed] Staff"; break;
+                case AdministrationActiveTabView.Leaders: s = "Active Completed [Staff]"; break;
+            }
+            _tabText.text = s;
         }
         
         public void Awake()
@@ -57,6 +76,7 @@ namespace RP0.Programs
             if (KSP.UI.Screens.Administration.Instance == null)
             {
                 _ticks = 0;
+                _activeTabView = AdministrationActiveTabView.Active;
                 return;
             }
 
@@ -79,7 +99,7 @@ namespace RP0.Programs
                 _tabTransform = Administration.Instance.transform.FindDeepChild("ActiveStrategiesTab");
                 _tabText = _tabTransform.Find("Text").GetComponent<TextMeshProUGUI>();
                 SetTabState();
-                Button b = _tabTransform.gameObject.AddComponent<Button>();
+                Button b = _tabTransform.gameObject.GetComponent<Button>() ?? _tabTransform.gameObject.AddComponent<Button>();
                 b.onClick.AddListener(ToggleProgramTab);
                 
                 // Replace department avatars with images when necessary

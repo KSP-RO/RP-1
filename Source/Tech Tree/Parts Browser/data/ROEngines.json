@@ -428,7 +428,7 @@
         ]
     },
     {
-        "name": "ROE-AJ10AdvShort",
+        "name": "ROE-AJ10AdvLong",
         "title": "AJ10 Series (Advanced Long Nozzle)",
         "description": "",
         "mod": "ROEngines",

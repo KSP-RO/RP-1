@@ -25,13 +25,16 @@ namespace RP0.Programs
 
             string text = $"Objectives: {program.objectivesPrettyText}\nTotal Funds: {program.TotalFunding:N0}\n";
             if (wasAccepted)
-                text += $"Funds Paid Out: {program.fundsPaidOut:N0}\n";
-            text += $"Nominal Duration: {program.nominalDurationYears:0.#} years\n";
-            if (wasAccepted)
             {
-                text += $"Accepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT, false, false)}\n";
+                text += $"Funds Paid Out: {program.fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT, false, false)}\n";
                 if (program.IsComplete)
                     text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.completedUT, false, false)}";
+                else
+                    text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT + program.nominalDurationYears * 365.25d * 86400d, false, false)}";
+            }
+            else
+            {
+                text = $"Requirements: {program.requirementsPrettyText}\n{text}Nominal Duration: {program.nominalDurationYears:0.#} years";
             }
 
             return text;

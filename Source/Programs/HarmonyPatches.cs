@@ -79,13 +79,23 @@ namespace RP0
                 return false;
             }
 
+            [HarmonyPrefix]
+            [HarmonyPatch("SetSelectedStrategy")]
+            internal static void Prefix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
+            {
+                if (wrapper.strategy is ProgramStrategy ps)
+                {
+                    ps.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
+                }
+            }
+
             [HarmonyPostfix]
             [HarmonyPatch("SetSelectedStrategy")]
             internal static void Postfix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
             {
-                if (wrapper.strategy is ProgramStrategy)
+                if (wrapper.strategy is ProgramStrategy ps)
                 {
-                    string name = wrapper.strategy.Config.Name;
+                    string name = ps.Config.Name;
                     Program program = ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == name);
                     if (program != null)
                         __instance.btnAcceptCancel.gameObject.SetActive(false);

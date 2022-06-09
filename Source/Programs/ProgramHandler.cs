@@ -16,7 +16,7 @@ namespace RP0.Programs
         public bool IsInAdmin => _showGUI;
         private bool _showGUI;
         private Rect _windowRect = new Rect(3, 40, 425, 600);
-        private GUIContent _gc;
+        //private GUIContent _gc;
         private Vector2 _scrollPos = new Vector2();
         private readonly List<string> _expandedPrograms = new List<string>();
 

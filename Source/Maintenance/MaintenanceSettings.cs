@@ -33,15 +33,17 @@
         public double courseMultiplierDivisor = 3d;
 
         [Persistent]
+        public double repToSubsidyConversion = 100d;
+
+        [Persistent]
+        public double subsidyMultiplierForMax = 2d;
+
+        [Persistent]
         public FloatCurve subsidyCurve = new FloatCurve();
 
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-
-            var fc = new FloatCurve();
-            fc.Load(node.GetNode("subsidyCurve"));
-            subsidyCurve = fc;
         }
 
         public void Save(ConfigNode node)

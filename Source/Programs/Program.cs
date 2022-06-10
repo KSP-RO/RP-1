@@ -57,11 +57,23 @@ namespace RP0.Programs
         [Persistent]
         public double fundsPaidOut;
 
+        [Persistent]
+        public double repPenaltyAssessed;
+
         /// <summary>
         /// Texture URL
         /// </summary>
         [Persistent]
         public string icon;
+
+        [Persistent(isPersistant = false)]
+        public double repDeltaOnCompletePerYearEarly;
+
+        [Persistent(isPersistant = false)]
+        public double repBonusOnCompletePerYearLate;
+
+        [Persistent(isPersistant = false)]
+        public double repPenaltyPerYearLate;
 
         private Func<bool> _requirementsPredicate;
         private Func<bool> _objectivesPredicate;
@@ -134,7 +146,8 @@ namespace RP0.Programs
                 acceptedUT = KSPUtils.GetUT(),
                 lastPaymentUT = KSPUtils.GetUT(),
                 totalFunding = TotalFunding,
-                fundsPaidOut = 0
+                fundsPaidOut = 0,
+                repPenaltyAssessed = 0
             };
         }
 
@@ -151,6 +164,15 @@ namespace RP0.Programs
             Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name}");
             fundsPaidOut += fundsToAdd;
             Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Strategies);
+
+            double repLost = GetRepLossAtTime(time2);
+            if (repLost > 0d)
+            {
+                double repLossToApply = repLost - repPenaltyAssessed;
+                repPenaltyAssessed += repLossToApply;
+                Reputation.Instance.AddReputation((float)-repLossToApply, TransactionReasons.Mission);
+                Debug.Log($"[RP-0] Penalizing rep by {repLossToApply} for program {name}");
+            }
         }
 
         public void MarkObjectivesComplete()
@@ -161,6 +183,9 @@ namespace RP0.Programs
         public void Complete()
         {
             completedUT = KSPUtils.GetUT();
+            double timeDeltaYears = nominalDurationYears * 365.25d - (completedUT - acceptedUT);
+            if(timeDeltaYears > 0)
+            Reputation.Instance.AddReputation((float)(timeDeltaYears * repDeltaOnCompletePerYearEarly), TransactionReasons.Mission);
         }
 
         private double GetFundsAtTime(double time)
@@ -169,6 +194,18 @@ namespace RP0.Programs
             double fractionOfTotalDuration = time / (nominalDurationYears * secsPerYear);
             double curveFactor = ProgramHandler.Settings.paymentCurve.Evaluate((float)fractionOfTotalDuration);
             return curveFactor * TotalFunding;
+        }
+
+        private double GetRepLossAtTime(double time)
+        {
+            const double secsPerYear = 3600 * 24 * 365.25;
+            const double recip = 1d / secsPerYear;
+            double extraTime = time - nominalDurationYears * secsPerYear;
+            if (extraTime > 0d)
+            {
+                return repPenaltyPerYearLate * (extraTime * recip);
+            }
+            return 0d;
         }
 
         private Expression<Func<bool>> ParseRequirementBlock(ConfigNode cn)

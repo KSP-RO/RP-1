@@ -88,7 +88,10 @@ namespace RP0
             get
             {
                 const double secsPerYear = 3600 * 24 * 365.25;
-                return Settings.subsidyCurve.Evaluate((float)(KSPUtils.GetUT() / secsPerYear)) / 365.25;
+                double minSubsidy = Settings.subsidyCurve.Evaluate((float)(KSPUtils.GetUT() / secsPerYear)) / 365.25;
+                double minRep = minSubsidy / Settings.repToSubsidyConversion;
+                double maxRep = minRep * Settings.subsidyMultiplierForMax;
+                return UtilMath.Lerp(minSubsidy, minSubsidy * Settings.subsidyMultiplierForMax, UtilMath.InverseLerp(minRep, maxRep, Reputation.Instance.reputation));
             }
         }
 

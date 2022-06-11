@@ -311,7 +311,7 @@ namespace KerbalConstructionTime
 
                     var lcConstr = new LCConstruction
                     {
-                        LaunchComplexIndex = KCTGameStates.ActiveKSC.LaunchComplexes.IndexOf(lc),
+                        LCID = lc.ID,
                         Cost = totalCost,
                         Name = lcName,
                         IsModify = isModify,

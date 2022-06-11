@@ -5,12 +5,9 @@ namespace KerbalConstructionTime
 {
     public class LCConstruction : ConstructionBuildItem
     {
-        /// <summary>
-        /// Index of the LC in KSCItem.LaunchComplexes.
-        /// </summary>
-        public int LaunchComplexIndex = 0;
         public bool IsModify;
         public Guid ModID;
+        public Guid LCID;
 
         public LCItem.LCData LCData;
 
@@ -29,7 +26,7 @@ namespace KerbalConstructionTime
         {
             if (!KCTGameStates.ErroredDuringOnLoad)
             {
-                LCItem lc = KSC.LaunchComplexes[LaunchComplexIndex];
+                LCItem lc = KSC.LaunchComplexes.Find(l => l.ID == LCID);
                 lc.IsOperational = true;
                 UpgradeProcessed = true;
                 if (IsModify)
@@ -48,7 +45,7 @@ namespace KerbalConstructionTime
 
         protected override void ProcessCancel()
         {
-            LCItem lc = KSC.LaunchComplexes[LaunchComplexIndex];
+            LCItem lc = KSC.LaunchComplexes.Find(l => l.ID == LCID);
             if (IsModify)
             {
                 lc.IsOperational = true;
@@ -59,11 +56,6 @@ namespace KerbalConstructionTime
                 KSC.LaunchComplexes.RemoveAt(index);
                 if (KSC.ActiveLaunchComplexIndex >= index)
                     --KSC.ActiveLaunchComplexIndex; // should not change active LC.
-
-                // Also fix LCCs
-                foreach (var lcc in KSC.LCConstructions)
-                    if (lcc != this && lcc.LaunchComplexIndex >= index)
-                        --lcc.LaunchComplexIndex;
             }
 
             KSC.LCConstructions.Remove(this);

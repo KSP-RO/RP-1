@@ -108,10 +108,6 @@ namespace KerbalConstructionTime
                     {
                         if (vessel.LaunchSiteIndex > idx) vessel.LaunchSiteIndex--;
                     }
-                    foreach (PadConstruction building in currentLC.PadConstructions)
-                    {
-                        if (building.LaunchpadIndex > idx) building.LaunchpadIndex--;
-                    }
 
                     currentLC.LaunchPads.RemoveAt(idx);
 
@@ -153,7 +149,7 @@ namespace KerbalConstructionTime
                 }
                 foreach (PadConstruction pc in lc.PadConstructions)
                 {
-                    if (pc.LaunchpadIndex == lc.LaunchPads.IndexOf(this))
+                    if (pc.ID == id)
                     {
                         pc.Name = newName;
                     }

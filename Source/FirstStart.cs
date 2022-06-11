@@ -16,6 +16,7 @@ namespace RP0
             if (isFirstLoad)
             {
                 isFirstLoad = false;
+                Reputation.Instance.GetType().GetField("rep", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(Reputation.Instance, (float)(MaintenanceHandler.Settings.subsidyCurve.Evaluate(0f) / MaintenanceHandler.Settings.repToSubsidyConversion));
 
                 UnlockStartingPartsTechNode();
 

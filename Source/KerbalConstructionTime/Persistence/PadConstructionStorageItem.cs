@@ -5,16 +5,23 @@ namespace KerbalConstructionTime
     public class PadConstructionStorageItem : ConstructionStorage
     {
         [Persistent]
+        [Obsolete("Remove this after a week when everything is Guid'd up")]
         public int launchpadID = 0;
 
         [Persistent]
         public Guid id;
 
-        public PadConstruction ToPadConstruction()
+        // Back-Compat pass in the parent LC
+        public PadConstruction ToPadConstruction(LCItem lc)
         {
             var p = new PadConstruction();
             LoadFields(p);
-            p.LaunchpadIndex = launchpadID;
+
+            if (id == Guid.Empty)
+            {
+                id = lc.LaunchPads[launchpadID].id;
+            }
+
             p.ID = id;
             return p;
         }
@@ -22,7 +29,7 @@ namespace KerbalConstructionTime
         public PadConstructionStorageItem FromPadConstruction(PadConstruction pc)
         {
             SaveFields(pc);
-            launchpadID = pc.LaunchpadIndex;
+            launchpadID = pc.LC.LaunchPads.IndexOf(pc.LC.LaunchPads.Find( p => p.id == pc.ID));
             id = pc.ID;
             return this;
         }

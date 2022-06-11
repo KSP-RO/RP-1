@@ -495,7 +495,10 @@ namespace KerbalConstructionTime
                 {
                     var tempLP = new KCT_LaunchPad("LP0");
                     ConfigNode.LoadObjectFromConfig(tempLP, cn);
-                    cn.TryGetValue(nameof(KCT_LaunchPad.id), ref tempLP.id);
+                    if (!cn.TryGetValue(nameof(KCT_LaunchPad.id), ref tempLP.id) || tempLP.id == Guid.Empty)
+                    {
+                        tempLP.id = Guid.NewGuid();
+                    }
                     tempLP.DestructionNode = cn.GetNode("DestructionState");
                     if (tempLP.fractionalLevel == -1) tempLP.MigrateFromOldState();
                     LaunchPads.Add(tempLP);
@@ -509,7 +512,7 @@ namespace KerbalConstructionTime
                 {
                     var storageItem = new PadConstructionStorageItem();
                     storageItem.Load(cn);
-                    PadConstructions.Add(storageItem.ToPadConstruction());
+                    PadConstructions.Add(storageItem.ToPadConstruction(this));
                 }
             }
 

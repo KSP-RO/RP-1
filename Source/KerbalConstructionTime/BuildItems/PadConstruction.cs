@@ -5,11 +5,6 @@ namespace KerbalConstructionTime
 {
     public class PadConstruction : ConstructionBuildItem
     {
-        /// <summary>
-        /// Index of the pad in KSCItem.LaunchPads.
-        /// </summary>
-        public int LaunchpadIndex = 0;
-
         public Guid ID;
 
         private LCItem _lc = null;
@@ -49,15 +44,11 @@ namespace KerbalConstructionTime
 
         protected override void ProcessCancel()
         {
-            KCT_LaunchPad lp = LC.LaunchPads[LaunchpadIndex];
+            KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == ID);
             int index = LC.LaunchPads.IndexOf(lp);
             LC.LaunchPads.RemoveAt(index);
             if (LC.ActiveLaunchPadIndex >= index)
                 --LC.ActiveLaunchPadIndex; // should not change active pad.
-
-            foreach (var pc in LC.PadConstructions)
-                if (pc != this && pc.LaunchpadIndex >= index)
-                    --pc.LaunchpadIndex;
 
             LC.PadConstructions.Remove(this);
 
@@ -78,7 +69,7 @@ namespace KerbalConstructionTime
 
             if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
             {
-                KCT_LaunchPad lp = LC.LaunchPads[LaunchpadIndex];
+                KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == ID);
                 lp.isOperational = true;
                 lp.DestructionNode = new ConfigNode("DestructionState");
                 UpgradeProcessed = true;

@@ -87,7 +87,6 @@ namespace KerbalConstructionTime
                     var padConstr = new PadConstruction
                     {
                         ID = id,
-                        LaunchpadIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Count - 1,
                         Cost = curPadCost,
                         Name = _newName
                     };

@@ -71,9 +71,6 @@ namespace RP0
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
         public bool AvionicsUseKerbalism = false;
 
-        [GameParameters.CustomParameterUI("Avionics Units Stack", toolTip = "When enabled, multiple avionics units stack their controllable mass.")]
-        public bool IsAvionicsStackable = true;
-
         [GameParameters.CustomParameterUI("Procedural avionics window auto opens", toolTip = "When enabled, the Procedural Avionics configuration window is automatically opened when you right click on a part with Proc Avionics.")]
         public bool IsProcAvionicsAutoShown = true;
 
@@ -101,28 +98,24 @@ namespace RP0
                     IsMissionTrainingEnabled = false;
                     IsRetirementEnabled = false;
                     ContractDeadlineMult = 1.7f;
-                    IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Normal:
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 1.3f;
-                    IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Moderate:
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 1f;
-                    IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Hard:
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 0.8f;
-                    IsAvionicsStackable = false;
                     break;
             }
         }

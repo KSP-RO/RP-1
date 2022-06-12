@@ -21,7 +21,7 @@ jobs:
       - name: Get Branch
         shell: bash
         run: |
-          releaseBranch=$(git branch -a --contains ${GITHUB_SHA} | head -n 2 | tail -n 1 | sed -e "s/\s*//" | sed -e "s/remotes\/origin\///")
+          releaseBranch=${{ github.event.release.target_commitish }}
           echo "Found branch ${releaseBranch}"
           echo "tagged_branch=${releaseBranch}" >> $GITHUB_ENV
         
@@ -116,6 +116,8 @@ jobs:
           git checkout $RELEASEBRANCH
           git reset --hard origin/$RELEASEBRANCH
           cp -v "${GITHUB_WORKSPACE}/RP-1.version" "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
+          cp -v "${GITHUB_WORKSPACE}/README_TEMP.md" "${GITHUB_WORKSPACE}/README.md"
           git add "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
+          git add "${GITHUB_WORKSPACE}/README.md"
           git commit -m "Update version to $TAG_STRING"
           git push origin $RELEASEBRANCH

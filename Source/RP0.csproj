@@ -56,6 +56,7 @@
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
     <Compile Include="GameplayTips.cs" />
+    <Compile Include="HarmonyPatcher.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
@@ -108,6 +109,10 @@
     <Compile Include="Avionics\AvionicsGUI.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <Private>False</Private>
     </Reference>

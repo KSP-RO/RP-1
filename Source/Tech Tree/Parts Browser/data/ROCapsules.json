@@ -1568,6 +1568,32 @@
         ]
     },
     {
+        "name": "ROC-DynaCockpitAltMoroz",
+        "title": "Dynasoar Cockpit (Alt)",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "16000",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "Cockpit",
+        "year": "1966",
+        "technology": "prototypeSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "X-20",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "X20",
+        "identical_part_name": "X20Cockpit",
+        "module_tags": [
+            "Cockpit",
+            "HumanRated",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
         "name": "ROC-DynaCockpitMoroz",
         "title": "Dynasoar Cockpit",
         "description": "",

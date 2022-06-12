@@ -1,4 +1,4 @@
-import os, argparse, sys, json, glob
+import os, argparse, sys, json, glob, re
 
 class DefaultHelpParser(argparse.ArgumentParser):
     def error(self, message):
@@ -57,3 +57,14 @@ avc = {
 }
 with open("RP-1.version", "w") as f:
 	f.write(json.dumps(avc, indent=4))
+
+# Replace old version tag in readme
+new_string = "compare/v"+version+"...master"
+new_readme = []
+with open("README.md", "r") as f:
+	for line in f.readlines():
+		replaced = re.sub(r'compare/v[\d|.]*...master', new_string, line)
+		new_readme.append(replaced)
+
+with open("README_TEMP.md", "w") as f:
+	f.writelines(new_readme)

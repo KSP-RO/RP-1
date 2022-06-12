@@ -2101,6 +2101,31 @@
         ]
     },
     {
+        "name": "ROC-GeminiLCMBDB",
+        "title": "Gemini L Command Pod",
+        "description": "Gemini L was one proposal for an advanced Gemini pod capable of reentry from translunar trajectory.  This would have included development of an improved TPS similar to the system used on Apollo.",
+        "mod": "ROCapsules",
+        "cost": "9000",
+        "entry_cost": "200000",
+        "category": "COMMAND",
+        "info": "",
+        "year": "1966",
+        "technology": "lunarOrbiterCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Gemini",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "capsulesGemini",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
         "name": "ROC-GeminiNoseCap",
         "title": "Gemini Nose Fairing",
         "description": "",

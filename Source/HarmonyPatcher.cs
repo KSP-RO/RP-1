@@ -3,6 +3,7 @@ using KerbalConstructionTime;
 using KSP.UI.Screens;
 using KSP.UI.Screens.Editor;
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -133,6 +134,52 @@ namespace RP0
                     __instance.buttonPurchaseContainer.SetActive(false);
                     __instance.costPanel.SetActive(true);
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(Contracts.ContractSystem))]
+        internal class PatchContractSystem
+        {
+            [HarmonyPatch("GetContractCounts")]
+            internal static bool Prefix_GetContractCounts(Contracts.ContractSystem __instance, ref float rep, ref int avgContracts, ref int tier1, ref int tier2, ref int tier3)
+            {
+                tier1 = tier2 = tier3 = int.MaxValue;
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(Reputation))]
+        internal class PatchReputation
+        {
+            private static FieldInfo repField = typeof(Reputation).GetField("rep", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            [HarmonyPatch("addReputation_granular")]
+            internal static bool Prefix_addReputation_granular(Reputation __instance, ref float value, ref float __result)
+            {
+                repField.SetValue(__instance, __instance.reputation + value);
+                __result = value;
+                return false;
+            }
+
+            [HarmonyPatch("OnCrewKilled")]
+            internal static bool Prefix_OnCrewKilled(Reputation __instance, ref EventReport evt)
+            {
+                if (evt.eventType == FlightEvents.CREW_KILLED)
+                {
+                    float repFixed = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossKerbalDeathFixed ?? 0f;
+                    float repPct = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossKerbalDeathPercent ?? 0f;
+                    __instance.AddReputation(-1f * (repFixed + repPct * __instance.reputation), TransactionReasons.VesselLoss);
+                }
+                return false;
+            }
+
+            [HarmonyPatch("onvesselRecoveryProcessing")]
+            internal static bool Prefix_onvesselRecoveryProcessing(Reputation __instance, ref ProtoVessel pv, ref MissionRecoveryDialog mrDialog, ref float recoveryScore)
+            {
+                if (mrDialog != null)
+                    mrDialog.reputationEarned = 0f;
+
+                return false;
             }
         }
 

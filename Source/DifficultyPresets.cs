@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -33,31 +32,6 @@ namespace RP0
 
             GameSettings.DELTAV_APP_ENABLED = false;
             GameSettings.DELTAV_CALCULATIONS_ENABLED = false;
-
-            var gv = GameVariables.Instance;
-            ConfigNode settingsCN = GameDatabase.Instance.GetConfigNodes("REPUTATION_SETTINGS").FirstOrDefault();
-            if (settingsCN != default)
-            {
-                float f = 0;
-                if (settingsCN.TryGetValue("reputationRange", ref f))
-                    Reputation.RepRange = f;
-
-                ConfigNode cn = settingsCN.GetNode("REPUTATION_ADDITION");
-                if (cn != default)
-                {
-                    var fc = new FloatCurve();
-                    fc.Load(cn);
-                    gv.reputationAddition = fc.Curve;
-                }
-
-                cn = settingsCN.GetNode("REPUTATION_SUBTRACTION");
-                if (cn != default)
-                {
-                    var fc = new FloatCurve();
-                    fc.Load(cn);
-                    gv.reputationSubtraction = fc.Curve;
-                }
-            }
         }
     }
 
@@ -90,6 +64,12 @@ namespace RP0
 
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;
+
+        [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 0f, maxValue = 200f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
+        public float RepLossKerbalDeathFixed = 100f;
+
+        [GameParameters.CustomFloatParameterUI("Kerbal Death Percent Rep Loss", minValue = 0f, maxValue = 0.5f, stepCount = 51, displayFormat = "P0", gameMode = GameParameters.GameMode.CAREER)]
+        public float RepLossKerbalDeathPercent = 0.1f;
 
         [GameParameters.CustomParameterUI("Enable part tooling")]
         public bool IsToolingEnabled = true;
@@ -128,6 +108,8 @@ namespace RP0
                     IsMissionTrainingEnabled = false;
                     IsRetirementEnabled = false;
                     ContractDeadlineMult = 1.7f;
+                    RepLossKerbalDeathFixed = 50f;
+                    RepLossKerbalDeathPercent = 0.05f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
@@ -135,6 +117,8 @@ namespace RP0
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 1.3f;
+                    RepLossKerbalDeathFixed = 80f;
+                    RepLossKerbalDeathPercent = 0.08f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
@@ -142,6 +126,8 @@ namespace RP0
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 1f;
+                    RepLossKerbalDeathFixed = 100f;
+                    RepLossKerbalDeathPercent = 0.1f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
@@ -149,6 +135,8 @@ namespace RP0
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
                     ContractDeadlineMult = 0.8f;
+                    RepLossKerbalDeathFixed = 200f;
+                    RepLossKerbalDeathPercent = 0.2f;
                     break;
             }
         }

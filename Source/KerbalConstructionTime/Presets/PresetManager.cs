@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UniLinq;
 
 namespace KerbalConstructionTime
 {
@@ -13,7 +14,17 @@ namespace KerbalConstructionTime
             set
             {
                 _activePreset = value;
+
                 KSCContextMenuOverrider.AreTextsUpdated = false;
+
+                // Fixup upgrade text
+                foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
+                {
+                    if (up.name.StartsWith("rp0EngineerUpgrade"))
+                        up.description = KSP.Localization.Localizer.Format("#rp0EngineerUpgradeText", (value.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                    else if (up.name.StartsWith("rp0ResearcherUpgrade"))
+                        up.description = KSP.Localization.Localizer.Format("#rp0ResearcherUpgradeText", (value.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                }
             }
         }
         private KCT_Preset _activePreset;
@@ -360,35 +371,44 @@ namespace KerbalConstructionTime
         }
     }
 
-    public class EngineeringUpgrades : IConfigNode
+    public class EfficiencyUpgrades : IConfigNode
     {
-        private Dictionary<string, double> upgradeMultipliers = new Dictionary<string, double>();
+        private Dictionary<string, double> techMultipliers = new Dictionary<string, double>();
 
         public void Load(ConfigNode node)
         {
-            upgradeMultipliers.Clear();
+            techMultipliers.Clear();
             foreach (ConfigNode.Value kvp in node.values)
             {
                 if (double.TryParse(kvp.value, out double val))
-                    upgradeMultipliers[kvp.name] = val;
+                    techMultipliers[kvp.name] = val;
             }
         }
 
         public void Save(ConfigNode node)
         {
-            foreach (var kvp in upgradeMultipliers)
+            foreach (var kvp in techMultipliers)
                 node.AddValue(kvp.Key, kvp.Value);
         }
 
         public double GetMultiplier()
         {
             double mult = 1d;
-            foreach (var kvp in upgradeMultipliers)
+            foreach (var kvp in techMultipliers)
             {
-                if (PartUpgradeManager.Handler.IsUnlocked(kvp.Key))
-                    mult *= kvp.Value;
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
+                    mult += kvp.Value;
             }
             return mult;
+        }
+
+        public double GetValue(string tech)
+        {
+            double val;
+            if (techMultipliers.TryGetValue(tech, out val))
+                return val;
+
+            return 0d;
         }
     }
 
@@ -415,11 +435,14 @@ namespace KerbalConstructionTime
         [Persistent]
         public FloatCurve ResearcherSkillupRate = new FloatCurve();
         [Persistent]
-        public EngineeringUpgrades EngineerEfficiencyUpgrades = new EngineeringUpgrades();
+        public EfficiencyUpgrades EngineerEfficiencyUpgrades = new EfficiencyUpgrades();
+        [Persistent]
+        public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
         [Persistent]
         public double SmallLCExtraFunds = 10000d;
 
-        public double EngineeringMultiplier => EngineerEfficiencyUpgrades.GetMultiplier();
+        public double EngineerEfficiencyMultiplier => EngineerEfficiencyUpgrades.GetMultiplier();
+        public double ResearcherEfficiencyMultiplier => ResearcherEfficiencyUpgrades.GetMultiplier();
 
 
         public override ConfigNode AsConfigNode()

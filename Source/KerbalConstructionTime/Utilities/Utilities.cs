@@ -339,15 +339,20 @@ namespace KerbalConstructionTime
             return MathParser.ParseConstructionRateFormula(index, KSC, delta);
         }
 
-        public static double GetEfficiencyMultipliers(LCItem LC = null)
+        public static double GetEngineerEfficiencyMultipliers(LCItem LC = null)
         {
             double mult = 1d;
             if (LC != null)
                 mult *= LC.EfficiencyEngineers;
             mult *= KCTGameStates.EfficiencyEngineers;
-            mult *= PresetManager.Instance.ActivePreset.GeneralSettings.EngineeringMultiplier;
+            mult *= PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
             
             return mult;
+        }
+
+        public static double GetResearcherEfficiencyMultipliers()
+        {
+            return KCTGameStates.EfficiencyResearchers * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)

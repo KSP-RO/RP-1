@@ -52,7 +52,7 @@ namespace RP0
                         strategies.Add(strategy);
                     }
                 }
-                foreach(Strategy strategy in strategies)
+                foreach (Strategy strategy in strategies)
                 {
                     UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
                     ActiveStrategyListItem stratItem = item.GetComponent<ActiveStrategyListItem>();

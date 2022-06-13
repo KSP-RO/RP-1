@@ -65,6 +65,7 @@
     <Compile Include="ModuleNonRecharge.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleNoEVA.cs" />
+    <Compile Include="HideEmptyNodes.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
     <Compile Include="Avionics\ProceduralAvionicsConfig.cs" />
     <Compile Include="Avionics\ControlLocker.cs" />

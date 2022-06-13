@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -58,9 +60,12 @@
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
+    <Compile Include="Harmony\ReputationPatcher.cs" />
+    <Compile Include="Harmony\ContractPatcher.cs" />
+    <Compile Include="Harmony\RnDPatcher.cs" />
     <Compile Include="GameplayTips.cs" />
     <Compile Include="LocalizationPatcher.cs" />
-    <Compile Include="HarmonyPatcher.cs" />
+    <Compile Include="Harmony\HarmonyPatcher.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
@@ -83,7 +88,7 @@
     <Compile Include="Avionics\ProceduralAvionicsTechNode.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUnlockedNodes.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
-    <Compile Include="Programs\HarmonyPatches.cs" />
+    <Compile Include="Harmony\StrategyPatches.cs" />
     <Compile Include="Programs\AdminUIFixer.cs" />
     <Compile Include="Programs\Strategies.cs" />
     <Compile Include="Programs\ProgramStrategy.cs" />

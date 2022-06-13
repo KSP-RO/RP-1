@@ -180,7 +180,7 @@ namespace KerbalConstructionTime
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiencyEngineers;
             double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2}");
+            GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2} (tech)");
             GUILayout.EndHorizontal();
 
             double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta) * techMult;
@@ -321,7 +321,7 @@ namespace KerbalConstructionTime
             
             GUILayout.BeginHorizontal();
             GUILayout.Label("Efficiency:");
-            GUILayout.Label($"{effic:P1} (global) x {techMult:N2}", GetLabelRightAlignStyle());
+            GUILayout.Label($"{effic:P1} (global) x {techMult:N2} (tech)", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

@@ -178,7 +178,7 @@ namespace KerbalConstructionTime
 
             double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiencyEngineers;
-            double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineeringMultiplier;
+            double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2}");
             GUILayout.EndHorizontal();
@@ -290,7 +290,7 @@ namespace KerbalConstructionTime
                 delta = -fireAmount;
 
             double effic = Utilities.PredictEfficiencyResearchers(delta);
-
+            double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
             //if (_nodeRate == int.MinValue || isCostCacheInvalid)
             //{
@@ -301,7 +301,7 @@ namespace KerbalConstructionTime
             _nodeRate = MathParser.ParseNodeRateFormula(0, 0, delta);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
-            double sciPerDayEffic = sciPerDay * effic;
+            double sciPerDayEffic = sciPerDay * effic * techMult;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Rate: ", GetLabelRightAlignStyle());
             //bool usingPerYear = false;
@@ -320,8 +320,8 @@ namespace KerbalConstructionTime
 
             
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Global Researcher Efficiency:");
-            GUILayout.Label($"{effic:P1}", GetLabelRightAlignStyle());
+            GUILayout.Label("Efficiency:");
+            GUILayout.Label($"{effic:P1} (global) x {techMult:N2}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

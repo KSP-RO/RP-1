@@ -7,6 +7,7 @@ namespace RP0.Programs
     public class ProgramStrategy : Strategy
     {
         public bool NextTextIsShowSelected = false;
+
         protected override string GetEffectText()
         {
             if (ProgramHandler.Instance == null)
@@ -27,18 +28,21 @@ namespace RP0.Programs
             string objectives = string.Empty, requirements = string.Empty;
             if (NextTextIsShowSelected)
             {
-                objectives = "Objectivs: x/y met.\nObjective 1 ...\nObjective 2 ....\n";
-                requirements = "Requirements: x/y met.\nRequirement 1 ...\nRequirement 2 ....\n";
-                // return;
+                NextTextIsShowSelected = false;
+
+                var tmp = program.ObjectivesBlock?.ToString(doColoring: wasAccepted);
+                objectives = $"<b>Objectives</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
+
+                tmp = program.RequirementsBlock?.ToString(doColoring: !wasAccepted);
+                requirements = $"<b>Requirements</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
             }
             else
             {
-                objectives = $"Objectives: {program.objectivesPrettyText}";
-                requirements = $"Requirements: {program.requirementsPrettyText}";
+                objectives = $"<b>Objectives</b>: {program.objectivesPrettyText}";
+                requirements = $"<b>Requirements</b>: {program.requirementsPrettyText}";
             }
 
-
-            string text = $"{objectives}\nTotal Funds: {program.TotalFunding:N0}\n";
+            string text = $"{objectives}\n\nTotal Funds: {program.TotalFunding:N0}\n";
             if (wasAccepted)
             {
                 text += $"Funds Paid Out: {program.fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT, false, false)}\n";
@@ -49,7 +53,7 @@ namespace RP0.Programs
             }
             else
             {
-                text = $"{requirements}\n{text}Nominal Duration: {program.nominalDurationYears:0.#} years";
+                text = $"{requirements}\n\n{text}Nominal Duration: {program.nominalDurationYears:0.#} years";
             }
 
             return text;

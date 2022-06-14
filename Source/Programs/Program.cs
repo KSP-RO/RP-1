@@ -72,6 +72,9 @@ namespace RP0.Programs
         [Persistent(isPersistant = false)]
         public double repPenaltyPerYearLate;
 
+        public RequirementBlock RequirementsBlock;
+        public RequirementBlock ObjectivesBlock;
+
         private Func<bool> _requirementsPredicate;
         private Func<bool> _objectivesPredicate;
 
@@ -108,6 +111,8 @@ namespace RP0.Programs
             objectivesPrettyText = toCopy.objectivesPrettyText;
             nominalDurationYears = toCopy.nominalDurationYears;
             baseFunding = toCopy.baseFunding;
+            RequirementsBlock = toCopy.RequirementsBlock;
+            ObjectivesBlock = toCopy.ObjectivesBlock;
             _requirementsPredicate = toCopy._requirementsPredicate;
             _objectivesPredicate = toCopy._objectivesPredicate;
         }
@@ -119,15 +124,17 @@ namespace RP0.Programs
             ConfigNode cn = node.GetNode("REQUIREMENTS");
             if (cn != null)
             {
-                Expression<Func<bool>> expr = ParseRequirementBlock(cn);
-                _requirementsPredicate = expr?.Compile();
+                RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                RequirementsBlock = reqBlock;
+                _requirementsPredicate = reqBlock?.Expression.Compile();
             }
 
             cn = node.GetNode("OBJECTIVES");
             if (cn != null)
             {
-                Expression<Func<bool>> expr = ParseRequirementBlock(cn);
-                _objectivesPredicate = expr?.Compile();
+                RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                ObjectivesBlock = reqBlock;
+                _objectivesPredicate = reqBlock?.Expression.Compile();
             }
         }
 
@@ -212,59 +219,92 @@ namespace RP0.Programs
             return 0d;
         }
 
-        private Expression<Func<bool>> ParseRequirementBlock(ConfigNode cn)
+        private RequirementBlock ParseRequirementBlock(ConfigNode cn)
         {
-            List<Expression<Func<bool>>> expressions = ParseRequirementsAsExpressions(cn);
+            List<ProgramRequirement> reqs = ParseRequirements(cn);
+            var expressions = new List<Expression<Func<bool>>>();
+            if (reqs != null)
+            {
+                foreach (var r in reqs)
+                {
+                    expressions.Add(() => r.IsMet);
+                }
+            }
 
+            var childBlocks = new List<RequirementBlock>();
             foreach (ConfigNode innerCn in cn.nodes)
             {
-                Expression<Func<bool>> expression = ParseRequirementBlock(innerCn);
-                if (expression != null)
+                RequirementBlock block = ParseRequirementBlock(innerCn);
+                if (block == null) continue;
+
+                int bCount = block.ChildBlocks?.Count ?? 0;
+                int rCount = block.Reqs?.Count ?? 0;
+                if (bCount == 0 && rCount == 1)
                 {
-                    expressions ??= new List<Expression<Func<bool>>>();
-                    expressions.Add(expression);
+                    ProgramRequirement req = block.Reqs[0];
+                    reqs ??= new List<ProgramRequirement>();
+                    reqs.Add(req);
+                    expressions.Add(() => req.IsMet);
+                }
+                else
+                {
+                    childBlocks.Add(block);
+                    expressions.Add(block.Expression);
                 }
             }
 
             if (expressions == null || expressions.Count == 0) return null;
 
+            if (childBlocks.Count == 1 && (reqs == null || reqs.Count == 0)) return childBlocks[0];
+
+            Expression<Func<bool>> combinedExpression;
+            RequirementBlock.LogicOp op;
             if (cn.name.Equals("or", StringComparison.OrdinalIgnoreCase))
             {
-                return expressions.CombineExpressionsWithOr();
+                op = RequirementBlock.LogicOp.Or;
+                combinedExpression = expressions.CombineExpressionsWithOr();
             }
             else
             {
-                return expressions.CombineExpressionsWithAnd();
+                op = RequirementBlock.LogicOp.And;
+                combinedExpression = expressions.CombineExpressionsWithAnd();
             }
+
+            return new RequirementBlock
+            {
+                Expression = combinedExpression,
+                Op = op,
+                Reqs = reqs,
+                ChildBlocks = childBlocks
+            };
         }
 
-        private List<Expression<Func<bool>>> ParseRequirementsAsExpressions(ConfigNode cn)
+        private List<ProgramRequirement> ParseRequirements(ConfigNode cn)
         {
             if (cn == null || (cn.values.Count == 0 && !cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))) return null;
 
-            List<Expression<Func<bool>>> expressions = new List<Expression<Func<bool>>>();
+            var reqs = new List<ProgramRequirement>();
 
             if (cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))
             {
-                var req = new ContractRequirement(cn);
-                expressions.Add(() => req.IsMet);
+                reqs.Add(new ContractRequirement(cn));
             }
             else
             {
                 foreach (Value cnVal in cn.values)
                 {
-                    Expression<Func<bool>> expr = ParseRequirementAsExpression(cnVal);
-                    if (expr != null)
+                    ProgramRequirement req = ParseRequirementAsExpression(cnVal);
+                    if (req != null)
                     {
-                        expressions.Add(expr);
+                        reqs.Add(req);
                     }
                 }
             }
 
-            return expressions;
+            return reqs;
         }
 
-        private Expression<Func<bool>> ParseRequirementAsExpression(Value cnVal)
+        private ProgramRequirement ParseRequirementAsExpression(Value cnVal)
         {
             ProgramRequirement req = null;
             switch (cnVal.name)
@@ -281,8 +321,7 @@ namespace RP0.Programs
                     break;
             }
 
-            if (req == null) return null;
-            else return () => req.IsMet;
+            return req;
         }
     }
 }

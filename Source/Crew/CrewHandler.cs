@@ -806,7 +806,7 @@ namespace RP0.Crew
 
         private double GetServiceTime(ProtoCrewMember pcm)
         {
-            return 86400d * 365d *
+            return 86400d * 365.25d *
                 (Settings.retireBaseYears +
                  UtilMath.Lerp(Settings.retireCourageMin, Settings.retireCourageMax, pcm.courage) +
                  UtilMath.Lerp(Settings.retireStupidMin, Settings.retireStupidMax, pcm.stupidity));

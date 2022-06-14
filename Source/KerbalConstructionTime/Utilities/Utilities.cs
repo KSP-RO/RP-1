@@ -2269,7 +2269,7 @@ namespace KerbalConstructionTime
         }
 
         private const double MaxSecondsForDayDisplay = 7d * 86400d;
-        private const double MaxTimeToDisplay = 100d * 365d * 86400d;
+        private const double MaxTimeToDisplay = 100d * 365.25d * 86400d;
 
         public static string GetColonFormattedTime(double t, double extraTime = 0d, bool flip = false)
         {

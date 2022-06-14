@@ -70,9 +70,6 @@ namespace RP0.Programs
         public double repDeltaOnCompletePerYearEarly;
 
         [Persistent(isPersistant = false)]
-        public double repBonusOnCompletePerYearLate;
-
-        [Persistent(isPersistant = false)]
         public double repPenaltyPerYearLate;
 
         private Func<bool> _requirementsPredicate;

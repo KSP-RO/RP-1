@@ -26,6 +26,7 @@ namespace RP0.Programs
         public static ProgramHandler Instance { get; private set; }
         public static ProgramHandlerSettings Settings { get; private set; }
         public static List<Program> Programs { get; private set; }
+        public static Dictionary<string, Program> ProgramDict { get; private set; }
 
         private static Dictionary<string, System.Type> programStrategies = new Dictionary<string, System.Type>();
         private static AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
@@ -42,15 +43,15 @@ namespace RP0.Programs
         {
             if (Programs == null)
             {
-                // Create the assembly
-                
-                
-
                 Programs = new List<Program>();
+                ProgramDict = new Dictionary<string, Program>();
+
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM"))
                 {
                     Program p = new Program(n);
                     Programs.Add(p);
+                    ProgramDict.Add(p.name, p);
+
                     if (programStrategies.ContainsKey(p.name))
                         continue;
 

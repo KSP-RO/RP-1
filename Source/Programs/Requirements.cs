@@ -1,19 +1,79 @@
 ﻿using ContractConfigurator;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using static ConfigNode;
 
 namespace RP0.Programs
 {
+    public class RequirementBlock
+    {
+        public enum LogicOp { And, Or }
+
+        public Expression<Func<bool>> Expression { get; set; }
+
+        public LogicOp Op { get; set; }
+
+        public List<ProgramRequirement> Reqs { get; set; }
+
+        public List<RequirementBlock> ChildBlocks { get; set; }
+
+        public override string ToString()
+        {
+            return ToString(indent: 0);
+        }
+
+        public string ToString(int indent = 0, bool doColoring = false)
+        {
+            string sIndent = string.Join("", Enumerable.Repeat(" ", indent));
+            int reqCount = Reqs?.Count ?? 0;
+            int childCount = ChildBlocks?.Count ?? 0;
+
+            string s = null;
+            bool omitOpHeader = childCount + reqCount < 2;
+            if (!omitOpHeader)
+            {
+                s = $"* {(Op == LogicOp.And ? "All:" : "Any:")}";
+                if (doColoring)
+                {
+                    bool isMet = Expression.Compile().Invoke();
+                    s = ProgramRequirement.SurroundWithConditionalColorTags(s, isMet);
+                }
+                s = $"{sIndent}{s}\n";
+                sIndent += "    ";
+            }
+
+            if (reqCount > 0) s += string.Join("\n", Reqs.Select(r => $"{sIndent}{r.ToString(doColoring, prefix: "- ")}"));
+            if (reqCount > 0 && childCount > 0) s += "\n";
+            if (childCount > 0) s += string.Join("\n", ChildBlocks.Select(b => b.ToString(indent: indent + 4)));
+
+            return s;
+        }
+    }
+
     public abstract class ProgramRequirement
     {
         public bool IsInverted { get; set; }
 
         public abstract bool IsMet { get; }
+
+        public abstract override string ToString();
+
+        public abstract string ToString(bool doColoring = false, string prefix = null);
+
+        public static string SurroundWithConditionalColorTags(string s, bool isMet)
+        {
+            string color = isMet ? "green" : "#fa8072";
+            return $"<color={color}>{s}</color>";
+        }
     }
 
     public class ContractRequirement : ProgramRequirement
     {
         public string ContractName { get; set; }
+
+        public string ContractTitle => ContractType.GetContractType(ContractName)?.title ?? ContractName;
 
         public uint? MinCount { get; set; }
 
@@ -54,11 +114,37 @@ namespace RP0.Programs
             uint i = 0;
             MinCount = cn.TryGetValue("minCount", ref i) ? i : null;
         }
+
+        public override string ToString()
+        {
+            return ToString(doColoring: false, prefix: null);
+        }
+
+        public override string ToString(bool doColoring = false, string prefix = null)
+        {
+            string s;
+            if (MinCount.HasValue && MinCount > 1)
+            {
+                s = IsInverted ? $"Haven't completed contract {ContractTitle} {MinCount} or more times" :
+                                 $"Complete contract {ContractTitle} at least {MinCount} times";
+            }
+            else
+            {
+                s = IsInverted ? $"Haven't completed contract {ContractTitle}" :
+                                 $"Complete contract {ContractTitle}";
+            }
+
+            if (prefix != null) s = prefix + s;
+
+            return doColoring ? SurroundWithConditionalColorTags(s, IsMet) : s;
+        }
     }
 
     public class OtherProgramRequirement : ProgramRequirement
     {
         public string ProgramName { get; set; }
+
+        public string ProgramTitle => ProgramHandler.ProgramDict.TryGetValue(ProgramName, out Program p) ? p.title : ProgramName;
 
         public override bool IsMet
         {
@@ -78,6 +164,19 @@ namespace RP0.Programs
 
             ProgramName = cnVal.value;
             IsInverted = cnVal.name == "not_complete_program";
+        }
+
+        public override string ToString()
+        {
+            return ToString(doColoring: false, prefix: null);
+        }
+
+        public override string ToString(bool doColoring = false, string prefix = null)
+        {
+            string s = IsInverted ? $"Haven't completed program {ProgramTitle}" :
+                                    $"Complete program {ProgramTitle}";
+            if (prefix != null) s = prefix + s;
+            return doColoring ? SurroundWithConditionalColorTags(s, IsMet) : s;
         }
     }
 }

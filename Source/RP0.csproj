@@ -90,7 +90,6 @@
     <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Harmony\StrategyPatches.cs" />
     <Compile Include="Programs\AdminUIFixer.cs" />
-    <Compile Include="Programs\Strategies.cs" />
     <Compile Include="Programs\ProgramStrategy.cs" />
     <Compile Include="Programs\StrategySystemFixer.cs" />
     <Compile Include="Programs\PredicateBuilder.cs" />

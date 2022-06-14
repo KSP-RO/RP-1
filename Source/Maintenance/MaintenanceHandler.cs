@@ -88,10 +88,14 @@ namespace RP0
             get
             {
                 const double secsPerYear = 3600 * 24 * 365.25;
-                double minSubsidy = Settings.subsidyCurve.Evaluate((float)(KSPUtils.GetUT() / secsPerYear)) / 365.25;
+                float years = (float)(KSPUtils.GetUT() / secsPerYear);
+                double minSubsidy = Settings.subsidyCurve.Evaluate(years);
                 double minRep = minSubsidy / Settings.repToSubsidyConversion;
                 double maxRep = minRep * Settings.subsidyMultiplierForMax;
-                return UtilMath.Lerp(minSubsidy, minSubsidy * Settings.subsidyMultiplierForMax, UtilMath.InverseLerp(minRep, maxRep, Reputation.Instance.reputation));
+                double invLerp = UtilMath.InverseLerp(minRep, maxRep, UtilMath.Clamp(Reputation.Instance.reputation, minRep, maxRep));
+                double val = UtilMath.LerpUnclamped(minSubsidy, minSubsidy * Settings.subsidyMultiplierForMax, invLerp);
+                //Debug.Log($"$$$$ years {years}: minSub: {minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, minRep {minRep}, maxRep {maxRep}, invLerp {invLerp}, val {val}\n{n.ToString()}");
+                return val * (1d / 365.25d);
             }
         }
 
@@ -130,7 +134,7 @@ namespace RP0
             {
                 Settings = new MaintenanceSettings();
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
-                    Settings.Load(n);
+                    ConfigNode.LoadObjectFromConfig(Settings, n);
 
                 UpdateKCTSalarySettings();
             }
@@ -346,7 +350,7 @@ namespace RP0
             {
                 double costPerDay = Math.Max(0, TotalUpkeep - MaintenanceSubsidy);
                 double costForPassedSeconds = -timePassed * (costPerDay * (1d / 86400d));
-                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedSeconds} funds");
+                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedSeconds} funds where upkeep is {TotalUpkeep} and subsidy {MaintenanceSubsidy}");
                 Funding.Instance.AddFunds(costForPassedSeconds, TransactionReasons.StructureRepair);
             }
 

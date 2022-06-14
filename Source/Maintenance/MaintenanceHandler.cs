@@ -299,7 +299,7 @@ namespace RP0
 
             NautBaseUpkeep += nautCount * perNaut;
             NautTotalUpkeep = NautBaseUpkeep + TrainingUpkeep + NautInFlightUpkeep;
-            KCTGameStates.TotalMaintenancePerDay = FacilityUpkeep + NautTotalUpkeep + Settings.maintenanceOffset;
+            KCTGameStates.TotalMaintenancePerDay = FacilityUpkeep + NautTotalUpkeep - MaintenanceSubsidy;
             Profiler.EndSample();
         }
 

@@ -154,7 +154,7 @@ namespace KerbalConstructionTime
         public static int GetSalaryResearchers() => (int)(KCTGameStates.Researchers * SalaryResearchers * SalaryMultiplier);
         public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
 
-        public static double GetTotalMaintenanceAndSalaryPerDay() => System.Math.Max(0d, TotalMaintenancePerDay + GetTotalSalary() / 365d);
+        public static double GetTotalMaintenanceAndSalaryPerDay() => System.Math.Max(0d, TotalMaintenancePerDay + GetTotalSalary() / 365.25d);
 
         public static int TotalEngineers
         {

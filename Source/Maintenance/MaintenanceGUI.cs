@@ -73,7 +73,7 @@ namespace RP0
         public void RenderSummaryTab()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Maintenance costs (per ", HighLogic.Skin.label);
+            GUILayout.Label("Budget (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
@@ -124,7 +124,7 @@ namespace RP0
             {
                 Debug.LogException(ex);
             }
-            GUILayout.EndHorizontal();
+            GUILayout.EndHorizontal();            
 
             GUILayout.BeginHorizontal();
             try
@@ -160,33 +160,31 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            try
-            {
-                double costPerDay = Math.Max(0, MaintenanceHandler.Instance.TotalUpkeep - MaintenanceHandler.Instance.MaintenanceSubsidy);
-                GUILayout.Label("Total (after subsidy)", BoldLabel, GUILayout.Width(160));
-                GUILayout.Label((costPerDay * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
+            double costPerDay = Math.Max(0, MaintenanceHandler.Instance.TotalUpkeep - MaintenanceHandler.Instance.MaintenanceSubsidy);
+            GUILayout.Label("Total (after subsidy)", BoldLabel, GUILayout.Width(160));
+            GUILayout.Label((costPerDay * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Budget", HighLogic.Skin.label, GUILayout.Width(160));
+            double constrMaterials = MaintenanceHandler.Instance.ConstructionMaterialsTotal * PeriodFactor;
+            GUILayout.Label("Building Materials", HighLogic.Skin.label, GUILayout.Width(160));
+            GUILayout.Label(constrMaterials.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Program Budget", HighLogic.Skin.label, GUILayout.Width(160));
             double programBudget = 0d;
-            try
+            foreach (Programs.Program p in Programs.ProgramHandler.Instance.ActivePrograms)
             {
-                foreach (Programs.Program p in Programs.ProgramHandler.Instance.ActivePrograms)
-                {
-                    programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
-                }
+                programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
             }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.Label(programBudget.ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
+            GUILayout.Label(programBudget.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Balance", HighLogic.Skin.label, GUILayout.Width(160));
+            double delta = programBudget - costPerDay * PeriodFactor - constrMaterials;
+            GUILayout.Label($"{(delta < 0 ? "-":"+")}{Math.Abs(delta).ToString(PeriodDispFormat)}", BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
         }
 
@@ -332,7 +330,7 @@ namespace RP0
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (var kvp in MaintenanceHandler.Instance.Integration)
+            foreach (var kvp in MaintenanceHandler.Instance.IntegrationSalaries)
             {
                 string site = LocalizeSiteName(kvp.Key);
                 double engineers = kvp.Value;
@@ -343,7 +341,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.Label((engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365.25d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -368,12 +366,12 @@ namespace RP0
         public void RenderConstructionTab()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Construction Engineer Salaries (per ", HighLogic.Skin.label);
+            GUILayout.Label("Construction Salaries/Materials (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (var kvp in MaintenanceHandler.Instance.Construction)
+            foreach (var kvp in MaintenanceHandler.Instance.ConstructionSalaries)
             {
                 string site = LocalizeSiteName(kvp.Key);
                 double engineers = kvp.Value;
@@ -384,7 +382,22 @@ namespace RP0
                 try
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.Label((engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365.25d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                try
+                {
+                    GUILayout.Label("  Materials", HighLogic.Skin.label, GUILayout.Width(160));
+                    double cost;
+                    if (!MaintenanceHandler.Instance.ConstructionMaterials.TryGetValue(kvp.Key, out cost))
+                        cost = 0d;
+                    GUILayout.Label((cost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {

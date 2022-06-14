@@ -27,8 +27,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public double lastUpdate = 0d;
 
-        public readonly Dictionary<string, double> Integration = new Dictionary<string, double>();
-        public readonly Dictionary<string, double> Construction = new Dictionary<string, double>();
+        public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
+        public readonly Dictionary<string, double> ConstructionSalaries = new Dictionary<string, double>();
+        public readonly Dictionary<string, double> ConstructionMaterials = new Dictionary<string, double>();
         public double Researchers = 0d;
         //public readonly Dictionary<string, double> KCTBuildRates = new Dictionary<string, double>();
         //public int[] KCTPadCounts = new int[PadLevelCount];
@@ -54,7 +55,7 @@ namespace RP0
         public double NautBaseUpkeep = 0d;
         public double NautInFlightUpkeep = 0d;
         public double NautTotalUpkeep = 0d;
-        public double TotalUpkeep => FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchSalaryTotal + NautTotalUpkeep;
+        public double TotalUpkeep => FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchSalaryTotal + NautTotalUpkeep + ConstructionMaterialsTotal;
 
         public double FacilityUpkeep => RndCost + McCost + TsCost + AcCost;
 
@@ -64,9 +65,9 @@ namespace RP0
             get
             {
                 double tmp = 0d;
-                foreach (double d in Integration.Values)
+                foreach (double d in IntegrationSalaries.Values)
                     tmp += d;
-                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365d;
+                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365.25d;
             }
         }
 
@@ -75,13 +76,25 @@ namespace RP0
             get
             {
                 double tmp = 0d;
-                foreach (double d in Construction.Values)
+                foreach (double d in ConstructionSalaries.Values)
                     tmp += d;
-                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365d;
+                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365.25d;
             }
         }
 
-        public double ResearchSalaryTotal => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365d;
+        public double ConstructionMaterialsTotal
+        {
+            get
+            {
+                double tmp = 0d;
+                foreach (double d in ConstructionMaterials.Values)
+                    tmp += d;
+
+                return tmp * _maintenanceCostMult / 365.25d;
+            }
+        }
+
+        public double ResearchSalaryTotal => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365.25d;
 
         public double MaintenanceSubsidy
         {
@@ -180,13 +193,13 @@ namespace RP0
         private void UpdateKCTSalaries()
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
-            Construction.Clear();
-            Integration.Clear();
+            ConstructionSalaries.Clear();
+            IntegrationSalaries.Clear();
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
                 int constructionWorkers = ksc.ConstructionWorkers;
-                Construction[ksc.KSCName] = constructionWorkers;
-                Integration[ksc.KSCName] = KCTGameStates.GetEffectiveEngineersForSalary(ksc) - constructionWorkers;
+                ConstructionSalaries[ksc.KSCName] = constructionWorkers;
+                IntegrationSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveEngineersForSalary(ksc) - constructionWorkers;
                 //for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
                 //{
                 //    LCItem lc = ksc.LaunchComplexes[j];
@@ -205,7 +218,7 @@ namespace RP0
         {
             Profiler.BeginSample("RP0Maintenance UpdateUpkeep");
 
-            if (Integration.Count == 0)
+            if (IntegrationSalaries.Count == 0)
                 UpdateKCTSalaries();
 
             EnsureFacilityLvlCostsLoaded();
@@ -235,6 +248,20 @@ namespace RP0
 
             //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
             //    SphCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
+
+            ConstructionMaterials.Clear();
+            foreach (var ksc in KCTGameStates.KSCs)
+            {
+                if (ksc.Constructions.Count > 0)
+                {
+                    var c = ksc.Constructions[0];
+                    double br = c.GetBuildRate();
+                    if (br > 0d)
+                    {
+                        ConstructionMaterials[ksc.KSCName] = br * 86400d / c.BP * c.Cost;
+                    }
+                }
+            }
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out float[] costs))
                 RndCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
@@ -269,7 +296,7 @@ namespace RP0
             NautBaseUpkeep = 0d;
             NautInFlightUpkeep = 0d;
             NautTotalUpkeep = 0d;
-            double perNaut = nautYearlyUpkeep * (1d / 365d);
+            double perNaut = nautYearlyUpkeep * (1d / 365.25d);
             int nautCount = 0;
             for (int i = HighLogic.CurrentGame.CrewRoster.Count; i-- > 0;)
             {

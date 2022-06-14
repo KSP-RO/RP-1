@@ -924,11 +924,12 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            if (!_lcs.Any(logLC => logLC.ModID == data.ModID))
+            Guid modId = data?.ModID ?? lc.ModID;    // Should only happen when LCs are created through code and thus do not have Construction items
+            if (!_lcs.Any(logLC => logLC.ModID == modId))
             {
                 _lcs.Add(new LCLogItem(lc)
                 {
-                    ModID = data.ModID,
+                    ModID = modId,
                     ModCost = data?.Cost ?? 0
                 });
             }
@@ -937,7 +938,7 @@ namespace RP0
             {
                 Facility = FacilityType.LaunchComplex,
                 State = state,
-                FacilityID = data.ModID
+                FacilityID = modId
             });
         }
 

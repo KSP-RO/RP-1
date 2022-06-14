@@ -112,7 +112,6 @@ namespace RP0
             [HarmonyPatch("LoadStrategyConfigs")]
             internal static void Postfix_LoadStrategyConfigs(StrategySystemConfig __instance)
             {
-                Debug.Log($"%%%% Loading programs as StrategyConfigs. Found {__instance.Departments.Count} departments.");
                 ProgramHandler.EnsurePrograms();
                 foreach (Program p in ProgramHandler.Programs)
                 {

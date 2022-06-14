@@ -178,11 +178,11 @@ namespace RP0
             {
                 programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
             }
-            GUILayout.Label(programBudget.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+            GUILayout.Label($"+{programBudget.ToString(PeriodDispFormat)}", RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Balance", HighLogic.Skin.label, GUILayout.Width(160));
+            GUILayout.Label("Balance", BoldLabel, GUILayout.Width(160));
             double delta = programBudget - costPerDay * PeriodFactor - constrMaterials;
             GUILayout.Label($"{(delta < 0 ? "-":"+")}{Math.Abs(delta).ToString(PeriodDispFormat)}", BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();

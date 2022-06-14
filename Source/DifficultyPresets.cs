@@ -35,6 +35,19 @@ namespace RP0
         }
     }
 
+    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
+    public class GameVariablesCorrector : MonoBehaviour
+    {
+        public void Update()
+        {
+            GameVariables.Instance.contractPrestigeTrivial = 1f;
+            GameVariables.Instance.contractPrestigeSignificant = 1f;
+            GameVariables.Instance.contractPrestigeExceptional = 1f;
+
+            GameObject.Destroy(this);
+        }
+    }
+
     public class RP0Settings : GameParameters.CustomParameterNode
     {
         public override string Title { get { return "General Settings"; } }

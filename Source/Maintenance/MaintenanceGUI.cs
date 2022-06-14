@@ -48,7 +48,7 @@ namespace RP0
                 {
                     MaintenancePeriod.Day => 1,
                     MaintenancePeriod.Month => 30,
-                    MaintenancePeriod.Year => 365,
+                    MaintenancePeriod.Year => 365.25,
                     _ => 0,
                 };
             }

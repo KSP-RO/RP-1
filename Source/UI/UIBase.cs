@@ -6,7 +6,7 @@ namespace RP0
     {
         public enum UITab
         {
-            Maintenance, Facilities, Integration, Construction, Astronauts, Tooling, ToolingType,
+            Budget, Facilities, Integration, Construction, Astronauts, Tooling, ToolingType,
             Training, Courses, NewCourse, Naut, Avionics, Contracts, CareerLog
         };
 
@@ -51,7 +51,7 @@ namespace RP0
         {
             switch (tab)
             {
-                case UITab.Maintenance:
+                case UITab.Budget:
                 case UITab.Facilities:
                 case UITab.Integration:
                 case UITab.Construction:

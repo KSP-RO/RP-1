@@ -1,6 +1,6 @@
 ﻿namespace RP0
 {
-    public class MaintenanceSettings : IConfigNode
+    public class MaintenanceSettings
     {
         [Persistent]
         public double facilityLevelCostMult = 0.00002d;
@@ -40,15 +40,5 @@
 
         [Persistent]
         public FloatCurve subsidyCurve = new FloatCurve();
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
-        }
     }
 }

@@ -58,8 +58,8 @@ namespace RP0
         private void UpdateSelectedTab()
         {
             GUILayout.BeginHorizontal();
-            if (ShouldShowTab(UITab.Maintenance) && RenderToggleButton("Maintenance", _currentTab == UITab.Maintenance))
-                SwitchTabTo(UITab.Maintenance);
+            if (ShouldShowTab(UITab.Budget) && RenderToggleButton("Budget", _currentTab == UITab.Budget))
+                SwitchTabTo(UITab.Budget);
             if (ShouldShowTab(UITab.Tooling) && RenderToggleButton("Tooling", _currentTab == UITab.Tooling))
                 SwitchTabTo(UITab.Tooling);
             if (ShouldShowTab(UITab.Training) && RenderToggleButton("Astronauts", _currentTab == UITab.Training))
@@ -89,7 +89,7 @@ namespace RP0
                 {
                     switch (_currentTab)
                     {
-                        case UITab.Maintenance:
+                        case UITab.Budget:
                             _maintUI.RenderSummaryTab();
                             break;
                         case UITab.Facilities:

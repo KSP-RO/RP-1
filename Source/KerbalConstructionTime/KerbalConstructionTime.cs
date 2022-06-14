@@ -669,7 +669,7 @@ namespace KerbalConstructionTime
                                 {
                                     double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
                                     double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyEngineers);
-                                    double delta = eval * timestep / (365d * 86400d);
+                                    double delta = eval * timestep / (365.25d * 86400d);
                                     //KCTDebug.Log($"For LC {currentLC.Name}, effic {currentLC.EfficiencyPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
                                     currentLC.EfficiencyEngineers = Math.Min(max, currentLC.EfficiencyEngineers + delta);
                                 }
@@ -746,7 +746,7 @@ namespace KerbalConstructionTime
                     {
                         double max = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerMaxEfficiency;
                         double eval = PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerSkillupRate.Evaluate((float)KCTGameStates.EfficiencyEngineers);
-                        double delta = eval * UTDiff / (365d * 86400d);
+                        double delta = eval * UTDiff / (365.25d * 86400d);
                         if (rushingEngs > 0)
                             delta = UtilMath.LerpUnclamped(delta, 0, rushingEngs / KCTGameStates.TotalEngineers);
                         //KCTDebug.Log($"Global eng effic {KCTGameStates.EfficiencyEngineers}. Max {max}. Curve eval {eval}. So delta {delta}");
@@ -762,7 +762,7 @@ namespace KerbalConstructionTime
                     {
                         double max = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherMaxEfficiency;
                         double eval = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherSkillupRate.Evaluate((float)KCTGameStates.EfficiencyResearchers);
-                        double delta = eval * UTDiff / (365d * 86400d);
+                        double delta = eval * UTDiff / (365.25d * 86400d);
                         //KCTDebug.Log($"For Researchers, effic {KCTGameStates.EfficiencyRDPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
                         KCTGameStates.EfficiencyResearchers = Math.Min(max, KCTGameStates.EfficiencyResearchers + delta);
                     }

@@ -35,7 +35,7 @@ namespace RP0
         }
     }
 
-    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
+    [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
     public class GameVariablesCorrector : MonoBehaviour
     {
         public void Update()

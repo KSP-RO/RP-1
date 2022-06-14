@@ -1,10 +1,13 @@
-﻿using ClickThroughFix;
+﻿using System;
+using ClickThroughFix;
 using ContractConfigurator;
 using Contracts;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace RP0.Programs
 {
@@ -24,6 +27,11 @@ namespace RP0.Programs
         public static ProgramHandlerSettings Settings { get; private set; }
         public static List<Program> Programs { get; private set; }
 
+        private static Dictionary<string, System.Type> programStrategies = new Dictionary<string, System.Type>();
+        private static AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
+                    new AssemblyName("RP0ProgramsDynamic"), AssemblyBuilderAccess.Run);
+        private static ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("RP0ProgramsDynamicModule");
+
         public List<Program> ActivePrograms { get; private set; } = new List<Program>();
 
         public List<Program> CompletedPrograms { get; private set; } = new List<Program>();
@@ -34,10 +42,24 @@ namespace RP0.Programs
         {
             if (Programs == null)
             {
+                // Create the assembly
+                
+                
+
                 Programs = new List<Program>();
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM"))
                 {
-                    Programs.Add(new Program(n));
+                    Program p = new Program(n);
+                    Programs.Add(p);
+                    if (programStrategies.ContainsKey(p.name))
+                        continue;
+
+                    TypeBuilder stratBuilder = moduleBuilder.DefineType("RP0.Programs." + p.name,
+                        TypeAttributes.Public | TypeAttributes.Class, typeof(ProgramStrategy));
+                    Type t = stratBuilder.CreateType();
+                    programStrategies[p.name] = t;
+                    if (Strategies.StrategySystem.StrategyTypes.Count > 0)
+                        Strategies.StrategySystem.StrategyTypes.Add(t);
                 }
             }
         }

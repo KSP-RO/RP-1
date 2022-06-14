@@ -171,6 +171,23 @@ namespace RP0
                 Debug.LogException(ex);
             }
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Budget", HighLogic.Skin.label, GUILayout.Width(160));
+            double programBudget = 0d;
+            try
+            {
+                foreach (Programs.Program p in Programs.ProgramHandler.Instance.ActivePrograms)
+                {
+                    programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+            GUILayout.Label(programBudget.ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
+            GUILayout.EndHorizontal();
         }
 
         public void RenderFacilitiesTab()

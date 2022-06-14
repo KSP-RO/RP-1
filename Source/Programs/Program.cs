@@ -148,6 +148,13 @@ namespace RP0.Programs
             };
         }
 
+        public double GetFundsForFutureTimestamp(double ut)
+        {
+            double time2 = ut - acceptedUT;
+            double funds2 = GetFundsAtTime(time2);
+            return Math.Max(0, funds2 - fundsPaidOut);
+        }
+
         public void ProcessFunding()
         {
             if (TotalFunding < 1) return;

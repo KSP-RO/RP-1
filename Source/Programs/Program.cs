@@ -257,22 +257,11 @@ namespace RP0.Programs
 
             if (childBlocks.Count == 1 && (reqs == null || reqs.Count == 0)) return childBlocks[0];
 
-            Expression<Func<bool>> combinedExpression;
-            RequirementBlock.LogicOp op;
-            if (cn.name.Equals("or", StringComparison.OrdinalIgnoreCase))
-            {
-                op = RequirementBlock.LogicOp.Or;
-                combinedExpression = expressions.CombineExpressionsWithOr();
-            }
-            else
-            {
-                op = RequirementBlock.LogicOp.And;
-                combinedExpression = expressions.CombineExpressionsWithAnd();
-            }
+            var op = RequirementBlock.LogicOp.Parse(cn);
 
             return new RequirementBlock
             {
-                Expression = combinedExpression,
+                Expression = op.CombineExpressions(expressions),
                 Op = op,
                 Reqs = reqs,
                 ChildBlocks = childBlocks

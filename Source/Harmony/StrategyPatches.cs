@@ -93,6 +93,8 @@ namespace RP0
             [HarmonyPatch("SetSelectedStrategy")]
             internal static void Postfix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
             {
+                // If it's a Program, we always want to show the green checkmark
+                // not the red x.
                 if (wrapper.strategy is ProgramStrategy ps)
                 {
                     string name = ps.Config.Name;
@@ -101,6 +103,21 @@ namespace RP0
                         __instance.btnAcceptCancel.gameObject.SetActive(false);
                     else if (__instance.btnAcceptCancel.currentState != "accept")
                         __instance.btnAcceptCancel.SetState("accept");
+                }
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch("BtnInputAccept")]
+            internal static void Prefix_BtnInputAccept(Administration __instance, ref string state)
+            {
+                // We're changing the button to always be the checkmark.
+                // But that means if this is an active strategy, we need
+                // to change what state this handler thinks we're in
+                // so we complete the contract.
+                if (__instance.SelectedWrapper.strategy is ProgramStrategy ps)
+                {
+                    if (ps.IsActive)
+                        state = "cancel";
                 }
             }
         }

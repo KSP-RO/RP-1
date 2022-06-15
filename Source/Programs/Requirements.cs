@@ -3,13 +3,96 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using UnityEngine;
 using static ConfigNode;
 
 namespace RP0.Programs
 {
     public class RequirementBlock
     {
-        public enum LogicOp { And, Or }
+        public abstract class LogicOp
+        {
+            public abstract override string ToString();
+
+            public abstract Expression<Func<bool>> CombineExpressions(IEnumerable<Expression<Func<bool>>> expressions);
+
+            public static LogicOp Parse(ConfigNode cn)
+            {
+                string s = cn.name;
+                if (s.Equals("any", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new Any();
+                }
+                else if (s.Equals("atleast", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new AtLeast(cn);
+                }
+                else
+                {
+                    return new All();
+                }
+            }
+        }
+
+        public class All : LogicOp
+        {
+            public override string ToString() => "All";
+
+            public override Expression<Func<bool>> CombineExpressions(IEnumerable<Expression<Func<bool>>> expressions)
+            {
+                if (expressions == null || expressions.Count() == 0)
+                {
+                    return () => true;
+                }
+                return expressions.Aggregate((a, b) => a.And(b));
+            }
+        }
+
+        public class Any : LogicOp
+        {
+            public override string ToString() => "Any";
+
+            public override Expression<Func<bool>> CombineExpressions(IEnumerable<Expression<Func<bool>>> expressions)
+            {
+                if (expressions == null || expressions.Count() == 0)
+                {
+                    return () => true;
+                }
+                return expressions.Aggregate((a, b) => a.Or(b));
+            }
+        }
+
+        public class AtLeast : LogicOp
+        {
+            public uint Count { get; private set; }
+
+            public AtLeast(uint count)
+            {
+                Count = count;
+            }
+
+            public AtLeast(ConfigNode cn)
+            {
+                uint count = 0;
+                if (!cn.TryGetValue("count", ref count))
+                {
+                    Debug.LogError("[RP-0] Invalid RequirementBlock logic operator: " + cn);
+                }
+                Count = count;
+            }
+
+            public override string ToString() => $"At least {Count}";
+
+            public override Expression<Func<bool>> CombineExpressions(IEnumerable<Expression<Func<bool>>> expressions)
+            {
+                if (expressions == null || expressions.Count() == 0)
+                {
+                    return () => true;
+                }
+                Func<bool>[] compiledExprs = expressions.Select(x => x.Compile()).ToArray();
+                return () => compiledExprs.Count(expr => expr.Invoke()) >= Count;
+            }
+        }
 
         public Expression<Func<bool>> Expression { get; set; }
 
@@ -34,7 +117,7 @@ namespace RP0.Programs
             bool omitOpHeader = childCount + reqCount < 2;
             if (!omitOpHeader)
             {
-                s = $"* {(Op == LogicOp.And ? "All:" : "Any:")}";
+                s = $"* {Op}";
                 if (doColoring)
                 {
                     bool isMet = Expression.Compile().Invoke();
@@ -46,7 +129,7 @@ namespace RP0.Programs
 
             if (reqCount > 0) s += string.Join("\n", Reqs.Select(r => $"{sIndent}{r.ToString(doColoring, prefix: "- ")}"));
             if (reqCount > 0 && childCount > 0) s += "\n";
-            if (childCount > 0) s += string.Join("\n", ChildBlocks.Select(b => b.ToString(indent: indent + 4)));
+            if (childCount > 0) s += string.Join("\n", ChildBlocks.Select(b => b.ToString(indent: indent + 4, doColoring)));
 
             return s;
         }

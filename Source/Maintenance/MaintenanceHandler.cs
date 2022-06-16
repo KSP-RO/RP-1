@@ -31,10 +31,6 @@ namespace RP0
         public readonly Dictionary<string, double> ConstructionSalaries = new Dictionary<string, double>();
         public readonly Dictionary<string, double> ConstructionMaterials = new Dictionary<string, double>();
         public double Researchers = 0d;
-        //public readonly Dictionary<string, double> KCTBuildRates = new Dictionary<string, double>();
-        //public int[] KCTPadCounts = new int[PadLevelCount];
-        //public List<float> KCTPadLevels = new List<float>();
-        //public double KCTResearchRate = 0;
 
         private double _maintenanceCostMult = 1d;
         private bool _wasWarpingHigh = false;
@@ -55,7 +51,7 @@ namespace RP0
         public double NautBaseUpkeep = 0d;
         public double NautInFlightUpkeep = 0d;
         public double NautTotalUpkeep = 0d;
-        public double TotalUpkeep => FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchSalaryTotal + NautTotalUpkeep + ConstructionMaterialsTotal;
+        public double TotalUpkeep => FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchSalaryTotal + NautTotalUpkeep;
 
         public double FacilityUpkeep => RndCost + McCost + TsCost + AcCost;
 
@@ -123,6 +119,8 @@ namespace RP0
                 Destroy(Instance);
             }
             Instance = this;
+
+            KCTGameStates.ProgramFundingForTime = GetProgramFunding;
 
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
             GameEvents.onGameStateLoad.Add(LoadSettings);
@@ -326,8 +324,18 @@ namespace RP0
 
             NautBaseUpkeep += nautCount * perNaut;
             NautTotalUpkeep = NautBaseUpkeep + TrainingUpkeep + NautInFlightUpkeep;
-            KCTGameStates.TotalMaintenancePerDay = FacilityUpkeep + NautTotalUpkeep - MaintenanceSubsidy;
+            KCTGameStates.NetUpkeep = -Math.Max(0d, TotalUpkeep - MaintenanceSubsidy);
             Profiler.EndSample();
+        }
+
+        private double GetProgramFunding(double utOffset)
+        {
+            double programBudget = 0d;
+            foreach (Program p in Programs.ProgramHandler.Instance.ActivePrograms)
+            {
+                programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + utOffset) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
+            }
+            return programBudget;
         }
 
         public void Update()
@@ -402,6 +410,8 @@ namespace RP0
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
             if (onKctPersonnelChangeEvent != null)
                 onKctPersonnelChangeEvent.Remove(UpdateKCTSalaries);
+
+            KCTGameStates.ProgramFundingForTime = null;
         }
 
         #endregion

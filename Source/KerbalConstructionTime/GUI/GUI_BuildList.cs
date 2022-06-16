@@ -189,7 +189,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(locTxt, _windowSkin.label);
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
 
-                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"Salary Cost:\n√{(buildItem.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}")))
+                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(buildItem.GetTimeLeft()):N0}")))
                 {
                     KCTWarpController.Create(buildItem);
                 }
@@ -839,7 +839,7 @@ namespace KerbalConstructionTime
             foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
-                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(reconditioning.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}"), GUILayout.Width((_butW + 4) * 3)))
+                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(reconditioning.GetTimeLeft()):N0}"), GUILayout.Width((_butW + 4) * 3)))
                 {
                     KCTWarpController.Create(reconditioning);
                 }
@@ -1669,7 +1669,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
             }
 
-            if (!b.IsFinished && b.BuildRate > 0 && GUILayout.Button(new GUIContent("Warp To", $"Salary Cost: {(b.GetTimeLeft() / 86400d * KCTGameStates.GetTotalMaintenanceAndSalaryPerDay()):N0}")))
+            if (!b.IsFinished && b.BuildRate > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(b.GetTimeLeft()):N0}")))
             {
                 KCTWarpController.Create(b);
                 GUIStates.ShowBLPlus = false;

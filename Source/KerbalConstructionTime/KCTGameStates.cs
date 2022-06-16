@@ -123,7 +123,7 @@ namespace KerbalConstructionTime
         public static int SalaryEngineers = -1;
         public static int SalaryResearchers = -1;
         public static double SalaryMultiplier = 1d;
-        public static double TotalMaintenancePerDay = 0d;
+        public static double NetUpkeep = 0d;
 
         public static int GetSalaryEngineers()
         {
@@ -154,7 +154,33 @@ namespace KerbalConstructionTime
         public static int GetSalaryResearchers() => (int)(KCTGameStates.Researchers * SalaryResearchers * SalaryMultiplier);
         public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
 
-        public static double GetTotalMaintenanceAndSalaryPerDay() => System.Math.Max(0d, TotalMaintenancePerDay + GetTotalSalary() / 365.25d);
+        public delegate double FundingDelegate(double utOffset);
+        public static FundingDelegate ProgramFundingForTime = null;
+
+        public static double GetBudgetDelta(double time)
+        {
+            double delta = NetUpkeep * time / 86400d;
+            foreach (var ksc in KSCs)
+            {
+                double remainingTime = time;
+                foreach (var c in ksc.Constructions)
+                {
+                    double left = c.EstimatedTimeLeft;
+                    if (left > remainingTime)
+                    {
+                        delta -= (remainingTime / left) * (c.Cost - c.SpentCost);
+                        break;
+                    }
+                    delta -= (c.Cost - c.SpentCost);
+                    remainingTime -= left;
+                }
+            }
+            
+            if (ProgramFundingForTime != null)
+                delta += ProgramFundingForTime(time);
+
+            return delta;
+        }
 
         public static int TotalEngineers
         {

@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Csv;
 using KerbalConstructionTime;
+using RP0.Programs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -610,6 +611,7 @@ namespace RP0
                 _prevPeriod.EfficiencyResearchers = KCTGameStates.EfficiencyResearchers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+                _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmountForSeconds(_prevPeriod.EndUT - _prevPeriod.StartUT);
                 _prevPeriod.Reputation = Reputation.CurrentRep;
                 _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }
@@ -657,17 +659,21 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            float changeDelta = query.GetTotal(Currency.Funds);
-            if (changeDelta != 0f)
+            float fundsDelta = query.GetTotal(Currency.Funds);
+            if (fundsDelta != 0f)
             {
-                FundsChanged(changeDelta, query.reason);
+                FundsChanged(fundsDelta, query.reason);
+            }
+
+            float repDelta = query.GetTotal(Currency.Reputation);
+            if (repDelta != 0f)
+            {
+                RepChanged(repDelta, query.reason);
             }
         }
 
         private void FundsChanged(float changeDelta, TransactionReasons reason)
         {
-            if (CareerEventScope.ShouldIgnore) return;
-
             _prevFundsChangeAmount = changeDelta;
             _prevFundsChangeReason = reason;
 
@@ -675,6 +681,12 @@ namespace RP0
                 reason == TransactionReasons.ContractAdvance || reason == TransactionReasons.ContractReward)
             {
                 CurrentPeriod.ContractRewards += changeDelta;
+                return;
+            }
+
+            if (reason == TransactionReasons.Mission)
+            {
+                CurrentPeriod.ProgramFunds += changeDelta;
                 return;
             }
 
@@ -715,6 +727,15 @@ namespace RP0
             else
             {
                 CurrentPeriod.OtherFees -= changeDelta;
+            }
+        }
+
+        private void RepChanged(float repDelta, TransactionReasons reason)
+        {
+            if (reason == TransactionReasons.Mission)
+            {
+                CurrentPeriod.RepFromPrograms += repDelta;
+                return;
             }
         }
 
@@ -788,6 +809,21 @@ namespace RP0
                 DisplayName = c.Title,
                 InternalName = internalName
             });
+        }
+
+        public void ProgramAccepted(Program p)
+        {
+            // TODO
+        }
+
+        public void ProgramObjectivesMet(Program p)
+        {
+            // TODO
+        }
+
+        public void ProgramCompleted(Program p)
+        {
+            // TODO
         }
 
         private void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)

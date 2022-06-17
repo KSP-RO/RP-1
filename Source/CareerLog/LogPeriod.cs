@@ -15,6 +15,9 @@
         public double CurrentSci;
 
         [Persistent]
+        public double ProgramFunds;
+
+        [Persistent]
         public double ContractRewards;
 
         [Persistent]
@@ -40,6 +43,15 @@
 
         [Persistent]
         public double OtherFees;
+
+        [Persistent]
+        public double SubsidySize;
+
+        [Persistent]
+        public double SubsidyPaidOut;
+
+        [Persistent]
+        public double RepFromPrograms;
 
         [Persistent]
         public int NumEngineers;

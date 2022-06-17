@@ -145,7 +145,7 @@ namespace RP0.Programs
 
         public Program Accept()
         {
-            return new Program(this)
+            var p = new Program(this)
             {
                 acceptedUT = KSPUtils.GetUT(),
                 lastPaymentUT = KSPUtils.GetUT(),
@@ -153,6 +153,9 @@ namespace RP0.Programs
                 fundsPaidOut = 0,
                 repPenaltyAssessed = 0
             };
+            CareerLog.Instance?.ProgramAccepted(p);
+
+            return p;
         }
 
         public double GetFundsForFutureTimestamp(double ut)
@@ -174,7 +177,7 @@ namespace RP0.Programs
 
             Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name}");
             fundsPaidOut += fundsToAdd;
-            Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Strategies);
+            Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
 
             double repLost = GetRepLossAtTime(time2);
             if (repLost > 0d)
@@ -189,14 +192,17 @@ namespace RP0.Programs
         public void MarkObjectivesComplete()
         {
             objectivesCompletedUT = KSPUtils.GetUT();
+            CareerLog.Instance?.ProgramObjectivesMet(this);
         }
 
         public void Complete()
         {
             completedUT = KSPUtils.GetUT();
             double timeDeltaYears = nominalDurationYears * 365.25d - (completedUT - acceptedUT);
-            if(timeDeltaYears > 0)
-            Reputation.Instance.AddReputation((float)(timeDeltaYears * repDeltaOnCompletePerYearEarly), TransactionReasons.Mission);
+            if (timeDeltaYears > 0)
+                Reputation.Instance.AddReputation((float)(timeDeltaYears * repDeltaOnCompletePerYearEarly), TransactionReasons.Mission);
+
+            CareerLog.Instance?.ProgramCompleted(this);
         }
 
         private double GetFundsAtTime(double time)

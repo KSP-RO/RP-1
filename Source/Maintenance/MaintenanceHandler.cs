@@ -47,16 +47,16 @@ namespace RP0
         public double TsCost = 0d;
         public double AcCost = 0d;
 
-        public double TrainingUpkeep = 0d;
-        public double NautBaseUpkeep = 0d;
-        public double NautInFlightUpkeep = 0d;
-        public double NautTotalUpkeep = 0d;
-        public double TotalUpkeep => FacilityUpkeep + IntegrationSalaryTotal + ConstructionSalaryTotal + ResearchSalaryTotal + NautTotalUpkeep;
+        public double TrainingUpkeepPerDay = 0d;
+        public double NautBaseUpkeepPerDay = 0d;
+        public double NautInFlightUpkeepPerDay = 0d;
+        public double NautUpkeepPerDay = 0d;
+        public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ConstructionSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
 
-        public double FacilityUpkeep => RndCost + McCost + TsCost + AcCost;
+        public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost;
 
         // TODO this is duplicate code with the KCT side
-        public double IntegrationSalaryTotal
+        public double IntegrationSalaryPerDay
         {
             get
             {
@@ -67,7 +67,7 @@ namespace RP0
             }
         }
 
-        public double ConstructionSalaryTotal
+        public double ConstructionSalaryPerDay
         {
             get
             {
@@ -78,7 +78,7 @@ namespace RP0
             }
         }
 
-        public double ConstructionMaterialsTotal
+        public double ConstructionMaterialsPerDay
         {
             get
             {
@@ -90,9 +90,9 @@ namespace RP0
             }
         }
 
-        public double ResearchSalaryTotal => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365.25d;
+        public double ResearchSalaryPerDay => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365.25d;
 
-        public double MaintenanceSubsidy
+        public double MaintenanceSubsidyPerDay
         {
             get
             {
@@ -270,7 +270,7 @@ namespace RP0
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.TrackingStation, out costs))
                 TsCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
 
-            TrainingUpkeep = 0d;
+            TrainingUpkeepPerDay = 0d;
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out costs))
             {
                 float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
@@ -284,16 +284,16 @@ namespace RP0
                         courses -= lvlInt * Settings.freeCoursesPerLevel;
                         if (courses > 0d)
                         {
-                            TrainingUpkeep = AcCost * (courses * (Settings.courseMultiplierDivisor / (Settings.courseMultiplierDivisor + lvlInt)));
+                            TrainingUpkeepPerDay = AcCost * (courses * (Settings.courseMultiplierDivisor / (Settings.courseMultiplierDivisor + lvlInt)));
                         }
                     }
                 }
             }
 
             double nautYearlyUpkeep = _maintenanceCostMult * Settings.nautYearlyUpkeepBase + ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * _maintenanceCostMult * Settings.nautYearlyUpkeepAdd;
-            NautBaseUpkeep = 0d;
-            NautInFlightUpkeep = 0d;
-            NautTotalUpkeep = 0d;
+            NautBaseUpkeepPerDay = 0d;
+            NautInFlightUpkeepPerDay = 0d;
+            NautUpkeepPerDay = 0d;
             double perNaut = nautYearlyUpkeep * (1d / 365.25d);
             int nautCount = 0;
             for (int i = HighLogic.CurrentGame.CrewRoster.Count; i-- > 0;)
@@ -307,7 +307,7 @@ namespace RP0
 
                 ++nautCount;
                 if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
-                    NautInFlightUpkeep += _maintenanceCostMult * Settings.nautInFlightDailyRate;
+                    NautInFlightUpkeepPerDay += _maintenanceCostMult * Settings.nautInFlightDailyRate;
                 else
                 {
                     for (int j = k.flightLog.Count; j-- > 0;)
@@ -315,16 +315,16 @@ namespace RP0
                         var e = k.flightLog[j];
                         if (e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Orbit"))
                         {
-                            NautBaseUpkeep += _maintenanceCostMult * Settings.nautOrbitProficiencyDailyRate;
+                            NautBaseUpkeepPerDay += _maintenanceCostMult * Settings.nautOrbitProficiencyDailyRate;
                             break;
                         }
                     }
                 }
             }
 
-            NautBaseUpkeep += nautCount * perNaut;
-            NautTotalUpkeep = NautBaseUpkeep + TrainingUpkeep + NautInFlightUpkeep;
-            KCTGameStates.NetUpkeep = -Math.Max(0d, TotalUpkeep - MaintenanceSubsidy);
+            NautBaseUpkeepPerDay += nautCount * perNaut;
+            NautUpkeepPerDay = NautBaseUpkeepPerDay + TrainingUpkeepPerDay + NautInFlightUpkeepPerDay;
+            KCTGameStates.NetUpkeep = -Math.Max(0d, TotalUpkeepPerDay - MaintenanceSubsidyPerDay);
             Profiler.EndSample();
         }
 
@@ -383,10 +383,13 @@ namespace RP0
 
             using (new CareerEventScope(CareerEventType.Maintenance))
             {
-                double costPerDay = Math.Max(0, TotalUpkeep - MaintenanceSubsidy);
-                double costForPassedSeconds = -timePassed * (costPerDay * (1d / 86400d));
-                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedSeconds} funds where upkeep is {TotalUpkeep} and subsidy {MaintenanceSubsidy}");
-                Funding.Instance.AddFunds(costForPassedSeconds, TransactionReasons.StructureRepair);
+                double timeFactor = timePassed * (1d / 86400d);
+                double upkeepForPassedTime = timeFactor * TotalUpkeepPerDay;
+                double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
+                double costForPassedTime = Math.Max(0, upkeepForPassedTime - subsidyForPassedTime);
+                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedTime} funds where upkeep is {TotalUpkeepPerDay} and subsidy {MaintenanceSubsidyPerDay}");
+                Funding.Instance.AddFunds(-costForPassedTime, TransactionReasons.StructureRepair);
+                CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += Math.Min(upkeepForPassedTime, subsidyForPassedTime);
             }
 
             lastUpdate = time;
@@ -458,6 +461,11 @@ namespace RP0
         {
             EnsureFacilityLvlCostsLoaded();
             GameEvents.onLevelWasLoaded.Remove(LoadUpgradesPrices);
+        }
+
+        public double GetSubsidyAmountForSeconds(double seconds)
+        {
+            return MaintenanceSubsidyPerDay * seconds / 86400d;
         }
     }
 }

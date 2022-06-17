@@ -64,7 +64,6 @@
     <Compile Include="Harmony\ContractPatcher.cs" />
     <Compile Include="Harmony\RnDPatcher.cs" />
     <Compile Include="GameplayTips.cs" />
-    <Compile Include="LocalizationPatcher.cs" />
     <Compile Include="Harmony\HarmonyPatcher.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />

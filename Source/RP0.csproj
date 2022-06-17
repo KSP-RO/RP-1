@@ -65,8 +65,7 @@
     <Compile Include="Harmony\ContractPatcher.cs" />
     <Compile Include="Harmony\RnDPatcher.cs" />
     <Compile Include="GameplayTips.cs" />
-    <Compile Include="LocalizationPatcher.cs" />
-    <Compile Include="HarmonyPatcher.cs" />
+    <Compile Include="Harmony\HarmonyPatcher.cs" />
     <Compile Include="Harmony\BaseCrewAssignmentDialog.cs" />
     <Compile Include="Harmony\FlightEVA.cs" />
     <Compile Include="LoadingScreenChanger.cs" />

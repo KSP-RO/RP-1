@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -6,8 +6,9 @@
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>ClassLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -17,6 +18,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -25,6 +27,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace>GameData</RootNamespace>
@@ -40,1193 +43,1193 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\GameData\RP-0\AdminDisable.cfg" />
-    <Content Include="..\GameData\RP-0\Agencies\Agents.cfg" >
-<Link>Agencies\Agents.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Agencies\FAI_scaled.truecolor" >
-<Link>Agencies\FAI_scaled.truecolor</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\Agencies\Agents.cfg">
+      <Link>Agencies\Agents.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Agencies\FAI_scaled.truecolor">
+      <Link>Agencies\FAI_scaled.truecolor</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Avionics.cfg" />
-    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Earth Imaging Satellites.cfg" >
-<Link>Contracts\Advanced Satellites\Earth Imaging Satellites.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\IridiumNEXT.cfg.disabled" >
-<Link>Contracts\Advanced Satellites\IridiumNEXT.cfg.disabled</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Molniya Communications Satellites.cfg" >
-<Link>Contracts\Advanced Satellites\Molniya Communications Satellites.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Tundra Communications Satellites.cfg" >
-<Link>Contracts\Advanced Satellites\Tundra Communications Satellites.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Ceres Orbit.cfg" >
-<Link>Contracts\Asteroid Exploration\Ceres Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg" >
-<Link>Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Vesta Orbit.cfg" >
-<Link>Contracts\Asteroid Exploration\Vesta Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg" >
-<Link>Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Communications Network\EarlyComNetwork3.cfg" >
-<Link>Contracts\Communications Network\EarlyComNetwork3.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Communications Network\EarlyComNetwork4.cfg" >
-<Link>Contracts\Communications Network\EarlyComNetwork4.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedLunarFlyby.cfg" >
-<Link>Contracts\Crewed Lunar Exploration\CrewedLunarFlyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedLunarOrbitRepeat.cfg.DISABLED" >
-<Link>Contracts\Crewed Lunar Exploration\CrewedLunarOrbitRepeat.cfg.DISABLED</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedMoonLandingRover.cfg" >
-<Link>Contracts\Crewed Lunar Exploration\CrewedMoonLandingRover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedMoonLandingTargeted.cfg" >
-<Link>Contracts\Crewed Lunar Exploration\CrewedMoonLandingTargeted.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\FirstCrewedLunarOrbit.cfg" >
-<Link>Contracts\Crewed Lunar Exploration\FirstCrewedLunarOrbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\FirstMoonLandingCrewed.cfg" >
-<Link>Contracts\Crewed Lunar Exploration\FirstMoonLandingCrewed.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\SingleCrewedLunarOrbitRepeatable.cfg.DISABLED" >
-<Link>Contracts\Crewed Lunar Exploration\SingleCrewedLunarOrbitRepeatable.cfg.DISABLED</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\Docking.cfg" >
-<Link>Contracts\Crewed Orbit\Docking.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\FirstEVA.cfg" >
-<Link>Contracts\Crewed Orbit\FirstEVA.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\FirstOrbitCrewed.cfg" >
-<Link>Contracts\Crewed Orbit\FirstOrbitCrewed.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\FirstOrbitRecovery.cfg" >
-<Link>Contracts\Crewed Orbit\FirstOrbitRecovery.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalFlight1.cfg" >
-<Link>Contracts\Crewed Orbit\OrbitalFlight1.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalFlight2.cfg" >
-<Link>Contracts\Crewed Orbit\OrbitalFlight2.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalFlight3.cfg" >
-<Link>Contracts\Crewed Orbit\OrbitalFlight3.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalTestFlight.cfg" >
-<Link>Contracts\Crewed Orbit\OrbitalTestFlight.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalTestFlightAnimal.cfg" >
-<Link>Contracts\Crewed Orbit\OrbitalTestFlightAnimal.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitRecovery.cfg" >
-<Link>Contracts\Crewed Orbit\OrbitRecovery.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\Rendezvous.cfg" >
-<Link>Contracts\Crewed Orbit\Rendezvous.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\SuborbitalCrewed.cfg" >
-<Link>Contracts\Crewed Orbit\SuborbitalCrewed.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\SuborbitalTestFlight.cfg" >
-<Link>Contracts\Crewed Orbit\SuborbitalTestFlight.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\MarsFlyby.cfg" >
-<Link>Contracts\Early Inner Planet Probes\MarsFlyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\MarsOrbit.cfg" >
-<Link>Contracts\Early Inner Planet Probes\MarsOrbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\MarsOrbitRepeat.cfg" >
-<Link>Contracts\Early Inner Planet Probes\MarsOrbitRepeat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\VenusFlyby.cfg" >
-<Link>Contracts\Early Inner Planet Probes\VenusFlyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\VenusOrbit.cfg" >
-<Link>Contracts\Early Inner Planet Probes\VenusOrbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\VenusOrbitRepeat.cfg" >
-<Link>Contracts\Early Inner Planet Probes\VenusOrbitRepeat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarFirstOrbiters.cfg" >
-<Link>Contracts\Early Lunar Probes\LunarFirstOrbiters.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarFlyby.cfg" >
-<Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactor.cfg" >
-<Link>Contracts\Early Lunar Probes\LunarImpactor.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\AtmosphereAnalysis.cfg" >
-<Link>Contracts\Early Satellites\AtmosphereAnalysis.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstComSat.cfg" >
-<Link>Contracts\Early Satellites\FirstComSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstNavSat.cfg" >
-<Link>Contracts\Early Satellites\FirstNavSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstPolarSat.cfg" >
-<Link>Contracts\Early Satellites\FirstPolarSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstSatellite.cfg" >
-<Link>Contracts\Early Satellites\FirstSatellite.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstScienceSat.cfg" >
-<Link>Contracts\Early Satellites\FirstScienceSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstSolarSat.cfg" >
-<Link>Contracts\Early Satellites\FirstSolarSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstSunSyncSat.cfg" >
-<Link>Contracts\Early Satellites\FirstSunSyncSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstWeatherSat.cfg" >
-<Link>Contracts\Early Satellites\FirstWeatherSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\BreakSoundBarrier.cfg" >
-<Link>Contracts\Early X-Plane Research\BreakSoundBarrier.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\CrewedFlightAtmo.cfg" >
-<Link>Contracts\Early X-Plane Research\CrewedFlightAtmo.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\CrewedSupersonic.cfg" >
-<Link>Contracts\Early X-Plane Research\CrewedSupersonic.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\RocketPlaneDevelopment.cfg" >
-<Link>Contracts\Early X-Plane Research\RocketPlaneDevelopment.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Geostationary Communications Network\GeoComSatNetwork.cfg" >
-<Link>Contracts\Geostationary Communications Network\GeoComSatNetwork.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Geostationary Communications Network\GEORepeatComSats.cfg" >
-<Link>Contracts\Geostationary Communications Network\GEORepeatComSats.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Groups.cfg" >
-<Link>Contracts\Groups.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Asteroid Landing Crew.cfg" >
-<Link>Contracts\Human Exploration\Asteroid Landing Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Jupiter Flyby Crew.cfg" >
-<Link>Contracts\Human Exploration\Jupiter Flyby Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Flyby Crew.cfg" >
-<Link>Contracts\Human Exploration\Mars Flyby Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Landing Crew.cfg" >
-<Link>Contracts\Human Exploration\Mars Landing Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Orbit Crew.cfg" >
-<Link>Contracts\Human Exploration\Mars Orbit Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mercury Flyby Crew.cfg" >
-<Link>Contracts\Human Exploration\Mercury Flyby Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Phobos Landing Crew.cfg" >
-<Link>Contracts\Human Exploration\Phobos Landing Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Saturn Flyby Crew.cfg" >
-<Link>Contracts\Human Exploration\Saturn Flyby Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Venus Flyby Crew.cfg" >
-<Link>Contracts\Human Exploration\Venus Flyby Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Venus Orbit Crew.cfg" >
-<Link>Contracts\Human Exploration\Venus Orbit Crew.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedAltRecord.cfg" >
-<Link>Contracts\Human Records\CrewedAltRecord.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedCountRecord.cfg" >
-<Link>Contracts\Human Records\CrewedCountRecord.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedDurationRecord.cfg" >
-<Link>Contracts\Human Records\CrewedDurationRecord.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedSpeedRecord.cfg" >
-<Link>Contracts\Human Records\CrewedSpeedRecord.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Callisto Flyby.cfg" >
-<Link>Contracts\Jupiter Observation\Callisto Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Europa Flyby.cfg" >
-<Link>Contracts\Jupiter Observation\Europa Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Ganymede Flyby.cfg" >
-<Link>Contracts\Jupiter Observation\Ganymede Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Io Flyby.cfg" >
-<Link>Contracts\Jupiter Observation\Io Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Jupiter Orbit.cfg" >
-<Link>Contracts\Jupiter Observation\Jupiter Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Jupiter Orbit_Rep.cfg" >
-<Link>Contracts\Jupiter Observation\Jupiter Orbit_Rep.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Jupiter Probe.cfg" >
-<Link>Contracts\Jupiter Observation\Jupiter Probe.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Asteroid Landing.cfg" >
-<Link>Contracts\Landings\Asteroid Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Callisto Landing.cfg" >
-<Link>Contracts\Landings\Callisto Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Dione Landing.cfg" >
-<Link>Contracts\Landings\Dione Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Enceladus Landing.cfg" >
-<Link>Contracts\Landings\Enceladus Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Europa Landing.cfg" >
-<Link>Contracts\Landings\Europa Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Ganymede Landing.cfg" >
-<Link>Contracts\Landings\Ganymede Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Iapetus Landing.cfg" >
-<Link>Contracts\Landings\Iapetus Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Io Landing.cfg" >
-<Link>Contracts\Landings\Io Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Mimas Landing.cfg" >
-<Link>Contracts\Landings\Mimas Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Rhea Landing.cfg" >
-<Link>Contracts\Landings\Rhea Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Tethys Landing.cfg" >
-<Link>Contracts\Landings\Tethys Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Titan Landing.cfg" >
-<Link>Contracts\Landings\Titan Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Deimos Flyby.cfg" >
-<Link>Contracts\Martian Surface Exploration\Deimos Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Deimos Landing.cfg" >
-<Link>Contracts\Martian Surface Exploration\Deimos Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Mars Landing.cfg" >
-<Link>Contracts\Martian Surface Exploration\Mars Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Mars Probe.cfg" >
-<Link>Contracts\Martian Surface Exploration\Mars Probe.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Mars Rover.cfg" >
-<Link>Contracts\Martian Surface Exploration\Mars Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Phobos Flyby.cfg" >
-<Link>Contracts\Martian Surface Exploration\Phobos Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Phobos Landing.cfg" >
-<Link>Contracts\Martian Surface Exploration\Phobos Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Phobos Sample Return.cfg" >
-<Link>Contracts\Martian Surface Exploration\Phobos Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Landing.cfg" >
-<Link>Contracts\Mercury Exploration\Mercury Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Orbit.cfg" >
-<Link>Contracts\Mercury Exploration\Mercury Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Orbit_Rep.cfg" >
-<Link>Contracts\Mercury Exploration\Mercury Orbit_Rep.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Rover.cfg" >
-<Link>Contracts\Mercury Exploration\Mercury Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Early Nav Sats.cfg" >
-<Link>Contracts\Nav Sats\Early Nav Sats.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\GLONASS Network.cfg.disabled" >
-<Link>Contracts\Nav Sats\GLONASS Network.cfg.disabled</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\GPS Network.cfg.disabled" >
-<Link>Contracts\Nav Sats\GPS Network.cfg.disabled</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Operational Nav Sats.cfg" >
-<Link>Contracts\Nav Sats\Operational Nav Sats.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Second-Gen Nav Sats.cfg" >
-<Link>Contracts\Nav Sats\Second-Gen Nav Sats.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Ariel Flyby.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Ariel Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Miranda Flyby.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Miranda Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Neptune Orbit.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Neptune Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Neptune Orbit_Rep.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Neptune Orbit_Rep.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Neptune Probe.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Neptune Probe.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Oberon Flyby.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Oberon Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Titania Flyby.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Titania Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Triton Flyby.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Triton Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Triton Landing.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Triton Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Umbriel Flyby.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Umbriel Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Uranus Orbit.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Uranus Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Uranus Orbit_Rep.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Uranus Orbit_Rep.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Uranus Probe.cfg" >
-<Link>Contracts\Outer Gas Giant Survey\Uranus Probe.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Charon Flyby.cfg" >
-<Link>Contracts\Outer Planet Flyby\Charon Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Jupiter Flyby.cfg" >
-<Link>Contracts\Outer Planet Flyby\Jupiter Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Neptune Flyby.cfg" >
-<Link>Contracts\Outer Planet Flyby\Neptune Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Pluto Flyby.cfg" >
-<Link>Contracts\Outer Planet Flyby\Pluto Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Saturn Flyby.cfg" >
-<Link>Contracts\Outer Planet Flyby\Saturn Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Uranus Flyby.cfg" >
-<Link>Contracts\Outer Planet Flyby\Uranus Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Charon Landing.cfg" >
-<Link>Contracts\Plutonian Landings\Charon Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Charon Rover.cfg" >
-<Link>Contracts\Plutonian Landings\Charon Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Pluto Landing.cfg" >
-<Link>Contracts\Plutonian Landings\Pluto Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Pluto Orbit.cfg" >
-<Link>Contracts\Plutonian Landings\Pluto Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Pluto Rover.cfg" >
-<Link>Contracts\Plutonian Landings\Pluto Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Programs.cfg" >
-<Link>Contracts\Programs.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Records\AltRecord.cfg" >
-<Link>Contracts\Records\AltRecord.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Records\SpeedRecord.cfg" >
-<Link>Contracts\Records\SpeedRecord.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Callisto Rover.cfg" >
-<Link>Contracts\Rovers\Callisto Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Dione Rover.cfg" >
-<Link>Contracts\Rovers\Dione Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Enceladus Rover.cfg" >
-<Link>Contracts\Rovers\Enceladus Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Europa Rover.cfg" >
-<Link>Contracts\Rovers\Europa Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Ganymede Rover.cfg" >
-<Link>Contracts\Rovers\Ganymede Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Iapetus Rover.cfg" >
-<Link>Contracts\Rovers\Iapetus Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Io Rover.cfg" >
-<Link>Contracts\Rovers\Io Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Mimas Rover.cfg" >
-<Link>Contracts\Rovers\Mimas Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Rhea Rover.cfg" >
-<Link>Contracts\Rovers\Rhea Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Tethys Rover.cfg" >
-<Link>Contracts\Rovers\Tethys Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Triton Rover.cfg" >
-<Link>Contracts\Rovers\Triton Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\RP0_Contract_Resources.cfg" >
-<Link>Contracts\RP0_Contract_Resources.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Asteroid Sample Return.cfg" >
-<Link>Contracts\Sample Return\Asteroid Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Callisto Sample Return.cfg" >
-<Link>Contracts\Sample Return\Callisto Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Charon Sample Return.cfg" >
-<Link>Contracts\Sample Return\Charon Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Dione Sample Return.cfg" >
-<Link>Contracts\Sample Return\Dione Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Enceladus Sample Return.cfg" >
-<Link>Contracts\Sample Return\Enceladus Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Europa Sample Return.cfg" >
-<Link>Contracts\Sample Return\Europa Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Ganymede Sample Return.cfg" >
-<Link>Contracts\Sample Return\Ganymede Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Iapetus Sample Return.cfg" >
-<Link>Contracts\Sample Return\Iapetus Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Io Sample Return.cfg" >
-<Link>Contracts\Sample Return\Io Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mars Sample Return.cfg" >
-<Link>Contracts\Sample Return\Mars Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mercury Sample Return.cfg" >
-<Link>Contracts\Sample Return\Mercury Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mimas Sample Return.cfg" >
-<Link>Contracts\Sample Return\Mimas Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Pluto Sample Return.cfg" >
-<Link>Contracts\Sample Return\Pluto Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Rhea Sample Return.cfg" >
-<Link>Contracts\Sample Return\Rhea Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Tethys Sample Return.cfg" >
-<Link>Contracts\Sample Return\Tethys Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Titan Sample Return.cfg" >
-<Link>Contracts\Sample Return\Titan Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Triton Sample Return.cfg" >
-<Link>Contracts\Sample Return\Triton Sample Return.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Dione Flyby.cfg" >
-<Link>Contracts\Saturn Observation\Dione Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Enceladus Flyby.cfg" >
-<Link>Contracts\Saturn Observation\Enceladus Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Iapetus Flyby.cfg" >
-<Link>Contracts\Saturn Observation\Iapetus Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Mimas Flyby.cfg" >
-<Link>Contracts\Saturn Observation\Mimas Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Rhea Flyby.cfg" >
-<Link>Contracts\Saturn Observation\Rhea Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Saturn Orbit.cfg" >
-<Link>Contracts\Saturn Observation\Saturn Orbit.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Saturn Orbit_Rep.cfg" >
-<Link>Contracts\Saturn Observation\Saturn Orbit_Rep.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Saturn Probe.cfg" >
-<Link>Contracts\Saturn Observation\Saturn Probe.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Tethys Flyby.cfg" >
-<Link>Contracts\Saturn Observation\Tethys Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Flyby.cfg" >
-<Link>Contracts\Saturn Observation\Titan Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Probe.cfg" >
-<Link>Contracts\Saturn Observation\Titan Probe.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Rover.cfg" >
-<Link>Contracts\Saturn Observation\Titan Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\SCANSat.cfg" >
-<Link>Contracts\SCANSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Earth_AltimetryLoRes.cfg" >
-<Link>Contracts\ScanSat\Earth_AltimetryLoRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Mars_AltimetryLoRes.cfg" >
-<Link>Contracts\ScanSat\Mars_AltimetryLoRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Moon_AltimetryLoRes.cfg" >
-<Link>Contracts\ScanSat\Moon_AltimetryLoRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_AltimetryLoRes.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Average_AltimetryLoRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_Biome.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Average_Biome.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_HiRes.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Average_HiRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Earth.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Earth.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_GasGiant_Biome.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_GasGiant_Biome.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_AltimetryLoRes.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Hard_AltimetryLoRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_Biome.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Hard_Biome.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_HiRes.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Hard_HiRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_JupiterMoons.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_JupiterMoons.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_NeptuneMoons.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_NeptuneMoons.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Potato_AltimetryLoRes.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Potato_AltimetryLoRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Potato_HiRes.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_Potato_HiRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_SaturnMoons.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_SaturnMoons.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_UranusMoons.cfg" >
-<Link>Contracts\ScanSat\RP0_SCANSat_UranusMoons.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Venus_AltimetryLoRes.cfg" >
-<Link>Contracts\ScanSat\Venus_AltimetryLoRes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Small Bodies Flyby\Ceres Flyby.cfg" >
-<Link>Contracts\Small Bodies Flyby\Ceres Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Small Bodies Flyby\Mercury Flyby.cfg" >
-<Link>Contracts\Small Bodies Flyby\Mercury Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Small Bodies Flyby\Vesta Flyby.cfg" >
-<Link>Contracts\Small Bodies Flyby\Vesta Flyby.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Add Crew Module Station.cfg" >
-<Link>Contracts\Space Stations\Add Crew Module Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Crew Rotation Station.cfg" >
-<Link>Contracts\Space Stations\Crew Rotation Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\First Space Station.cfg" >
-<Link>Contracts\Space Stations\First Space Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Life Support Station.cfg" >
-<Link>Contracts\Space Stations\Life Support Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Lunar Space Station.cfg" >
-<Link>Contracts\Space Stations\Lunar Space Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Martian Space Station.cfg" >
-<Link>Contracts\Space Stations\Martian Space Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\New Crew Station.cfg" >
-<Link>Contracts\Space Stations\New Crew Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Power Module Station.cfg" >
-<Link>Contracts\Space Stations\Power Module Station.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg" >
-<Link>Contracts\StockContracts.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\DistanceSoundingDifficult.cfg" >
-<Link>Contracts\Suborbital Rocket Development\DistanceSoundingDifficult.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\DistanceSoundingIntermediate.cfg" >
-<Link>Contracts\Suborbital Rocket Development\DistanceSoundingIntermediate.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\Downrange.cfg" >
-<Link>Contracts\Suborbital Rocket Development\Downrange.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\KarmanLine.cfg" >
-<Link>Contracts\Suborbital Rocket Development\KarmanLine.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SoundingDifficult.cfg" >
-<Link>Contracts\Suborbital Rocket Development\SoundingDifficult.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SoundingIntermediate.cfg" >
-<Link>Contracts\Suborbital Rocket Development\SoundingIntermediate.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg" >
-<Link>Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketAdvancedBio.cfg" >
-<Link>Contracts\Suborbital Rocket Research\SoundingRocketAdvancedBio.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketBio.cfg" >
-<Link>Contracts\Suborbital Rocket Research\SoundingRocketBio.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketFilm.cfg" >
-<Link>Contracts\Suborbital Rocket Research\SoundingRocketFilm.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MarsOutpost.cfg" >
-<Link>Contracts\Surface Outposts\MarsOutpost.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MarsOutpostWithLab.cfg" >
-<Link>Contracts\Surface Outposts\MarsOutpostWithLab.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpost.cfg" >
-<Link>Contracts\Surface Outposts\MoonOutpost.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpostWithLab.cfg" >
-<Link>Contracts\Surface Outposts\MoonOutpostWithLab.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstGEOSat.cfg" >
-<Link>Contracts\Targeted Satellites\FirstGEOSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstMolniyaSat.cfg" >
-<Link>Contracts\Targeted Satellites\FirstMolniyaSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstTundraSat.cfg" >
-<Link>Contracts\Targeted Satellites\FirstTundraSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\TestSubjectRemove.cfg" >
-<Link>Contracts\TestSubjectRemove.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\TO BE SORTED\Communications Satellite - Early.cfg" >
-<Link>Contracts\TO BE SORTED\Communications Satellite - Early.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\TO BE SORTED\Communications Test Satellite.cfg" >
-<Link>Contracts\TO BE SORTED\Communications Test Satellite.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonLanding.cfg" >
-<Link>Contracts\Uncrewed Lunar Surface Exploration\MoonLanding.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonLandingFarSide.cfg" >
-<Link>Contracts\Uncrewed Lunar Surface Exploration\MoonLandingFarSide.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonLandingReturn.cfg" >
-<Link>Contracts\Uncrewed Lunar Surface Exploration\MoonLandingReturn.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonOrbiter.cfg" >
-<Link>Contracts\Uncrewed Lunar Surface Exploration\MoonOrbiter.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonRover.cfg" >
-<Link>Contracts\Uncrewed Lunar Surface Exploration\MoonRover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Venus Surface Exploration\Venus Landing.cfg" >
-<Link>Contracts\Venus Surface Exploration\Venus Landing.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Venus Surface Exploration\Venus Probe.cfg" >
-<Link>Contracts\Venus Surface Exploration\Venus Probe.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Venus Surface Exploration\Venus Rover.cfg" >
-<Link>Contracts\Venus Surface Exploration\Venus Rover.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Early Weather Sats.cfg" >
-<Link>Contracts\Weather Sats\Early Weather Sats.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Geostationary Weather Sat.cfg" >
-<Link>Contracts\Weather Sats\Geostationary Weather Sat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Second Gen Weather Sats.cfg" >
-<Link>Contracts\Weather Sats\Second Gen Weather Sats.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Sun Sync Weather Sats.cfg" >
-<Link>Contracts\Weather Sats\Sun Sync Weather Sats.cfg</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Earth Imaging Satellites.cfg">
+      <Link>Contracts\Advanced Satellites\Earth Imaging Satellites.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\IridiumNEXT.cfg.disabled">
+      <Link>Contracts\Advanced Satellites\IridiumNEXT.cfg.disabled</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Molniya Communications Satellites.cfg">
+      <Link>Contracts\Advanced Satellites\Molniya Communications Satellites.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Tundra Communications Satellites.cfg">
+      <Link>Contracts\Advanced Satellites\Tundra Communications Satellites.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Ceres Orbit.cfg">
+      <Link>Contracts\Asteroid Exploration\Ceres Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg">
+      <Link>Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Vesta Orbit.cfg">
+      <Link>Contracts\Asteroid Exploration\Vesta Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg">
+      <Link>Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Communications Network\EarlyComNetwork3.cfg">
+      <Link>Contracts\Communications Network\EarlyComNetwork3.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Communications Network\EarlyComNetwork4.cfg">
+      <Link>Contracts\Communications Network\EarlyComNetwork4.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedLunarFlyby.cfg">
+      <Link>Contracts\Crewed Lunar Exploration\CrewedLunarFlyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedLunarOrbitRepeat.cfg.DISABLED">
+      <Link>Contracts\Crewed Lunar Exploration\CrewedLunarOrbitRepeat.cfg.DISABLED</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedMoonLandingRover.cfg">
+      <Link>Contracts\Crewed Lunar Exploration\CrewedMoonLandingRover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedMoonLandingTargeted.cfg">
+      <Link>Contracts\Crewed Lunar Exploration\CrewedMoonLandingTargeted.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\FirstCrewedLunarOrbit.cfg">
+      <Link>Contracts\Crewed Lunar Exploration\FirstCrewedLunarOrbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\FirstMoonLandingCrewed.cfg">
+      <Link>Contracts\Crewed Lunar Exploration\FirstMoonLandingCrewed.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\SingleCrewedLunarOrbitRepeatable.cfg.DISABLED">
+      <Link>Contracts\Crewed Lunar Exploration\SingleCrewedLunarOrbitRepeatable.cfg.DISABLED</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\Docking.cfg">
+      <Link>Contracts\Crewed Orbit\Docking.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\FirstEVA.cfg">
+      <Link>Contracts\Crewed Orbit\FirstEVA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\FirstOrbitCrewed.cfg">
+      <Link>Contracts\Crewed Orbit\FirstOrbitCrewed.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\FirstOrbitRecovery.cfg">
+      <Link>Contracts\Crewed Orbit\FirstOrbitRecovery.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalFlight1.cfg">
+      <Link>Contracts\Crewed Orbit\OrbitalFlight1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalFlight2.cfg">
+      <Link>Contracts\Crewed Orbit\OrbitalFlight2.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalFlight3.cfg">
+      <Link>Contracts\Crewed Orbit\OrbitalFlight3.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalTestFlight.cfg">
+      <Link>Contracts\Crewed Orbit\OrbitalTestFlight.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitalTestFlightAnimal.cfg">
+      <Link>Contracts\Crewed Orbit\OrbitalTestFlightAnimal.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\OrbitRecovery.cfg">
+      <Link>Contracts\Crewed Orbit\OrbitRecovery.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\Rendezvous.cfg">
+      <Link>Contracts\Crewed Orbit\Rendezvous.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\SuborbitalCrewed.cfg">
+      <Link>Contracts\Crewed Orbit\SuborbitalCrewed.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\SuborbitalTestFlight.cfg">
+      <Link>Contracts\Crewed Orbit\SuborbitalTestFlight.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\MarsFlyby.cfg">
+      <Link>Contracts\Early Inner Planet Probes\MarsFlyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\MarsOrbit.cfg">
+      <Link>Contracts\Early Inner Planet Probes\MarsOrbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\MarsOrbitRepeat.cfg">
+      <Link>Contracts\Early Inner Planet Probes\MarsOrbitRepeat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\VenusFlyby.cfg">
+      <Link>Contracts\Early Inner Planet Probes\VenusFlyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\VenusOrbit.cfg">
+      <Link>Contracts\Early Inner Planet Probes\VenusOrbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Inner Planet Probes\VenusOrbitRepeat.cfg">
+      <Link>Contracts\Early Inner Planet Probes\VenusOrbitRepeat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarFirstOrbiters.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarFirstOrbiters.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarFlyby.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactor.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarImpactor.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\AtmosphereAnalysis.cfg">
+      <Link>Contracts\Early Satellites\AtmosphereAnalysis.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstComSat.cfg">
+      <Link>Contracts\Early Satellites\FirstComSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstNavSat.cfg">
+      <Link>Contracts\Early Satellites\FirstNavSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstPolarSat.cfg">
+      <Link>Contracts\Early Satellites\FirstPolarSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstSatellite.cfg">
+      <Link>Contracts\Early Satellites\FirstSatellite.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstScienceSat.cfg">
+      <Link>Contracts\Early Satellites\FirstScienceSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstSolarSat.cfg">
+      <Link>Contracts\Early Satellites\FirstSolarSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstSunSyncSat.cfg">
+      <Link>Contracts\Early Satellites\FirstSunSyncSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstWeatherSat.cfg">
+      <Link>Contracts\Early Satellites\FirstWeatherSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\BreakSoundBarrier.cfg">
+      <Link>Contracts\Early X-Plane Research\BreakSoundBarrier.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\CrewedFlightAtmo.cfg">
+      <Link>Contracts\Early X-Plane Research\CrewedFlightAtmo.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\CrewedSupersonic.cfg">
+      <Link>Contracts\Early X-Plane Research\CrewedSupersonic.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\RocketPlaneDevelopment.cfg">
+      <Link>Contracts\Early X-Plane Research\RocketPlaneDevelopment.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Geostationary Communications Network\GeoComSatNetwork.cfg">
+      <Link>Contracts\Geostationary Communications Network\GeoComSatNetwork.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Geostationary Communications Network\GEORepeatComSats.cfg">
+      <Link>Contracts\Geostationary Communications Network\GEORepeatComSats.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Groups.cfg">
+      <Link>Contracts\Groups.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Asteroid Landing Crew.cfg">
+      <Link>Contracts\Human Exploration\Asteroid Landing Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Jupiter Flyby Crew.cfg">
+      <Link>Contracts\Human Exploration\Jupiter Flyby Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Flyby Crew.cfg">
+      <Link>Contracts\Human Exploration\Mars Flyby Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Landing Crew.cfg">
+      <Link>Contracts\Human Exploration\Mars Landing Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Orbit Crew.cfg">
+      <Link>Contracts\Human Exploration\Mars Orbit Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mercury Flyby Crew.cfg">
+      <Link>Contracts\Human Exploration\Mercury Flyby Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Phobos Landing Crew.cfg">
+      <Link>Contracts\Human Exploration\Phobos Landing Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Saturn Flyby Crew.cfg">
+      <Link>Contracts\Human Exploration\Saturn Flyby Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Venus Flyby Crew.cfg">
+      <Link>Contracts\Human Exploration\Venus Flyby Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Venus Orbit Crew.cfg">
+      <Link>Contracts\Human Exploration\Venus Orbit Crew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedAltRecord.cfg">
+      <Link>Contracts\Human Records\CrewedAltRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedCountRecord.cfg">
+      <Link>Contracts\Human Records\CrewedCountRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedDurationRecord.cfg">
+      <Link>Contracts\Human Records\CrewedDurationRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedSpeedRecord.cfg">
+      <Link>Contracts\Human Records\CrewedSpeedRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Callisto Flyby.cfg">
+      <Link>Contracts\Jupiter Observation\Callisto Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Europa Flyby.cfg">
+      <Link>Contracts\Jupiter Observation\Europa Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Ganymede Flyby.cfg">
+      <Link>Contracts\Jupiter Observation\Ganymede Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Io Flyby.cfg">
+      <Link>Contracts\Jupiter Observation\Io Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Jupiter Orbit.cfg">
+      <Link>Contracts\Jupiter Observation\Jupiter Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Jupiter Orbit_Rep.cfg">
+      <Link>Contracts\Jupiter Observation\Jupiter Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Jupiter Probe.cfg">
+      <Link>Contracts\Jupiter Observation\Jupiter Probe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Asteroid Landing.cfg">
+      <Link>Contracts\Landings\Asteroid Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Callisto Landing.cfg">
+      <Link>Contracts\Landings\Callisto Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Dione Landing.cfg">
+      <Link>Contracts\Landings\Dione Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Enceladus Landing.cfg">
+      <Link>Contracts\Landings\Enceladus Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Europa Landing.cfg">
+      <Link>Contracts\Landings\Europa Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Ganymede Landing.cfg">
+      <Link>Contracts\Landings\Ganymede Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Iapetus Landing.cfg">
+      <Link>Contracts\Landings\Iapetus Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Io Landing.cfg">
+      <Link>Contracts\Landings\Io Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Mimas Landing.cfg">
+      <Link>Contracts\Landings\Mimas Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Rhea Landing.cfg">
+      <Link>Contracts\Landings\Rhea Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Tethys Landing.cfg">
+      <Link>Contracts\Landings\Tethys Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Landings\Titan Landing.cfg">
+      <Link>Contracts\Landings\Titan Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Deimos Flyby.cfg">
+      <Link>Contracts\Martian Surface Exploration\Deimos Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Deimos Landing.cfg">
+      <Link>Contracts\Martian Surface Exploration\Deimos Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Mars Landing.cfg">
+      <Link>Contracts\Martian Surface Exploration\Mars Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Mars Probe.cfg">
+      <Link>Contracts\Martian Surface Exploration\Mars Probe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Mars Rover.cfg">
+      <Link>Contracts\Martian Surface Exploration\Mars Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Phobos Flyby.cfg">
+      <Link>Contracts\Martian Surface Exploration\Phobos Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Phobos Landing.cfg">
+      <Link>Contracts\Martian Surface Exploration\Phobos Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Martian Surface Exploration\Phobos Sample Return.cfg">
+      <Link>Contracts\Martian Surface Exploration\Phobos Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Landing.cfg">
+      <Link>Contracts\Mercury Exploration\Mercury Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Orbit.cfg">
+      <Link>Contracts\Mercury Exploration\Mercury Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Orbit_Rep.cfg">
+      <Link>Contracts\Mercury Exploration\Mercury Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Mercury Exploration\Mercury Rover.cfg">
+      <Link>Contracts\Mercury Exploration\Mercury Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Early Nav Sats.cfg">
+      <Link>Contracts\Nav Sats\Early Nav Sats.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\GLONASS Network.cfg.disabled">
+      <Link>Contracts\Nav Sats\GLONASS Network.cfg.disabled</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\GPS Network.cfg.disabled">
+      <Link>Contracts\Nav Sats\GPS Network.cfg.disabled</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Operational Nav Sats.cfg">
+      <Link>Contracts\Nav Sats\Operational Nav Sats.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Second-Gen Nav Sats.cfg">
+      <Link>Contracts\Nav Sats\Second-Gen Nav Sats.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Ariel Flyby.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Ariel Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Miranda Flyby.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Miranda Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Neptune Orbit.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Neptune Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Neptune Orbit_Rep.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Neptune Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Neptune Probe.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Neptune Probe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Oberon Flyby.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Oberon Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Titania Flyby.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Titania Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Triton Flyby.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Triton Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Triton Landing.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Triton Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Umbriel Flyby.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Umbriel Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Uranus Orbit.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Uranus Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Uranus Orbit_Rep.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Uranus Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Gas Giant Survey\Uranus Probe.cfg">
+      <Link>Contracts\Outer Gas Giant Survey\Uranus Probe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Charon Flyby.cfg">
+      <Link>Contracts\Outer Planet Flyby\Charon Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Jupiter Flyby.cfg">
+      <Link>Contracts\Outer Planet Flyby\Jupiter Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Neptune Flyby.cfg">
+      <Link>Contracts\Outer Planet Flyby\Neptune Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Pluto Flyby.cfg">
+      <Link>Contracts\Outer Planet Flyby\Pluto Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Saturn Flyby.cfg">
+      <Link>Contracts\Outer Planet Flyby\Saturn Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Outer Planet Flyby\Uranus Flyby.cfg">
+      <Link>Contracts\Outer Planet Flyby\Uranus Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Charon Landing.cfg">
+      <Link>Contracts\Plutonian Landings\Charon Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Charon Rover.cfg">
+      <Link>Contracts\Plutonian Landings\Charon Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Pluto Landing.cfg">
+      <Link>Contracts\Plutonian Landings\Pluto Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Pluto Orbit.cfg">
+      <Link>Contracts\Plutonian Landings\Pluto Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Pluto Rover.cfg">
+      <Link>Contracts\Plutonian Landings\Pluto Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Programs.cfg">
+      <Link>Contracts\Programs.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Records\AltRecord.cfg">
+      <Link>Contracts\Records\AltRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Records\SpeedRecord.cfg">
+      <Link>Contracts\Records\SpeedRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Callisto Rover.cfg">
+      <Link>Contracts\Rovers\Callisto Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Dione Rover.cfg">
+      <Link>Contracts\Rovers\Dione Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Enceladus Rover.cfg">
+      <Link>Contracts\Rovers\Enceladus Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Europa Rover.cfg">
+      <Link>Contracts\Rovers\Europa Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Ganymede Rover.cfg">
+      <Link>Contracts\Rovers\Ganymede Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Iapetus Rover.cfg">
+      <Link>Contracts\Rovers\Iapetus Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Io Rover.cfg">
+      <Link>Contracts\Rovers\Io Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Mimas Rover.cfg">
+      <Link>Contracts\Rovers\Mimas Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Rhea Rover.cfg">
+      <Link>Contracts\Rovers\Rhea Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Tethys Rover.cfg">
+      <Link>Contracts\Rovers\Tethys Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Rovers\Triton Rover.cfg">
+      <Link>Contracts\Rovers\Triton Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\RP0_Contract_Resources.cfg">
+      <Link>Contracts\RP0_Contract_Resources.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Asteroid Sample Return.cfg">
+      <Link>Contracts\Sample Return\Asteroid Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Callisto Sample Return.cfg">
+      <Link>Contracts\Sample Return\Callisto Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Charon Sample Return.cfg">
+      <Link>Contracts\Sample Return\Charon Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Dione Sample Return.cfg">
+      <Link>Contracts\Sample Return\Dione Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Enceladus Sample Return.cfg">
+      <Link>Contracts\Sample Return\Enceladus Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Europa Sample Return.cfg">
+      <Link>Contracts\Sample Return\Europa Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Ganymede Sample Return.cfg">
+      <Link>Contracts\Sample Return\Ganymede Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Iapetus Sample Return.cfg">
+      <Link>Contracts\Sample Return\Iapetus Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Io Sample Return.cfg">
+      <Link>Contracts\Sample Return\Io Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mars Sample Return.cfg">
+      <Link>Contracts\Sample Return\Mars Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mercury Sample Return.cfg">
+      <Link>Contracts\Sample Return\Mercury Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mimas Sample Return.cfg">
+      <Link>Contracts\Sample Return\Mimas Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Pluto Sample Return.cfg">
+      <Link>Contracts\Sample Return\Pluto Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Rhea Sample Return.cfg">
+      <Link>Contracts\Sample Return\Rhea Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Tethys Sample Return.cfg">
+      <Link>Contracts\Sample Return\Tethys Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Titan Sample Return.cfg">
+      <Link>Contracts\Sample Return\Titan Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Triton Sample Return.cfg">
+      <Link>Contracts\Sample Return\Triton Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Dione Flyby.cfg">
+      <Link>Contracts\Saturn Observation\Dione Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Enceladus Flyby.cfg">
+      <Link>Contracts\Saturn Observation\Enceladus Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Iapetus Flyby.cfg">
+      <Link>Contracts\Saturn Observation\Iapetus Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Mimas Flyby.cfg">
+      <Link>Contracts\Saturn Observation\Mimas Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Rhea Flyby.cfg">
+      <Link>Contracts\Saturn Observation\Rhea Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Saturn Orbit.cfg">
+      <Link>Contracts\Saturn Observation\Saturn Orbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Saturn Orbit_Rep.cfg">
+      <Link>Contracts\Saturn Observation\Saturn Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Saturn Probe.cfg">
+      <Link>Contracts\Saturn Observation\Saturn Probe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Tethys Flyby.cfg">
+      <Link>Contracts\Saturn Observation\Tethys Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Flyby.cfg">
+      <Link>Contracts\Saturn Observation\Titan Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Probe.cfg">
+      <Link>Contracts\Saturn Observation\Titan Probe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Rover.cfg">
+      <Link>Contracts\Saturn Observation\Titan Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\SCANSat.cfg">
+      <Link>Contracts\SCANSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Earth_AltimetryLoRes.cfg">
+      <Link>Contracts\ScanSat\Earth_AltimetryLoRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Mars_AltimetryLoRes.cfg">
+      <Link>Contracts\ScanSat\Mars_AltimetryLoRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Moon_AltimetryLoRes.cfg">
+      <Link>Contracts\ScanSat\Moon_AltimetryLoRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_AltimetryLoRes.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Average_AltimetryLoRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_Biome.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Average_Biome.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_HiRes.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Average_HiRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Earth.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Earth.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_GasGiant_Biome.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_GasGiant_Biome.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_AltimetryLoRes.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Hard_AltimetryLoRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_Biome.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Hard_Biome.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_HiRes.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Hard_HiRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_JupiterMoons.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_JupiterMoons.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_NeptuneMoons.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_NeptuneMoons.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Potato_AltimetryLoRes.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Potato_AltimetryLoRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Potato_HiRes.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_Potato_HiRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_SaturnMoons.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_SaturnMoons.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_UranusMoons.cfg">
+      <Link>Contracts\ScanSat\RP0_SCANSat_UranusMoons.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Venus_AltimetryLoRes.cfg">
+      <Link>Contracts\ScanSat\Venus_AltimetryLoRes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Small Bodies Flyby\Ceres Flyby.cfg">
+      <Link>Contracts\Small Bodies Flyby\Ceres Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Small Bodies Flyby\Mercury Flyby.cfg">
+      <Link>Contracts\Small Bodies Flyby\Mercury Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Small Bodies Flyby\Vesta Flyby.cfg">
+      <Link>Contracts\Small Bodies Flyby\Vesta Flyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Add Crew Module Station.cfg">
+      <Link>Contracts\Space Stations\Add Crew Module Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Crew Rotation Station.cfg">
+      <Link>Contracts\Space Stations\Crew Rotation Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\First Space Station.cfg">
+      <Link>Contracts\Space Stations\First Space Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Life Support Station.cfg">
+      <Link>Contracts\Space Stations\Life Support Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Lunar Space Station.cfg">
+      <Link>Contracts\Space Stations\Lunar Space Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Martian Space Station.cfg">
+      <Link>Contracts\Space Stations\Martian Space Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\New Crew Station.cfg">
+      <Link>Contracts\Space Stations\New Crew Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Power Module Station.cfg">
+      <Link>Contracts\Space Stations\Power Module Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg">
+      <Link>Contracts\StockContracts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\DistanceSoundingDifficult.cfg">
+      <Link>Contracts\Suborbital Rocket Development\DistanceSoundingDifficult.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\DistanceSoundingIntermediate.cfg">
+      <Link>Contracts\Suborbital Rocket Development\DistanceSoundingIntermediate.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\Downrange.cfg">
+      <Link>Contracts\Suborbital Rocket Development\Downrange.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\KarmanLine.cfg">
+      <Link>Contracts\Suborbital Rocket Development\KarmanLine.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SoundingDifficult.cfg">
+      <Link>Contracts\Suborbital Rocket Development\SoundingDifficult.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SoundingIntermediate.cfg">
+      <Link>Contracts\Suborbital Rocket Development\SoundingIntermediate.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg">
+      <Link>Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketAdvancedBio.cfg">
+      <Link>Contracts\Suborbital Rocket Research\SoundingRocketAdvancedBio.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketBio.cfg">
+      <Link>Contracts\Suborbital Rocket Research\SoundingRocketBio.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketFilm.cfg">
+      <Link>Contracts\Suborbital Rocket Research\SoundingRocketFilm.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MarsOutpost.cfg">
+      <Link>Contracts\Surface Outposts\MarsOutpost.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MarsOutpostWithLab.cfg">
+      <Link>Contracts\Surface Outposts\MarsOutpostWithLab.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpost.cfg">
+      <Link>Contracts\Surface Outposts\MoonOutpost.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpostWithLab.cfg">
+      <Link>Contracts\Surface Outposts\MoonOutpostWithLab.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstGEOSat.cfg">
+      <Link>Contracts\Targeted Satellites\FirstGEOSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstMolniyaSat.cfg">
+      <Link>Contracts\Targeted Satellites\FirstMolniyaSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstTundraSat.cfg">
+      <Link>Contracts\Targeted Satellites\FirstTundraSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\TestSubjectRemove.cfg">
+      <Link>Contracts\TestSubjectRemove.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\TO BE SORTED\Communications Satellite - Early.cfg">
+      <Link>Contracts\TO BE SORTED\Communications Satellite - Early.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\TO BE SORTED\Communications Test Satellite.cfg">
+      <Link>Contracts\TO BE SORTED\Communications Test Satellite.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonLanding.cfg">
+      <Link>Contracts\Uncrewed Lunar Surface Exploration\MoonLanding.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonLandingFarSide.cfg">
+      <Link>Contracts\Uncrewed Lunar Surface Exploration\MoonLandingFarSide.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonLandingReturn.cfg">
+      <Link>Contracts\Uncrewed Lunar Surface Exploration\MoonLandingReturn.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonOrbiter.cfg">
+      <Link>Contracts\Uncrewed Lunar Surface Exploration\MoonOrbiter.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonRover.cfg">
+      <Link>Contracts\Uncrewed Lunar Surface Exploration\MoonRover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Venus Surface Exploration\Venus Landing.cfg">
+      <Link>Contracts\Venus Surface Exploration\Venus Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Venus Surface Exploration\Venus Probe.cfg">
+      <Link>Contracts\Venus Surface Exploration\Venus Probe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Venus Surface Exploration\Venus Rover.cfg">
+      <Link>Contracts\Venus Surface Exploration\Venus Rover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Early Weather Sats.cfg">
+      <Link>Contracts\Weather Sats\Early Weather Sats.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Geostationary Weather Sat.cfg">
+      <Link>Contracts\Weather Sats\Geostationary Weather Sat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Second Gen Weather Sats.cfg">
+      <Link>Contracts\Weather Sats\Second Gen Weather Sats.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Sun Sync Weather Sats.cfg">
+      <Link>Contracts\Weather Sats\Sun Sync Weather Sats.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\CrewHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-0\CrewSettings.cfg" />
     <Content Include="..\GameData\RP-0\CrewTrainingTimes.cfg" />
     <Content Include="..\GameData\RP-0\CustomBarnKit.cfg" />
     <Content Include="..\GameData\RP-0\Deprecation.cfg" />
-    <Content Include="..\GameData\RP-0\Filter_Extensions_Configs\non_wip_RP0.cfg" >
-<Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\Filter_Extensions_Configs\non_wip_RP0.cfg">
+      <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\GameParameters.cfg" />
-    <Content Include="..\GameData\RP-0\KCT\AirlaunchLevels.cfg" >
-<Link>KCT\AirlaunchLevels.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\KCT\FuelResources.cfg" >
-<Link>KCT\FuelResources.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\KCT\KCTTags.cfg" >
-<Link>KCT\KCTTags.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\KCT\KCT_ModuleTemplates.cfg" >
-<Link>KCT\KCT_ModuleTemplates.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\KCT\TechNodePeriods.cfg" >
-<Link>KCT\TechNodePeriods.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\KCT_Presets\RP1_KCT_Presets.cfg" >
-<Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\KCT\AirlaunchLevels.cfg">
+      <Link>KCT\AirlaunchLevels.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\KCT\FuelResources.cfg">
+      <Link>KCT\FuelResources.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\KCT\KCTTags.cfg">
+      <Link>KCT\KCTTags.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\KCT\KCT_ModuleTemplates.cfg">
+      <Link>KCT\KCT_ModuleTemplates.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\KCT\TechNodePeriods.cfg">
+      <Link>KCT\TechNodePeriods.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\KCT_Presets\RP1_KCT_Presets.cfg">
+      <Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\KSPCommunityFixes.cfg" />
     <Content Include="..\GameData\RP-0\maintecost.truecolor" />
     <Content Include="..\GameData\RP-0\MaintenanceSettings.cfg" />
     <Content Include="..\GameData\RP-0\ModuleStationParts.cfg" />
     <Content Include="..\GameData\RP-0\NonRP0.cfg" />
     <Content Include="..\GameData\RP-0\PartHacks.cfg" />
-    <Content Include="..\GameData\RP-0\Parts\HumanRatedFlag.cfg" >
-<Link>Parts\HumanRatedFlag.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\ProcFairingFix.cfg" >
-<Link>Parts\ProcFairingFix.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\RFProcTanks.cfg" >
-<Link>Parts\RFProcTanks.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_CargoBay.mu" >
-<Link>Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_CargoBay.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_Parachute.mu" >
-<Link>Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_Parachute.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg" >
-<Link>Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg" >
-<Link>Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ACC.mu" >
-<Link>Parts\Science\Assets\ACC.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_cameraLowTech.mu" >
-<Link>Parts\Science\Assets\bluedog_cameraLowTech.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_geiger.mu" >
-<Link>Parts\Science\Assets\bluedog_geiger.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_hydrometer.mu" >
-<Link>Parts\Science\Assets\bluedog_hydrometer.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\Bluedog_IonSensor.mu" >
-<Link>Parts\Science\Assets\Bluedog_IonSensor.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_IRspec.mu" >
-<Link>Parts\Science\Assets\bluedog_IRspec.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\Bluedog_Micrometeorite.mu" >
-<Link>Parts\Science\Assets\Bluedog_Micrometeorite.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_MS.mu" >
-<Link>Parts\Science\Assets\bluedog_MS.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_barometer.mu" >
-<Link>Parts\Science\Assets\ca_barometer.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_DUSTX.mu" >
-<Link>Parts\Science\Assets\ca_DUSTX.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_ELIX.mu" >
-<Link>Parts\Science\Assets\ca_ELIX.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_gravioli.mu" >
-<Link>Parts\Science\Assets\ca_gravioli.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_GRS.mu" >
-<Link>Parts\Science\Assets\ca_GRS.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_KLIR.mu" >
-<Link>Parts\Science\Assets\ca_KLIR.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_LUV.mu" >
-<Link>Parts\Science\Assets\ca_LUV.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_RPWS.mu" >
-<Link>Parts\Science\Assets\ca_RPWS.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_SWIS.mu" >
-<Link>Parts\Science\Assets\ca_SWIS.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_telescope_a.mu" >
-<Link>Parts\Science\Assets\ca_telescope_a.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_thermometer.mu" >
-<Link>Parts\Science\Assets\ca_thermometer.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_vor_camera.mu" >
-<Link>Parts\Science\Assets\ca_vor_camera.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_vor_mag.mu" >
-<Link>Parts\Science\Assets\ca_vor_mag.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\landv_soilScoop.mu" >
-<Link>Parts\Science\Assets\landv_soilScoop.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\LargeRecon.mu" >
-<Link>Parts\Science\Assets\LargeRecon.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\magneto2.mu" >
-<Link>Parts\Science\Assets\magneto2.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\MMDetector_Emmisive.tga" >
-<Link>Parts\Science\Assets\MMDetector_Emmisive.tga</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\MMDetector_Lights.tga" >
-<Link>Parts\Science\Assets\MMDetector_Lights.tga</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelGoreSat.mu" >
-<Link>Parts\Science\Assets\modelGoreSat.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelImaging.mu" >
-<Link>Parts\Science\Assets\modelImaging.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelMagBoom.mu" >
-<Link>Parts\Science\Assets\modelMagBoom.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelRPWS.mu" >
-<Link>Parts\Science\Assets\modelRPWS.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelScope.mu" >
-<Link>Parts\Science\Assets\modelScope.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\SmallRecon.mu" >
-<Link>Parts\Science\Assets\SmallRecon.mu</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\CR01-GeigerMuller.cfg" >
-<Link>Parts\Science\CR01-GeigerMuller.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\CR02-ScintillationCounter.cfg" >
-<Link>Parts\Science\CR02-ScintillationCounter.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IR01-IRRadiometer.cfg" >
-<Link>Parts\Science\IR01-IRRadiometer.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IR02-HRIRRadiometer.cfg" >
-<Link>Parts\Science\IR02-HRIRRadiometer.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IR03-TwoChannelIR.cfg" >
-<Link>Parts\Science\IR03-TwoChannelIR.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IR04-PMIRR.cfg" >
-<Link>Parts\Science\IR04-PMIRR.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IS01-IRIS.cfg" >
-<Link>Parts\Science\IS01-IRIS.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IS02-UVSpectrometer.cfg" >
-<Link>Parts\Science\IS02-UVSpectrometer.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IS03-NIMS.cfg" >
-<Link>Parts\Science\IS03-NIMS.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\IS04-VIMS.cfg" >
-<Link>Parts\Science\IS04-VIMS.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MAGNET01-EarlyMagnet.cfg" >
-<Link>Parts\Science\MAGNET01-EarlyMagnet.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MAGNET02-HeliumMagnet.cfg" >
-<Link>Parts\Science\MAGNET02-HeliumMagnet.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MAGNET03-FluxgateMagnet.cfg" >
-<Link>Parts\Science\MAGNET03-FluxgateMagnet.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MM01-Micrometeorite.cfg" >
-<Link>Parts\Science\MM01-Micrometeorite.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MS01-IonMassSpectrometer.cfg" >
-<Link>Parts\Science\MS01-IonMassSpectrometer.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MS02-MIMS.cfg" >
-<Link>Parts\Science\MS02-MIMS.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MS03-QuadropoleMassSpectrometer.cfg" >
-<Link>Parts\Science\MS03-QuadropoleMassSpectrometer.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\MS04-GC-MS.cfg" >
-<Link>Parts\Science\MS04-GC-MS.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO01-EarlyFilmCamera.cfg" >
-<Link>Parts\Science\PHOTO01-EarlyFilmCamera.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO02-ImprovedFilmCamera.cfg" >
-<Link>Parts\Science\PHOTO02-ImprovedFilmCamera.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO03-HighResFilmCamera.cfg" >
-<Link>Parts\Science\PHOTO03-HighResFilmCamera.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO04-DigitalCamera.cfg" >
-<Link>Parts\Science\PHOTO04-DigitalCamera.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\RPWS01-PlasmaWave.cfg" >
-<Link>Parts\Science\RPWS01-PlasmaWave.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\RPWS02-SWPlasmaWave.cfg" >
-<Link>Parts\Science\RPWS02-SWPlasmaWave.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\RPWS03-RPWS.cfg" >
-<Link>Parts\Science\RPWS03-RPWS.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\SS01-SurfaceSampler.cfg" >
-<Link>Parts\Science\SS01-SurfaceSampler.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\VI01-EarlyTVCamera.cfg" >
-<Link>Parts\Science\VI01-EarlyTVCamera.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\VI02-BasicTVCamera.cfg" >
-<Link>Parts\Science\VI02-BasicTVCamera.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\VI03-ImprovedTVCamera.cfg" >
-<Link>Parts\Science\VI03-ImprovedTVCamera.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\VI04-AdvancedImager.cfg" >
-<Link>Parts\Science\VI04-AdvancedImager.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\VI05-HIResImager.cfg" >
-<Link>Parts\Science\VI05-HIResImager.cfg</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\Parts\HumanRatedFlag.cfg">
+      <Link>Parts\HumanRatedFlag.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\ProcFairingFix.cfg">
+      <Link>Parts\ProcFairingFix.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\RFProcTanks.cfg">
+      <Link>Parts\RFProcTanks.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_CargoBay.mu">
+      <Link>Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_CargoBay.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_Parachute.mu">
+      <Link>Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_Parachute.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg">
+      <Link>Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg">
+      <Link>Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ACC.mu">
+      <Link>Parts\Science\Assets\ACC.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_cameraLowTech.mu">
+      <Link>Parts\Science\Assets\bluedog_cameraLowTech.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_geiger.mu">
+      <Link>Parts\Science\Assets\bluedog_geiger.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_hydrometer.mu">
+      <Link>Parts\Science\Assets\bluedog_hydrometer.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\Bluedog_IonSensor.mu">
+      <Link>Parts\Science\Assets\Bluedog_IonSensor.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_IRspec.mu">
+      <Link>Parts\Science\Assets\bluedog_IRspec.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\Bluedog_Micrometeorite.mu">
+      <Link>Parts\Science\Assets\Bluedog_Micrometeorite.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_MS.mu">
+      <Link>Parts\Science\Assets\bluedog_MS.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_barometer.mu">
+      <Link>Parts\Science\Assets\ca_barometer.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_DUSTX.mu">
+      <Link>Parts\Science\Assets\ca_DUSTX.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_ELIX.mu">
+      <Link>Parts\Science\Assets\ca_ELIX.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_gravioli.mu">
+      <Link>Parts\Science\Assets\ca_gravioli.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_GRS.mu">
+      <Link>Parts\Science\Assets\ca_GRS.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_KLIR.mu">
+      <Link>Parts\Science\Assets\ca_KLIR.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_LUV.mu">
+      <Link>Parts\Science\Assets\ca_LUV.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_RPWS.mu">
+      <Link>Parts\Science\Assets\ca_RPWS.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_SWIS.mu">
+      <Link>Parts\Science\Assets\ca_SWIS.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_telescope_a.mu">
+      <Link>Parts\Science\Assets\ca_telescope_a.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_thermometer.mu">
+      <Link>Parts\Science\Assets\ca_thermometer.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_vor_camera.mu">
+      <Link>Parts\Science\Assets\ca_vor_camera.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_vor_mag.mu">
+      <Link>Parts\Science\Assets\ca_vor_mag.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\landv_soilScoop.mu">
+      <Link>Parts\Science\Assets\landv_soilScoop.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\LargeRecon.mu">
+      <Link>Parts\Science\Assets\LargeRecon.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\magneto2.mu">
+      <Link>Parts\Science\Assets\magneto2.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\MMDetector_Emmisive.tga">
+      <Link>Parts\Science\Assets\MMDetector_Emmisive.tga</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\MMDetector_Lights.tga">
+      <Link>Parts\Science\Assets\MMDetector_Lights.tga</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelGoreSat.mu">
+      <Link>Parts\Science\Assets\modelGoreSat.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelImaging.mu">
+      <Link>Parts\Science\Assets\modelImaging.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelMagBoom.mu">
+      <Link>Parts\Science\Assets\modelMagBoom.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelRPWS.mu">
+      <Link>Parts\Science\Assets\modelRPWS.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelScope.mu">
+      <Link>Parts\Science\Assets\modelScope.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\Assets\SmallRecon.mu">
+      <Link>Parts\Science\Assets\SmallRecon.mu</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\CR01-GeigerMuller.cfg">
+      <Link>Parts\Science\CR01-GeigerMuller.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\CR02-ScintillationCounter.cfg">
+      <Link>Parts\Science\CR02-ScintillationCounter.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IR01-IRRadiometer.cfg">
+      <Link>Parts\Science\IR01-IRRadiometer.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IR02-HRIRRadiometer.cfg">
+      <Link>Parts\Science\IR02-HRIRRadiometer.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IR03-TwoChannelIR.cfg">
+      <Link>Parts\Science\IR03-TwoChannelIR.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IR04-PMIRR.cfg">
+      <Link>Parts\Science\IR04-PMIRR.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IS01-IRIS.cfg">
+      <Link>Parts\Science\IS01-IRIS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IS02-UVSpectrometer.cfg">
+      <Link>Parts\Science\IS02-UVSpectrometer.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IS03-NIMS.cfg">
+      <Link>Parts\Science\IS03-NIMS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\IS04-VIMS.cfg">
+      <Link>Parts\Science\IS04-VIMS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MAGNET01-EarlyMagnet.cfg">
+      <Link>Parts\Science\MAGNET01-EarlyMagnet.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MAGNET02-HeliumMagnet.cfg">
+      <Link>Parts\Science\MAGNET02-HeliumMagnet.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MAGNET03-FluxgateMagnet.cfg">
+      <Link>Parts\Science\MAGNET03-FluxgateMagnet.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MM01-Micrometeorite.cfg">
+      <Link>Parts\Science\MM01-Micrometeorite.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MS01-IonMassSpectrometer.cfg">
+      <Link>Parts\Science\MS01-IonMassSpectrometer.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MS02-MIMS.cfg">
+      <Link>Parts\Science\MS02-MIMS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MS03-QuadropoleMassSpectrometer.cfg">
+      <Link>Parts\Science\MS03-QuadropoleMassSpectrometer.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\MS04-GC-MS.cfg">
+      <Link>Parts\Science\MS04-GC-MS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO01-EarlyFilmCamera.cfg">
+      <Link>Parts\Science\PHOTO01-EarlyFilmCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO02-ImprovedFilmCamera.cfg">
+      <Link>Parts\Science\PHOTO02-ImprovedFilmCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO03-HighResFilmCamera.cfg">
+      <Link>Parts\Science\PHOTO03-HighResFilmCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\PHOTO04-DigitalCamera.cfg">
+      <Link>Parts\Science\PHOTO04-DigitalCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\RPWS01-PlasmaWave.cfg">
+      <Link>Parts\Science\RPWS01-PlasmaWave.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\RPWS02-SWPlasmaWave.cfg">
+      <Link>Parts\Science\RPWS02-SWPlasmaWave.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\RPWS03-RPWS.cfg">
+      <Link>Parts\Science\RPWS03-RPWS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\SS01-SurfaceSampler.cfg">
+      <Link>Parts\Science\SS01-SurfaceSampler.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\VI01-EarlyTVCamera.cfg">
+      <Link>Parts\Science\VI01-EarlyTVCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\VI02-BasicTVCamera.cfg">
+      <Link>Parts\Science\VI02-BasicTVCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\VI03-ImprovedTVCamera.cfg">
+      <Link>Parts\Science\VI03-ImprovedTVCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\VI04-AdvancedImager.cfg">
+      <Link>Parts\Science\VI04-AdvancedImager.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\VI05-HIResImager.cfg">
+      <Link>Parts\Science\VI05-HIResImager.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\ProcCosts.cfg" />
     <Content Include="..\GameData\RP-0\ProgramHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-0\ResourceCosts.cfg" />
-    <Content Include="..\GameData\RP-0\Resources\KCT_airlaunch16.truecolor" >
-<Link>Resources\KCT_airlaunch16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_construct16.truecolor" >
-<Link>Resources\KCT_construct16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_flight16.truecolor" >
-<Link>Resources\KCT_flight16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_hangar16.truecolor" >
-<Link>Resources\KCT_hangar16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_landing16.truecolor" >
-<Link>Resources\KCT_landing16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_recon16.truecolor" >
-<Link>Resources\KCT_recon16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_rocket16.truecolor" >
-<Link>Resources\KCT_rocket16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_rollback16.truecolor" >
-<Link>Resources\KCT_rollback16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_rollout16.truecolor" >
-<Link>Resources\KCT_rollout16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_settings16.truecolor" >
-<Link>Resources\KCT_settings16.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_tech16.truecolor" >
-<Link>Resources\KCT_tech16.truecolor</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_airlaunch16.truecolor">
+      <Link>Resources\KCT_airlaunch16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_construct16.truecolor">
+      <Link>Resources\KCT_construct16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_flight16.truecolor">
+      <Link>Resources\KCT_flight16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_hangar16.truecolor">
+      <Link>Resources\KCT_hangar16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_landing16.truecolor">
+      <Link>Resources\KCT_landing16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_recon16.truecolor">
+      <Link>Resources\KCT_recon16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_rocket16.truecolor">
+      <Link>Resources\KCT_rocket16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_rollback16.truecolor">
+      <Link>Resources\KCT_rollback16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_rollout16.truecolor">
+      <Link>Resources\KCT_rollout16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_settings16.truecolor">
+      <Link>Resources\KCT_settings16.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Resources\KCT_tech16.truecolor">
+      <Link>Resources\KCT_tech16.truecolor</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\RP-1.version" />
-    <Content Include="..\GameData\RP-0\Scenarios\1957Start.cfg" >
-<Link>Scenarios\1957Start.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\BodyScienceParams.cfg" >
-<Link>Science\BodyScienceParams.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\CleanupParts\CoatlAerospaceScience.cfg" >
-<Link>Science\CleanupParts\CoatlAerospaceScience.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\CleanupParts\PartExperimentAdder.cfg" >
-<Link>Science\CleanupParts\PartExperimentAdder.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\CleanupParts\RemoveScienceParts.cfg" >
-<Link>Science\CleanupParts\RemoveScienceParts.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\CleanupParts\StockSXTVensScienceParts.cfg" >
-<Link>Science\CleanupParts\StockSXTVensScienceParts.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\BioSample.cfg" >
-<Link>Science\Experiments\BioSample.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\CapsuleReport.cfg" >
-<Link>Science\Experiments\CapsuleReport.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\CosmicRay.cfg" >
-<Link>Science\Experiments\CosmicRay.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\CrewReport.cfg" >
-<Link>Science\Experiments\CrewReport.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\EVAReport.cfg" >
-<Link>Science\Experiments\EVAReport.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\ImagingSpectrometry.cfg" >
-<Link>Science\Experiments\ImagingSpectrometry.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\InfraredRadiometry.cfg" >
-<Link>Science\Experiments\InfraredRadiometry.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\MagneticScan.cfg" >
-<Link>Science\Experiments\MagneticScan.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\MassSpectrometry.cfg" >
-<Link>Science\Experiments\MassSpectrometry.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\Micrometeorite.cfg" >
-<Link>Science\Experiments\Micrometeorite.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\OrbitalPerturbation.cfg" >
-<Link>Science\Experiments\OrbitalPerturbation.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\Photography.cfg" >
-<Link>Science\Experiments\Photography.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\PressureScan.cfg" >
-<Link>Science\Experiments\PressureScan.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\RPWS.cfg" >
-<Link>Science\Experiments\RPWS.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\SCANSat.cfg" >
-<Link>Science\Experiments\SCANSat.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\StationScienceEarly.cfg" >
-<Link>Science\Experiments\StationScienceEarly.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\SurfaceSample.cfg" >
-<Link>Science\Experiments\SurfaceSample.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\TelemetryAnalysis.cfg" >
-<Link>Science\Experiments\TelemetryAnalysis.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\Temperature.cfg" >
-<Link>Science\Experiments\Temperature.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\VisibleImaging.cfg" >
-<Link>Science\Experiments\VisibleImaging.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Lab.cfg" >
-<Link>Science\Lab.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\MOL.cfg" >
-<Link>Science\MOL.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Results\BioSample.cfg" >
-<Link>Science\Results\BioSample.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Results\CrewReport.cfg" >
-<Link>Science\Results\CrewReport.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Results\FilmReturn.cfg" >
-<Link>Science\Results\FilmReturn.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Results\Pressure.cfg" >
-<Link>Science\Results\Pressure.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Results\ResultClearer.cfg" >
-<Link>Science\Results\ResultClearer.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Results\SurfaceSample.cfg" >
-<Link>Science\Results\SurfaceSample.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Science\Results\TemperatureScan.cfg" >
-<Link>Science\Results\TemperatureScan.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Strategies\Departments.cfg" >
-<Link>Strategies\Departments.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Strategies\LocPatches.cfg" >
-<Link>Strategies\LocPatches.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Strategies\RP-1Logo.truecolor" >
-<Link>Strategies\RP-1Logo.truecolor</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Strategies\StrategyPatcher.cfg" >
-<Link>Strategies\StrategyPatcher.cfg</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\Scenarios\1957Start.cfg">
+      <Link>Scenarios\1957Start.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\BodyScienceParams.cfg">
+      <Link>Science\BodyScienceParams.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\CleanupParts\CoatlAerospaceScience.cfg">
+      <Link>Science\CleanupParts\CoatlAerospaceScience.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\CleanupParts\PartExperimentAdder.cfg">
+      <Link>Science\CleanupParts\PartExperimentAdder.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\CleanupParts\RemoveScienceParts.cfg">
+      <Link>Science\CleanupParts\RemoveScienceParts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\CleanupParts\StockSXTVensScienceParts.cfg">
+      <Link>Science\CleanupParts\StockSXTVensScienceParts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\BioSample.cfg">
+      <Link>Science\Experiments\BioSample.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\CapsuleReport.cfg">
+      <Link>Science\Experiments\CapsuleReport.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\CosmicRay.cfg">
+      <Link>Science\Experiments\CosmicRay.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\CrewReport.cfg">
+      <Link>Science\Experiments\CrewReport.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\EVAReport.cfg">
+      <Link>Science\Experiments\EVAReport.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\ImagingSpectrometry.cfg">
+      <Link>Science\Experiments\ImagingSpectrometry.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\InfraredRadiometry.cfg">
+      <Link>Science\Experiments\InfraredRadiometry.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\MagneticScan.cfg">
+      <Link>Science\Experiments\MagneticScan.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\MassSpectrometry.cfg">
+      <Link>Science\Experiments\MassSpectrometry.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\Micrometeorite.cfg">
+      <Link>Science\Experiments\Micrometeorite.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\OrbitalPerturbation.cfg">
+      <Link>Science\Experiments\OrbitalPerturbation.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\Photography.cfg">
+      <Link>Science\Experiments\Photography.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\PressureScan.cfg">
+      <Link>Science\Experiments\PressureScan.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\RPWS.cfg">
+      <Link>Science\Experiments\RPWS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\SCANSat.cfg">
+      <Link>Science\Experiments\SCANSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\StationScienceEarly.cfg">
+      <Link>Science\Experiments\StationScienceEarly.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\SurfaceSample.cfg">
+      <Link>Science\Experiments\SurfaceSample.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\TelemetryAnalysis.cfg">
+      <Link>Science\Experiments\TelemetryAnalysis.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\Temperature.cfg">
+      <Link>Science\Experiments\Temperature.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\VisibleImaging.cfg">
+      <Link>Science\Experiments\VisibleImaging.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Lab.cfg">
+      <Link>Science\Lab.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\MOL.cfg">
+      <Link>Science\MOL.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Results\BioSample.cfg">
+      <Link>Science\Results\BioSample.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Results\CrewReport.cfg">
+      <Link>Science\Results\CrewReport.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Results\FilmReturn.cfg">
+      <Link>Science\Results\FilmReturn.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Results\Pressure.cfg">
+      <Link>Science\Results\Pressure.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Results\ResultClearer.cfg">
+      <Link>Science\Results\ResultClearer.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Results\SurfaceSample.cfg">
+      <Link>Science\Results\SurfaceSample.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Results\TemperatureScan.cfg">
+      <Link>Science\Results\TemperatureScan.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\Departments.cfg">
+      <Link>Strategies\Departments.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\LocPatches.cfg">
+      <Link>Strategies\LocPatches.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\RP-1Logo.truecolor">
+      <Link>Strategies\RP-1Logo.truecolor</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\StrategyPatcher.cfg">
+      <Link>Strategies\StrategyPatcher.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\TestFlightInterop.cfg" />
     <Content Include="..\GameData\RP-0\TestFlightRnD.cfg" />
     <Content Include="..\GameData\RP-0\ToolingDefinitions.cfg" />
-    <Content Include="..\GameData\RP-0\Tooling\SSPX.cfg" >
-<Link>Tooling\SSPX.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\AirlaunchTechlevels.cfg" >
-<Link>Tree\AirlaunchTechlevels.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\AutoStrut.cfg" >
-<Link>Tree\AutoStrut.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\CockpitUpgrades.cfg" >
-<Link>Tree\CockpitUpgrades.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\CommsTechlevels.cfg" >
-<Link>Tree\CommsTechlevels.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\Crossfeed.cfg" >
-<Link>Tree\Crossfeed.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\CustomPartPlacement.cfg" >
-<Link>Tree\CustomPartPlacement.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\ECM-Engines.cfg" >
-<Link>Tree\ECM-Engines.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\ECM-Parts.cfg" >
-<Link>Tree\ECM-Parts.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\EntryCostModifiers.cfg" >
-<Link>Tree\EntryCostModifiers.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\identicalParts.cfg" >
-<Link>Tree\identicalParts.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\KCTUpgrades.cfg" >
-<Link>Tree\KCTUpgrades.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\OrphanNode.cfg" >
-<Link>Tree\OrphanNode.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\ProceduralAvionics.cfg" >
-<Link>Tree\ProceduralAvionics.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\ProcSizes.cfg" >
-<Link>Tree\ProcSizes.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\ResourceTechs.cfg" >
-<Link>Tree\ResourceTechs.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\RFTechLevels.cfg" >
-<Link>Tree\RFTechLevels.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\ROHeatshields.cfg" >
-<Link>Tree\ROHeatshields.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\RP0TechTree.cfg" >
-<Link>Tree\RP0TechTree.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\SRB-CostAdjustments.cfg" >
-<Link>Tree\SRB-CostAdjustments.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\StartNodeRemoval.cfg" >
-<Link>Tree\StartNodeRemoval.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\TechFacilityUpgrades.cfg" >
-<Link>Tree\TechFacilityUpgrades.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\TREE-Engines.cfg" >
-<Link>Tree\TREE-Engines.cfg</Link>
-</Content>
-    <Content Include="..\GameData\RP-0\Tree\TREE-Parts.cfg" >
-<Link>Tree\TREE-Parts.cfg</Link>
-</Content>
+    <Content Include="..\GameData\RP-0\Tooling\SSPX.cfg">
+      <Link>Tooling\SSPX.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\AirlaunchTechlevels.cfg">
+      <Link>Tree\AirlaunchTechlevels.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\AutoStrut.cfg">
+      <Link>Tree\AutoStrut.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\CockpitUpgrades.cfg">
+      <Link>Tree\CockpitUpgrades.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\CommsTechlevels.cfg">
+      <Link>Tree\CommsTechlevels.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\Crossfeed.cfg">
+      <Link>Tree\Crossfeed.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\CustomPartPlacement.cfg">
+      <Link>Tree\CustomPartPlacement.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\ECM-Engines.cfg">
+      <Link>Tree\ECM-Engines.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\ECM-Parts.cfg">
+      <Link>Tree\ECM-Parts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\EntryCostModifiers.cfg">
+      <Link>Tree\EntryCostModifiers.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\identicalParts.cfg">
+      <Link>Tree\identicalParts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\KCTUpgrades.cfg">
+      <Link>Tree\KCTUpgrades.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\OrphanNode.cfg">
+      <Link>Tree\OrphanNode.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\ProceduralAvionics.cfg">
+      <Link>Tree\ProceduralAvionics.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\ProcSizes.cfg">
+      <Link>Tree\ProcSizes.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\ResourceTechs.cfg">
+      <Link>Tree\ResourceTechs.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\RFTechLevels.cfg">
+      <Link>Tree\RFTechLevels.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\ROHeatshields.cfg">
+      <Link>Tree\ROHeatshields.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\RP0TechTree.cfg">
+      <Link>Tree\RP0TechTree.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\SRB-CostAdjustments.cfg">
+      <Link>Tree\SRB-CostAdjustments.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\StartNodeRemoval.cfg">
+      <Link>Tree\StartNodeRemoval.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\TechFacilityUpgrades.cfg">
+      <Link>Tree\TechFacilityUpgrades.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\TREE-Engines.cfg">
+      <Link>Tree\TREE-Engines.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Tree\TREE-Parts.cfg">
+      <Link>Tree\TREE-Parts.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\zFinal.cfg" />
     <Content Include="..\GameData\RP-0\zTweakScale.cfg" />
   </ItemGroup>

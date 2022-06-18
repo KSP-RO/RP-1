@@ -44,3 +44,4 @@ using System.Runtime.InteropServices;
 [assembly: KSPAssemblyDependency("RealFuels", 15, 1)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
 [assembly: KSPAssemblyDependency("KerbalConstructionTime", 2, 0)]
+[assembly: KSPAssemblyDependency("ContractConfigurator", 2, 0)]

@@ -164,6 +164,8 @@ namespace RP0.Programs
         private IEnumerator ContractCompleteRoutine()
         {
             // The contract will only be seen as completed after the ContractSystem has run it's next update
+            // This will happen within 1 or 2 frames of the contract completion event getting fired.
+            yield return null;
             yield return null;
 
             for (int i = ActivePrograms.Count - 1; i >= 0; --i)

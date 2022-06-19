@@ -155,10 +155,15 @@ namespace KerbalConstructionTime
         public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
 
         public delegate double FundingDelegate(double utOffset);
-        public static FundingDelegate ProgramFundingForTime = null;
+        public delegate void VoidDelegate();
+        public static FundingDelegate ProgramFundingForTimeDelegate = null;
+        public static VoidDelegate UpkeepCheckDelegate;
 
         public static double GetBudgetDelta(double time)
         {
+            if (UpkeepCheckDelegate != null)
+                UpkeepCheckDelegate();
+
             double delta = NetUpkeep * time / 86400d;
             foreach (var ksc in KSCs)
             {
@@ -176,8 +181,8 @@ namespace KerbalConstructionTime
                 }
             }
             
-            if (ProgramFundingForTime != null)
-                delta += ProgramFundingForTime(time);
+            if (ProgramFundingForTimeDelegate != null)
+                delta += ProgramFundingForTimeDelegate(time);
 
             return delta;
         }

@@ -154,25 +154,27 @@ namespace KerbalConstructionTime
                 if (isModify)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Tonnage limit, min:");
-                    GUILayout.Label($"{Math.Max(1, (int)(activeLC.MassOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("Upgrade Limit:");
+                    GUILayout.Label($"{(int)(activeLC.MassOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Tonnage limit, max:");
-                    GUILayout.Label($"{(int)(activeLC.MassOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("Downgrade Limit:");
+                    GUILayout.Label($"{Math.Max(1, (int)(activeLC.MassOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
+
+                    
                 }
                 else
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Tonnage limit range available");
-                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0} -", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("Upgrade Limit:");
+                    GUILayout.Label($"{Math.Max(3, tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("for subsequent modification:");
-                    GUILayout.Label($"{Math.Max(3, tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("Downgrade Limit:");
+                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0} -", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
 

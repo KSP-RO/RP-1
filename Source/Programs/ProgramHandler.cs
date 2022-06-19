@@ -94,7 +94,7 @@ namespace RP0.Programs
             {
                 Settings = new ProgramHandlerSettings();
                 foreach (ConfigNode cn in GameDatabase.Instance.GetConfigNodes("PROGRAMHANDLERSETTINGS"))
-                    Settings.Load(cn);
+                    ConfigNode.LoadObjectFromConfig(Settings, cn);
             }
 
             EnsurePrograms();
@@ -139,10 +139,12 @@ namespace RP0.Programs
 
         public void ProcessFunding()
         {
+            double fundsOld = Funding.Instance.Funds;
             foreach (Program p in ActivePrograms)
             {
                 p.ProcessFunding();
             }
+            Debug.Log($"[RP-0] ProgramHandler added {(Funding.Instance.Funds - fundsOld)} funds.");
         }
 
         internal void OnGUI()

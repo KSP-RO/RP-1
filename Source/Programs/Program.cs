@@ -60,6 +60,9 @@ namespace RP0.Programs
         [Persistent]
         public double repPenaltyAssessed;
 
+        [Persistent]
+        public DoubleCurve overrideFundingCurve = new DoubleCurve();
+
         /// <summary>
         /// Texture URL
         /// </summary>
@@ -175,7 +178,7 @@ namespace RP0.Programs
             double fundsToAdd = funds2 - fundsPaidOut;
             lastPaymentUT = nowUT;
 
-            Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name}");
+            Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / nominalDurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
             fundsPaidOut += fundsToAdd;
             Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
 
@@ -208,8 +211,9 @@ namespace RP0.Programs
         private double GetFundsAtTime(double time)
         {
             const double secsPerYear = 3600 * 24 * 365.25;
-            double fractionOfTotalDuration = time / (nominalDurationYears * secsPerYear);
-            double curveFactor = ProgramHandler.Settings.paymentCurve.Evaluate((float)fractionOfTotalDuration);
+            double fractionOfTotalDuration = time / nominalDurationYears / secsPerYear;
+            DoubleCurve curve = overrideFundingCurve.keys.Count > 0 ? overrideFundingCurve : ProgramHandler.Settings.paymentCurve;
+            double curveFactor = curve.Evaluate(fractionOfTotalDuration);
             return curveFactor * TotalFunding;
         }
 

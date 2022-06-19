@@ -103,7 +103,7 @@ namespace RP0
                 double maxRep = minRep * Settings.subsidyMultiplierForMax;
                 double invLerp = UtilMath.InverseLerp(minRep, maxRep, UtilMath.Clamp(Reputation.Instance.reputation, minRep, maxRep));
                 double val = UtilMath.LerpUnclamped(minSubsidy, minSubsidy * Settings.subsidyMultiplierForMax, invLerp);
-                //Debug.Log($"$$$$ years {years}: minSub: {minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, minRep {minRep}, maxRep {maxRep}, invLerp {invLerp}, val {val}\n{n.ToString()}");
+                //Debug.Log($"$$$$ years {years}: minSub: {minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, minRep {minRep}, maxRep {maxRep}, invLerp {invLerp}, val {val}=>{(val * (1d / 365.25d))}");
                 return val * (1d / 365.25d);
             }
         }
@@ -394,8 +394,9 @@ namespace RP0
                 double upkeepForPassedTime = timeFactor * TotalUpkeepPerDay;
                 double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
                 double costForPassedTime = Math.Max(0, upkeepForPassedTime - subsidyForPassedTime);
-                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedTime} funds where upkeep is {TotalUpkeepPerDay} and subsidy {MaintenanceSubsidyPerDay}");
+                double fundsOld = Funding.Instance.Funds;
                 Funding.Instance.AddFunds(-costForPassedTime, TransactionReasons.StructureRepair);
+                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedTime} funds where upkeep is {TotalUpkeepPerDay} ({upkeepForPassedTime} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
                 CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += Math.Min(upkeepForPassedTime, subsidyForPassedTime);
             }
 

@@ -86,7 +86,7 @@ namespace RP0
                 foreach (double d in ConstructionMaterials.Values)
                     tmp += d;
 
-                return tmp * _maintenanceCostMult / 365.25d;
+                return tmp;
             }
         }
 

@@ -18,7 +18,7 @@ namespace RP0
         public static MaintenanceHandler Instance { get; private set; } = null;
         public static MaintenanceSettings Settings { get; private set; } = null;
 
-        private static bool _isFirstLoad = true;
+        private bool _isFirstLoad = true;
         private static readonly Dictionary<SpaceCenterFacility, float[]> _facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
 
         [KSPField(isPersistant = true)]
@@ -120,7 +120,8 @@ namespace RP0
             }
             Instance = this;
 
-            KCTGameStates.ProgramFundingForTime = GetProgramFunding;
+            KCTGameStates.ProgramFundingForTimeDelegate = GetProgramFunding;
+            KCTGameStates.UpkeepCheckDelegate = UpdateUpkeepCheck;
 
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
             GameEvents.onGameStateLoad.Add(LoadSettings);
@@ -212,9 +213,17 @@ namespace RP0
             Profiler.EndSample();
         }
 
+        public void UpdateUpkeepCheck()
+        {
+            if (_isFirstLoad)
+                UpdateUpkeep();
+        }
+
         public void UpdateUpkeep()
         {
             Profiler.BeginSample("RP0Maintenance UpdateUpkeep");
+
+            _isFirstLoad = false;
 
             if (IntegrationSalaries.Count == 0)
                 UpdateKCTSalaries();
@@ -363,12 +372,10 @@ namespace RP0
             }
 
             double time = KSPUtils.GetUT();
-            if (nextUpdate > time)
+            if (nextUpdate > time && !_isFirstLoad)
             {
                 if (_wasWarpingHigh && TimeWarp.CurrentRate <= 100f)
                     _wasWarpingHigh = false;
-                else if (_isFirstLoad)
-                    _isFirstLoad = false;
                 else
                     return;
             }
@@ -414,7 +421,8 @@ namespace RP0
             if (onKctPersonnelChangeEvent != null)
                 onKctPersonnelChangeEvent.Remove(UpdateKCTSalaries);
 
-            KCTGameStates.ProgramFundingForTime = null;
+            KCTGameStates.ProgramFundingForTimeDelegate = null;
+            KCTGameStates.UpkeepCheckDelegate = null;
         }
 
         #endregion

@@ -1615,7 +1615,7 @@ namespace KerbalConstructionTime
             //R&D
             total += (int)MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>()
             {
-                { "N", KCTGameStates.SciPointsTotal.ToString() }
+                { "N", Math.Max(0, KCTGameStates.SciPointsTotal).ToString() }
             });
 
             return total;

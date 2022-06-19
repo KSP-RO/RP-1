@@ -116,8 +116,15 @@ namespace RP0.Programs
 
             if (!p.CanComplete)
             {
-                reason = "This Program has unmet objectives.";
-                return false;
+                if (p.AllObjectivesMet && p.IsActive && !p.IsComplete)
+                {
+                    p.MarkObjectivesComplete();
+                }
+                else
+                {
+                    reason = "This Program has unmet objectives.";
+                    return false;
+                }
             }
 
             return true;

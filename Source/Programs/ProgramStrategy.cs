@@ -118,6 +118,7 @@ namespace RP0.Programs
             {
                 if (p.AllObjectivesMet && p.IsActive && !p.IsComplete)
                 {
+                    Debug.LogError($"[RP-0]: Program {p.name} was incorrectly not marked as complete. Marking complete now.");
                     p.MarkObjectivesComplete();
                 }
                 else

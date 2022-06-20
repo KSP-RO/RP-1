@@ -29,7 +29,6 @@ namespace RP0
 
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
         public readonly Dictionary<string, double> ConstructionSalaries = new Dictionary<string, double>();
-        public readonly Dictionary<string, double> ConstructionMaterials = new Dictionary<string, double>();
         public double Researchers = 0d;
 
         private double _maintenanceCostMult = 1d;
@@ -75,18 +74,6 @@ namespace RP0
                 foreach (double d in ConstructionSalaries.Values)
                     tmp += d;
                 return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365.25d;
-            }
-        }
-
-        public double ConstructionMaterialsPerDay
-        {
-            get
-            {
-                double tmp = 0d;
-                foreach (double d in ConstructionMaterials.Values)
-                    tmp += d;
-
-                return tmp;
             }
         }
 
@@ -255,20 +242,6 @@ namespace RP0
 
             //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
             //    SphCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
-
-            ConstructionMaterials.Clear();
-            foreach (var ksc in KCTGameStates.KSCs)
-            {
-                if (ksc.Constructions.Count > 0)
-                {
-                    var c = ksc.Constructions[0];
-                    double br = c.GetBuildRate();
-                    if (br > 0d)
-                    {
-                        ConstructionMaterials[ksc.KSCName] = br * 86400d / c.BP * c.Cost;
-                    }
-                }
-            }
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out float[] costs))
                 RndCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);

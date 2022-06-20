@@ -439,8 +439,14 @@ namespace RP0
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
 
+            const string jsonVer = "2.0";
+            var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(GetType().Assembly.Location);
+            string rp1Ver = fvi.FileVersion;
+
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
-            var jsonToSend = "{ \"periods\": [";
+            var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
+            jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
+            jsonToSend += "\"periods\": [";
 
             for (var i = 0; i < logPeriods.Length; i++)
             {
@@ -554,21 +560,6 @@ namespace RP0
 
         private CareerLogDto CreateLogDto(LogPeriod logPeriod)
         {
-            double advanceFunds = _contractDict
-                .Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(logPeriod))
-                .Select(c => c.FundsChange)
-                .Sum();
-
-            double rewardFunds = _contractDict
-                .Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(logPeriod))
-                .Select(c => c.FundsChange)
-                .Sum();
-
-            double failureFunds = -_contractDict.Where(c =>
-                    (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(logPeriod))
-                .Select(c => c.FundsChange)
-                .Sum();
-
             return new CareerLogDto
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
@@ -581,9 +572,7 @@ namespace RP0
                 currentFunds = logPeriod.CurrentFunds,
                 currentSci = logPeriod.CurrentSci,
                 scienceEarned = logPeriod.ScienceEarned,
-                advanceFunds = advanceFunds,
-                rewardFunds = rewardFunds,
-                failureFunds = failureFunds,
+                programFunds = logPeriod.ProgramFunds,
                 otherFundsEarned = logPeriod.OtherFundsEarned,
                 launchFees = logPeriod.LaunchFees,
                 maintenanceFees = logPeriod.MaintenanceFees,
@@ -591,6 +580,9 @@ namespace RP0
                 entryCosts = logPeriod.EntryCosts,
                 constructionFees = logPeriod.ConstructionFees,
                 otherFees = logPeriod.OtherFees,
+                subsidySize = logPeriod.SubsidySize,
+                subsidyPaidOut = logPeriod.SubsidyPaidOut,
+                repFromPrograms = logPeriod.RepFromPrograms,
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
                 reputation = logPeriod.Reputation,

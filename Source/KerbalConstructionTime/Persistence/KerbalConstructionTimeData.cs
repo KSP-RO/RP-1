@@ -103,15 +103,6 @@ namespace KerbalConstructionTime
                 if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
                 {
                     ConfigNode.LoadObjectFromConfig(kctVS, cn);
-                    // for back-compat
-                    if (cn.HasValue("RDPersonnel"))
-                    {
-                        cn.TryGetValue("RDPersonnel", ref KCTGameStates.Researchers);
-                        cn.TryGetValue("EfficiencyRDPersonnel", ref KCTGameStates.EfficiencyResearchers);
-                        KCTGameStates.EfficiencyResearchers -= 0.2d;
-                    }
-                    if (cn.HasValue("EfficiecnyEngineers"))
-                        cn.TryGetValue("EfficiecnyEngineers", ref KCTGameStates.EfficiencyEngineers);
                 }
 
                 bool foundStockKSC = false;

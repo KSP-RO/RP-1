@@ -9,6 +9,7 @@ namespace RP0.Programs
     public class Program : IConfigNode
     {
         private const string CN_CompleteContract = "COMPLETE_CONTRACT";
+        private const double secsPerYear = 3600 * 24 * 365.25;
 
         [Persistent]
         public string name;
@@ -201,7 +202,7 @@ namespace RP0.Programs
         public void Complete()
         {
             completedUT = KSPUtils.GetUT();
-            double timeDeltaYears = nominalDurationYears * 365.25d - (completedUT - acceptedUT);
+            double timeDeltaYears = nominalDurationYears * secsPerYear - (completedUT - acceptedUT);
             if (timeDeltaYears > 0)
                 Reputation.Instance.AddReputation((float)(timeDeltaYears * repDeltaOnCompletePerYearEarly), TransactionReasons.Mission);
 
@@ -210,7 +211,6 @@ namespace RP0.Programs
 
         private double GetFundsAtTime(double time)
         {
-            const double secsPerYear = 3600 * 24 * 365.25;
             double fractionOfTotalDuration = time / nominalDurationYears / secsPerYear;
             DoubleCurve curve = overrideFundingCurve.keys.Count > 0 ? overrideFundingCurve : ProgramHandler.Settings.paymentCurve;
             double curveFactor = curve.Evaluate(fractionOfTotalDuration);
@@ -219,7 +219,6 @@ namespace RP0.Programs
 
         private double GetRepLossAtTime(double time)
         {
-            const double secsPerYear = 3600 * 24 * 365.25;
             const double recip = 1d / secsPerYear;
             double extraTime = time - nominalDurationYears * secsPerYear;
             if (extraTime > 0d)

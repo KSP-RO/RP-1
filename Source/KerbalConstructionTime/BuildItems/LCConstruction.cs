@@ -17,11 +17,6 @@ namespace KerbalConstructionTime
         {
         }
 
-        public LCConstruction(string name)
-        {
-            Name = name;
-        }
-
         protected override void ProcessComplete()
         {
             if (!KCTGameStates.ErroredDuringOnLoad)
@@ -45,14 +40,28 @@ namespace KerbalConstructionTime
 
         protected override void ProcessCancel()
         {
-            LCItem lc = KSC.LaunchComplexes.Find(l => l.ID == LCID);
+            int index = -1;
+            LCItem lc = null;
+            for (int i = 0; i < KSC.LaunchComplexes.Count; ++i)
+            {
+                lc = KSC.LaunchComplexes[i];
+                if (lc.ID == LCID)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index < 0)
+            {
+                Debug.LogError($"[RP-0]: Error! Can't find LC from LCC, LC ID {LCID}");
+                return;
+            }
             if (IsModify)
             {
                 lc.IsOperational = true;
             }
             else
             {
-                int index = KSC.LaunchComplexes.IndexOf(lc);
                 KSC.LaunchComplexes.RemoveAt(index);
                 if (KSC.ActiveLaunchComplexIndex >= index)
                     --KSC.ActiveLaunchComplexIndex; // should not change active LC.

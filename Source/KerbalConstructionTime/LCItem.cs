@@ -135,9 +135,6 @@ namespace KerbalConstructionTime
             IsHumanRated = isHuman;
             MassMax = mMax;
             MassOrig = mOrig;
-            // back-compat
-            if (mOrig == 0)
-                MassOrig = MassMax;
             float fracLevel;
 
             KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out _, out _, out fracLevel);
@@ -163,9 +160,6 @@ namespace KerbalConstructionTime
             _modID = modId;
             MassMax = data.massMax;
             MassOrig = data.massOrig;
-            // back-compat
-            if (MassOrig == 0)
-                MassOrig = MassMax;
             IsHumanRated = data.isHumanRated;
             SizeMax = data.sizeMax;
             float fracLevel;
@@ -431,25 +425,6 @@ namespace KerbalConstructionTime
             node.TryGetValue("BuildRateCapped", ref _rateHRCapped);
             node.TryGetValue("IsHumanRated", ref IsHumanRated);
 
-            //back-Compat
-            if (node.HasValue("isPad"))
-            {
-                bool isPad = true;
-                node.TryGetValue("isPad", ref isPad);
-                LCType = isPad ? LaunchComplexType.Pad : LaunchComplexType.Hangar;
-            }
-            if (LCType == LaunchComplexType.Hangar)
-                IsHumanRated = true;
-            if (MassMax == -1f)
-                MassMax = float.MaxValue;
-            if (MassOrig == 0)
-                MassOrig = MassMax;
-            if (node.HasValue("Personnel"))
-            {
-                node.TryGetValue("Personnel", ref Engineers);
-                node.TryGetValue("EfficiencyPersonnel", ref EfficiencyEngineers);
-            }
-
             ConfigNode tmp = node.GetNode("BuildList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
@@ -512,7 +487,7 @@ namespace KerbalConstructionTime
                 {
                     var storageItem = new PadConstructionStorageItem();
                     storageItem.Load(cn);
-                    PadConstructions.Add(storageItem.ToPadConstruction(this));
+                    PadConstructions.Add(storageItem.ToPadConstruction());
                 }
             }
 

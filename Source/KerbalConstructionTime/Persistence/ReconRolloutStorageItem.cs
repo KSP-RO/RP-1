@@ -25,27 +25,6 @@
                 LC = KCTGameStates.FindLCFromID(new System.Guid(lcID))
             };
 
-            // back-compat
-            if (r.RRType == ReconRollout.RolloutReconType.None)
-            {
-                switch (name)
-                {
-                    case "LaunchPad Reconditioning":
-                        r.RRType = ReconRollout.RolloutReconType.Reconditioning;
-                        break;
-                    case "Vessel Rollout":
-                        r.RRType = ReconRollout.RolloutReconType.Rollout;
-                        break;
-                    case "Vesssel Rollback":
-                        r.RRType = ReconRollout.RolloutReconType.Rollback;
-                        break;
-                    case "Vessel Recovery":
-                    case "Recovery":
-                        r.RRType = ReconRollout.RolloutReconType.Recovery;
-                        break;
-                }
-            }
-
             return r;
         }
 

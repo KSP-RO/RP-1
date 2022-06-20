@@ -200,7 +200,7 @@ namespace KerbalConstructionTime
                 {
                     var storageItem = new LCConstructionStorageItem();
                     storageItem.Load(cn);
-                    LCConstructions.Add(storageItem.ToLCConstruction());
+                    LCConstructions.Add(storageItem.ToLCConstruction(this));
                 }
             }
 

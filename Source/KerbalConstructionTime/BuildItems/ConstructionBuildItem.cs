@@ -225,9 +225,6 @@ namespace KerbalConstructionTime
             b.BP = BP;
             b.Cost = cost;
             b.SpentCost = spentCost;
-            // back-compat
-            if (b.SpentCost == 0d && b.Progress >= b.BP * 0.1d)
-                b.SpentCost = b.Cost;
             b.UpgradeProcessed = upgradeProcessed;
             b.BuildListIndex = buildListIndex;
         }

@@ -662,11 +662,11 @@
     <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg">
       <Link>Contracts\StockContracts.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\DistanceSoundingDifficult.cfg">
-      <Link>Contracts\Suborbital Rocket Development\DistanceSoundingDifficult.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\DistanceSoundingDifficult.cfg">
+      <Link>Contracts\Suborbital Rocket Research\DistanceSoundingDifficult.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\DistanceSoundingIntermediate.cfg">
-      <Link>Contracts\Suborbital Rocket Development\DistanceSoundingIntermediate.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\DistanceSoundingIntermediate.cfg">
+      <Link>Contracts\Suborbital Rocket Research\DistanceSoundingIntermediate.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\Downrange.cfg">
       <Link>Contracts\Suborbital Rocket Development\Downrange.cfg</Link>
@@ -677,11 +677,11 @@
     <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\KarmanLine.cfg">
       <Link>Contracts\Suborbital Rocket Development\KarmanLine.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SoundingDifficult.cfg">
-      <Link>Contracts\Suborbital Rocket Development\SoundingDifficult.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingDifficult.cfg">
+      <Link>Contracts\Suborbital Rocket Research\SoundingDifficult.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SoundingIntermediate.cfg">
-      <Link>Contracts\Suborbital Rocket Development\SoundingIntermediate.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingIntermediate.cfg">
+      <Link>Contracts\Suborbital Rocket Research\SoundingIntermediate.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg">
       <Link>Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg</Link>

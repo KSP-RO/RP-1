@@ -181,10 +181,6 @@ namespace KerbalConstructionTime
             Engineers = 0;
             node.TryGetValue("Engineers", ref Engineers);
 
-            // back-compat
-            if (node.HasValue("Personnel"))
-                node.TryGetValue("Personnel", ref Engineers);
-
             ConfigNode tmp = node.GetNode("LaunchComplexes");
             if (tmp != null)
             {
@@ -204,7 +200,7 @@ namespace KerbalConstructionTime
                 {
                     var storageItem = new LCConstructionStorageItem();
                     storageItem.Load(cn);
-                    LCConstructions.Add(storageItem.ToLCConstruction(this));
+                    LCConstructions.Add(storageItem.ToLCConstruction());
                 }
             }
 

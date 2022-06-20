@@ -44,12 +44,6 @@ namespace KerbalConstructionTime
             ret.CurrentLevel = currentLevel;
             ret.FacilityInternalID = id;
             ret.ID = uid;
-            // back-compat
-            if (!string.IsNullOrEmpty(commonName))
-            {
-                ret.Name = commonName;
-                ret.UpgradeProcessed = UpgradeProcessed;
-            }
             return ret;
         }
 

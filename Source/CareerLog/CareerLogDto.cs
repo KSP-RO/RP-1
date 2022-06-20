@@ -18,9 +18,7 @@ namespace RP0
         public double currentFunds;
         public double currentSci;
         public double scienceEarned;
-        public double advanceFunds;
-        public double rewardFunds;
-        public double failureFunds;
+        public double programFunds;
         public double otherFundsEarned;
         public double launchFees;
         public double maintenanceFees;
@@ -28,6 +26,9 @@ namespace RP0
         public double entryCosts;
         public double constructionFees;
         public double otherFees;
+        public double subsidySize;
+        public double subsidyPaidOut;
+        public double repFromPrograms;
         public double fundsGainMult;
         public double reputation;
         public double headlinesHype;
@@ -46,9 +47,7 @@ namespace RP0
                 $"{nameof(currentFunds)}: {currentFunds}, " +
                 $"{nameof(currentSci)}: {currentSci}, " +
                 $"{nameof(scienceEarned)}: {scienceEarned}, " +
-                $"{nameof(advanceFunds)}: {advanceFunds}, " +
-                $"{nameof(rewardFunds)}: {rewardFunds}, " +
-                $"{nameof(failureFunds)}: {failureFunds}, " +
+                $"{nameof(programFunds)}: {programFunds}, " +
                 $"{nameof(otherFundsEarned)}: {otherFundsEarned}, " +
                 $"{nameof(launchFees)}: {launchFees}, " +
                 $"{nameof(maintenanceFees)}: {maintenanceFees}, " +
@@ -56,6 +55,9 @@ namespace RP0
                 $"{nameof(entryCosts)}: {entryCosts}, " +
                 $"{nameof(constructionFees)}: {constructionFees}, " +
                 $"{nameof(otherFees)}: {otherFees}, " +
+                $"{nameof(subsidySize)}: {subsidySize}, " +
+                $"{nameof(subsidyPaidOut)}: {subsidyPaidOut}, " +
+                $"{nameof(repFromPrograms)}: {repFromPrograms}, " +
                 $"{nameof(fundsGainMult)}: {fundsGainMult}, " +
                 $"{nameof(reputation)}: {reputation}, " +
                 $"{nameof(headlinesHype)}: {headlinesHype}";
@@ -161,8 +163,8 @@ namespace RP0
         public string id;
         public string modId;
         public double modCost;
-        private string name;
-        private LaunchComplexType lcType;
+        public string name;
+        public LaunchComplexType lcType;
         public float massMax;
         public float massOrig;
         public Vector3 sizeMax;
@@ -267,6 +269,8 @@ namespace RP0
         public string vesselName;
         public string vesselUID;
         public string launchID;
+        public string lcID;
+        public string lcModID;
         public EditorFacility builtAt;
 
         public LaunchEventDto()
@@ -279,6 +283,8 @@ namespace RP0
             vesselName = le.VesselName;
             vesselUID = le.VesselUID;
             launchID = le.LaunchID;
+            lcID = le.LCID;
+            lcModID = le.LCModID;
             builtAt = le.BuiltAt;
         }
 
@@ -289,6 +295,8 @@ namespace RP0
                 $"{nameof(vesselName)}: {vesselName}, " +
                 $"{nameof(vesselUID)}: {vesselUID}, " +
                 $"{nameof(launchID)}: {launchID}, " +
+                $"{nameof(lcID)}: {lcID}, " +
+                $"{nameof(lcModID)}: {lcModID}, " +
                 $"{nameof(builtAt)}: {builtAt}";
         }
     }

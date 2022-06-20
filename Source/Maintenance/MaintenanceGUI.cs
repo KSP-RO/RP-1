@@ -166,7 +166,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            double constrMaterials = MaintenanceHandler.Instance.ConstructionMaterialsPerDay * PeriodFactor;
+            double constrMaterials = KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d);
             GUILayout.Label("Building Materials", HighLogic.Skin.label, GUILayout.Width(160));
             GUILayout.Label(constrMaterials.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
@@ -394,10 +394,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label("  Materials", HighLogic.Skin.label, GUILayout.Width(160));
-                    double cost;
-                    if (!MaintenanceHandler.Instance.ConstructionMaterials.TryGetValue(kvp.Key, out cost))
-                        cost = 0d;
-                    GUILayout.Label((cost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.Label((KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, kvp.Key)).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {

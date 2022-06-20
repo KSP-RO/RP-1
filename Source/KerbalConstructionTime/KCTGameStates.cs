@@ -164,27 +164,53 @@ namespace KerbalConstructionTime
             if (UpkeepCheckDelegate != null)
                 UpkeepCheckDelegate();
 
-            double delta = NetUpkeep * time / 86400d;
-            foreach (var ksc in KSCs)
-            {
-                double remainingTime = time;
-                foreach (var c in ksc.Constructions)
-                {
-                    double left = c.EstimatedTimeLeft;
-                    if (left > remainingTime)
-                    {
-                        delta -= (remainingTime / left) * (c.Cost - c.SpentCost);
-                        break;
-                    }
-                    delta -= (c.Cost - c.SpentCost);
-                    remainingTime -= left;
-                }
-            }
+            // note NetUpkeep is negative or 0.
+            double delta = NetUpkeep * time / 86400d - GetConstructionCostOverTime(time);
             
             if (ProgramFundingForTimeDelegate != null)
                 delta += ProgramFundingForTimeDelegate(time);
 
             return delta;
+        }
+
+        public static double GetConstructionCostOverTime(double time)
+        {
+            double delta = 0;
+            foreach (var ksc in KSCs)
+            {
+                delta += GetConstructionCostOverTime(time, ksc);
+            }
+            return delta;
+        }
+
+        public static double GetConstructionCostOverTime(double time, KSCItem ksc)
+        {
+            double delta = 0;
+            foreach (var c in ksc.Constructions)
+            {
+                double left = c.EstimatedTimeLeft;
+                if (left > time)
+                {
+                    delta += (time / left) * (c.Cost - c.SpentCost);
+                    break;
+                }
+                delta += (c.Cost - c.SpentCost);
+                time -= left;
+            }
+            return delta;
+        }
+
+        public static double GetConstructionCostOverTime(double time, string kscName)
+        {
+            foreach (var ksc in KSCs)
+            {
+                if (ksc.KSCName == kscName)
+                {
+                    return GetConstructionCostOverTime(time, ksc);
+                }
+            }
+
+            return 0d;
         }
 
         public static int TotalEngineers

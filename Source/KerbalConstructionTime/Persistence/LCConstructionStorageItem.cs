@@ -48,6 +48,7 @@ namespace KerbalConstructionTime
             SaveFields(lcc);
             isModify = lcc.IsModify;
             modId = lcc.ModID;
+            lcID = lcc.LCID;
             lcData = new LCItem.LCData(lcc.LCData);
             return this;
         }

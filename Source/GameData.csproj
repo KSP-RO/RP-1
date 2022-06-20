@@ -671,6 +671,9 @@
     <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\Downrange.cfg">
       <Link>Contracts\Suborbital Rocket Development\Downrange.cfg</Link>
     </Content>
+	<Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\First Flight.cfg">
+      <Link>Contracts\Suborbital Rocket Development\First Flight.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\KarmanLine.cfg">
       <Link>Contracts\Suborbital Rocket Development\KarmanLine.cfg</Link>
     </Content>

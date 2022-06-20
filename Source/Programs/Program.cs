@@ -115,6 +115,11 @@ namespace RP0.Programs
             objectivesPrettyText = toCopy.objectivesPrettyText;
             nominalDurationYears = toCopy.nominalDurationYears;
             baseFunding = toCopy.baseFunding;
+            ConfigNode n = new ConfigNode();
+            toCopy.overrideFundingCurve.Save(n);
+            overrideFundingCurve.Load(n);
+            repDeltaOnCompletePerYearEarly = toCopy.repDeltaOnCompletePerYearEarly;
+            repPenaltyPerYearLate = toCopy.repPenaltyPerYearLate;
             RequirementsBlock = toCopy.RequirementsBlock;
             ObjectivesBlock = toCopy.ObjectivesBlock;
             _requirementsPredicate = toCopy._requirementsPredicate;
@@ -203,8 +208,13 @@ namespace RP0.Programs
         {
             completedUT = KSPUtils.GetUT();
             double timeDelta = nominalDurationYears * secsPerYear - (completedUT - acceptedUT);
+            float repDelta = 0f;
             if (timeDelta > 0)
-                Reputation.Instance.AddReputation((float)(timeDelta / secsPerYear * repDeltaOnCompletePerYearEarly), TransactionReasons.Mission);
+            {
+                repDelta = (float)(timeDelta / secsPerYear * repDeltaOnCompletePerYearEarly);
+                Reputation.Instance.AddReputation(repDelta, TransactionReasons.Mission);
+            }
+            Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT)/secsPerYear}, {timeDelta/secsPerYear} early/late. Adding {repDelta} rep.");
 
             CareerLog.Instance?.ProgramCompleted(this);
         }

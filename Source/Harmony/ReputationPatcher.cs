@@ -95,7 +95,7 @@ namespace RP0
                 img.rectTransform.anchorMin = frameImage.rectTransform.anchorMin;
                 img.rectTransform.anchorMax = frameImage.rectTransform.anchorMax;
                 img.rectTransform.anchoredPosition = frameImage.rectTransform.anchoredPosition;
-                img.rectTransform.sizeDelta = frameImage.rectTransform.sizeDelta;
+                img.rectTransform.sizeDelta = ((RectTransform)__instance.gameObject.transform).sizeDelta;    // No idea why the frame image transform is larger than the component itself
 
                 RepLabel = GameObject.Instantiate(new GameObject("repLabel"), __instance.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
                 RepLabel.alignment = TextAlignmentOptions.Right;

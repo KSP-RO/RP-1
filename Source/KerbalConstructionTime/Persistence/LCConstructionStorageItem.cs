@@ -16,24 +16,10 @@ namespace KerbalConstructionTime
         [Persistent]
         public LCItem.LCData lcData = new LCItem.LCData();
 
-        // Back-compat: pass in the parent KSC
-        public LCConstruction ToLCConstruction(KSCItem ksc)
+        public LCConstruction ToLCConstruction()
         {
             var lcc = new LCConstruction();
             LoadFields(lcc);
-            if (lcID == Guid.Empty)
-            {
-                LCItem lc = ksc.LaunchComplexes.Find(l => l.Name == lcData.Name && !l.IsOperational);
-                if (lc == null)
-                {
-                    lc = ksc.LaunchComplexes.Find(l => l.MassOrig == lcData.massOrig && !l.IsOperational);
-                }
-                if (lc == null)
-                {
-                    throw new Exception($"[KCT] Failed to find LC for LCConstructionStorageItem with name {lcData.Name}");
-                }
-                lcID = lc.ID;
-            }
             lcc.LCID = lcID;
             lcc.IsModify = isModify;
             lcc.ModID = modId;

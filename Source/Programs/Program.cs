@@ -202,9 +202,9 @@ namespace RP0.Programs
         public void Complete()
         {
             completedUT = KSPUtils.GetUT();
-            double timeDeltaYears = nominalDurationYears * secsPerYear - (completedUT - acceptedUT);
-            if (timeDeltaYears > 0)
-                Reputation.Instance.AddReputation((float)(timeDeltaYears * repDeltaOnCompletePerYearEarly), TransactionReasons.Mission);
+            double timeDelta = nominalDurationYears * secsPerYear - (completedUT - acceptedUT);
+            if (timeDelta > 0)
+                Reputation.Instance.AddReputation((float)(timeDelta / secsPerYear * repDeltaOnCompletePerYearEarly), TransactionReasons.Mission);
 
             CareerLog.Instance?.ProgramCompleted(this);
         }

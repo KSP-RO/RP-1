@@ -6,11 +6,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace RP0
 {
     public partial class HarmonyPatcher : MonoBehaviour
     {
+        [HarmonyPatch]
+        internal class PatchRnDVesselRecovery
+        {
+            static MethodBase TargetMethod() => AccessTools.Method(typeof(ResearchAndDevelopment), "reverseEngineerRecoveredVessel", new Type[] { typeof(ProtoVessel), typeof(MissionRecoveryDialog) });
+
+            [HarmonyPrefix]
+            internal static void Prefix(ref MissionRecoveryDialog mrDialog, out float __state)
+            {
+                mrDialog = null; // will prevent the widget being added.
+
+                // store old science gain mult, then set to 0 so no actual science gain
+                __state = HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier;
+                HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier = 0;
+            }
+
+            [HarmonyPostfix]
+            internal static void Postfix(float __state)
+            {
+                // restore old science gain mult
+                HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier = __state;
+            }
+        }
+
         [HarmonyPatch(typeof(ResearchAndDevelopment))]
         internal class PatchRnDPartAvailability
         {

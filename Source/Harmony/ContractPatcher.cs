@@ -8,6 +8,7 @@ namespace RP0
         [HarmonyPatch(typeof(Contracts.ContractSystem))]
         internal class PatchContractSystem
         {
+            [HarmonyPrefix]
             [HarmonyPatch("GetContractCounts")]
             internal static bool Prefix_GetContractCounts(Contracts.ContractSystem __instance, ref float rep, ref int avgContracts, ref int tier1, ref int tier2, ref int tier3)
             {

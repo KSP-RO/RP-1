@@ -150,11 +150,6 @@ namespace KerbalConstructionTime
                 if (lvlIdx > 0)
                     lvl.levelStats.textBase += $"\nResearch Boost: +{20:N0}% (total {(Math.Pow(1.2d, lvlIdx) - 1d) * 100:N0}%)";
             }
-            else if (facilityType == SpaceCenterFacility.Administration)
-            {
-                lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "This facility is currently unused";
-            }
             else if (facilityType == SpaceCenterFacility.AstronautComplex &&
                      lvlIdx > 0)
             {

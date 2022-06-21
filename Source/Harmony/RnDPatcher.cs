@@ -111,6 +111,7 @@ namespace RP0
         [HarmonyPatch("UpdatePurchaseButton")]
         internal class PatchRnDUpdatePurchaseButton
         {
+            [HarmonyPrefix]
             internal static bool Prefix(RDController __instance)
             {
                 if (KCTGameStates.TechList.Any(tech => tech.TechID == __instance.node_selected.tech.techID))

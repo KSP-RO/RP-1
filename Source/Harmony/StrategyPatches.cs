@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Reflection;
 using RP0.Programs;
+using UniLinq;
 
 namespace RP0
 {
@@ -79,10 +80,25 @@ namespace RP0
                 return false;
             }
 
+            internal static string cancelTooltipStr = String.Empty;
+            internal static string acceptTooltipStr = String.Empty;
+
             [HarmonyPrefix]
             [HarmonyPatch("SetSelectedStrategy")]
             internal static void Prefix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
             {
+                // Cache the loc strings, update tooltip
+                var tooltip = __instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
+                if (tooltip != null)
+                {
+                    if (string.IsNullOrEmpty(cancelTooltipStr))
+                        cancelTooltipStr = tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText;
+                    if (string.IsNullOrEmpty(acceptTooltipStr))
+                        acceptTooltipStr = tooltip.tooltipStates.First(s => s.name == "accept").tooltipText;
+                    else // update to the normal one
+                        tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = acceptTooltipStr;
+                }
+
                 if (wrapper.strategy is ProgramStrategy ps)
                 {
                     ps.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
@@ -102,7 +118,13 @@ namespace RP0
                     if (program != null)
                         __instance.btnAcceptCancel.gameObject.SetActive(false);
                     else if (__instance.btnAcceptCancel.currentState != "accept")
+                    {
+                        // Use the "deactivate" tooltip for the accept button
+                        var tooltip = __instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
+                        if (tooltip != null)
+                            tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = cancelTooltipStr;
                         __instance.btnAcceptCancel.SetState("accept");
+                    }
                 }
             }
 

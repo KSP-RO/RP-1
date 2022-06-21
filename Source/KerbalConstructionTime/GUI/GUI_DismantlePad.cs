@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace KerbalConstructionTime
 {
@@ -35,13 +36,33 @@ namespace KerbalConstructionTime
                         Utilities.ScrapVessel(activeLC.Warehouse[i]);
                     }
                     ksc.LaunchComplexes.Remove(activeLC);
+
+                    try
+                    {
+                        KCTEvents.OnLCDismantled?.Fire(activeLC);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                    }
                 }
                 else
                 {
                     if (activeLC.LaunchPadCount < 2) return;
 
                     KCT_LaunchPad lpToDel = activeLC.ActiveLPInstance;
-                    if (!lpToDel.Delete(out string err))
+                    if (lpToDel.Delete(out string err))
+                    {
+                        try
+                        {
+                            KCTEvents.OnPadDismantled?.Fire(lpToDel);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogException(ex);
+                        }
+                    }
+                    else
                     {
                         ScreenMessages.PostScreenMessage("Dismantle failed: " + err, 5f, ScreenMessageStyle.UPPER_CENTER);
                     }

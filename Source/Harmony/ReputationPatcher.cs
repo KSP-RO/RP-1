@@ -24,15 +24,6 @@ namespace RP0
             }
 
             [HarmonyPrefix]
-            [HarmonyPatch("addReputation_discrete")]
-            internal static bool Prefix_addReputation_discrete(Reputation __instance, ref float reputation, ref float __result, ref float ___rep)
-            {
-                ___rep = ___rep + reputation;
-                __result = reputation;
-                return false;
-            }
-
-            [HarmonyPrefix]
             [HarmonyPatch("OnCrewKilled")]
             internal static bool Prefix_OnCrewKilled(Reputation __instance, ref EventReport evt)
             {

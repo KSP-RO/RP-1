@@ -37,9 +37,11 @@ namespace RP0
         private EventData<LCConstruction, LCItem> onKctLCConstructionQueuedEvent;
         private EventData<LCConstruction, LCItem> onKctLCConstructionCancelEvent;
         private EventData<LCConstruction, LCItem> onKctLCConstructionCompleteEvent;
+        private EventData<LCItem> onKctLCDismantledEvent;
         private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionQueuedEvent;
         private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCancelEvent;
         private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCompletedEvent;
+        private EventData<KCT_LaunchPad> onKctPadDismantledEvent;
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
         private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
         private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
@@ -138,6 +140,12 @@ namespace RP0
                 onKctLCConstructionCompleteEvent.Add(OnKctLCConstructionComplete);
             }
 
+            onKctLCDismantledEvent = GameEvents.FindEvent<EventData<LCItem>>("OnKctLCDismantled");
+            if (onKctLCDismantledEvent != null)
+            {
+                onKctLCDismantledEvent.Add(OnKctLCDismantled);
+            }
+
             onKctPadConstructionQueuedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionQueued");
             if (onKctPadConstructionQueuedEvent != null)
             {
@@ -155,6 +163,12 @@ namespace RP0
             {
                 onKctPadConstructionCompletedEvent.Add(OnKctPadConstructionComplete);
             }
+
+            onKctPadDismantledEvent = GameEvents.FindEvent<EventData<KCT_LaunchPad>>("OnKctPadDismantled");
+            if (onKctPadDismantledEvent != null)
+            {
+                onKctPadDismantledEvent.Add(OnKctPadDismantled);
+            }
         }
 
         public void OnDestroy()
@@ -169,9 +183,11 @@ namespace RP0
             if (onKctLCConstructionQueuedEvent != null) onKctLCConstructionQueuedEvent.Remove(OnKctLCConstructionQueued);
             if (onKctLCConstructionCancelEvent != null) onKctLCConstructionCancelEvent.Remove(OnKctLCConstructionCancel);
             if (onKctLCConstructionCompleteEvent != null) onKctLCConstructionCompleteEvent.Remove(OnKctLCConstructionComplete);
+            if (onKctLCDismantledEvent != null) onKctLCDismantledEvent.Remove(OnKctLCDismantled);
             if (onKctPadConstructionQueuedEvent != null) onKctPadConstructionQueuedEvent.Remove(OnKctPadConstructionQueued);
             if (onKctPadConstructionCancelEvent != null) onKctPadConstructionCancelEvent.Remove(OnKctPadConstructionCancel);
             if (onKctPadConstructionCompletedEvent != null) onKctPadConstructionCompletedEvent.Remove(OnKctPadConstructionComplete);
+            if (onKctPadDismantledEvent != null) onKctPadDismantledEvent.Remove(OnKctPadDismantled);
 
             if (_eventsBound)
             {
@@ -910,19 +926,29 @@ namespace RP0
             AddLCConstructionEvent(data, lc, ConstructionState.Completed);
         }
 
+        private void OnKctLCDismantled(LCItem lc)
+        {
+            AddLCConstructionEvent(null, lc, ConstructionState.Dismantled);
+        }
+
         private void OnKctPadConstructionQueued(PadConstruction data, KCT_LaunchPad lp)
         {
-            AddPadConstructionEvent(data, ConstructionState.Started);
+            AddPadConstructionEvent(data, lp, ConstructionState.Started);
         }
 
         private void OnKctPadConstructionCancel(PadConstruction data, KCT_LaunchPad lp)
         {
-            AddPadConstructionEvent(data, ConstructionState.Cancelled);
+            AddPadConstructionEvent(data, lp, ConstructionState.Cancelled);
         }
 
         private void OnKctPadConstructionComplete(PadConstruction data, KCT_LaunchPad lp)
         {
-            AddPadConstructionEvent(data, ConstructionState.Completed);
+            AddPadConstructionEvent(data, lp, ConstructionState.Completed);
+        }
+
+        private void OnKctPadDismantled(KCT_LaunchPad lp)
+        {
+            AddPadConstructionEvent(null, lp, ConstructionState.Dismantled);
         }
 
         private void AddFacilityConstructionEvent(FacilityUpgrade data, ConstructionState state)
@@ -970,18 +996,20 @@ namespace RP0
             });
         }
 
-        private void AddPadConstructionEvent(PadConstruction data, ConstructionState state)
+        private void AddPadConstructionEvent(PadConstruction data, KCT_LaunchPad lp, ConstructionState state)
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            if (!_lpConstructions.Any(lpc => lpc.LPID == data.ID))
+            Guid id = data?.ID ?? lp.id;
+            LCItem lc = data?.LC ?? lp.LC;
+            if (!_lpConstructions.Any(lpc => lpc.LPID == id))
             {
                 _lpConstructions.Add(new LPConstruction
                 {
-                    LPID = data.ID,
-                    LCID = data.LC.ID,
-                    LCModID = data.LC.ModID,
-                    Cost = data.Cost
+                    LPID = id,
+                    LCID = lc.ID,
+                    LCModID = lc.ModID,
+                    Cost = data?.Cost ?? 0
                 });
             }
 
@@ -989,7 +1017,7 @@ namespace RP0
             {
                 Facility = FacilityType.LaunchPad,
                 State = state,
-                FacilityID = data.ID
+                FacilityID = id
             });
         }
     }

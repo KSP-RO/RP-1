@@ -23,9 +23,11 @@ namespace KerbalConstructionTime
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionQueued;
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionCancel;
         public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
+        public static EventData<KCT_LaunchPad> OnPadDismantled;
         public static EventData<LCConstruction, LCItem> OnLCConstructionQueued;
         public static EventData<LCConstruction, LCItem> OnLCConstructionCancel;
         public static EventData<LCConstruction, LCItem> OnLCConstructionComplete;
+        public static EventData<LCItem> OnLCDismantled;
         public static EventVoid OnPersonnelChange;
 
         public KCTEvents()
@@ -119,9 +121,11 @@ namespace KerbalConstructionTime
             OnPadConstructionQueued = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionQueued");
             OnPadConstructionCancel = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionCancel");
             OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
+            OnPadDismantled = new EventData<KCT_LaunchPad>("OnKctPadDismantled");
             OnLCConstructionQueued = new EventData<LCConstruction, LCItem>("OnKctLCConstructionQueued");
             OnLCConstructionCancel = new EventData<LCConstruction, LCItem>("OnKctLCConstructionCancel");
             OnLCConstructionComplete = new EventData<LCConstruction, LCItem>("OnKctLCConstructionComplete");
+            OnLCDismantled = new EventData<LCItem>("OnKctLCDismantled");
             OnPersonnelChange = new EventVoid("OnKctPesonnelChange");
             CreatedEvents = true;
         }

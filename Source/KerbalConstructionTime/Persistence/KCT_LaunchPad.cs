@@ -52,6 +52,22 @@ namespace KerbalConstructionTime
             }
         }
 
+        public LCItem LC
+        {
+            get
+            {
+                foreach (KSCItem currentKSC in KCTGameStates.KSCs)
+                {
+                    if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
+                    {
+                        return currentLC;
+                    }
+                }
+
+                return null;
+            }
+        }
+
         /// <summary>
         /// Used for deserializing from ConfigNodes.
         /// </summary>
@@ -126,16 +142,8 @@ namespace KerbalConstructionTime
         {
             //find everything that references this launchpad by name and update the name reference
 
-            LCItem lc = null;
-            foreach (KSCItem currentKSC in KCTGameStates.KSCs)
-            {
-                if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
-                {
-                    lc = currentLC;
-                    break;
-                }
-            }
-            if(lc != null)
+            LCItem lc = LC;
+            if (lc != null)
             {
                 if (lc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
                     return; //can't name it something that already is named that

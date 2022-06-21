@@ -43,7 +43,8 @@ namespace RP0
     {
         Started = 1,
         Cancelled = 1 << 1,
-        Completed = 1 << 2
+        Completed = 1 << 2,
+        Dismantled = 1 << 3
     }
 
     /// <summary>

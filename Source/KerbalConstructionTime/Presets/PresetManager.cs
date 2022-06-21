@@ -18,12 +18,18 @@ namespace KerbalConstructionTime
                 KSCContextMenuOverrider.AreTextsUpdated = false;
 
                 // Fixup upgrade text
-                foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
+                if (PartUpgradeManager.Instance != null && KSP.Localization.Localizer.Instance != null)
                 {
-                    if (up.name.StartsWith("rp0EngineerUpgrade"))
-                        up.description = KSP.Localization.Localizer.Format("#rp0EngineerUpgradeText", (value.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
-                    else if (up.name.StartsWith("rp0ResearcherUpgrade"))
-                        up.description = KSP.Localization.Localizer.Format("#rp0ResearcherUpgradeText", (value.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                    foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
+                    {
+                        if (up == null || string.IsNullOrEmpty(up.name))
+                            continue;
+
+                        if (up.name.StartsWith("rp0EngineerUpgrade"))
+                            up.description = KSP.Localization.Localizer.Format("#rp0EngineerUpgradeText", (value.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                        else if (up.name.StartsWith("rp0ResearcherUpgrade"))
+                            up.description = KSP.Localization.Localizer.Format("#rp0ResearcherUpgradeText", (value.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                    }
                 }
             }
         }

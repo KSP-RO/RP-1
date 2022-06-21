@@ -13,16 +13,26 @@ namespace RP0
         [HarmonyPatch(typeof(Reputation))]
         internal class PatchReputation
         {
-            private static FieldInfo repField = typeof(Reputation).GetField("rep", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-
+            [HarmonyPrefix]
             [HarmonyPatch("addReputation_granular")]
-            internal static bool Prefix_addReputation_granular(Reputation __instance, ref float value, ref float __result)
+            internal static bool Prefix_addReputation_granular(Reputation __instance, ref float value, ref float __result, ref float ___rep)
             {
-                repField.SetValue(__instance, __instance.reputation + value);
+                float oldRep = ___rep;
+                ___rep = ___rep + value;
                 __result = value;
                 return false;
             }
 
+            [HarmonyPrefix]
+            [HarmonyPatch("addReputation_discrete")]
+            internal static bool Prefix_addReputation_discrete(Reputation __instance, ref float reputation, ref float __result, ref float ___rep)
+            {
+                ___rep = ___rep + reputation;
+                __result = reputation;
+                return false;
+            }
+
+            [HarmonyPrefix]
             [HarmonyPatch("OnCrewKilled")]
             internal static bool Prefix_OnCrewKilled(Reputation __instance, ref EventReport evt)
             {
@@ -35,6 +45,7 @@ namespace RP0
                 return false;
             }
 
+            [HarmonyPrefix]
             [HarmonyPatch("onvesselRecoveryProcessing")]
             internal static bool Prefix_onvesselRecoveryProcessing(Reputation __instance, ref ProtoVessel pv, ref MissionRecoveryDialog mrDialog, ref float recoveryScore)
             {

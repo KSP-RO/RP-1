@@ -115,6 +115,7 @@ namespace RP0
 
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
             GameEvents.onGameStateLoad.Add(LoadSettings);
+            GameEvents.onVesselRecoveryProcessingComplete.Add(onVesselRecoveryProcessingComplete);
         }
 
         public void Start()
@@ -209,6 +210,37 @@ namespace RP0
                 UpdateUpkeep();
         }
 
+        public void GetNautCost(ProtoCrewMember k, out double baseCostPerDay, out double flightCostPerDay)
+        {
+            flightCostPerDay = 0d;
+            baseCostPerDay = Settings.nautYearlyUpkeepBase + ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * Settings.nautYearlyUpkeepAdd;
+            if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
+            {
+                flightCostPerDay = _maintenanceCostMult * Settings.nautInFlightDailyRate;
+            }
+            else
+            {
+                bool foundOrbit = false;
+                bool foundSubOrb = false;
+                for (int j = k.flightLog.Count; j-- > 0;)
+                {
+                    var e = k.flightLog[j];
+                    if (!foundOrbit && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Orbital"))
+                    {
+                        baseCostPerDay += Settings.nautOrbitProficiencyUpkeepAdd;
+                        foundOrbit = true;
+                    }
+                    if (!foundSubOrb && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Suborbital"))
+                    {
+                        baseCostPerDay += Settings.nautSubOrbitProficiencyUpkeepAdd;
+                        foundOrbit = true;
+                    }
+                }
+            }
+
+            baseCostPerDay *= (_maintenanceCostMult / 365.25d);
+        }
+
         public void UpdateUpkeep()
         {
             Profiler.BeginSample("RP0Maintenance UpdateUpkeep");
@@ -269,18 +301,16 @@ namespace RP0
                         courses -= lvlInt * Settings.freeCoursesPerLevel;
                         if (courses > 0d)
                         {
-                            TrainingUpkeepPerDay = AcCost * (courses * (Settings.courseMultiplierDivisor / (Settings.courseMultiplierDivisor + lvlInt)));
+                            TrainingUpkeepPerDay = Settings.nautTrainingCostMultiplier * AcCost * (courses * (Settings.courseMultiplierDivisor / (Settings.courseMultiplierDivisor + lvlInt)));
                         }
                     }
                 }
             }
 
-            double nautYearlyUpkeep = _maintenanceCostMult * Settings.nautYearlyUpkeepBase + ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * _maintenanceCostMult * Settings.nautYearlyUpkeepAdd;
+            
             NautBaseUpkeepPerDay = 0d;
             NautInFlightUpkeepPerDay = 0d;
             NautUpkeepPerDay = 0d;
-            double perNaut = nautYearlyUpkeep * (1d / 365.25d);
-            int nautCount = 0;
             for (int i = HighLogic.CurrentGame.CrewRoster.Count; i-- > 0;)
             {
                 var k = HighLogic.CurrentGame.CrewRoster[i];
@@ -290,25 +320,14 @@ namespace RP0
                     continue;
                 }
 
-                ++nautCount;
-                if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
-                    NautInFlightUpkeepPerDay += _maintenanceCostMult * Settings.nautInFlightDailyRate;
-                else
-                {
-                    for (int j = k.flightLog.Count; j-- > 0;)
-                    {
-                        var e = k.flightLog[j];
-                        if (e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Orbit"))
-                        {
-                            NautBaseUpkeepPerDay += _maintenanceCostMult * Settings.nautOrbitProficiencyDailyRate;
-                            break;
-                        }
-                    }
-                }
+                double baseCost, flightCost;
+                GetNautCost(k, out baseCost, out flightCost);
+                NautBaseUpkeepPerDay += baseCost;
+                NautInFlightUpkeepPerDay += flightCost;
             }
 
-            NautBaseUpkeepPerDay += nautCount * perNaut;
             NautUpkeepPerDay = NautBaseUpkeepPerDay + TrainingUpkeepPerDay + NautInFlightUpkeepPerDay;
+
             KCTGameStates.NetUpkeep = -Math.Max(0d, TotalUpkeepPerDay - MaintenanceSubsidyPerDay);
             Profiler.EndSample();
         }
@@ -395,6 +414,8 @@ namespace RP0
         {
             GameEvents.onGameStateLoad.Remove(LoadSettings);
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
+            GameEvents.onVesselRecoveryProcessingComplete.Remove(onVesselRecoveryProcessingComplete);
+
             if (onKctPersonnelChangeEvent != null)
                 onKctPersonnelChangeEvent.Remove(UpdateKCTSalaries);
 
@@ -451,6 +472,12 @@ namespace RP0
         public double GetSubsidyAmountForSeconds(double seconds)
         {
             return MaintenanceSubsidyPerDay * seconds / 86400d;
+        }
+
+        private void onVesselRecoveryProcessingComplete(ProtoVessel pv, KSP.UI.Screens.MissionRecoveryDialog mrd, float x)
+        {
+            if (pv.GetVesselCrew().Count > 0)
+                UpdateUpkeep();
         }
     }
 }

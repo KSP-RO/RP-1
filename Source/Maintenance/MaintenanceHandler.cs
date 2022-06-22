@@ -27,6 +27,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public double lastUpdate = 0d;
 
+        [KSPField(isPersistant = true)]
+        public MaintenanceGUI.MaintenancePeriod guiSelectedPeriod = MaintenanceGUI.MaintenancePeriod.Day;
+
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
         public readonly Dictionary<string, double> ConstructionSalaries = new Dictionary<string, double>();
         public double Researchers = 0d;

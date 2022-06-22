@@ -421,7 +421,7 @@ namespace RP0
             GUILayout.Space(20);
             GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(144));
             GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(120));
-            GUILayout.Label("Upkeep", HighLogic.Skin.label, GUILayout.Width(70));
+            GUILayout.Label("Upkeep", HighLogic.Skin.label, GUILayout.Width(50));
             GUILayout.EndHorizontal();
 
             for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; ++i)
@@ -439,7 +439,7 @@ namespace RP0
                     GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(120));
                     double cost, flightCost;
                     MaintenanceHandler.Instance.GetNautCost(k, out cost, out flightCost);
-                    GUILayout.Label(((cost + flightCost) * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(60));
+                    GUILayout.Label(((cost + flightCost) * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(50));
                 }
                 catch (Exception ex)
                 {

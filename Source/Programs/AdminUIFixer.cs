@@ -101,51 +101,6 @@ namespace RP0.Programs
                 SetTabState();
                 Button b = _tabTransform.gameObject.GetComponent<Button>() ?? _tabTransform.gameObject.AddComponent<Button>();
                 b.onClick.AddListener(ToggleProgramTab);
-                
-                // Replace department avatars with images when necessary
-                Transform scrollListKerbals = KSP.UI.Screens.Administration.Instance.transform.FindDeepChild("scroll list kerbals");
-                foreach (DepartmentConfig department in StrategySystem.Instance.SystemConfig.Departments)
-                {
-                    // If there is no avatar prefab but there is a head image, use that in place
-                    if (department.AvatarPrefab == null)
-                    {
-                        // Get the head image
-                        Texture2D tex = department.HeadImage;
-                        if (tex == null)
-                        {
-                            // Pull from texture DB if possible
-                            if (GameDatabase.Instance.ExistsTexture(department.HeadImageString))
-                            {
-                                tex = GameDatabase.Instance.GetTexture(department.HeadImageString, false);
-                            }
-                            // Otherwise just load it
-                            else
-                            {
-                                tex = TextureUtil.LoadTexture(department.HeadImageString);
-                            }
-                        }
-
-                        for (int i = 0; i < scrollListKerbals.childCount; i++)
-                        {
-                            Transform t = scrollListKerbals.GetChild(i);
-                            KerbalListItem kerbalListItem = t.GetComponent<KerbalListItem>();
-                            if (kerbalListItem.title.text.Contains(department.HeadName))
-                            {
-                                kerbalListItem.kerbalImage.texture = tex;
-                                kerbalListItem.kerbalImage.material = kerbalListItem.kerbalImage.defaultMaterial;
-
-                                // Remove extra braces
-                                if (kerbalListItem.title.text.Contains("()"))
-                                {
-                                    kerbalListItem.title.text.Replace("()", "");
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-                }
-
             }
         }
     }

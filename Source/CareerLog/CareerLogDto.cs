@@ -1,4 +1,5 @@
 ﻿using KerbalConstructionTime;
+using RP0.Programs;
 using System;
 using UnityEngine;
 
@@ -331,6 +332,51 @@ namespace RP0
                 $"{nameof(type)}: {type}, " +
                 $"{nameof(vesselUID)}: {vesselUID}, " +
                 $"{nameof(launchID)}: {launchID}";
+        }
+    }
+
+    [Serializable]
+    internal class ProgramDto
+    {
+        public string name;
+        public string accepted;
+        public string objectivesCompleted;
+        public string completed;
+        public double nominalDurationYears;
+        public double totalFunding;
+        public double fundsPaidOut;
+        public double repPenaltyAssessed;
+
+        public ProgramDto()
+        {
+        }
+
+        public ProgramDto(Program p)
+        {
+            var dt1 = p.objectivesCompletedUT > 0 ? CareerLog.UTToDate(p.objectivesCompletedUT) : DateTime.MinValue;
+            var dt2 = p.completedUT > 0 ? CareerLog.UTToDate(p.completedUT) : DateTime.MinValue;
+
+            name = p.name;
+            accepted = CareerLog.UTToDate(p.acceptedUT).ToString("o");
+            objectivesCompleted = dt1.ToString("o");
+            completed = dt2.ToString("o");
+            nominalDurationYears = p.nominalDurationYears;
+            totalFunding = p.totalFunding;
+            fundsPaidOut = p.fundsPaidOut;
+            repPenaltyAssessed = p.repPenaltyAssessed;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(name)}: {name}, " +
+                $"{nameof(accepted)}: {accepted}, " +
+                $"{nameof(objectivesCompleted)}: {objectivesCompleted}, " +
+                $"{nameof(completed)}: {completed}, " +
+                $"{nameof(nominalDurationYears)}: {nominalDurationYears}, " +
+                $"{nameof(totalFunding)}: {totalFunding}, " +
+                $"{nameof(fundsPaidOut)}: {fundsPaidOut}, " +
+                $"{nameof(repPenaltyAssessed)}: {repPenaltyAssessed}";
         }
     }
 }

@@ -24,7 +24,12 @@
         public double nautInFlightDailyRate = 100d;
 
         [Persistent]
-        public double nautOrbitProficiencyDailyRate = 20d;
+        public double nautOrbitProficiencyUpkeepAdd = 20d;
+
+        [Persistent]
+        public double nautSubOrbitProficiencyUpkeepAdd = 20d;
+        [Persistent]
+        public double nautTrainingCostMultiplier = 100d;
 
         [Persistent]
         public double freeCoursesPerLevel = 0.5d;

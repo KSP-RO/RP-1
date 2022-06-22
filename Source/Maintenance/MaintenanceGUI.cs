@@ -5,10 +5,9 @@ namespace RP0
 {
     public class MaintenanceGUI : UIBase
     {
-        private enum MaintenancePeriod { Day, Month, Year };
+        public enum MaintenancePeriod { Day, Month, Year };
 
         private Vector2 _nautListScroll = new Vector2();
-        private MaintenancePeriod _selectedPeriod = MaintenancePeriod.Year;
         private readonly GUIContent _infoBtnContent = new GUIContent("ⓘ", "View details");
 
         private System.Collections.Generic.Dictionary<string, string> siteLocalizer = new System.Collections.Generic.Dictionary<string, string>();
@@ -44,7 +43,7 @@ namespace RP0
         {
             get
             {
-                return _selectedPeriod switch
+                return MaintenanceHandler.Instance.guiSelectedPeriod switch
                 {
                     MaintenancePeriod.Day => 1,
                     MaintenancePeriod.Month => 30,
@@ -54,18 +53,18 @@ namespace RP0
             }
         }
 
-        private string PeriodDispFormat => _selectedPeriod == MaintenancePeriod.Day ? "N1" : "N0";
+        private string PeriodDispFormat => MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Day ? "N1" : "N0";
 
         private void RenderPeriodSelector()
         {
             GUILayout.BeginHorizontal();
 
-            if (RenderToggleButton("Day", _selectedPeriod == MaintenancePeriod.Day))
-                _selectedPeriod = MaintenancePeriod.Day;
-            if (RenderToggleButton("Month", _selectedPeriod == MaintenancePeriod.Month))
-                _selectedPeriod = MaintenancePeriod.Month;
-            if (RenderToggleButton("Year", _selectedPeriod == MaintenancePeriod.Year))
-                _selectedPeriod = MaintenancePeriod.Year;
+            if (RenderToggleButton("Day", MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Day))
+                MaintenanceHandler.Instance.guiSelectedPeriod = MaintenancePeriod.Day;
+            if (RenderToggleButton("Month", MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Month))
+                MaintenanceHandler.Instance.guiSelectedPeriod = MaintenancePeriod.Month;
+            if (RenderToggleButton("Year", MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Year))
+                MaintenanceHandler.Instance.guiSelectedPeriod = MaintenancePeriod.Year;
 
             GUILayout.EndHorizontal();
         }

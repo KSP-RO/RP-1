@@ -142,6 +142,19 @@ namespace RP0
                         state = "cancel";
                 }
             }
+
+            [HarmonyPostfix]
+            [HarmonyPatch("AddKerbalListItem")]
+            internal static void Postfix_AddKerbalListItem(Administration __instance, ref Strategies.DepartmentConfig dep)
+            {
+                if (dep.AvatarPrefab != null || dep.HeadImage == null)
+                    return;
+
+                UIListItem item = __instance.scrollListKerbals.GetUilistItemAt(__instance.scrollListKerbals.Count - 1);
+                KerbalListItem kerbal = item.GetComponent<KerbalListItem>();
+                kerbal.kerbalImage.texture = dep.HeadImage;
+                kerbal.kerbalImage.material = kerbal.kerbalImage.defaultMaterial;
+            }
         }
 
         [HarmonyPatch(typeof(StrategySystemConfig))]

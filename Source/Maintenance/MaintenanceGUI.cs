@@ -439,7 +439,7 @@ namespace RP0
                     GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(120));
                     double cost, flightCost;
                     MaintenanceHandler.Instance.GetNautCost(k, out cost, out flightCost);
-                    GUILayout.Label(((cost + flightCost) * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(70));
+                    GUILayout.Label(((cost + flightCost) * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(60));
                 }
                 catch (Exception ex)
                 {

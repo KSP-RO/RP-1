@@ -54,6 +54,19 @@ namespace RP0
             ModID = lc.ModID;
         }
 
+        public LCLogItem(LCConstruction data)
+        {
+            Name = data.Name;
+            MassMax = data.LCData.massMax;
+            MassOrig = data.LCData.massOrig;
+            SizeMax = data.LCData.sizeMax;
+            LcType = data.LCData.lcType;
+            IsHumanRated = data.LCData.isHumanRated;
+            ID = data.LCID;
+            ModID = data.ModID;
+            ModCost = data.Cost;
+        }
+
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);

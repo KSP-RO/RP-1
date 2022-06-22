@@ -542,6 +542,16 @@ namespace RP0
                 else jsonToSend += JsonUtility.ToJson(dto);
             }
 
+            jsonToSend += "], \"programs\": [";
+
+            var allPrograms = ProgramHandler.Instance.CompletedPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+            for (var i = 0; i < allPrograms.Length; i++)
+            {
+                var dto = new ProgramDto(allPrograms[i]);
+                if (i < allPrograms.Length - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
             jsonToSend += "] }";
 
             Debug.Log("[RP-0] Request payload: " + jsonToSend);

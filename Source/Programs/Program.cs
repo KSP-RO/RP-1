@@ -61,13 +61,13 @@ namespace RP0.Programs
         [Persistent]
         public double repPenaltyAssessed;
 
-        [Persistent]
+        [Persistent(isPersistant = false)]
         public DoubleCurve overrideFundingCurve = new DoubleCurve();
 
         /// <summary>
         /// Texture URL
         /// </summary>
-        [Persistent]
+        [Persistent(isPersistant = false)]
         public string icon;
 
         [Persistent(isPersistant = false)]

@@ -981,11 +981,9 @@ namespace RP0
             Guid modId = data?.ModID ?? lc.ModID;    // Should only happen when LCs are created through code and thus do not have Construction items
             if (!_lcs.Any(logLC => logLC.ModID == modId))
             {
-                _lcs.Add(new LCLogItem(lc)
-                {
-                    ModID = modId,
-                    ModCost = data?.Cost ?? 0
-                });
+                var logItem = data == null ? new LCLogItem(lc) : new LCLogItem(data);
+                logItem.ModID = modId;
+                _lcs.Add(logItem);
             }
 
             _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())

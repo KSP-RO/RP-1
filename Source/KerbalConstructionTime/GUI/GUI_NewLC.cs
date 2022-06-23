@@ -174,7 +174,7 @@ namespace KerbalConstructionTime
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Downgrade Limit:");
-                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0} -", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
 

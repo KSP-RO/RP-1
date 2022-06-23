@@ -52,6 +52,22 @@ namespace KerbalConstructionTime
             }
         }
 
+        public LCItem LC
+        {
+            get
+            {
+                foreach (KSCItem currentKSC in KCTGameStates.KSCs)
+                {
+                    if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
+                    {
+                        return currentLC;
+                    }
+                }
+
+                return null;
+            }
+        }
+
         /// <summary>
         /// Used for deserializing from ConfigNodes.
         /// </summary>
@@ -85,7 +101,6 @@ namespace KerbalConstructionTime
 
         public bool Delete(out string failReason)
         {
-            bool found = false;
             foreach (KSCItem currentKSC in KCTGameStates.KSCs)
             {
                 foreach (LCItem currentLC in currentKSC.LaunchComplexes)
@@ -108,6 +123,15 @@ namespace KerbalConstructionTime
                     {
                         if (vessel.LaunchSiteIndex > idx) vessel.LaunchSiteIndex--;
                     }
+                    
+                    try
+                    {
+                        KCTEvents.OnPadDismantled?.Fire(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        UnityEngine.Debug.LogException(ex);
+                    }
 
                     currentLC.LaunchPads.RemoveAt(idx);
 
@@ -119,23 +143,15 @@ namespace KerbalConstructionTime
             }
 
             failReason = null;
-            return !found;
+            return true;
         }
 
         public void Rename(string newName)
         {
             //find everything that references this launchpad by name and update the name reference
 
-            LCItem lc = null;
-            foreach (KSCItem currentKSC in KCTGameStates.KSCs)
-            {
-                if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
-                {
-                    lc = currentLC;
-                    break;
-                }
-            }
-            if(lc != null)
+            LCItem lc = LC;
+            if (lc != null)
             {
                 if (lc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
                     return; //can't name it something that already is named that

@@ -5,10 +5,9 @@ namespace RP0
 {
     public class MaintenanceGUI : UIBase
     {
-        private enum MaintenancePeriod { Day, Month, Year };
+        public enum MaintenancePeriod { Day, Month, Year };
 
         private Vector2 _nautListScroll = new Vector2();
-        private MaintenancePeriod _selectedPeriod = MaintenancePeriod.Year;
         private readonly GUIContent _infoBtnContent = new GUIContent("ⓘ", "View details");
 
         private System.Collections.Generic.Dictionary<string, string> siteLocalizer = new System.Collections.Generic.Dictionary<string, string>();
@@ -44,7 +43,7 @@ namespace RP0
         {
             get
             {
-                return _selectedPeriod switch
+                return MaintenanceHandler.Instance.guiSelectedPeriod switch
                 {
                     MaintenancePeriod.Day => 1,
                     MaintenancePeriod.Month => 30,
@@ -54,18 +53,18 @@ namespace RP0
             }
         }
 
-        private string PeriodDispFormat => _selectedPeriod == MaintenancePeriod.Day ? "N1" : "N0";
+        private string PeriodDispFormat => MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Day ? "N1" : "N0";
 
         private void RenderPeriodSelector()
         {
             GUILayout.BeginHorizontal();
 
-            if (RenderToggleButton("Day", _selectedPeriod == MaintenancePeriod.Day))
-                _selectedPeriod = MaintenancePeriod.Day;
-            if (RenderToggleButton("Month", _selectedPeriod == MaintenancePeriod.Month))
-                _selectedPeriod = MaintenancePeriod.Month;
-            if (RenderToggleButton("Year", _selectedPeriod == MaintenancePeriod.Year))
-                _selectedPeriod = MaintenancePeriod.Year;
+            if (RenderToggleButton("Day", MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Day))
+                MaintenanceHandler.Instance.guiSelectedPeriod = MaintenancePeriod.Day;
+            if (RenderToggleButton("Month", MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Month))
+                MaintenanceHandler.Instance.guiSelectedPeriod = MaintenancePeriod.Month;
+            if (RenderToggleButton("Year", MaintenanceHandler.Instance.guiSelectedPeriod == MaintenancePeriod.Year))
+                MaintenanceHandler.Instance.guiSelectedPeriod = MaintenancePeriod.Year;
 
             GUILayout.EndHorizontal();
         }
@@ -421,18 +420,26 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Space(20);
             GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(144));
-            GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(160));
+            GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(120));
+            GUILayout.Label("Upkeep", HighLogic.Skin.label, GUILayout.Width(50));
             GUILayout.EndHorizontal();
 
-            foreach (string name in Crew.CrewHandler.Instance.KerbalRetireTimes.Keys)
+            for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; ++i)
             {
+                var k = HighLogic.CurrentGame.CrewRoster[i];
+                double rt;
+                if (!Crew.CrewHandler.Instance.KerbalRetireTimes.TryGetValue(k.name, out rt))
+                    continue;
+
                 GUILayout.BeginHorizontal();
                 try
                 {
                     GUILayout.Space(20);
-                    double rt = Crew.CrewHandler.Instance.KerbalRetireTimes[name];
-                    GUILayout.Label(name, HighLogic.Skin.label, GUILayout.Width(144));
-                    GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label(k.displayName, HighLogic.Skin.label, GUILayout.Width(144));
+                    GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(120));
+                    double cost, flightCost;
+                    MaintenanceHandler.Instance.GetNautCost(k, out cost, out flightCost);
+                    GUILayout.Label(((cost + flightCost) * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(50));
                 }
                 catch (Exception ex)
                 {

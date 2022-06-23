@@ -151,15 +151,20 @@ namespace KerbalConstructionTime
             }
             if (!isHangar)
             {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Minimum tonnage:");
+                GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+
                 if (isModify)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Upgrade Limit:");
+                    GUILayout.Label("Upgrade Limit for max tng:");
                     GUILayout.Label($"{(int)(activeLC.MassOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Downgrade Limit:");
+                    GUILayout.Label("Downgrade Limit for max tng:");
                     GUILayout.Label($"{Math.Max(1, (int)(activeLC.MassOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
@@ -168,21 +173,15 @@ namespace KerbalConstructionTime
                 else
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Upgrade Limit:");
+                    GUILayout.Label("Upgrade Limit for max tng:");
                     GUILayout.Label($"{Math.Max(3, tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Downgrade Limit:");
-                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0} -", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label("Downgrade Limit for max tng:");
+                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
-
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Minimum tonnage:");
-                GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
-                GUILayout.EndHorizontal();
             }
 
             GUILayout.BeginHorizontal();
@@ -228,14 +227,15 @@ namespace KerbalConstructionTime
                     totalCost = minPadModifyCost;
 
                 double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
+                double costScalingFactor = UtilMath.LerpUnclamped(100d, 1000d, UtilMath.InverseLerp(10d, 55d, UtilMath.Clamp(activeLC.MassOrig, 10d, 50d)));
                 double renovateCost = Math.Abs(curVABCost - oldVABCost)
-                    + heightAbs * 1000d
-                    + Math.Abs(widthLimit - activeLC.SizeMax.x) * 500d
-                    + Math.Abs(lengthLimit - activeLC.SizeMax.z) * 500d;
+                    + heightAbs * costScalingFactor
+                    + Math.Abs(widthLimit - activeLC.SizeMax.x) * costScalingFactor * 0.5d
+                    + Math.Abs(lengthLimit - activeLC.SizeMax.z) * costScalingFactor * 0.5d;
 
-                // moving the roof
-                if (heightAbs > 0.1d)
-                    renovateCost += 3000d;
+                //// moving the roof
+                //if (heightAbs > 0.1d)
+                //    renovateCost += 3000d;
 
                 if (curVABCost < oldVABCost)
                     renovateCost *= 0.5d;

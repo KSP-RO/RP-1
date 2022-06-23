@@ -151,15 +151,20 @@ namespace KerbalConstructionTime
             }
             if (!isHangar)
             {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Minimum tonnage:");
+                GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+
                 if (isModify)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Upgrade Limit:");
+                    GUILayout.Label("Upgrade Limit for max tng:");
                     GUILayout.Label($"{(int)(activeLC.MassOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Downgrade Limit:");
+                    GUILayout.Label("Downgrade Limit for max tng:");
                     GUILayout.Label($"{Math.Max(1, (int)(activeLC.MassOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
@@ -168,21 +173,15 @@ namespace KerbalConstructionTime
                 else
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Upgrade Limit:");
+                    GUILayout.Label("Upgrade Limit for max tng:");
                     GUILayout.Label($"{Math.Max(3, tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Downgrade Limit:");
+                    GUILayout.Label("Downgrade Limit for max tng:");
                     GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
-
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Minimum tonnage:");
-                GUILayout.Label(minTonnage.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
-                GUILayout.EndHorizontal();
             }
 
             GUILayout.BeginHorizontal();

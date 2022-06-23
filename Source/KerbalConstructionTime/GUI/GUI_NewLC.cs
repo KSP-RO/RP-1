@@ -227,14 +227,15 @@ namespace KerbalConstructionTime
                     totalCost = minPadModifyCost;
 
                 double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
+                double costScalingFactor = UtilMath.LerpUnclamped(100d, 1000d, UtilMath.InverseLerp(10d, 55d, UtilMath.Clamp(activeLC.MassOrig, 10d, 50d)));
                 double renovateCost = Math.Abs(curVABCost - oldVABCost)
-                    + heightAbs * 1000d
-                    + Math.Abs(widthLimit - activeLC.SizeMax.x) * 500d
-                    + Math.Abs(lengthLimit - activeLC.SizeMax.z) * 500d;
+                    + heightAbs * costScalingFactor
+                    + Math.Abs(widthLimit - activeLC.SizeMax.x) * costScalingFactor * 0.5d
+                    + Math.Abs(lengthLimit - activeLC.SizeMax.z) * costScalingFactor * 0.5d;
 
-                // moving the roof
-                if (heightAbs > 0.1d)
-                    renovateCost += 3000d;
+                //// moving the roof
+                //if (heightAbs > 0.1d)
+                //    renovateCost += 3000d;
 
                 if (curVABCost < oldVABCost)
                     renovateCost *= 0.5d;

@@ -101,7 +101,6 @@ namespace KerbalConstructionTime
 
         public bool Delete(out string failReason)
         {
-            bool found = false;
             foreach (KSCItem currentKSC in KCTGameStates.KSCs)
             {
                 foreach (LCItem currentLC in currentKSC.LaunchComplexes)
@@ -124,6 +123,15 @@ namespace KerbalConstructionTime
                     {
                         if (vessel.LaunchSiteIndex > idx) vessel.LaunchSiteIndex--;
                     }
+                    
+                    try
+                    {
+                        KCTEvents.OnPadDismantled?.Fire(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        UnityEngine.Debug.LogException(ex);
+                    }
 
                     currentLC.LaunchPads.RemoveAt(idx);
 
@@ -135,7 +143,7 @@ namespace KerbalConstructionTime
             }
 
             failReason = null;
-            return !found;
+            return true;
         }
 
         public void Rename(string newName)

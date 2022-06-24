@@ -62,7 +62,7 @@
         "spacecraft": "Soyuz",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "capsulesSoyuz, catalystRCS",
+        "entry_cost_mods": "capsulesSoyuz, CatalystRCS",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -382,6 +382,10 @@ namespace KerbalConstructionTime
                 FlightGlobals.ActiveVessel.situation = Vessel.Situations.PRELAUNCH;
                 yield return new WaitForFixedUpdate();
             } while (FlightGlobals.ActiveVessel.packed && i++ < maxFramesWaited);
+            // Need to fire this so trip logger etc notice we're flying now.
+            Debug.Log($"[RP-0] Finished clobbering vessel situation of {FlightGlobals.ActiveVessel.name} to PRELAUNCH (for Prinicipia stability), now firing change event to FLYING.");
+            FlightGlobals.ActiveVessel.situation = Vessel.Situations.FLYING;
+            GameEvents.onVesselSituationChange.Fire(new GameEvents.HostedFromToAction<Vessel, Vessel.Situations>(FlightGlobals.ActiveVessel, Vessel.Situations.PRELAUNCH, Vessel.Situations.FLYING));
         }
 
         protected void EditorRecalculation()

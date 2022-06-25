@@ -427,6 +427,10 @@ namespace RP0
             for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; ++i)
             {
                 var k = HighLogic.CurrentGame.CrewRoster[i];
+                if (k.rosterStatus == ProtoCrewMember.RosterStatus.Dead || k.rosterStatus == ProtoCrewMember.RosterStatus.Missing ||
+                    k.type != ProtoCrewMember.KerbalType.Crew)
+                    continue;
+
                 double rt;
                 if (!Crew.CrewHandler.Instance.KerbalRetireTimes.TryGetValue(k.name, out rt))
                     continue;

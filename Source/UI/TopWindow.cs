@@ -62,10 +62,10 @@ namespace RP0
                 SwitchTabTo(UITab.Budget);
             if (ShouldShowTab(UITab.Tooling) && RenderToggleButton("Tooling", _currentTab == UITab.Tooling))
                 SwitchTabTo(UITab.Tooling);
-            if (ShouldShowTab(UITab.Training) && RenderToggleButton("Astronauts", _currentTab == UITab.Training))
+            if (ShouldShowTab(UITab.Astronauts) && RenderToggleButton("Astronauts", _currentTab == UITab.Astronauts))
+                SwitchTabTo(UITab.Astronauts);
+            if (ShouldShowTab(UITab.Training) && RenderToggleButton("Training", _currentTab == UITab.Training))
                 SwitchTabTo(UITab.Training);
-            if (ShouldShowTab(UITab.Courses) && RenderToggleButton("Training", _currentTab == UITab.Courses))
-                SwitchTabTo(UITab.Courses);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
                 SwitchTabTo(UITab.Avionics);
             if (ShouldShowTab(UITab.Contracts) && RenderToggleButton("Contracts", _currentTab == UITab.Contracts))
@@ -101,7 +101,7 @@ namespace RP0
                         case UITab.Construction:
                             _maintUI.RenderConstructionTab();
                             break;
-                        case UITab.Astronauts:
+                        case UITab.AstronautCosts:
                             _maintUI.RenderAstronautsTab();
                             break;
                         case UITab.Tooling:
@@ -110,10 +110,10 @@ namespace RP0
                         case UITab.ToolingType:
                             _toolUI.RenderTypeTab();
                             break;
-                        case UITab.Training:
+                        case UITab.Astronauts:
                             SwitchTabTo(_fsUI.RenderSummaryTab());
                             break;
-                        case UITab.Courses:
+                        case UITab.Training:
                             SwitchTabTo(_fsUI.RenderCoursesTab());
                             break;
                         case UITab.NewCourse:

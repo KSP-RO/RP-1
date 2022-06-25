@@ -144,7 +144,7 @@ namespace RP0
                 GUILayout.Label((MaintenanceHandler.Instance.NautUpkeepPerDay * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
-                    TopWindow.SwitchTabTo(UITab.Astronauts);
+                    TopWindow.SwitchTabTo(UITab.AstronautCosts);
                 }
             }
             catch (Exception ex)

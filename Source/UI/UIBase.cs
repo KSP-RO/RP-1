@@ -6,8 +6,8 @@ namespace RP0
     {
         public enum UITab
         {
-            Budget, Facilities, Integration, Construction, Astronauts, Tooling, ToolingType,
-            Training, Courses, NewCourse, Naut, Avionics, Contracts, CareerLog
+            Budget, Facilities, Integration, Construction, AstronautCosts, Tooling, ToolingType,
+            Astronauts, Training, NewCourse, Naut, Avionics, Contracts, CareerLog
         };
 
         protected GUIStyle RightLabel, BoldLabel, BoldRightLabel, PressedButton, InfoButton;
@@ -62,10 +62,10 @@ namespace RP0
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Avionics:
                     return HighLogic.LoadedSceneIsEditor;
-                case UITab.Astronauts:
+                case UITab.AstronautCosts:
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER;
+                case UITab.Astronauts:
                 case UITab.Training:
-                case UITab.Courses:
                 case UITab.NewCourse:
                 case UITab.Naut:
                 case UITab.CareerLog:

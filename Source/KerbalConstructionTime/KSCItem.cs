@@ -80,17 +80,20 @@ namespace KerbalConstructionTime
                 startIndex = ActiveLaunchComplexIndex;
 
             LCItem lc;
+            int count = LaunchComplexes.Count;
             do
             {
                 if (forwardDirection)
                 {
-                    startIndex = (startIndex + 1) % LaunchComplexes.Count;
+                    ++startIndex;
+                    if (startIndex == count)
+                        startIndex = 0;
                 }
                 else
                 {
-                    //Simple fix for mod function being "weird" in the negative direction
-                    //http://stackoverflow.com/questions/1082917/mod-of-negative-number-is-melting-my-brain
-                    startIndex = ((startIndex - 1) % LaunchComplexes.Count + LaunchComplexes.Count) % LaunchComplexes.Count;
+                    if (startIndex == 0)
+                        startIndex = count;
+                    --startIndex;
                 }
                 lc = LaunchComplexes[startIndex];
             } while (!lc.IsOperational);

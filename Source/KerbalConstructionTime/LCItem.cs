@@ -219,17 +219,20 @@ namespace KerbalConstructionTime
 
             int idx = ActiveLaunchPadIndex;
             KCT_LaunchPad pad;
+            int count = LaunchPads.Count;
             do
             {
                 if (forwardDirection)
                 {
-                    idx = (idx + 1) % LaunchPads.Count;
+                    ++idx;
+                    if (idx == count)
+                        idx = 0;
                 }
                 else
                 {
-                    //Simple fix for mod function being "weird" in the negative direction
-                    //http://stackoverflow.com/questions/1082917/mod-of-negative-number-is-melting-my-brain
-                    idx = ((idx - 1) % LaunchPads.Count + LaunchPads.Count) % LaunchPads.Count;
+                    if (idx == 0)
+                        idx = count;
+                    --idx;
                 }
                 pad = LaunchPads[idx];
             } while (!pad.isOperational);

@@ -48,7 +48,7 @@ namespace KerbalConstructionTime
             int index = LC.LaunchPads.IndexOf(lp);
             LC.LaunchPads.RemoveAt(index);
             if (LC.ActiveLaunchPadIndex >= index)
-                --LC.ActiveLaunchPadIndex; // should not change active pad.
+                LC.ActiveLaunchPadIndex = Math.Max(0, LC.ActiveLaunchPadIndex - 1); // should not change active pad.
 
             LC.PadConstructions.Remove(this);
 

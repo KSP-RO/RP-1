@@ -48,7 +48,7 @@ namespace RP0.Crew
                             _selectedCourse.AddStudent(student);
                     }
                 }
-                else if (currentTab == UITab.Training)
+                else if (currentTab == UITab.Astronauts)
                 {
                     if (GUILayout.Button(student.name, HighLogic.Skin.button, GUILayout.Width(144)))
                     {
@@ -132,7 +132,7 @@ namespace RP0.Crew
         private void RenderSummaryBody(UITab currentTab)
         {
             UpdateActiveCourseMap();
-            float scrollHeight = currentTab == UITab.Training ? 420 : 305;
+            float scrollHeight = currentTab == UITab.Astronauts ? 420 : 305;
             _nautListScroll = GUILayout.BeginScrollView(_nautListScroll, GUILayout.Width(505), GUILayout.Height(scrollHeight));
             try
             {
@@ -142,7 +142,7 @@ namespace RP0.Crew
                     ProtoCrewMember student = HighLogic.CurrentGame.CrewRoster[i];
                     if (student.type == ProtoCrewMember.KerbalType.Crew &&
                         (student.rosterStatus == ProtoCrewMember.RosterStatus.Available ||
-                         (currentTab == UITab.Training && student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)))
+                         (currentTab == UITab.Astronauts && student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)))
                     {
                         RenderNautListRow(currentTab, student);
                     }
@@ -159,8 +159,8 @@ namespace RP0.Crew
         {
             _selectedCourse = null;
             _selectedNaut = null;
-            RenderSummaryBody(UITab.Training);
-            return _selectedNaut == null ? UITab.Training : UITab.Naut;
+            RenderSummaryBody(UITab.Astronauts);
+            return _selectedNaut == null ? UITab.Astronauts : UITab.Naut;
         }
 
         protected void RenderCourseSelector()
@@ -193,7 +193,7 @@ namespace RP0.Crew
         {
             _selectedCourse = null;
             RenderCourseSelector();
-            return _selectedCourse == null ? UITab.Courses : UITab.NewCourse;
+            return _selectedCourse == null ? UITab.Training : UITab.NewCourse;
         }
 
         public UITab RenderNewCourseTab()
@@ -231,7 +231,7 @@ namespace RP0.Crew
                     MaintenanceHandler.Instance?.UpdateUpkeep();
                 }
             }
-            return _selectedCourse == null ? UITab.Training : UITab.NewCourse;
+            return _selectedCourse == null ? UITab.Astronauts : UITab.NewCourse;
         }
 
         public void RenderNautTab()

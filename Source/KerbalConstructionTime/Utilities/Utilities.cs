@@ -2326,6 +2326,12 @@ namespace KerbalConstructionTime
             else
                 return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
+
+        public static double ScienceForNextApplicants()
+        {
+            int applicantsCur = (int)MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>() { { "N", KCTGameStates.SciPointsTotal.ToString() } });
+            return Math.Pow(5d * (applicantsCur + 1d), 1d / 0.75d);
+        }
     }
 }
 

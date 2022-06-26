@@ -46,6 +46,15 @@ namespace KerbalConstructionTime
             GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Total Science:", GUILayout.Width(120));
+            GUILayout.Label(KCTGameStates.SciPointsTotal.ToString("N1"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+            int applicantsCur = (int)MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>() { { "N", KCTGameStates.SciPointsTotal.ToString() } });
+            double scienceRequired = Math.Pow(5d * (applicantsCur + 1d), 1d / 0.75d);
+            GUILayout.Label("Next Applicants Science:", GetLabelRightAlignStyle(), GUILayout.Width(150));
+            GUILayout.Label(scienceRequired.ToString("N1"), GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal(); 
+
             int tE = KCTGameStates.TotalEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));

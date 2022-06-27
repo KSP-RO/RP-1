@@ -48,6 +48,8 @@ namespace RP0
         public double McCost = 0d;
         public double TsCost = 0d;
         public double AcCost = 0d;
+        public double HangarsCost = 0d;
+        public double LCsCost = 0d;
 
         public double TrainingUpkeepPerDay = 0d;
         public double NautBaseUpkeepPerDay = 0d;
@@ -55,7 +57,7 @@ namespace RP0
         public double NautUpkeepPerDay = 0d;
         public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ConstructionSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
 
-        public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost;
+        public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost + HangarsCost + LCsCost;
 
         // TODO this is duplicate code with the KCT side
         public double IntegrationSalaryPerDay
@@ -200,17 +202,8 @@ namespace RP0
             IntegrationSalaries.Clear();
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
-                int constructionWorkers = ksc.ConstructionWorkers;
-                ConstructionSalaries[ksc.KSCName] = constructionWorkers;
-                IntegrationSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveEngineersForSalary(ksc) - constructionWorkers;
-                //for (int j = ksc.LaunchComplexes.Count; j-- > 0;)
-                //{
-                //    LCItem lc = ksc.LaunchComplexes[j];
-                //    if (!lc.isOperational)
-                //        continue;
-
-                //    int lpCount = lc.LaunchPadCount;
-                //}
+                ConstructionSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveConstructionEngineersForSalary(ksc);
+                IntegrationSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveIntegrationEngineersForSalary(ksc);
             }
 
             Researchers = KCTGameStates.Researchers;
@@ -265,31 +258,23 @@ namespace RP0
 
             EnsureFacilityLvlCostsLoaded();
 
-            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out float[] costs))
-            //{
-            //    for (int i = 0; i < PadLevelCount; i++)
-            //    {
-            //        PadCosts[i] = 0d;
-            //    }
+            HangarsCost = 0d;
+            LCsCost = 0d;
+            foreach (var ksc in KCTGameStates.KSCs)
+            {
+                if (ksc.Hangar.IsOperational)
+                    HangarsCost += Math.Max(Settings.hangarCostForMaintenanceMin, KCT_GUI.GetPadStats(ksc.Hangar.MassMax, ksc.Hangar.SizeMax, ksc.Hangar.IsHumanRated, out _, out _, out _) - Settings.hangarCostForMaintenanceOffset);
 
-            //    foreach (float lvl in KCTPadLevels)
-            //    {
-            //        int roundedPadLvl = (int)Math.Round(lvl);
-            //        PadCosts[roundedPadLvl] += _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, lvl), Settings.facilityLevelCostPow);
-            //    }
-            //    PadCost = 0;
-            //    for (int i = PadLevelCount; i-- > 0;)
-            //        PadCost += PadCosts[i];
-            //}
-
-            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.Runway, out costs))
-            //    RunwayCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
-
-            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.VehicleAssemblyBuilding, out costs))
-            //    VabCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.VehicleAssemblyBuilding) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
-
-            //if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.SpaceplaneHangar, out costs))
-            //    SphCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.SpaceplaneHangar) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
+                for (int i = 1; i < ksc.LaunchComplexes.Count; ++i)
+                {
+                    LCItem lc = ksc.LaunchComplexes[i];
+                    if (!lc.IsOperational)
+                        continue;
+                    LCsCost += KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out _, out _, out _);
+                }
+            }
+            HangarsCost *= _maintenanceCostMult * Settings.facilityLevelCostMult;
+            LCsCost *= _maintenanceCostMult * Settings.facilityLevelCostMult * Settings.lcCostMultiplier;
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out float[] costs))
                 RndCost = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);

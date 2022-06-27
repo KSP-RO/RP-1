@@ -64,50 +64,5 @@ namespace RP0
                 }
             }
         }
-
-        [HarmonyPatch(typeof(ReputationWidget))]
-        internal class PatchReputationWidget
-        {
-            public static TextMeshProUGUI RepLabel;
-
-            [HarmonyPrefix]
-            [HarmonyPatch("onReputationChanged")]
-            internal static bool Prefix_onReputationChanged(float rep, TransactionReasons reason)
-            {
-                if (RepLabel != null)
-                {
-                    RepLabel.text = KSPUtil.LocalizeNumber(rep, "0.0");
-                }
-
-                return false;
-            }
-
-            [HarmonyPrefix]
-            [HarmonyPatch("DelayedStart")]
-            internal static bool Prefix_DelayedStart(ReputationWidget __instance)
-            {
-                GameObject.DestroyImmediate(__instance.gauge);
-                __instance.gauge = null;
-                GameObject.DestroyImmediate(__instance.gameObject.transform.Find("circularGauge").gameObject);
-
-                var frameImage = (Image)__instance.gameObject.GetComponentInChildren(typeof(Image));
-
-                var img = GameObject.Instantiate(new GameObject("repBackground"), __instance.transform, worldPositionStays: false).AddComponent<Image>();
-                img.color = new Color32(58, 58, 63, 255);
-                img.rectTransform.anchorMin = frameImage.rectTransform.anchorMin;
-                img.rectTransform.anchorMax = frameImage.rectTransform.anchorMax;
-                img.rectTransform.anchoredPosition = frameImage.rectTransform.anchoredPosition;
-                img.rectTransform.sizeDelta = ((RectTransform)__instance.gameObject.transform).sizeDelta;    // No idea why the frame image transform is larger than the component itself
-
-                RepLabel = GameObject.Instantiate(new GameObject("repLabel"), __instance.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
-                RepLabel.alignment = TextAlignmentOptions.Right;
-                RepLabel.color = XKCDColors.Mustard;
-                RepLabel.fontSize = 22;
-                RepLabel.rectTransform.localPosition = new Vector3(-9, -1, 0);
-                RepLabel.fontStyle = FontStyles.Bold;
-
-                return true;
-            }
-        }
     }
 }

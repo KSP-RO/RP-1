@@ -126,6 +126,7 @@
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="Tooling\ToolingGUI.cs" />
     <Compile Include="Avionics\AvionicsGUI.cs" />
+    <Compile Include="Utilities\TransformUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">

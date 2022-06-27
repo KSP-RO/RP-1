@@ -154,6 +154,7 @@ namespace KerbalConstructionTime
                         }
                     }
                 }
+                KCTGameStates.LoadedSaveVersion = KCTGameStates.VERSION;
             }
             catch (Exception ex)
             {

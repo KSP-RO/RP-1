@@ -26,6 +26,8 @@ namespace KerbalConstructionTime
         [Persistent] public double LastEngineers = 0d;
         [Persistent] public double LastResearchers = 0d;
 
+        [Persistent] public int saveVersion;
+
         public override void OnDecodeFromConfigNode()
         {
             KCTGameStates.ActiveKSCName = activeKSC;
@@ -38,6 +40,7 @@ namespace KerbalConstructionTime
             KCTGameStates.UnassignedPersonnel = UnassignedPersonnel;
             KCTGameStates.LastEngineers = LastEngineers;
             KCTGameStates.LastResearchers = LastResearchers;
+            KCTGameStates.LoadedSaveVersion = saveVersion;
         }
 
         public override void OnEncodeToConfigNode()
@@ -52,6 +55,7 @@ namespace KerbalConstructionTime
             EfficiencyEngineers = KCTGameStates.EfficiencyEngineers;
             LastResearchers = KCTGameStates.LastResearchers;
             LastEngineers = KCTGameStates.LastEngineers;
+            saveVersion = KCTGameStates.VERSION;
         }
     }
 }

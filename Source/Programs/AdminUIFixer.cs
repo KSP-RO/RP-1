@@ -104,37 +104,4 @@ namespace RP0.Programs
             }
         }
     }
-
-    public static class TransformExtns
-    {
-        public static Transform FindDeepChild(this Transform parent, string name)
-        {
-            var result = parent.Find(name);
-            if (result != null)
-                return result;
-            foreach (Transform child in parent)
-            {
-                result = child.FindDeepChild(name);
-                if (result != null)
-                    return result;
-            }
-            return null;
-        }
-
-        public static void Dump(this GameObject go, string indent = "")
-        {
-            Debug.Log(indent + "Object: " + go.name);
-            foreach (Component c in go.GetComponents<Component>())
-            {
-                Debug.Log(indent + c);
-                if (c is TextMeshProUGUI t)
-                    Debug.Log(indent + "   text=" + t.text);
-            }
-
-            foreach (Transform c in go.transform)
-            {
-                c.gameObject.Dump(indent + "    ");
-            }
-        }
-    }
 }

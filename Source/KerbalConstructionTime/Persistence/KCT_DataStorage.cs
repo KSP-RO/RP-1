@@ -41,6 +41,17 @@ namespace KerbalConstructionTime
             KCTGameStates.LastEngineers = LastEngineers;
             KCTGameStates.LastResearchers = LastResearchers;
             KCTGameStates.LoadedSaveVersion = saveVersion;
+
+            if (saveVersion < KCTGameStates.VERSION)
+            {
+                if (saveVersion < 1)
+                {
+                    KCTGameStates.LastEngineers *= 2;
+                    KCTGameStates.LastResearchers *= 2;
+                    KCTGameStates.UnassignedPersonnel *= 2;
+                    KCTGameStates.Researchers *= 2;
+                }
+            }
         }
 
         public override void OnEncodeToConfigNode()

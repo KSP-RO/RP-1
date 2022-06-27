@@ -15,16 +15,68 @@ namespace RP0
 {
     public partial class HarmonyPatcher : MonoBehaviour
     {
+        [HarmonyPatch(typeof(StrategySystem))]
+        internal class PatchStrategySystem
+        {
+            internal static HashSet<string> acceptablePrograms = new HashSet<string>();
+            internal static HashSet<string> completedPrograms = new HashSet<string>();
+
+            [HarmonyPrefix]
+            [HarmonyPatch("GetStrategies")]
+            internal static bool Prefix_GetStrategies(StrategySystem __instance, ref string department, ref List<Strategy> __result, ref List<Strategy> ___strategies)
+            {
+                if (department != "Programs")
+                    return true;
+
+                List<Strategy> list = new List<Strategy>();
+
+                // Cache what programs can be accepted (and which have been completed)
+                foreach (Program p in ProgramHandler.Programs)
+                    if (p.CanAccept)
+                        acceptablePrograms.Add(p.name);
+
+                foreach (Program p in ProgramHandler.Instance.CompletedPrograms)
+                    completedPrograms.Add(p.name);
+
+                // Insert acceptable programs first
+                for (int i = 0; i < ___strategies.Count; ++i)
+                {
+                    Strategy strat = ___strategies[i];
+                    if (strat.DepartmentName != department)
+                        continue;
+
+                    string name = strat.Config.Name;
+                    if (acceptablePrograms.Contains(name) && !completedPrograms.Contains(name))
+                        list.Add(strat);
+                }
+
+                // then insert other programs
+                for (int i = 0; i < ___strategies.Count; ++i)
+                {
+                    Strategy strat = ___strategies[i];
+                    if (strat.DepartmentName != department)
+                        continue;
+
+                    string name = strat.Config.Name;
+                    if (!acceptablePrograms.Contains(name) && !completedPrograms.Contains(name))
+                        list.Add(strat);
+                }
+
+                __result = list;
+                acceptablePrograms.Clear();
+                completedPrograms.Clear();
+                return false;
+            }
+        }
+
         [HarmonyPatch(typeof(Administration))]
         internal class PatchAdministration
         {
-            internal static FieldInfo activeStrategyCountField = typeof(Administration).GetField("activeStrategyCount", BindingFlags.NonPublic | BindingFlags.Instance);
-            internal static FieldInfo maxActiveStrategiesField = typeof(Administration).GetField("maxActiveStrategies", BindingFlags.NonPublic | BindingFlags.Instance);
             internal static List<Strategy> strategies = new List<Strategy>();
 
             [HarmonyPrefix]
             [HarmonyPatch("CreateActiveStratList")]
-            internal static bool Prefix_CreateActiveStratList(Administration __instance)
+            internal static bool Prefix_CreateActiveStratList(Administration __instance, ref int ___activeStrategyCount, ref int ___maxActiveStrategies)
             {
                 __instance.scrollListActive.Clear(true);
                 Administration.StrategyWrapper wrapper = null;
@@ -73,8 +125,8 @@ namespace RP0
                 }
                 strategies.Clear();
 
-                activeStrategyCountField.SetValue(__instance, ProgramHandler.Instance.ActivePrograms.Count);
-                maxActiveStrategiesField.SetValue(__instance, ProgramHandler.Instance.ActiveProgramLimit);
+                ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
+                ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
                 __instance.activeStratCount.text = KSP.Localization.Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
 
                 return false;

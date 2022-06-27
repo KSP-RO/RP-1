@@ -430,7 +430,7 @@ namespace KerbalConstructionTime
         public double EngineerStartEfficiency = 0.5, GlobalEngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, 
             EngineerMaxEfficiency = 1.0, ResearcherMaxEfficiency = 1.0, GlobalEngineerMaxEfficiency = 1.0,
             EngineerDecayRate = 0.1, GlobalEngineerDecayRate = 0.1, ResearcherDecayRate = 0.1, AdditionalPadCostMult = 0.5d,
-            RushRateMult = 1.5d, RushSalaryMult = 2d, RushEfficMult = 0.985d, RushEfficMin = 0.6d;
+            RushRateMult = 1.5d, RushSalaryMult = 2d, RushEfficMult = 0.985d, RushEfficMin = 0.6d, IdleSalaryMult = 0.25;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]

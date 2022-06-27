@@ -726,7 +726,7 @@ namespace KerbalConstructionTime
             int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
             if (upgradesToAdd > 0)
             {
-                int numWorkers = upgradesToAdd * 5;
+                int numWorkers = upgradesToAdd * LCItem.EngineersPerPacket;
                 KCTGameStates.UnassignedPersonnel += numWorkers;
                 KCTDebug.Log($"Added {numWorkers} workers from science points");
                 ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);

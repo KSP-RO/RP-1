@@ -66,16 +66,19 @@ namespace KerbalConstructionTime
         private double _rateHRCapped;
         public double Rate => _rate;
         public double RateHRCapped => _rateHRCapped;
+
+        public const int MinEngineersConst = 1;
+        public const int EngineersPerPacket = 10;
         
         public int Engineers = 0;
         private static double RawMaxEngineers(float massMax, Vector3 sizeMax) =>
             massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.01d;
         public static int MaxEngineersCalc(float massMax, Vector3 sizeMax, bool isHuman) => 
-            Math.Max(5, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d)) * 5);
+            Math.Max(MinEngineersConst, (int)Math.Ceiling(RawMaxEngineers(massMax, sizeMax) * (isHuman ? 1.5d : 1d) * EngineersPerPacket));
 
         private double _RawMaxEngineers => RawMaxEngineers(MassMax, SizeMax);
         public int MaxEngineers => MaxEngineersCalc(MassMax, SizeMax, IsHumanRated);
-        public int MaxEngineersNonHR => Math.Max(5, (int)Math.Ceiling(_RawMaxEngineers)) * 5;
+        public int MaxEngineersNonHR => Math.Max(MinEngineersConst, (int)Math.Ceiling(_RawMaxEngineers * EngineersPerPacket));
         public int MaxEngineersFor(double mass, double bp, bool humanRated)
         {
             if (LCType == LaunchComplexType.Pad)
@@ -85,7 +88,7 @@ namespace KerbalConstructionTime
             if (IsHumanRated && humanRated)
                 tngMax *= 1.5d;
             double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
-            return Math.Max(5, (int)Math.Ceiling(tngMax * 0.25d + bpMax * 0.75d) * 5);
+            return Math.Max(MinEngineersConst, (int)Math.Ceiling((tngMax * 0.25d + bpMax * 0.75d) * EngineersPerPacket));
         }
         public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints + blv.IntegrationPoints, blv.IsHumanRated);
 
@@ -191,8 +194,8 @@ namespace KerbalConstructionTime
                     (LCType == LaunchComplexType.Pad ? StartingLC1.Compare(this) || StartingLC15.Compare(this) : StartingHangar.Compare(this));
 
         public bool IsActive => BuildList.Any() || Recon_Rollout.Any(r => !r.IsComplete()) || AirlaunchPrep.Any(a => !a.IsComplete());
-
         public bool CanModify => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() && !PadConstructions.Any();
+        public bool IsIdle => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any();
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
             Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
@@ -491,6 +494,15 @@ namespace KerbalConstructionTime
                     var storageItem = new PadConstructionStorageItem();
                     storageItem.Load(cn);
                     PadConstructions.Add(storageItem.ToPadConstruction());
+                }
+            }
+
+            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            {
+                if (KCTGameStates.LoadedSaveVersion < 1)
+                {
+                    Engineers *= 2;
+                    LastEngineers *= 2;
                 }
             }
 

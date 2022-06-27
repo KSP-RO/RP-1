@@ -61,6 +61,7 @@
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
     <Compile Include="Harmony\DifficultyPatcher.cs" />
+    <Compile Include="Harmony\CurrencyWidgetPatcher.cs" />
     <Compile Include="Harmony\ReputationPatcher.cs" />
     <Compile Include="Harmony\ContractPatcher.cs" />
     <Compile Include="Harmony\RnDPatcher.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Harmony\StrategyPatches.cs" />
     <Compile Include="Programs\AdminUIFixer.cs" />
     <Compile Include="Programs\ProgramStrategy.cs" />
+    <Compile Include="Programs\ReputationWidgetTooltip.cs" />
     <Compile Include="Programs\StrategySystemFixer.cs" />
     <Compile Include="Programs\PredicateBuilder.cs" />
     <Compile Include="Programs\Program.cs" />

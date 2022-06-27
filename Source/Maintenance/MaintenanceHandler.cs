@@ -82,19 +82,32 @@ namespace RP0
 
         public double ResearchSalaryPerDay => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365.25d;
 
+        public struct SubsidyDetails
+        {
+            public double minSubsidy, maxSubsidy, minRep, maxRep, subsidy;
+        }
+
+        public SubsidyDetails GetSubsidyDetails()
+        {
+            var details = new SubsidyDetails();
+            const double secsPerYear = 3600 * 24 * 365.25;
+            float years = (float)(KSPUtils.GetUT() / secsPerYear);
+            details.minSubsidy = Settings.subsidyCurve.Evaluate(years);
+            details.minRep = details.minSubsidy / Settings.repToSubsidyConversion;
+            details.maxRep = details.minRep * Settings.subsidyMultiplierForMax;
+            details.maxSubsidy = details.minSubsidy * Settings.subsidyMultiplierForMax;
+            double invLerp = UtilMath.InverseLerp(details.minRep, details.maxRep, UtilMath.Clamp(Reputation.Instance.reputation, details.minRep, details.maxRep));
+            details.subsidy = UtilMath.LerpUnclamped(details.minSubsidy, details.maxSubsidy, invLerp);
+            //Debug.Log($"$$$$ years {years}: minSub: {minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, minRep {minRep}, maxRep {maxRep}, invLerp {invLerp}, val {val}=>{(val * (1d / 365.25d))}");
+            return details;
+        }
+
         public double MaintenanceSubsidyPerDay
         {
             get
             {
-                const double secsPerYear = 3600 * 24 * 365.25;
-                float years = (float)(KSPUtils.GetUT() / secsPerYear);
-                double minSubsidy = Settings.subsidyCurve.Evaluate(years);
-                double minRep = minSubsidy / Settings.repToSubsidyConversion;
-                double maxRep = minRep * Settings.subsidyMultiplierForMax;
-                double invLerp = UtilMath.InverseLerp(minRep, maxRep, UtilMath.Clamp(Reputation.Instance.reputation, minRep, maxRep));
-                double val = UtilMath.LerpUnclamped(minSubsidy, minSubsidy * Settings.subsidyMultiplierForMax, invLerp);
-                //Debug.Log($"$$$$ years {years}: minSub: {minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, minRep {minRep}, maxRep {maxRep}, invLerp {invLerp}, val {val}=>{(val * (1d / 365.25d))}");
-                return val * (1d / 365.25d);
+                SubsidyDetails details = GetSubsidyDetails();
+                return details.subsidy * (1d / 365.25d);
             }
         }
 

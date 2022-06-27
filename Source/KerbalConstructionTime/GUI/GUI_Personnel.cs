@@ -14,7 +14,7 @@ namespace KerbalConstructionTime
         private static int _buyModifier;
         public static int _LCIndex = 0;
         private static GUIStyle _cannotAffordStyle;
-        private static readonly int[] _buyModifierMultsPersonnel = { 5, 50, 500, int.MaxValue };
+        private static readonly int[] _buyModifierMultsPersonnel = { 1, 10, 100, int.MaxValue };
         private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
         private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
 

@@ -48,7 +48,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && LaunchComplexes.All(lc => lc.IsEmpty);
+        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && Hangar.IsEmpty;
 
         public void EnsureStartingLaunchComplexes()
         {
@@ -183,6 +183,14 @@ namespace KerbalConstructionTime
 
             Engineers = 0;
             node.TryGetValue("Engineers", ref Engineers);
+
+            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            {
+                if (KCTGameStates.LoadedSaveVersion < 1)
+                {
+                    Engineers *= 2;
+                }
+            }
 
             ConfigNode tmp = node.GetNode("LaunchComplexes");
             if (tmp != null)

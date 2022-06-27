@@ -15,6 +15,15 @@
         public int salaryResearchers = 1000;
 
         [Persistent]
+        public double hangarCostForMaintenanceOffset = 240000d;
+
+        [Persistent]
+        public double hangarCostForMaintenanceMin = 20000d;
+
+        [Persistent]
+        public double lcCostMultiplier = 2d;
+
+        [Persistent]
         public double nautYearlyUpkeepAdd = 5000d;
 
         [Persistent]

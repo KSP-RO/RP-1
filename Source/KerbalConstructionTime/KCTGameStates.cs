@@ -37,6 +37,8 @@ namespace KerbalConstructionTime
         public static double LastEngineers = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
+        public static int LoadedSaveVersion = 0;
+        public const int VERSION = 1;
 
         public static ToolbarControl ToolbarControl;
 
@@ -134,19 +136,27 @@ namespace KerbalConstructionTime
             return (int)(engineers * SalaryEngineers * SalaryMultiplier);
         }
 
-        public static double GetEffectiveEngineersForSalary(KSCItem ksc)
+        public static double GetEffectiveConstructionEngineersForSalary(KSCItem ksc) => ksc.ConstructionWorkers * (ksc.Constructions.Count == 0 ? PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult : 1d);
+
+        public static double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)
         {
-            double engineers = ksc.ConstructionWorkers;
+            double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
                 engineers += GetEffectiveEngineersForSalary(lc);
-            
             return engineers;
         }
+
+        public static double GetEffectiveEngineersForSalary(KSCItem ksc) => GetEffectiveConstructionEngineersForSalary(ksc) + GetEffectiveIntegrationEngineersForSalary(ksc);
 
         public static double GetEffectiveEngineersForSalary(LCItem lc)
         {
             if (lc.IsOperational && lc.Engineers > 0)
+            {
+                if (lc.IsIdle) // not IsActive because completed rollouts/airlaunches still count
+                    return lc.Engineers * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
+
                 return lc.Engineers * lc.RushSalary;
+            }
 
             return 0;
         }

@@ -15,7 +15,7 @@ namespace KerbalConstructionTime
         private static string _lengthLimit = "8";
         private static bool _isHumanRated = false;
 
-        public static void GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
+        public static double GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
         {
             fractionalPadLvl = 0f;
             if (tonnageLimit != float.MaxValue)
@@ -70,6 +70,8 @@ namespace KerbalConstructionTime
                 curPadCost *= 1.5d;
                 curVABCost *= 2d;
             }
+
+            return curVABCost + curPadCost;
         }
 
         public static void DrawNewLCWindow(int windowID)

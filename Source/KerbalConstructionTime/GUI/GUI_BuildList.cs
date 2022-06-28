@@ -1209,7 +1209,7 @@ namespace KerbalConstructionTime
                                 {
                                     KCTGameStates.LaunchedVessel = b;
                                     KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
-                                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, b.LaunchSite).Count == 0)
+                                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
                                     {
                                         GUIStates.ShowBLPlus = false;
                                         if (!IsCrewable(b.ExtractedParts))

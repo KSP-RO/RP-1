@@ -31,14 +31,16 @@ namespace KerbalConstructionTime
         //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int UnassignedPersonnel = 0;
         public static int Researchers = 0;
-        public static double EfficiencyResearchers = 0.25d;
+        private const double StartingEfficiencyResearchers = 0.25d;
+        public static double EfficiencyResearchers = StartingEfficiencyResearchers;
         public static double LastResearchers = 0;
-        public static double EfficiencyEngineers = 0.25d;
+        private const double StartingEfficiencyEngineers = 0.25d;
+        public static double EfficiencyEngineers = StartingEfficiencyEngineers;
         public static double LastEngineers = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 1;
+        public const int VERSION = 2;
 
         public static ToolbarControl ToolbarControl;
 
@@ -83,7 +85,15 @@ namespace KerbalConstructionTime
             BuildingMaxLevelCache.Clear();
 
             InitAndClearTechList();
-        }
+
+             UnassignedPersonnel = 0;
+             Researchers = 0;
+             EfficiencyResearchers = StartingEfficiencyResearchers;
+             LastResearchers = 0;
+             EfficiencyEngineers = StartingEfficiencyEngineers;
+             LastEngineers = 0;
+             LoadedSaveVersion = 0;
+    }
 
         public static void InitAndClearTechList()
         {

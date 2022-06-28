@@ -112,9 +112,11 @@ namespace KerbalConstructionTime
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
         public int ActiveLaunchPadIndex = 0;
 
-        public string SupportedMassAsPrettyText => MassMax == float.MaxValue ? "unlimited" : $"{MassMin:N0}-{MassMax:N0}t";
+        public static string SupportedMassAsPrettyTextCalc(float mass) => mass == float.MaxValue ? "unlimited" : $"{CalcMassMin(mass):N0}-{mass:N0}t";
+        public string SupportedMassAsPrettyText => SupportedMassAsPrettyTextCalc(MassMax);
 
-        public string SupportedSizeAsPrettyText => SizeMax.y == float.MaxValue ? "unlimited" : $"{SizeMax.z:N0}x{SizeMax.x:N0}x{SizeMax.y:N0}m";
+        public static string SupportedSizeAsPrettyTextCalc(Vector3 size) => size.y == float.MaxValue ? "unlimited" : $"{size.z:N0}x{size.x:N0}x{size.y:N0}m";
+        public string SupportedSizeAsPrettyText => SupportedSizeAsPrettyTextCalc(SizeMax);
 
         private KSCItem _ksc = null;
 

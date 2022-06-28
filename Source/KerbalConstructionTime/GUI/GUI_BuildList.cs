@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -976,9 +976,9 @@ namespace KerbalConstructionTime
             if (!b.AllPartsValid)
                 return;
 
-            LCItem activeLC = b.LC;
+            LCItem vesselLC = b.LC;
 
-            bool isPad = activeLC != KCTGameStates.ActiveKSC.Hangar;
+            bool isPad = vesselLC != KCTGameStates.ActiveKSC.Hangar;
 
             string launchSite = b.LaunchSite;
             if (launchSite == "LaunchPad" && isPad)
@@ -988,24 +988,38 @@ namespace KerbalConstructionTime
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
-            ReconRollout rollout = isPad ? activeLC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite) : null;
-            ReconRollout rollback = isPad ? activeLC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Rollback) : null;
-            ReconRollout recovery = activeLC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
-            AirlaunchPrep airlaunchPrep = !isPad ? activeLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == b.Id.ToString()) : null;
+            ReconRollout rollout = null, rollback = null, recovery = null;
+            string blvID = b.Id.ToString();
+            foreach (var rr in vesselLC.Recon_Rollout)
+            {
+                if (rr.AssociatedID == blvID)
+                {
+                    switch (rr.RRType)
+                    {
+                        case ReconRollout.RolloutReconType.Recovery: recovery = rr; break;
+                        case ReconRollout.RolloutReconType.Rollback: rollback = rr; break;
+                        case ReconRollout.RolloutReconType.Rollout: rollout = rr; break;
+                        // any other type is wrong.
+                    }
+                }
+                else if (isPad && rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.LaunchPadID == launchSite)
+                    rollout = rr; // something else is being rollout out to this launchsite.
+            }
+            AirlaunchPrep airlaunchPrep = !isPad ? vesselLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == blvID) : null;
 
             IKCTBuildItem typeIcon = rollout ?? rollback ?? recovery ?? null;
             typeIcon = typeIcon ?? airlaunchPrep;
             typeIcon = typeIcon ?? b;
 
             VesselPadStatus padStatus = VesselPadStatus.InStorage;
-            if ( isPad && rollback != null)
-                padStatus = VesselPadStatus.RollingBack;
             if (recovery != null)
                 padStatus = VesselPadStatus.Recovering;
+            if ( isPad && rollback != null)
+                padStatus = VesselPadStatus.RollingBack;
 
             GUIStyle textColor = GUI.skin.label;
             string status = "In Storage";
-            if (rollout != null && rollout.AssociatedID == b.Id.ToString())
+            if (rollout != null && rollout.AssociatedID == blvID)
             {
                 padStatus = VesselPadStatus.RollingOut;
                 status = $"Rolling Out to {launchSite}";
@@ -1061,28 +1075,28 @@ namespace KerbalConstructionTime
             GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
             if (recovery != null)
             {
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+b.Id.ToString()), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             }
             else
             {
                 if (isPad)
                 {
-                    bool siteHasActiveRolloutOrRollback = rollout != null || activeLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) != null;
+                    bool siteHasActiveRolloutOrRollback = rollout != null || vesselLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) != null;
                     if (!HighLogic.LoadedSceneIsEditor && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
                     {
                         bool hasRecond = false;
                         List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                         GUIStyle btnColor = _greenButton;
-                        if (activeLC.ActiveLPInstance.IsDestroyed)
+                        if (vesselLC.ActiveLPInstance.IsDestroyed)
                             btnColor = _redButton;
-                        else if (hasRecond = activeLC.GetReconditioning(activeLC.ActiveLPInstance.name) != null)
+                        else if (hasRecond = vesselLC.GetReconditioning(vesselLC.ActiveLPInstance.name) != null)
                             btnColor = _yellowButton;
                         else if (facilityChecks.Count != 0)
                             btnColor = _yellowButton;
-                        ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, b.Id.ToString(), launchSite);
+                        ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
                         if (tmpRollout.Cost > 0d)
                             GUILayout.Label("√" + tmpRollout.Cost.ToString("N0"));
-                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+b.Id.ToString()) : new GUIContent("Rollout");
+                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
                             if (hasRecond)
@@ -1093,15 +1107,15 @@ namespace KerbalConstructionTime
                             {
                                 if (facilityChecks.Count == 0)
                                 {
-                                    if (!activeLC.ActiveLPInstance.IsDestroyed)
+                                    if (!vesselLC.ActiveLPInstance.IsDestroyed)
                                     {
-                                        b.LaunchSiteIndex = activeLC.ActiveLaunchPadIndex;
+                                        b.LaunchSiteIndex = vesselLC.ActiveLaunchPadIndex;
 
                                         if (rollout != null)
                                         {
                                             rollout.SwapRolloutType();
                                         }
-                                        activeLC.Recon_Rollout.Add(tmpRollout);
+                                        vesselLC.Recon_Rollout.Add(tmpRollout);
                                     }
                                     else
                                     {
@@ -1121,8 +1135,8 @@ namespace KerbalConstructionTime
                                 _mouseOnRolloutButton = -1;
                     }
                     else if (!HighLogic.LoadedSceneIsEditor && rollback == null &&
-                             rollout != null && b.Id.ToString() == rollout.AssociatedID && !rollout.IsComplete() &&
-                             GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+b.Id.ToString()), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
+                             rollout != null && blvID == rollout.AssociatedID && !rollout.IsComplete() &&
+                             GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ blvID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
                     {
                         rollout.SwapRolloutType();
                     }
@@ -1130,27 +1144,27 @@ namespace KerbalConstructionTime
                     {
                         if (rollout == null)
                         {
-                            if (GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+b.Id.ToString()), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
+                            if (GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
                                 rollback.SwapRolloutType();
                         }
                         else
                         {
-                            GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+b.Id.ToString()), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                            GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                         }
                     }
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
-                             (rollout != null && b.Id.ToString() == rollout.AssociatedID && rollout.IsComplete()))
+                             (rollout != null && blvID == rollout.AssociatedID && rollout.IsComplete()))
                     {
-                        KCT_LaunchPad pad = activeLC.LaunchPads.Find(lp => lp.name == launchSite);
-                        bool operational = pad != null ? !pad.IsDestroyed : !activeLC.ActiveLPInstance.IsDestroyed;
+                        KCT_LaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.LaunchPadID);
+                        bool operational = pad != null && !pad.IsDestroyed;
                         GUIStyle btnColor = _greenButton;
                         string launchTxt = "Launch";
                         if (!operational)
                         {
-                            launchTxt = "Repairs Required";
+                            launchTxt = pad == null ? "No Pad" : "Repairs Required";
                             btnColor = _redButton;
                         }
-                        else if (Utilities.ReconditioningActive(null, launchSite))
+                        else if (Utilities.ReconditioningActive(vesselLC, rollout.LaunchPadID))
                         {
                             launchTxt = "Reconditioning";
                             btnColor = _yellowButton;
@@ -1163,20 +1177,24 @@ namespace KerbalConstructionTime
                         {
                             if (b.LaunchSiteIndex >= 0)
                             {
-                                activeLC.SwitchLaunchPad(b.LaunchSiteIndex);
+                                vesselLC.SwitchLaunchPad(b.LaunchSiteIndex);
                             }
-                            b.LaunchSiteIndex = activeLC.ActiveLaunchPadIndex;
+                            b.LaunchSiteIndex = vesselLC.ActiveLaunchPadIndex;
 
                             List<string> facilityChecks = b.MeetsFacilityRequirements(false);
                             if (facilityChecks.Count == 0)
                             {
-                                if (!operational)
+                                if (pad == null)
+                                {
+                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchNoPad", "Cannot Launch!", "Somehow this vessel is not associated with a launch pad!", "Acknowledged", false, HighLogic.UISkin);
+                                }
+                                else if (!operational)
                                 {
                                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchRepairPopup", "Cannot Launch!", "You must repair the launchpad before you can launch a vessel from it!", "Acknowledged", false, HighLogic.UISkin);
                                 }
-                                else if (Utilities.ReconditioningActive(null, launchSite))
+                                else if (vesselLC.GetReconditioning(launchSite) is ReconRollout recon)
                                 {
-                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {Utilities.GetFormattedTime(activeLC.GetReconditioning(launchSite).GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {Utilities.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
                                     ScreenMessages.PostScreenMessage(message);
                                 }
                                 else
@@ -1219,10 +1237,10 @@ namespace KerbalConstructionTime
                     {
                         if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
                         {
-                            var tmpPrep = new AirlaunchPrep(b, b.Id.ToString());
+                            var tmpPrep = new AirlaunchPrep(b, blvID);
                             if (tmpPrep.Cost > 0d)
                                 GUILayout.Label("√" + tmpPrep.Cost.ToString("N0"));
-                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+b.Id.ToString()) : new GUIContent("Prep for airlaunch");
+                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
                                 AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
@@ -1232,7 +1250,7 @@ namespace KerbalConstructionTime
                                 }
                                 else
                                 {
-                                    activeLC.AirlaunchPrep.Add(tmpPrep);
+                                    vesselLC.AirlaunchPrep.Add(tmpPrep);
                                 }
                             }
                             if (Event.current.type == EventType.Repaint)

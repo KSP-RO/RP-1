@@ -17,10 +17,9 @@ namespace KerbalConstructionTime
                 ShowSettings();
             }
 
-            GUILayout.Label($"{step++}) If you want to play from a different site than Cape Canaveral, switch to the Tracking Station and select a new site.");
+            GUILayout.Label($"{step++}) If you want to play from a different site than Cape Canaveral, switch to the Tracking Station and select a new site. You will only get a free launch complex in one site.");
 
-            KSCItem ksc = KCTGameStates.KSCs.Find(k => k.LaunchComplexes.Count > 1);
-            if (ksc == null)
+            if (!KCTGameStates.StarterLCSelected)
             {
                 GUILayout.Label($"{step++}) Choose a starting Launch Complex:");
 
@@ -28,6 +27,7 @@ namespace KerbalConstructionTime
                 {
                     CreateStartingPad(LCItem.StartingLC1);
                     Utilities.AddFunds(PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds, TransactionReasons.None);
+                    KCTGameStates.StarterLCSelected = true;
                 }
                 GUILayout.Label($"Also gives √{PresetManager.Instance.ActivePreset.GeneralSettings.SmallLCExtraFunds:N0}");
 
@@ -36,6 +36,7 @@ namespace KerbalConstructionTime
                 if (GUILayout.Button($"15t Capacity (min: {LCItem.CalcMassMin(15):N0}t)", HighLogic.Skin.button))
                 {
                     CreateStartingPad(LCItem.StartingLC15);
+                    KCTGameStates.StarterLCSelected = true;
                 }
             }
             

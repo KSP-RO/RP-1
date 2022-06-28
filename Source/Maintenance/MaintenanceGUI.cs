@@ -160,7 +160,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             double costPerDay = Math.Max(0, MaintenanceHandler.Instance.TotalUpkeepPerDay - MaintenanceHandler.Instance.MaintenanceSubsidyPerDay);
-            GUILayout.Label("Total (after subsidy)", BoldLabel, GUILayout.Width(160));
+            GUILayout.Label("Net (after subsidy)", BoldLabel, GUILayout.Width(160));
             GUILayout.Label((costPerDay * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 

@@ -900,6 +900,9 @@
     <Content Include="..\GameData\RP-0\Science\BodyScienceParams.cfg">
       <Link>Science\BodyScienceParams.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Science\IgnoredExperiments.cfg">
+      <Link>Science\IgnoredExperiments.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Science\Lab.cfg">
       <Link>Science\Lab.cfg</Link>
     </Content>

@@ -42,7 +42,7 @@ namespace KerbalConstructionTime
             KCTGameStates.LastResearchers = LastResearchers;
             KCTGameStates.LoadedSaveVersion = saveVersion;
 
-            if (saveVersion < KCTGameStates.VERSION)
+            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
             {
                 if (saveVersion < 1)
                 {

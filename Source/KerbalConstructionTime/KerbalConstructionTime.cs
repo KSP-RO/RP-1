@@ -89,6 +89,9 @@ namespace KerbalConstructionTime
             if (!File.Exists(PresetManager.SettingsFilePath))
             {
                 KCTGameStates.IsFirstStart = true;
+                // In this case it is a new game, so we start on the current version.
+                // Should not be meaningful because we only check LoadedSaveVersion during Load
+                KCTGameStates.LoadedSaveVersion = KCTGameStates.VERSION;
             }
 
             if (PresetManager.Instance == null)

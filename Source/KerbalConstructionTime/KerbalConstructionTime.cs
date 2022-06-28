@@ -258,6 +258,7 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.IsSimulatedFlight)
             {
+                LCItem vesselLC = KCTGameStates.LaunchedVessel.LC;
                 KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
                 if (KCTGameStates.LaunchedVessel.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
@@ -266,12 +267,12 @@ namespace KerbalConstructionTime
                     Utilities.AddFunds(KCTGameStates.LaunchedVessel.Cost, TransactionReasons.VesselRollout);
                     FlightGlobals.ActiveVessel.vesselName = KCTGameStates.LaunchedVessel.ShipName;
                 }
+                if (vesselLC == null) vesselLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is ReconRollout rollout)
+                    vesselLC.Recon_Rollout.Remove(rollout);
 
-                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is ReconRollout rollout)
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Recon_Rollout.Remove(rollout);
-
-                if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is AirlaunchPrep alPrep)
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.AirlaunchPrep.Remove(alPrep);
+                if (vesselLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is AirlaunchPrep alPrep)
+                    vesselLC.AirlaunchPrep.Remove(alPrep);
 
                 if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KCTGameStates.LaunchedVessel.Id &&
                     (!alParams.KSPVesselId.HasValue || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))

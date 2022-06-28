@@ -46,6 +46,7 @@ namespace KerbalConstructionTime
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
+        public static bool StarterLCSelected = false;
         public static bool IsSimulatedFlight = false;
         public static double EditorBuildPoints = 0;
         public static double EditorShipMass = 0;
@@ -75,6 +76,7 @@ namespace KerbalConstructionTime
         public static void Reset()
         {
             IsFirstStart = false;
+            StarterLCSelected = false;
             VesselErrorAlerted = false;
 
             IsSimulatedFlight = false;

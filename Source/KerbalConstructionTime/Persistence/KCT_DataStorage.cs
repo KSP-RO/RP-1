@@ -25,6 +25,7 @@ namespace KerbalConstructionTime
         [Persistent] public double EfficiencyEngineers = 0.25d;
         [Persistent] public double LastEngineers = 0d;
         [Persistent] public double LastResearchers = 0d;
+        [Persistent] public bool StarterLCSelected = false;
 
         [Persistent] public int saveVersion;
 
@@ -41,6 +42,7 @@ namespace KerbalConstructionTime
             KCTGameStates.LastEngineers = LastEngineers;
             KCTGameStates.LastResearchers = LastResearchers;
             KCTGameStates.LoadedSaveVersion = saveVersion;
+            KCTGameStates.StarterLCSelected = StarterLCSelected;
 
             if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
             {
@@ -67,6 +69,7 @@ namespace KerbalConstructionTime
             LastResearchers = KCTGameStates.LastResearchers;
             LastEngineers = KCTGameStates.LastEngineers;
             saveVersion = KCTGameStates.VERSION;
+            StarterLCSelected = KCTGameStates.StarterLCSelected;
         }
     }
 }

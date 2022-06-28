@@ -412,7 +412,15 @@ namespace KerbalConstructionTime
                 }
                 DrawTypeIcon(constr);
                 string identifier = constr.GetItemName() + i;
-                string costTooltip = $"{identifier}¶Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}";
+                string costTooltip = $"Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}";
+                if (constr is LCConstruction lcc)
+                {
+                    if (lcc.LCData.lcType == LaunchComplexType.Pad)
+                        costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\n{costTooltip}";
+
+                    costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.LCData.sizeMax)}\n{costTooltip}";
+                }
+                costTooltip = $"{identifier}¶{costTooltip}";
                 GUILayout.Label(new GUIContent(constr.GetItemName(), "name" + costTooltip));
                 GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)

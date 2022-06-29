@@ -82,19 +82,21 @@ namespace KerbalConstructionTime
             IsSimulatedFlight = false;
             SimulationParams.Reset();
 
+            AirlaunchParams = null;
+
             KCT_GUI.ResetFormulaRateHolders();
 
             BuildingMaxLevelCache.Clear();
 
             InitAndClearTechList();
 
-             UnassignedPersonnel = 0;
-             Researchers = 0;
-             EfficiencyResearchers = StartingEfficiencyResearchers;
-             LastResearchers = 0;
-             EfficiencyEngineers = StartingEfficiencyEngineers;
-             LastEngineers = 0;
-             LoadedSaveVersion = 0;
+            UnassignedPersonnel = 0;
+            Researchers = 0;
+            EfficiencyResearchers = StartingEfficiencyResearchers;
+            LastResearchers = 0;
+            EfficiencyEngineers = StartingEfficiencyEngineers;
+            LastEngineers = 0;
+            LoadedSaveVersion = 0;
     }
 
         public static void InitAndClearTechList()

@@ -522,8 +522,8 @@ namespace KerbalConstructionTime
             }
 
             Utilities.CleanupDebris(launchSiteName);
-            FlightDriver.StartWithNewLaunch(tempFile, Flag, launchSiteName, new VesselCrewManifest());
             if (KCTGameStates.AirlaunchParams != null) KCTGameStates.AirlaunchParams.KSPVesselId = null;
+            FlightDriver.StartWithNewLaunch(tempFile, Flag, launchSiteName, new VesselCrewManifest());
         }
 
         public List<string> MeetsFacilityRequirements(bool skipMinMass, bool highestFacility = false)

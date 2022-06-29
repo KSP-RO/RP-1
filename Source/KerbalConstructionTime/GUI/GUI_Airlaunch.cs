@@ -120,6 +120,7 @@ namespace KerbalConstructionTime
                     }
 
                     KCTGameStates.AirlaunchParams = _airlaunchParams;
+                    _airlaunchParams = null;
 
                     BuildListVessel b = KCTGameStates.LaunchedVessel;
                     if (!IsCrewable(b.ExtractedParts))

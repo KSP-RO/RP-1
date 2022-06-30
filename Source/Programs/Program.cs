@@ -191,6 +191,17 @@ namespace RP0.Programs
             double repLost = GetRepLossAtTime(time2);
             if (repLost > 0d)
             {
+                if (repPenaltyAssessed <= 0)
+                {
+                    if (KSP.UI.Screens.MessageSystem.Instance != null)
+                    {
+                        KSP.UI.Screens.MessageSystem.Instance.AddMessage(new KSP.UI.Screens.MessageSystem.Message("Program Duration Expired",
+                            $"The duration of the {title} program has expired.\n\n"
+                            + ( CanComplete ? "It should be completed in the Administration Building before we lose any more reputation."
+                                : "We need to finish its objectives as soon as possible!"),
+                            KSP.UI.Screens.MessageSystemButton.MessageButtonColor.ORANGE, KSP.UI.Screens.MessageSystemButton.ButtonIcons.DEADLINE));
+                    }
+                }
                 double repLossToApply = repLost - repPenaltyAssessed;
                 repPenaltyAssessed += repLossToApply;
                 Reputation.Instance.AddReputation((float)-repLossToApply, TransactionReasons.Mission);
@@ -202,6 +213,12 @@ namespace RP0.Programs
         {
             objectivesCompletedUT = KSPUtils.GetUT();
             CareerLog.Instance?.ProgramObjectivesMet(this);
+            if (KSP.UI.Screens.MessageSystem.Instance != null)
+            {
+                KSP.UI.Screens.MessageSystem.Instance.AddMessage(new KSP.UI.Screens.MessageSystem.Message("Program Complete", 
+                    $"We've achieved the objectives set forth in the {title} program and it can now be completed in the Administration Building.",
+                    KSP.UI.Screens.MessageSystemButton.MessageButtonColor.GREEN, KSP.UI.Screens.MessageSystemButton.ButtonIcons.COMPLETE));
+            }
         }
 
         public void Complete()

@@ -48,7 +48,6 @@ namespace RP0
         public double McCost = 0d;
         public double TsCost = 0d;
         public double AcCost = 0d;
-        public double HangarsCost = 0d;
         public double LCsCost = 0d;
 
         public double TrainingUpkeepPerDay = 0d;
@@ -57,7 +56,7 @@ namespace RP0
         public double NautUpkeepPerDay = 0d;
         public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ConstructionSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
 
-        public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost + HangarsCost + LCsCost;
+        public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost + LCsCost;
 
         // TODO this is duplicate code with the KCT side
         public double IntegrationSalaryPerDay
@@ -253,6 +252,24 @@ namespace RP0
             return _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(cost, Settings.facilityLevelCostPow);
         }
 
+        public double LCUpkeep(LCItem lc)
+        {
+            if (!lc.IsOperational)
+                return 0d;
+
+            switch (lc.LCType)
+            {
+                case LaunchComplexType.Hangar:
+                    return ComputeDailyMaintenanceCost(Math.Max(Settings.hangarCostForMaintenanceMin, KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out _, out _, out _) - Settings.hangarCostForMaintenanceOffset));
+
+                case LaunchComplexType.Pad:
+                    KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out double padCost, out double vabCost, out _);
+                    return ComputeDailyMaintenanceCost((vabCost + lc.LaunchPadCount * padCost) * Settings.lcCostMultiplier);
+            }
+
+            return 0d;
+        }
+
         public void UpdateUpkeep()
         {
             Profiler.BeginSample("RP0Maintenance UpdateUpkeep");
@@ -264,22 +281,11 @@ namespace RP0
 
             EnsureFacilityLvlCostsLoaded();
 
-            HangarsCost = 0d;
             LCsCost = 0d;
             foreach (var ksc in KCTGameStates.KSCs)
             {
-                if (ksc.Hangar.IsOperational)
-                    HangarsCost += ComputeDailyMaintenanceCost(Math.Max(Settings.hangarCostForMaintenanceMin, KCT_GUI.GetPadStats(ksc.Hangar.MassMax, ksc.Hangar.SizeMax, ksc.Hangar.IsHumanRated, out _, out _, out _) - Settings.hangarCostForMaintenanceOffset));
-
-                for (int i = 1; i < ksc.LaunchComplexes.Count; ++i)
-                {
-                    LCItem lc = ksc.LaunchComplexes[i];
-                    if (!lc.IsOperational)
-                        continue;
-
-                    KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out double padCost, out double vabCost, out _);
-                    LCsCost += ComputeDailyMaintenanceCost((vabCost + lc.LaunchPadCount * padCost) * Settings.lcCostMultiplier);
-                }
+                foreach (var lc in ksc.LaunchComplexes)
+                    LCsCost += LCUpkeep(lc);
             }
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out float[] costs))

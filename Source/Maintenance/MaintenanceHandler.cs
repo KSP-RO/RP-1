@@ -463,7 +463,6 @@ namespace RP0
             KCTGameStates.SalaryEngineers = Settings.salaryEngineers;
             KCTGameStates.SalaryResearchers = Settings.salaryResearchers;
             KCTGameStates.SalaryMultiplier = _maintenanceCostMult;
-            KCTGameStates.LCUpkeepMultiplier = Settings.lcCostMultiplier;
         }
 
         private void EnsureFacilityLvlCostsLoaded()

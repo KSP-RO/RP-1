@@ -140,8 +140,8 @@ namespace KerbalConstructionTime
         public static int SalaryResearchers = -1;
         public static double SalaryMultiplier = 1d;
         public static double NetUpkeep = 0d;
-        public static DoubleDelegate FacilityDailyMaintenanceDelegate = null;
-        public static double LCUpkeepMultiplier = 1d;
+        public delegate double DoubleIntDelegate(double d, int i);
+        public static DoubleIntDelegate FacilityDailyMaintenanceDelegate = null;
 
         public static int GetSalaryEngineers()
         {

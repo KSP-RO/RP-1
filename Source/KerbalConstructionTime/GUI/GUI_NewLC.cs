@@ -148,8 +148,9 @@ namespace KerbalConstructionTime
                 curPadSize.x = widthLimit;
                 curPadSize.y = heightLimit;
                 curPadSize.z = lengthLimit;
-                GetPadStats(tonnageLimit, curPadSize, _isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
-                minTonnage = LCItem.CalcMassMin(tonnageLimit);
+                GetPadStats(isHangar ? activeLC.MassMax : tonnageLimit, curPadSize, isHangar ? activeLC.IsHumanRated : _isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
+                if (!isHangar)
+                    minTonnage = LCItem.CalcMassMin(tonnageLimit);
             }
             if (!isHangar)
             {
@@ -212,24 +213,27 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
             }
 
-            double totalCost;
-            if (curPadCost > oldPadCost)
-                totalCost = curPadCost - oldPadCost;
-            else
-                totalCost = (oldPadCost - curPadCost) * 0.5d;
-            // Modify case: Additional pads cost less to build, so cost less to modify.
-            if(lpMult > 1)
-                totalCost *= 1d + (lpMult - 1d) * PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
+            double totalCost = 0;
+            if (!isHangar)
+            {
+                if (curPadCost > oldPadCost)
+                    totalCost = curPadCost - oldPadCost;
+                else
+                    totalCost = (oldPadCost - curPadCost) * 0.5d;
+                // Modify case: Additional pads cost less to build, so cost less to modify.
+                if (lpMult > 1)
+                    totalCost *= 1d + (lpMult - 1d) * PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
+            }
 
             if (isModify)
             {
                 // Enforce a min cost for pad size changes
                 const double minPadModifyCost = 1000d;
-                if (activeLC.MassMax != tonnageLimit && totalCost < minPadModifyCost)
+                if (!isHangar && activeLC.MassMax != tonnageLimit && totalCost < minPadModifyCost)
                     totalCost = minPadModifyCost;
 
                 double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
-                double costScalingFactor = UtilMath.LerpUnclamped(100d, 1000d, UtilMath.InverseLerp(10d, 55d, UtilMath.Clamp(activeLC.MassOrig, 10d, 50d)));
+                double costScalingFactor = isHangar ? 500d : UtilMath.LerpUnclamped(100d, 1000d, UtilMath.InverseLerp(10d, 55d, UtilMath.Clamp(activeLC.MassOrig, 10d, 50d)));
                 double renovateCost = Math.Abs(curVABCost - oldVABCost)
                     + heightAbs * costScalingFactor
                     + Math.Abs(widthLimit - activeLC.SizeMax.x) * costScalingFactor * 0.5d
@@ -254,7 +258,9 @@ namespace KerbalConstructionTime
 
             if (totalCost > 0)
             {
-                double totalCostForMaintenance = curVABCost + curPadCost * lpMult;
+                double totalCostForMaintenance = curVABCost;
+                if(!isHangar)
+                    totalCostForMaintenance += curPadCost * lpMult;
 
                 // Additional pads cost less
                 curPadCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;

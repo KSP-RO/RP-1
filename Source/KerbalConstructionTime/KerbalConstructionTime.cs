@@ -948,6 +948,28 @@ namespace KerbalConstructionTime
                 if (KCTGameStates.SimulationParams.SimulationUT > 0 &&
                     FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
+                    // Advance building construction
+                    double UToffset = KCTGameStates.SimulationParams.SimulationUT - Utilities.GetUT();
+                    if (UToffset > 0)
+                    {
+                        foreach (var ksc in KCTGameStates.KSCs)
+                        {
+                            double timePortion = UToffset;
+                            if (ksc.ConstructionWorkers == 0)
+                                continue;
+
+                            for(int i = 0; i < ksc.Constructions.Count && timePortion > 0; ++i)
+                            {
+                                var c = ksc.Constructions[i];
+                                double t = c.EstimatedTimeLeft;
+                                if (t > timePortion)
+                                    break;
+
+                                timePortion -= t;
+                                c.Progress = c.BP;
+                            }
+                        }
+                    }
                     KCTDebug.Log($"Setting simulation UT to {KCTGameStates.SimulationParams.SimulationUT}");
                     if (!Utilities.IsPrincipiaInstalled)
                         Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);

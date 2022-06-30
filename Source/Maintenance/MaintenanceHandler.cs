@@ -247,9 +247,19 @@ namespace RP0
             baseCostPerDay *= (_maintenanceCostMult / 365.25d);
         }
 
-        protected double ComputeDailyMaintenanceCost(double cost)
+        protected double ComputeDailyMaintenanceCost(double cost) => ComputeDailyMaintenanceCost(cost, 0);
+
+        protected double ComputeDailyMaintenanceCost(double cost, int facilityType)
         {
-            return _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(cost, Settings.facilityLevelCostPow);
+            if (facilityType == 2)
+                cost = Math.Max(Settings.hangarCostForMaintenanceMin, cost - Settings.hangarCostForMaintenanceOffset);
+
+            double upkeep = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(cost, Settings.facilityLevelCostPow);
+
+            if (facilityType == 1)
+                upkeep *= Settings.lcCostMultiplier;
+
+            return upkeep;
         }
 
         public double LCUpkeep(LCItem lc)

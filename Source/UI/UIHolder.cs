@@ -38,7 +38,10 @@ namespace RP0
             {
                 GameEvents.onGUIApplicationLauncherReady.Remove(OnGuiAppLauncherReady);
                 if (_button != null)
+                {
+                    GameEvents.onGameSceneLoadRequested.Remove(OnSceneChange);
                     ApplicationLauncher.Instance.RemoveModApplication(_button);
+                }
             }
             catch (Exception ex)
             {

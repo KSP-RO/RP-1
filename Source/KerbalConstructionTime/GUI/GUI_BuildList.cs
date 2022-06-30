@@ -411,16 +411,7 @@ namespace KerbalConstructionTime
                     ksc.RecalculateBuildRates(false);
                 }
                 DrawTypeIcon(constr);
-                string identifier = constr.GetItemName() + i;
-                string costTooltip = $"Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}";
-                if (constr is LCConstruction lcc)
-                {
-                    if (lcc.LCData.lcType == LaunchComplexType.Pad)
-                        costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\n{costTooltip}";
-
-                    costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.LCData.sizeMax)}\n{costTooltip}";
-                }
-                costTooltip = $"{identifier}¶{costTooltip}";
+                GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                 GUILayout.Label(new GUIContent(constr.GetItemName(), "name" + costTooltip));
                 GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
@@ -464,6 +455,20 @@ namespace KerbalConstructionTime
             GUILayout.Label("Remaining cost of all constructions:");
             GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
+        }
+
+        private static void GetConstructionTooltip(ConstructionBuildItem constr, int i, out string costTooltip, out string identifier)
+        {
+            identifier = constr.GetItemName() + i;
+            costTooltip = $"Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}";
+            if (constr is LCConstruction lcc)
+            {
+                if (lcc.LCData.lcType == LaunchComplexType.Pad)
+                    costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\n{costTooltip}";
+
+                costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.LCData.sizeMax)}\n{costTooltip}";
+            }
+            costTooltip = $"{identifier}¶{costTooltip}";
         }
 
         private static void RenderTechList()
@@ -696,6 +701,11 @@ namespace KerbalConstructionTime
                     GUILayout.Label($"{a.GetItemName()}: {blv.ShipName}");
                 else if (t is BuildListVessel b)
                     GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
+                else if (t is ConstructionBuildItem constr)
+                {
+                    GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
+                    GUILayout.Label(new GUIContent( t.GetItemName(), "name" + costTooltip ));
+                }
                 else
                     GUILayout.Label(t.GetItemName());
 
@@ -709,7 +719,7 @@ namespace KerbalConstructionTime
                     GUILayout.Space(18);
 
                 if (t.GetBuildRate() > 0d)
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "comgbined"+i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined"+i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
                     GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined"+i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();

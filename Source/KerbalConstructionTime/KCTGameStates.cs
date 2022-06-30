@@ -140,6 +140,8 @@ namespace KerbalConstructionTime
         public static int SalaryResearchers = -1;
         public static double SalaryMultiplier = 1d;
         public static double NetUpkeep = 0d;
+        public static DoubleDelegate FacilityDailyMaintenanceDelegate = null;
+        public static double LCUpkeepMultiplier = 1d;
 
         public static int GetSalaryEngineers()
         {
@@ -178,9 +180,9 @@ namespace KerbalConstructionTime
         public static int GetSalaryResearchers() => (int)(KCTGameStates.Researchers * SalaryResearchers * SalaryMultiplier);
         public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
 
-        public delegate double FundingDelegate(double utOffset);
+        public delegate double DoubleDelegate(double num);
         public delegate void VoidDelegate();
-        public static FundingDelegate ProgramFundingForTimeDelegate = null;
+        public static DoubleDelegate ProgramFundingForTimeDelegate = null;
         public static VoidDelegate UpkeepCheckDelegate;
 
         public static double GetBudgetDelta(double time)

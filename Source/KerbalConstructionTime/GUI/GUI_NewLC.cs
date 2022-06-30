@@ -254,6 +254,8 @@ namespace KerbalConstructionTime
 
             if (totalCost > 0)
             {
+                double totalCostForMaintenance = curVABCost + curPadCost * lpMult;
+
                 // Additional pads cost less
                 curPadCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
 
@@ -282,6 +284,20 @@ namespace KerbalConstructionTime
                 GUILayout.Label("Est. construction time:", GUILayout.ExpandWidth(false));
                 GUILayout.Label(new GUIContent( sBuildTime, isModify ? "With current construction engineers" : "With LC engineers as\nconstruction engineers"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
+
+                double projectedMaintenance = 0d;
+                if (KCTGameStates.FacilityDailyMaintenanceDelegate != null)
+                    projectedMaintenance = KCTGameStates.FacilityDailyMaintenanceDelegate(totalCostForMaintenance);
+                if (!isHangar)
+                    projectedMaintenance *= KCTGameStates.LCUpkeepMultiplier;
+
+                if (projectedMaintenance > 0d)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Est. Yearly Upkeep:", GUILayout.ExpandWidth(false));
+                    GUILayout.Label(new GUIContent((projectedMaintenance * 365.25d).ToString("N0"), $"Daily: {projectedMaintenance:N1}"), GetLabelRightAlignStyle());
+                    GUILayout.EndHorizontal();
+                }
             }
 
             GUILayout.BeginHorizontal();

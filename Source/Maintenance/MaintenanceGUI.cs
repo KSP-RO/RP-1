@@ -195,29 +195,32 @@ namespace RP0
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            try
+            foreach (var ksc in KerbalConstructionTime.KCTGameStates.KSCs)
             {
-                GUILayout.Label("Hangars", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.HangarsCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
+                string site = LocalizeSiteName(ksc.KSCName);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(site, BoldLabel, GUILayout.Width(160));
+                GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Launch Complexes", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.LCsCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                double siteTotal = 0d;
+                foreach (var lc in ksc.LaunchComplexes)
+                {
+                    if (!lc.IsOperational)
+                        continue;
+
+                    double cost = MaintenanceHandler.Instance.LCUpkeep(lc) * PeriodFactor;
+                    siteTotal += cost;
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label($"   {lc.Name}", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label(cost.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.EndHorizontal();
+                }
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(" Total", BoldLabel, GUILayout.Width(160));
+                GUILayout.Label(siteTotal.ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
+                GUILayout.EndHorizontal();
             }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             try

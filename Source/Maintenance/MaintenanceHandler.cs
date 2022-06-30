@@ -7,6 +7,7 @@ using RP0.Programs;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Upgradeables;
+using System.Collections;
 
 namespace RP0
 {
@@ -20,6 +21,7 @@ namespace RP0
 
         private bool _isFirstLoad = true;
         private static readonly Dictionary<SpaceCenterFacility, float[]> _facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
+        public static void ClearFacilityCosts() { _facilityLevelCosts.Clear(); }
 
         [KSPField(isPersistant = true)]
         public double nextUpdate = -1d;
@@ -36,9 +38,8 @@ namespace RP0
 
         private double _maintenanceCostMult = 1d;
         private bool _wasWarpingHigh = false;
-        private bool _skipOne = true;
-        private bool _skipTwo = true;
-        private bool _skipThree = true;
+        private int _frameCount = 0;
+        private bool _waitingForLevelLoad = false;
 
         private EventVoid onKctPersonnelChangeEvent;
 
@@ -155,12 +156,6 @@ namespace RP0
                     ConfigNode.LoadObjectFromConfig(Settings, n);
 
                 UpdateKCTSalarySettings();
-            }
-
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-            {
-                // Need to load the facility upgrade prices after CustomBarnKit has finished patching them
-                GameEvents.onLevelWasLoaded.Add(LoadUpgradesPrices);
             }
         }
 
@@ -367,21 +362,9 @@ namespace RP0
             if (HighLogic.CurrentGame == null)
                 return;
 
-            if (_skipThree)
+            ++_frameCount;
+            if (_frameCount == 3)
             {
-                if (_skipTwo)
-                {
-                    if (_skipOne)
-                    {
-                        _skipOne = false;
-                        return;
-                    }
-
-                    _skipTwo = false;
-                    return;
-                }
-
-                _skipThree = false;
                 UpdateKCTSalaries();
                 return;
             }
@@ -465,8 +448,11 @@ namespace RP0
             KCTGameStates.SalaryMultiplier = _maintenanceCostMult;
         }
 
-        private void EnsureFacilityLvlCostsLoaded()
+        private bool EnsureFacilityLvlCostsLoaded()
         {
+            if(_waitingForLevelLoad)
+                return false;
+
             if (_facilityLevelCosts.Count == 0)
             {
                 // Facility level upgrade costs should be loaded only once. These do not change and are actually unavailable 
@@ -482,12 +468,7 @@ namespace RP0
                 }
                 Debug.Log($"[RP-0] Updated facilityLevelsCosts, count: {_facilityLevelCosts.Count}");
             }
-        }
-
-        private void LoadUpgradesPrices(GameScenes scene)
-        {
-            EnsureFacilityLvlCostsLoaded();
-            GameEvents.onLevelWasLoaded.Remove(LoadUpgradesPrices);
+            return true;
         }
 
         public double GetSubsidyAmountForSeconds(double seconds)

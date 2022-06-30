@@ -67,6 +67,7 @@
     <Compile Include="Harmony\RnDPatcher.cs" />
     <Compile Include="GameplayTips.cs" />
     <Compile Include="Harmony\HarmonyPatcher.cs" />
+    <Compile Include="Harmony\CBKPatcher.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />

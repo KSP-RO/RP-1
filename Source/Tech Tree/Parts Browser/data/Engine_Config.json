@@ -424,7 +424,7 @@
         "spacecraft": "Redstone",
         "engine_config": "NAA75_110",
         "upgrade": true,
-        "entry_cost_mods": "1000, HydyneFuel",
+        "entry_cost_mods": "1000, A-6, HydyneFuel",
         "identical_part_name": "",
         "module_tags": []
     },

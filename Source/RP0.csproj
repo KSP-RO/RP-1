@@ -70,6 +70,7 @@
     <Compile Include="Harmony\HarmonyPatcher.cs" />
     <Compile Include="Harmony\BaseCrewAssignmentDialog.cs" />
     <Compile Include="Harmony\FlightEVA.cs" />
+    <Compile Include="Harmony\CBKPatcher.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />

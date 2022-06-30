@@ -293,9 +293,7 @@ namespace KerbalConstructionTime
 
                 double projectedMaintenance = 0d;
                 if (KCTGameStates.FacilityDailyMaintenanceDelegate != null)
-                    projectedMaintenance = KCTGameStates.FacilityDailyMaintenanceDelegate(totalCostForMaintenance);
-                if (!isHangar)
-                    projectedMaintenance *= KCTGameStates.LCUpkeepMultiplier;
+                    projectedMaintenance = KCTGameStates.FacilityDailyMaintenanceDelegate(totalCostForMaintenance, isHangar ? 2 : 1);
 
                 if (projectedMaintenance > 0d)
                 {

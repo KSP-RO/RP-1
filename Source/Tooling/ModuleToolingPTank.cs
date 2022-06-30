@@ -120,7 +120,6 @@ namespace RP0
                     Debug.LogError("[ModuleTooling] Could not find proc SHAPE to bind to");
                     return;
                 }
-                length = procShape.Fields["length"];
                 length = GetRealLengthFieldForShape(procShape, isTruss);
                 diam1 = GetPrimaryDiameterFieldForShape(procShape, isCone, isHollow, isTruss);
                 diam2 = GetSecondaryDiameterFieldForShape(procShape, isCone, isHollow);

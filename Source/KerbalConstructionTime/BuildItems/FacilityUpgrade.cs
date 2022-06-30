@@ -13,6 +13,14 @@ namespace KerbalConstructionTime
             get { return _facilityType; }
             set { _facilityType = value; }
         }
+
+        public override string GetItemName()
+        {
+            if (_facilityType == null)
+                return Name;
+            return ScenarioUpgradeableFacilities.GetFacilityName((SpaceCenterFacility)_facilityType);
+        }
+
         public int UpgradeLevel, CurrentLevel;
         public string FacilityInternalID;
         public Guid ID;

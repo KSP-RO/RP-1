@@ -13,15 +13,8 @@ namespace RP0
 
         protected void Awake()
         {
-            try
-            {
-                GameEvents.onGUIApplicationLauncherReady.Add(OnGuiAppLauncherReady);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError("[RP-0] failed to register UIHolder.OnGuiAppLauncherReady");
-                Debug.LogException(ex);
-            }
+            GameEvents.onGUIApplicationLauncherReady.Add(OnGuiAppLauncherReady);
+            GameEvents.onGameSceneLoadRequested.Add(OnSceneChange);
         }
 
         protected void Start()
@@ -34,18 +27,11 @@ namespace RP0
 
         protected void OnDestroy()
         {
-            try
+            GameEvents.onGUIApplicationLauncherReady.Remove(OnGuiAppLauncherReady);
+            GameEvents.onGameSceneLoadRequested.Remove(OnSceneChange);
+            if (_button != null)
             {
-                GameEvents.onGUIApplicationLauncherReady.Remove(OnGuiAppLauncherReady);
-                if (_button != null)
-                {
-                    GameEvents.onGameSceneLoadRequested.Remove(OnSceneChange);
-                    ApplicationLauncher.Instance.RemoveModApplication(_button);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
+                ApplicationLauncher.Instance.RemoveModApplication(_button);
             }
         }
 
@@ -73,24 +59,15 @@ namespace RP0
 
         private void OnGuiAppLauncherReady()
         {
-            try
-            {
-                _button = ApplicationLauncher.Instance.AddModApplication(
-                    ShowWindow,
-                    HideWindow,
-                    null,
-                    null,
-                    null,
-                    null,
-                    ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
-                    GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
-                GameEvents.onGameSceneLoadRequested.Add(OnSceneChange);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError("[RP-0] failed to register UIHolder");
-                Debug.LogException(ex);
-            }
+            _button = ApplicationLauncher.Instance.AddModApplication(
+                ShowWindow,
+                HideWindow,
+                null,
+                null,
+                null,
+                null,
+                ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
+                GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
         }
     }
 }

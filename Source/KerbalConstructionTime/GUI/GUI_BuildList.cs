@@ -1001,7 +1001,7 @@ namespace KerbalConstructionTime
             string launchSite = b.LaunchSite;
             if (launchSite == "LaunchPad" && isPad)
             {
-                if (b.LaunchSiteIndex >= 0)
+                if (b.LaunchSiteIndex >= 0 && b.LaunchSiteIndex < b.LC.LaunchPads.Count)
                     launchSite = b.LC.LaunchPads[b.LaunchSiteIndex].name;
                 else
                     launchSite = b.LC.ActiveLPInstance.name;

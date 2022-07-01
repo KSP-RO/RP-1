@@ -220,7 +220,11 @@ namespace KerbalConstructionTime
 
         public void SwitchLaunchPad(bool forwardDirection)
         {
-            if (LaunchPadCount < 2) return;
+            if (LaunchPadCount < 2)
+            {
+                ActiveLaunchPadIndex = 0;
+                return;
+            }
 
             int idx = ActiveLaunchPadIndex;
             KCT_LaunchPad pad;
@@ -415,6 +419,8 @@ namespace KerbalConstructionTime
             Name = node.GetValue("LCName");
             ActiveLaunchPadIndex = 0;
             node.TryGetValue("ActiveLPID", ref ActiveLaunchPadIndex);
+            if (ActiveLaunchPadIndex < 0)
+                ActiveLaunchPadIndex = 0;
             node.TryGetValue("operational", ref IsOperational);
             string lcTypeVal = node.GetValue("lcType");
             if (!string.IsNullOrEmpty(lcTypeVal))

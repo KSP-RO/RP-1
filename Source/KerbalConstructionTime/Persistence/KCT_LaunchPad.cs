@@ -117,11 +117,11 @@ namespace KerbalConstructionTime
 
                     foreach (BuildListVessel vessel in currentLC.Warehouse)
                     {
-                        if (vessel.LaunchSiteIndex > idx) vessel.LaunchSiteIndex--;
+                        if (vessel.LaunchSiteIndex >= idx) vessel.LaunchSiteIndex--;
                     }
                     foreach (BuildListVessel vessel in currentLC.BuildList)
                     {
-                        if (vessel.LaunchSiteIndex > idx) vessel.LaunchSiteIndex--;
+                        if (vessel.LaunchSiteIndex >= idx) vessel.LaunchSiteIndex--;
                     }
                     
                     try
@@ -180,7 +180,6 @@ namespace KerbalConstructionTime
             {
                 int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
                 KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex = idx;
 
                 //set the level to this level
                 if (Utilities.CurrentGameIsCareer())

@@ -80,31 +80,31 @@ namespace KerbalConstructionTime
             }
         }
 
-        private void OnPartUndock(Part data)
+        private static void OnPartUndock(Part data)
         {
             _isUnDockingInProgress = true;
             KerbalConstructionTime.Instance.StartCoroutine(ResetUnDockingInProgress());
         }
 
-        private void OnVesselDocking(uint persistentId1, uint persistentId2)
+        private static void OnVesselDocking(uint persistentId1, uint persistentId2)
         {
             _isDockingInProgress = true;
             KerbalConstructionTime.Instance.StartCoroutine(ResetDockingInProgress());
         }
 
-        private IEnumerator ResetUnDockingInProgress()
+        private static IEnumerator ResetUnDockingInProgress()
         {
             yield return new WaitForEndOfFrame();
             _isUnDockingInProgress = false;
         }
 
-        private IEnumerator ResetDockingInProgress()
+        private static IEnumerator ResetDockingInProgress()
         {
             yield return new WaitForEndOfFrame();
             _isDockingInProgress = false;
         }
 
-        private void OnPartCouple(GameEvents.FromToAction<Part, Part> data)
+        private static void OnPartCouple(GameEvents.FromToAction<Part, Part> data)
         {
             if (_isDockingInProgress)
             {
@@ -124,7 +124,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        private void OnVesselsUndocking(Vessel oldVessel, Vessel newVessel)
+        private static void OnVesselsUndocking(Vessel oldVessel, Vessel newVessel)
         {
             if (_isUnDockingInProgress)
             {
@@ -147,7 +147,7 @@ namespace KerbalConstructionTime
         /// </summary>
         /// <param name="vm">Tracking VesselModule</param>
         /// <param name="dict">Docking history dictionary to clean and assign to vm</param>
-        private void CleanAndAssignDockedVesselData(KCTVesselTracker vm, Dictionary<uint, KCTVesselData> dict)
+        private static void CleanAndAssignDockedVesselData(KCTVesselTracker vm, Dictionary<uint, KCTVesselData> dict)
         {
             uint rootPartLaunchId = vm.Vessel.rootPart.launchID;
             uint[] keys = dict.Keys.ToArray();
@@ -173,7 +173,7 @@ namespace KerbalConstructionTime
             vm.DockedVesselData = dict;
         }
 
-        private void OnPartDeCoupleNewVesselComplete(Vessel v1, Vessel v2)
+        private static void OnPartDeCoupleNewVesselComplete(Vessel v1, Vessel v2)
         {
             var vm1 = (KCTVesselTracker)v1.vesselModules.Find(vm => vm is KCTVesselTracker);
             var vm2 = (KCTVesselTracker)v2.vesselModules.Find(vm => vm is KCTVesselTracker);

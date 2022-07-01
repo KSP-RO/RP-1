@@ -60,6 +60,7 @@
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
+    <Compile Include="Harmony\ContractsAppPatcher.cs" />
     <Compile Include="Harmony\DifficultyPatcher.cs" />
     <Compile Include="Harmony\CurrencyWidgetPatcher.cs" />
     <Compile Include="Harmony\ReputationPatcher.cs" />

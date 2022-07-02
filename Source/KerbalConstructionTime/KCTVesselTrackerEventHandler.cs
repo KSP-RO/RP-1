@@ -9,8 +9,8 @@ namespace KerbalConstructionTime
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
     public class KCTVesselTrackerEventHandler : MonoBehaviour
     {
-        private static bool _isDockingInProgress = false;
-        private static bool _isUnDockingInProgress = false;
+        private bool _isDockingInProgress = false;
+        private bool _isUnDockingInProgress = false;
 
         private void Awake()
         {

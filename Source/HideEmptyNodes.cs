@@ -24,7 +24,7 @@ namespace RP0
             RDTechTree.OnTechTreeSpawn.Add(OnUpdateRnD);
         }
 
-        public void Destroy()
+        public void OnDestroy()
         {
             RDTechTree.OnTechTreeSpawn.Remove(OnUpdateRnD);
         }

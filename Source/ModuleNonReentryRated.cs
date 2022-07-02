@@ -51,7 +51,7 @@ namespace RP0
             }
         }
 
-        public void Destroy()
+        public void OnDestroy()
         {
             _registeredNonReentryParts.Clear();
         }

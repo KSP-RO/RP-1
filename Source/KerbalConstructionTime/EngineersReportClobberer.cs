@@ -222,11 +222,11 @@ namespace KerbalConstructionTime
             {
                 _engineerLocCached = true;
 
-                _cacheAutoLOC_443417 = KSP.Localization.Localizer.Format("#autoLOC_443417");
-                _cacheAutoLOC_443418 = KSP.Localization.Localizer.Format("#autoLOC_443418");
-                _cacheAutoLOC_443419 = KSP.Localization.Localizer.Format("#autoLOC_443419");
-                _cacheAutoLOC_443420 = KSP.Localization.Localizer.Format("#autoLOC_443420");
-                _cacheAutoLOC_7001411 = KSP.Localization.Localizer.Format("#autoLOC_7001411");
+                _cacheAutoLOC_443417 = KSP.Localization.Localizer.GetStringByTag("#autoLOC_443417");
+                _cacheAutoLOC_443418 = KSP.Localization.Localizer.GetStringByTag("#autoLOC_443418");
+                _cacheAutoLOC_443419 = KSP.Localization.Localizer.GetStringByTag("#autoLOC_443419");
+                _cacheAutoLOC_443420 = KSP.Localization.Localizer.GetStringByTag("#autoLOC_443420");
+                _cacheAutoLOC_7001411 = KSP.Localization.Localizer.GetStringByTag("#autoLOC_7001411");
             }
         }
     }

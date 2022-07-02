@@ -23,7 +23,7 @@ namespace RP0
                         string dName = l.GetValue("displayName");
                         if (!string.IsNullOrEmpty(dName))
                         {
-                            if (dName[0] == '#')
+                            if (dName[0] == '#') // not using GetStringByTag in case a user screws this up. :)
                                 dName = KSP.Localization.Localizer.Format(dName);
 
                             siteLocalizer[l.GetValue("name")] = dName;

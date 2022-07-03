@@ -731,9 +731,6 @@ namespace KerbalConstructionTime
                 KCTDebug.Log($"Added {numWorkers} workers from science points");
                 ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
             }
-
-            if (ScienceWidgetTooltip.Instance != null)
-                ScienceWidgetTooltip.Instance.UpdateText();
         }
 
         public static void EnsureCurrentSaveHasSciTotalsInitialized(float changeDelta)

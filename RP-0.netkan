@@ -83,7 +83,6 @@
 		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
 		{ "name" : "MechJebForAll" },
-		{ "name" : "DynamicBatteryStorage" },
 		{ "name" : "KRASH" }
 	]
 }

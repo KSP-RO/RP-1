@@ -366,7 +366,7 @@ namespace KerbalConstructionTime
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 
             if (ksc.Constructions.Count == 0)
-                GUILayout.Label("No KSC upgrade projects are currently underway.");
+                GUILayout.Label("No constructions under way at this space center.");
 
             bool forceRecheck = false;
             int cancelID = -1;

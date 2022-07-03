@@ -26,9 +26,11 @@ namespace RP0
             {
                 string logStr = $"{indent}{c.ToString().Replace(go.name,"")}";
                 if (c is TextMeshProUGUI t)
-                    logStr += ": text=" + t.text;
+                    logStr += ": " + t.text;
                 else if (c is RectTransform rt)
-                    logStr += $": rectTrf anchor3d={rt.anchoredPosition3D}, anchorN/X={rt.anchorMin}/{rt.anchorMax} size={rt.sizeDelta} pivot={rt.pivot} offsetN/X={rt.offsetMin}/{rt.offsetMax}";
+                    logStr += $": anchor3d={rt.anchoredPosition3D}, anchorN/X={rt.anchorMin}/{rt.anchorMax} size={rt.sizeDelta} pivot={rt.pivot} offsetN/X={rt.offsetMin}/{rt.offsetMax}";
+                else if (c is Canvas cv)
+                    logStr += $": rM={cv.renderMode}, pd={cv.planeDistance}, rOrd={cv.renderOrder}, sortLN={cv.sortingLayerName}, sOrd={cv.sortingOrder}, oSort={cv.overrideSorting}, {cv.tag}";
 
                 Debug.Log(logStr);
             }

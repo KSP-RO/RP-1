@@ -1,11 +1,11 @@
 ﻿using HarmonyLib;
-using KSP.UI.Screens;
-using System.Reflection;
+using KerbalConstructionTime;
+using KSP.Localization;
+using KSP.UI.TooltipTypes;
+using RP0.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using KSP.UI.TooltipTypes;
 
 namespace RP0
 {
@@ -43,7 +43,7 @@ namespace RP0
         //        rt.anchoredPosition3D = tumblerRT.anchoredPosition3D;
         //        // but offset in -Z so it's above.
         //        rt.localPosition = new Vector3(tumblerRT.localPosition.x, tumblerRT.localPosition.y, tumblerRT.localPosition.z - 1f);
-                
+
         //        // Add tooltip
         //        var tooltip = go.AddComponent<TooltipController_Text>();
         //        var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
@@ -96,12 +96,24 @@ namespace RP0
                 RepLabel.rectTransform.localPosition = new Vector3(-9, -1, 0);
                 RepLabel.fontStyle = FontStyles.Bold;
 
-                var tooltip = __instance.gameObject.AddComponent<ReputationWidgetTooltip>();
+                var tooltip = __instance.gameObject.AddComponent<TooltipController_TextFunc>();
                 var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
                 tooltip.prefab = prefab;
-                tooltip.RequireInteractable = false;
+                tooltip.getStringAction = GetTooltipText;
+                tooltip.continuousUpdate = true;
 
                 return true;
+            }
+
+            private static string GetTooltipText()
+            {
+                MaintenanceHandler.SubsidyDetails details = MaintenanceHandler.Instance.GetSubsidyDetails();
+                return Localizer.Format("#rp0RepWidgetTooltip",
+                                        details.minSubsidy.ToString("N0"),
+                                        details.minRep.ToString("N0"),
+                                        details.maxSubsidy.ToString("N0"),
+                                        details.maxRep.ToString("N0"),
+                                        details.subsidy.ToString("N0"));
             }
         }
 
@@ -112,10 +124,17 @@ namespace RP0
             [HarmonyPatch("DelayedStart")]
             internal static void Postfix_DelayedStart(FundsWidget __instance)
             {
-                var tooltip = __instance.gameObject.AddComponent<KerbalConstructionTime.ScienceWidgetTooltip>();
+                var tooltip = __instance.gameObject.AddComponent<TooltipController_TextFunc>();
                 var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
                 tooltip.prefab = prefab;
-                tooltip.RequireInteractable = false;
+                tooltip.getStringAction = GetTooltipText;
+            }
+
+            private static string GetTooltipText()
+            {
+                return Localizer.Format("#rp0ScienceWidgetTooltip",
+                                        KCTGameStates.SciPointsTotal.ToString("N1"),
+                                        KerbalConstructionTime.Utilities.ScienceForNextApplicants().ToString("N1"));
             }
         }
     }

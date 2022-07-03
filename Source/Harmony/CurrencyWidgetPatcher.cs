@@ -81,6 +81,7 @@ namespace RP0
                 GameObject.DestroyImmediate(__instance.gameObject.transform.Find("circularGauge").gameObject);
 
                 var frameImage = (Image)__instance.gameObject.GetComponentInChildren(typeof(Image));
+                frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-0/Resources/rep_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
 
                 var img = GameObject.Instantiate(new GameObject("repBackground"), __instance.transform, worldPositionStays: false).AddComponent<Image>();
                 img.color = new Color32(58, 58, 63, 255);

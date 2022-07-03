@@ -86,21 +86,39 @@ namespace KerbalConstructionTime
             }
             // When this is true, and the mouse is NOT over the toggle, the toggle code is making the toggle active
             // which is showing the corners of the button as unfilled
-            bool wasShown = GUIStates.IsMainGuiVisible;
+            bool wasShown = KSP.UI.Screens.ApplicationLauncher.Ready;
             bool newShown = GUI.Toggle(_rectSubsceneToggleButton, wasShown, _contentSubsceneToggleButton, _subsceneToggleButton);
             if (newShown)
             {
                 if (!wasShown)
                 {
-                    if (PrevGUIStates == null)
-                        ToggleVisibility(true);
-                    else
-                        RestorePrevUIState();
+                    KSP.UI.Screens.ApplicationLauncher.Instance.Show();
                 }
             }
             else if (wasShown)
-                KCTEvents.Instance.HideAllGUIs();
+            {
+                KSP.UI.Screens.ApplicationLauncher.Instance.Hide();
+            }
         }
+
+        public static void EnterSCSubcene()
+        { 
+            _inSCSubscene = true;
+            var canvas = KSP.UI.Screens.ApplicationLauncher.Instance.GetComponent<Canvas>();
+            canvas.overrideSorting = true;
+            canvas.sortingLayerName = "Actions";
+            canvas.sortingOrder = 20;
+        }
+        public static void ExitSCSubcene()
+        {
+            _inSCSubscene = false;
+            // Reset applauncher
+            var canvas = KSP.UI.Screens.ApplicationLauncher.Instance.GetComponent<Canvas>();
+            canvas.sortingLayerName = "Default";
+            canvas.sortingOrder = 0;
+            canvas.overrideSorting = false;
+        }
+
     }
 }
 

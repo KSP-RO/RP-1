@@ -69,15 +69,15 @@ namespace KerbalConstructionTime
             GameEvents.FindEvent<EventVoid>("OnSYReady")?.Add(SYReady);
             GameEvents.FindEvent<EventData<Part>>("OnSYInventoryAppliedToPart")?.Add(OnSYInventoryAppliedToPart);
 
-            GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubscene);
-            GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubscene);
-            GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubscene);
+            GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubsceneAndHide);
+            GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubsceneAndHide);
+            GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIRnDComplexSpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIKSPediaSpawn.Add(HideAllGUIs);
 
-            GameEvents.onGUIAdministrationFacilityDespawn.Add(ExitSCSubscene);
-            GameEvents.onGUIAstronautComplexDespawn.Add(ExitSCSubscene);
-            GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubscene);
+            GameEvents.onGUIAdministrationFacilityDespawn.Add(ExitSCSubsceneAndShow);
+            GameEvents.onGUIAstronautComplexDespawn.Add(ExitSCSubsceneAndShow);
+            GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 

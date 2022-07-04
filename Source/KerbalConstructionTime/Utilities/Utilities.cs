@@ -719,8 +719,8 @@ namespace KerbalConstructionTime
             KCTGameStates.SciPointsTotal += changeDelta;
             KCTDebug.Log("Total sci points earned is now: " + KCTGameStates.SciPointsTotal);
 
-            double upgradesBef = MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>() { { "N", pointsBef.ToString() } });
-            double upgradesAft = MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>() { { "N", KCTGameStates.SciPointsTotal.ToString() } });
+            double upgradesBef = ApplicantPacketsForScience(pointsBef);
+            double upgradesAft = ApplicantPacketsForScience(KCTGameStates.SciPointsTotal);
             KCTDebug.Log($"Upg points bef: {upgradesBef}; aft: {upgradesAft}");
 
             int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
@@ -2294,10 +2294,12 @@ namespace KerbalConstructionTime
                 return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
 
+        public static int ApplicantPacketsForScience(double sci) => (int)(sci / 5d);
+
         public static double ScienceForNextApplicants()
         {
-            int applicantsCur = (int)MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>() { { "N", KCTGameStates.SciPointsTotal.ToString() } });
-            return Math.Pow(5d * (applicantsCur + 1d), 1d / 0.75d);
+            int applicantsCur = ApplicantPacketsForScience(KCTGameStates.SciPointsTotal);
+            return 5d * (applicantsCur + 1d);
         }
     }
 }

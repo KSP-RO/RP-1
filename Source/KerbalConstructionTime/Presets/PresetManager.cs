@@ -168,21 +168,6 @@ namespace KerbalConstructionTime
             LoadPresets();
         }
 
-        public int StartingUpgrades(Game.Modes mode)
-        {
-            if (mode == Game.Modes.CAREER)
-            {
-                return ActivePreset.StartUpgrades[0];
-            }
-            else if (mode == Game.Modes.SCIENCE_SANDBOX)
-            {
-                return ActivePreset.StartUpgrades[1];
-            }
-            else
-            {
-                return ActivePreset.StartUpgrades[2];
-            }
-        }
         public int StartingPersonnel(Game.Modes mode)
         {
             if (mode == Game.Modes.CAREER)
@@ -212,23 +197,6 @@ namespace KerbalConstructionTime
         public string Name = "UNINIT", ShortName = "UNINIT", Description = "NA", Author = "NA";
         public bool CareerEnabled = true, ScienceEnabled = true, SandboxEnabled = true;    //These just control whether it should appear during these game types
         public bool AllowDeletion = true;
-
-        private int[] _upgradesInternal;
-        public int[] StartUpgrades
-        {
-            get
-            {
-                if (_upgradesInternal == null)
-                {
-                    _upgradesInternal = new int[3] {0, 0, 0}; //career, science, sandbox
-                    string[] upgrades = GeneralSettings.StartingPoints.Split(',');
-                    for (int i = 0; i < 3; i++)
-                        if (!int.TryParse(upgrades[i], out _upgradesInternal[i]))
-                            _upgradesInternal[i] = 0;
-                }
-                return _upgradesInternal;
-            }
-        }
 
         private int[] _personnelInternal;
         public int[] StartPersonnel
@@ -420,8 +388,7 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true;
         [Persistent]
-        public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
-            StartingPersonnel = "20, 50, 10000",
+        public string StartingPersonnel = "20, 50, 10000", //Career, Science, and Sandbox modes
             VABRecoveryTech = null,
             ResearcherCaps = "300, 500, 750, 1250, 2000, 3500, -1";
         [Persistent]

@@ -68,16 +68,6 @@ namespace KerbalConstructionTime
             GUILayout.Label($"√{KCTGameStates.GetSalaryResearchers():N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            //if (!string.IsNullOrEmpty(PresetManager.Instance.ActivePreset.FormulaSettings.UpgradesForScience) &&
-            //    KCTGameStates.SciPointsTotal >= 0)
-            //{
-            //    GUILayout.BeginHorizontal();
-            //    GUILayout.Label("Total science:", GUILayout.Width(90));
-            //    GUILayout.Label(((int)KCTGameStates.SciPointsTotal).ToString("N0"));
-            //    GUILayout.EndHorizontal();
-            //}
-
-
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
             if (Utilities.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }

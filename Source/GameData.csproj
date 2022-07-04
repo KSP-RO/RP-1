@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -43,18 +43,49 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\GameData\RP-0\AdminDisable.cfg" />
+    <Content Include="..\GameData\RP-0\Avionics.cfg" />
+    <Content Include="..\GameData\RP-0\CrewHandlerSettings.cfg" />
+    <Content Include="..\GameData\RP-0\CrewSettings.cfg" />
+    <Content Include="..\GameData\RP-0\CrewTrainingTimes.cfg" />
+    <Content Include="..\GameData\RP-0\CustomBarnKit.cfg" />
+    <Content Include="..\GameData\RP-0\Deprecation.cfg" />
+    <Content Include="..\GameData\RP-0\GameParameters.cfg" />
+    <Content Include="..\GameData\RP-0\KSPCommunityFixes.cfg" />
+    <Content Include="..\GameData\RP-0\MaintenanceSettings.cfg" />
+    <Content Include="..\GameData\RP-0\ModuleStationParts.cfg" />
+    <Content Include="..\GameData\RP-0\NonRP0.cfg" />
+    <Content Include="..\GameData\RP-0\PartHacks.cfg" />
+    <Content Include="..\GameData\RP-0\ProcCosts.cfg" />
+    <Content Include="..\GameData\RP-0\ProgramHandlerSettings.cfg" />
+    <Content Include="..\GameData\RP-0\ResourceCosts.cfg" />
+    <Content Include="..\GameData\RP-0\TestFlightInterop.cfg" />
+    <Content Include="..\GameData\RP-0\TestFlightRnD.cfg" />
+    <Content Include="..\GameData\RP-0\ToolingDefinitions.cfg" />
+    <Content Include="..\GameData\RP-0\zFinal.cfg" />
+    <Content Include="..\GameData\RP-0\zTweakScale.cfg" />
     <Content Include="..\GameData\RP-0\Agencies\Agents.cfg">
       <Link>Agencies\Agents.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Agencies\FAI_scaled.truecolor">
-      <Link>Agencies\FAI_scaled.truecolor</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Groups.cfg">
+      <Link>Contracts\Groups.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Avionics.cfg" />
+    <Content Include="..\GameData\RP-0\Contracts\Programs.cfg">
+      <Link>Contracts\Programs.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\RP0_Contract_Resources.cfg">
+      <Link>Contracts\RP0_Contract_Resources.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\SCANSat.cfg">
+      <Link>Contracts\SCANSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg">
+      <Link>Contracts\StockContracts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\TestSubjectRemove.cfg">
+      <Link>Contracts\TestSubjectRemove.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Earth Imaging Satellites.cfg">
       <Link>Contracts\Advanced Satellites\Earth Imaging Satellites.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\IridiumNEXT.cfg.disabled">
-      <Link>Contracts\Advanced Satellites\IridiumNEXT.cfg.disabled</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Advanced Satellites\Molniya Communications Satellites.cfg">
       <Link>Contracts\Advanced Satellites\Molniya Communications Satellites.cfg</Link>
@@ -83,9 +114,6 @@
     <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedLunarFlyby.cfg">
       <Link>Contracts\Crewed Lunar Exploration\CrewedLunarFlyby.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedLunarOrbitRepeat.cfg.DISABLED">
-      <Link>Contracts\Crewed Lunar Exploration\CrewedLunarOrbitRepeat.cfg.DISABLED</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\CrewedMoonLandingRover.cfg">
       <Link>Contracts\Crewed Lunar Exploration\CrewedMoonLandingRover.cfg</Link>
     </Content>
@@ -97,9 +125,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\FirstMoonLandingCrewed.cfg">
       <Link>Contracts\Crewed Lunar Exploration\FirstMoonLandingCrewed.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Crewed Lunar Exploration\SingleCrewedLunarOrbitRepeatable.cfg.DISABLED">
-      <Link>Contracts\Crewed Lunar Exploration\SingleCrewedLunarOrbitRepeatable.cfg.DISABLED</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Crewed Orbit\Docking.cfg">
       <Link>Contracts\Crewed Orbit\Docking.cfg</Link>
@@ -167,14 +192,32 @@
     <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactor.cfg">
       <Link>Contracts\Early Lunar Probes\LunarImpactor.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\DistanceSoundingDifficult.cfg">
+      <Link>Contracts\Early Rocket Development\DistanceSoundingDifficult.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\DistanceSoundingIntermediate.cfg">
+      <Link>Contracts\Early Rocket Development\DistanceSoundingIntermediate.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\Downrange.cfg">
+      <Link>Contracts\Early Rocket Development\Downrange.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\First Flight.cfg">
+      <Link>Contracts\Early Rocket Development\First Flight.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\KarmanLine.cfg">
+      <Link>Contracts\Early Rocket Development\KarmanLine.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\SoundingDifficult.cfg">
+      <Link>Contracts\Early Rocket Development\SoundingDifficult.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\SoundingIntermediate.cfg">
+      <Link>Contracts\Early Rocket Development\SoundingIntermediate.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\SuborbitalReturn.cfg">
+      <Link>Contracts\Early Rocket Development\SuborbitalReturn.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Early Satellites\AtmosphereAnalysis.cfg">
       <Link>Contracts\Early Satellites\AtmosphereAnalysis.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstComSat.cfg">
-      <Link>Contracts\Early Satellites\FirstComSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstNavSat.cfg">
-      <Link>Contracts\Early Satellites\FirstNavSat.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstPolarSat.cfg">
       <Link>Contracts\Early Satellites\FirstPolarSat.cfg</Link>
@@ -191,29 +234,11 @@
     <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstSunSyncSat.cfg">
       <Link>Contracts\Early Satellites\FirstSunSyncSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Satellites\FirstWeatherSat.cfg">
-      <Link>Contracts\Early Satellites\FirstWeatherSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\BreakSoundBarrier.cfg">
-      <Link>Contracts\Early X-Plane Research\BreakSoundBarrier.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\CrewedFlightAtmo.cfg">
-      <Link>Contracts\Early X-Plane Research\CrewedFlightAtmo.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\CrewedSupersonic.cfg">
-      <Link>Contracts\Early X-Plane Research\CrewedSupersonic.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early X-Plane Research\RocketPlaneDevelopment.cfg">
-      <Link>Contracts\Early X-Plane Research\RocketPlaneDevelopment.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Geostationary Communications Network\GeoComSatNetwork.cfg">
       <Link>Contracts\Geostationary Communications Network\GeoComSatNetwork.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Geostationary Communications Network\GEORepeatComSats.cfg">
       <Link>Contracts\Geostationary Communications Network\GEORepeatComSats.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Groups.cfg">
-      <Link>Contracts\Groups.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Asteroid Landing Crew.cfg">
       <Link>Contracts\Human Exploration\Asteroid Landing Crew.cfg</Link>
@@ -353,12 +378,6 @@
     <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Early Nav Sats.cfg">
       <Link>Contracts\Nav Sats\Early Nav Sats.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\GLONASS Network.cfg.disabled">
-      <Link>Contracts\Nav Sats\GLONASS Network.cfg.disabled</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Nav Sats\GPS Network.cfg.disabled">
-      <Link>Contracts\Nav Sats\GPS Network.cfg.disabled</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Nav Sats\Operational Nav Sats.cfg">
       <Link>Contracts\Nav Sats\Operational Nav Sats.cfg</Link>
     </Content>
@@ -437,9 +456,6 @@
     <Content Include="..\GameData\RP-0\Contracts\Plutonian Landings\Pluto Rover.cfg">
       <Link>Contracts\Plutonian Landings\Pluto Rover.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Programs.cfg">
-      <Link>Contracts\Programs.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Records\AltRecord.cfg">
       <Link>Contracts\Records\AltRecord.cfg</Link>
     </Content>
@@ -478,9 +494,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Rovers\Triton Rover.cfg">
       <Link>Contracts\Rovers\Triton Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\RP0_Contract_Resources.cfg">
-      <Link>Contracts\RP0_Contract_Resources.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Sample Return\Asteroid Sample Return.cfg">
       <Link>Contracts\Sample Return\Asteroid Sample Return.cfg</Link>
@@ -569,9 +582,6 @@
     <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Rover.cfg">
       <Link>Contracts\Saturn Observation\Titan Rover.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\SCANSat.cfg">
-      <Link>Contracts\SCANSat.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\ScanSat\Earth_AltimetryLoRes.cfg">
       <Link>Contracts\ScanSat\Earth_AltimetryLoRes.cfg</Link>
     </Content>
@@ -659,41 +669,14 @@
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\Power Module Station.cfg">
       <Link>Contracts\Space Stations\Power Module Station.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg">
-      <Link>Contracts\StockContracts.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Research\SoundingRocketAdvancedBio.cfg">
+      <Link>Contracts\Suborbital Research\SoundingRocketAdvancedBio.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\DistanceSoundingDifficult.cfg">
-      <Link>Contracts\Suborbital Rocket Research\DistanceSoundingDifficult.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Research\SoundingRocketBio.cfg">
+      <Link>Contracts\Suborbital Research\SoundingRocketBio.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\DistanceSoundingIntermediate.cfg">
-      <Link>Contracts\Suborbital Rocket Research\DistanceSoundingIntermediate.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\Downrange.cfg">
-      <Link>Contracts\Suborbital Rocket Development\Downrange.cfg</Link>
-    </Content>
-	<Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\First Flight.cfg">
-      <Link>Contracts\Suborbital Rocket Development\First Flight.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\KarmanLine.cfg">
-      <Link>Contracts\Suborbital Rocket Development\KarmanLine.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingDifficult.cfg">
-      <Link>Contracts\Suborbital Rocket Research\SoundingDifficult.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingIntermediate.cfg">
-      <Link>Contracts\Suborbital Rocket Research\SoundingIntermediate.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg">
-      <Link>Contracts\Suborbital Rocket Development\SuborbitalReturn.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketAdvancedBio.cfg">
-      <Link>Contracts\Suborbital Rocket Research\SoundingRocketAdvancedBio.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketBio.cfg">
-      <Link>Contracts\Suborbital Rocket Research\SoundingRocketBio.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Suborbital Rocket Research\SoundingRocketFilm.cfg">
-      <Link>Contracts\Suborbital Rocket Research\SoundingRocketFilm.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Research\SoundingRocketFilm.cfg">
+      <Link>Contracts\Suborbital Research\SoundingRocketFilm.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MarsOutpost.cfg">
       <Link>Contracts\Surface Outposts\MarsOutpost.cfg</Link>
@@ -707,17 +690,23 @@
     <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpostWithLab.cfg">
       <Link>Contracts\Surface Outposts\MoonOutpostWithLab.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstComSat.cfg">
+      <Link>Contracts\Targeted Satellites\FirstComSat.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstGEOSat.cfg">
       <Link>Contracts\Targeted Satellites\FirstGEOSat.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstMolniyaSat.cfg">
       <Link>Contracts\Targeted Satellites\FirstMolniyaSat.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstNavSat.cfg">
+      <Link>Contracts\Targeted Satellites\FirstNavSat.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstTundraSat.cfg">
       <Link>Contracts\Targeted Satellites\FirstTundraSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\TestSubjectRemove.cfg">
-      <Link>Contracts\TestSubjectRemove.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstWeatherSat.cfg">
+      <Link>Contracts\Targeted Satellites\FirstWeatherSat.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\TO BE SORTED\Communications Satellite - Early.cfg">
       <Link>Contracts\TO BE SORTED\Communications Satellite - Early.cfg</Link>
@@ -761,15 +750,21 @@
     <Content Include="..\GameData\RP-0\Contracts\Weather Sats\Sun Sync Weather Sats.cfg">
       <Link>Contracts\Weather Sats\Sun Sync Weather Sats.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\CrewHandlerSettings.cfg" />
-    <Content Include="..\GameData\RP-0\CrewSettings.cfg" />
-    <Content Include="..\GameData\RP-0\CrewTrainingTimes.cfg" />
-    <Content Include="..\GameData\RP-0\CustomBarnKit.cfg" />
-    <Content Include="..\GameData\RP-0\Deprecation.cfg" />
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\BreakSoundBarrier.cfg">
+      <Link>Contracts\X-Plane Research\BreakSoundBarrier.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\CrewedFlightAtmo.cfg">
+      <Link>Contracts\X-Plane Research\CrewedFlightAtmo.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\CrewedSupersonic.cfg">
+      <Link>Contracts\X-Plane Research\CrewedSupersonic.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\RocketPlaneDevelopment.cfg">
+      <Link>Contracts\X-Plane Research\RocketPlaneDevelopment.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\GameParameters.cfg" />
     <Content Include="..\GameData\RP-0\KCT\AirlaunchLevels.cfg">
       <Link>KCT\AirlaunchLevels.cfg</Link>
     </Content>
@@ -788,12 +783,9 @@
     <Content Include="..\GameData\RP-0\KCT_Presets\RP1_KCT_Presets.cfg">
       <Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\KSPCommunityFixes.cfg" />
-    <Content Include="..\GameData\RP-0\maintecost.truecolor" />
-    <Content Include="..\GameData\RP-0\MaintenanceSettings.cfg" />
-    <Content Include="..\GameData\RP-0\ModuleStationParts.cfg" />
-    <Content Include="..\GameData\RP-0\NonRP0.cfg" />
-    <Content Include="..\GameData\RP-0\PartHacks.cfg" />
+    <Content Include="..\GameData\RP-0\Localization\en-us.cfg">
+      <Link>Localization\en-us.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Parts\HumanRatedFlag.cfg">
       <Link>Parts\HumanRatedFlag.cfg</Link>
     </Content>
@@ -803,113 +795,11 @@
     <Content Include="..\GameData\RP-0\Parts\RFProcTanks.cfg">
       <Link>Parts\RFProcTanks.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_CargoBay.mu">
-      <Link>Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_CargoBay.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_Parachute.mu">
-      <Link>Parts\SampleReturnCapsule\Assets\SampleReturnCapsule_Parachute.mu</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg">
       <Link>Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg">
       <Link>Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ACC.mu">
-      <Link>Parts\Science\Assets\ACC.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_cameraLowTech.mu">
-      <Link>Parts\Science\Assets\bluedog_cameraLowTech.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_geiger.mu">
-      <Link>Parts\Science\Assets\bluedog_geiger.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_hydrometer.mu">
-      <Link>Parts\Science\Assets\bluedog_hydrometer.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\Bluedog_IonSensor.mu">
-      <Link>Parts\Science\Assets\Bluedog_IonSensor.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_IRspec.mu">
-      <Link>Parts\Science\Assets\bluedog_IRspec.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\Bluedog_Micrometeorite.mu">
-      <Link>Parts\Science\Assets\Bluedog_Micrometeorite.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\bluedog_MS.mu">
-      <Link>Parts\Science\Assets\bluedog_MS.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_barometer.mu">
-      <Link>Parts\Science\Assets\ca_barometer.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_DUSTX.mu">
-      <Link>Parts\Science\Assets\ca_DUSTX.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_ELIX.mu">
-      <Link>Parts\Science\Assets\ca_ELIX.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_gravioli.mu">
-      <Link>Parts\Science\Assets\ca_gravioli.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_GRS.mu">
-      <Link>Parts\Science\Assets\ca_GRS.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_KLIR.mu">
-      <Link>Parts\Science\Assets\ca_KLIR.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_LUV.mu">
-      <Link>Parts\Science\Assets\ca_LUV.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_RPWS.mu">
-      <Link>Parts\Science\Assets\ca_RPWS.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_SWIS.mu">
-      <Link>Parts\Science\Assets\ca_SWIS.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_telescope_a.mu">
-      <Link>Parts\Science\Assets\ca_telescope_a.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_thermometer.mu">
-      <Link>Parts\Science\Assets\ca_thermometer.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_vor_camera.mu">
-      <Link>Parts\Science\Assets\ca_vor_camera.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\ca_vor_mag.mu">
-      <Link>Parts\Science\Assets\ca_vor_mag.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\landv_soilScoop.mu">
-      <Link>Parts\Science\Assets\landv_soilScoop.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\LargeRecon.mu">
-      <Link>Parts\Science\Assets\LargeRecon.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\magneto2.mu">
-      <Link>Parts\Science\Assets\magneto2.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\MMDetector_Emmisive.tga">
-      <Link>Parts\Science\Assets\MMDetector_Emmisive.tga</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\MMDetector_Lights.tga">
-      <Link>Parts\Science\Assets\MMDetector_Lights.tga</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelGoreSat.mu">
-      <Link>Parts\Science\Assets\modelGoreSat.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelImaging.mu">
-      <Link>Parts\Science\Assets\modelImaging.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelMagBoom.mu">
-      <Link>Parts\Science\Assets\modelMagBoom.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelRPWS.mu">
-      <Link>Parts\Science\Assets\modelRPWS.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\modelScope.mu">
-      <Link>Parts\Science\Assets\modelScope.mu</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Parts\Science\Assets\SmallRecon.mu">
-      <Link>Parts\Science\Assets\SmallRecon.mu</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Parts\Science\CR01-GeigerMuller.cfg">
       <Link>Parts\Science\CR01-GeigerMuller.cfg</Link>
@@ -1004,48 +894,17 @@
     <Content Include="..\GameData\RP-0\Parts\Science\VI05-HIResImager.cfg">
       <Link>Parts\Science\VI05-HIResImager.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\ProcCosts.cfg" />
-    <Content Include="..\GameData\RP-0\ProgramHandlerSettings.cfg" />
-    <Content Include="..\GameData\RP-0\ResourceCosts.cfg" />
-    <Content Include="..\GameData\RP-0\Resources\KCT_airlaunch16.truecolor">
-      <Link>Resources\KCT_airlaunch16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_construct16.truecolor">
-      <Link>Resources\KCT_construct16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_flight16.truecolor">
-      <Link>Resources\KCT_flight16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_hangar16.truecolor">
-      <Link>Resources\KCT_hangar16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_landing16.truecolor">
-      <Link>Resources\KCT_landing16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_recon16.truecolor">
-      <Link>Resources\KCT_recon16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_rocket16.truecolor">
-      <Link>Resources\KCT_rocket16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_rollback16.truecolor">
-      <Link>Resources\KCT_rollback16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_rollout16.truecolor">
-      <Link>Resources\KCT_rollout16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_settings16.truecolor">
-      <Link>Resources\KCT_settings16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Resources\KCT_tech16.truecolor">
-      <Link>Resources\KCT_tech16.truecolor</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\RP-1.version" />
     <Content Include="..\GameData\RP-0\Scenarios\1957Start.cfg">
       <Link>Scenarios\1957Start.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Science\BodyScienceParams.cfg">
       <Link>Science\BodyScienceParams.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Lab.cfg">
+      <Link>Science\Lab.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\MOL.cfg">
+      <Link>Science\MOL.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Science\CleanupParts\CoatlAerospaceScience.cfg">
       <Link>Science\CleanupParts\CoatlAerospaceScience.cfg</Link>
@@ -1119,12 +978,6 @@
     <Content Include="..\GameData\RP-0\Science\Experiments\VisibleImaging.cfg">
       <Link>Science\Experiments\VisibleImaging.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Science\Lab.cfg">
-      <Link>Science\Lab.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Science\MOL.cfg">
-      <Link>Science\MOL.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Science\Results\BioSample.cfg">
       <Link>Science\Results\BioSample.cfg</Link>
     </Content>
@@ -1152,15 +1005,9 @@
     <Content Include="..\GameData\RP-0\Strategies\LocPatches.cfg">
       <Link>Strategies\LocPatches.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Strategies\RP-1Logo.truecolor">
-      <Link>Strategies\RP-1Logo.truecolor</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Strategies\StrategyPatcher.cfg">
       <Link>Strategies\StrategyPatcher.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\TestFlightInterop.cfg" />
-    <Content Include="..\GameData\RP-0\TestFlightRnD.cfg" />
-    <Content Include="..\GameData\RP-0\ToolingDefinitions.cfg" />
     <Content Include="..\GameData\RP-0\Tooling\SSPX.cfg">
       <Link>Tooling\SSPX.cfg</Link>
     </Content>
@@ -1233,8 +1080,7 @@
     <Content Include="..\GameData\RP-0\Tree\TREE-Parts.cfg">
       <Link>Tree\TREE-Parts.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\zFinal.cfg" />
-    <Content Include="..\GameData\RP-0\zTweakScale.cfg" />
+
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

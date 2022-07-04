@@ -101,8 +101,8 @@ namespace KerbalConstructionTime
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Starting Upgrades:");
-            _workingPreset.GeneralSettings.StartingPoints = GUILayout.TextField(_workingPreset.GeneralSettings.StartingPoints, GUILayout.Width(100));
+            GUILayout.Label("Starting Personnel:");
+            _workingPreset.GeneralSettings.StartingPersonnel = GUILayout.TextField(_workingPreset.GeneralSettings.StartingPersonnel, GUILayout.Width(100));
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             GUILayout.EndVertical(); //end Features

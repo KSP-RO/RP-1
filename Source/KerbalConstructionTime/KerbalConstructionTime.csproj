@@ -180,7 +180,7 @@
     <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="KCTVesselTracker.cs" />
-	<Compile Include="KCTVesselTrackerEventHandler.cs" />
+    <Compile Include="KCTVesselTrackerEventHandler.cs" />
     <Compile Include="VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>

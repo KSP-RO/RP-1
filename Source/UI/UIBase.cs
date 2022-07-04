@@ -55,20 +55,18 @@ namespace RP0
                 case UITab.Facilities:
                 case UITab.Integration:
                 case UITab.Construction:
-                    return HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Tooling:
                 case UITab.ToolingType:
+                case UITab.AstronautCosts:
                 case UITab.Contracts:
+                case UITab.CareerLog:
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Avionics:
                     return HighLogic.LoadedSceneIsEditor;
-                case UITab.AstronautCosts:
-                    return HighLogic.LoadedScene == GameScenes.SPACECENTER;
                 case UITab.Astronauts:
                 case UITab.Training:
                 case UITab.NewCourse:
                 case UITab.Naut:
-                case UITab.CareerLog:
                 default:
                     return true;
             }

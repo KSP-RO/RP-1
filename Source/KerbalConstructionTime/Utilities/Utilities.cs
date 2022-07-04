@@ -1607,20 +1607,6 @@ namespace KerbalConstructionTime
             return lvl;
         }
 
-        public static int GetTotalUpgradePoints()
-        {
-            int total = 0;
-            //Starting points
-            total += PresetManager.Instance.StartingUpgrades(HighLogic.CurrentGame.Mode);
-            //R&D
-            total += (int)MathParser.GetStandardFormulaValue("UpgradesForScience", new Dictionary<string, string>()
-            {
-                { "N", Math.Max(0, KCTGameStates.SciPointsTotal).ToString() }
-            });
-
-            return total;
-        }
-
         public static bool RecoverActiveVesselToStorage(BuildListVessel.ListType listType)
         {
             var test = new ShipConstruct();

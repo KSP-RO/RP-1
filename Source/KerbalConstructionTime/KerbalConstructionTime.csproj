@@ -125,7 +125,6 @@
     <Compile Include="GUI\GUI_NewPad.cs" />
     <Compile Include="GUI\GUI_VesselMerge.cs" />
     <Compile Include="GUI\GUI_Simulation.cs" />
-    <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
     <Compile Include="KCTCostModifier.cs" />
     <Compile Include="KCTTechNodePeriod.cs" />

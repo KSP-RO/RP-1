@@ -89,7 +89,8 @@ namespace RP0.Programs
                     RectTransform rect = aspectFitter.GetComponent<RectTransform>();
 
                     // Determine the ideal size
-                    int count = Math.Max(StrategySystem.Instance.SystemConfig.Departments.Count - 4, 0);
+                    // was -4, using -3 since programs is double-wide
+                    int count = Math.Max(StrategySystem.Instance.SystemConfig.Departments.Count - 3, 0);
                     float size = Math.Min(944f + (count * 232.0f), Screen.width);
 
                     rect.sizeDelta = new Vector2(size, rect.sizeDelta.y);

@@ -72,6 +72,45 @@ namespace RP0
         [HarmonyPatch(typeof(Administration))]
         internal class PatchAdministration
         {
+            [HarmonyPrefix]
+            [HarmonyPatch("CreateStrategiesList")]
+            internal static void Prefix_CreateStrategiesList(Administration __instance)
+            {
+                Transform tSpacer1 = __instance.scrollListKerbals.transform.Find("DepartmentSpacer1");
+                if (tSpacer1 != null)
+                    GameObject.Destroy(tSpacer1.gameObject);
+
+                Transform tSpacer2 = __instance.scrollListKerbals.transform.Find("DepartmentSpacer2");
+                if(tSpacer2 != null)
+                    GameObject.Destroy(tSpacer2.gameObject);
+            }
+
+            [HarmonyPostfix]
+            [HarmonyPatch("CreateStrategiesList")]
+            internal static void Postfix_CreateStrategiesList(Administration __instance)
+            {
+                __instance.scrollListStrategies.GetUilistItemAt(0).GetComponent<LayoutElement>().minWidth = 280f;
+                var firstDep = __instance.scrollListKerbals.GetUilistItemAt(0);
+                GameObject spacer = GameObject.Instantiate(firstDep.gameObject);
+                spacer.name = "DepartmentSpacer1";
+                for (int i = spacer.transform.childCount - 1; i >= 0; --i)
+                    GameObject.DestroyImmediate(spacer.transform.GetChild(i).gameObject);
+
+                GameObject.DestroyImmediate(spacer.GetComponent<KerbalListItem>());
+                GameObject.DestroyImmediate(spacer.GetComponent<Image>());
+                GameObject.DestroyImmediate(spacer.GetComponent<UIListItem>());
+
+
+                spacer.GetComponent<LayoutElement>().minWidth = 70f;
+                spacer.transform.SetParent(firstDep.transform.parent, false);
+                spacer.transform.SetAsFirstSibling();
+
+                GameObject spacer2 = GameObject.Instantiate(spacer);
+                spacer2.name = "DepartmentSpacer2";
+                spacer2.transform.SetParent(spacer.transform.parent, false);
+                spacer2.transform.SetSiblingIndex(firstDep.transform.GetSiblingIndex() + 1);
+            }
+
             internal static List<Strategy> strategies = new List<Strategy>();
 
             [HarmonyPrefix]
@@ -193,19 +232,6 @@ namespace RP0
                     if (ps.IsActive)
                         state = "cancel";
                 }
-            }
-
-            [HarmonyPostfix]
-            [HarmonyPatch("AddKerbalListItem")]
-            internal static void Postfix_AddKerbalListItem(Administration __instance, ref Strategies.DepartmentConfig dep)
-            {
-                if (dep.AvatarPrefab != null || dep.HeadImage == null)
-                    return;
-
-                UIListItem item = __instance.scrollListKerbals.GetUilistItemAt(__instance.scrollListKerbals.Count - 1);
-                KerbalListItem kerbal = item.GetComponent<KerbalListItem>();
-                kerbal.kerbalImage.texture = dep.HeadImage;
-                kerbal.kerbalImage.material = kerbal.kerbalImage.defaultMaterial;
             }
         }
 

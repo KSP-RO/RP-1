@@ -137,35 +137,38 @@ namespace KerbalConstructionTime
             if (InvEff != 0)
                 inventorySample.Remove(partRef);
 
-            double runTime = 0;
-            if (o is Part)
+            if (HighLogic.LoadedSceneIsEditor)
             {
-                foreach (PartModule modNode in (o as Part).Modules)
+                double runTime = 0;
+                if (o is Part)
                 {
-                    string s = modNode.moduleName;
-                    if (s == "TestFlightReliability_EngineCycle")
-                        runTime = Convert.ToDouble(modNode.Fields.GetValue("engineOperatingTime"));
-                    else if (s == "ModuleTestLite")
-                        runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
-                    if (runTime > 0)  //There can be more than one TestLite module per part
-                        break;
+                    foreach (PartModule modNode in (o as Part).Modules)
+                    {
+                        string s = modNode.moduleName;
+                        if (s == "TestFlightReliability_EngineCycle")
+                            runTime = Convert.ToDouble(modNode.Fields.GetValue("engineOperatingTime"));
+                        else if (s == "ModuleTestLite")
+                            runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
+                        if (runTime > 0)  //There can be more than one TestLite module per part
+                            break;
+                    }
                 }
-            }
-            else
-            {
-                foreach (ConfigNode modNode in (o as ConfigNode).GetNodes("MODULE"))
+                else
                 {
-                    string s = modNode.GetValue("name");
-                    if (s == "TestFlightReliability_EngineCycle")
-                        double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
-                    else if (s == "ModuleTestLite")
-                        double.TryParse(modNode.GetValue("runTime"), out runTime);
-                    if (runTime > 0) //There can be more than one TestLite module per part
-                        break;
+                    foreach (ConfigNode modNode in (o as ConfigNode).GetNodes("MODULE"))
+                    {
+                        string s = modNode.GetValue("name");
+                        if (s == "TestFlightReliability_EngineCycle")
+                            double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
+                        else if (s == "ModuleTestLite")
+                            double.TryParse(modNode.GetValue("runTime"), out runTime);
+                        if (runTime > 0) //There can be more than one TestLite module per part
+                            break;
+                    }
                 }
+                if (runTime > 0)
+                    effectiveCost = MathParser.ParseEngineRefurbFormula(runTime) * effectiveCost;
             }
-            if (runTime > 0)
-                effectiveCost = MathParser.ParseEngineRefurbFormula(runTime) * effectiveCost;
 
             if (effectiveCost < 0)
                 effectiveCost = 0;

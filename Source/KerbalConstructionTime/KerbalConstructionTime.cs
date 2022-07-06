@@ -206,7 +206,6 @@ namespace KerbalConstructionTime
                     }
                     KCT_GUI.GUIStates.ShowFirstRun = shouldStart;
                     StartCoroutine(UpdateActiveLPLevel());
-                    StartCoroutine(UpdateBuildRates());
                     break;
                 case GameScenes.TRACKSTATION:
                     KCTGameStates.ClearVesselEditMode();
@@ -216,6 +215,8 @@ namespace KerbalConstructionTime
                     ProcessFlightStart();
                     break;
             }
+            // Need to do this in every scene.
+            StartCoroutine(UpdateBuildRates());
             KCTDebug.Log("Start finished");
 
             DelayedStart();
@@ -489,17 +490,17 @@ namespace KerbalConstructionTime
                 yield return new WaitForFixedUpdate();    // No way to know when KSP has finally initialized the ScenarioUpgradeableFacilities data
             } while (HighLogic.LoadedScene == GameScenes.SPACECENTER && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) < 0);
 
+            // Need to always update build rates, regardless of scene
+            KCTDebug.Log("Updating build rates");
+            foreach (KSCItem KSC in KCTGameStates.KSCs)
+            {
+                KSC?.RecalculateBuildRates();
+            }
+            KCTDebug.Log("Rates updated");
+
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER
                 && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) >= 0)
             {
-                KCTDebug.Log("Updating build rates");
-                foreach (KSCItem KSC in KCTGameStates.KSCs)
-                {
-                    KSC?.RecalculateBuildRates();
-                }
-
-                KCTDebug.Log("Rates updated");
-
                 foreach (SpaceCenterFacility facility in Enum.GetValues(typeof(SpaceCenterFacility)))
                 {
                     KCTGameStates.BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);

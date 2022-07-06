@@ -30,6 +30,7 @@ namespace KerbalConstructionTime
                 {
                     if (vessel.Id != ship.Id && !KCTGameStates.MergedVessels.Exists(x => x.Id == vessel.Id) && GUILayout.Button(vessel.ShipName))
                     {
+                        vessel.EffectiveCost = Utilities.GetEffectiveCost(vessel.ExtractedPartNodes, out _);
                         ShipConstruct mergedShip = new ShipConstruct();
                         mergedShip.LoadShip(vessel.ShipNode);
                         EditorLogic.fetch.SpawnConstruct(mergedShip);

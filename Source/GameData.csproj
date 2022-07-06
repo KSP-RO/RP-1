@@ -201,17 +201,14 @@
     <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\Downrange.cfg">
       <Link>Contracts\Early Rocket Development\Downrange.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\DownrangeEarly.cfg">
+      <Link>Contracts\Early Rocket Development\DownrangeEarly.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\First Flight.cfg">
       <Link>Contracts\Early Rocket Development\First Flight.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\KarmanLine.cfg">
       <Link>Contracts\Early Rocket Development\KarmanLine.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\SoundingDifficult.cfg">
-      <Link>Contracts\Early Rocket Development\SoundingDifficult.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\SoundingIntermediate.cfg">
-      <Link>Contracts\Early Rocket Development\SoundingIntermediate.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Early Rocket Development\SuborbitalReturn.cfg">
       <Link>Contracts\Early Rocket Development\SuborbitalReturn.cfg</Link>
@@ -668,6 +665,12 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\Power Module Station.cfg">
       <Link>Contracts\Space Stations\Power Module Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Research\SoundingDifficult.cfg">
+      <Link>Contracts\Suborbital Research\SoundingDifficult.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Suborbital Research\SoundingIntermediate.cfg">
+      <Link>Contracts\Suborbital Research\SoundingIntermediate.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Suborbital Research\SoundingRocketAdvancedBio.cfg">
       <Link>Contracts\Suborbital Research\SoundingRocketAdvancedBio.cfg</Link>

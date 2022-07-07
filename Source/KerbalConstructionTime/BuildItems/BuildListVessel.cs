@@ -28,6 +28,7 @@ namespace KerbalConstructionTime
         public float EmptyCost = 0, EmptyMass = 0;
         public EditorFacility FacilityBuiltIn;
         public string KCTPersistentID;
+        public string LandedAt = "";
         private double _buildRate = -1d;
 
         internal ShipConstruct _ship;

@@ -3218,7 +3218,7 @@
         "spacecraft": "",
         "engine_config": "RCS",
         "upgrade": true,
-        "entry_cost_mods": "CatalystRCS, HydrazineFuel",
+        "entry_cost_mods": "5000, CatalystRCS, HydrazineFuel",
         "identical_part_name": "",
         "module_tags": []
     },

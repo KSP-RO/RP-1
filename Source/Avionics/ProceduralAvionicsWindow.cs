@@ -345,11 +345,23 @@ namespace RP0.ProceduralAvionics
                 // Store and sum together the volume of all resources other than EC on this part
                 double otherFuelVolume = 0;
                 var otherTanks = new List<KeyValuePair<FuelTank, double>>();
-                foreach (FuelTank t in _tankList)
+                if (_tanksDict != null)
                 {
-                    if (t == _ecTank || t.maxAmount == 0) continue;
-                    otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
-                    otherFuelVolume += t.maxAmount / t.utilization;
+                    foreach (FuelTank t in _tanksDict.Values)
+                    {
+                        if (t == _ecTank || t.maxAmount == 0) continue;
+                        otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
+                        otherFuelVolume += t.maxAmount / t.utilization;
+                    }
+                }
+                else
+                {
+                    foreach (FuelTank t in _tankList)
+                    {
+                        if (t == _ecTank || t.maxAmount == 0) continue;
+                        otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
+                        otherFuelVolume += t.maxAmount / t.utilization;
+                    }
                 }
 
                 SetProcPartVolumeLimit();

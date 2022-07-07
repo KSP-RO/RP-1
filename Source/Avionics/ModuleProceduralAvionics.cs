@@ -60,7 +60,8 @@ namespace RP0.ProceduralAvionics
         private PartModule _procPartPM;
         private PartModule _roTankPM;
         private ModuleFuelTanks _rfPM;
-        private FuelTankList _tankList;
+        private System.Collections.ObjectModel.KeyedCollection<string, FuelTank> _tankList = null;
+        private Dictionary<string, FuelTank> _tanksDict = null;
         private FuelTank _ecTank;
         private MethodInfo _seekVolumeMethod;
         private FieldInfo _procPartMinVolumeField;
@@ -209,9 +210,19 @@ namespace RP0.ProceduralAvionics
             }
 
             _rfPM = part.Modules.GetModule<ModuleFuelTanks>();
-            var fiTanks = typeof(ModuleFuelTanks).GetField("tankList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            _tankList = (FuelTankList)fiTanks.GetValue(_rfPM);
-            _ecTank = _tankList["ElectricCharge"];
+            FieldInfo fiDict = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (fiDict != null)
+            {
+                _tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(_rfPM);
+                _ecTank = _tanksDict["ElectricCharge"];
+            }
+            else
+            {
+                Debug.Log("[RP-0] Could not find tank dictionary on RF part module, falling back to FuelTankList");
+                FieldInfo fiTanks = typeof(ModuleFuelTanks).GetField("tankList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+                _tankList = (System.Collections.ObjectModel.KeyedCollection<string, FuelTank>)fiTanks.GetValue(_rfPM);
+                _ecTank = _tankList["ElectricCharge"];
+            }
 
             _seekVolumeMethod = GetSeekVolumeMethod();
         }

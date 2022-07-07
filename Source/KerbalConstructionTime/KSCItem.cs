@@ -32,7 +32,11 @@ namespace KerbalConstructionTime
 
             void added(int idx, ConstructionBuildItem item) { Constructions.Add(item); }
             void removed(int idx, ConstructionBuildItem item) { Constructions.Remove(item); }
-            void updated() { if (_allowRecalcConstructions) RecalculateBuildRates(false); }
+            void updated()
+            {
+                if (_allowRecalcConstructions) RecalculateBuildRates(false);
+                KCTEvents.OnRP0MaintenanceChanged.Fire();
+            }
         }
 
         public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;

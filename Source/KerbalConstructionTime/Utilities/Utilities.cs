@@ -690,6 +690,8 @@ namespace KerbalConstructionTime
             {
                 DisplayMessage("Vessel Complete!", Message, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE);
             }
+
+            KCTEvents.OnRP0MaintenanceChanged.Fire();
         }
 
         public static double SpendFunds(double toSpend, TransactionReasons reason)
@@ -2207,6 +2209,7 @@ namespace KerbalConstructionTime
 
             currentLC.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
+            KCTEvents.OnRP0MaintenanceChanged.Fire();
         }
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
@@ -2215,6 +2218,7 @@ namespace KerbalConstructionTime
 
             ksc.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
+            KCTEvents.OnRP0MaintenanceChanged.Fire();
         }
 
         public static void ChangeResearchers(int delta)
@@ -2223,6 +2227,7 @@ namespace KerbalConstructionTime
 
             KCTGameStates.Researchers += delta;
             KCTEvents.OnPersonnelChange.Fire();
+            KCTEvents.OnRP0MaintenanceChanged.Fire();
         }
 
         public static double PredictEfficiencyEngineers(LCItem currentLC, int delta)

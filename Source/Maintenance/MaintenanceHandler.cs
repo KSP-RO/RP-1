@@ -227,6 +227,10 @@ namespace RP0
                         foundOrbit = true;
                     }
                 }
+                if (k.inactive)
+                {
+                    baseCostPerDay *= Settings.nautInactiveMult;
+                }
             }
 
             baseCostPerDay *= (_maintenanceCostMult / 365.25d);

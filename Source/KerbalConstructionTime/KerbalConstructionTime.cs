@@ -728,10 +728,11 @@ namespace KerbalConstructionTime
                     for (int i = ksc.LCConstructions.Count - 1; i >= 0; i--)
                         ksc.LCConstructions[i].IncrementProgress(UTDiff);
 
+                    ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
+
                     for (int i = ksc.FacilityUpgrades.Count - 1; i >= 0; i--)
                         ksc.FacilityUpgrades[i].IncrementProgress(UTDiff);
 
-                    ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
                     ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                 }
                 

@@ -86,15 +86,13 @@ namespace KerbalConstructionTime
             Updated();
         }
 
-        public new void RemoveAll(Predicate<T> match)
+        public new int RemoveAll(Predicate<T> match)
         {
-            List<T> found = FindAll(match);
-            foreach (T item in found)
-            {
-                Remove(item);
-            }
-            if (found.Count > 0)
+            int removed = base.RemoveAll(match);
+            if (removed > 0)
                 Updated();
+
+            return removed;
         }
 
         public new T this[int index]

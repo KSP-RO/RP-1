@@ -23,6 +23,8 @@ namespace RP0
         private static readonly Dictionary<SpaceCenterFacility, float[]> _facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
         public static void ClearFacilityCosts() { _facilityLevelCosts.Clear(); }
 
+        public static EventVoid OnRP0MaintenanceChanged;
+
         [KSPField(isPersistant = true)]
         public double nextUpdate = -1d;
 
@@ -40,8 +42,6 @@ namespace RP0
         private bool _wasWarpingHigh = false;
         private int _frameCount = 0;
         private bool _waitingForLevelLoad = false;
-
-        private EventVoid onKctPersonnelChangeEvent;
 
         #region Component costs
 
@@ -126,23 +126,19 @@ namespace RP0
             Instance = this;
 
             KCTGameStates.ProgramFundingForTimeDelegate = GetProgramFunding;
-            KCTGameStates.UpkeepCheckDelegate = UpdateUpkeepCheck;
             KCTGameStates.FacilityDailyMaintenanceDelegate = ComputeDailyMaintenanceCost;
 
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
             GameEvents.onGameStateLoad.Add(LoadSettings);
             GameEvents.onVesselRecoveryProcessingComplete.Add(onVesselRecoveryProcessingComplete);
+            GameEvents.onKerbalInactiveChange.Add(onKerbalInactiveChange);
+            GameEvents.onKerbalStatusChange.Add(onKerbalStatusChange);
+            GameEvents.onKerbalTypeChanged.Add(onKerbalTypeChanged);
         }
 
         public void Start()
         {
-            onKctPersonnelChangeEvent = GameEvents.FindEvent<EventVoid>("OnKctPesonnelChange");
-            if (onKctPersonnelChangeEvent != null)
-            {
-                onKctPersonnelChangeEvent.Add(UpdateKCTSalaries);
-            }
-            else
-                Debug.LogError("RP-0: Couldn't find OnKctPesonnelChange!");
+            OnRP0MaintenanceChanged.Add(ScheduleMaintenanceUpdate);
         }
 
         public override void OnLoad(ConfigNode node)
@@ -187,7 +183,7 @@ namespace RP0
 
         public void ScheduleMaintenanceUpdate()
         {
-            nextUpdate = 0;
+            nextUpdate = 0d;
         }
 
         private void UpdateKCTSalaries()
@@ -203,12 +199,6 @@ namespace RP0
 
             Researchers = KCTGameStates.Researchers;
             Profiler.EndSample();
-        }
-
-        public void UpdateUpkeepCheck()
-        {
-            if (_isFirstLoad)
-                UpdateUpkeep();
         }
 
         public void GetNautCost(ProtoCrewMember k, out double baseCostPerDay, out double flightCostPerDay)
@@ -281,8 +271,7 @@ namespace RP0
 
             _isFirstLoad = false;
 
-            if (IntegrationSalaries.Count == 0)
-                UpdateKCTSalaries();
+            UpdateKCTSalaries();
 
             EnsureFacilityLvlCostsLoaded();
 
@@ -335,8 +324,7 @@ namespace RP0
                     continue;
                 }
 
-                double baseCost, flightCost;
-                GetNautCost(k, out baseCost, out flightCost);
+                GetNautCost(k, out double baseCost, out double flightCost);
                 NautBaseUpkeepPerDay += baseCost;
                 NautInFlightUpkeepPerDay += flightCost;
             }
@@ -362,10 +350,8 @@ namespace RP0
             if (HighLogic.CurrentGame == null)
                 return;
 
-            ++_frameCount;
-            if (_frameCount == 3)
+            if (_frameCount++ < 2)
             {
-                UpdateKCTSalaries();
                 return;
             }
 
@@ -378,7 +364,6 @@ namespace RP0
                     return;
             }
 
-            UpdateKCTSalaries();
             UpdateUpkeep();
 
             double timePassed = time - lastUpdate;
@@ -418,12 +403,13 @@ namespace RP0
             GameEvents.onGameStateLoad.Remove(LoadSettings);
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
             GameEvents.onVesselRecoveryProcessingComplete.Remove(onVesselRecoveryProcessingComplete);
+            GameEvents.onKerbalInactiveChange.Remove(onKerbalInactiveChange);
+            GameEvents.onKerbalStatusChange.Remove(onKerbalStatusChange);
+            GameEvents.onKerbalTypeChanged.Remove(onKerbalTypeChanged);
 
-            if (onKctPersonnelChangeEvent != null)
-                onKctPersonnelChangeEvent.Remove(UpdateKCTSalaries);
+            OnRP0MaintenanceChanged.Remove(ScheduleMaintenanceUpdate);
 
             KCTGameStates.ProgramFundingForTimeDelegate = null;
-            KCTGameStates.UpkeepCheckDelegate = null;
             KCTGameStates.FacilityDailyMaintenanceDelegate = null;
         }
 
@@ -479,7 +465,25 @@ namespace RP0
         private void onVesselRecoveryProcessingComplete(ProtoVessel pv, KSP.UI.Screens.MissionRecoveryDialog mrd, float x)
         {
             if (pv.GetVesselCrew().Count > 0)
-                UpdateUpkeep();
+                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+        }
+
+        private void onKerbalTypeChanged(ProtoCrewMember pcm, ProtoCrewMember.KerbalType from, ProtoCrewMember.KerbalType to)
+        {
+            if (from != to && (from == ProtoCrewMember.KerbalType.Crew || to == ProtoCrewMember.KerbalType.Crew))
+                OnRP0MaintenanceChanged.Fire();
+        }
+
+        private void onKerbalStatusChange(ProtoCrewMember pcm, ProtoCrewMember.RosterStatus from, ProtoCrewMember.RosterStatus to)
+        {
+            if (from != to)
+                OnRP0MaintenanceChanged.Fire();
+        }
+
+        private void onKerbalInactiveChange(ProtoCrewMember pcm, bool from, bool to)
+        {
+            if (from != to)
+                OnRP0MaintenanceChanged.Fire();
         }
     }
 }

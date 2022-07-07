@@ -36,6 +36,9 @@
         public double nautOrbitProficiencyUpkeepAdd = 20d;
 
         [Persistent]
+        public double nautInactiveMult = 0.5d;
+
+        [Persistent]
         public double nautSubOrbitProficiencyUpkeepAdd = 20d;
         [Persistent]
         public double nautTrainingCostMultiplier = 100d;

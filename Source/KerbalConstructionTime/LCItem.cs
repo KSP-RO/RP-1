@@ -56,8 +56,8 @@ namespace KerbalConstructionTime
         public Guid ID => _id;
         protected Guid _modID;
         public Guid ModID => _modID;
-        public List<BuildListVessel> BuildList = new List<BuildListVessel>();
-        public List<BuildListVessel> Warehouse = new List<BuildListVessel>();
+        public KCTObservableList<BuildListVessel> BuildList = new KCTObservableList<BuildListVessel>();
+        public KCTObservableList<BuildListVessel> Warehouse = new KCTObservableList<BuildListVessel>();
         public SortedList<string, BuildListVessel> Plans = new SortedList<string, BuildListVessel>();
         public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
         public List<ReconRollout> Recon_Rollout = new List<ReconRollout>();
@@ -155,9 +155,14 @@ namespace KerbalConstructionTime
 
             PadConstructions.Added += added;
             PadConstructions.Removed += removed;
+            PadConstructions.Updated += updated;
 
             void added(int idx, ConstructionBuildItem pc) { ksc.Constructions.Add(pc); }
             void removed(int idx, ConstructionBuildItem pc) { ksc.Constructions.Remove(pc); }
+
+            BuildList.Updated += updated;
+            Warehouse.Updated += updated;
+            void updated() { KCTEvents.OnRP0MaintenanceChanged.Fire(); }
         }
 
         public void Modify(LCData data, Guid modId)

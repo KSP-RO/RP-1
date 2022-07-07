@@ -90,7 +90,8 @@ namespace KerbalConstructionTime
             {
                 double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
                 BP += BP * (vessel.DistanceFromKSC / maxDist);
-            }
+                BP *= (vessel.LandedAt?.Contains("Runway") ?? false) ? .75 : 1;
+            } 
         }
 
         public void SwapRolloutType()

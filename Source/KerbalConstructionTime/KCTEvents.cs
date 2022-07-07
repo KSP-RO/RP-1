@@ -29,6 +29,7 @@ namespace KerbalConstructionTime
         public static EventData<LCConstruction, LCItem> OnLCConstructionComplete;
         public static EventData<LCItem> OnLCDismantled;
         public static EventVoid OnPersonnelChange;
+        public static EventVoid OnRP0MaintenanceChanged;
 
         public KCTEvents()
         {
@@ -127,6 +128,9 @@ namespace KerbalConstructionTime
             OnLCConstructionComplete = new EventData<LCConstruction, LCItem>("OnKctLCConstructionComplete");
             OnLCDismantled = new EventData<LCItem>("OnKctLCDismantled");
             OnPersonnelChange = new EventVoid("OnKctPesonnelChange");
+
+            OnRP0MaintenanceChanged = GameEvents.FindEvent<EventVoid>("OnRP0MaintenanceChanged");
+
             CreatedEvents = true;
         }
 

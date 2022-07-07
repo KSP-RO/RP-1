@@ -32,8 +32,7 @@ namespace RP0
                 if (___varLoaded && !__state)
                 {
                     MaintenanceHandler.ClearFacilityCosts();
-                    if (MaintenanceHandler.Instance != null)
-                        MaintenanceHandler.Instance.UpdateUpkeep();
+                    MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
                 }
             }
         }

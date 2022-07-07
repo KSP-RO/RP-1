@@ -106,6 +106,9 @@ namespace KerbalConstructionTime
             {
                 TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
             }
+
+            void updated() { KCTEvents.OnRP0MaintenanceChanged.Fire(); }
+            TechList.Updated += updated;
         }
 
         public static void ClearVesselEditMode()
@@ -183,13 +186,9 @@ namespace KerbalConstructionTime
         public delegate double DoubleDelegate(double num);
         public delegate void VoidDelegate();
         public static DoubleDelegate ProgramFundingForTimeDelegate = null;
-        public static VoidDelegate UpkeepCheckDelegate;
 
         public static double GetBudgetDelta(double time)
         {
-            if (UpkeepCheckDelegate != null)
-                UpkeepCheckDelegate();
-
             // note NetUpkeep is negative or 0.
             double delta = NetUpkeep * time / 86400d - GetConstructionCostOverTime(time);
             

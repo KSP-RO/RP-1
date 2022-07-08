@@ -88,7 +88,18 @@ namespace KerbalConstructionTime
 
         public new int RemoveAll(Predicate<T> match)
         {
-            int removed = base.RemoveAll(match);
+            int removed = 0;
+            for (int i = base.Count - 1; i >= 0; --i)
+            {
+                T item = base[i];
+                if (match(item))
+                {
+                    base.RemoveAt(i);
+                    Removed(i, item);
+                    ++removed;
+                }
+            }
+
             if (removed > 0)
                 Updated();
 

@@ -89,9 +89,10 @@ namespace RP0.Crew
                 GUILayout.Label(course, GUILayout.Width(96));
                 GUILayout.Label(complete, GUILayout.Width(80));
 
-                if (CrewHandler.Instance.KerbalRetireTimes.ContainsKey(student.name))
+                double retireTime = CrewHandler.Instance.GetRetireTime(student.name);
+                if (retireTime > 0d)
                 {
-                    retires = CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(CrewHandler.Instance.KerbalRetireTimes[student.name], false) : "(n/a)";
+                    retires = CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(retireTime, false) : "(n/a)";
                 }
                 else
                 {
@@ -248,10 +249,11 @@ namespace RP0.Crew
             try
             {
                 GUILayout.Label($"{_selectedNaut.trait} {_selectedNaut.experienceLevel.ToString():D}");
-                if (CrewHandler.Instance.RetirementEnabled && CrewHandler.Instance.KerbalRetireTimes.ContainsKey(_selectedNaut.name))
+                double retireTime = CrewHandler.Instance.GetRetireTime(_selectedNaut.name);
+                if (CrewHandler.Instance.RetirementEnabled && retireTime > 0d)
                 {
                     GUILayout.Space(8);
-                    GUILayout.Label($"Retires NET {KSPUtil.PrintDate(CrewHandler.Instance.KerbalRetireTimes[_selectedNaut.name], false)}", RightLabel);
+                    GUILayout.Label($"Retires NET {KSPUtil.PrintDate(retireTime, false)}", RightLabel);
                 }
             }
             catch(Exception ex)
@@ -260,7 +262,7 @@ namespace RP0.Crew
             }
             GUILayout.EndHorizontal();
 
-            double nlt = CrewHandler.Instance.GetLatestRetireTime(_selectedNaut);
+            double nlt = CrewHandler.Instance.GetLatestRetireTime(_selectedNaut.name);
             if (nlt > 0)
             {
                 GUILayout.BeginHorizontal();

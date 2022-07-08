@@ -633,7 +633,7 @@ namespace RP0.Crew
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Date",
-                                             $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting flights they fly.)",
+                                             $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
                                              "OK",
                                              false,
                                              HighLogic.UISkin);
@@ -697,7 +697,7 @@ namespace RP0.Crew
                 foreach (string s in newHires)
                     sb.Append($"\n{s}, {KSPUtil.PrintDate(GetRetireTime(s), false)}");
 
-                sb.Append($"\n\nInteresting flights will delay retirement up to an additional {Math.Round(Settings.retireIncreaseCap / 31536000)} years.");
+                sb.Append($"\n\nInteresting flights and training will delay retirement up to an additional {Math.Round(Settings.retireIncreaseCap / (365.25d * 86400d))} years.");
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",

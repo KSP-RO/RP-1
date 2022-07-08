@@ -227,7 +227,7 @@ namespace RP0.Programs
     {
         public string ProgramName { get; set; }
 
-        public string ProgramTitle => ProgramHandler.ProgramDict.TryGetValue(ProgramName, out Program p) ? p.title : ProgramName;
+        public string ProgramTitle => ProgramHandler.PrettyPrintProgramName(ProgramName);
 
         public override bool IsMet
         {

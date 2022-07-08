@@ -29,8 +29,8 @@ namespace RP0.Crew
         [KSPField(isPersistant = true)]
         public double NextUpdate = UpdateInterval;    // Get the first hour for free :)
 
-        public Dictionary<string, double> KerbalRetireTimes = new Dictionary<string, double>();
-        public Dictionary<string, double> KerbalRetireIncreases = new Dictionary<string, double>();
+        private Dictionary<string, double> KerbalRetireTimes = new Dictionary<string, double>();
+        private Dictionary<string, double> KerbalRetireIncreases = new Dictionary<string, double>();
         public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
@@ -389,16 +389,51 @@ namespace RP0.Crew
             return false;
         }
 
-        public double GetLatestRetireTime(ProtoCrewMember pcm)
+        public double GetLatestRetireTime(string pcmName)
         {
-            if (KerbalRetireTimes.TryGetValue(pcm.name, out double retTime))
+            double retTime = GetRetireTime(pcmName);
+            double retIncreaseTotal = GetRetireIncreaseTime(pcmName);
+            if (retTime > 0d)
             {
-                KerbalRetireIncreases.TryGetValue(pcm.name, out double retIncreaseTotal);
                 double retIncreaseLeft = Settings.retireIncreaseCap - retIncreaseTotal;
                 return retTime + retIncreaseLeft;
             }
 
-            return 0;
+            return 0d;
+        }
+
+        public double GetRetireTime(string pcmName)
+        {
+            KerbalRetireTimes.TryGetValue(pcmName, out double retTime);
+            return retTime;
+        }
+
+        public double GetRetireIncreaseTime(string pcmName)
+        {
+            KerbalRetireIncreases.TryGetValue(pcmName, out double retTime);
+            return retTime;
+        }
+
+        public double IncreaseRetireTime(string pcmName, double retireOffset)
+        {
+            if (retireOffset <= 0d)
+                return 0d;
+
+            double retIncreaseTotal = GetRetireIncreaseTime(pcmName);
+            double newTotal = retIncreaseTotal + retireOffset;
+            if (newTotal > Settings.retireIncreaseCap)
+            {
+                // Cap the total retirement increase at a specific number of years
+                retireOffset = retIncreaseTotal - Settings.retireIncreaseCap;
+                newTotal = Settings.retireIncreaseCap;
+            }
+            KerbalRetireIncreases[pcmName] = newTotal;
+
+            string sRetireOffset = KSPUtil.PrintDateDelta(retireOffset, false, false);
+            Debug.Log("[RP-0] retire date increased by: " + sRetireOffset);
+
+            KerbalRetireTimes[pcmName] = GetRetireTime(pcmName) + retireOffset;
+            return retireOffset;
         }
 
         private void ACSpawn()
@@ -513,31 +548,14 @@ namespace RP0.Crew
 
                 Debug.Log($"[RP-0]  retirementMult: {retirementMult}, inactivityMult: {inactivityMult}, number of valid situations: {situations}");
 
-                if (KerbalRetireTimes.TryGetValue(pcm.name, out double retTime))
+                if (GetRetireTime(pcm.name) > 0d)
                 {
                     double stupidityPenalty = UtilMath.Lerp(Settings.retireOffsetStupidMin, Settings.retireOffsetStupidMax, pcm.stupidity);
                     Debug.Log($"[RP-0]  stupidityPenalty for {pcm.stupidity}: {stupidityPenalty}");
                     double retireOffset = retirementMult * 86400 * Settings.retireOffsetBaseMult / stupidityPenalty;
 
-                    if (retireOffset > 0)
-                    {
-                        KerbalRetireIncreases.TryGetValue(pcm.name, out double retIncreaseTotal);
-                        retIncreaseTotal += retireOffset;
-                        if (retIncreaseTotal > Settings.retireIncreaseCap)
-                        {
-                            // Cap the total retirement increase at a specific number of years
-                            retireOffset -= retIncreaseTotal - Settings.retireIncreaseCap;
-                            retIncreaseTotal = Settings.retireIncreaseCap;
-                        }
-                        KerbalRetireIncreases[pcm.name] = retIncreaseTotal;
-
-                        string sRetireOffset = KSPUtil.PrintDateDelta(retireOffset, false, false);
-                        Debug.Log("[RP-0] retire date increased by: " + sRetireOffset);
-
-                        retTime += retireOffset;
-                        KerbalRetireTimes[pcm.name] = retTime;
-                        retirementChanges.Add($"\n{pcm.name}, +{sRetireOffset}, no earlier than {KSPUtil.PrintDate(retTime, false)}");
-                    }
+                    retireOffset = IncreaseRetireTime(pcm.name, retireOffset);
+                    retirementChanges.Add($"\n{pcm.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(GetRetireTime(pcm.name), false)}");
                 }
 
                 inactivityMult = Math.Max(1, inactivityMult);
@@ -677,7 +695,7 @@ namespace RP0.Crew
                 StringBuilder sb = new StringBuilder();
                 sb.Append("Earliest crew retirement dates:");
                 foreach (string s in newHires)
-                    sb.Append($"\n{s}, {KSPUtil.PrintDate(KerbalRetireTimes[s], false)}");
+                    sb.Append($"\n{s}, {KSPUtil.PrintDate(GetRetireTime(s), false)}");
 
                 sb.Append($"\n\nInteresting flights will delay retirement up to an additional {Math.Round(Settings.retireIncreaseCap / 31536000)} years.");
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
@@ -724,7 +742,6 @@ namespace RP0.Crew
                 }
             }
 
-            // TODO remove from courses? Except I think they won't retire if inactive either so that's ok.
             if (_toRemove.Count > 0)
             {
                 string msgStr = string.Empty;
@@ -897,7 +914,8 @@ namespace RP0.Crew
         private void FixTooltip(CrewListItem cli)
         {
             ProtoCrewMember pcm = cli.GetCrewRef();
-            if (RetirementEnabled && KerbalRetireTimes.TryGetValue(pcm.name, out double retTime))
+            double retTime;
+            if (RetirementEnabled && (retTime = GetRetireTime(pcm.name)) > 0d)
             {
                 cli.SetTooltip(pcm);
                 var ttc = _cliTooltip.GetValue(cli) as TooltipController_CrewAC;

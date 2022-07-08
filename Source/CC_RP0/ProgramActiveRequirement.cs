@@ -16,14 +16,14 @@ namespace ContractConfigurator.RP0
             // Check on active contracts too
             checkOnActiveContract = configNode.HasValue("checkOnActiveContract") ? checkOnActiveContract : true;
 
-            valid &= ConfigNodeUtil.ParseValue<List<string>>(configNode, "program", x => programs = x, this, new List<string>());
+            valid &= ConfigNodeUtil.ParseValue(configNode, "program", x => programs = x, this, new List<string>());
 
             return valid;
         }
 
         public override void OnLoad(ConfigNode configNode)
         {
-            programs = ConfigNodeUtil.ParseValue<List<string>>(configNode, "program", new List<string>());
+            programs = ConfigNodeUtil.ParseValue(configNode, "program", new List<string>());
         }
 
         public override void OnSave(ConfigNode configNode)
@@ -41,13 +41,14 @@ namespace ContractConfigurator.RP0
 
         protected override string RequirementText()
         {
+            IEnumerable<string> prettyNames = programs.Select(name => ProgramHandler.PrettyPrintProgramName(base.name));
             if (invertRequirement)
             {
-                return $"Must NOT have active program{(programs.Count > 1 ? "s" : "")}: {string.Join(", ", programs)}";
+                return $"Must NOT have active program{(programs.Count > 1 ? "s" : "")}: {string.Join(", ", prettyNames)}";
             }
             else
             {
-                return $"Have active program{(programs.Count > 1 ? "s" : "")}: {string.Join(", ", programs)}";
+                return $"Have active program{(programs.Count > 1 ? "s" : "")}: {string.Join(", ", prettyNames)}";
             }
         }
     }

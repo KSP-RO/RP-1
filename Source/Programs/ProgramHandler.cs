@@ -66,6 +66,11 @@ namespace RP0.Programs
             }
         }
 
+        public static string PrettyPrintProgramName(string name)
+        {
+            return ProgramDict.TryGetValue(name, out Program p) ? p.title : name;
+        }
+
         public override void OnAwake()
         {
             if (Instance != null)

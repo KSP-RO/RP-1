@@ -70,15 +70,11 @@ namespace RP0
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            node.TryGetValue(nameof(ID), ref ID);
-            node.TryGetValue(nameof(ModID), ref ModID);
         }
 
         public void Save(ConfigNode node)
         {
             ConfigNode.CreateConfigFromObject(this, node);
-            node.AddValue(nameof(ID), ID);
-            node.AddValue(nameof(ModID), ModID);
         }
     }
 }

@@ -27,6 +27,12 @@ namespace RP0.Crew
         public double minFlightDurationSecondsForTrainingExpire = 30;
 
         [Persistent]
+        public double retireIncreaseMultiplierToTrainingLengthProficiency = 0.125d;
+
+        [Persistent]
+        public double retireIncreaseMultiplierToTrainingLengthMission = 0.25d;
+
+        [Persistent]
         public double flightHighAltitude = 40000;
 
         public Dictionary<string, double> situationValues = new Dictionary<string, double>();

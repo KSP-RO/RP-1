@@ -201,6 +201,28 @@ namespace RP0
             Profiler.EndSample();
         }
 
+        private double GetNautUpkeepFromTraining(FlightLog log)
+        {
+            bool foundOrbit = false;
+            bool foundSubOrb = false;
+            double baseCostPerDay = 0d;
+            for (int j = log.Count; j-- > 0;)
+            {
+                var e = log[j];
+                if (!foundOrbit && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Orbital"))
+                {
+                    baseCostPerDay += Settings.nautOrbitProficiencyUpkeepAdd;
+                    foundOrbit = true;
+                }
+                if (!foundSubOrb && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Suborbital"))
+                {
+                    baseCostPerDay += Settings.nautSubOrbitProficiencyUpkeepAdd;
+                    foundOrbit = true;
+                }
+            }
+            return baseCostPerDay;
+        }
+
         public void GetNautCost(ProtoCrewMember k, out double baseCostPerDay, out double flightCostPerDay)
         {
             flightCostPerDay = 0d;
@@ -211,22 +233,8 @@ namespace RP0
             }
             else
             {
-                bool foundOrbit = false;
-                bool foundSubOrb = false;
-                for (int j = k.flightLog.Count; j-- > 0;)
-                {
-                    var e = k.flightLog[j];
-                    if (!foundOrbit && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Orbital"))
-                    {
-                        baseCostPerDay += Settings.nautOrbitProficiencyUpkeepAdd;
-                        foundOrbit = true;
-                    }
-                    if (!foundSubOrb && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Suborbital"))
-                    {
-                        baseCostPerDay += Settings.nautSubOrbitProficiencyUpkeepAdd;
-                        foundOrbit = true;
-                    }
-                }
+                baseCostPerDay += GetNautUpkeepFromTraining(k.flightLog) + GetNautUpkeepFromTraining(k.careerLog);
+
                 if (k.inactive)
                 {
                     baseCostPerDay *= Settings.nautInactiveMult;

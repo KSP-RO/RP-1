@@ -393,8 +393,8 @@ namespace RP0
                     k.type != ProtoCrewMember.KerbalType.Crew)
                     continue;
 
-                double rt;
-                if (!Crew.CrewHandler.Instance.KerbalRetireTimes.TryGetValue(k.name, out rt))
+                double rt = Crew.CrewHandler.Instance.GetRetireTime(k.name);
+                if (rt == 0d)
                     continue;
 
                 GUILayout.BeginHorizontal();

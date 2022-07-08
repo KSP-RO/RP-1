@@ -194,10 +194,14 @@ namespace RP0.Crew
             //assign rewards to all kerbals and set them to free
             if (Completed)
             {
+                double length = GetTime(Students);
+                List<string> retirementChanges = new List<string>();
                 foreach (ProtoCrewMember student in Students)
                 {
                     if (student == null)
                         continue;
+
+                    double retireTimeOffset = length;
                     
                     if (ExpireLog != null)
                     {
@@ -241,6 +245,12 @@ namespace RP0.Crew
                             string trainingType = s[0];
                             string trainingTarget = s.Length == 1 ? null : s[1];
 
+                            switch (trainingType)
+                            {
+                                case CrewHandler.TrainingType_Mission: retireTimeOffset += length * CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthMission; break;
+                                case CrewHandler.TrainingType_Proficiency: retireTimeOffset += length * CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthProficiency; break;
+                            }
+
                             if (!prevMissionsAlreadyExpired && trainingType == CrewHandler.TrainingType_Mission)
                             {
                                 // Expire any previous mission trainings because only 1 should be active at a time
@@ -269,6 +279,27 @@ namespace RP0.Crew
 
                     if (rewardXP != 0)
                         student.ExtraExperience += rewardXP;
+
+                    double retireOffset = CrewHandler.Instance.IncreaseRetireTime(student.name, retireTimeOffset);
+                    if(retireOffset > 0d)
+                        retirementChanges.Add($"\n{student.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(CrewHandler.Instance.GetRetireTime(student.name), false)}");
+                }
+
+                if (CrewHandler.Instance.RetirementEnabled && retirementChanges.Count > 0)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append($"{name} training completed! The following retirement changes have occurred:");
+                    foreach (string s in retirementChanges)
+                        sb.Append(s);
+
+                    PopupDialog.SpawnPopupDialog(new UnityEngine.Vector2(0.5f, 0.5f),
+                                             new UnityEngine.Vector2(0.5f, 0.5f),
+                                             "CrewUpdateNotification",
+                                             "Crew Updates",
+                                             sb.ToString(),
+                                             "OK",
+                                             true,
+                                             HighLogic.UISkin);
                 }
             }
 

@@ -12,6 +12,7 @@ namespace RP0.ProceduralAvionics
     public static class ProceduralAvionicsTechManager
     {
         private static List<ProceduralAvionicsConfig> allTechNodes;
+        public static List<ProceduralAvionicsConfig> AllAvionicsConfigs => allTechNodes; 
 
         private static Dictionary<string, string> unlockedTech;
 

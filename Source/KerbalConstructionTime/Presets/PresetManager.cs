@@ -21,13 +21,7 @@ namespace KerbalConstructionTime
                     return;
 
                 // Fixup upgrade text
-                foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
-                {
-                    if (up.name.StartsWith("rp0EngineerUpgrade"))
-                        up.description = KSP.Localization.Localizer.Format("#rp0EngineerUpgradeText", (value.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
-                    else if (up.name.StartsWith("rp0ResearcherUpgrade"))
-                        up.description = KSP.Localization.Localizer.Format("#rp0ResearcherUpgradeText", (value.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
-                }
+                Utilities.SetPartUpgradeText();
             }
         }
         private KCT_Preset _activePreset;

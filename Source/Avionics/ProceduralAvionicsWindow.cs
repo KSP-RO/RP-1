@@ -443,25 +443,34 @@ namespace RP0.ProceduralAvionics
         private string ConstructTooltipForAvionicsTL(ProceduralAvionicsTechNode techNode)
         {
             var sb = StringBuilderCache.Acquire();
-            if (techNode.IsScienceCore)
+            float calcMass = GetStatsForTechNode(techNode, _newControlMass, out float massKG, out _, out float powerWatts);
+            string indent = string.Empty;
+            if (!techNode.IsScienceCore)
             {
-                sb.AppendLine($"Mass: {GetAvionicsMass(techNode, 0) * 1000:0.#}kg");
-                sb.AppendLine($"Power consumption: {GetEnabledkW(techNode, 0) * 1000:0.#}W");
-            }
-            else
-            {
-                float calcMass = _newControlMass;
-                if (calcMass <= 0) calcMass = techNode.interplanetary ? 0.5f : 100f;
                 sb.AppendLine($"At {calcMass:0.##}t controllable mass:");
-                sb.AppendLine($"  Mass: {GetAvionicsMass(techNode, calcMass) * 1000:0.#}kg");
-                sb.AppendLine($"  Power consumption: {GetEnabledkW(techNode, calcMass) * 1000:0.#}W");
+                indent = "  ";
             }
+            sb.AppendLine($"{indent}Mass: {massKG:0.#}kg");
+            sb.AppendLine($"{indent}Power consumption: {powerWatts:0.#}W");
 
             sb.AppendLine($"Axial control: {BoolToYesNoString(techNode.allowAxial)}");
             sb.AppendLine($"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}");
             sb.Append($"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}");
 
             return sb.ToStringAndRelease();
+        }
+
+        public static float GetStatsForTechNode(ProceduralAvionicsTechNode techNode, float controllableMass, out float massKG, out float cost, out float powerWatts)
+        {
+            if (techNode.IsScienceCore)
+                controllableMass = 0f;
+            else if (controllableMass <= 0)
+                controllableMass = techNode.interplanetary ? 0.5f : 100f;
+            
+            massKG = GetAvionicsMass(techNode, controllableMass) * 1000;
+            cost = GetAvionicsCost(controllableMass, techNode);
+            powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
+            return controllableMass;
         }
 
         private static string BoolToYesNoString(bool b) => b ? "Yes" : "No";

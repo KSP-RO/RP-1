@@ -9,6 +9,8 @@ namespace RP0
         {
             if (MaintenanceHandler.OnRP0MaintenanceChanged == null)
                 MaintenanceHandler.OnRP0MaintenanceChanged = new EventVoid("OnRP0MaintenanceChanged");
+
+            Destroy(this);
         }
     }
 }

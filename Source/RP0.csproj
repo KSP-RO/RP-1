@@ -62,6 +62,7 @@
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
     <Compile Include="Harmony\AppLauncherPatcher.cs" />
+    <Compile Include="Harmony\KerbalismPatcher.cs" />
     <Compile Include="Harmony\ContractsAppPatcher.cs" />
     <Compile Include="Harmony\DifficultyPatcher.cs" />
     <Compile Include="Harmony\CurrencyWidgetPatcher.cs" />

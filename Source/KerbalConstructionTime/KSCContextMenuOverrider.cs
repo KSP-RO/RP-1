@@ -130,29 +130,25 @@ namespace KerbalConstructionTime
             if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding || facilityType == SpaceCenterFacility.LaunchPad)
             {
                 lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "Modify a launch complex from the Space Center Management window instead.";
+                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuVAB";
             }
             else if(facilityType == SpaceCenterFacility.SpaceplaneHangar || facilityType == SpaceCenterFacility.Runway)
             {
                 lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "Modify the Hangar from the Space Center Management window instead.";
+                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuSPH";
             }
             else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
             {
                 if (PresetManager.Instance != null)
                 {
                     int limit = PresetManager.Instance.ActivePreset.ResearcherCaps[lvlIdx];
-                    if (limit == -1)
-                        lvl.levelStats.textBase += $"\nResearcher Limit: unlimited";
-                    else
-                        lvl.levelStats.textBase += $"\nResearcher Limit: {limit:N0}";
+                    lvl.levelStats.textBase += $"\n{KSP.Localization.Localizer.GetStringByTag("#rp0FacilityContextMenuRnD_ResearcherLimit")} {(limit == -1 ? "#rp0FacilityContextMenuRnD_ResearcherLimit_unlimited" : limit.ToString("N0"))}";
                 }
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex &&
                      lvlIdx > 0)
             {
-                lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter R&R times";
-                lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter training times";
+                lvl.levelStats.textBase += $"\n{KSP.Localization.Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_RnR", lvlIdx * 25)}\n{KSP.Localization.Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_Training", lvlIdx * 25)}";
             }
         }
 

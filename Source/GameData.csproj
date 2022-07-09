@@ -57,7 +57,9 @@
     <Content Include="..\GameData\RP-0\PartHacks.cfg" />
     <Content Include="..\GameData\RP-0\ProcCosts.cfg" />
     <Content Include="..\GameData\RP-0\ProgramHandlerSettings.cfg" />
+    <Content Include="..\GameData\RP-0\RealFuelsSettings.cfg" />
     <Content Include="..\GameData\RP-0\ResourceCosts.cfg" />
+    <Content Include="..\GameData\RP-0\TEMPexperimentFixer.cfg" />
     <Content Include="..\GameData\RP-0\TestFlightInterop.cfg" />
     <Content Include="..\GameData\RP-0\TestFlightRnD.cfg" />
     <Content Include="..\GameData\RP-0\ToolingDefinitions.cfg" />
@@ -693,6 +695,12 @@
     <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpostWithLab.cfg">
       <Link>Contracts\Surface Outposts\MoonOutpostWithLab.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\Communications Satellite - Early.cfg">
+      <Link>Contracts\Targeted Satellites\Communications Satellite - Early.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\Communications Test Satellite.cfg">
+      <Link>Contracts\Targeted Satellites\Communications Test Satellite.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstComSat.cfg">
       <Link>Contracts\Targeted Satellites\FirstComSat.cfg</Link>
     </Content>
@@ -710,12 +718,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Targeted Satellites\FirstWeatherSat.cfg">
       <Link>Contracts\Targeted Satellites\FirstWeatherSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\TO BE SORTED\Communications Satellite - Early.cfg">
-      <Link>Contracts\TO BE SORTED\Communications Satellite - Early.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\TO BE SORTED\Communications Test Satellite.cfg">
-      <Link>Contracts\TO BE SORTED\Communications Test Satellite.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Uncrewed Lunar Surface Exploration\MoonLanding.cfg">
       <Link>Contracts\Uncrewed Lunar Surface Exploration\MoonLanding.cfg</Link>

@@ -181,7 +181,7 @@ namespace RP0.Programs
             double nowUT = KSPUtils.GetUT();
             double time2 = nowUT - acceptedUT;
             double funds2 = GetFundsAtTime(time2);
-            double fundsToAdd = funds2 - fundsPaidOut;
+            double fundsToAdd = Math.Max(0d, funds2 - fundsPaidOut);
             lastPaymentUT = nowUT;
 
             Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / nominalDurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");

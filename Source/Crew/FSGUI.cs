@@ -21,7 +21,7 @@ namespace RP0.Crew
             GUILayout.BeginHorizontal();
             GUILayout.Label("", GUILayout.Width(24));
             GUILayout.Label("Name", BoldLabel, GUILayout.Width(144));
-            GUILayout.Label("Course", BoldLabel, GUILayout.Width(96));
+            GUILayout.Label("Training", BoldLabel, GUILayout.Width(96));
             GUILayout.Label("Complete", BoldLabel, GUILayout.Width(80));
             GUILayout.Label("Retires NET", BoldLabel, GUILayout.Width(80));
             GUILayout.EndHorizontal();
@@ -39,7 +39,7 @@ namespace RP0.Crew
                 GUILayout.Label($"{student.trait.Substring(0, 1)} {student.experienceLevel}", GUILayout.Width(24));
                 if (currentCourse == null && _selectedCourse != null && (selectedForCourse || _selectedCourse.MeetsStudentReqs(student)))
                 {
-                    var c = new GUIContent(student.name, "Select for course");
+                    var c = new GUIContent(student.name, "Select for training");
                     if (RenderToggleButton(c, selectedForCourse, GUILayout.Width(144)))
                     {
                         if (selectedForCourse)
@@ -104,12 +104,12 @@ namespace RP0.Crew
                 {
                     if (currentCourse.seatMin > 1)
                     {
-                        if (GUILayout.Button(new GUIContent("X", "Cancel course"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button(new GUIContent("X", "Cancel training"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             CancelCourse(currentCourse);
                     }
                     else
                     {
-                        if (GUILayout.Button(new GUIContent("X", "Remove from course"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button(new GUIContent("X", "Remove from training"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             LeaveCourse(currentCourse, student);
                     }
 
@@ -220,10 +220,24 @@ namespace RP0.Crew
             if (_selectedCourse.seatMax > 0)
                 GUILayout.Label($"{_selectedCourse.seatMax - _selectedCourse.Students.Count} remaining seat(s).");
             if (_selectedCourse.seatMin > _selectedCourse.Students.Count)
-                GUILayout.Label($"{_selectedCourse.seatMin - _selectedCourse.Students.Count} more student(s) required.");
+                GUILayout.Label($"{_selectedCourse.seatMin - _selectedCourse.Students.Count} more naut(s) required.");
             GUILayout.Label($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTime(), true, false)}");
             GUILayout.Label($"and finish on {KSPUtil.PrintDate(_selectedCourse.CompletionTime(), false)}");
-            if (GUILayout.Button("Start Course", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+            if (CrewHandler.Instance.RetirementEnabled)
+            {
+                double mult = 1d;
+                foreach (ConfigNode.Value v in _selectedCourse.RewardLog.values)
+                {
+                    string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    switch (s[0])
+                    {
+                        case CrewHandler.TrainingType_Mission: mult += CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthMission; break;
+                        case CrewHandler.TrainingType_Proficiency: mult += CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthProficiency; break;
+                    }
+                }
+                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTime() * mult, true, false)}");
+            }
+            if (GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
             {
                 if (_selectedCourse.StartCourse())
                 {
@@ -313,7 +327,7 @@ namespace RP0.Crew
             });
             options[2] = new DialogGUIButton("No", () => { });
 
-            var diag = new MultiOptionDialog("ConfirmStudentDropCourse", $"Are you sure you want {student.name} to drop this course?", "Drop Course?",
+            var diag = new MultiOptionDialog("ConfirmStudentDropCourse", $"Are you sure you want to remove {student.name} from training? They will lose any retirement benefit of the training as well.", "Remove from Training?",
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
@@ -333,13 +347,13 @@ namespace RP0.Crew
                 MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
             });
             options[2] = new DialogGUIButton("No", () => { });
-            var sb = new StringBuilder("Are you sure you want to cancel this course? The following students will cease study:");
+            var sb = new StringBuilder("Are you sure you want to cancel this training? The following students will be removed (losing all retirement benefit from the training):");
             foreach (ProtoCrewMember stud in course.Students)
             {
                 sb.AppendLine();
                 sb.Append(stud.name);
             }
-            var diag = new MultiOptionDialog("ConfirmCancelCourse", sb.ToStringAndRelease(), "Stop Course?",
+            var diag = new MultiOptionDialog("ConfirmCancelCourse", sb.ToStringAndRelease(), "Cancel Training?",
                 HighLogic.UISkin,
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),

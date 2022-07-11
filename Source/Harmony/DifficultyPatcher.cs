@@ -29,7 +29,7 @@ namespace RP0
                     if (instruction.LoadsConstant(-100f))
                     {
                         yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 0f);
-                        yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 50f);
+                        yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 10f);
                         skipNext = true;
                     }
                     else

@@ -32,7 +32,7 @@ namespace RP0
 
                 // Cache what programs can be accepted (and which have been completed)
                 foreach (Program p in ProgramHandler.Programs)
-                    if (p.CanAccept)
+                    if (p.CanAccept && !ProgramHandler.Instance.DisabledPrograms.Contains(p.name))
                         acceptablePrograms.Add(p.name);
 
                 foreach (Program p in ProgramHandler.Instance.CompletedPrograms)
@@ -58,7 +58,7 @@ namespace RP0
                         continue;
 
                     string name = strat.Config.Name;
-                    if (!acceptablePrograms.Contains(name) && !completedPrograms.Contains(name))
+                    if (!acceptablePrograms.Contains(name) && !completedPrograms.Contains(name) && !ProgramHandler.Instance.DisabledPrograms.Contains(name))
                         list.Add(strat);
                 }
 

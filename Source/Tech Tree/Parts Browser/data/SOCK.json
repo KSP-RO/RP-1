@@ -62,7 +62,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "STS",
-        "identical_part_name": "",
+        "identical_part_name": "ShuttleBodyFlap",
         "module_tags": [
             "Reentry"
         ]
@@ -85,7 +85,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "STS",
-        "identical_part_name": "",
+        "identical_part_name": "ShuttleWingL",
         "module_tags": [
             "Reentry"
         ]
@@ -108,7 +108,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "STS",
-        "identical_part_name": "",
+        "identical_part_name": "ShuttleWingR",
         "module_tags": [
             "Reentry"
         ]
@@ -177,7 +177,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "STS",
-        "identical_part_name": "",
+        "identical_part_name": "ShuttleCabin",
         "module_tags": [
             "Cockpit",
             "HumanRated",
@@ -268,7 +268,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "STS",
-        "identical_part_name": "",
+        "identical_part_name": "ShuttleFuselage",
         "module_tags": [
             "NoResourceCostMult",
             "Reentry"
@@ -336,7 +336,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "STS",
-        "identical_part_name": "",
+        "identical_part_name": "ShuttleTail",
         "module_tags": [
             "Reentry"
         ]

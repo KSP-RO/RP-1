@@ -38,6 +38,8 @@ namespace RP0.Programs
 
         public List<Program> CompletedPrograms { get; private set; } = new List<Program>();
 
+        public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
+
         public int ActiveProgramLimit => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
 
         public static void EnsurePrograms()
@@ -104,6 +106,15 @@ namespace RP0.Programs
 
             EnsurePrograms();
 
+            ConfigNode disableds = node.GetNode("DISABLEDPROGRAMS");
+            if (disableds != null)
+            {
+                foreach (ConfigNode.Value v in disableds.values)
+                {
+                    DisabledPrograms.Add(v.name);
+                }
+            }
+
             foreach (ConfigNode cn in node.GetNodes("ACTIVEPROGRAM"))
             {
                 string progName = cn.GetValue(nameof(Program.name));
@@ -111,6 +122,13 @@ namespace RP0.Programs
                 var program = new Program(programTemplate);
                 program.Load(cn);
                 ActivePrograms.Add(program);
+
+                // back-compat
+                foreach (var s in program.programsToDisableOnAccept)
+                {
+                    Debug.Log($"[RP-0] Back-compat: Program {progName} asks to disable {s}");
+                    DisableProgram(s);
+                }
             }
 
             foreach (ConfigNode cn in node.GetNodes("COMPLETEDPROGRAM"))
@@ -120,6 +138,13 @@ namespace RP0.Programs
                 var program = new Program(programTemplate);
                 program.Load(cn);
                 CompletedPrograms.Add(program);
+
+                // back-compat
+                foreach (var s in program.programsToDisableOnAccept)
+                {
+                    Debug.Log($"[RP-0] Back-compat: Program {progName} asks to disable {s}");
+                    DisableProgram(s);
+                }
             }
         }
 
@@ -140,6 +165,11 @@ namespace RP0.Programs
                 program.Save(cn);
                 node.AddNode(cn);
             }
+
+            var disableds = new ConfigNode("DISABLEDPROGRAMS");
+            foreach (var p in DisabledPrograms)
+                disableds.AddValue(p, true);
+            node.AddNode(disableds);
         }
 
         public void ProcessFunding()
@@ -339,6 +369,9 @@ namespace RP0.Programs
         private void ActivateProgram(Program p)
         {
             ActivePrograms.Add(p.Accept());
+            foreach (string s in p.programsToDisableOnAccept)
+                DisableProgram(s);
+
             ContractPreLoader.Instance.ResetGenerationFailure();
         }
 
@@ -358,6 +391,14 @@ namespace RP0.Programs
             CompletedPrograms.Add(p);
             p.Complete();
             ContractPreLoader.Instance.ResetGenerationFailure();
+        }
+
+        private void DisableProgram(string s)
+        {
+            if (DisabledPrograms.Add(s))
+                Debug.Log($"[RP-0] Disabling program {s}");
+            else
+                Debug.Log($"[RP-0] tried to disable program {s} but it already was!");
         }
     }
 }

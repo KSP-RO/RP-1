@@ -83,12 +83,14 @@ namespace RP0
             private static string GetTooltipText()
             {
                 MaintenanceHandler.SubsidyDetails details = MaintenanceHandler.Instance.GetSubsidyDetails();
+                double repLostPerDay = Reputation.Instance.reputation * MaintenanceHandler.Settings.repPortionLostPerDay;
                 return Localizer.Format("#rp0RepWidgetTooltip",
                                         details.minSubsidy.ToString("N0"),
-                                        details.minRep.ToString("N0"),
                                         details.maxSubsidy.ToString("N0"),
                                         details.maxRep.ToString("N0"),
-                                        details.subsidy.ToString("N0"));
+                                        details.subsidy.ToString("N0"),
+                                        repLostPerDay.ToString("N1"),
+                                        (repLostPerDay * 365.25d).ToString("N0"));
             }
         }
 

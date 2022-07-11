@@ -56,6 +56,9 @@
         public double subsidyMultiplierForMax = 2d;
 
         [Persistent]
+        public double repPortionLostPerDay = 0.9995d;
+
+        [Persistent]
         public FloatCurve subsidyCurve = new FloatCurve();
     }
 }

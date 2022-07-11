@@ -32,6 +32,9 @@ namespace RP0
         public double lastUpdate = 0d;
 
         [KSPField(isPersistant = true)]
+        public double lastRepUpdate = 0d;
+
+        [KSPField(isPersistant = true)]
         public MaintenanceGUI.MaintenancePeriod guiSelectedPeriod = MaintenanceGUI.MaintenancePeriod.Day;
 
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
@@ -86,7 +89,7 @@ namespace RP0
 
         public struct SubsidyDetails
         {
-            public double minSubsidy, maxSubsidy, minRep, maxRep, subsidy;
+            public double minSubsidy, maxSubsidy, maxRep, subsidy;
         }
 
         public SubsidyDetails GetSubsidyDetails()
@@ -95,12 +98,11 @@ namespace RP0
             const double secsPerYear = 3600 * 24 * 365.25;
             float years = (float)(KSPUtils.GetUT() / secsPerYear);
             details.minSubsidy = Settings.subsidyCurve.Evaluate(years);
-            details.minRep = details.minSubsidy / Settings.repToSubsidyConversion;
-            details.maxRep = details.minRep * Settings.subsidyMultiplierForMax;
+            details.maxRep = details.minSubsidy * Settings.subsidyMultiplierForMax / Settings.repToSubsidyConversion;
             details.maxSubsidy = details.minSubsidy * Settings.subsidyMultiplierForMax;
-            double invLerp = UtilMath.InverseLerp(details.minRep, details.maxRep, UtilMath.Clamp(Reputation.Instance.reputation, details.minRep, details.maxRep));
+            double invLerp = UtilMath.InverseLerp(0, details.maxRep, UtilMath.Clamp(Reputation.Instance.reputation, 0, details.maxRep));
             details.subsidy = UtilMath.LerpUnclamped(details.minSubsidy, details.maxSubsidy, invLerp);
-            //Debug.Log($"$$$$ years {years}: minSub: {minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, minRep {minRep}, maxRep {maxRep}, invLerp {invLerp}, val {val}=>{(val * (1d / 365.25d))}");
+            //Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");
             return details;
         }
 
@@ -396,6 +398,15 @@ namespace RP0
             }
 
             lastUpdate = time;
+
+            if (lastRepUpdate < time)
+            {
+                if (lastRepUpdate == 0d)
+                    lastRepUpdate = time;
+
+                lastRepUpdate += 3600d * 24d;
+                Reputation.Instance.AddReputation((float)(Reputation.Instance.reputation * -Settings.repPortionLostPerDay), TransactionReasons.Progression);
+            }
 
             if (TimeWarp.CurrentRate <= 100f)
             {

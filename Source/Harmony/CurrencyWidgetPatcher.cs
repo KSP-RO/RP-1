@@ -11,49 +11,23 @@ namespace RP0
 {
     public partial class HarmonyPatcher : MonoBehaviour
     {
-        //[HarmonyPatch(typeof(FundsWidget))]
-        //internal class PatchFundsWidget
-        //{
-        //    [HarmonyPostfix]
-        //    [HarmonyPatch("DelayedStart")]
-        //    internal static void Postfix_DelayedStart(FundsWidget __instance)
-        //    {
-        //        // Get tumblers, clone it.
-        //        var tumblers = __instance.transform.Find("Tumblers");
-        //        GameObject go = GameObject.Instantiate(tumblers.gameObject, tumblers.position, tumblers.rotation, __instance.gameObject.transform);
-        //        go.name = "FundsWidgetTooltipController";
-        //        // Kill Tumbler script and chidlren.
-        //        GameObject.DestroyImmediate(go.GetComponent<KSP.UI.Screens.Tumbler>());
-        //        GameObject[] children = new GameObject[go.transform.childCount];
-        //        int i = 0;
-        //        foreach (Transform child in go.transform)
-        //            children[i++] = child.gameObject;
-        //        foreach (var child in children)
-        //            GameObject.DestroyImmediate(child);
-
-        //        // Copy the rect transform
-        //        var rt = go.GetComponent<RectTransform>();
-        //        var tumblerRT = tumblers.GetComponent<RectTransform>();
-        //        rt.anchoredPosition = tumblerRT.anchoredPosition;
-        //        rt.anchorMin = tumblerRT.anchorMin;
-        //        rt.anchorMax = tumblerRT.anchorMax;
-        //        rt.offsetMin = tumblerRT.offsetMin;
-        //        rt.offsetMin = tumblerRT.offsetMax;
-        //        rt.sizeDelta = tumblerRT.sizeDelta;
-        //        rt.anchoredPosition3D = tumblerRT.anchoredPosition3D;
-        //        // but offset in -Z so it's above.
-        //        rt.localPosition = new Vector3(tumblerRT.localPosition.x, tumblerRT.localPosition.y, tumblerRT.localPosition.z - 1f);
-
-        //        // Add tooltip
-        //        var tooltip = go.AddComponent<TooltipController_Text>();
-        //        var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
-        //        tooltip.prefab = prefab;
-        //        tooltip.RequireInteractable = false;
-        //        tooltip.textString = "blah?";
-        //        Debug.Log("$$$$");
-        //        __instance.gameObject.Dump();
-        //    }
-        //}
+        [HarmonyPatch(typeof(FundsWidget))]
+        internal class PatchFundsWidget
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch("DelayedStart")]
+            internal static void Postfix_DelayedStart(FundsWidget __instance)
+            {
+                // Get foreground element
+                var foreground = __instance.transform.Find("Foreground");
+                // Add tooltip
+                var tooltip = foreground.gameObject.AddComponent<TooltipController_Text>();
+                var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
+                tooltip.prefab = prefab;
+                tooltip.RequireInteractable = false;
+                tooltip.textString = "blah?";
+            }
+        }
 
         [HarmonyPatch(typeof(ReputationWidget))]
         internal class PatchReputationWidget

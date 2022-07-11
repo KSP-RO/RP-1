@@ -76,6 +76,8 @@ namespace RP0.Programs
         [Persistent(isPersistant = false)]
         public double repPenaltyPerYearLate;
 
+        public List<string> programsToDisableOnAccept = new List<string>();
+
         public RequirementBlock RequirementsBlock;
         public RequirementBlock ObjectivesBlock;
 
@@ -124,6 +126,7 @@ namespace RP0.Programs
             ObjectivesBlock = toCopy.ObjectivesBlock;
             _requirementsPredicate = toCopy._requirementsPredicate;
             _objectivesPredicate = toCopy._objectivesPredicate;
+            programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
         }
 
         public void Load(ConfigNode node)
@@ -144,6 +147,13 @@ namespace RP0.Programs
                 RequirementBlock reqBlock = ParseRequirementBlock(cn);
                 ObjectivesBlock = reqBlock;
                 _objectivesPredicate = reqBlock?.Expression.Compile();
+            }
+
+            cn = node.GetNode("DISABLE");
+            if (cn != null)
+            {
+                foreach (Value v in cn.values)
+                    programsToDisableOnAccept.Add(v.name);
             }
         }
 

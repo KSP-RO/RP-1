@@ -28,8 +28,6 @@ namespace RP0.Programs
             string objectives = string.Empty, requirements = string.Empty;
             if (NextTextIsShowSelected)
             {
-                NextTextIsShowSelected = false;
-
                 var tmp = program.ObjectivesBlock?.ToString(doColoring: wasAccepted);
                 objectives = $"<b>Objectives</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
 
@@ -56,6 +54,15 @@ namespace RP0.Programs
                 text = $"{requirements}\n\n{text}Nominal Duration: {program.nominalDurationYears:0.#} years";
             }
 
+            if (NextTextIsShowSelected && !wasAccepted && program.programsToDisableOnAccept.Count > 0)
+            {
+                text += "\nWill disable the following on accept:";
+                foreach (var s in program.programsToDisableOnAccept)
+                    text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+            }
+
+            NextTextIsShowSelected = false;
+
             return text;
         }
 
@@ -76,6 +83,12 @@ namespace RP0.Programs
             if (ProgramHandler.Instance.ActivePrograms.Any(p => p.name == Config.Name))
             {
                 reason = "This Program is currently active.";
+                return false;
+            }
+
+            if (ProgramHandler.Instance.DisabledPrograms.Contains(Config.Name))
+            {
+                reason = "This Program is disabled.";
                 return false;
             }
 

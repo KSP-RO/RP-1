@@ -118,6 +118,35 @@ namespace RP0.Crew
             ClearTracker();
             return _GetTime(Sanitize(name));
         }
+        
+        public static double GetProficiencyTime(string name, ProtoCrewMember pcm)
+        {
+            ClearTracker();
+            double mult = 1d;
+            string expired = "expired_" + CrewHandler.TrainingType_Proficiency;
+            string sanName = Sanitize(name);
+            for (int i = pcm.careerLog.Entries.Count - 1; i >= 0; --i)
+            {
+                var entry = pcm.careerLog.Entries[i];
+                if (entry.type == CrewHandler.TrainingType_Proficiency)
+                {
+                    if (holders.TryGetValue(entry.target, out var h))
+                    {
+                        FillTrackerFromHolder(h);
+                    }
+                    else
+                    {
+                        Debug.LogError($"[RP-0] Couldn't find TrainingHolder for {entry.target}");
+                    }
+                }
+                else if (entry.type == expired && entry.target == sanName)
+                {
+                    mult = 0.5d;
+                }
+            }
+
+            return _GetTime(sanName) * mult;
+        }
 
         protected static double _GetTime(string name)
         {
@@ -133,10 +162,9 @@ namespace RP0.Crew
 
             unlockPathTracker.Add(name);
 
-            TrainingHolder h;
-            if (holders.TryGetValue(name, out h))
+            if (holders.TryGetValue(name, out var h))
                 return h.GetTime();
-            
+
             return 0d;
         }
 
@@ -148,6 +176,18 @@ namespace RP0.Crew
                 return h.HasName(name);
 
             return false;
+        }
+
+        protected static void FillTrackerFromHolder(TrainingHolder h)
+        {
+            if (unlockPathTracker.Contains(h.name))
+                return;
+
+            unlockPathTracker.Add(h.name);
+            
+            foreach (var child in h.children)
+                if (holders.TryGetValue(child, out var hc))
+                    FillTrackerFromHolder(hc);
         }
 
         public static bool SynonymReplace(string name, out string result)
@@ -172,7 +212,7 @@ namespace RP0.Crew
             return partName.Replace("_", "-");
         }
 
-        public static void ClearTracker()
+        protected static void ClearTracker()
         {
             unlockPathTracker.Clear();
         }

@@ -221,8 +221,9 @@ namespace RP0.Crew
                 GUILayout.Label($"{_selectedCourse.seatMax - _selectedCourse.Students.Count} remaining seat(s).");
             if (_selectedCourse.seatMin > _selectedCourse.Students.Count)
                 GUILayout.Label($"{_selectedCourse.seatMin - _selectedCourse.Students.Count} more naut(s) required.");
-            GUILayout.Label($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTime(), true, false)}");
-            GUILayout.Label($"and finish on {KSPUtil.PrintDate(_selectedCourse.CompletionTime(), false)}");
+            const string tooltip = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
+            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTime(), true, false)}", tooltip));
+            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(_selectedCourse.CompletionTime(), false)}", tooltip));
             if (CrewHandler.Instance.RetirementEnabled && _selectedCourse.Students.Count > 0)
             {
                 double sumOffset = 0d;
@@ -236,8 +237,7 @@ namespace RP0.Crew
                         maxOffset = Math.Max(maxOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, s[0], s.Length > 1 ? s[1] : null));
                     }
                 }
-                sumOffset /= _selectedCourse.Students.Count;
-                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(sumOffset, true, false)}");
+                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(sumOffset / _selectedCourse.Students.Count, true, false)}");
             }
             if (GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
             {

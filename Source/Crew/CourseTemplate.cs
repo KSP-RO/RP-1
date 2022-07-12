@@ -175,6 +175,17 @@ namespace RP0.Crew
         public double GetTime(List<ProtoCrewMember> students)
         {
             double curTime = time;
+            if (RewardLog.values.Count > 0 && students.Count > 0)
+            {
+                string[] s = RewardLog.values[0].value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (s[0] == CrewHandler.TrainingType_Proficiency)
+                {
+                    double sumTime = 0d;
+                    foreach(var pcm in students)
+                        sumTime += TrainingDatabase.GetProficiencyTime(s[1], pcm);
+                    curTime = 1d + (sumTime / students.Count) * 86400d;
+                }
+            }
 
             double level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
             curTime *= (1d - level * 0.5d);

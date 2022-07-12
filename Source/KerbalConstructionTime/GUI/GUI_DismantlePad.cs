@@ -58,7 +58,7 @@ namespace KerbalConstructionTime
                 {
                     Utilities.ScrapVessel(activeLC.Warehouse[i]);
                 }
-                for (int i = activeLC.LaunchPads.Count - 1; i > 0; --i)
+                for (int i = activeLC.LaunchPads.Count - 1; i >= 0; --i)
                 {
                     KCT_LaunchPad lpToDel = activeLC.LaunchPads[i];
                     if (!lpToDel.Delete(out string err))

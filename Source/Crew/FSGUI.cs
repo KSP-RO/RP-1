@@ -223,19 +223,21 @@ namespace RP0.Crew
                 GUILayout.Label($"{_selectedCourse.seatMin - _selectedCourse.Students.Count} more naut(s) required.");
             GUILayout.Label($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTime(), true, false)}");
             GUILayout.Label($"and finish on {KSPUtil.PrintDate(_selectedCourse.CompletionTime(), false)}");
-            if (CrewHandler.Instance.RetirementEnabled)
+            if (CrewHandler.Instance.RetirementEnabled && _selectedCourse.Students.Count > 0)
             {
-                double mult = 1d;
-                foreach (ConfigNode.Value v in _selectedCourse.RewardLog.values)
+                double sumOffset = 0d;
+                double trainingLength = _selectedCourse.GetTime();
+                foreach (var pcm in _selectedCourse.Students)
                 {
-                    string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    switch (s[0])
+                    double maxOffset = 0d;
+                    foreach (ConfigNode.Value v in _selectedCourse.RewardLog.values)
                     {
-                        case CrewHandler.TrainingType_Mission: mult += CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthMission; break;
-                        case CrewHandler.TrainingType_Proficiency: mult += CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthProficiency; break;
+                        string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        maxOffset = Math.Max(maxOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, s[0], s.Length > 1 ? s[1] : null));
                     }
                 }
-                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTime() * mult, true, false)}");
+                sumOffset /= _selectedCourse.Students.Count;
+                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(sumOffset, true, false)}");
             }
             if (GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
             {

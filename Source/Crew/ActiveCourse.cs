@@ -201,7 +201,7 @@ namespace RP0.Crew
                     if (student == null)
                         continue;
 
-                    double retireTimeOffset = length;
+                    double retireTimeOffset = 0d;
                     
                     if (ExpireLog != null)
                     {
@@ -239,17 +239,14 @@ namespace RP0.Crew
                         }
 
                         bool prevMissionsAlreadyExpired = false;
+                        int lastEntryIndex = student.careerLog.Entries.Count - 1;
                         foreach (ConfigNode.Value v in RewardLog.values)
                         {
                             string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             string trainingType = s[0];
                             string trainingTarget = s.Length == 1 ? null : s[1];
 
-                            switch (trainingType)
-                            {
-                                case CrewHandler.TrainingType_Mission: retireTimeOffset += length * CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthMission; break;
-                                case CrewHandler.TrainingType_Proficiency: retireTimeOffset += length * CrewHandler.Settings.retireIncreaseMultiplierToTrainingLengthProficiency; break;
-                            }
+                            retireTimeOffset = Math.Max(retireTimeOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, trainingType, trainingTarget, lastEntryIndex));
 
                             if (!prevMissionsAlreadyExpired && trainingType == CrewHandler.TrainingType_Mission)
                             {

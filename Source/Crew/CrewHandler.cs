@@ -19,6 +19,18 @@ namespace RP0.Crew
         public const string Situation_FlightHigh = "Flight-High";
         public const string TrainingType_Proficiency = "TRAINING_proficiency";
         public const string TrainingType_Mission = "TRAINING_mission";
+        public static Dictionary<string, string> TrainingTypesDict;
+        private static bool _ComputedTrainingTypes = ComputeTrainingTypes();
+        private static bool ComputeTrainingTypes()
+        {
+            TrainingTypesDict = new Dictionary<string, string>();
+            var lst = new List<string>() { TrainingType_Mission, TrainingType_Proficiency };
+            foreach (var s in lst)
+                TrainingTypesDict[s] = "expired_" + s;
+
+            return true;
+        }
+
         public const double UpdateInterval = 3600;
         public const int FlightLogUpdateInterval = 50;
         public const int KarmanAltitude = 100000;
@@ -500,7 +512,7 @@ namespace RP0.Crew
                 Debug.Log("[RP-0] - Found ProtoCrewMember: " + pcm.displayName);
 
                 allFlightsDict.Clear();
-                
+
                 int curFlight = pcm.careerLog.Last().flight;
                 double inactivityMult = 0;
                 double retirementMult = 0;
@@ -622,7 +634,7 @@ namespace RP0.Crew
                 retireTime = KerbalRetireTimes[pcm.name];
             }
             else
-            { 
+            {
                 retireTime = KSPUtils.GetUT() + GetServiceTime(pcm);
                 KerbalRetireTimes[pcm.name] = retireTime;
             }
@@ -1116,6 +1128,104 @@ namespace RP0.Crew
         {
             ct.PartsTooltip = ct.PartsTooltip == null ? $"Applies to parts: {ap.title}" :
                                                         $"{ct.PartsTooltip}, {ap.title}";
+        }
+
+        private bool IsTraining(FlightLog.Entry entry, string trainingType = null, string trainingTarget = null)
+        {
+            if (trainingType != null)
+                return (entry.type == trainingType || entry.type == TrainingTypesDict[trainingType]) &&
+                    (trainingTarget == null || entry.target == trainingTarget);
+
+            foreach (var kvp in TrainingTypesDict)
+                if ((kvp.Key == entry.type || kvp.Value == entry.type) && (trainingTarget == null || trainingTarget == entry.target))
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Looks for the specific training type and returns false if
+        /// it is the last entry, or if there has been no intervening
+        /// flight since the last training of that type. Returns true
+        /// if there has been no training of that type.
+        /// Can optionally be limited to a specific target.
+        /// Can optionally have a number allowed > 0
+        /// </summary>
+        /// <param name="pcm"></param>
+        /// <param name="trainingType">a key from TrainingTypesDict. Will find both active and expired trainings. Null means any training.</param>
+        /// <param name="trainingTarget">default: null (ignored)</param>
+        /// <param name="numAllowed">default: 0</param>
+        /// <returns></returns>
+        public bool HasFlightSinceLastTraining(ProtoCrewMember pcm, string trainingType, string trainingTarget = null, int numAllowed = 0)
+        {
+            int count = pcm.careerLog.Entries.Count;
+            if (count == 0)
+                return true;
+            var entry = pcm.careerLog.Entries[count - 1];
+            int numFound = 0;
+            if (IsTraining(entry, trainingType, trainingTarget))
+                ++numFound;
+
+            for (int i = count - 2; i >= 0 && numFound <= numAllowed; --i)
+            {
+                entry = pcm.careerLog.Entries[i];
+                if (IsTraining(entry, trainingType, trainingTarget))
+                    ++numFound;
+                else if (!IsTraining(entry))
+                    return true;
+            }
+
+            return numFound <= numAllowed;
+        }
+
+        public int TrainingsSinceLastFlight(ProtoCrewMember pcm, string trainingType = null, string trainingTarget = null, int startAtIndex = -1)
+        {
+            int trainings = 0;
+            int lastIndex = pcm.careerLog.Entries.Count - 1;
+            int startIndex = startAtIndex < 0 ? lastIndex : Math.Min(startAtIndex, lastIndex);
+            for (int i = startIndex; i >= 0; --i)
+            {
+                var entry = pcm.careerLog.Entries[i];
+                if (IsTraining(entry, trainingType, trainingTarget))
+                    ++trainings;
+                if (!IsTraining(entry))
+                    return trainings;
+            }
+
+            return trainings;
+        }
+
+        public double GetRetirementOffsetForTraining(ProtoCrewMember pcm, double courseLength, string trainingType, string trainingTarget, int startAtIndex = -1)
+        {
+            int specificTrainingsSinceFlight = TrainingsSinceLastFlight(pcm, trainingType, trainingTarget, startAtIndex);
+            switch (trainingType)
+            {
+                case TrainingType_Mission:
+                    if (specificTrainingsSinceFlight > 1)
+                        return 0;
+                    if (specificTrainingsSinceFlight == 1)
+                    {
+                        if (TrainingsSinceLastFlight(pcm, trainingType, null, startAtIndex) > 1)
+                            return courseLength * 0.5d;
+                        else
+                            return courseLength;
+                    }
+
+                    return courseLength * (1d + Settings.retireIncreaseMultiplierToTrainingLengthMission);
+
+                case TrainingType_Proficiency:
+                    if (specificTrainingsSinceFlight > 0)
+                        return courseLength * 0.5d;
+                    int anyTrainingsCount = TrainingsSinceLastFlight(pcm, null, null, startAtIndex);
+                    if (anyTrainingsCount > 2)
+                        return courseLength / anyTrainingsCount + 0.25d;
+                    if (anyTrainingsCount > 1)
+                        return courseLength;
+
+                    return courseLength * (1d + Settings.retireIncreaseMultiplierToTrainingLengthProficiency);
+            }
+
+            return 0d;
         }
     }
 }

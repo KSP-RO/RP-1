@@ -236,6 +236,7 @@ namespace RP0.Crew
                         string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         maxOffset = Math.Max(maxOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, s[0], s.Length > 1 ? s[1] : null));
                     }
+                    sumOffset += maxOffset;
                 }
                 GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(sumOffset / _selectedCourse.Students.Count, true, false)}");
             }

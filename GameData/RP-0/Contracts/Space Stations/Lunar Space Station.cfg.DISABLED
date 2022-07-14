@@ -2,7 +2,7 @@ CONTRACT_TYPE
 {
 	name = MoonSpaceStation
 	title = Lunar Space Station
-	group = SpaceStations
+	group = EarthSpaceStation
 	agent = Stations
 
 	description = Design, build, and launch a space station into orbit of the Moon, then crew it for a month with at least two crew, and bring the crew safely home. Once you're done, you'll get missions to perform further crew rotations and resupply missions, as well as expansion or replacement missions.

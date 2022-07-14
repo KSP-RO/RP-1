@@ -194,7 +194,7 @@ namespace RP0.Programs
             double fundsToAdd = Math.Max(0d, funds2 - fundsPaidOut);
             lastPaymentUT = nowUT;
 
-            Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / nominalDurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
+            RP0Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / nominalDurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
             fundsPaidOut += fundsToAdd;
             Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
 
@@ -215,7 +215,7 @@ namespace RP0.Programs
                 double repLossToApply = repLost - repPenaltyAssessed;
                 repPenaltyAssessed += repLossToApply;
                 Reputation.Instance.AddReputation((float)-repLossToApply, TransactionReasons.Mission);
-                Debug.Log($"[RP-0] Penalizing rep by {repLossToApply} for program {name}");
+                RP0Debug.Log($"[RP-0] Penalizing rep by {repLossToApply} for program {name}");
             }
         }
 

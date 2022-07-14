@@ -441,9 +441,13 @@ namespace KerbalConstructionTime
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
             double UT = Utilities.GetUT();
-            if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UT - _lastRateUpdateUT > BUILD_TIME_INTERVAL))
+            if (_lastRateUpdateUT == 0d)
+                _lastRateUpdateUT = UT;
+            double UTDiff = UT - _lastRateUpdateUT;
+            if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UTDiff > BUILD_TIME_INTERVAL))
             {
-                ProgressBuildTime();
+                // Drive this from RP-1: ProgressBuildTime(UTDiff);
+                _lastRateUpdateUT = UT;
 
                 if (UT - _lastYearMultUpdateUT > YEAR_MULT_TIME_INTERVAL)
                 {
@@ -617,13 +621,9 @@ namespace KerbalConstructionTime
             UpdateRndScreen();
         }
 
-        public void ProgressBuildTime()
+        public void ProgressBuildTime(double UTDiff)
         {
             Profiler.BeginSample("KCT ProgressBuildTime");
-            double UT = Utilities.GetUT();
-            if (_lastRateUpdateUT == 0)
-                _lastRateUpdateUT = UT;
-            double UTDiff = UT - _lastRateUpdateUT;
 
             if (UTDiff > 0)
             {
@@ -786,8 +786,6 @@ namespace KerbalConstructionTime
                 for (int i = techCount - 1; i >= 0; i--)
                     KCTGameStates.TechList[i].IncrementProgress(UTDiff);
             }
-
-            _lastRateUpdateUT = UT;
             Profiler.EndSample();
         }
 

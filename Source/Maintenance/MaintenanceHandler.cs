@@ -31,6 +31,8 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public double lastUpdate = 0d;
 
+        private double _lastUpdateFixed = 0;
+
         [KSPField(isPersistant = true)]
         public double lastRepUpdate = 0d;
 
@@ -380,23 +382,6 @@ namespace RP0
 
             UpdateUpkeep();
 
-            double timePassed = time - lastUpdate;
-
-            // Best to deduct maintenance fees and add program funding at the same time
-            ProgramHandler.Instance.ProcessFunding();
-
-            using (new CareerEventScope(CareerEventType.Maintenance))
-            {
-                double timeFactor = timePassed * (1d / 86400d);
-                double upkeepForPassedTime = timeFactor * TotalUpkeepPerDay;
-                double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
-                double costForPassedTime = Math.Max(0, upkeepForPassedTime - subsidyForPassedTime);
-                double fundsOld = Funding.Instance.Funds;
-                Funding.Instance.AddFunds(-costForPassedTime, TransactionReasons.StructureRepair);
-                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedTime} funds where upkeep is {TotalUpkeepPerDay} ({upkeepForPassedTime} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
-                CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += Math.Min(upkeepForPassedTime, subsidyForPassedTime);
-            }
-
             lastUpdate = time;
 
             if (lastRepUpdate < time)
@@ -419,6 +404,42 @@ namespace RP0
                 // Scale the update interval up with timewarp but don't allow longer than 1 day steps
                 nextUpdate = time + Math.Min(3600 * 24, UpdateInterval * TimeWarp.CurrentRate / 100f);
             }
+        }
+
+        public void FixedUpdate()
+        {
+            double UT = KSPUtils.GetUT();
+            if (_lastUpdateFixed == 0)
+                _lastUpdateFixed = UT;
+
+            double UTDiff = UT - _lastUpdateFixed;
+
+            // Wait until first UpdateUpkeep runs
+            if (_isFirstLoad)
+                return;
+
+            if (UTDiff < 10d)
+                return;
+
+            _lastUpdateFixed = UT;
+
+            // Best to deduct maintenance fees and add program funding at the same time
+            ProgramHandler.Instance.ProcessFunding();
+
+            using (new CareerEventScope(CareerEventType.Maintenance))
+            {
+                double timeFactor = UTDiff * (1d / 86400d);
+                double upkeepForPassedTime = timeFactor * TotalUpkeepPerDay;
+                double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
+                double costForPassedTime = Math.Max(0, upkeepForPassedTime - subsidyForPassedTime);
+                double fundsOld = Funding.Instance.Funds;
+                Funding.Instance.AddFunds(-costForPassedTime, TransactionReasons.StructureRepair);
+                RP0Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedTime} funds where upkeep is {TotalUpkeepPerDay} ({upkeepForPassedTime} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
+                CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += Math.Min(upkeepForPassedTime, subsidyForPassedTime);
+            }
+
+            // Finally, update all builds
+            KerbalConstructionTime.KerbalConstructionTime.Instance.ProgressBuildTime(UTDiff);
         }
 
         public void OnDestroy()

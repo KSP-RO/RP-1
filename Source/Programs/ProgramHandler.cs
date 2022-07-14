@@ -179,7 +179,7 @@ namespace RP0.Programs
             {
                 p.ProcessFunding();
             }
-            Debug.Log($"[RP-0] ProgramHandler added {(Funding.Instance.Funds - fundsOld)} funds.");
+            RP0Debug.Log($"[RP-0] ProgramHandler added {(Funding.Instance.Funds - fundsOld)} funds.");
         }
 
         internal void OnGUI()

@@ -180,6 +180,12 @@ namespace KerbalConstructionTime
                 if (lc.IsIdle) // not IsActive because completed rollouts/airlaunches still count
                     return lc.Engineers * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
 
+                if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].IsHumanRated)
+                {
+                    int num = System.Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
+                    return num * lc.RushSalary + (lc.Engineers - num) * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
+                }
+
                 return lc.Engineers * lc.RushSalary;
             }
 

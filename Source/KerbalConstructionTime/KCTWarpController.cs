@@ -49,7 +49,7 @@ namespace KerbalConstructionTime
 
         public void Start()
         {
-            lastUT = Planetarium.GetUniversalTime();
+            lastUT = Utilities.GetUT();
             if (target == null)
                 target = Utilities.GetNextThingToFinish();
 
@@ -64,21 +64,30 @@ namespace KerbalConstructionTime
             {
                 return;
             }
-            // If the warp target has been reached, exit.
-            // Or if the player (or something else) has warped us down to 1x, exit.
-            if (target.IsComplete() || TimeWarp.CurrentRateIndex == 0)
+            
+            int warpRate = TimeWarp.CurrentRateIndex;
+
+            // if the player (or something else) has warped us down to 1x, exit.
+            if (warpRate == 0)
             {
                 Instance.gameObject.DestroyGameObject();
                 return;
             }
 
+            // If the target goes null or completes, stop warp and exit
+            if (target == null || target.IsComplete())
+            {
+                StopWarp();
+                return;
+            }
+
             Profiler.BeginSample("KCT.WarpController");
             double remaining = target.GetTimeLeft();
-            double UT = Planetarium.GetUniversalTime();
+            double UT = Utilities.GetUT();
             double dT = UT - lastUT;
             if (dT > 0)
             {
-                int warpRate = TimeWarp.CurrentRateIndex;
+                
                 if (warping && warpRate < desiredWarpRate) //if something else changes the warp rate then release control to them, such as Kerbal Alarm Clock
                 {
                     // This will prevent us warping up again--but note this does _not_ make us exit.

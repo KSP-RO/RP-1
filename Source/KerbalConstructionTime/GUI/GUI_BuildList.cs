@@ -1409,10 +1409,10 @@ namespace KerbalConstructionTime
             if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
             {
                 _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
-                _lengthLimit = "8";
-                _widthLimit = "8";
-                _heightLimit = "33";
-                _tonnageLimit = "60";
+                _lengthLimit = "2";
+                _widthLimit = "2";
+                _heightLimit = "10";
+                _tonnageLimit = "1";
                 _isHumanRated = false;
 
                 GUIStates.ShowDismantlePad = false;

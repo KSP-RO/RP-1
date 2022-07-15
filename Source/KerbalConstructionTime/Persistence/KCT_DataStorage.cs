@@ -26,6 +26,8 @@ namespace KerbalConstructionTime
         [Persistent] public double LastEngineers = 0d;
         [Persistent] public double LastResearchers = 0d;
         [Persistent] public bool StarterLCSelected = false;
+        [Persistent] public bool HiredStarterApplicants = false;
+        [Persistent] public bool StartedProgram = false;
 
         [Persistent] public int saveVersion;
 
@@ -42,7 +44,9 @@ namespace KerbalConstructionTime
             KCTGameStates.LastEngineers = LastEngineers;
             KCTGameStates.LastResearchers = LastResearchers;
             KCTGameStates.LoadedSaveVersion = saveVersion;
-            KCTGameStates.StarterLCSelected = StarterLCSelected;
+            KCTGameStates.StarterLCBuilding = StarterLCSelected;
+            KCTGameStates.HiredStarterApplicants = HiredStarterApplicants;
+            KCTGameStates.StartedProgram = StartedProgram;
 
             if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
             {
@@ -52,6 +56,11 @@ namespace KerbalConstructionTime
                     KCTGameStates.LastResearchers *= 2;
                     KCTGameStates.UnassignedPersonnel *= 2;
                     KCTGameStates.Researchers *= 2;
+                }
+                if (saveVersion < 3)
+                {
+                    KCTGameStates.HiredStarterApplicants = true;
+                    KCTGameStates.StartedProgram = true;
                 }
             }
         }
@@ -69,7 +78,9 @@ namespace KerbalConstructionTime
             LastResearchers = KCTGameStates.LastResearchers;
             LastEngineers = KCTGameStates.LastEngineers;
             saveVersion = KCTGameStates.VERSION;
-            StarterLCSelected = KCTGameStates.StarterLCSelected;
+            StarterLCSelected = KCTGameStates.StarterLCBuilding;
+            HiredStarterApplicants = KCTGameStates.HiredStarterApplicants;
+            StartedProgram = KCTGameStates.StartedProgram;
         }
     }
 }

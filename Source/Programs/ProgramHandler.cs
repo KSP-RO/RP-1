@@ -373,6 +373,8 @@ namespace RP0.Programs
                 DisableProgram(s);
 
             ContractPreLoader.Instance.ResetGenerationFailure();
+
+            KerbalConstructionTime.KCTGameStates.StartedProgram = true;
         }
 
         public bool CompleteProgram(string name)

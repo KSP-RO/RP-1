@@ -57,9 +57,6 @@ namespace RP0
         public override int SectionOrder { get { return 1; } }
         public override bool HasPresets { get { return true; } }
 
-        [GameParameters.CustomParameterUI("Enable X-Plane contracts", toolTip = "Disable this option if don't intend to build and fly any planes at all. Will slightly increase rewards of other contracts in the early game.", newGameOnly = true)]
-        public bool PlaneContractsEnabled = true;
-
         [GameParameters.CustomParameterUI("Crews require proficiency training", toolTip = "Astronauts must complete lengthy proficiency training prior to their first launch in each cockpit or capsule.")]
         public bool IsTrainingEnabled = true;
 

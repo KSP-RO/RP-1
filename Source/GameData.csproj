@@ -80,9 +80,6 @@
     <Content Include="..\GameData\RP-0\Contracts\SCANSat.cfg">
       <Link>Contracts\SCANSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg">
-      <Link>Contracts\StockContracts.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\TestSubjectRemove.cfg">
       <Link>Contracts\TestSubjectRemove.cfg</Link>
     </Content>
@@ -212,36 +209,6 @@
     <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\GEORepeatComSats.cfg">
       <Link>Contracts\Earth Satellites\GEORepeatComSats.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Asteroid Landing Crew.cfg">
-      <Link>Contracts\Human Exploration\Asteroid Landing Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Jupiter Flyby Crew.cfg">
-      <Link>Contracts\Human Exploration\Jupiter Flyby Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Flyby Crew.cfg">
-      <Link>Contracts\Human Exploration\Mars Flyby Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Landing Crew.cfg">
-      <Link>Contracts\Human Exploration\Mars Landing Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mars Orbit Crew.cfg">
-      <Link>Contracts\Human Exploration\Mars Orbit Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Mercury Flyby Crew.cfg">
-      <Link>Contracts\Human Exploration\Mercury Flyby Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Phobos Landing Crew.cfg">
-      <Link>Contracts\Human Exploration\Phobos Landing Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Saturn Flyby Crew.cfg">
-      <Link>Contracts\Human Exploration\Saturn Flyby Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Venus Flyby Crew.cfg">
-      <Link>Contracts\Human Exploration\Venus Flyby Crew.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Human Exploration\Venus Orbit Crew.cfg">
-      <Link>Contracts\Human Exploration\Venus Orbit Crew.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Human Records\CrewedAltRecord.cfg">
       <Link>Contracts\Human Records\CrewedAltRecord.cfg</Link>
     </Content>
@@ -274,42 +241,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Jupiter Observation\Jupiter Probe.cfg">
       <Link>Contracts\Jupiter Observation\Jupiter Probe.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Asteroid Landing.cfg">
-      <Link>Contracts\Landings\Asteroid Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Callisto Landing.cfg">
-      <Link>Contracts\Landings\Callisto Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Dione Landing.cfg">
-      <Link>Contracts\Landings\Dione Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Enceladus Landing.cfg">
-      <Link>Contracts\Landings\Enceladus Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Europa Landing.cfg">
-      <Link>Contracts\Landings\Europa Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Ganymede Landing.cfg">
-      <Link>Contracts\Landings\Ganymede Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Iapetus Landing.cfg">
-      <Link>Contracts\Landings\Iapetus Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Io Landing.cfg">
-      <Link>Contracts\Landings\Io Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Mimas Landing.cfg">
-      <Link>Contracts\Landings\Mimas Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Rhea Landing.cfg">
-      <Link>Contracts\Landings\Rhea Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Tethys Landing.cfg">
-      <Link>Contracts\Landings\Tethys Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Landings\Titan Landing.cfg">
-      <Link>Contracts\Landings\Titan Landing.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Crewed\CrewedLunarFlyby.cfg">
       <Link>Contracts\Lunar Crewed\CrewedLunarFlyby.cfg</Link>
@@ -473,90 +404,6 @@
     <Content Include="..\GameData\RP-0\Contracts\Records\SpeedRecord.cfg">
       <Link>Contracts\Records\SpeedRecord.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Callisto Rover.cfg">
-      <Link>Contracts\Rovers\Callisto Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Dione Rover.cfg">
-      <Link>Contracts\Rovers\Dione Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Enceladus Rover.cfg">
-      <Link>Contracts\Rovers\Enceladus Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Europa Rover.cfg">
-      <Link>Contracts\Rovers\Europa Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Ganymede Rover.cfg">
-      <Link>Contracts\Rovers\Ganymede Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Iapetus Rover.cfg">
-      <Link>Contracts\Rovers\Iapetus Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Io Rover.cfg">
-      <Link>Contracts\Rovers\Io Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Mimas Rover.cfg">
-      <Link>Contracts\Rovers\Mimas Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Rhea Rover.cfg">
-      <Link>Contracts\Rovers\Rhea Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Tethys Rover.cfg">
-      <Link>Contracts\Rovers\Tethys Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Rovers\Triton Rover.cfg">
-      <Link>Contracts\Rovers\Triton Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Asteroid Sample Return.cfg">
-      <Link>Contracts\Sample Return\Asteroid Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Callisto Sample Return.cfg">
-      <Link>Contracts\Sample Return\Callisto Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Charon Sample Return.cfg">
-      <Link>Contracts\Sample Return\Charon Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Dione Sample Return.cfg">
-      <Link>Contracts\Sample Return\Dione Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Enceladus Sample Return.cfg">
-      <Link>Contracts\Sample Return\Enceladus Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Europa Sample Return.cfg">
-      <Link>Contracts\Sample Return\Europa Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Ganymede Sample Return.cfg">
-      <Link>Contracts\Sample Return\Ganymede Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Iapetus Sample Return.cfg">
-      <Link>Contracts\Sample Return\Iapetus Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Io Sample Return.cfg">
-      <Link>Contracts\Sample Return\Io Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mars Sample Return.cfg">
-      <Link>Contracts\Sample Return\Mars Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mercury Sample Return.cfg">
-      <Link>Contracts\Sample Return\Mercury Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Mimas Sample Return.cfg">
-      <Link>Contracts\Sample Return\Mimas Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Pluto Sample Return.cfg">
-      <Link>Contracts\Sample Return\Pluto Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Rhea Sample Return.cfg">
-      <Link>Contracts\Sample Return\Rhea Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Tethys Sample Return.cfg">
-      <Link>Contracts\Sample Return\Tethys Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Titan Sample Return.cfg">
-      <Link>Contracts\Sample Return\Titan Sample Return.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Sample Return\Triton Sample Return.cfg">
-      <Link>Contracts\Sample Return\Triton Sample Return.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Dione Flyby.cfg">
       <Link>Contracts\Saturn Observation\Dione Flyby.cfg</Link>
     </Content>
@@ -592,60 +439,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Saturn Observation\Titan Rover.cfg">
       <Link>Contracts\Saturn Observation\Titan Rover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Earth_AltimetryLoRes.cfg">
-      <Link>Contracts\ScanSat\Earth_AltimetryLoRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Mars_AltimetryLoRes.cfg">
-      <Link>Contracts\ScanSat\Mars_AltimetryLoRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Moon_AltimetryLoRes.cfg">
-      <Link>Contracts\ScanSat\Moon_AltimetryLoRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_AltimetryLoRes.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Average_AltimetryLoRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_Biome.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Average_Biome.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Average_HiRes.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Average_HiRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Earth.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Earth.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_GasGiant_Biome.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_GasGiant_Biome.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_AltimetryLoRes.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Hard_AltimetryLoRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_Biome.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Hard_Biome.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Hard_HiRes.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Hard_HiRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_JupiterMoons.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_JupiterMoons.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_NeptuneMoons.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_NeptuneMoons.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Potato_AltimetryLoRes.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Potato_AltimetryLoRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_Potato_HiRes.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_Potato_HiRes.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_SaturnMoons.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_SaturnMoons.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\RP0_SCANSat_UranusMoons.cfg">
-      <Link>Contracts\ScanSat\RP0_SCANSat_UranusMoons.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\ScanSat\Venus_AltimetryLoRes.cfg">
-      <Link>Contracts\ScanSat\Venus_AltimetryLoRes.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Small Bodies Flyby\Ceres Flyby.cfg">
       <Link>Contracts\Small Bodies Flyby\Ceres Flyby.cfg</Link>
@@ -704,29 +497,11 @@
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\Life Support Station.cfg">
       <Link>Contracts\Space Stations\Life Support Station.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Lunar Space Station.cfg">
-      <Link>Contracts\Space Stations\Lunar Space Station.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Martian Space Station.cfg">
-      <Link>Contracts\Space Stations\Martian Space Station.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\New Crew Station.cfg">
       <Link>Contracts\Space Stations\New Crew Station.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\Power Module Station.cfg">
       <Link>Contracts\Space Stations\Power Module Station.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MarsOutpost.cfg">
-      <Link>Contracts\Surface Outposts\MarsOutpost.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MarsOutpostWithLab.cfg">
-      <Link>Contracts\Surface Outposts\MarsOutpostWithLab.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpost.cfg">
-      <Link>Contracts\Surface Outposts\MoonOutpost.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Surface Outposts\MoonOutpostWithLab.cfg">
-      <Link>Contracts\Surface Outposts\MoonOutpostWithLab.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Venus\Venus Landing.cfg">
       <Link>Contracts\Venus\Venus Landing.cfg</Link>

@@ -9,10 +9,10 @@ namespace KerbalConstructionTime
         private static float[] _padTons = null;
         private static Vector3[] _padSizes;
 
-        private static string _tonnageLimit = "60";
-        private static string _heightLimit = "33";
-        private static string _widthLimit = "8";
-        private static string _lengthLimit = "8";
+        private static string _tonnageLimit = "1";
+        private static string _heightLimit = "10";
+        private static string _widthLimit = "2";
+        private static string _lengthLimit = "2";
         private static bool _isHumanRated = false;
 
         public static double GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
@@ -307,6 +307,8 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify ? activeLC : null))
             {
+                KCTGameStates.StarterLCBuilding |= !isModify;
+
                 string lcName = isModify ? activeLC.Name : _newName;
                 if (!Utilities.CurrentGameIsCareer())
                 {

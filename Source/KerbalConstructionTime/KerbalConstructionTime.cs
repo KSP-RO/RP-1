@@ -909,7 +909,7 @@ namespace KerbalConstructionTime
 
                     KCTGameStates.UnassignedPersonnel = PresetManager.Instance.StartingPersonnel(HighLogic.CurrentGame.Mode);
                 }
-                else if (!KCTGameStates.StarterLCSelected)
+                else if (KCTGameStates.FirstRunNotComplete)
                 {
                     KCT_GUI.GUIStates.ShowFirstRun = true;
                 }

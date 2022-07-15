@@ -2322,7 +2322,7 @@ namespace KerbalConstructionTime
                 return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
 
-        public static int ApplicantPacketsForScience(double sci) => (int)(sci / 5d);
+        public static int ApplicantPacketsForScience(double sci) => (int)(Math.Pow(sci, 0.92d) / 5d);
 
         public static double ScienceForNextApplicants()
         {

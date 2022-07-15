@@ -5,7 +5,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static string _newName = "";
+        private static string _newName = "Launch Complex 1";
         private static RenameType _renameType = RenameType.None;
 
         public static void DrawNewPadWindow(int windowID)

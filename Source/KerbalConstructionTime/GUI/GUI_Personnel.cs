@@ -404,6 +404,8 @@ namespace KerbalConstructionTime
                         ksc.RecalculateBuildRates(false);
                     }
                     KCTGameStates.UnassignedPersonnel = Math.Max(0, KCTGameStates.UnassignedPersonnel - workers);
+                    if (KCTGameStates.UnassignedPersonnel == 0)
+                        KCTGameStates.HiredStarterApplicants = true;
 
                     _fundsCost = int.MinValue;
                 }

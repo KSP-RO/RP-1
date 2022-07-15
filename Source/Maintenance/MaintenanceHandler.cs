@@ -418,7 +418,7 @@ namespace RP0
             if (_isFirstLoad)
                 return;
 
-            if (UTDiff < 10d)
+            if (UTDiff < 1d)
                 return;
 
             _lastUpdateFixed = UT;

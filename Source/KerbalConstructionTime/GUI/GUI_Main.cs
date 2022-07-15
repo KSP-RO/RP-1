@@ -106,9 +106,7 @@ namespace KerbalConstructionTime
                 }
                 else if (_inSCSubscene)
                 {
-                    if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                        DoSubsceneToggleIcon();
-                    else
+                    if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
                         _inSCSubscene = false;
                 }
 
@@ -336,6 +334,15 @@ namespace KerbalConstructionTime
                 _styleTextFieldRightAlign.alignment = TextAnchor.LowerRight;
             }
             return _styleTextFieldRightAlign;
+        }
+
+        public static void EnterSCSubcene()
+        {
+            _inSCSubscene = true;
+        }
+        public static void ExitSCSubcene()
+        {
+            _inSCSubscene = false;
         }
     }
 }

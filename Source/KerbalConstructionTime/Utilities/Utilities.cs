@@ -2322,12 +2322,13 @@ namespace KerbalConstructionTime
                 return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
 
-        public static int ApplicantPacketsForScience(double sci) => (int)(Math.Pow(sci, 0.92d) / 5d);
+        private const double ApplicantsPow = 0.92d;
+        public static int ApplicantPacketsForScience(double sci) => (int)(Math.Pow(sci, ApplicantsPow) / 5d);
 
         public static double ScienceForNextApplicants()
         {
             int applicantsCur = ApplicantPacketsForScience(KCTGameStates.SciPointsTotal);
-            return 5d * (applicantsCur + 1d);
+            return Math.Pow(5d * (applicantsCur + 1d), 1d / ApplicantsPow);
         }
 
         public static void SetPartUpgradeText()

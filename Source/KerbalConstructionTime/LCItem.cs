@@ -45,7 +45,7 @@ namespace KerbalConstructionTime
             }
 
             // NOTE: Not comparing name, which I think is correct here.
-            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax;
+            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated;
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true);
         public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false);
@@ -196,9 +196,8 @@ namespace KerbalConstructionTime
             }
         }
 
-        public bool IsEmpty => !BuildList.Any() && !Warehouse.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
-                    !PadConstructions.Any() && LaunchPads.Count < 2 && EfficiencyEngineers == StartingEfficiency && LastEngineers < 0.001d &&
-                    (LCType == LaunchComplexType.Pad ? StartingLC1.Compare(this) || StartingLC15.Compare(this) : StartingHangar.Compare(this));
+        public bool IsEmpty => StartingHangar.Compare(this) && BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && AirlaunchPrep.Count == 0 &&
+                    PadConstructions.Count == 0 && EfficiencyEngineers == StartingEfficiency && LastEngineers < 0.001d;
 
         public bool IsActive => BuildList.Any() || Recon_Rollout.Any(r => !r.IsComplete()) || AirlaunchPrep.Any(a => !a.IsComplete());
         public bool CanModify => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() && !PadConstructions.Any();

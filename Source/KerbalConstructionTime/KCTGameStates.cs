@@ -40,13 +40,16 @@ namespace KerbalConstructionTime
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 2;
+        public const int VERSION = 3;
 
         public static ToolbarControl ToolbarControl;
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
-        public static bool StarterLCSelected = false;
+        public static bool StarterLCBuilding = false;
+        public static bool HiredStarterApplicants = false;
+        public static bool StartedProgram = false;
+        public static bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram);
         public static bool IsSimulatedFlight = false;
         public static double EditorBuildPoints = 0;
         public static double EditorShipMass = 0;
@@ -76,7 +79,9 @@ namespace KerbalConstructionTime
         public static void Reset()
         {
             IsFirstStart = false;
-            StarterLCSelected = false;
+            StarterLCBuilding = false;
+            HiredStarterApplicants = false;
+            StartedProgram = false;
             VesselErrorAlerted = false;
 
             IsSimulatedFlight = false;
@@ -85,6 +90,7 @@ namespace KerbalConstructionTime
             AirlaunchParams = null;
 
             KCT_GUI.ResetFormulaRateHolders();
+            KCT_GUI.ResetShowFirstRunAgain();
 
             BuildingMaxLevelCache.Clear();
 

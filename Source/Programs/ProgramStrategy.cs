@@ -72,7 +72,7 @@ namespace RP0.Programs
                     double fundAtYear = program.GetFundsAtTime(secPerYear * i);
                     double amtPaid = fundAtYear - paid;
                     paid = fundAtYear;
-                    text += $"\nYear {i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
+                    text += $"\nYear {(max > 10 ? " " : string.Empty)}{i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
                 }
             }
 

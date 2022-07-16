@@ -40,10 +40,10 @@ namespace RP0.Programs
                 requirements = $"<b>Requirements</b>: {program.requirementsPrettyText}";
             }
 
-            string text = $"{objectives}\n\nTotal Funds: {program.TotalFunding:N0}\n";
+            string text = $"{objectives}\n\nTotal Funds: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{program.TotalFunding:N0}\n";
             if (wasAccepted)
             {
-                text += $"Funds Paid Out: {program.fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT, false, false)}\n";
+                text += $"Funds Paid Out: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{program.fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT, false, false)}\n";
                 if (program.IsComplete)
                     text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.completedUT, false, false)}";
                 else
@@ -54,11 +54,26 @@ namespace RP0.Programs
                 text = $"{requirements}\n\n{text}Nominal Duration: {program.nominalDurationYears:0.#} years";
             }
 
-            if (NextTextIsShowSelected && !wasAccepted && program.programsToDisableOnAccept.Count > 0)
+            if (NextTextIsShowSelected && !wasAccepted)
             {
-                text += "\nWill disable the following on accept:";
-                foreach (var s in program.programsToDisableOnAccept)
-                    text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+                if (program.programsToDisableOnAccept.Count > 0)
+                {
+                    text += "\nWill disable the following on accept:";
+                    foreach (var s in program.programsToDisableOnAccept)
+                        text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+                }
+
+                text += "\n\nFunding Summary:";
+                double paid = 0d;
+                int max = (int)(program.nominalDurationYears) + 1;
+                for (int i = 1; i < max; ++i)
+                {
+                    const double secPerYear = 365.25d * 86400d;
+                    double fundAtYear = program.GetFundsAtTime(secPerYear * i);
+                    double amtPaid = fundAtYear - paid;
+                    paid = fundAtYear;
+                    text += $"\nYear {i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
+                }
             }
 
             NextTextIsShowSelected = false;

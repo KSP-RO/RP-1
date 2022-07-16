@@ -77,29 +77,29 @@ namespace KerbalConstructionTime
         {
             KCTDebug.Log("InitBuildListVars");
             _redText = new GUIStyle(GUI.skin.label);
-            _redText.normal.textColor = Color.red;
+            _redText.normal.textColor = XKCDColors.KSPNotSoGoodOrange;
             _yellowText = new GUIStyle(GUI.skin.label);
-            _yellowText.normal.textColor = Color.yellow;
+            _yellowText.normal.textColor = XKCDColors.KSPMellowYellow;
             _greenText = new GUIStyle(GUI.skin.label);
-            _greenText.normal.textColor = Color.green;
+            _greenText.normal.textColor = XKCDColors.KSPBadassGreen;
             _blobText = new GUIStyle(GUI.skin.label);
             _blobText.fontSize = 30;
             _blobText.fixedHeight = 20;
             _blobText.alignment = TextAnchor.MiddleCenter;
 
             _yellowButton = new GUIStyle(GUI.skin.button);
-            _yellowButton.normal.textColor = Color.yellow;
-            _yellowButton.hover.textColor = Color.yellow;
-            _yellowButton.active.textColor = Color.yellow;
+            _yellowButton.normal.textColor = XKCDColors.KSPMellowYellow;
+            _yellowButton.hover.textColor = XKCDColors.KSPMellowYellow;
+            _yellowButton.active.textColor = XKCDColors.KSPMellowYellow;
             _redButton = new GUIStyle(GUI.skin.button);
-            _redButton.normal.textColor = Color.red;
-            _redButton.hover.textColor = Color.red;
-            _redButton.active.textColor = Color.red;
+            _redButton.normal.textColor = XKCDColors.KSPNotSoGoodOrange;
+            _redButton.hover.textColor = XKCDColors.KSPNotSoGoodOrange;
+            _redButton.active.textColor = XKCDColors.KSPNotSoGoodOrange;
 
             _greenButton = new GUIStyle(GUI.skin.button);
-            _greenButton.normal.textColor = Color.green;
-            _greenButton.hover.textColor = Color.green;
-            _greenButton.active.textColor = Color.green;
+            _greenButton.normal.textColor = XKCDColors.KSPBadassGreen;
+            _greenButton.hover.textColor = XKCDColors.KSPBadassGreen;
+            _greenButton.active.textColor = XKCDColors.KSPBadassGreen;
 
             _airlaunchTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_airlaunch16", false));
             _constructTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_construct16", false));

@@ -667,8 +667,8 @@ namespace KerbalConstructionTime
             _allItems.Sort(CompareBuildItems);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Name:");
-            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
+            GUILayout.Label("Name:", GUILayout.Width(175));
+            GUILayout.Label("Progress:");
             GUILayout.Space(18);
             GUILayout.Label("Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();

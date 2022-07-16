@@ -101,6 +101,9 @@ namespace RP0
                         case UITab.Construction:
                             _maintUI.RenderConstructionTab();
                             break;
+                        case UITab.Programs:
+                            _maintUI.RenderProgramTab();
+                            break;
                         case UITab.AstronautCosts:
                             _maintUI.RenderAstronautsTab();
                             break;

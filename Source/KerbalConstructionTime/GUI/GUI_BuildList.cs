@@ -1608,28 +1608,28 @@ namespace KerbalConstructionTime
 
         private static void DrawBLPlusWindow(int windowID)
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225;
-            BuildListVessel b = Utilities.FindBLVesselByID(activeLC, _selectedVesselId);
+            BuildListVessel b = Utilities.FindBLVesselByID(KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.LaunchSite;
 
             if (launchSite == "LaunchPad")
             {
-                if (b.LaunchSiteIndex >= 0)
-                    launchSite = b.KSC.ActiveLaunchComplexInstance.LaunchPads[b.LaunchSiteIndex].name;
+                if (b.LaunchSiteIndex >= 0 && b.LaunchSiteIndex < b.LC.LaunchPads.Count)
+                    launchSite = b.LC.LaunchPads[b.LaunchSiteIndex].name;
                 else
-                    launchSite = b.KSC.ActiveLaunchComplexInstance.ActiveLPInstance.name;
+                    launchSite = b.LC.ActiveLPInstance.name;
             }
-            ReconRollout rollout = activeLC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
-            bool onPad = rollout != null && rollout.IsComplete() && rollout.AssociatedID == b.Id.ToString();
-            //This vessel is rolled out onto the pad
+            string blvID = b.Id.ToString();
+            ReconRollout rollout = b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
+            bool isRollingOut = rollout != null && rollout.AssociatedID == blvID;
+            bool onPad = isRollingOut && rollout.IsComplete();
 
-            // 1.4 Addition
-            if (!onPad && GUILayout.Button("Select LaunchSite"))
+            // Only allow selecting launch site for planes.
+            // Rockets use whatever location is set for their pad.
+            if (b.Type == BuildListVessel.ListType.SPH && b.LC.AirlaunchPrep.Find(a => a.AssociatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
             {
                 _launchSites = Utilities.GetLaunchSites(b.Type == BuildListVessel.ListType.VAB);
                 if (_launchSites.Any())
@@ -1699,9 +1699,10 @@ namespace KerbalConstructionTime
                 AddVesselToPlansList(b.CreateCopy(true));
             }
 
-            if (activeLC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()) != null && GUILayout.Button("Rollback"))
+            ReconRollout blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == blvID);
+            if (blvRollout != null && GUILayout.Button("Rollback"))
             {
-                activeLC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()).SwapRolloutType();
+                blvRollout.SwapRolloutType();
                 GUIStates.ShowBLPlus = false;
             }
 
@@ -1715,9 +1716,12 @@ namespace KerbalConstructionTime
             {
                 if (_isOperationsSelected)
                 {
-                    if (activeLC.BuildList.Remove(b))
-                        activeLC.BuildList.Insert(0, b);
-                    activeLC.RecalculateBuildRates();
+                    LCItem lc = b.LC;
+                    if (lc.BuildList.Remove(b))
+                    {
+                        lc.BuildList.Insert(0, b);
+                        lc.RecalculateBuildRates();
+                    }
                 }
             }
 

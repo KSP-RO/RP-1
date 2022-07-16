@@ -81,7 +81,7 @@ namespace KerbalConstructionTime
             _yellowText = new GUIStyle(GUI.skin.label);
             _yellowText.normal.textColor = XKCDColors.KSPMellowYellow;
             _greenText = new GUIStyle(GUI.skin.label);
-            _greenText.normal.textColor = Color.Green;
+            _greenText.normal.textColor = Color.green;
             _blobText = new GUIStyle(GUI.skin.label);
             _blobText.fontSize = 30;
             _blobText.fixedHeight = 20;
@@ -97,9 +97,9 @@ namespace KerbalConstructionTime
             _redButton.active.textColor = XKCDColors.KSPNotSoGoodOrange;
 
             _greenButton = new GUIStyle(GUI.skin.button);
-            _greenButton.normal.textColor = Color.Green;
-            _greenButton.hover.textColor = Color.Green;
-            _greenButton.active.textColor = Color.Green;
+            _greenButton.normal.textColor = Color.green;
+            _greenButton.hover.textColor = Color.green;
+            _greenButton.active.textColor = Color.green;
 
             _airlaunchTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_airlaunch16", false));
             _constructTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_construct16", false));

@@ -7,7 +7,7 @@ namespace RP0
         public enum UITab
         {
             Budget, Facilities, Integration, Construction, AstronautCosts, Tooling, ToolingType,
-            Astronauts, Training, NewCourse, Naut, Avionics, Contracts, CareerLog
+            Astronauts, Training, NewCourse, Naut, Avionics, Contracts, CareerLog, Programs
         };
 
         protected GUIStyle RightLabel, BoldLabel, BoldRightLabel, PressedButton, InfoButton;
@@ -55,6 +55,7 @@ namespace RP0
                 case UITab.Facilities:
                 case UITab.Integration:
                 case UITab.Construction:
+                case UITab.Programs:
                 case UITab.Tooling:
                 case UITab.ToolingType:
                 case UITab.AstronautCosts:

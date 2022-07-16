@@ -669,8 +669,8 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label("Time Left:", GUILayout.Width(_width1));
-            GUILayout.Space(70);
+            GUILayout.Space(18);
+            GUILayout.Label("Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 

@@ -178,6 +178,10 @@ namespace RP0
                 programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
             }
             GUILayout.Label($"+{programBudget.ToString(PeriodDispFormat)}", RightLabel, GUILayout.Width(160));
+            if (GUILayout.Button(_infoBtnContent, InfoButton))
+            {
+                TopWindow.SwitchTabTo(UITab.Programs);
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -374,6 +378,43 @@ namespace RP0
             {
                 Debug.LogException(ex);
             }
+            GUILayout.EndHorizontal();
+        }
+
+        public void RenderProgramTab()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Active Programs (per ", HighLogic.Skin.label);
+            RenderPeriodSelector();
+            GUILayout.Label(")", HighLogic.Skin.label);
+            GUILayout.EndHorizontal();
+
+            double total = 0d;
+            foreach (Programs.Program p in Programs.ProgramHandler.Instance.ActivePrograms)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(p.title, BoldLabel);
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(" Nominal Deadline:", HighLogic.Skin.label, GUILayout.Width(160));
+                const double secsPerYear = 365.25d * 86400d;
+                GUILayout.Label(KSPUtil.PrintDate(p.acceptedUT + p.nominalDurationYears * secsPerYear, false), RightLabel, GUILayout.Width(160));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(" Funding:", HighLogic.Skin.label, GUILayout.Width(160));
+                double amt = p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
+                total += amt;
+                GUILayout.Label($"+{(amt).ToString(PeriodDispFormat)}", RightLabel, GUILayout.Width(160));
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.Label("");
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
+            GUILayout.Label($"+{total.ToString(PeriodDispFormat)}", BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
         }
 

@@ -410,8 +410,6 @@ namespace RP0
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.Label("");
-
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
             GUILayout.Label($"+{total.ToString(PeriodDispFormat)}", BoldRightLabel, GUILayout.Width(160));

@@ -211,6 +211,11 @@ namespace RP0.Programs
                 s = IsInverted ? $"Haven't completed contract {ContractTitle} {MinCount} or more times" :
                                  $"Complete contract {ContractTitle} at least {MinCount} times";
             }
+            else if (MinCount.HasValue && MinCount == 1)
+            {
+                s = IsInverted ? $"Haven't completed contract {ContractTitle} at least once" :
+                                 $"Complete contract {ContractTitle} at least once";
+            }
             else
             {
                 s = IsInverted ? $"Haven't completed contract {ContractTitle}" :

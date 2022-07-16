@@ -246,7 +246,7 @@ namespace RP0.Programs
             CareerLog.Instance?.ProgramCompleted(this);
         }
 
-        private double GetFundsAtTime(double time)
+        public double GetFundsAtTime(double time)
         {
             double fractionOfTotalDuration = time / nominalDurationYears / secsPerYear;
             DoubleCurve curve = overrideFundingCurve.keys.Count > 0 ? overrideFundingCurve : ProgramHandler.Settings.paymentCurve;

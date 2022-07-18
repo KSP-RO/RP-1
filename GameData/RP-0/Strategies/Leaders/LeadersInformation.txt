@@ -1,0 +1,423 @@
+CHIEF DESIGNER
+	Wernher von Braun - GERMANY / USA
+		* Charismatic
+		* Political Savvy convincing public support
+		* Dreamer
+		* Technical Genius
+		* Famous Contributions
+			* V2
+			* Jupiter Launch Vehicle
+			* Saturn V
+		* POSSIBLE BONUSES
+			+ Research Speed (Technical Genius)
+			+ Fast Versions of Programs always available (Political Savvy)
+			+ Reputation Gain (Charismatic)
+			- Trust (Nazi Ties)
+			- Total Allowed Engineers (early competiton split progress)
+	Elon Musk - USA
+			
+	Sergei Korolev - USSR
+		* OKB-1 Design Bureau
+		* Excellent Administrator
+		* Cautious
+		* Died young
+		* Famous Contributions
+			* R7
+			* N1
+		* POSSIBLE BONUSES
+			+ Cost per New Hire (Excellent Administrator)
+			+ Cost of Salary of Engineers (Excellent Administrator)
+			+ Cheaper Cost of Large Pads (The R7)
+			- Research Speed (Cautious)
+			- Total Allowed Researchers (Cautious)
+			- Length of Bonuses (Died Young)
+	Valentin Glushko - USSR
+		* OKB-456 Design Bureau
+		* NPO Energia
+		* Famous Contributions
+			* RD-101
+			* RD-103
+			* RD-107
+			* RD-108
+			* RD-170
+			* UR-500 (Proton)
+			* Energia
+			* RD-120
+			* Invented Electric Propulsion
+		* POSSIBLE BONUSES
+			+ Staged Combustion Engines
+			- Hydrolox Engines (thought LH was useless as a rocket fuel)
+			+ Hypergolic Engines
+			- Large Kerolox Engines (could not create a rival to the F1)
+	Mikhail Yangel - USSR (1954-1971)
+		* OKB-586 Design Bureau
+		* Aviation Engineer
+		* Pioneer of Hypergolic Fuels
+		* Famous Contributions
+			* Cosmos
+			* Tsyklon
+			* Dnepr
+		* POSSIBLE BONUSES
+			+ Reduced Cost of Hypergolic Engines and RCS
+	Vladimir Chelomey - USSR
+		* OKB-52 Design Bureau
+		* Designed the first Soviet Pulse Jet Engine
+		* Famous Contributions
+			* UR-XXX Series of Rockets (Proton)
+			* TKS Spacecraft
+			* Almaz Stations
+	Vasily Mishin - USSR
+		* OKB-1 Design Bureau
+		* Poor Administrator
+		* Technical Genius
+		* Worked poorly with Cosmonauts
+		* Famous Contributions
+			* KORD System for Engine Shutoff
+	Kerim Kerimov - USSR
+		* Chairman of the State Commission on Piloted Flights
+		* Famous Contributions
+			* Worked on the Katyusha
+			* Sputnik
+			* Soyuz
+			* Docking
+			* Salyut
+			* Vostok
+			* Mir Consultant
+	Boris Chertok - USSR
+		* Electrical Engineer and Control Systems Designer
+		* Created copmuterized control systems of Soviet Rockets
+		
+		
+		
+FLIGHT DIRECTOR
+	Chris Kraft - USA
+		* First flight director
+		* Created all of the protocols used for human spaceflight for Mercury
+		* Designed the structure of the Mission Control Center
+	Gene Kranz - USA
+		* Second flight director
+		* Worked through many Gemini and Apollo missions
+	Glynn Lunney - USA
+		* Mercury, Gemini Apollo, ASTP, Shuttle
+		
+		
+		
+SCIENTISTS / ENGINEERS
+	Georgy Babakin - USSR
+		* Designed the first soft landing craft, Luna 9
+	Vladimir Barmin - USSR
+		* Designed the world's first rocket LC, Baikonur
+	Alexander Bereznyak - USSR
+		* Designed the first rocket-powered fighter aircraft, Bi-1
+	Evgeniy Cherovsky - USSR
+		* Inventor of the pressure suit
+	Mikhail Gurevich - USSR
+		* Designer of the MiG-series Fighter Aircraft
+	Dergey Ilyushin - USSR
+		* Designer of the Il-series Aircraft
+	Mstislav Keldysh - USSR
+		* Designer of Sputnik
+	Alexander Kemurdzhian - USSR
+		* Designer of Lunokhod
+	Semyon Lavochkin - USSR
+		* Designer of the La-series Aircraft
+	Gleb Lozino-Lozinskiy - USSR
+		* Designer of Buran shuttle
+	Artem Mikoyan - USSR
+		* Designer of the MiG-series Fighter Aircraft
+	Vladimir Petlyakov - USSR
+		* Designer of the Pe-series of Aircraft
+	Nikolay Pilyugin - USSR
+		* Chief designer of Soviet Rocket Guidance Systems
+	Guy Severin - USSR
+		* Designer of the first EVA supporting system
+	Pavel Sukhoi - USSR
+		* Designer of the Su-series fighter aircraft
+	Vladimir Syromyatnikov - USSR
+		* Designer of the APAS Docking System
+	Mikhail Tikhonravov - USSR
+		* Designer of Sputniks
+	Andronik Iosifyan - USSR
+		* Designed the Soviet Meteor Weather Satellites
+		* Father of electromechanics in USSR
+		* Developed all electronics in Soyuz, Progress, Salyut and Mir
+	Aleksei Isaev - USSR
+		* Created thin-walled copper combustion chambers backed by Steel support
+		* First to propose Staged Combustion in 1949
+		* Expert in small engines used for landings
+	Arkhip Lyulka - USSR
+		* Jet engine designer
+	Semyon Kosberg - USSR
+		* Upper Stage Engines
+	
+	Ludwig Bolkow - GERMANY
+		* High-Speed aerodynamics designer on the Me-262
+		* Created the first German satellite, Azur
+	Adolf Busemann - GERMANY / NACA
+		* Pioneered the use of Swept Wings
+	Werner Dahm - GERMANY / NASA
+		* Aerodynamicist
+		* Created the conical propellant tank that overcame sloshing problems
+		* Redstone
+		* Contributed greatly to the Saturn V development
+		* Shuttle
+	Alexander Lippisch - GERMANY
+		* Delta Wing pioneer
+		* Me 163
+	Gunter Wendt - GERMANY / NASA
+		* Launch Pad Preparations
+		
+	Yvonne Brill - CANADA / NASA
+		* Invented the Hydrazine resistojet
+		
+	Isabelle Buret - FRANCE
+		* Telecommunications and Astronautics
+		* Systems engineering on the Globalstar project (satellite telecoms)
+		
+	Sydney Camm - UK
+		* Harrier Jet
+	Geoffrey de Havilland - UK
+		* Comet (world's first jet airliner)
+	Stanley Hooker - UK
+		* Jet Engine Designer
+		* Designed the engine for the Harrier
+		
+	Maxime Faget - US
+		* Designer of the Mercury Spacecraft
+		* Worked on Gemini and Apollo
+		* Instrumental in design of Shuttle
+	Homer Hickam - US
+		* Astronaut Training Expert
+	Kelly Johnson - US
+		* Lockheed Skunkworks
+		* U-2, SR-71
+		* F-80
+		* F-117A
+	Katherine Johnson - US
+		* Mathmetician
+		* Expert in trajectories, launch windows and rendezvous
+	Robert Thomas Jones - US
+		* Swept wing pioneer
+		* "One of the premier aeronautical engineers of the 20th century"
+	Alexander Kartveli - US
+		* F-84
+		* F-105
+	Gerhard Neumann - USA
+		* J79 Jet Engine
+	Burt Rutan - USA
+		* SpaceShipOne
+	Edgar Schmued - USA
+		* P-51
+		* F-82, F-86, F-100
+		* F-5, T-38
+	Harrison Storms - USA
+		* Apollo CSM
+	Theodore von Karman - USA
+		* Founded JPL
+		* Expert in Supersonic and Hypersonic Airflow
+	Richard Whitcomb - USA
+		* Area Rule
+	Oswald Williams Jr. - USA
+		* Liquid Rocket engine testing at Thoikol
+		* Development of LEM thrusters
+	Robert Zubrin - USA
+		* Nuclear Salt-Water Rocket
+		* Mars Direct
+	James Van Allen - USA
+		* Created the Aerobee Rocket
+		* Discovered Radiation Belts
+		* Science missions to various planets
+	John McTigue - USA
+		* X-1 to X-15
+	Betty Love - USA
+		* X-1 to X-15
+	John Houbolt - USA
+		* Architect of the Lunar Orbit Rendezvous
+	George Mueller - USA
+		* All-Up Testing Philosophy for Saturn V
+		* Designer of Skylab
+		* "Father of the Space Shuttle"
+	Abe Silverstein - USA
+		* Centaur
+		* Technical basis for Apollo
+	
+	
+		
+		
+HEROES
+	Yuri Gagarin - USSR
+		* First Crewed Orbit
+	Gherman Titov - USSR
+		* First to spend 24 hours in space
+	Alexei Leonov - USSR
+		* First EVA
+	Valentina Tereshkova - USSR
+		* First Woman in Space
+	Ivan E. Fyodorov - USSR
+		* Break Sound Barrier
+	Valeri Polyakov - USSR
+		* 14 months in space
+	
+	Alan Shepard - USA
+		* First US Astronaut in Space
+	John Glenn - USA
+		* First US Crewed Orbit
+	Wally Schirra - USA
+		* First Rendezvous
+	Neil Armstrong - USA
+		* First Docking
+	Buzz Aldrin - USA
+		* First Docking?
+	Chuck Yeager - USA
+		* Break Sound Barrier
+	Sally Ride - USA
+		* First US Woman in Space
+	Guion Bluford - USA
+		* First African-American in Space
+	Jim Lovell - USA
+		* Rendezvous
+	
+		
+	
+		
+			
+			
+			
+			
+			
+CONTRACTORS
+	OKB-586 / Yuzhnoye Design Office
+		* Contributions
+			* Major ICBM Manufacturer
+			* Zenit
+			* Dnepr
+			* Tsyklon
+			* Kosmos
+	OKB-52 / NPO Mashinostroyeniya
+		* Contributions
+			* UR-XXX Series of Rockets
+			* Strela
+			* TKS Spacecraft
+			* Almaz Stations
+	OKB-1 / RSC Energia
+		* Contributions
+			* Sputnik
+			* Vostok 1
+			* N1
+			* Salyut Stations
+			* Soyuz
+			* R7
+			* Venera
+			* Zond
+			* Mars Program
+			* Buran Shuttle
+			* Luna
+			* Voskhod
+			* Energia
+			* Progress
+			* Zenit
+			* ISS Modules
+	OKB-456 / NPO Energomash
+		* Liquid Rocket Engines
+		* RD-107/108
+	OKB-276 / Kuznetsov Design Bureau
+		* NK-9, NK-15, NK-19, NK-21, NK-33, NK-39, NK-43
+	NPO Prikladonoi Mekhaniki / JSC Information Satellite Systems Reshetnev (1977)
+		* Satellite Developer
+		* GLONASS
+	OKB-301 / NPO Lavochkin
+		* Fobos-Grunt
+		* Luna 9-25
+		* Mars Program
+		* Lunokhod
+		* Spektr-R
+		* Venera
+	OKB-154 / KB Khimavtomatika
+		* Upper Stage Engines
+		* RD-0105
+		* RD-0109
+		* RD-0110
+		
+	North American Aviation (1951 - 1967) / North American Rockwell (1967 - 1973) / Rockwell International (1973-1996)
+		* F-86
+		* X-15
+		* Apollo CSM
+		* Saturn V S-II
+		* Space Shuttle Orbiter
+	Rocketdyne (1955 - 2005)
+		* A6 (Redstone), A7 (Jupiter)
+		* Kiwi Nuclear Engine
+		* S-3D
+		* LR89
+		* LR79
+		* LR101
+		* LR105
+		* E-1
+		* F-1
+		* H-1
+		* J-2
+		* RS-25
+		* RS-27A
+		* RS-56
+		* RS-68
+	Pratt & Whitney Rocketdyne (2005 - 2013)
+		* RL10
+		* RS-68
+		* RS-25
+		* J-2X
+	Aerojet Rocketdyne (2013 - 2022)
+		* RS-25
+		* RL10
+		* RS-68
+		* MMRTG
+	Aerojet (1951 - 2013)
+		* Aerobee
+		* AJ10
+		* LR87
+		* LR91
+	Lockheed (1951 - 1995)
+		* P-80, F-104, F-117
+		* Agena
+		* Apollo LES
+		* Hubble Space Telescope
+	Lockheed Martin (1995 - 2022)
+		* F-22, F-35
+		* X-33
+		* Orion Capsule
+		* GOES-R
+		* MAVEN, JUNO, OSIRIS-REx, InSight, Lucy, VERITAS, DAVINCI+
+	Martin Marietta (1961 - 1995)
+		* Titan Rockets
+		* Atlas I, Atlas II
+		* Magellan, Mars Polar Lander, Viking Program
+	McDonnell Aircraft (1951 - 1967)
+		* F-101, F-4
+		* Mercury Capsule, Gemini Capsule
+	McDonnell Douglas (1967 - 1997)
+		* F-15E, Harrier II, F/A-18 Hornet
+		* Big Gemini
+		* Skylab
+		* Delta II
+		* Saturn S-IV
+		* Saturn S-IVB
+	Douglass Aircraft Company (1951 - 1967)
+		* WAC Corporal
+		* Thor Rocket Family
+		* MOL
+		* Saturn S-IV Stage
+		* Saturn S-IVB Stage
+	Grumman (1951 - 1994)
+		* F-14
+		* Apollo LEM
+	Northrop Grumman (1994 - 2022)
+		* JWST
+	TRW (1951 - 2002)
+		* Pioneer 0, 1, 2
+		* Pioneer 10, 11
+		* HEAO 1, 2, 3
+		* Compton Gamma Ray Observatory
+		* Chandra X-Ray Observatory
+		* TDRSS
+		* Apollo LMDE
+	
+	

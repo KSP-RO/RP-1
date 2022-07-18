@@ -80,6 +80,9 @@
     <Content Include="..\GameData\RP-0\Contracts\SCANSat.cfg">
       <Link>Contracts\SCANSat.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg">
+      <Link>Contracts\StockContracts.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\TestSubjectRemove.cfg">
       <Link>Contracts\TestSubjectRemove.cfg</Link>
     </Content>
@@ -779,8 +782,8 @@
     <Content Include="..\GameData\RP-0\Strategies\LocPatches.cfg">
       <Link>Strategies\LocPatches.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Strategies\StrategyPatcher.cfg">
-      <Link>Strategies\StrategyPatcher.cfg</Link>
+    <Content Include="..\GameData\RP-0\Strategies\RemoveStockStrategies.cfg">
+      <Link>Strategies\RemoveStockStrategies.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Tooling\SSPX.cfg">
       <Link>Tooling\SSPX.cfg</Link>

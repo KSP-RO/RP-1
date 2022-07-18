@@ -8,6 +8,12 @@ namespace RP0.Programs
 {
     public class Program : IConfigNode
     {
+        public enum Speed
+        {
+            Normal = 0,
+            Slow,
+            Fast,
+        }
         private const string CN_CompleteContract = "COMPLETE_CONTRACT";
         private const double secsPerYear = 3600 * 24 * 365.25;
 
@@ -28,6 +34,18 @@ namespace RP0.Programs
 
         [Persistent(isPersistant = false)]
         public double nominalDurationYears;
+        public double DurationYears => DurationYearsCalc(speed, nominalDurationYears);
+
+        public static double DurationYearsCalc(Speed spd, double years)
+        {
+            double mult = 1d;
+            switch (spd)
+            {
+                case Speed.Slow: mult = 1.5d; break;
+                case Speed.Fast: mult = 0.75d; break;
+            }
+            return Math.Round(years * mult * 4) * 0.25d;
+        }
 
         /// <summary>
         /// The amount of funds that will be paid out over the nominal duration of the program.
@@ -64,6 +82,9 @@ namespace RP0.Programs
         [Persistent(isPersistant = false)]
         public DoubleCurve overrideFundingCurve = new DoubleCurve();
 
+        [Persistent]
+        public Speed speed = Speed.Normal;
+
         /// <summary>
         /// Texture URL
         /// </summary>
@@ -75,6 +96,15 @@ namespace RP0.Programs
 
         [Persistent(isPersistant = false)]
         public double repPenaltyPerYearLate;
+        public double RepPenaltyPerYearLate => RepPenaltyPerYearLateCalc(speed, repPenaltyPerYearLate);
+        public static double RepPenaltyPerYearLateCalc(Speed spd, double pen)
+        {
+            double mult = 1d;
+            if (spd == Speed.Fast)
+                mult = 1.5d;
+
+            return pen * mult;
+        }
 
         public List<string> programsToDisableOnAccept = new List<string>();
 
@@ -84,7 +114,17 @@ namespace RP0.Programs
         private Func<bool> _requirementsPredicate;
         private Func<bool> _objectivesPredicate;
 
-        public double TotalFunding => totalFunding > 0 ? totalFunding : baseFunding * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+        public static double TotalFundingCalc(Speed spd, double funds)
+        {
+            double mult = 1d;
+            switch (spd)
+            {
+                case Speed.Fast: mult = 4d / 3d; break;
+                case Speed.Slow: mult = 2d / 3d; break;
+            }
+            return funds * mult * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+        }
+        public double TotalFunding => totalFunding > 0 ? totalFunding : TotalFundingCalc(speed, baseFunding);
 
         public bool IsComplete => completedUT != 0;
 
@@ -127,6 +167,7 @@ namespace RP0.Programs
             _requirementsPredicate = toCopy._requirementsPredicate;
             _objectivesPredicate = toCopy._objectivesPredicate;
             programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
+            speed = toCopy.speed;
         }
 
         public void Load(ConfigNode node)
@@ -194,7 +235,7 @@ namespace RP0.Programs
             double fundsToAdd = Math.Max(0d, funds2 - fundsPaidOut);
             lastPaymentUT = nowUT;
 
-            RP0Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / nominalDurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
+            RP0Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / DurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
             fundsPaidOut += fundsToAdd;
             Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
 
@@ -234,7 +275,7 @@ namespace RP0.Programs
         public void Complete()
         {
             completedUT = KSPUtils.GetUT();
-            double timeDelta = nominalDurationYears * secsPerYear - (completedUT - acceptedUT);
+            double timeDelta = DurationYears * secsPerYear - (completedUT - acceptedUT);
             float repDelta = 0f;
             if (timeDelta > 0)
             {
@@ -248,7 +289,7 @@ namespace RP0.Programs
 
         public double GetFundsAtTime(double time)
         {
-            double fractionOfTotalDuration = time / nominalDurationYears / secsPerYear;
+            double fractionOfTotalDuration = time / DurationYears / secsPerYear;
             DoubleCurve curve = overrideFundingCurve.keys.Count > 0 ? overrideFundingCurve : ProgramHandler.Settings.paymentCurve;
             double curveFactor = curve.Evaluate(fractionOfTotalDuration);
             return curveFactor * TotalFunding;
@@ -257,10 +298,10 @@ namespace RP0.Programs
         private double GetRepLossAtTime(double time)
         {
             const double recip = 1d / secsPerYear;
-            double extraTime = time - nominalDurationYears * secsPerYear;
+            double extraTime = time - DurationYears * secsPerYear;
             if (extraTime > 0d)
             {
-                return repPenaltyPerYearLate * (extraTime * recip);
+                return RepPenaltyPerYearLate * (extraTime * recip);
             }
             return 0d;
         }

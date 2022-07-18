@@ -359,8 +359,8 @@ namespace KerbalConstructionTime
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowModifyLC = false;
                 _centralWindowPosition.height = 1;
-                _centralWindowPosition.width = 150;
-                _centralWindowPosition.x = (Screen.width - 150) / 2;
+                _centralWindowPosition.width = 300;
+                _centralWindowPosition.x = (Screen.width - 300) / 2;
                 GUIStates.ShowBuildList = true;
 
                 _padLvlOptions = null;

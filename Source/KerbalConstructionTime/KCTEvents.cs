@@ -50,6 +50,7 @@ namespace KerbalConstructionTime
             GameEvents.onEditorShowPartList.Add(PartListEvent);
             KSP.UI.BaseCrewAssignmentDialog.onCrewDialogChange.Add(CrewDialogChange);
             GameEvents.OnPartPurchased.Add(PartPurchasedEvent);
+            GameEvents.OnPartUpgradePurchased.Add(PartUpgradePurchasedEvent);
             GameEvents.onGUIRnDComplexSpawn.Add(TechEnableEvent);
             GameEvents.onGUIRnDComplexDespawn.Add(TechDisableEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
@@ -305,6 +306,20 @@ namespace KerbalConstructionTime
             else
             {
                 Utilities.RemoveExperimentalPart(part);
+            }
+        }
+
+        public void PartUpgradePurchasedEvent(PartUpgradeHandler.Upgrade upgrade)
+        {
+            if (HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
+                return;
+            TechItem tech = KCTGameStates.TechList.OfType<TechItem>().FirstOrDefault(t => t.TechID == upgrade.techRequired);
+            if (tech != null && tech.IsInList())
+            {
+                ScreenMessages.PostScreenMessage("You must wait until the node is fully researched to purchase upgrades!", 4f, ScreenMessageStyle.UPPER_LEFT);
+                Utilities.AddFunds(upgrade.entryCost, TransactionReasons.RnDPartPurchase);
+                PartUpgradeManager.Handler.SetUnlocked(upgrade.name, false);
+                tech.DisableTech();
             }
         }
 

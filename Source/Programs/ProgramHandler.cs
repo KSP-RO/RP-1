@@ -333,7 +333,7 @@ namespace RP0.Programs
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Nominal duration: ", HighLogic.Skin.label);
-                GUILayout.Label($"{p.nominalDurationYears:0.#} years", HighLogic.Skin.label);
+                GUILayout.Label($"{p.DurationYears:0.#} years", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
                 if (isActive || isCompleted)
@@ -366,8 +366,14 @@ namespace RP0.Programs
             return true;
         }
 
-        private void ActivateProgram(Program p)
+        public void ActivateProgram(Program p)
         {
+            if (p == null)
+            {
+                Debug.LogError($"[RP-0] Error: Tried to accept null program!");
+                return;
+            }
+
             ActivePrograms.Add(p.Accept());
             foreach (string s in p.programsToDisableOnAccept)
                 DisableProgram(s);

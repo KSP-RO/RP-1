@@ -2308,7 +2308,7 @@ namespace KerbalConstructionTime
 
         public static double ScienceForNextApplicants()
         {
-            int applicantsCur = ApplicantPacketsForScience(KCTGameStates.SciPointsTotal);
+            int applicantsCur = ApplicantPacketsForScience(Math.Max(0d, KCTGameStates.SciPointsTotal));
             return Math.Pow(5d * (applicantsCur + 1d), 1d / ApplicantsPow);
         }
 

@@ -59,6 +59,7 @@
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="Debug.cs" />
+    <Compile Include="Harmony\AdminPatcher.cs" />
     <Compile Include="LocalizationHandler.cs" />
     <Compile Include="EventRegisterer.cs" />
     <Compile Include="EntryCostStorage.cs" />
@@ -97,7 +98,7 @@
     <Compile Include="Avionics\ProceduralAvionicsUnlockedNodes.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Harmony\StrategyPatches.cs" />
-    <Compile Include="Programs\AdminUIFixer.cs" />
+    <Compile Include="Programs\AdminExtender.cs" />
     <Compile Include="Programs\ProgramStrategy.cs" />
     <Compile Include="Programs\StrategySystemFixer.cs" />
     <Compile Include="Programs\PredicateBuilder.cs" />

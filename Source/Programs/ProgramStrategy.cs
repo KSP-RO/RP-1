@@ -8,77 +8,44 @@ namespace RP0.Programs
     {
         public bool NextTextIsShowSelected = false;
 
+        protected Program _program;
+        public Program Program => _program;
+        public void SetProgram(Program p) { _program = p; }
+        public void SetSpeed(Program.Speed spd) { _program.speed = spd; }
+        public Program.Speed ProgramSpeed => _program?.speed ?? Program.Speed.Slow;
+
+        public void OnSetupConfig()
+        {
+            // StrategySystem's OnLoad (that creates Strategy objects)
+            // waits a frame before firing, which happily means ProgramHandler is live.
+            _program = ProgramHandler.Instance.ActivePrograms.Find(p => p.name == Config.Name);
+            if (_program == null)
+            {
+                _program = ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == Config.Name);
+            }
+
+            if (_program == null)
+            {
+                Program source = ProgramHandler.Programs.Find(p => p.name == Config.Name);
+                if (source == null)
+                {
+                    Debug.LogError($"[RP-0] ProgramStrategy: Error finding program {Config.Name}");
+                    return;
+                }
+                // Create a copy so we can mess with the speed
+                _program = new Program(source);
+            }
+        }
+
         protected override string GetEffectText()
         {
-            if (ProgramHandler.Instance == null)
-                return base.GetEffectText();
-
-            Program program = ProgramHandler.Instance.ActivePrograms.Find(p => p.name == Config.Name);
-            if (program == null)
-                program = ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == Config.Name);
-
-            bool wasAccepted = program != null;
-
-            if (program == null)
-                program = ProgramHandler.Programs.Find(p => p.name == Config.Name);
-
-            if (program == null)
-                return base.GetEffectText();
-
-            string objectives = string.Empty, requirements = string.Empty;
-            if (NextTextIsShowSelected)
-            {
-                var tmp = program.ObjectivesBlock?.ToString(doColoring: wasAccepted);
-                objectives = $"<b>Objectives</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
-
-                tmp = program.RequirementsBlock?.ToString(doColoring: !wasAccepted);
-                requirements = $"<b>Requirements</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
-            }
-            else
-            {
-                objectives = $"<b>Objectives</b>: {program.objectivesPrettyText}";
-                requirements = $"<b>Requirements</b>: {program.requirementsPrettyText}";
-            }
-
-            string text = $"{objectives}\n\nTotal Funds: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{program.TotalFunding:N0}\n";
-            if (wasAccepted)
-            {
-                text += $"Funds Paid Out: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{program.fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT, false, false)}\n";
-                if (program.IsComplete)
-                    text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.completedUT, false, false)}";
-                else
-                    text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDateCompact(program.acceptedUT + program.nominalDurationYears * 365.25d * 86400d, false, false)}";
-            }
-            else
-            {
-                text = $"{requirements}\n\n{text}Nominal Duration: {program.nominalDurationYears:0.#} years";
-            }
-
-            if (NextTextIsShowSelected && !wasAccepted)
-            {
-                if (program.programsToDisableOnAccept.Count > 0)
-                {
-                    text += "\nWill disable the following on accept:";
-                    foreach (var s in program.programsToDisableOnAccept)
-                        text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
-                }
-
-                text += "\n\nFunding Summary:";
-                double paid = 0d;
-                int max = (int)(program.nominalDurationYears) + 1;
-                for (int i = 1; i < max; ++i)
-                {
-                    const double secPerYear = 365.25d * 86400d;
-                    double fundAtYear = program.GetFundsAtTime(secPerYear * i);
-                    double amtPaid = fundAtYear - paid;
-                    paid = fundAtYear;
-                    text += $"\nYear {(max > 10 ? " " : string.Empty)}{i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
-                }
-            }
-
+            bool extendedInfo = NextTextIsShowSelected;
             NextTextIsShowSelected = false;
 
-            return text;
+            if (_program == null)
+                return "Error finding program!";
+
+            return _program.GetDescription(extendedInfo);
         }
 
         protected override bool CanActivate(ref string reason)
@@ -89,13 +56,19 @@ namespace RP0.Programs
                 return false;
             }
 
-            if (ProgramHandler.Instance.CompletedPrograms.Any(p => p.name == Config.Name))
+            if (_program == null)
+            {
+                reason = "An error occurred during loading. The program field is null!";
+                return false;
+            }
+
+            if (_program.IsComplete)
             {
                 reason = "This Program has already been completed.";
                 return false;
             }
 
-            if (ProgramHandler.Instance.ActivePrograms.Any(p => p.name == Config.Name))
+            if (_program.IsActive)
             {
                 reason = "This Program is currently active.";
                 return false;
@@ -107,14 +80,7 @@ namespace RP0.Programs
                 return false;
             }
 
-            Program program = ProgramHandler.Programs.Find(p => p.name == Config.Name);
-            if (program == null)
-            {
-                reason = "An error occurred during loading. This Program cannot be found!";
-                return false;
-            }
-
-            if (!program.CanAccept)
+            if (!_program.CanAccept)
             {
                 reason = "This Program has unmet requirements.";
                 return false;
@@ -135,19 +101,18 @@ namespace RP0.Programs
                 return false;
             }
 
-            Program p = ProgramHandler.Instance.ActivePrograms.Find(p2 => p2.name == Config.Name);
-            if (p == null)
+            if (_program == null)
             {
-                reason = "This Program cannot be found in the active programs.";
+                reason = "An error occurred during loading. The program field is null!";
                 return false;
             }
 
-            if (!p.CanComplete)
+            if (!_program.CanComplete)
             {
-                if (p.AllObjectivesMet && p.IsActive && !p.IsComplete)
+                if (_program.AllObjectivesMet && _program.IsActive && !_program.IsComplete)
                 {
-                    Debug.LogError($"[RP-0]: Program {p.name} was incorrectly not marked as complete. Marking complete now.");
-                    p.MarkObjectivesComplete();
+                    Debug.LogError($"[RP-0]: Program {_program.name} was incorrectly not marked as complete. Marking complete now.");
+                    _program.MarkObjectivesComplete();
                 }
                 else
                 {
@@ -164,8 +129,7 @@ namespace RP0.Programs
             base.OnRegister();
 
             if (ProgramHandler.Instance && ProgramHandler.Instance.IsInAdmin)
-                if (!ProgramHandler.Instance.ActivateProgram(Config.Name))
-                    Debug.LogError($"[RP-0] Error: Can't find program {Config.Name} to accept!");
+                ProgramHandler.Instance.ActivateProgram(_program);
         }
 
         protected override void OnUnregister()
@@ -173,10 +137,7 @@ namespace RP0.Programs
             base.OnUnregister();
 
             if (ProgramHandler.Instance && ProgramHandler.Instance.IsInAdmin)
-            {
-                if (!ProgramHandler.Instance.CompleteProgram(Config.Name))
-                    Debug.LogError($"[RP-0] Error: Can't find program {Config.Name} to complete!");
-            }
+                ProgramHandler.Instance.CompleteProgram(_program);
         }
     }
 }

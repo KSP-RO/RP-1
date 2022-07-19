@@ -116,13 +116,8 @@ namespace RP0.Programs
 
         public static double TotalFundingCalc(Speed spd, double funds)
         {
-            double mult = 1d;
-            switch (spd)
-            {
-                case Speed.Fast: mult = 4d / 3d; break;
-                case Speed.Slow: mult = 2d / 3d; break;
-            }
-            return funds * mult * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+            // For now, no change in funding.
+            return funds * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
         }
         public double TotalFunding => totalFunding > 0 ? totalFunding : TotalFundingCalc(speed, baseFunding);
 
@@ -398,6 +393,75 @@ namespace RP0.Programs
             }
 
             return req;
+        }
+
+        public string GetDescription(bool extendedInfo)
+        {
+            double duration = DurationYears;
+            bool wasAccepted = IsActive || IsComplete;
+
+            string objectives, requirements;
+            if (extendedInfo)
+            {
+                var tmp = ObjectivesBlock?.ToString(doColoring: wasAccepted);
+                objectives = $"<b>Objectives</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
+
+                tmp = RequirementsBlock?.ToString(doColoring: !wasAccepted);
+                requirements = $"<b>Requirements</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
+            }
+            else
+            {
+                objectives = $"<b>Objectives</b>: {objectivesPrettyText}";
+                requirements = $"<b>Requirements</b>: {requirementsPrettyText}";
+            }
+
+            string text = $"{objectives}\n\nTotal Funds: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{TotalFunding:N0}\n";
+            if (wasAccepted)
+            {
+                text += $"Funds Paid Out: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT, false, false)}\n";
+                if (IsComplete)
+                {
+                    if (extendedInfo)
+                        text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDate(completedUT, false, false)}";
+                    else
+                        text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDateCompact(completedUT, false, false)}";
+                }
+                else
+                {
+                    if (extendedInfo)
+                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDate(acceptedUT + duration * 365.25d * 86400d, false, false)}";
+                    else
+                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT + duration * 365.25d * 86400d, false, false)}";
+                }
+            }
+            else
+            {
+                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.#} years";
+            }
+
+            if (extendedInfo && !wasAccepted)
+            {
+                if (programsToDisableOnAccept.Count > 0)
+                {
+                    text += "\nWill disable the following on accept:";
+                    foreach (var s in programsToDisableOnAccept)
+                        text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+                }
+
+                text += "\n\nFunding Summary:";
+                double paid = 0d;
+                int max = (int)System.Math.Ceiling(duration) + 1;
+                for (int i = 1; i < max; ++i)
+                {
+                    const double secPerYear = 365.25d * 86400d;
+                    double fundAtYear = GetFundsAtTime(System.Math.Min(i, duration) * secPerYear);
+                    double amtPaid = fundAtYear - paid;
+                    paid = fundAtYear;
+                    text += $"\nYear {(max > 10 ? " " : string.Empty)}{i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
+                }
+            }
+
+            return text;
         }
     }
 }

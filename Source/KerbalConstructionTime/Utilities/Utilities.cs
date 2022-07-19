@@ -1459,6 +1459,10 @@ namespace KerbalConstructionTime
                 KCTGameStates.EditorRolloutCosts = 0;
                 KCTGameStates.EditorRolloutTime = 0;
             }
+
+            var unlockInfo = GetVesselUnlockInfo(ship);
+            KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
+            KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
         }
 
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
@@ -2122,6 +2126,117 @@ namespace KerbalConstructionTime
                 }
             }
         }
+
+        public static Tuple<float, List<string>> GetVesselUnlockInfo(ShipConstruct ship)
+        {
+            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return new Tuple<float, List<string>>(0, new List<string>());
+
+            // get the unlock cost for all parts in the list not already purchased
+            var partStatuses = GetPartsWithPurchasability(ship.Parts);
+            IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable || kvp.Value.Status == PurchasabilityStatus.Unavailable);
+            List<AvailablePart> partList = lockedParts.Select(kvp => kvp.Key).ToList();
+            float partCost = Utilities.FindUnlockCost(partList);
+
+            // filter down further to those parts that can't be unlocked with our current tech and get the tech names needed
+            partList = lockedParts.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable).Select(kvp => kvp.Key).ToList();
+            List<string> pendingTech = new List<string>();
+
+            foreach (AvailablePart p in partList)
+            {
+                if (!pendingTech.Contains(p.TechRequired)) pendingTech.Add(p.TechRequired);
+            }
+
+            // iterate all the parts finding partconfig upgrades that require unlock
+            float partUpgradeCosts = 0;
+            foreach (Part p in ship.Parts)
+            {
+                var mecs = p.FindModulesImplementing<RealFuels.ModuleEngineConfigs>();
+                foreach (var mec in mecs)
+                {
+                    ConfigNode n = mec.configs.Find(c => c.GetValue("name") == mec.configuration);
+                    if (n != null)
+                    {
+                        string techRequired = n.GetValue("techRequired");
+                        if (techRequired == null) continue;
+
+                        ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(techRequired);
+                        bool partIsUnlocked = techState != null && techState.state == RDTech.State.Available &&
+                                              RUIutils.Any(techState.partsPurchased, (a => a.name == mec.configuration));
+                        if (!partIsUnlocked)
+                        {
+                            string cost = n.GetValue("cost");
+                            if (cost != null)
+                                partUpgradeCosts += Convert.ToSingle(cost);
+
+                            if (techState == null || techState.state != RDTech.State.Available)
+                            {
+                                if (!pendingTech.Contains(techRequired)) pendingTech.Add(techRequired);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var techList = RemoveParentsFromTechList(pendingTech);
+            float totalCost = partCost + partUpgradeCosts;
+            KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Parts: {partCost}, Upgrades: {partUpgradeCosts}");
+            return new Tuple<float, List<string>>(totalCost, techList);
+        }
+
+        public static List<string> RemoveParentsFromTechList(List<string> input)
+        {
+            List<string> blacklist = new List<string>();
+            SortedList<string,string> slist = new SortedList<string, string>();
+            foreach(string s in input)
+            {
+                foreach (string parent in KerbalConstructionTimeData.techNameToParents[s])
+                {
+                    if (!blacklist.Contains(parent)) blacklist.Add(parent);
+                }
+            }
+            foreach (string s in input)
+            {
+                if (!blacklist.Contains(s))
+                {
+                    // sort our result, depth into the tree then alpha
+                    int depth = KerbalConstructionTimeData.techNameToParents[s].Count();
+                    string skey = $"{depth:d2}{s}";
+                    if (!slist.ContainsKey(skey))
+                        slist.Add(skey, s);
+                }
+            }
+
+            return slist.Values.ToList();
+        }
+
+        public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<Part> parts)
+        {
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
+
+            if (ResearchAndDevelopment.Instance == null)
+                return res;
+
+            foreach (Part p in parts)
+            {
+                AvailablePart part = p.partInfo;
+                if (res.TryGetValue(part, out PartPurchasability pp))
+                {
+                    pp.PartCount++;
+                }
+                else
+                {
+                    PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
+                    if (Utilities.PartIsUnlocked(part))
+                        status = PurchasabilityStatus.Purchased;
+                    else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
+                        status = PurchasabilityStatus.Purchasable;
+
+                    res.Add(part, new PartPurchasability(status, 1));
+                }
+            }
+            return res;
+        }
+
     }
 }
 

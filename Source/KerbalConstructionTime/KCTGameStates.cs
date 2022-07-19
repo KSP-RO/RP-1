@@ -37,6 +37,8 @@ namespace KerbalConstructionTime
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorIntegrationCosts = 0;
+        public static double EditorUnlockCosts = 0;
+        public static List<string> EditorRequiredTechs = new List<string>();
 
         public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();
 

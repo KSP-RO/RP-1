@@ -88,11 +88,28 @@ namespace KerbalConstructionTime
             }
 
             if (KCTGameStates.EditorIntegrationCosts > 0)
-                GUILayout.Label($"Integration Cost: {Math.Round(KCTGameStates.EditorIntegrationCosts, 1)}");
+                GUILayout.Label($"Integration Cost: √{Math.Round(KCTGameStates.EditorIntegrationCosts, 1):N1}");
 
             if (KCTGameStates.EditorRolloutCosts > 0)
-                GUILayout.Label($"Rollout Cost: {Math.Round(KCTGameStates.EditorRolloutCosts, 1)}");
+                GUILayout.Label($"Rollout Cost: √{Math.Round(KCTGameStates.EditorRolloutCosts, 1):N1}");
 
+            if (KCTGameStates.EditorUnlockCosts > 0)
+                GUILayout.Label($"Unlock Cost: √{Math.Round(KCTGameStates.EditorUnlockCosts, 1):N1}");
+
+            if (KCTGameStates.EditorRequiredTechs.Any())
+            {
+                string techLabel = string.Empty;
+                foreach (string techId in KCTGameStates.EditorRequiredTechs)
+                {
+                    string techName = ResearchAndDevelopment.GetTechnologyTitle(techId);
+
+                    if (string.IsNullOrEmpty(techLabel))
+                        techLabel = $"Needs: {techName}";
+                    else
+                        techLabel += $"\n\r       {techName}";
+                }
+                GUILayout.Label(techLabel);
+            }
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {

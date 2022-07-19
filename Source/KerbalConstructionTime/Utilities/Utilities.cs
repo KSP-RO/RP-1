@@ -2186,16 +2186,16 @@ namespace KerbalConstructionTime
 
             double ecmCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList);
 
-            List<string> techList = RemoveParentsFromTechList(pendingTech);
+            List<string> techList = SortAndFilterTechListForFinalNodes(pendingTech);
             float totalCost = runningCost + Convert.ToSingle(ecmCost);
             KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Raw cost: {runningCost}, ECM cost: {ecmCost}");
             return new Tuple<float, List<string>>(totalCost, techList);
         }
 
-        public static List<string> RemoveParentsFromTechList(HashSet<string> input)
+        public static List<string> SortAndFilterTechListForFinalNodes(HashSet<string> input)
         {
             HashSet<string> blacklist = new HashSet<string>();
-            SortedList<string,string> slist = new SortedList<string, string>();
+            SortedList<string, string> slist = new SortedList<string, string>();
             foreach(string s in input)
             {
                 foreach (string parent in KerbalConstructionTimeData.techNameToParents[s])

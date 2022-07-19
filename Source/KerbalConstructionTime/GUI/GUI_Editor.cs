@@ -96,7 +96,7 @@ namespace KerbalConstructionTime
             if (KCTGameStates.EditorUnlockCosts > 0)
                 GUILayout.Label($"Unlock Cost: √{Math.Round(KCTGameStates.EditorUnlockCosts, 1):N1}");
 
-            if (KCTGameStates.EditorRequiredTechs.Any())
+            if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {
                 string techLabel = string.Empty;
                 foreach (string techId in KCTGameStates.EditorRequiredTechs)
@@ -106,7 +106,7 @@ namespace KerbalConstructionTime
                     if (string.IsNullOrEmpty(techLabel))
                         techLabel = $"Needs: {techName}";
                     else
-                        techLabel += $"\n\r       {techName}";
+                        techLabel += $"\n       {techName}";
                 }
                 GUILayout.Label(techLabel);
             }

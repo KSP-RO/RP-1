@@ -791,25 +791,15 @@ namespace KerbalConstructionTime
             if (ResearchAndDevelopment.Instance == null)
                 return res;
 
+            List<AvailablePart> apList = new List<AvailablePart>();
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
                 string partName = Utilities.GetPartNameFromNode(pNode);
                 AvailablePart part = PartLoader.getPartInfoByName(partName);
-                if (res.TryGetValue(part, out PartPurchasability pp))
-                {
-                    pp.PartCount++;
-                }
-                else
-                {
-                    PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
-                    if (Utilities.PartIsUnlocked(part))
-                        status = PurchasabilityStatus.Purchased;
-                    else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
-                        status = PurchasabilityStatus.Purchasable;
-
-                    res.Add(part, new PartPurchasability(status, 1));
-                }
+                apList.Add(part);
             }
+
+            res = Utilities.GetPartsWithPurchasability(apList);
             return res;
         }
 

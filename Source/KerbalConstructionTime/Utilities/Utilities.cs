@@ -2131,28 +2131,50 @@ namespace KerbalConstructionTime
         {
             if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return new Tuple<float, List<string>>(0, new List<string>());
 
-            // get the unlock cost for all parts in the list not already purchased
-            var partStatuses = GetPartsWithPurchasability(ship.Parts);
-            IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable || kvp.Value.Status == PurchasabilityStatus.Unavailable);
-            List<AvailablePart> partList = lockedParts.Select(kvp => kvp.Key).ToList();
-            float partCost = Utilities.FindUnlockCost(partList);
+            // filter the ship parts list to those parts that are not already purchased
+            var purchasableParts = GetPartsWithPurchasability(ship.Parts).Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable || kvp.Value.Status == PurchasabilityStatus.Unavailable);
+            List<string> ecmPartsList = new List<string>();
+            float runningCost = 0;
+
+            // compare the part specified entry cost to the ECM database
+            foreach (var part in purchasableParts.Select(kvp => kvp.Key))
+            {
+                var rawCost = part.entryCost;
+                var ecmEstCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(part.name);
+                if (rawCost == ecmEstCost)
+                {
+                    // this part is managed by the ECM, save its name later for a batch request
+                    var sanitizedName = RealFuels.Utilities.SanitizeName(part.name);
+                    if (!ecmPartsList.Contains(sanitizedName)) 
+                        ecmPartsList.Add(sanitizedName);
+                }
+                else
+                {
+                    // this part is not in the ECM, take the raw cost
+                    runningCost += rawCost;
+                }
+            }
 
             // filter down further to those parts that can't be unlocked with our current tech and get the tech names needed
-            partList = lockedParts.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable).Select(kvp => kvp.Key).ToList();
+            var lockedParts = purchasableParts.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable).Select(kvp => kvp.Key).ToList();
             List<string> pendingTech = new List<string>();
 
-            foreach (AvailablePart p in partList)
+            foreach (AvailablePart p in lockedParts)
             {
                 if (!pendingTech.Contains(p.TechRequired)) pendingTech.Add(p.TechRequired);
             }
 
-            // iterate all the parts finding partconfig upgrades that require unlock
-            float partUpgradeCosts = 0;
+            // now back through the list looking for upgrades to add to our batch list
             foreach (Part p in ship.Parts)
             {
-                var mecs = p.FindModulesImplementing<RealFuels.ModuleEngineConfigs>();
+                var mecs = p.FindModulesImplementing<RealFuels.ModuleEngineConfigsBase>();
                 foreach (var mec in mecs)
                 {
+                    var sanitizedName = RealFuels.Utilities.SanitizeName(mec.configuration);
+                    if (ecmPartsList.Contains(sanitizedName))
+                        continue;
+                    
+                    ecmPartsList.Add(sanitizedName);
                     ConfigNode n = mec.configs.Find(c => c.GetValue("name") == mec.configuration);
                     if (n != null)
                     {
@@ -2160,26 +2182,18 @@ namespace KerbalConstructionTime
                         if (techRequired == null) continue;
 
                         ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(techRequired);
-                        bool partIsUnlocked = techState != null && techState.state == RDTech.State.Available &&
-                                              RUIutils.Any(techState.partsPurchased, (a => a.name == mec.configuration));
-                        if (!partIsUnlocked)
-                        {
-                            string cost = n.GetValue("cost");
-                            if (cost != null)
-                                partUpgradeCosts += Convert.ToSingle(cost);
-
-                            if (techState == null || techState.state != RDTech.State.Available)
-                            {
-                                if (!pendingTech.Contains(techRequired)) pendingTech.Add(techRequired);
-                            }
-                        }
+                        bool techIsUnlocked = techState != null && techState.state == RDTech.State.Available;
+                        if (!techIsUnlocked && !pendingTech.Contains(techRequired)) 
+                            pendingTech.Add(techRequired);
                     }
                 }
             }
 
+            var ecmCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList);
+
             var techList = RemoveParentsFromTechList(pendingTech);
-            float totalCost = partCost + partUpgradeCosts;
-            KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Parts: {partCost}, Upgrades: {partUpgradeCosts}");
+            float totalCost = runningCost + Convert.ToSingle(ecmCost);
+            KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Raw cost: {runningCost}, ECM cost: {ecmCost}");
             return new Tuple<float, List<string>>(totalCost, techList);
         }
 

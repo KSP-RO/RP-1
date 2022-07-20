@@ -98,6 +98,7 @@
     <Compile Include="Avionics\ProceduralAvionicsUnlockedNodes.cs" />
     <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
     <Compile Include="Harmony\StrategyPatches.cs" />
+    <Compile Include="Programs\ProgramSpeedListItem.cs" />
     <Compile Include="Programs\AdminExtender.cs" />
     <Compile Include="Programs\ProgramStrategy.cs" />
     <Compile Include="Programs\StrategySystemFixer.cs" />

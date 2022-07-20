@@ -371,7 +371,7 @@ namespace RP0.Programs
 
             ContractPreLoader.Instance.ResetGenerationFailure();
 
-            ProgramStrategy ps = Strategies.StrategySystem.Instance.Strategies.Find(s => s.Config.Name == activeP.name) as ProgramStrategy;
+            ProgramStrategy ps = activeP.GetStrategy();
             if (ps == null)
                 Debug.LogError($"[RP-0] ProgramHandler Error! Couldn't find Strategy to match program {activeP.name}");
             else

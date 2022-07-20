@@ -10,9 +10,11 @@ namespace RP0.Programs
     {
         public enum Speed
         {
-            Normal = 0,
-            Slow,
+            Slow = 0,
+            Normal,
             Fast,
+
+            MAX
         }
         private const string CN_CompleteContract = "COMPLETE_CONTRACT";
         private const double secsPerYear = 3600 * 24 * 365.25;
@@ -85,6 +87,9 @@ namespace RP0.Programs
         [Persistent]
         public Speed speed = Speed.Normal;
 
+        private Dictionary<Speed, double> trustCosts = new Dictionary<Speed, double>();
+        public double GetCostForSpeed(Speed spd) => trustCosts[spd];
+
         /// <summary>
         /// Texture URL
         /// </summary>
@@ -125,13 +130,15 @@ namespace RP0.Programs
 
         public bool IsActive => !IsComplete && acceptedUT != 0;
 
-        public bool CanAccept => !IsComplete && !IsActive && AllRequirementsMet;
+        public bool CanAccept => !IsComplete && !IsActive && AllRequirementsMet && MeetsTrustThreshold;
 
         public bool CanComplete => !IsComplete && IsActive && objectivesCompletedUT != 0;
 
         public bool AllRequirementsMet => _requirementsPredicate == null || _requirementsPredicate();
 
         public bool AllObjectivesMet => _objectivesPredicate == null || _objectivesPredicate();
+
+        public bool MeetsTrustThreshold => IsSpeedAllowed(speed);
 
         public Program()
         {
@@ -163,6 +170,7 @@ namespace RP0.Programs
             _objectivesPredicate = toCopy._objectivesPredicate;
             programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
             speed = toCopy.speed;
+            trustCosts = toCopy.trustCosts;
         }
 
         public void Load(ConfigNode node)
@@ -172,17 +180,32 @@ namespace RP0.Programs
             ConfigNode cn = node.GetNode("REQUIREMENTS");
             if (cn != null)
             {
-                RequirementBlock reqBlock = ParseRequirementBlock(cn);
-                RequirementsBlock = reqBlock;
-                _requirementsPredicate = reqBlock?.Expression.Compile();
+                try
+                {
+                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    RequirementsBlock = reqBlock;
+                    _requirementsPredicate = reqBlock?.Expression.Compile();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[RP-0] Exception loading requirements for program {name}: {e}");
+                }
             }
 
             cn = node.GetNode("OBJECTIVES");
             if (cn != null)
             {
-                RequirementBlock reqBlock = ParseRequirementBlock(cn);
-                ObjectivesBlock = reqBlock;
-                _objectivesPredicate = reqBlock?.Expression.Compile();
+                try
+                {
+                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    ObjectivesBlock = reqBlock;
+                    _objectivesPredicate = reqBlock?.Expression.Compile();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[RP-0] Exception loading objectives for program {name}: {e}");
+                }
+
             }
 
             cn = node.GetNode("DISABLE");
@@ -190,6 +213,25 @@ namespace RP0.Programs
             {
                 foreach (Value v in cn.values)
                     programsToDisableOnAccept.Add(v.name);
+            }
+
+            cn = node.GetNode("TRUSTCOSTS");
+            if (cn != null)
+            {
+                for (int i = 0; i < (int)Speed.MAX; ++i)
+                {
+                    Speed spd = (Speed)i;
+                    double cost = 0;
+                    cn.TryGetValue(spd.ToString(), ref cost);
+                    trustCosts[spd] = cost;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < (int)Speed.MAX; ++i)
+                {
+                    trustCosts[(Speed)i] = 0;
+                }
             }
         }
 
@@ -463,5 +505,24 @@ namespace RP0.Programs
 
             return text;
         }
+
+        public bool IsSpeedAllowed(Speed s)
+        {
+            return Reputation.CurrentRep >= trustCosts[s];
+        }
+
+        public void SetBestAllowableSpeed()
+        {
+            int max = (int)Speed.MAX;
+            speed = Speed.Slow;
+            for (int i = 0; i < max; ++i)
+            {
+                Speed spd = (Speed)i;
+                if (IsSpeedAllowed(spd))
+                    speed = spd;
+            }
+        }
+
+        public ProgramStrategy GetStrategy() => Strategies.StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;
     }
 }

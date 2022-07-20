@@ -61,6 +61,8 @@
     <Compile Include="AvionicsCheckFactory.cs" />
     <Compile Include="ContractClobberer.cs" />
     <Compile Include="CustomExpressionParserRegistrer.cs" />
+    <Compile Include="RP1CollectScience.cs" />
+    <Compile Include="RP1CollectScienceFactory.cs" />
     <Compile Include="DownrangeDistanceFactory.cs" />
     <Compile Include="DownrangeDistanceVesselParam.cs" />
     <Compile Include="HorizontalLandingFactory.cs" />

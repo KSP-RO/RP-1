@@ -478,7 +478,7 @@ namespace RP0.Programs
             }
             else
             {
-                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.#} years";
+                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years";
             }
 
             if (extendedInfo && !wasAccepted)

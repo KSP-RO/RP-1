@@ -161,6 +161,10 @@ namespace RP0
                 if (wrapper.strategy is ProgramStrategy ps)
                 {
                     ps.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
+
+                    // Set best speed before we get description
+                    if (!ps.Program.IsComplete && !ps.Program.IsActive)
+                        ps.Program.SetBestAllowableSpeed();
                 }
             }
 
@@ -172,9 +176,7 @@ namespace RP0
                 // not the red x.
                 if (wrapper.strategy is ProgramStrategy ps)
                 {
-                    string name = ps.Config.Name;
-                    Program program = ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == name);
-                    if (program != null)
+                    if (ps.Program.IsComplete)
                         __instance.btnAcceptCancel.gameObject.SetActive(false);
                     else if (__instance.btnAcceptCancel.currentState != "accept")
                     {
@@ -184,6 +186,12 @@ namespace RP0
                             tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = cancelTooltipStr;
                         __instance.btnAcceptCancel.SetState("accept");
                     }
+
+                    AdminExtender.Instance.SetSpeedButtonsActive(!ps.Program.IsActive && !ps.Program.IsComplete, ps.Program);
+                }
+                else
+                {
+                    AdminExtender.Instance.SetSpeedButtonsActive(false, null);
                 }
             }
 

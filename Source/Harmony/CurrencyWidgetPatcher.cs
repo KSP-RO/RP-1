@@ -18,14 +18,21 @@ namespace RP0
             [HarmonyPatch("DelayedStart")]
             internal static void Postfix_DelayedStart(FundsWidget __instance)
             {
+                var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
+
                 // Get foreground element
                 var foreground = __instance.transform.Find("Foreground");
+
+                // The top level object for the widget has a Canvas component but no
+                // GraphicRaycaster, we need one so OnMouseEnter/Exit events handled
+                // by the tooltip are triggered.
+                foreground.parent.gameObject.AddComponent<GraphicRaycaster>();
+
                 // Add tooltip
-                var tooltip = foreground.gameObject.AddComponent<TooltipController_Text>();
-                var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
-                tooltip.prefab = prefab;
-                tooltip.RequireInteractable = false;
-                tooltip.textString = "blah?";
+                var tooltip1 = foreground.gameObject.AddComponent<TooltipController_Text>();
+                tooltip1.prefab = prefab;
+                tooltip1.RequireInteractable = false;
+                tooltip1.textString = "Tooltip coming soon";
             }
         }
 

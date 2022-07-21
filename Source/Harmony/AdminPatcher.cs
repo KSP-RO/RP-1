@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using System.Reflection;
 using RP0.Programs;
 using UniLinq;
+using KSP.Localization;
 
 namespace RP0
 {
@@ -134,36 +135,21 @@ namespace RP0
 
                 ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
                 ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
-                __instance.activeStratCount.text = KSP.Localization.Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
+                __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
 
                 return false;
             }
-
-            internal static string cancelTooltipStr = String.Empty;
-            internal static string acceptTooltipStr = String.Empty;
 
             [HarmonyPrefix]
             [HarmonyPatch("SetSelectedStrategy")]
             internal static void Prefix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
             {
-                // Cache the loc strings, update tooltip
-                var tooltip = __instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
-                if (tooltip != null)
-                {
-                    if (string.IsNullOrEmpty(cancelTooltipStr))
-                        cancelTooltipStr = tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText;
-                    if (string.IsNullOrEmpty(acceptTooltipStr))
-                        acceptTooltipStr = tooltip.tooltipStates.First(s => s.name == "accept").tooltipText;
-                    else // update to the normal one
-                        tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = acceptTooltipStr;
-                }
-
                 if (wrapper.strategy is ProgramStrategy ps)
                 {
                     ps.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
 
                     // Set best speed before we get description
-                    if (!ps.Program.IsComplete && !ps.Program.IsActive)
+                    if (!ps.Program.IsComplete && !ps.Program.IsActive && !AdminExtender.Instance.PressedSpeedButton)
                         ps.Program.SetBestAllowableSpeed();
                 }
             }
@@ -172,18 +158,27 @@ namespace RP0
             [HarmonyPatch("SetSelectedStrategy")]
             internal static void Postfix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
             {
+                var tooltip = __instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
+
                 // If it's a Program, we always want to show the green checkmark
                 // not the red x.
                 if (wrapper.strategy is ProgramStrategy ps)
                 {
                     if (ps.Program.IsComplete)
                         __instance.btnAcceptCancel.gameObject.SetActive(false);
-                    else if (__instance.btnAcceptCancel.currentState != "accept")
+                    else if (__instance.btnAcceptCancel.currentState == "accept")
+                    {
+                        float cost = ps.Program.TrustCost;
+                        var stateAccept = tooltip.tooltipStates.First(s => s.name == "accept");
+                        if (cost > 0)
+                            stateAccept.tooltipText = Localizer.Format("#rp0AcceptProgramWithCost", cost.ToString("N0"));
+                        else
+                            stateAccept.tooltipText = Localizer.GetStringByTag("#autoLOC_900259");
+                    }
+                    else
                     {
                         // Use the "deactivate" tooltip for the accept button
-                        var tooltip = __instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
-                        if (tooltip != null)
-                            tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = cancelTooltipStr;
+                        tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.GetStringByTag("#autoLOC_900260");
                         __instance.btnAcceptCancel.SetState("accept");
                     }
 
@@ -191,6 +186,8 @@ namespace RP0
                 }
                 else
                 {
+                    tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.GetStringByTag("#rp0AppointLeader");
+                    tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText = Localizer.GetStringByTag("#rp0RemoveLeader");
                     AdminExtender.Instance.SetSpeedButtonsActive(false, null);
                 }
             }
@@ -209,8 +206,6 @@ namespace RP0
                         state = "cancel";
                 }
             }
-        }
-
-        
+        }       
     }
 }

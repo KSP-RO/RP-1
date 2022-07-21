@@ -59,7 +59,7 @@
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="TrustWidget.cs" />
-    <Compile Include="Triust.cs" />
+    <Compile Include="Trust.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Harmony\AdminPatcher.cs" />
     <Compile Include="LocalizationHandler.cs" />

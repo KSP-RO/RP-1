@@ -33,7 +33,10 @@ namespace RP0.Programs
         private UIListToggleController _tabController;
         public AdministrationActiveTabView ActiveTabView => _tabController == null ? AdministrationActiveTabView.Active : (AdministrationActiveTabView)CurrentListField.GetValue(_tabController);
 
-        private readonly Dictionary<Program.Speed, ProgramSpeedListItem> speedButtons = new Dictionary<Program.Speed, ProgramSpeedListItem>();
+        private readonly Dictionary<Program.Speed, ProgramSpeedListItem> _speedButtons = new Dictionary<Program.Speed, ProgramSpeedListItem>();
+        private KSP.UI.TooltipTypes.UIStateButtonTooltip buttonTooltip;
+
+        public bool PressedSpeedButton = false;
 
         private void OnClickTab(bool active)
         {
@@ -46,22 +49,24 @@ namespace RP0.Programs
             if (program == null)
                 active = false;
 
-            foreach (var item in speedButtons.Values)
+            foreach (var item in _speedButtons.Values)
             {
                 item.gameObject.SetActive(active);
                 if (active)
                 {
-                    double cost = program.GetCostForSpeed(item.Speed);
-                    bool interactable = program.speed >= item.Speed;
+                    double cost = program.GetTrustCostForSpeed(item.Speed);
+                    bool allowable = program.IsSpeedAllowed(item.Speed);
                     var sph = new SpeedButtonHolder(program.GetStrategy(), item.Speed);
-                    item.SetupButton(interactable, KSP.Localization.Localizer.Format("#rp0ProgramSpeedTrustRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
+                    item.SetupButton(allowable, KSP.Localization.Localizer.Format("#rp0ProgramSpeedTrustRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
                 }
             }
 
             if (active)
             {
-                speedButtons[program.speed].SetState(UIRadioButton.State.True);
+                _speedButtons[program.speed].SetState(UIRadioButton.State.True);
             }
+
+            PressedSpeedButton = false; // clear state
         }
 
         public class SpeedButtonHolder
@@ -70,6 +75,7 @@ namespace RP0.Programs
 
             private ProgramStrategy programStrategy;
             private Program.Speed speed;
+
             public SpeedButtonHolder(ProgramStrategy ps, Program.Speed s)
             {
                 programStrategy = ps;
@@ -78,19 +84,22 @@ namespace RP0.Programs
 
             public void OnSpeedSet(UnityEngine.EventSystems.PointerEventData data, UIRadioButton.CallType callType)
             {
-                var item = AdminExtender.Instance.speedButtons[speed];
+                var item = AdminExtender.Instance._speedButtons[speed];
                 item.ResetInteractivity(true);
+                var oldSpeed = programStrategy.Program.speed;
                 programStrategy.Program.speed = speed;
 
-
-                programStrategy.NextTextIsShowSelected = true;
-                programStrategy.CanBeActivated(out string reason);
-                Administration.Instance.selectedStrategyDescription.text = (string)GetStrategyDescriptionMethod.Invoke(Administration.Instance, new object[] { programStrategy.Description, programStrategy.Effect, reason });
+                // Update the description and the button on change
+                if (oldSpeed != speed)
+                {
+                    AdminExtender.Instance.PressedSpeedButton = true; // so we don't reset program speed
+                    Administration.Instance.SetSelectedStrategy(Administration.Instance.SelectedWrapper);
+                }
             }
 
             public void OnSpeedUnset(UnityEngine.EventSystems.PointerEventData data, UIRadioButton.CallType callType)
             {
-                AdminExtender.Instance.speedButtons[speed].ResetInteractivity(false);
+                AdminExtender.Instance._speedButtons[speed].ResetInteractivity(false);
             }
         }
 
@@ -191,7 +200,7 @@ namespace RP0.Programs
                 var speedItem = newButton.gameObject.AddComponent<ProgramSpeedListItem>();
                 newButton.gameObject.SetActive(true); // so Awake runs, if it hasn't
                 speedItem.Initialize(KSP.Localization.Localizer.GetStringByTag("#rp0ProgramSpeed" + i), spd);
-                speedButtons[spd] = speedItem;
+                _speedButtons[spd] = speedItem;
 
                 // Set layout
                 var lE = newButton.gameObject.AddComponent<LayoutElement>();
@@ -201,12 +210,13 @@ namespace RP0.Programs
             }
             buttonLE.transform.SetAsLastSibling();
 
-            foreach (var button in speedButtons.Values)
+            foreach (var button in _speedButtons.Values)
                 button.gameObject.SetActive(false);
         }
 
         public void BindAndFixUI()
         {
+            buttonTooltip = Administration.Instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
 
             RescaleMainUI();
 
@@ -217,7 +227,7 @@ namespace RP0.Programs
                 ProgramSpeedListItem[] items = buttonArea.GetComponentsInChildren<ProgramSpeedListItem>(true);
                 foreach (var item in items)
                 {
-                    speedButtons[item.Speed] = item;
+                    _speedButtons[item.Speed] = item;
                 }
 
                 return;

@@ -87,8 +87,9 @@ namespace RP0.Programs
         [Persistent]
         public Speed speed = Speed.Normal;
 
-        private Dictionary<Speed, double> trustCosts = new Dictionary<Speed, double>();
-        public double GetCostForSpeed(Speed spd) => trustCosts[spd];
+        private Dictionary<Speed, float> trustCosts = new Dictionary<Speed, float>();
+        public float GetTrustCostForSpeed(Speed spd) => trustCosts[spd];
+        public float TrustCost => trustCosts[speed];
 
         /// <summary>
         /// Texture URL
@@ -130,7 +131,7 @@ namespace RP0.Programs
 
         public bool IsActive => !IsComplete && acceptedUT != 0;
 
-        public bool CanAccept => !IsComplete && !IsActive && AllRequirementsMet && MeetsTrustThreshold;
+        public bool CanAccept => !IsComplete && !IsActive && AllRequirementsMet;
 
         public bool CanComplete => !IsComplete && IsActive && objectivesCompletedUT != 0;
 
@@ -221,7 +222,7 @@ namespace RP0.Programs
                 for (int i = 0; i < (int)Speed.MAX; ++i)
                 {
                     Speed spd = (Speed)i;
-                    double cost = 0;
+                    float cost = 0;
                     cn.TryGetValue(spd.ToString(), ref cost);
                     trustCosts[spd] = cost;
                 }
@@ -242,6 +243,8 @@ namespace RP0.Programs
 
         public Program Accept()
         {
+            Trust.Instance.AddTrust(-GetTrustCostForSpeed(speed), TransactionReasons.Mission);
+
             var p = new Program(this)
             {
                 acceptedUT = KSPUtils.GetUT(),
@@ -508,7 +511,7 @@ namespace RP0.Programs
 
         public bool IsSpeedAllowed(Speed s)
         {
-            return Reputation.CurrentRep >= trustCosts[s];
+            return Trust.CurrentTrust >= trustCosts[s];
         }
 
         public void SetBestAllowableSpeed()

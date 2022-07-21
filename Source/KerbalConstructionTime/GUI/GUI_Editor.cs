@@ -88,13 +88,13 @@ namespace KerbalConstructionTime
             }
 
             if (KCTGameStates.EditorIntegrationCosts > 0)
-                GUILayout.Label($"Integration Cost: √{Math.Round(KCTGameStates.EditorIntegrationCosts, 1):N1}");
+                GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorIntegrationCosts:N1}");
 
             if (KCTGameStates.EditorRolloutCosts > 0)
-                GUILayout.Label($"Rollout Cost: √{Math.Round(KCTGameStates.EditorRolloutCosts, 1):N1}");
+                GUILayout.Label($"Rollout Cost: √{KCTGameStates.EditorRolloutCosts:N1}");
 
             if (KCTGameStates.EditorUnlockCosts > 0)
-                GUILayout.Label($"Unlock Cost: √{Math.Round(KCTGameStates.EditorUnlockCosts, 1):N1}");
+                GUILayout.Label($"Unlock Cost: √{KCTGameStates.EditorUnlockCosts:N1}");
 
             if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {

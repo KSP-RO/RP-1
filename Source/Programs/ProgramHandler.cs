@@ -193,10 +193,10 @@ namespace RP0.Programs
 
         private void OnContractComplete(Contract data)
         {
-            StartCoroutine(ContractCompleteRoutine());
+            StartCoroutine(ContractCompleteRoutine(data));
         }
 
-        private IEnumerator ContractCompleteRoutine()
+        private IEnumerator ContractCompleteRoutine(Contract data)
         {
             // The contract will only be seen as completed after the ContractSystem has run it's next update
             // This will happen within 1 or 2 frames of the contract completion event getting fired.
@@ -211,6 +211,9 @@ namespace RP0.Programs
                     p.MarkObjectivesComplete();
                 }
             }
+
+            // HACK: This is adding too much trust, fix to not count requireds.
+            Trust.Instance.AddTrust(5 * data.ReputationCompletion, TransactionReasons.ContractReward);
         }
 
         private void ShowAdminGUI()
@@ -265,7 +268,7 @@ namespace RP0.Programs
         {
             bool isCompleted = p.IsComplete;
             bool isActive = p.IsActive;
-            bool canAccept = p.CanAccept;
+            bool canAccept = p.CanAccept && p.MeetsTrustThreshold;
             bool canComplete = p.CanComplete;
 
             GUILayout.BeginVertical(HighLogic.Skin.box);

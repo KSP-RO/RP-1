@@ -55,7 +55,7 @@ namespace RP0.Programs
             if (isSelected)
                 toggleButton.Interactable = false;
             else
-                toggleButton.Interactable = _allowable;
+                toggleButton.Interactable = true; // was _allowable -- but we want it always clickable, just colored.
         }
 
         public void SetState(UIRadioButton.State state)
@@ -71,7 +71,7 @@ namespace RP0.Programs
             toggleButton.Data = program;
             toggleButton.onTrue.AddListener(onTrue);
             toggleButton.onFalse.AddListener(onFalse);
-            toggleButton.Interactable = allowed;
+            toggleButton.Interactable = true; // was allowed -- but we want it always clickable, just colored.
 
             tooltipController.SetText(tooltip);
 

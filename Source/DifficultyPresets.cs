@@ -78,6 +78,9 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;
 
+        [GameParameters.CustomFloatParameterUI("Starting Trust", minValue = 0f, maxValue = 1000f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
+        public float StartingTrust = 500f;
+
         [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 0f, maxValue = 200f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float RepLossKerbalDeathFixed = 100f;
 
@@ -129,6 +132,7 @@ namespace RP0
                     ContractDeadlineMult = 1.7f;
                     RepLossKerbalDeathFixed = 50f;
                     RepLossKerbalDeathPercent = 0.05f;
+                    StartingTrust = 750f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
@@ -138,6 +142,7 @@ namespace RP0
                     ContractDeadlineMult = 1.3f;
                     RepLossKerbalDeathFixed = 80f;
                     RepLossKerbalDeathPercent = 0.08f;
+                    StartingTrust = 500f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
@@ -147,6 +152,7 @@ namespace RP0
                     ContractDeadlineMult = 1f;
                     RepLossKerbalDeathFixed = 100f;
                     RepLossKerbalDeathPercent = 0.1f;
+                    StartingTrust = 500f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
@@ -156,6 +162,7 @@ namespace RP0
                     ContractDeadlineMult = 0.8f;
                     RepLossKerbalDeathFixed = 200f;
                     RepLossKerbalDeathPercent = 0.2f;
+                    StartingTrust = 350f;
                     break;
             }
         }

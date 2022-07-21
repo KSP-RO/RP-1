@@ -86,6 +86,12 @@ namespace RP0.Programs
                 return false;
             }
 
+            if (!_program.MeetsTrustThreshold)
+            {
+                reason = $"This Program requires {_program.TrustCost:N0} to accept at this speed.";
+                return false;
+            }
+
             // Handled by base in the Admin screen.
             //if (ProgramHandler.Instance.ActivePrograms.Count >= ProgramHandler.Instance.ActiveProgramLimit)
             //    return false;

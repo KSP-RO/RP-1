@@ -114,6 +114,8 @@ namespace RP0.Programs
 
         public List<string> programsToDisableOnAccept = new List<string>();
 
+        public List<string> optionalContracts = new List<string>();
+
         public RequirementBlock RequirementsBlock;
         public RequirementBlock ObjectivesBlock;
 
@@ -170,6 +172,7 @@ namespace RP0.Programs
             _requirementsPredicate = toCopy._requirementsPredicate;
             _objectivesPredicate = toCopy._objectivesPredicate;
             programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
+            optionalContracts = toCopy.optionalContracts;
             speed = toCopy.speed;
             trustCosts = toCopy.trustCosts;
         }
@@ -214,6 +217,13 @@ namespace RP0.Programs
             {
                 foreach (Value v in cn.values)
                     programsToDisableOnAccept.Add(v.name);
+            }
+
+            cn = node.GetNode("OPTIONALS");
+            if (cn != null)
+            {
+                foreach (Value v in cn.values)
+                    optionalContracts.Add(v.name);
             }
 
             cn = node.GetNode("TRUSTCOSTS");

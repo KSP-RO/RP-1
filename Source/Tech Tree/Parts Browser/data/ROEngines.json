@@ -2540,6 +2540,30 @@
         ]
     },
     {
+        "name": "ROE-HM7",
+        "title": "HM-7",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 500,
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1966",
+        "technology": "improvedHydrolox",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "HM7",
+        "upgrade": false,
+        "entry_cost_mods": "HM-7",
+        "identical_part_name": "HM-7",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-HiPAT",
         "title": "R-4D HiPAT (445N)",
         "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world's communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini's orbit insertion of Saturn.",

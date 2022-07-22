@@ -593,11 +593,12 @@ namespace RP0.ProceduralAvionics
             Log($"Setting science container to {(CurrentProceduralAvionicsTechNode.hasScienceContainer ? "enabled." : "disabled.")}");
         }
 
-        public virtual bool Validate(out string validationError, out bool canBeResolved, out float costToResolve)
+        public virtual bool Validate(out string validationError, out bool canBeResolved, out float costToResolve, out string techToResolve)
         {
             validationError = null;
             canBeResolved = false;
             costToResolve = 0;
+            techToResolve = null;
 
             if (CurrentProceduralAvionicsConfig == null && !string.IsNullOrEmpty(avionicsConfigName))
                 CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
@@ -605,6 +606,7 @@ namespace RP0.ProceduralAvionics
             if (!CurrentProceduralAvionicsTechNode.IsAvailable)
             {
                 validationError = $"unlock tech {CurrentProceduralAvionicsTechNode.TechNodeTitle}";
+                techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
                 return false;
             }
 

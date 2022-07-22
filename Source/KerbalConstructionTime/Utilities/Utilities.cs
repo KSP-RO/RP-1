@@ -724,18 +724,18 @@ namespace KerbalConstructionTime
             KCTGameStates.SciPointsTotal += changeDelta;
             KCTDebug.Log("Total sci points earned is now: " + KCTGameStates.SciPointsTotal);
 
-            double upgradesBef = ApplicantPacketsForScience(pointsBef);
-            double upgradesAft = ApplicantPacketsForScience(KCTGameStates.SciPointsTotal);
-            KCTDebug.Log($"Upg points bef: {upgradesBef}; aft: {upgradesAft}");
+            //double upgradesBef = ApplicantPacketsForScience(pointsBef);
+            //double upgradesAft = ApplicantPacketsForScience(KCTGameStates.SciPointsTotal);
+            //KCTDebug.Log($"Upg points bef: {upgradesBef}; aft: {upgradesAft}");
 
-            int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
-            if (upgradesToAdd > 0)
-            {
-                int numWorkers = upgradesToAdd * LCItem.EngineersPerPacket;
-                KCTGameStates.UnassignedPersonnel += numWorkers;
-                KCTDebug.Log($"Added {numWorkers} workers from science points");
-                ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
-            }
+            //int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
+            //if (upgradesToAdd > 0)
+            //{
+            //    int numWorkers = upgradesToAdd * LCItem.EngineersPerPacket;
+            //    KCTGameStates.UnassignedPersonnel += numWorkers;
+            //    KCTDebug.Log($"Added {numWorkers} workers from science points");
+            //    ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
+            //}
         }
 
         public static void EnsureCurrentSaveHasSciTotalsInitialized(float changeDelta)

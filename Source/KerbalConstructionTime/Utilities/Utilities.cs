@@ -2144,7 +2144,7 @@ namespace KerbalConstructionTime
                 if (rawCost == ecmEstCost)
                 {
                     // this part is managed by the ECM, save its name later for a batch request
-                    string sanitizedName = RealFuels.Utilities.SanitizeName(part.name);
+                    string sanitizedName = RealFuels.Utilities.GetPartName(part.name);
                     if (!ecmPartsList.Contains(sanitizedName)) 
                         ecmPartsList.Add(sanitizedName);
                 }
@@ -2162,10 +2162,10 @@ namespace KerbalConstructionTime
             // now back through the list looking for upgrades to add to our batch list
             foreach (Part p in ship.Parts)
             {
-                var mecs = p.FindModulesImplementing<RealFuels.ModuleEngineConfigsBase>();
-                foreach (RealFuels.ModuleEngineConfigsBase mec in mecs)
+                var mecs = p.FindModulesImplementing<RealFuels.ModuleEngineConfigs>();
+                foreach (RealFuels.ModuleEngineConfigs mec in mecs)
                 {
-                    string sanitizedName = RealFuels.Utilities.SanitizeName(mec.configuration);
+                    string sanitizedName = RealFuels.Utilities.GetPartName(mec.configuration);
                     if (ecmPartsList.Contains(sanitizedName))
                         continue;
                     

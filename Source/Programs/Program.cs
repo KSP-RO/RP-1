@@ -87,9 +87,9 @@ namespace RP0.Programs
         [Persistent]
         public Speed speed = Speed.Normal;
 
-        private Dictionary<Speed, float> trustCosts = new Dictionary<Speed, float>();
-        public float GetTrustCostForSpeed(Speed spd) => trustCosts[spd];
-        public float TrustCost => trustCosts[speed];
+        private Dictionary<Speed, float> confidenceCosts = new Dictionary<Speed, float>();
+        public float GetConfidenceCostForSpeed(Speed spd) => confidenceCosts[spd];
+        public float ConfidenceCost => confidenceCosts[speed];
 
         /// <summary>
         /// Texture URL
@@ -141,7 +141,7 @@ namespace RP0.Programs
 
         public bool AllObjectivesMet => _objectivesPredicate == null || _objectivesPredicate();
 
-        public bool MeetsTrustThreshold => IsSpeedAllowed(speed);
+        public bool MeetsConfidenceThreshold => IsSpeedAllowed(speed);
 
         public Program()
         {
@@ -174,7 +174,7 @@ namespace RP0.Programs
             programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
             optionalContracts = toCopy.optionalContracts;
             speed = toCopy.speed;
-            trustCosts = toCopy.trustCosts;
+            confidenceCosts = toCopy.confidenceCosts;
         }
 
         public void Load(ConfigNode node)
@@ -226,7 +226,7 @@ namespace RP0.Programs
                     optionalContracts.Add(v.name);
             }
 
-            cn = node.GetNode("TRUSTCOSTS");
+            cn = node.GetNode("CONFIDENCECOSTS");
             if (cn != null)
             {
                 for (int i = 0; i < (int)Speed.MAX; ++i)
@@ -234,14 +234,14 @@ namespace RP0.Programs
                     Speed spd = (Speed)i;
                     float cost = 0;
                     cn.TryGetValue(spd.ToString(), ref cost);
-                    trustCosts[spd] = cost;
+                    confidenceCosts[spd] = cost;
                 }
             }
             else
             {
                 for (int i = 0; i < (int)Speed.MAX; ++i)
                 {
-                    trustCosts[(Speed)i] = 0;
+                    confidenceCosts[(Speed)i] = 0;
                 }
             }
         }
@@ -253,7 +253,7 @@ namespace RP0.Programs
 
         public Program Accept()
         {
-            Trust.Instance.AddTrust(-GetTrustCostForSpeed(speed), TransactionReasons.Mission);
+            Confidence.Instance.AddConfidence(-GetConfidenceCostForSpeed(speed), TransactionReasons.Mission);
 
             var p = new Program(this)
             {
@@ -521,7 +521,7 @@ namespace RP0.Programs
 
         public bool IsSpeedAllowed(Speed s)
         {
-            return Trust.CurrentTrust >= trustCosts[s];
+            return Confidence.CurrentConfidence >= confidenceCosts[s];
         }
 
         public void SetBestAllowableSpeed()

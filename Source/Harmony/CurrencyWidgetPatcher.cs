@@ -40,8 +40,6 @@ namespace RP0
         internal class PatchReputationWidget
         {
             public static TextMeshProUGUI RepLabel;
-            internal static Sprite repSprite = null;
-            internal static Sprite trustSprite = null;
 
             [HarmonyPrefix]
             [HarmonyPatch("onReputationChanged")]
@@ -55,32 +53,32 @@ namespace RP0
                 return false;
             }
 
-            internal static void CreateTrustWidget(GameObject trustWidgetObj)
+            internal static void CreateConfidenceWidget(GameObject confidenceWidgetObj)
             {
-                trustWidgetObj.name = "TrustWidget";
+                confidenceWidgetObj.name = "ConfidenceWidget";
 
-                GameObject.Destroy(trustWidgetObj.GetComponent<ReputationWidget>());
+                GameObject.Destroy(confidenceWidgetObj.GetComponent<ReputationWidget>());
 
-                var frameImage = (Image)trustWidgetObj.GetComponentInChildren(typeof(Image));
-                frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-0/Resources/trust_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
+                var frameImage = (Image)confidenceWidgetObj.GetComponentInChildren(typeof(Image));
+                frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-0/Resources/confidence_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
 
-                var img = GameObject.Instantiate(new GameObject("Background"), trustWidgetObj.transform, worldPositionStays: false).AddComponent<Image>();
+                var img = GameObject.Instantiate(new GameObject("Background"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<Image>();
                 img.color = new Color32(58, 58, 63, 255);
                 img.rectTransform.anchorMin = frameImage.rectTransform.anchorMin;
                 img.rectTransform.anchorMax = frameImage.rectTransform.anchorMax;
                 img.rectTransform.anchoredPosition = frameImage.rectTransform.anchoredPosition;
-                img.rectTransform.sizeDelta = ((RectTransform)trustWidgetObj.transform).sizeDelta;    // No idea why the frame image transform is larger than the component itself
+                img.rectTransform.sizeDelta = ((RectTransform)confidenceWidgetObj.transform).sizeDelta;    // No idea why the frame image transform is larger than the component itself
 
-                var textComp = GameObject.Instantiate(new GameObject("Text"), trustWidgetObj.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
+                var textComp = GameObject.Instantiate(new GameObject("Text"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
                 textComp.alignment = TextAlignmentOptions.Right;
                 textComp.color = XKCDColors.KSPBadassGreen;
                 textComp.fontSize = 22;
                 textComp.rectTransform.localPosition = new Vector3(-9, -1, 0);
                 textComp.fontStyle = FontStyles.Bold;
 
-                var trustWidget = trustWidgetObj.AddComponent<TrustWidget>();
-                trustWidget.text = textComp;
-                trustWidget.DelayedStart();
+                var confidenceWidget = confidenceWidgetObj.AddComponent<ConfidenceWidget>();
+                confidenceWidget.text = textComp;
+                confidenceWidget.DelayedStart();
             }
 
             [HarmonyPrefix]
@@ -91,8 +89,8 @@ namespace RP0
                 __instance.gauge = null;
                 GameObject.DestroyImmediate(__instance.gameObject.transform.Find("circularGauge").gameObject);
 
-                // Create the Trust widget
-                CreateTrustWidget(GameObject.Instantiate(__instance.gameObject, __instance.transform.parent, worldPositionStays: false));
+                // Create the Confidence widget
+                CreateConfidenceWidget(GameObject.Instantiate(__instance.gameObject, __instance.transform.parent, worldPositionStays: false));
 
                 var frameImage = (Image)__instance.gameObject.GetComponentInChildren(typeof(Image));
                 frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-0/Resources/rep_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);

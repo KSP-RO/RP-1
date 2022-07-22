@@ -86,9 +86,9 @@ namespace RP0.Programs
                 return false;
             }
 
-            if (!_program.MeetsTrustThreshold)
+            if (!_program.MeetsConfidenceThreshold)
             {
-                reason = $"This Program requires {_program.TrustCost:N0} to accept at this speed.";
+                reason = $"This Program requires {_program.ConfidenceCost:N0} to accept at this speed.";
                 return false;
             }
 

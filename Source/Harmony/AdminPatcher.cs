@@ -168,7 +168,7 @@ namespace RP0
                         __instance.btnAcceptCancel.gameObject.SetActive(false);
                     else if (__instance.btnAcceptCancel.currentState == "accept")
                     {
-                        float cost = ps.Program.TrustCost;
+                        float cost = ps.Program.ConfidenceCost;
                         var stateAccept = tooltip.tooltipStates.First(s => s.name == "accept");
                         if (cost > 0)
                             stateAccept.tooltipText = Localizer.Format("#rp0AcceptProgramWithCost", cost.ToString("N0"));

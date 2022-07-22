@@ -191,6 +191,19 @@ namespace RP0.Programs
             }
         }
 
+        public bool IsContractOptional(ConfiguredContract cc)
+        {
+            foreach (Program p in ActivePrograms)
+            {
+                if (p.optionalContracts.Contains(cc.contractType.name))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void OnContractComplete(Contract data)
         {
             StartCoroutine(ContractCompleteRoutine(data));
@@ -214,16 +227,13 @@ namespace RP0.Programs
 
             if (data is ConfiguredContract cc)
             {
-                bool isOpt = false;
-                foreach (Program p in ActivePrograms)
-                {
-                    if (p.optionalContracts.Contains(cc.contractType.name))
-                    {
-                        isOpt = true;
-                        break;
-                    }
-                }
-                if (isOpt)
+                // Handle KCT applicants
+                int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
+                if (applicants > 0)
+                    KerbalConstructionTime.KCTGameStates.UnassignedPersonnel += applicants;
+
+                // Handle Confidence
+                if (IsContractOptional(cc))
                 {
                     float rep = 0;
                     foreach (var param in cc.AllParameters)

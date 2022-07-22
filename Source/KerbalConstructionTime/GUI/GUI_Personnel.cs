@@ -46,13 +46,6 @@ namespace KerbalConstructionTime
             GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Total Science:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.SciPointsTotal.ToString("N1"), GetLabelRightAlignStyle(), GUILayout.Width(60));
-            GUILayout.Label("Next Applicants Science:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label(Utilities.ScienceForNextApplicants().ToString("N1"), GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal(); 
-
             int tE = KCTGameStates.TotalEngineers;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));

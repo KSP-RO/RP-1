@@ -18,8 +18,6 @@ namespace RP0
             [HarmonyPatch("DelayedStart")]
             internal static void Postfix_DelayedStart(FundsWidget __instance)
             {
-                var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
-
                 // Get foreground element
                 var foreground = __instance.transform.Find("Foreground");
 
@@ -29,10 +27,20 @@ namespace RP0
                 foreground.parent.gameObject.AddComponent<GraphicRaycaster>();
 
                 // Add tooltip
-                var tooltip1 = foreground.gameObject.AddComponent<TooltipController_Text>();
-                tooltip1.prefab = prefab;
-                tooltip1.RequireInteractable = false;
-                tooltip1.textString = "Tooltip coming soon";
+                var tooltip = foreground.gameObject.AddComponent<TooltipController_TextFunc>();
+                var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
+                tooltip.RequireInteractable = false;
+                tooltip.prefab = prefab;
+                tooltip.getStringAction = GetTooltipText;
+                tooltip.continuousUpdate = false;
+            }
+
+            private static string GetTooltipText()
+            {
+                return Localizer.Format("#rp0FundsWidgetTooltip",
+                                        LocalizationHandler.FormatValuePositiveNegative(KCTGameStates.GetBudgetDelta(86400d), "N1"),
+                                        LocalizationHandler.FormatValuePositiveNegative(KCTGameStates.GetBudgetDelta(86400d * 30d), "N0"),
+                                        LocalizationHandler.FormatValuePositiveNegative(KCTGameStates.GetBudgetDelta(86400d * 365.25d), "N0"));
             }
         }
 
@@ -79,6 +87,13 @@ namespace RP0
                 var confidenceWidget = confidenceWidgetObj.AddComponent<ConfidenceWidget>();
                 confidenceWidget.text = textComp;
                 confidenceWidget.DelayedStart();
+
+                // Add tooltip
+                var tooltip = confidenceWidgetObj.AddComponent<TooltipController_TextFunc>();
+                var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
+                tooltip.prefab = prefab;
+                tooltip.getStringAction = GetTooltipTextConf;
+                tooltip.continuousUpdate = true;
             }
 
             [HarmonyPrefix]
@@ -113,13 +128,18 @@ namespace RP0
                 var tooltip = __instance.gameObject.AddComponent<TooltipController_TextFunc>();
                 var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
                 tooltip.prefab = prefab;
-                tooltip.getStringAction = GetTooltipText;
-                tooltip.continuousUpdate = true;
+                tooltip.getStringAction = GetTooltipTextRep;
+                tooltip.continuousUpdate = false;
 
                 return true;
             }
 
-            private static string GetTooltipText()
+            private static string GetTooltipTextConf()
+            {
+                return Localizer.Format("#rp0ConfidenceWidgetTooltip", Confidence.AllConfidenceEarned.ToString("N0"));
+            }
+
+            private static string GetTooltipTextRep()
             {
                 MaintenanceHandler.SubsidyDetails details = MaintenanceHandler.Instance.GetSubsidyDetails();
                 double repLostPerDay = Reputation.Instance.reputation * MaintenanceHandler.Settings.repPortionLostPerDay;
@@ -149,8 +169,7 @@ namespace RP0
             private static string GetTooltipText()
             {
                 return Localizer.Format("#rp0ScienceWidgetTooltip",
-                                        KCTGameStates.SciPointsTotal.ToString("N1"),
-                                        KerbalConstructionTime.Utilities.ScienceForNextApplicants().ToString("N1"));
+                                        System.Math.Max(0, KCTGameStates.SciPointsTotal).ToString("N1"));
             }
         }
     }

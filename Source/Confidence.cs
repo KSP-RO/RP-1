@@ -10,7 +10,12 @@ namespace RP0
         [KSPField(isPersistant = true)]
         private float confidence = 0f;
 
+        [KSPField(isPersistant = true)]
+        private float confidenceEarned = 0f;
+
         public static float CurrentConfidence => Instance == null ? 0 : Instance.confidence;
+
+        public static float AllConfidenceEarned => Instance == null ? 0 : Instance.confidenceEarned;
 
         public static EventData<float, TransactionReasons> OnConfidenceChanged;
 
@@ -44,7 +49,11 @@ namespace RP0
             float oldConfidence = confidence;
             confidence = Mathf.Max(0f, confidence + delta);
             if (confidence != oldConfidence)
+            {
                 OnConfidenceChanged.Fire(confidence, reason);
+                if (delta > 0f)
+                    confidenceEarned += delta;
+            }
         }
 
         public void SetConfidence(float newConfidence, TransactionReasons reason)
@@ -52,7 +61,10 @@ namespace RP0
             float oldConfidence = confidence;
             confidence = Mathf.Max(0f, newConfidence);
             if (confidence != oldConfidence)
+            {
                 OnConfidenceChanged.Fire(confidence, reason);
+                confidenceEarned += (confidence - oldConfidence);
+            }
         }
 
         private void OnScienceChanged(float sci, TransactionReasons reason)

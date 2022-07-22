@@ -31,7 +31,7 @@ namespace RP0
                 List<Strategy> list = new List<Strategy>();
 
                 // Cache what programs can be accepted (and which have been completed)
-                // We don't care about trust thresholds because you can always accept at Slow speed
+                // We don't care about confidence thresholds because you can always accept at Slow speed
                 foreach (Program p in ProgramHandler.Programs)
                     if (p.CanAccept && !ProgramHandler.Instance.DisabledPrograms.Contains(p.name))
                         acceptablePrograms.Add(p.name);

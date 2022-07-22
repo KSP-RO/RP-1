@@ -12,7 +12,7 @@ CHIEF DESIGNER
 			+ Research Speed (Technical Genius)
 			+ Fast Versions of Programs always available (Political Savvy)
 			+ Reputation Gain (Charismatic)
-			- Trust (Nazi Ties)
+			- Confidence (Nazi Ties)
 			- Total Allowed Engineers (early competiton split progress)
 	Elon Musk - USA
 			

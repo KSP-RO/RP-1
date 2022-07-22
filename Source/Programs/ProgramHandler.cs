@@ -229,7 +229,7 @@ namespace RP0.Programs
                     foreach (var param in cc.AllParameters)
                         if (param.Optional && param.ReputationCompletion > 0 && param.State == ParameterState.Complete)
                             rep += param.ReputationCompletion;
-                    Trust.Instance.AddTrust(5 * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
+                    Confidence.Instance.AddConfidence(5 * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
                 }
             }
         }
@@ -286,7 +286,7 @@ namespace RP0.Programs
         {
             bool isCompleted = p.IsComplete;
             bool isActive = p.IsActive;
-            bool canAccept = p.CanAccept && p.MeetsTrustThreshold;
+            bool canAccept = p.CanAccept && p.MeetsConfidenceThreshold;
             bool canComplete = p.CanComplete;
 
             GUILayout.BeginVertical(HighLogic.Skin.box);

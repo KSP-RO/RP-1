@@ -9,6 +9,8 @@ namespace RP0
         {
             if (MaintenanceHandler.OnRP0MaintenanceChanged == null)
                 MaintenanceHandler.OnRP0MaintenanceChanged = new EventVoid("OnRP0MaintenanceChanged");
+            if(Trust.OnTrustChanged == null)
+                Trust.OnTrustChanged = new EventData<float, TransactionReasons>("OnTrustChanged");
 
             Destroy(this);
         }

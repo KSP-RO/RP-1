@@ -193,10 +193,10 @@ namespace RP0.Programs
 
         private void OnContractComplete(Contract data)
         {
-            StartCoroutine(ContractCompleteRoutine());
+            StartCoroutine(ContractCompleteRoutine(data));
         }
 
-        private IEnumerator ContractCompleteRoutine()
+        private IEnumerator ContractCompleteRoutine(Contract data)
         {
             // The contract will only be seen as completed after the ContractSystem has run it's next update
             // This will happen within 1 or 2 frames of the contract completion event getting fired.
@@ -211,6 +211,9 @@ namespace RP0.Programs
                     p.MarkObjectivesComplete();
                 }
             }
+
+            // HACK: This is adding too much trust, fix to not count requireds.
+            Trust.Instance.AddTrust(5 * data.ReputationCompletion, TransactionReasons.ContractReward);
         }
 
         private void ShowAdminGUI()
@@ -265,7 +268,7 @@ namespace RP0.Programs
         {
             bool isCompleted = p.IsComplete;
             bool isActive = p.IsActive;
-            bool canAccept = p.CanAccept;
+            bool canAccept = p.CanAccept && p.MeetsTrustThreshold;
             bool canComplete = p.CanComplete;
 
             GUILayout.BeginVertical(HighLogic.Skin.box);
@@ -356,16 +359,6 @@ namespace RP0.Programs
             GUILayout.EndVertical();
         }
 
-        public bool ActivateProgram(string name)
-        {
-            Program p = Programs.Find(p2 => p2.name == name);
-            if (p == null)
-                return false;
-
-            ActivateProgram(p);
-            return true;
-        }
-
         public void ActivateProgram(Program p)
         {
             if (p == null)
@@ -374,30 +367,29 @@ namespace RP0.Programs
                 return;
             }
 
-            ActivePrograms.Add(p.Accept());
+            Program activeP = p.Accept();
+            ActivePrograms.Add(activeP);
             foreach (string s in p.programsToDisableOnAccept)
                 DisableProgram(s);
 
             ContractPreLoader.Instance.ResetGenerationFailure();
 
+            ProgramStrategy ps = activeP.GetStrategy();
+            if (ps == null)
+                Debug.LogError($"[RP-0] ProgramHandler Error! Couldn't find Strategy to match program {activeP.name}");
+            else
+                ps.SetProgram(activeP);
+
+
             KerbalConstructionTime.KCTGameStates.StartedProgram = true;
         }
 
-        public bool CompleteProgram(string name)
-        {
-            Program p = ActivePrograms.Find(p2 => p2.name == name);
-            if (p == null)
-                return false;
-
-            CompleteProgram(p);
-            return true;
-        }
-
-        private void CompleteProgram(Program p)
+        public void CompleteProgram(Program p)
         {
             ActivePrograms.Remove(p);
             CompletedPrograms.Add(p);
             p.Complete();
+            // No change needed to ProgramStrategy because reference holds.
             ContractPreLoader.Instance.ResetGenerationFailure();
         }
 

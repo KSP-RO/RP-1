@@ -10,9 +10,11 @@ namespace RP0.Programs
     {
         public enum Speed
         {
-            Normal = 0,
-            Slow,
+            Slow = 0,
+            Normal,
             Fast,
+
+            MAX
         }
         private const string CN_CompleteContract = "COMPLETE_CONTRACT";
         private const double secsPerYear = 3600 * 24 * 365.25;
@@ -85,6 +87,10 @@ namespace RP0.Programs
         [Persistent]
         public Speed speed = Speed.Normal;
 
+        private Dictionary<Speed, float> trustCosts = new Dictionary<Speed, float>();
+        public float GetTrustCostForSpeed(Speed spd) => trustCosts[spd];
+        public float TrustCost => trustCosts[speed];
+
         /// <summary>
         /// Texture URL
         /// </summary>
@@ -108,6 +114,8 @@ namespace RP0.Programs
 
         public List<string> programsToDisableOnAccept = new List<string>();
 
+        public List<string> optionalContracts = new List<string>();
+
         public RequirementBlock RequirementsBlock;
         public RequirementBlock ObjectivesBlock;
 
@@ -116,13 +124,8 @@ namespace RP0.Programs
 
         public static double TotalFundingCalc(Speed spd, double funds)
         {
-            double mult = 1d;
-            switch (spd)
-            {
-                case Speed.Fast: mult = 4d / 3d; break;
-                case Speed.Slow: mult = 2d / 3d; break;
-            }
-            return funds * mult * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+            // For now, no change in funding.
+            return funds * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
         }
         public double TotalFunding => totalFunding > 0 ? totalFunding : TotalFundingCalc(speed, baseFunding);
 
@@ -137,6 +140,8 @@ namespace RP0.Programs
         public bool AllRequirementsMet => _requirementsPredicate == null || _requirementsPredicate();
 
         public bool AllObjectivesMet => _objectivesPredicate == null || _objectivesPredicate();
+
+        public bool MeetsTrustThreshold => IsSpeedAllowed(speed);
 
         public Program()
         {
@@ -167,7 +172,9 @@ namespace RP0.Programs
             _requirementsPredicate = toCopy._requirementsPredicate;
             _objectivesPredicate = toCopy._objectivesPredicate;
             programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
+            optionalContracts = toCopy.optionalContracts;
             speed = toCopy.speed;
+            trustCosts = toCopy.trustCosts;
         }
 
         public void Load(ConfigNode node)
@@ -177,17 +184,32 @@ namespace RP0.Programs
             ConfigNode cn = node.GetNode("REQUIREMENTS");
             if (cn != null)
             {
-                RequirementBlock reqBlock = ParseRequirementBlock(cn);
-                RequirementsBlock = reqBlock;
-                _requirementsPredicate = reqBlock?.Expression.Compile();
+                try
+                {
+                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    RequirementsBlock = reqBlock;
+                    _requirementsPredicate = reqBlock?.Expression.Compile();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[RP-0] Exception loading requirements for program {name}: {e}");
+                }
             }
 
             cn = node.GetNode("OBJECTIVES");
             if (cn != null)
             {
-                RequirementBlock reqBlock = ParseRequirementBlock(cn);
-                ObjectivesBlock = reqBlock;
-                _objectivesPredicate = reqBlock?.Expression.Compile();
+                try
+                {
+                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    ObjectivesBlock = reqBlock;
+                    _objectivesPredicate = reqBlock?.Expression.Compile();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[RP-0] Exception loading objectives for program {name}: {e}");
+                }
+
             }
 
             cn = node.GetNode("DISABLE");
@@ -195,6 +217,32 @@ namespace RP0.Programs
             {
                 foreach (Value v in cn.values)
                     programsToDisableOnAccept.Add(v.name);
+            }
+
+            cn = node.GetNode("OPTIONALS");
+            if (cn != null)
+            {
+                foreach (Value v in cn.values)
+                    optionalContracts.Add(v.name);
+            }
+
+            cn = node.GetNode("TRUSTCOSTS");
+            if (cn != null)
+            {
+                for (int i = 0; i < (int)Speed.MAX; ++i)
+                {
+                    Speed spd = (Speed)i;
+                    float cost = 0;
+                    cn.TryGetValue(spd.ToString(), ref cost);
+                    trustCosts[spd] = cost;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < (int)Speed.MAX; ++i)
+                {
+                    trustCosts[(Speed)i] = 0;
+                }
             }
         }
 
@@ -205,6 +253,8 @@ namespace RP0.Programs
 
         public Program Accept()
         {
+            Trust.Instance.AddTrust(-GetTrustCostForSpeed(speed), TransactionReasons.Mission);
+
             var p = new Program(this)
             {
                 acceptedUT = KSPUtils.GetUT(),
@@ -399,5 +449,93 @@ namespace RP0.Programs
 
             return req;
         }
+
+        public string GetDescription(bool extendedInfo)
+        {
+            double duration = DurationYears;
+            bool wasAccepted = IsActive || IsComplete;
+
+            string objectives, requirements;
+            if (extendedInfo)
+            {
+                var tmp = ObjectivesBlock?.ToString(doColoring: wasAccepted);
+                objectives = $"<b>Objectives</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
+
+                tmp = RequirementsBlock?.ToString(doColoring: !wasAccepted);
+                requirements = $"<b>Requirements</b>:\n{(string.IsNullOrWhiteSpace(tmp) ? "None" : tmp)}";
+            }
+            else
+            {
+                objectives = $"<b>Objectives</b>: {objectivesPrettyText}";
+                requirements = $"<b>Requirements</b>: {requirementsPrettyText}";
+            }
+
+            string text = $"{objectives}\n\nTotal Funds: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{TotalFunding:N0}\n";
+            if (wasAccepted)
+            {
+                text += $"Funds Paid Out: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT, false, false)}\n";
+                if (IsComplete)
+                {
+                    if (extendedInfo)
+                        text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDate(completedUT, false, false)}";
+                    else
+                        text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDateCompact(completedUT, false, false)}";
+                }
+                else
+                {
+                    if (extendedInfo)
+                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDate(acceptedUT + duration * 365.25d * 86400d, false, false)}";
+                    else
+                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT + duration * 365.25d * 86400d, false, false)}";
+                }
+            }
+            else
+            {
+                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years";
+            }
+
+            if (extendedInfo && !wasAccepted)
+            {
+                if (programsToDisableOnAccept.Count > 0)
+                {
+                    text += "\nWill disable the following on accept:";
+                    foreach (var s in programsToDisableOnAccept)
+                        text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+                }
+
+                text += "\n\nFunding Summary:";
+                double paid = 0d;
+                int max = (int)System.Math.Ceiling(duration) + 1;
+                for (int i = 1; i < max; ++i)
+                {
+                    const double secPerYear = 365.25d * 86400d;
+                    double fundAtYear = GetFundsAtTime(System.Math.Min(i, duration) * secPerYear);
+                    double amtPaid = fundAtYear - paid;
+                    paid = fundAtYear;
+                    text += $"\nYear {(max > 10 ? " " : string.Empty)}{i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
+                }
+            }
+
+            return text;
+        }
+
+        public bool IsSpeedAllowed(Speed s)
+        {
+            return Trust.CurrentTrust >= trustCosts[s];
+        }
+
+        public void SetBestAllowableSpeed()
+        {
+            int max = (int)Speed.MAX;
+            speed = Speed.Slow;
+            for (int i = 0; i < max; ++i)
+            {
+                Speed spd = (Speed)i;
+                if (IsSpeedAllowed(spd))
+                    speed = spd;
+            }
+        }
+
+        public ProgramStrategy GetStrategy() => Strategies.StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;
     }
 }

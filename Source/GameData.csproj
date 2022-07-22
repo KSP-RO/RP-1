@@ -260,14 +260,20 @@
     <Content Include="..\GameData\RP-0\Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg">
       <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarFirstOrbiters.cfg">
-      <Link>Contracts\Lunar Uncrewed\LunarFirstOrbiters.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarFlyby.cfg">
       <Link>Contracts\Lunar Uncrewed\LunarFlyby.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarImpactor.cfg">
       <Link>Contracts\Lunar Uncrewed\LunarImpactor.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarImpactorOptional.cfg">
+      <Link>Contracts\Lunar Uncrewed\LunarImpactorOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarOrbiter.cfg">
+      <Link>Contracts\Lunar Uncrewed\LunarOrbiter.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarOrbiterOptional.cfg">
+      <Link>Contracts\Lunar Uncrewed\LunarOrbiterOptional.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLanding.cfg">
       <Link>Contracts\Lunar Uncrewed\MoonLanding.cfg</Link>
@@ -275,11 +281,20 @@
     <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingFarSide.cfg">
       <Link>Contracts\Lunar Uncrewed\MoonLandingFarSide.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingFarSideOptional.cfg">
+      <Link>Contracts\Lunar Uncrewed\MoonLandingFarSideOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingOptional.cfg">
+      <Link>Contracts\Lunar Uncrewed\MoonLandingOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingReturn.cfg">
       <Link>Contracts\Lunar Uncrewed\MoonLandingReturn.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonOrbiter.cfg">
       <Link>Contracts\Lunar Uncrewed\MoonOrbiter.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonOrbiterOptional.cfg">
+      <Link>Contracts\Lunar Uncrewed\MoonOrbiterOptional.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonRover.cfg">
       <Link>Contracts\Lunar Uncrewed\MoonRover.cfg</Link>
@@ -479,11 +494,20 @@
     <Content Include="..\GameData\RP-0\Contracts\Sounding Rockets\SoundingRocketAdvancedBio.cfg">
       <Link>Contracts\Sounding Rockets\SoundingRocketAdvancedBio.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sounding Rockets\SoundingRocketAdvancedBioOptional.cfg">
+      <Link>Contracts\Sounding Rockets\SoundingRocketAdvancedBioOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Sounding Rockets\SoundingRocketBio.cfg">
       <Link>Contracts\Sounding Rockets\SoundingRocketBio.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sounding Rockets\SoundingRocketBioOptional.cfg">
+      <Link>Contracts\Sounding Rockets\SoundingRocketBioOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Sounding Rockets\SoundingRocketFilm.cfg">
       <Link>Contracts\Sounding Rockets\SoundingRocketFilm.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Sounding Rockets\SoundingRocketFilmOptional.cfg">
+      <Link>Contracts\Sounding Rockets\SoundingRocketFilmOptional.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Sounding Rockets\SuborbitalReturn.cfg">
       <Link>Contracts\Sounding Rockets\SuborbitalReturn.cfg</Link>
@@ -527,14 +551,29 @@
     <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\BreakSoundBarrier.cfg">
       <Link>Contracts\X-Plane Research\BreakSoundBarrier.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\CrewedFlightAtmo.cfg">
-      <Link>Contracts\X-Plane Research\CrewedFlightAtmo.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\CrewedSupersonic.cfg">
-      <Link>Contracts\X-Plane Research\CrewedSupersonic.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\RocketPlaneDevelopment.cfg">
       <Link>Contracts\X-Plane Research\RocketPlaneDevelopment.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg">
+      <Link>Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\XPlanesHighAltitude.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesHighAltitude.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\XPlanesKarman.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesKarman.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\XPlanesSuborbital.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesSuborbital.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\XPlanesSupersonic.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesSupersonic.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\X-Plane Research\XPlanesSupersonicOptional.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptional.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>

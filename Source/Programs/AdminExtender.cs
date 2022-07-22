@@ -54,10 +54,10 @@ namespace RP0.Programs
                 item.gameObject.SetActive(active);
                 if (active)
                 {
-                    double cost = program.GetTrustCostForSpeed(item.Speed);
+                    double cost = program.GetConfidenceCostForSpeed(item.Speed);
                     bool allowable = program.IsSpeedAllowed(item.Speed);
                     var sph = new SpeedButtonHolder(program.GetStrategy(), item.Speed);
-                    item.SetupButton(allowable, KSP.Localization.Localizer.Format("#rp0ProgramSpeedTrustRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
+                    item.SetupButton(allowable, KSP.Localization.Localizer.Format("#rp0ProgramSpeedConfidenceRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
                 }
             }
 

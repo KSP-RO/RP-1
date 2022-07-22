@@ -336,6 +336,11 @@ namespace KerbalConstructionTime
         }
     }
 
+    public class ApplicantsFromContracts : EfficiencyUpgrades, IConfigNode
+    {
+        public int GetApplicantsFromContract(string contract) => (int)GetValue(contract);
+    }
+
     public class EfficiencyUpgrades : IConfigNode
     {
         private Dictionary<string, double> techMultipliers = new Dictionary<string, double>();
@@ -404,6 +409,9 @@ namespace KerbalConstructionTime
         public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
         [Persistent]
         public double SmallLCExtraFunds = 10000d;
+
+        [Persistent]
+        public ApplicantsFromContracts ContractApplicants = new ApplicantsFromContracts();
 
         public double EngineerEfficiencyMultiplier => EngineerEfficiencyUpgrades.GetMultiplier();
         public double ResearcherEfficiencyMultiplier => ResearcherEfficiencyUpgrades.GetMultiplier();

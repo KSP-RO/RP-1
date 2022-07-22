@@ -239,7 +239,7 @@ namespace RP0.Programs
                     foreach (var param in cc.AllParameters)
                         if (param.Optional && param.ReputationCompletion > 0 && param.State == ParameterState.Complete)
                             rep += param.ReputationCompletion;
-                    Confidence.Instance.AddConfidence(5 * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
+                    Confidence.Instance.AddConfidence(Settings.repToConfidence * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
                 }
             }
         }

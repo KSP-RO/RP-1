@@ -60,7 +60,7 @@ namespace RP0
             return retStr;
         }
 
-        private string FormatRatioAsPercent(double ratio)
+        public static string FormatRatioAsPercent(double ratio)
         {
             if (ratio < 1d)
                 return Localizer.Format("#rp0NegativePercent", ((1d - ratio) * 100d).ToString("N0"));
@@ -68,7 +68,7 @@ namespace RP0
             return Localizer.Format("#rp0PositivePercent", ((ratio - 1d) * 100d).ToString("N0"));
         }
 
-        private string FormatBytes(int amount)
+        public static string FormatBytes(int amount)
         {
             if (amount < 1024)
                 return Localizer.Format("#rp0DiskSpaceB", amount);
@@ -76,6 +76,14 @@ namespace RP0
                 return Localizer.Format("#rp0DiskSpacekB", (amount / 1024d).ToString("0.#"));
 
             return Localizer.Format("#rp0DiskSpaceMB", (amount / (1024d * 1024d)).ToString("0.#"));
+        }
+
+        public static string FormatValuePositiveNegative(double value, string format)
+        {
+            if (value < 0d)
+                return Localizer.Format("#rp0NegativeValue", (-value).ToString(format));
+
+            return Localizer.Format("#rp0PositiveValue", value.ToString(format));
         }
     }
 }

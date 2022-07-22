@@ -728,27 +728,23 @@ namespace RP0.Crew
                 foreach (KeyValuePair<string, double> kvp in KerbalRetireTimes)
                 {
                     ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[kvp.Key];
-                    if (pcm == null)
-                        _toRemove.Add(kvp.Key);
-                    else
+                    if (pcm == null || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Dead || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Missing)
                     {
-                        if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Available)
-                        {
-                            if (pcm.rosterStatus != ProtoCrewMember.RosterStatus.Assigned)
-                                _toRemove.Add(kvp.Key);
+                        _toRemove.Add(kvp.Key);
+                        continue;
+                    }
 
-                            continue;
-                        }
+                    if (pcm.inactive)
+                        continue;
 
-                        if (pcm.inactive)
-                            continue;
-
+                    if (pcm.type == ProtoCrewMember.KerbalType.Applicant
+                        || (pcm.type == ProtoCrewMember.KerbalType.Crew && pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available))
+                    {
                         if (time > kvp.Value)
                         {
                             _toRemove.Add(kvp.Key);
                             _retirees.Add(kvp.Key);
                             pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
-                            pcm.type = ProtoCrewMember.KerbalType.Crew;
                         }
                     }
                 }
@@ -760,7 +756,8 @@ namespace RP0.Crew
                 foreach (string s in _toRemove)
                 {
                     KerbalRetireTimes.Remove(s);
-                    if (HighLogic.CurrentGame.CrewRoster[s] != null && _retirees.Contains(s))
+                    ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[s];
+                    if (pcm != null && _retirees.Contains(s) && pcm.type == ProtoCrewMember.KerbalType.Crew)
                     {
                         msgStr = $"{msgStr}\n{s}";
                     }

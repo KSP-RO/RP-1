@@ -96,6 +96,9 @@
     <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <Private>False</Private>
     </Reference>
+	<Reference Include="RealFuels">
+		<Private>False</Private>
+	</Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirlaunchParams.cs" />
@@ -173,7 +176,7 @@
     <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="KCTVesselTracker.cs" />
-	<Compile Include="KCTVesselTrackerEventHandler.cs" />
+    <Compile Include="KCTVesselTrackerEventHandler.cs" />
     <Compile Include="VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>

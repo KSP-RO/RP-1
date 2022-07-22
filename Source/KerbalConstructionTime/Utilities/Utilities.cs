@@ -1459,6 +1459,10 @@ namespace KerbalConstructionTime
                 KCTGameStates.EditorRolloutCosts = 0;
                 KCTGameStates.EditorRolloutTime = 0;
             }
+
+            Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
+            KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
+            KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
         }
 
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
@@ -2121,6 +2125,131 @@ namespace KerbalConstructionTime
                     }
                 }
             }
+        }
+
+        public static Tuple<float, List<string>> GetVesselUnlockInfo(ShipConstruct ship)
+        {
+            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return new Tuple<float, List<string>>(0, new List<string>());
+
+            // filter the ship parts list to those parts that are not already purchased
+            IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> purchasableParts = GetPartsWithPurchasability(ship.Parts).Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable || kvp.Value.Status == PurchasabilityStatus.Unavailable);
+            List<string> ecmPartsList = new List<string>();
+            float runningCost = 0;
+
+            // compare the part specified entry cost to the ECM database
+            foreach (AvailablePart part in purchasableParts.Select(kvp => kvp.Key))
+            {
+                int rawCost = part.entryCost;
+                double ecmEstCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(part.name);
+                if (rawCost == ecmEstCost)
+                {
+                    // this part is managed by the ECM, save its name later for a batch request
+                    string sanitizedName = RealFuels.Utilities.SanitizeName(part.name);
+                    if (!ecmPartsList.Contains(sanitizedName)) 
+                        ecmPartsList.Add(sanitizedName);
+                }
+                else
+                {
+                    // this part is not in the ECM, take the raw cost
+                    runningCost += rawCost;
+                }
+            }
+
+            // filter down further to those parts that can't be unlocked with our current tech and get the tech names needed
+            List<AvailablePart> lockedParts = purchasableParts.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable).Select(kvp => kvp.Key).ToList();
+            HashSet<string> pendingTech = new HashSet<string>(lockedParts.Select(ap => ap.TechRequired));
+
+            // now back through the list looking for upgrades to add to our batch list
+            foreach (Part p in ship.Parts)
+            {
+                var mecs = p.FindModulesImplementing<RealFuels.ModuleEngineConfigsBase>();
+                foreach (RealFuels.ModuleEngineConfigsBase mec in mecs)
+                {
+                    string sanitizedName = RealFuels.Utilities.SanitizeName(mec.configuration);
+                    if (ecmPartsList.Contains(sanitizedName))
+                        continue;
+                    
+                    ecmPartsList.Add(sanitizedName);
+                    ConfigNode n = mec.configs.Find(c => c.GetValue("name") == mec.configuration);
+                    if (n != null)
+                    {
+                        string techRequired = n.GetValue("techRequired");
+                        if (techRequired == null) continue;
+
+                        ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(techRequired);
+                        bool techIsUnlocked = techState != null && techState.state == RDTech.State.Available;
+                        if (!techIsUnlocked) 
+                            pendingTech.Add(techRequired);
+                    }
+                }
+            }
+
+            double ecmCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList);
+
+            List<string> techList = SortAndFilterTechListForFinalNodes(pendingTech);
+            float totalCost = runningCost + Convert.ToSingle(ecmCost);
+            KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Raw cost: {runningCost}, ECM cost: {ecmCost}");
+            return new Tuple<float, List<string>>(totalCost, techList);
+        }
+
+        public static List<string> SortAndFilterTechListForFinalNodes(HashSet<string> input)
+        {
+            HashSet<string> blacklist = new HashSet<string>();
+            SortedList<string, string> slist = new SortedList<string, string>();
+            foreach(string s in input)
+            {
+                foreach (string parent in KerbalConstructionTimeData.techNameToParents[s])
+                {
+                    blacklist.Add(parent);
+                }
+            }
+            foreach (string s in input)
+            {
+                if (!blacklist.Contains(s))
+                {
+                    // sort our result, depth into the tree then alpha
+                    int depth = KerbalConstructionTimeData.techNameToParents[s].Count();
+                    string skey = $"{depth:d2}{s}";
+                    if (!slist.ContainsKey(skey))
+                        slist.Add(skey, s);
+                }
+            }
+
+            return slist.Values.ToList();
+        }
+
+        public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<Part> parts)
+        {
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
+
+            if (ResearchAndDevelopment.Instance == null)
+                return res;
+
+            List<AvailablePart> apList = parts.Select(p => p.partInfo).ToList();
+            res = GetPartsWithPurchasability(apList);
+            return res;
+        }
+
+        public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<AvailablePart> parts)
+        {
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
+            foreach (AvailablePart part in parts)
+            {
+                if (res.TryGetValue(part, out PartPurchasability pp))
+                {
+                    pp.PartCount++;
+                }
+                else
+                {
+                    PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
+                    if (Utilities.PartIsUnlocked(part))
+                        status = PurchasabilityStatus.Purchased;
+                    else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
+                        status = PurchasabilityStatus.Purchasable;
+                    res.Add(part, new PartPurchasability(status, 1));
+                }
+            }
+            return res;
         }
     }
 }

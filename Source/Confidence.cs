@@ -70,7 +70,7 @@ namespace RP0
         private void OnScienceChanged(float sci, TransactionReasons reason)
         {
             if (sci > 0)
-                AddConfidence(2 * sci, reason);
+                AddConfidence((Programs.ProgramHandler.Settings?.sciToConfidence ?? 2) * sci, reason);
         }
     }
 }

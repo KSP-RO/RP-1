@@ -212,8 +212,26 @@ namespace RP0.Programs
                 }
             }
 
-            // HACK: This is adding too much trust, fix to not count requireds.
-            Trust.Instance.AddTrust(5 * data.ReputationCompletion, TransactionReasons.ContractReward);
+            if (data is ConfiguredContract cc)
+            {
+                bool isOpt = false;
+                foreach (Program p in ActivePrograms)
+                {
+                    if (p.optionalContracts.Contains(cc.contractType.name))
+                    {
+                        isOpt = true;
+                        break;
+                    }
+                }
+                if (isOpt)
+                {
+                    float rep = 0;
+                    foreach (var param in cc.AllParameters)
+                        if (param.Optional && param.ReputationCompletion > 0 && param.State == ParameterState.Complete)
+                            rep += param.ReputationCompletion;
+                    Trust.Instance.AddTrust(5 * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
+                }
+            }
         }
 
         private void ShowAdminGUI()

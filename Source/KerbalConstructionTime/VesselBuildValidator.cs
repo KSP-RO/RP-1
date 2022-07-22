@@ -283,11 +283,11 @@ namespace KerbalConstructionTime
             {
                 foreach (PartModule pm in part.Modules)
                 {
-                    var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType() };
+                    var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
                     var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
                     if (mi != null)
                     {
-                        var parameters = new object[] { null, null, null };
+                        var parameters = new object[] { null, null, null, null };
                         bool allSucceeded;
                         try
                         {
@@ -301,6 +301,7 @@ namespace KerbalConstructionTime
                             parameters[0] = "error occurred, check the logs";
                             parameters[1] = false;
                             parameters[2] = 0f;
+                            parameters[3] = string.Empty;
                         }
 
                         if (!allSucceeded)

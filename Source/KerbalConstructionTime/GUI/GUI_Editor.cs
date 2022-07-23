@@ -126,6 +126,47 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
             }
+
+            RenderEditorLaunchComplexControls();
+        }
+
+        private static void RenderEditorLaunchComplexControls()
+        {
+            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+
+            GUILayout.BeginHorizontal();
+            int lcCount = KCTGameStates.ActiveKSC.LaunchComplexCount;
+            if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+            {
+                KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+                BuildRateForDisplay = null;
+            }
+            GUILayout.FlexibleSpace();
+            string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
+            string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
+            GUILayout.Label(new GUIContent(lcText, lcTooltip));
+
+            if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New", "Build a new launch complex for this vessel"), GUILayout.ExpandWidth(false)))
+            {
+                _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
+                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 1.1f).ToString();
+                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 1.1f).ToString();
+                _heightLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.y * 1.1f).ToString();
+                _tonnageLimit = Mathf.CeilToInt((float)(KCTGameStates.EditorShipMass * 1.1d)).ToString();
+                _isHumanRated = KCTGameStates.EditorIsHumanRated;
+
+                GUIStates.ShowNewLC = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                _centralWindowPosition.width = 300;
+            }
+            GUILayout.FlexibleSpace();
+            if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            {
+                KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
+                BuildRateForDisplay = null;
+            }
+            GUILayout.EndHorizontal();
         }
 
         private static void RenderEditMode()

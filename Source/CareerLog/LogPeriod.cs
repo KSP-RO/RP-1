@@ -72,6 +72,9 @@
         public int NumNautsKilled;
 
         [Persistent]
+        public double Confidence;
+
+        [Persistent]
         public double Reputation;
 
         [Persistent]

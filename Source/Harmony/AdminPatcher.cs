@@ -21,7 +21,7 @@ namespace RP0
         {
             [HarmonyPrefix]
             [HarmonyPatch("Start")]
-            internal static void Prefix_Start(Administration __instance, ref int ___activeStrategyCount, ref int ___maxActiveStrategies)
+            internal static void Prefix_Start(Administration __instance)
             {
                 var adminExt = __instance.gameObject.GetComponent<AdminExtender>() ?? __instance.gameObject.AddComponent<AdminExtender>();
                 adminExt.BindAndFixUI();
@@ -37,8 +37,11 @@ namespace RP0
 
             [HarmonyPrefix]
             [HarmonyPatch("CreateStrategiesList")]
-            internal static void Prefix_CreateStrategiesList(Administration __instance)
+            internal static void Prefix_CreateStrategiesList(Administration __instance, ref int ___activeStrategyCount, ref int ___maxActiveStrategies)
             {
+                ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
+                ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+
                 Transform tSpacer1 = __instance.scrollListKerbals.transform.Find("DepartmentSpacer1");
                 if (tSpacer1 != null)
                     GameObject.Destroy(tSpacer1.gameObject);
@@ -192,19 +195,94 @@ namespace RP0
                 }
             }
 
+            internal static void OnPopupDismiss()
+            {
+                // Stock does nothing here. Leaving this in case we need it.
+            }
+
+            internal static void OnCompleteProgramConfirm()
+            {
+                OnPopupDismiss();
+
+                if (!Administration.Instance.SelectedWrapper.strategy.Deactivate())
+                    return;
+
+                Administration.Instance.UnselectStrategy();
+                Administration.Instance.RedrawPanels();
+            }
+
+            internal static MethodInfo addActive = typeof(Administration).GetMethod("AddActiveStratItem", AccessTools.all);
+            internal static MethodInfo createStratList = typeof(Administration).GetMethod("CreateStrategiesList", AccessTools.all);
+
+            internal static void OnActivateProgramConfirm()
+            {
+                OnPopupDismiss();
+                if (Administration.Instance.SelectedWrapper.strategy.Activate())
+                {
+                    AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Active);
+                    Administration.StrategyWrapper selectedStrategy = addActive.Invoke(Administration.Instance, new object[] { Administration.Instance.SelectedWrapper.strategy }) as Administration.StrategyWrapper;
+                    Administration.Instance.SetSelectedStrategy(selectedStrategy);
+                    createStratList.Invoke(Administration.Instance, new object[] { StrategySystem.Instance.SystemConfig.Departments });
+                    Administration.Instance.SelectedWrapper.ButtonInUse.Value = true;
+                }
+                StrategySystem.Instance.StartCoroutine(CallbackUtil.DelayedCallback(2, delegate
+                {
+                    if (!Administration.Instance.SelectedWrapper.strategy.IsActive)
+                    {
+
+                        Administration.Instance.UnselectStrategy();
+                        return;
+                    }
+                }));
+            }
+
             [HarmonyPrefix]
             [HarmonyPatch("BtnInputAccept")]
-            internal static void Prefix_BtnInputAccept(Administration __instance, ref string state)
+            internal static bool Prefix_BtnInputAccept(Administration __instance, ref string state)
             {
-                // We're changing the button to always be the checkmark.
-                // But that means if this is an active strategy, we need
-                // to change what state this handler thinks we're in
-                // so we complete the contract.
+                if (state != "accept" && state != "cancel")
+                    return false;
+
                 if (__instance.SelectedWrapper.strategy is ProgramStrategy ps)
                 {
                     if (ps.IsActive)
-                        state = "cancel";
+                    {
+                        if (!ps.CanBeDeactivated(out _))
+                            return false;
+
+                        var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), 
+                            new Vector2(0.5f, 0.5f), 
+                            new MultiOptionDialog("StrategyConfirmation", 
+                                Localizer.GetStringByTag("#rp0ProgramCompleteConfirm"), 
+                                Localizer.GetStringByTag("#autoLOC_464288"), 
+                                HighLogic.UISkin, 
+                                new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439855"), OnCompleteProgramConfirm), 
+                                new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439856"), OnPopupDismiss)), 
+                            persistAcrossScenes: false, HighLogic.UISkin);
+                        dlg.OnDismiss = OnPopupDismiss;
+                    }
+                    else
+                    {
+                        if (ps.Program.IsComplete)
+                            return false;
+
+                        double cost = ps.Program.ConfidenceCost;
+                        string message = cost > 0 ? Localizer.Format("#rp0ProrgamActivateConfirmWithCost", cost.ToString("N0")) : Localizer.GetStringByTag("#rp0ProrgamActivateConfirm");
+
+                        var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), 
+                            new Vector2(0.5f, 0.5f), 
+                            new MultiOptionDialog("StrategyConfirmation", 
+                            message, 
+                            Localizer.Format("#autoLOC_464288"), 
+                            HighLogic.UISkin, 
+                            new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnActivateProgramConfirm), 
+                            new DialogGUIButton(Localizer.Format("#autoLOC_439840"), OnPopupDismiss)), persistAcrossScenes: false, HighLogic.UISkin);
+                        dlg.OnDismiss = OnPopupDismiss;
+                    }
                 }
+                //else if( is LeaderStrategy...
+
+                return false;
             }
         }       
     }

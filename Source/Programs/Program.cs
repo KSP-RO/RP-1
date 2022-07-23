@@ -504,6 +504,8 @@ namespace RP0.Programs
                         foreach (var s in programsToDisableOnAccept)
                             text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
                     }
+
+                    text += $"\n\n{KSP.Localization.Localizer.Format("#rp0ProgramSpeedConfidenceRequired", ConfidenceCost.ToString("N0"))}";
                 }
 
                 if (!IsComplete)

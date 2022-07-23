@@ -237,7 +237,9 @@ namespace RP0.Programs
                     confidenceCosts[spd] = cost;
                 }
             }
-            else
+            // This is back-compat and can probably go away.
+            // But maybe a program could be defined with no costs?
+            else if (confidenceCosts.Count == 0)
             {
                 for (int i = 0; i < (int)Speed.MAX; ++i)
                 {

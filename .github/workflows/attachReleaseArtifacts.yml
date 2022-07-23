@@ -78,10 +78,8 @@ jobs:
           python ${GITHUB_WORKSPACE}/makeMeta.py ${{ github.event.release.tag_name }}
           
       - name: Update changelog file
-        # make a copy of the new changelog temporarily after updating it
         run: |
           python ${GITHUB_WORKSPACE}/processChangeLog.py ${{ github.event.release.tag_name }} "${{ github.event.release.body }}" ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg
-          cp -v ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg ${GITHUB_WORKSPACE}/GameData/RP-0/changelog_new.cfg
           
       - name: Assemble release
         id: assemble-release
@@ -120,6 +118,7 @@ jobs:
           RELEASEBRANCH=${{ env.tagged_branch }}
           echo "Checking out branch ${RELEASEBRANCH}"
           git checkout $RELEASEBRANCH
+          cp -v ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg ${GITHUB_WORKSPACE}/GameData/RP-0/changelog_new.cfg
           git reset --hard origin/$RELEASEBRANCH
           cp -v "${GITHUB_WORKSPACE}/RP-1.version" "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
           cp -v "${GITHUB_WORKSPACE}/README_TEMP.md" "${GITHUB_WORKSPACE}/README.md"

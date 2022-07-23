@@ -149,8 +149,8 @@ namespace KerbalConstructionTime
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New", "Build a new launch complex for this vessel"), GUILayout.ExpandWidth(false)))
             {
                 _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
-                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 1.1f).ToString();
-                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 1.1f).ToString();
+                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 2f).ToString();
+                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 2f).ToString();
                 _heightLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.y * 1.1f).ToString();
                 _tonnageLimit = Mathf.CeilToInt((float)(KCTGameStates.EditorShipMass * 1.1d)).ToString();
                 _isHumanRated = KCTGameStates.EditorIsHumanRated;

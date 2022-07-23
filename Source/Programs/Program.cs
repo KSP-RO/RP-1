@@ -473,7 +473,12 @@ namespace RP0.Programs
             string text = $"{objectives}\n\nTotal Funds: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{TotalFunding:N0}\n";
             if (wasAccepted)
             {
-                text += $"Funds Paid Out: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{fundsPaidOut:N0}\nAccepted: {KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT, false, false)}\n";
+                text += $"Funds Paid Out: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{fundsPaidOut:N0}\nAccepted: ";
+                if (extendedInfo)
+                    text += KSPUtil.dateTimeFormatter.PrintDate(acceptedUT, false, false);
+                else
+                    text += KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT, false, false);
+                text += "\n";
                 if (IsComplete)
                 {
                     if (extendedInfo)

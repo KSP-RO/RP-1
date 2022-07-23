@@ -47,7 +47,7 @@ namespace RP0
                     GameObject.Destroy(tSpacer1.gameObject);
 
                 Transform tSpacer2 = __instance.scrollListKerbals.transform.Find("DepartmentSpacer2");
-                if(tSpacer2 != null)
+                if (tSpacer2 != null)
                     GameObject.Destroy(tSpacer2.gameObject);
             }
 
@@ -219,9 +219,16 @@ namespace RP0
                 OnPopupDismiss();
                 if (Administration.Instance.SelectedWrapper.strategy.Activate())
                 {
+                    var newActiveStrat = Administration.Instance.SelectedWrapper.strategy;
                     AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Active);
                     Administration.StrategyWrapper selectedStrategy = addActive.Invoke(Administration.Instance, new object[] { Administration.Instance.SelectedWrapper.strategy }) as Administration.StrategyWrapper;
                     Administration.Instance.SetSelectedStrategy(selectedStrategy);
+                    // Reset program speeds
+                    foreach (var strat in StrategySystem.Instance.Strategies)
+                    {
+                        if(!strat.IsActive && strat != newActiveStrat && strat is ProgramStrategy ps && !ps.IsActive)
+                            ps.Program.SetBestAllowableSpeed();
+                    }
                     createStratList.Invoke(Administration.Instance, new object[] { StrategySystem.Instance.SystemConfig.Departments });
                     Administration.Instance.SelectedWrapper.ButtonInUse.Value = true;
                 }
@@ -250,14 +257,14 @@ namespace RP0
                         if (!ps.CanBeDeactivated(out _))
                             return false;
 
-                        var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), 
-                            new Vector2(0.5f, 0.5f), 
-                            new MultiOptionDialog("StrategyConfirmation", 
-                                Localizer.GetStringByTag("#rp0ProgramCompleteConfirm"), 
-                                Localizer.GetStringByTag("#autoLOC_464288"), 
-                                HighLogic.UISkin, 
-                                new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439855"), OnCompleteProgramConfirm), 
-                                new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439856"), OnPopupDismiss)), 
+                        var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                            new Vector2(0.5f, 0.5f),
+                            new MultiOptionDialog("StrategyConfirmation",
+                                Localizer.GetStringByTag("#rp0ProgramCompleteConfirm"),
+                                Localizer.GetStringByTag("#autoLOC_464288"),
+                                HighLogic.UISkin,
+                                new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439855"), OnCompleteProgramConfirm),
+                                new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439856"), OnPopupDismiss)),
                             persistAcrossScenes: false, HighLogic.UISkin);
                         dlg.OnDismiss = OnPopupDismiss;
                     }
@@ -269,13 +276,13 @@ namespace RP0
                         double cost = ps.Program.ConfidenceCost;
                         string message = cost > 0 ? Localizer.Format("#rp0ProrgamActivateConfirmWithCost", cost.ToString("N0")) : Localizer.GetStringByTag("#rp0ProrgamActivateConfirm");
 
-                        var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), 
-                            new Vector2(0.5f, 0.5f), 
-                            new MultiOptionDialog("StrategyConfirmation", 
-                            message, 
-                            Localizer.Format("#autoLOC_464288"), 
-                            HighLogic.UISkin, 
-                            new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnActivateProgramConfirm), 
+                        var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                            new Vector2(0.5f, 0.5f),
+                            new MultiOptionDialog("StrategyConfirmation",
+                            message,
+                            Localizer.Format("#autoLOC_464288"),
+                            HighLogic.UISkin,
+                            new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnActivateProgramConfirm),
                             new DialogGUIButton(Localizer.Format("#autoLOC_439840"), OnPopupDismiss)), persistAcrossScenes: false, HighLogic.UISkin);
                         dlg.OnDismiss = OnPopupDismiss;
                     }
@@ -284,6 +291,6 @@ namespace RP0
 
                 return false;
             }
-        }       
+        }
     }
 }

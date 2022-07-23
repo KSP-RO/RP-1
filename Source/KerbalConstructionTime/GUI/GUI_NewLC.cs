@@ -291,9 +291,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(new GUIContent( sBuildTime, isModify ? "With current construction engineers" : "With LC engineers as\nconstruction engineers"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
-                double projectedMaintenance = 0d;
-                if (KCTGameStates.FacilityDailyMaintenanceDelegate != null)
-                    projectedMaintenance = KCTGameStates.FacilityDailyMaintenanceDelegate(totalCostForMaintenance, isHangar ? 2 : 1);
+                double projectedMaintenance = RP0.MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(totalCostForMaintenance, isHangar ? RP0.FacilityMaintenanceType.Hangar : RP0.FacilityMaintenanceType.LC);
 
                 if (projectedMaintenance > 0d)
                 {

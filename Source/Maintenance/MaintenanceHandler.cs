@@ -11,6 +11,13 @@ using System.Collections;
 
 namespace RP0
 {
+    public enum FacilityMaintenanceType
+    {
+        Building,
+        LC,
+        Hangar,
+    }
+
     [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class MaintenanceHandler : ScenarioModule
     {
@@ -44,6 +51,7 @@ namespace RP0
         public double Researchers = 0d;
 
         private double _maintenanceCostMult = 1d;
+        public double MaintenanceCostMult => _maintenanceCostMult;
         private bool _wasWarpingHigh = false;
         private int _frameCount = 0;
         private bool _waitingForLevelLoad = false;
@@ -61,6 +69,7 @@ namespace RP0
         public double NautInFlightUpkeepPerDay = 0d;
         public double NautUpkeepPerDay = 0d;
         public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ConstructionSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
+        public double NetUpkeepPerDay = 0d;
 
         public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost + LCsCost;
 
@@ -129,9 +138,6 @@ namespace RP0
             }
             Instance = this;
 
-            KCTGameStates.ProgramFundingForTimeDelegate = GetProgramFunding;
-            KCTGameStates.FacilityDailyMaintenanceDelegate = ComputeDailyMaintenanceCost;
-
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
             GameEvents.onGameStateLoad.Add(LoadSettings);
             GameEvents.onVesselRecoveryProcessingComplete.Add(onVesselRecoveryProcessingComplete);
@@ -154,8 +160,6 @@ namespace RP0
                 Settings = new MaintenanceSettings();
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
                     ConfigNode.LoadObjectFromConfig(Settings, n);
-
-                UpdateKCTSalarySettings();
             }
         }
 
@@ -248,16 +252,14 @@ namespace RP0
             baseCostPerDay *= (_maintenanceCostMult / 365.25d);
         }
 
-        protected double ComputeDailyMaintenanceCost(double cost) => ComputeDailyMaintenanceCost(cost, 0);
-
-        protected double ComputeDailyMaintenanceCost(double cost, int facilityType)
+        public double ComputeDailyMaintenanceCost(double cost, FacilityMaintenanceType facilityType = FacilityMaintenanceType.Building)
         {
-            if (facilityType == 2)
+            if (facilityType == FacilityMaintenanceType.Hangar)
                 cost = Math.Max(Settings.hangarCostForMaintenanceMin, cost - Settings.hangarCostForMaintenanceOffset);
 
             double upkeep = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(cost, Settings.facilityLevelCostPow);
 
-            if (facilityType == 1)
+            if (facilityType == FacilityMaintenanceType.LC)
                 upkeep *= Settings.lcCostMultiplier;
 
             return upkeep;
@@ -271,11 +273,11 @@ namespace RP0
             switch (lc.LCType)
             {
                 case LaunchComplexType.Hangar:
-                    return ComputeDailyMaintenanceCost(Math.Max(Settings.hangarCostForMaintenanceMin, KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out _, out _, out _) - Settings.hangarCostForMaintenanceOffset));
+                    return ComputeDailyMaintenanceCost(KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out _, out _, out _), FacilityMaintenanceType.Hangar);
 
                 case LaunchComplexType.Pad:
                     KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out double padCost, out double vabCost, out _);
-                    return ComputeDailyMaintenanceCost((vabCost + lc.LaunchPadCount * padCost) * Settings.lcCostMultiplier);
+                    return ComputeDailyMaintenanceCost((vabCost + lc.LaunchPadCount * padCost), FacilityMaintenanceType.LC);
             }
 
             return 0d;
@@ -346,12 +348,11 @@ namespace RP0
             }
 
             NautUpkeepPerDay = NautBaseUpkeepPerDay + TrainingUpkeepPerDay + NautInFlightUpkeepPerDay;
-
-            KCTGameStates.NetUpkeep = -Math.Max(0d, TotalUpkeepPerDay - MaintenanceSubsidyPerDay);
+            NetUpkeepPerDay = -Math.Max(0d, TotalUpkeepPerDay - MaintenanceSubsidyPerDay);
             Profiler.EndSample();
         }
 
-        private double GetProgramFunding(double utOffset)
+        public double GetProgramFunding(double utOffset)
         {
             double programBudget = 0d;
             foreach (Program p in Programs.ProgramHandler.Instance.ActivePrograms)
@@ -452,9 +453,6 @@ namespace RP0
             GameEvents.onKerbalTypeChanged.Remove(onKerbalTypeChanged);
 
             OnRP0MaintenanceChanged.Remove(ScheduleMaintenanceUpdate);
-
-            KCTGameStates.ProgramFundingForTimeDelegate = null;
-            KCTGameStates.FacilityDailyMaintenanceDelegate = null;
         }
 
         #endregion
@@ -467,15 +465,7 @@ namespace RP0
         private void SettingsChanged()
         {
             LoadSettings(null);
-            UpdateKCTSalarySettings();
             UpdateUpkeep();
-        }
-
-        private void UpdateKCTSalarySettings()
-        {
-            KCTGameStates.SalaryEngineers = Settings.salaryEngineers;
-            KCTGameStates.SalaryResearchers = Settings.salaryResearchers;
-            KCTGameStates.SalaryMultiplier = _maintenanceCostMult;
         }
 
         private bool EnsureFacilityLvlCostsLoaded()

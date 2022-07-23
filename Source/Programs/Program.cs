@@ -494,25 +494,43 @@ namespace RP0.Programs
                 text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years";
             }
 
-            if (extendedInfo && !wasAccepted)
+            if (extendedInfo)
             {
-                if (programsToDisableOnAccept.Count > 0)
+                if (!wasAccepted)
                 {
-                    text += "\nWill disable the following on accept:";
-                    foreach (var s in programsToDisableOnAccept)
-                        text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+                    if (programsToDisableOnAccept.Count > 0)
+                    {
+                        text += "\nWill disable the following on accept:";
+                        foreach (var s in programsToDisableOnAccept)
+                            text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+                    }
                 }
 
-                text += "\n\nFunding Summary:";
-                double paid = 0d;
-                int max = (int)System.Math.Ceiling(duration) + 1;
-                for (int i = 1; i < max; ++i)
+                if (!IsComplete)
                 {
-                    const double secPerYear = 365.25d * 86400d;
-                    double fundAtYear = GetFundsAtTime(System.Math.Min(i, duration) * secPerYear);
-                    double amtPaid = fundAtYear - paid;
-                    paid = fundAtYear;
-                    text += $"\nYear {(max > 10 ? " " : string.Empty)}{i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
+                    text += "\n\nFunding Summary:";
+                    double paid;
+                    int startYear;
+                    int lastYear = (int)System.Math.Ceiling(duration) + 1;
+                    if (IsActive)
+                    {
+                        double relativeUT = KSPUtils.GetUT() - acceptedUT;
+                        startYear = (int)(relativeUT / (86400d * 365.25d)) + 1;
+                        paid = GetFundsAtTime(relativeUT);
+                    }
+                    else
+                    {
+                        startYear = 1;
+                        paid = 0d;
+                    }
+                    for (int i = startYear; i < lastYear; ++i)
+                        {
+                            const double secPerYear = 365.25d * 86400d;
+                            double fundAtYear = GetFundsAtTime(Math.Min(i, duration) * secPerYear);
+                            double amtPaid = fundAtYear - paid;
+                            paid = fundAtYear;
+                            text += $"\nYear {(lastYear > 10 ? " " : string.Empty)}{i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
+                        }
                 }
             }
 

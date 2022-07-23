@@ -42,11 +42,11 @@ namespace KerbalConstructionTime
 
             if (!KCTGameStates.StarterLCBuilding)
             {
-                GUILayout.Label($"{step++}) Build a starting Launch Complex. You can build new LCs in Space Center Management in the Operations tab, by clicking New.");
-                GUILayout.Label("The New LC dialog defaults to a reasonable starting LC for small rockets, though a larger LC (15t, 22x3x3m) is needed later and experience players can start directly with that (or with something else entirely).");
-                if (GUILayout.Button($"Build a new LC", HighLogic.Skin.button))
+                GUILayout.Label($"{step++}) Build a starting Launch Complex. To know what size LC you need, you should go to the VAB and create/load a vessel, and then click New in the SSM window. The LC properties will be set to support that vessel.");
+                GUILayout.Label("You can also access the New LC window from the main Space Center Management UI's Operations tab, if you know what properties you want. Once you have LCs built you can also modify them the same way.");
+                if (GUILayout.Button($"Go to the VAB", HighLogic.Skin.button))
                 {
-                    GUIStates.ShowNewLC = true;
+                    EnterVAB();
                 }
                 GUILayout.Label("");
             }
@@ -92,6 +92,27 @@ namespace KerbalConstructionTime
             };
             KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
             KCTEvents.OnLCConstructionComplete.Fire(null, starterLC);
+        }
+
+        private static void EnterVAB()
+        {
+            EditorFacility editorFacility = EditorFacility.None;
+            if (ShipConstruction.ShipConfig != null)
+            {
+                editorFacility = ShipConstruction.ShipType;
+            }
+            int startupBehaviour;
+            if (editorFacility != EditorFacility.VAB)
+            {
+                startupBehaviour = 0;
+            }
+            else
+            {
+                startupBehaviour = 1;
+            }
+            EditorDriver.StartupBehaviour = (EditorDriver.StartupBehaviours)startupBehaviour;
+            GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+            EditorDriver.StartEditor(EditorFacility.VAB);
         }
     }
 }

@@ -1348,6 +1348,7 @@ namespace KerbalConstructionTime
             KCTGameStates.EditorBuildPoints = GetBuildPoints(effCost);
             var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL, KCTGameStates.EditorIsHumanRated);
             KCTGameStates.EditorShipMass = GetShipMass(ship, true, out _, out _);
+            KCTGameStates.EditorShipSize = GetShipSize(ship, true);
             KCTGameStates.EditorIntegrationPoints = kctVessel.IntegrationPoints;
             KCTGameStates.EditorIntegrationCosts = kctVessel.IntegrationCost;
 

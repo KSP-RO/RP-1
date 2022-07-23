@@ -80,7 +80,7 @@ jobs:
       - name: Update changelog file
         # make a copy of the new changelog temporarily after updating it
         run: |
-          python ${GITHUB_WORKSPACE}/processChangeLog.py ${{ github.event.release.tag_name }} ${{ github.event.release.body }} ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg
+          python ${GITHUB_WORKSPACE}/processChangeLog.py ${{ github.event.release.tag_name }} "${{ github.event.release.body }}" ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg
           cp -v ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg ${GITHUB_WORKSPACE}/GameData/RP-0/changelog_new.cfg
           
       - name: Assemble release

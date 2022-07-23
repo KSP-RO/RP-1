@@ -418,6 +418,7 @@ namespace RP0
                     p.EntryCosts.ToString("F0"),
                     p.ConstructionFees.ToString("F0"),
                     p.OtherFees.ToString("F0"),
+                    p.Confidence.ToString("F1"),
                     p.Reputation.ToString("F1"),
                     p.HeadlinesHype.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
@@ -439,7 +440,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -611,6 +612,7 @@ namespace RP0
                 repFromPrograms = logPeriod.RepFromPrograms,
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
+                confidence = logPeriod.Confidence,
                 reputation = logPeriod.Reputation,
                 headlinesHype = logPeriod.HeadlinesHype
             };
@@ -630,6 +632,7 @@ namespace RP0
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmountForSeconds(_prevPeriod.EndUT - _prevPeriod.StartUT);
+                _prevPeriod.Confidence = Confidence.CurrentConfidence;
                 _prevPeriod.Reputation = Reputation.CurrentRep;
                 _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }

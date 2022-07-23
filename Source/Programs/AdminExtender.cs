@@ -178,7 +178,8 @@ namespace RP0.Programs
             var hLG = buttonArea.AddComponent<HorizontalLayoutGroup>();
             hLG.childForceExpandHeight = false;
             hLG.childForceExpandWidth = false;
-            hLG.childAlignment = TextAnchor.MiddleCenter;
+            hLG.childAlignment = TextAnchor.MiddleRight;
+            hLG.spacing = 10;
 
             // Create speed buttons
             var tooltipPrefab = AssetBase.GetPrefab<KSP.UI.TooltipTypes.Tooltip_Text>("Tooltip_Text");
@@ -188,9 +189,16 @@ namespace RP0.Programs
             {
                 Program.Speed spd = (Program.Speed)i;
 
-                var newButton = GameObject.Instantiate(Administration.Instance.prefabStratListItem);
+                var newButton = GameObject.Instantiate(Administration.Instance.prefabStratListItem, buttonArea.transform, worldPositionStays: false);
                 newButton.gameObject.name = "speedButton" + i;
                 GameObject.Destroy(newButton.GetComponent<StrategyListItem>());
+
+                var textRect = newButton.transform.Find("btn").transform.Find("Text").GetComponent<RectTransform>();
+                textRect.offsetMin = new Vector2(2, 2);
+                textRect.offsetMax = new Vector2(-2, -2);
+                var textComp = textRect.GetComponent<TextMeshProUGUI>();
+                textComp.alignment = TextAlignmentOptions.Midline;
+                textComp.fontSizeMax = 20;
 
                 var tooltip = newButton.gameObject.AddComponent<KSP.UI.TooltipTypes.TooltipController_Text>();
                 tooltip.prefab = tooltipPrefab;
@@ -206,8 +214,13 @@ namespace RP0.Programs
                 var lE = newButton.gameObject.AddComponent<LayoutElement>();
                 lE.preferredHeight = 54;
                 lE.preferredWidth = width;
-                newButton.transform.SetParent(buttonArea.transform, false);
             }
+            // Add a spacer between the speed buttons and the accept button
+            var newSpacerLE = GameObject.Instantiate(ApplicationLauncher.Instance.CurrentLayout.GetTopRightSpacer(), buttonArea.transform, worldPositionStays: false);
+            newSpacerLE.preferredWidth = 100;
+            newSpacerLE.gameObject.SetActive(true);
+
+            // make sure the button is at the far right
             buttonLE.transform.SetAsLastSibling();
 
             foreach (var button in _speedButtons.Values)

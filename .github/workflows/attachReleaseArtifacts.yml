@@ -77,6 +77,12 @@ jobs:
         run: |
           python ${GITHUB_WORKSPACE}/makeMeta.py ${{ github.event.release.tag_name }}
           
+      - name: Update changelog file
+        # make a copy of the new changelog temporarily after updating it
+        run: |
+          python ${GITHUB_WORKSPACE}/processChangeLog.py ${{ github.event.release.tag_name }} "${{ github.event.release.body }}" ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg
+          cp -v ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg ${GITHUB_WORKSPACE}/GameData/RP-0/changelog_new.cfg
+          
       - name: Assemble release
         id: assemble-release
         run: |
@@ -106,7 +112,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           
-      - name: Commit new version file
+      - name: Commit changes
         shell: bash
         env:
           TAG_STRING: ${{ github.event.release.tag_name }}
@@ -117,7 +123,9 @@ jobs:
           git reset --hard origin/$RELEASEBRANCH
           cp -v "${GITHUB_WORKSPACE}/RP-1.version" "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
           cp -v "${GITHUB_WORKSPACE}/README_TEMP.md" "${GITHUB_WORKSPACE}/README.md"
+          cp -v ${GITHUB_WORKSPACE}/GameData/RP-0/changelog_new.cfg ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg
           git add "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
           git add "${GITHUB_WORKSPACE}/README.md"
+          git add "${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg"
           git commit -m "Update version to $TAG_STRING"
           git push origin $RELEASEBRANCH

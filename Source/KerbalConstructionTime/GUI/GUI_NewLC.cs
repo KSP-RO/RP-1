@@ -361,7 +361,8 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 300;
                 _centralWindowPosition.x = (Screen.width - 300) / 2;
-                GUIStates.ShowBuildList = true;
+                if (!HighLogic.LoadedSceneIsEditor)
+                    GUIStates.ShowBuildList = true;
 
                 _padLvlOptions = null;
             }
@@ -374,7 +375,8 @@ namespace KerbalConstructionTime
                 _padLvlOptions = null;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowModifyLC = false;
-                GUIStates.ShowBuildList = true;
+                if (!HighLogic.LoadedSceneIsEditor)
+                    GUIStates.ShowBuildList = true;
             }
 
             GUILayout.EndHorizontal();

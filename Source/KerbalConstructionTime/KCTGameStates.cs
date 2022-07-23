@@ -146,20 +146,13 @@ namespace KerbalConstructionTime
             return null;
         }
 
-        public static int SalaryEngineers = -1;
-        public static int SalaryResearchers = -1;
-        public static double SalaryMultiplier = 1d;
-        public static double NetUpkeep = 0d;
-        public delegate double DoubleIntDelegate(double d, int i);
-        public static DoubleIntDelegate FacilityDailyMaintenanceDelegate = null;
-
         public static int GetSalaryEngineers()
         {
             double engineers = 0d;
             foreach (var ksc in KCTGameStates.KSCs)
                 engineers += GetEffectiveEngineersForSalary(ksc);
 
-            return (int)(engineers * SalaryEngineers * SalaryMultiplier);
+            return (int)(engineers * RP0.MaintenanceHandler.Settings.salaryEngineers * RP0.MaintenanceHandler.Instance.MaintenanceCostMult);
         }
 
         public static double GetEffectiveConstructionEngineersForSalary(KSCItem ksc) => ksc.ConstructionWorkers * (ksc.Constructions.Count == 0 ? PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult : 1d);
@@ -193,20 +186,14 @@ namespace KerbalConstructionTime
             return 0;
         }
 
-        public static int GetSalaryResearchers() => (int)(KCTGameStates.Researchers * SalaryResearchers * SalaryMultiplier);
+        public static int GetSalaryResearchers() => (int)(Researchers * RP0.MaintenanceHandler.Settings.salaryResearchers * RP0.MaintenanceHandler.Instance.MaintenanceCostMult);
         public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
-
-        public delegate double DoubleDelegate(double num);
-        public delegate void VoidDelegate();
-        public static DoubleDelegate ProgramFundingForTimeDelegate = null;
 
         public static double GetBudgetDelta(double time)
         {
-            // note NetUpkeep is negative or 0.
-            double delta = NetUpkeep * time / 86400d - GetConstructionCostOverTime(time);
-            
-            if (ProgramFundingForTimeDelegate != null)
-                delta += ProgramFundingForTimeDelegate(time);
+            // note NetUpkeepPerDay is negative or 0.
+            double delta = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay * time / 86400d - GetConstructionCostOverTime(time);
+            delta += RP0.MaintenanceHandler.Instance.GetProgramFunding(time);
 
             return delta;
         }

@@ -141,6 +141,88 @@
     <Compile Include="Tooling\ToolingGUI.cs" />
     <Compile Include="Avionics\AvionicsGUI.cs" />
     <Compile Include="Utilities\TransformUtils.cs" />
+    <Compile Include="KerbalConstructionTime\AirlaunchParams.cs" />
+    <Compile Include="KerbalConstructionTime\AirlaunchTechLevel.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\ConstructionBuildItem.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\LCConstruction.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\LCProject.cs" />
+    <Compile Include="KerbalConstructionTime\EngineersReportClobberer.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_NewLC.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_Personnel.cs" />
+    <Compile Include="KerbalConstructionTime\LCItem.cs" />
+    <Compile Include="KerbalConstructionTime\PartCrewAssignment.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\PadConstruction.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\DialogGUIButtonWithTooltip.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_Tooltip.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUIStates.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_Airlaunch.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_ClearLaunch.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_CrewSelect.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_DismantlePad.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_Editor.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_FirstRun.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_NewPad.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_VesselMerge.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_Simulation.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_DevParts.cs" />
+    <Compile Include="KerbalConstructionTime\KCTCostModifier.cs" />
+    <Compile Include="KerbalConstructionTime\KCTTechNodePeriod.cs" />
+    <Compile Include="KerbalConstructionTime\ModIntegrations\CTIWrapper.cs" />
+    <Compile Include="KerbalConstructionTime\ModuleTagList.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\AirlaunchPrepStorageItem.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\BuildListStorageItem.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\ConfigNodeStorage.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\FacilityUpgradeStorageItem.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\GUIPosition.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\KCTVesselData.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\LCConstructionStorageItem.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\PadConstructionStorageItem.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\ReconRolloutStorageItem.cs" />
+    <Compile Include="KerbalConstructionTime\KCTObservableList.cs" />
+    <Compile Include="KerbalConstructionTime\SceneAddons\MainMenuAddon.cs" />
+    <Compile Include="KerbalConstructionTime\SimulationParams.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\HyperEdit_Utilities.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\IKCTBuildItem.cs" />
+    <Compile Include="KerbalConstructionTime\InstallChecker.cs" />
+    <Compile Include="KerbalConstructionTime\ModIntegrations\KACWrapper.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\KCTDebug.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\AirlaunchPrep.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\BuildListVessel.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_BuildPlans.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\KCT_TechStorageItem.cs" />
+    <Compile Include="KerbalConstructionTime\SceneAddons\EditorAddon.cs" />
+    <Compile Include="KerbalConstructionTime\KCTEvents.cs" />
+    <Compile Include="KerbalConstructionTime\SceneAddons\FlightAddon.cs" />
+    <Compile Include="KerbalConstructionTime\KCTDataLoader.cs" />
+    <Compile Include="KerbalConstructionTime\KCTGameStates.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_Main.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\KCT_DataStorage.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_BuildList.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_Presets.cs" />
+    <Compile Include="KerbalConstructionTime\KSCItem.cs" />
+    <Compile Include="KerbalConstructionTime\KSCContextMenuOverrider.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\KCT_LaunchPad.cs" />
+    <Compile Include="KerbalConstructionTime\KCTWarpController.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\MathParser.cs" />
+    <Compile Include="KerbalConstructionTime\Presets\PresetManager.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\ReconRollout.cs" />
+    <Compile Include="KerbalConstructionTime\Presets\KCTSettings.cs" />
+    <Compile Include="KerbalConstructionTime\SceneAddons\SpaceCenterAddon.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\TechItem.cs" />
+    <Compile Include="KerbalConstructionTime\SceneAddons\TrackingStationAddon.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\FacilityUpgrade.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\Utilities.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\WindowHelper.cs" />
+    <Compile Include="KerbalConstructionTime\KerbalConstructionTime.cs" />
+    <Compile Include="KerbalConstructionTime\Persistence\KerbalConstructionTimeData.cs" />
+    <Compile Include="KerbalConstructionTime\ModIntegrations\ScrapYardWrapper.cs" />
+    <Compile Include="KerbalConstructionTime\ModIntegrations\StageRecoveryWrapper.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\TextureScale.cs" />
+    <Compile Include="KerbalConstructionTime\ModIntegrations\ToolbarRegistration.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\TypeExtensions.cs" />
+    <Compile Include="KerbalConstructionTime\KCTVesselTracker.cs" />
+    <Compile Include="KerbalConstructionTime\KCTVesselTrackerEventHandler.cs" />
+    <Compile Include="KerbalConstructionTime\VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
@@ -169,6 +251,12 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ToolbarControl">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="MagiCore">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">

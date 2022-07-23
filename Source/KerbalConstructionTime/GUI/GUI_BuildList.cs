@@ -1354,10 +1354,6 @@ namespace KerbalConstructionTime
             if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
                 KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
-                if (HighLogic.LoadedSceneIsEditor)
-                {
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
             }
             GUILayout.FlexibleSpace();
             string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
@@ -1449,10 +1445,6 @@ namespace KerbalConstructionTime
             if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
                 KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
-                if (HighLogic.LoadedSceneIsEditor)
-                {
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
             }
             GUILayout.EndHorizontal();
         }
@@ -1483,10 +1475,6 @@ namespace KerbalConstructionTime
             if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
                 activeLC.SwitchToPrevLaunchPad();
-                if (HighLogic.LoadedSceneIsEditor)
-                {
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
             }
             GUILayout.FlexibleSpace();
             GUILayout.Label(new GUIContent(activePad.name, "Uses Launch Complex limits"));
@@ -1546,10 +1534,6 @@ namespace KerbalConstructionTime
             if (lpCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
                 activeLC.SwitchToNextLaunchPad();
-                if (HighLogic.LoadedSceneIsEditor)
-                {
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
             }
             GUILayout.EndHorizontal();
         }

@@ -31,18 +31,27 @@ namespace RP0.Programs
 
         private static FieldInfo CurrentListField = typeof(UIListToggleController).GetField("currentList", BindingFlags.NonPublic | BindingFlags.Instance);
         private UIListToggleController _tabController;
+        private readonly Dictionary<AdministrationActiveTabView, Toggle> _adminTabToggles = new Dictionary<AdministrationActiveTabView, Toggle>();
         public AdministrationActiveTabView ActiveTabView => _tabController == null ? AdministrationActiveTabView.Active : (AdministrationActiveTabView)CurrentListField.GetValue(_tabController);
-
-        private readonly Dictionary<Program.Speed, ProgramSpeedListItem> _speedButtons = new Dictionary<Program.Speed, ProgramSpeedListItem>();
-        private KSP.UI.TooltipTypes.UIStateButtonTooltip buttonTooltip;
-
-        public bool PressedSpeedButton = false;
 
         private void OnClickTab(bool active)
         {
             if (active)
                 Administration.Instance.RedrawPanels();
         }
+
+        public void SetTabView(AdministrationActiveTabView view)
+        {
+            if (ActiveTabView == view)
+                return;
+
+            _adminTabToggles[view].isOn = true;
+        }
+
+        private readonly Dictionary<Program.Speed, ProgramSpeedListItem> _speedButtons = new Dictionary<Program.Speed, ProgramSpeedListItem>();
+        private KSP.UI.TooltipTypes.UIStateButtonTooltip buttonTooltip;
+
+        public bool PressedSpeedButton = false;
 
         public void SetSpeedButtonsActive(bool active, Program program)
         {

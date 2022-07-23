@@ -295,6 +295,7 @@ namespace KerbalConstructionTime
             TechItem tech = KCTGameStates.TechList.OfType<TechItem>().FirstOrDefault(t => t.TechID == part.TechRequired);
             if (tech != null && tech.IsInList())
             {
+                PopupDialog.SpawnPopupDialog(new UnityEngine.Vector2(0.5f, 0.5f), new UnityEngine.Vector2(0.5f, 0.5f), "", "KCT ERROR", "You tried to purchase a part from a node that you haven't researched yet. Please report how you did this to the KSP-RO devs.", "Understood", false, HighLogic.UISkin);
                 ScreenMessages.PostScreenMessage("You must wait until the node is fully researched to purchase parts!", 4f, ScreenMessageStyle.UPPER_LEFT);
                 if (part.costsFunds)
                 {
@@ -317,6 +318,7 @@ namespace KerbalConstructionTime
             if (tech != null && tech.IsInList())
             {
                 ScreenMessages.PostScreenMessage("You must wait until the node is fully researched to purchase upgrades!", 4f, ScreenMessageStyle.UPPER_LEFT);
+                PopupDialog.SpawnPopupDialog(new UnityEngine.Vector2(0.5f, 0.5f), new UnityEngine.Vector2(0.5f, 0.5f), "", "KCT ERROR", "You tried to purchase a part from a node that you haven't researched yet. Please report how you did this to the KSP-RO devs.", "Understood", false, HighLogic.UISkin);
                 Utilities.AddFunds(upgrade.entryCost, TransactionReasons.RnDPartPurchase);
                 PartUpgradeManager.Handler.SetUnlocked(upgrade.name, false);
                 tech.DisableTech();

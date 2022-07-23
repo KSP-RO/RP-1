@@ -113,20 +113,20 @@ namespace RP0
             [HarmonyPatch(new Type[] { typeof(AvailablePart), typeof(Callback<PartListTooltip>), typeof(RenderTexture) })]
             internal static void Postfix_Setup1(PartListTooltip __instance, AvailablePart availablePart, bool ___requiresEntryPurchase)
             {
-                PatchButtons(__instance, availablePart, ___requiresEntryPurchase);
+                PatchButtons(__instance, availablePart, null, ___requiresEntryPurchase);
             }
 
             [HarmonyPostfix]
             [HarmonyPatch("Setup")]
             [HarmonyPatch(new Type[] { typeof(AvailablePart), typeof(PartUpgradeHandler.Upgrade), typeof(Callback<PartListTooltip>), typeof(RenderTexture) })]
-            internal static void Postfix_Setup2(PartListTooltip __instance, AvailablePart availablePart, bool ___requiresEntryPurchase)
+            internal static void Postfix_Setup2(PartListTooltip __instance, AvailablePart availablePart, PartUpgradeHandler.Upgrade up, bool ___requiresEntryPurchase)
             {
-                PatchButtons(__instance, availablePart, ___requiresEntryPurchase);
+                PatchButtons(__instance, null, up, ___requiresEntryPurchase);
             }
 
-            private static void PatchButtons(PartListTooltip __instance, AvailablePart availablePart, bool ___requiresEntryPurchase)
+            private static void PatchButtons(PartListTooltip __instance, AvailablePart availablePart, PartUpgradeHandler.Upgrade up, bool ___requiresEntryPurchase)
             {
-                if (___requiresEntryPurchase && KCTGameStates.TechList.Any(tech => tech.TechID == availablePart.TechRequired))
+                if (___requiresEntryPurchase && KCTGameStates.TechList.Any(tech => tech.TechID == (availablePart?.TechRequired ?? up.techRequired)))
                 {
                     __instance.buttonPurchaseContainer.SetActive(false);
                     __instance.costPanel.SetActive(true);

@@ -31,6 +31,7 @@ namespace RP0
         public double subsidyPaidOut;
         public double repFromPrograms;
         public double fundsGainMult;
+        public double confidence;
         public double reputation;
         public double headlinesHype;
 
@@ -60,6 +61,7 @@ namespace RP0
                 $"{nameof(subsidyPaidOut)}: {subsidyPaidOut}, " +
                 $"{nameof(repFromPrograms)}: {repFromPrograms}, " +
                 $"{nameof(fundsGainMult)}: {fundsGainMult}, " +
+                $"{nameof(confidence)}: {confidence}, " +
                 $"{nameof(reputation)}: {reputation}, " +
                 $"{nameof(headlinesHype)}: {headlinesHype}";
         }

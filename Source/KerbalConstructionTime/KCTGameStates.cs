@@ -53,6 +53,7 @@ namespace KerbalConstructionTime
         public static bool IsSimulatedFlight = false;
         public static double EditorBuildPoints = 0;
         public static double EditorShipMass = 0;
+        public static UnityEngine.Vector3 EditorShipSize = UnityEngine.Vector3.zero;
         public static bool EditorIsHumanRated = false;
         public static double EditorIntegrationPoints = 0;
         public static double EditorRolloutCosts = 0;

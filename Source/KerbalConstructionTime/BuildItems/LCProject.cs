@@ -101,10 +101,16 @@ namespace KerbalConstructionTime
 
         public bool IsComplete() => IsReversed ? Progress <= 0 : Progress >= BP;
 
-        public void IncrementProgress(double UTDiff)
+        public double IncrementProgress(double UTDiff)
         {
             double progBefore = Progress;
-            Progress += GetBuildRate() * UTDiff;
+            double bR = GetBuildRate();
+            if (bR == 0d)
+                return 0d;
+
+            double toGo = BP - Progress;
+            double incBP = bR * UTDiff;
+            Progress += incBP;
             if (Progress > BP) Progress = BP;
             else if (Progress < 0) Progress = 0;
 
@@ -124,11 +130,18 @@ namespace KerbalConstructionTime
                             ScreenMessages.PostScreenMessage($"Timewarp was stopped because there's insufficient funds to continue the {Name}");
                             KCTWarpController.Instance.StopWarp();
                         }
+                        return 0d;
                     }
                     else
                         Utilities.SpendFunds(steps * Cost / 10, TransactionReasons.VesselRollout);
                 }
             }
+            if (IsComplete())
+            {
+                return (1d - Math.Abs(toGo) / Math.Abs(incBP)) * UTDiff;
+            }
+
+            return 0d;
         }
     }
 }

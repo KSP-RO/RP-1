@@ -340,6 +340,9 @@ namespace RP0
     internal class RFECMPatcher
     {
         internal static string techNode = null;
+        internal static MethodInfo updateParts = typeof(RealFuels.EntryCostDatabase).GetMethod("UpdatePartEntryCosts", AccessTools.all);
+        internal static MethodInfo updateUpgrades = typeof(RealFuels.EntryCostDatabase).GetMethod("UpdateUpgradeEntryCosts", AccessTools.all);
+        internal static MethodInfo updateAll = typeof(RealFuels.EntryCostDatabase).GetMethod("UpdateEntryCosts", AccessTools.all);
         [HarmonyPrefix]
         [HarmonyPatch("PurchaseConfig")]
         internal static bool Prefix_PurchaseConfig(RealFuels.EntryCostManager __instance, ref string cfgName, ref bool __result)
@@ -373,7 +376,15 @@ namespace RP0
 
             RealFuels.EntryCostDatabase.SetUnlocked(cfgName);
 
-            RealFuels.EntryCostDatabase.UpdateEntryCosts();
+            if (updateAll == null)
+            {
+                updateParts.Invoke(null, new object[] { });
+                updateUpgrades.Invoke(null, new object[] { });
+            }
+            else
+            {
+                updateAll.Invoke(null, new object[] { });
+            }
 
             __result = true;
             return false;

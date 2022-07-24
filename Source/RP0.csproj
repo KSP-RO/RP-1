@@ -62,6 +62,7 @@
     <Compile Include="Confidence.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Harmony\AdminPatcher.cs" />
+    <Compile Include="UnlockSubsidyHandler.cs" />
     <Compile Include="LocalizationHandler.cs" />
     <Compile Include="EventRegisterer.cs" />
     <Compile Include="EntryCostStorage.cs" />

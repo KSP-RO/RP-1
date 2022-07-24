@@ -4,7 +4,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 150) / 2, Screen.height / 5, 300, 50);
+        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 150) / 2, Screen.height / 5, 600, 50);
         private static bool _dontShowFirstRunAgain = false;
         public static void ResetShowFirstRunAgain() { _dontShowFirstRunAgain = false; }
 
@@ -31,12 +31,20 @@ namespace KerbalConstructionTime
             //}
 
             GUILayout.Label($"{step++}) If you want to play from a different site than Cape Canaveral, switch to the Tracking Station and select a new site.");
+            if (GUILayout.Button($"Go to Tracking Station", HighLogic.Skin.button))
+            {
+                EnterTS();
+            }
             GUILayout.Label("");
 
             if (!KCTGameStates.StartedProgram)
             {
                 GUILayout.Label($"{step++}) Choose your starting Programs.");
                 GUILayout.Label("These provide you with funds over time, and allow you to select relevant contracts in Mission Control. Go to the Admin Building to select them.");
+                if (GUILayout.Button($"Go to Administration", HighLogic.Skin.button))
+                {
+                    EnterAdmin();
+                }
                 GUILayout.Label("");
             }
 
@@ -44,7 +52,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.Label($"{step++}) Build a starting Launch Complex. To know what size LC you need, you should go to the VAB and create/load a vessel, and then click New in the SSM window. The LC properties will be set to support that vessel.");
                 GUILayout.Label("You can also access the New LC window from the main Space Center Management UI's Operations tab, if you know what properties you want. Once you have LCs built you can also modify them the same way.");
-                if (GUILayout.Button($"Go to the VAB", HighLogic.Skin.button))
+                if (GUILayout.Button($"Go to VAB", HighLogic.Skin.button))
                 {
                     EnterVAB();
                 }
@@ -113,6 +121,19 @@ namespace KerbalConstructionTime
             EditorDriver.StartupBehaviour = (EditorDriver.StartupBehaviours)startupBehaviour;
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
             EditorDriver.StartEditor(EditorFacility.VAB);
+        }
+
+        private static void EnterAdmin()
+        {
+            GameEvents.onGUIAdministrationFacilitySpawn.Fire();
+            GameEvents.onGUIAdministrationFacilityDespawn.Add(KCTEvents.Instance.OnExitAdmin);
+            GUIStates.ShowFirstRun = false;
+        }
+
+        private static void EnterTS()
+        {
+            GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+            HighLogic.LoadScene(GameScenes.TRACKSTATION);
         }
     }
 }

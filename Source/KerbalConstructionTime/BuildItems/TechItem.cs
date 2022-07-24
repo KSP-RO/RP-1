@@ -158,16 +158,22 @@ namespace KerbalConstructionTime
 
         public bool IsComplete() => Progress >= ScienceCost;
 
-        public void IncrementProgress(double UTDiff)
+        public double IncrementProgress(double UTDiff)
         {
             // Don't progress blocked items
             if (GetBlockingTech(KCTGameStates.TechList) != null)
-                return;
+                return 0d;
 
-            Progress += BuildRate * UTDiff;
+            double bR = BuildRate;
+            if (bR == 0d && PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
+                return 0d;
+
+            double toGo = ScienceCost - Progress;
+            double increment = bR * UTDiff;
+            Progress += increment;
             if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
             {
-                if (ProtoNode == null) return;
+                if (ProtoNode == null) return 0d;
                 EnableTech();
 
                 try
@@ -183,7 +189,11 @@ namespace KerbalConstructionTime
 
                 for (int j = 0; j < KCTGameStates.TechList.Count; j++)
                     KCTGameStates.TechList[j].UpdateBuildRate(j);
+
+                return (1d - toGo / increment) * UTDiff;
             }
+
+            return 0d;
         }
 
         public string GetBlockingTech(KCTObservableList<TechItem> techList)

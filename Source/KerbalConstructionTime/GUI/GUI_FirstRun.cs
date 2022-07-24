@@ -4,7 +4,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 150) / 2, Screen.height / 5, 600, 50);
+        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 480) / 2, Screen.height / 5, 480, 50);
         private static bool _dontShowFirstRunAgain = false;
         public static void ResetShowFirstRunAgain() { _dontShowFirstRunAgain = false; }
 

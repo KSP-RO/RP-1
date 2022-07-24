@@ -25,7 +25,8 @@
 		{ "name" : "ClickThroughBlocker" },
 		{ "name" : "ToolbarController" },
 		{ "name" : "Kerbalism-Config-RO" },
-		{ "name" : "KSPCommunityFixes" }
+		{ "name" : "KSPCommunityFixes" },
+		{ "name" : "KerbalChangelog" }
 	],
 	"recommends" : [
 		{ "name" : "RSSDateTimeFormatter" },
@@ -37,6 +38,7 @@
 		{ "name" : "ROTanks" },
 		{ "name" : "ROCapsules" },
 		{ "name" : "ROSolar" },
+		{ "name" : "ROHeatshields" },
 		{ "name" : "B9-PWings-Fork" },
 		{ "name" : "KSPWheel" },
 		{ "name" : "PersistentRotationUpgraded" },

@@ -10,13 +10,21 @@ namespace KerbalConstructionTime
         public double GetTimeLeftEst(double offset) => EstimatedTimeLeft;
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
         public bool IsComplete() => Progress >= BP;
-        public virtual void IncrementProgress(double UTDiff)
+        public virtual double IncrementProgress(double UTDiff)
         {
-            if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
+            double excessTime = 0d;
+            if (!IsComplete())
+            {
+                double bR = GetBuildRate();
+                excessTime = AddProgress(bR * UTDiff) / bR;
+            }
+
             if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
             {
                 ProcessComplete();
             }
+
+            return excessTime;
         }
 
         protected abstract void ProcessComplete();
@@ -168,11 +176,17 @@ namespace KerbalConstructionTime
         }
 
 
-        private void AddProgress(double amt)
+        private double AddProgress(double amt)
         {
+            if (amt == 0d)
+                return 0d;
             double newProgress = Progress + amt;
+            double extraProgress = 0d;
             if (newProgress > BP)
+            {
+                extraProgress = newProgress - BP;
                 newProgress = BP;
+            }
             double costDelta = newProgress / BP * Cost - SpentCost;
             if (costDelta > 1d)
             {
@@ -183,13 +197,14 @@ namespace KerbalConstructionTime
                         ScreenMessages.PostScreenMessage("Timewarp was stopped because there's insufficient funds to continue the construction");
                         KCTWarpController.Instance.StopWarp();
                     }
-                    return;
+                    return 0d;
                 }
 
                 Utilities.SpendFunds(costDelta, TransactionReasons.StructureConstruction);
                 SpentCost += costDelta;
             }
             Progress = newProgress;
+            return extraProgress;
         }
     }
 

@@ -96,7 +96,7 @@ namespace RP0
             }
         }
 
-        public double ResearchSalaryPerDay => _maintenanceCostMult * Researchers * Settings.salaryEngineers / 365.25d;
+        public double ResearchSalaryPerDay => _maintenanceCostMult * Researchers * Settings.salaryResearchers / 365.25d;
 
         public struct SubsidyDetails
         {

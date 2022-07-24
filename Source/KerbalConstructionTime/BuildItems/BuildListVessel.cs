@@ -899,11 +899,23 @@ namespace KerbalConstructionTime
 
         public bool IsComplete() => Progress >= BuildPoints + IntegrationPoints;
 
-        public void IncrementProgress(double UTDiff)
+        public double IncrementProgress(double UTDiff)
         {
-            Progress += BuildRate * UTDiff;
+            double bR = BuildRate;
+            if (bR == 0)
+                return 0d;
+
+            double toGo = BuildPoints + IntegrationPoints - Progress;
+            double amt = bR * UTDiff;
+            Progress += bR * UTDiff;
             if (IsComplete())
+            {
                 Utilities.MoveVesselToWarehouse(this);
+                if (amt > toGo)
+                    return (1d - toGo / amt) * UTDiff;
+            }
+
+            return 0d;
         }
     }
 

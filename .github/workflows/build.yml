@@ -66,7 +66,6 @@ jobs:
           msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
           cp -v ${GITHUB_WORKSPACE}/Source/ClearInputLocks/obj/x64/Release/ClearInputLocks.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/ClearInputLocks.dll
           cp -v ${GITHUB_WORKSPACE}/Source/CC_RP0/obj/x64/Release/CC_RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/CC_RP0.dll
-          cp -v ${GITHUB_WORKSPACE}/Source/KerbalConstructionTime/obj/Release/RP0KCT.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0KCT.dll
           cp -v ${GITHUB_WORKSPACE}/Source/obj/x64/Release/RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0.dll
         
       - name: Setup python

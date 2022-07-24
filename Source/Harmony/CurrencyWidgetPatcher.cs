@@ -164,6 +164,7 @@ namespace RP0
                 var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
                 tooltip.prefab = prefab;
                 tooltip.getStringAction = GetTooltipText;
+                tooltip.continuousUpdate = true;
             }
 
             private static string GetTooltipText()

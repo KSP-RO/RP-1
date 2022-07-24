@@ -9,6 +9,6 @@
         double GetTimeLeftEst(double offset);
         BuildListVessel.ListType GetListType();
         bool IsComplete();
-        void IncrementProgress(double UTDiff);
+        double IncrementProgress(double UTDiff);
     }
 }

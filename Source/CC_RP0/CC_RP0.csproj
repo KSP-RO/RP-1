@@ -80,10 +80,6 @@
     <Compile Include="RP1ReturnHomeFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KerbalConstructionTime\KerbalConstructionTime.csproj">
-      <Project>{93908b2a-0859-4dab-8873-d32a4c633308}</Project>
-      <Name>KerbalConstructionTime</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RP0.csproj">
       <Project>{997854F8-4EFB-4A78-87BC-F7C8CEA64669}</Project>
       <Name>RP0</Name>

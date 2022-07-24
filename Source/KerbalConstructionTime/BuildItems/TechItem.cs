@@ -190,9 +190,12 @@ namespace KerbalConstructionTime
                 for (int j = 0; j < KCTGameStates.TechList.Count; j++)
                     KCTGameStates.TechList[j].UpdateBuildRate(j);
 
-                return (1d - toGo / increment) * UTDiff;
+                double portion = toGo / increment;
+                RP0.UnlockSubsidyHandler.Instance.IncrementSubsidyTime(TechID, portion * UTDiff);
+                return (1d - portion) * UTDiff;
             }
 
+            RP0.UnlockSubsidyHandler.Instance.IncrementSubsidyTime(TechID, UTDiff);
             return 0d;
         }
 

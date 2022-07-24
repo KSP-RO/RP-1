@@ -604,10 +604,11 @@ namespace RP0.ProceduralAvionics
             if (CurrentProceduralAvionicsConfig == null && !string.IsNullOrEmpty(avionicsConfigName))
                 CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
 
+            techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
+
             if (!CurrentProceduralAvionicsTechNode.IsAvailable)
             {
                 validationError = $"unlock tech {CurrentProceduralAvionicsTechNode.TechNodeTitle}";
-                techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
                 return false;
             }
 

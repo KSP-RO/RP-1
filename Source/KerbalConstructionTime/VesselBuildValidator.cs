@@ -312,12 +312,13 @@ namespace KerbalConstructionTime
                                 PM = pm,
                                 Error = (string)parameters[0],
                                 CanBeResolved = (bool)parameters[1],
-                                CostToResolve = (float)parameters[2]
+                                CostToResolve = (float)parameters[2],
+                                TechToResolve = (string)parameters[3]
                             };
 
                             // Try to autoresolve issues that cost next to nothing
                             if (validationError.CanBeResolved && validationError.CostToResolve <= 1.1 &&
-                                PurchaseConfig(pm))
+                                PurchaseConfig(pm, validationError.TechToResolve))
                             {
                                 continue;
                             }
@@ -360,10 +361,10 @@ namespace KerbalConstructionTime
                                      new DialogGUILabel(txt, expandW: true),
                                      new DialogGUIButton($"Unlock ({error.CostToResolve:N0})",
                                                          () => {
-                                                             PurchaseConfig(error.PM);
+                                                             PurchaseConfig(error.PM, error.TechToResolve);
                                                              _validationResult = ValidationResult.Rerun;
                                                          },
-                                                         () => Funding.CanAfford(error.CostToResolve),
+                                                         () => Funding.Instance.Funds >= error.CostToResolve - RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve),
                                                          100, -1, true)));
                     }
                     else
@@ -383,10 +384,12 @@ namespace KerbalConstructionTime
             return list.ToArray();
         }
 
-        private bool PurchaseConfig(PartModule pm)
+        private bool PurchaseConfig(PartModule pm, string tech)
         {
+            RP0.RFECMPatcher.techNode = tech;
             var mi = pm.GetType().GetMethod("ResolveValidationError", BindingFlags.Instance | BindingFlags.Public);
             object retVal = mi?.Invoke(pm, new object[] { });
+            RP0.RFECMPatcher.techNode = null;
 
             return (retVal is bool b) && b;
         }
@@ -397,6 +400,7 @@ namespace KerbalConstructionTime
             public string Error { get; set; }
             public bool CanBeResolved { get; set; }
             public float CostToResolve { get; set; }
+            public string TechToResolve { get; set; }
         }
     }
 }

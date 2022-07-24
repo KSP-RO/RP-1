@@ -548,6 +548,12 @@ namespace KerbalConstructionTime
             Utilities.SetPartUpgradeText();
             KSCContextMenuOverrider.AreTextsUpdated = false;
         }
+
+        public void OnExitAdmin()
+        {
+            GameEvents.onGUIAdministrationFacilityDespawn.Remove(OnExitAdmin);
+            InputLockManager.RemoveControlLock("administrationFacility");
+        }
     }
 }
 

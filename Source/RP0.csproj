@@ -68,6 +68,8 @@
     <Compile Include="Harmony\ScienceWidget.cs" />
     <Compile Include="Harmony\FundsWidget.cs" />
     <Compile Include="Harmony\RealFuels.cs" />
+    <Compile Include="Harmony\Strategy.cs" />
+    <Compile Include="Harmony\StrategySystemConfig.cs" />
     <Compile Include="UnlockSubsidyHandler.cs" />
     <Compile Include="LocalizationHandler.cs" />
     <Compile Include="EventRegisterer.cs" />
@@ -82,7 +84,7 @@
     <Compile Include="Harmony\ContractPatcher.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment.cs" />
     <Compile Include="GameplayTips.cs" />
-    <Compile Include="Harmony\HarmonyPatcher.cs" />
+    <Compile Include="HarmonyPatcher.cs" />
     <Compile Include="Harmony\CustomBarnKit.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />

@@ -386,10 +386,10 @@ namespace KerbalConstructionTime
 
         private bool PurchaseConfig(PartModule pm, string tech)
         {
-            RP0.RFECMPatcher.techNode = tech;
+            RP0.Harmony.RFECMPatcher.techNode = tech;
             var mi = pm.GetType().GetMethod("ResolveValidationError", BindingFlags.Instance | BindingFlags.Public);
             object retVal = mi?.Invoke(pm, new object[] { });
-            RP0.RFECMPatcher.techNode = null;
+            RP0.Harmony.RFECMPatcher.techNode = null;
 
             return (retVal is bool b) && b;
         }

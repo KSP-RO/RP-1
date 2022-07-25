@@ -25,7 +25,6 @@ namespace RP0
             {
                 EntryCostDatabaseAccessor.Init();
                 EntryCostDatabaseAccessor.GetFields();
-//                EntryCostDatabaseAccessor.ScanDatabase();
                 foreach (AvailablePart ap in EntryCostDatabaseAccessor.nameToPart.Values)
                 {
                     if (ap.partPrefab.FindModuleImplementing<ModuleShowInfo>() is ModuleShowInfo msi)
@@ -121,17 +120,6 @@ namespace RP0
             }
 
             return $"{CostString(h, h.cost)}{s}";
-        }
-
-        public static void ScanDatabase()
-        {
-            if (holders != null)
-            {
-                foreach (var x in holders)   // Recurse through the database to touch all holders.
-                {
-                    DisplayHolder(x.Value, true);
-                }
-            }
         }
     }
 

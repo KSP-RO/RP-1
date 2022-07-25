@@ -18,13 +18,8 @@ namespace RP0.Harmony
         [HarmonyPatch("UpdatePurchaseButton")]
         internal static bool Prefix_UpdatePurchaseButton(RDController __instance)
         {
-            if (KCTGameStates.TechList.Any(tech => tech.TechID == __instance.node_selected.tech.techID))
-            {
-                __instance.actionButton.gameObject.SetActive(false);
-                return false;
-            }
-
-            return true;
+            __instance.actionButton.gameObject.SetActive(false);
+            return false;
         }
 
         [HarmonyPostfix]

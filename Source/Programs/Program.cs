@@ -56,6 +56,9 @@ namespace RP0.Programs
         [Persistent(isPersistant = false)]
         public double baseFunding;
 
+        [Persistent(isPersistant = false)]
+        public string fundingCurve;
+
         [Persistent]
         public double acceptedUT;
 
@@ -80,9 +83,6 @@ namespace RP0.Programs
 
         [Persistent]
         public double repPenaltyAssessed;
-
-        [Persistent(isPersistant = false)]
-        public DoubleCurve overrideFundingCurve = new DoubleCurve();
 
         [Persistent]
         public Speed speed = Speed.Normal;
@@ -162,9 +162,8 @@ namespace RP0.Programs
             objectivesPrettyText = toCopy.objectivesPrettyText;
             nominalDurationYears = toCopy.nominalDurationYears;
             baseFunding = toCopy.baseFunding;
+            fundingCurve = toCopy.fundingCurve;
             ConfigNode n = new ConfigNode();
-            toCopy.overrideFundingCurve.Save(n);
-            overrideFundingCurve.Load(n);
             repDeltaOnCompletePerYearEarly = toCopy.repDeltaOnCompletePerYearEarly;
             repPenaltyPerYearLate = toCopy.repPenaltyPerYearLate;
             RequirementsBlock = toCopy.RequirementsBlock;
@@ -342,7 +341,7 @@ namespace RP0.Programs
         public double GetFundsAtTime(double time)
         {
             double fractionOfTotalDuration = time / DurationYears / secsPerYear;
-            DoubleCurve curve = overrideFundingCurve.keys.Count > 0 ? overrideFundingCurve : ProgramHandler.Settings.paymentCurve;
+            DoubleCurve curve = ProgramHandler.Settings.FundingCurve(fundingCurve);
             double curveFactor = curve.Evaluate(fractionOfTotalDuration);
             return curveFactor * TotalFunding;
         }

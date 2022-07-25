@@ -9,50 +9,47 @@ using UnityEngine;
 using System.Reflection;
 using KSP.Localization;
 
-namespace RP0
+namespace RP0.Harmony
 {
-    public partial class HarmonyPatcher : MonoBehaviour
+    [HarmonyPatch(typeof(RDController))]
+    internal class PatchRDController
     {
-        [HarmonyPatch(typeof(RDController))]
-        internal class PatchRDController
+        [HarmonyPrefix]
+        [HarmonyPatch("UpdatePurchaseButton")]
+        internal static bool Prefix_UpdatePurchaseButton(RDController __instance)
         {
-            [HarmonyPrefix]
-            [HarmonyPatch("UpdatePurchaseButton")]
-            internal static bool Prefix_UpdatePurchaseButton(RDController __instance)
+            if (KCTGameStates.TechList.Any(tech => tech.TechID == __instance.node_selected.tech.techID))
             {
-                if (KCTGameStates.TechList.Any(tech => tech.TechID == __instance.node_selected.tech.techID))
-                {
-                    __instance.actionButton.gameObject.SetActive(false);
-                    return false;
-                }
-
-                return true;
+                __instance.actionButton.gameObject.SetActive(false);
+                return false;
             }
 
-            [HarmonyPostfix]
-            [HarmonyPatch("ShowNodePanel")]
-            internal static void Postfix_ShowNodePanel(RDController __instance, ref RDNode node)
-            {
-                string techID = node.tech.techID;
-                if (node.tech.state == RDTech.State.Available || KCTGameStates.TechList.Any(tech => tech.TechID == techID))
-                {
-                    __instance.node_description.text = Localizer.Format("#rp0UnlockSubsidyDesc",
-                        UnlockSubsidyHandler.Instance.GetLocalSubsidyAmount(node.tech.techID).ToString("N0"),
-                        UnlockSubsidyHandler.Instance.GetSubsidyAmount(node.tech.techID).ToString("N0"))
-                        + "\n\n" + __instance.node_description.text;
-                }
-                else
-                {
-                    __instance.node_description.text = "\n\n\n" + __instance.node_description.text;
-                }
-            }
+            return true;
+        }
 
-            [HarmonyPostfix]
-            [HarmonyPatch("Start")]
-            internal static void Postfix_Start(RDController __instance)
+        [HarmonyPostfix]
+        [HarmonyPatch("ShowNodePanel")]
+        internal static void Postfix_ShowNodePanel(RDController __instance, ref RDNode node)
+        {
+            string techID = node.tech.techID;
+            if (node.tech.state == RDTech.State.Available || KCTGameStates.TechList.Any(tech => tech.TechID == techID))
             {
-                __instance.node_description.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0.75f);
+                __instance.node_description.text = Localizer.Format("#rp0UnlockSubsidyDesc",
+                    UnlockSubsidyHandler.Instance.GetLocalSubsidyAmount(node.tech.techID).ToString("N0"),
+                    UnlockSubsidyHandler.Instance.GetSubsidyAmount(node.tech.techID).ToString("N0"))
+                    + "\n\n" + __instance.node_description.text;
             }
+            else
+            {
+                __instance.node_description.text = "\n\n\n" + __instance.node_description.text;
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("Start")]
+        internal static void Postfix_Start(RDController __instance)
+        {
+            __instance.node_description.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0.75f);
         }
     }
 }

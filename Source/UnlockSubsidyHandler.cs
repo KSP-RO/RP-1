@@ -159,9 +159,7 @@ namespace RP0
 
         private float ProcessSubsidy(float entryCost, string tech)
         {
-            var currencyQuery = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -entryCost, 0f, 0f);
-            double total = -currencyQuery.GetTotal(Currency.Funds);
-            double remainingCost = SpendSubsidy(tech, total);
+            double remainingCost = SpendSubsidy(tech, entryCost);
             // Refresh description to show new subsidy remaining
             if (KSP.UI.Screens.RDController.Instance != null)
                 KSP.UI.Screens.RDController.Instance.ShowNodePanel(KSP.UI.Screens.RDController.Instance.node_selected);

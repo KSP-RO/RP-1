@@ -77,10 +77,10 @@
     <Compile Include="Harmony\KerbalismPatcher.cs" />
     <Compile Include="Harmony\ContractsApp.cs" />
     <Compile Include="Harmony\DifficultyOptionsMenu.cs" />
-    <Compile Include="Harmony\CurrencyWidgetPatcher.cs" />
+    <Compile Include="Harmony\ReputationWidget.cs" />
     <Compile Include="Harmony\Reputation.cs" />
     <Compile Include="Harmony\ContractPatcher.cs" />
-    <Compile Include="Harmony\RnDPatcher.cs" />
+    <Compile Include="Harmony\ResearchAndDevelopment.cs" />
     <Compile Include="GameplayTips.cs" />
     <Compile Include="Harmony\HarmonyPatcher.cs" />
     <Compile Include="Harmony\CustomBarnKit.cs" />

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Content Include="..\GameData\RP-0\AdminDisable.cfg" />
     <Content Include="..\GameData\RP-0\Avionics.cfg" />
+    <Content Include="..\GameData\RP-0\changelog.cfg" />
     <Content Include="..\GameData\RP-0\CrewHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-0\CrewSettings.cfg" />
     <Content Include="..\GameData\RP-0\CrewTrainingTimes.cfg" />

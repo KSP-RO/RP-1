@@ -164,8 +164,7 @@ namespace RP0
             if (KSP.UI.Screens.RDController.Instance != null)
                 KSP.UI.Screens.RDController.Instance.ShowNodePanel(KSP.UI.Screens.RDController.Instance.node_selected);
 
-            // Convert back through the CMQ operation
-            return (float)(remainingCost * entryCost / total);
+            return (float)remainingCost;
         }
 
         private void OnPartPurchased(AvailablePart ap)

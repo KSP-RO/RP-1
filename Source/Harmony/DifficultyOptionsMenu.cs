@@ -6,35 +6,32 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-namespace RP0
+namespace RP0.Harmony
 {
-    public partial class HarmonyPatcher : MonoBehaviour
+    [HarmonyPatch(typeof(DifficultyOptionsMenu))]
+    internal class PatchDifficultyOptionsMenu
     {
-        [HarmonyPatch(typeof(DifficultyOptionsMenu))]
-        internal class PatchDifficultyOptionsMenu
+        [HarmonyTranspiler]
+        [HarmonyPatch("CreateDifficultWindow")]
+        internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            [HarmonyTranspiler]
-            [HarmonyPatch("CreateDifficultWindow")]
-            internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            bool skipNext = false;
+            foreach (var instruction in instructions)
             {
-                bool skipNext = false;
-                foreach (var instruction in instructions)
+                if (skipNext)
                 {
-                    if (skipNext)
-                    {
-                        skipNext = false;
-                        continue;
-                    }
-
-                    if (instruction.LoadsConstant(-100f))
-                    {
-                        yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 0f);
-                        yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 10f);
-                        skipNext = true;
-                    }
-                    else
-                        yield return instruction;
+                    skipNext = false;
+                    continue;
                 }
+
+                if (instruction.LoadsConstant(-100f))
+                {
+                    yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 0f);
+                    yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 10f);
+                    skipNext = true;
+                }
+                else
+                    yield return instruction;
             }
         }
     }

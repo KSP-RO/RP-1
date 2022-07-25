@@ -11,29 +11,26 @@ using System.Reflection;
 using RP0.Programs;
 using UniLinq;
 
-namespace RP0
+namespace RP0.Harmony
 {
-    public partial class HarmonyPatcher : MonoBehaviour
+    [HarmonyPatch]
+    internal class PatchCBK
     {
-        [HarmonyPatch]
-        internal class PatchCBK
-        {
-            static MethodBase TargetMethod() => AccessTools.TypeByName("CustomBarnKit.CustomBarnKit").GetMethod("LoadUpgradesPrices", AccessTools.all);
-            
-            [HarmonyPrefix]
-            internal static void Prefix_LoadUpgradesPrices(ref bool ___varLoaded, out bool __state)
-            {
-                __state = ___varLoaded;
-            }
+        static MethodBase TargetMethod() => AccessTools.TypeByName("CustomBarnKit.CustomBarnKit").GetMethod("LoadUpgradesPrices", AccessTools.all);
 
-            [HarmonyPostfix]
-            internal static void Postfix_LoadUpgradesPrices(ref bool ___varLoaded, bool __state)
+        [HarmonyPrefix]
+        internal static void Prefix_LoadUpgradesPrices(ref bool ___varLoaded, out bool __state)
+        {
+            __state = ___varLoaded;
+        }
+
+        [HarmonyPostfix]
+        internal static void Postfix_LoadUpgradesPrices(ref bool ___varLoaded, bool __state)
+        {
+            if (___varLoaded && !__state)
             {
-                if (___varLoaded && !__state)
-                {
-                    MaintenanceHandler.ClearFacilityCosts();
-                    MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
-                }
+                MaintenanceHandler.ClearFacilityCosts();
+                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
             }
         }
     }

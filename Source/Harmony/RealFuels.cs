@@ -9,7 +9,7 @@ using UnityEngine;
 using System.Reflection;
 using KSP.Localization;
 
-namespace RP0
+namespace RP0.Harmony
 {
     [HarmonyPatch(typeof(RealFuels.ModuleEngineConfigsBase))]
     internal class RFMECBPatcher

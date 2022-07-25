@@ -151,10 +151,10 @@ namespace RP0.ProceduralAvionics
 
         internal static bool PurchaseConfig(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
         {
-            RFECMPatcher.techNode = techNode.TechNodeName;
+            RP0.Harmony.RFECMPatcher.techNode = techNode.TechNodeName;
             string ecmName = GetEcmName(avionicsConfigName, techNode);
             bool retVal = EntryCostManager.Instance.PurchaseConfig(ecmName);
-            RFECMPatcher.techNode = null;
+            RP0.Harmony.RFECMPatcher.techNode = null;
             return retVal;
         }
 

@@ -58,6 +58,8 @@
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
+    <Compile Include="Harmony\Contract.cs" />
+    <Compile Include="Harmony\ContractParameter.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
     <Compile Include="Confidence.cs" />
     <Compile Include="Debug.cs" />
@@ -81,7 +83,7 @@
     <Compile Include="Harmony\DifficultyOptionsMenu.cs" />
     <Compile Include="Harmony\ReputationWidget.cs" />
     <Compile Include="Harmony\Reputation.cs" />
-    <Compile Include="Harmony\ContractPatcher.cs" />
+    <Compile Include="Harmony\ContractSystem.cs" />
     <Compile Include="Harmony\ResearchAndDevelopment.cs" />
     <Compile Include="GameplayTips.cs" />
     <Compile Include="HarmonyPatcher.cs" />

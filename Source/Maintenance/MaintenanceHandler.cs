@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using KerbalConstructionTime;
 using RP0.Crew;
 using RP0.Programs;
@@ -57,10 +57,15 @@ namespace RP0
 
         #region Component costs
 
-        public double RndCost = 0d;
-        public double McCost = 0d;
-        public double TsCost = 0d;
-        public double AcCost = 0d;
+        public readonly Dictionary<SpaceCenterFacility, double> FacilityMaintenanceCosts = new Dictionary<SpaceCenterFacility, double>();
+        public readonly SpaceCenterFacility[] FacilitiesForMaintenance = { 
+            SpaceCenterFacility.Administration,
+            SpaceCenterFacility.AstronautComplex,
+            SpaceCenterFacility.MissionControl,
+            SpaceCenterFacility.ResearchAndDevelopment,
+            SpaceCenterFacility.TrackingStation
+        };
+
         public double LCsCost = 0d;
 
         public double TrainingUpkeepPerDay = 0d;
@@ -70,7 +75,7 @@ namespace RP0
         public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
         public double NetUpkeepPerDay = 0d;
 
-        public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost + LCsCost;
+        public double FacilityUpkeepPerDay => FacilityMaintenanceCosts.Values.Sum() + LCsCost;
 
         // TODO this is duplicate code with the KCT side
         public double IntegrationSalaryPerDay
@@ -251,20 +256,41 @@ namespace RP0
             return upkeep;
         }
 
+        private double LCUpkeep(float massMax, Vector3 sizeMax, bool humanRated, int padCount, LaunchComplexType type)
+        {
+            switch (type)
+            {
+                case LaunchComplexType.Hangar:
+                    return ComputeDailyMaintenanceCost(KCT_GUI.GetPadStats(massMax, sizeMax, humanRated, out _, out _, out _), FacilityMaintenanceType.Hangar);
+
+                case LaunchComplexType.Pad:
+                    KCT_GUI.GetPadStats(massMax, sizeMax, humanRated, out double padCost, out double vabCost, out _);
+                    return ComputeDailyMaintenanceCost((vabCost + padCount * padCost), FacilityMaintenanceType.LC);
+            }
+            return 0d;
+        }
+
         public double LCUpkeep(LCItem lc)
         {
             if (!lc.IsOperational)
-                return 0d;
-
-            switch (lc.LCType)
             {
-                case LaunchComplexType.Hangar:
-                    return ComputeDailyMaintenanceCost(KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out _, out _, out _), FacilityMaintenanceType.Hangar);
-
-                case LaunchComplexType.Pad:
-                    KCT_GUI.GetPadStats(lc.MassMax, lc.SizeMax, lc.IsHumanRated, out double padCost, out double vabCost, out _);
-                    return ComputeDailyMaintenanceCost((vabCost + lc.LaunchPadCount * padCost), FacilityMaintenanceType.LC);
+                // find LCConstruction
+                foreach (var lcc in lc.KSC.LCConstructions)
+                {
+                    if (lcc.LCID != lc.ID)
+                        return lcc.Progress / lcc.BP * LCUpkeep(lcc.LCData.massMax, lcc.LCData.sizeMax, lcc.LCData.isHumanRated, lc.LaunchPadCount, lcc.LCData.lcType);
+                }
+                return 0d;
             }
+
+            return LCUpkeep(lc.MassMax, lc.SizeMax, lc.IsHumanRated, lc.LaunchPadCount, lc.LCType);
+        }
+
+        private double GetFacilityUpgradeRatio(SpaceCenterFacility facility)
+        {
+            foreach (var fac in KCTGameStates.ActiveKSC.FacilityUpgrades)
+                if (fac.FacilityType == facility)
+                    return fac.Progress / fac.BP;
 
             return 0d;
         }
@@ -286,21 +312,29 @@ namespace RP0
                     LCsCost += LCUpkeep(lc);
             }
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.ResearchAndDevelopment, out float[] costs))
-                RndCost = ComputeDailyMaintenanceCost(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.ResearchAndDevelopment) * (costs.Length - 0.95f))));
+            foreach (SpaceCenterFacility facility in FacilitiesForMaintenance)
+            {
+                if (!_facilityLevelCosts.TryGetValue(facility, out float[] facCosts))
+                    continue;
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.MissionControl, out costs))
-                McCost = ComputeDailyMaintenanceCost(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) * (costs.Length - 0.95f))));
+                double cost = ComputeDailyMaintenanceCost(SumCosts(facCosts, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(facility) * (facCosts.Length - 0.95f))));
+                double ratio = GetFacilityUpgradeRatio(facility);
+                if (ratio > 0d)
+                {
+                    double newCost = ComputeDailyMaintenanceCost(SumCosts(facCosts, 1 + (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(facility) * (facCosts.Length - 0.95f))));
+                    cost = UtilMath.LerpUnclamped(cost, newCost, ratio);
+                }
+                FacilityMaintenanceCosts[facility] = cost;
+            }
 
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.TrackingStation, out costs))
-                TsCost = ComputeDailyMaintenanceCost(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) * (costs.Length - 0.95f))));
+            
 
             TrainingUpkeepPerDay = 0d;
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out costs))
+            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out float[] costs))
             {
                 float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
                 int lvlInt = (int)(lvl * (costs.Length - 0.95f));
-                AcCost = ComputeDailyMaintenanceCost(SumCosts(costs, lvlInt));
+                FacilityMaintenanceCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out double AcCost);
                 if (CrewHandler.Instance?.ActiveCourses != null)
                 {
                     double courses = CrewHandler.Instance.ActiveCourses.Count(c => c.Started);

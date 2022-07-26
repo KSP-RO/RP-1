@@ -502,7 +502,11 @@ namespace RP0.Programs
 
             if (extendedInfo)
             {
-                if (!wasAccepted)
+                if (wasAccepted)
+                {
+                    text += $"\n\nProgram Speed: {KSP.Localization.Localizer.GetStringByTag("#rp0ProgramSpeed" + (int)speed)}";
+                }
+                else
                 {
                     if (programsToDisableOnAccept.Count > 0)
                     {

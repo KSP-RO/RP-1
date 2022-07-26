@@ -40,7 +40,7 @@ namespace KerbalConstructionTime
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 3;
+        public const int VERSION = 4;
 
         public static ToolbarControl ToolbarControl;
 
@@ -155,17 +155,15 @@ namespace KerbalConstructionTime
             return (int)(engineers * RP0.MaintenanceHandler.Settings.salaryEngineers * RP0.MaintenanceHandler.Instance.MaintenanceCostMult);
         }
 
-        public static double GetEffectiveConstructionEngineersForSalary(KSCItem ksc) => ksc.ConstructionWorkers * (ksc.Constructions.Count == 0 ? PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult : 1d);
-
         public static double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)
         {
             double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
                 engineers += GetEffectiveEngineersForSalary(lc);
-            return engineers;
+            return engineers + ksc.UnassignedEngineers * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
         }
 
-        public static double GetEffectiveEngineersForSalary(KSCItem ksc) => GetEffectiveConstructionEngineersForSalary(ksc) + GetEffectiveIntegrationEngineersForSalary(ksc);
+        public static double GetEffectiveEngineersForSalary(KSCItem ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
 
         public static double GetEffectiveEngineersForSalary(LCItem lc)
         {
@@ -212,16 +210,8 @@ namespace KerbalConstructionTime
         {
             double delta = 0;
             foreach (var c in ksc.Constructions)
-            {
-                double left = c.EstimatedTimeLeft;
-                if (left > time)
-                {
-                    delta += (time / left) * (c.Cost - c.SpentCost);
-                    break;
-                }
-                delta += (c.Cost - c.SpentCost);
-                time -= left;
-            }
+                delta += c.GetConstructionCostOverTime(time);
+
             return delta;
         }
 

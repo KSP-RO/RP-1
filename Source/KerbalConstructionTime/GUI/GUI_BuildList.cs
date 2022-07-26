@@ -353,15 +353,14 @@ namespace KerbalConstructionTime
 
         private static void RenderConstructionList()
         {
-            _accumulatedTimeBefore = 0;
-
             KSCItem ksc = KCTGameStates.ActiveKSC;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
+            GUILayout.Label("Rate:", GUILayout.Width(75));
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label("Time Left:", GUILayout.Width(_width1));
-            GUILayout.Space(70);
+            GUILayout.Label("Time Left:", GUILayout.Width(_width1 / 2 + 5));
+            GUILayout.Space(30);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 
@@ -374,7 +373,7 @@ namespace KerbalConstructionTime
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
                 ConstructionBuildItem constr = ksc.Constructions[i];
-                totalCost += (constr.Cost - constr.SpentCost);
+                totalCost += (constr.Cost - constr.SpentCost) * constr.RushMultiplier;
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
@@ -386,23 +385,8 @@ namespace KerbalConstructionTime
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.SpentCost:N0} funds on this construction ({(constr.SpentCost / constr.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.SpentRushCost:N0} funds on this construction ({(constr.SpentCost / constr.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
-                }
-
-                double buildRate = constr.GetBuildRate();
-                if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
-                {
-                    ksc.Constructions.RemoveAt(i);
-                    ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, constr);
-                    forceRecheck = true;
-                }
-
-                if (i < ksc.Constructions.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
-                {
-                    ksc.Constructions.RemoveAt(i);
-                    ksc.Constructions.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i + 1, constr);
-                    forceRecheck = true;
                 }
 
                 if (forceRecheck)
@@ -410,28 +394,37 @@ namespace KerbalConstructionTime
                     forceRecheck = false;
                     ksc.RecalculateBuildRates(false);
                 }
+                double buildRate = constr.GetBuildRate();
                 DrawTypeIcon(constr);
-                GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
+                Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                 GUILayout.Label(new GUIContent(constr.GetItemName(), "name" + costTooltip));
-                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+
+                GUILayout.Label(new GUIContent(constr.WorkRate.ToString("P0"), $"rate{identifier}¶Materials cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                float newWorkRate = GUILayout.HorizontalSlider(constr.WorkRate, 0f, 1.5f, GUILayout.Width(45));
+                constr.WorkRate = Mathf.RoundToInt(newWorkRate * 100f) * 0.01f;
+
+                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2-5));
                 if (buildRate > 0d)
                 {
                     double seconds = constr.GetTimeLeft();
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
-                    _accumulatedTimeBefore += seconds;
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1 - 50));
                 }
                 else
                 {
-                    double seconds = constr.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, constr.GetItemName()+i, _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
-                    _accumulatedTimeBefore += seconds;
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1 - 50));
                 }
-                if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d && GUILayout.Button("Warp", GUILayout.Width(45)))
+
+                if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
                 {
-                    KCTWarpController.Create(constr);
+                    if (GUILayout.Button(new GUIContent("W", "Warp to"), GUILayout.Width(30)))
+                    {
+                        KCTWarpController.Create(constr);
+                    }
                 }
-                else if (HighLogic.LoadedSceneIsEditor)
-                    GUILayout.Space(45);
+                else
+                {
+                    GUILayout.Space(30);
+                }
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
@@ -455,20 +448,6 @@ namespace KerbalConstructionTime
             GUILayout.Label("Remaining cost of all constructions:");
             GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
-        }
-
-        private static void GetConstructionTooltip(ConstructionBuildItem constr, int i, out string costTooltip, out string identifier)
-        {
-            identifier = constr.GetItemName() + i;
-            costTooltip = $"Remaining Cost: √{(constr.Cost - constr.SpentCost):N0}";
-            if (constr is LCConstruction lcc)
-            {
-                if (lcc.LCData.lcType == LaunchComplexType.Pad)
-                    costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\n{costTooltip}";
-
-                costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.LCData.sizeMax)}\n{costTooltip}";
-            }
-            costTooltip = $"{identifier}¶{costTooltip}";
         }
 
         private static void RenderTechList()
@@ -653,7 +632,6 @@ namespace KerbalConstructionTime
                 foreach (var c in k.Constructions)
                 {
                     _timeBeforeItem[c] = accTime;
-                    accTime += c.GetTimeLeftEst(accTime);
                     _allItems.Add(c);
                 }
             }
@@ -703,7 +681,7 @@ namespace KerbalConstructionTime
                     GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
                 else if (t is ConstructionBuildItem constr)
                 {
-                    GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
+                    Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                     GUILayout.Label(new GUIContent( t.GetItemName(), "name" + costTooltip ));
                 }
                 else

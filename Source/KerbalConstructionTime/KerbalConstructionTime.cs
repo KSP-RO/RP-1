@@ -641,9 +641,6 @@ namespace KerbalConstructionTime
                 int totalEngineers = 0;
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
-                    if (ksc.Constructions.Count > 0 && ksc.ConstructionWorkers > 0)
-                        skillupEng = true;
-
                     totalEngineers += ksc.Engineers;
 
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
@@ -972,19 +969,12 @@ namespace KerbalConstructionTime
                     {
                         foreach (var ksc in KCTGameStates.KSCs)
                         {
-                            double timePortion = UToffset;
-                            if (ksc.ConstructionWorkers == 0)
-                                continue;
-
-                            for(int i = 0; i < ksc.Constructions.Count && timePortion > 0; ++i)
+                            for(int i = 0; i < ksc.Constructions.Count; ++i)
                             {
                                 var c = ksc.Constructions[i];
-                                double t = c.EstimatedTimeLeft;
-                                if (t > timePortion)
-                                    break;
-
-                                timePortion -= t;
-                                c.Progress = c.BP;
+                                double t = c.GetTimeLeft();
+                                if (t <= UToffset)
+                                    c.Progress = c.BP;
                             }
                         }
                     }

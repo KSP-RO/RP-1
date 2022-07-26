@@ -94,8 +94,8 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Engineers:", GUILayout.ExpandWidth(false));
             GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
-            GUILayout.Label($"Free for Construction:", GetLabelRightAlignStyle());
-            GUILayout.Label($"{KSC.ConstructionWorkers}", GetLabelRightAlignStyle(), GUILayout.Width(60));
+            GUILayout.Label($"Unassigned:", GetLabelRightAlignStyle());
+            GUILayout.Label($"{KSC.UnassignedEngineers}", GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.EndHorizontal();
 
             RenderHireFire(false, out int fireAmount, out int hireAmount);
@@ -236,23 +236,6 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Construction Rate: {cRateFull:N3} => {cRate:N3} BP/sec)", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            if (KSC.Constructions.Count > 0)
-            {
-                ConstructionBuildItem b = KSC.Constructions[0];
-                GUILayout.Label($"Current Construction: {b.GetItemName()}");
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip((b.BP - b.Progress) / cRate, "PersonnelConstr"), GetLabelRightAlignStyle());
-            }
-            else
-            {
-                GUILayout.Label($"No construction projects");
-            }
-            GUILayout.EndHorizontal();
         }
 
         private static void RenderResearchersSection(bool isCostCacheInvalid)
@@ -339,7 +322,7 @@ namespace KerbalConstructionTime
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? KCTGameStates.Researchers : KCTGameStates.ActiveKSC.ConstructionWorkers;
+                fireAmount = research ? KCTGameStates.Researchers : KCTGameStates.ActiveKSC.UnassignedEngineers;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -427,7 +410,7 @@ namespace KerbalConstructionTime
             if (add)
             {
                 signChar = "+";
-                limit = Math.Min(currentLC.KSC.ConstructionWorkers, currentLC.MaxEngineers - currentLC.Engineers);
+                limit = Math.Min(currentLC.KSC.UnassignedEngineers, currentLC.MaxEngineers - currentLC.Engineers);
             }
             else
             {

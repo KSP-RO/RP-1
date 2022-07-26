@@ -404,6 +404,8 @@ namespace KerbalConstructionTime
         [Persistent]
         public FloatCurve ResearcherSkillupRate = new FloatCurve();
         [Persistent]
+        public FloatCurve ConstructionRushCost = new FloatCurve();
+        [Persistent]
         public EfficiencyUpgrades EngineerEfficiencyUpgrades = new EfficiencyUpgrades();
         [Persistent]
         public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
@@ -439,6 +441,13 @@ namespace KerbalConstructionTime
             {
                 tmp = new ConfigNode("GlobalEngineerSkillupRate");
                 GlobalEngineerSkillupRate.Save(tmp);
+                node.AddNode(tmp);
+            }
+            tmp = node.GetNode("ConstructionRushCost");
+            if (tmp == null)
+            {
+                tmp = new ConfigNode("ConstructionRushCost");
+                ConstructionRushCost.Save(tmp);
                 node.AddNode(tmp);
             }
 

@@ -62,10 +62,8 @@ namespace KerbalConstructionTime
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             if (KSC == null)
                 KSC = KCTGameStates.ActiveKSC;
-            int personnel = Math.Max(0, KSC.ConstructionWorkers + persDelta);
 
             var variables = new Dictionary<string, string>();
-            variables.Add("N", personnel.ToString());
             variables.Add("I", index.ToString());
             AddCrewVariables(variables);
 

@@ -649,7 +649,7 @@ namespace KerbalConstructionTime
             GUILayout.Space(18);
             GUILayout.Label("Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250 - GUI.skin.label.lineHeight * 3));
 
             for (int i = 0; i < _allItems.Count; i++)
             {
@@ -702,10 +702,14 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
             }
 
+            GUILayout.EndScrollView();
+
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
             GUILayout.Label("Storage");
             GUILayout.EndHorizontal();
+
+            _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, GUILayout.Height(GUI.skin.label.lineHeight * 3));
 
             int idx = 0;
             foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)

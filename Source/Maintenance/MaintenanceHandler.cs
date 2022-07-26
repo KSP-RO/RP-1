@@ -47,7 +47,6 @@ namespace RP0
         public MaintenanceGUI.MaintenancePeriod guiSelectedPeriod = MaintenanceGUI.MaintenancePeriod.Day;
 
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
-        public readonly Dictionary<string, double> ConstructionSalaries = new Dictionary<string, double>();
         public double Researchers = 0d;
 
         private double _maintenanceCostMult = 1d;
@@ -68,7 +67,7 @@ namespace RP0
         public double NautBaseUpkeepPerDay = 0d;
         public double NautInFlightUpkeepPerDay = 0d;
         public double NautUpkeepPerDay = 0d;
-        public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ConstructionSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
+        public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
         public double NetUpkeepPerDay = 0d;
 
         public double FacilityUpkeepPerDay => RndCost + McCost + TsCost + AcCost + LCsCost;
@@ -80,17 +79,6 @@ namespace RP0
             {
                 double tmp = 0d;
                 foreach (double d in IntegrationSalaries.Values)
-                    tmp += d;
-                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365.25d;
-            }
-        }
-
-        public double ConstructionSalaryPerDay
-        {
-            get
-            {
-                double tmp = 0d;
-                foreach (double d in ConstructionSalaries.Values)
                     tmp += d;
                 return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365.25d;
             }
@@ -197,11 +185,9 @@ namespace RP0
         private void UpdateKCTSalaries()
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
-            ConstructionSalaries.Clear();
             IntegrationSalaries.Clear();
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
-                ConstructionSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveConstructionEngineersForSalary(ksc);
                 IntegrationSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveIntegrationEngineersForSalary(ksc);
             }
 

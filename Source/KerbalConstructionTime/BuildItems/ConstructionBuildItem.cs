@@ -7,7 +7,7 @@ namespace KerbalConstructionTime
         public virtual string GetItemName() => Name;
         public double GetFractionComplete() => Progress / BP;
         public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
-        public double GetTimeLeftEst(double offset) => EstimatedTimeLeft;
+        public double GetTimeLeftEst(double offset) => GetTimeLeft();
         public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
         public bool IsComplete() => Progress >= BP;
         public virtual double IncrementProgress(double UTDiff)
@@ -29,11 +29,13 @@ namespace KerbalConstructionTime
 
         protected abstract void ProcessComplete();
 
-        public double Progress = 0, BP = 0, Cost = 0, SpentCost = 0;
+        public double Progress = 0, BP = 0, Cost = 0, SpentCost = 0, SpentRushCost = 0;
         private double _buildRate = -1d;
         public string Name;
         public int BuildListIndex { get; set; }
         public bool UpgradeProcessed = false;
+        public float WorkRate = 1f;
+        public double RushMultiplier => WorkRate > 1f ? PresetManager.Instance.ActivePreset.GeneralSettings.ConstructionRushCost.Evaluate(WorkRate) : 1d;
 
         public virtual SpaceCenterFacility? FacilityType
         {
@@ -42,21 +44,7 @@ namespace KerbalConstructionTime
         }
 
 
-        public double EstimatedTimeLeft
-        {
-            get
-            {
-                if (_buildRate > 0)
-                {
-                    return GetTimeLeft();
-                }
-                else
-                {
-                    double rate = Utilities.GetConstructionRate(KSC) * Utilities.GetEngineerEfficiencyMultipliers();
-                    return (BP - Progress) / rate;
-                }
-            }
-        }
+        public double EstimatedTimeLeft => GetTimeLeft();
 
         private KSCItem _ksc = null;
 
@@ -72,11 +60,23 @@ namespace KerbalConstructionTime
             }
         }
 
+        public double GetConstructionCostOverTime(double time)
+        {
+            double left = GetTimeLeft();
+            if (GetBuildRate() == 0d)
+                return 0d;
+
+            if (left > time)
+                return (time / left) * (Cost - SpentCost) * RushMultiplier;
+            else
+                return (Cost - SpentCost) * RushMultiplier;
+        }
+
         public double GetBuildRate()
         {
             if (_buildRate < 0)
                 UpdateBuildRate(KSC.Constructions.IndexOf(this));
-            return _buildRate * Utilities.GetEngineerEfficiencyMultipliers();
+            return _buildRate * WorkRate;
         }
 
         public double UpdateBuildRate(int index)
@@ -190,7 +190,9 @@ namespace KerbalConstructionTime
             double costDelta = newProgress / BP * Cost - SpentCost;
             if (costDelta > 1d)
             {
-                if (Utilities.CurrentGameIsCareer() && !Funding.CanAfford((float)costDelta))
+                double rushCostDelta = costDelta * RushMultiplier;
+
+                if (Utilities.CurrentGameIsCareer() && !Funding.CanAfford((float)rushCostDelta))
                 {
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {
@@ -200,8 +202,9 @@ namespace KerbalConstructionTime
                     return 0d;
                 }
 
-                Utilities.SpendFunds(costDelta, TransactionReasons.StructureConstruction);
+                Utilities.SpendFunds(rushCostDelta, TransactionReasons.StructureConstruction);
                 SpentCost += costDelta;
+                SpentRushCost += rushCostDelta;
             }
             Progress = newProgress;
             return extraProgress;
@@ -214,13 +217,16 @@ namespace KerbalConstructionTime
         public string name;
 
         [Persistent]
-        public double progress = 0, BP = 0, cost = 0, spentCost = 0;
+        public double progress = 0, BP = 0, cost = 0, spentCost = 0, spentRushCost = 0;
 
         [Persistent]
         public bool upgradeProcessed = false;
 
         [Persistent]
         public int buildListIndex = -1;
+
+        [Persistent]
+        public float workRate;
 
         protected void SaveFields(ConstructionBuildItem b)
         {
@@ -229,8 +235,10 @@ namespace KerbalConstructionTime
             BP = b.BP;
             cost = b.Cost;
             spentCost = b.SpentCost;
+            spentRushCost = b.SpentRushCost;
             upgradeProcessed = b.UpgradeProcessed;
             buildListIndex = b.BuildListIndex;
+            workRate = b.WorkRate;
         }
 
         protected void LoadFields(ConstructionBuildItem b)
@@ -240,8 +248,22 @@ namespace KerbalConstructionTime
             b.BP = BP;
             b.Cost = cost;
             b.SpentCost = spentCost;
+            b.SpentRushCost = spentRushCost;
             b.UpgradeProcessed = upgradeProcessed;
             b.BuildListIndex = buildListIndex;
+            b.WorkRate = workRate;
+            if (KCTGameStates.LoadedSaveVersion < 4)
+            {
+                b.WorkRate = 1f;
+                b.SpentRushCost = spentCost;
+
+                // old formula was ([C]+10000)*36 so let's get Cost out.
+                b.BP /= 36d;
+                b.BP -= 10000d;
+
+                b.BP = ConstructionBuildItem.CalculateBP(b.BP, null); // we're not using facilityType anyway.
+                b.Progress = progress / BP * b.BP;
+            }
         }
 
         public virtual void Load(ConfigNode node)

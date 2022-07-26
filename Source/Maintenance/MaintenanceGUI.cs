@@ -113,7 +113,7 @@ namespace RP0
             try
             {
                 GUILayout.Label("Construction", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.ConstructionSalaryPerDay * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                GUILayout.Label(KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Construction);
@@ -330,24 +330,26 @@ namespace RP0
 
         public void RenderConstructionTab()
         {
+            double totalCost = 0d;
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Construction Teams Cost/Materials (per ", HighLogic.Skin.label);
+            GUILayout.Label("Construction Cost (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (var kvp in MaintenanceHandler.Instance.ConstructionSalaries)
+            foreach (var ksc in KerbalConstructionTime.KCTGameStates.KSCs)
             {
-                string site = LocalizeSiteName(kvp.Key);
-                double engineers = kvp.Value;
-                if (engineers == 0)
+                string site = LocalizeSiteName(ksc.KSCName);
+                if (ksc.Constructions.Count == 0)
                     continue;
 
                 GUILayout.BeginHorizontal();
                 try
                 {
+                    double cost = KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
+                    totalCost += cost;
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365.25d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    GUILayout.Label(cost.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -355,24 +357,29 @@ namespace RP0
                 }
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal();
-                try
+                for (int i = 0; i < ksc.Constructions.Count; ++i)
                 {
-                    GUILayout.Label("  Materials", HighLogic.Skin.label, GUILayout.Width(160));
-                    GUILayout.Label((KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, kvp.Key)).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    var c = ksc.Constructions[i];
+                    GUILayout.BeginHorizontal();
+                    try
+                    {
+                        KerbalConstructionTime.Utilities.GetConstructionTooltip(c, i, out string tooltip, out _);
+                        GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label, GUILayout.Width(160));
+                        GUILayout.Label(KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                    }
+                    GUILayout.EndHorizontal();
                 }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
-                GUILayout.EndHorizontal();
             }
 
             GUILayout.BeginHorizontal();
             try
             {
                 GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.ConstructionSalaryPerDay * PeriodFactor).ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
+                GUILayout.Label(totalCost.ToString(PeriodDispFormat), BoldRightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {

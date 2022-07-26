@@ -430,15 +430,14 @@ namespace KerbalConstructionTime
             GUILayout.EndScrollView();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Cost/day for Materials:");
+            GUILayout.Label("Cost/day:");
             double costday = 0d;
-            if (ksc.Constructions.Count > 0)
+            foreach(var c in ksc.Constructions)
             {
-                var c = ksc.Constructions[0];
                 double br = c.GetBuildRate();
                 if (br > 0d)
                 {
-                    costday = br * 86400d / c.BP * c.Cost;
+                    costday += br * 86400d / c.BP * c.Cost * c.RushMultiplier;
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());

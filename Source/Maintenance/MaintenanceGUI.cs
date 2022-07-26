@@ -364,8 +364,9 @@ namespace RP0
                     try
                     {
                         KerbalConstructionTime.Utilities.GetConstructionTooltip(c, i, out string tooltip, out _);
-                        GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label, GUILayout.Width(160));
-                        GUILayout.Label(KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                        GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label);
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label(c.GetConstructionCostOverTime(PeriodFactor * 86400d).ToString(PeriodDispFormat), RightLabel);
                     }
                     catch (Exception ex)
                     {

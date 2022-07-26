@@ -226,53 +226,23 @@ namespace RP0
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.BeginHorizontal();
-            try
+            foreach (var facility in MaintenanceHandler.Instance.FacilitiesForMaintenance)
             {
-                GUILayout.Label("Research & Development", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.RndCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
+                if (!MaintenanceHandler.Instance.FacilityMaintenanceCosts.TryGetValue(facility, out double cost))
+                    continue;
 
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Mission Control", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.McCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
+                GUILayout.BeginHorizontal();
+                try
+                {
+                    GUILayout.Label(ScenarioUpgradeableFacilities.GetFacilityName(facility), HighLogic.Skin.label, GUILayout.Width(200));
+                    GUILayout.Label((cost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(120));
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
+                GUILayout.EndHorizontal();
             }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Tracking Station", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.TsCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            try
-            {
-                GUILayout.Label("Astronaut Complex", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label((MaintenanceHandler.Instance.AcCost * PeriodFactor).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             try
@@ -364,9 +334,8 @@ namespace RP0
                     try
                     {
                         KerbalConstructionTime.Utilities.GetConstructionTooltip(c, i, out string tooltip, out _);
-                        GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label);
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Label(c.GetConstructionCostOverTime(PeriodFactor * 86400d).ToString(PeriodDispFormat), RightLabel);
+                        GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label, GUILayout.Width(200));
+                        GUILayout.Label(c.GetConstructionCostOverTime(PeriodFactor * 86400d).ToString(PeriodDispFormat), RightLabel, GUILayout.Width(120));
                     }
                     catch (Exception ex)
                     {

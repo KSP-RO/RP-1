@@ -2294,6 +2294,20 @@ namespace KerbalConstructionTime
                     up.description = KSP.Localization.Localizer.Format("#rp0ResearcherUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
             }
         }
+
+        public static void GetConstructionTooltip(ConstructionBuildItem constr, int i, out string costTooltip, out string identifier)
+        {
+            identifier = constr.GetItemName() + i;
+            costTooltip = $"Remaining Cost: √{((constr.Cost - constr.SpentCost) * constr.RushMultiplier):N0}";
+            if (constr is LCConstruction lcc)
+            {
+                if (lcc.LCData.lcType == LaunchComplexType.Pad)
+                    costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\n{costTooltip}";
+
+                costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.LCData.sizeMax)}\n{costTooltip}";
+            }
+            costTooltip = $"{identifier}¶{costTooltip}";
+        }
     }
 }
 

@@ -12,6 +12,7 @@ namespace KerbalConstructionTime
         private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 150, 50);
         private static Rect _blPlusPosition = new Rect(Screen.width - 500, 40, 100, 1);
         private static Vector2 _scrollPos;
+        private static Vector2 _scrollPos2;
         private static GUISkin _windowSkin;
         private static GUIStyle _orangeText;
 

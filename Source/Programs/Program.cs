@@ -564,6 +564,10 @@ namespace RP0.Programs
                 if (IsSpeedAllowed(spd))
                     speed = spd;
             }
+
+            // Don't default to fast.
+            if (speed > Speed.Normal)
+                speed = Speed.Normal;
         }
 
         public ProgramStrategy GetStrategy() => Strategies.StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;

@@ -92,10 +92,10 @@ namespace KerbalConstructionTime
             LCItem currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Engineers:", GUILayout.ExpandWidth(false));
-            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
-            GUILayout.Label($"Unassigned:", GetLabelRightAlignStyle());
-            GUILayout.Label($"{KSC.UnassignedEngineers}", GetLabelRightAlignStyle(), GUILayout.Width(60));
+            GUILayout.Label("Engineers:", GUILayout.Width(120));
+            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(120));
+            GUILayout.Label($"Unassigned:", GetLabelRightAlignStyle(), GUILayout.Width(120));
+            GUILayout.Label($"{KSC.UnassignedEngineers}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             RenderHireFire(false, out int fireAmount, out int hireAmount);

@@ -79,6 +79,10 @@ namespace RP0
                     {
                         partMass = 0f;
                     }
+                    if (p.parent != null && p.parent.FindModuleImplementing<KerbalConstructionTime.ModuleTagList>() is KerbalConstructionTime.ModuleTagList parentMod && parentMod.tags.Contains("PadInfrastructure"))
+                    {
+                        partMass = 0f;
+                    }
                     if (m is ModuleAvionicsModifier)
                     {
                         partMass *= (m as ModuleAvionicsModifier).multiplier;

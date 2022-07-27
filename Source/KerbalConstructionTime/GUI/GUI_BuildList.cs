@@ -298,7 +298,7 @@ namespace KerbalConstructionTime
                     break;
                 }
             }
-            if (!hasIdleEngineers && engCount > 0 && KCTGameStates.ActiveKSC.Constructions.Count == 0)
+            if (!hasIdleEngineers && engCount > 0)
                 hasIdleEngineers = true;
 
             if (GUILayout.Button(new GUIContent("Staff", hasIdleEngineers ? "Some engineers are idle!" : (KCTGameStates.UnassignedPersonnel > 0 ? "Applicants can be hired for free!" : "Hire/fire/reassign staff")),

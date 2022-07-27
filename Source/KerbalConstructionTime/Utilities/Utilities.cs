@@ -417,6 +417,8 @@ namespace KerbalConstructionTime
                 {
                     if (part.Modules.Contains<LaunchClamp>() || part.HasTag("PadInfrastructure"))
                         continue;
+                    if (part.parent != null && part.parent.HasTag("PadInfrastructure"))
+                        continue;
                 }
 
                 float partDryMass = partInfo.partPrefab.mass + part.GetModuleMass(partInfo.partPrefab.mass, ModifierStagingSituation.CURRENT);
@@ -453,6 +455,8 @@ namespace KerbalConstructionTime
                 if (excludeClamps)
                 {
                     if (p.Modules.Contains<LaunchClamp>() || p.HasTag("PadInfrastructure"))
+                        continue;
+                    if (p.parent != null && p.parent.HasTag("PadInfrastructure"))
                         continue;
                 }
 

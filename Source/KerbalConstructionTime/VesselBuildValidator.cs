@@ -168,7 +168,7 @@ namespace KerbalConstructionTime
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
                 new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
                 {
-                    if (Funding.Instance.Funds > unlockCost)
+                    if (CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -(float)RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList), 0f, 0f).CanAfford())
                     {
                         Utilities.UnlockExperimentalParts(partList);
                         _validationResult = ValidationResult.Success;
@@ -227,11 +227,10 @@ namespace KerbalConstructionTime
             if (CheckAvailableFunds)
             {
                 double totalCost = blv.GetTotalCost();
-                double prevFunds = Funding.Instance.Funds;
-                if (totalCost > prevFunds)
+                if (!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)totalCost, 0f, 0f).CanAfford())
                 {
                     KCTDebug.Log($"Tried to add {blv.ShipName} to build list but not enough funds.");
-                    KCTDebug.Log($"Vessel cost: {Utilities.GetTotalVesselCost(blv.ShipNode)}, Current funds: {prevFunds}");
+                    KCTDebug.Log($"Vessel cost: {Utilities.GetTotalVesselCost(blv.ShipNode)}, Current funds: {Funding.Instance.Funds}");
                     var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
 
@@ -364,7 +363,7 @@ namespace KerbalConstructionTime
                                                              PurchaseConfig(error.PM, error.TechToResolve);
                                                              _validationResult = ValidationResult.Rerun;
                                                          },
-                                                         () => Funding.Instance.Funds >= error.CostToResolve - RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve),
+                                                         () => CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)(RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve) - error.CostToResolve), 0f, 0f).CanAfford(),
                                                          100, -1, true)));
                     }
                     else

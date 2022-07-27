@@ -192,7 +192,7 @@ namespace KerbalConstructionTime
             {
                 double rushCostDelta = costDelta * RushMultiplier;
 
-                if (Utilities.CurrentGameIsCareer() && !Funding.CanAfford((float)rushCostDelta))
+                if (Utilities.CurrentGameIsCareer() && !CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f).CanAfford())
                 {
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {

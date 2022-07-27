@@ -997,6 +997,9 @@ namespace KerbalConstructionTime
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
         {
+            // this will spend the funds, which is why we set costsFunds=false below.
+            RP0.UnlockSubsidyHandler.Instance.SpendSubsidyAndCost(availableParts);
+
             foreach (var ap in availableParts)
             {
                 ProtoTechNode protoNode = ResearchAndDevelopment.Instance.GetTechState(ap.TechRequired);
@@ -1004,7 +1007,9 @@ namespace KerbalConstructionTime
                 if (!protoNode.partsPurchased.Contains(ap))
                 {
                     protoNode.partsPurchased.Add(ap);
+                    ap.costsFunds = false;
                     GameEvents.OnPartPurchased.Fire(ap);
+                    ap.costsFunds = true;
                     HandlePurchase(ap);
                 }
 

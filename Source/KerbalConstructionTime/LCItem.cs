@@ -142,7 +142,7 @@ namespace KerbalConstructionTime
             MassOrig = mOrig;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(MassMax, sMax, IsHumanRated, out _, out _, out fracLevel);
+            Utilities.GetPadStats(MassMax, sMax, IsHumanRated, out _, out _, out fracLevel);
 
             SizeMax = sMax;
 
@@ -174,7 +174,7 @@ namespace KerbalConstructionTime
             SizeMax = data.sizeMax;
             float fracLevel;
 
-            KCT_GUI.GetPadStats(MassMax, SizeMax, IsHumanRated, out _, out _, out fracLevel);
+            Utilities.GetPadStats(MassMax, SizeMax, IsHumanRated, out _, out _, out fracLevel);
 
             foreach (var pad in LaunchPads)
             {

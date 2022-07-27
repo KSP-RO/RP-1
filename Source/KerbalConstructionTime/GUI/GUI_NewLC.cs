@@ -5,74 +5,11 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static string[] _padLvlOptions = null;
-        private static float[] _padTons = null;
-        private static Vector3[] _padSizes;
-
         private static string _tonnageLimit = "1";
         private static string _heightLimit = "10";
         private static string _widthLimit = "2";
         private static string _lengthLimit = "2";
         private static bool _isHumanRated = false;
-
-        public static double GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
-        {
-            fractionalPadLvl = 0f;
-            if (tonnageLimit != float.MaxValue)
-            {
-                double mass = tonnageLimit;
-                curPadCost = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2000d) + 1000d;
-
-                if (_padLvlOptions == null)
-                {
-                    LoadPadData();
-                }
-
-                if (_padLvlOptions == null)
-                {
-                    fractionalPadLvl = 0f;
-                }
-                else
-                {
-                    float unlimitedTonnageThreshold = 2500f;
-
-                    if (tonnageLimit >= unlimitedTonnageThreshold)
-                    {
-                        int padLvl = _padLvlOptions.Length - 2;
-                        fractionalPadLvl = padLvl;
-                    }
-                    else
-                    {
-                        for (int i = 1; i < _padTons.Length; i++)
-                        {
-                            if (tonnageLimit < _padTons[i])
-                            {
-                                float lowerBound = _padTons[i - 1];
-                                float upperBound = Math.Min(_padTons[i], unlimitedTonnageThreshold);
-                                float fractionOverFullLvl = (tonnageLimit - lowerBound) / (upperBound - lowerBound);
-                                fractionalPadLvl = (i - 1) + fractionOverFullLvl;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // SPH case
-                curPadCost = 0f;
-                padSize.y *= 5f;
-            }
-            curVABCost = padSize.sqrMagnitude * 25d + 1000d;
-            if (humanRated)
-            {
-                curPadCost *= 1.5d;
-                curVABCost *= 2d;
-            }
-
-            return curVABCost + curPadCost;
-        }
 
         public static void DrawNewLCWindow(int windowID)
         {
@@ -100,7 +37,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(activeLC.IsHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
 
-                GetPadStats(activeLC.MassMax, activeLC.SizeMax, activeLC.IsHumanRated, out oldPadCost, out oldVABCost, out _);
+                Utilities.GetPadStats(activeLC.MassMax, activeLC.SizeMax, activeLC.IsHumanRated, out oldPadCost, out oldVABCost, out _);
                 lpMult = activeLC.LaunchPads.Count;
             }
             else
@@ -148,7 +85,7 @@ namespace KerbalConstructionTime
                 curPadSize.x = widthLimit;
                 curPadSize.y = heightLimit;
                 curPadSize.z = lengthLimit;
-                GetPadStats(isHangar ? activeLC.MassMax : tonnageLimit, curPadSize, isHangar ? activeLC.IsHumanRated : _isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
+                Utilities.GetPadStats(isHangar ? activeLC.MassMax : tonnageLimit, curPadSize, isHangar ? activeLC.IsHumanRated : _isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
                 if (!isHangar)
                     minTonnage = LCItem.CalcMassMin(tonnageLimit);
             }
@@ -361,8 +298,6 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.x = (Screen.width - 300) / 2;
                 if (!HighLogic.LoadedSceneIsEditor)
                     GUIStates.ShowBuildList = true;
-
-                _padLvlOptions = null;
             }
 
             if (GUILayout.Button("Cancel"))
@@ -370,7 +305,6 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 150;
                 _centralWindowPosition.x = (Screen.width - 150) / 2;
-                _padLvlOptions = null;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowModifyLC = false;
                 if (!HighLogic.LoadedSceneIsEditor)
@@ -380,32 +314,6 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             CenterWindow(ref _centralWindowPosition);
-        }
-
-        private static void LoadPadData()
-        {
-            var upgdFacility = KCT_LaunchPad.GetUpgradeableFacilityReference();
-            if (upgdFacility == null)
-                return;
-
-            var padUpgdLvls = upgdFacility.UpgradeLevels;
-
-            _padLvlOptions = new string[padUpgdLvls.Length + 1];
-            _padLvlOptions[padUpgdLvls.Length] = "Custom";
-            _padSizes = new Vector3[padUpgdLvls.Length];
-            _padTons = new float[padUpgdLvls.Length];
-
-            for (int i = 0; i < padUpgdLvls.Length; i++)
-            {
-                float normalizedLevel = (float)i / (float)upgdFacility.MaxLevel;
-                float limit = GameVariables.Instance.GetCraftMassLimit(normalizedLevel, true);
-                _padTons[i] = limit;
-                var sLimit = limit == float.MaxValue ? "unlimited" : $"max {limit} tons";
-                _padLvlOptions[i] = $"Level {i + 1} ({sLimit})";
-
-                Vector3 sizeLimit = GameVariables.Instance.GetCraftSizeLimit(normalizedLevel, true);
-                _padSizes[i] = sizeLimit;
-            }
         }
 
         private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LCItem lc)

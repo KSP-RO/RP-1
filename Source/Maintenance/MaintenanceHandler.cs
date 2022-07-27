@@ -261,10 +261,10 @@ namespace RP0
             switch (type)
             {
                 case LaunchComplexType.Hangar:
-                    return ComputeDailyMaintenanceCost(KCT_GUI.GetPadStats(massMax, sizeMax, humanRated, out _, out _, out _), FacilityMaintenanceType.Hangar);
+                    return ComputeDailyMaintenanceCost(KerbalConstructionTime.Utilities.GetPadStats(massMax, sizeMax, humanRated, out _, out _, out _), FacilityMaintenanceType.Hangar);
 
                 case LaunchComplexType.Pad:
-                    KCT_GUI.GetPadStats(massMax, sizeMax, humanRated, out double padCost, out double vabCost, out _);
+                    KerbalConstructionTime.Utilities.GetPadStats(massMax, sizeMax, humanRated, out double padCost, out double vabCost, out _);
                     return ComputeDailyMaintenanceCost((vabCost + padCount * padCost), FacilityMaintenanceType.LC);
             }
             return 0d;

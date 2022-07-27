@@ -340,7 +340,6 @@ namespace KerbalConstructionTime
                     {
                         KCTGameStates.TechList.Add(tech);
                         tech.UpdateBuildRate(KCTGameStates.TechList.Count - 1);
-                        ScreenMessages.PostScreenMessage(Utilities.GetTechUnlockTime(tech), 4f, ScreenMessageStyle.UPPER_LEFT);
 
                         OnTechQueued.Fire(ev.host);
                     }
@@ -349,7 +348,6 @@ namespace KerbalConstructionTime
                 {
                     ResearchAndDevelopment.Instance.AddScience(tech.ScienceCost, TransactionReasons.RnDTechResearch);
                     ScreenMessages.PostScreenMessage("This node is already being researched!", 4f, ScreenMessageStyle.UPPER_LEFT);
-                    ScreenMessages.PostScreenMessage(Utilities.GetTechUnlockTime(KCTGameStates.TechList.First(t => t.TechID == ev.host.techID)), 4f, ScreenMessageStyle.UPPER_LEFT);
                 }
             }
         }

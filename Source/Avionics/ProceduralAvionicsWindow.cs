@@ -304,8 +304,7 @@ namespace RP0.ProceduralAvionics
         {
             bool switchedConfig = false;
             if (unlockCost <= 0) return switchedConfig;
-
-            GUI.enabled = techNode.IsAvailable && Funding.Instance.Funds > unlockCost;
+            GUI.enabled = techNode.IsAvailable && CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode.TechNodeName) - unlockCost, 0f, 0f).CanAfford();
             _gc.text = $"Unlock ({BuildCostString(unlockCost)})";
             _gc.tooltip = techNode.IsAvailable ? string.Empty : $"Needs tech: {techNode.TechNodeTitle}";
             if (GUILayout.Button(_gc, HighLogic.Skin.button, GUILayout.Width(120)))

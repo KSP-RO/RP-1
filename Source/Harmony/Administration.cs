@@ -183,14 +183,22 @@ namespace RP0.Harmony
                     __instance.btnAcceptCancel.SetState("accept");
                 }
 
-                AdminExtender.Instance.SetSpeedButtonsActive(!ps.Program.IsActive && !ps.Program.IsComplete, ps.Program);
+                AdminExtender.Instance.SetSpeedButtonsActive(!ps.Program.IsActive && !ps.Program.IsComplete ? ps.Program : null);
             }
             else
             {
                 tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.GetStringByTag("#rp0AppointLeader");
                 tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText = Localizer.GetStringByTag("#rp0RemoveLeader");
-                AdminExtender.Instance.SetSpeedButtonsActive(false, null);
+                AdminExtender.Instance.SetSpeedButtonsActive(null);
             }
+            AdminExtender.Instance.BtnSpacer.gameObject.SetActive(!Administration.Instance.btnAcceptCancel.gameObject.activeSelf);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("UnselectStrategy")]
+        internal static void Postfix_UnselectStrategy()
+        {
+            AdminExtender.Instance.SetSpeedButtonsActive(null);
         }
 
         internal static void OnPopupDismiss()

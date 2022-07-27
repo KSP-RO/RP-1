@@ -13,6 +13,7 @@ using KSP.UI.Screens;
 using Strategies;
 using ContractConfigurator;
 using ContractConfigurator.Util;
+using KSP.Localization;
 
 namespace RP0.Programs
 {
@@ -48,16 +49,22 @@ namespace RP0.Programs
             _adminTabToggles[view].isOn = true;
         }
 
+        private LayoutElement _btnSpacer = null;
+        public LayoutElement BtnSpacer => _btnSpacer;
+
         private readonly Dictionary<Program.Speed, ProgramSpeedListItem> _speedButtons = new Dictionary<Program.Speed, ProgramSpeedListItem>();
-        private KSP.UI.TooltipTypes.UIStateButtonTooltip buttonTooltip;
+        private KSP.UI.TooltipTypes.UIStateButtonTooltip _buttonTooltip;
 
         public bool PressedSpeedButton = false;
 
-        public void SetSpeedButtonsActive(bool active, Program program)
-        {
-            if (program == null)
-                active = false;
+        private TMPro.TextMeshProUGUI _speedOptionsNames;
+        private TMPro.TextMeshProUGUI _speedOptionsCosts;
 
+        public void SetSpeedButtonsActive(Program program)
+        {
+            bool active = program != null;
+
+            string costStr = string.Empty;
             foreach (var item in _speedButtons.Values)
             {
                 item.gameObject.SetActive(active);
@@ -66,13 +73,18 @@ namespace RP0.Programs
                     double cost = program.GetConfidenceCostForSpeed(item.Speed);
                     bool allowable = program.IsSpeedAllowed(item.Speed);
                     var sph = new SpeedButtonHolder(program.GetStrategy(), item.Speed);
-                    item.SetupButton(allowable, KSP.Localization.Localizer.Format("#rp0ProgramSpeedConfidenceRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
+                    item.SetupButton(allowable, Localizer.Format("#rp0ProgramSpeedConfidenceRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
+                    costStr += "\n" + cost.ToString("N0");
                 }
             }
+
+            _speedOptionsNames.gameObject.SetActive(active);
+            _speedOptionsCosts.gameObject.SetActive(active);
 
             if (active)
             {
                 _speedButtons[program.speed].SetState(UIRadioButton.State.True);
+                _speedOptionsCosts.text = Localizer.GetStringByTag("#rp0ProgramConfidenceCost") + costStr;
             }
 
             PressedSpeedButton = false; // clear state
@@ -164,11 +176,11 @@ namespace RP0.Programs
                 foreach (var text in child.gameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>())
                 {
                     if (i == 0)
-                        text.text = KSP.Localization.Localizer.GetStringByTag("#rp0ActivePrograms");
+                        text.text = Localizer.GetStringByTag("#rp0ActivePrograms");
                     else if (i == 1)
-                        text.text = KSP.Localization.Localizer.GetStringByTag("#rp0CompletedPrograms");
+                        text.text = Localizer.GetStringByTag("#rp0CompletedPrograms");
                     else
-                        text.text = KSP.Localization.Localizer.GetStringByTag("#rp0Leaders");
+                        text.text = Localizer.GetStringByTag("#rp0Leaders");
                 }
             }
 
@@ -194,6 +206,7 @@ namespace RP0.Programs
             var tooltipPrefab = AssetBase.GetPrefab<KSP.UI.TooltipTypes.Tooltip_Text>("Tooltip_Text");
             int max = (int)Program.Speed.MAX;
             int width = (int)(285.0f / max);
+            TextMeshProUGUI srcText = null;
             for (int i = 0; i < max; ++i)
             {
                 Program.Speed spd = (Program.Speed)i;
@@ -206,6 +219,7 @@ namespace RP0.Programs
                 textRect.offsetMin = new Vector2(2, 2);
                 textRect.offsetMax = new Vector2(-2, -2);
                 var textComp = textRect.GetComponent<TextMeshProUGUI>();
+                srcText = textComp;
                 textComp.alignment = TextAlignmentOptions.Midline;
                 textComp.fontSizeMax = 20;
 
@@ -216,7 +230,7 @@ namespace RP0.Programs
 
                 var speedItem = newButton.gameObject.AddComponent<ProgramSpeedListItem>();
                 newButton.gameObject.SetActive(true); // so Awake runs, if it hasn't
-                speedItem.Initialize(KSP.Localization.Localizer.GetStringByTag("#rp0ProgramSpeed" + i), spd);
+                speedItem.Initialize(Localizer.GetStringByTag("#rp0ProgramSpeed" + i), spd);
                 _speedButtons[spd] = speedItem;
 
                 // Set layout
@@ -229,8 +243,36 @@ namespace RP0.Programs
             newSpacerLE.preferredWidth = 100;
             newSpacerLE.gameObject.SetActive(true);
 
-            // make sure the button is at the far right
+            // Add a spacer to replace the button
+            _btnSpacer = GameObject.Instantiate(ApplicationLauncher.Instance.CurrentLayout.GetTopRightSpacer(), buttonArea.transform, worldPositionStays: false);
+            _btnSpacer.preferredWidth = 48;
+            _btnSpacer.gameObject.SetActive(false);
+
+            // Add text for costs
+            _speedOptionsNames = Instantiate(srcText, buttonArea.transform, worldPositionStays: false);
+            _speedOptionsNames.fontSizeMax = 15;
+            var namesLE = _speedOptionsNames.gameObject.AddComponent<LayoutElement>();
+            namesLE.preferredWidth = 120;
+            _speedOptionsNames.alignment = TextAlignmentOptions.MidlineLeft;
+            string namesStr = Localizer.GetStringByTag("#rp0ProgramSpeed");
+            for (int i = 0; i < max; ++i)
+            {
+                namesStr += "\n" + Localizer.GetStringByTag("#rp0ProgramSpeed" + i);
+            }
+            _speedOptionsNames.text = namesStr;
+
+            _speedOptionsCosts = Instantiate(_speedOptionsNames, buttonArea.transform, worldPositionStays: false);
+            _speedOptionsCosts.alignment = TextAlignmentOptions.MidlineRight;
+
+            _speedOptionsCosts.transform.SetAsFirstSibling();
+            _speedOptionsNames.transform.SetAsFirstSibling();
+
+            _speedOptionsNames.gameObject.SetActive(false);
+            _speedOptionsCosts.gameObject.SetActive(false);
+
+            // make sure the button (and the spacer replacement) is at the far right
             buttonLE.transform.SetAsLastSibling();
+            _btnSpacer.transform.SetAsLastSibling();
 
             foreach (var button in _speedButtons.Values)
                 button.gameObject.SetActive(false);
@@ -238,7 +280,7 @@ namespace RP0.Programs
 
         public void BindAndFixUI()
         {
-            buttonTooltip = Administration.Instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
+            _buttonTooltip = Administration.Instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
 
             RescaleMainUI();
 

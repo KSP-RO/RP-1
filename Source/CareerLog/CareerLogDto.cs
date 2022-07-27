@@ -348,6 +348,7 @@ namespace RP0
         public double totalFunding;
         public double fundsPaidOut;
         public double repPenaltyAssessed;
+        public Program.Speed speed;
 
         public ProgramDto()
         {
@@ -366,6 +367,7 @@ namespace RP0
             totalFunding = p.totalFunding;
             fundsPaidOut = p.fundsPaidOut;
             repPenaltyAssessed = p.repPenaltyAssessed;
+            speed = p.speed;
         }
 
         public override string ToString()
@@ -378,7 +380,8 @@ namespace RP0
                 $"{nameof(nominalDurationYears)}: {nominalDurationYears}, " +
                 $"{nameof(totalFunding)}: {totalFunding}, " +
                 $"{nameof(fundsPaidOut)}: {fundsPaidOut}, " +
-                $"{nameof(repPenaltyAssessed)}: {repPenaltyAssessed}";
+                $"{nameof(repPenaltyAssessed)}: {repPenaltyAssessed}, " +
+                $"{nameof(speed)}: {speed}";
         }
     }
 }

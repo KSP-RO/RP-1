@@ -40,7 +40,7 @@ namespace KerbalConstructionTime
 
             double curPadCost;
             float fractionalPadLvl;
-            GetPadStats(curLC.MassMax, curLC.SizeMax, curLC.IsHumanRated, out curPadCost, out _, out fractionalPadLvl);
+            Utilities.GetPadStats(curLC.MassMax, curLC.SizeMax, curLC.IsHumanRated, out curPadCost, out _, out fractionalPadLvl);
             curPadCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
 
             if (curPadCost > 0)
@@ -102,8 +102,6 @@ namespace KerbalConstructionTime
                         Debug.LogException(ex);
                     }
                 }
-
-                _padLvlOptions = null;
             }
 
             if (GUILayout.Button("Cancel"))
@@ -111,7 +109,6 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 150;
                 _centralWindowPosition.x = (Screen.width - 150) / 2;
-                _padLvlOptions = null;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowBuildList = true;
             }

@@ -42,7 +42,7 @@ namespace KerbalConstructionTime
             AutoKACAlarms = false;
             PreferBlizzyToolbar = false;
             CleanUpKSCDebris = true;
-            UseDates = false;
+            UseDates = true;
             InPlaceEdit = false;
         }
 

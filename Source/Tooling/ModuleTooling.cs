@@ -50,7 +50,7 @@ namespace RP0
 
             bool bypass = HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch;
             float toolingCost = bypass ? 0f : GetToolingCost();
-            bool canAfford = bypass || Funding.Instance.Funds >= toolingCost;
+            bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -toolingCost, 0f, 0f).CanAfford();
 
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),

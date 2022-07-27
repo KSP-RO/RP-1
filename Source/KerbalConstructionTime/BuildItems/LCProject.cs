@@ -122,7 +122,7 @@ namespace KerbalConstructionTime
                 int steps = curStep - prevStep;
                 if (steps > 0) //  Pay or halt at 10% intervals
                 {
-                    if (Funding.Instance.Funds < Cost / 10) //If they can't afford to continue the rollout, progress stops
+                    if(!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)(Cost * steps * 0.1d), 0f, 0f).CanAfford()) //If they can't afford to continue the rollout, progress stops
                     {
                         Progress = progBefore;
                         if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
@@ -133,7 +133,7 @@ namespace KerbalConstructionTime
                         return 0d;
                     }
                     else
-                        Utilities.SpendFunds(steps * Cost / 10, TransactionReasons.VesselRollout);
+                        Utilities.SpendFunds(steps * Cost * 0.1d, TransactionReasons.VesselRollout);
                 }
             }
             if (IsComplete())

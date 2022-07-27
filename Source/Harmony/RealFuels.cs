@@ -75,9 +75,8 @@ namespace RP0.Harmony
 
             if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
             {
-                if (Funding.Instance.Funds >= cfgCost || Funding.Instance.Funds + UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode) >= cfgCost)
+                if(CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)(UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode) - cfgCost), 0f, 0f).CanAfford())
                 {
-
                     double excessCost = UnlockSubsidyHandler.Instance.SpendSubsidy(techNode, cfgCost);
                     if (excessCost > 0d)
                         Funding.Instance.AddFunds(-excessCost, TransactionReasons.RnDPartPurchase);

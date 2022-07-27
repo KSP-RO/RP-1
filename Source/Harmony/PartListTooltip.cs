@@ -48,12 +48,10 @@ namespace RP0.Harmony
                     if (__instance.buttonPurchase.gameObject.activeSelf)
                         return;
 
-                    double eCost = availablePart?.entryCost ?? up.entryCost;
-                    double funds = Funding.Instance.Funds;
-                    double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(techID);
+                    float eCost = availablePart?.entryCost ?? up.entryCost;
 
                     // If we still can't afford, bail
-                    if (eCost > subsidy + funds)
+                    if (!CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(techID) - eCost, 0f, 0f).CanAfford())
                         return;
 
                     // We need to fix state.

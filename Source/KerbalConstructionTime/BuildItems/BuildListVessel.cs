@@ -280,6 +280,9 @@ namespace KerbalConstructionTime
                         continue;
                 }
 
+                if (p.parent != null && p.parent.partPrefab != null && p.parent.partPrefab.HasTag("PadInfrastructure"))
+                    continue;
+
                 TotalMass += p.mass;
                 EmptyMass += p.mass;
 

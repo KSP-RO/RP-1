@@ -35,19 +35,11 @@ namespace RP0.Harmony
                 text = cmq.GetCostLine(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
 
                 // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
+                if (!cmq.CanAfford() && CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, Mathf.Min(0, -part.entryCost + (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(part.TechRequired)), 0f, 0f).CanAfford())
+                    text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
 
-                if (!cmq.CanAfford())
-                {
-                    var cmqSubsidized = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, Mathf.Min(0, -part.entryCost + (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(part.TechRequired)), 0f, 0f);
-                    if (cmqSubsidized.CanAfford())
-                    {
-                        text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
-                    }
-                }
                 if (___selected_node.tech.state != RDTech.State.Available)
-                {
                     text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
-                }
             }
             else
             {
@@ -81,13 +73,11 @@ namespace RP0.Harmony
                 text = cmq.GetCostLine(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
 
                 // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
-                double excessCost = Funding.Instance.Funds - upgrade.entryCost;
-                if (excessCost < 0 && UnlockSubsidyHandler.Instance.GetSubsidyAmount(upgrade.techRequired) + excessCost >= 0)
+                if (!cmq.CanAfford() && CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(upgrade.techRequired) - upgrade.entryCost, 0f, 0f).CanAfford())
                     text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
+
                 if (___selected_node.tech.state != RDTech.State.Available)
-                {
                     text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
-                }
             }
             else
             {

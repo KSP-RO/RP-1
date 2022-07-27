@@ -14,6 +14,14 @@ namespace RP0
 
             [Persistent]
             public double funds;
+
+            public UnlockSubsidyNode() { }
+
+            public UnlockSubsidyNode(UnlockSubsidyNode src)
+            {
+                tech = src.tech;
+                funds = src.funds;
+            }
         }
 
         public static UnlockSubsidyHandler Instance { get; private set; }
@@ -46,20 +54,26 @@ namespace RP0
             sNode.funds += amount;
         }
 
-        public double GetLocalSubsidyAmount(string tech)
+        public double GetLocalSubsidyAmount(string tech, Dictionary<string, UnlockSubsidyNode> dict = null)
         {
-            if (!_subsidyStorage.TryGetValue(tech, out var sNode))
+            if (dict == null)
+                dict = _subsidyStorage;
+
+            if (!dict.TryGetValue(tech, out var sNode))
                 return 0d;
 
             return sNode.funds;
         }
 
-        public double GetSubsidyAmount(string tech)
+        public double GetSubsidyAmount(string tech, Dictionary<string, UnlockSubsidyNode> dict = null)
         {
             if (tech == null)
                 return 0d;
 
-            double amount = GetLocalSubsidyAmount(tech);
+            if (dict == null)
+                dict = _subsidyStorage;
+
+            double amount = GetLocalSubsidyAmount(tech, dict);
 
             List<string> parentList;
             if (!KerbalConstructionTimeData.techNameToParents.TryGetValue(tech, out parentList))
@@ -68,17 +82,89 @@ namespace RP0
                 return amount;
             }
             foreach (var parent in parentList)
-                amount += GetSubsidyAmount(parent);
+                amount += GetSubsidyAmount(parent, dict);
 
             _cacheDict[tech] = amount;
             return amount;
         }
 
-        public double SpendSubsidy(string tech, double cost)
+        // This is not optimal, but it's better than naive unsorted.
+        public double GetSubsidyAmount(List<AvailablePart> parts)
         {
-            double amount = GetSubsidyAmount(tech);
+            double subsidyAmount = 0d;
+            var cloneDict = new Dictionary<string, UnlockSubsidyNode>();
+            foreach (var kvp in _subsidyStorage)
+                cloneDict.Add(kvp.Key, new UnlockSubsidyNode(kvp.Value));
+
+
+            var partCostDict = new Dictionary<AvailablePart, double>();
+            // first pull from local.
+            foreach (var p in parts)
+            {
+                double cost = p.entryCost;
+                if (cloneDict.TryGetValue(p.TechRequired, out var sNode))
+                {
+                    double local = sNode.funds;
+                    if (local > cost)
+                        local = cost;
+                    cost -= local;
+                    sNode.funds -= local;
+                    subsidyAmount += local;
+                }
+                partCostDict[p] = cost;
+            }
+            foreach (var p in parts)
+            {
+                double cost = partCostDict[p];
+                double excess = SpendSubsidy(p.TechRequired, cost, cloneDict);
+                subsidyAmount += (cost - excess);
+            }
+
+            return subsidyAmount;
+        }
+
+        public void SpendSubsidyAndCost(List<AvailablePart> parts)
+        {
+            double subsidyAmount = 0d;
+
+            var partCostDict = new Dictionary<AvailablePart, double>();
+            // first pull from local.
+            foreach (var p in parts)
+            {
+                double cost = p.entryCost;
+                if (_subsidyStorage.TryGetValue(p.TechRequired, out var sNode))
+                {
+                    double local = sNode.funds;
+                    if (local > cost)
+                        local = cost;
+                    cost -= local;
+                    sNode.funds -= local;
+                    subsidyAmount += local;
+                }
+                partCostDict[p] = cost;
+            }
+
+            double totalCost = 0d;
+
+            foreach (var p in parts)
+            {
+                double cost = partCostDict[p];
+                double excess = SpendSubsidy(p.TechRequired, cost);
+                subsidyAmount += (cost - excess);
+                totalCost += excess;
+            }
+
+            Funding.Instance.AddFunds(-totalCost, TransactionReasons.RnDPartPurchase);
+        }
+
+        public double SpendSubsidy(string tech, double cost, Dictionary<string, UnlockSubsidyNode> dict = null)
+        {
+            double amount = GetSubsidyAmount(tech, dict);
             if (amount == 0d)
                 return cost;
+
+            if (dict == null)
+                dict = _subsidyStorage;
 
             double excessCost;
             if (amount < cost)
@@ -91,13 +177,16 @@ namespace RP0
                 excessCost = 0d;
             }
 
-            _SpendSubsidy(tech, cost, excessCost > 0d);
+            _SpendSubsidy(tech, cost, excessCost > 0d, dict);
             return excessCost;
         }
 
-        private void _SpendSubsidy(string tech, double cost, bool spendAll)
+        private void _SpendSubsidy(string tech, double cost, bool spendAll, Dictionary<string, UnlockSubsidyNode> dict)
         {
-            if (_subsidyStorage.TryGetValue(tech, out var sNode))
+            if (dict == null)
+                dict = _subsidyStorage;
+
+            if (dict.TryGetValue(tech, out var sNode))
             {
                 if (spendAll)
                 {
@@ -133,7 +222,7 @@ namespace RP0
             {
                 foreach (var parent in parentList)
                 {
-                    _SpendSubsidy(parent, cost, true);
+                    _SpendSubsidy(parent, cost, true, dict);
                 }
                 return;
             }
@@ -144,7 +233,7 @@ namespace RP0
                 double amount;
                 if (!_cacheDict.TryGetValue(parent, out amount))
                 {
-                    amount = GetSubsidyAmount(parent);
+                    amount = GetSubsidyAmount(parent, dict);
                     _cacheDict[parent] = amount;
                 }
                 parentSubsidyTotal += amount;
@@ -153,7 +242,7 @@ namespace RP0
             foreach (var parent in parentList)
             {
                 double portion = _cacheDict[parent] / parentSubsidyTotal * cost;
-                _SpendSubsidy(parent, portion, spendAll);
+                _SpendSubsidy(parent, portion, false, dict);
             }
         }
 
@@ -169,6 +258,7 @@ namespace RP0
 
         private void OnPartPurchased(AvailablePart ap)
         {
+            UnlockSubsidyResetter.StoredPartEntryCost = ap.entryCost;
             if (ap.costsFunds)
             {
                 int remainingCost = (int)ProcessSubsidy(ap.entryCost, ap.TechRequired);
@@ -178,6 +268,7 @@ namespace RP0
 
         private void OnPartUpgradePurchased(PartUpgradeHandler.Upgrade up)
         {
+            UnlockSubsidyResetter.StoredUpgradeEntryCost = up.entryCost;
             float remainingCost = ProcessSubsidy(up.entryCost, up.techRequired);
             up.entryCost = remainingCost;
         }
@@ -223,9 +314,40 @@ namespace RP0
         {
             GameEvents.OnPartPurchased.Remove(OnPartPurchased);
             GameEvents.OnPartUpgradePurchased.Remove(OnPartUpgradePurchased);
-            
+
             if (Instance == this)
                 Instance = null;
+        }
+    }
+
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
+    public class UnlockSubsidyResetter : MonoBehaviour
+    {
+        public static float StoredUpgradeEntryCost = -1f;
+        public static int StoredPartEntryCost = -1;
+
+        public void Awake()
+        {
+            GameEvents.OnPartPurchased.Add(ResetPartCost);
+            GameEvents.OnPartUpgradePurchased.Add(ResetUpgradeCost);
+
+            Destroy(this);
+        }
+
+        private void ResetPartCost(AvailablePart ap)
+        {
+            if (StoredPartEntryCost >= 0)
+                ap.SetEntryCost(StoredPartEntryCost);
+
+            StoredPartEntryCost = -1;
+        }
+
+        private void ResetUpgradeCost(PartUpgradeHandler.Upgrade up)
+        {
+            if (StoredUpgradeEntryCost >= 0)
+                up.entryCost = StoredUpgradeEntryCost;
+
+            StoredUpgradeEntryCost = -1f;
         }
     }
 }

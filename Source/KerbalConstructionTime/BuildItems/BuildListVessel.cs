@@ -699,26 +699,6 @@ namespace KerbalConstructionTime
             return LC.EfficiencyEngineers - newEffic;
         }
 
-        public bool DoRushBuild()
-        {
-            if (LC.Engineers == 0)
-                return false;
-
-            double rushCost = GetRushCost();
-            if (Funding.Instance.Funds < rushCost)
-                return false;
-
-            double remainingBP = BuildPoints + IntegrationPoints - Progress;
-            Progress += remainingBP * 0.2d; //* LC.Engineers / LC.MaxPersonnel;
-            Utilities.SpendFunds(rushCost, TransactionReasons.VesselRollout);
-            ++RushBuildClicks;
-            _rushCost = -1;    // force recalculation of rush cost
-
-            LC.EfficiencyEngineers -= GetRushEfficiencyCost();
-
-            return true;
-        }
-
         public bool RemoveFromBuildList(out int oldIndex)
         {
             bool removed = false;

@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         [Persistent]
         float cost = 0, integrationCost;
         [Persistent]
-        float mass = 0, kscDistance = 0;
+        float mass = 0, emptyMass = 0, kscDistance = 0;
         [Persistent]
         int numStageParts = 0, numStages = 0;
         [Persistent]
@@ -42,6 +42,7 @@ namespace KerbalConstructionTime
                 Id = new Guid(shipID),
                 CannotEarnScience = cannotEarnScience,
                 TotalMass = mass,
+                EmptyMass = emptyMass,
                 NumStageParts = numStageParts,
                 NumStages = numStages,
                 StagePartCost = stagePartCost,

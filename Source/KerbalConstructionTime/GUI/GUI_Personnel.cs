@@ -92,9 +92,9 @@ namespace KerbalConstructionTime
             LCItem currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Engineers:", GUILayout.Width(120));
-            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(120));
-            GUILayout.Label($"Unassigned:", GetLabelRightAlignStyle(), GUILayout.Width(120));
+            GUILayout.Label("Engineers:", GUILayout.Width(100));
+            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(100));
+            GUILayout.Label($"Unassigned:", GetLabelRightAlignStyle(), GUILayout.Width(100));
             GUILayout.Label($"{KSC.UnassignedEngineers}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 

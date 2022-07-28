@@ -162,12 +162,14 @@ namespace KerbalConstructionTime
         {
             EnterSCSubscene();
             HideAllGUIs();
+            RP0.UIHolder.Instance.HideIfShowing();
         }
 
         private void ExitSCSubsceneAndShow()
         {
             ExitSCSubscene();
             RestoreAllGUIs();
+            RP0.UIHolder.Instance.ShowIfWasHidden();
         }
 
 

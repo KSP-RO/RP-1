@@ -251,7 +251,7 @@ namespace RP0
 
         private void OnPartPurchased(AvailablePart ap)
         {
-            UnlockSubsidyResetter.StoredPartEntryCost = ap.entryCost;
+            UnlockSubsidyUtility.StoredPartEntryCost = ap.entryCost;
             if (ap.costsFunds)
             {
                 int remainingCost = (int)ProcessSubsidy(ap.entryCost, ap.TechRequired);
@@ -261,7 +261,7 @@ namespace RP0
 
         private void OnPartUpgradePurchased(PartUpgradeHandler.Upgrade up)
         {
-            UnlockSubsidyResetter.StoredUpgradeEntryCost = up.entryCost;
+            UnlockSubsidyUtility.StoredUpgradeEntryCost = up.entryCost;
             float remainingCost = ProcessSubsidy(up.entryCost, up.techRequired);
             up.entryCost = remainingCost;
         }
@@ -314,17 +314,38 @@ namespace RP0
     }
 
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
-    public class UnlockSubsidyResetter : MonoBehaviour
+    public class UnlockSubsidyUtility : MonoBehaviour
     {
         public static float StoredUpgradeEntryCost = -1f;
         public static int StoredPartEntryCost = -1;
+
+        public static UnityEngine.UI.Button Button = null;
+        public static string TooltipText = null;
+        private static System.Reflection.MethodInfo IsHighlightedMethod = typeof(UnityEngine.UI.Selectable).GetMethod("IsHighlighted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        public static int WindowID = "PartListTooltip".GetHashCode();
 
         public void Awake()
         {
             GameEvents.OnPartPurchased.Add(ResetPartCost);
             GameEvents.OnPartUpgradePurchased.Add(ResetUpgradeCost);
+            DontDestroyOnLoad(this);
+        }
 
-            Destroy(this);
+        public void OnGUI()
+        {
+            if (Button == null || !Button.gameObject.activeSelf)
+                return;
+
+            bool highlighted = (bool)IsHighlightedMethod.Invoke(Button, null);
+            if (highlighted)
+            {
+                Tooltip.Instance.RecordTooltip(WindowID, false, TooltipText);
+                Tooltip.Instance.ShowTooltip(WindowID);
+            }
+            else
+            {
+                Tooltip.Instance.RecordTooltip(WindowID, false, TooltipText);
+            }
         }
 
         private void ResetPartCost(AvailablePart ap)

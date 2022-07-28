@@ -172,7 +172,7 @@ namespace RP0.Crew
             }
         }
 
-        public double GetTime(List<ProtoCrewMember> students)
+        public double GetBaseTime(List<ProtoCrewMember> students)
         {
             double curTime = time;
             if (RewardLog.values.Count > 0 && students.Count > 0)
@@ -187,9 +187,6 @@ namespace RP0.Crew
                 }
             }
 
-            double level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
-            curTime *= (1d - level * 0.5d);
-
             if (students == null || students.Count == 0 || !timeUseStupid)
                 return curTime;
 
@@ -201,6 +198,17 @@ namespace RP0.Crew
             averageStupid /= sC;
 
             return curTime * UtilMath.Lerp(CrewHandler.Settings.trainingMissionStupidMin, CrewHandler.Settings.trainingMissionStupidMax, averageStupid);
+        }
+
+        public double GetTimeMultiplierFacility()
+        {
+            double level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
+            return (1d - level * 0.5d);
+        }
+
+        public virtual double GetTime(List<ProtoCrewMember> students)
+        {
+            return GetBaseTime(students) * GetTimeMultiplierFacility();
         }
 
         public double GetExpiration(ProtoCrewMember pcm)

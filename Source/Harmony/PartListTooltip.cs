@@ -1,12 +1,10 @@
 ﻿using HarmonyLib;
 using KerbalConstructionTime;
-using KSP.UI.Screens;
+using KSP.UI.TooltipTypes;
 using KSP.UI.Screens.Editor;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.Reflection;
 using KSP.Localization;
 
 namespace RP0.Harmony
@@ -34,9 +32,22 @@ namespace RP0.Harmony
 
         private static void PatchButtons(PartListTooltip __instance, AvailablePart availablePart, PartUpgradeHandler.Upgrade up, bool ___requiresEntryPurchase)
         {
+            SetTooltip(null, null);
+
             if (___requiresEntryPurchase)
             {
-                string techID = availablePart?.TechRequired ?? up.techRequired;
+                string techID;
+                float eCost;
+                if (up != null)
+                {
+                    techID = up.techRequired;
+                    eCost = up.entryCost;
+                }
+                else
+                {
+                    techID = availablePart.TechRequired;
+                    eCost = availablePart.entryCost;
+                }
                 if (KCTGameStates.TechList.Any(tech => tech.TechID == techID))
                 {
                     __instance.buttonPurchaseContainer.SetActive(false);
@@ -44,24 +55,31 @@ namespace RP0.Harmony
                 }
                 else if (__instance.buttonPurchase.gameObject.activeSelf || __instance.buttonPurchaseRed.gameObject.activeSelf)
                 {
-                    // First check if we can already afford; if so, bail.
-                    if (__instance.buttonPurchase.gameObject.activeSelf)
+                    var cmq = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, Math.Min(0f, (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(techID) - eCost), 0f, 0f);
+                    // If we still can't afford, bail without setting tooltip
+                    if (!cmq.CanAfford())
                         return;
 
-                    float eCost = availablePart?.entryCost ?? up.entryCost;
+                    // We might need to fix state
+                    if (__instance.buttonPurchaseRed.gameObject.activeSelf)
+                    {
+                        __instance.buttonPurchase.gameObject.SetActive(true);
+                        __instance.buttonPurchaseCaption.gameObject.SetActive(true);
+                        __instance.buttonPurchaseCaption.text = __instance.buttonPurchaseCaption.text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
+                        __instance.buttonPurchaseRed.gameObject.SetActive(false);
+                        __instance.buttonPurchaseCaptionRed.gameObject.SetActive(false);
+                    }
 
-                    // If we still can't afford, bail
-                    if (!CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(techID) - eCost, 0f, 0f).CanAfford())
-                        return;
-
-                    // We need to fix state.
-                    __instance.buttonPurchase.gameObject.SetActive(true);
-                    __instance.buttonPurchaseCaption.gameObject.SetActive(true);
-                    __instance.buttonPurchaseCaption.text = __instance.buttonPurchaseCaption.text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
-                    __instance.buttonPurchaseRed.gameObject.SetActive(false);
-                    __instance.buttonPurchaseCaptionRed.gameObject.SetActive(false);
+                    SetTooltip(__instance.buttonPurchase, cmq);
                 }
             }
+        }
+
+        private static void SetTooltip(UnityEngine.UI.Button button, CurrencyModifierQuery cmq)
+        {
+            UnlockSubsidyUtility.Button = button;
+            if(button != null)
+                UnlockSubsidyUtility.TooltipText = Localizer.Format("#rp0UnlockSubsidyCostAfter", cmq.GetTotal(Currency.Funds));
         }
     }
 }

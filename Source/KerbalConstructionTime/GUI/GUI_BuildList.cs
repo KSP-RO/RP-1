@@ -717,7 +717,7 @@ namespace KerbalConstructionTime
                 if (!lc.IsOperational)
                     continue;
                 foreach (var b in lc.Warehouse)
-                    RenderWarehouseRow(b, idx++);
+                    RenderWarehouseRow(b, idx++, true);
             }
             if(idx == 0)
                 GUILayout.Label("No vessels in storage!");
@@ -966,11 +966,11 @@ namespace KerbalConstructionTime
             for (int i = 0; i < buildList.Count; i++)
             {
                 BuildListVessel b = buildList[i];
-                RenderWarehouseRow(b, i);
+                RenderWarehouseRow(b, i, false);
             }
         }
 
-        private static void RenderWarehouseRow(BuildListVessel b, int listIdx)
+        private static void RenderWarehouseRow(BuildListVessel b, int listIdx, bool isCombinedList)
         {
             if (!b.AllPartsValid)
                 return;
@@ -987,7 +987,7 @@ namespace KerbalConstructionTime
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
-            ReconRollout rollout = null, rollback = null, recovery = null;
+            ReconRollout rollout = null, rollback = null, recovery = null, padRollout = null;
             string blvID = b.Id.ToString();
             foreach (var rr in vesselLC.Recon_Rollout)
             {
@@ -1002,7 +1002,7 @@ namespace KerbalConstructionTime
                     }
                 }
                 else if (isPad && rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.LaunchPadID == launchSite)
-                    rollout = rr; // something else is being rollout out to this launchsite.
+                    padRollout = rr; // something else is being rollout out to this launchsite.
             }
             AirlaunchPrep airlaunchPrep = !isPad ? vesselLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == blvID) : null;
 
@@ -1018,7 +1018,7 @@ namespace KerbalConstructionTime
 
             GUIStyle textColor = GUI.skin.label;
             string status = "In Storage";
-            if (rollout != null && rollout.AssociatedID == blvID)
+            if (rollout != null)
             {
                 padStatus = VesselPadStatus.RollingOut;
                 status = $"Rolling Out to {launchSite}";
@@ -1080,15 +1080,36 @@ namespace KerbalConstructionTime
             {
                 if (isPad)
                 {
-                    bool siteHasActiveRolloutOrRollback = rollout != null || vesselLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) != null;
-                    if (!HighLogic.LoadedSceneIsEditor && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
+                    KCT_LaunchPad foundPad = null;
+                    LaunchPadState lpState = LaunchPadState.None;
+                    if (rollout == null && rollback == null)
                     {
-                        bool hasRecond = false;
+                        if (isCombinedList)
+                        {
+                            foundPad = vesselLC.FindFreeLaunchPad();
+                            if (foundPad != null)
+                                lpState = LaunchPadState.Free;
+                            else
+                                lpState = vesselLC.GetBestLaunchPadState();
+                        }
+                        else
+                        {
+                            lpState = vesselLC.ActiveLPInstance.State;
+                            if (padRollout == null && vesselLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) == null)
+                            {
+                                foundPad = vesselLC.ActiveLPInstance;
+                            }
+                        }
+                    }
+
+                    if (!HighLogic.LoadedSceneIsEditor && lpState > LaunchPadState.Nonoperational) //rollout if the pad isn't busy
+                    {
                         List<string> facilityChecks = b.MeetsFacilityRequirements(false);
+
                         GUIStyle btnColor = _greenButton;
-                        if (vesselLC.ActiveLPInstance.IsDestroyed)
+                        if (lpState == LaunchPadState.Destroyed)
                             btnColor = _redButton;
-                        else if (hasRecond = vesselLC.GetReconditioning(vesselLC.ActiveLPInstance.name) != null)
+                        else if (lpState <  LaunchPadState.Free)
                             btnColor = _yellowButton;
                         else if (facilityChecks.Count != 0)
                             btnColor = _yellowButton;
@@ -1098,33 +1119,29 @@ namespace KerbalConstructionTime
                         GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
-                            if (hasRecond)
-                            {
-                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutReconditioningPopup", "Cannot Roll out!", "You must finish reconditioning the launchpad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin);
-                            }
-                            else
+                            if (foundPad != null && lpState == LaunchPadState.Free)
                             {
                                 if (facilityChecks.Count == 0)
                                 {
-                                    if (!vesselLC.ActiveLPInstance.IsDestroyed)
-                                    {
-                                        b.LaunchSiteIndex = vesselLC.ActiveLaunchPadIndex;
-
-                                        if (rollout != null)
-                                        {
-                                            rollout.SwapRolloutType();
-                                        }
-                                        vesselLC.Recon_Rollout.Add(tmpRollout);
-                                    }
-                                    else
-                                    {
-                                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchRepairPopup", "Cannot Launch!", "You must repair the launchpad before you can launch a vessel from it!", "Acknowledged", false, HighLogic.UISkin);
-                                    }
+                                    b.LaunchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                                    vesselLC.Recon_Rollout.Add(tmpRollout);
                                 }
                                 else
                                 {
                                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
                                 }
+                            }
+                            else if (lpState == LaunchPadState.Destroyed)
+                            {
+                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutDestroyedPopup", "Cannot Roll out!", "You must repair the launchpad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin);
+                            }
+                            else if (lpState == LaunchPadState.Reconditioning)
+                            {
+                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutReconditioningPopup", "Cannot Roll out!", "You must finish reconditioning at least one pad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin);
+                            }
+                            else if (lpState != LaunchPadState.Free)
+                            {
+                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutBusyPopup", "Cannot Roll out!", isCombinedList ? "All pads are in use by other vessels" : "This launchpad is in use by another vessel.", "Acknowledged", false, HighLogic.UISkin);
                             }
                         }
                         if (Event.current.type == EventType.Repaint)
@@ -1133,15 +1150,14 @@ namespace KerbalConstructionTime
                             else if (listIdx == _mouseOnRolloutButton)
                                 _mouseOnRolloutButton = -1;
                     }
-                    else if (!HighLogic.LoadedSceneIsEditor && rollback == null &&
-                             rollout != null && blvID == rollout.AssociatedID && !rollout.IsComplete() &&
+                    else if (!HighLogic.LoadedSceneIsEditor && rollback == null && rollout != null && !rollout.IsComplete() &&
                              GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ blvID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
                     {
                         rollout.SwapRolloutType();
                     }
                     else if (!HighLogic.LoadedSceneIsEditor && rollback != null && !rollback.IsComplete())
                     {
-                        if (rollout == null)
+                        if (rollout == null && padRollout == null)
                         {
                             if (GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
                                 rollback.SwapRolloutType();
@@ -1152,10 +1168,10 @@ namespace KerbalConstructionTime
                         }
                     }
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
-                             (rollout != null && blvID == rollout.AssociatedID && rollout.IsComplete()))
+                             (rollout != null && rollout.IsComplete()))
                     {
                         KCT_LaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.LaunchPadID);
-                        bool operational = pad != null && !pad.IsDestroyed;
+                        bool operational = pad != null && !pad.IsDestroyed && pad.isOperational;
                         GUIStyle btnColor = _greenButton;
                         string launchTxt = "Launch";
                         if (!operational)

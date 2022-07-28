@@ -366,13 +366,9 @@ namespace RP0.Crew
 
         private static void CreateCourseFinishAlarm(ProtoCrewMember student, ActiveCourse currentCourse)
         {
-            // CrewHandler processes trainings every 3600 seconds. Need to account for that to set up accurate KAC alarms.
             double completeUT = currentCourse.CompletionTime();
-            double timeDiff = completeUT - CrewHandler.Instance.NextUpdate;
-            double timesChRun = Math.Ceiling(timeDiff / CrewHandler.UpdateInterval);
-            double alarmUT = CrewHandler.Instance.NextUpdate + timesChRun * CrewHandler.UpdateInterval;
             string alarmTxt = $"{currentCourse.name} - {student.name}";
-            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, alarmUT);
+            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, completeUT);
         }
 
         private static void CreateReturnToDutyAlarm(ProtoCrewMember crew)

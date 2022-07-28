@@ -9,7 +9,7 @@ namespace KerbalConstructionTime
 {
     public class BuildListVessel : IKCTBuildItem
     {
-        public enum ListType { None, VAB, SPH, TechNode, Reconditioning, KSC, AirLaunch };
+        public enum ListType { None, VAB, SPH, TechNode, Reconditioning, KSC, AirLaunch, Crew };
 
         public double Progress, EffectiveCost, BuildPoints, IntegrationPoints;
         public string LaunchSite, Flag, ShipName;

@@ -8,11 +8,19 @@ namespace RP0
     public class UIHolder : MonoBehaviour
     {
         private bool _isGuiEnabled = false;
+        private bool _wasGuiEnabled = false;
         private ApplicationLauncherButton _button;
         private TopWindow _tw;
 
+        public static UIHolder Instance { get; protected set; }
+
         protected void Awake()
         {
+            if (Instance != null)
+                Destroy(Instance);
+
+            Instance = this;
+
             GameEvents.onGUIApplicationLauncherReady.Add(OnGuiAppLauncherReady);
             GameEvents.onGameSceneLoadRequested.Add(OnSceneChange);
         }
@@ -33,12 +41,28 @@ namespace RP0
             {
                 ApplicationLauncher.Instance.RemoveModApplication(_button);
             }
+
+            if (Instance == this)
+                Instance = null;
         }
 
         protected void OnGUI()
         {
             if (_isGuiEnabled)
                 _tw.OnGUI();
+        }
+
+        public void HideIfShowing()
+        {
+            _wasGuiEnabled = _isGuiEnabled;
+            if (_isGuiEnabled)
+                _button.toggleButton.Value = false;
+        }
+
+        public void ShowIfWasHidden()
+        {
+            if(_wasGuiEnabled && !_isGuiEnabled)
+                _button.toggleButton.Value = true;
         }
 
         private void ShowWindow()

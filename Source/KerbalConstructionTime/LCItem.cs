@@ -292,6 +292,30 @@ namespace KerbalConstructionTime
             ActiveLPInstance?.SetActive();
         }
 
+        public LaunchPadState GetBestLaunchPadState()
+        {
+            LaunchPadState state = LaunchPadState.None;
+            foreach (KCT_LaunchPad lp in LaunchPads)
+            {
+                var padState = lp.State;
+                if (padState > state)
+                    state = padState;
+            }
+
+            return state;
+        }
+
+        public KCT_LaunchPad FindFreeLaunchPad()
+        {
+            foreach (KCT_LaunchPad lp in LaunchPads)
+            {
+                if (lp.State == LaunchPadState.Free)
+                    return lp;
+            }
+
+            return null;
+        }
+
         private void BuildVesselAndShipNodeConfigs(BuildListVessel blv, ref ConfigNode node)
         {
             var storageItem = new BuildListStorageItem();

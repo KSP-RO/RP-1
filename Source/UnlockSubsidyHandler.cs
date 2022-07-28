@@ -125,8 +125,6 @@ namespace RP0
 
         public void SpendSubsidyAndCost(List<AvailablePart> parts)
         {
-            double subsidyAmount = 0d;
-
             var partCostDict = new Dictionary<AvailablePart, double>();
             // first pull from local.
             foreach (var p in parts)
@@ -139,22 +137,17 @@ namespace RP0
                         local = cost;
                     cost -= local;
                     sNode.funds -= local;
-                    subsidyAmount += local;
                 }
                 partCostDict[p] = cost;
             }
-
-            double totalCost = 0d;
 
             foreach (var p in parts)
             {
                 double cost = partCostDict[p];
                 double excess = SpendSubsidy(p.TechRequired, cost);
-                subsidyAmount += (cost - excess);
-                totalCost += excess;
+                if (excess > 0)
+                    Funding.Instance.AddFunds(-excess, TransactionReasons.RnDPartPurchase);
             }
-
-            Funding.Instance.AddFunds(-totalCost, TransactionReasons.RnDPartPurchase);
         }
 
         public double SpendSubsidy(string tech, double cost, Dictionary<string, UnlockSubsidyNode> dict = null)

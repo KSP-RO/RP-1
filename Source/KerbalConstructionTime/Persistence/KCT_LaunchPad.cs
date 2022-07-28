@@ -5,6 +5,17 @@ using Upgradeables;
 
 namespace KerbalConstructionTime
 {
+    public enum LaunchPadState
+    {
+        None,
+        Destroyed,
+        Nonoperational,
+        Rollout,
+        Rollback,
+        Reconditioning,
+        Free,
+    }
+
     public class KCT_LaunchPad : ConfigNodeStorage
     {
         public const string LPID = "SpaceCenter/LaunchPad";
@@ -65,6 +76,34 @@ namespace KerbalConstructionTime
                 }
 
                 return null;
+            }
+        }
+
+        public LaunchPadState State
+        {
+            get
+            {
+                if (IsDestroyed)
+                    return LaunchPadState.Destroyed;
+
+                if (!isOperational)
+                    return LaunchPadState.Nonoperational;
+
+                foreach (var rr in LC.Recon_Rollout)
+                {
+                    if (rr.LaunchPadID == launchSiteName)
+                    {
+                        switch (rr.RRType)
+                        {
+                            case ReconRollout.RolloutReconType.Reconditioning: return LaunchPadState.Reconditioning;
+                            case ReconRollout.RolloutReconType.Rollback: return LaunchPadState.Rollback;
+                            case ReconRollout.RolloutReconType.Rollout: return LaunchPadState.Rollout;
+                        }
+                        break;
+                    }
+                }
+
+                return LaunchPadState.Free;
             }
         }
 

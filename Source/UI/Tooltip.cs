@@ -49,23 +49,24 @@ namespace RP0
             Instance = new Tooltip();
         }
 
-        public void RecordTooltip(int windowId)
+        public void RecordTooltip(int windowId, bool skipOnEvent = true, string overrideTooltip = null)
         {
-            if (Event.current.type != EventType.Repaint) return;
+            if (skipOnEvent && Event.current.type != EventType.Repaint) return;
 
             if (!_windowTooltipTexts.TryGetValue(windowId, out string tooltipText))
             {
                 tooltipText = string.Empty;
             }
 
-            if (tooltipText != GUI.tooltip)
+            string newTooltipStr = overrideTooltip != null ? overrideTooltip : GUI.tooltip;
+            if (tooltipText != newTooltipStr)
             {
                 _isTooltipChanged = true;
                 if (!string.IsNullOrEmpty(tooltipText))
                 {
                     _tooltipBeginDt = DateTime.UtcNow;
                 }
-                _windowTooltipTexts[windowId] = GUI.tooltip;
+                _windowTooltipTexts[windowId] = newTooltipStr;
             }
         }
 

@@ -79,7 +79,7 @@ namespace RP0.Harmony
         {
             UnlockSubsidyUtility.Button = button;
             if(button != null)
-                UnlockSubsidyUtility.TooltipText = Localizer.Format("#rp0UnlockSubsidyCostAfter", cmq.GetTotal(Currency.Funds));
+                UnlockSubsidyUtility.TooltipText = Localizer.Format("#rp0UnlockSubsidyCostAfter", -cmq.GetTotal(Currency.Funds));
         }
     }
 }

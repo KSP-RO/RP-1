@@ -38,9 +38,6 @@ namespace RP0.Crew
         public static CrewHandler Instance { get; private set; } = null;
         public static CrewHandlerSettings Settings { get; private set; } = null;
 
-        [KSPField(isPersistant = true)]
-        public double NextUpdate = UpdateInterval;    // Get the first hour for free :)
-
         private Dictionary<string, double> KerbalRetireTimes = new Dictionary<string, double>();
         private Dictionary<string, double> KerbalRetireIncreases = new Dictionary<string, double>();
         public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
@@ -197,6 +194,16 @@ namespace RP0.Crew
             node.AddNode("FlightSchoolData", FSData);
         }
 
+        public void Process()
+        {
+            if (_isFirstLoad)
+                return;
+
+            double time = KSPUtils.GetUT();
+            ProcessRetirements(time);
+            ProcessCourses(time);
+        }
+
         public void Update()
         {
             if (HighLogic.CurrentGame == null || HighLogic.CurrentGame.CrewRoster == null)
@@ -212,20 +219,6 @@ namespace RP0.Crew
             {
                 _flightLogUpdateCounter = 0;
                 UpdateFlightLog();
-            }
-
-            double time = KSPUtils.GetUT();
-            if (NextUpdate < time)
-            {
-                // Ensure that CrewHandler updates happen at predictable times so that accurate KAC alarms can be set.
-                do
-                {
-                    NextUpdate += UpdateInterval;
-                }
-                while (NextUpdate < time);
-
-                ProcessRetirements(time);
-                ProcessCourses(time);
             }
 
             if (_inAC)
@@ -776,10 +769,6 @@ namespace RP0.Crew
                 }
 
                 _toRemove.Clear();
-            }
-
-            if (_toRemove.Count > 0)
-            {
                 MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
             }
         }

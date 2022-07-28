@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UniLinq;
 using System.Text;
+using KerbalConstructionTime;
 
 namespace RP0.Crew
 {
-    public class ActiveCourse : CourseTemplate
+    public class ActiveCourse : CourseTemplate, KerbalConstructionTime.IKCTBuildItem
     {
         public List<ProtoCrewMember> Students = new List<ProtoCrewMember>();
 
         public double elapsedTime = 0;
         public double startTime = 0d;
+        public double baseCourseTime = 0d;
         public bool Started = false, Completed = false;
 
         public ActiveCourse(CourseTemplate template)
@@ -154,6 +156,19 @@ namespace RP0.Crew
         public void RemoveStudent(string student)
         {
             RemoveStudent(HighLogic.CurrentGame.CrewRoster[student]);
+        }
+
+        public override double GetTime(List<ProtoCrewMember> students)
+        {
+            if (Started)
+            {
+                if (baseCourseTime == 0d)
+                    baseCourseTime = GetBaseTime(students);
+
+                return baseCourseTime * GetTimeMultiplierFacility();
+            }
+
+            return base.GetTime(students);
         }
 
         public double GetTime()
@@ -323,11 +338,52 @@ namespace RP0.Crew
 
             startTime = KSPUtils.GetUT();
 
+
             foreach (ProtoCrewMember student in Students)
                 student.SetInactive(GetTime(Students) + 1d);
 
             return true;
             //fire an event
+        }
+
+        public string GetItemName()
+        {
+            return name;
+        }
+
+        public double GetBuildRate()
+        {
+            return 1d;
+        }
+
+        public double GetFractionComplete()
+        {
+            return (KSPUtils.GetUT() - startTime) / GetTime();
+        }
+
+        public double GetTimeLeft()
+        {
+            return GetTime() - (KSPUtils.GetUT() - startTime);
+        }
+
+        public double GetTimeLeftEst(double offset)
+        {
+            return GetTimeLeft();
+        }
+
+        public KerbalConstructionTime.BuildListVessel.ListType GetListType()
+        {
+            return KerbalConstructionTime.BuildListVessel.ListType.Crew;
+        }
+
+        public bool IsComplete()
+        {
+            return Completed;
+        }
+
+        public double IncrementProgress(double UTDiff)
+        {
+            return 0d;
         }
     }
 }

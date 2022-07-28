@@ -163,12 +163,13 @@ namespace KerbalConstructionTime
             // PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
             int unlockCost = Utilities.FindUnlockCost(partList);
             int partCount = purchasableParts.Count();
+            double subsidy = RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList);
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{unlockCost:N0} and {mode} (cost after subsidy <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0, unlockCost - (int)subsidy):N0})", () =>
                 {
-                    if (CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -(float)RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList), 0f, 0f).CanAfford())
+                    if (CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)( subsidy - unlockCost), 0f, 0f).CanAfford())
                     {
                         Utilities.UnlockExperimentalParts(partList);
                         _validationResult = ValidationResult.Success;

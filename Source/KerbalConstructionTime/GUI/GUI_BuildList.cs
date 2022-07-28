@@ -184,6 +184,11 @@ namespace KerbalConstructionTime
                 {
                     locTxt = "KSC";
                 }
+                else if (buildItem.GetListType() == BuildListVessel.ListType.Crew)
+                {
+                    locTxt = txt;
+                    txt = "Training";
+                }
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
@@ -641,6 +646,7 @@ namespace KerbalConstructionTime
                 accTime += t.GetTimeLeftEst(accTime);
                 _allItems.Add(t);
             }
+            _allItems.AddRange(RP0.Crew.CrewHandler.Instance.ActiveCourses);
             _allItems.Sort(CompareBuildItems);
 
             GUILayout.BeginHorizontal();

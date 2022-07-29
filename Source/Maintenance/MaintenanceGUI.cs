@@ -207,6 +207,7 @@ namespace RP0
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button("Warp to Funds", HighLogic.Skin.button))
             {
+                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "warptofunds");
                 UIHolder.Instance.HideWindow();
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("warpToFunds", "Fund Target", "Warp To Funds", HighLogic.UISkin,
@@ -216,7 +217,10 @@ namespace RP0
                         return warpToFundsString;
                     }, 24f),
                     new DialogGUIButton("Warp", () => { ConfirmWarpDialog(); }),
-                    new DialogGUIButton("Cancel", () => { UIHolder.Instance.ShowWindow(); })
+                    new DialogGUIButton("Cancel", () => { 
+                        UIHolder.Instance.ShowWindow();
+                        InputLockManager.RemoveControlLock("warptofunds");
+                    })
                     ), false, HighLogic.UISkin);
             }
         }
@@ -230,7 +234,10 @@ namespace RP0
                     "Error",
                     HighLogic.UISkin,
                     300,
-                    new DialogGUIButton("Understood", () => { UIHolder.Instance.ShowWindow(); })), false, HighLogic.UISkin);
+                    new DialogGUIButton("Understood", () => {
+                        UIHolder.Instance.ShowWindow();
+                        InputLockManager.RemoveControlLock("warptofunds");
+                    })), false, HighLogic.UISkin);
             }
             else
             {
@@ -249,7 +256,10 @@ namespace RP0
                         "Error",
                         HighLogic.UISkin,
                         300,
-                        new DialogGUIButton("Understood", () => { UIHolder.Instance.ShowWindow(); })), false, HighLogic.UISkin);
+                        new DialogGUIButton("Understood", () => {
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
+                        })), false, HighLogic.UISkin);
                 }
                 else
                 {
@@ -257,9 +267,14 @@ namespace RP0
                         new DialogGUIButton("Yes", () => 
                         {
                             KerbalConstructionTime.KCTWarpController.Create(target);
-                        UIHolder.Instance.ShowWindow();
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
                         }),
-                        new DialogGUIButton("No", () => { UIHolder.Instance.ShowWindow(); })
+                        new DialogGUIButton("No", () => 
+                        { 
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
+                        })
                     };
                     var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Estimated to take {KSPUtil.PrintDateDelta(time, false, false)} and finish on {KSPUtil.PrintDate(KSPUtils.GetUT() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
                     PopupDialog.SpawnPopupDialog(dialog, false, HighLogic.UISkin);

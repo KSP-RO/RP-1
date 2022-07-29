@@ -118,7 +118,7 @@ namespace KerbalConstructionTime
 
             if (Utilities.CurrentGameIsCareer() && HasCost && Cost > 0)
             {
-                if (!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)Cost, 0f, 0f).CanAfford()) //If they can't afford to continue the rollout, progress stops
+                if (!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)cost, 0f, 0f).CanAfford()) //If they can't afford to continue the rollout, progress stops
                 {
                     Progress = progBefore;
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
@@ -130,7 +130,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    Utilities.SpendFunds(Cost, TransactionReasons.VesselRollout);
+                    Utilities.SpendFunds(cost, TransactionReasons.VesselRollout);
                 }
             }
             if (IsComplete())

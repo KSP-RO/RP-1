@@ -188,7 +188,7 @@ namespace KerbalConstructionTime
         public static double GetBudgetDelta(double time)
         {
             // note NetUpkeepPerDay is negative or 0.
-            double delta = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay * time / 86400d - GetConstructionCostOverTime(time);
+            double delta = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay * time / 86400d - GetConstructionCostOverTime(time) - GetRolloutCostOverTime(time);
             delta += RP0.MaintenanceHandler.Instance.GetProgramFunding(time);
 
             return delta;
@@ -220,6 +220,56 @@ namespace KerbalConstructionTime
                 if (ksc.KSCName == kscName)
                 {
                     return GetConstructionCostOverTime(time, ksc);
+                }
+            }
+
+            return 0d;
+        }
+
+        public static double GetRolloutCostOverTime(double time)
+        {
+            double delta = 0;
+            foreach (var ksc in KSCs)
+            {
+                delta += GetRolloutCostOverTime(time, ksc);
+            }
+            return delta;
+        }
+
+        public static double GetRolloutCostOverTime(double time, KSCItem ksc)
+        {
+            double delta = 0;
+            foreach (var lc in ksc.LaunchComplexes)
+                delta += GetRolloutCostOverTime(time, lc);
+
+            return delta;
+        }
+
+        public static double GetRolloutCostOverTime(double time, LCItem lc)
+        {
+            double delta = 0;
+            foreach (var rr in lc.Recon_Rollout)
+            {
+                if (rr.RRType != ReconRollout.RolloutReconType.Rollout)
+                    continue;
+                delta += rr.Cost * (1d - rr.Progress / rr.BP);
+            }
+            foreach (var al in lc.AirlaunchPrep)
+            {
+                if (al.Direction == AirlaunchPrep.PrepDirection.Mount)
+                    delta += al.Cost * (1d - al.Progress / al.BP);
+            }
+
+            return delta;
+        }
+
+        public static double GetRolloutCostOverTime(double time, string kscName)
+        {
+            foreach (var ksc in KSCs)
+            {
+                if (ksc.KSCName == kscName)
+                {
+                    return GetRolloutCostOverTime(time, ksc);
                 }
             }
 

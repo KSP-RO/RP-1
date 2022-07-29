@@ -168,10 +168,6 @@ namespace RP0
                 rolloutCost = KerbalConstructionTime.KCTGameStates.GetRolloutCostOverTime(PeriodFactor * 86400d);
                 GUILayout.Label("Rollout/Airlaunch Prep", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label(FormatCost(-rolloutCost), RightLabel, GUILayout.Width(160));
-                if (GUILayout.Button(_infoBtnContent, InfoButton))
-                {
-                    TopWindow.SwitchTabTo(UITab.Construction);
-                }
             }
             catch (Exception ex)
             {
@@ -181,8 +177,12 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             double constrMaterials = KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d);
-            GUILayout.Label("Building Materials", HighLogic.Skin.label, GUILayout.Width(160));
+            GUILayout.Label("Constructions", HighLogic.Skin.label, GUILayout.Width(160));
             GUILayout.Label(FormatCost(-constrMaterials), RightLabel, GUILayout.Width(160));
+            if (GUILayout.Button(_infoBtnContent, InfoButton))
+            {
+                TopWindow.SwitchTabTo(UITab.Construction);
+            }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

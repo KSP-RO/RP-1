@@ -114,26 +114,23 @@ namespace KerbalConstructionTime
             if (Progress > BP) Progress = BP;
             else if (Progress < 0) Progress = 0;
 
-            int prevStep = (int)Math.Floor(10 * progBefore / BP);
-            int curStep = (int)Math.Floor(10 * Progress / BP);
+            double cost = (Progress - progBefore) / BP * Cost;
 
             if (Utilities.CurrentGameIsCareer() && HasCost && Cost > 0)
             {
-                int steps = curStep - prevStep;
-                if (steps > 0) //  Pay or halt at 10% intervals
+                if (!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)Cost, 0f, 0f).CanAfford()) //If they can't afford to continue the rollout, progress stops
                 {
-                    if(!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)(Cost * steps * 0.1d), 0f, 0f).CanAfford()) //If they can't afford to continue the rollout, progress stops
+                    Progress = progBefore;
+                    if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {
-                        Progress = progBefore;
-                        if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
-                        {
-                            ScreenMessages.PostScreenMessage($"Timewarp was stopped because there's insufficient funds to continue the {Name}");
-                            KCTWarpController.Instance.StopWarp();
-                        }
-                        return 0d;
+                        ScreenMessages.PostScreenMessage($"Timewarp was stopped because there's insufficient funds to continue the {Name}");
+                        KCTWarpController.Instance.StopWarp();
                     }
-                    else
-                        Utilities.SpendFunds(steps * Cost * 0.1d, TransactionReasons.VesselRollout);
+                    return UTDiff;
+                }
+                else
+                {
+                    Utilities.SpendFunds(Cost, TransactionReasons.VesselRollout);
                 }
             }
             if (IsComplete())

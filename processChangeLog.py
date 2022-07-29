@@ -37,10 +37,12 @@ if version.startswith('v'):
 	version = version.split('v')[1]
 
 def create_subChange_from_item(item):
+	# Remove "by @author in https..."
+	actual_item = item.split(" by @")[0]
 	output = ""
 	nr_tabs = 3
-	#   subChange = "item"
-	output += "\n"+nr_tabs*"\t"+"subChange = " + item
+	#	subChange = "actual_item"
+	output += "\n"+nr_tabs*"\t"+"subchange = " + actual_item
 	return output
 
 def split_text(text):
@@ -49,11 +51,11 @@ def split_text(text):
 def create_change_from_category(category, text):
 	output = ""
 	nr_tabs = 2
-	#   CHANGE
-	#   {
-	#       change = "category"
-	#       ...
-	#   }
+	#	CHANGE
+	#	{
+	#		change = "category"
+	#		...
+	#	}
 	output += "\n"+nr_tabs*"\t"+"CHANGE\n"+nr_tabs*"\t"+"{\n"+(nr_tabs+1)*"\t"+"change = " + category
 
 	for row in split_text(text):
@@ -75,30 +77,32 @@ def split_body(body):
 			item = line.split("* ")[1]
 			if items != "":
 				items += "\n"
-			# print(item)
 			items += item
 	yield (category, items)
 
 def create_version(version, body):
 	output = ""
 	nr_tabs = 1
-	#   VERSION
-	#   {
-	#       version = "version"
-	#       ...
-	#   }
+	#	VERSION
+	#	{
+	#		version = "version"
+	#		versionKSP = 1.12.3
+	#		...
+	#	}
 	HEADER = "\n"+nr_tabs*"\t"+"VERSION\n"+nr_tabs*"\t"+"{"
-	version_text = "\n"+(nr_tabs+1)*"\t"+"version = " + version
+	version_text = "\n"+(nr_tabs+1)*"\t"+"version = " + version + "\n" + (nr_tabs+1)*"\t" + "versionKSP = 1.12.3"
 	output += HEADER + version_text
 
 	for (category, items) in split_body(body):
 		output += create_change_from_category(category, items)
 
-	# TODO: add notes at the bottom (full changelog link)
 	output += "\n"+nr_tabs*"\t"+"}"
 	return output
 
 def compare_versions(new, old):
+	"""
+	returns true if new version is greater than old version
+	"""
 	for i in range(4):
 		if int(new.split(".")[i]) > int(old.split(".")[i]):
 			return True
@@ -106,8 +110,10 @@ def compare_versions(new, old):
 			return False
 	return False
 
-# returns true if new version is greater than last version
 def check_previous_version(version, path):
+	"""
+	finds last version in the changelog and returns true if new version is greater than last version
+	"""
 	with open(path, "r") as f:
 		for row in f.readlines():
 			if "version = " in row:
@@ -120,7 +126,6 @@ if not check_previous_version(version, path):
 	sys.exit(2)
 
 def insert_new_version(output, path):
-	print(output)
 	output_list = [e+"\n" for e in output.split("\n") if e]
 	with open(path, "r") as f:
 		text = f.readlines()

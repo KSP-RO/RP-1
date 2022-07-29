@@ -65,12 +65,12 @@ namespace RP0
                 _button.toggleButton.Value = true;
         }
 
-        private void ShowWindow()
+        public void ShowWindow()
         {
             _isGuiEnabled = true;
         }
 
-        private void HideWindow()
+        public void HideWindow()
         {
             _isGuiEnabled = false;
         }

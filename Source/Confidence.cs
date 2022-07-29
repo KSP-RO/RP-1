@@ -33,7 +33,7 @@ namespace RP0
                 confidence = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().StartingConfidence;
             }
 
-            GameEvents.OnScienceChanged.Add(OnScienceChanged);
+            GameEvents.Modifiers.OnCurrencyModified.Add(OnCurrenciesModified);
         }
 
         private void OnDestroy()
@@ -41,7 +41,7 @@ namespace RP0
             if (Instance == this)
                 Instance = null;
 
-            GameEvents.OnScienceChanged.Remove(OnScienceChanged);
+            GameEvents.Modifiers.OnCurrencyModified.Remove(OnCurrenciesModified);
         }
 
         public void AddConfidence(float delta, TransactionReasons reason)
@@ -67,10 +67,11 @@ namespace RP0
             }
         }
 
-        private void OnScienceChanged(float sci, TransactionReasons reason)
+        private void OnCurrenciesModified(CurrencyModifierQuery query)
         {
-            if (sci > 0)
-                AddConfidence((Programs.ProgramHandler.Settings?.sciToConfidence ?? 2) * sci, reason);
+            float changeDelta = query.GetTotal(Currency.Science);
+            if (changeDelta > 0f)
+                AddConfidence((Programs.ProgramHandler.Settings?.sciToConfidence ?? 2) * changeDelta, query.reason);
         }
     }
 }

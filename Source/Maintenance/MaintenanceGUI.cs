@@ -12,6 +12,8 @@ namespace RP0
 
         private System.Collections.Generic.Dictionary<string, string> siteLocalizer = new System.Collections.Generic.Dictionary<string, string>();
 
+        private string warpToFundsString;
+
         private string LocalizeSiteName(string siteID)
         {
             if (siteLocalizer.Count == 0)
@@ -202,6 +204,67 @@ namespace RP0
             double delta = programBudget - costPerDay * PeriodFactor - constrMaterials - rolloutCost;
             GUILayout.Label(FormatCost(delta), BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
+
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button("Warp to Funds", HighLogic.Skin.button))
+            {
+                UIHolder.Instance.HideWindow();
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                    new MultiOptionDialog("warpToFunds", "Fund Target", "Warp To Funds", HighLogic.UISkin,
+                    new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
+                    {
+                        warpToFundsString = n;
+                        return warpToFundsString;
+                    }, 24f),
+                    new DialogGUIButton("Warp", () => { ConfirmWarpDialog(); }),
+                    new DialogGUIButton("Cancel", () => { UIHolder.Instance.ShowWindow(); })
+                    ), false, HighLogic.UISkin);
+            }
+        }
+
+        private void ConfirmWarpDialog()
+        {
+            if (!double.TryParse(warpToFundsString, out double fundTarget))
+            {
+                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
+                    "Failed to parse funds!",
+                    "Error",
+                    HighLogic.UISkin,
+                    300,
+                    new DialogGUIButton("Understood", () => { UIHolder.Instance.ShowWindow(); })), false, HighLogic.UISkin);
+            }
+            else
+            {
+                if (fundTarget <= Funding.Instance.Funds)
+                {
+                    UIHolder.Instance.ShowWindow();
+                    return;
+                }
+
+                KerbalConstructionTime.FundTarget target = new KerbalConstructionTime.FundTarget(fundTarget);
+                double time = target.GetTimeLeft();
+                if (time < 0d)
+                {
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
+                        $"Failed to find a time to warp to, with a limit of {KSPUtil.PrintDateDeltaCompact(KerbalConstructionTime.FundTarget.MaxTime, false, false)}",
+                        "Error",
+                        HighLogic.UISkin,
+                        300,
+                        new DialogGUIButton("Understood", () => { UIHolder.Instance.ShowWindow(); })), false, HighLogic.UISkin);
+                }
+                else
+                {
+                    var options = new DialogGUIBase[] {
+                        new DialogGUIButton("Yes", () => 
+                        {
+                            KerbalConstructionTime.KCTWarpController.Create(target);
+                        UIHolder.Instance.ShowWindow();
+                        }),
+                        new DialogGUIButton("No", () => { UIHolder.Instance.ShowWindow(); })
+                    };
+                    var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Will take {KSPUtil.PrintDateDelta(time, false, false)} and finish on {KSPUtil.PrintDate(KSPUtils.GetUT() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
+                    PopupDialog.SpawnPopupDialog(dialog, false, HighLogic.UISkin);
+                }
+            }
         }
 
         public void RenderFacilitiesTab()

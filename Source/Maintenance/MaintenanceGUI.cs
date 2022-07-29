@@ -261,7 +261,7 @@ namespace RP0
                         }),
                         new DialogGUIButton("No", () => { UIHolder.Instance.ShowWindow(); })
                     };
-                    var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Will take {KSPUtil.PrintDateDelta(time, false, false)} and finish on {KSPUtil.PrintDate(KSPUtils.GetUT() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
+                    var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Estimated to take {KSPUtil.PrintDateDelta(time, false, false)} and finish on {KSPUtil.PrintDate(KSPUtils.GetUT() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
                     PopupDialog.SpawnPopupDialog(dialog, false, HighLogic.UISkin);
                 }
             }

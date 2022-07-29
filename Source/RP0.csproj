@@ -61,6 +61,7 @@
     <Compile Include="DataTypes\PersistentDictionary.cs" />
     <Compile Include="Harmony\Contract.cs" />
     <Compile Include="Harmony\ContractParameter.cs" />
+    <Compile Include="KerbalConstructionTime\BuildItems\FundTarget.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
     <Compile Include="Confidence.cs" />
     <Compile Include="Debug.cs" />

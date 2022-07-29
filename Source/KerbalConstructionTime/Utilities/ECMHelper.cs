@@ -14,7 +14,7 @@ namespace KerbalConstructionTime
 
         public static string GetEcmNameFromPartModule(PartModule pm)
         {
-            if (CheckLoadEcmRelatedTypes())
+            if (!CheckLoadEcmRelatedTypes())
             {
                 // necessary asseemblies and types could not be loaded
                 return null;
@@ -48,10 +48,10 @@ namespace KerbalConstructionTime
                 object currentProceduralAvionicsConfig = pi.GetValue(pm);
                 if (currentProceduralAvionicsConfig != null)
                 {
-                    pi = currentProceduralAvionicsConfig.GetType().GetProperty("name");
-                    if (pi != null)
+                    FieldInfo fi = currentProceduralAvionicsConfig.GetType().GetField("name");
+                    if (fi != null)
                     {
-                        currentProceduralAvionicsConfigName = (string)pi.GetValue(currentProceduralAvionicsConfig);
+                        currentProceduralAvionicsConfigName = (string)fi.GetValue(currentProceduralAvionicsConfig);
                     }
                 }
             }
@@ -70,8 +70,8 @@ namespace KerbalConstructionTime
                 KCTDebug.LogError($"PartModule {pm.name} did not return valid CurrentProceduralAvionicsTechNode or CurrentProceduralAvionicsConfig.name values");
                 return null;
             }
-            var types = new[] { typeof(string).MakeByRefType(), _ProceduralAvionicsTechNodeType.MakeByRefType() };
-            var mi = _ProceduralAvionicsTechManagerType.GetMethod("GetEcmName", BindingFlags.Instance | BindingFlags.Public, null, types, null);
+            var types = new[] { typeof(string), _ProceduralAvionicsTechNodeType };
+            var mi = _ProceduralAvionicsTechManagerType.GetMethod("GetEcmName", BindingFlags.Static | BindingFlags.Public, null, types, null);
             if (mi != null)
             {
                 var parameters = new object[] { currentProceduralAvionicsConfigName, currentProceduralAvionicsTechNode };
@@ -106,15 +106,16 @@ namespace KerbalConstructionTime
         {
             if (_rp0Assembly == null)
             {
-                _rp0Assembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RP0", StringComparison.OrdinalIgnoreCase))?.assembly;
+                _rp0Assembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RP-0", StringComparison.OrdinalIgnoreCase))?.assembly;
 
                 if (_rp0Assembly != null)
                 {
                     _ProceduralAvionicsTechManagerType = _rp0Assembly.GetType("RP0.ProceduralAvionics.ProceduralAvionicsTechManager");
                     _ProceduralAvionicsTechNodeType = _rp0Assembly.GetType("RP0.ProceduralAvionics.ProceduralAvionicsTechNode");
+                    _ModuleProceduralAvionicsType = _rp0Assembly.GetType("RP0.ProceduralAvionics.ModuleProceduralAvionics");
                 }
             }
-            return _rp0Assembly != null && _ProceduralAvionicsTechManagerType != null && _ProceduralAvionicsTechNodeType != null;
+            return _rp0Assembly != null && _ProceduralAvionicsTechManagerType != null && _ProceduralAvionicsTechNodeType != null && _ModuleProceduralAvionicsType != null;
         }
     }
 }

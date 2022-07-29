@@ -2185,11 +2185,12 @@ namespace KerbalConstructionTime
 
                         if (allSucceeded)
                             continue;   // if validate passed, this partmodule is already unlocked and purchased, nothing to do
-                        
+
                         bool CanBeResolved = (bool)parameters[1];
                         float CostToResolve = (float)parameters[2];
                         string techName = (string)parameters[3];
-                        pendingTech.Add(techName);
+                        if (!string.IsNullOrEmpty(techName))
+                            pendingTech.Add(techName);
 
                         // use a helper to get the ECM name, each PartModule type stores it differently
                         string ecmName = ECMHelper.GetEcmNameFromPartModule(pm);

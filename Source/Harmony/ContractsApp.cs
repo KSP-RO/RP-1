@@ -14,11 +14,6 @@ namespace RP0.Harmony
     {
         internal static MethodInfo CreateParameterListMethod = typeof(ContractsApp).GetMethod("CreateParameterList", AccessTools.all);
         
-        private static bool ContractIsRecord(ContractConfigurator.ConfiguredContract cc)
-        {
-            return cc.contractType.group.name == "Records" || cc.contractType.group.name == "HumanRecords";
-        }
-        
         [HarmonyPrefix]
         [HarmonyPatch("CreateItem")]
         internal static bool Prefix_CreateItem(ContractsApp __instance, ref Contract contract, ref KSP.UI.UICascadingList.CascadingListItem __result, ref GenericCascadingList ___cascadingList, ref Dictionary<Guid, UICascadingList.CascadingListItem> ___contractList)
@@ -26,7 +21,7 @@ namespace RP0.Harmony
             if (contract is ContractConfigurator.ConfiguredContract configuredContract)
             {
                 // Records go at the end
-                if (ContractIsRecord(configuredContract))
+                if (ContractUtils.ContractIsRecord(configuredContract))
                     return true;
 
                 UnityEngine.UI.Button button;
@@ -37,7 +32,7 @@ namespace RP0.Harmony
                 {
                     if (ContractSystem.Instance.GetContractByGuid(kvp.Key) is ContractConfigurator.ConfiguredContract cc)
                     {
-                        if (ContractIsRecord(cc))
+                        if (ContractUtils.ContractIsRecord(cc))
                         {
                             int idx = ___cascadingList.ruiList.cascadingList.GetIndex(kvp.Value.header);
                             if (idx < 0)

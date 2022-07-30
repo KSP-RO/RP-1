@@ -7,11 +7,13 @@ namespace RP0.UI
 {
     public class TooltipController_TextFunc : TooltipController_Text
     {
-        public Func<string> getStringAction;
+        public Func<string> getStringAction = null;
 
         public override void OnTooltipSpawned(KSP.UI.Tooltip instance)
         {
-            textString = getStringAction();
+            if (getStringAction != null)
+                textString = getStringAction();
+
             base.OnTooltipSpawned(instance);
         }
 
@@ -19,7 +21,9 @@ namespace RP0.UI
         {
             if(continuousUpdate && tooltipInstance != null)
             {
-                textString = getStringAction();
+                if (getStringAction != null)
+                    textString = getStringAction();
+
                 if (tooltipInstance.label.text != textString)
                     tooltipInstance.label.text = textString;
             }

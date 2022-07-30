@@ -70,7 +70,8 @@ namespace RP0
         private void OnCurrenciesModified(CurrencyModifierQuery query)
         {
             float changeDelta = query.GetTotal(Currency.Science);
-            if (changeDelta > 0f)
+            // Annoyingly Kerbalism uses TransactionReason.None
+            if (changeDelta > 0f && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
                 AddConfidence((Programs.ProgramHandler.Settings?.sciToConfidence ?? 2) * changeDelta, query.reason);
         }
     }

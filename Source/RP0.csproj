@@ -60,6 +60,7 @@
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="DataTypes\PersistentDictionary.cs" />
     <Compile Include="Harmony\Contract.cs" />
+    <Compile Include="Harmony\MissionControl.cs" />
     <Compile Include="Harmony\ContractParameter.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\FundTarget.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Utilities\BypassCertificateHandler.cs" />
     <Compile Include="Utilities\CSV\CsvWriter.cs" />
     <Compile Include="Utilities\ContinuousLogger.cs" />
+    <Compile Include="Utilities\ContractUtils.cs" />
     <Compile Include="Utilities\SphericalTankUtilities.cs" />
     <Compile Include="Utilities\KACWrapper.cs" />
     <Compile Include="Utilities\KSPUtils.cs" />

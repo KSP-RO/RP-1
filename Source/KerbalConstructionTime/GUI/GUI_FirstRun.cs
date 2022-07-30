@@ -4,7 +4,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 480) / 2, Screen.height / 5, 480, 50);
+        private static Rect _firstRunWindowPosition = new Rect((Screen.width - 540) / 2, Screen.height / 5, 540, 50);
         private static bool _dontShowFirstRunAgain = false;
         public static void ResetShowFirstRunAgain() { _dontShowFirstRunAgain = false; }
 
@@ -44,6 +44,17 @@ namespace KerbalConstructionTime
                 if (GUILayout.Button($"Go to Administration", HighLogic.Skin.button))
                 {
                     EnterAdmin();
+                }
+                GUILayout.Label("");
+            }
+
+            if (!KCTGameStates.AcceptedContract)
+            {
+                GUILayout.Label($"{step++}) Accept a Contract.");
+                GUILayout.Label("With a Program selected, you now have access to the Contracts associated with that Program. Programs have some number of optional and some number of required contracts. Optional contracts aren't necessary to complete the program, but award Confidence.");
+                if (GUILayout.Button($"Go to Mission Control", HighLogic.Skin.button))
+                {
+                    EnterMC();
                 }
                 GUILayout.Label("");
             }
@@ -127,6 +138,13 @@ namespace KerbalConstructionTime
         {
             GameEvents.onGUIAdministrationFacilitySpawn.Fire();
             GameEvents.onGUIAdministrationFacilityDespawn.Add(KCTEvents.Instance.OnExitAdmin);
+            GUIStates.ShowFirstRun = false;
+        }
+
+        private static void EnterMC()
+        {
+            GameEvents.onGUIMissionControlSpawn.Fire();
+            GameEvents.onGUIMissionControlDespawn.Add(KCTEvents.Instance.OnExitMC);
             GUIStates.ShowFirstRun = false;
         }
 

@@ -590,7 +590,8 @@ namespace RP0.Crew
                         sb.Append(s);
                 }
 
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
+                var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "CrewUpdateNotification",
                                              "Crew Updates",
@@ -598,7 +599,13 @@ namespace RP0.Crew
                                              "OK",
                                              true,
                                              HighLogic.UISkin);
+                popup.OnDismiss += RemoveInputLock;
             }
+        }
+
+        private void RemoveInputLock()
+        {
+            InputLockManager.RemoveControlLock("crewUpdate");
         }
 
         private bool TryGetBestSituationMatch(string body, string situation, string type, out double situationMult)
@@ -634,7 +641,8 @@ namespace RP0.Crew
 
             if (RetirementEnabled && idx != int.MinValue)
             {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
+                var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Date",
@@ -642,6 +650,7 @@ namespace RP0.Crew
                                              "OK",
                                              false,
                                              HighLogic.UISkin);
+                popup.OnDismiss += RemoveInputLock;
             }
         }
 
@@ -703,7 +712,8 @@ namespace RP0.Crew
                     sb.Append($"\n{s}, {KSPUtil.PrintDate(GetRetireTime(s), false)}");
 
                 sb.Append($"\n\nInteresting flights and training will delay retirement up to an additional {Math.Round(Settings.retireIncreaseCap / (365.25d * 86400d))} years.");
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
+                var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Dates",
@@ -711,6 +721,7 @@ namespace RP0.Crew
                                              "OK",
                                              false,
                                              HighLogic.UISkin);
+                popup.OnDismiss += RemoveInputLock;
             }
         }
 
@@ -757,8 +768,8 @@ namespace RP0.Crew
                 }
                 if (!string.IsNullOrEmpty(msgStr))
                 {
-
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
+                    var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                  new Vector2(0.5f, 0.5f),
                                                  "CrewRetirementNotification",
                                                  "Crew Retirement",
@@ -766,6 +777,7 @@ namespace RP0.Crew
                                                  "OK",
                                                  true,
                                                  HighLogic.UISkin);
+                    popup.OnDismiss += RemoveInputLock;
                 }
 
                 _toRemove.Clear();

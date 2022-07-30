@@ -590,22 +590,15 @@ namespace RP0.Crew
                         sb.Append(s);
                 }
 
-                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
-                var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "CrewUpdateNotification",
                                              "Crew Updates",
                                              sb.ToString(),
                                              "OK",
                                              true,
-                                             HighLogic.UISkin);
-                popup.OnDismiss += RemoveInputLock;
+                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL, "crewUpdate");
             }
-        }
-
-        private void RemoveInputLock()
-        {
-            InputLockManager.RemoveControlLock("crewUpdate");
         }
 
         private bool TryGetBestSituationMatch(string body, string situation, string type, out double situationMult)
@@ -641,16 +634,14 @@ namespace RP0.Crew
 
             if (RetirementEnabled && idx != int.MinValue)
             {
-                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
-                var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Date",
                                              $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
                                              "OK",
                                              false,
-                                             HighLogic.UISkin);
-                popup.OnDismiss += RemoveInputLock;
+                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL, "crewUpdate");
             }
         }
 
@@ -712,16 +703,14 @@ namespace RP0.Crew
                     sb.Append($"\n{s}, {KSPUtil.PrintDate(GetRetireTime(s), false)}");
 
                 sb.Append($"\n\nInteresting flights and training will delay retirement up to an additional {Math.Round(Settings.retireIncreaseCap / (365.25d * 86400d))} years.");
-                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
-                var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Dates",
                                              sb.ToString(),
                                              "OK",
                                              false,
-                                             HighLogic.UISkin);
-                popup.OnDismiss += RemoveInputLock;
+                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL, "crewUpdate");
             }
         }
 
@@ -768,16 +757,14 @@ namespace RP0.Crew
                 }
                 if (!string.IsNullOrEmpty(msgStr))
                 {
-                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
-                    var popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                                  new Vector2(0.5f, 0.5f),
                                                  "CrewRetirementNotification",
                                                  "Crew Retirement",
                                                  "The following retirements have occurred:\n" + msgStr,
                                                  "OK",
                                                  true,
-                                                 HighLogic.UISkin);
-                    popup.OnDismiss += RemoveInputLock;
+                                                 HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL, "crewUpdate");
                 }
 
                 _toRemove.Clear();

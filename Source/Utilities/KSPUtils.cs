@@ -16,15 +16,15 @@ namespace RP0
             return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
         }
 
-        public static void DialogInputLock(this PopupDialog dialog, ControlTypes lockType, string lockName, Action onCreateAction = null, Action onDestroyAction = null)
+        public static void PrePostActions(this PopupDialog dialog, ControlTypes lockType = ControlTypes.None, string lockName = null, Action onCreateAction = null, Action onDestroyAction = null)
         {
             if (dialog == null)
                 return;
 
             if (onCreateAction != null)
                 onCreateAction();
-
-            InputLockManager.SetControlLock(lockType, lockName);
+            if (lockType != ControlTypes.None)
+                InputLockManager.SetControlLock(lockType, lockName);
             dialog.gameObject.AddComponent<LockRemover>().Setup(lockName, onDestroyAction);
         }
 
@@ -41,7 +41,9 @@ namespace RP0
 
             public void OnDestroy()
             {
-                InputLockManager.RemoveControlLock(_lockName);
+                if (_lockName != null)
+                    InputLockManager.RemoveControlLock(_lockName);
+
                 if (_action != null)
                     _action();
             }

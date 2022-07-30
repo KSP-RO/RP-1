@@ -673,7 +673,7 @@ namespace RP0.Crew
                                              "OK",
                                              true,
                                              HighLogic.UISkin)
-                    .DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
+                    .PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -717,7 +717,7 @@ namespace RP0.Crew
                                              $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
                                              "OK",
                                              false,
-                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                             HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -786,7 +786,7 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              "OK",
                                              false,
-                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                             HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -840,7 +840,7 @@ namespace RP0.Crew
                                                  "The following retirements have occurred:\n" + msgStr,
                                                  "OK",
                                                  true,
-                                                 HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                                 HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
                 }
 
                 _toRemove.Clear();

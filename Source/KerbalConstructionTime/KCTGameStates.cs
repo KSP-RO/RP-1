@@ -38,7 +38,7 @@ namespace KerbalConstructionTime
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 4;
+        public const int VERSION = 5;
 
         public static ToolbarControl ToolbarControl;
 
@@ -47,7 +47,8 @@ namespace KerbalConstructionTime
         public static bool StarterLCBuilding = false;
         public static bool HiredStarterApplicants = false;
         public static bool StartedProgram = false;
-        public static bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram);
+        public static bool AcceptedContract = false;
+        public static bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
         public static bool IsSimulatedFlight = false;
         public static double EditorBuildPoints = 0;
         public static double EditorShipMass = 0;

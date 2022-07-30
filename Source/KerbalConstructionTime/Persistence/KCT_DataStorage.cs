@@ -28,6 +28,7 @@ namespace KerbalConstructionTime
         [Persistent] public bool StarterLCSelected = false;
         [Persistent] public bool HiredStarterApplicants = false;
         [Persistent] public bool StartedProgram = false;
+        [Persistent] public bool AcceptedContract = false;
 
         [Persistent] public int saveVersion;
 
@@ -47,6 +48,7 @@ namespace KerbalConstructionTime
             KCTGameStates.StarterLCBuilding = StarterLCSelected;
             KCTGameStates.HiredStarterApplicants = HiredStarterApplicants;
             KCTGameStates.StartedProgram = StartedProgram;
+            KCTGameStates.AcceptedContract = AcceptedContract;
 
             if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
             {
@@ -61,6 +63,10 @@ namespace KerbalConstructionTime
                 {
                     KCTGameStates.HiredStarterApplicants = true;
                     KCTGameStates.StartedProgram = true;
+                }
+                if (saveVersion < 5)
+                {
+                    KCTGameStates.AcceptedContract = true;
                 }
             }
         }
@@ -81,6 +87,7 @@ namespace KerbalConstructionTime
             StarterLCSelected = KCTGameStates.StarterLCBuilding;
             HiredStarterApplicants = KCTGameStates.HiredStarterApplicants;
             StartedProgram = KCTGameStates.StartedProgram;
+            AcceptedContract = KCTGameStates.AcceptedContract;
         }
     }
 }

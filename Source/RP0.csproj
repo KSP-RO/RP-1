@@ -59,6 +59,7 @@
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="DataTypes\PersistentDictionary.cs" />
+    <Compile Include="Harmony\ProgressTracking.cs" />
     <Compile Include="Harmony\Contract.cs" />
     <Compile Include="Harmony\MissionControl.cs" />
     <Compile Include="Harmony\ContractParameter.cs" />

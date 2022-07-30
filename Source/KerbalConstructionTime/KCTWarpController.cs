@@ -18,7 +18,6 @@ namespace KerbalConstructionTime
         private bool warping = false;
         private bool isNextThing = false;
         internal IKCTBuildItem warpTarget;
-        internal IKCTBuildItem Target => isNextThing ? Utilities.GetNextThingToFinish() : warpTarget;
         public static KCTWarpController Instance { get; private set; } = null;
         private static GameObject go = null;
 
@@ -36,9 +35,9 @@ namespace KerbalConstructionTime
             else
             {
                 controller.isNextThing = true;
-                controller.warpTarget = null;
+                controller.warpTarget = Utilities.GetNextThingToFinish();
             }
-            Debug.Log($"{ModTag} Created for warp target {controller.Target.GetItemName()}");
+            Debug.Log($"{ModTag} Created for warp target {controller.warpTarget.GetItemName()}");
         }
 
         public void Awake()
@@ -50,7 +49,7 @@ namespace KerbalConstructionTime
 
         public void OnDestroy()
         {
-            Debug.Log($"{ModTag} {Target.GetItemName()} OnDestroy.");
+            Debug.Log($"{ModTag} {warpTarget.GetItemName()} OnDestroy.");
             if (Instance == this)
             {
                 Destroy(this);
@@ -61,15 +60,14 @@ namespace KerbalConstructionTime
         public void Start()
         {
             lastUT = Utilities.GetUT();
-            IKCTBuildItem target = Target;
-            if (target == null)
+            if (warpTarget == null || warpTarget.IsComplete())
             {
                 StopWarp();
                 return;
             }
 
             // These KCTGameStates fields should fade out.
-            desiredWarpRate = RampUpWarp(target);
+            desiredWarpRate = RampUpWarp(warpTarget);
             warping = true;
         }
 
@@ -89,17 +87,30 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            IKCTBuildItem target = Target;
-
             // If the target goes null or completes, stop warp and exit
-            if (target == null || target.IsComplete())
+            if (warpTarget == null || warpTarget.IsComplete())
             {
                 StopWarp();
                 return;
             }
 
+            if (isNextThing)
+            {
+                var newTarget = Utilities.GetNextThingToFinish();
+                if (newTarget != warpTarget)
+                {
+                    warpTarget = newTarget;
+                    // second check
+                    if (warpTarget == null || warpTarget.IsComplete())
+                    {
+                        StopWarp();
+                        return;
+                    }
+                }
+            }
+
             Profiler.BeginSample("KCT.WarpController");
-            double remaining = target.GetTimeLeft();
+            double remaining = warpTarget.GetTimeLeft();
             double UT = Utilities.GetUT();
             double dT = UT - lastUT;
             if (dT > 0)
@@ -150,7 +161,7 @@ namespace KerbalConstructionTime
 
         public void StopWarp()
         {
-            Debug.Log($"{ModTag} Halting warp to target {Target.GetItemName()}");
+            Debug.Log($"{ModTag} Halting warp to target {warpTarget?.GetItemName() ?? "(null)"}");
             TimeWarp.SetRate(0, true);
             warping = false;
             gameObject.DestroyGameObject();

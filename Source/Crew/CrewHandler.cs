@@ -61,6 +61,72 @@ namespace RP0.Crew
 
         public bool CurrentSceneAllowsCrewManagement => HighLogic.LoadedSceneIsEditor || HighLogic.LoadedScene == GameScenes.SPACECENTER;
 
+        private static readonly Dictionary<CrewListItem, bool> _storedCrewListItemMouseovers = new Dictionary<CrewListItem, bool>();
+        private static readonly List<UIListItem> _crewList = new List<UIListItem>();
+        private Coroutine _lockRoutine = null;
+        private void OnDialogSpawn()
+        {
+            if (_lockRoutine != null)
+                StopCoroutine(_lockRoutine);
+
+            _lockRoutine = StartCoroutine(OnDialogSpawnRoutine());
+        }
+        private IEnumerator OnDialogSpawnRoutine()
+        {
+            yield return null;
+            LockCrewItems(true);
+        }
+
+        private void OnDialogDismiss()
+        {
+            LockCrewItems(false);
+        }
+
+        private void LockCrewItems(bool shouldLock)
+        {
+            AstronautComplex[] mbs = FindObjectsOfType<AstronautComplex>();
+            if (mbs.Length != 1)
+                return;
+
+            AstronautComplex ac = mbs[0];
+
+            if (shouldLock)
+            {
+                if (_storedCrewListItemMouseovers.Count > 0)
+                    return;
+            }
+            else
+            {
+                if (_storedCrewListItemMouseovers.Count == 0)
+                    return;
+            }
+
+            _crewList.AddRange(ac.ScrollListApplicants.GetUiListItems());
+            _crewList.AddRange(ac.ScrollListAvailable.GetUiListItems());
+            foreach (UIListItem item in _crewList)
+            {
+                CrewListItem cic;
+                cic = item.GetComponent<CrewListItem>();
+                if (cic != null)
+                {
+                    if (shouldLock)
+                    {
+                        _storedCrewListItemMouseovers[cic] = cic.MouseoverEnabled;
+                        cic.MouseoverEnabled = false;
+                    }
+                    else if (_storedCrewListItemMouseovers.TryGetValue(cic, out bool lockState))
+                    {
+                        cic.MouseoverEnabled = lockState;
+                    }
+                }
+            }
+            _crewList.Clear();
+            if (!shouldLock)
+            {
+                _storedCrewListItemMouseovers.Clear();
+            }
+        }
+
         public override void OnAwake()
         {
             if (Instance != null)
@@ -599,7 +665,6 @@ namespace RP0.Crew
 
             if (sb.Length > 0)
             {
-                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "crewUpdate");
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "CrewUpdateNotification",
@@ -608,7 +673,7 @@ namespace RP0.Crew
                                              "OK",
                                              true,
                                              HighLogic.UISkin)
-                    .DialogInputLock(ControlTypes.KSC_ALL, "RP0CrewUpdate");
+                    .DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -652,7 +717,7 @@ namespace RP0.Crew
                                              $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
                                              "OK",
                                              false,
-                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL, "crewUpdate");
+                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -721,7 +786,7 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              "OK",
                                              false,
-                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL, "crewUpdate");
+                                             HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -775,7 +840,7 @@ namespace RP0.Crew
                                                  "The following retirements have occurred:\n" + msgStr,
                                                  "OK",
                                                  true,
-                                                 HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL, "crewUpdate");
+                                                 HighLogic.UISkin).DialogInputLock(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
                 }
 
                 _toRemove.Clear();

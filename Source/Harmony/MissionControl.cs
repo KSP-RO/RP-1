@@ -75,7 +75,6 @@ namespace RP0.Harmony
                     {
                         if (contract.ContractState == Contract.State.Completed && (__instance.archiveMode == MissionControl.ArchiveMode.All || __instance.archiveMode == MissionControl.ArchiveMode.Completed))
                         {
-
                             __instance.AddItem(contract, isAvailable: false, $"<color=#00ff00>{Localizer.Format("#autoLOC_468222")}</color> <color=#fefa87>{contract.Title}</color>");
                         }
                         else if ((contract.ContractState == Contract.State.Failed || contract.ContractState == Contract.State.DeadlineExpired) && (__instance.archiveMode == MissionControl.ArchiveMode.All || __instance.archiveMode == MissionControl.ArchiveMode.Failed))

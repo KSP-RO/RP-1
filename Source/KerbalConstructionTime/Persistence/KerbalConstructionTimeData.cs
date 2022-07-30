@@ -15,7 +15,9 @@ namespace KerbalConstructionTime
         {
             if (HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX || HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
-                string fullPath = KSPUtil.ApplicationRootPath + HighLogic.CurrentGame.Parameters.Career.TechTreeUrl;
+                // On starting a new game, MM has not yet patched the tech tree URL so we're
+                // going to use that directly instead of the one in HighLogic.
+                string fullPath = KSPUtil.ApplicationRootPath + System.IO.Path.Combine("GameData", "ModuleManager.TechTree");
                 KCTDebug.Log($"Loading tech tree from {fullPath}");
 
                 if (ConfigNode.Load(fullPath) is ConfigNode fileNode && fileNode.HasNode("TechTree"))

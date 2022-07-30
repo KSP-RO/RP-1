@@ -42,7 +42,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\GameData\RP-0\AdminDisable.cfg" />
     <Content Include="..\GameData\RP-0\Avionics.cfg" />
     <Content Include="..\GameData\RP-0\changelog.cfg" />
     <Content Include="..\GameData\RP-0\CrewHandlerSettings.cfg" />
@@ -821,6 +820,9 @@
     </Content>
     <Content Include="..\GameData\RP-0\Strategies\LocPatches.cfg">
       <Link>Strategies\LocPatches.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\RemoveOtherStrategies.cfg">
+      <Link>Strategies\RemoveOtherStrategies.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Strategies\RemoveStockStrategies.cfg">
       <Link>Strategies\RemoveStockStrategies.cfg</Link>

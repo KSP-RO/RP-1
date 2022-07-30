@@ -554,6 +554,12 @@ namespace KerbalConstructionTime
             GameEvents.onGUIAdministrationFacilityDespawn.Remove(OnExitAdmin);
             InputLockManager.RemoveControlLock("administrationFacility");
         }
+
+        public void OnExitMC()
+        {
+            GameEvents.onGUIMissionControlDespawn.Remove(OnExitMC);
+            InputLockManager.RemoveControlLock("administrationFacility");
+        }
     }
 }
 

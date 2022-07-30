@@ -84,6 +84,7 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilitySpawn.Add(ShowAdminGUI);
             GameEvents.onGUIAdministrationFacilityDespawn.Add(HideAdminGUI);
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
+            GameEvents.Contract.onAccepted.Add(OnContractAccept);
         }
 
         public void OnDestroy()
@@ -202,6 +203,12 @@ namespace RP0.Programs
             }
 
             return false;
+        }
+
+        private void OnContractAccept(Contract data)
+        {
+            if (KerbalConstructionTime.KCTGameStates.StartedProgram)
+                KerbalConstructionTime.KCTGameStates.AcceptedContract = true;
         }
 
         private void OnContractComplete(Contract data)

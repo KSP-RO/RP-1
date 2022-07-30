@@ -145,8 +145,16 @@ namespace KerbalConstructionTime
             string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
             string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
             GUILayout.Label(new GUIContent(lcText, lcTooltip));
+            GUILayout.FlexibleSpace();
+            if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            {
+                KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
+                BuildRateForDisplay = null;
+            }
+            GUILayout.EndHorizontal();
 
-            if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New", "Build a new launch complex for this vessel"), GUILayout.ExpandWidth(false)))
+            GUILayout.BeginHorizontal();
+            if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New LC", "Build a new launch complex for this vessel")))
             {
                 _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
                 _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 2f).ToString();
@@ -156,15 +164,29 @@ namespace KerbalConstructionTime
                 _isHumanRated = KCTGameStates.EditorIsHumanRated;
 
                 GUIStates.ShowNewLC = true;
+                GUIStates.ShowModifyLC = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            GUILayout.FlexibleSpace();
-            if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            bool canModify = activeLC.CanModify 
+                && ((activeLC.LCType == LaunchComplexType.Hangar && EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH) 
+                    || (activeLC.LCType == LaunchComplexType.Pad && EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB));
+            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
+            if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip),
+                canModify ? GUI.skin.button : _yellowButton))
             {
-                KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
-                BuildRateForDisplay = null;
+                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 2f).ToString();
+                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 2f).ToString();
+                _heightLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.y * 1.1f).ToString();
+                _tonnageLimit = Mathf.CeilToInt((float)(KCTGameStates.EditorShipMass * 1.1d)).ToString();
+                _isHumanRated = EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH || KCTGameStates.EditorIsHumanRated;
+
+                GUIStates.ShowModifyLC = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                GUIStates.ShowNewLC = false;
+                _centralWindowPosition.width = 300;
             }
             GUILayout.EndHorizontal();
         }

@@ -1569,7 +1569,7 @@ namespace KerbalConstructionTime
                     KCTGameStates.IsRefunding = true;
                     try
                     {
-                        ResearchAndDevelopment.Instance.AddScience(node.ScienceCost, TransactionReasons.None);    //Should maybe do tech research as the reason
+                        ResearchAndDevelopment.Instance.AddScience(node.ScienceCost, TransactionReasons.RnDTechResearch);
                     }
                     finally
                     {

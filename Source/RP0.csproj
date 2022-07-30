@@ -165,7 +165,7 @@
     <Compile Include="KerbalConstructionTime\LCItem.cs" />
     <Compile Include="KerbalConstructionTime\PartCrewAssignment.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\PadConstruction.cs" />
-    <Compile Include="KerbalConstructionTime\GUI\DialogGUIButtonWithTooltip.cs" />
+    <Compile Include="UI\DialogGUIButtonWithTooltip.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_Tooltip.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUIStates.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_Airlaunch.cs" />

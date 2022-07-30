@@ -2,6 +2,7 @@
 using KSP.UI.Screens;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using RP0.UI;
 
 namespace KerbalConstructionTime
 {

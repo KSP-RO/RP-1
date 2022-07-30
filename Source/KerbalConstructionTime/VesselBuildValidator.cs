@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using RP0.UI;
 
 namespace KerbalConstructionTime
 {
@@ -356,16 +357,21 @@ namespace KerbalConstructionTime
                     if (error.CanBeResolved)
                     {
                         string txt = $"<color=green><b>{p.partInfo.title}: {error.Error}</b></color>\n";
-                        list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,
-                                     new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
-                                     new DialogGUILabel(txt, expandW: true),
-                                     new DialogGUIButton($"Unlock ({error.CostToResolve:N0})",
-                                                         () => {
+                        string costStr = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -error.CostToResolve, 0f, 0f).GetCostLine(true, false, false, true);
+                        string costAfterSubsidyStr = $"{CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, Math.Max(0f, (float)RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve) - error.CostToResolve), 0f, 0f).GetCostLine(true, false, true, true)} after subsidy";
+                        var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
+                                                         () =>
+                                                         {
                                                              PurchaseConfig(error.PM, error.TechToResolve);
                                                              _validationResult = ValidationResult.Rerun;
                                                          },
                                                          () => CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)(RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve) - error.CostToResolve), 0f, 0f).CanAfford(),
-                                                         100, -1, true)));
+                                                         100, -1, true)
+                                                            { tooltipText = costAfterSubsidyStr };
+                        list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,
+                                     new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
+                                     new DialogGUILabel(txt, expandW: true),
+                                     button));
                     }
                     else
                     {

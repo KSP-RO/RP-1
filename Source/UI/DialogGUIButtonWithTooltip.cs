@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0.UI
 {
     public class DialogGUIButtonWithTooltip : DialogGUIButton
     {
@@ -52,17 +52,27 @@ namespace KerbalConstructionTime
         {
         }
 
+        public Func<string> TooltipTextFunc
+        {
+            set
+            {
+                _tooltipController.getStringAction = value;
+            }
+        }
+
+        private TooltipController_TextFunc _tooltipController;
+
         public override GameObject Create(ref Stack<Transform> layouts, UISkinDef skin)
         {
             GameObject obj = base.Create(ref layouts, skin);
 
-            var tooltip = uiItem.AddComponent<TooltipController_Text>();
+            _tooltipController = uiItem.AddComponent<TooltipController_TextFunc>();
             var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
-            tooltip.prefab = prefab;
-            tooltip.RequireInteractable = false;
+            _tooltipController.prefab = prefab;
+            _tooltipController.RequireInteractable = false;
 
             var fi = typeof(DialogGUIBase).GetField("toolTip", BindingFlags.Instance | BindingFlags.NonPublic);
-            fi.SetValue(this, tooltip);
+            fi.SetValue(this, _tooltipController);
 
             return obj;
         }

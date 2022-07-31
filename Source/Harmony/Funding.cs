@@ -9,6 +9,9 @@ namespace RP0.Harmony
         [HarmonyPatch("AddFunds")]
         internal static bool Prefix_AddFunds(Funding __instance, double value, TransactionReasons reason, ref double ___funds)
         {
+            if (value == 0d)
+                return false;
+
             ___funds += value;
             CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason, value, 0f, 0f);
             GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(data);

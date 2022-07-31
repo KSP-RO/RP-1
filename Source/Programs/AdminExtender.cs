@@ -182,6 +182,7 @@ namespace RP0.Programs
                     else
                         text.text = Localizer.GetStringByTag("#rp0Leaders");
                 }
+                _adminTabToggles[(AdministrationActiveTabView)i] = child.GetComponentInChildren<Toggle>();
             }
 
             // Finally, parent the Strat Count text to the new tab object *after* we fixed the tabs.

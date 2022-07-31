@@ -40,13 +40,12 @@ namespace RP0.Harmony
             ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
             ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
 
-            Transform tSpacer1 = __instance.scrollListKerbals.transform.Find("DepartmentSpacer1");
-            if (tSpacer1 != null)
-                GameObject.Destroy(tSpacer1.gameObject);
-
-            Transform tSpacer2 = __instance.scrollListKerbals.transform.Find("DepartmentSpacer2");
-            if (tSpacer2 != null)
-                GameObject.Destroy(tSpacer2.gameObject);
+            Transform[] trfs = __instance.scrollListKerbals.gameObject.GetComponentsInChildren<Transform>(true);
+            foreach (var trf in trfs)
+            {
+                if (trf.name == "DepartmentSpacer1" || trf.name == "DepartmentSpacer2")
+                    GameObject.DestroyImmediate(trf.gameObject);
+            }
         }
 
         [HarmonyPostfix]
@@ -81,15 +80,16 @@ namespace RP0.Harmony
             GameObject.DestroyImmediate(spacer.GetComponent<Image>());
             GameObject.DestroyImmediate(spacer.GetComponent<UIListItem>());
 
-
             spacer.GetComponent<LayoutElement>().minWidth = 70f;
             spacer.transform.SetParent(firstDep.transform.parent, false);
             spacer.transform.SetAsFirstSibling();
 
+            firstDep.transform.SetAsFirstSibling();
+
             GameObject spacer2 = GameObject.Instantiate(spacer);
             spacer2.name = "DepartmentSpacer2";
             spacer2.transform.SetParent(spacer.transform.parent, false);
-            spacer2.transform.SetSiblingIndex(firstDep.transform.GetSiblingIndex() + 1);
+            spacer2.transform.SetAsFirstSibling();
         }
 
         internal static List<Strategy> _strategies = new List<Strategy>();

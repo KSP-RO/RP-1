@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RP0;
+using System;
 using System.Linq;
 
 namespace KerbalConstructionTime
@@ -12,6 +13,8 @@ namespace KerbalConstructionTime
 
         public enum PrepDirection { Mount, Unmount };
         public PrepDirection Direction = PrepDirection.Mount;
+
+        protected override TransactionReasonsRP0 transactionReason => TransactionReasonsRP0.AirLaunchRollout;
 
         public AirlaunchPrep() : base()
         {

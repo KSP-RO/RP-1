@@ -707,6 +707,15 @@ namespace KerbalConstructionTime
             return Funding.Instance.Funds;
         }
 
+        public static double SpendFunds(double toSpend, RP0.TransactionReasonsRP0 reason)
+        {
+            if (!CurrentGameIsCareer())
+                return 0;
+            KCTDebug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
+            Funding.Instance.AddFunds(-toSpend, (TransactionReasons)reason);
+            return Funding.Instance.Funds;
+        }
+
         public static double AddFunds(double toAdd, TransactionReasons reason)
         {
             if (!CurrentGameIsCareer())

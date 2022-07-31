@@ -80,10 +80,6 @@ namespace RP0
             GUILayout.BeginVertical();
             try
             {
-                // If TotalUpkeep is zero, we probably haven't calculated the upkeeps yet, so recalculate now
-                if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER && MaintenanceHandler.Instance.TotalUpkeepPerDay == 0)
-                    MaintenanceHandler.Instance?.UpdateUpkeep();
-
                 UpdateSelectedTab();
                 if (ShouldShowTab(_currentTab))
                 {

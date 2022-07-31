@@ -321,6 +321,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Leaders\" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <!--Krafs.Publicizer items-->

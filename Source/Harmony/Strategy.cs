@@ -74,7 +74,7 @@ namespace RP0.Harmony
             {
                 if (__instance.LeastDuration > 0)
                 {
-                    if (__instance.LeastDuration - KSPUtils.GetUT() > 0)
+                    if (__instance.DateActivated + __instance.LeastDuration <= KSPUtils.GetUT())
                     {
                         text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemove"), Localizer.GetStringByTag("#autoLOC_6002417"));
                     }

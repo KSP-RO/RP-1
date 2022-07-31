@@ -53,6 +53,23 @@ namespace RP0.Harmony
         [HarmonyPatch("CreateStrategiesList")]
         internal static void Postfix_CreateStrategiesList(Administration __instance)
         {
+            // Replace Department images if required
+            for(int i = 0; i < __instance.scrollListKerbals.Count; ++i)
+            {
+                var dep = StrategySystem.Instance.Departments[i];
+                if (dep.Name == "Programs")
+                    continue;
+
+                var leader = StrategySystem.Instance.Strategies.FirstOrDefault(s => s.IsActive && s.Department == dep);
+                if (leader == null)
+                    continue;
+
+                var kerbal = __instance.scrollListKerbals.GetUilistItemAt(i).GetComponent<KerbalListItem>();
+                string headName = $"<color=#{RUIutils.ColorToHex(dep.Color)}>{leader.Title}\n({dep.Title})</color>";
+                kerbal.Initialize(headName, dep.Description, null);
+                kerbal.tooltip.textString = dep.Description + "\n\n" + leader.Effect;
+                kerbal.kerbalImage.texture = leader.Config.IconImage;
+            }
             __instance.scrollListStrategies.GetUilistItemAt(0).GetComponent<LayoutElement>().minWidth = 280f;
             var firstDep = __instance.scrollListKerbals.GetUilistItemAt(0);
             GameObject spacer = GameObject.Instantiate(firstDep.gameObject);
@@ -75,7 +92,7 @@ namespace RP0.Harmony
             spacer2.transform.SetSiblingIndex(firstDep.transform.GetSiblingIndex() + 1);
         }
 
-        internal static List<Strategy> strategies = new List<Strategy>();
+        internal static List<Strategy> _strategies = new List<Strategy>();
 
         [HarmonyPrefix]
         [HarmonyPatch("CreateActiveStratList")]
@@ -88,7 +105,7 @@ namespace RP0.Harmony
             {
                 foreach (var s in StrategySystem.Instance.Strategies)
                     if (s.IsActive && !(s is ProgramStrategy))
-                        strategies.Add(s);
+                        _strategies.Add(s);
             }
             else
             {
@@ -111,10 +128,10 @@ namespace RP0.Harmony
                             Debug.LogError($"[RP-0] ProgramStrategy binding mismatch for completed program! Strat {strategy.Config.Name} is bound to program that is not the same. Null? {ps.Program == null}");
                     }
 
-                    strategies.Add(strategy);
+                    _strategies.Add(strategy);
                 }
             }
-            foreach (Strategy strategy in strategies)
+            foreach (Strategy strategy in _strategies)
             {
                 UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
                 ActiveStrategyListItem stratItem = item.GetComponent<ActiveStrategyListItem>();
@@ -132,7 +149,7 @@ namespace RP0.Harmony
 
                 __instance.scrollListActive.AddItem(item);
             }
-            strategies.Clear();
+            _strategies.Clear();
 
             ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
             ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
@@ -253,11 +270,13 @@ namespace RP0.Harmony
         [HarmonyPatch("BtnInputAccept")]
         internal static bool Prefix_BtnInputAccept(Administration __instance, ref string state)
         {
-            if (state != "accept" && state != "cancel")
-                return false;
+            
 
             if (__instance.SelectedWrapper.strategy is ProgramStrategy ps)
             {
+                if (state != "accept" && state != "cancel")
+                    return false;
+
                 if (ps.IsActive)
                 {
                     if (!ps.CanBeDeactivated(out _))
@@ -292,10 +311,24 @@ namespace RP0.Harmony
                         new DialogGUIButton(Localizer.Format("#autoLOC_439840"), OnPopupDismiss)), persistAcrossScenes: false, HighLogic.UISkin);
                     dlg.OnDismiss = OnPopupDismiss;
                 }
-            }
-            //else if( is LeaderStrategy...
 
-            return false;
+                return false;
+            }
+
+            return true;
+        }
+
+        internal static MethodInfo OnPopupDismissMethod = typeof(Administration).GetMethod("OnPopupDismiss", AccessTools.all);
+
+        [HarmonyPrefix]
+        [HarmonyPatch("OnAcceptConfirm")]
+        internal static void Prefix_OnAcceptConfirm(Administration __instance)
+        {
+            // FIXME do we want non-Leader, non-Program strategies?
+            if (!(__instance.SelectedWrapper.strategy is ProgramStrategy))
+            {
+                AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Leaders);
+            }
         }
     }
 }

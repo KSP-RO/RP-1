@@ -827,6 +827,9 @@
     <Content Include="..\GameData\RP-0\Strategies\RemoveStockStrategies.cfg">
       <Link>Strategies\RemoveStockStrategies.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Strategies\Leaders\Leaders.cfg">
+      <Link>Strategies\Leaders\Leaders.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Tooling\SSPX.cfg">
       <Link>Tooling\SSPX.cfg</Link>
     </Content>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -10,6 +11,8 @@ namespace KerbalConstructionTime
         public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
         public string AssociatedID = string.Empty;
         public bool IsHumanRated;
+
+        protected abstract TransactionReasonsRP0 transactionReason { get; }
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
 
@@ -118,7 +121,8 @@ namespace KerbalConstructionTime
 
             if (Utilities.CurrentGameIsCareer() && HasCost && Cost > 0)
             {
-                if (!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)cost, 0f, 0f).CanAfford()) //If they can't afford to continue the rollout, progress stops
+                var reason = transactionReason;
+                if (!CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d).CanAfford()) //If they can't afford to continue the rollout, progress stops
                 {
                     Progress = progBefore;
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
@@ -130,7 +134,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    Utilities.SpendFunds(cost, TransactionReasons.VesselRollout);
+                    Utilities.SpendFunds(cost, reason);
                 }
             }
             if (IsComplete())

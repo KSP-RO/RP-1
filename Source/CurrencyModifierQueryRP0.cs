@@ -375,6 +375,11 @@ namespace RP0
             return "";
         }
 
+        public static CurrencyModifierQueryRP0 RunQuery(TransactionReasonsRP0 reason, double f0, double s0, double r0)
+        {
+            return RunQuery(reason, f0, s0, r0, 0d, 0d);
+        }
+
         public static CurrencyModifierQueryRP0 RunQuery(TransactionReasonsRP0 reason, double f0, double s0, double r0, double c0, double t0)
         {
             CurrencyModifierQueryRP0 currencyModifierQuery = new CurrencyModifierQueryRP0(reason, f0, s0, r0, c0, t0);

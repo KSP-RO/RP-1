@@ -60,6 +60,8 @@
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="CurrencyModifierQueryRP0.cs" />
     <Compile Include="DataTypes\PersistentDictionary.cs" />
+    <Compile Include="Harmony\CurrencyOperation.cs" />
+    <Compile Include="Harmony\CurrencyConverter.cs" />
     <Compile Include="Harmony\CurrencyModifierQuery.cs" />
     <Compile Include="Harmony\ProgressTracking.cs" />
     <Compile Include="Harmony\Contract.cs" />

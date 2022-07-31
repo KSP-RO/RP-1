@@ -13,7 +13,6 @@ namespace RP0.Harmony
         [HarmonyPatch("addReputation_granular")]
         internal static bool Prefix_addReputation_granular(Reputation __instance, ref float value, ref float __result, ref float ___rep)
         {
-            float oldRep = ___rep;
             ___rep = ___rep + value;
             __result = value;
             return false;
@@ -29,6 +28,31 @@ namespace RP0.Harmony
                 float repPct = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossKerbalDeathPercent ?? 0f;
                 __instance.AddReputation(-1f * (repFixed + repPct * __instance.reputation), TransactionReasons.VesselLoss);
             }
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("AddReputation")]
+        internal static bool Prefix_AddReputation(Reputation __instance, ref float __result, float r, TransactionReasons reason, ref float ___rep)
+        {
+            ___rep += r;
+            CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason, 0f, 0f, r);
+            GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(data);
+            GameEvents.Modifiers.OnCurrencyModified.Fire(data);
+            if (reason == TransactionReasons.None)
+            {
+                Debug.Log("Added " + r + " (" + r + ") reputation. Total Rep: " + ___rep);
+            }
+            else
+            {
+                Debug.Log("Added " + r + " (" + r + ") reputation: '" + reason.ToString() + "'.");
+            }
+            if (r != 0f)
+            {
+                GameEvents.OnReputationChanged.Fire(___rep, reason);
+            }
+            __result = r;
+
             return false;
         }
 

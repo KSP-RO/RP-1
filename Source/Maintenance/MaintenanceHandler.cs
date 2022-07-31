@@ -66,18 +66,15 @@ namespace RP0
             SpaceCenterFacility.TrackingStation
         };
 
-        public double LCsCost = 0d;
+        public double LCsCostPerDay = 0d;
 
         public double TrainingUpkeepPerDay = 0d;
         public double NautBaseUpkeepPerDay = 0d;
         public double NautInFlightUpkeepPerDay = 0d;
-        public double NautUpkeepPerDay = 0d;
-        public double TotalUpkeepPerDay => FacilityUpkeepPerDay + IntegrationSalaryPerDay + ResearchSalaryPerDay + NautUpkeepPerDay;
         public double NetUpkeepPerDay = 0d;
 
-        public double FacilityUpkeepPerDay => FacilityMaintenanceCosts.Values.Sum() + LCsCost;
+        public double FacilityUpkeepPerDay => FacilityMaintenanceCosts.Values.Sum();
 
-        // TODO this is duplicate code with the KCT side
         public double IntegrationSalaryPerDay
         {
             get
@@ -85,6 +82,7 @@ namespace RP0
                 double tmp = 0d;
                 foreach (double d in IntegrationSalaries.Values)
                     tmp += d;
+
                 return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365.25d;
             }
         }
@@ -305,11 +303,11 @@ namespace RP0
 
             EnsureFacilityLvlCostsLoaded();
 
-            LCsCost = 0d;
+            LCsCostPerDay = 0d;
             foreach (var ksc in KCTGameStates.KSCs)
             {
                 foreach (var lc in ksc.LaunchComplexes)
-                    LCsCost += LCUpkeep(lc);
+                    LCsCostPerDay += LCUpkeep(lc);
             }
 
             foreach (SpaceCenterFacility facility in FacilitiesForMaintenance)
@@ -352,7 +350,6 @@ namespace RP0
             
             NautBaseUpkeepPerDay = 0d;
             NautInFlightUpkeepPerDay = 0d;
-            NautUpkeepPerDay = 0d;
             for (int i = HighLogic.CurrentGame.CrewRoster.Count; i-- > 0;)
             {
                 var k = HighLogic.CurrentGame.CrewRoster[i];
@@ -367,8 +364,13 @@ namespace RP0
                 NautInFlightUpkeepPerDay += flightCost;
             }
 
-            NautUpkeepPerDay = NautBaseUpkeepPerDay + TrainingUpkeepPerDay + NautInFlightUpkeepPerDay;
-            NetUpkeepPerDay = -Math.Max(0d, TotalUpkeepPerDay - MaintenanceSubsidyPerDay);
+            double totalUpkeep = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
+                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
+                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
+                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
+                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
+                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
+            NetUpkeepPerDay = Math.Min(0d, MaintenanceSubsidyPerDay + totalUpkeep);
             Profiler.EndSample();
         }
 
@@ -453,13 +455,37 @@ namespace RP0
             using (new CareerEventScope(CareerEventType.Maintenance))
             {
                 double timeFactor = UTDiff * (1d / 86400d);
-                double upkeepForPassedTime = timeFactor * TotalUpkeepPerDay;
                 double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
-                double costForPassedTime = Math.Max(0, upkeepForPassedTime - subsidyForPassedTime);
+                // We have to do some weird logic here. We have to get the resultant upkeep first,
+                // then add the subsidy, then actually subtract the upkeep.
+                // This is because we have to subtract piecemeal.
                 double fundsOld = Funding.Instance.Funds;
-                Funding.Instance.AddFunds(-costForPassedTime, TransactionReasons.StructureRepair);
-                RP0Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedTime} funds where upkeep is {TotalUpkeepPerDay} ({upkeepForPassedTime} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
-                CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += Math.Min(upkeepForPassedTime, subsidyForPassedTime);
+                double totalUpkeep = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
+                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
+                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
+                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
+                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
+                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
+                // We have to add subsidy first, to be sure we have enough funds.
+                double netSubsidy = Math.Min(CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.Subsidy, subsidyForPassedTime), -totalUpkeep * timeFactor);
+                if (netSubsidy > 0)
+                {
+                    Funding.Instance.AddFunds(subsidyForPassedTime, (TransactionReasons)TransactionReasonsRP0.Subsidy);
+                    double overshoot = (Funding.Instance.Funds - fundsOld) - netSubsidy;
+                    if (overshoot > 0)
+                        Funding.Instance.AddFunds(-overshoot, TransactionReasons.None);
+                }
+                double preMaint = Funding.Instance.Funds;
+                Funding.Instance.AddFunds(-FacilityUpkeepPerDay * timeFactor, TransactionReasons.StructureRepair);
+                Funding.Instance.AddFunds(-LCsCostPerDay * timeFactor, (TransactionReasons)TransactionReasonsRP0.StructureRepairLC);
+                Funding.Instance.AddFunds(-IntegrationSalaryPerDay * timeFactor, (TransactionReasons)TransactionReasonsRP0.SalaryEngineers);
+                Funding.Instance.AddFunds(-ResearchSalaryPerDay * timeFactor, (TransactionReasons)TransactionReasonsRP0.SalaryResearchers);
+                Funding.Instance.AddFunds(-(NautBaseUpkeepPerDay + NautInFlightUpkeepPerDay) * timeFactor, (TransactionReasons)TransactionReasonsRP0.SalaryCrew);
+                Funding.Instance.AddFunds(-TrainingUpkeepPerDay * timeFactor, (TransactionReasons)TransactionReasonsRP0.CrewTraining);
+                RP0Debug.Log($"[RP-0] MaintenanceHandler removing {(totalUpkeep*timeFactor - netSubsidy)} funds where upkeep is {-totalUpkeep} ({(preMaint - Funding.Instance.Funds)} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
+                if (Math.Abs(Funding.Instance.Funds - fundsOld - (totalUpkeep * timeFactor - netSubsidy)) > 0.1)
+                    Debug.LogError("[RP-0] $$$$ Error! Fund mismatch from prediction in maintenance!");
+                CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += netSubsidy;
             }
 
             // Finally, update all builds

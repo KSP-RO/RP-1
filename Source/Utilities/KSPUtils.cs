@@ -16,6 +16,20 @@ namespace RP0
             return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
         }
 
+        public static TransactionReasons Stock(this TransactionReasonsRP0 reason) => (TransactionReasons)reason;
+        public static TransactionReasonsRP0 RP0(this TransactionReasons reason) => (TransactionReasonsRP0)reason;
+
+        public static Currency Stock(this CurrencyRP0 c) => (Currency)c;
+        public static CurrencyRP0 RP0(this Currency c) => (CurrencyRP0)c;
+
+        /// <summary>
+        /// Adds a way for a PopupDialog to perform actions on spawn/despawn, like locking input for a true modal.
+        /// </summary>
+        /// <param name="dialog"></param>
+        /// <param name="lockType">optional: the control locks to add</param>
+        /// <param name="lockName">optional (will use default if not specified and locking controls)</param>
+        /// <param name="onCreateAction">optional: runs on dialog spawn</param>
+        /// <param name="onDestroyAction">optional: runs when dialog is destroyed</param>
         public static void PrePostActions(this PopupDialog dialog, ControlTypes lockType = ControlTypes.None, string lockName = null, Action onCreateAction = null, Action onDestroyAction = null)
         {
             if (dialog == null)
@@ -24,7 +38,12 @@ namespace RP0
             if (onCreateAction != null)
                 onCreateAction();
             if (lockType != ControlTypes.None)
+            {
+                if (lockName == null)
+                    lockName = dialog.GetHashCode().ToString();
+
                 InputLockManager.SetControlLock(lockType, lockName);
+            }
             dialog.gameObject.AddComponent<LockRemover>().Setup(lockName, onDestroyAction);
         }
 

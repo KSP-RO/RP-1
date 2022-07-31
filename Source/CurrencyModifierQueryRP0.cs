@@ -450,6 +450,8 @@ namespace RP0
         StructureConstructionAll = StructureConstruction | StructureConstructionLC,
         StructureRepairAll = StructureRepair | StructureRepairLC,
 
+        // Time
+
         TimeProgramDeadline = 1 << 35,
 
         TimeIntegrationVAB = 1 << 36,

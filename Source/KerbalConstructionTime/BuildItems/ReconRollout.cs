@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -16,6 +17,26 @@ namespace KerbalConstructionTime
 
         public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
         public RolloutReconType RRType = RolloutReconType.None;
+
+        protected override TransactionReasonsRP0 transactionReason
+        {
+            get
+            {
+                switch (RRType)
+                {
+                    case RolloutReconType.Rollout:
+                    case RolloutReconType.Rollback:
+                        return TransactionReasonsRP0.RocketRollout;
+                    case RolloutReconType.Recovery:
+                        return TransactionReasonsRP0.VesselRecovery;
+                    case RolloutReconType.Reconditioning:
+                        return TransactionReasonsRP0.StructureRepair;
+
+                    default:
+                        return TransactionReasonsRP0.None;
+                }
+            }
+        }
 
         public static Dictionary<string, RolloutReconType> RRDict = new Dictionary<string, RolloutReconType>()
         {

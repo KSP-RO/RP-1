@@ -66,10 +66,13 @@ namespace KerbalConstructionTime
             if (GetBuildRate() == 0d)
                 return 0d;
 
+            double val;
             if (left > time)
-                return (time / left) * (Cost - SpentCost) * RushMultiplier;
+                val = (time / left) * (Cost - SpentCost) * RushMultiplier;
             else
-                return (Cost - SpentCost) * RushMultiplier;
+                val = (Cost - SpentCost) * RushMultiplier;
+
+            return RP0.CurrencyModifierQueryRP0.Funds((this is FacilityUpgrade) ? RP0.TransactionReasonsRP0.StructureConstruction : RP0.TransactionReasonsRP0.StructureConstructionLC, val);
         }
 
         public double GetBuildRate()

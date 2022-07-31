@@ -386,6 +386,8 @@ namespace RP0
             GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(currencyModifierQuery);
             return currencyModifierQuery;
         }
+
+        public static double Funds(TransactionReasonsRP0 reason, double funds) => RunQuery(reason, funds, 0f, 0f).GetTotal(CurrencyRP0.Funds);
     }
 
     [System.Flags]
@@ -455,27 +457,29 @@ namespace RP0
         StructureConstructionAll = StructureConstruction | StructureConstructionLC,
         StructureRepairAll = StructureRepair | StructureRepairLC,
 
+        Subsidy = 1 << 35,
+
         // Time
 
-        TimeProgramDeadline = 1 << 35,
+        TimeProgramDeadline = 1 << 36,
 
-        TimeIntegrationVAB = 1 << 36,
-        TimeIntegrationSPH = 1 << 37,
+        TimeIntegrationVAB = 1 << 37,
+        TimeIntegrationSPH = 1 << 38,
         TimeIntegration = TimeIntegrationVAB | TimeIntegrationSPH,
 
-        TimeRollout = 1 << 38,
-        TimeAirlaunch = 1 << 39,
+        TimeRollout = 1 << 39,
+        TimeAirlaunch = 1 << 40,
         TimeVesselPrep = TimeRollout | TimeAirlaunch,
 
-        TimeRecovery = 1 << 40,
+        TimeRecovery = 1 << 41,
 
-        TimeManufacturing = 1 << 41,
+        TimeManufacturing = 1 << 42,
 
         TimeVessel = TimeIntegration | TimeVesselPrep | TimeRecovery | TimeManufacturing,
 
-        EfficiencyGainLC = 1 << 42,
+        EfficiencyGainLC = 1 << 43,
 
-        ResearchRate = 1 << 43,
+        ResearchRate = 1 << 44,
 
         Any = ~0
     }

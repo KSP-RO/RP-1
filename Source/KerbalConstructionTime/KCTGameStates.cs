@@ -189,7 +189,7 @@ namespace KerbalConstructionTime
         public static double GetBudgetDelta(double time)
         {
             // note NetUpkeepPerDay is negative or 0.
-            double delta = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay * time / 86400d - GetConstructionCostOverTime(time) - GetRolloutCostOverTime(time);
+            double delta = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay * time / 86400d + GetConstructionCostOverTime(time) + GetRolloutCostOverTime(time) + GetAirlaunchCostOverTime(time);
             delta += RP0.MaintenanceHandler.Instance.GetProgramFunding(time);
 
             return delta;
@@ -240,8 +240,8 @@ namespace KerbalConstructionTime
         public static double GetRolloutCostOverTime(double time, KSCItem ksc)
         {
             double delta = 0;
-            foreach (var lc in ksc.LaunchComplexes)
-                delta += GetRolloutCostOverTime(time, lc);
+            for(int i = 1; i < ksc.LaunchComplexes.Count; ++i)
+                delta += GetRolloutCostOverTime(time, ksc.LaunchComplexes[i]);
 
             return delta;
         }
@@ -253,12 +253,42 @@ namespace KerbalConstructionTime
             {
                 if (rr.RRType != ReconRollout.RolloutReconType.Rollout)
                     continue;
-                delta += rr.Cost * (1d - rr.Progress / rr.BP);
+                
+                double t = rr.GetTimeLeft();
+                double fac = 1d;
+                if (t > time)
+                    fac = time / t;
+
+                delta += RP0.CurrencyModifierQueryRP0.Funds(RP0.TransactionReasonsRP0.RocketRollout, -rr.Cost * (1d - rr.Progress / rr.BP) * fac);
             }
-            foreach (var al in lc.AirlaunchPrep)
+
+            return delta;
+        }
+
+        public static double GetAirlaunchCostOverTime(double time)
+        {
+            double delta = 0;
+            foreach (var ksc in KSCs)
+            {
+                delta += GetAirlaunchCostOverTime(time, ksc);
+            }
+            return delta;
+        }
+
+        public static double GetAirlaunchCostOverTime(double time, KSCItem ksc)
+        {
+            double delta = 0;
+            foreach (var al in ksc.Hangar.AirlaunchPrep)
             {
                 if (al.Direction == AirlaunchPrep.PrepDirection.Mount)
-                    delta += al.Cost * (1d - al.Progress / al.BP);
+                {
+                    double t = al.GetTimeLeft();
+                    double fac = 1d;
+                    if (t > time)
+                        fac = time / t;
+
+                    delta += RP0.CurrencyModifierQueryRP0.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -al.Cost * (1d - al.Progress / al.BP) * fac);
+                }
             }
 
             return delta;

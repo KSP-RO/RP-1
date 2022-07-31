@@ -34,6 +34,22 @@ namespace RP0.Harmony
     internal class PatchRnD
     {
         [HarmonyPrefix]
+        [HarmonyPatch("AddScience")]
+        internal static bool Prefix_AddScience(ResearchAndDevelopment __instance, float value, TransactionReasons reason, ref float ___science)
+        {
+            ___science += value;
+            if (!HighLogic.CurrentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().AllowNegativeCurrency && ___science < 0f)
+                ___science = 0f;
+
+            CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason, 0f, value, 0f);
+            GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(data);
+            GameEvents.Modifiers.OnCurrencyModified.Fire(data);
+            GameEvents.OnScienceChanged.Fire(___science, reason);
+
+            return false;
+        }
+
+        [HarmonyPrefix]
         [HarmonyPatch("PartTechAvailable")]
         internal static bool Prefix(AvailablePart ap, ref bool __result)
         {

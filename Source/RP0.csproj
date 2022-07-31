@@ -58,11 +58,14 @@
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
+    <Compile Include="CurrencyModifierQueryRP0.cs" />
     <Compile Include="DataTypes\PersistentDictionary.cs" />
+    <Compile Include="Harmony\CurrencyModifierQuery.cs" />
     <Compile Include="Harmony\ProgressTracking.cs" />
     <Compile Include="Harmony\Contract.cs" />
     <Compile Include="Harmony\MissionControl.cs" />
     <Compile Include="Harmony\ContractParameter.cs" />
+    <Compile Include="Harmony\Funding.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\FundTarget.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
     <Compile Include="Confidence.cs" />

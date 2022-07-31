@@ -220,7 +220,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Balance", BoldLabel, GUILayout.Width(160));
-            double delta = programBudget + totalCost * PeriodFactor + constrMaterials + rolloutCost;
+            double delta = programBudget + totalCost + constrMaterials + rolloutCost;
             GUILayout.Label(FormatCost(delta), BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 

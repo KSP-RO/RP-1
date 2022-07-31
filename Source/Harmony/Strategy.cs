@@ -147,5 +147,24 @@ namespace RP0.Harmony
 
             return code;
         }
+
+        internal static FieldInfo curStrats = typeof(KSP.UI.Screens.Administration).GetField("activeStrategyCount", AccessTools.all);
+
+        [HarmonyPrefix]
+        [HarmonyPatch("CanBeActivated")]
+        internal static void Prefix_CanBeActivated(Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
+        {
+            if (__instance is ProgramStrategy)
+                return;
+
+            curStrats.SetValue(KSP.UI.Screens.Administration.Instance, 0);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("CanBeActivated")]
+        internal static void Postfix_CanBeActivated(Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
+        {
+            curStrats.SetValue(KSP.UI.Screens.Administration.Instance, ProgramHandler.Instance.ActivePrograms.Count);
+        }
     }
 }

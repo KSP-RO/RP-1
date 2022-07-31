@@ -95,12 +95,14 @@ namespace RP0.Harmony
                     {
                         if ((strategy.GroupTags[idxTargetTag] == groupTags[idxSourceTag]))
                         {
+                            _activeStrats.Clear();
                             __result = true;
                             return false;
                         }
                     }
                 }
             }
+            _activeStrats.Clear();
             __result = false;
             return false;
         }

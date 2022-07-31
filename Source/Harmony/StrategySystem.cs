@@ -66,5 +66,43 @@ namespace RP0.Harmony
             completedPrograms.Clear();
             return false;
         }
+
+        internal static List<Strategy> _activeStrats = new List<Strategy>();
+        [HarmonyPrefix]
+        [HarmonyPatch("HasConflictingActiveStrategies")]
+        internal static bool Prefix_HasConflictingActiveStrategies(StrategySystem __instance, ref bool __result, string[] groupTags)
+        {
+            // Vastly simplify all this code.
+            // If we match on a single tag, we can't activate.
+            int count = __instance.Strategies.Count;
+            while (count-- > 0)
+            {
+                Strategy strategy = __instance.Strategies[count];
+                if (strategy.IsActive)
+                {
+                    _activeStrats.Add(strategy);
+                }
+            }
+            count = _activeStrats.Count;
+            while (count-- > 0)
+            {
+                Strategy strategy = _activeStrats[count];
+                int idxTargetTag = strategy.GroupTags.Length;
+                while (idxTargetTag-- > 0)
+                {
+                    int idxSourceTag = groupTags.Length;
+                    while (idxSourceTag-- > 0)
+                    {
+                        if ((strategy.GroupTags[idxTargetTag] == groupTags[idxSourceTag]))
+                        {
+                            __result = true;
+                            return false;
+                        }
+                    }
+                }
+            }
+            __result = false;
+            return false;
+        }
     }
 }

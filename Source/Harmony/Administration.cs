@@ -54,7 +54,7 @@ namespace RP0.Harmony
         internal static void Postfix_CreateStrategiesList(Administration __instance)
         {
             // Replace Department images if required
-            for(int i = 0; i < __instance.scrollListKerbals.Count; ++i)
+            for (int i = 0; i < __instance.scrollListKerbals.Count; ++i)
             {
                 var dep = StrategySystem.Instance.Departments[i];
                 if (dep.Name == "Programs")
@@ -266,12 +266,27 @@ namespace RP0.Harmony
             }));
         }
 
+        internal static void OnRemoveLeaderConfirm()
+        {
+            OnPopupDismiss();
+            var leader = Administration.Instance.SelectedWrapper.strategy;
+            double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated));
+
+            if (!Administration.Instance.SelectedWrapper.strategy.Deactivate())
+                return;
+
+            Reputation.Instance.AddReputation(-(float)cost, (TransactionReasons)TransactionReasonsRP0.LeaderRemove);
+
+            Administration.Instance.UnselectStrategy();
+            Administration.Instance.RedrawPanels();
+        }
+
+        internal const double FireLeaderRepPenaltyPctMax = 0.1d;
+
         [HarmonyPrefix]
         [HarmonyPatch("BtnInputAccept")]
         internal static bool Prefix_BtnInputAccept(Administration __instance, ref string state)
         {
-            
-
             if (__instance.SelectedWrapper.strategy is ProgramStrategy ps)
             {
                 if (state != "accept" && state != "cancel")
@@ -315,10 +330,29 @@ namespace RP0.Harmony
                 return false;
             }
 
+            if (state == "cancel")
+            {
+                var leader = __instance.SelectedWrapper.strategy;
+                double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated));
+                string message = cost > 0
+                    ? Localizer.Format("#rp0LeaderRemoveConfirmWithCost", CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -cost, 0d, 0d).GetCostLineOverride(true))
+                    : Localizer.GetStringByTag("#rp0LeaderRemoveConfirm");
+
+                var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                    new Vector2(0.5f, 0.5f),
+                    new MultiOptionDialog("StrategyConfirmation",
+                    message,
+                    Localizer.Format("#autoLOC_464288"),
+                    HighLogic.UISkin,
+                    new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnRemoveLeaderConfirm),
+                    new DialogGUIButton(Localizer.Format("#autoLOC_439840"), OnPopupDismiss)), persistAcrossScenes: false, HighLogic.UISkin);
+                dlg.OnDismiss = OnPopupDismiss;
+
+                return false;
+            }
+
             return true;
         }
-
-        internal static MethodInfo OnPopupDismissMethod = typeof(Administration).GetMethod("OnPopupDismiss", AccessTools.all);
 
         [HarmonyPrefix]
         [HarmonyPatch("OnAcceptConfirm")]

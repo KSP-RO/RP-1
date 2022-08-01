@@ -47,7 +47,7 @@ namespace RP0
         public MaintenanceGUI.MaintenancePeriod guiSelectedPeriod = MaintenanceGUI.MaintenancePeriod.Day;
 
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
-        public double Researchers = 0d;
+        public double Researchers => KCTGameStates.Researchers;
 
         private double _maintenanceCostMult = 1d;
         public double MaintenanceCostMult => _maintenanceCostMult;
@@ -193,8 +193,6 @@ namespace RP0
             {
                 IntegrationSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveIntegrationEngineersForSalary(ksc);
             }
-
-            Researchers = KCTGameStates.Researchers;
             Profiler.EndSample();
         }
 

@@ -85,7 +85,10 @@ namespace KerbalConstructionTime
                 rate = 0;
 
             if (rate != 0)
+            {
                 rate *= YearBasedRateMult;
+                rate *= RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.TimeResearch);
+            }
 
             _buildRate = rate;
             return _buildRate;

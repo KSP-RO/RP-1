@@ -50,7 +50,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Cost:", GUILayout.ExpandWidth(false));
-                GUILayout.Label($"√{curPadCost:N0}", GetLabelRightAlignStyle());
+                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -curPadCost):N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();

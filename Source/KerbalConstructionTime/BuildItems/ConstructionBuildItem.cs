@@ -37,6 +37,10 @@ namespace KerbalConstructionTime
         public float WorkRate = 1f;
         public double RushMultiplier => WorkRate > 1f ? PresetManager.Instance.ActivePreset.GeneralSettings.ConstructionRushCost.Evaluate(WorkRate) : 1d;
 
+        public double RemainingCost => -RP0.CurrencyUtils.Funds(
+            FacilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction,
+            -(Cost - SpentCost) * RushMultiplier);
+
         public virtual SpaceCenterFacility? FacilityType
         {
             get { return SpaceCenterFacility.LaunchPad; }
@@ -66,13 +70,11 @@ namespace KerbalConstructionTime
             if (GetBuildRate() == 0d)
                 return 0d;
 
-            double val;
+            double val = RemainingCost;
             if (left > time)
-                val = (time / left) * (Cost - SpentCost) * RushMultiplier;
-            else
-                val = (Cost - SpentCost) * RushMultiplier;
+                val *= (time / left);
 
-            return RP0.CurrencyUtils.Funds((this is FacilityUpgrade) ? RP0.TransactionReasonsRP0.StructureConstruction : RP0.TransactionReasonsRP0.StructureConstructionLC, -val);
+            return val;
         }
 
         public double GetBuildRate()
@@ -84,7 +86,7 @@ namespace KerbalConstructionTime
 
         public double UpdateBuildRate(int index)
         {
-            double rate = Utilities.GetConstructionRate(index, KSC, 0);
+            double rate = Utilities.GetConstructionRate(index, KSC, FacilityType);
             if (rate < 0)
                 rate = 0;
 
@@ -111,10 +113,10 @@ namespace KerbalConstructionTime
             BP = Formula.GetConstructionBP(cost, FacilityType);
         }
 
-        public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null, int delta = 0)
+        public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
         {
             double bp = Formula.GetConstructionBP(cost, facilityType);
-            double rateTotal = Utilities.GetConstructionRate(0, KSC, delta);
+            double rateTotal = Utilities.GetConstructionRate(0, KSC, facilityType);
 
             return bp / rateTotal;
         }

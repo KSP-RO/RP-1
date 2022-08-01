@@ -4,18 +4,18 @@ using UniLinq;
 
 namespace RP0.Programs
 {
-    public class ProgramStrategy : Strategy
+    public class ProgramStrategy : StrategyRP0
     {
-        public bool NextTextIsShowSelected = false;
-
         protected Program _program;
         public Program Program => _program;
         public void SetProgram(Program p) { _program = p; }
         public void SetSpeed(Program.Speed spd) { _program.speed = spd; }
         public Program.Speed ProgramSpeed => _program?.speed ?? Program.Speed.Slow;
 
-        public void OnSetupConfig()
+        public override void OnSetupConfig()
         {
+            base.OnSetupConfig();
+
             // StrategySystem's OnLoad (that creates Strategy objects)
             // waits a frame before firing, which happily means ProgramHandler is live.
             _program = ProgramHandler.Instance.ActivePrograms.Find(p => p.name == Config.Name);

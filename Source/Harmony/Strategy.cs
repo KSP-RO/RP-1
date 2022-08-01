@@ -10,21 +10,20 @@ using System.Reflection.Emit;
 
 namespace RP0.Harmony
 {
-    [HarmonyPatch(typeof(Strategy))]
+    [HarmonyPatch(typeof(Strategies.Strategy))]
     internal class PatchStrategy
     {
         [HarmonyPostfix]
         [HarmonyPatch("SetupConfig")]
-        internal static void Postfix_SetupConfig(Strategy __instance)
+        internal static void Postfix_SetupConfig(Strategies.Strategy __instance)
         {
-            MethodInfo OnSetupConfigMethod = __instance.GetType().GetMethod("OnSetupConfig");
-            if (OnSetupConfigMethod != null)
-                OnSetupConfigMethod.Invoke(__instance, new object[] { });
+            if (__instance is StrategyRP0 s)
+                s.OnSetupConfig();
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("CanBeDeactivated")]
-        internal static void Postfix_CanBeDeactivated(Strategy __instance, ref string reason, ref bool __result)
+        internal static void Postfix_CanBeDeactivated(Strategies.Strategy __instance, ref string reason, ref bool __result)
         {
             if (__instance is ProgramStrategy ps && __result)
             {
@@ -34,7 +33,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("LongestDuration", MethodType.Getter)]
-        internal static bool Prefix_LongestDuration(Strategy __instance, ref double __result)
+        internal static bool Prefix_LongestDuration(Strategies.Strategy __instance, ref double __result)
         {
             __result = Mathfx.Lerp(__instance.MinLongestDuration, __instance.MaxLongestDuration, __instance.Factor);
             return false;
@@ -42,96 +41,15 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("LeastDuration", MethodType.Getter)]
-        internal static bool Prefix_LeastDuration(Strategy __instance, ref double __result)
+        internal static bool Prefix_LeastDuration(Strategies.Strategy __instance, ref double __result)
         {
             __result = Mathfx.Lerp(__instance.MinLeastDuration, __instance.MaxLeastDuration, __instance.Factor);
             return false;
         }
 
-        // These are needed because GetEffectText uses the wrong date printing method when a strategy is inactive.
-        // We also need to clean up some other things.
-        [HarmonyPrefix]
-        [HarmonyPatch("GetEffectText")]
-        internal static bool Prefix_GetEffectText(Strategy __instance, ref string __result)
-        {
-            string text = "";
-            // We don't need to prepend Description.
-            //text += RichTextUtil.Title(Localizer.GetStringByTag("#autoLOC_304558");
-
-            // Ditto - this is handled as part of the Admin window's strategy window.
-            //text += Localizer.Format("#autoLOC_304559", __instance.Description);
-            // We don't want the description in the mini item for active strats because the effect text
-            // itself will cover it.
-            text += RichTextUtil.Title(Localizer.GetStringByTag("#autoLOC_304560"));
-
-            foreach (StrategyEffect strategyEffect in __instance.Effects)
-            {
-                text += "<b><color=#" + RUIutils.ColorToHex(RichTextUtil.colorParams) + ">* " + strategyEffect.Description + "</color></b>\n";
-            }
-
-            text += "\n";
-            if (__instance.IsActive)
-            {
-                if (__instance.LeastDuration > 0)
-                {
-                    if (__instance.DateActivated + __instance.LeastDuration <= KSPUtils.GetUT())
-                    {
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemove"), Localizer.GetStringByTag("#autoLOC_6002417"));
-                    }
-                    else
-                    {
-                        if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveOn"), KSPUtil.PrintDate(__instance.LeastDuration + KSPUtils.GetUT(), false, false));
-                        else
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveIn"), KSPUtil.PrintDateDeltaCompact(__instance.LeastDuration, false, false));
-                    }
-                }
-                if (__instance.LongestDuration > 0)
-                {
-                    if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresOn"), KSPUtil.PrintDate(__instance.LongestDuration + KSPUtils.GetUT(), false, false));
-                    else
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresIn"), KSPUtil.PrintDateDeltaCompact(__instance.LongestDuration, false, false));
-                }
-            }
-            else
-            {
-                if (__instance.LeastDuration > 0)
-                {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveAfter"), KSPUtil.PrintDateDeltaCompact(__instance.LeastDuration, false, false));
-                }
-                if (__instance.LongestDuration > 0)
-                {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresAfter"), KSPUtil.PrintDateDeltaCompact(__instance.LongestDuration, false, false));
-                }
-            }
-
-
-            string text2 = string.Empty;
-            if (__instance.InitialCostFunds != 0f)
-            {
-                text2 = text2 + "<color=#B4D455><sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>  " + __instance.InitialCostFunds.ToString("F0") + "   </color>";
-            }
-            if (__instance.InitialCostScience != 0f)
-            {
-                text2 = text2 + "<color=#6DCFF6><sprite=\"CurrencySpriteAsset\" name=\"Science\" tint=1> " + __instance.InitialCostScience.ToString("F0") + "   </color>";
-            }
-            if (__instance.InitialCostReputation != 0f)
-            {
-                text2 = text2 + "<color=#E0D503><sprite=\"CurrencySpriteAsset\" name=\"Reputation\" tint=1> " + __instance.InitialCostReputation.ToString("F0") + "   </color>";
-            }
-            if (text2 != string.Empty)
-            {
-                text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#autoLOC_304612"), text2);
-            }
-
-            __result = text;
-            return false;
-        }
-
         [HarmonyTranspiler]
         [HarmonyPatch("CanBeDeactivated")]
-        internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        internal static IEnumerable<CodeInstruction> Transpiler_CanBeDeactivated(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> code = new List<CodeInstruction>(instructions);
             for (int i = 9; i < code.Count; ++i)
@@ -148,11 +66,66 @@ namespace RP0.Harmony
             return code;
         }
 
+        //[HarmonyTranspiler]
+        //[HarmonyPatch("Create")]
+        //internal static IEnumerable<CodeInstruction> Transpiler_CreateanBeDeactivated(IEnumerable<CodeInstruction> instructions)
+        //{
+        //    List<CodeInstruction> code = new List<CodeInstruction>(instructions);
+        //    bool startSearch = false;
+        //    for (int i = 2; i < code.Count - 1; ++i)
+        //    {
+        //        if (!startSearch && code[i].opcode == OpCodes.Ldnull && code[i + 1].opcode == OpCodes.Ret)
+        //        {
+        //            startSearch = true;
+        //            continue;
+        //        }
+
+        //        // Change this to create our own strategy type
+        //        if (startSearch && code[i].opcode == OpCodes.Ldtoken)
+        //        {
+        //            code[i].operand = typeof(StrategyRP0).TypeHandle;
+        //            break;
+        //        }
+        //    }
+
+        //    return code;
+        //}
+
+        internal static MethodInfo setupConfigMethod = typeof(Strategy).GetMethod("SetupConfig", BindingFlags.Instance | BindingFlags.NonPublic);
+        internal static FieldInfo factorField = typeof(Strategy).GetField("factor", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Create")]
+        internal static bool Prefix_Create(System.Type type, StrategyConfig config, ref Strategy __result)
+        {
+            if (config == null)
+            {
+                UnityEngine.Debug.LogError("Strategy: Config cannot be null");
+                __result = null;
+                return false;
+            }
+            if (type == null || type == typeof(Strategy))
+            {
+                type = typeof(StrategyRP0);
+            }
+            Strategy strategy = (Strategy)System.Activator.CreateInstance(type);
+            setupConfigMethod.Invoke(strategy, new object[] { config });
+            if (strategy.FactorSliderDefault != 0f)
+            {
+                if (strategy.Factor == 0f)
+                {
+                    factorField.SetValue(strategy, strategy.FactorSliderDefault);
+                }
+            }
+            __result = strategy;
+            return false;
+        }
+
         internal static FieldInfo curStrats = typeof(KSP.UI.Screens.Administration).GetField("activeStrategyCount", AccessTools.all);
 
         [HarmonyPrefix]
         [HarmonyPatch("CanBeActivated")]
-        internal static void Prefix_CanBeActivated(Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
+        internal static void Prefix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
         {
             if (__instance is ProgramStrategy)
                 return;
@@ -162,9 +135,33 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("CanBeActivated")]
-        internal static void Postfix_CanBeActivated(Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
+        internal static void Postfix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
         {
             curStrats.SetValue(KSP.UI.Screens.Administration.Instance, ProgramHandler.Instance.ActivePrograms.Count);
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Activate")]
+        internal static bool Prefix_Activate(Strategy __instance, ref bool __result)
+        {
+            if (__instance is StrategyRP0 s)
+            {
+                __result = s.ActivateOverride();
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Deactivate")]
+        internal static bool Prefix_Deactivate(Strategy __instance, ref bool __result)
+        {
+            if (__instance is StrategyRP0 s)
+            {
+                __result = s.DeactivateOverride();
+                return false;
+            }
+            return true;
         }
     }
 }

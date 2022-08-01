@@ -368,7 +368,7 @@ namespace RP0
                 + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
-            NetUpkeepPerDay = Math.Min(0d, MaintenanceSubsidyPerDay + totalUpkeep);
+            NetUpkeepPerDay = Math.Min(0d, CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceSubsidyPerDay) + totalUpkeep);
             Profiler.EndSample();
         }
 

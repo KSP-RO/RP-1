@@ -408,7 +408,7 @@ namespace RP0
         ContractAdvance = 1 << 1,
         ContractReward = 1 << 2,
         ContractPenalty = 1 << 3,
-        Contracts = ContractAdvance | ContractPenalty | ContractReward | ContractDecline,
+        Contracts = ContractAdvance | ContractPenalty | ContractReward /*| ContractDecline*/,
 
         VesselRollout = 1 << 4,
         VesselRecovery = 1 << 5,
@@ -433,7 +433,7 @@ namespace RP0
 
         Cheating = 1 << 16,
         CrewRecruited = 1 << 17,
-        ContractDecline = 1 << 18,
+        //ContractDecline = 1 << 18,
         //Progression = 1 << 19, -- We'll hijack this
 
         ProgramFunding = 1 << 20, // was Mission
@@ -468,6 +468,7 @@ namespace RP0
         StructureRepairAll = StructureRepair | StructureRepairLC,
 
         Subsidy = 1 << 12,
+        RepDecline = 1 << 18,
 
         // Time
 

@@ -11,7 +11,7 @@ namespace RP0
         public static CurrencyRP0 RP0(this Currency c) => (CurrencyRP0)c;
 
         public static double Funds(TransactionReasonsRP0 reason, double funds) => CurrencyModifierQueryRP0.RunQuery(reason, funds, 0f, 0f).GetTotal(CurrencyRP0.Funds);
-        public static double Rate(TransactionReasonsRP0 reason, double rate) => rate / CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, 1d).GetTotal(CurrencyRP0.Time);
+        public static double Rate(TransactionReasonsRP0 reason) => 1d / CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, 1d).GetTotal(CurrencyRP0.Time);
         public static double Time(TransactionReasonsRP0 reason, double time) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, time).GetTotal(CurrencyRP0.Time);
 
         public static void ProcessCurrency(TransactionReasonsRP0 reason, Dictionary<CurrencyRP0, double> dict, bool invert = false)

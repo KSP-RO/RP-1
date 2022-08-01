@@ -169,11 +169,12 @@ namespace KerbalConstructionTime
             double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(freeDelta) : KCTGameStates.EfficiencyEngineers;
             double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
+            double stratMult = currentLC.StrategyRateMultiplier;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2} (tech)");
             GUILayout.EndHorizontal();
 
-            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * techMult;
+            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * techMult * stratMult;
             double rate = rateFull * efficLocal * efficGlobal;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
@@ -193,7 +194,7 @@ namespace KerbalConstructionTime
                 if (engCap < currentLC.Engineers + assignDelta)
                     delta = engCap - currentLC.Engineers;
                 double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, delta)
-                    * efficLocal * efficGlobal * techMult;
+                    * efficLocal * efficGlobal * techMult * stratMult;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }

@@ -481,16 +481,16 @@ namespace RP0
         TimeRollout = 1 << 36,
         TimeAirlaunch = 1 << 37,
         TimeVesselPrep = TimeRollout | TimeAirlaunch,
+        TimeReconditioning = 1 << 38,
+        TimeRecovery = 1 << 39,
 
-        TimeRecovery = 1 << 38,
-
-        TimeManufacturing = 1 << 39,
+        TimeManufacturing = 1 << 40,
 
         TimeVessel = TimeIntegration | TimeVesselPrep | TimeRecovery | TimeManufacturing,
 
-        EfficiencyGainLC = 1 << 40,
+        EfficiencyGainLC = 1 << 41,
 
-        ResearchRate = 1 << 41,
+        ResearchRate = 1 << 42,
 
         Any = ~0
     }

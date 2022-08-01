@@ -10,7 +10,7 @@ namespace RP0.DataTypes
     {
         protected abstract TKey ParseKey(string key);
 
-        void IConfigNode.Load(ConfigNode node)
+        public void Load(ConfigNode node)
         {
             Clear();
             foreach (ConfigNode n in node.nodes)
@@ -22,7 +22,7 @@ namespace RP0.DataTypes
             }
         }
 
-        void IConfigNode.Save(ConfigNode node)
+        public void Save(ConfigNode node)
         {
             foreach (var kvp in this)
             {
@@ -38,6 +38,38 @@ namespace RP0.DataTypes
         protected override string ParseKey(string key)
         {
             return key;
+        }
+    }
+
+    /// <summary>
+    /// NOTE: This does not have constraints because string is supported
+    /// but string is not a valuetype
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    public class PersistentDictionaryValueTypes<TKey, TValue> : Dictionary<TKey, TValue>, IConfigNode
+    {
+        private static System.Reflection.MethodInfo ReadValueMethod = typeof(ConfigNode).GetMethod("ReadValue", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Type KeyType = typeof(TKey);
+        private static System.Type ValueType = typeof(TValue);
+
+        public void Load(ConfigNode node)
+        {
+            Clear();
+            foreach (ConfigNode.Value v in node.values)
+            {
+                TKey key = (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, v.name });
+                TValue value = (TValue)ReadValueMethod.Invoke(null, new object[] { ValueType, v.value });
+                Add(key, value);
+            }
+        }
+
+        public void Save(ConfigNode node)
+        {
+            foreach (var kvp in this)
+            {
+                node.AddValue(kvp.Key.ToString(), kvp.Value.ToString());
+            }
         }
     }
 }

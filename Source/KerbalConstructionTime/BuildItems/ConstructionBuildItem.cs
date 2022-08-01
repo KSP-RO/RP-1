@@ -108,71 +108,12 @@ namespace KerbalConstructionTime
 
         public void SetBP(double cost)
         {
-            BP = CalculateBP(cost, FacilityType);
-        }
-
-        public static double CalculateBP(double cost, SpaceCenterFacility? facilityType)
-        {
-            int isAdm = 0, isAC = 0, isLP = 0, isMC = 0, isRD = 0, isRW = 0, isTS = 0, isSPH = 0, isVAB = 0, isOther = 0;
-            switch (facilityType)
-            {
-                case SpaceCenterFacility.Administration:
-                    isAdm = 1;
-                    break;
-                case SpaceCenterFacility.AstronautComplex:
-                    isAC = 1;
-                    break;
-                case SpaceCenterFacility.LaunchPad:
-                    isLP = 1;
-                    break;
-                case SpaceCenterFacility.MissionControl:
-                    isMC = 1;
-                    break;
-                case SpaceCenterFacility.ResearchAndDevelopment:
-                    isRD = 1;
-                    break;
-                case SpaceCenterFacility.Runway:
-                    isRW = 1;
-                    break;
-                case SpaceCenterFacility.TrackingStation:
-                    isTS = 1;
-                    break;
-                case SpaceCenterFacility.SpaceplaneHangar:
-                    isSPH = 1;
-                    break;
-                case SpaceCenterFacility.VehicleAssemblyBuilding:
-                    isVAB = 1;
-                    break;
-                default:
-                    isOther = 1;
-                    break;
-            }
-
-            var variables = new Dictionary<string, string>()
-            {
-                { "C", cost.ToString() },
-                { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() },
-                { "Adm", isAdm.ToString() },
-                { "AC", isAC.ToString() },
-                { "LP", isLP.ToString() },
-                { "MC", isMC.ToString() },
-                { "RD", isRD.ToString() },
-                { "RW", isRW.ToString() },
-                { "TS", isTS.ToString() },
-                { "SPH", isSPH.ToString() },
-                { "VAB", isVAB.ToString() },
-                { "Other", isOther.ToString() }
-            };
-
-            double bp = MathParser.GetStandardFormulaValue("KSCUpgrade", variables);
-            if (bp <= 0) { bp = 1; }
-
-            return bp;
+            BP = MathParser.GetConstructionBP(cost, FacilityType);
         }
 
         public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null, int delta = 0)
         {
-            double bp = CalculateBP(cost, facilityType);
+            double bp = MathParser.GetConstructionBP(cost, facilityType);
             double rateTotal = Utilities.GetConstructionRate(0, KSC, delta);
 
             return bp / rateTotal;
@@ -264,7 +205,7 @@ namespace KerbalConstructionTime
                 b.BP /= 36d;
                 b.BP -= 10000d;
 
-                b.BP = ConstructionBuildItem.CalculateBP(b.BP, null); // we're not using facilityType anyway.
+                b.BP = MathParser.GetConstructionBP(b.BP, null); // we're not using facilityType anyway.
                 b.Progress = progress / BP * b.BP;
             }
         }

@@ -46,7 +46,8 @@ namespace RP0.Programs
                 case Speed.Slow: mult = 1.5d; break;
                 case Speed.Fast: mult = 0.75d; break;
             }
-            return Math.Round(years * mult * 4) * 0.25d;
+            double adjustedYears = Math.Round(years * mult * 4) * 0.25d;
+            return CurrencyUtils.Time(TransactionReasonsRP0.TimeProgramDeadline, adjustedYears);
         }
 
         /// <summary>

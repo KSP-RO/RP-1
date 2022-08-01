@@ -27,8 +27,8 @@ namespace KerbalConstructionTime
             AssociatedID = id;
             Progress = 0;
 
-            BP = MathParser.ParseAirlaunchTimeFormula(vessel);
-            Cost = MathParser.ParseAirlaunchCostFormula(vessel);
+            BP = MathParser.GetAirlaunchBP(vessel);
+            Cost = MathParser.GetAirlaunchCost(vessel);
             Mass = vessel.GetTotalMass();
             IsHumanRated = vessel.IsHumanRated;
             VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;

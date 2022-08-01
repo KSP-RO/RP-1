@@ -492,6 +492,8 @@ namespace RP0
 
         TimeResearch = 1 << 42,
 
+        TimeTraining = 1 << 43,
+
         Any = ~0
     }
 

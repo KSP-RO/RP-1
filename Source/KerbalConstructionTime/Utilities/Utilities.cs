@@ -176,7 +176,7 @@ namespace KerbalConstructionTime
                     }
                 }
                 if (runTime > 0)
-                    effectiveCost = MathParser.GetEngineRefurbBPMultiplier(runTime) * effectiveCost;
+                    effectiveCost = Formula.GetEngineRefurbBPMultiplier(runTime) * effectiveCost;
             }
 
             if (effectiveCost < 0)
@@ -299,7 +299,7 @@ namespace KerbalConstructionTime
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
             {
-                return MathParser.GetVesselBuildRate(index, LC, useCap, 0);
+                return Formula.GetVesselBuildRate(index, LC, useCap, 0);
             }
 
             return useCap ? LC.Rate : LC.RateHRCapped;
@@ -314,7 +314,7 @@ namespace KerbalConstructionTime
 
             if (delta != 0)
             {
-                return MathParser.GetVesselBuildRate(0, LC, useCap, delta);
+                return Formula.GetVesselBuildRate(0, LC, useCap, delta);
             }
 
             return useCap ? LC.RateHRCapped : LC.Rate;
@@ -325,7 +325,7 @@ namespace KerbalConstructionTime
             if (type == BuildListVessel.ListType.VAB ? LC.LCType == LaunchComplexType.Hangar : LC.LCType == LaunchComplexType.Pad)
                 return 0.0001d;
 
-            return MathParser.GetVesselBuildRate(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta);
+            return Formula.GetVesselBuildRate(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta);
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -348,7 +348,7 @@ namespace KerbalConstructionTime
 
         public static double GetConstructionRate(int index, KSCItem KSC, int delta)
         {
-            return MathParser.GetConstructionBuildRate(index, KSC, delta);
+            return Formula.GetConstructionBuildRate(index, KSC, delta);
         }
 
         public static double GetEngineerEfficiencyMultipliers(LCItem LC = null)
@@ -997,7 +997,7 @@ namespace KerbalConstructionTime
                     totalEffectiveCost += v.EffectiveCost;
                 }
 
-                origTotalBP = oldProgressBP = MathParser.GetIntegrationBP(ship, KCTGameStates.MergedVessels) + GetVesselBuildPoints(totalEffectiveCost);
+                origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KCTGameStates.MergedVessels) + GetVesselBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePenalty);
             }
 
@@ -1353,8 +1353,8 @@ namespace KerbalConstructionTime
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KCTGameStates.EditorRolloutCosts = MathParser.GetRolloutCost(kctVessel);
-                KCTGameStates.EditorRolloutTime = MathParser.GetRolloutBP(kctVessel);
+                KCTGameStates.EditorRolloutCosts = Formula.GetRolloutCost(kctVessel);
+                KCTGameStates.EditorRolloutTime = Formula.GetRolloutBP(kctVessel);
             }
             else
             {

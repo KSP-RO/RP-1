@@ -217,8 +217,8 @@ namespace KerbalConstructionTime
                 EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList(), out IsHumanRated);
             }
 
-            IntegrationPoints = MathParser.GetIntegrationBP(this);
-            IntegrationCost = (float)MathParser.GetIntegrationCost(this);
+            IntegrationPoints = Formula.GetIntegrationBP(this);
+            IntegrationCost = (float)Formula.GetIntegrationCost(this);
         }
 
         public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int editorFacility, bool isHuman)
@@ -303,8 +303,8 @@ namespace KerbalConstructionTime
             DistanceFromKSC = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
 
             RushBuildClicks = 0;
-            IntegrationPoints = MathParser.GetIntegrationBP(this);
-            IntegrationCost = (float)MathParser.GetIntegrationCost(this);
+            IntegrationPoints = Formula.GetIntegrationBP(this);
+            IntegrationCost = (float)Formula.GetIntegrationCost(this);
 
             Progress = BuildPoints + IntegrationPoints;
         }
@@ -435,8 +435,8 @@ namespace KerbalConstructionTime
             {
                 ret.EffectiveCost = Utilities.GetEffectiveCost(ret.ExtractedPartNodes, out IsHumanRated);
                 ret.BuildPoints = Utilities.GetVesselBuildPoints(ret.EffectiveCost);
-                ret.IntegrationPoints = MathParser.GetIntegrationBP(ret);
-                ret.IntegrationCost = (float)MathParser.GetIntegrationCost(ret);
+                ret.IntegrationPoints = Formula.GetIntegrationBP(ret);
+                ret.IntegrationCost = (float)Formula.GetIntegrationCost(ret);
             }
 
             return ret;
@@ -678,7 +678,7 @@ namespace KerbalConstructionTime
             {
                 Cost = Utilities.GetTotalVesselCost(ShipNode);
                 EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
-                IntegrationCost = (float)MathParser.GetIntegrationCost(this);
+                IntegrationCost = (float)Formula.GetIntegrationCost(this);
             }
 
             return Cost + IntegrationCost;

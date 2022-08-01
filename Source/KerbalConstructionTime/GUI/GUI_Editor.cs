@@ -47,7 +47,8 @@ namespace KerbalConstructionTime
             double buildPoints = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorIsHumanRated, 0)
-                * Utilities.GetEngineerEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
+                * Utilities.GetEngineerEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance)
+                * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
@@ -65,7 +66,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.EndHorizontal();
                 double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorShipMass, buildPoints, KCTGameStates.EditorIsHumanRated)
-                    * Utilities.GetEngineerEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance));
+                    * Utilities.GetEngineerEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance) * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier);
                 GUILayout.Label(Utilities.GetFormattedTime(buildPoints / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
@@ -83,10 +84,10 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorIntegrationCosts:N1}");
 
             if (KCTGameStates.EditorRolloutCosts > 0)
-                GUILayout.Label($"Rollout Cost: √{KCTGameStates.EditorRolloutCosts:N1}");
+                GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCosts):N1}");
 
             if (KCTGameStates.EditorUnlockCosts > 0)
-                GUILayout.Label($"Unlock Cost: √{KCTGameStates.EditorUnlockCosts:N1}");
+                GUILayout.Label($"Unlock Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RnDPartPurchase, -KCTGameStates.EditorUnlockCosts):N1}");
 
             if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {
@@ -207,7 +208,8 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
             double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorIsHumanRated, 0)
-                * Utilities.GetEngineerEfficiencyMultipliers(ship.LC);
+                * Utilities.GetEngineerEfficiencyMultipliers(ship.LC)
+                * ship.LC.StrategyRateMultiplier;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
@@ -227,7 +229,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.EndHorizontal();
                 double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KCTGameStates.EditorShipMass, KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, KCTGameStates.EditorIsHumanRated)
-                    * Utilities.GetEngineerEfficiencyMultipliers(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance));
+                    * Utilities.GetEngineerEfficiencyMultipliers(ship.LC) * ship.LC.StrategyRateMultiplier);
                 GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)

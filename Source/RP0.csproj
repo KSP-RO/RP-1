@@ -71,7 +71,10 @@
     <Compile Include="Harmony\MissionControl.cs" />
     <Compile Include="Harmony\ContractParameter.cs" />
     <Compile Include="Harmony\Funding.cs" />
+    <Compile Include="Harmony\StrategyConfig.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\FundTarget.cs" />
+    <Compile Include="Strategy\StrategyConfigRP0.cs" />
+    <Compile Include="Strategy\StrategyRP0.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
     <Compile Include="Confidence.cs" />
     <Compile Include="Debug.cs" />
@@ -327,9 +330,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Leaders\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>

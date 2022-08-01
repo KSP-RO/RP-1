@@ -165,7 +165,7 @@ namespace RP0.Crew
                 if (baseCourseTime == 0d)
                     baseCourseTime = GetBaseTime(students);
 
-                return baseCourseTime * GetTimeMultiplierFacility();
+                return CurrencyUtils.Time(TransactionReasonsRP0.TimeTraining, baseCourseTime * GetTimeMultiplierFacility());
             }
 
             return base.GetTime(students);

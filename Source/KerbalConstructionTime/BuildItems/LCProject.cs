@@ -11,8 +11,10 @@ namespace KerbalConstructionTime
         public double BP = 0, Progress = 0, Cost = 0, Mass = 0, VesselBP;
         public string AssociatedID = string.Empty;
         public bool IsHumanRated;
+        protected double _buildRate = -1;
 
         protected abstract TransactionReasonsRP0 transactionReason { get; }
+        protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
 
         public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(AssociatedID));
 
@@ -74,17 +76,40 @@ namespace KerbalConstructionTime
 
         public virtual bool HasCost => false;
 
-        public double GetBuildRate() => GetBuildRate(0);
+        public double GetBuildRate() => GetBaseBuildRate()
+            * Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.RushRate * (IsReversed ? -1d : 1d);
 
-        public double GetBuildRate(int delta = 0)
+        public void UpdateBuildRate()
         {
-            double buildRate;
+            _buildRate = CalculateBuildRate(0);
+        }
+
+        protected double GetBaseBuildRate()
+        {
+            if (_buildRate < 0d)
+                _buildRate = CalculateBuildRate(0);
+
+            return _buildRate;
+        }
+
+        protected double CalculateBuildRate(int delta)
+        {
+            double rate;
             if (IsCapped)
-                buildRate = Utilities.GetBuildRate(LC, Mass, VesselBP, IsHumanRated, delta);
+                rate = Utilities.GetBuildRate(LC, Mass, VesselBP, IsHumanRated, delta);
             else
-                buildRate = delta == 0 ? Utilities.GetBuildRate(0, LC, IsHumanRated, false)
-                : Utilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, LC, IsHumanRated, delta);
-            buildRate *= Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.RushRate;
+                rate = delta == 0 ? Utilities.GetBuildRate(0, LC, IsHumanRated, false)
+                    : Utilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, LC, IsHumanRated, delta);
+            
+            rate *= CurrencyUtils.Rate(transactionReasonTime);
+
+            return rate;
+        }
+
+        public double GetBuildRate(int delta)
+        {
+            double buildRate = CalculateBuildRate(delta);
+            buildRate *= Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.RushRate * CurrencyUtils.Rate(transactionReasonTime);
 
             if (IsReversed)
                 buildRate *= -1;

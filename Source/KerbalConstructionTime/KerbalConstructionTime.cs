@@ -640,6 +640,7 @@ namespace KerbalConstructionTime
                 int rushingEngs = 0;
 
                 int totalEngineers = 0;
+                double stratEfficGain = RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.EfficiencyGainLC);
                 foreach (KSCItem ksc in KCTGameStates.KSCs)
                 {
                     totalEngineers += ksc.Engineers;
@@ -675,7 +676,7 @@ namespace KerbalConstructionTime
                                 {
                                     double max = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerMaxEfficiency;
                                     double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)currentLC.EfficiencyEngineers);
-                                    double delta = eval * timestep / (365.25d * 86400d);
+                                    double delta = stratEfficGain * eval * timestep / (365.25d * 86400d);
                                     //KCTDebug.Log($"For LC {currentLC.Name}, effic {currentLC.EfficiencyPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
                                     currentLC.EfficiencyEngineers = Math.Min(max, currentLC.EfficiencyEngineers + delta);
                                 }

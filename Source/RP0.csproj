@@ -62,6 +62,7 @@
     <Compile Include="DataTypes\PersistentDictionary.cs" />
     <Compile Include="DataTypes\PersistentHashSet.cs" />
     <Compile Include="DataTypes\PersistentList.cs" />
+    <Compile Include="Harmony\EnumExtensions.cs" />
     <Compile Include="Harmony\GameSettings.cs" />
     <Compile Include="Harmony\CurrencyOperation.cs" />
     <Compile Include="Harmony\CurrencyConverter.cs" />

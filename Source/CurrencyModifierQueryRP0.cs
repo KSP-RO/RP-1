@@ -415,17 +415,17 @@ namespace RP0
         VesselLoss = 1 << 6,
         Vessels = VesselRollout | VesselRecovery | VesselLoss,
 
-        StrategyInput = 1 << 7,
-        StrategyOutput = 1 << 8,
+        //StrategyInput = 1 << 7,
+        //StrategyOutput = 1 << 8,
         StrategySetup = 1 << 9,
-        Strategies = StrategyInput | StrategyOutput | StrategySetup,
+        //Strategies = StrategyInput | StrategyOutput | StrategySetup,
 
         ScienceTransmission = 1 << 10,
 
         StructureRepair = 1 << 11, // will be used for maintenance too
-        StructureCollapse = 1 << 12,
+        //StructureCollapse = 1 << 12,
         StructureConstruction = 1 << 13,
-        Structures = StructureRepair | StructureCollapse | StructureConstruction,
+        Structures = StructureRepair /*| StructureCollapse*/ | StructureConstruction,
 
         RnDTechResearch = 1 << 14,
         RnDPartPurchase = 1 << 15,
@@ -434,7 +434,7 @@ namespace RP0
         Cheating = 1 << 16,
         CrewRecruited = 1 << 17,
         ContractDecline = 1 << 18,
-        Progression = 1 << 19,
+        //Progression = 1 << 19, -- We'll hijack this
 
         ProgramFunding = 1 << 20, // was Mission
         ProgramActivation = 1 << 21,
@@ -457,39 +457,39 @@ namespace RP0
         Crew = CrewRecruited | SalaryCrew | CrewTraining,
 
         HiringEngineers = 1 << 31,
-        HiringResearchers = 1 << 32,
+        HiringResearchers = 1 << 19,
         Hiring = HiringEngineers | HiringResearchers,
 
         Personnel = Salary | Crew | Hiring,
 
-        StructureConstructionLC = 1 << 33,
-        StructureRepairLC = 1 << 34,
+        StructureConstructionLC = 1 << 7,
+        StructureRepairLC = 1 << 8,
         StructureConstructionAll = StructureConstruction | StructureConstructionLC,
         StructureRepairAll = StructureRepair | StructureRepairLC,
 
-        Subsidy = 1 << 35,
+        Subsidy = 1 << 12,
 
         // Time
 
-        TimeProgramDeadline = 1 << 36,
+        TimeProgramDeadline = 1 << 33,
 
-        TimeIntegrationVAB = 1 << 37,
-        TimeIntegrationSPH = 1 << 38,
+        TimeIntegrationVAB = 1 << 34,
+        TimeIntegrationSPH = 1 << 35,
         TimeIntegration = TimeIntegrationVAB | TimeIntegrationSPH,
 
-        TimeRollout = 1 << 39,
-        TimeAirlaunch = 1 << 40,
+        TimeRollout = 1 << 36,
+        TimeAirlaunch = 1 << 37,
         TimeVesselPrep = TimeRollout | TimeAirlaunch,
 
-        TimeRecovery = 1 << 41,
+        TimeRecovery = 1 << 38,
 
-        TimeManufacturing = 1 << 42,
+        TimeManufacturing = 1 << 39,
 
         TimeVessel = TimeIntegration | TimeVesselPrep | TimeRecovery | TimeManufacturing,
 
-        EfficiencyGainLC = 1 << 43,
+        EfficiencyGainLC = 1 << 40,
 
-        ResearchRate = 1 << 44,
+        ResearchRate = 1 << 41,
 
         Any = ~0
     }

@@ -16,12 +16,6 @@ namespace RP0
             return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
         }
 
-        public static TransactionReasons Stock(this TransactionReasonsRP0 reason) => (TransactionReasons)reason;
-        public static TransactionReasonsRP0 RP0(this TransactionReasons reason) => (TransactionReasonsRP0)reason;
-
-        public static Currency Stock(this CurrencyRP0 c) => (Currency)c;
-        public static CurrencyRP0 RP0(this Currency c) => (CurrencyRP0)c;
-
         /// <summary>
         /// Adds a way for a PopupDialog to perform actions on spawn/despawn, like locking input for a true modal.
         /// </summary>

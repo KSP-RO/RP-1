@@ -95,8 +95,8 @@ namespace RP0
             try
             {
                 GUILayout.Label("Facilities", HighLogic.Skin.label, GUILayout.Width(160));
-                cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepair, -MaintenanceHandler.Instance.FacilityUpkeepPerDay * PeriodFactor);
-                cost += CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepairLC, -MaintenanceHandler.Instance.LCsCostPerDay * PeriodFactor);
+                cost = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -MaintenanceHandler.Instance.FacilityUpkeepPerDay * PeriodFactor);
+                cost += CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -MaintenanceHandler.Instance.LCsCostPerDay * PeriodFactor);
                 totalCost += cost;
                 GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
@@ -114,7 +114,7 @@ namespace RP0
             try
             {
                 GUILayout.Label("Integration Teams", HighLogic.Skin.label, GUILayout.Width(160));
-                cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * PeriodFactor);
+                cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * PeriodFactor);
                 totalCost += cost;
                 GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
@@ -132,7 +132,7 @@ namespace RP0
             try
             {
                 GUILayout.Label("Research Teams", HighLogic.Skin.label, GUILayout.Width(160));
-                cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * PeriodFactor);
+                cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * PeriodFactor);
                 totalCost += cost;
                 GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
             }
@@ -146,10 +146,10 @@ namespace RP0
             try
             {
                 GUILayout.Label("Astronauts", HighLogic.Skin.label, GUILayout.Width(160));
-                cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautBaseUpkeepPerDay * PeriodFactor)
-                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautInFlightUpkeepPerDay * PeriodFactor);
+                cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautBaseUpkeepPerDay * PeriodFactor)
+                    + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautInFlightUpkeepPerDay * PeriodFactor);
                 totalCost += cost;
-                double cost2 = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.CrewTraining, -MaintenanceHandler.Instance.TrainingUpkeepPerDay * PeriodFactor);
+                double cost2 = CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -MaintenanceHandler.Instance.TrainingUpkeepPerDay * PeriodFactor);
                 totalCost += cost2;
                 cost += cost2;
                 GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
@@ -168,7 +168,7 @@ namespace RP0
             GUILayout.Label("Subsidy", HighLogic.Skin.label, GUILayout.Width(160));
             // NOT formatcost since it is not, strictly speaking, a fund gain.
             double subsidy = MaintenanceHandler.Instance.MaintenanceSubsidyPerDay * PeriodFactor;
-            subsidy = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.Subsidy, subsidy);
+            subsidy = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidy);
             GUILayout.Label(subsidy.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
@@ -210,7 +210,7 @@ namespace RP0
             {
                 programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
             }
-            programBudget = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.ProgramFunding, programBudget);
+            programBudget = CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, programBudget);
             GUILayout.Label(FormatCost(programBudget), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
             {
@@ -324,7 +324,7 @@ namespace RP0
                         continue;
 
                     double cost = MaintenanceHandler.Instance.LCUpkeep(lc) * PeriodFactor;
-                    cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepairLC, -cost);
+                    cost = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -cost);
                     siteTotal += cost;
                     GUILayout.BeginHorizontal();
                     GUILayout.Label($"   {lc.Name}", HighLogic.Skin.label, GUILayout.Width(160));
@@ -348,7 +348,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label(ScenarioUpgradeableFacilities.GetFacilityName(facility), HighLogic.Skin.label, GUILayout.Width(200));
-                    cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepair, -cost * PeriodFactor);
+                    cost = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -cost * PeriodFactor);
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(120));
                     grandTotal += cost;
                 }
@@ -393,7 +393,7 @@ namespace RP0
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
                     double cost = -engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365.25d;
-                    cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryEngineers, cost);
+                    cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, cost);
                     grandTotal += cost;
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
@@ -501,7 +501,7 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" Funding:", HighLogic.Skin.label, GUILayout.Width(160));
                 double amt = p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
-                amt = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.ProgramFunding, amt);
+                amt = CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, amt);
                 total += amt;
                 GUILayout.Label(FormatCost(amt), RightLabel, GUILayout.Width(160));
                 GUILayout.EndHorizontal();
@@ -541,7 +541,7 @@ namespace RP0
                     double cost, flightCost;
                     MaintenanceHandler.Instance.GetNautCost(k, out cost, out flightCost);
                     cost += flightCost;
-                    cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -cost * PeriodFactor);
+                    cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -cost * PeriodFactor);
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(50));
                 }
                 catch (Exception ex)
@@ -587,7 +587,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label("Astronaut base cost", HighLogic.Skin.label, GUILayout.Width(160));
-                    cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautBaseUpkeepPerDay * PeriodFactor);
+                    cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautBaseUpkeepPerDay * PeriodFactor);
                     total += cost;
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
@@ -601,7 +601,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label("Astronaut operational cost", HighLogic.Skin.label, GUILayout.Width(160));
-                    cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautInFlightUpkeepPerDay * PeriodFactor);
+                    cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautInFlightUpkeepPerDay * PeriodFactor);
                     total += cost;
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
@@ -615,7 +615,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label("Astronaut training cost", HighLogic.Skin.label, GUILayout.Width(160));
-                    cost = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.CrewTraining, -MaintenanceHandler.Instance.TrainingUpkeepPerDay * PeriodFactor);
+                    cost = CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -MaintenanceHandler.Instance.TrainingUpkeepPerDay * PeriodFactor);
                     total += cost;
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }

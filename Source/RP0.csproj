@@ -149,6 +149,7 @@
     <Compile Include="Utilities\CSV\CsvWriter.cs" />
     <Compile Include="Utilities\ContinuousLogger.cs" />
     <Compile Include="Utilities\ContractUtils.cs" />
+    <Compile Include="Utilities\CurrencyUtils.cs" />
     <Compile Include="Utilities\SphericalTankUtilities.cs" />
     <Compile Include="Utilities\KACWrapper.cs" />
     <Compile Include="Utilities\KSPUtils.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="Tooling\ToolingGUI.cs" />
     <Compile Include="Avionics\AvionicsGUI.cs" />
+    <Compile Include="Utilities\MiscUtils.cs" />
     <Compile Include="Utilities\TransformUtils.cs" />
     <Compile Include="KerbalConstructionTime\AirlaunchParams.cs" />
     <Compile Include="KerbalConstructionTime\AirlaunchTechLevel.cs" />

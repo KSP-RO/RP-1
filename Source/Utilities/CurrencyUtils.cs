@@ -4,7 +4,7 @@ namespace RP0
 {
     public static class CurrencyUtils
     {
-        public static TransactionReasons Stock(this TransactionReasonsRP0 reason) => (TransactionReasons)reason;
+        public static TransactionReasons Stock(this TransactionReasonsRP0 reason) => (long)reason < int.MaxValue ? (TransactionReasons)reason : TransactionReasons.None;
         public static TransactionReasonsRP0 RP0(this TransactionReasons reason) => (TransactionReasonsRP0)reason;
 
         public static Currency Stock(this CurrencyRP0 c) => (Currency)c;

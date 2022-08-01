@@ -157,14 +157,9 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static int GetSalaryEngineers()
-        {
-            double engineers = 0d;
-            foreach (var ksc in KCTGameStates.KSCs)
-                engineers += GetEffectiveEngineersForSalary(ksc);
-
-            return (int)(engineers * RP0.MaintenanceHandler.Settings.salaryEngineers * RP0.MaintenanceHandler.Instance.MaintenanceCostMult);
-        }
+        public static int GetSalaryEngineers() => (int)(-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryEngineers, -RP0.MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d));
+        public static int GetSalaryResearchers() => (int)(-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryResearchers, -RP0.MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d));
+        public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
 
         public static double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)
         {
@@ -194,9 +189,6 @@ namespace KerbalConstructionTime
 
             return 0;
         }
-
-        public static int GetSalaryResearchers() => (int)(Researchers * RP0.MaintenanceHandler.Settings.salaryResearchers * RP0.MaintenanceHandler.Instance.MaintenanceCostMult);
-        public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
 
         public static double GetBudgetDelta(double time)
         {

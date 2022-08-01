@@ -372,14 +372,14 @@ namespace RP0
             Profiler.EndSample();
         }
 
-        public double GetProgramFunding(double utOffset)
+        public double GetDisplayProgramFunding(double utOffset)
         {
             double programBudget = 0d;
             foreach (Program p in Programs.ProgramHandler.Instance.ActivePrograms)
             {
                 programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + utOffset) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
             }
-            return programBudget;
+            return CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, programBudget);
         }
 
         public void Update()

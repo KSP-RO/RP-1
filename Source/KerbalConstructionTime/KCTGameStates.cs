@@ -194,7 +194,7 @@ namespace KerbalConstructionTime
         {
             // note NetUpkeepPerDay is negative or 0.
             double delta = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay * time / 86400d + GetConstructionCostOverTime(time) + GetRolloutCostOverTime(time) + GetAirlaunchCostOverTime(time);
-            delta += RP0.MaintenanceHandler.Instance.GetProgramFunding(time);
+            delta += RP0.MaintenanceHandler.Instance.GetDisplayProgramFunding(time);
 
             return delta;
         }

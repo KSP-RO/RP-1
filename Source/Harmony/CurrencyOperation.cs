@@ -33,7 +33,6 @@ namespace RP0.Harmony
                     }
                     else
                     {
-                        UnityEngine.Debug.Log($"$$$$ Parsed {array[i].Trim()} as {reason.ToString()} with stock version {reason.Stock().ToString()}");
                         ___AffectReasons |= reason.Stock();
                     }
                 }

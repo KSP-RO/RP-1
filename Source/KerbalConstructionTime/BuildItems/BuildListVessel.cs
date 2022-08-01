@@ -848,7 +848,7 @@ namespace KerbalConstructionTime
 
         public double UpdateBuildRate()
         {
-            _buildRate = Utilities.GetBuildRate(this);
+            _buildRate = Utilities.GetBuildRate(this) * LC?.StrategyRateMultiplier ?? 1d;
             if (_buildRate < 0d)
                 _buildRate = 0d;
 
@@ -865,7 +865,7 @@ namespace KerbalConstructionTime
 
             double bp = BuildPoints + IntegrationPoints;
             double rate = Utilities.GetBuildRate(LC, GetTotalMass(), bp, IsHumanRated)
-                        * Utilities.GetEngineerEfficiencyMultipliers(LC);
+                        * Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.StrategyRateMultiplier;
             return (bp - Progress) / rate;
         }
 

@@ -204,7 +204,7 @@ namespace RP0.Harmony
                     __instance.btnAcceptCancel.gameObject.SetActive(false);
                 else if (__instance.btnAcceptCancel.currentState == "accept")
                 {
-                    float cost = ps.Program.ConfidenceCost;
+                    float cost = ps.Program.DisplayConfidenceCost;
                     var stateAccept = tooltip.tooltipStates.First(s => s.name == "accept");
                     if (cost > 0)
                         stateAccept.tooltipText = Localizer.Format("#rp0AcceptProgramWithCost", cost.ToString("N0"));
@@ -331,7 +331,7 @@ namespace RP0.Harmony
                     if (ps.Program.IsComplete)
                         return false;
 
-                    double cost = ps.Program.ConfidenceCost;
+                    double cost = ps.Program.DisplayConfidenceCost;
                     string message = cost > 0 ? Localizer.Format("#rp0ProrgamActivateConfirmWithCost", cost.ToString("N0")) : Localizer.GetStringByTag("#rp0ProrgamActivateConfirm");
 
                     var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),

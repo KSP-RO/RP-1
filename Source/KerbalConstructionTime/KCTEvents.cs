@@ -530,8 +530,8 @@ namespace KerbalConstructionTime
                 ScrapYardWrapper.ProcessVessel(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
 
                 //reset the BP
-                KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetBuildPoints(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
-                KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(KCTGameStates.RecoveredVessel);
+                KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetVesselBuildPoints(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
+                KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.GetIntegrationBP(KCTGameStates.RecoveredVessel);
             }
 
             LCItem targetLC = KCTGameStates.RecoveredVessel.LC;

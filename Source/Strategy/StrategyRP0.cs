@@ -66,6 +66,8 @@ namespace RP0
 
             CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
+            KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
+
             return true;
         }
 
@@ -77,6 +79,9 @@ namespace RP0
             isActive.SetValue(this, false);
             Unregister();
             CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.EndCosts, true);
+
+            KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
+
             return true;
         }
 

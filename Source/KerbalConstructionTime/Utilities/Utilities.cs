@@ -50,11 +50,11 @@ namespace KerbalConstructionTime
 
         public static double GetVesselBuildPoints(double totalEffectiveCost)
         {
-            var formulaParams = new Dictionary<string, string>()
-            {
-                { "E", totalEffectiveCost.ToString() },
-                { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() }
-            };
+            //var formulaParams = new Dictionary<string, string>()
+            //{
+            //    { "E", totalEffectiveCost.ToString() },
+            //    { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() }
+            //};
             //double finalBP = MathParser.GetStandardFormulaValue("BP", formulaParams);
             // 1000 + (([E]^0.95)*216*min(1,max(0.5,([E]-500)/1500))) + ((max(0,[E]-50000)^1.4)*0.864)
             double bpScalar = UtilMath.Clamp((totalEffectiveCost - 500d) / 1500d, 0.5d, 1d);
@@ -119,7 +119,7 @@ namespace KerbalConstructionTime
 
             GatherGlobalModifiers(globalMods, partRef);
 
-            double InvEff = inventorySample.Contains(partRef) ? PresetManager.Instance.ActivePreset.TimeSettings.InventoryEffect : 0;
+            double InvEff = inventorySample.Contains(partRef) ? PresetManager.Instance.ActivePreset.GeneralSettings.InventoryEffect : 0;
             int builds = ScrapYardWrapper.GetBuildCount(partRef);
             int used = ScrapYardWrapper.GetUseCount(partRef);
 
@@ -998,7 +998,7 @@ namespace KerbalConstructionTime
                 }
 
                 origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KCTGameStates.MergedVessels) + GetVesselBuildPoints(totalEffectiveCost);
-                oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePenalty);
+                oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.GeneralSettings.MergingTimePenalty);
             }
 
             double newTotalBP = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;

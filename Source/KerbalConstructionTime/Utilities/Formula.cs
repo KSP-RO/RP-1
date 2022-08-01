@@ -109,7 +109,7 @@ namespace KerbalConstructionTime
             //return GetStandardFormulaValue("ConstructionRate", variables);
             double rate = 1d / 86400d;
             RP0.TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction;
-            return RP0.CurrencyUtils.Rate(reason, rate);
+            return rate * RP0.CurrencyUtils.Rate(reason);
         }
 
         public static double GetResearchRate(double ScienceValue, int index, int upgradeDelta)

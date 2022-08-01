@@ -407,7 +407,7 @@ namespace RP0
 
             lastUpdate = time;
 
-            if (lastRepUpdate < time)
+            while (lastRepUpdate < time)
             {
                 if (lastRepUpdate == 0d)
                     lastRepUpdate = time;

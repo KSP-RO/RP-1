@@ -364,12 +364,12 @@ namespace RP0
                 NautInFlightUpkeepPerDay += flightCost;
             }
 
-            double totalUpkeep = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
-                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
-                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
-                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
-                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
-                + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
+            double totalUpkeep = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
+                + CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
+                + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
+                + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
+                + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
+                + CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
             NetUpkeepPerDay = Math.Min(0d, MaintenanceSubsidyPerDay + totalUpkeep);
             Profiler.EndSample();
         }
@@ -460,14 +460,14 @@ namespace RP0
                 // then add the subsidy, then actually subtract the upkeep.
                 // This is because we have to subtract piecemeal.
                 double fundsOld = Funding.Instance.Funds;
-                double totalUpkeep = CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
-                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
-                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
-                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
-                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
-                    + CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
+                double totalUpkeep = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
+                    + CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
+                    + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
+                    + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
+                    + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
+                    + CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
                 // We have to add subsidy first, to be sure we have enough funds.
-                double netSubsidy = Math.Min(CurrencyModifierQueryRP0.Funds(TransactionReasonsRP0.Subsidy, subsidyForPassedTime), -totalUpkeep * timeFactor);
+                double netSubsidy = Math.Min(CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidyForPassedTime), -totalUpkeep * timeFactor);
                 if (netSubsidy > 0)
                 {
                     Funding.Instance.AddFunds(subsidyForPassedTime, (TransactionReasons)TransactionReasonsRP0.Subsidy);

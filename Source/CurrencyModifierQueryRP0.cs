@@ -1,5 +1,6 @@
 ﻿using System;
 using KSP.Localization;
+using System.Collections.Generic;
 
 namespace RP0
 {
@@ -181,7 +182,7 @@ namespace RP0
                 {
                     resultText += seperator;
                 }
-                resultText = ((!((useInsufficientCurrencyColors && !canAffordConf) || useCurrencyColors)) ? (resultText + textConf) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordConf) ? "#E0D503" : XKCDColors.HexFormat.BrightOrange, textConf)));
+                resultText = ((!((useInsufficientCurrencyColors && !canAffordConf) || useCurrencyColors)) ? (resultText + textConf) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordConf) ? $"#{RUIutils.ColorToHex(XKCDColors.KSPBadassGreen)}" : XKCDColors.HexFormat.BrightOrange, textConf)));
                 if (includePercentage && deltaConf != 0f)
                 {
                     resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Confidence, "N1", TextStyling.OnGUI_LessIsGood);
@@ -387,7 +388,16 @@ namespace RP0
             return currencyModifierQuery;
         }
 
-        public static double Funds(TransactionReasonsRP0 reason, double funds) => RunQuery(reason, funds, 0f, 0f).GetTotal(CurrencyRP0.Funds);
+        public static CurrencyModifierQueryRP0 RunQuery(TransactionReasonsRP0 reason, Dictionary<CurrencyRP0, double> dict, bool invert = false)
+        {
+            double mult = invert ? -1d : 1d;
+            return RunQuery(reason,
+                mult * dict.ValueOrDefault(CurrencyRP0.Funds),
+                mult * dict.ValueOrDefault(CurrencyRP0.Science),
+                mult * dict.ValueOrDefault(CurrencyRP0.Reputation),
+                mult * dict.ValueOrDefault(CurrencyRP0.Confidence),
+                dict.ValueOrDefault(CurrencyRP0.Time));
+        }
     }
 
     [System.Flags]

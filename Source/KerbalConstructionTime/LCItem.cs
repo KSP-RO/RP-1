@@ -92,6 +92,9 @@ namespace KerbalConstructionTime
         }
         public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints + blv.IntegrationPoints, blv.IsHumanRated);
 
+        protected double _strategyRateMultiplier = 1d;
+        public double StrategyRateMultiplier => _strategyRateMultiplier;
+
         public const double StartingEfficiency = 0.5d;
         public double EfficiencyEngineers = StartingEfficiency;
         public double LastEngineers = 0d;
@@ -211,10 +214,17 @@ namespace KerbalConstructionTime
 
         public void RecalculateBuildRates()
         {
+            _strategyRateMultiplier = RP0.CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? RP0.TransactionReasonsRP0.TimeIntegrationVAB : RP0.TransactionReasonsRP0.TimeIntegrationSPH);
             _rate = Utilities.GetBuildRate(0, this, IsHumanRated, true);
             _rateHRCapped = Utilities.GetBuildRate(0, this, false, true);
             foreach (var blv in BuildList)
                 blv.UpdateBuildRate();
+
+            foreach (var rr in Recon_Rollout)
+                rr.UpdateBuildRate();
+
+            foreach (var al in AirlaunchPrep)
+                al.UpdateBuildRate();
 
             KCTDebug.Log($"Build rate for {Name} = {_rate:N3}, capped {_rateHRCapped:N3}");
         }

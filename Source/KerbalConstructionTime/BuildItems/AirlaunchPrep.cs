@@ -15,6 +15,7 @@ namespace KerbalConstructionTime
         public PrepDirection Direction = PrepDirection.Mount;
 
         protected override TransactionReasonsRP0 transactionReason => TransactionReasonsRP0.AirLaunchRollout;
+        protected override TransactionReasonsRP0 transactionReasonTime => TransactionReasonsRP0.TimeAirlaunch;
 
         public AirlaunchPrep() : base()
         {

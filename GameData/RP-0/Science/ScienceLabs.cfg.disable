@@ -1,0 +1,617 @@
+// add the Laboratory module and remove the stock module
+@PART[*]:HAS[@MODULE[ModuleScienceConverter],#CrewCapacity]:BEFORE[RP-0-Kerbalism]
+{
+	!MODULE[ModuleScienceConverter] {}
+
+    MODULE
+    {
+        name = Laboratory
+        ec_rate = 0.1
+        analysis_rate = 0.000005
+        @ec_rate *= #$/CrewCapacity$
+        @analysis_rate *= #$/CrewCapacity$
+        researcher = Scientist
+    }
+}
+
+// add all crewed experiments
+@PART[*]:HAS[@MODULE[Laboratory]]:NEEDS[FeatureScience,RP-0]:AFTER[RP-0-Kerbalism]
+{
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-LiquidsMicrogravity
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-LiquidsMicrogravity/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-LiquidsMicrogravity/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-LiquidsMicrogravity/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-LiquidsMicrogravity/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-LiquidsMicrogravity/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-VisualTracking
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualTracking/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualTracking/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualTracking/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualTracking/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualTracking/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-FlightControl
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FlightControl/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FlightControl/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-FlightControl/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FlightControl/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FlightControl/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-EarthPhotography
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EarthPhotography/ECCost$
+		%sample_amount = 1
+		%data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EarthPhotography/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-EarthPhotography/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EarthPhotography/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EarthPhotography/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-TelevisionBroadcast
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TelevisionBroadcast/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TelevisionBroadcast/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-TelevisionBroadcast/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TelevisionBroadcast/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TelevisionBroadcast/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-IonSensingAltitudeControl
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-IonSensingAltitudeControl/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-IonSensingAltitudeControl/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-IonSensingAltitudeControl/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-IonSensingAltitudeControl/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-IonSensingAltitudeControl/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-NightImageIntensification
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-NightImageIntensification/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-NightImageIntensification/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-NightImageIntensification/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-NightImageIntensification/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-NightImageIntensification/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-TerrainPhotography
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TerrainPhotography/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TerrainPhotography/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-TerrainPhotography/duration$
+		%sample_amount = 1
+        @sample_amount /= 3
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TerrainPhotography/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-TerrainPhotography/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-WeatherPhotography
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WeatherPhotography/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WeatherPhotography/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-WeatherPhotography/duration$
+		%sample_amount = 1
+        @sample_amount /= 3
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WeatherPhotography/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WeatherPhotography/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-OrbitalManeuvering
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-OrbitalManeuvering/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-OrbitalManeuvering/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-OrbitalManeuvering/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-OrbitalManeuvering/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-OrbitalManeuvering/ResourceRates$
+		crew_operate = Pilot
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-VisualAcuity
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualAcuity/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualAcuity/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualAcuity/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualAcuity/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VisualAcuity/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-StarOccultationNav
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-StarOccultationNav/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-StarOccultationNav/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-StarOccultationNav/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-StarOccultationNav/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-StarOccultationNav/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-PowerToolEvaluation
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-PowerToolEvaluation/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-PowerToolEvaluation/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-PowerToolEvaluation/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-PowerToolEvaluation/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-PowerToolEvaluation/ResourceRates$
+		crew_operate = Engineer
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-EggGrowth
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EggGrowth/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EggGrowth/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-EggGrowth/duration$
+		%sample_amount = 1
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EggGrowth/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-EggGrowth/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-BloodCells
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-BloodCells/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-BloodCells/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-BloodCells/duration$
+		%sample_amount = 1
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-BloodCells/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-BloodCells/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-SleepAnalysis
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SleepAnalysis/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SleepAnalysis/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-SleepAnalysis/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SleepAnalysis/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SleepAnalysis/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-FoodEvaluation
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FoodEvaluation/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FoodEvaluation/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-FoodEvaluation/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FoodEvaluation/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-FoodEvaluation/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-WorkTolerance
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WorkTolerance/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WorkTolerance/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-WorkTolerance/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WorkTolerance/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-WorkTolerance/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-SimpleNavigation
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SimpleNavigation/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SimpleNavigation/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-SimpleNavigation/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SimpleNavigation/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-SimpleNavigation/ResourceRates$
+		crew_operate = Pilot
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-ZodiacalLightPhoto
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-ZodiacalLightPhoto/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-ZodiacalLightPhoto/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-ZodiacalLightPhoto/duration$
+		%sample_amount = 1
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-ZodiacalLightPhoto/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-ZodiacalLightPhoto/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	MODULE
+	{
+		name = Experiment
+		experiment_id = RP0-VHFPolarization
+		ec_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VHFPolarization/ECCost$
+		data_rate = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VHFPolarization/size$
+		@data_rate /= #$@KERBALISM_CREW_EXPERIMENTS/RP0-VHFPolarization/duration$
+		requires = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VHFPolarization/requirements$
+		resources = #$@KERBALISM_CREW_EXPERIMENTS/RP0-VHFPolarization/ResourceRates$
+		crew_operate = True
+		hide_when_unavailable = True
+	}
+	
+	MODULE
+	{
+		name = Configure
+		title = Crew Science
+		slots = 4
+
+        SETUP
+		{
+			name = None
+			desc = Empty slot 1
+		}
+		SETUP
+		{
+			name = None 2
+			desc = Empty slot 2
+		}
+		SETUP
+		{
+			name = None 3
+			desc = Empty slot 3
+		}
+		SETUP
+		{
+			name = None 4
+			desc = Empty slot 4
+		}
+		SETUP
+		{
+			name = Liquids in Microgravity
+			desc = Very little is known about how liquids behave in a microgravity environment. Various tests are needed to analyze the liquids to properly design fluid storage tanks in the future.
+			mass = 0.004
+			tech = basicCapsules
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-LiquidsMicrogravity
+			}
+		}
+		SETUP
+		{
+			name = Visual Tracking
+			desc = This experiment is designed to test how well humans can track objects in space. A multicolor, mylar balloon, about the size of a beach ball, will be extended on a tether for the crew member to track.
+			mass = 0.003
+			tech = basicCapsules
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-VisualTracking
+			}
+		}
+		SETUP
+		{
+			name = Flight Control Experiments
+			desc = Maneuvering in space will be very important if we want to continue our exploration. We need the crew member to see how the spacecraft reacts and maneuvers with yaw, pitch and roll controls.
+			mass = 0.001
+			tech = earlyFlightControl
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-FlightControl
+			}
+		}
+		SETUP
+		{
+			name = Earth Photography
+			desc = By using a hand-held camera, our crew can take images of locations on Earth that our scientists are intersted in. These images can be of much higher quality than our current satellite technology can accomplish.
+			mass = 0.005
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-EarthPhotography
+			}
+		}
+		SETUP
+		{
+			name = Orbital Maneuvering
+			desc = It will be necessary for our future spacecraft to be able to change their oribts in order to rendezvous and dock. This experiment will test the Orbital Maneuvering system to better understand what is required and possible.
+			mass = 0
+			tech = secondGenCapsules
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-OrbitalManeuvering
+			}
+		}
+		SETUP
+		{
+			name = Visual Acuity
+			desc = The visual ability of the astronauts in the detection and recognition of objects on the Earth's surface will be tested.
+			mass = 0.002
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-VisualAcuity
+			}
+		}
+		SETUP
+		{
+			name = Star Occultation Navigation
+			desc = To study the feasibility and operational value of star occulting measurements in the development of a simple, accurate, and self-contained navigational capability by measuring the time stars dip behind an established horizon.
+			mass = 0.008
+			tech = earlyFlightControl
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-StarOccultationNav
+			}
+		}
+		SETUP
+		{
+			name = Power Tool Evaluation
+			desc = To determine man's ability to perform work tasks in pressurized suit under zero gravity.
+			mass = 0
+			tech = materialsScienceHuman
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-PowerToolEvaluation
+			}
+		}
+		SETUP
+		{
+			name = Simple Organism Egg Growth
+			desc = This experiment is designed to explore the possibility of the existence of a gravitational field effect on cells exposed to microgravity situations. These irregularities would be easier to explore in simple cell systems.
+			mass = 0.001
+			tech = materialsScienceHuman
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-EggGrowth
+			}
+		}
+		SETUP
+		{
+			name = Synergistic Effect of Zero Gravity and Radiation on White Blood Cells
+			desc = The objective is to examine the biological effects of radiation. The experiment will test the possibility that weightlessness interacts with radiation to produce unpredicted effects greater than the sum of their individual effects.
+			mass = 0.001
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-BloodCells
+			}
+		}
+		SETUP
+		{
+			name = In-Flight Sleep Analysis
+			desc = The objectives of this experiment are to assess the crew's state of alertness, levels of consciousness, and depth of sleep during flight.
+			mass = 0
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-SleepAnalysis
+			}
+		}
+		SETUP
+		{
+			name = Food Evaluation
+			desc = Our scientists have come up with a fancy way of packaging food for consumption in space. We need the crew to evaluate how the trip to space has affected this packaging and the quality of the food.
+			mass = 0.001
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-FoodEvaluation
+			}
+		}
+		SETUP
+		{
+			name = In-flight Work Tolerance
+			desc = The astronauts will use a bungee cord to assess their capacity to do physical work under space flight conditions.
+			mass = 0.003
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-WorkTolerance
+			}
+		}
+		SETUP
+		{
+			name = Simple Navigation
+			desc = Study the capability of crew to provide a reliable method of navigation without input from the ground utilizing a space stedimeter and a sextant.
+			mass = 0.005
+			tech = secondGenCapsules
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-SimpleNavigation
+			}
+		}
+		SETUP
+		{
+			name = Zodiacal Light Photography
+			desc = To obtain photographs of zodiacal light, airglow layer, and other dim light phenomena, including day sky brightness from orbital altitude.
+			mass = 0.008
+			tech = secondGenCapsules
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-ZodiacalLightPhoto
+			}
+		}
+		SETUP
+		{
+			name = UHF/VHF Polarization
+			desc = To obtain information on communication systems operating through the ionosphere.
+			mass = 0.005
+			tech = lunarRangeComms
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-VHFPolarization
+			}
+		}
+		SETUP
+		{
+			name = Space Television Broadcast
+			desc = To broadcast live television while in route to the Moon.
+			mass = 0.006
+			tech = lunarRangeComms
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-TelevisionBroadcast
+			}
+		}
+		SETUP
+		{
+			name = Ion Sensing Altitude Control
+			desc = To investigate determination of spacecraft attitude in yaw and pitch from measurement of ion flow variations. The recording of ion sensor outputs during pitch and yaw maneuvers will be compared with data obtained from the inertial guidance system and the horizon scanner. Results of the comparison and the astronaut evaluation will form the basis for further development of simple, lightweight orbital attitude determination systems.
+			mass = 0
+			tech = electronicsHuman
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-IonSensingAltitudeControl
+			}
+		}
+		SETUP
+		{
+			name = Night Image Intensification
+			desc = To test the usefulness and performance of a low-light-level television system as a supplement to unaided vision in observing surface features primarily when such features are in darkness and spacecraft pilots are not dark-adapted.
+			mass = 0.01
+			tech = electronicsHuman
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-NightImageIntensification
+			}
+		}
+		SETUP
+		{
+			name = Synoptic Terrain Photography
+			desc = Crew photographs of land and ocean areas for geologic, geographic, and oceanographic study for evaluation of various film types. <b>This experiment can be completed 3 times.</b>
+			mass = 0.008
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-TerrainPhotography
+			}
+		}
+		SETUP
+		{
+			name = Synoptic Weather Photography
+			desc = Crew photographs of global and local weather systems for use by scientists in improving techniques of interpretation of orbital altitude weather photographs. <b>This experiment can be completed 3 times.</b>
+			mass = 0.008
+			tech = start
+			
+			MODULE
+			{
+			  type = Experiment
+			  id_field = experiment_id
+			  id_value = RP0-WeatherPhotography
+			}
+		}
+	}
+}
+
+
+// part specific patches
+@PART[Large_Crewed_Lab|L25mSci]:NEEDS[FeatureScience,RP-0]:AFTER[RP-0-Kerbalism]
+{
+    // remove the -200W generator
+    !MODULE[ModuleGenerator] {}
+}
+
+@PART[FASAGeminiMOLSci|L25mSci]:NEEDS[FeatureScience,RP-0]:BEFORE[RP-0-Kerbalism]
+{
+	%MODULE[ModuleScienceConverter]
+	{
+	}
+}

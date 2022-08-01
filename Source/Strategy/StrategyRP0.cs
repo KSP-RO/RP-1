@@ -11,7 +11,7 @@ namespace RP0
 
         // Reflection of private fields
         private static FieldInfo isActive = typeof(Strategy).GetField("isActive", BindingFlags.Instance | BindingFlags.NonPublic);
-        private static FieldInfo dateActivated = typeof(Strategy).GetField("isActive", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static FieldInfo dateActivated = typeof(Strategy).GetField("dateActivated", BindingFlags.Instance | BindingFlags.NonPublic);
 
         public StrategyConfigRP0 ConfigRP0 { get; protected set; }
 

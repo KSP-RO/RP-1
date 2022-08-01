@@ -254,7 +254,7 @@ namespace RP0.Programs
 
         public Program Accept()
         {
-            Confidence.Instance.AddConfidence(-GetConfidenceCostForSpeed(speed), TransactionReasons.Mission);
+            Confidence.Instance.AddConfidence(-GetConfidenceCostForSpeed(speed), TransactionReasonsRP0.ProgramActivation.Stock());
 
             var p = new Program(this)
             {

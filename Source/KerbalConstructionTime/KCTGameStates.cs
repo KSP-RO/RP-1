@@ -259,7 +259,7 @@ namespace KerbalConstructionTime
                 if (t > time)
                     fac = time / t;
 
-                delta += RP0.CurrencyModifierQueryRP0.Funds(RP0.TransactionReasonsRP0.RocketRollout, -rr.Cost * (1d - rr.Progress / rr.BP) * fac);
+                delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -rr.Cost * (1d - rr.Progress / rr.BP) * fac);
             }
 
             return delta;
@@ -287,7 +287,7 @@ namespace KerbalConstructionTime
                     if (t > time)
                         fac = time / t;
 
-                    delta += RP0.CurrencyModifierQueryRP0.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -al.Cost * (1d - al.Progress / al.BP) * fac);
+                    delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -al.Cost * (1d - al.Progress / al.BP) * fac);
                 }
             }
 

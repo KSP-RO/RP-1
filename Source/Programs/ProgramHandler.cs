@@ -40,6 +40,8 @@ namespace RP0.Programs
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
 
+        public HashSet<string> CompletedCCContracts { get; private set; } = new HashSet<string>();
+
         public int ActiveProgramLimit => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
 
         public static void EnsurePrograms()
@@ -92,6 +94,26 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilitySpawn.Remove(ShowAdminGUI);
             GameEvents.onGUIAdministrationFacilityDespawn.Remove(HideAdminGUI);
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
+        }
+
+        private IEnumerator FillCompletedContracts()
+        {
+            CompletedCCContracts.Clear();
+
+            yield return null;
+            yield return null;
+            yield return null;
+            yield return null;
+
+            var allCCs = ContractSystem.Instance?.GetCompletedContracts<ConfiguredContract>();
+            if (allCCs == null)
+                yield break;
+
+            foreach (var cc in allCCs)
+            {
+                if (cc.contractType is var cType)
+                    CompletedCCContracts.Add(cType.name);
+            }
         }
 
         public override void OnLoad(ConfigNode node)
@@ -147,6 +169,8 @@ namespace RP0.Programs
                     DisableProgram(s);
                 }
             }
+
+            StartCoroutine(FillCompletedContracts());
         }
 
         public override void OnSave(ConfigNode node)
@@ -218,7 +242,7 @@ namespace RP0.Programs
 
         private IEnumerator ContractCompleteRoutine(Contract data)
         {
-            // The contract will only be seen as completed after the ContractSystem has run it's next update
+            // The contract will only be seen as completed after the ContractSystem has run its next update
             // This will happen within 1 or 2 frames of the contract completion event getting fired.
             yield return null;
             yield return null;
@@ -234,6 +258,9 @@ namespace RP0.Programs
 
             if (data is ConfiguredContract cc)
             {
+                // Add to completed hashset
+                CompletedCCContracts.Add(cc.contractType.name);
+
                 // Handle KCT applicants
                 int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)

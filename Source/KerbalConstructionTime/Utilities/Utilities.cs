@@ -46,16 +46,23 @@ namespace KerbalConstructionTime
 
         public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
-        public static double GetBuildPoints(List<ConfigNode> parts) => GetBuildPoints(GetEffectiveCost(parts, out _));
+        public static double GetVesselBuildPoints(List<ConfigNode> parts) => GetVesselBuildPoints(GetEffectiveCost(parts, out _));
 
-        public static double GetBuildPoints(double totalEffectiveCost)
+        public static double GetVesselBuildPoints(double totalEffectiveCost)
         {
             var formulaParams = new Dictionary<string, string>()
             {
                 { "E", totalEffectiveCost.ToString() },
                 { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() }
             };
-            double finalBP = MathParser.GetStandardFormulaValue("BP", formulaParams);
+            //double finalBP = MathParser.GetStandardFormulaValue("BP", formulaParams);
+            // 1000 + (([E]^0.95)*216*min(1,max(0.5,([E]-500)/1500))) + ((max(0,[E]-50000)^1.4)*0.864)
+            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 500d) / 1500d, 0.5d, 1d);
+            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 0.95) * 216 * bpScalar;
+            double powScalar = totalEffectiveCost - 50000d;
+            if (powScalar > 0)
+                finalBP += Math.Pow(totalEffectiveCost, 1.4d) * 0.864d;
+
             KCTDebug.Log($"BP: {finalBP}");
             return finalBP;
         }
@@ -117,22 +124,24 @@ namespace KerbalConstructionTime
             int used = ScrapYardWrapper.GetUseCount(partRef);
 
             //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
-            double effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
-                new Dictionary<string, string>()
-                {
-                        {"C", cost.ToString()},
-                        {"c", dryCost.ToString()},
-                        {"M", wetMass.ToString()},
-                        {"m", dryMass.ToString()},
-                        {"U", builds.ToString()},
-                        {"u", used.ToString()},
-                        {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
-                        {"I", InvEff.ToString()},
-                        {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
-                        {"PV", partMultiplier.ToString()},
-                        {"RV", resourceMultiplier.ToString()},
-                        {"MV", moduleMultiplier.ToString()}
-                });
+            //double effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
+            //    new Dictionary<string, string>()
+            //    {
+            //            {"C", cost.ToString()},
+            //            {"c", dryCost.ToString()},
+            //            {"M", wetMass.ToString()},
+            //            {"m", dryMass.ToString()},
+            //            {"U", builds.ToString()},
+            //            {"u", used.ToString()},
+            //            {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
+            //            {"I", InvEff.ToString()},
+            //            {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
+            //            {"PV", partMultiplier.ToString()},
+            //            {"RV", resourceMultiplier.ToString()},
+            //            {"MV", moduleMultiplier.ToString()}
+            //    });
+            // [PV]*[RV]*[MV]*[C]
+            double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
 
             if (InvEff != 0)
                 inventorySample.Remove(partRef);
@@ -167,7 +176,7 @@ namespace KerbalConstructionTime
                     }
                 }
                 if (runTime > 0)
-                    effectiveCost = MathParser.ParseEngineRefurbFormula(runTime) * effectiveCost;
+                    effectiveCost = MathParser.GetEngineRefurbBPMultiplier(runTime) * effectiveCost;
             }
 
             if (effectiveCost < 0)
@@ -290,7 +299,7 @@ namespace KerbalConstructionTime
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
             {
-                return MathParser.ParseBuildRateFormula(index, LC, useCap, 0);
+                return MathParser.GetVesselBuildRate(index, LC, useCap, 0);
             }
 
             return useCap ? LC.Rate : LC.RateHRCapped;
@@ -305,7 +314,7 @@ namespace KerbalConstructionTime
 
             if (delta != 0)
             {
-                return MathParser.ParseBuildRateFormula(0, LC, useCap, delta);
+                return MathParser.GetVesselBuildRate(0, LC, useCap, delta);
             }
 
             return useCap ? LC.RateHRCapped : LC.Rate;
@@ -316,7 +325,7 @@ namespace KerbalConstructionTime
             if (type == BuildListVessel.ListType.VAB ? LC.LCType == LaunchComplexType.Hangar : LC.LCType == LaunchComplexType.Pad)
                 return 0.0001d;
 
-            return MathParser.ParseBuildRateFormula(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta);
+            return MathParser.GetVesselBuildRate(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta);
         }
 
         public static double GetBuildRate(BuildListVessel ship)
@@ -339,7 +348,7 @@ namespace KerbalConstructionTime
 
         public static double GetConstructionRate(int index, KSCItem KSC, int delta)
         {
-            return MathParser.ParseConstructionRateFormula(index, KSC, delta);
+            return MathParser.GetConstructionBuildRate(index, KSC, delta);
         }
 
         public static double GetEngineerEfficiencyMultipliers(LCItem LC = null)
@@ -829,7 +838,7 @@ namespace KerbalConstructionTime
 
             bool humanRated;
             double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
-            double bp = GetBuildPoints(effCost);
+            double bp = GetVesselBuildPoints(effCost);
             var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, humanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
@@ -897,7 +906,7 @@ namespace KerbalConstructionTime
             string launchSite = EditorLogic.fetch.launchSiteName;
             bool humanRated;
             double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
-            double bp = GetBuildPoints(effCost);
+            double bp = GetVesselBuildPoints(effCost);
             var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, humanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
@@ -988,7 +997,7 @@ namespace KerbalConstructionTime
                     totalEffectiveCost += v.EffectiveCost;
                 }
 
-                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.MergedVessels) + GetBuildPoints(totalEffectiveCost);
+                origTotalBP = oldProgressBP = MathParser.GetIntegrationBP(ship, KCTGameStates.MergedVessels) + GetVesselBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePenalty);
             }
 
@@ -1335,7 +1344,7 @@ namespace KerbalConstructionTime
             if (!HighLogic.LoadedSceneIsEditor) return;
 
             double effCost = GetEffectiveCost(ship.Parts, out KCTGameStates.EditorIsHumanRated);
-            KCTGameStates.EditorBuildPoints = GetBuildPoints(effCost);
+            KCTGameStates.EditorBuildPoints = GetVesselBuildPoints(effCost);
             var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL, KCTGameStates.EditorIsHumanRated);
             KCTGameStates.EditorShipMass = GetShipMass(ship, true, out _, out _);
             KCTGameStates.EditorShipSize = GetShipSize(ship, true);
@@ -1344,8 +1353,8 @@ namespace KerbalConstructionTime
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KCTGameStates.EditorRolloutCosts = MathParser.ParseRolloutCostFormula(kctVessel);
-                KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
+                KCTGameStates.EditorRolloutCosts = MathParser.GetRolloutCost(kctVessel);
+                KCTGameStates.EditorRolloutTime = MathParser.GetRolloutBP(kctVessel);
             }
             else
             {

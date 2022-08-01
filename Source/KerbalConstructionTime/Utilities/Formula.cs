@@ -96,7 +96,7 @@ namespace KerbalConstructionTime
             return personnel * 0.0025d;
         }
 
-        public static double GetConstructionBuildRate(int index, KSCItem KSC, int persDelta)
+        public static double GetConstructionBuildRate(int index, KSCItem KSC, SpaceCenterFacility? facilityType)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             //if (KSC == null)
@@ -107,7 +107,9 @@ namespace KerbalConstructionTime
             //AddCrewVariables(variables);
 
             //return GetStandardFormulaValue("ConstructionRate", variables);
-            return 1d / 86400d;
+            double rate = 1d / 86400d;
+            RP0.TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction;
+            return RP0.CurrencyUtils.Rate(reason, rate);
         }
 
         public static double GetResearchRate(double ScienceValue, int index, int upgradeDelta)

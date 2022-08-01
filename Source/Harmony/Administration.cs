@@ -157,6 +157,23 @@ namespace RP0.Harmony
             return false;
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch("AddStrategiesListItem")]
+        internal static void Postfix_AddStrategiesListItem(Administration __instance, UIList itemList)
+        {
+            for (int i = 0; i < itemList.Count; ++i)
+            {
+                var item = itemList.GetUilistItemAt(i);
+                var stratItem = item.GetComponent<StrategyListItem>();
+                if (stratItem.toggleButton.Data is Administration.StrategyWrapper sw)
+                {
+                    if (sw.strategy.Department.Name == "Programs")
+                        return;
+                }
+                stratItem.transform.FindDeepChild("Text").GetComponent<RectTransform>().anchorMin = new Vector2(0.05f, 0f);
+            }
+        }
+
         [HarmonyPrefix]
         [HarmonyPatch("SetSelectedStrategy")]
         internal static void Prefix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)

@@ -228,7 +228,7 @@ namespace KerbalConstructionTime
             Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             bool humanRated;
             double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
-            double bp = Utilities.GetBuildPoints(effCost);
+            double bp = Utilities.GetVesselBuildPoints(effCost);
             KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL, humanRated);
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();

@@ -341,14 +341,9 @@ namespace KerbalConstructionTime
             return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated, delta);
         }
 
-        public static double GetConstructionRate(KSCItem KSC)
+        public static double GetConstructionRate(int index, KSCItem KSC, SpaceCenterFacility? facilityType)
         {
-            return GetConstructionRate(0, KSC, 0);
-        }
-
-        public static double GetConstructionRate(int index, KSCItem KSC, int delta)
-        {
-            return Formula.GetConstructionBuildRate(index, KSC, delta);
+            return Formula.GetConstructionBuildRate(index, KSC, facilityType);
         }
 
         public static double GetEngineerEfficiencyMultipliers(LCItem LC = null)
@@ -2345,7 +2340,7 @@ namespace KerbalConstructionTime
         public static void GetConstructionTooltip(ConstructionBuildItem constr, int i, out string costTooltip, out string identifier)
         {
             identifier = constr.GetItemName() + i;
-            costTooltip = $"Remaining Cost: √{((constr.Cost - constr.SpentCost) * constr.RushMultiplier):N0}";
+            costTooltip = $"Remaining Cost: √{constr.RemainingCost:N0}";
             if (constr is LCConstruction lcc)
             {
                 if (lcc.LCData.lcType == LaunchComplexType.Pad)

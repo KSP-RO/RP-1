@@ -271,7 +271,7 @@ namespace KerbalConstructionTime
             //    _nodeRate = MathParser.ParseNodeRateFormula(0);
             //    _upNodeRate = MathParser.ParseNodeRateFormula(0, 0, _nodeDelta);
             //}
-            _nodeRate = MathParser.ParseNodeRateFormula(0, 0, delta);
+            _nodeRate = MathParser.GetResearchRate(0, 0, delta);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
             double sciPerDayEffic = sciPerDay * effic * techMult;
@@ -302,7 +302,7 @@ namespace KerbalConstructionTime
             {
                 TechItem t = KCTGameStates.TechList[0];
                 GUILayout.Label($"Current Research: {t.TechName}");
-                double techRate = MathParser.ParseNodeRateFormula(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
+                double techRate = MathParser.GetResearchRate(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
                 double timeLeft = (t.ScienceCost - t.Progress) / techRate;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }

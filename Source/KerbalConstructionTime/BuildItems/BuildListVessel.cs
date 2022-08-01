@@ -32,7 +32,6 @@ namespace KerbalConstructionTime
         private double _buildRate = -1d;
 
         internal ShipConstruct _ship;
-        private double _rushCost = -1;
 
         public Vector3 ShipSize = Vector3.zero;
 
@@ -218,8 +217,8 @@ namespace KerbalConstructionTime
                 EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList(), out IsHumanRated);
             }
 
-            IntegrationPoints = MathParser.ParseIntegrationTimeFormula(this);
-            IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(this);
+            IntegrationPoints = MathParser.GetIntegrationBP(this);
+            IntegrationCost = (float)MathParser.GetIntegrationCost(this);
         }
 
         public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int editorFacility, bool isHuman)
@@ -298,14 +297,14 @@ namespace KerbalConstructionTime
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
             EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList(), out IsHumanRated);
-            BuildPoints = Utilities.GetBuildPoints(EffectiveCost);
+            BuildPoints = Utilities.GetVesselBuildPoints(EffectiveCost);
             Flag = HighLogic.CurrentGame.flagURL;
 
             DistanceFromKSC = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
 
             RushBuildClicks = 0;
-            IntegrationPoints = MathParser.ParseIntegrationTimeFormula(this);
-            IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(this);
+            IntegrationPoints = MathParser.GetIntegrationBP(this);
+            IntegrationCost = (float)MathParser.GetIntegrationCost(this);
 
             Progress = BuildPoints + IntegrationPoints;
         }
@@ -435,9 +434,9 @@ namespace KerbalConstructionTime
             if (RecalcTime)
             {
                 ret.EffectiveCost = Utilities.GetEffectiveCost(ret.ExtractedPartNodes, out IsHumanRated);
-                ret.BuildPoints = Utilities.GetBuildPoints(ret.EffectiveCost);
-                ret.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ret);
-                ret.IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(ret);
+                ret.BuildPoints = Utilities.GetVesselBuildPoints(ret.EffectiveCost);
+                ret.IntegrationPoints = MathParser.GetIntegrationBP(ret);
+                ret.IntegrationCost = (float)MathParser.GetIntegrationCost(ret);
             }
 
             return ret;
@@ -679,18 +678,10 @@ namespace KerbalConstructionTime
             {
                 Cost = Utilities.GetTotalVesselCost(ShipNode);
                 EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
-                IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(this);
+                IntegrationCost = (float)MathParser.GetIntegrationCost(this);
             }
 
             return Cost + IntegrationCost;
-        }
-
-        public double GetRushCost()
-        {
-            if (_rushCost < 0)
-                _rushCost = MathParser.ParseRushCostFormula(this);
-
-            return _rushCost * LC.Engineers / LC.MaxEngineers;
         }
 
         public double GetRushEfficiencyCost()

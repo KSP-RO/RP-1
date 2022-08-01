@@ -157,24 +157,21 @@ namespace KerbalConstructionTime
                 assignDelta = assignAmt;
             else if (_currentPersonnelHover == PersonnelButtonHover.Unassign)
                 assignDelta = -unassignAmt;
-            int constructionDelta = 0;
+            int freeDelta = 0;
             switch (_currentPersonnelHover)
             {
-                case PersonnelButtonHover.Assign: constructionDelta = -assignAmt; break;
-                case PersonnelButtonHover.Unassign: constructionDelta = unassignAmt; break;
-                case PersonnelButtonHover.Hire: constructionDelta = hireAmount; break;
-                case PersonnelButtonHover.Fire: constructionDelta = -fireAmount; break;
+                case PersonnelButtonHover.Assign: freeDelta = -assignAmt; break;
+                case PersonnelButtonHover.Unassign: freeDelta = unassignAmt; break;
+                case PersonnelButtonHover.Hire: freeDelta = hireAmount; break;
+                case PersonnelButtonHover.Fire: freeDelta = -fireAmount; break;
             }
 
             double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
-            double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(constructionDelta) : KCTGameStates.EfficiencyEngineers;
+            double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(freeDelta) : KCTGameStates.EfficiencyEngineers;
             double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2} (tech)");
             GUILayout.EndHorizontal();
-
-            double cRateFull = Utilities.GetConstructionRate(0, KSC, constructionDelta) * techMult;
-            double cRate = cRateFull * efficGlobal;
 
             double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * techMult;
             double rate = rateFull * efficLocal * efficGlobal;
@@ -265,12 +262,7 @@ namespace KerbalConstructionTime
             double effic = Utilities.PredictEfficiencyResearchers(delta);
             double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
-            //if (_nodeRate == int.MinValue || isCostCacheInvalid)
-            //{
-            //    _nodeDelta = _buyModifier == int.MaxValue ? AvailablePoints : _buyModifier;
-            //    _nodeRate = MathParser.ParseNodeRateFormula(0);
-            //    _upNodeRate = MathParser.ParseNodeRateFormula(0, 0, _nodeDelta);
-            //}
+
             _nodeRate = Formula.GetResearchRate(0, 0, delta);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;

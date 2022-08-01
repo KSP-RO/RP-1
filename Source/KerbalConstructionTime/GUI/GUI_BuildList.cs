@@ -378,7 +378,7 @@ namespace KerbalConstructionTime
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
                 ConstructionBuildItem constr = ksc.Constructions[i];
-                totalCost += (constr.Cost - constr.SpentCost) * constr.RushMultiplier;
+                totalCost += constr.RemainingCost;
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
@@ -442,7 +442,7 @@ namespace KerbalConstructionTime
                 double br = c.GetBuildRate();
                 if (br > 0d)
                 {
-                    costday += br * 86400d / c.BP * c.Cost * c.RushMultiplier;
+                    costday += br * 86400d / c.BP * -RP0.CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction, -c.Cost * c.RushMultiplier);
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
@@ -884,7 +884,9 @@ namespace KerbalConstructionTime
                         DialogGUIBase[] options = new DialogGUIBase[2];
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost:N0}.", "Scrap Vessel", null, options: options);
+                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselRollout, b.Cost, 0f, 0f).GetCostLine(false, false) +".",
+                            "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                     }
                 }
@@ -1121,7 +1123,7 @@ namespace KerbalConstructionTime
                             btnColor = _yellowButton;
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
                         if (tmpRollout.Cost > 0d)
-                            GUILayout.Label("√" + tmpRollout.Cost.ToString("N0"));
+                            GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -tmpRollout.Cost):N0}");
                         GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
@@ -1260,7 +1262,7 @@ namespace KerbalConstructionTime
                         {
                             var tmpPrep = new AirlaunchPrep(b, blvID);
                             if (tmpPrep.Cost > 0d)
-                                GUILayout.Label("√" + tmpPrep.Cost.ToString("N0"));
+                                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.Cost):N0}");
                             GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
@@ -1637,7 +1639,9 @@ namespace KerbalConstructionTime
                 DialogGUIBase[] options = new DialogGUIBase[2];
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", $"Are you sure you want to scrap this vessel? You will regain <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{b.Cost:N0}.", "Scrap Vessel", null, 300, options);
+                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselRollout, b.Cost, 0f, 0f).GetCostLine(false, false) + ".",
+                            "Scrap Vessel", null, options: options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow(false);

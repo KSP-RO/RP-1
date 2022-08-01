@@ -103,7 +103,7 @@ namespace KerbalConstructionTime
             EfficiencyEngineers = StartingEfficiencyEngineers;
             LastEngineers = 0;
             LoadedSaveVersion = 0;
-    }
+        }
 
         public static void InitAndClearTechList()
         {
@@ -143,6 +143,12 @@ namespace KerbalConstructionTime
                         return lc;
 
             return null;
+        }
+
+        public static void RecalculateBuildRates()
+        {
+            foreach (var ksc in KSCs)
+                ksc.RecalculateBuildRates(true);
         }
 
         public static int GetSalaryEngineers()

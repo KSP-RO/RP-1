@@ -51,6 +51,7 @@ namespace KerbalConstructionTime
             for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > EpsilonTime;)
             {
                 time = (timeUpper + timeLower) * 0.5d;
+                // This is the post-CMQ delta.
                 double fundDelta = KCTGameStates.GetBudgetDelta(time);
                 totalFunds = baseFunds + fundDelta;
                 if (System.Math.Abs(targetFunds - totalFunds) < EpsilonFunds)

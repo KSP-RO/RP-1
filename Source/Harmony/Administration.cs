@@ -4,7 +4,6 @@ using KSP.UI;
 using Strategies;
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Reflection;
@@ -67,7 +66,7 @@ namespace RP0.Harmony
                 string headName = $"<color=#{RUIutils.ColorToHex(dep.Color)}>{leader.Title}\n({dep.Title})</color>";
                 kerbal.Initialize(headName, dep.Description, null);
                 kerbal.tooltip.textString = dep.Description + "\n\n" + leader.Effect;
-                kerbal.kerbalImage.texture = leader.Config.IconImage;
+                kerbal.kerbalImage.texture = (leader.Config as StrategyConfigRP0).IconDepartmentImage;
             }
             __instance.scrollListStrategies.GetUilistItemAt(0).GetComponent<LayoutElement>().minWidth = 280f;
             var firstDep = __instance.scrollListKerbals.GetUilistItemAt(0);
@@ -92,7 +91,7 @@ namespace RP0.Harmony
             spacer2.transform.SetAsFirstSibling();
         }
 
-        internal static List<Strategy> _strategies = new List<Strategy>();
+        internal static List<Strategies.Strategy> _strategies = new List<Strategies.Strategy>();
 
         [HarmonyPrefix]
         [HarmonyPatch("CreateActiveStratList")]
@@ -112,7 +111,7 @@ namespace RP0.Harmony
                 List<Program> programs = AdminExtender.Instance.ActiveTabView == AdministrationActiveTabView.Active ? ProgramHandler.Instance.ActivePrograms : ProgramHandler.Instance.CompletedPrograms;
                 foreach (Program p in programs)
                 {
-                    Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
+                    Strategies.Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
                     if (strategy == null)
                         continue;
 
@@ -131,7 +130,7 @@ namespace RP0.Harmony
                     _strategies.Add(strategy);
                 }
             }
-            foreach (Strategy strategy in _strategies)
+            foreach (Strategies.Strategy strategy in _strategies)
             {
                 UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
                 ActiveStrategyListItem stratItem = item.GetComponent<ActiveStrategyListItem>();
@@ -162,10 +161,12 @@ namespace RP0.Harmony
         [HarmonyPatch("SetSelectedStrategy")]
         internal static void Prefix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
         {
+            if (wrapper.strategy is StrategyRP0 s)
+            {
+                s.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
+            }
             if (wrapper.strategy is ProgramStrategy ps)
             {
-                ps.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
-
                 // Set best speed before we get description
                 if (!ps.Program.IsComplete && !ps.Program.IsActive && !AdminExtender.Instance.PressedSpeedButton)
                     ps.Program.SetBestAllowableSpeed();
@@ -334,9 +335,12 @@ namespace RP0.Harmony
             {
                 var leader = __instance.SelectedWrapper.strategy;
                 double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated));
+                string reappointStr = leader.Config is StrategyConfigRP0 cfg && cfg.RemoveOnDeactivate ? $"\n\n{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}" : string.Empty;
                 string message = cost > 0
-                    ? Localizer.Format("#rp0LeaderRemoveConfirmWithCost", CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -cost, 0d, 0d).GetCostLineOverride(true))
-                    : Localizer.GetStringByTag("#rp0LeaderRemoveConfirm");
+                    ? Localizer.Format("#rp0LeaderRemoveConfirmWithCost", 
+                        CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -cost, 0d, 0d).GetCostLineOverride(true),
+                        reappointStr)
+                    : Localizer.Format("#rp0LeaderRemoveConfirm", reappointStr);
 
                 var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                     new Vector2(0.5f, 0.5f),

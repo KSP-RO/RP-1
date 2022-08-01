@@ -38,6 +38,26 @@ namespace KerbalConstructionTime
             }
         }
 
+        protected override TransactionReasonsRP0 transactionReasonTime
+        {
+            get
+            {
+                switch (RRType)
+                {
+                    case RolloutReconType.Rollout:
+                    case RolloutReconType.Rollback:
+                        return TransactionReasonsRP0.TimeRollout;
+                    case RolloutReconType.Recovery:
+                        return TransactionReasonsRP0.TimeRecovery;
+                    case RolloutReconType.Reconditioning:
+                        return TransactionReasonsRP0.TimeReconditioning;
+
+                    default:
+                        return TransactionReasonsRP0.None;
+                }
+            }
+        }
+
         public static Dictionary<string, RolloutReconType> RRDict = new Dictionary<string, RolloutReconType>()
         {
             {  ReconditioningStr, RolloutReconType.Reconditioning },

@@ -70,7 +70,7 @@ namespace RP0.Programs
                 item.gameObject.SetActive(active);
                 if (active)
                 {
-                    double cost = program.GetConfidenceCostForSpeed(item.Speed);
+                    double cost = program.GetDisplayedConfidenceCostForSpeed(item.Speed);
                     bool allowable = program.IsSpeedAllowed(item.Speed);
                     var sph = new SpeedButtonHolder(program.GetStrategy(), item.Speed);
                     item.SetupButton(allowable, Localizer.Format("#rp0ProgramSpeedConfidenceRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);

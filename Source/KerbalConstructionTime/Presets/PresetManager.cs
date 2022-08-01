@@ -272,13 +272,7 @@ namespace KerbalConstructionTime
             node.AddValue("science", ScienceEnabled);
             node.AddValue("sandbox", SandboxEnabled);
 
-            ConfigNode gNode = GeneralSettings.AsConfigNode();
-            if (GeneralSettings.YearBasedRateMult != null)
-            {
-                ConfigNode rateNode = gNode.AddNode("YearBasedRateMult");
-                GeneralSettings.YearBasedRateMult.Save(rateNode);
-            }
-            node.AddNode(gNode);
+            node.AddNode(GeneralSettings.AsConfigNode());
 
             node.AddNode(PartVariables.AsConfigNode());
             return node;
@@ -406,42 +400,6 @@ namespace KerbalConstructionTime
 
         public double EngineerEfficiencyMultiplier => EngineerEfficiencyUpgrades.GetMultiplier();
         public double ResearcherEfficiencyMultiplier => ResearcherEfficiencyUpgrades.GetMultiplier();
-
-
-        public override ConfigNode AsConfigNode()
-        {
-            ConfigNode node = base.AsConfigNode();
-            ConfigNode tmp = node.GetNode("EngineerSkillupRate");
-            if (tmp == null)
-            {
-                tmp = new ConfigNode("EngineerSkillupRate");
-                EngineerSkillupRate.Save(tmp);
-                node.AddNode(tmp);
-            }
-            tmp = node.GetNode("ResearcherSkillupRate");
-            if (tmp == null)
-            {
-                tmp = new ConfigNode("ResearcherSkillupRate");
-                ResearcherSkillupRate.Save(tmp);
-                node.AddNode(tmp);
-            }
-            tmp = node.GetNode("GlobalEngineerSkillupRate");
-            if (tmp == null)
-            {
-                tmp = new ConfigNode("GlobalEngineerSkillupRate");
-                GlobalEngineerSkillupRate.Save(tmp);
-                node.AddNode(tmp);
-            }
-            tmp = node.GetNode("ConstructionRushCost");
-            if (tmp == null)
-            {
-                tmp = new ConfigNode("ConstructionRushCost");
-                ConstructionRushCost.Save(tmp);
-                node.AddNode(tmp);
-            }
-
-            return node;
-        }
     }
 
     public class KCT_Preset_Part_Variables

@@ -490,7 +490,7 @@ namespace RP0
 
         EfficiencyGainLC = 1 << 41,
 
-        ResearchRate = 1 << 42,
+        TimeResearch = 1 << 42,
 
         Any = ~0
     }

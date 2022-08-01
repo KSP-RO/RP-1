@@ -531,7 +531,7 @@ namespace KerbalConstructionTime
 
                 //reset the BP
                 KCTGameStates.RecoveredVessel.BuildPoints = Utilities.GetVesselBuildPoints(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
-                KCTGameStates.RecoveredVessel.IntegrationPoints = MathParser.GetIntegrationBP(KCTGameStates.RecoveredVessel);
+                KCTGameStates.RecoveredVessel.IntegrationPoints = Formula.GetIntegrationBP(KCTGameStates.RecoveredVessel);
             }
 
             LCItem targetLC = KCTGameStates.RecoveredVessel.LC;

@@ -108,12 +108,12 @@ namespace KerbalConstructionTime
 
         public void SetBP(double cost)
         {
-            BP = MathParser.GetConstructionBP(cost, FacilityType);
+            BP = Formula.GetConstructionBP(cost, FacilityType);
         }
 
         public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null, int delta = 0)
         {
-            double bp = MathParser.GetConstructionBP(cost, facilityType);
+            double bp = Formula.GetConstructionBP(cost, facilityType);
             double rateTotal = Utilities.GetConstructionRate(0, KSC, delta);
 
             return bp / rateTotal;
@@ -205,7 +205,7 @@ namespace KerbalConstructionTime
                 b.BP /= 36d;
                 b.BP -= 10000d;
 
-                b.BP = MathParser.GetConstructionBP(b.BP, null); // we're not using facilityType anyway.
+                b.BP = Formula.GetConstructionBP(b.BP, null); // we're not using facilityType anyway.
                 b.Progress = progress / BP * b.BP;
             }
         }

@@ -111,7 +111,7 @@ namespace RP0.Programs
 
             foreach (var cc in allCCs)
             {
-                if (cc.contractType is var cType)
+                if (cc?.contractType is var cType)
                     CompletedCCContracts.Add(cType.name);
             }
         }

@@ -362,8 +362,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
-                GUILayout.Label(FormatCost(-grandTotal), BoldRightLabel, GUILayout.Width(160));
+                GUILayout.Label("Grand Total", BoldLabel, GUILayout.Width(160));
+                GUILayout.Label(FormatCost(grandTotal), BoldRightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {

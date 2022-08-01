@@ -209,29 +209,30 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(" ");
 
-                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad, null, isModify ? activeLC.Engineers : 0);
-                string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
+                double buildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad, null);
+                string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
-                GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
+                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -totalCost):N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
                 if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Extra Pad Cost:", GUILayout.ExpandWidth(false));
-                    GUILayout.Label($"√{curPadCost:N0}", GetLabelRightAlignStyle());
+                    GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -curPadCost):N0}", GetLabelRightAlignStyle());
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Est. construction time:", GUILayout.ExpandWidth(false));
-                GUILayout.Label(new GUIContent( sBuildTime, isModify ? "With current construction engineers" : "With LC engineers as\nconstruction engineers"), GetLabelRightAlignStyle());
+                GUILayout.Label(new GUIContent(sBuildTime, isModify ? "With current construction engineers" : "With LC engineers as\nconstruction engineers"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 double projectedMaintenance = RP0.MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(totalCostForMaintenance, isHangar ? RP0.FacilityMaintenanceType.Hangar : RP0.FacilityMaintenanceType.LC);
 
                 if (projectedMaintenance > 0d)
                 {
+                    projectedMaintenance = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureRepairLC, -projectedMaintenance);
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Est. Yearly Upkeep:", GUILayout.ExpandWidth(false));
                     GUILayout.Label(new GUIContent((projectedMaintenance * 365.25d).ToString("N0"), $"Daily: {projectedMaintenance:N1}"), GetLabelRightAlignStyle());

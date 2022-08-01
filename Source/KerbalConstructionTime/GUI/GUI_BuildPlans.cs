@@ -215,7 +215,7 @@ namespace KerbalConstructionTime
             }
             bool isHumanRated;
             double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out isHumanRated);
-            double bp = Utilities.GetBuildPoints(effCost);
+            double bp = Utilities.GetVesselBuildPoints(effCost);
             BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, isHumanRated)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text

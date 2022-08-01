@@ -143,13 +143,8 @@ namespace KerbalConstructionTime
                 }
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
 
-                for (int j = 0; j < KCTGameStates.TechList.Count; j++)
-                    KCTGameStates.TechList[j].UpdateBuildRate(j);
+                KCTGameStates.RecalculateBuildRates();
 
-                foreach (KSCItem ksc in KCTGameStates.KSCs)
-                {
-                    ksc.RecalculateBuildRates();
-                }
                 ResetFormulaRateHolders();
                 KSCContextMenuOverrider.AreTextsUpdated = false;
             }
@@ -164,8 +159,7 @@ namespace KerbalConstructionTime
                     RefreshToolbarState();
                 }
 
-                for (int j = 0; j < KCTGameStates.TechList.Count; j++)
-                    KCTGameStates.TechList[j].UpdateBuildRate(j);
+                KCTGameStates.RecalculateBuildRates();
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

@@ -149,6 +149,12 @@ namespace KerbalConstructionTime
         {
             foreach (var ksc in KSCs)
                 ksc.RecalculateBuildRates(true);
+
+            for (int i = TechList.Count; i-- > 0;)
+            {
+                TechItem tech = KCTGameStates.TechList[i];
+                tech.UpdateBuildRate(i);
+            }
         }
 
         public static int GetSalaryEngineers()

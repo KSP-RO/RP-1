@@ -179,15 +179,7 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
             AllowedToUpgrade = false;
-            foreach (KSCItem ksc in KCTGameStates.KSCs)
-            {
-                ksc.RecalculateBuildRates();
-            }
-            for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
-            {
-                TechItem tech = KCTGameStates.TechList[i];
-                tech.UpdateBuildRate(KCTGameStates.TechList.IndexOf(tech));
-            }
+            KCTGameStates.RecalculateBuildRates();
         }
 
         public void FaciliyRepaired(DestructibleBuilding facility)

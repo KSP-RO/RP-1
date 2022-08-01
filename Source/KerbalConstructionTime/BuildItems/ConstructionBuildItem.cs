@@ -70,7 +70,7 @@ namespace KerbalConstructionTime
             if (GetBuildRate() == 0d)
                 return 0d;
 
-            double val = RemainingCost;
+            double val = -RemainingCost;
             if (left > time)
                 val *= (time / left);
 

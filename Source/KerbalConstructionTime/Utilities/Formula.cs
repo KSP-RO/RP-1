@@ -4,7 +4,7 @@ using System;
 
 namespace KerbalConstructionTime
 {
-    public class MathParser
+    public class Formula
     {
         public static double GetConstructionBP(double cost, SpaceCenterFacility? facilityType)
         {

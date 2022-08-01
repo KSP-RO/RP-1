@@ -1,6 +1,7 @@
 ﻿using System;
 using KSP.Localization;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RP0
 {
@@ -499,10 +500,15 @@ namespace RP0
 
     public enum CurrencyRP0
     {
+        [Description("#autoLOC_7001031")]
         Funds = 0,
+        [Description("#autoLOC_7001032")]
         Science = 1,
+        [Description("#autoLOC_7001033")]
         Reputation = 2,
+        [Description("#rp0CurrencyConfidence")]
         Confidence = 3,
+        [Description("#rp0CurrencyTime")]
         Time = 4
     }
 }

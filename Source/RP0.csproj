@@ -232,7 +232,7 @@
     <Compile Include="KerbalConstructionTime\KSCContextMenuOverrider.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\KCT_LaunchPad.cs" />
     <Compile Include="KerbalConstructionTime\KCTWarpController.cs" />
-    <Compile Include="KerbalConstructionTime\Utilities\MathParser.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\Formula.cs" />
     <Compile Include="KerbalConstructionTime\Presets\PresetManager.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\ReconRollout.cs" />
     <Compile Include="KerbalConstructionTime\Presets\KCTSettings.cs" />

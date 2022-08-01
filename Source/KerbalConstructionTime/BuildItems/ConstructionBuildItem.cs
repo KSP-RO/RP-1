@@ -72,7 +72,7 @@ namespace KerbalConstructionTime
             else
                 val = (Cost - SpentCost) * RushMultiplier;
 
-            return RP0.CurrencyModifierQueryRP0.Funds((this is FacilityUpgrade) ? RP0.TransactionReasonsRP0.StructureConstruction : RP0.TransactionReasonsRP0.StructureConstructionLC, -val);
+            return RP0.CurrencyUtils.Funds((this is FacilityUpgrade) ? RP0.TransactionReasonsRP0.StructureConstruction : RP0.TransactionReasonsRP0.StructureConstructionLC, -val);
         }
 
         public double GetBuildRate()

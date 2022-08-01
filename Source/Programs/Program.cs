@@ -89,8 +89,9 @@ namespace RP0.Programs
         public Speed speed = Speed.Normal;
 
         private Dictionary<Speed, float> confidenceCosts = new Dictionary<Speed, float>();
-        public float GetConfidenceCostForSpeed(Speed spd) => confidenceCosts[spd];
+        public float GetDisplayedConfidenceCostForSpeed(Speed spd) => -(float)CurrencyUtils.Conf(TransactionReasonsRP0.ProgramActivation, -confidenceCosts[spd]);
         public float ConfidenceCost => confidenceCosts[speed];
+        public float DisplayConfidenceCost => GetDisplayedConfidenceCostForSpeed(speed);
 
         /// <summary>
         /// Texture URL
@@ -255,7 +256,7 @@ namespace RP0.Programs
 
         public Program Accept()
         {
-            Confidence.Instance.AddConfidence(-GetConfidenceCostForSpeed(speed), TransactionReasonsRP0.ProgramActivation.Stock());
+            Confidence.Instance.AddConfidence(-confidenceCosts[speed], TransactionReasonsRP0.ProgramActivation.Stock());
 
             var p = new Program(this)
             {
@@ -516,7 +517,7 @@ namespace RP0.Programs
                             text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
                     }
 
-                    text += $"\n\n{KSP.Localization.Localizer.Format("#rp0ProgramSpeedConfidenceRequired", ConfidenceCost.ToString("N0"))}";
+                    text += $"\n\n{KSP.Localization.Localizer.Format("#rp0ProgramSpeedConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
                 }
 
                 if (!IsComplete)
@@ -552,7 +553,8 @@ namespace RP0.Programs
 
         public bool IsSpeedAllowed(Speed s)
         {
-            return Confidence.CurrentConfidence >= confidenceCosts[s];
+            // we use the display version because, were it accepted, we'd do a CMQ when subtracting.
+            return Confidence.CurrentConfidence >= GetDisplayedConfidenceCostForSpeed(s);
         }
 
         public void SetBestAllowableSpeed()

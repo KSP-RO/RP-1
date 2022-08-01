@@ -480,9 +480,9 @@ namespace RP0
                 Funding.Instance.AddFunds(-ResearchSalaryPerDay * timeFactor, (TransactionReasons)TransactionReasonsRP0.SalaryResearchers);
                 Funding.Instance.AddFunds(-(NautBaseUpkeepPerDay + NautInFlightUpkeepPerDay) * timeFactor, (TransactionReasons)TransactionReasonsRP0.SalaryCrew);
                 Funding.Instance.AddFunds(-TrainingUpkeepPerDay * timeFactor, (TransactionReasons)TransactionReasonsRP0.CrewTraining);
-                RP0Debug.Log($"[RP-0] MaintenanceHandler removing {(totalUpkeep*timeFactor - netSubsidy)} funds where upkeep is {-totalUpkeep} ({(preMaint - Funding.Instance.Funds)} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
-                if (Math.Abs(Funding.Instance.Funds - fundsOld - (totalUpkeep * timeFactor - netSubsidy)) > 0.1)
-                    Debug.LogError("[RP-0] $$$$ Error! Fund mismatch from prediction in maintenance!");
+                RP0Debug.Log($"[RP-0] MaintenanceHandler removing {(-totalUpkeep * timeFactor - netSubsidy)} funds where upkeep is {-totalUpkeep} ({(preMaint - Funding.Instance.Funds)} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
+                if (Math.Abs(Funding.Instance.Funds - fundsOld - (-totalUpkeep * timeFactor - netSubsidy)) > 0.1)
+                    Debug.LogError($"[RP-0] $$$$ Error! Fund mismatch from prediction in maintenance! Prediction: {-totalUpkeep * timeFactor} maintenace - {netSubsidy} subsidy should = {Funding.Instance.Funds - fundsOld}");
                 CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += netSubsidy;
             }
 

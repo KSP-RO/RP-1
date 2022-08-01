@@ -71,6 +71,9 @@ namespace KerbalConstructionTime
 
         public static double GetVesselBuildRate(int index, LCItem LC, bool isHumanRatedCapped, int persDelta)
         {
+            if (index > 0)
+                return 0d;
+
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             int personnel = Math.Max(0, LC.Engineers + persDelta);
             if (isHumanRatedCapped)

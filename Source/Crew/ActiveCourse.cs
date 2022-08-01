@@ -311,7 +311,7 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              "OK",
                                              true,
-                                             HighLogic.UISkin);
+                                             HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN);
                 }
             }
 

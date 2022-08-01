@@ -11,8 +11,7 @@ namespace KerbalConstructionTime
         private static int _presetIndex = -1;
         private static KCT_Preset _workingPreset;
         private static Vector2 _presetScrollView, _presetMainScroll;
-        private static bool _isChanged = false, _showFormula = false;
-        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _mTimePTmp = "";
+        private static bool _isChanged = false;
 
         private static string _saveName, _saveShort, _saveDesc, _saveAuthor;
         private static bool _saveCareer, _saveScience, _saveSandbox;
@@ -108,128 +107,10 @@ namespace KerbalConstructionTime
             GUILayout.EndVertical(); //end Features
 
 
-            GUILayout.BeginVertical(); //Begin time settings
-            GUILayout.Label("Time Settings", _yellowText);
-            GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            GUILayout.BeginHorizontal();
-            GUILayout.BeginVertical();
-            GUILayout.Label("Overall Multiplier: ");
-            double.TryParse(_oMultTmp = GUILayout.TextField(_oMultTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.OverallMultiplier);
-            GUILayout.Label("Merging Time Penalty: ");
-            double.TryParse(_mTimePTmp = GUILayout.TextField(_mTimePTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MergingTimePenalty);
-            GUILayout.EndVertical(); 
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Build Effect: ");
-            double.TryParse(_bEffTmp = GUILayout.TextField(_bEffTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.BuildEffect);
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Inventory Effect: ");
-            double.TryParse(_iEffTmp = GUILayout.TextField(_iEffTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.InventoryEffect);
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical(); //end time settings
-            GUILayout.EndVertical();
+            
             GUILayout.EndHorizontal(); //end feature/time setting split
 
-            //begin formula settings
-            GUILayout.BeginVertical();
-            GUILayout.Label("Formula Settings (Advanced)", _yellowText);
-            GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Show/Hide Formulas"))
-            {
-                _showFormula = !_showFormula;
-            }
-            GUILayout.EndHorizontal();
-
-            if (_showFormula)
-            {
-                //show half here, half on other side? Or all in one big list
-                int textWidth = 350;
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("NodeFormula: ");
-                _workingPreset.FormulaSettings.NodeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.NodeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("EffectivePart: ");
-                _workingPreset.FormulaSettings.EffectivePartFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EffectivePartFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("ProceduralPart: ");
-                _workingPreset.FormulaSettings.ProceduralPartFormula = GUILayout.TextField(_workingPreset.FormulaSettings.ProceduralPartFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("BPFormula: ");
-                _workingPreset.FormulaSettings.BPFormula = GUILayout.TextField(_workingPreset.FormulaSettings.BPFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("KSCUpgrade: ");
-                _workingPreset.FormulaSettings.KSCUpgradeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.KSCUpgradeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Reconditioning: ");
-                _workingPreset.FormulaSettings.ReconditioningFormula = GUILayout.TextField(_workingPreset.FormulaSettings.ReconditioningFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("BuildRate: ");
-                _workingPreset.FormulaSettings.BuildRateFormula = GUILayout.TextField(_workingPreset.FormulaSettings.BuildRateFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("ConstructionRate: ");
-                _workingPreset.FormulaSettings.ConstructionRateFormula= GUILayout.TextField(_workingPreset.FormulaSettings.ConstructionRateFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("InventorySale: ");
-                _workingPreset.FormulaSettings.InventorySaleFormula = GUILayout.TextField(_workingPreset.FormulaSettings.InventorySaleFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("RolloutCosts: ");
-                _workingPreset.FormulaSettings.RolloutCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.RolloutCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("IntegrationCosts: ");
-                _workingPreset.FormulaSettings.IntegrationCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.IntegrationCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("IntegrationTime: ");
-                _workingPreset.FormulaSettings.IntegrationTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.IntegrationTimeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("RushCost: ");
-                _workingPreset.FormulaSettings.RushCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.RushCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("AirlaunchCost: ");
-                _workingPreset.FormulaSettings.AirlaunchCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.AirlaunchCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("AirlaunchTime: ");
-                _workingPreset.FormulaSettings.AirlaunchTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.AirlaunchTimeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("EngineRefurbCredit: ");
-                _workingPreset.FormulaSettings.EngineRefurbFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EngineRefurbFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-            }
-
-            GUILayout.EndVertical();
-            GUILayout.EndVertical(); //end formula settings
-
+            
             GUILayout.EndScrollView();
 
             GUILayout.BeginHorizontal();
@@ -343,11 +224,6 @@ namespace KerbalConstructionTime
                 _workingPreset.Description = "A custom set of configs.";
                 _workingPreset.Author = HighLogic.SaveFolder;
             }
-
-            _oMultTmp = _workingPreset.TimeSettings.OverallMultiplier.ToString();
-            _mTimePTmp = _workingPreset.TimeSettings.MergingTimePenalty.ToString(); 
-            _bEffTmp = _workingPreset.TimeSettings.BuildEffect.ToString();
-            _iEffTmp = _workingPreset.TimeSettings.InventoryEffect.ToString();
         }
 
         public static void DrawPresetSaveWindow(int windowID)

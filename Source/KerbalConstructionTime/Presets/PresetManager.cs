@@ -184,8 +184,6 @@ namespace KerbalConstructionTime
         internal string _presetFileLocation = string.Empty;
 
         public KCT_Preset_General GeneralSettings = new KCT_Preset_General();
-        public KCT_Preset_Time TimeSettings = new KCT_Preset_Time();
-        public KCT_Preset_Formula FormulaSettings = new KCT_Preset_Formula();
         public KCT_Preset_Part_Variables PartVariables = new KCT_Preset_Part_Variables();
 
         public string Name = "UNINIT", ShortName = "UNINIT", Description = "NA", Author = "NA";
@@ -257,8 +255,6 @@ namespace KerbalConstructionTime
             SandboxEnabled = Source.SandboxEnabled;
 
             ConfigNode.LoadObjectFromConfig(GeneralSettings, Source.GeneralSettings.AsConfigNode());
-            ConfigNode.LoadObjectFromConfig(TimeSettings, Source.TimeSettings.AsConfigNode());
-            ConfigNode.LoadObjectFromConfig(FormulaSettings, Source.FormulaSettings.AsConfigNode());
             PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
@@ -276,16 +272,13 @@ namespace KerbalConstructionTime
             node.AddValue("science", ScienceEnabled);
             node.AddValue("sandbox", SandboxEnabled);
 
-            node.AddNode(GeneralSettings.AsConfigNode());
-            node.AddNode(TimeSettings.AsConfigNode());
-
-            ConfigNode fNode = FormulaSettings.AsConfigNode();
-            if (FormulaSettings.YearBasedRateMult != null)
+            ConfigNode gNode = GeneralSettings.AsConfigNode();
+            if (GeneralSettings.YearBasedRateMult != null)
             {
-                ConfigNode rateNode = fNode.AddNode("YearBasedRateMult");
-                FormulaSettings.YearBasedRateMult.Save(rateNode);
+                ConfigNode rateNode = gNode.AddNode("YearBasedRateMult");
+                GeneralSettings.YearBasedRateMult.Save(rateNode);
             }
-            node.AddNode(fNode);
+            node.AddNode(gNode);
 
             node.AddNode(PartVariables.AsConfigNode());
             return node;
@@ -306,10 +299,6 @@ namespace KerbalConstructionTime
 
             ConfigNode gNode = node.GetNode("KCT_Preset_General");
             ConfigNode.LoadObjectFromConfig(GeneralSettings, gNode);
-            ConfigNode.LoadObjectFromConfig(TimeSettings, node.GetNode("KCT_Preset_Time"));
-
-            ConfigNode fNode = node.GetNode("KCT_Preset_Formula");
-            ConfigNode.LoadObjectFromConfig(FormulaSettings, fNode);
 
             if (node.HasNode("KCT_Preset_Part_Variables"))
                 PartVariables.FromConfigNode(node.GetNode("KCT_Preset_Part_Variables"));
@@ -396,7 +385,7 @@ namespace KerbalConstructionTime
         public double EngineerStartEfficiency = 0.5, GlobalEngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, 
             EngineerMaxEfficiency = 1.0, ResearcherMaxEfficiency = 1.0, GlobalEngineerMaxEfficiency = 1.0,
             EngineerDecayRate = 0.1, GlobalEngineerDecayRate = 0.1, ResearcherDecayRate = 0.1, AdditionalPadCostMult = 0.5d,
-            RushRateMult = 1.5d, RushSalaryMult = 2d, RushEfficMult = 0.985d, RushEfficMin = 0.6d, IdleSalaryMult = 0.25;
+            RushRateMult = 1.5d, RushSalaryMult = 2d, RushEfficMult = 0.985d, RushEfficMin = 0.6d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
@@ -406,11 +395,11 @@ namespace KerbalConstructionTime
         [Persistent]
         public FloatCurve ConstructionRushCost = new FloatCurve();
         [Persistent]
+        public FloatCurve YearBasedRateMult = new FloatCurve();
+        [Persistent]
         public EfficiencyUpgrades EngineerEfficiencyUpgrades = new EfficiencyUpgrades();
         [Persistent]
         public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
-        [Persistent]
-        public double SmallLCExtraFunds = 10000d;
 
         [Persistent]
         public ApplicantsFromContracts ContractApplicants = new ApplicantsFromContracts();
@@ -453,36 +442,6 @@ namespace KerbalConstructionTime
 
             return node;
         }
-    }
-
-    public class KCT_Preset_Time : ConfigNodeStorage
-    {
-        [Persistent]
-        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, MergingTimePenalty = 0.05;
-    }
-
-    public class KCT_Preset_Formula : ConfigNodeStorage
-    {
-        [Persistent]
-        public string NodeFormula = "2^([N]+1) / 86400",
-            EffectivePartFormula = "min([C]/([I] + ([B]*([U]+1))) *[MV]*[PV], [C])",
-            ProceduralPartFormula = "(([C]-[A]) + ([A]*10/max([I],1))) / max([B]*([U]+1),1) *[MV]*[PV]",
-            BPFormula = "([E]^(1/2))*2000*[O]",
-            KSCUpgradeFormula = "([C]^(1/2))*1000*[O]",
-            ReconditioningFormula = "min([M]*[O]*[E], [X])*abs([RE]-[S])",
-            BuildRateFormula = "(([I]+1)*0.05*[N] + max(0.1-[I], 0))*sign(2*[L]-[I]+1)",
-            ConstructionRateFormula = "([N]*0.005)^0.625",
-            InventorySaleFormula = "([V]+[P] / 10000)^(0.5)",    //Gives the TOTAL amount of points, decimals are kept //[V] = inventory value in funds, [P] = Value of all previous sales combined
-            IntegrationTimeFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
-            RolloutCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
-            IntegrationCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
-            RushCostFormula = "[TC]*0.2",
-            AirlaunchCostFormula = "[E]*0.25",
-            AirlaunchTimeFormula = "[BP]*0.25",
-            EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))";    //[RT]=Runtime of used engine
-
-        [Persistent]
-        public FloatCurve YearBasedRateMult = new FloatCurve();
     }
 
     public class KCT_Preset_Part_Variables

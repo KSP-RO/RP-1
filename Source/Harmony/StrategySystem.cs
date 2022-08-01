@@ -1,13 +1,6 @@
 ﻿using HarmonyLib;
-using KSP.UI.Screens;
-using KSP.UI;
 using Strategies;
-using System;
 using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-using System.Reflection;
 using RP0.Programs;
 using UniLinq;
 
@@ -23,10 +16,59 @@ namespace RP0.Harmony
         [HarmonyPatch("GetStrategies")]
         internal static bool Prefix_GetStrategies(StrategySystem __instance, ref string department, ref List<Strategy> __result, ref List<Strategy> ___strategies)
         {
-            if (department != "Programs")
-                return true;
+            var list = new List<Strategy>();
 
-            List<Strategy> list = new List<Strategy>();
+            if (department != "Programs")
+            {
+                // FIXME support other strategy types?
+                for (int i = 0; i < ___strategies.Count; ++i)
+                {
+                    Strategy strat = ___strategies[i];
+                    if (strat.DepartmentName != department)
+                        continue;
+
+                    if (strat.Config is StrategyConfigRP0 cfg)
+                    {
+                        if (cfg.RemoveOnDeactivate
+                            && (StrategyConfigRP0.ActivatedStrategies.Contains(cfg.Name)
+                                || (!string.IsNullOrEmpty(cfg.RemoveOnDeactivateTag) && StrategyConfigRP0.ActivatedStrategies.Contains(cfg.RemoveOnDeactivateTag))))
+                            continue;
+
+                        // Check unlock criteria
+                        if (cfg.UnlockByContractComplete.Count > 0 || cfg.UnlockByProgramComplete.Count > 0)
+                        {
+                            bool skip = true;
+                            foreach (string s in cfg.UnlockByContractComplete)
+                            {
+                                if (ProgramHandler.Instance.CompletedCCContracts.Contains(s))
+                                {
+                                    skip = false;
+                                    break;
+                                }
+                            }
+                            if (skip)
+                            {
+                                foreach (string s in cfg.UnlockByProgramComplete)
+                                {
+                                    if (ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == s) != null)
+                                    {
+                                        skip = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (skip)
+                                continue;
+                        }
+                    }
+
+                    list.Add(strat);
+                }
+
+                __result = list;
+                return false;
+            }
 
             // Cache what programs can be accepted (and which have been completed)
             // We don't care about confidence thresholds because you can always accept at Slow speed
@@ -105,6 +147,28 @@ namespace RP0.Harmony
             _activeStrats.Clear();
             __result = false;
             return false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("OnSave")]
+        internal static void Postfix_OnSave(StrategySystem __instance, ConfigNode gameNode)
+        {
+            ConfigNode node = gameNode.AddNode("EVERACTIVATED");
+            foreach (string s in StrategyConfigRP0.ActivatedStrategies)
+                node.AddValue("strategy", s);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("OnLoad")]
+        internal static void Postfix_OnLoad(StrategySystem __instance, ConfigNode gameNode)
+        {
+            StrategyConfigRP0.ActivatedStrategies.Clear();
+            ConfigNode node = gameNode.GetNode("EVERACTIVATED");
+            if (node != null)
+            {
+                foreach (ConfigNode.Value v in node.values)
+                    StrategyConfigRP0.ActivatedStrategies.Add(v.value);
+            }
         }
     }
 }

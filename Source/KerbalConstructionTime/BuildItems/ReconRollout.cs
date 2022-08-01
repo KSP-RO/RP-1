@@ -75,7 +75,7 @@ namespace KerbalConstructionTime
             {
                 var blv = new BuildListVessel(vessel);
                 IsHumanRated = blv.IsHumanRated;
-                BP = MathParser.GetReconditioningBP(blv);
+                BP = Formula.GetReconditioningBP(blv);
                 VesselBP = blv.BuildPoints + blv.IntegrationPoints;
             }
             catch
@@ -105,21 +105,21 @@ namespace KerbalConstructionTime
             switch (type)
             {
                 case RolloutReconType.Reconditioning:
-                    BP = MathParser.GetReconditioningBP(vessel);
+                    BP = Formula.GetReconditioningBP(vessel);
                     break;
 
                 case RolloutReconType.Rollout:
                 case RolloutReconType.Rollback:
-                    BP = MathParser.GetRolloutBP(vessel);
+                    BP = Formula.GetRolloutBP(vessel);
                     break;
 
                 case RolloutReconType.Recovery:
-                    BP = vessel.FacilityBuiltIn == EditorFacility.SPH ? MathParser.GetRecoveryBPSPH(vessel) : MathParser.GetRecoveryBPVAB(vessel);
+                    BP = vessel.FacilityBuiltIn == EditorFacility.SPH ? Formula.GetRecoveryBPSPH(vessel) : Formula.GetRecoveryBPVAB(vessel);
                     break;
             }
 
             if (type == RolloutReconType.Rollout)
-                Cost = MathParser.GetRolloutCost(vessel);
+                Cost = Formula.GetRolloutCost(vessel);
             else if (type == RolloutReconType.Rollback)
                 Progress = BP;
             else if (type == RolloutReconType.Recovery)

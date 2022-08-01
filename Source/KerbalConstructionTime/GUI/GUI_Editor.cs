@@ -199,7 +199,7 @@ namespace KerbalConstructionTime
                 // If ship is finished, then both build and integration times can be refreshed with newly calculated values
                 _finishedShipBP = Utilities.GetVesselBuildPoints(ship.ExtractedPartNodes);
                 ship.BuildPoints = _finishedShipBP;
-                ship.IntegrationPoints = MathParser.GetIntegrationBP(ship);
+                ship.IntegrationPoints = Formula.GetIntegrationBP(ship);
             }
 
             Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);

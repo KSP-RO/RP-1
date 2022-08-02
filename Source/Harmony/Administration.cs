@@ -351,7 +351,7 @@ namespace RP0.Harmony
             if (state == "cancel")
             {
                 var leader = __instance.SelectedWrapper.strategy;
-                double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated));
+                double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, Math.Pow(UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated), 2.5d));
                 string reappointStr = leader.Config is StrategyConfigRP0 cfg && cfg.RemoveOnDeactivate 
                     ? cfg.ReactivateCooldown > 0
                         ? $"\n\n{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"

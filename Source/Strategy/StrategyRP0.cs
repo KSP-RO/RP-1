@@ -15,6 +15,9 @@ namespace RP0
 
         public StrategyConfigRP0 ConfigRP0 { get; protected set; }
 
+        protected double dateDeactivated;
+        public double DateDeactivated => dateDeactivated;
+
         public virtual void OnSetupConfig()
         {
             ConfigRP0 = Config as StrategyConfigRP0;
@@ -31,6 +34,16 @@ namespace RP0
         //    reason = string.Empty;
         //    return true;
         //}
+
+        protected override void OnLoad(ConfigNode node)
+        {
+            node.TryGetValue("dateDeactivated", ref dateDeactivated);
+        }
+
+        protected override void OnSave(ConfigNode node)
+        {
+            node.AddValue("dateDeactivated", dateDeactivated.ToString("G17"));
+        }
 
         protected override bool CanActivate(ref string reason)
         {
@@ -50,9 +63,6 @@ namespace RP0
         protected override void OnRegister()
         {
             base.OnRegister();
-            StrategyConfigRP0.ActivatedStrategies.Add(ConfigRP0.Name);
-            if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
-                StrategyConfigRP0.ActivatedStrategies.Add(ConfigRP0.RemoveOnDeactivateTag);
         }
 
         public virtual bool ActivateOverride()
@@ -63,6 +73,11 @@ namespace RP0
             isActive.SetValue(this, true);
             Register();
             dateActivated.SetValue(this, KSPUtils.GetUT());
+            
+            dateDeactivated = -1d;
+            StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = -1d;
+            if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
+                StrategyConfigRP0.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = -1d;
 
             CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
@@ -77,6 +92,13 @@ namespace RP0
                 return false;
 
             isActive.SetValue(this, false);
+            
+            dateDeactivated = KSPUtils.GetUT();
+            StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = dateDeactivated;
+            if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
+                StrategyConfigRP0.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = dateDeactivated; // will stomp the previous one.
+
+
             Unregister();
             CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.EndCosts, true);
 
@@ -97,7 +119,12 @@ namespace RP0
                 text += Localizer.Format("#autoLOC_304559", Description);
 
             if (extendedInfo && ConfigRP0.RemoveOnDeactivate)
-                text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}</color>\n\n";
+            {
+                if (ConfigRP0.ReactivateCooldown > 0d)
+                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(ConfigRP0.ReactivateCooldown, false))}</color>\n\n";
+                else
+                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}</color>\n\n";
+            }
 
             text += RichTextUtil.Title(Localizer.GetStringByTag("#autoLOC_304560"));
 
@@ -120,7 +147,9 @@ namespace RP0
                         if (GameSettings.SHOW_DEADLINES_AS_DATES)
                             text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
                         else
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveIn"), KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
+                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveIn"), 
+                                extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
+                                : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
                     }
                 }
                 if (LongestDuration > 0)
@@ -128,18 +157,24 @@ namespace RP0
                     if (GameSettings.SHOW_DEADLINES_AS_DATES)
                         text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
                     else
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresIn"), KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
+                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresIn"), 
+                            extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration, false, false)
+                            : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
                 }
             }
             else
             {
                 if (LeastDuration > 0)
                 {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveAfter"), KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
+                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveAfter"),
+                        extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
+                            : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
                 }
                 if (LongestDuration > 0)
                 {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresAfter"), KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
+                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresAfter"),
+                        extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration, false, false)
+                            : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
                 }
             }
 

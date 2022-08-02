@@ -134,7 +134,7 @@ namespace KerbalConstructionTime
             if (index > 0)
                 return 0d;
 
-            double rate = Personnel > 0 ? 1 + Personnel * 0.1d : 0.001d;
+            double rate = Personnel > 0 ? 1 + Personnel * 0.075d : 0.001d;
             const double yearToSec = 1d / (86400d * 365d);
             return rate * yearToSec;
         }

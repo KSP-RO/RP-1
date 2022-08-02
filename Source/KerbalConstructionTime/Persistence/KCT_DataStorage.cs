@@ -21,7 +21,6 @@ namespace KerbalConstructionTime
         [Persistent] public bool DisableFailuresInSim = true;
         [Persistent] public int Researchers;
         [Persistent] public int UnassignedPersonnel;
-        [Persistent] public double EfficiencyResearchers = 0.25d;
         [Persistent] public double EfficiencyEngineers = 0.25d;
         [Persistent] public double LastEngineers = 0d;
         [Persistent] public double LastResearchers = 0d;
@@ -39,7 +38,6 @@ namespace KerbalConstructionTime
             KCTGameStates.IsSimulatedFlight = IsSimulation;
             KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
             KCTGameStates.Researchers = Researchers;
-            KCTGameStates.EfficiencyResearchers = EfficiencyResearchers;
             KCTGameStates.EfficiencyEngineers = EfficiencyEngineers;
             KCTGameStates.UnassignedPersonnel = UnassignedPersonnel;
             KCTGameStates.LastEngineers = LastEngineers;
@@ -79,7 +77,6 @@ namespace KerbalConstructionTime
             DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
             Researchers = KCTGameStates.Researchers;
             UnassignedPersonnel = KCTGameStates.UnassignedPersonnel;
-            EfficiencyResearchers = KCTGameStates.EfficiencyResearchers;
             EfficiencyEngineers = KCTGameStates.EfficiencyEngineers;
             LastResearchers = KCTGameStates.LastResearchers;
             LastEngineers = KCTGameStates.LastEngineers;

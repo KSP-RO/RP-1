@@ -779,14 +779,6 @@ namespace KerbalConstructionTime
                     else if (KCTGameStates.LastEngineers > totalEngineers)
                         KCTGameStates.LastEngineers = Math.Max(totalEngineers, KCTGameStates.LastEngineers * (1d - PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerDecayRate * timestep / 86400d));
 
-                    if (techCount > 0 && KCTGameStates.Researchers > 0)
-                    {
-                        double max = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherMaxEfficiency;
-                        double eval = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherSkillupRate.Evaluate((float)KCTGameStates.EfficiencyResearchers);
-                        double delta = eval * UTDiff / (365.25d * 86400d);
-                        //KCTDebug.Log($"For Researchers, effic {KCTGameStates.EfficiencyRDPersonnel}. Max {max}. Curve eval {eval}. So delta {delta}");
-                        KCTGameStates.EfficiencyResearchers = Math.Min(max, KCTGameStates.EfficiencyResearchers + delta);
-                    }
                     if (KCTGameStates.LastResearchers < KCTGameStates.Researchers)
                         KCTGameStates.LastResearchers = KCTGameStates.Researchers;
                     else if (KCTGameStates.LastResearchers > KCTGameStates.Researchers)

@@ -359,7 +359,7 @@ namespace KerbalConstructionTime
 
         public static double GetResearcherEfficiencyMultipliers()
         {
-            return KCTGameStates.EfficiencyResearchers * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
+            return PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
@@ -2218,8 +2218,6 @@ namespace KerbalConstructionTime
 
         public static void ChangeResearchers(int delta)
         {
-            KCTGameStates.EfficiencyResearchers = PredictEfficiencyResearchers(delta);
-
             KCTGameStates.Researchers += delta;
             KCTEvents.OnPersonnelChange.Fire();
             KCTEvents.OnRP0MaintenanceChanged.Fire();
@@ -2245,17 +2243,6 @@ namespace KerbalConstructionTime
                     / (KCTGameStates.LastEngineers + correctedDelta));
 
             return KCTGameStates.EfficiencyEngineers;
-        }
-
-        public static double PredictEfficiencyResearchers(int delta)
-        {
-            double correctedDelta = KCTGameStates.Researchers + delta - KCTGameStates.LastResearchers;
-            if (correctedDelta > 0)
-                return Math.Min(KCTGameStates.EfficiencyResearchers,
-                    ((KCTGameStates.LastResearchers * KCTGameStates.EfficiencyResearchers) + (correctedDelta * PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherStartEfficiency))
-                    / (KCTGameStates.LastResearchers + correctedDelta));
-
-            return KCTGameStates.EfficiencyResearchers;
         }
 
         private const double MaxSecondsForDayDisplay = 7d * 86400d;

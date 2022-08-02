@@ -376,16 +376,13 @@ namespace KerbalConstructionTime
         [Persistent]
         public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
         [Persistent]
-        public double EngineerStartEfficiency = 0.5, GlobalEngineerStartEfficiency = 0.5, ResearcherStartEfficiency = 0.5, 
-            EngineerMaxEfficiency = 1.0, ResearcherMaxEfficiency = 1.0, GlobalEngineerMaxEfficiency = 1.0,
+        public double EngineerStartEfficiency = 0.5, GlobalEngineerStartEfficiency = 0.5, EngineerMaxEfficiency = 1.0, GlobalEngineerMaxEfficiency = 1.0,
             EngineerDecayRate = 0.1, GlobalEngineerDecayRate = 0.1, ResearcherDecayRate = 0.1, AdditionalPadCostMult = 0.5d,
             RushRateMult = 1.5d, RushSalaryMult = 2d, RushEfficMult = 0.985d, RushEfficMin = 0.6d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
         public FloatCurve GlobalEngineerSkillupRate = new FloatCurve();
-        [Persistent]
-        public FloatCurve ResearcherSkillupRate = new FloatCurve();
         [Persistent]
         public FloatCurve ConstructionRushCost = new FloatCurve();
         [Persistent]

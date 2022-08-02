@@ -17,6 +17,25 @@ namespace RP0.Harmony
     internal class PatchStrategySystemConfig
     {
         [HarmonyPostfix]
+        [HarmonyPatch("LoadDepartmentConfigs")]
+        internal static void Postfix_LoadDepartmentConfigs(StrategySystemConfig __instance)
+        {
+            DepartmentConfig dep = null;
+            for (int i = __instance.Departments.Count; i-- > 0;)
+            {
+                var d = __instance.Departments[i];
+                if (d.Name == "Programs")
+                {
+                    dep = d;
+                    __instance.Departments.RemoveAt(i);
+                    break;
+                }
+            }
+            if (dep != null)
+                __instance.Departments.Insert(0, dep);
+        }
+
+        [HarmonyPostfix]
         [HarmonyPatch("LoadStrategyConfigs")]
         internal static void Postfix_LoadStrategyConfigs(StrategySystemConfig __instance)
         {

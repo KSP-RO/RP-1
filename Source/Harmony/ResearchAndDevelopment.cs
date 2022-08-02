@@ -7,32 +7,40 @@ using System.Reflection;
 
 namespace RP0.Harmony
 {
-    [HarmonyPatch]
-    internal class PatchRnDVesselRecovery
-    {
-        static MethodBase TargetMethod() => AccessTools.Method(typeof(ResearchAndDevelopment), "reverseEngineerRecoveredVessel", new Type[] { typeof(ProtoVessel), typeof(MissionRecoveryDialog) });
-
-        [HarmonyPrefix]
-        internal static void Prefix(ref MissionRecoveryDialog mrDialog, out float __state)
-        {
-            mrDialog = null; // will prevent the widget being added.
-
-            // store old science gain mult, then set to 0 so no actual science gain
-            __state = HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier;
-            HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier = 0;
-        }
-
-        [HarmonyPostfix]
-        internal static void Postfix(float __state)
-        {
-            // restore old science gain mult
-            HighLogic.CurrentGame.Parameters.Career.ScienceGainMultiplier = __state;
-        }
-    }
-
-    [HarmonyPatch(typeof(ResearchAndDevelopment))]
+   [HarmonyPatch(typeof(ResearchAndDevelopment))]
     internal class PatchRnD
     {
+        [HarmonyPrefix]
+        [HarmonyPatch("reverseEngineerPartsFrom")]
+        internal static bool Prefix_reverseEngineerPartsFrom(ResearchAndDevelopment __instance, List<string> fromCBs, List<string> ignoreCBs, ref float subValue, string idVerb, string returnedFrom)
+        {
+            bool isHome = fromCBs.Count == 1 && fromCBs[0] == FlightGlobals.GetHomeBodyName();
+            if (isHome)
+            {
+                switch (idVerb)
+                {
+                    case "Orbited":     subValue = 10f; break; // stock: 10f
+                    case "SubOrbited":  subValue = 8f; break; // stock: 8f
+                    case "Flew":
+                        // TODO: Do something where we check if you went above the Karman line
+                        // stock: 5f
+                        return false;
+                }
+            }
+            else
+            {
+                switch (idVerb)
+                {
+                    case "Surfaced":    subValue = 15f; break; // was 15f;
+                    case "Flew":        subValue = 12f; break; // was 12f;
+                    case "SubOrbited":  subValue = 10f; break; // was 10f;
+                    case "Orbited":     subValue = 8f; break; // was 8f;
+                    case "FlewBy":      subValue = 6f; break; // was 6f;
+                }
+            }
+            return true;
+        }
+
         [HarmonyPrefix]
         [HarmonyPatch("AddScience")]
         internal static bool Prefix_AddScience(ResearchAndDevelopment __instance, float value, TransactionReasons reason, ref float ___science)

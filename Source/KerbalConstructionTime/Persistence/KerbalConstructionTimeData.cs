@@ -99,7 +99,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.SciPointsTotal = -1;
                 KCTGameStates.UnassignedPersonnel = 0;
                 KCTGameStates.Researchers = 0;
-                KCTGameStates.EfficiencyResearchers = 0.25d;
                 KCTGameStates.EfficiencyEngineers = 0.25d;
                 KCTGameStates.LastEngineers = 0d;
                 KCTGameStates.LastResearchers = 0d;

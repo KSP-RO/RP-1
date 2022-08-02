@@ -14,7 +14,6 @@ namespace RP0
         public int numEngineers;
         public int numResearchers;
         public double efficiencyEngineers;
-        public double efficiencyResearchers;
         public int numNautsKilled;
         public double currentFunds;
         public double currentSci;
@@ -44,7 +43,6 @@ namespace RP0
                 $"{nameof(numEngineers)}: {numEngineers}, " +
                 $"{nameof(numResearchers)}: {numResearchers}, " +
                 $"{nameof(efficiencyEngineers)}: {efficiencyEngineers}, " +
-                $"{nameof(efficiencyResearchers)}: {efficiencyResearchers}, " +
                 $"{nameof(numNautsKilled)}: {numNautsKilled}, " +
                 $"{nameof(currentFunds)}: {currentFunds}, " +
                 $"{nameof(currentSci)}: {currentSci}, " +

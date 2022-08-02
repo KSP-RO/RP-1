@@ -60,9 +60,6 @@
         public int NumResearchers;
 
         [Persistent]
-        public double EfficiencyResearchers;
-
-        [Persistent]
         public double EfficiencyEngineers;
 
         [Persistent]

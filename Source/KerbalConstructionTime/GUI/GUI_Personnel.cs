@@ -170,8 +170,9 @@ namespace KerbalConstructionTime
             double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(freeDelta) : KCTGameStates.EfficiencyEngineers;
             double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
             double stratMult = currentLC.StrategyRateMultiplier;
+            const string efficTooltip = "Adding new engineers here will temporarily lower local efficiency.\nHiring new engineers will temporarily lower global efficiency.";
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2} (tech)");
+            GUILayout.Label(new GUIContent($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2} (tech)", efficTooltip));
             GUILayout.EndHorizontal();
 
             double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * techMult * stratMult;
@@ -260,14 +261,13 @@ namespace KerbalConstructionTime
             else if (_currentPersonnelHover == PersonnelButtonHover.Fire)
                 delta = -fireAmount;
 
-            double effic = Utilities.PredictEfficiencyResearchers(delta);
             double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
 
             _nodeRate = Formula.GetResearchRate(0, 0, delta);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
-            double sciPerDayEffic = sciPerDay * effic * techMult;
+            double sciPerDayEffic = sciPerDay * techMult;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Rate: ", GetLabelRightAlignStyle());
             //bool usingPerYear = false;
@@ -286,8 +286,9 @@ namespace KerbalConstructionTime
 
             
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Efficiency:");
-            GUILayout.Label($"{effic:P1} (global) x {techMult:N2} (tech)", GetLabelRightAlignStyle());
+            const string researcherEfficTooltip = "Researching new Electronics Research nodes will increase this";
+            GUILayout.Label(new GUIContent("Efficiency:", researcherEfficTooltip));
+            GUILayout.Label(new GUIContent($"{techMult:P2}", researcherEfficTooltip), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -295,7 +296,7 @@ namespace KerbalConstructionTime
             {
                 TechItem t = KCTGameStates.TechList[0];
                 GUILayout.Label($"Current Research: {t.TechName}");
-                double techRate = Formula.GetResearchRate(t.ScienceCost, 0, delta) * effic * t.YearBasedRateMult;
+                double techRate = Formula.GetResearchRate(t.ScienceCost, 0, delta) * techMult * t.YearBasedRateMult;
                 double timeLeft = (t.ScienceCost - t.Progress) / techRate;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }

@@ -29,8 +29,6 @@ namespace KerbalConstructionTime
         //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int UnassignedPersonnel = 0;
         public static int Researchers = 0;
-        private const double StartingEfficiencyResearchers = 0.25d;
-        public static double EfficiencyResearchers = StartingEfficiencyResearchers;
         public static double LastResearchers = 0;
         private const double StartingEfficiencyEngineers = 0.25d;
         public static double EfficiencyEngineers = StartingEfficiencyEngineers;
@@ -98,7 +96,6 @@ namespace KerbalConstructionTime
 
             UnassignedPersonnel = 0;
             Researchers = 0;
-            EfficiencyResearchers = StartingEfficiencyResearchers;
             LastResearchers = 0;
             EfficiencyEngineers = StartingEfficiencyEngineers;
             LastEngineers = 0;

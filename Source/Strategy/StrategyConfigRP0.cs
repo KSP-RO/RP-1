@@ -7,7 +7,7 @@ namespace RP0
 {
     public class StrategyConfigRP0 : StrategyConfig
     {
-        public static HashSet<string> ActivatedStrategies = new HashSet<string>();
+        public static Dictionary<string, double> ActivatedStrategies = new Dictionary<string, double>();
 
         [Persistent]
         protected string iconDepartment;
@@ -43,6 +43,10 @@ namespace RP0
         [Persistent]
         protected string removeOnDeactivateTag;
         public string RemoveOnDeactivateTag => removeOnDeactivateTag;
+
+        [Persistent]
+        protected double reactivateCooldown;
+        public double ReactivateCooldown => reactivateCooldown;
 
         // Will be called by transpiler of stock StrategyConfig.Create()
         protected static StrategyConfig NewBaseConfig() { return new StrategyConfigRP0(); }

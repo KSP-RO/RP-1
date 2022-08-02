@@ -27,12 +27,25 @@ namespace RP0.Harmony
                     if (strat.DepartmentName != department)
                         continue;
 
-                    if (strat.Config is StrategyConfigRP0 cfg)
+                    if (strat.Config is StrategyConfigRP0 cfg && strat is StrategyRP0 stratR)
                     {
-                        if (cfg.RemoveOnDeactivate
-                            && (StrategyConfigRP0.ActivatedStrategies.Contains(cfg.Name)
-                                || (!string.IsNullOrEmpty(cfg.RemoveOnDeactivateTag) && StrategyConfigRP0.ActivatedStrategies.Contains(cfg.RemoveOnDeactivateTag))))
-                            continue;
+                        if (cfg.RemoveOnDeactivate)
+                        {
+                            double nameDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.Name);
+                            double tagDeactivate = 0d;
+                            if (!string.IsNullOrEmpty(cfg.RemoveOnDeactivateTag))
+                                tagDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.RemoveOnDeactivateTag);
+
+                            // we are skipping the case where the strategy or its tag is active, but 
+                            // groupTags will take care of that.
+                            double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
+                            if (lastActive > 0d)
+                            {
+                                if (cfg.ReactivateCooldown == 0d || stratR.DateDeactivated + cfg.ReactivateCooldown > KSPUtils.GetUT())
+                                    continue;
+                            }
+                        }
+
 
                         // Check unlock criteria
                         if (cfg.UnlockByContractComplete.Count > 0 || cfg.UnlockByProgramComplete.Count > 0)
@@ -153,9 +166,9 @@ namespace RP0.Harmony
         [HarmonyPatch("OnSave")]
         internal static void Postfix_OnSave(StrategySystem __instance, ConfigNode gameNode)
         {
-            ConfigNode node = gameNode.AddNode("EVERACTIVATED");
-            foreach (string s in StrategyConfigRP0.ActivatedStrategies)
-                node.AddValue("strategy", s);
+            ConfigNode node = gameNode.AddNode("DEACTIVATIONDATES");
+            foreach (var kvp in StrategyConfigRP0.ActivatedStrategies)
+                node.AddValue(kvp.Key, kvp.Value.ToString("G17"));
         }
 
         [HarmonyPostfix]
@@ -163,11 +176,11 @@ namespace RP0.Harmony
         internal static void Postfix_OnLoad(StrategySystem __instance, ConfigNode gameNode)
         {
             StrategyConfigRP0.ActivatedStrategies.Clear();
-            ConfigNode node = gameNode.GetNode("EVERACTIVATED");
+            ConfigNode node = gameNode.GetNode("DEACTIVATIONDATES");
             if (node != null)
             {
                 foreach (ConfigNode.Value v in node.values)
-                    StrategyConfigRP0.ActivatedStrategies.Add(v.value);
+                    StrategyConfigRP0.ActivatedStrategies.Add(v.name, double.Parse(v.value));
             }
         }
     }

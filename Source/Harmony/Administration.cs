@@ -352,7 +352,11 @@ namespace RP0.Harmony
             {
                 var leader = __instance.SelectedWrapper.strategy;
                 double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated));
-                string reappointStr = leader.Config is StrategyConfigRP0 cfg && cfg.RemoveOnDeactivate ? $"\n\n{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}" : string.Empty;
+                string reappointStr = leader.Config is StrategyConfigRP0 cfg && cfg.RemoveOnDeactivate 
+                    ? cfg.ReactivateCooldown > 0
+                        ? $"\n\n{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"
+                        : $"\n\n{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}"
+                    : string.Empty;
                 string message = cost > 0
                     ? Localizer.Format("#rp0LeaderRemoveConfirmWithCost", 
                         CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -cost, 0d, 0d).GetCostLineOverride(true),

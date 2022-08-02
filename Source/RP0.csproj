@@ -130,7 +130,6 @@
     <Compile Include="Programs\ProgramSpeedListItem.cs" />
     <Compile Include="Programs\AdminExtender.cs" />
     <Compile Include="Programs\ProgramStrategy.cs" />
-    <Compile Include="Programs\StrategySystemFixer.cs" />
     <Compile Include="Programs\PredicateBuilder.cs" />
     <Compile Include="Programs\Program.cs" />
     <Compile Include="Programs\ProgramHandler.cs" />

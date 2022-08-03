@@ -87,6 +87,11 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilityDespawn.Add(HideAdminGUI);
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
             GameEvents.Contract.onAccepted.Add(OnContractAccept);
+
+            if (CompletedCCContracts == null)
+                CompletedCCContracts = new HashSet<string>();
+            else
+                CompletedCCContracts.Clear();
         }
 
         public void OnDestroy()
@@ -94,26 +99,6 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilitySpawn.Remove(ShowAdminGUI);
             GameEvents.onGUIAdministrationFacilityDespawn.Remove(HideAdminGUI);
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
-        }
-
-        private IEnumerator FillCompletedContracts()
-        {
-            CompletedCCContracts.Clear();
-
-            yield return null;
-            yield return null;
-            yield return null;
-            yield return null;
-
-            var allCCs = ContractSystem.Instance?.GetCompletedContracts<ConfiguredContract>();
-            if (allCCs == null)
-                yield break;
-
-            foreach (var cc in allCCs)
-            {
-                if (cc?.contractType is var cType)
-                    CompletedCCContracts.Add(cType.name);
-            }
         }
 
         public override void OnLoad(ConfigNode node)
@@ -169,8 +154,6 @@ namespace RP0.Programs
                     DisableProgram(s);
                 }
             }
-
-            StartCoroutine(FillCompletedContracts());
         }
 
         public override void OnSave(ConfigNode node)

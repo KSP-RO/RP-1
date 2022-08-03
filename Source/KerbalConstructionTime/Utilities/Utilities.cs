@@ -2093,7 +2093,9 @@ namespace KerbalConstructionTime
                 }
             }
 
-            double ecmCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList);
+            double ecmCost = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RnDPartPurchase, -RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList));
+
+            runningCost = -(float)RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RnDPartPurchase, -runningCost);
 
             List<string> techList = SortAndFilterTechListForFinalNodes(pendingTech);
             float totalCost = runningCost + Convert.ToSingle(ecmCost);

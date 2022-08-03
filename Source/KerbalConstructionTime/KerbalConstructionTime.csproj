@@ -135,6 +135,7 @@
     <Compile Include="KCTObservableList.cs" />
     <Compile Include="SceneAddons\MainMenuAddon.cs" />
     <Compile Include="SimulationParams.cs" />
+    <Compile Include="Utilities\ECMHelper.cs" />
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="BuildItems\IKCTBuildItem.cs" />
     <Compile Include="InstallChecker.cs" />

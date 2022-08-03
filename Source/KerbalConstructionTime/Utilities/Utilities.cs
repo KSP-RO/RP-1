@@ -2133,7 +2133,7 @@ namespace KerbalConstructionTime
 
             // filter the ship parts list to those parts that are not already purchased
             IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> purchasableParts = GetPartsWithPurchasability(ship.Parts).Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable || kvp.Value.Status == PurchasabilityStatus.Unavailable);
-            List<string> ecmPartsList = new List<string>();
+            HashSet<string> ecmPartsList = new HashSet<string>();
             float runningCost = 0;
 
             // compare the part specified entry cost to the ECM database
@@ -2144,9 +2144,7 @@ namespace KerbalConstructionTime
                 if (rawCost == ecmEstCost)
                 {
                     // this part is managed by the ECM, save its name later for a batch request
-                    string sanitizedName = RealFuels.Utilities.SanitizeName(part.name);
-                    if (!ecmPartsList.Contains(sanitizedName)) 
-                        ecmPartsList.Add(sanitizedName);
+                    ecmPartsList.Add(part.name);
                 }
                 else
                 {
@@ -2162,24 +2160,42 @@ namespace KerbalConstructionTime
             // now back through the list looking for upgrades to add to our batch list
             foreach (Part p in ship.Parts)
             {
-                var mecs = p.FindModulesImplementing<RealFuels.ModuleEngineConfigsBase>();
-                foreach (RealFuels.ModuleEngineConfigsBase mec in mecs)
+                foreach (PartModule pm in p.Modules)
                 {
-                    string sanitizedName = RealFuels.Utilities.SanitizeName(mec.configuration);
-                    if (ecmPartsList.Contains(sanitizedName))
-                        continue;
-                    
-                    ecmPartsList.Add(sanitizedName);
-                    ConfigNode n = mec.configs.Find(c => c.GetValue("name") == mec.configuration);
-                    if (n != null)
+                    var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
+                    var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
+                    if (mi != null)
                     {
-                        string techRequired = n.GetValue("techRequired");
-                        if (techRequired == null) continue;
+                        var parameters = new object[] { null, null, null, null };
+                        bool allSucceeded;
+                        try
+                        {
+                            allSucceeded = (bool)mi.Invoke(pm, parameters);
+                        }
+                        catch (Exception ex)
+                        {
+                            KCTDebug.LogError($"Config validation failed for {p.name}");
+                            Debug.LogException(ex);
+                            allSucceeded = false;
+                            parameters[0] = "error occurred, check the logs";
+                            parameters[1] = false;
+                            parameters[2] = 0f;
+                            parameters[3] = string.Empty;
+                        }
 
-                        ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(techRequired);
-                        bool techIsUnlocked = techState != null && techState.state == RDTech.State.Available;
-                        if (!techIsUnlocked) 
-                            pendingTech.Add(techRequired);
+                        if (allSucceeded)
+                            continue;   // if validate passed, this partmodule is already unlocked and purchased, nothing to do
+
+                        bool CanBeResolved = (bool)parameters[1];
+                        float CostToResolve = (float)parameters[2];
+                        string techName = (string)parameters[3];
+                        if (!string.IsNullOrEmpty(techName))
+                            pendingTech.Add(techName);
+
+                        // use a helper to get the ECM name, each PartModule type stores it differently
+                        string ecmName = ECMHelper.GetEcmNameFromPartModule(pm);
+                        if (!string.IsNullOrEmpty(ecmName))
+                            ecmPartsList.Add(ecmName);
                     }
                 }
             }
@@ -2217,6 +2233,9 @@ namespace KerbalConstructionTime
 
             return slist.Values.ToList();
         }
+
+ 
+
 
         public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<Part> parts)
         {

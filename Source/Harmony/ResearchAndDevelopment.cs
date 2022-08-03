@@ -7,23 +7,22 @@ using System.Reflection;
 
 namespace RP0.Harmony
 {
-   [HarmonyPatch(typeof(ResearchAndDevelopment))]
+    [HarmonyPatch(typeof(ResearchAndDevelopment))]
     internal class PatchRnD
     {
         [HarmonyPrefix]
         [HarmonyPatch("reverseEngineerPartsFrom")]
-        internal static bool Prefix_reverseEngineerPartsFrom(ResearchAndDevelopment __instance, List<string> fromCBs, List<string> ignoreCBs, ref float subValue, string idVerb, string returnedFrom)
+        internal static bool Prefix_reverseEngineerPartsFrom(ResearchAndDevelopment __instance, List<string> fromCBs, List<string> ignoreCBs, ref float subValue, string idVerb, string returnedFrom, ref List<ScienceSubject> __result)
         {
             bool isHome = fromCBs.Count == 1 && fromCBs[0] == FlightGlobals.GetHomeBodyName();
             if (isHome)
             {
                 switch (idVerb)
                 {
-                    case "Orbited":     subValue = 10f; break; // stock: 10f
-                    case "SubOrbited":  subValue = 8f; break; // stock: 8f
-                    case "Flew":
-                        // TODO: Do something where we check if you went above the Karman line
-                        // stock: 5f
+                    case "Orbited": subValue = 8f; break; // stock: 10f
+                    case "SubOrbited": subValue = 5f; break; // stock: 8f
+                    case "Flew": //subValue = 3f; break; // stock: 5f -- TODO: Do something where we check if you went above the Karman line
+                        __result = new List<ScienceSubject>();
                         return false;
                 }
             }
@@ -31,11 +30,13 @@ namespace RP0.Harmony
             {
                 switch (idVerb)
                 {
-                    case "Surfaced":    subValue = 15f; break; // was 15f;
-                    case "Flew":        subValue = 12f; break; // was 12f;
-                    case "SubOrbited":  subValue = 10f; break; // was 10f;
-                    case "Orbited":     subValue = 8f; break; // was 8f;
-                    case "FlewBy":      subValue = 6f; break; // was 6f;
+                    case "Surfaced": subValue = 12f; break; // was 15f;
+                    case "Flew": subValue = 10f; break; // was 12f;
+                    case "SubOrbited": //subValue = 10f; break; // was 10f;
+                        __result = new List<ScienceSubject>();
+                        return false;
+                    case "Orbited": subValue = 8f; break; // was 8f;
+                    case "FlewBy": subValue = 6f; break; // was 6f;
                 }
             }
             return true;

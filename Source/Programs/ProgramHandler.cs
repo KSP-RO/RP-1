@@ -99,6 +99,7 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilitySpawn.Remove(ShowAdminGUI);
             GameEvents.onGUIAdministrationFacilityDespawn.Remove(HideAdminGUI);
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
+            GameEvents.Contract.onAccepted.Remove(OnContractAccept);
         }
 
         public override void OnLoad(ConfigNode node)

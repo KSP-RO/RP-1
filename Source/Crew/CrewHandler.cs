@@ -31,10 +31,6 @@ namespace RP0.Crew
             return true;
         }
 
-        public const double UpdateInterval = 3600;
-        public const int FlightLogUpdateInterval = 50;
-        public const int KarmanAltitude = 100000;
-
         public static CrewHandler Instance { get; private set; } = null;
         public static CrewHandlerSettings Settings { get; private set; } = null;
 
@@ -52,9 +48,7 @@ namespace RP0.Crew
         private List<TrainingExpiration> _expireTimes = new List<TrainingExpiration>();
         private bool _isFirstLoad = true;    // true if it's a freshly started career
         private bool _inAC = false;
-        private int _flightLogUpdateCounter = 0;
         private int _countAvailable, _countAssigned, _countKIA;
-        private Dictionary<Guid, double> _vesselAltitudes = new Dictionary<Guid, double>();
         private AstronautComplex _astronautComplex = null;
         private FieldInfo _cliTooltip;
 
@@ -279,12 +273,6 @@ namespace RP0.Crew
             {
                 _isFirstLoad = false;
                 ProcessFirstLoad();
-            }
-
-            if (HighLogic.LoadedSceneIsFlight && _flightLogUpdateCounter++ >= FlightLogUpdateInterval)
-            {
-                _flightLogUpdateCounter = 0;
-                UpdateFlightLog();
             }
 
             if (_inAC)
@@ -708,38 +696,6 @@ namespace RP0.Crew
                                              "OK",
                                              false,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
-            }
-        }
-
-        private void UpdateFlightLog()
-        {
-            if (!FlightGlobals.currentMainBody.isHomeWorld) return;
-
-            foreach (Vessel v in FlightGlobals.VesselsLoaded)
-            {
-                if (v.crewedParts == 0) continue;
-
-                if (!_vesselAltitudes.TryGetValue(v.id, out double prevAltitude))
-                {
-                    prevAltitude = v.altitude;
-                }
-                _vesselAltitudes[v.id] = v.altitude;
-
-                if (prevAltitude < Settings.flightHighAltitude && v.altitude >= Settings.flightHighAltitude)
-                {
-                    foreach (ProtoCrewMember c in v.GetVesselCrew())
-                    {
-                        c.flightLog.AddEntryUnique(new FlightLog.Entry(c.flightLog.Flight, Situation_FlightHigh, v.mainBody.name));
-                    }
-                }
-
-                if (prevAltitude < KarmanAltitude && v.altitude >= KarmanAltitude)
-                {
-                    foreach (ProtoCrewMember c in v.GetVesselCrew())
-                    {
-                        c.flightLog.AddEntryUnique(FlightLog.EntryType.Suborbit, v.mainBody.name);
-                    }
-                }
             }
         }
 

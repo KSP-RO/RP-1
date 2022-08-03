@@ -72,6 +72,7 @@
     <Compile Include="Harmony\MissionControl.cs" />
     <Compile Include="Harmony\ContractParameter.cs" />
     <Compile Include="Harmony\Funding.cs" />
+    <Compile Include="Harmony\ModuleTripLogger.cs" />
     <Compile Include="Harmony\StrategyConfig.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\FundTarget.cs" />
     <Compile Include="Strategy\StrategyConfigRP0.cs" />

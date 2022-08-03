@@ -74,6 +74,14 @@ namespace RP0.Harmony
                 _loggers.Remove(m);
         }
 
+        public void Awake()
+        {
+            if (Instance != null)
+                Destroy(Instance);
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+
         public void FixedUpdate()
         {
             if (HighLogic.LoadedSceneIsFlight && FlightGlobals.currentMainBody.isHomeWorld && _flightLogUpdateCounter++ >= FlightLogUpdateInterval)

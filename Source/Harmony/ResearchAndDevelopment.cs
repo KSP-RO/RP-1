@@ -10,6 +10,22 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(ResearchAndDevelopment))]
     internal class PatchRnD
     {
+        internal static ProtoVessel recoverVessel;
+
+        [HarmonyPrefix]
+        [HarmonyPatch("reverseEngineerRecoveredVessel")]
+        internal static void Prefix_reverseEngineerRecoveredVessel(ResearchAndDevelopment __instance, ProtoVessel pv, MissionRecoveryDialog mrDialog)
+        {
+            recoverVessel = pv;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("reverseEngineerRecoveredVessel")]
+        internal static void Postfix_reverseEngineerRecoveredVessel(ResearchAndDevelopment __instance, ProtoVessel pv, MissionRecoveryDialog mrDialog)
+        {
+            pv = null;
+        }
+
         [HarmonyPrefix]
         [HarmonyPatch("reverseEngineerPartsFrom")]
         internal static bool Prefix_reverseEngineerPartsFrom(ResearchAndDevelopment __instance, List<string> fromCBs, List<string> ignoreCBs, ref float subValue, string idVerb, string returnedFrom, ref List<ScienceSubject> __result)
@@ -21,9 +37,18 @@ namespace RP0.Harmony
                 {
                     case "Orbited": subValue = 8f; break; // stock: 10f
                     case "SubOrbited": subValue = 5f; break; // stock: 8f
-                    case "Flew": //subValue = 3f; break; // stock: 5f -- TODO: Do something where we check if you went above the Karman line
-                        __result = new List<ScienceSubject>();
-                        return false;
+                    case "Flew":
+                        VesselTripLog tripLog = VesselTripLog.FromProtoVessel(recoverVessel);
+                        if (tripLog.Log.HasEntry(Crew.CrewHandler.Situation_FlightHigh, FlightGlobals.GetHomeBodyName()))
+                        {
+                            subValue = 2.5f;
+                        }
+                        else
+                        {
+                            __result = new List<ScienceSubject>();
+                            return false;
+                        }
+                        break;
                 }
             }
             else

@@ -29,6 +29,8 @@ namespace RP0
 
         private double deltaTime;
 
+        private double deltaRate;
+
         public CurrencyModifierQueryRP0(TransactionReasons reason, double f0, float s0, float r0)
             : base(reason, (float)f0, s0, r0)
         {
@@ -43,6 +45,7 @@ namespace RP0
             deltaRep = 0d;
             deltaConf = 0d;
             deltaTime = 0d;
+            deltaRate = 0d;
         }
 
         public CurrencyModifierQueryRP0(TransactionReasonsRP0 reason, double f0, double s0, double r0, double c0, double t0)
@@ -60,6 +63,7 @@ namespace RP0
             deltaRep = 0d;
             deltaConf = 0d;
             deltaTime = 0d;
+            deltaRep = 0d;
         }
 
         public double GetInput(CurrencyRP0 c)
@@ -71,7 +75,7 @@ namespace RP0
                 CurrencyRP0.Reputation => inputRep,
                 CurrencyRP0.Confidence => inputConf,
                 CurrencyRP0.Time => inputTime,
-                _ => 0f,
+                _ => 1d,
             };
         }
 
@@ -94,6 +98,9 @@ namespace RP0
                 case CurrencyRP0.Time:
                     deltaTime += val;
                     break;
+                case CurrencyRP0.Rate:
+                    deltaRate += val;
+                    break;
             }
         }
 
@@ -106,6 +113,7 @@ namespace RP0
                 CurrencyRP0.Reputation => deltaRep,
                 CurrencyRP0.Confidence => deltaConf,
                 CurrencyRP0.Time => deltaTime,
+                CurrencyRP0.Rate => deltaRate,
                 _ => 0f,
             };
         }
@@ -128,12 +136,14 @@ namespace RP0
             double rep = GetTotal(CurrencyRP0.Reputation);
             double conf = GetTotal(CurrencyRP0.Confidence);
             double time = GetTotal(CurrencyRP0.Time);
+            double rate = GetTotal(CurrencyRP0.Rate);
             if (displayInverted)
             {
                 funds = -funds;
                 sci = -sci;
                 rep = -rep;
                 conf = -conf;
+                // rate can't be inverted
             }
             bool canAffordFunds = CanAfford(CurrencyRP0.Funds);
             bool canAffordSci = CanAfford(CurrencyRP0.Science);
@@ -144,6 +154,7 @@ namespace RP0
             string textRep = ((!ApproximatelyZero(rep)) ? ("<sprite=\"CurrencySpriteAsset\" name=\"Reputation\" tint=1> " + KSPUtil.LocalizeNumber(rep, "F2")) : "");
             string textConf = ((!ApproximatelyZero(conf)) ? ("<sprite=\"CurrencySpriteAsset\" name=\"Flask\" tint=1> " + KSPUtil.LocalizeNumber(conf, "F2")) : "");
             string textTime = ((!ApproximatelyZero(time)) ? (!double.IsInfinity(time) && !double.IsNaN(time) && time < (100 * 365.25d * 86400d) ? KSPUtil.PrintDateDeltaCompact(time, time < 7d * 86400d, time < 600) : Localizer.GetStringByTag("#autoLOC_462439")) : "");
+            string textRate = ((!ApproximatelyZero(rate - 1d)) ? LocalizationHandler.FormatRatioAsPercent(rate) : "");
             string resultText = "";
             if (!string.IsNullOrEmpty(textFunds))
             {
@@ -196,9 +207,21 @@ namespace RP0
                     resultText += seperator;
                 }
                 resultText += textTime;
-                if (includePercentage && deltaConf != 0f)
+                if (includePercentage && deltaTime != 0f)
                 {
                     resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Time, "N1", TextStyling.OnGUI_LessIsGood);
+                }
+            }
+            if (!string.IsNullOrEmpty(textRate))
+            {
+                if (!string.IsNullOrEmpty(resultText))
+                {
+                    resultText += seperator;
+                }
+                resultText += textRate;
+                if (includePercentage && deltaRate != 0f)
+                {
+                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Rate, "N1", TextStyling.OnGUI);
                 }
             }
             return resultText;
@@ -318,6 +341,9 @@ namespace RP0
                 case CurrencyRP0.Time:
                     delta = deltaTime;
                     break;
+                case CurrencyRP0.Rate:
+                    delta = deltaRate;
+                    break;
             }
             if (delta == 0d)
             {
@@ -359,6 +385,10 @@ namespace RP0
                 case CurrencyRP0.Time:
                     delta = deltaTime;
                     input = inputTime;
+                    break;
+                case CurrencyRP0.Rate:
+                    delta = 1d + deltaRate;
+                    input = 1d;
                     break;
             }
             if (delta != 0f && input != 0f)
@@ -475,25 +505,25 @@ namespace RP0
 
         TimeProgramDeadline = 1 << 33,
 
-        TimeIntegrationVAB = 1 << 34,
-        TimeIntegrationSPH = 1 << 35,
-        TimeIntegration = TimeIntegrationVAB | TimeIntegrationSPH,
+        RateIntegrationVAB = 1 << 34,
+        RateIntegrationSPH = 1 << 35,
+        RateIntegration = RateIntegrationVAB | RateIntegrationSPH,
 
-        TimeRollout = 1 << 36,
-        TimeAirlaunch = 1 << 37,
-        TimeVesselPrep = TimeRollout | TimeAirlaunch,
-        TimeReconditioning = 1 << 38,
-        TimeRecovery = 1 << 39,
+        RateRollout = 1 << 36,
+        RateAirlaunch = 1 << 37,
+        RateVesselPrep = RateRollout | RateAirlaunch,
+        RateReconditioning = 1 << 38,
+        RateRecovery = 1 << 39,
 
-        TimeManufacturing = 1 << 40,
+        RateManufacturing = 1 << 40,
 
-        TimeVessel = TimeIntegration | TimeVesselPrep | TimeRecovery | TimeManufacturing,
+        RateVessel = RateIntegration | RateVesselPrep | RateRecovery | RateManufacturing,
 
         EfficiencyGainLC = 1 << 41,
 
-        TimeResearch = 1 << 42,
+        RateResearch = 1 << 42,
 
-        TimeTraining = 1 << 43,
+        RateTraining = 1 << 43,
 
         Any = ~0
     }
@@ -509,6 +539,8 @@ namespace RP0
         [Description("#rp0CurrencyConfidence")]
         Confidence = 3,
         [Description("#rp0CurrencyTime")]
-        Time = 4
+        Time = 4,
+        [Description("#rp0CurrencyRate")]
+        Rate = 5,
     }
 }

@@ -590,8 +590,8 @@
     <Content Include="..\GameData\RP-0\KCT\KCT_ModuleTemplates.cfg">
       <Link>KCT\KCT_ModuleTemplates.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\KCT\TechNodePeriods.cfg">
-      <Link>KCT\TechNodePeriods.cfg</Link>
+    <Content Include="..\GameData\RP-0\KCT\TechNodeData.cfg">
+      <Link>KCT\TechNodeData.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\KCT_Presets\RP1_KCT_Presets.cfg">
       <Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>

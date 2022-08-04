@@ -68,15 +68,27 @@ namespace KerbalConstructionTime
         }
 
         // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
-        private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass)
+        private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
         {
             dryCost = (float)GetPartCosts(p, false);
             fuelCost = (float)GetPartCosts(p) - dryCost;
             dryMass = p.mass;
-            fuelMass = p.GetResourceMass();
+            double fMass = 0;
+            for (int i = p.Resources.Count; i-- > 0;)
+            {
+                PartResource res = p.Resources[i];
+                fMass += res.amount * res.info.density;
+                resources.TryGetValue(res.resourceName, out double amt);
+                amt += res.maxAmount;
+                resources[res.resourceName] = amt;
+            }
+            fuelMass = (float)fMass;
         }
 
-        private static double GetEffectiveCostInternal(object o, HashSet<string> globalMods, IList<Part> inventorySample)
+        private static Dictionary<string, double> _resourceAmounts = new Dictionary<string, double>();
+        private static HashSet<string> _tags = new HashSet<string>();
+
+        private static double GetEffectiveCostInternal(object o, HashSet<string> globalMods, Dictionary<string, double> resources, IList<Part> inventorySample)
         {
             if (!(o is Part) && !(o is ConfigNode))
                 return 0;
@@ -94,7 +106,9 @@ namespace KerbalConstructionTime
             if (o is ConfigNode)
                 ShipConstruction.GetPartCostsAndMass(o as ConfigNode, GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
             else
-                GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass);
+            {
+                GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass, _resourceAmounts);
+            }
 
             float wetMass = dryMass + fuelMass;
             float cost = dryCost + fuelCost;
@@ -104,20 +118,32 @@ namespace KerbalConstructionTime
 
             // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
             double resourceMultiplier = 1d;
-            if (applyResourceMods)
+            
+            if (o is ConfigNode)
             {
-                if (o is ConfigNode)
+                var resourceNames = applyResourceMods ? new List<string>() : null;
+                foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
                 {
-                    var resourceNames = new List<string>();
-                    foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
-                        resourceNames.Add(rNode.GetValue("name"));
-                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
+                    string rName = rNode.GetValue("name");
+                    _resourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
+                    resourceNames?.Add(rName);
                 }
-                else
-                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
+                if (applyResourceMods)
+                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
             }
+            else if (applyResourceMods)
+                resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
 
-            GatherGlobalModifiers(globalMods, partRef);
+            GatherGlobalModifiers(_tags, partRef);
+            foreach (var s in _tags)
+                globalMods.Add(s);
+
+            foreach (var kvp in _resourceAmounts)
+            {
+                resources.TryGetValue(kvp.Key, out double amt);
+                amt += kvp.Value;
+                resources[kvp.Key] = amt;
+            }
 
             double InvEff = inventorySample.Contains(partRef) ? PresetManager.Instance.ActivePreset.GeneralSettings.InventoryEffect : 0;
             int builds = ScrapYardWrapper.GetBuildCount(partRef);
@@ -142,6 +168,7 @@ namespace KerbalConstructionTime
             //    });
             // [PV]*[RV]*[MV]*[C]
             double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
+            effectiveCost *= RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(_tags, _resourceAmounts, name);
 
             if (InvEff != 0)
                 inventorySample.Remove(partRef);
@@ -184,6 +211,9 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
 
+            _tags.Clear();
+            _resourceAmounts.Clear();
+
             return effectiveCost;
         }
 
@@ -192,13 +222,14 @@ namespace KerbalConstructionTime
             //get list of parts that are in the inventory
             IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
             var globalVariables = new HashSet<string>();
+            var resourceAmounts = new Dictionary<string, double>();
             double totalEffectiveCost = 0;
             foreach (Part p in parts)
             {
-                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
+                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, resourceAmounts, inventorySample);
             }
 
-            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated) * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalVariables, resourceAmounts);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
@@ -219,13 +250,14 @@ namespace KerbalConstructionTime
 
             IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(apList, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
             var globalVariables = new HashSet<string>();
+            var resourceAmounts = new Dictionary<string, double>();
             double totalEffectiveCost = 0;
             foreach (ConfigNode p in parts)
             {
-                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
+                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, resourceAmounts, inventorySample);
             }
 
-            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated);
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables, out isHumanRated) * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalVariables, resourceAmounts);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 

@@ -214,7 +214,7 @@ namespace KerbalConstructionTime
 
         public void RecalculateBuildRates()
         {
-            _strategyRateMultiplier = RP0.CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? RP0.TransactionReasonsRP0.TimeIntegrationVAB : RP0.TransactionReasonsRP0.TimeIntegrationSPH);
+            _strategyRateMultiplier = RP0.CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? RP0.TransactionReasonsRP0.RateIntegrationVAB : RP0.TransactionReasonsRP0.RateIntegrationSPH);
             _rate = Utilities.GetBuildRate(0, this, IsHumanRated, true);
             _rateHRCapped = Utilities.GetBuildRate(0, this, false, true);
             foreach (var blv in BuildList)

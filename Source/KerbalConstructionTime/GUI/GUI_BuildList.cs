@@ -362,30 +362,28 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
-            GUILayout.Label("Rate:", GUILayout.Width(75));
-            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1 / 2 + 5));
-            GUILayout.Space(30);
+            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2 + 30));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Space(20);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
 
             if (ksc.Constructions.Count == 0)
                 GUILayout.Label("No constructions under way at this space center.");
 
-            bool forceRecheck = false;
             int cancelID = -1;
             double totalCost = 0d;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
                 ConstructionBuildItem constr = ksc.Constructions[i];
-                totalCost += constr.RemainingCost;
+                double rCost = constr.RemainingCost;
+                totalCost += rCost;
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
                     InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
 
-                    forceRecheck = true;
                     cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
@@ -394,42 +392,45 @@ namespace KerbalConstructionTime
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
-                if (forceRecheck)
-                {
-                    forceRecheck = false;
-                    ksc.RecalculateBuildRates(false);
-                }
                 double buildRate = constr.GetBuildRate();
                 DrawTypeIcon(constr);
                 Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                 GUILayout.Label(new GUIContent(constr.GetItemName(), "name" + costTooltip));
-
-                GUILayout.Label(new GUIContent(constr.WorkRate.ToString("P0"), $"rate{identifier}¶Materials cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
-                float newWorkRate = GUILayout.HorizontalSlider(constr.WorkRate, 0f, 1.5f, GUILayout.Width(45));
-                constr.WorkRate = Mathf.RoundToInt(newWorkRate * 100f) * 0.01f;
-
-                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2-5));
+                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
                 {
                     double seconds = constr.GetTimeLeft();
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1 - 50));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
                 else
                 {
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1 - 50));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
 
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
                 {
-                    if (GUILayout.Button(new GUIContent("W", "Warp to"), GUILayout.Width(30)))
+                    if (GUILayout.Button(new GUIContent("Warp", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(constr.GetTimeLeft()):N0}"), GUILayout.Width(45)))
                     {
                         KCTWarpController.Create(constr);
                     }
                 }
                 else
                 {
-                    GUILayout.Space(30);
+                    GUILayout.Space(45);
                 }
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("   Work rate:", GUILayout.Width(90));
+                GUILayout.Label(new GUIContent(constr.WorkRate.ToString("P0"), $"rate{identifier}¶Materials cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                
+                float newWorkRate = GUILayout.HorizontalSlider(constr.WorkRate, 0f, 1.5f, GUILayout.Width(150));
+                constr.WorkRate = Mathf.RoundToInt(newWorkRate * 100f) * 0.01f;
+
+                GUILayout.Label("Remaining Cost:", GUILayout.Width(100));
+                GUILayout.Label($"√{rCost:N0}", GetLabelRightAlignStyle());
+
+                
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();

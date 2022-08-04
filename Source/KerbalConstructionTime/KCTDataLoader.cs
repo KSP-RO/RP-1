@@ -69,6 +69,11 @@ namespace KerbalConstructionTime
                     KerbalConstructionTime.TechNodePeriods[x.id] = x;
                 }
             }
+
+            KerbalConstructionTime.NodeTypes.Clear();
+            ConfigNode typeNode = GameDatabase.Instance.GetConfigNode("KCT_TECH_NODE_TYPES");
+            if (typeNode != null)
+                KerbalConstructionTime.NodeTypes.Load(typeNode);
         }
 
         public override bool IsReady() => LoadingScreen.Instance?.loaders != null;

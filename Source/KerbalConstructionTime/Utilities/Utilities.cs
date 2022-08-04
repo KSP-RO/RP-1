@@ -2365,7 +2365,7 @@ namespace KerbalConstructionTime
             if (constr is LCConstruction lcc)
             {
                 if (lcc.LCData.lcType == LaunchComplexType.Pad)
-                    costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\n{costTooltip}";
+                    costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\nHuman-Rated: {(lcc.LCData.isHumanRated ? "Yes" : "No")}\n{costTooltip}";
 
                 costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.LCData.sizeMax)}\n{costTooltip}";
             }

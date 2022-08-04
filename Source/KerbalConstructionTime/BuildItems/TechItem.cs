@@ -5,6 +5,54 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
+    [Flags]
+    public enum NodeType
+    {
+        None = 0,
+
+        Materials = 1 << 0,
+        Electronics = 1 << 2,
+        Bluesky = Materials | Electronics,
+
+        Flight = 1 << 3,
+        Spaceplanes = 1 << 4,
+        Aerospace = Flight | Spaceplanes,
+
+        Command = 1 << 5,
+        Stations = 1 << 6,
+        HSF = Command | Stations,
+
+        Crewed = Aerospace | HSF,
+
+        RCS = 1 << 7,
+
+        EDL = 1 << 8,
+
+        Hydrolox = 1 << 9,
+        RocketEngines = 1 << 10,
+        Staged = 1 << 11,
+        LiquidEngines = Hydrolox | RocketEngines | Staged,
+
+        Solid = 1 << 12,
+        NTR = 1 << 14,
+        Ion = 1 << 13,
+        Propulsion = LiquidEngines | NTR | Ion,
+        
+        LifeSupport = 1 << 15,
+
+        Nuclear = 1 << 16,
+        Power = 1 << 17,
+        Electricity = Nuclear | Power,
+
+        Comms = 1 << 18,
+
+        Avionics = 1 << 19,
+
+        Science = 1 << 20,
+
+        Any = ~0,
+    }
+
     public class TechItem : IKCTBuildItem
     {
         private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -15,6 +63,17 @@ namespace KerbalConstructionTime
         public string TechName, TechID;
         public double Progress;
         public ProtoTechNode ProtoNode;
+
+        protected NodeType nodeType
+        {
+            get
+            {
+                if (KerbalConstructionTime.NodeTypes.TryGetValue(TechID, out var type))
+                    return type;
+
+                return NodeType.None;
+            }
+        }
 
         private double _buildRate = -1;
         private double _yearMult = -1;
@@ -87,7 +146,8 @@ namespace KerbalConstructionTime
             if (rate != 0)
             {
                 rate *= YearBasedRateMult;
-                rate *= RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.TimeResearch);
+                rate *= RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.RateResearch);
+                rate *= RP0.Leaders.LeaderUtils.GetResearchRateEffect(nodeType, TechID);
             }
 
             _buildRate = rate;

@@ -46,11 +46,11 @@ namespace KerbalConstructionTime
                 {
                     case RolloutReconType.Rollout:
                     case RolloutReconType.Rollback:
-                        return TransactionReasonsRP0.TimeRollout;
+                        return TransactionReasonsRP0.RateRollout;
                     case RolloutReconType.Recovery:
-                        return TransactionReasonsRP0.TimeRecovery;
+                        return TransactionReasonsRP0.RateRecovery;
                     case RolloutReconType.Reconditioning:
-                        return TransactionReasonsRP0.TimeReconditioning;
+                        return TransactionReasonsRP0.RateReconditioning;
 
                     default:
                         return TransactionReasonsRP0.None;

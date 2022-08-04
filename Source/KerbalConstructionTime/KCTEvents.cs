@@ -2,6 +2,7 @@ using KSP.UI.Screens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -30,6 +31,23 @@ namespace KerbalConstructionTime
         public static EventData<LCItem> OnLCDismantled;
         public static EventVoid OnPersonnelChange;
         public static EventVoid OnRP0MaintenanceChanged;
+
+        // Multiplier events
+        // Using the first arg as a shared return value since these are voids.
+        /// <summary>
+        /// Rate, Node type, nodeID
+        /// </summary>
+        public static EventData<Boxed<double>, NodeType, string> ApplyResearchRateMultiplier;
+
+        /// <summary>
+        /// Rate, tags, resource amounts, part name
+        /// </summary>
+        public static EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>, string> ApplyPartEffectiveCostMultiplier;
+
+        /// <summary>
+        /// Rate, tags, resource amounts
+        /// </summary>
+        public static EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>> ApplyGlobalEffectiveCostMultiplier;
 
         public KCTEvents()
         {
@@ -133,6 +151,10 @@ namespace KerbalConstructionTime
             OnPersonnelChange = new EventVoid("OnKctPesonnelChange");
 
             OnRP0MaintenanceChanged = GameEvents.FindEvent<EventVoid>("OnRP0MaintenanceChanged");
+
+            ApplyResearchRateMultiplier = new EventData<Boxed<double>, NodeType, string>("ApplyResearchRateMultiplier");
+            ApplyPartEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>, string>("ApplyPartEffectiveCostMultiplier");
+            ApplyGlobalEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>>("ApplyGlobalEffectiveCostMultiplier");
 
             CreatedEvents = true;
         }

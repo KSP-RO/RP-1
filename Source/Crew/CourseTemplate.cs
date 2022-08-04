@@ -208,7 +208,7 @@ namespace RP0.Crew
 
         public virtual double GetTime(List<ProtoCrewMember> students)
         {
-            return CurrencyUtils.Time(TransactionReasonsRP0.TimeTraining, GetBaseTime(students) * GetTimeMultiplierFacility());
+            return GetBaseTime(students) * GetTimeMultiplierFacility() / CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
         }
 
         public double GetExpiration(ProtoCrewMember pcm)

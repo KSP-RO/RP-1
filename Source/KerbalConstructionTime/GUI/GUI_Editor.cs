@@ -158,8 +158,8 @@ namespace KerbalConstructionTime
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New LC", "Build a new launch complex for this vessel")))
             {
                 _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
-                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 2f).ToString();
-                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 2f).ToString();
+                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 1.5f).ToString();
+                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 1.5f).ToString();
                 _heightLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.y * 1.1f).ToString();
                 _tonnageLimit = Mathf.CeilToInt((float)(KCTGameStates.EditorShipMass * 1.1d)).ToString();
                 _isHumanRated = KCTGameStates.EditorIsHumanRated;
@@ -177,8 +177,8 @@ namespace KerbalConstructionTime
             if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton))
             {
-                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 2f).ToString();
-                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 2f).ToString();
+                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 1.5f).ToString();
+                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 1.5f).ToString();
                 _heightLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.y * 1.1f).ToString();
                 _tonnageLimit = Mathf.CeilToInt((float)(KCTGameStates.EditorShipMass * 1.1d)).ToString();
                 _isHumanRated = EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH || KCTGameStates.EditorIsHumanRated;

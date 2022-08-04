@@ -364,7 +364,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("Name:");
             GUILayout.Label("Rate:", GUILayout.Width(75));
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label("Time Left:", GUILayout.Width(_width1 / 2 + 5));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1 / 2 + 5));
             GUILayout.Space(30);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
@@ -462,7 +462,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label("Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(70);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
@@ -653,7 +653,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("Name:", GUILayout.Width(250));
             GUILayout.Label("Progress:");
             GUILayout.Space(18);
-            GUILayout.Label("Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250 - GUI.skin.label.lineHeight * 3));
 
@@ -834,7 +834,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label("Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
         }
 

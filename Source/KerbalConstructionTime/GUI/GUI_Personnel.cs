@@ -346,14 +346,15 @@ namespace KerbalConstructionTime
                 }
                 fireAmount = Math.Min(workers, fireAmount);
 
+                double modifiedHireCost = -RP0.CurrencyUtils.Funds(research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers, -PresetManager.Instance.ActivePreset.GeneralSettings.HireCost);
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
-                    workers = Math.Max(_buyModifierMultsPersonnel[0], KCTGameStates.UnassignedPersonnel + (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost));
+                    workers = Math.Max(_buyModifierMultsPersonnel[0], KCTGameStates.UnassignedPersonnel + (int)(Funding.Instance.Funds / modifiedHireCost));
 
                 if (research)
                     workers = Math.Max(0, Math.Min(workers, PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)] - KCTGameStates.Researchers));
 
-                _fundsCost = PresetManager.Instance.ActivePreset.GeneralSettings.HireCost * Math.Max(0, workers - KCTGameStates.UnassignedPersonnel);
+                _fundsCost = modifiedHireCost * Math.Max(0, workers - KCTGameStates.UnassignedPersonnel);
                 // Show the result for whatever you're asking for, even if you can't afford it.
                 hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost) + KCTGameStates.UnassignedPersonnel);
 

@@ -33,6 +33,7 @@ namespace KerbalConstructionTime
         private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
         public static readonly Dictionary<string, KCTCostModifier> KCTCostModifiers = new Dictionary<string, KCTCostModifier>();
         public static readonly Dictionary<string, KCTTechNodePeriod> TechNodePeriods = new Dictionary<string, KCTTechNodePeriod>();
+        public static readonly RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType>();
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;

@@ -7,6 +7,9 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(GameSettings))]
     internal class PatchGameSettings
     {
+        internal static bool DELTAV_APP_ENABLED = true;
+        internal static bool DELTAV_CALCULATIONS_ENABLED = true;
+
         internal static System.Type EEXType = AccessTools.TypeByName("EditorExtensionsRedux.EditorExtensions");
         internal static FieldInfo EEXInstance = EEXType?.GetField("Instance");
         internal static FieldInfo HotkeyEditor_toggleSymModePrimary = EEXType?.GetField("HotkeyEditor_toggleSymModePrimary", AccessTools.all);
@@ -27,6 +30,9 @@ namespace RP0.Harmony
                 GameSettings.Editor_toggleAngleSnap.primary = HotkeyEditor_toggleAngleSnapPrimary.GetValue(eex) as KeyCodeExtended;
                 GameSettings.Editor_toggleAngleSnap.secondary = HotkeyEditor_toggleAngleSnapSecondary.GetValue(eex) as KeyCodeExtended;
             }
+
+            GameSettings.DELTAV_APP_ENABLED = DELTAV_APP_ENABLED;
+            GameSettings.DELTAV_CALCULATIONS_ENABLED = DELTAV_CALCULATIONS_ENABLED;
         }
 
         [HarmonyPostfix]
@@ -41,6 +47,31 @@ namespace RP0.Harmony
                 GameSettings.Editor_toggleAngleSnap.primary = new KeyCodeExtended(KeyCode.None);
                 GameSettings.Editor_toggleAngleSnap.secondary = new KeyCodeExtended(KeyCode.None);
             }
+
+            GameSettings.DELTAV_APP_ENABLED = false;
+            GameSettings.DELTAV_CALCULATIONS_ENABLED = false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("ParseCfg")]
+        internal static void Postfix_ParseCfg()
+        {            
+            DELTAV_APP_ENABLED = GameSettings.DELTAV_APP_ENABLED;
+            DELTAV_CALCULATIONS_ENABLED = GameSettings.DELTAV_CALCULATIONS_ENABLED;
+
+            GameSettings.DELTAV_APP_ENABLED = false;
+            GameSettings.DELTAV_CALCULATIONS_ENABLED = false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("SetDefaultValues")]
+        internal static void Postfix_SetDefaultValues()
+        {
+            DELTAV_APP_ENABLED = GameSettings.DELTAV_APP_ENABLED;
+            DELTAV_CALCULATIONS_ENABLED = GameSettings.DELTAV_CALCULATIONS_ENABLED;
+
+            GameSettings.DELTAV_APP_ENABLED = false;
+            GameSettings.DELTAV_CALCULATIONS_ENABLED = false;
         }
     }
 }

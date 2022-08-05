@@ -52,7 +52,7 @@ namespace RP0.Crew
         private PersistentHashSetValueType<string> _retirees = new PersistentHashSetValueType<string>();
 
         [KSPField(isPersistant = true)]
-        public PersistentList<TrainingCourse> ActiveCourses = new PersistentList<TrainingCourse>();
+        public PersistentList<TrainingCourse> TrainingCourses = new PersistentList<TrainingCourse>();
 
         
         public List<TrainingTemplate> TrainingTemplates = new List<TrainingTemplate>();
@@ -67,8 +67,6 @@ namespace RP0.Crew
         private int _countAvailable, _countAssigned, _countKIA;
         private AstronautComplex _astronautComplex = null;
         private FieldInfo _cliTooltip;
-
-        public bool CurrentSceneAllowsCrewManagement => HighLogic.LoadedSceneIsEditor || HighLogic.LoadedScene == GameScenes.SPACECENTER;
 
         private static readonly Dictionary<CrewListItem, bool> _storedCrewListItemMouseovers = new Dictionary<CrewListItem, bool>();
         private static readonly List<UIListItem> _crewList = new List<UIListItem>();
@@ -175,7 +173,6 @@ namespace RP0.Crew
                 onKctTechQueuedEvent.Add(AddCoursesForQueuedTechNode);
             }
 
-            if (CurrentSceneAllowsCrewManagement) StartCoroutine(CreateUnderResearchCoursesRoutine());
             StartCoroutine(EnsureActiveCrewInSimulationRoutine());
         }
 
@@ -224,12 +221,12 @@ namespace RP0.Crew
                 if (FSData != null)
                 {
                     //load all the active courses
-                    ActiveCourses.Clear();
+                    TrainingCourses.Clear();
                     foreach (ConfigNode courseNode in FSData.GetNodes("ACTIVE_COURSE"))
                     {
                         try
                         {
-                            ActiveCourses.Add(new TrainingCourse(courseNode));
+                            TrainingCourses.Add(new TrainingCourse(courseNode));
                         }
                         catch (Exception ex)
                         {
@@ -511,7 +508,7 @@ namespace RP0.Crew
         {
             RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
             IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
-            GenerateOfferedCourses();
+            GenerateTrainingTemplates();
         }
 
         private void VesselRecoveryProcessing(ProtoVessel v, MissionRecoveryDialog mrDialog, float data)
@@ -792,12 +789,12 @@ namespace RP0.Crew
         private void ProcessCourses(double time)
         {
             bool anyCourseEnded = false;
-            for (int i = ActiveCourses.Count; i-- > 0;)
+            for (int i = TrainingCourses.Count; i-- > 0;)
             {
-                TrainingCourse course = ActiveCourses[i];
+                TrainingCourse course = TrainingCourses[i];
                 if (course.ProgressTime(time)) //returns true when the course completes
                 {
-                    ActiveCourses.RemoveAt(i);
+                    TrainingCourses.RemoveAt(i);
                     anyCourseEnded = true;
                 }
             }
@@ -884,14 +881,14 @@ namespace RP0.Crew
                     {
                         cli.MouseoverEnabled = false;
                         bool notTraining = true;
-                        for (int i = ActiveCourses.Count; i-- > 0 && notTraining;)
+                        for (int i = TrainingCourses.Count; i-- > 0 && notTraining;)
                         {
-                            foreach (ProtoCrewMember pcm in ActiveCourses[i].Students)
+                            foreach (ProtoCrewMember pcm in TrainingCourses[i].Students)
                             {
                                 if (pcm == cli.GetCrewRef())
                                 {
                                     notTraining = false;
-                                    cli.SetLabel("Training, done " + KSPUtil.PrintDate(ActiveCourses[i].startTime + ActiveCourses[i].GetTime(ActiveCourses[i].Students), false));
+                                    cli.SetLabel("Training, done " + KSPUtil.PrintDate(TrainingCourses[i].startTime + TrainingCourses[i].GetTime(TrainingCourses[i].Students), false));
                                     break;
                                 }
                             }
@@ -982,47 +979,39 @@ namespace RP0.Crew
             return false;
         }
 
-        private void GenerateOfferedCourses()
+        private void GenerateTrainingTemplates()
         {
-            Profiler.BeginSample("RP0 GenerateOfferedCourses");
+            Profiler.BeginSample("RP0 GenerateTrainingTemplates");
             TrainingTemplates.Clear();
             _partSynsHandled.Clear();
 
-            if (!CurrentSceneAllowsCrewManagement)
-            {
-                Profiler.EndSample();
-                return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
-            }
-
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
-                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0 &&
-                    ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available)
-                {
+                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0
+                    && (ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available
+                        || KCTGameStates.TechList.Find(t => t.TechID == ap.TechRequired) != null))
                     AddPartCourses(ap);
-                }
+            }
+
+            foreach (var c in TrainingCourses)
+            {
+                c.Relink();
             }
             Profiler.EndSample();
         }
 
         private TrainingTemplate GenerateCourseProf(AvailablePart ap, bool isTemporary)
         {
-            var n = new ConfigNode("FS_COURSE");
             bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
 
-            n.AddValue("id", "prof_" + name);
-            n.AddValue("name", "Proficiency: " + (found ? name : ap.title));
-            n.AddValue("time", 1d + (TrainingDatabase.GetTime(name) * 86400));
-            n.AddValue("isTemporary", isTemporary);
-            n.AddValue("conflicts", $"{TrainingType_Proficiency}:{name}");
+            var c = new TrainingTemplate();
 
-            ConfigNode r = n.AddNode("REWARD");
-            r.AddValue("XPAmt", Settings.trainingProficiencyXP);
-            ConfigNode l = r.AddNode("FLIGHTLOG");
-            l.AddValue("0", $"{TrainingType_Proficiency},{name}");
-
-            var c = new TrainingTemplate(n);
-            c.PopulateFromSourceNode();
+            c.id = "prof_" + name;
+            c.name = "Proficiency: " + (found ? name : ap.title);
+            c.time = 1d + (TrainingDatabase.GetTime(name) * 86400);
+            c.isTemporary = isTemporary;
+            c.conflict = new FlightLog.Entry(0, TrainingType_Proficiency, name);
+            c.training = new FlightLog.Entry(0, TrainingType_Proficiency, name);
             TrainingTemplates.Add(c);
 
             return c;
@@ -1030,24 +1019,20 @@ namespace RP0.Crew
 
         private TrainingTemplate GenerateCourseMission(AvailablePart ap)
         {
-            var n = new ConfigNode("FS_COURSE");
             bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
 
-            n.AddValue("id", "msn_" + name);
-            n.AddValue("name", "Mission: " + (found ? name : ap.title));
-            n.AddValue("time", 1 + TrainingDatabase.GetTime(name + "-Mission") * 86400);
-            n.AddValue("isTemporary", false);
-            n.AddValue("timeUseStupid", true);
-            n.AddValue("seatMax", ap.partPrefab.CrewCapacity * 2);
-            n.AddValue("expiration", Settings.trainingMissionExpirationDays * 86400);
-            n.AddValue("preReqs", $"{TrainingType_Proficiency}:{name}");
+            var c = new TrainingTemplate();
 
-            ConfigNode r = n.AddNode("REWARD");
-            ConfigNode l = r.AddNode("FLIGHTLOG");
-            l.AddValue("0", $"{TrainingType_Mission},{name}");
+            c.id = "msn_" + name;
+            c.name = "Mission: " + (found ? name : ap.title);
+            c.time = 1 + TrainingDatabase.GetTime(name + "-Mission") * 86400d;
+            c.isTemporary = false;
+            c.timeUseStupid = true;
+            c.seatMax = ap.partPrefab.CrewCapacity * 2;
+            c.expiration = Settings.trainingMissionExpirationDays * 86400d;
+            c.prereq = new FlightLog.Entry(0, TrainingType_Proficiency, name);
+            c.training = new FlightLog.Entry(0, TrainingType_Mission, name);
 
-            var c = new TrainingTemplate(n);
-            c.PopulateFromSourceNode();
             TrainingTemplates.Add(c);
 
             return c;
@@ -1071,24 +1056,6 @@ namespace RP0.Crew
                     return "Mission training for ";
                 default:
                     return string.Empty;
-            }
-        }
-
-        private IEnumerator CreateUnderResearchCoursesRoutine()
-        {
-            yield return new WaitForFixedUpdate();
-
-            for (int i = 0; i < PartLoader.LoadedPartsList.Count; i++)
-            {
-                var ap = PartLoader.LoadedPartsList[i];
-                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0)
-                {
-                    var kctTech = KCTGameStates.TechList.Find(t => t.TechID == ap.TechRequired);
-                    if (kctTech != null)
-                    {
-                        AddPartCourses(ap);
-                    }
-                }
             }
         }
 

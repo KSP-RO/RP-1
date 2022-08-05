@@ -12,7 +12,7 @@ namespace RP0.Crew
         [Persistent]
         public string id;
 
-        [Persistent(name = "STUDENTS")]
+        [Persistent]
         public PersistentParsableList<ProtoCrewMember> Students = new PersistentParsableList<ProtoCrewMember>();
 
         [Persistent]
@@ -42,6 +42,7 @@ namespace RP0.Crew
         public TrainingCourse(TrainingTemplate template)
         {
             id = template.id;
+            this.template = template;
         }
 
         public TrainingCourse(ConfigNode node)
@@ -52,6 +53,10 @@ namespace RP0.Crew
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
+            if (CrewHandler.Instance.saveVersion < 1)
+            {
+                Students.Load(node.GetNode("STUDENTS"));
+            }
         }
 
         public void Save(ConfigNode node)
@@ -59,7 +64,7 @@ namespace RP0.Crew
             ConfigNode.CreateConfigFromObject(this, node);
         }
 
-        public void Relink()
+        public void LinkTemplate()
         {
             template = CrewHandler.Instance.TrainingTemplates.Find(c => c.id == id);
         }

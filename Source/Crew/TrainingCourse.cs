@@ -62,6 +62,14 @@ namespace RP0.Crew
         public void Save(ConfigNode node)
         {
             ConfigNode.CreateConfigFromObject(this, node);
+            // TEMP until KSPCF releases
+            ConfigNode n = node.GetNode("Students");
+            if (n == null)
+            {
+                n = new ConfigNode("Students");
+                Students.Save(n);
+                node.AddNode(n);
+            }
         }
 
         public void LinkTemplate()

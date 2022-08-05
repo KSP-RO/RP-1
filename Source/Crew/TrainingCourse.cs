@@ -32,9 +32,12 @@ namespace RP0.Crew
         public int seatMax => template.seatMax;
         public string description => template.description;
         public bool isTemporary => template.isTemporary;
-        public ConfigNode RewardLog => template.RewardLog;
 
         public double baseCourseTime = 0d;
+
+        public TrainingCourse()
+        {
+        }
 
         public TrainingCourse(TrainingTemplate template)
         {
@@ -49,7 +52,6 @@ namespace RP0.Crew
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            template = CrewHandler.Instance.TrainingTemplates.Find(c => c.id == id);
         }
 
         public void Save(ConfigNode node)
@@ -57,56 +59,31 @@ namespace RP0.Crew
             ConfigNode.CreateConfigFromObject(this, node);
         }
 
+        public void Relink()
+        {
+            template = CrewHandler.Instance.TrainingTemplates.Find(c => c.id == id);
+        }
+
         public bool MeetsStudentReqs(ProtoCrewMember student)
         {
             if (!(student.type == ProtoCrewMember.KerbalType.Crew && (template.seatMax <= 0 || Students.Count < template.seatMax) && !student.inactive 
-                && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && student.experienceLevel >= template.minLevel && student.experienceLevel <= template.maxLevel 
-                && (template.classes.Length == 0 || template.classes.Contains(student.trait)) && !Students.Contains(student)))
+                && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && !Students.Contains(student)))
                 return false;
 
-            int pCount = template.preReqs.GetLength(0);
-            int pACount = template.preReqsAny.GetLength(0);
-            int cCount = template.conflicts.GetLength(0);
-            if (pCount > 0 || cCount > 0 || pACount > 0)
+            bool checkPrereq = template.prereq != null;
+            bool checkConflict = template.conflict != null;
+            for (int entryIdx = student.careerLog.Count; entryIdx-- > 0 && (checkPrereq || checkConflict);)
             {
-                for (int i = pCount; i-- > 0;)
-                    template.pChecker[i] = true;
+                FlightLog.Entry e = student.careerLog.Entries[entryIdx];
 
-                int needCount = pCount;
-                bool needAnyStill = pACount > 0;
+                if (checkPrereq && e.type == template.prereq.type && e.target == template.prereq.target)
+                    checkPrereq = false;
 
-                for (int entryIdx = student.careerLog.Count; entryIdx-- > 0 && (needCount > 0 || cCount > 0 || needAnyStill);)
-                {
-                    FlightLog.Entry e = student.careerLog.Entries[entryIdx];
-
-                    string tgt = string.IsNullOrEmpty(e.target) ? string.Empty : e.target;
-
-                    for (int preIdx = pCount; preIdx-- > 0 && needCount > 0;)
-                    {
-                        if (template.pChecker[preIdx] && (e.type == template.preReqs[preIdx, 0] && tgt == template.preReqs[preIdx, 1]))
-                        {
-                            template.pChecker[preIdx] = false;
-                            --needCount;
-                        }
-                    }
-
-                    for (int anyIdx = pACount; anyIdx-- > 0 && needAnyStill;)
-                    {
-                        if (e.type == template.preReqsAny[anyIdx, 0] && tgt == template.preReqsAny[anyIdx, 1])
-                            needAnyStill = false;
-                    }
-
-                    for (int conIdx = cCount; conIdx-- > 0;)
-                    {
-                        if (e.type == template.conflicts[conIdx, 0] && tgt == template.conflicts[conIdx, 1])
-                            return false;
-                    }
-                }
-
-                if (needCount > 0 || needAnyStill)
+                if (checkConflict && e.type == template.conflict.type && e.target == template.conflict.target)
                     return false;
             }
-            return true;
+
+            return !checkPrereq;
         }
         public void AddStudent(ProtoCrewMember student)
         {
@@ -202,83 +179,52 @@ namespace RP0.Crew
                         continue;
 
                     double retireTimeOffset = 0d;
-                    
-                    if (template.ExpireLog != null)
+
+
+
+                    if (student.flightLog.Count > 0)
+                        student.ArchiveFlightLog();
+
+                    if (template.expiration > 0d)
                     {
-                        foreach (ConfigNode.Value v in template.ExpireLog.values)
+                        var exp = new TrainingExpiration();
+                        exp.PcmName = student.name;
+                        exp.Expiration = template.expiration;
+                        if (template.expirationUseStupid)
+                            exp.Expiration *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
+                                CrewHandler.Settings.trainingProficiencyStupidMax,
+                                student.stupidity);
+                        exp.Expiration += KSPUtils.GetUT();
+                        exp.Entries.Add($"{template.training.type},{template.training.target}");
+                        CrewHandler.Instance.AddExpiration(exp);
+                    }
+
+                    int lastEntryIndex = student.careerLog.Entries.Count - 1;
+
+
+
+                    retireTimeOffset = Math.Max(retireTimeOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, template.training.type, template.training.target, lastEntryIndex));
+
+                    if (template.training.type == CrewHandler.TrainingType_Mission)
+                    {
+                        // Expire any previous mission trainings because only 1 should be active at a time
+                        for (int i = student.careerLog.Count; i-- > 0;)
                         {
-                            for (int i = student.careerLog.Count; i-- > 0;)
+                            FlightLog.Entry e = student.careerLog.Entries[i];
+                            if (e.type == CrewHandler.TrainingType_Mission)
                             {
-                                FlightLog.Entry e = student.careerLog.Entries[i];
-                                if (TrainingExpiration.Compare(v.value, e))
-                                {
-                                    e.type = "expired_" + e.type;
-                                    CrewHandler.Instance.RemoveExpiration(student.name, v.value);
-                                    break;
-                                }
+                                e.type = "expired_" + e.type;
+                                CrewHandler.Instance.RemoveExpiration(student.name, $"{template.training.type},{template.training.target}");
+                                student.ArchiveFlightLog();
                             }
                         }
                     }
 
-                    if (template.RewardLog != null)
-                    {
-                        if (student.flightLog.Count > 0)
-                            student.ArchiveFlightLog();
-
-                        TrainingExpiration exp = null;
-                        if (template.expiration > 0d)
-                        {
-                            exp = new TrainingExpiration();
-                            exp.PcmName = student.name;
-                            exp.Expiration = template.expiration;
-                            if (template.expirationUseStupid)
-                                exp.Expiration *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
-                                    CrewHandler.Settings.trainingProficiencyStupidMax,
-                                    student.stupidity);
-                            exp.Expiration += KSPUtils.GetUT();
-                        }
-
-                        bool prevMissionsAlreadyExpired = false;
-                        int lastEntryIndex = student.careerLog.Entries.Count - 1;
-                        foreach (ConfigNode.Value v in template.RewardLog.values)
-                        {
-                            string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                            string trainingType = s[0];
-                            string trainingTarget = s.Length == 1 ? null : s[1];
-
-                            retireTimeOffset = Math.Max(retireTimeOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, trainingType, trainingTarget, lastEntryIndex));
-
-                            if (!prevMissionsAlreadyExpired && trainingType == CrewHandler.TrainingType_Mission)
-                            {
-                                // Expire any previous mission trainings because only 1 should be active at a time
-                                for (int i = student.careerLog.Count; i-- > 0;)
-                                {
-                                    FlightLog.Entry e = student.careerLog.Entries[i];
-                                    if (e.type == CrewHandler.TrainingType_Mission)
-                                    {
-                                        e.type = "expired_" + e.type;
-                                        CrewHandler.Instance.RemoveExpiration(student.name, v.value);
-                                        student.ArchiveFlightLog();
-                                        prevMissionsAlreadyExpired = true;
-                                    }
-                                }
-                            }
-
-                            student.flightLog.AddEntry(trainingType, trainingTarget);
-                            student.ArchiveFlightLog();
-                            if (template.expiration > 0d)
-                                exp.Entries.Add(v.value);
-                        }
-
-                        if (template.expiration > 0d)
-                            CrewHandler.Instance.AddExpiration(exp);
-                    }
-
-                    if (template.rewardXP != 0)
-                        student.ExtraExperience += template.rewardXP;
+                    student.flightLog.AddEntry(template.training.type, template.training.target);
+                    student.ArchiveFlightLog();
 
                     double retireOffset = CrewHandler.Instance.IncreaseRetireTime(student.name, retireTimeOffset);
-                    if(retireOffset > 0d)
+                    if (retireOffset > 0d)
                         retirementChanges.Add($"\n{student.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(CrewHandler.Instance.GetRetireTime(student.name), false)}");
                 }
 
@@ -369,6 +315,21 @@ namespace RP0.Crew
         public double IncrementProgress(double UTDiff)
         {
             return 0d;
+        }
+
+        public double AverageRetireExtension()
+        {
+            double count = Students.Count;
+            if (count == 0d)
+                return 0d;
+
+            double sumOffset = 0d;
+            double trainingLength = GetTime();
+            foreach (var pcm in Students)
+            {
+                sumOffset += CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, template.training.type, template.training.target);
+            }
+            return sumOffset / count;
         }
     }
 }

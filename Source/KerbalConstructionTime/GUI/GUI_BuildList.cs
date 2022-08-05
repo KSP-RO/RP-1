@@ -10,8 +10,8 @@ namespace KerbalConstructionTime
         public enum VesselPadStatus { InStorage, RollingOut, RolledOut, RollingBack, Recovering };
         public enum RenameType { None, Vessel, Pad, LaunchComplex };
 
-        public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, 400, 1);
-        public static Rect EditorBuildListWindowPosition = new Rect(Screen.width - 400, 40, 400, 1);
+        public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, 500, 1);
+        public static Rect EditorBuildListWindowPosition = new Rect(Screen.width - 400, 40, 500, 1);
 
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
@@ -366,7 +366,7 @@ namespace KerbalConstructionTime
             GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(20);
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
 
             if (ksc.Constructions.Count == 0)
                 GUILayout.Label("No constructions under way at this space center.");
@@ -466,7 +466,7 @@ namespace KerbalConstructionTime
             GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(70);
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
 
             if (techList.Count == 0)
                 GUILayout.Label("No tech nodes are being researched!\nBegin research by unlocking tech in the R&D building.");
@@ -656,7 +656,7 @@ namespace KerbalConstructionTime
             GUILayout.Space(18);
             GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250 - GUI.skin.label.lineHeight * 3));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350 - GUI.skin.label.lineHeight * 5));
 
             for (int i = 0; i < _allItems.Count; i++)
             {
@@ -716,7 +716,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("Storage");
             GUILayout.EndHorizontal();
 
-            _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, GUILayout.Height(GUI.skin.label.lineHeight * 3));
+            _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, GUILayout.Height(GUI.skin.label.lineHeight * 5));
 
             int idx = 0;
             foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
@@ -817,7 +817,7 @@ namespace KerbalConstructionTime
 
             RenderBuildlistHeader();
 
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(275));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(375));
 
             if (activeLC.LCType == LaunchComplexType.Pad)
                 RenderRollouts();

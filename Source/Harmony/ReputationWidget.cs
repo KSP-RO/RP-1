@@ -66,7 +66,7 @@ namespace RP0.Harmony
 
         private static string GetTooltipTextRep()
         {
-            MaintenanceHandler.SubsidyDetails details = MaintenanceHandler.Instance.GetSubsidyDetails();
+            MaintenanceHandler.SubsidyDetails details = MaintenanceHandler.GetSubsidyDetails();
 
             double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.RepDecline, -Reputation.Instance.reputation * MaintenanceHandler.Settings.repPortionLostPerDay);
             return Localizer.Format("#rp0RepWidgetTooltip",

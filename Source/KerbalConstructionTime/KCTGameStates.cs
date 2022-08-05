@@ -190,7 +190,11 @@ namespace KerbalConstructionTime
         public static double GetBudgetDelta(double time)
         {
             // note NetUpkeepPerDay is negative or 0.
-            double delta = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay * time / 86400d + GetConstructionCostOverTime(time) + GetRolloutCostOverTime(time) + GetAirlaunchCostOverTime(time);
+            
+            double subsidy = RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.Subsidy, RP0.MaintenanceHandler.Instance.MaintenanceSubsidyPerDay);
+            double upkeep = RP0.MaintenanceHandler.Instance.NetUpkeepPerDay - subsidy;
+            double averageSubsidy = subsidy * 0.5d + RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.Subsidy, RP0.MaintenanceHandler.GetSubsidyAt(RP0.KSPUtils.GetUT() + time)) * 0.5d;
+            double delta = (RP0.MaintenanceHandler.Instance.NetUpkeepPerDay + averageSubsidy ) * time / 86400d + GetConstructionCostOverTime(time) + GetRolloutCostOverTime(time) + GetAirlaunchCostOverTime(time);
             delta += RP0.MaintenanceHandler.Instance.GetDisplayProgramFunding(time);
 
             return delta;

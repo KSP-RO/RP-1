@@ -83,7 +83,7 @@ namespace RP0.Crew
                 }
                 else
                 {
-                    course = currentCourse.name;
+                    course = currentCourse.GetItemName();
                     complete = KSPUtil.PrintDate(currentCourse.CompletionTime(), false);
                 }
                 GUILayout.Label(course, GUILayout.Width(96));
@@ -207,7 +207,7 @@ namespace RP0.Crew
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label(_selectedCourse.name);
+            GUILayout.Label(_selectedCourse.GetItemName());
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
@@ -294,7 +294,7 @@ namespace RP0.Crew
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label($"Studying {currentCourse.name} until {KSPUtil.PrintDate(currentCourse.CompletionTime(), false)}");
+                    GUILayout.Label($"Studying {currentCourse.GetItemName()} until {KSPUtil.PrintDate(currentCourse.CompletionTime(), false)}");
                     if (currentCourse.seatMin > 1)
                     {
                         if (GUILayout.Button("Cancel", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
@@ -367,7 +367,7 @@ namespace RP0.Crew
         private static void CreateCourseFinishAlarm(ProtoCrewMember student, ActiveCourse currentCourse)
         {
             double completeUT = currentCourse.CompletionTime();
-            string alarmTxt = $"{currentCourse.name} - {student.name}";
+            string alarmTxt = $"{currentCourse.GetItemName()} - {student.name}";
             KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, completeUT);
         }
 

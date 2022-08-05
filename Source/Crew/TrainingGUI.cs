@@ -226,25 +226,13 @@ namespace RP0.Crew
             GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(_selectedCourse.CompletionTime(), false)}", tooltip));
             if (CrewHandler.Instance.RetirementEnabled && _selectedCourse.Students.Count > 0)
             {
-                double sumOffset = 0d;
-                double trainingLength = _selectedCourse.GetTime();
-                foreach (var pcm in _selectedCourse.Students)
-                {
-                    double maxOffset = 0d;
-                    foreach (ConfigNode.Value v in _selectedCourse.RewardLog.values)
-                    {
-                        string[] s = v.value.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        maxOffset = Math.Max(maxOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, s[0], s.Length > 1 ? s[1] : null));
-                    }
-                    sumOffset += maxOffset;
-                }
-                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(sumOffset / _selectedCourse.Students.Count, true, false)}");
+                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");
             }
             if (GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
             {
                 if (_selectedCourse.StartCourse())
                 {
-                    CrewHandler.Instance.ActiveCourses.Add(_selectedCourse);
+                    CrewHandler.Instance.TrainingCourses.Add(_selectedCourse);
                     _selectedCourse = null;
                     MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
                 }
@@ -324,7 +312,7 @@ namespace RP0.Crew
                 course.RemoveStudent(student);
                 if (course.Students.Count == 0)
                 {
-                    CrewHandler.Instance.ActiveCourses.Remove(course);
+                    CrewHandler.Instance.TrainingCourses.Remove(course);
                     MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
                 }
             });
@@ -346,7 +334,7 @@ namespace RP0.Crew
             {
                 // We "complete" the course but we didn't mark it as Completed, so it just releases the students and doesn't apply rewards
                 course.CompleteCourse();
-                CrewHandler.Instance.ActiveCourses.Remove(course);
+                CrewHandler.Instance.TrainingCourses.Remove(course);
                 MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
             });
             options[2] = new DialogGUIButton("No", () => { });
@@ -380,7 +368,7 @@ namespace RP0.Crew
         private void UpdateActiveCourseMap()
         {
             _activeMap.Clear();
-            foreach (TrainingCourse course in CrewHandler.Instance.ActiveCourses)
+            foreach (TrainingCourse course in CrewHandler.Instance.TrainingCourses)
             {
                 foreach (ProtoCrewMember student in course.Students)
                 {

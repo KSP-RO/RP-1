@@ -358,9 +358,9 @@ namespace RP0
                 float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
                 int lvlInt = (int)(lvl * (costs.Length - 0.95f));
                 FacilityMaintenanceCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out double AcCost);
-                if (CrewHandler.Instance?.ActiveCourses != null)
+                if (CrewHandler.Instance?.TrainingCourses != null)
                 {
-                    double courses = CrewHandler.Instance.ActiveCourses.Count(c => c.Started);
+                    double courses = CrewHandler.Instance.TrainingCourses.Count(c => c.Started);
                     if (courses > 0)
                     {
                         courses -= lvlInt * Settings.freeCoursesPerLevel;

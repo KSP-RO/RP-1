@@ -26,7 +26,7 @@ namespace RP0.Leaders
 
         protected override string GetDescription()
         {
-            return KSP.Localization.Localizer.Format("#rp0LeaderEffectResearchRateModifier", LocalizationHandler.FormatRatioAsPercent(value), effectDescription);
+            return KSP.Localization.Localizer.Format("#rp0LeaderEffectResearchRateModifier", LocalizationHandler.FormatRatioAsPercent(1d + value), effectDescription);
         }
 
         protected override void OnLoadFromConfig(ConfigNode node)

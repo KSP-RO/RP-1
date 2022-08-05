@@ -52,11 +52,11 @@
     <Compile Include="CareerLog\LogPeriod.cs" />
     <Compile Include="CareerLog\LPConstruction.cs" />
     <Compile Include="CareerLog\TechResearchEvent.cs" />
-    <Compile Include="Crew\ActiveCourse.cs" />
-    <Compile Include="Crew\CourseTemplate.cs" />
+    <Compile Include="Crew\TrainingCourse.cs" />
+    <Compile Include="Crew\TrainingTemplate.cs" />
     <Compile Include="Crew\CrewHandlerSettings.cs" />
     <Compile Include="Crew\TrainingDatabase.cs" />
-    <Compile Include="Crew\FSGUI.cs" />
+    <Compile Include="Crew\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="Harmony\RDNode.cs" />
     <Compile Include="Leaders\CurrencyModifierQueryRP0.cs" />

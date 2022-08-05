@@ -52,19 +52,16 @@ namespace RP0.Crew
         private PersistentHashSetValueType<string> _retirees = new PersistentHashSetValueType<string>();
 
         [KSPField(isPersistant = true)]
-        public PersistentList<ActiveCourse> ActiveCourses = new PersistentList<ActiveCourse>();
+        public PersistentList<TrainingCourse> ActiveCourses = new PersistentList<TrainingCourse>();
 
-
-        public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
-        public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         
+        public List<TrainingTemplate> TrainingTemplates = new List<TrainingTemplate>();
         
-
         public bool RetirementEnabled = true;
         public bool IsMissionTrainingEnabled;
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
-        private Dictionary<string, Tuple<CourseTemplate, CourseTemplate>> _partSynsHandled = new Dictionary<string, Tuple<CourseTemplate, CourseTemplate>>();
+        private Dictionary<string, Tuple<TrainingTemplate, TrainingTemplate>> _partSynsHandled = new Dictionary<string, Tuple<TrainingTemplate, TrainingTemplate>>();
         private bool _isFirstLoad = true;    // true if it's a freshly started career
         private bool _inAC = false;
         private int _countAvailable, _countAssigned, _countKIA;
@@ -232,7 +229,7 @@ namespace RP0.Crew
                     {
                         try
                         {
-                            ActiveCourses.Add(new ActiveCourse(courseNode));
+                            ActiveCourses.Add(new TrainingCourse(courseNode));
                         }
                         catch (Exception ex)
                         {
@@ -321,20 +318,20 @@ namespace RP0.Crew
             {
                 bool isPartUnlocked = !isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available;
 
-                CourseTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
+                TrainingTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
                 AppendToPartTooltip(ap, profCourse);
-                CourseTemplate missionCourse = null;
+                TrainingTemplate missionCourse = null;
                 if (isPartUnlocked && IsMissionTrainingEnabled)
                 {
                     missionCourse = GenerateCourseMission(ap);
                     AppendToPartTooltip(ap, missionCourse);
                 }
-                _partSynsHandled.Add(name, new Tuple<CourseTemplate, CourseTemplate>(profCourse, missionCourse));
+                _partSynsHandled.Add(name, new Tuple<TrainingTemplate, TrainingTemplate>(profCourse, missionCourse));
             }
             else
             {
-                CourseTemplate pc = coursePair.Item1;
-                CourseTemplate mc = coursePair.Item2;
+                TrainingTemplate pc = coursePair.Item1;
+                TrainingTemplate mc = coursePair.Item2;
                 AppendToPartTooltip(ap, pc);
                 if (mc != null) AppendToPartTooltip(ap, mc);
             }
@@ -797,7 +794,7 @@ namespace RP0.Crew
             bool anyCourseEnded = false;
             for (int i = ActiveCourses.Count; i-- > 0;)
             {
-                ActiveCourse course = ActiveCourses[i];
+                TrainingCourse course = ActiveCourses[i];
                 if (course.ProgressTime(time)) //returns true when the course completes
                 {
                     ActiveCourses.RemoveAt(i);
@@ -988,22 +985,13 @@ namespace RP0.Crew
         private void GenerateOfferedCourses()
         {
             Profiler.BeginSample("RP0 GenerateOfferedCourses");
-            OfferedCourses.Clear();
+            TrainingTemplates.Clear();
             _partSynsHandled.Clear();
 
             if (!CurrentSceneAllowsCrewManagement)
             {
                 Profiler.EndSample();
                 return;    // Course UI is only available in those 2 scenes so no need to generate them for any other
-            }
-
-            //convert the saved configs to course offerings
-            foreach (CourseTemplate template in CourseTemplates)
-            {
-                var duplicate = new CourseTemplate(template.sourceNode, true); //creates a duplicate so the initial template is preserved
-                duplicate.PopulateFromSourceNode();
-                if (duplicate.Available)
-                    OfferedCourses.Add(duplicate);
             }
 
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
@@ -1017,7 +1005,7 @@ namespace RP0.Crew
             Profiler.EndSample();
         }
 
-        private CourseTemplate GenerateCourseProf(AvailablePart ap, bool isTemporary)
+        private TrainingTemplate GenerateCourseProf(AvailablePart ap, bool isTemporary)
         {
             var n = new ConfigNode("FS_COURSE");
             bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
@@ -1033,14 +1021,14 @@ namespace RP0.Crew
             ConfigNode l = r.AddNode("FLIGHTLOG");
             l.AddValue("0", $"{TrainingType_Proficiency},{name}");
 
-            var c = new CourseTemplate(n);
+            var c = new TrainingTemplate(n);
             c.PopulateFromSourceNode();
-            OfferedCourses.Add(c);
+            TrainingTemplates.Add(c);
 
             return c;
         }
 
-        private CourseTemplate GenerateCourseMission(AvailablePart ap)
+        private TrainingTemplate GenerateCourseMission(AvailablePart ap)
         {
             var n = new ConfigNode("FS_COURSE");
             bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
@@ -1058,9 +1046,9 @@ namespace RP0.Crew
             ConfigNode l = r.AddNode("FLIGHTLOG");
             l.AddValue("0", $"{TrainingType_Mission},{name}");
 
-            var c = new CourseTemplate(n);
+            var c = new TrainingTemplate(n);
             c.PopulateFromSourceNode();
-            OfferedCourses.Add(c);
+            TrainingTemplates.Add(c);
 
             return c;
         }
@@ -1118,7 +1106,7 @@ namespace RP0.Crew
             }
         }
 
-        private static void AppendToPartTooltip(AvailablePart ap, CourseTemplate ct)
+        private static void AppendToPartTooltip(AvailablePart ap, TrainingTemplate ct)
         {
             ct.PartsTooltip = ct.PartsTooltip == null ? $"Applies to parts: {ap.title}" :
                                                         $"{ct.PartsTooltip}, {ap.title}";

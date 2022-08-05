@@ -30,6 +30,37 @@ namespace RP0.DataTypes
         }
     }
 
+    public class PersistentParsableList<T> : List<T>, IConfigNode where T : class
+    {
+        protected virtual T Parse(string s)
+        {
+            if (typeof(T) == typeof(ProtoCrewMember))
+            {
+                return HighLogic.CurrentGame.CrewRoster[s] as T;
+            }
+
+            return null;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            Clear();
+            foreach (ConfigNode.Value v in node.values)
+            {
+                T item = Parse(v.value);
+                Add(item);
+            }
+        }
+
+        public void Save(ConfigNode node)
+        {
+            foreach (var item in this)
+            {
+                node.AddValue("item", item.ToString());
+            }
+        }
+    }
+
     /// <summary>
     /// NOTE: This does not have constraints because string is supported
     /// but string is not a valuetype

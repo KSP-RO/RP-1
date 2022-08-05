@@ -10,6 +10,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
 using KCTUtils = KerbalConstructionTime.Utilities;
+using RP0.DataTypes;
 
 namespace RP0.Crew
 {
@@ -34,18 +35,36 @@ namespace RP0.Crew
         public static CrewHandler Instance { get; private set; } = null;
         public static CrewHandlerSettings Settings { get; private set; } = null;
 
-        private Dictionary<string, double> KerbalRetireTimes = new Dictionary<string, double>();
-        private Dictionary<string, double> KerbalRetireIncreases = new Dictionary<string, double>();
+        [KSPField(isPersistant = true)]
+        public int saveVersion;
+        public const int VERSION = 1;
+
+        [KSPField(isPersistant = true)]
+        private PersistentDictionaryValueTypes<string, double> _retireTimes = new PersistentDictionaryValueTypes<string, double>();
+        
+        [KSPField(isPersistant = true)]
+        private PersistentDictionaryValueTypes<string, double> _retireIncreases = new PersistentDictionaryValueTypes<string, double>();
+
+        [KSPField(isPersistant = true)]
+        private PersistentList<TrainingExpiration> _expireTimes = new PersistentList<TrainingExpiration>();
+
+        [KSPField(isPersistant = true)]
+        private PersistentHashSetValueType<string> _retirees = new PersistentHashSetValueType<string>();
+
+        [KSPField(isPersistant = true)]
+        public PersistentList<ActiveCourse> ActiveCourses = new PersistentList<ActiveCourse>();
+
+
         public List<CourseTemplate> CourseTemplates = new List<CourseTemplate>();
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
-        public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
+        
+        
+
         public bool RetirementEnabled = true;
         public bool IsMissionTrainingEnabled;
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
-        private HashSet<string> _retirees = new HashSet<string>();
         private Dictionary<string, Tuple<CourseTemplate, CourseTemplate>> _partSynsHandled = new Dictionary<string, Tuple<CourseTemplate, CourseTemplate>>();
-        private List<TrainingExpiration> _expireTimes = new List<TrainingExpiration>();
         private bool _isFirstLoad = true;    // true if it's a freshly started career
         private bool _inAC = false;
         private int _countAvailable, _countAssigned, _countKIA;
@@ -140,8 +159,6 @@ namespace RP0.Crew
             KCT_GUI.AvailabilityChecker = CheckCrewForPart;
 
             _cliTooltip = typeof(CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            FindAllCourseConfigs();     //find all applicable configs
         }
 
         public void Start()
@@ -167,58 +184,63 @@ namespace RP0.Crew
                     Settings.Load(stg);
             }
 
-            KerbalRetireTimes.Clear();
-            ConfigNode n = node.GetNode("RETIRETIMES");
-            if (n != null)
+            if (saveVersion < 1)
             {
-                _isFirstLoad = false;
-                foreach (ConfigNode.Value v in n.values)
-                    KerbalRetireTimes[v.name] = double.Parse(v.value);
-            }
-
-            KerbalRetireIncreases.Clear();
-            n = node.GetNode("RETIREINCREASES");
-            if (n != null)
-            {
-                foreach (ConfigNode.Value v in n.values)
-                    KerbalRetireIncreases[v.name] = double.Parse(v.value);
-            }
-
-            _retirees.Clear();
-            n = node.GetNode("RETIREES");
-            if (n != null)
-            {
-                foreach (ConfigNode.Value v in n.values)
-                    _retirees.Add(v.value);
-            }
-
-            _expireTimes.Clear();
-            n = node.GetNode("EXPIRATIONS");
-            if (n != null)
-            {
-                foreach (ConfigNode eN in n.nodes)
+                _retireTimes.Clear();
+                ConfigNode n = node.GetNode("RETIRETIMES");
+                if (n != null)
                 {
-                    _expireTimes.Add(new TrainingExpiration(eN));
+                    _isFirstLoad = false;
+                    foreach (ConfigNode.Value v in n.values)
+                        _retireTimes[v.name] = double.Parse(v.value);
+                }
+
+                _retireIncreases.Clear();
+                n = node.GetNode("RETIREINCREASES");
+                if (n != null)
+                {
+                    foreach (ConfigNode.Value v in n.values)
+                        _retireIncreases[v.name] = double.Parse(v.value);
+                }
+
+                _retirees.Clear();
+                n = node.GetNode("RETIREES");
+                if (n != null)
+                {
+                    foreach (ConfigNode.Value v in n.values)
+                        _retirees.Add(v.value);
+                }
+
+                _expireTimes.Clear();
+                n = node.GetNode("EXPIRATIONS");
+                if (n != null)
+                {
+                    foreach (ConfigNode eN in n.nodes)
+                    {
+                        _expireTimes.Add(new TrainingExpiration(eN));
+                    }
+                }
+
+                ConfigNode FSData = node.GetNode("FlightSchoolData");
+                if (FSData != null)
+                {
+                    //load all the active courses
+                    ActiveCourses.Clear();
+                    foreach (ConfigNode courseNode in FSData.GetNodes("ACTIVE_COURSE"))
+                    {
+                        try
+                        {
+                            ActiveCourses.Add(new ActiveCourse(courseNode));
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogException(ex);
+                        }
+                    }
                 }
             }
 
-            ConfigNode FSData = node.GetNode("FlightSchoolData");
-            if (FSData != null)
-            {
-                //load all the active courses
-                ActiveCourses.Clear();
-                foreach (ConfigNode courseNode in FSData.GetNodes("ACTIVE_COURSE"))
-                {
-                    try
-                    {
-                        ActiveCourses.Add(new ActiveCourse(courseNode));
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogException(ex);
-                    }
-                }
-            }
+            saveVersion = VERSION;
 
             TrainingDatabase.EnsureInitialized();
             KACWrapper.InitKACWrapper();
@@ -227,31 +249,6 @@ namespace RP0.Crew
         public override void OnSave(ConfigNode node)
         {
             base.OnSave(node);
-
-            ConfigNode n = node.AddNode("RETIRETIMES");
-            foreach (KeyValuePair<string, double> kvp in KerbalRetireTimes)
-                n.AddValue(kvp.Key, kvp.Value);
-
-            n = node.AddNode("RETIREINCREASES");
-            foreach (KeyValuePair<string, double> kvp in KerbalRetireIncreases)
-                n.AddValue(kvp.Key, kvp.Value);
-
-            n = node.AddNode("RETIREES");
-            foreach (string s in _retirees)
-                n.AddValue("retiree", s);
-
-            n = node.AddNode("EXPIRATIONS");
-            foreach (TrainingExpiration e in _expireTimes)
-                e.Save(n.AddNode("Expiration"));
-
-            var FSData = new ConfigNode("FlightSchoolData");
-            //save all the active courses
-            foreach (ActiveCourse course in ActiveCourses)
-            {
-                ConfigNode courseNode = course.AsConfigNode();
-                FSData.AddNode("ACTIVE_COURSE", courseNode);
-            }
-            node.AddNode("FlightSchoolData", FSData);
         }
 
         public void Process()
@@ -463,13 +460,13 @@ namespace RP0.Crew
 
         public double GetRetireTime(string pcmName)
         {
-            KerbalRetireTimes.TryGetValue(pcmName, out double retTime);
+            _retireTimes.TryGetValue(pcmName, out double retTime);
             return retTime;
         }
 
         public double GetRetireIncreaseTime(string pcmName)
         {
-            KerbalRetireIncreases.TryGetValue(pcmName, out double retTime);
+            _retireIncreases.TryGetValue(pcmName, out double retTime);
             return retTime;
         }
 
@@ -486,12 +483,12 @@ namespace RP0.Crew
                 retireOffset = retIncreaseTotal - Settings.retireIncreaseCap;
                 newTotal = Settings.retireIncreaseCap;
             }
-            KerbalRetireIncreases[pcmName] = newTotal;
+            _retireIncreases[pcmName] = newTotal;
 
             string sRetireOffset = KSPUtil.PrintDateDelta(retireOffset, false, false);
             Debug.Log("[RP-0] retire date increased by: " + sRetireOffset);
 
-            KerbalRetireTimes[pcmName] = GetRetireTime(pcmName) + retireOffset;
+            _retireTimes[pcmName] = GetRetireTime(pcmName) + retireOffset;
             return retireOffset;
         }
 
@@ -676,14 +673,14 @@ namespace RP0.Crew
         {
             double retireTime;
             // Skip updating the retirement time if this is an existing kerbal.
-            if (KerbalRetireTimes.ContainsKey(pcm.name))
+            if (_retireTimes.ContainsKey(pcm.name))
             {
-                retireTime = KerbalRetireTimes[pcm.name];
+                retireTime = _retireTimes[pcm.name];
             }
             else
             {
                 retireTime = KSPUtils.GetUT() + GetServiceTime(pcm);
-                KerbalRetireTimes[pcm.name] = retireTime;
+                _retireTimes[pcm.name] = retireTime;
             }
 
             if (RetirementEnabled && idx != int.MinValue)
@@ -705,7 +702,7 @@ namespace RP0.Crew
             foreach (ProtoCrewMember pcm in HighLogic.CurrentGame.CrewRoster.Crew)
             {
                 if ((pcm.rosterStatus == ProtoCrewMember.RosterStatus.Assigned || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available) &&
-                    !KerbalRetireTimes.ContainsKey(pcm.name))
+                    !_retireTimes.ContainsKey(pcm.name))
                 {
                     if (pcm.trait != KerbalRoster.pilotTrait)
                     {
@@ -740,7 +737,7 @@ namespace RP0.Crew
         {
             if (RetirementEnabled)
             {
-                foreach (KeyValuePair<string, double> kvp in KerbalRetireTimes)
+                foreach (KeyValuePair<string, double> kvp in _retireTimes)
                 {
                     ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[kvp.Key];
                     if (pcm == null || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Dead || pcm.rosterStatus == ProtoCrewMember.RosterStatus.Missing)
@@ -770,7 +767,7 @@ namespace RP0.Crew
                 string msgStr = string.Empty;
                 foreach (string s in _toRemove)
                 {
-                    KerbalRetireTimes.Remove(s);
+                    _retireTimes.Remove(s);
                     ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[s];
                     if (pcm != null && _retirees.Contains(s) && pcm.type == ProtoCrewMember.KerbalType.Crew)
                     {
@@ -985,17 +982,6 @@ namespace RP0.Crew
             }
 
             return false;
-        }
-
-        private void FindAllCourseConfigs()
-        {
-            CourseTemplates.Clear();
-            //find all configs and save them
-            foreach (ConfigNode course in GameDatabase.Instance.GetConfigNodes("FS_COURSE"))
-            {
-                CourseTemplates.Add(new CourseTemplate(course));
-            }
-            Debug.Log($"[RP-0] Found {CourseTemplates.Count} courses.");
         }
 
         private void GenerateOfferedCourses()

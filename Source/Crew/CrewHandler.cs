@@ -159,6 +159,15 @@ namespace RP0.Crew
             KCT_GUI.AvailabilityChecker = CheckCrewForPart;
 
             _cliTooltip = typeof(CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (Settings == null)
+            {
+                Settings = new CrewHandlerSettings();
+                foreach (ConfigNode stg in GameDatabase.Instance.GetConfigNodes("CREWHANDLERSETTINGS"))
+                    Settings.Load(stg);
+            }
+
+            TrainingDatabase.EnsureInitialized();
         }
 
         public void Start()
@@ -176,13 +185,6 @@ namespace RP0.Crew
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
-
-            if (Settings == null)
-            {
-                Settings = new CrewHandlerSettings();
-                foreach (ConfigNode stg in GameDatabase.Instance.GetConfigNodes("CREWHANDLERSETTINGS"))
-                    Settings.Load(stg);
-            }
 
             if (saveVersion < 1)
             {
@@ -242,7 +244,6 @@ namespace RP0.Crew
 
             saveVersion = VERSION;
 
-            TrainingDatabase.EnsureInitialized();
             KACWrapper.InitKACWrapper();
         }
 

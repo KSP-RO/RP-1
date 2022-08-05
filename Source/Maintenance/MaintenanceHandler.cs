@@ -94,26 +94,53 @@ namespace RP0
             public double minSubsidy, maxSubsidy, maxRep, subsidy;
         }
 
-        public SubsidyDetails GetSubsidyDetails()
+        public static SubsidyDetails GetSubsidyDetails()
         {
             var details = new SubsidyDetails();
             const double secsPerYear = 3600 * 24 * 365.25;
             float years = (float)(KSPUtils.GetUT() / secsPerYear);
             details.minSubsidy = Settings.subsidyCurve.Evaluate(years);
-            details.maxRep = details.minSubsidy * Settings.subsidyMultiplierForMax / Settings.repToSubsidyConversion;
             details.maxSubsidy = details.minSubsidy * Settings.subsidyMultiplierForMax;
+            details.maxRep = details.maxSubsidy / Settings.repToSubsidyConversion;
             double invLerp = UtilMath.InverseLerp(0, details.maxRep, UtilMath.Clamp(Reputation.Instance.reputation, 0, details.maxRep));
             details.subsidy = UtilMath.LerpUnclamped(details.minSubsidy, details.maxSubsidy, invLerp);
             //Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");
             return details;
         }
 
+        public static double GetSubsidyAt(double UT)
+        {
+            double days = Math.Floor((UT - KSPUtils.GetUT()) / 86400d);
+            double rep = Reputation.CurrentRep * Math.Pow(1d - Settings.repPortionLostPerDay, days);
+            return GetSubsidyAt(UT, rep);
+        }
+
+        public static double GetSubsidyAt(double UT, double rep)
+        {
+            const double secsPerYear = 3600 * 24 * 365.25;
+            float years = (float)(UT / secsPerYear);
+            double minSubsidy = Settings.subsidyCurve.Evaluate(years);
+            
+
+            
+            double maxSubsidy = minSubsidy * Settings.subsidyMultiplierForMax;
+            double maxRep = maxSubsidy / Settings.repToSubsidyConversion;
+            double t;
+            if (rep < 0)
+                t = 0;
+            else if (rep > maxRep)
+                t = 1;
+            else
+                t = UtilMath.InverseLerp(0, maxRep, rep);
+
+            return UtilMath.LerpUnclamped(minSubsidy, maxSubsidy, t);
+        }
+
         public double MaintenanceSubsidyPerDay
         {
             get
             {
-                SubsidyDetails details = GetSubsidyDetails();
-                return details.subsidy * (1d / 365.25d);
+                return GetSubsidyAt(KSPUtils.GetUT()) * (1d / 365.25d);
             }
         }
 

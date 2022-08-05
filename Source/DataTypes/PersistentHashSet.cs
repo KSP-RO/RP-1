@@ -36,7 +36,7 @@ namespace RP0.DataTypes
     /// </summary>
     public class PersistentHashSetValueType<T> : HashSet<T>, IConfigNode
     {
-        private static System.Reflection.MethodInfo ReadValueMethod = typeof(ConfigNode).GetMethod("ReadValue", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.MethodInfo ReadValueMethod = HarmonyLib.AccessTools.Method(typeof(ConfigNode), "ReadValue");
         private static System.Type type = typeof(T);
 
         public void Load(ConfigNode node)

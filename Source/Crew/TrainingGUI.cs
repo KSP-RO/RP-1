@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace RP0.Crew
 {
-    public class FSGUI : UIBase
+    public class TrainingGUI : UIBase
     {
-        private ActiveCourse _selectedCourse = null;
+        private TrainingCourse _selectedCourse = null;
         private ProtoCrewMember _selectedNaut = null;
         private Vector2 _nautListScroll = new Vector2();
-        private readonly Dictionary<ProtoCrewMember, ActiveCourse> _activeMap = new Dictionary<ProtoCrewMember, ActiveCourse>();
+        private readonly Dictionary<ProtoCrewMember, TrainingCourse> _activeMap = new Dictionary<ProtoCrewMember, TrainingCourse>();
         private Vector2 _courseSelectorScroll = new Vector2();
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
@@ -29,7 +29,7 @@ namespace RP0.Crew
 
         protected void RenderNautListRow(UITab currentTab, ProtoCrewMember student)
         {
-            ActiveCourse currentCourse = null;
+            TrainingCourse currentCourse = null;
             if (_activeMap.ContainsKey(student))
                 currentCourse = _activeMap[student];
             bool selectedForCourse = _selectedCourse != null && _selectedCourse.Students.Contains(student);
@@ -175,12 +175,12 @@ namespace RP0.Crew
             _courseSelectorScroll = GUILayout.BeginScrollView(_courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));
             try
             {
-                foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses)
+                foreach (TrainingTemplate course in CrewHandler.Instance.TrainingTemplates)
                 {
                     var style = course.isTemporary ? _courseBtnStyle : HighLogic.Skin.button;
                     var c = new GUIContent(course.name, course.PartsTooltip);
                     if (GUILayout.Button(c, style))
-                        _selectedCourse = new ActiveCourse(course);
+                        _selectedCourse = new TrainingCourse(course);
                 }
             }
             catch (Exception ex)
@@ -290,7 +290,7 @@ namespace RP0.Crew
 
             if (_activeMap.ContainsKey(_selectedNaut))
             {
-                ActiveCourse currentCourse = _activeMap[_selectedNaut];
+                TrainingCourse currentCourse = _activeMap[_selectedNaut];
                 GUILayout.BeginHorizontal();
                 try
                 {
@@ -315,7 +315,7 @@ namespace RP0.Crew
             GUILayout.Label(CrewHandler.Instance.GetTrainingString(_selectedNaut));
         }
 
-        private void LeaveCourse(ActiveCourse course, ProtoCrewMember student)
+        private void LeaveCourse(TrainingCourse course, ProtoCrewMember student)
         {
             DialogGUIBase[] options = new DialogGUIBase[3];
             options[0] = new DialogGUIFlexibleSpace();
@@ -338,7 +338,7 @@ namespace RP0.Crew
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
-        private void CancelCourse(ActiveCourse course)
+        private void CancelCourse(TrainingCourse course)
         {
             DialogGUIBase[] options = new DialogGUIBase[3];
             options[0] = new DialogGUIFlexibleSpace();
@@ -364,7 +364,7 @@ namespace RP0.Crew
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
 
-        private static void CreateCourseFinishAlarm(ProtoCrewMember student, ActiveCourse currentCourse)
+        private static void CreateCourseFinishAlarm(ProtoCrewMember student, TrainingCourse currentCourse)
         {
             double completeUT = currentCourse.CompletionTime();
             string alarmTxt = $"{currentCourse.GetItemName()} - {student.name}";
@@ -380,7 +380,7 @@ namespace RP0.Crew
         private void UpdateActiveCourseMap()
         {
             _activeMap.Clear();
-            foreach (ActiveCourse course in CrewHandler.Instance.ActiveCourses)
+            foreach (TrainingCourse course in CrewHandler.Instance.ActiveCourses)
             {
                 foreach (ProtoCrewMember student in course.Students)
                 {

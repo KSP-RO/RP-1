@@ -1179,7 +1179,7 @@ namespace KerbalConstructionTime
                 if (tech.GetBlockingTech(KCTGameStates.TechList) == null)   // Ignore items that are blocked
                     _checkTime(tech, ref shortestTime, ref thing);
             }
-            foreach (IKCTBuildItem course in RP0.Crew.CrewHandler.Instance.ActiveCourses)
+            foreach (IKCTBuildItem course in RP0.Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
             return thing;
         }

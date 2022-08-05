@@ -995,7 +995,7 @@ namespace RP0.Crew
 
             foreach (var c in TrainingCourses)
             {
-                c.Relink();
+                c.LinkTemplate();
             }
             Profiler.EndSample();
         }

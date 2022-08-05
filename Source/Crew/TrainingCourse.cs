@@ -7,7 +7,7 @@ using RP0.DataTypes;
 
 namespace RP0.Crew
 {
-    public class ActiveCourse : IKCTBuildItem, IConfigNode
+    public class TrainingCourse : IKCTBuildItem, IConfigNode
     {
         [Persistent]
         public string id;
@@ -27,7 +27,7 @@ namespace RP0.Crew
         [Persistent]
         public bool Completed = false;
 
-        private CourseTemplate template;
+        private TrainingTemplate template;
         public int seatMin => template.seatMin;
         public int seatMax => template.seatMax;
         public string description => template.description;
@@ -36,12 +36,12 @@ namespace RP0.Crew
 
         public double baseCourseTime = 0d;
 
-        public ActiveCourse(CourseTemplate template)
+        public TrainingCourse(TrainingTemplate template)
         {
             id = template.id;
         }
 
-        public ActiveCourse(ConfigNode node)
+        public TrainingCourse(ConfigNode node)
         {
             Load(node);
         }
@@ -49,7 +49,7 @@ namespace RP0.Crew
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            template = CrewHandler.Instance.CourseTemplates.Find(c => c.id == id);
+            template = CrewHandler.Instance.TrainingTemplates.Find(c => c.id == id);
         }
 
         public void Save(ConfigNode node)

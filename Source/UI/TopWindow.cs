@@ -13,7 +13,7 @@ namespace RP0
 
         private readonly MaintenanceGUI _maintUI = new MaintenanceGUI();
         private readonly ToolingGUI _toolUI = new ToolingGUI();
-        private readonly Crew.FSGUI _fsUI = new Crew.FSGUI();
+        private readonly Crew.TrainingGUI _fsUI = new Crew.TrainingGUI();
         private readonly AvionicsGUI _avUI = new AvionicsGUI();
         private readonly ContractGUI _contractUI = new ContractGUI();
         private readonly CareerLogGUI _logUI = new CareerLogGUI();

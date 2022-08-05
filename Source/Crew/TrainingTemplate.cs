@@ -6,7 +6,7 @@ namespace RP0.Crew
 {
     public enum RepeatMode { NEVER, EXPIRED, ALWAYS }; //is the course repeatable?
 
-    public class CourseTemplate
+    public class TrainingTemplate
     {
         public ConfigNode sourceNode = new ConfigNode();
         
@@ -44,12 +44,12 @@ namespace RP0.Crew
 
         internal string PartsTooltip;
 
-        public CourseTemplate(ConfigNode source)
+        public TrainingTemplate(ConfigNode source)
         {
             sourceNode = source;
         }
 
-        public CourseTemplate(ConfigNode source, bool copy)
+        public TrainingTemplate(ConfigNode source, bool copy)
         {
             if (copy)
                 sourceNode = source.CreateCopy();
@@ -57,7 +57,7 @@ namespace RP0.Crew
                 sourceNode = source;
         }
 
-        public CourseTemplate()
+        public TrainingTemplate()
         {
 
         }

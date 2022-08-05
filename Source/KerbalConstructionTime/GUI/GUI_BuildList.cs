@@ -647,7 +647,7 @@ namespace KerbalConstructionTime
                 accTime += t.GetTimeLeftEst(accTime);
                 _allItems.Add(t);
             }
-            _allItems.AddRange(RP0.Crew.CrewHandler.Instance.ActiveCourses);
+            _allItems.AddRange(RP0.Crew.CrewHandler.Instance.TrainingCourses);
             _allItems.Sort(CompareBuildItems);
 
             GUILayout.BeginHorizontal();

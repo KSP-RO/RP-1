@@ -49,7 +49,7 @@ namespace RP0.DataTypes
     /// <typeparam name="TValue"></typeparam>
     public class PersistentDictionaryValueTypes<TKey, TValue> : Dictionary<TKey, TValue>, IConfigNode
     {
-        private static System.Reflection.MethodInfo ReadValueMethod = typeof(ConfigNode).GetMethod("ReadValue", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.MethodInfo ReadValueMethod = HarmonyLib.AccessTools.Method(typeof(ConfigNode), "ReadValue");
         private static System.Type KeyType = typeof(TKey);
         private static System.Type ValueType = typeof(TValue);
 

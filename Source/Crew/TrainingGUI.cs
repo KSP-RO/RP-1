@@ -84,7 +84,7 @@ namespace RP0.Crew
                 else
                 {
                     course = currentCourse.GetItemName();
-                    complete = KSPUtil.PrintDate(currentCourse.CompletionTime(), false);
+                    complete = KSPUtil.PrintDate(KSPUtils.GetUT() + currentCourse.GetTimeLeft(), false);
                 }
                 GUILayout.Label(course, GUILayout.Width(96));
                 GUILayout.Label(complete, GUILayout.Width(80));
@@ -222,8 +222,8 @@ namespace RP0.Crew
             if (_selectedCourse.seatMin > _selectedCourse.Students.Count)
                 GUILayout.Label($"{_selectedCourse.seatMin - _selectedCourse.Students.Count} more naut(s) required.");
             const string tooltip = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
-            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTime(), true, false)}", tooltip));
-            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(_selectedCourse.CompletionTime(), false)}", tooltip));
+            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTimeLeft(), true, false)}", tooltip));
+            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(KSPUtils.GetUT() + _selectedCourse.GetTimeLeft(), false)}", tooltip));
             if (CrewHandler.Instance.RetirementEnabled && _selectedCourse.Students.Count > 0)
             {
                 GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");
@@ -282,7 +282,7 @@ namespace RP0.Crew
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label($"Studying {currentCourse.GetItemName()} until {KSPUtil.PrintDate(currentCourse.CompletionTime(), false)}");
+                    GUILayout.Label($"Training for {currentCourse.GetItemName()} until {KSPUtil.PrintDate(KSPUtils.GetUT() + currentCourse.GetTimeLeft(), false)}");
                     if (currentCourse.seatMin > 1)
                     {
                         if (GUILayout.Button("Cancel", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
@@ -354,7 +354,7 @@ namespace RP0.Crew
 
         private static void CreateCourseFinishAlarm(ProtoCrewMember student, TrainingCourse currentCourse)
         {
-            double completeUT = currentCourse.CompletionTime();
+            double completeUT = KSPUtils.GetUT() + currentCourse.GetTimeLeft();
             string alarmTxt = $"{currentCourse.GetItemName()} - {student.name}";
             KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, completeUT);
         }

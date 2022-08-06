@@ -143,6 +143,7 @@ namespace RP0
                 sci = -sci;
                 rep = -rep;
                 conf = -conf;
+                time = -time;
                 // rate can't be inverted
             }
             bool canAffordFunds = CanAfford(CurrencyRP0.Funds);
@@ -161,7 +162,7 @@ namespace RP0
                 resultText = ((!((useInsufficientCurrencyColors && !canAffordFunds) || useCurrencyColors)) ? textFunds : StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordFunds) ? "#B4D455" : XKCDColors.HexFormat.BrightOrange, textFunds));
                 if (includePercentage && deltaFunds != 0f)
                 {
-                    resultText = resultText + " " + GetEffectPercentageText(Currency.Funds, "N1", TextStyling.OnGUI_LessIsGood);
+                    resultText = resultText + " " + GetEffectPercentageText(Currency.Funds, "N1", GetTextStyleFromInput(inputFunds));
                 }
             }
             if (!string.IsNullOrEmpty(textSci))
@@ -173,7 +174,7 @@ namespace RP0
                 resultText = ((!((useInsufficientCurrencyColors && !canAffordSci) || useCurrencyColors)) ? (resultText + textSci) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordSci) ? "#6DCFF6" : XKCDColors.HexFormat.BrightOrange, textSci)));
                 if (includePercentage && deltaScience != 0f)
                 {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Science, "N1", TextStyling.OnGUI_LessIsGood);
+                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Science, "N1", GetTextStyleFromInput(inputScience));
                 }
             }
             if (!string.IsNullOrEmpty(textRep))
@@ -185,7 +186,7 @@ namespace RP0
                 resultText = ((!((useInsufficientCurrencyColors && !canAffordRep) || useCurrencyColors)) ? (resultText + textRep) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordRep) ? "#E0D503" : XKCDColors.HexFormat.BrightOrange, textRep)));
                 if (includePercentage && deltaRep != 0f)
                 {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Reputation, "N1", TextStyling.OnGUI_LessIsGood);
+                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Reputation, "N1", GetTextStyleFromInput(inputRep));
                 }
             }
             if (!string.IsNullOrEmpty(textConf))
@@ -197,7 +198,7 @@ namespace RP0
                 resultText = ((!((useInsufficientCurrencyColors && !canAffordConf) || useCurrencyColors)) ? (resultText + textConf) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordConf) ? $"#{RUIutils.ColorToHex(XKCDColors.KSPBadassGreen)}" : XKCDColors.HexFormat.BrightOrange, textConf)));
                 if (includePercentage && deltaConf != 0f)
                 {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Confidence, "N1", TextStyling.OnGUI_LessIsGood);
+                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Confidence, "N1", GetTextStyleFromInput(inputConf));
                 }
             }
             if (!string.IsNullOrEmpty(textTime))
@@ -209,7 +210,7 @@ namespace RP0
                 resultText += textTime;
                 if (includePercentage && deltaTime != 0f)
                 {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Time, "N1", TextStyling.OnGUI_LessIsGood);
+                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Time, "N1", GetTextStyleFromInput(inputTime));
                 }
             }
             if (!string.IsNullOrEmpty(textRate))
@@ -405,6 +406,14 @@ namespace RP0
                 };
             }
             return "";
+        }
+
+        public static TextStyling GetTextStyleFromInput(double input)
+        {
+            if (input < 0)
+                return TextStyling.OnGUI_LessIsGood;
+
+            return TextStyling.OnGUI;
         }
 
         public static CurrencyModifierQueryRP0 RunQuery(TransactionReasonsRP0 reason, double f0, double s0, double r0)

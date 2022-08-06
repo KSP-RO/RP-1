@@ -191,6 +191,21 @@ namespace RP0.Programs
             RP0Debug.Log($"[RP-0] ProgramHandler added {(Funding.Instance.Funds - fundsOld)} funds.");
         }
 
+        public double GetProgramFunding(double utOffset)
+        {
+            double programBudget = 0d;
+            foreach (Program p in ActivePrograms)
+            {
+                programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + utOffset) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
+            }
+            return programBudget;
+        }
+
+        public double GetDisplayProgramFunding(double utOffset)
+        {
+            return CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, GetProgramFunding(utOffset));
+        }
+
         internal void OnGUI()
         {
             if (IsInAdmin && (_dbgScreen?.isShown ?? false))

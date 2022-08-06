@@ -167,8 +167,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Subsidy", HighLogic.Skin.label, GUILayout.Width(160));
             // NOT formatcost since it is not, strictly speaking, a fund gain.
-            double subsidy = MaintenanceHandler.Instance.MaintenanceSubsidyPerDay * PeriodFactor;
-            subsidy = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidy);
+            double subsidy = MaintenanceHandler.GetAverageSubsidyForPeriod(PeriodFactor * 86400d);
+            subsidy = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidy) * (PeriodFactor / 365.25d);
             GUILayout.Label(subsidy.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
@@ -205,12 +205,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Program Budget", HighLogic.Skin.label, GUILayout.Width(160));
-            double programBudget = 0d;
-            foreach (Programs.Program p in Programs.ProgramHandler.Instance.ActivePrograms)
-            {
-                programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
-            }
-            programBudget = CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, programBudget);
+            double programBudget = Programs.ProgramHandler.Instance.GetDisplayProgramFunding(PeriodFactor * 86400d);
             GUILayout.Label(FormatCost(programBudget), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
             {

@@ -61,7 +61,6 @@
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="Harmony\ACSceneSpawner.cs" />
     <Compile Include="Harmony\AdministrationSceneSpawner.cs" />
-    <Compile Include="Harmony\DoubleCurve.cs" />
     <Compile Include="Harmony\EditorExtensionsRedux.cs" />
     <Compile Include="Harmony\MCSceneSpawner.cs" />
     <Compile Include="Harmony\RDNode.cs" />

@@ -91,11 +91,9 @@ namespace KerbalConstructionTime
                 {
                     foreach (UpgradeableFacility facilityUpgrade in upgrade.facilityRefs)
                     {
+                        double mult = facilityUpgrade.UpgradeLevels.Length > 1 ? 1d / (facilityUpgrade.UpgradeLevels.Length - 1d) : 1d;
                         for (int i = 0; i < facilityUpgrade.UpgradeLevels.Length; i++)
-                        {
-                            UpgradeableObject.UpgradeLevel upgradeLevel = facilityUpgrade.UpgradeLevels[i];
-                            UpdateFacilityLevelStats(upgradeLevel, i);
-                        }
+                            RP0.LocalizationHandler.UpdateFacilityLevelStats(facilityUpgrade.UpgradeLevels[i], i, i * mult);
                     }
                 }
             }
@@ -106,50 +104,6 @@ namespace KerbalConstructionTime
             }
 
             return true;
-        }
-
-        private void UpdateFacilityLevelStats(UpgradeableObject.UpgradeLevel lvl, int lvlIdx)
-        {
-            // levelText appears to be unused by KSP itself. We can use it to store original level stats.
-            // Restoring old values is necessary because those persist between scene changes but some of them are based on current KCT settings.
-            if (lvl.levelText == null)
-            {
-                lvl.levelText = ScriptableObject.CreateInstance<KSCUpgradeableLevelText>();
-                lvl.levelText.facility = lvl.levelStats.facility;
-                lvl.levelText.linePrefix = lvl.levelStats.linePrefix;
-                lvl.levelText.textBase = lvl.levelStats.textBase;
-            }
-            else
-            {
-                lvl.levelStats.textBase = lvl.levelText.textBase;
-            }
-
-            KCTDebug.Log($"Overriding level stats text for {lvl.levelStats.facility} lvl {lvlIdx}");
-
-            SpaceCenterFacility facilityType = lvl.levelStats.facility;
-            if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding || facilityType == SpaceCenterFacility.LaunchPad)
-            {
-                lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuVAB";
-            }
-            else if(facilityType == SpaceCenterFacility.SpaceplaneHangar || facilityType == SpaceCenterFacility.Runway)
-            {
-                lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuSPH";
-            }
-            else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
-            {
-                if (PresetManager.Instance != null)
-                {
-                    int limit = PresetManager.Instance.ActivePreset.ResearcherCaps[lvlIdx];
-                    lvl.levelStats.textBase += $"\n{KSP.Localization.Localizer.GetStringByTag("#rp0FacilityContextMenuRnD_ResearcherLimit")} {(limit == -1 ? "#rp0FacilityContextMenuRnD_ResearcherLimit_unlimited" : limit.ToString("N0"))}";
-                }
-            }
-            else if (facilityType == SpaceCenterFacility.AstronautComplex &&
-                     lvlIdx > 0)
-            {
-                lvl.levelStats.textBase += $"\n{KSP.Localization.Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_RnR", lvlIdx * 25)}\n{KSP.Localization.Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_Training", lvlIdx * 25)}";
-            }
         }
 
         internal T GetMember<T>(string name)

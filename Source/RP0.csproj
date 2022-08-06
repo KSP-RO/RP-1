@@ -60,6 +60,7 @@
     <Compile Include="Crew\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="Harmony\DoubleCurve.cs" />
+    <Compile Include="Harmony\EditorExtensionsRedux.cs" />
     <Compile Include="Harmony\RDNode.cs" />
     <Compile Include="Leaders\CurrencyModifierQueryRP0.cs" />
     <Compile Include="DataTypes\PersistentDictionary.cs" />

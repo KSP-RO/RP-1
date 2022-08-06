@@ -155,10 +155,6 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static int GetSalaryEngineers() => (int)(-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryEngineers, -RP0.MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d));
-        public static int GetSalaryResearchers() => (int)(-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryResearchers, -RP0.MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d));
-        public static int GetTotalSalary() => GetSalaryEngineers() + GetSalaryResearchers();
-
         public static double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)
         {
             double engineers = 0d;
@@ -318,7 +314,7 @@ namespace KerbalConstructionTime
             get
             {
                 int eng = 0;
-                foreach (var ksc in KCTGameStates.KSCs)
+                foreach (var ksc in KSCs)
                     eng += ksc.Engineers;
 
                 return eng;

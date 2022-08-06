@@ -37,7 +37,7 @@ namespace RP0.Crew
 
         [KSPField(isPersistant = true)]
         public int saveVersion;
-        public const int VERSION = 2;
+        public const int VERSION = 3;
 
         [KSPField(isPersistant = true)]
         private PersistentDictionaryValueTypes<string, double> _retireTimes = new PersistentDictionaryValueTypes<string, double>();
@@ -246,14 +246,15 @@ namespace RP0.Crew
             base.OnSave(node);
         }
 
-        public void Process()
+        public void Process(double UTDiff)
         {
             if (_isFirstLoad)
                 return;
 
             double time = KSPUtils.GetUT();
             ProcessRetirements(time);
-            ProcessCourses(time);
+            ProcessCourses(UTDiff);
+            ProcessExpirations(time);
         }
 
         public void Update()
@@ -780,19 +781,8 @@ namespace RP0.Crew
             }
         }
 
-        private void ProcessCourses(double time)
+        private void ProcessExpirations(double time)
         {
-            bool anyCourseEnded = false;
-            for (int i = TrainingCourses.Count; i-- > 0;)
-            {
-                TrainingCourse course = TrainingCourses[i];
-                if (course.ProgressTime(time)) //returns true when the course completes
-                {
-                    TrainingCourses.RemoveAt(i);
-                    anyCourseEnded = true;
-                }
-            }
-
             for (int i = _expireTimes.Count; i-- > 0;)
             {
                 TrainingExpiration exp = _expireTimes[i];
@@ -804,8 +794,6 @@ namespace RP0.Crew
                         for (int j = pcm.careerLog.Entries.Count; j-- > 0;)
                         {
                             FlightLog.Entry ent = pcm.careerLog[j];
-                            // Allow only mission trainings to expire.
-                            // This check is actually only needed for old savegames as only these can have expirations on proficiencies.
                             if (exp.Compare(ent))
                             {
                                 ScreenMessages.PostScreenMessage($"{pcm.name}: Expired: {GetPrettyCourseName(ent.type)}{ent.target}");
@@ -814,6 +802,21 @@ namespace RP0.Crew
                         }
                     }
                     _expireTimes.RemoveAt(i);
+                }
+            }
+        }
+
+        private void ProcessCourses(double UTDiff)
+        {
+            bool anyCourseEnded = false;
+            for (int i = TrainingCourses.Count; i-- > 0;)
+            {
+                TrainingCourse course = TrainingCourses[i];
+                course.IncrementProgress(UTDiff);
+                if (course.Completed)
+                {
+                    TrainingCourses.RemoveAt(i);
+                    anyCourseEnded = true;
                 }
             }
 
@@ -876,7 +879,7 @@ namespace RP0.Crew
                                 if (pcm == cli.GetCrewRef())
                                 {
                                     notTraining = false;
-                                    cli.SetLabel("Training, done " + KSPUtil.PrintDate(TrainingCourses[i].startTime + TrainingCourses[i].GetTime(TrainingCourses[i].Students), false));
+                                    cli.SetLabel("Training, done " + KSPUtil.PrintDate(TrainingCourses[i].GetTimeLeft() + KSPUtils.GetUT(), false));
                                     break;
                                 }
                             }

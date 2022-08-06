@@ -71,7 +71,7 @@ namespace RP0
         public double TrainingUpkeepPerDay = 0d;
         public double NautBaseUpkeepPerDay = 0d;
         public double NautInFlightUpkeepPerDay = 0d;
-        public double NetUpkeepPerDay = 0d;
+        public double UpkeepPerDayForDisplay = 0d;
 
         public double FacilityUpkeepPerDay => FacilityMaintenanceCosts.Values.Sum();
 
@@ -120,8 +120,6 @@ namespace RP0
             const double secsPerYear = 3600 * 24 * 365.25;
             float years = (float)(UT / secsPerYear);
             double minSubsidy = Settings.subsidyCurve.Evaluate(years);
-            
-
             
             double maxSubsidy = minSubsidy * Settings.subsidyMultiplierForMax;
             double maxRep = maxSubsidy / Settings.repToSubsidyConversion;
@@ -389,13 +387,12 @@ namespace RP0
                 NautInFlightUpkeepPerDay += flightCost;
             }
 
-            double totalUpkeep = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
+            UpkeepPerDayForDisplay = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
-            NetUpkeepPerDay = Math.Min(0d, CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceSubsidyPerDay) + totalUpkeep);
             Profiler.EndSample();
         }
 

@@ -2347,17 +2347,6 @@ namespace KerbalConstructionTime
             return Math.Pow(5d * (applicantsCur + 1d), 1d / ApplicantsPow);
         }
 
-        public static void SetPartUpgradeText()
-        {
-            foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
-            {
-                if (up.name.StartsWith("rp0EngineerUpgrade"))
-                    up.description = KSP.Localization.Localizer.Format("#rp0EngineerUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
-                else if (up.name.StartsWith("rp0ResearcherUpgrade"))
-                    up.description = KSP.Localization.Localizer.Format("#rp0ResearcherUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
-            }
-        }
-
         public static void GetConstructionTooltip(ConstructionBuildItem constr, int i, out string costTooltip, out string identifier)
         {
             identifier = constr.GetItemName() + i;

@@ -35,7 +35,7 @@ namespace RP0.Crew
         public double GetBaseTime(List<ProtoCrewMember> students)
         {
             double curTime = time;
-            if (training != null && students.Count > 0)
+            if (students.Count > 0)
             {
                 if (training.type == CrewHandler.TrainingType_Proficiency)
                 {
@@ -46,7 +46,7 @@ namespace RP0.Crew
                 }
             }
 
-            if (students == null || students.Count == 0 || !timeUseStupid)
+            if (students.Count == 0 || !timeUseStupid)
                 return curTime;
 
             double averageStupid = 0d;
@@ -57,17 +57,6 @@ namespace RP0.Crew
             averageStupid /= sC;
 
             return curTime * UtilMath.Lerp(CrewHandler.Settings.trainingMissionStupidMin, CrewHandler.Settings.trainingMissionStupidMax, averageStupid);
-        }
-
-        public double GetTimeMultiplierFacility()
-        {
-            double level = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
-            return (1d - level * 0.5d);
-        }
-
-        public virtual double GetTime(List<ProtoCrewMember> students)
-        {
-            return GetBaseTime(students) * GetTimeMultiplierFacility() / CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
         }
 
         public double GetExpiration(ProtoCrewMember pcm)

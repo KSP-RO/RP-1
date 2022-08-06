@@ -472,7 +472,7 @@ namespace RP0
             _lastUpdateFixed = UT;
 
             // First process crew
-            CrewHandler.Instance.Process();
+            CrewHandler.Instance.Process(UTDiff);
 
             // Best to deduct maintenance fees and add program funding at the same time
             ProgramHandler.Instance.ProcessFunding();

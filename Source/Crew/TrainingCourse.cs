@@ -16,10 +16,13 @@ namespace RP0.Crew
         public PersistentParsableList<ProtoCrewMember> Students = new PersistentParsableList<ProtoCrewMember>();
 
         [Persistent]
-        public double elapsedTime = 0;
+        private double progress = 0d;
 
         [Persistent]
-        public double startTime = 0d;
+        private double BP = 0d;
+
+        [Persistent]
+        private double startTime;
 
         [Persistent]
         public bool Started = false;
@@ -33,7 +36,7 @@ namespace RP0.Crew
         public string description => template.description;
         public bool isTemporary => template.isTemporary;
 
-        public double baseCourseTime = 0d;
+        protected double _buildRate = 1d;
 
         public TrainingCourse()
         {
@@ -43,11 +46,16 @@ namespace RP0.Crew
         {
             id = template.id;
             this.template = template;
+            RecalculateBP();
         }
 
         public TrainingCourse(ConfigNode node)
         {
             Load(node);
+            if (CrewHandler.Instance.saveVersion < 3)
+            {
+                node.TryGetValue("elapsedTime", ref progress);
+            }
         }
 
         public void Load(ConfigNode node)
@@ -103,7 +111,10 @@ namespace RP0.Crew
             if (template.seatMax <= 0 || Students.Count < template.seatMax)
             {
                 if (!Students.Contains(student))
+                {
                     Students.Add(student);
+                    RecalculateBP();
+                }
             }
         }
         public void AddStudent(string student)
@@ -118,13 +129,15 @@ namespace RP0.Crew
                 Students.Remove(student);
                 if (Started)
                 {
-                    UnityEngine.Debug.Log("[FS] Kerbal removed from in-progress class!");
-                    //TODO: Assign partial rewards, based on what the REWARD nodes think
                     student.inactive = false;
                     if (Students.Count == 0)
                     {
                         CompleteCourse();   // cancel the course
                     }
+                }
+                else
+                {
+                    RecalculateBP();
                 }
             }
         }
@@ -133,58 +146,12 @@ namespace RP0.Crew
             RemoveStudent(HighLogic.CurrentGame.CrewRoster[student]);
         }
 
-        public double GetTime(List<ProtoCrewMember> students)
-        {
-            if (Started)
-            {
-                if (baseCourseTime == 0d)
-                    baseCourseTime = template.GetBaseTime(students);
-
-                return baseCourseTime * template.GetTimeMultiplierFacility() / CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
-            }
-
-            return template.GetTime(students);
-        }
-
-        public double GetTime()
-        {
-            return GetTime(Students);
-        }
-
-        /* Returns time at which this course will complete */
-        public double CompletionTime()
-        {
-            double start, length;
-            if (Started)
-                start = startTime;
-            else
-                start = KSPUtils.GetUT();
-            length = GetTime();
-            return start + length;
-        }
-
-        public bool ProgressTime(double curT)
-        {
-            if (!Started)
-                return false;
-            if (!Completed)
-            {
-                elapsedTime = curT - startTime;
-                Completed = curT > startTime + GetTime(Students);
-                if (Completed) //we finished the course!
-                {
-                    CompleteCourse();
-                }
-            }
-            return Completed;
-        }
-
         public void CompleteCourse()
         {
             //assign rewards to all kerbals and set them to free
             if (Completed)
             {
-                double length = GetTime(Students);
+                double length = KSPUtils.GetUT() - startTime;
                 List<string> retirementChanges = new List<string>();
                 foreach (ProtoCrewMember student in Students)
                 {
@@ -270,12 +237,10 @@ namespace RP0.Crew
                 return false;
 
             Started = true;
-
             startTime = KSPUtils.GetUT();
 
-
             foreach (ProtoCrewMember student in Students)
-                student.SetInactive(GetTime(Students) + 1d);
+                student.SetInactive(template.GetBaseTime(Students) * 1.2d);
 
             return true;
             //fire an event
@@ -286,19 +251,14 @@ namespace RP0.Crew
             return template.name;
         }
 
-        public double GetBuildRate()
-        {
-            return 1d;
-        }
-
         public double GetFractionComplete()
         {
-            return (KSPUtils.GetUT() - startTime) / GetTime();
+            return progress / BP;
         }
 
         public double GetTimeLeft()
         {
-            return GetTime() - (KSPUtils.GetUT() - startTime);
+            return (BP - progress) / GetBuildRate();
         }
 
         public double GetTimeLeftEst(double offset)
@@ -316,10 +276,46 @@ namespace RP0.Crew
             return Completed;
         }
 
+        public static double CalculateBuildRate()
+        {
+            double r = 1d;
+            r *= (ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * 0.5d);
+            r *= CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
+            return r;
+        }
+
+        public double GetBuildRate()
+        {
+            if (_buildRate < 0d)
+                _buildRate = CalculateBuildRate();
+
+            return _buildRate;
+        }
+
+        public void RecalculateBuildRate()
+        {
+            _buildRate = CalculateBuildRate();
+        }
+
         public double IncrementProgress(double UTDiff)
         {
-            return 0d;
+            // back-compat
+            if (BP == 0)
+                BP = template.GetBaseTime(Students);
+
+            double increment = UTDiff * GetBuildRate();
+            progress += increment;
+            if (progress < BP)
+                return 0d;
+
+            Completed = true;
+            CompleteCourse();
+
+            double remainder = progress - BP;
+            return remainder / increment * UTDiff;
         }
+
+        private void RecalculateBP() { BP = template.GetBaseTime(Students); }
 
         public double AverageRetireExtension()
         {
@@ -328,7 +324,7 @@ namespace RP0.Crew
                 return 0d;
 
             double sumOffset = 0d;
-            double trainingLength = GetTime();
+            double trainingLength = BP / GetBuildRate();
             foreach (var pcm in Students)
             {
                 sumOffset += CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, template.training.type, template.training.target);

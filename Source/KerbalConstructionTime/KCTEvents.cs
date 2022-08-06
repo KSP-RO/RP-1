@@ -368,8 +368,7 @@ namespace KerbalConstructionTime
 
         public void TechDisableEvent()
         {
-            TechDisableEventFinal(true);
-
+            TechDisableEventFinal();
             Utilities.AddResearchedPartsToExperimental();
         }
 
@@ -384,21 +383,15 @@ namespace KerbalConstructionTime
             Utilities.RemoveResearchedPartsFromExperimental();
         }
 
-        public void TechDisableEventFinal(bool save = false)
+        public void TechDisableEventFinal()
         {
-            if (PresetManager.Instance != null && PresetManager.Instance.ActivePreset != null &&
-                PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
+            if (PresetManager.Instance?.ActivePreset != null &&
+                PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes &&
+                PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
                 foreach (TechItem tech in KCTGameStates.TechList)
                 {
-
                     tech.DisableTech();
-                }
-
-                //Need to somehow update the R&D instance
-                if (save)
-                {
-                    GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 }
             }
         }

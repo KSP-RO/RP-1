@@ -108,17 +108,20 @@ namespace RP0
             return details;
         }
 
-        public static double GetSubsidyAt(double UT)
+        public static double GetSubsidyAtTimeDelta(double deltaTime)
         {
-            double days = Math.Floor((UT - KSPUtils.GetUT()) / 86400d);
-            double rep = Reputation.CurrentRep * Math.Pow(1d - Settings.repPortionLostPerDay, days);
-            return GetSubsidyAt(UT, rep);
+            double days;
+            double rep = Reputation.CurrentRep;
+            if (deltaTime > 0 && (days = Math.Floor(deltaTime / 86400d)) > 0)
+                rep *= Math.Pow(1d - Settings.repPortionLostPerDay, days);
+            
+            return GetSubsidyAtTimeDelta(deltaTime, rep);
         }
 
-        public static double GetSubsidyAt(double UT, double rep)
+        public static double GetSubsidyAtTimeDelta(double deltaTime, double rep)
         {
             const double secsPerYear = 3600 * 24 * 365.25;
-            float years = (float)(UT / secsPerYear);
+            float years = (float)((KSPUtils.GetUT() + deltaTime) / secsPerYear);
             double minSubsidy = Settings.subsidyCurve.Evaluate(years);
             
             double maxSubsidy = minSubsidy * Settings.subsidyMultiplierForMax;
@@ -134,11 +137,28 @@ namespace RP0
             return UtilMath.LerpUnclamped(minSubsidy, maxSubsidy, t);
         }
 
+        public static double GetAverageSubsidyForPeriod(double deltaTime, int steps = 0)
+        {
+            // default is 1 step per month (plus the zeroeth step)
+            if (steps == 0)
+                steps = 1 + (int)(deltaTime / (86400d * 29.999d));
+
+            double deltaPerStep = deltaTime / (steps - 1);
+            double subsidy = GetSubsidyAtTimeDelta(0d);
+            double ut = 0d;
+            for (int i = 1; i < steps; ++i)
+            {
+                ut += deltaPerStep;
+                subsidy += GetSubsidyAtTimeDelta(ut);
+            }
+            return subsidy / steps;
+        }
+
         public double MaintenanceSubsidyPerDay
         {
             get
             {
-                return GetSubsidyAt(KSPUtils.GetUT()) * (1d / 365.25d);
+                return GetSubsidyAtTimeDelta(0) * (1d / 365.25d);
             }
         }
 
@@ -394,16 +414,6 @@ namespace RP0
                 + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
                 + CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
             Profiler.EndSample();
-        }
-
-        public double GetDisplayProgramFunding(double utOffset)
-        {
-            double programBudget = 0d;
-            foreach (Program p in Programs.ProgramHandler.Instance.ActivePrograms)
-            {
-                programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + utOffset) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
-            }
-            return CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, programBudget);
         }
 
         public void Update()

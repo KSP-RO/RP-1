@@ -4,76 +4,57 @@ namespace RP0.Crew
 {
     public class TrainingExpiration : IConfigNode
     {
-        public string PcmName;
-        public List<string> Entries = new List<string>();
-        public double Expiration;
+        [Persistent]
+        public string pcmName;
+
+        [Persistent]
+        public TrainingFlightEntry training = new TrainingFlightEntry();
+
+        [Persistent]
+        public double expiration;
 
         public TrainingExpiration() { }
+
+        public TrainingExpiration(string pcmName, double expireTime, TrainingFlightEntry entry)
+        {
+            this.pcmName = pcmName;
+            expiration = expireTime;
+            training = entry;
+        }
 
         public TrainingExpiration(ConfigNode node)
         {
             Load(node);
         }
 
-        public static bool Compare(string str, FlightLog.Entry e)
+        public bool Compare(FlightLog.Entry e)
         {
-            int tyLen = string.IsNullOrEmpty(e.type) ? 0 : e.type.Length;
-            int tgLen = string.IsNullOrEmpty(e.target) ? 0 : e.target.Length;
-            int iC = str.Length;
-            if (iC != 1 + tyLen + tgLen)
-                return false;
-            int i = 0;
-            for (; i < tyLen; ++i)
-            {
-                if (str[i] != e.type[i])
-                    return false;
-            }
-
-            if (str[i] != ',')
-                return false;
-            ++i;
-            for (int j = 0; j < tgLen && i < iC; ++j)
-            {
-                if (str[i] != e.target[j])
-                    return false;
-                ++i;
-            }
-
-            return true;
+            return e.type == training.type && e.target == training.target;
         }
 
-        public bool Compare(int idx, FlightLog.Entry e)
+        public bool Compare(string pcmName, FlightLog.Entry e)
         {
-            return Compare(Entries[idx], e);
+            return this.pcmName == pcmName && Compare(e);
         }
 
         public void Load(ConfigNode node)
         {
-            foreach (ConfigNode.Value v in node.values)
-            {
-                switch (v.name)
-                {
-                    case "pcmName":
-                        PcmName = v.value;
-                        break;
-                    case "expiration":
-                        double.TryParse(v.value, out Expiration);
-                        break;
+            ConfigNode.LoadObjectFromConfig(this, node);
 
-                    default:
-                    case "entry":
-                        Entries.Add(v.value);
-                        break;
+            if (CrewHandler.Instance.saveVersion < 2)
+            {
+                string entry = node.GetValue("entry");
+                if (entry != null)
+                {
+                    var split = entry.Split(',');
+                    training = new TrainingFlightEntry(split[0], split[1]);
                 }
             }
         }
 
         public void Save(ConfigNode node)
         {
-            node.AddValue("pcmName", PcmName);
-            node.AddValue("expiration", Expiration);
-            foreach (string s in Entries)
-                node.AddValue("entry", s);
+            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

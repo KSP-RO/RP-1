@@ -10,6 +10,8 @@ namespace RP0
         {
             var harmony = new HarmonyLib.Harmony("RP0.HarmonyPatcher");
             harmony.PatchAll();
+
+            Harmony.PatchGameSettings.FixDV();
         }
     }
 }

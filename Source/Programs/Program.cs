@@ -523,27 +523,27 @@ namespace RP0.Programs
                 if (!IsComplete)
                 {
                     text += "\n\nFunding Summary:";
-                    double paid;
+                    double totalPaid;
                     int startYear;
                     int lastYear = (int)System.Math.Ceiling(duration) + 1;
                     if (IsActive)
                     {
                         double relativeUT = KSPUtils.GetUT() - acceptedUT;
                         startYear = (int)(relativeUT / (86400d * 365.25d)) + 1;
-                        paid = GetFundsAtTime(relativeUT);
+                        totalPaid = GetFundsAtTime(relativeUT);
                     }
                     else
                     {
                         startYear = 1;
-                        paid = 0d;
+                        totalPaid = 0d;
                     }
                     for (int i = startYear; i < lastYear; ++i)
                         {
                             const double secPerYear = 365.25d * 86400d;
                             double fundAtYear = GetFundsAtTime(Math.Min(i, duration) * secPerYear);
-                            double amtPaid = fundAtYear - paid;
-                            paid = fundAtYear;
-                            text += $"\nYear {(lastYear > 10 ? " " : string.Empty)}{i}:  <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{amtPaid:N0}";
+                            double paidThisYear = fundAtYear - totalPaid;
+                            totalPaid = fundAtYear;
+                            text += $"\nYear {(lastYear > 10 ? " " : string.Empty)}{i}:  {CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, paidThisYear, 0d, 0d).GetCostLine(false, false, false, true)}";
                         }
                 }
             }

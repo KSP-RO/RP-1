@@ -15,13 +15,10 @@ namespace KerbalConstructionTime
             {
                 _activePreset = value;
 
-                KSCContextMenuOverrider.AreTextsUpdated = false;
-
                 if (value == null)
                     return;
 
-                // Fixup upgrade text
-                Utilities.SetPartUpgradeText();
+                RP0.LocalizationHandler.UpdateLocalizedText();
             }
         }
         private KCT_Preset _activePreset;

@@ -52,6 +52,7 @@
     <Compile Include="CareerLog\LogPeriod.cs" />
     <Compile Include="CareerLog\LPConstruction.cs" />
     <Compile Include="CareerLog\TechResearchEvent.cs" />
+    <Compile Include="Crew\TrainingFlightEntry.cs" />
     <Compile Include="Crew\TrainingCourse.cs" />
     <Compile Include="Crew\TrainingTemplate.cs" />
     <Compile Include="Crew\CrewHandlerSettings.cs" />

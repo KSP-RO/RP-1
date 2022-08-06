@@ -106,8 +106,6 @@ namespace KerbalConstructionTime
             GameEvents.onEditorLoad.Add(OnEditorLoad);
             GameEvents.onFacilityContextMenuSpawn.Add(FacilityContextMenuSpawn);
 
-            GameEvents.onLanguageSwitched.Add(LangaugeChangeEvent);
-
             SubscribedToEvents = true;
         }
 
@@ -555,12 +553,6 @@ namespace KerbalConstructionTime
             targetLC.Warehouse.Add(KCTGameStates.RecoveredVessel);
             targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
             KCTGameStates.RecoveredVessel = null;
-        }
-
-        public void LangaugeChangeEvent()
-        {
-            Utilities.SetPartUpgradeText();
-            KSCContextMenuOverrider.AreTextsUpdated = false;
         }
 
         public void OnExitAdmin()

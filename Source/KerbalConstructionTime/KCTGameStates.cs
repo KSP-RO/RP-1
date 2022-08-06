@@ -184,16 +184,16 @@ namespace KerbalConstructionTime
             return 0;
         }
 
-        public static double GetBudgetDelta(double time)
+        public static double GetBudgetDelta(double deltaTime)
         {
             // note NetUpkeepPerDay is negative or 0.
             
-            double subsidy = RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.Subsidy, RP0.MaintenanceHandler.Instance.MaintenanceSubsidyPerDay);
-            double averageSubsidy = (subsidy + RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.Subsidy, RP0.MaintenanceHandler.GetSubsidyAt(RP0.KSPUtils.GetUT() + time))) * 0.5d;
-            double delta = System.Math.Max(0d, RP0.MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidy * (1d / 365.25d)) * time / 86400d + GetConstructionCostOverTime(time) + GetRolloutCostOverTime(time) + GetAirlaunchCostOverTime(time);
-            delta += RP0.MaintenanceHandler.Instance.GetDisplayProgramFunding(time);
+            double averageSubsidyPerDay = RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.Subsidy, RP0.MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
+            double fundDelta = System.Math.Min(0d, RP0.MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
+                + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime) + GetAirlaunchCostOverTime(deltaTime)
+                + RP0.Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
 
-            return delta;
+            return fundDelta;
         }
 
         public static double GetConstructionCostOverTime(double time)

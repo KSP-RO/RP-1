@@ -10,8 +10,8 @@ namespace RP0.Crew
         public string name;
         public string description;
 
-        public FlightLog.Entry prereq;
-        public FlightLog.Entry conflict;
+        public TrainingFlightEntry prereq;
+        public TrainingFlightEntry conflict;
 
         public double time = 0; //how much time the course takes (in seconds)
         public bool timeUseStupid = false;
@@ -22,7 +22,7 @@ namespace RP0.Crew
         public int seatMax = -1; //maximum number of kerbals allowed in the course at once
         public int seatMin = 0; //minimum number of kerbals required to start the course
 
-        public FlightLog.Entry training;
+        public TrainingFlightEntry training;
         
         public bool isTemporary = false;
 

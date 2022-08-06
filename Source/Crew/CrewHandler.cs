@@ -37,7 +37,7 @@ namespace RP0.Crew
 
         [KSPField(isPersistant = true)]
         public int saveVersion;
-        public const int VERSION = 1;
+        public const int VERSION = 2;
 
         [KSPField(isPersistant = true)]
         private PersistentDictionaryValueTypes<string, double> _retireTimes = new PersistentDictionaryValueTypes<string, double>();
@@ -415,26 +415,20 @@ namespace RP0.Crew
                 return string.Empty;
         }
 
-        public bool RemoveExpiration(string pcmName, string entry)
+        public bool RemoveExpiration(string pcmName, FlightLog.Entry entry)
         {
             for (int i = _expireTimes.Count; i-- > 0;)
             {
                 TrainingExpiration e = _expireTimes[i];
-                if (e.PcmName != pcmName)
+                if (e.pcmName != pcmName)
                     continue;
 
-                for (int j = e.Entries.Count; j-- > 0;)
-                {
-                    if (e.Entries[j] == entry)
-                    {
-                        e.Entries.RemoveAt(j);
 
-                        if (e.Entries.Count == 0)
-                            _expireTimes.RemoveAt(i);
+                if (!e.Compare(entry))
+                    continue;
 
-                        return true;
-                    }
-                }
+                _expireTimes.RemoveAt(i);
+                return true;
             }
 
             return false;
@@ -801,27 +795,21 @@ namespace RP0.Crew
 
             for (int i = _expireTimes.Count; i-- > 0;)
             {
-                TrainingExpiration e = _expireTimes[i];
-                if (time > e.Expiration)
+                TrainingExpiration exp = _expireTimes[i];
+                if (time > exp.expiration)
                 {
-                    ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[e.PcmName];
+                    ProtoCrewMember pcm = HighLogic.CurrentGame.CrewRoster[exp.pcmName];
                     if (pcm != null)
                     {
                         for (int j = pcm.careerLog.Entries.Count; j-- > 0;)
                         {
-                            if (e.Entries.Count == 0)
-                                break;
                             FlightLog.Entry ent = pcm.careerLog[j];
-                            for (int k = e.Entries.Count; k-- > 0;)
+                            // Allow only mission trainings to expire.
+                            // This check is actually only needed for old savegames as only these can have expirations on proficiencies.
+                            if (exp.Compare(ent))
                             {
-                                // Allow only mission trainings to expire.
-                                // This check is actually only needed for old savegames as only these can have expirations on proficiencies.
-                                if (ent.type == TrainingType_Mission && e.Compare(k, ent))
-                                {
-                                    ScreenMessages.PostScreenMessage($"{pcm.name}: Expired: {GetPrettyCourseName(ent.type)}{ent.target}");
-                                    ent.type = "expired_" + ent.type;
-                                    e.Entries.RemoveAt(k);
-                                }
+                                ScreenMessages.PostScreenMessage($"{pcm.name}: Expired: {GetPrettyCourseName(ent.type)}{ent.target}");
+                                ExpireFlightLogEntry(ent);
                             }
                         }
                     }
@@ -945,14 +933,8 @@ namespace RP0.Crew
             for (int i = _expireTimes.Count; i-- > 0;)
             {
                 TrainingExpiration e = _expireTimes[i];
-                if (e.PcmName == pcmName)
-                {
-                    for (int j = e.Entries.Count; j-- > 0;)
-                    {
-                        if (e.Compare(j, ent))
-                            return e.Expiration;
-                    }
-                }
+                if (e.Compare(pcmName, ent))
+                    return e.expiration;
             }
 
             return 0d;
@@ -963,16 +945,10 @@ namespace RP0.Crew
             for (int i = _expireTimes.Count; i-- > 0;)
             {
                 TrainingExpiration e = _expireTimes[i];
-                if (e.PcmName == pcmName)
+                if (e.Compare(pcmName, ent))
                 {
-                    for (int j = e.Entries.Count; j-- > 0;)
-                    {
-                        if (e.Compare(j, ent))
-                        {
-                            e.Expiration = expirationUT;
-                            return true;
-                        }
-                    }
+                    e.expiration = expirationUT;
+                    return true;
                 }
             }
 
@@ -1010,8 +986,8 @@ namespace RP0.Crew
             c.name = "Proficiency: " + (found ? name : ap.title);
             c.time = 1d + (TrainingDatabase.GetTime(name) * 86400);
             c.isTemporary = isTemporary;
-            c.conflict = new FlightLog.Entry(0, TrainingType_Proficiency, name);
-            c.training = new FlightLog.Entry(0, TrainingType_Proficiency, name);
+            c.conflict = new TrainingFlightEntry(TrainingType_Proficiency, name);
+            c.training = new TrainingFlightEntry(TrainingType_Proficiency, name);
             TrainingTemplates.Add(c);
 
             return c;
@@ -1030,8 +1006,8 @@ namespace RP0.Crew
             c.timeUseStupid = true;
             c.seatMax = ap.partPrefab.CrewCapacity * 2;
             c.expiration = Settings.trainingMissionExpirationDays * 86400d;
-            c.prereq = new FlightLog.Entry(0, TrainingType_Proficiency, name);
-            c.training = new FlightLog.Entry(0, TrainingType_Mission, name);
+            c.prereq = new TrainingFlightEntry(TrainingType_Proficiency, name);
+            c.training = new TrainingFlightEntry(TrainingType_Mission, name);
 
             TrainingTemplates.Add(c);
 
@@ -1175,6 +1151,11 @@ namespace RP0.Crew
             }
 
             return 0d;
+        }
+
+        public static void ExpireFlightLogEntry(FlightLog.Entry entry)
+        {
+            entry.type = "expired_" + entry.type;
         }
     }
 }

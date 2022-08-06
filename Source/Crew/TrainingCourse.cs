@@ -191,33 +191,10 @@ namespace RP0.Crew
                     if (student == null)
                         continue;
 
-                    double retireTimeOffset = 0d;
-
-
-
                     if (student.flightLog.Count > 0)
                         student.ArchiveFlightLog();
 
-                    if (template.expiration > 0d)
-                    {
-                        var exp = new TrainingExpiration();
-                        exp.PcmName = student.name;
-                        exp.Expiration = template.expiration;
-                        if (template.expirationUseStupid)
-                            exp.Expiration *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
-                                CrewHandler.Settings.trainingProficiencyStupidMax,
-                                student.stupidity);
-                        exp.Expiration += KSPUtils.GetUT();
-                        exp.Entries.Add($"{template.training.type},{template.training.target}");
-                        CrewHandler.Instance.AddExpiration(exp);
-                    }
-
-                    int lastEntryIndex = student.careerLog.Entries.Count - 1;
-
-
-
-                    retireTimeOffset = Math.Max(retireTimeOffset, CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, template.training.type, template.training.target, lastEntryIndex));
-
+                    // First, expire any old mission trainings.
                     if (template.training.type == CrewHandler.TrainingType_Mission)
                     {
                         // Expire any previous mission trainings because only 1 should be active at a time
@@ -226,19 +203,33 @@ namespace RP0.Crew
                             FlightLog.Entry e = student.careerLog.Entries[i];
                             if (e.type == CrewHandler.TrainingType_Mission)
                             {
-                                e.type = "expired_" + e.type;
-                                CrewHandler.Instance.RemoveExpiration(student.name, $"{template.training.type},{template.training.target}");
-                                student.ArchiveFlightLog();
+                                CrewHandler.Instance.RemoveExpiration(student.name, e);
+                                CrewHandler.ExpireFlightLogEntry(e);
                             }
                         }
                     }
 
+                    // Create a new TrainingExpiration if needed
+                    if (template.expiration > 0d)
+                    {
+                        double expireTime = template.expiration;
+                        if (template.expirationUseStupid)
+                            expireTime *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
+                                CrewHandler.Settings.trainingProficiencyStupidMax,
+                                student.stupidity);
+                        expireTime += KSPUtils.GetUT();
+
+                        CrewHandler.Instance.AddExpiration(new TrainingExpiration(student.name, expireTime, new TrainingFlightEntry(template.training.type, template.training.target)));
+                    }
+
+                    double retireTimeOffset = CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, template.training.type, template.training.target, student.careerLog.Entries.Count - 1);
+
                     student.flightLog.AddEntry(template.training.type, template.training.target);
                     student.ArchiveFlightLog();
 
-                    double retireOffset = CrewHandler.Instance.IncreaseRetireTime(student.name, retireTimeOffset);
-                    if (retireOffset > 0d)
-                        retirementChanges.Add($"\n{student.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(CrewHandler.Instance.GetRetireTime(student.name), false)}");
+                    double actualRetireOffset = CrewHandler.Instance.IncreaseRetireTime(student.name, retireTimeOffset);
+                    if (actualRetireOffset > 0d)
+                        retirementChanges.Add($"\n{student.name}, +{KSPUtil.PrintDateDelta(actualRetireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(CrewHandler.Instance.GetRetireTime(student.name), false)}");
                 }
 
                 if (CrewHandler.Instance.RetirementEnabled && retirementChanges.Count > 0)

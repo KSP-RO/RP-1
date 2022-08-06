@@ -31,66 +31,6 @@ namespace RP0.Harmony
             }
         }
 
-        [HarmonyPrefix]
-        [HarmonyPatch("LongestDuration", MethodType.Getter)]
-        internal static bool Prefix_LongestDuration(Strategies.Strategy __instance, ref double __result)
-        {
-            __result = Mathfx.Lerp(__instance.MinLongestDuration, __instance.MaxLongestDuration, __instance.Factor);
-            return false;
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch("LeastDuration", MethodType.Getter)]
-        internal static bool Prefix_LeastDuration(Strategies.Strategy __instance, ref double __result)
-        {
-            __result = Mathfx.Lerp(__instance.MinLeastDuration, __instance.MaxLeastDuration, __instance.Factor);
-            return false;
-        }
-
-        [HarmonyTranspiler]
-        [HarmonyPatch("CanBeDeactivated")]
-        internal static IEnumerable<CodeInstruction> Transpiler_CanBeDeactivated(IEnumerable<CodeInstruction> instructions)
-        {
-            List<CodeInstruction> code = new List<CodeInstruction>(instructions);
-            for (int i = 9; i < code.Count; ++i)
-            {
-                // We need to fix the inequality check for if ( dateActivated + LeastDuration < Planetarium.fetch.time )
-                // because that should be a > check.
-                if (code[i].opcode == OpCodes.Bge_Un_S)
-                {
-                    code[i].opcode = OpCodes.Ble_Un_S;
-                    break;
-                }
-            }
-
-            return code;
-        }
-
-        //[HarmonyTranspiler]
-        //[HarmonyPatch("Create")]
-        //internal static IEnumerable<CodeInstruction> Transpiler_CreateanBeDeactivated(IEnumerable<CodeInstruction> instructions)
-        //{
-        //    List<CodeInstruction> code = new List<CodeInstruction>(instructions);
-        //    bool startSearch = false;
-        //    for (int i = 2; i < code.Count - 1; ++i)
-        //    {
-        //        if (!startSearch && code[i].opcode == OpCodes.Ldnull && code[i + 1].opcode == OpCodes.Ret)
-        //        {
-        //            startSearch = true;
-        //            continue;
-        //        }
-
-        //        // Change this to create our own strategy type
-        //        if (startSearch && code[i].opcode == OpCodes.Ldtoken)
-        //        {
-        //            code[i].operand = typeof(StrategyRP0).TypeHandle;
-        //            break;
-        //        }
-        //    }
-
-        //    return code;
-        //}
-
         internal static MethodInfo setupConfigMethod = typeof(Strategy).GetMethod("SetupConfig", BindingFlags.Instance | BindingFlags.NonPublic);
         internal static FieldInfo factorField = typeof(Strategy).GetField("factor", BindingFlags.Instance | BindingFlags.NonPublic);
 

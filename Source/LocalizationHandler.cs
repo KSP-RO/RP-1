@@ -18,6 +18,13 @@ namespace RP0
 
         private void OnLanguageChange()
         {
+            UpdateLocalizedText();
+        }
+
+        public static void UpdateLocalizedText()
+        {
+            KSCContextMenuOverrider.AreTextsUpdated = false;
+
             foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
             {
                 // Proc avionics upgrades
@@ -29,11 +36,23 @@ namespace RP0
 
                     continue;
                 }
+                
+                if (up.name.StartsWith("rp0EngineerUpgrade"))
+                {
+                    up.description = Localizer.Format("#rp0EngineerUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                    continue;
+                }
+
+                if (up.name.StartsWith("rp0ResearcherUpgrade"))
+                {
+                    up.description = Localizer.Format("#rp0ResearcherUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                    continue;
+                }
             }
         }
 
         
-        private string BuildAvionicsStats(string techRequired)
+        private static string BuildAvionicsStats(string techRequired)
         {
             string retStr = string.Empty;
             foreach (var avConfig in ProceduralAvionicsTechManager.AllAvionicsConfigs)

@@ -541,7 +541,7 @@ namespace RP0.Crew
             };
 
 
-            double acMult = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) + 1;
+            double acMult = RnRMultiplierFromACLevel(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex));
             var allFlightsDict = new Dictionary<string, int>();
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
@@ -609,7 +609,7 @@ namespace RP0.Crew
                 inactivityMult = Math.Max(1, inactivityMult);
                 double elapsedTimeDays = elapsedTime / 86400;
                 double inactiveTimeDays = Math.Max(Settings.inactivityMinFlightDurationDays, Math.Pow(elapsedTimeDays, Settings.inactivityFlightDurationExponent)) *
-                                          Math.Min(Settings.inactivityMaxSituationMult, inactivityMult) / acMult;
+                                          Math.Min(Settings.inactivityMaxSituationMult, inactivityMult) * acMult;
                 double inactiveTime = inactiveTimeDays * 86400;
                 Debug.Log($"[RP-0] inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
 
@@ -1170,5 +1170,7 @@ namespace RP0.Crew
         {
             entry.type = "expired_" + entry.type;
         }
+
+        public static double RnRMultiplierFromACLevel(double fracLevel) => 1d - fracLevel * 0.5d;
     }
 }

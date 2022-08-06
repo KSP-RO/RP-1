@@ -2,6 +2,7 @@
 using KSP.Localization;
 using System.Collections.Generic;
 using RP0.ProceduralAvionics;
+using KerbalConstructionTime;
 
 namespace RP0
 {
@@ -58,6 +59,56 @@ namespace RP0
             }
 
             return retStr;
+        }
+
+        public static void UpdateFacilityLevelStats(Upgradeables.UpgradeableObject.UpgradeLevel lvl, int lvlIdx, double fracLevel)
+        {
+            // levelText appears to be unused by KSP itself. We can use it to store original level stats.
+            // Restoring old values is necessary because those persist between scene changes but some of them are based on current KCT settings.
+            if (lvl.levelText == null)
+            {
+                lvl.levelText = ScriptableObject.CreateInstance<KSCUpgradeableLevelText>();
+                lvl.levelText.facility = lvl.levelStats.facility;
+                lvl.levelText.linePrefix = lvl.levelStats.linePrefix;
+                lvl.levelText.textBase = lvl.levelStats.textBase;
+            }
+            else
+            {
+                lvl.levelStats.textBase = lvl.levelText.textBase;
+            }
+
+            RP0Debug.Log($"Overriding level stats text for {lvl.levelStats.facility} lvl {lvlIdx}");
+
+            SpaceCenterFacility facilityType = lvl.levelStats.facility;
+            if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding || facilityType == SpaceCenterFacility.LaunchPad)
+            {
+                lvl.levelStats.linePrefix = string.Empty;
+                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuVAB";
+            }
+            else if (facilityType == SpaceCenterFacility.SpaceplaneHangar || facilityType == SpaceCenterFacility.Runway)
+            {
+                lvl.levelStats.linePrefix = string.Empty;
+                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuSPH";
+            }
+            else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
+            {
+                if (PresetManager.Instance != null)
+                {
+                    int limit = PresetManager.Instance.ActivePreset.ResearcherCaps[lvlIdx];
+                    lvl.levelStats.textBase += $"\n{Localizer.GetStringByTag("#rp0FacilityContextMenuRnD_ResearcherLimit")} {(limit == -1 ? "#rp0FacilityContextMenuRnD_ResearcherLimit_unlimited" : limit.ToString("N0"))}";
+                }
+            }
+            else if (facilityType == SpaceCenterFacility.AstronautComplex)
+            {
+                double rrMult = Crew.CrewHandler.RnRMultiplierFromACLevel(fracLevel);
+                double trainingTimeMult = 1d / Crew.TrainingCourse.FacilityTrainingRate(fracLevel);
+
+                if (rrMult != 1d)
+                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_RnR", FormatRatioAsPercent(rrMult))}";
+
+                if (trainingTimeMult != 1d)
+                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_Training", FormatRatioAsPercent(trainingTimeMult))}";
+            }
         }
 
         public static string FormatRatioAsPercent(double ratio)

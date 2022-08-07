@@ -503,6 +503,12 @@ namespace KerbalConstructionTime
         {
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
+            LCItem lc = KCTGameStates.FindLCFromID(_lcID);
+            if (lc == null)
+                lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            else
+                KCTGameStates.ActiveKSC.SwitchLaunchComplex(KCTGameStates.ActiveKSC.LaunchComplexes.IndexOf(lc));
+
             string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
             UpdateRFTanks();
             if (fillFuel)
@@ -511,11 +517,7 @@ namespace KerbalConstructionTime
             string launchSiteName = LaunchSite;
             if (launchSiteName == "LaunchPad")
             {
-                LCItem lc = KCTGameStates.FindLCFromID(_lcID);
-                if (lc == null)
-                    lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-
-                KCT_LaunchPad pad = null;
+                KCT_LaunchPad pad;
                 if (LaunchSiteIndex >= 0)
                     pad = lc.LaunchPads[LaunchSiteIndex];
                 else

@@ -54,8 +54,8 @@ namespace RP0.Harmony
 
             if (Programs.ProgramHandler.Instance != null && Programs.ProgramHandler.Instance.IsContractOptional(_contract))
             {
-                CurrencyModifierQuery cmq = CurrencyModifierQuery.RunQuery(TransactionReasons.ContractReward, 0, 0, _contract.ReputationCompletion);
-                value += $"\n<color=#{RUIutils.ColorToHex(XKCDColors.KSPBadassGreen)}>{KSP.Localization.Localizer.Format("#rp0ConfidenceValue", (cmq.GetTotal(Currency.Reputation) * Programs.ProgramHandler.Settings.repToConfidence).ToString("N0"))}</color>";
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ContractReward, 0d, 0d, 0d, _contract.ReputationCompletion * Programs.ProgramHandler.Settings.repToConfidence, 0d);
+                value += $"<color={CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence)}>{CurrencyModifierQueryRP0.SpriteString(CurrencyRP0.Confidence)} {cmq.GetTotal(CurrencyRP0.Confidence):N0} {cmq.GetEffectDeltaText(CurrencyRP0.Confidence, "N0", CurrencyModifierQuery.TextStyling.OnGUI)}  </color>";
             }
             if (KerbalConstructionTime.PresetManager.Instance != null)
             {

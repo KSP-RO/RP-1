@@ -179,12 +179,12 @@ namespace RP0
             }
 
 
-            string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLine(true, true, true, false, "   ");
+            string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLineOverride(true, true, true, false, "   ");
             if (costString != string.Empty)
             {
                 text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#autoLOC_304612"), costString);
             }
-            string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLine(true, true, true, false, "   ");
+            string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLineOverride(true, true, true, false, "   ");
             if (requireString != string.Empty)
             {
                 text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#rp0LeaderHireRequirements"), requireString);

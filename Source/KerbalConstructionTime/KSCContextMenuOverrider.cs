@@ -54,8 +54,8 @@ namespace KerbalConstructionTime
                     if (buttonText != null && hostBuilding != null)
                     {
                         float upgradeCost = hostBuilding.Facility.GetUpgradeCost();
-                        CurrencyModifierQuery upgradeQuery = CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -upgradeCost, 0f, 0f);
-                        string upgradeString = upgradeQuery.GetCostLine(true, true, false, false, "\n");
+                        RP0.CurrencyModifierQueryRP0 upgradeQuery = RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.StructureConstruction, -upgradeCost, 0f, 0f);
+                        string upgradeString = upgradeQuery.GetCostLineOverride(true, true, false, false, "\n");
                         buttonText.text = KSP.Localization.Localizer.Format("#autoLOC_475331", upgradeString);
                     }
 

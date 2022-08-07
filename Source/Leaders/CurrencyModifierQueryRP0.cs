@@ -156,7 +156,7 @@ namespace RP0
         public static string CurrencyColor(CurrencyRP0 c) => currencyColors[(int)c];
 
         static readonly string[] currencyFormats = {
-            "N0",
+            "N2",
             "0.#",
             "N1",
             "N1"

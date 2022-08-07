@@ -155,6 +155,13 @@ namespace RP0
 
         public static string CurrencyColor(CurrencyRP0 c) => currencyColors[(int)c];
 
+        static readonly string[] currencyFormats = {
+            "N0",
+            "0.#",
+            "N1",
+            "N1"
+        };
+
         public string GetCostLineOverride(bool displayInverted = true, bool useCurrencyColors = false, bool useInsufficientCurrencyColors = true, bool includePercentage = false, string seperator = ", ", bool flipRateDeltaColoring = false)
         {
             CurrencyArray outputs = new CurrencyArray();
@@ -212,7 +219,7 @@ namespace RP0
                 }
                 else
                 {
-                    amountText = $"{SpriteString(c)} {amount:N2}";
+                    amountText = $"{SpriteString(c)} {amount.ToString(currencyFormats[i])}";
                 }
 
                 if (useInsufficientCurrencyColors && !canAffords[i])

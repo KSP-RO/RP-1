@@ -24,7 +24,6 @@ namespace RP0
         public static void UpdateLocalizedText()
         {
             KSCContextMenuOverrider.AreTextsUpdated = false;
-
             foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
             {
                 // Proc avionics upgrades
@@ -36,17 +35,20 @@ namespace RP0
 
                     continue;
                 }
-                
-                if (up.name.StartsWith("rp0EngineerUpgrade"))
-                {
-                    up.description = Localizer.Format("#rp0EngineerUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
-                    continue;
-                }
 
-                if (up.name.StartsWith("rp0ResearcherUpgrade"))
+                if (PresetManager.Instance != null && PresetManager.Instance.ActivePreset != null)
                 {
-                    up.description = Localizer.Format("#rp0ResearcherUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
-                    continue;
+                    if (up.name.StartsWith("rp0EngineerUpgrade"))
+                    {
+                        up.description = Localizer.Format("#rp0EngineerUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                        continue;
+                    }
+
+                    if (up.name.StartsWith("rp0ResearcherUpgrade"))
+                    {
+                        up.description = Localizer.Format("#rp0ResearcherUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                        continue;
+                    }
                 }
             }
         }

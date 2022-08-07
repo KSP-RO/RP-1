@@ -13,7 +13,7 @@ namespace RP0.Harmony
         {
             if (__instance.state == RDNode.State.RESEARCHED)
             {
-                __result = $"{CurrencyModifierQueryRP0.RunQuery(TransactionReasons.RnDTechResearch, 0f, -__instance.tech.scienceCost, 0f).GetCostLine(true, true)}\n{__result}";
+                __result = $"{CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDTechResearch, 0f, -__instance.tech.scienceCost, 0f).GetCostLineOverride(true, true)}\n{__result}";
             }
         }
     }

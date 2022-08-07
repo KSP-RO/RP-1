@@ -274,7 +274,12 @@ namespace KerbalConstructionTime
         public void SwitchLaunchPad(int LP_ID = -1, bool updateDestrNode = true)
         {
             if (LP_ID >= 0)
+            {
+                if (ActiveLaunchPadIndex == LP_ID && ActiveLPInstance != null && ActiveLPInstance.isOperational)
+                    return;
+
                 ActiveLaunchPadIndex = LP_ID;
+            }
 
             if (ActiveLPInstance == null)
             {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using RP0.UI;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -357,8 +358,8 @@ namespace KerbalConstructionTime
                     if (error.CanBeResolved)
                     {
                         string txt = $"<color=green><b>{p.partInfo.title}: {error.Error}</b></color>\n";
-                        string costStr = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -error.CostToResolve, 0f, 0f).GetCostLine(true, false, false, true);
-                        string costAfterSubsidyStr = $"{CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, Math.Max(0f, (float)RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve) - error.CostToResolve), 0f, 0f).GetCostLine(true, false, true, true)} after subsidy";
+                        string costStr = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -error.CostToResolve, 0f, 0f).GetCostLineOverride(true, false, false, true);
+                        string costAfterSubsidyStr = $"{CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, Math.Max(0d, RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve) - error.CostToResolve), 0f, 0f).GetCostLine(true, false, true, true)} after subsidy";
                         var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
                                                          () =>
                                                          {

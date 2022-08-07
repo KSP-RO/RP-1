@@ -11,7 +11,7 @@ namespace RP0.Harmony
         [HarmonyPatch("RunQuery")]
         internal static bool Prefix_RunQuery(TransactionReasons reason, float f0, float s0, float r0, ref CurrencyModifierQuery __result)
         {
-            __result = CurrencyModifierQueryRP0.RunQuery((TransactionReasonsRP0)reason, f0, s0, r0, 0d, 0d);
+            __result = CurrencyModifierQueryRP0.RunQuery(reason.RP0(), f0, s0, r0, 0d, 0d);
             return false;
         }
 

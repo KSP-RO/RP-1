@@ -2,125 +2,131 @@
 using KSP.Localization;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Collections;
+using UnityEngine;
 
 namespace RP0
 {
+    public class CurrencyArray : IEnumerable
+    {
+        private const int size = (int)CurrencyRP0.MAX + 1;
+        public double[] values = new double[size];
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return values.GetEnumerator();
+        }
+
+        public int Length => size;
+
+        public CurrencyArray()
+        {
+            int c = size;
+            while (c-- > 0)
+            {
+                values[c] = 0d;
+            }
+            this[CurrencyRP0.Rate] = 1d;
+        }
+
+        public CurrencyArray(double val)
+        {
+            int c = size;
+            while (c-- > 0)
+            {
+                values[c] = val;
+            }
+        }
+
+        public double this[CurrencyRP0 c]
+        {
+            get
+            {
+                return values[(int)c];
+            }
+            set
+            {
+                values[(int)c] = value;
+            }
+        }
+
+        public double this[int i]
+        {
+            get
+            {
+                return values[i];
+            }
+            set
+            {
+                values[i] = value;
+            }
+        }
+    }
+
     public class CurrencyModifierQueryRP0 : CurrencyModifierQuery
     {
+        const int LastCurrencyForAffordChecks = (int)CurrencyRP0.Time - 1;
+
         public TransactionReasonsRP0 reasonRP0;
 
-        private double inputFunds;
+        CurrencyArray inputs = new CurrencyArray();
 
-        private double inputScience;
-
-        private double inputRep;
-
-        private double inputConf;
-
-        private double inputTime;
-
-        private double deltaFunds;
-
-        private double deltaScience;
-
-        private double deltaRep;
-
-        private double deltaConf;
-
-        private double deltaTime;
-
-        private double deltaRate;
+        CurrencyArray multipliers = new CurrencyArray(1d);
 
         public CurrencyModifierQueryRP0(TransactionReasons reason, double f0, float s0, float r0)
             : base(reason, (float)f0, s0, r0)
         {
-            this.reasonRP0 = (TransactionReasonsRP0)reason;
-            inputFunds = f0;
-            inputScience = s0;
-            inputRep = r0;
-            inputConf = 0d;
-            inputTime = 0d;
-            deltaFunds = 0d;
-            deltaScience = 0d;
-            deltaRep = 0d;
-            deltaConf = 0d;
-            deltaTime = 0d;
-            deltaRate = 0d;
+            reasonRP0 = reason.RP0();
+            inputs[CurrencyRP0.Funds] = f0;
+            inputs[CurrencyRP0.Science] = s0;
+            inputs[CurrencyRP0.Reputation] = r0;
         }
 
         public CurrencyModifierQueryRP0(TransactionReasonsRP0 reason, double f0, double s0, double r0, double c0, double t0)
-            : base((TransactionReasons)reason, (float)f0, (float)s0, (float)r0)
+            : base(reason.Stock(), (float)f0, (float)s0, (float)r0)
         {
-            this.reasonRP0 = reason;
-            this.reason = (TransactionReasons)reason;
-            inputFunds = f0;
-            inputScience = s0;
-            inputRep = r0;
-            inputConf = c0;
-            inputTime = t0;
-            deltaFunds = 0d;
-            deltaScience = 0d;
-            deltaRep = 0d;
-            deltaConf = 0d;
-            deltaTime = 0d;
-            deltaRep = 0d;
+            reasonRP0 = reason;
+            inputs[CurrencyRP0.Funds] = f0;
+            inputs[CurrencyRP0.Science] = s0;
+            inputs[CurrencyRP0.Reputation] = r0;
+            inputs[CurrencyRP0.Confidence] = c0;
+            inputs[CurrencyRP0.Time] = t0;
         }
 
-        public double GetInput(CurrencyRP0 c)
-        {
-            return c switch
-            {
-                CurrencyRP0.Funds => inputFunds,
-                CurrencyRP0.Science => inputScience,
-                CurrencyRP0.Reputation => inputRep,
-                CurrencyRP0.Confidence => inputConf,
-                CurrencyRP0.Time => inputTime,
-                _ => 1d,
-            };
-        }
+        public double GetInput(CurrencyRP0 c) => inputs[c];
 
         public void AddDelta(CurrencyRP0 c, double val)
         {
-            switch (c)
-            {
-                case CurrencyRP0.Funds:
-                    deltaFunds += val;
-                    break;
-                case CurrencyRP0.Science:
-                    deltaScience += val;
-                    break;
-                case CurrencyRP0.Reputation:
-                    deltaRep += val;
-                    break;
-                case CurrencyRP0.Confidence:
-                    deltaConf += val;
-                    break;
-                case CurrencyRP0.Time:
-                    deltaTime += val;
-                    break;
-                case CurrencyRP0.Rate:
-                    deltaRate += val;
-                    break;
-            }
+            Debug.LogError($"[RP-0]: CurrencyModifierQuery: Something tried to AddDelta! Currency {c} and values {val} for reason {reasonRP0}");
+            if (inputs[c] == 0d)
+                return;
+
+            multipliers[c] = multipliers[c] * (inputs[c] + val) / inputs[c];
+        }
+
+        public void Multiply(CurrencyRP0 c, double mult)
+        {
+            multipliers[c] = multipliers[c] * mult;
         }
 
         public double GetEffectDelta(CurrencyRP0 c)
         {
-            return c switch
-            {
-                CurrencyRP0.Funds => deltaFunds,
-                CurrencyRP0.Science => deltaScience,
-                CurrencyRP0.Reputation => deltaRep,
-                CurrencyRP0.Confidence => deltaConf,
-                CurrencyRP0.Time => deltaTime,
-                CurrencyRP0.Rate => deltaRate,
-                _ => 0f,
-            };
+            //return c switch
+            //{
+            //    CurrencyRP0.Funds => deltaFunds,
+            //    CurrencyRP0.Science => deltaScience,
+            //    CurrencyRP0.Reputation => deltaRep,
+            //    CurrencyRP0.Confidence => deltaConf,
+            //    CurrencyRP0.Time => deltaTime,
+            //    CurrencyRP0.Rate => deltaRate,
+            //    _ => 0f,
+            //};
+            return inputs[c] * (multipliers[c] - 1d);
         }
 
         public double GetTotal(CurrencyRP0 c)
         {
-            return GetInput(c) + GetEffectDelta(c);
+            return inputs[c] * multipliers[c];
         }
 
         public static bool ApproximatelyZero(double a)
@@ -129,102 +135,107 @@ namespace RP0
             return absA < Math.Max(1E-06d * absA, UnityEngine.Mathf.Epsilon * 8d);
         }
 
-        public string GetCostLineOverride(bool displayInverted = true, bool useCurrencyColors = false, bool useInsufficientCurrencyColors = true, bool includePercentage = false, string seperator = ", ")
+        public static string SpriteString(CurrencyRP0 c) => c switch
         {
-            double funds = GetTotal(CurrencyRP0.Funds);
-            double sci = GetTotal(CurrencyRP0.Science);
-            double rep = GetTotal(CurrencyRP0.Reputation);
-            double conf = GetTotal(CurrencyRP0.Confidence);
-            double time = GetTotal(CurrencyRP0.Time);
-            double rate = GetTotal(CurrencyRP0.Rate);
-            if (displayInverted)
+            CurrencyRP0.Funds => "<sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>",
+            CurrencyRP0.Science => "<sprite=\"CurrencySpriteAsset\" name=\"Science\" tint=1>",
+            CurrencyRP0.Reputation => "<sprite=\"CurrencySpriteAsset\" name=\"Reputation\" tint=1>",
+            CurrencyRP0.Confidence => "<sprite=\"CurrencySpriteAsset\" name=\"Flask\" tint=1>",
+            _ => throw new ArgumentOutOfRangeException(nameof(c))
+        };
+
+        static readonly string[] currencyColors = {
+            "#B4D455", // funds
+            "#6DCFF6", // sci
+            "#E0D503", // rep
+            "#C8D986", // conf
+            "#B5B536", // time
+            "#efa4e2" // rate
+        };
+
+        public static string CurrencyColor(CurrencyRP0 c) => currencyColors[(int)c];
+
+        public string GetCostLineOverride(bool displayInverted = true, bool useCurrencyColors = false, bool useInsufficientCurrencyColors = true, bool includePercentage = false, string seperator = ", ", bool flipRateDeltaColoring = false)
+        {
+            CurrencyArray outputs = new CurrencyArray();
+            bool[] canAffords = new bool[outputs.Length];
+            double invMult = displayInverted ? -1d : 1d;
+            int rateIndex = (int)CurrencyRP0.Rate;
+            for (int i = 0; i < outputs.Length; ++i)
             {
-                funds = -funds;
-                sci = -sci;
-                rep = -rep;
-                conf = -conf;
-                time = -time;
-                // rate can't be inverted
+                double amount = inputs[i] * multipliers[i];
+                if (i > LastCurrencyForAffordChecks)
+                {
+                    canAffords[i] = true;
+                }
+                else
+                {
+                    canAffords[i] = CanAfford((CurrencyRP0)i);
+                }
+
+                if (i != rateIndex)
+                    amount *= invMult;
+
+                outputs[i] = amount;
             }
-            bool canAffordFunds = CanAfford(CurrencyRP0.Funds);
-            bool canAffordSci = CanAfford(CurrencyRP0.Science);
-            bool canAffordRep = CanAfford(CurrencyRP0.Reputation);
-            bool canAffordConf = CanAfford(CurrencyRP0.Confidence);
-            string textFunds = ((!ApproximatelyZero(funds)) ? ("<sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> " + KSPUtil.LocalizeNumber(funds, "N2")) : "");
-            string textSci = ((!ApproximatelyZero(sci)) ? ("<sprite=\"CurrencySpriteAsset\" name=\"Science\" tint=1> " + KSPUtil.LocalizeNumber(sci, "N0")) : "");
-            string textRep = ((!ApproximatelyZero(rep)) ? ("<sprite=\"CurrencySpriteAsset\" name=\"Reputation\" tint=1> " + KSPUtil.LocalizeNumber(rep, "F2")) : "");
-            string textConf = ((!ApproximatelyZero(conf)) ? ("<sprite=\"CurrencySpriteAsset\" name=\"Flask\" tint=1> " + KSPUtil.LocalizeNumber(conf, "F2")) : "");
-            string textTime = ((!ApproximatelyZero(time)) ? (!double.IsInfinity(time) && !double.IsNaN(time) && time < (100 * 365.25d * 86400d) ? KSPUtil.PrintDateDeltaCompact(time, time < 7d * 86400d, time < 600) : Localizer.GetStringByTag("#autoLOC_462439")) : "");
-            string textRate = ((!ApproximatelyZero(rate - 1d)) ? LocalizationHandler.FormatRatioAsPercent(rate) : "");
+
             string resultText = "";
-            if (!string.IsNullOrEmpty(textFunds))
+            for (int i = 0; i < outputs.Length; ++i)
             {
-                resultText = ((!((useInsufficientCurrencyColors && !canAffordFunds) || useCurrencyColors)) ? textFunds : StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordFunds) ? "#B4D455" : XKCDColors.HexFormat.BrightOrange, textFunds));
-                if (includePercentage && deltaFunds != 0f)
+                if (i == rateIndex)
                 {
-                    resultText = resultText + " " + GetEffectPercentageText(Currency.Funds, "N1", GetTextStyleFromInput(inputFunds));
+                    if (multipliers[i] == 1d)
+                        continue;
                 }
-            }
-            if (!string.IsNullOrEmpty(textSci))
-            {
+                else if (ApproximatelyZero(outputs[i]))
+                    continue;
+
                 if (!string.IsNullOrEmpty(resultText))
-                {
                     resultText += seperator;
-                }
-                resultText = ((!((useInsufficientCurrencyColors && !canAffordSci) || useCurrencyColors)) ? (resultText + textSci) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordSci) ? "#6DCFF6" : XKCDColors.HexFormat.BrightOrange, textSci)));
-                if (includePercentage && deltaScience != 0f)
+
+                double amount = outputs[i];
+                string amountText;
+                CurrencyRP0 c = (CurrencyRP0)i;
+                if (i > LastCurrencyForAffordChecks)
                 {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Science, "N1", GetTextStyleFromInput(inputScience));
+                    if (c == CurrencyRP0.Time)
+                    {
+                        if (double.IsInfinity(amount) || double.IsNaN(amount) || amount > (100 * 365.25d * 86400d))
+                            amountText = Localizer.GetStringByTag("#autoLOC_462439");
+                        else
+                            amountText = KSPUtil.PrintDateDeltaCompact(amount, amount < 7d * 86400d, amount < 600);
+                    }
+                    else
+                    {
+                        amountText = Localizer.Format("#rp0CurrencyRateFormat", amount.ToString("N2"));
+                    }
+                }
+                else
+                {
+                    amountText = $"{SpriteString(c)} {amount:N2}";
+                }
+
+                if (useInsufficientCurrencyColors && !canAffords[i])
+                {
+                    amountText = $"<color={XKCDColors.HexFormat.BrightOrange}>{amountText}</color>";
+                }
+                else if (useCurrencyColors)
+                {
+                    amountText = $"<color={CurrencyColor(c)}>{amountText}</color>";
+                }
+
+                resultText += amountText;
+
+                if (includePercentage && multipliers[i] != 1d)
+                {
+                    // Normally, for a currency less is good if it's a cost.
+                    // For time, less is good unless we're flipping
+                    // for rate, more is good unless we're flipping.
+                    bool lessGood = c == CurrencyRP0.Rate ? flipRateDeltaColoring : inputs[i] < 0;
+                    resultText += $" <color={TextStylingColor(inputs[i] < 0, lessGood)}>({LocalizationHandler.FormatRatioAsPercent(multipliers[i])})</color>";
                 }
             }
-            if (!string.IsNullOrEmpty(textRep))
-            {
-                if (!string.IsNullOrEmpty(resultText))
-                {
-                    resultText += seperator;
-                }
-                resultText = ((!((useInsufficientCurrencyColors && !canAffordRep) || useCurrencyColors)) ? (resultText + textRep) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordRep) ? "#E0D503" : XKCDColors.HexFormat.BrightOrange, textRep)));
-                if (includePercentage && deltaRep != 0f)
-                {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Reputation, "N1", GetTextStyleFromInput(inputRep));
-                }
-            }
-            if (!string.IsNullOrEmpty(textConf))
-            {
-                if (!string.IsNullOrEmpty(resultText))
-                {
-                    resultText += seperator;
-                }
-                resultText = ((!((useInsufficientCurrencyColors && !canAffordConf) || useCurrencyColors)) ? (resultText + textConf) : (resultText + StringBuilderCache.Format("<color={0}>{1}</color>", (!useInsufficientCurrencyColors || canAffordConf) ? $"#{RUIutils.ColorToHex(XKCDColors.KSPBadassGreen)}" : XKCDColors.HexFormat.BrightOrange, textConf)));
-                if (includePercentage && deltaConf != 0f)
-                {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Confidence, "N1", GetTextStyleFromInput(inputConf));
-                }
-            }
-            if (!string.IsNullOrEmpty(textTime))
-            {
-                if (!string.IsNullOrEmpty(resultText))
-                {
-                    resultText += seperator;
-                }
-                resultText += textTime;
-                if (includePercentage && deltaTime != 0f)
-                {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Time, "N1", GetTextStyleFromInput(inputTime));
-                }
-            }
-            if (!string.IsNullOrEmpty(textRate))
-            {
-                if (!string.IsNullOrEmpty(resultText))
-                {
-                    resultText += seperator;
-                }
-                resultText += textRate;
-                if (includePercentage && deltaRate != 0f)
-                {
-                    resultText = resultText + " " + GetEffectPercentageText(CurrencyRP0.Rate, "N1", TextStyling.OnGUI);
-                }
-            }
+
             return resultText;
         }
 
@@ -284,7 +295,7 @@ namespace RP0
 
         public bool CanAfford(CurrencyRP0 c)
         {
-            double amount = -(GetInput(c) + GetEffectDelta(c));
+            double amount = -inputs[c] * multipliers[c];
             if (ApproximatelyZero(amount))
                 return true;
 
@@ -302,20 +313,20 @@ namespace RP0
                 case CurrencyRP0.Science:
                     if (ResearchAndDevelopment.Instance != null)
                     {
-                        return UtilMath.RoundToPlaces(ResearchAndDevelopment.Instance.Science, 1) >= UtilMath.RoundToPlaces(amount, 1);
+                        return UtilMath.RoundToPlaces((double)ResearchAndDevelopment.Instance.Science, 1) >= UtilMath.RoundToPlaces(amount, 1);
                     }
                     return true;
                 case CurrencyRP0.Reputation:
                     if (Reputation.Instance != null)
                     {
-                        return UtilMath.RoundToPlaces(Reputation.Instance.reputation, 1) >= UtilMath.RoundToPlaces(amount, 1);
+                        return UtilMath.RoundToPlaces((double)Reputation.Instance.reputation, 1) >= UtilMath.RoundToPlaces(amount, 1);
                     }
                     return true;
 
                 case CurrencyRP0.Confidence:
                     if (Confidence.Instance != null)
                     {
-                        return UtilMath.RoundToPlaces(Confidence.CurrentConfidence, 1) >= UtilMath.RoundToPlaces(amount, 1);
+                        return UtilMath.RoundToPlaces((double)Confidence.CurrentConfidence, 1) >= UtilMath.RoundToPlaces(amount, 1);
                     }
                     return true;
             }
@@ -324,28 +335,8 @@ namespace RP0
         public string GetEffectDeltaText(CurrencyRP0 c, string format, TextStyling textStyle = TextStyling.None)
         {
             string text = "";
-            double delta = 0d;
-            switch (c)
-            {
-                case CurrencyRP0.Funds:
-                    delta = deltaFunds;
-                    break;
-                case CurrencyRP0.Science:
-                    delta = deltaScience;
-                    break;
-                case CurrencyRP0.Reputation:
-                    delta = deltaRep;
-                    break;
-                case CurrencyRP0.Confidence:
-                    delta = deltaConf;
-                    break;
-                case CurrencyRP0.Time:
-                    delta = deltaTime;
-                    break;
-                case CurrencyRP0.Rate:
-                    delta = deltaRate;
-                    break;
-            }
+            double delta = inputs[c] * (multipliers[c] - 1d);
+            
             if (delta == 0d)
             {
                 return "";
@@ -363,58 +354,24 @@ namespace RP0
 
         public string GetEffectPercentageText(CurrencyRP0 c, string format, TextStyling textStyle = TextStyling.None)
         {
-            double delta = 0d;
-            double input = 0d;
-            switch (c)
+            
+            if (inputs[c] != 0d)
             {
-                case CurrencyRP0.Funds:
-                    delta = deltaFunds;
-                    input = inputFunds;
-                    break;
-                case CurrencyRP0.Science:
-                    delta = deltaScience;
-                    input = inputScience;
-                    break;
-                case CurrencyRP0.Reputation:
-                    delta = deltaRep;
-                    input = inputRep;
-                    break;
-                case CurrencyRP0.Confidence:
-                    delta = deltaConf;
-                    input = inputConf;
-                    break;
-                case CurrencyRP0.Time:
-                    delta = deltaTime;
-                    input = inputTime;
-                    break;
-                case CurrencyRP0.Rate:
-                    delta = 1d + deltaRate;
-                    input = 1d;
-                    break;
-            }
-            if (delta != 0f && input != 0f)
-            {
-                double percent = delta / input * 100d;
+                double percent = (multipliers[c] - 1d) * 100d;
                 string text = percent.ToString(format);
                 return textStyle switch
                 {
-                    TextStyling.OnGUI => ((delta > 0f) ? "<color=#caff00>(+" : "<color=#feb200>(") + text + "%)</color>",
-                    TextStyling.EzGUIRichText => ((delta > 0f) ? "<#caff00>(+" : "<#feb200>(") + text + "%)</>",
-                    TextStyling.OnGUI_LessIsGood => ((delta > 0f) ? "<color=#feb200><+" : "<color=#caff00><") + text + "%></color>",
-                    TextStyling.EzGUIRichText_LessIsGood => ((delta > 0f) ? "<#feb200>(+" : "<#caff00>(") + text + ")%</>",
-                    _ => ((delta > 0f) ? "(+" : "(") + text + "%)",
+                    TextStyling.OnGUI => ((percent > 0f) ? "<color=#caff00>(+" : "<color=#feb200>(") + text + "%)</color>",
+                    TextStyling.EzGUIRichText => ((percent > 0f) ? "<#caff00>(+" : "<#feb200>(") + text + "%)</>",
+                    TextStyling.OnGUI_LessIsGood => ((percent > 0f) ? "<color=#feb200><+" : "<color=#caff00><") + text + "%></color>",
+                    TextStyling.EzGUIRichText_LessIsGood => ((percent > 0f) ? "<#feb200>(+" : "<#caff00>(") + text + ")%</>",
+                    _ => ((percent > 0f) ? "(+" : "(") + text + "%)",
                 };
             }
             return "";
         }
 
-        public static TextStyling GetTextStyleFromInput(double input)
-        {
-            if (input < 0)
-                return TextStyling.OnGUI_LessIsGood;
-
-            return TextStyling.OnGUI;
-        }
+        public static string TextStylingColor(bool negative, bool negativeGood) => negative ^ negativeGood ? "#caff00" : "#feb200";
 
         public static CurrencyModifierQueryRP0 RunQuery(TransactionReasonsRP0 reason, double f0, double s0, double r0)
         {
@@ -436,7 +393,7 @@ namespace RP0
                 mult * dict.ValueOrDefault(CurrencyRP0.Science),
                 mult * dict.ValueOrDefault(CurrencyRP0.Reputation),
                 mult * dict.ValueOrDefault(CurrencyRP0.Confidence),
-                dict.ValueOrDefault(CurrencyRP0.Time));
+                mult * dict.ValueOrDefault(CurrencyRP0.Time));
         }
     }
 
@@ -551,5 +508,9 @@ namespace RP0
         Time = 4,
         [Description("#rp0CurrencyRate")]
         Rate = 5,
+
+        MAX = Rate,
+
+        Invalid = 99,
     }
 }

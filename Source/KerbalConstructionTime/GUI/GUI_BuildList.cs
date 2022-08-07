@@ -886,7 +886,7 @@ namespace KerbalConstructionTime
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
                         MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
-                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselRollout, b.Cost, 0f, 0f).GetCostLine(false, false) +".",
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselRollout, b.Cost, 0f, 0f).GetCostLineOverride(false, false) +".",
                             "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                     }
@@ -1641,7 +1641,7 @@ namespace KerbalConstructionTime
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", RemoveInputLocks);
                 MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
-                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselRollout, b.Cost, 0f, 0f).GetCostLine(false, false) + ".",
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselRollout, b.Cost, 0f, 0f).GetCostLineOverride(false, false) + ".",
                             "Scrap Vessel", null, options: options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;

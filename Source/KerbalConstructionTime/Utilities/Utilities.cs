@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
-using UnityEngine.UI;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -743,12 +743,12 @@ namespace KerbalConstructionTime
             return Funding.Instance.Funds;
         }
 
-        public static double SpendFunds(double toSpend, RP0.TransactionReasonsRP0 reason)
+        public static double SpendFunds(double toSpend, TransactionReasonsRP0 reason)
         {
             if (!CurrentGameIsCareer())
                 return 0;
             KCTDebug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
-            Funding.Instance.AddFunds(-toSpend, (TransactionReasons)reason);
+            Funding.Instance.AddFunds(-toSpend, reason.Stock());
             return Funding.Instance.Funds;
         }
 

@@ -19,7 +19,8 @@ namespace RP0.Harmony
 
             if (__instance.Root is ContractConfigurator.ConfiguredContract cc && Programs.ProgramHandler.Instance != null && Programs.ProgramHandler.Instance.IsContractOptional(cc))
             {
-                message += $"\n<color=#{RUIutils.ColorToHex(XKCDColors.KSPBadassGreen)}>{KSP.Localization.Localizer.Format("#rp0ConfidenceValue", (_storedRep * Programs.ProgramHandler.Settings.repToConfidence).ToString("N0"))}</color>";
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ContractReward, 0d, 0d, 0d, _storedRep * Programs.ProgramHandler.Settings.repToConfidence, 0d);
+                message += $"<color={CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence)}>{CurrencyModifierQueryRP0.SpriteString(CurrencyRP0.Confidence)} {cmq.GetTotal(CurrencyRP0.Confidence):N0} {cmq.GetEffectDeltaText(CurrencyRP0.Confidence, "N0", CurrencyModifierQuery.TextStyling.OnGUI)}  </color>";
             }
         }
 
@@ -31,8 +32,7 @@ namespace RP0.Harmony
             //So we have to intercept and store the value.
             if (__instance.Root is ContractConfigurator.ConfiguredContract cc && Programs.ProgramHandler.Instance != null && Programs.ProgramHandler.Instance.IsContractOptional(cc))
             {
-                CurrencyModifierQuery cmq = CurrencyModifierQuery.RunQuery(TransactionReasons.ContractReward, 0, 0, __instance.ReputationCompletion);
-                _storedRep = cmq.GetTotal(Currency.Reputation);
+                _storedRep = __instance.ReputationCompletion;
             }
         }
     }

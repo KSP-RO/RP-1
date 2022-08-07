@@ -422,7 +422,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("     Work rate:", GUILayout.Width(90));
-                GUILayout.Label(new GUIContent(constr.WorkRate.ToString("P0"), $"rate{identifier}¶Materials cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                GUILayout.Label(new GUIContent(constr.WorkRate.ToString("P0"), $"rate{identifier}¶Daily cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
                 
                 float newWorkRate = GUILayout.HorizontalSlider(constr.WorkRate, 0f, 1.5f, GUILayout.Width(150));
                 constr.WorkRate = Mathf.RoundToInt(newWorkRate * 20f) * 0.05f;

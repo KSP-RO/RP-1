@@ -293,7 +293,7 @@ namespace RP0.Harmony
             if (!Administration.Instance.SelectedWrapper.strategy.Deactivate())
                 return;
 
-            Reputation.Instance.AddReputation(-(float)cost, (TransactionReasons)TransactionReasonsRP0.LeaderRemove);
+            Reputation.Instance.AddReputation(-(float)cost, TransactionReasonsRP0.LeaderRemove.Stock());
 
             Administration.Instance.UnselectStrategy();
             Administration.Instance.RedrawPanels();

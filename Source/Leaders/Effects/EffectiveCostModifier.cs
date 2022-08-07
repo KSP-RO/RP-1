@@ -12,7 +12,10 @@ namespace RP0.Leaders
         private string effectDescription = string.Empty;
 
         [Persistent]
-        private double value = 0d;
+        private string locStringOverride = string.Empty;
+
+        [Persistent]
+        private double multiplier = 1d;
 
         [Persistent]
         private PersistentHashSetValueType<string> tags = new PersistentHashSetValueType<string>();
@@ -33,7 +36,9 @@ namespace RP0.Leaders
 
         protected override string GetDescription()
         {
-            return KSP.Localization.Localizer.Format("#rp0LeaderEffectIntegrationRateModifier", LocalizationHandler.FormatRatioAsPercent(1d + value), effectDescription);
+            return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectIntegrationRateModifier" : locStringOverride,
+                LocalizationHandler.FormatRatioAsPercent(multiplier),
+                effectDescription);
         }
 
         protected override void OnLoadFromConfig(ConfigNode node)
@@ -81,7 +86,7 @@ namespace RP0.Leaders
             }
 
             if (found)
-                rate.value *= value;
+                rate.value *= multiplier;
         }
     }
 }

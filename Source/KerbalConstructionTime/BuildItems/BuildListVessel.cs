@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
         public Vector3 ShipSize = Vector3.zero;
 
         public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
-            * Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.RushRate;
+            * LC.Efficiency * LC.RushRate;
 
         public double TimeLeft
         {
@@ -688,8 +688,9 @@ namespace KerbalConstructionTime
 
         public double GetRushEfficiencyCost()
         {
-            double newEffic = LC.EfficiencyEngineers * 0.9d;
-            return LC.EfficiencyEngineers - newEffic;
+            double effic = LC.Efficiency;
+            double newEffic = effic * 0.9d;
+            return effic - newEffic;
         }
 
         public bool RemoveFromBuildList(out int oldIndex)
@@ -867,7 +868,7 @@ namespace KerbalConstructionTime
 
             double bp = BuildPoints + IntegrationPoints;
             double rate = Utilities.GetBuildRate(LC, GetTotalMass(), bp, IsHumanRated)
-                        * Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.StrategyRateMultiplier;
+                        * LC.Efficiency * LC.StrategyRateMultiplier;
             return (bp - Progress) / rate;
         }
 

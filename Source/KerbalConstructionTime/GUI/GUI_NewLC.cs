@@ -10,6 +10,7 @@ namespace KerbalConstructionTime
         private static string _widthLimit = "2";
         private static string _lengthLimit = "2";
         private static bool _isHumanRated = false;
+        private static LCItem.LCData _lcData = new LCItem.LCData();
 
         public static void DrawNewLCWindow(int windowID)
         {
@@ -238,6 +239,36 @@ namespace KerbalConstructionTime
                     GUILayout.Label(new GUIContent((projectedMaintenance * 365.25d).ToString("N0"), $"Daily: {projectedMaintenance:N1}"), GetLabelRightAlignStyle());
                     GUILayout.EndHorizontal();
                 }
+            }
+
+            if (!isHangar)
+            {
+                _lcData.massMax = tonnageLimit;
+                _lcData.sizeMax = curPadSize;
+                _lcData.isHumanRated = _isHumanRated;
+                LCEfficiency closestEff = LCEfficiency.FindClosest(_lcData, out double closeness);
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Closest Existing LC:", GUILayout.ExpandWidth(false));
+                GUILayout.Label(closeness > 0 ? closestEff.FirstLC().Name : "None", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+                    
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Commonality:");
+                GUILayout.Label(closeness.ToString("P0"), GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                if (closeness == 1d)
+                {
+                    GUILayout.Label("Uses shared efficiency.");
+                }
+                else
+                {
+                    GUILayout.Label("Starting Efficiency:");
+                    GUILayout.Label($"{(closeness > 0 ? Math.Max(LCEfficiency.MinEfficiency, closestEff.PostClosenessStartingEfficiency(closeness)) : LCEfficiency.MinEfficiency):P1}", GetLabelRightAlignStyle());
+                }
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.BeginHorizontal();

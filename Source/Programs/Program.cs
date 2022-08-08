@@ -325,17 +325,26 @@ namespace RP0.Programs
             }
         }
 
+        public double RepForComplete(double ut)
+        {
+            double timeDelta = DurationYears * secsPerYear - (ut - acceptedUT);
+            double repDelta = 0d;
+            if (timeDelta > 0)
+            {
+                repDelta = (timeDelta / secsPerYear * repDeltaOnCompletePerYearEarly);
+            }
+            return repDelta;
+        }
+
         public void Complete()
         {
             completedUT = KSPUtils.GetUT();
-            double timeDelta = DurationYears * secsPerYear - (completedUT - acceptedUT);
-            float repDelta = 0f;
-            if (timeDelta > 0)
+            float repDelta = (float)RepForComplete(completedUT);
+            if (repDelta > 0)
             {
-                repDelta = (float)(timeDelta / secsPerYear * repDeltaOnCompletePerYearEarly);
-                Reputation.Instance.AddReputation(repDelta, TransactionReasons.Mission);
+                Reputation.Instance.AddReputation(repDelta, TransactionReasonsRP0.ProgramFunding.Stock());
             }
-            Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT)/secsPerYear}, {timeDelta/secsPerYear} early/late. Adding {repDelta} rep.");
+            Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT)/secsPerYear}. Adding {repDelta} rep.");
 
             CareerLog.Instance?.ProgramCompleted(this);
         }
@@ -551,11 +560,7 @@ namespace RP0.Programs
             return text;
         }
 
-        public bool IsSpeedAllowed(Speed s)
-        {
-            // we use the display version because, were it accepted, we'd do a CMQ when subtracting.
-            return Confidence.CurrentConfidence >= GetDisplayedConfidenceCostForSpeed(s);
-        }
+        public bool IsSpeedAllowed(Speed s) => CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -confidenceCosts[s], 0d).CanAfford();
 
         public void SetBestAllowableSpeed()
         {

@@ -485,7 +485,8 @@ namespace KerbalConstructionTime
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.TechName}?\n\nThis will also cancel any dependent techs.", "Cancel Node?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.TechName}?\n\nThis will also cancel any dependent techs."
+                        + (RP0.Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.TechID) ?? string.Empty), "Cancel Node?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
@@ -1581,6 +1582,7 @@ namespace KerbalConstructionTime
                 }
                 node.DisableTech();
                 KCTGameStates.TechList.RemoveAt(index);
+                RP0.Crew.CrewHandler.Instance?.OnTechCanceled(node.TechID);
             }
         }
 

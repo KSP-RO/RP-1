@@ -241,7 +241,7 @@ namespace KerbalConstructionTime
 
                 try
                 {
-                    KCTEvents.OnTechCompleted?.Fire(this);
+                    KCTEvents.OnTechCompleted.Fire(this);
                 }
                 catch (Exception ex)
                 {
@@ -250,8 +250,7 @@ namespace KerbalConstructionTime
 
                 KCTGameStates.TechList.Remove(this);
 
-                for (int j = 0; j < KCTGameStates.TechList.Count; j++)
-                    KCTGameStates.TechList[j].UpdateBuildRate(j);
+                KCTGameStates.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
                 RP0.UnlockSubsidyHandler.Instance.IncrementSubsidyTime(TechID, portion * UTDiff);

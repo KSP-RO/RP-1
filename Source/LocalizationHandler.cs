@@ -40,7 +40,9 @@ namespace RP0
                 {
                     if (up.name.StartsWith("rp0EngineerUpgrade"))
                     {
-                        up.description = Localizer.Format("#rp0EngineerUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                        up.description = Localizer.Format("#rp0EngineerUpgradeText", 
+                            (PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyUpgradesMin.GetValue(up.techRequired) * 100d).ToString("N0"),
+                            (PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyUpgradesMax.GetValue(up.techRequired) * 100d).ToString("N0"));
                         continue;
                     }
 

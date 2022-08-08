@@ -494,9 +494,11 @@ namespace RP0
 
         EfficiencyGainLC = 1 << 41,
 
-        RateResearch = 1 << 42,
+        MaxEfficiencyLC = 1 << 42,
 
-        RateTraining = 1 << 43,
+        RateResearch = 1 << 43,
+
+        RateTraining = 1 << 44,
 
         Any = ~0
     }

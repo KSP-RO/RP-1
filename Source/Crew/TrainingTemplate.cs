@@ -10,6 +10,8 @@ namespace RP0.Crew
         public string name;
         public string description;
 
+        public List<AvailablePart> partsCovered = new List<AvailablePart>();
+
         public TrainingFlightEntry prereq;
         public TrainingFlightEntry conflict;
 

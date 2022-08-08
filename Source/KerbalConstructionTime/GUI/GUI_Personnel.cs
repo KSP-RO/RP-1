@@ -167,17 +167,25 @@ namespace KerbalConstructionTime
                 case PersonnelButtonHover.Fire: freeDelta = -fireAmount; break;
             }
 
-            double efficLocal = _currentPersonnelHover == PersonnelButtonHover.Assign ? Utilities.PredictEfficiencyEngineers(currentLC, assignDelta) : currentLC.EfficiencyEngineers;
-            double efficGlobal = _currentPersonnelHover == PersonnelButtonHover.Hire ? Utilities.PredictEfficiencyEngineers(freeDelta) : KCTGameStates.EfficiencyEngineers;
-            double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
+            double efficiency = currentLC.Efficiency;
             double stratMult = currentLC.StrategyRateMultiplier;
-            const string efficTooltip = "Adding new engineers here will temporarily lower local efficiency.\nHiring new engineers will temporarily lower global efficiency.";
+            const string HangarEfficTooltip = "The hangar has no specific efficiency, and instead uses the maximum possible efficiency at your current tech level.";
+            const string PadEfficTooltip = "LC efficiency increases as the LC is used, proportional to the number of engineers vs the max, and lowers only if the complex is modified. Efficiency will not increase if the LC is rushing.";
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent($"Efficiency: {efficLocal:P1} (at {currentLC.Name}) x {efficGlobal:P1} (global) x {techMult:N2} (tech)", efficTooltip));
+            if (currentLC.LCType == LaunchComplexType.Hangar)
+            {
+                GUILayout.Label(new GUIContent("Efficiency:", HangarEfficTooltip));
+                GUILayout.Label(new GUIContent(LCEfficiency.MaxEfficiency.ToString("P1"), HangarEfficTooltip), GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label(new GUIContent($"Efficiency: ({LCEfficiency.MinEfficiency:P0} - {LCEfficiency.MaxEfficiency:P0})", PadEfficTooltip));
+                GUILayout.Label(new GUIContent(efficiency.ToString("P1"), PadEfficTooltip), GetLabelRightAlignStyle());
+            }
             GUILayout.EndHorizontal();
 
-            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * techMult * stratMult;
-            double rate = rateFull * efficLocal * efficGlobal;
+            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * stratMult;
+            double rate = rateFull * efficiency;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -196,7 +204,7 @@ namespace KerbalConstructionTime
                 if (engCap < currentLC.Engineers + assignDelta)
                     delta = engCap - currentLC.Engineers;
                 double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, delta)
-                    * efficLocal * efficGlobal * techMult * stratMult;
+                    * efficiency * stratMult;
                 double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
@@ -224,9 +232,7 @@ namespace KerbalConstructionTime
                     if (engCap < int.MaxValue && engCap != currentLC.MaxEngineers)
                         GUILayout.Label($"(max of {engCap} eng.)");
 
-                    double buildRate = lcp.GetBuildRate(delta) 
-                        / (currentLC.EfficiencyEngineers * KCTGameStates.EfficiencyEngineers)
-                        * efficLocal * efficGlobal;
+                    double buildRate = lcp.GetBuildRate(delta);
                     double bpLeft = (lcp.IsReversed ? 0 : lcp.BP) - lcp.Progress;
                     GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
                 }
@@ -262,13 +268,13 @@ namespace KerbalConstructionTime
             else if (_currentPersonnelHover == PersonnelButtonHover.Fire)
                 delta = -fireAmount;
 
-            double techMult = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
+            double efficiency = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiency;
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
 
             _nodeRate = Formula.GetResearchRate(0, 0, delta);
             double sci = 86400 * _nodeRate;
             double sciPerDay = sci / days;
-            double sciPerDayEffic = sciPerDay * techMult;
+            double sciPerDayEffic = sciPerDay * efficiency;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Rate: ", GetLabelRightAlignStyle());
             //bool usingPerYear = false;
@@ -289,7 +295,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             const string researcherEfficTooltip = "Researching new Electronics Research nodes will increase this";
             GUILayout.Label(new GUIContent("Efficiency:", researcherEfficTooltip));
-            GUILayout.Label(new GUIContent($"{techMult:P2}", researcherEfficTooltip), GetLabelRightAlignStyle());
+            GUILayout.Label(new GUIContent($"{efficiency:P1}", researcherEfficTooltip), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -297,7 +303,7 @@ namespace KerbalConstructionTime
             {
                 TechItem t = KCTGameStates.TechList[0];
                 GUILayout.Label($"Current Research: {t.TechName}");
-                double techRate = Formula.GetResearchRate(t.ScienceCost, 0, delta) * techMult * t.YearBasedRateMult;
+                double techRate = Formula.GetResearchRate(t.ScienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
                 double timeLeft = (t.ScienceCost - t.Progress) / techRate;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }

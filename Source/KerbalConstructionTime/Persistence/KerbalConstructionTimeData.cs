@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -10,6 +11,29 @@ namespace KerbalConstructionTime
     {
         public static Dictionary<string, string> techNameToTitle = new Dictionary<string, string>();
         public static Dictionary<string, List<string>> techNameToParents = new Dictionary<string, List<string>>();
+
+        [KSPField(isPersistant = true)]
+        private PersistentList<LCEfficiency> _lcEfficiencies = new PersistentList<LCEfficiency>();
+        public PersistentList<LCEfficiency> LCEfficiencies => _lcEfficiencies;
+
+        public Dictionary<LCItem, LCEfficiency> LCToEfficiency = new Dictionary<LCItem, LCEfficiency>();
+
+        public static KerbalConstructionTimeData Instance { get; protected set; }
+
+        public override void OnAwake()
+        {
+            base.OnAwake();
+            if (Instance != null)
+                Destroy(Instance);
+
+            Instance = this;
+        }
+
+        public void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
 
         protected void LoadTree()
         {
@@ -101,9 +125,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.SciPointsTotal = -1;
                 KCTGameStates.UnassignedPersonnel = 0;
                 KCTGameStates.Researchers = 0;
-                KCTGameStates.EfficiencyEngineers = 0.25d;
-                KCTGameStates.LastEngineers = 0d;
-                KCTGameStates.LastResearchers = 0d;
 
                 var kctVS = new KCT_DataStorage();
                 if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
@@ -165,6 +186,8 @@ namespace KerbalConstructionTime
                     KCTGameStates.StarterLCBuilding = KCTGameStates.KSCs.FirstOrDefault(k => k.LaunchComplexes.Count > 1) != null;
                 }
                 KCTGameStates.LoadedSaveVersion = KCTGameStates.VERSION;
+
+                LCEfficiency.RelinkAll();
             }
             catch (Exception ex)
             {

@@ -30,14 +30,10 @@ namespace KerbalConstructionTime
         //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int UnassignedPersonnel = 0;
         public static int Researchers = 0;
-        public static double LastResearchers = 0;
-        private const double StartingEfficiencyEngineers = 0.25d;
-        public static double EfficiencyEngineers = StartingEfficiencyEngineers;
-        public static double LastEngineers = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 5;
+        public const int VERSION = 6;
 
         public static ToolbarControl ToolbarControl;
 
@@ -97,9 +93,6 @@ namespace KerbalConstructionTime
 
             UnassignedPersonnel = 0;
             Researchers = 0;
-            LastResearchers = 0;
-            EfficiencyEngineers = StartingEfficiencyEngineers;
-            LastEngineers = 0;
             LoadedSaveVersion = 0;
         }
 
@@ -145,6 +138,8 @@ namespace KerbalConstructionTime
 
         public static void RecalculateBuildRates()
         {
+            LCEfficiency.RecalculateConstants();
+
             foreach (var ksc in KSCs)
                 ksc.RecalculateBuildRates(true);
 
@@ -317,6 +312,34 @@ namespace KerbalConstructionTime
                     eng += ksc.Engineers;
 
                 return eng;
+            }
+        }
+
+        public static double WeightedAverageEfficiencyEngineers
+        {
+            get
+            {
+                double effic = 0d;
+                int engineers = 0;
+                foreach (var ksc in KSCs)
+                {
+                    foreach (var lc in ksc.LaunchComplexes)
+                    {
+                        if (!lc.IsOperational || lc.LCType == LaunchComplexType.Hangar)
+                            continue;
+
+                        if (lc.Engineers == 0d)
+                            continue;
+
+                        engineers += lc.Engineers;
+                        effic += lc.Efficiency * engineers;
+                    }
+                }
+                
+                if (engineers == 0)
+                    return 0d;
+
+                return effic / engineers;
             }
         }
     }

@@ -1462,7 +1462,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
             activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
-                $"Enable rush building.\nRate: {PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult:N1}x\nCosts: Salary {PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult:N1}x,\n-{(1d - PresetManager.Instance.ActivePreset.GeneralSettings.RushEfficMult):P0} efficiency/day."));
+                $"Enable rush building.\nRate: {PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult:N1}x\nSalary cost: {PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
             if (oldRushing != activeLC.IsRushing)
                 Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
 
@@ -1716,15 +1716,6 @@ namespace KerbalConstructionTime
                     }
                 }
             }
-
-            //if (!b.IsFinished &&
-            //    (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
-            //    (b.LC.Engineers == 0 ? GUILayout.Button(new GUIContent("Rush Build\nUnavailable", "Rush building requires Engineers!"), _redButton)
-            //    : GUILayout.Button(new GUIContent($"Rush Build {(10d /** b.LC.Engineers / b.LC.MaxPersonnel*/):N0}%\n√{Math.Round(b.GetRushCost())}",
-            //        $"Progress proportional to Engineers.\nWill cause {b.GetRushEfficiencyCost():P0}pt loss to efficiency\n at {b.LC.Name}."))))
-            //{
-            //    b.DoRushBuild();
-            //}
 
             if (GUILayout.Button("Close"))
             {

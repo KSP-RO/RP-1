@@ -8,6 +8,8 @@ namespace RP0.DataTypes
 {
     public class PersistentHashSet<T> : HashSet<T>, IConfigNode where T : IConfigNode
     {
+        private static string typeName = typeof(T).Name;
+
         public void Load(ConfigNode node)
         {
             Clear();
@@ -23,7 +25,7 @@ namespace RP0.DataTypes
         {
             foreach (var item in this)
             {
-                ConfigNode n = new ConfigNode("ITEM");
+                ConfigNode n = new ConfigNode(typeName);
                 item.Save(n);
                 node.AddNode(n);
             }
@@ -44,7 +46,16 @@ namespace RP0.DataTypes
             Clear();
             foreach (ConfigNode.Value v in node.values)
             {
-                T item = (T)ReadValueMethod.Invoke(null, new object[] { type, v.value });
+                T item;
+                if (type == typeof(Guid))
+                {
+                    object o = new Guid(v.value);
+                    item = (T)o;
+                }
+                else
+                {
+                    item = (T)ReadValueMethod.Invoke(null, new object[] { type, v.value });
+                }
                 Add(item);
             }
         }

@@ -36,6 +36,8 @@ namespace RP0.Crew
         public string description => template.description;
         public bool isTemporary => template.isTemporary;
 
+        public List<AvailablePart> partsCovered => template.partsCovered;
+
         protected double _buildRate = 1d;
 
         public TrainingCourse()
@@ -106,6 +108,7 @@ namespace RP0.Crew
 
             return !checkPrereq;
         }
+
         public void AddStudent(ProtoCrewMember student)
         {
             if (template.seatMax <= 0 || Students.Count < template.seatMax)
@@ -117,6 +120,7 @@ namespace RP0.Crew
                 }
             }
         }
+
         public void AddStudent(string student)
         {
             AddStudent(HighLogic.CurrentGame.CrewRoster[student]);
@@ -144,6 +148,22 @@ namespace RP0.Crew
         public void RemoveStudent(string student)
         {
             RemoveStudent(HighLogic.CurrentGame.CrewRoster[student]);
+        }
+
+        public void AbortCourse()
+        {
+            if (!Started)
+                return;
+
+
+            var sb = StringBuilderCache.Acquire();
+            
+            foreach (var student in Students)
+            {
+                student.inactive = false;
+            }
+            Students.Clear();
+            Completed = true;
         }
 
         public void CompleteCourse()

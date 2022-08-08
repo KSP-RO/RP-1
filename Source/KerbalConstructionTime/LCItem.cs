@@ -37,6 +37,17 @@ namespace KerbalConstructionTime
             public LCData(LCData old)
             {
                 Name = old.Name;
+                SetFrom(old);
+            }
+
+            public LCData(LCItem lc)
+            {
+                Name = lc.Name;
+                SetFrom(lc);
+            }
+
+            public void SetFrom(LCData old)
+            {
                 massMax = old.massMax;
                 massOrig = old.massOrig;
                 sizeMax = old.sizeMax;
@@ -44,8 +55,18 @@ namespace KerbalConstructionTime
                 isHumanRated = old.isHumanRated;
             }
 
+            public void SetFrom(LCItem lc)
+            {
+                massMax = lc.MassMax;
+                massOrig = lc.MassOrig;
+                sizeMax = lc.SizeMax;
+                lcType = lc.LCType;
+                isHumanRated = lc.IsHumanRated;
+            }
+
             // NOTE: Not comparing name, which I think is correct here.
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated;
+            public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated;
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true);
         public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false);
@@ -95,9 +116,8 @@ namespace KerbalConstructionTime
         protected double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;
 
-        public const double StartingEfficiency = 0.5d;
-        public double EfficiencyEngineers = StartingEfficiency;
-        public double LastEngineers = 0d;
+        public double Efficiency => LCType == LaunchComplexType.Hangar ? LCEfficiency.MaxEfficiency : LCEfficiency.GetOrCreateEfficiencyForLC(this).Efficiency;
+
         public bool IsRushing;
         public double RushRate => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult : 1d;
         public double RushSalary => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult : 1d;
@@ -170,6 +190,8 @@ namespace KerbalConstructionTime
 
         public void Modify(LCData data, Guid modId)
         {
+            LCEfficiency oldEff = LCEfficiency.GetOrCreateEfficiencyForLC(this);
+
             _modID = modId;
             MassMax = data.massMax;
             MassOrig = data.massOrig;
@@ -184,6 +206,12 @@ namespace KerbalConstructionTime
                 pad.fractionalLevel = fracLevel;
                 pad.level = (int)fracLevel;
             }
+
+            // will create a new one if needed (it probably will be needed)
+            
+            LCEfficiency newEff = LCEfficiency.GetOrCreateEfficiencyForLC(this);
+            if (oldEff != newEff)
+                LCEfficiency.ClearEmpty();
         }
 
         public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;
@@ -200,9 +228,9 @@ namespace KerbalConstructionTime
         }
 
         public bool IsEmpty => StartingHangar.Compare(this) && BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && AirlaunchPrep.Count == 0 &&
-                    PadConstructions.Count == 0 && EfficiencyEngineers == StartingEfficiency && LastEngineers < 0.001d;
+                    PadConstructions.Count == 0 && !KerbalConstructionTimeData.Instance.LCToEfficiency.ContainsKey(this);
 
-        public bool IsActive => BuildList.Any() || Recon_Rollout.Any(r => !r.IsComplete()) || AirlaunchPrep.Any(a => !a.IsComplete());
+        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0 || AirlaunchPrep.Count > 0;
         public bool CanModify => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() && !PadConstructions.Any();
         public bool IsIdle => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any();
 
@@ -368,8 +396,6 @@ namespace KerbalConstructionTime
             node.AddValue("id", _id);
             node.AddValue("modID", _modID);
             node.AddValue("Engineers", Engineers);
-            node.AddValue("EfficiencyEngineers", EfficiencyEngineers);
-            node.AddValue("LastEngineers", LastEngineers);
             node.AddValue("IsRushing", IsRushing);
             node.AddValue("BuildRate", _rate);
             node.AddValue("BuildRateCapped", _rateHRCapped);
@@ -454,9 +480,7 @@ namespace KerbalConstructionTime
             _rate = 0;
             _rateHRCapped = 0;
             Engineers = 0;
-            EfficiencyEngineers = 0d;
             IsRushing = false;
-            LastEngineers = 0;
             IsHumanRated = false;
 
             Name = node.GetValue("LCName");
@@ -475,9 +499,7 @@ namespace KerbalConstructionTime
             if (!node.TryGetValue("modID", ref _modID) || _modID == (new Guid()) )
                 _modID = Guid.NewGuid();
             node.TryGetValue("Engineers", ref Engineers);
-            node.TryGetValue("EfficiencyEngineers", ref EfficiencyEngineers);
             node.TryGetValue("IsRushing", ref IsRushing);
-            node.TryGetValue("LastEngineers", ref LastEngineers);
             node.TryGetValue("BuildRate", ref _rate);
             node.TryGetValue("BuildRateCapped", ref _rateHRCapped);
             node.TryGetValue("IsHumanRated", ref IsHumanRated);
@@ -553,7 +575,39 @@ namespace KerbalConstructionTime
                 if (KCTGameStates.LoadedSaveVersion < 1)
                 {
                     Engineers *= 2;
-                    LastEngineers *= 2;
+                }
+
+                if (KCTGameStates.LoadedSaveVersion < 6 && LCType != LaunchComplexType.Hangar)
+                {
+                    double oldEffic = 0.5d;
+                    node.TryGetValue("EfficiencyEngineers", ref oldEffic);
+
+                    // we can't use the dict yet
+                    bool createEffic = true;
+                    foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+                    {
+                        if (e.Contains(_id) && e.Efficiency < oldEffic)
+                        {
+                            e.IncreaseEfficiency(oldEffic - e.Efficiency, false);
+                            createEffic = false;
+                            break;
+                        }
+                    }
+                    if (createEffic)
+                    {
+                        LCEfficiency closest = LCEfficiency.FindClosest(this, out double closeness);
+                        if (closeness == 1d && closest.Efficiency < oldEffic)
+                        {
+                            closest.IncreaseEfficiency(oldEffic - closest.Efficiency, false);
+                            createEffic = false;
+                        }
+                    }
+                    if (createEffic)
+                    {
+                        var e = LCEfficiency.GetOrCreateEfficiencyForLC(this);
+                        if (e.Efficiency < oldEffic)
+                            e.IncreaseEfficiency(oldEffic - e.Efficiency, false);
+                    }
                 }
             }
 

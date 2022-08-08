@@ -352,6 +352,17 @@ namespace KerbalConstructionTime
             return mult;
         }
 
+        public double GetSum()
+        {
+            double sum = 0d;
+            foreach (var kvp in techMultipliers)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
+                    sum += kvp.Value;
+            }
+            return sum;
+        }
+
         public double GetValue(string tech)
         {
             double val;
@@ -371,11 +382,11 @@ namespace KerbalConstructionTime
             VABRecoveryTech = null,
             ResearcherCaps = "300, 500, 750, 1250, 2000, 3500, -1";
         [Persistent]
-        public int MaxRushClicks = 0, HireCost = 200, UpgradeCost = 2000;
+        public int HireCost = 200, UpgradeCost = 2000;
         [Persistent]
         public double EngineerStartEfficiency = 0.5, GlobalEngineerStartEfficiency = 0.5, EngineerMaxEfficiency = 1.0, GlobalEngineerMaxEfficiency = 1.0,
             EngineerDecayRate = 0.1, GlobalEngineerDecayRate = 0.1, ResearcherDecayRate = 0.1, AdditionalPadCostMult = 0.5d,
-            RushRateMult = 1.5d, RushSalaryMult = 2d, RushEfficMult = 0.985d, RushEfficMin = 0.6d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d;
+            RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
@@ -385,15 +396,18 @@ namespace KerbalConstructionTime
         [Persistent]
         public FloatCurve YearBasedRateMult = new FloatCurve();
         [Persistent]
-        public EfficiencyUpgrades EngineerEfficiencyUpgrades = new EfficiencyUpgrades();
+        public EfficiencyUpgrades LCEfficiencyUpgradesMin = new EfficiencyUpgrades();
+        [Persistent]
+        public EfficiencyUpgrades LCEfficiencyUpgradesMax = new EfficiencyUpgrades();
         [Persistent]
         public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
 
         [Persistent]
         public ApplicantsFromContracts ContractApplicants = new ApplicantsFromContracts();
 
-        public double EngineerEfficiencyMultiplier => EngineerEfficiencyUpgrades.GetMultiplier();
-        public double ResearcherEfficiencyMultiplier => ResearcherEfficiencyUpgrades.GetMultiplier();
+        public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
+        public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
+        public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier();
     }
 
     public class KCT_Preset_Part_Variables

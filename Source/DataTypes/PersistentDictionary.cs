@@ -43,9 +43,19 @@ namespace RP0.DataTypes
         private static System.Reflection.MethodInfo ReadValueMethod = HarmonyLib.AccessTools.Method(typeof(ConfigNode), "ReadValue");
         private static System.Type KeyType = typeof(TKey);
 
-        protected override TKey ParseKey(string key)
+        protected override TKey ParseKey(string value)
         {
-            return (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, key });
+            TKey key;
+            if (KeyType == typeof(Guid))
+            {
+                object o = new Guid(value);
+                key = (TKey)o;
+            }
+            else
+            {
+                key = (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, value });
+            }
+            return key;
         }
     }
 
@@ -66,8 +76,27 @@ namespace RP0.DataTypes
             Clear();
             foreach (ConfigNode.Value v in node.values)
             {
-                TKey key = (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, v.name });
-                TValue value = (TValue)ReadValueMethod.Invoke(null, new object[] { ValueType, v.value });
+                TKey key;
+                if (KeyType == typeof(Guid))
+                {
+                    object o = new Guid(v.value);
+                    key = (TKey)o;
+                }
+                else
+                {
+                    key = (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, v.name });
+                }
+
+                TValue value;
+                if (ValueType == typeof(Guid))
+                {
+                    object o = new Guid(v.value);
+                    value = (TValue)o;
+                }
+                else
+                {
+                    value = (TValue)ReadValueMethod.Invoke(null, new object[] { ValueType, v.value });
+                }
                 Add(key, value);
             }
         }

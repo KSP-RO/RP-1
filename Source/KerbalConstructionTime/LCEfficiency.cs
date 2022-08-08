@@ -63,9 +63,9 @@ namespace KerbalConstructionTime
 
         public void Relink()
         {
-            _lcs.Clear();
             _ignoreObserve = true;
-            foreach(var id in _lcIDs)
+            _lcs.Clear();
+            foreach (var id in _lcIDs)
             {
                 _lcs.Add(KCTGameStates.FindLCFromID(id));
             }
@@ -117,7 +117,7 @@ namespace KerbalConstructionTime
 
         public bool Contains(LCItem lc) => _lcs.Contains(lc);
 
-        public LCItem FirstLC() => _lcs.Count > 0 ? _lcs[0] : null;
+        public string FirstLCName() => _lcs.Count > 0 ? _lcs[0].Name : "No Named LC";
 
         static LCItem.LCData _comparisonLCData = new LCItem.LCData();
 

@@ -97,7 +97,10 @@ namespace KerbalConstructionTime
 
         public void IncreaseEfficiency(double timestep, double portionEngineers)
         {
-            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)(Efficiency/MaxEfficiency));
+            if (_efficiency == _MaxEfficiency)
+                return;
+
+            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((Efficiency - _MinEfficiency) / _EfficiencyRange));
             double delta = _EfficiencyGainMult * eval * timestep * portionEngineers / (365.25d * 86400d);
             IncreaseEfficiency(delta, true);
         }
@@ -170,6 +173,8 @@ namespace KerbalConstructionTime
         private static double _MaxEfficiency = 1d;
         public static double MaxEfficiency => _MaxEfficiency;
 
+        private static double _EfficiencyRange = 1d;
+
         private static double _EfficiencyGainMult = 1d;
 
         public static void RecalculateConstants()
@@ -178,6 +183,7 @@ namespace KerbalConstructionTime
             double efficMult = RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.MaxEfficiencyLC);
             _MinEfficiency = efficMult * PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyMin;
             _MaxEfficiency = efficMult * PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyMax;
+            _EfficiencyRange = _MaxEfficiency - _MinEfficiency;
 
             if (KSP.UI.Screens.MessageSystem.Instance != null)
             {

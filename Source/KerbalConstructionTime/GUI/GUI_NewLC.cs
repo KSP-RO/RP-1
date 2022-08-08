@@ -226,7 +226,7 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Est. construction time:", GUILayout.ExpandWidth(false));
-                GUILayout.Label(new GUIContent(sBuildTime, isModify ? "With current construction engineers" : "With LC engineers as\nconstruction engineers"), GetLabelRightAlignStyle());
+                GUILayout.Label(new GUIContent(sBuildTime, "At 100% work rate"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 double projectedMaintenance = RP0.MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(totalCostForMaintenance, isHangar ? RP0.FacilityMaintenanceType.Hangar : RP0.FacilityMaintenanceType.LC);
@@ -262,12 +262,13 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 if (closeness == 1d)
                 {
-                    GUILayout.Label("Uses shared efficiency", GetLabelCenterAlignStyle());
+                    GUILayout.Label("Uses shared efficiency:");
+                    GUILayout.Label(closestEff.Efficiency.ToString("P1"), GetLabelRightAlignStyle());
                 }
                 else
                 {
                     GUILayout.Label("Starting Efficiency:");
-                    GUILayout.Label($"{(closeness > 0 ? Math.Max(LCEfficiency.MinEfficiency, closestEff.PostClosenessStartingEfficiency(closeness)) : LCEfficiency.MinEfficiency):P1}", GetLabelRightAlignStyle());
+                    GUILayout.Label((closeness > 0 ? Math.Max(LCEfficiency.MinEfficiency, closestEff.PostClosenessStartingEfficiency(closeness)) : LCEfficiency.MinEfficiency).ToString("P1"), GetLabelRightAlignStyle());
                 }
                 GUILayout.EndHorizontal();
             }

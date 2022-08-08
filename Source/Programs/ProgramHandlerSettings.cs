@@ -11,7 +11,7 @@ namespace RP0.Programs
         public float sciToConfidence = 2;
 
         [Persistent]
-        public PersistentDictionaryString<DoubleCurve> paymentCurves = new PersistentDictionaryString<DoubleCurve>();
+        public PersistentDictionaryValueTypeKey<string, DoubleCurve> paymentCurves = new PersistentDictionaryValueTypeKey<string, DoubleCurve>();
 
         [Persistent]
         public string defaultFundingCurve;

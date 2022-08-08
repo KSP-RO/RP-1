@@ -2444,13 +2444,13 @@ namespace KerbalConstructionTime
                 bigger = ourStats;
             }
 
-            if (bigger.massMax > 1.5d * smaller.massMax)
+            if (bigger.massMax > 2d * smaller.massMax)
                 return 0d;
-            if (smaller.massMax < 0.666d * bigger.massMax)
+            if (smaller.massMax < 0.5d * bigger.massMax)
                 return 0d;
 
             double massFactor = smaller.massMax / bigger.massMax;
-            massFactor *= massFactor;
+            massFactor *= massFactor * massFactor;
 
             if (otherStats.sizeMax.y > ourStats.sizeMax.y)
             {

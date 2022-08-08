@@ -251,7 +251,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Closest Existing LC:", GUILayout.ExpandWidth(false));
-                GUILayout.Label(closeness > 0 ? closestEff.FirstLC().Name : "None", GetLabelRightAlignStyle());
+                GUILayout.Label(closeness > 0 ? closestEff.FirstLCName() : "None", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
                     
                 GUILayout.BeginHorizontal();

@@ -33,11 +33,19 @@ namespace RP0.DataTypes
         }
     }
 
-    public class PersistentDictionaryString<TValue> : PersistentDictionary<string, TValue> where TValue : IConfigNode
+    /// <summary>
+    /// This does not have a struct constraint because string is not a valuetype but can be handled by ConfigNode's parser
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    public class PersistentDictionaryValueTypeKey<TKey, TValue> : PersistentDictionary<TKey, TValue> where TValue : IConfigNode
     {
-        protected override string ParseKey(string key)
+        private static System.Reflection.MethodInfo ReadValueMethod = HarmonyLib.AccessTools.Method(typeof(ConfigNode), "ReadValue");
+        private static System.Type KeyType = typeof(TKey);
+
+        protected override TKey ParseKey(string key)
         {
-            return key;
+            return (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, key });
         }
     }
 

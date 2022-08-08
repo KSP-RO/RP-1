@@ -72,6 +72,14 @@ namespace KerbalConstructionTime
             _ignoreObserve = false;
         }
 
+        public void RemoveLC(LCItem lc)
+        {
+            if (!_lcs.Contains(lc) && KerbalConstructionTimeData.Instance.LCToEfficiency.ContainsKey(lc))
+                KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
+
+            _lcs.Remove(lc);
+        }
+
         private void ReceiveDistributedEfficiency(LCEfficiency e, double increase)
         {
             double closeness = Utilities.GetLCCloseness(_lcStats, e._lcStats);

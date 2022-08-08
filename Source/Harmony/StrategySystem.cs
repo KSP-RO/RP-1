@@ -183,5 +183,12 @@ namespace RP0.Harmony
                     StrategyConfigRP0.ActivatedStrategies.Add(v.name, double.Parse(v.value));
             }
         }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("LoadStrategies")]
+        internal static void Postfix_LoadStrategies()
+        {
+            KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
+        }
     }
 }

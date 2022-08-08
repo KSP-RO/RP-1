@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
         public virtual bool HasCost => false;
 
         public double GetBuildRate() => GetBaseBuildRate()
-            * Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.RushRate * (IsReversed ? -1d : 1d);
+            * LC.Efficiency * LC.RushRate * (IsReversed ? -1d : 1d);
 
         public void UpdateBuildRate()
         {
@@ -109,7 +109,7 @@ namespace KerbalConstructionTime
         public double GetBuildRate(int delta)
         {
             double buildRate = CalculateBuildRate(delta);
-            buildRate *= Utilities.GetEngineerEfficiencyMultipliers(LC) * LC.RushRate * CurrencyUtils.Rate(transactionReasonTime);
+            buildRate *= LC.Efficiency * LC.RushRate * CurrencyUtils.Rate(transactionReasonTime);
 
             if (IsReversed)
                 buildRate *= -1;

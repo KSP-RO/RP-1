@@ -67,6 +67,7 @@ namespace KerbalConstructionTime
                         return;
                     }
                 }
+                activeLC.OnRemove();
                 ksc.LaunchComplexes.Remove(activeLC);
 
                 try

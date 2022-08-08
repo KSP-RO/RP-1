@@ -21,9 +21,6 @@ namespace KerbalConstructionTime
         [Persistent] public bool DisableFailuresInSim = true;
         [Persistent] public int Researchers;
         [Persistent] public int UnassignedPersonnel;
-        [Persistent] public double EfficiencyEngineers = 0.25d;
-        [Persistent] public double LastEngineers = 0d;
-        [Persistent] public double LastResearchers = 0d;
         [Persistent] public bool StarterLCSelected = false;
         [Persistent] public bool HiredStarterApplicants = false;
         [Persistent] public bool StartedProgram = false;
@@ -38,10 +35,7 @@ namespace KerbalConstructionTime
             KCTGameStates.IsSimulatedFlight = IsSimulation;
             KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
             KCTGameStates.Researchers = Researchers;
-            KCTGameStates.EfficiencyEngineers = EfficiencyEngineers;
             KCTGameStates.UnassignedPersonnel = UnassignedPersonnel;
-            KCTGameStates.LastEngineers = LastEngineers;
-            KCTGameStates.LastResearchers = LastResearchers;
             KCTGameStates.LoadedSaveVersion = saveVersion;
             KCTGameStates.StarterLCBuilding = StarterLCSelected;
             KCTGameStates.HiredStarterApplicants = HiredStarterApplicants;
@@ -52,8 +46,6 @@ namespace KerbalConstructionTime
             {
                 if (saveVersion < 1)
                 {
-                    KCTGameStates.LastEngineers *= 2;
-                    KCTGameStates.LastResearchers *= 2;
                     KCTGameStates.UnassignedPersonnel *= 2;
                     KCTGameStates.Researchers *= 2;
                 }
@@ -77,9 +69,6 @@ namespace KerbalConstructionTime
             DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
             Researchers = KCTGameStates.Researchers;
             UnassignedPersonnel = KCTGameStates.UnassignedPersonnel;
-            EfficiencyEngineers = KCTGameStates.EfficiencyEngineers;
-            LastResearchers = KCTGameStates.LastResearchers;
-            LastEngineers = KCTGameStates.LastEngineers;
             saveVersion = KCTGameStates.VERSION;
             StarterLCSelected = KCTGameStates.StarterLCBuilding;
             HiredStarterApplicants = KCTGameStates.HiredStarterApplicants;

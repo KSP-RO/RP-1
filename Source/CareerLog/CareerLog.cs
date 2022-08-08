@@ -626,7 +626,7 @@ namespace RP0
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
                 _prevPeriod.NumEngineers = KCTGameStates.TotalEngineers;
                 _prevPeriod.NumResearchers = KCTGameStates.Researchers;
-                _prevPeriod.EfficiencyEngineers = KCTGameStates.EfficiencyEngineers;
+                _prevPeriod.EfficiencyEngineers = KCTGameStates.WeightedAverageEfficiencyEngineers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmountForSeconds(_prevPeriod.EndUT - _prevPeriod.StartUT);

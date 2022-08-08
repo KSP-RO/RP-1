@@ -378,20 +378,9 @@ namespace KerbalConstructionTime
             return Formula.GetConstructionBuildRate(index, KSC, facilityType);
         }
 
-        public static double GetEngineerEfficiencyMultipliers(LCItem LC = null)
-        {
-            double mult = 1d;
-            if (LC != null)
-                mult *= LC.EfficiencyEngineers;
-            mult *= KCTGameStates.EfficiencyEngineers;
-            mult *= PresetManager.Instance.ActivePreset.GeneralSettings.EngineerEfficiencyMultiplier;
-            
-            return mult;
-        }
-
         public static double GetResearcherEfficiencyMultipliers()
         {
-            return PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyMultiplier;
+            return PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiency;
         }
 
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
@@ -2234,8 +2223,6 @@ namespace KerbalConstructionTime
 
         public static void ChangeEngineers(LCItem currentLC, int delta)
         {
-            currentLC.EfficiencyEngineers = PredictEfficiencyEngineers(currentLC, delta);
-
             currentLC.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
             KCTEvents.OnRP0MaintenanceChanged.Fire();
@@ -2243,8 +2230,6 @@ namespace KerbalConstructionTime
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
         {
-            KCTGameStates.EfficiencyEngineers = PredictEfficiencyEngineers(delta);
-
             ksc.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
             KCTEvents.OnRP0MaintenanceChanged.Fire();
@@ -2255,28 +2240,6 @@ namespace KerbalConstructionTime
             KCTGameStates.Researchers += delta;
             KCTEvents.OnPersonnelChange.Fire();
             KCTEvents.OnRP0MaintenanceChanged.Fire();
-        }
-
-        public static double PredictEfficiencyEngineers(LCItem currentLC, int delta)
-        {
-            double correctedDelta = currentLC.Engineers + delta - currentLC.LastEngineers;
-            if (correctedDelta > 0)
-                return Math.Min(currentLC.EfficiencyEngineers,
-                    ((currentLC.LastEngineers * currentLC.EfficiencyEngineers) + (correctedDelta * PresetManager.Instance.ActivePreset.GeneralSettings.EngineerStartEfficiency))
-                        / (currentLC.LastEngineers + correctedDelta));
-
-            return currentLC.EfficiencyEngineers;
-        }
-
-        public static double PredictEfficiencyEngineers(int delta)
-        {
-            double correctedDelta = KCTGameStates.TotalEngineers + delta - KCTGameStates.LastEngineers;
-            if (correctedDelta > 0)
-                return Math.Min(KCTGameStates.EfficiencyEngineers,
-                    ((KCTGameStates.LastEngineers * KCTGameStates.EfficiencyEngineers) + (correctedDelta * PresetManager.Instance.ActivePreset.GeneralSettings.GlobalEngineerStartEfficiency))
-                    / (KCTGameStates.LastEngineers + correctedDelta));
-
-            return KCTGameStates.EfficiencyEngineers;
         }
 
         private const double MaxSecondsForDayDisplay = 7d * 86400d;
@@ -2443,6 +2406,97 @@ namespace KerbalConstructionTime
             }
 
             return curVABCost + curPadCost;
+        }
+
+        /// <summary>
+        /// Note this is NOT bidirectional.
+        /// ourStats can be closer to 'stats'
+        /// than 'stats' is to ourStats.
+        /// Always run this on the *destination* LC.
+        /// i.e. if you are removing HR from an LC,
+        /// make a new LCData with it off, and call
+        /// GetCloseness(newLCData, orig)
+        /// </summary>
+        /// </summary>
+        /// <param name="ourStats"></param>
+        /// <param name="otherStats"></param>
+        /// <returns></returns>
+        public static double GetLCCloseness(LCItem.LCData ourStats, LCItem.LCData otherStats)
+        {
+            if (ourStats.Compare(otherStats))
+                return 1d;
+
+            if (otherStats.lcType != ourStats.lcType)
+                return 0d;
+
+            if (ourStats.lcType == LaunchComplexType.Hangar)
+                return 1d;
+
+            LCItem.LCData bigger, smaller;
+            if (otherStats.massMax > ourStats.massMax)
+            {
+                bigger = otherStats;
+                smaller = ourStats;
+            }
+            else
+            {
+                smaller = otherStats;
+                bigger = ourStats;
+            }
+
+            if (bigger.massMax > 1.5d * smaller.massMax)
+                return 0d;
+            if (smaller.massMax < 0.666d * bigger.massMax)
+                return 0d;
+
+            double massFactor = smaller.massMax / bigger.massMax;
+            massFactor *= massFactor;
+
+            if (otherStats.sizeMax.y > ourStats.sizeMax.y)
+            {
+                bigger = otherStats;
+                smaller = ourStats;
+            }
+            else
+            {
+                smaller = otherStats;
+                bigger = ourStats;
+            }
+
+            double sizeFactor;
+
+            double minDiff = Math.Max(smaller.sizeMax.y * 0.1d, 2d);
+            if (bigger.sizeMax.y - smaller.sizeMax.y < minDiff)
+            {
+                sizeFactor = 1d;
+            }
+            else
+            {
+                sizeFactor = (smaller.sizeMax.y + minDiff) / bigger.sizeMax.y;
+                sizeFactor *= sizeFactor * sizeFactor;
+            }
+
+            double biggerXZ = Math.Max(bigger.sizeMax.x, bigger.sizeMax.z);
+            double smallerXZ = Math.Max(smaller.sizeMax.x, smaller.sizeMax.z);
+            if (smallerXZ > biggerXZ)
+            {
+                double t = biggerXZ;
+                biggerXZ = smallerXZ;
+                smallerXZ = t;
+            }
+            // Add the height in so the ratio is much closer to 1.
+            smallerXZ += smaller.sizeMax.y;
+            biggerXZ += smaller.sizeMax.y;
+
+            sizeFactor *= (smallerXZ / biggerXZ);
+
+            double hrFactor = 1d;
+            if (ourStats.isHumanRated && !otherStats.isHumanRated)
+                hrFactor = 0.7d;
+            else if (ourStats.isHumanRated != otherStats.isHumanRated)
+                hrFactor = 0.9d;
+
+            return massFactor * sizeFactor * hrFactor;
         }
     }
 }

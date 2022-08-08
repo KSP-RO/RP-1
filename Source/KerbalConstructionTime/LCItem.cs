@@ -362,6 +362,16 @@ namespace KerbalConstructionTime
             return null;
         }
 
+        public void OnRemove()
+        {
+            if (efficiencySource == null)
+                KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(this, out efficiencySource);
+            if(efficiencySource != null)
+                efficiencySource.RemoveLC(this);
+                
+            LCEfficiency.ClearEmpty();
+        }
+
         private void BuildVesselAndShipNodeConfigs(BuildListVessel blv, ref ConfigNode node)
         {
             var storageItem = new BuildListStorageItem();

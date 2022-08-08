@@ -26,22 +26,24 @@ namespace KerbalConstructionTime
                 if (ConfigNode.Load(fullPath) is ConfigNode fileNode && fileNode.HasNode("TechTree"))
                 {
                     techNameToTitle.Clear();
+                    techNameToParents.Clear();
 
                     ConfigNode treeNode = fileNode.GetNode("TechTree");
                     foreach (ConfigNode n in treeNode.GetNodes("RDNode"))
                     {
-                        if (n.HasValue("id"))
+                        string techID = n.GetValue("id");
+                        if (techID != null)
                         {
-                            string techID = n.GetValue("id");
-
-                            if (n.HasValue("title"))
-                                techNameToTitle[techID] = n.GetValue("title");
+                            string title = n.GetValue("title");
+                            if (title != null)
+                                techNameToTitle[techID] = title;
 
                             var pList = new List<string>();
                             foreach (ConfigNode p in n.GetNodes("Parent"))
                             {
-                                if (p.HasValue("parentID"))
-                                    pList.Add(p.GetValue("parentID"));
+                                string pID = p.GetValue("parentID");
+                                if(pID != null)
+                                    pList.Add(pID);
                             }
                             techNameToParents[techID] = pList;
                         }

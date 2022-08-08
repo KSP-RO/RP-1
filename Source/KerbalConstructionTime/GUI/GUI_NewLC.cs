@@ -246,6 +246,7 @@ namespace KerbalConstructionTime
                 _lcData.massMax = tonnageLimit;
                 _lcData.sizeMax = curPadSize;
                 _lcData.isHumanRated = _isHumanRated;
+                _lcData.lcType = LaunchComplexType.Pad;
                 LCEfficiency closestEff = LCEfficiency.FindClosest(_lcData, out double closeness);
 
                 GUILayout.BeginHorizontal();
@@ -261,7 +262,7 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 if (closeness == 1d)
                 {
-                    GUILayout.Label("Uses shared efficiency.");
+                    GUILayout.Label("Uses shared efficiency", GetLabelCenterAlignStyle());
                 }
                 else
                 {

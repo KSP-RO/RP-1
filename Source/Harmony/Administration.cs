@@ -47,6 +47,14 @@ namespace RP0.Harmony
             }
         }
 
+        internal static void SetOrUnsetLeader(Strategy leader)
+        {
+            if (Administration.Instance.SelectedWrapper?.strategy == leader)
+                Administration.Instance.UnselectStrategy();
+            else
+                Administration.Instance.SetSelectedStrategy(new Administration.StrategyWrapper(leader, (UIRadioButton)null));
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch("CreateStrategiesList")]
         internal static void Postfix_CreateStrategiesList(Administration __instance)
@@ -67,6 +75,18 @@ namespace RP0.Harmony
                 kerbal.Initialize(headName, dep.Description, null);
                 kerbal.tooltip.textString = dep.Description + "\n\n" + leader.Effect;
                 kerbal.kerbalImage.texture = (leader.Config as StrategyConfigRP0).IconDepartmentImage;
+
+                
+                var button = kerbal.gameObject.AddComponent<UnityEngine.UI.Button>();
+                button.transition = Selectable.Transition.None;
+                //button.transition = Selectable.Transition.ColorTint;
+                //button.targetGraphic = kerbal.kerbalImage;
+                //var cb = new ColorBlock();
+                //cb.highlightedColor = new Color(0.9f, 0.9f, 0.9f);
+                //button.colors = cb;
+                button.interactable = true;
+                button.onClick.AddListener(() => SetOrUnsetLeader(leader));
+
             }
             __instance.scrollListStrategies.GetUilistItemAt(0).GetComponent<LayoutElement>().minWidth = 280f;
             var firstDep = __instance.scrollListKerbals.GetUilistItemAt(0);
@@ -201,20 +221,31 @@ namespace RP0.Harmony
             if (wrapper.strategy is ProgramStrategy ps)
             {
                 if (ps.Program.IsComplete)
+                {
                     __instance.btnAcceptCancel.gameObject.SetActive(false);
+                }
                 else if (__instance.btnAcceptCancel.currentState == "accept")
                 {
-                    float cost = ps.Program.DisplayConfidenceCost;
                     var stateAccept = tooltip.tooltipStates.First(s => s.name == "accept");
-                    if (cost > 0)
-                        stateAccept.tooltipText = Localizer.Format("#rp0AcceptProgramWithCost", cost.ToString("N0"));
+
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
+                    string costStr = cmq.GetCostLine(true, true, true, true);
+                    if (string.IsNullOrEmpty(costStr))
+                        stateAccept.tooltipText = Localizer.GetStringByTag("#rp0AcceptProgram");
                     else
-                        stateAccept.tooltipText = Localizer.GetStringByTag("#autoLOC_900259");
+                        stateAccept.tooltipText = Localizer.Format("#rp0AcceptProgramWithCost", costStr);
                 }
                 else
                 {
                     // Use the "deactivate" tooltip for the accept button
-                    tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.GetStringByTag("#autoLOC_900260");
+                    var state = tooltip.tooltipStates.First(s => s.name == "accept");
+
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
+                    string rewardStr = cmq.GetCostLine(false, true, false, true);
+                    if (string.IsNullOrEmpty(rewardStr))
+                        state.tooltipText = Localizer.GetStringByTag("#rp0ProgramComplete");
+                    else
+                        state.tooltipText = Localizer.Format("#rp0ProgramCompleteWithReward", rewardStr);
                     __instance.btnAcceptCancel.SetState("accept");
                 }
 
@@ -315,10 +346,16 @@ namespace RP0.Harmony
                     if (!ps.CanBeDeactivated(out _))
                         return false;
 
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
+                    string rewardStr = cmq.GetCostLine(false, true, false, true);
+                    if (!string.IsNullOrEmpty(rewardStr))
+                        rewardStr = $"\n\n{Localizer.Format("#rp0GenericReward", rewardStr)}";
+
+
                     var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog("StrategyConfirmation",
-                            Localizer.GetStringByTag("#rp0ProgramCompleteConfirm"),
+                            Localizer.Format("#rp0ProgramCompleteConfirm", rewardStr),
                             Localizer.GetStringByTag("#autoLOC_464288"),
                             HighLogic.UISkin,
                             new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439855"), OnCompleteProgramConfirm),
@@ -331,13 +368,16 @@ namespace RP0.Harmony
                     if (ps.Program.IsComplete)
                         return false;
 
-                    double cost = ps.Program.DisplayConfidenceCost;
-                    string message = cost > 0 ? Localizer.Format("#rp0ProrgamActivateConfirmWithCost", cost.ToString("N0")) : Localizer.GetStringByTag("#rp0ProrgamActivateConfirm");
+                    
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
+                    string costStr = cmq.GetCostLine(true, true, true, true);
+                    if (!string.IsNullOrEmpty(costStr))
+                        costStr = $"\n\n{Localizer.Format("#rp0GenericCost", costStr)}";
 
                     var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog("StrategyConfirmation",
-                        message,
+                        Localizer.Format("#rp0ProrgamActivateConfirm", costStr),
                         Localizer.Format("#autoLOC_464288"),
                         HighLogic.UISkin,
                         new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnActivateProgramConfirm),

@@ -116,7 +116,10 @@ namespace KerbalConstructionTime
         protected double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;
 
-        public double Efficiency => LCType == LaunchComplexType.Hangar ? LCEfficiency.MaxEfficiency : LCEfficiency.GetOrCreateEfficiencyForLC(this).Efficiency;
+        private LCEfficiency efficiencySource = null;
+        public double Efficiency => LCType == LaunchComplexType.Hangar 
+            ? LCEfficiency.MaxEfficiency 
+            : (efficiencySource == null ? (efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this)) : efficiencySource).Efficiency;
 
         public bool IsRushing;
         public double RushRate => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult : 1d;
@@ -190,8 +193,6 @@ namespace KerbalConstructionTime
 
         public void Modify(LCData data, Guid modId)
         {
-            LCEfficiency oldEff = LCEfficiency.GetOrCreateEfficiencyForLC(this);
-
             _modID = modId;
             MassMax = data.massMax;
             MassOrig = data.massOrig;
@@ -208,10 +209,12 @@ namespace KerbalConstructionTime
             }
 
             // will create a new one if needed (it probably will be needed)
-            
             LCEfficiency newEff = LCEfficiency.GetOrCreateEfficiencyForLC(this);
-            if (oldEff != newEff)
+            if (efficiencySource != newEff)
+            {
+                efficiencySource = newEff;
                 LCEfficiency.ClearEmpty();
+            }
         }
 
         public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;

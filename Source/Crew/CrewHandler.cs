@@ -317,11 +317,13 @@ namespace RP0.Crew
                 bool isPartUnlocked = !isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available;
 
                 TrainingTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
+                profCourse.partsCovered.Add(ap);
                 AppendToPartTooltip(ap, profCourse);
                 TrainingTemplate missionCourse = null;
                 if (isPartUnlocked && IsMissionTrainingEnabled)
                 {
                     missionCourse = GenerateCourseMission(ap);
+                    missionCourse.partsCovered.Add(ap);
                     AppendToPartTooltip(ap, missionCourse);
                 }
                 _partSynsHandled.Add(name, new Tuple<TrainingTemplate, TrainingTemplate>(profCourse, missionCourse));
@@ -330,6 +332,8 @@ namespace RP0.Crew
             {
                 TrainingTemplate pc = coursePair.Item1;
                 TrainingTemplate mc = coursePair.Item2;
+                pc.partsCovered.Add(ap);
+                mc.partsCovered.Add(ap);
                 AppendToPartTooltip(ap, pc);
                 if (mc != null) AppendToPartTooltip(ap, mc);
             }
@@ -956,6 +960,63 @@ namespace RP0.Crew
             }
 
             return false;
+        }
+
+        public string GetTrainingCoursesForTech(string techID)
+        {
+            var sb = StringBuilderCache.Acquire();
+            bool anyFound = false;
+            foreach(var course in TrainingCourses)
+            {
+                bool found = false;
+                foreach (var ap in course.partsCovered)
+                {
+                    if (ap.TechRequired == techID)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found)
+                {
+                    if (course.Students.Count > 0)
+                    {
+                        anyFound = true;
+                        sb.Append("\n\n").Append(course.GetItemName()).Append(": ").Append(course.Students[0].displayName);
+                        for (int i = 1; i < course.Students.Count; ++i)
+                            sb.Append(", ").Append(course.Students[i].displayName);
+                    }
+                }
+            }
+            if (!anyFound)
+            {
+                sb.Release();
+                return string.Empty;
+            }
+
+            return "\nThis will cancel the following training courses and return their astronauts to duty:" + sb.ToStringAndRelease();
+        }
+
+        public void OnTechCanceled(string techID)
+        {
+            for(int i = TrainingCourses.Count; i-- > 0;)
+            {
+                var course = TrainingCourses[i];
+                bool found = false;
+                foreach (var ap in course.partsCovered)
+                {
+                    if (ap.TechRequired == techID)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found)
+                {
+                    course.AbortCourse();
+                    TrainingCourses.RemoveAt(i);
+                }
+            }
         }
 
         private void GenerateTrainingTemplates()

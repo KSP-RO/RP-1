@@ -117,9 +117,19 @@ namespace KerbalConstructionTime
         public double StrategyRateMultiplier => _strategyRateMultiplier;
 
         private LCEfficiency efficiencySource = null;
-        public double Efficiency => LCType == LaunchComplexType.Hangar 
-            ? LCEfficiency.MaxEfficiency 
-            : (efficiencySource == null ? (efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this)) : efficiencySource).Efficiency;
+        public double Efficiency
+        {
+            get
+            {
+                if (LCType == LaunchComplexType.Hangar)
+                    return LCEfficiency.MaxEfficiency;
+
+                if (efficiencySource == null)
+                    efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this);
+                
+                return efficiencySource.Efficiency;
+            }
+        }
 
         public bool IsRushing;
         public double RushRate => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult : 1d;
@@ -209,12 +219,8 @@ namespace KerbalConstructionTime
             }
 
             // will create a new one if needed (it probably will be needed)
-            LCEfficiency newEff = LCEfficiency.GetOrCreateEfficiencyForLC(this);
-            if (efficiencySource != newEff)
-            {
-                efficiencySource = newEff;
-                LCEfficiency.ClearEmpty();
-            }
+            // If it does, it will remove us from the old one, and then clear it if it's empty.
+            efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this);
         }
 
         public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;
@@ -366,10 +372,10 @@ namespace KerbalConstructionTime
         {
             if (efficiencySource == null)
                 KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(this, out efficiencySource);
-            if(efficiencySource != null)
+            if (efficiencySource != null)
                 efficiencySource.RemoveLC(this);
-                
-            LCEfficiency.ClearEmpty();
+            else
+                LCEfficiency.ClearEmpty();
         }
 
         private void BuildVesselAndShipNodeConfigs(BuildListVessel blv, ref ConfigNode node)

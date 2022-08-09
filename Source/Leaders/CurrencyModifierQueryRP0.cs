@@ -244,10 +244,10 @@ namespace RP0
                 if (includePercentage && multipliers[i] != 1d)
                 {
                     // Normally, for a currency less is good if it's a cost.
-                    // For time, less is good unless we're flipping
+                    // For time, use same positive/negative logic
                     // for rate, more is good unless we're flipping.
                     bool lessGood = c == CurrencyRP0.Rate ? flipRateDeltaColoring : inputs[i] < 0;
-                    resultText += $" <color={TextStylingColor(inputs[i] < 0, lessGood)}>({LocalizationHandler.FormatRatioAsPercent(multipliers[i])})</color>";
+                    resultText += $" <color={TextStylingColor(multipliers[i] < 1, lessGood)}>({LocalizationHandler.FormatRatioAsPercent(multipliers[i])})</color>";
                 }
             }
 

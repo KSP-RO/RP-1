@@ -6,17 +6,8 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
-    public class CurrencyModifier : StrategyEffect
+    public class CurrencyModifier : BaseEffect
     {
-        [Persistent]
-        private string effectDescription = string.Empty;
-
-        [Persistent]
-        private string locStringOverride = string.Empty;
-
-        [Persistent]
-        private double multiplier = 1d;
-
         [Persistent]
         private PersistentListValueType<TransactionReasonsRP0> transactionReasons = new PersistentListValueType<TransactionReasonsRP0>();
 
@@ -30,17 +21,17 @@ namespace RP0.Leaders
         {
         }
 
-        protected override string GetDescription()
+        protected override string DescriptionString()
         {
-            return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectCurrencyModifier" : locStringOverride, 
-                LocalizationHandler.FormatRatioAsPercent(multiplier), 
-                currency.displayDescription(), 
+            return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectCurrencyModifier" : locStringOverride,
+                LocalizationHandler.FormatRatioAsPercent(multiplier),
+                currency.displayDescription(),
                 effectDescription);
         }
 
         protected override void OnLoadFromConfig(ConfigNode node)
         {
-            ConfigNode.LoadObjectFromConfig(this, node);
+            base.OnLoadFromConfig(node);
 
             if (currency == CurrencyRP0.Invalid)
                 return;

@@ -19,25 +19,17 @@ namespace KerbalConstructionTime
         public KCTObservableList<LCItem> _lcs = new KCTObservableList<LCItem>();
 
 
+        // Used by Persistence
         public LCEfficiency()
         {
             _lcs.Added += added;
             _lcs.Removed += removed;
         }
 
-        public LCEfficiency(LCItem.LCData stats, double efficiency = 0)
-        {
-            _efficiency = Math.Max(_MinEfficiency, efficiency);
-            _lcStats.SetFrom(stats);
-
-            _lcs.Added += added;
-            _lcs.Removed += removed;
-        }
-
+        // Used when created during runtime
         public LCEfficiency(LCItem lc)
         {
             _lcStats.SetFrom(lc);
-            
 
             LCEfficiency closest = FindClosest(lc, out double closeness);
             if (closest == null)
@@ -74,10 +66,22 @@ namespace KerbalConstructionTime
 
         public void RemoveLC(LCItem lc)
         {
-            if (!_lcs.Contains(lc) && KerbalConstructionTimeData.Instance.LCToEfficiency.ContainsKey(lc))
-                KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
-
-            _lcs.Remove(lc);
+            int idx = _lcs.IndexOf(lc);
+            if (idx >= 0)
+            {
+                _lcs.RemoveAt(idx);
+                if (_lcs.Count == 0)
+                    ClearEmpty();
+            }
+            else
+            {
+                // Just in case we get in a bad state
+                if (KerbalConstructionTimeData.Instance.LCToEfficiency.ContainsKey(lc))
+                {
+                    KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
+                    ClearEmpty();
+                }
+            }
         }
 
         private void ReceiveDistributedEfficiency(LCEfficiency e, double increase)
@@ -225,7 +229,11 @@ namespace KerbalConstructionTime
         private void added(int idx, LCItem lc)
         {
             if (KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out var oldEffic))
+            {
                 oldEffic._lcs.Remove(lc);
+                if (oldEffic._lcs.Count == 0)
+                    ClearEmpty();
+            }
 
             KerbalConstructionTimeData.Instance.LCToEfficiency[lc] = this;
 

@@ -262,13 +262,15 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 if (closeness == 1d)
                 {
-                    GUILayout.Label("Uses shared efficiency:");
-                    GUILayout.Label(closestEff.Efficiency.ToString("P1"), GetLabelRightAlignStyle());
+                    const string sharedEfficTooltip = "Increases in efficiency will be fully shared between these two LCs.";
+                    GUILayout.Label(new GUIContent("Uses shared efficiency:", sharedEfficTooltip));
+                    GUILayout.Label(new GUIContent(closestEff.Efficiency.ToString("P1"), sharedEfficTooltip), GetLabelRightAlignStyle());
                 }
                 else
                 {
-                    GUILayout.Label("Starting Efficiency:");
-                    GUILayout.Label((closeness > 0 ? Math.Max(LCEfficiency.MinEfficiency, closestEff.PostClosenessStartingEfficiency(closeness)) : LCEfficiency.MinEfficiency).ToString("P1"), GetLabelRightAlignStyle());
+                    const string startingEffTooltip = "Based on current efficiency of the closest LC, if any, and the current tech level. Will be recalculated when this LC becomes operational.";
+                    GUILayout.Label(new GUIContent("Starting Efficiency:", startingEffTooltip));
+                    GUILayout.Label(new GUIContent((closeness > 0 ? Math.Max(LCEfficiency.MinEfficiency, closestEff.PostClosenessStartingEfficiency(closeness)) : LCEfficiency.MinEfficiency).ToString("P1"), startingEffTooltip), GetLabelRightAlignStyle());
                 }
                 GUILayout.EndHorizontal();
             }

@@ -6,17 +6,8 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
-    public class ResearchRateModifier : StrategyEffect
+    public class ResearchRateModifier : BaseEffect
     {
-        [Persistent]
-        private string effectDescription = string.Empty;
-
-        [Persistent]
-        private string locStringOverride = string.Empty;
-
-        [Persistent]
-        private double multiplier = 1d;
-
         [Persistent]
         private PersistentListValueType<NodeType> nodeTypes = new PersistentListValueType<NodeType>();
 
@@ -27,7 +18,7 @@ namespace RP0.Leaders
         {
         }
 
-        protected override string GetDescription()
+        protected override string DescriptionString()
         {
             return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectResearchRateModifier" : locStringOverride,
                 LocalizationHandler.FormatRatioAsPercent(multiplier), 
@@ -36,7 +27,8 @@ namespace RP0.Leaders
 
         protected override void OnLoadFromConfig(ConfigNode node)
         {
-            ConfigNode.LoadObjectFromConfig(this, node);
+            base.OnLoadFromConfig(node);
+
             nodeType = NodeType.None;
             foreach (var n in nodeTypes)
                 nodeType |= n;

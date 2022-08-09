@@ -101,7 +101,15 @@ namespace RP0
             if (inputs[c] == 0d)
                 return;
 
-            multipliers[c] = multipliers[c] * (inputs[c] + val) / inputs[c];
+            AddDeltaAuthorized(c, val);
+        }
+
+        public void AddDeltaAuthorized(CurrencyRP0 c, double val)
+        {
+            if (inputs[c] == 0d)
+                return;
+
+            multipliers[c] = (multipliers[c] * inputs[c] + val) / inputs[c];
         }
 
         public void Multiply(CurrencyRP0 c, double mult)

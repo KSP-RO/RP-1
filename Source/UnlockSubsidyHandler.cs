@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using KerbalConstructionTime;
+using System;
 
 namespace RP0
 {
@@ -123,31 +124,116 @@ namespace RP0
             return subsidyAmount;
         }
 
+        private void FillECMs(string techID, string ecmName, Dictionary<string, double> ecmToCost, Dictionary<string, HashSet<string>> ecmToTech)
+        {
+            // if this ECM is unlocked, we're done.
+            if (RealFuels.EntryCostDatabase.IsUnlocked(ecmName))
+                return;
+
+            var holder = RealFuels.EntryCostDatabase.GetHolder(ecmName);
+            if (holder == null)
+                return;
+
+            // If we've already seen this ECM, just add the tech and recurse
+            // Note that by definition we will have already added all children
+            // to the cost dict already.
+            if (ecmToTech.TryGetValue(ecmName, out var techs))
+            {
+                techs.Add(techID);
+                foreach (var childName in holder.children)
+                    FillECMs(techID, childName, ecmToCost, ecmToTech);
+
+                return;
+            }
+
+            // Fill from scratch and recurse.
+            ecmToCost[holder.name] = holder.cost;
+            techs = new HashSet<string>();
+            techs.Add(techID);
+            ecmToTech[holder.name] = techs;
+
+            foreach (var childName in holder.children)
+                FillECMs(techID, childName, ecmToCost, ecmToTech);
+        }
+
+        private void AddPartToDicts(AvailablePart ap, Dictionary<string, double> ecmToCost, Dictionary<string, HashSet<string>> ecmToTech)
+        {
+            string sanitizedName = RealFuels.Utilities.SanitizeName(ap.name);
+
+            if (RealFuels.EntryCostDatabase.GetHolder(sanitizedName) != null)
+            {
+                FillECMs(ap.TechRequired, sanitizedName, ecmToCost, ecmToTech);
+                return;
+            }
+            
+            // It shouldn't already contain the key, but you never know.
+            if (!ecmToCost.ContainsKey(sanitizedName))
+            {
+                ecmToCost[sanitizedName] = ap.entryCost;
+                
+                // ditto
+                if (!ecmToTech.TryGetValue(sanitizedName, out var techs))
+                    techs = new HashSet<string>();
+
+                techs.Add(ap.TechRequired);
+            }
+        }
+
         public void SpendSubsidyAndCost(List<AvailablePart> parts)
         {
-            var partCostDict = new Dictionary<AvailablePart, double>();
-            // first pull from local.
+            // This is going to be expensive, because we have to chase down all the ECMs.
+            Dictionary<string, double> ecmToCost = new Dictionary<string, double>();
+            Dictionary<string, HashSet<string>> ecmToTech = new Dictionary<string, HashSet<string>>();
             foreach (var p in parts)
+                AddPartToDicts(p, ecmToCost, ecmToTech);
+
+            // first try to spend local subsidy in each case
+            foreach (var kvp in ecmToTech)
             {
-                double cost = p.entryCost;
-                if (_subsidyStorage.TryGetValue(p.TechRequired, out var sNode))
+                foreach (string tech in kvp.Value)
                 {
+                    if (!_subsidyStorage.TryGetValue(tech, out var sNode))
+                        continue;
+
+                    double cost = ecmToCost[kvp.Key];
+
+                    // This check is needed because we might have multiple techs.
+                    if (cost == 0)
+                        continue;
+
+                    // Now deduct local funds and lower cost.
                     double local = sNode.funds;
                     if (local > cost)
                         local = cost;
                     cost -= local;
                     sNode.funds -= local;
+                    ecmToCost[kvp.Key] = cost;
                 }
-                partCostDict[p] = cost;
             }
 
-            foreach (var p in parts)
+            // Now pull full subsidy
+            foreach (var kvp in ecmToTech)
             {
-                double cost = partCostDict[p];
-                double excess = SpendSubsidy(p.TechRequired, cost);
-                if (excess > 0)
-                    Funding.Instance.AddFunds(-excess, TransactionReasons.RnDPartPurchase);
+                foreach (string tech in kvp.Value)
+                {
+                    double cost = ecmToCost[kvp.Key];
+
+                    // This check is needed because we might have multiple techs.
+                    if (cost == 0d)
+                        continue;
+
+                    ecmToCost[kvp.Key] = SpendSubsidy(tech, cost);
+
+                }
             }
+
+            // Finally, pay for the excess.
+            double totalCost = 0d;
+            foreach (double d in ecmToCost.Values)
+                totalCost += d;
+
+            if (totalCost > 0d)
+                Funding.Instance.AddFunds(-totalCost, TransactionReasons.RnDPartPurchase);
         }
 
         public double SpendSubsidy(string tech, double cost, Dictionary<string, UnlockSubsidyNode> dict = null)

@@ -442,6 +442,8 @@ namespace RP0
 
         ProgramFunding = 1 << 20, // was Mission
         ProgramActivation = 1 << 21,
+        ProgramCompletion = 1 << 26,
+        Programs = ProgramFunding | ProgramActivation | ProgramCompletion,
 
         RocketRollout = 1 << 22,
         AirLaunchRollout = 1 << 23,
@@ -449,8 +451,6 @@ namespace RP0
         LeaderAppoint = 1 << 24,
         LeaderRemove = 1 << 25,
         Leaders = LeaderAppoint | LeaderRemove,
-
-        RnDUpgradePurchase = 1 << 26,
 
         SalaryEngineers = 1 << 27,
         SalaryResearchers = 1 << 28,

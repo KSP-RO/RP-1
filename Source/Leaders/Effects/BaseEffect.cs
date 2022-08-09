@@ -18,7 +18,7 @@ namespace RP0.Leaders
         protected double multiplier = 1d;
 
         [Persistent]
-        protected bool flipPositive = true;
+        protected bool flipPositive = false;
 
         protected const string _GoodColor = "#caff00";
         protected const string _BadColor = "#feb200";

@@ -169,7 +169,7 @@ namespace KerbalConstructionTime
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{unlockCost:N0} and {mode} (cost after subsidy <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0, unlockCost - (int)subsidy):N0})", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{unlockCost:N0} and {mode} (cost after subsidy <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, Math.Max(0, unlockCost - (int)subsidy)):N0})", () =>
                 {
                     if (CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)( subsidy - unlockCost), 0f, 0f).CanAfford())
                     {

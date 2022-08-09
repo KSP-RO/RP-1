@@ -80,6 +80,7 @@
     <Compile Include="Harmony\ModuleTripLogger.cs" />
     <Compile Include="Harmony\StrategyConfig.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\FundTarget.cs" />
+    <Compile Include="Leaders\Effects\BaseEffect.cs" />
     <Compile Include="Leaders\Effects\EffectiveCostModifier.cs" />
     <Compile Include="Leaders\Effects\CurrencyModifier.cs" />
     <Compile Include="Leaders\Effects\ResearchRateModifier.cs" />

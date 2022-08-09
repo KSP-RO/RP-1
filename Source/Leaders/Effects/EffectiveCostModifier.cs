@@ -6,17 +6,8 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
-    public class EffectiveCostModifier : StrategyEffect
+    public class EffectiveCostModifier : BaseEffect
     {
-        [Persistent]
-        private string effectDescription = string.Empty;
-
-        [Persistent]
-        private string locStringOverride = string.Empty;
-
-        [Persistent]
-        private double multiplier = 1d;
-
         [Persistent]
         private PersistentHashSetValueType<string> tags = new PersistentHashSetValueType<string>();
 
@@ -34,16 +25,13 @@ namespace RP0.Leaders
         {
         }
 
-        protected override string GetDescription()
+        protected override bool IsPositive => multiplier < 1d ^ flipPositive;
+
+        protected override string DescriptionString()
         {
             return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectIntegrationRateModifier" : locStringOverride,
                 LocalizationHandler.FormatRatioAsPercent(1d/multiplier),
                 effectDescription);
-        }
-
-        protected override void OnLoadFromConfig(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
         }
 
         protected override void OnRegister()

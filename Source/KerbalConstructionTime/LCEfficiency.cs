@@ -223,7 +223,7 @@ namespace KerbalConstructionTime
                 string lcsModified = sb.ToStringAndRelease();
                 if (!string.IsNullOrEmpty(lcsModified))
                     KSP.UI.Screens.MessageSystem.Instance.AddMessage(new KSP.UI.Screens.MessageSystem.Message("LC Efficiency Increases",
-                        "The following Launch Complexes have had their efficiency increased due to improved technology:" + lcsModified,
+                        $"Due to improved technology the minimum efficiency for launch complexes is now {_MinEfficiency:P1} and the following complexes had efficiency raised to that level:" + lcsModified,
                         KSP.UI.Screens.MessageSystemButton.MessageButtonColor.GREEN, KSP.UI.Screens.MessageSystemButton.ButtonIcons.ACHIEVE));
             }
             foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)

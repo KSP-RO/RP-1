@@ -249,7 +249,7 @@ namespace RP0.Harmony
                     // Use the "deactivate" tooltip for the accept button
                     var state = tooltip.tooltipStates.First(s => s.name == "accept");
 
-                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (string.IsNullOrEmpty(rewardStr))
                         state.tooltipText = Localizer.GetStringByTag("#rp0ProgramComplete");
@@ -355,7 +355,7 @@ namespace RP0.Harmony
                     if (!ps.CanBeDeactivated(out _))
                         return false;
 
-                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (!string.IsNullOrEmpty(rewardStr))
                         rewardStr = $"\n\n{Localizer.Format("#rp0GenericReward", rewardStr)}";

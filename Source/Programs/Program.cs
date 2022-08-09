@@ -342,7 +342,7 @@ namespace RP0.Programs
             float repDelta = (float)RepForComplete(completedUT);
             if (repDelta > 0)
             {
-                Reputation.Instance.AddReputation(repDelta, TransactionReasonsRP0.ProgramFunding.Stock());
+                Reputation.Instance.AddReputation(repDelta, TransactionReasonsRP0.ProgramCompletion.Stock());
             }
             Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT)/secsPerYear}. Adding {repDelta} rep.");
 
@@ -547,13 +547,13 @@ namespace RP0.Programs
                         totalPaid = 0d;
                     }
                     for (int i = startYear; i < lastYear; ++i)
-                        {
-                            const double secPerYear = 365.25d * 86400d;
-                            double fundAtYear = GetFundsAtTime(Math.Min(i, duration) * secPerYear);
-                            double paidThisYear = fundAtYear - totalPaid;
-                            totalPaid = fundAtYear;
-                            text += $"\nYear {(lastYear > 10 ? " " : string.Empty)}{i}:  {CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, paidThisYear, 0d, 0d).GetCostLineOverride(false, false, false, true)}";
-                        }
+                    {
+                        const double secPerYear = 365.25d * 86400d;
+                        double fundAtYear = GetFundsAtTime(Math.Min(i, duration) * secPerYear);
+                        double paidThisYear = fundAtYear - totalPaid;
+                        totalPaid = fundAtYear;
+                        text += $"\nYear {(lastYear > 10 ? " " : string.Empty)}{i}:  {CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, paidThisYear, 0d, 0d).GetCostLineOverride(false, false, false, true)}";
+                    }
                 }
             }
 

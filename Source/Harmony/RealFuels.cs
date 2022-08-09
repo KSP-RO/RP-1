@@ -55,9 +55,8 @@ namespace RP0.Harmony
     internal class RFECMPatcher
     {
         internal static string techNode = null;
-        internal static MethodInfo updateParts = typeof(RealFuels.EntryCostDatabase).GetMethod("UpdatePartEntryCosts", AccessTools.all);
-        internal static MethodInfo updateUpgrades = typeof(RealFuels.EntryCostDatabase).GetMethod("UpdateUpgradeEntryCosts", AccessTools.all);
         internal static MethodInfo updateAll = typeof(RealFuels.EntryCostDatabase).GetMethod("UpdateEntryCosts", AccessTools.all);
+
         [HarmonyPrefix]
         [HarmonyPatch("PurchaseConfig")]
         internal static bool Prefix_PurchaseConfig(RealFuels.EntryCostManager __instance, ref string cfgName, ref bool __result)
@@ -75,30 +74,26 @@ namespace RP0.Harmony
 
             if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
             {
-                if(CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)(UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode) - cfgCost), 0f, 0f).CanAfford())
-                {
-                    double excessCost = UnlockSubsidyHandler.Instance.SpendSubsidy(techNode, cfgCost);
-                    if (excessCost > 0d)
-                        Funding.Instance.AddFunds(-excessCost, TransactionReasons.RnDPartPurchase);
-                }
-                else
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -cfgCost, 0d, 0d);
+                double postCMQcost = -cmq.GetTotal(CurrencyRP0.Funds);
+                double invertCMQop = cfgCost / postCMQcost;
+                double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode);
+                cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidy);
+                if (!cmq.CanAfford())
                 {
                     __result = false;
                     return false;
                 }
+
+                double excessCost = UnlockSubsidyHandler.Instance.SpendSubsidy(techNode, postCMQcost);
+                if (excessCost > 0d)
+                {
+                    Funding.Instance.AddFunds(-excessCost * invertCMQop, TransactionReasons.RnDPartPurchase);
+                }
             }
 
             RealFuels.EntryCostDatabase.SetUnlocked(cfgName);
-
-            if (updateAll == null)
-            {
-                updateParts.Invoke(null, new object[] { });
-                updateUpgrades.Invoke(null, new object[] { });
-            }
-            else
-            {
-                updateAll.Invoke(null, new object[] { });
-            }
+            updateAll.Invoke(null, new object[] { });
 
             __result = true;
             return false;

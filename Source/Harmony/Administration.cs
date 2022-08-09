@@ -39,6 +39,14 @@ namespace RP0.Harmony
             ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
             ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
 
+            foreach (var strat in Strategies.StrategySystem.Instance.GetStrategies("Programs"))
+            {
+                if (!strat.IsActive && strat is ProgramStrategy ps)
+                {
+                    ps.Program.SetBestAllowableSpeed();
+                }
+            }
+
             Transform[] trfs = __instance.scrollListKerbals.gameObject.GetComponentsInChildren<Transform>(true);
             foreach (var trf in trfs)
             {
@@ -205,6 +213,7 @@ namespace RP0.Harmony
             if (wrapper.strategy is ProgramStrategy ps)
             {
                 // Set best speed before we get description
+                // This is maybe a duplicate of the work we did in CreateStrategiesList but eh.
                 if (!ps.Program.IsComplete && !ps.Program.IsActive && !AdminExtender.Instance.PressedSpeedButton)
                     ps.Program.SetBestAllowableSpeed();
             }

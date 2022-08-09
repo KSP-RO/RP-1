@@ -90,18 +90,18 @@ namespace KerbalConstructionTime
             if (closeness == 0d)
                 return;
 
-            bool noActive = true;
-            for (int i = _lcs.Count; i-- > 0;)
-            {
-                if (_lcs[i].IsOperational)
-                {
-                    noActive = false;
-                    break;
-                }
-            }
+            //bool noActive = true;
+            //for (int i = _lcs.Count; i-- > 0;)
+            //{
+            //    if (_lcs[i].IsOperational)
+            //    {
+            //        noActive = false;
+            //        break;
+            //    }
+            //}
 
-            if (noActive)
-                return;
+            //if (noActive)
+            //    return;
 
             IncreaseEfficiency(increase * closeness, false);
         }

@@ -31,12 +31,16 @@ namespace RP0.Harmony
             if (Funding.Instance != null)
             {
                 // standard stuff: get the cost line
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -part.entryCost, 0f, 0f);
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -part.entryCost, 0d, 0d);
                 text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
 
                 // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
-                if (!cmq.CanAfford() && CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, Mathf.Min(0, -part.entryCost + (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(part.TechRequired)), 0f, 0f).CanAfford())
-                    text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
+                if (!cmq.CanAfford())
+                {
+                    cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(part.TechRequired)));
+                    if (cmq.CanAfford())
+                        text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
+                }
 
                 if (___selected_node.tech.state != RDTech.State.Available)
                     text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
@@ -69,12 +73,16 @@ namespace RP0.Harmony
             if (Funding.Instance != null)
             {
                 // standard stuff: get the cost line
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -upgrade.entryCost, 0f, 0f);
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -upgrade.entryCost, 0d, 0d);
                 text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
 
                 // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
-                if (!cmq.CanAfford() && CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)UnlockSubsidyHandler.Instance.GetSubsidyAmount(upgrade.techRequired) - upgrade.entryCost, 0f, 0f).CanAfford())
-                    text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
+                if (!cmq.CanAfford())
+                {
+                    cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(upgrade.techRequired)));
+                    if (cmq.CanAfford())
+                        text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
+                }
 
                 if (___selected_node.tech.state != RDTech.State.Available)
                     text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";

@@ -201,8 +201,8 @@ namespace RP0
                 AddPartToDicts(p, ecmToCost, ecmToTech);
 
             // First apply our CMQ result
-            foreach (var kvp in ecmToCost)
-                ecmToCost[kvp.Key] = kvp.Value * cmqMultiplier;
+            foreach (var kvp in ecmToTech)
+                ecmToCost[kvp.Key] = ecmToCost[kvp.Key] * cmqMultiplier;
 
             // first try to spend local subsidy in each case
             foreach (var kvp in ecmToTech)

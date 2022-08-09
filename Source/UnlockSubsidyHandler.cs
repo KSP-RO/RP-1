@@ -344,7 +344,7 @@ namespace RP0
 
         private float ProcessSubsidy(float entryCost, string tech)
         {
-            double postCMQCost = CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -entryCost);
+            double postCMQCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -entryCost);
             double remainingCost = SpendSubsidy(tech, postCMQCost);
             // Refresh description to show new subsidy remaining
             if (KSP.UI.Screens.RDController.Instance != null)

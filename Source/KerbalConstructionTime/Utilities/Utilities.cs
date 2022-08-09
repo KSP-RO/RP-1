@@ -2444,12 +2444,16 @@ namespace KerbalConstructionTime
                 bigger = ourStats;
             }
 
-            if (bigger.massMax > 2d * smaller.massMax)
-                return 0d;
-            if (smaller.massMax < 0.5d * bigger.massMax)
-                return 0d;
+            double minMassDiff = Math.Max(1d, smaller.massMax * 0.05d);
+            if (bigger.massMax > smaller.massMax + minMassDiff)
+            {
+                if (bigger.massMax > 2d * smaller.massMax)
+                    return 0d;
+                if (smaller.massMax < 0.5d * bigger.massMax)
+                    return 0d;
+            }
 
-            double massFactor = smaller.massMax / bigger.massMax;
+            double massFactor = (smaller.massMax + minMassDiff) / bigger.massMax;
             massFactor *= massFactor * massFactor;
 
             if (otherStats.sizeMax.y > ourStats.sizeMax.y)
@@ -2465,14 +2469,14 @@ namespace KerbalConstructionTime
 
             double sizeFactor;
 
-            double minDiff = Math.Max(smaller.sizeMax.y * 0.1d, 2d);
-            if (bigger.sizeMax.y - smaller.sizeMax.y < minDiff)
+            double minHeightDiff = Math.Max(smaller.sizeMax.y * 0.1d, 2d);
+            if (bigger.sizeMax.y - smaller.sizeMax.y < minHeightDiff)
             {
                 sizeFactor = 1d;
             }
             else
             {
-                sizeFactor = (smaller.sizeMax.y + minDiff) / bigger.sizeMax.y;
+                sizeFactor = (smaller.sizeMax.y + minHeightDiff) / bigger.sizeMax.y;
                 sizeFactor *= sizeFactor * sizeFactor;
             }
 

@@ -42,8 +42,18 @@ namespace RP0
             }
         }
 
+        /// <summary>
+        /// Note this is CMQ-neutral.
+        /// </summary>
+        /// <param name="tech"></param>
+        /// <param name="UT"></param>
         public void IncrementSubsidyTime(string tech, double UT) => IncrementSubsidy(tech, UT * MaintenanceHandler.Instance.ResearchSalaryPerDay / 86400d * MaintenanceHandler.Settings.researcherSalaryToUnlockSubsidy);
 
+        /// <summary>
+        /// Note this is CMQ-neutral.
+        /// </summary>
+        /// <param name="tech"></param>
+        /// <param name="amount"></param>
         public void IncrementSubsidy(string tech, double amount)
         {
             if (!_subsidyStorage.TryGetValue(tech, out var sNode))
@@ -182,10 +192,17 @@ namespace RP0
         public void SpendSubsidyAndCost(List<AvailablePart> parts)
         {
             // This is going to be expensive, because we have to chase down all the ECMs.
+            double cmqMultiplier = -CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -1d);
+            double recipCMQMult = 1d / cmqMultiplier;
+
             Dictionary<string, double> ecmToCost = new Dictionary<string, double>();
             Dictionary<string, HashSet<string>> ecmToTech = new Dictionary<string, HashSet<string>>();
             foreach (var p in parts)
                 AddPartToDicts(p, ecmToCost, ecmToTech);
+
+            // First apply our CMQ result
+            foreach (var kvp in ecmToCost)
+                ecmToCost[kvp.Key] = kvp.Value * cmqMultiplier;
 
             // first try to spend local subsidy in each case
             foreach (var kvp in ecmToTech)
@@ -233,7 +250,7 @@ namespace RP0
                 totalCost += d;
 
             if (totalCost > 0d)
-                Funding.Instance.AddFunds(-totalCost, TransactionReasons.RnDPartPurchase);
+                Funding.Instance.AddFunds(-totalCost * recipCMQMult, TransactionReasons.RnDPartPurchase);
         }
 
         public double SpendSubsidy(string tech, double cost, Dictionary<string, UnlockSubsidyNode> dict = null)
@@ -327,12 +344,13 @@ namespace RP0
 
         private float ProcessSubsidy(float entryCost, string tech)
         {
-            double remainingCost = SpendSubsidy(tech, entryCost);
+            double postCMQCost = CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -entryCost);
+            double remainingCost = SpendSubsidy(tech, postCMQCost);
             // Refresh description to show new subsidy remaining
             if (KSP.UI.Screens.RDController.Instance != null)
                 KSP.UI.Screens.RDController.Instance.ShowNodePanel(KSP.UI.Screens.RDController.Instance.node_selected);
 
-            return (float)remainingCost;
+            return (float)(remainingCost * (entryCost / postCMQCost));
         }
 
         private void OnPartPurchased(AvailablePart ap)

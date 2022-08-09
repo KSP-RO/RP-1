@@ -213,13 +213,13 @@ namespace RP0
                         continue;
 
                     double cost = ecmToCost[kvp.Key];
+                    double local = sNode.funds;
 
                     // This check is needed because we might have multiple techs.
-                    if (cost == 0)
+                    if (cost == 0 || local == 0)
                         continue;
 
                     // Now deduct local funds and lower cost.
-                    double local = sNode.funds;
                     if (local > cost)
                         local = cost;
                     cost -= local;
@@ -240,7 +240,6 @@ namespace RP0
                         continue;
 
                     ecmToCost[kvp.Key] = SpendSubsidy(tech, cost);
-
                 }
             }
 

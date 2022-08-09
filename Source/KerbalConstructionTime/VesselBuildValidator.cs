@@ -162,16 +162,26 @@ namespace KerbalConstructionTime
 
             string devPartsMsg = ConstructUnlockablePartsWarning(purchasableParts);
             List<AvailablePart> partList = purchasableParts.Select(kvp => kvp.Key).ToList();
+            
             // PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
-            int unlockCost = Utilities.FindUnlockCost(partList);
+            
+            double unlockCost = Utilities.FindUnlockCost(partList);
+            var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -unlockCost, 0d, 0d);
+            double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds);
+
+            double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList);
+
+            double spentSubsidy = Math.Min(postCMQUnlockCost, subsidy);
+            double postSubsidyTotal = postCMQUnlockCost - spentSubsidy;
+            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentSubsidy);
+
             int partCount = purchasableParts.Count();
-            double subsidy = RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList);
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{unlockCost:N0} and {mode} (cost after subsidy <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, Math.Max(0, unlockCost - (int)subsidy)):N0})", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{postSubsidyTotal:N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentSubsidy:N0} subsidy)", () =>
                 {
-                    if (CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)( subsidy - unlockCost), 0f, 0f).CanAfford())
+                    if (cmq.CanAfford())
                     {
                         Utilities.UnlockExperimentalParts(partList);
                         _validationResult = ValidationResult.Success;
@@ -358,15 +368,20 @@ namespace KerbalConstructionTime
                     if (error.CanBeResolved)
                     {
                         string txt = $"<color=green><b>{p.partInfo.title}: {error.Error}</b></color>\n";
-                        string costStr = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -error.CostToResolve, 0f, 0f).GetCostLineOverride(true, false, false, true);
-                        string costAfterSubsidyStr = $"{CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, Math.Max(0d, RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve) - error.CostToResolve), 0f, 0f).GetCostLine(true, false, true, true)} after subsidy";
+                        var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -error.CostToResolve, 0f, 0f);
+                        string costStr = cmq.GetCostLineOverride(true, false, false, true);
+                        double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
+                        double invertCMQOp = error.CostToResolve / trueTotal;
+                        double subsidyAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve));
+                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidyAmtToUse);
+                        string costAfterSubsidyStr = $"{cmq.GetCostLine(true, false, true, true)} after subsidy";
                         var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
                                                          () =>
                                                          {
                                                              PurchaseConfig(error.PM, error.TechToResolve);
                                                              _validationResult = ValidationResult.Rerun;
                                                          },
-                                                         () => CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, (float)(RP0.UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve) - error.CostToResolve), 0f, 0f).CanAfford(),
+                                                         () => cmq.CanAfford(),
                                                          100, -1, true)
                                                             { tooltipText = costAfterSubsidyStr };
                         list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,

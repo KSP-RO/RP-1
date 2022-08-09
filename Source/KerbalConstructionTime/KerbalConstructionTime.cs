@@ -666,15 +666,10 @@ namespace KerbalConstructionTime
                         double timeForBuild = UTDiff;
                         while(timeForBuild > 0d && currentLC.BuildList.Count > 0)
                         {
-                            //double excess = 0d;
-                            //for (int i = currentLC.BuildList.Count - 1; i >= 0; i--)
-                            //    excess += currentLC.BuildList[i].IncrementProgress(UTDiff);
-
-                            //timeForBuild = excess;
                             timeForBuild = currentLC.BuildList[0].IncrementProgress(UTDiff);
                         }
 
-                        for (int i = currentLC.Recon_Rollout.Count - 1; i >= 0; i--)
+                        for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
                         {
                             // These work in parallel so no need to track excess time
                             var rr = currentLC.Recon_Rollout[i];
@@ -692,19 +687,19 @@ namespace KerbalConstructionTime
                         currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete());
                         
                         // These also are in parallel
-                        for (int i = currentLC.AirlaunchPrep.Count - 1; i >= 0; i--)
+                        for (int i = currentLC.AirlaunchPrep.Count; i-- > 0;)
                             currentLC.AirlaunchPrep[i].IncrementProgress(UTDiff);
 
                         currentLC.AirlaunchPrep.RemoveAll(ap => ap.Direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
                     }
 
-                    for (int i = ksc.Constructions.Count - 1; i >= 0; --i)
+                    for (int i = ksc.Constructions.Count; i-- > 0;)
                     {
                         ksc.Constructions[i].IncrementProgress(UTDiff);
                     }
 
                     // Remove all completed items
-                    for (int i = ksc.LaunchComplexes.Count - 1; i >= 0; --i)
+                    for (int i = ksc.LaunchComplexes.Count; i-- > 0;)
                     {
                         ksc.LaunchComplexes[i].PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
                     }
@@ -712,14 +707,10 @@ namespace KerbalConstructionTime
                     ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
                 }
                 
-                int techCount = KCTGameStates.TechList.Count;
                 double researchTime = UTDiff;
-                while (researchTime > 0d)
+                while (researchTime > 0d && KCTGameStates.TechList.Count > 0)
                 {
-                    double excess = 0d;
-                    for (int i = techCount - 1; i >= 0; i--)
-                        excess += KCTGameStates.TechList[i].IncrementProgress(UTDiff);
-                    researchTime = excess;
+                    researchTime = KCTGameStates.TechList[0].IncrementProgress(UTDiff);
                 }
             }
             Profiler.EndSample();

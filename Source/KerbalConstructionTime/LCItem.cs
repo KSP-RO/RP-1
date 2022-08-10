@@ -116,7 +116,20 @@ namespace KerbalConstructionTime
         protected double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;
 
-        private LCEfficiency efficiencySource = null;
+        private LCEfficiency _efficiencySource = null;
+        public LCEfficiency EfficiencySource
+        {
+            get
+            {
+                if (LCType == LaunchComplexType.Hangar)
+                    return null;
+
+                if (_efficiencySource == null)
+                    _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, true);
+
+                return _efficiencySource;
+            }
+        }
         public double Efficiency
         {
             get
@@ -124,10 +137,7 @@ namespace KerbalConstructionTime
                 if (LCType == LaunchComplexType.Hangar)
                     return LCEfficiency.MaxEfficiency;
 
-                if (efficiencySource == null)
-                    efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this);
-                
-                return efficiencySource.Efficiency;
+                return EfficiencySource.Efficiency;
             }
         }
 
@@ -220,7 +230,7 @@ namespace KerbalConstructionTime
 
             // will create a new one if needed (it probably will be needed)
             // If it does, it will remove us from the old one, and then clear it if it's empty.
-            efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this);
+            _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
         }
 
         public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;
@@ -370,10 +380,10 @@ namespace KerbalConstructionTime
 
         public void OnRemove()
         {
-            if (efficiencySource == null)
-                KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(this, out efficiencySource);
-            if (efficiencySource != null)
-                efficiencySource.RemoveLC(this);
+            if (_efficiencySource == null)
+                KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(this, out _efficiencySource);
+            if (_efficiencySource != null)
+                _efficiencySource.RemoveLC(this);
             else
                 LCEfficiency.ClearEmpty();
         }
@@ -623,7 +633,7 @@ namespace KerbalConstructionTime
                     }
                     if (createEffic)
                     {
-                        var e = LCEfficiency.GetOrCreateEfficiencyForLC(this);
+                        var e = LCEfficiency.GetOrCreateEfficiencyForLC(this, true);
                         if (e.Efficiency < oldEffic)
                             e.IncreaseEfficiency(oldEffic - e.Efficiency, false);
                     }

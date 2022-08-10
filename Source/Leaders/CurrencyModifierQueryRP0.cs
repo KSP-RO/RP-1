@@ -507,6 +507,9 @@ namespace RP0
         RateResearch = 1 << 43,
 
         RateTraining = 1 << 44,
+        TimeRetirement = 1 << 45,
+        TimeInactive = 1 << 46,
+        CrewTimes = RateTraining | TimeRetirement | TimeInactive,
 
         Any = ~0
     }

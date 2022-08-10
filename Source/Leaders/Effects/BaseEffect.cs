@@ -28,7 +28,7 @@ namespace RP0.Leaders
         {
         }
 
-        protected virtual bool IsPositive => multiplier > 1d ^ flipPositive;
+        protected virtual bool IsPositive => (multiplier > 1d) ^ flipPositive;
 
         protected abstract string DescriptionString();
 

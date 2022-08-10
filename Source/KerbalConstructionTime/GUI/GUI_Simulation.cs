@@ -229,7 +229,9 @@ namespace KerbalConstructionTime
             bool humanRated;
             double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out humanRated);
             double bp = Utilities.GetVesselBuildPoints(effCost);
+
             KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL, humanRated);
+            KCTGameStates.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)

@@ -23,7 +23,7 @@ namespace RP0InstallChecker
             if (AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals("KerbalConstructionTime", StringComparison.OrdinalIgnoreCase)))
             {
                 string titleText = "Incorrect RP-1 Installation";
-                string contentText = "You still have a KerbalConstructionTime dll. Please uninstall RP-1 and properly reinstall it to remove this dll." +
+                string contentText = "You still have a KerbalConstructionTime dll (RP0KCT.dll). Please uninstall RP-1 and properly reinstall it to remove this dll." +
                     "Make sure to follow the install guide located in the RP-1 wiki.\n\n" +
                     "If the goal was to obtain the latest developmental version of RP-1, then please use the link at the top of the RP-1 readme after uninstalling this RP-1 install.";
                 ShowErrorDialog(titleText, contentText);

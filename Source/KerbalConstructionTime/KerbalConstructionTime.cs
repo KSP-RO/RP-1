@@ -650,7 +650,6 @@ namespace KerbalConstructionTime
                             continue;
 
                         double portionEngineers = currentLC.Engineers / currentLC.MaxEngineers;
-                        LCEfficiency lcEff = LCEfficiency.GetOrCreateEfficiencyForLC(currentLC);
 
                         if (currentLC.IsRushing)
                             rushingEngs += currentLC.Engineers;
@@ -659,7 +658,7 @@ namespace KerbalConstructionTime
                             for (int p = 0; p < passes; ++p)
                             {
                                 double timestep = p == 0 ? remainingUT : 86400d;
-                                lcEff.IncreaseEfficiency(timestep, portionEngineers);
+                                currentLC.EfficiencySource?.IncreaseEfficiency(timestep, portionEngineers);
                             }
                         }
 

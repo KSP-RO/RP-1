@@ -517,6 +517,9 @@ namespace RP0.Crew
             var retirementChanges = new List<string>();
             var inactivity = new List<string>();
 
+            double retireCMQmult = CurrencyUtils.Time(TransactionReasonsRP0.TimeRetirement, 1d);
+            double inactiveCMQmult = -CurrencyUtils.Time(TransactionReasonsRP0.TimeInactive, -1d); // how we signal this is a cost not a reward
+
             double UT = KSPUtils.GetUT();
 
             // normally we would use v.missionTime, but that doesn't seem to update
@@ -602,7 +605,7 @@ namespace RP0.Crew
                 {
                     double stupidityPenalty = UtilMath.Lerp(Settings.retireOffsetStupidMin, Settings.retireOffsetStupidMax, pcm.stupidity);
                     Debug.Log($"[RP-0]  stupidityPenalty for {pcm.stupidity}: {stupidityPenalty}");
-                    double retireOffset = retirementMult * 86400 * Settings.retireOffsetBaseMult / stupidityPenalty;
+                    double retireOffset = retirementMult * 86400 * Settings.retireOffsetBaseMult / stupidityPenalty * retireCMQmult;
 
                     retireOffset = IncreaseRetireTime(pcm.name, retireOffset);
                     retirementChanges.Add($"\n{pcm.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(GetRetireTime(pcm.name), false)}");
@@ -612,7 +615,7 @@ namespace RP0.Crew
                 double elapsedTimeDays = elapsedTime / 86400;
                 double inactiveTimeDays = Math.Max(Settings.inactivityMinFlightDurationDays, Math.Pow(elapsedTimeDays, Settings.inactivityFlightDurationExponent)) *
                                           Math.Min(Settings.inactivityMaxSituationMult, inactivityMult) * acMult;
-                double inactiveTime = inactiveTimeDays * 86400;
+                double inactiveTime = inactiveTimeDays * 86400d * inactiveCMQmult;
                 Debug.Log($"[RP-0] inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
 
                 pcm.SetInactive(inactiveTime, false);
@@ -832,10 +835,10 @@ namespace RP0.Crew
 
         private double GetServiceTime(ProtoCrewMember pcm)
         {
-            return 86400d * 365.25d *
+            return CurrencyUtils.Time(TransactionReasonsRP0.TimeRetirement, 86400d * 365.25d *
                 (Settings.retireBaseYears +
                  UtilMath.Lerp(Settings.retireCourageMin, Settings.retireCourageMax, pcm.courage) +
-                 UtilMath.Lerp(Settings.retireStupidMin, Settings.retireStupidMax, pcm.stupidity));
+                 UtilMath.Lerp(Settings.retireStupidMin, Settings.retireStupidMax, pcm.stupidity)));
         }
 
         private void FixAstronauComplexUI()

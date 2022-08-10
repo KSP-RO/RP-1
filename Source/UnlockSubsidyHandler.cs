@@ -193,6 +193,9 @@ namespace RP0
         {
             // This is going to be expensive, because we have to chase down all the ECMs.
             double cmqMultiplier = -CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -1d);
+            if (cmqMultiplier == 0d)
+                return;
+            
             double recipCMQMult = 1d / cmqMultiplier;
 
             Dictionary<string, double> ecmToCost = new Dictionary<string, double>();
@@ -343,6 +346,9 @@ namespace RP0
 
         private float ProcessSubsidy(float entryCost, string tech)
         {
+            if (entryCost == 0f)
+                return 0f;
+            
             double postCMQCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -entryCost);
             double remainingCost = SpendSubsidy(tech, postCMQCost);
             // Refresh description to show new subsidy remaining

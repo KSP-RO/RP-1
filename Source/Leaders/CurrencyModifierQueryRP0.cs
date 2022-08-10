@@ -386,7 +386,7 @@ namespace RP0
             return "";
         }
 
-        public static string TextStylingColor(bool negative, bool negativeGood) => negative ^ negativeGood ? "#caff00" : "#feb200";
+        public static string TextStylingColor(bool negative, bool negativeGood) => negative ^ negativeGood ? "#feb200" : "#caff00";
 
         public static CurrencyModifierQueryRP0 RunQuery(TransactionReasonsRP0 reason, double f0, double s0, double r0)
         {

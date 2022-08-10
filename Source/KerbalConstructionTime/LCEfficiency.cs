@@ -161,16 +161,20 @@ namespace KerbalConstructionTime
             return bestItem;
         }
 
-        public static LCEfficiency GetOrCreateEfficiencyForLC(LCItem lc)
+        public static LCEfficiency GetOrCreateEfficiencyForLC(LCItem lc, bool allowLookup)
         {
             LCEfficiency e;
-            if (KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out e))
+            if (allowLookup && KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out e))
                 return e;
 
             e = FindClosest(lc, out double closeness);
             if (closeness == 1d)
             {
-                e._lcs.Add(lc);
+                // If we modified the LC but didn't need a new LCEfficiency,
+                // then we'll already be in this LCE's list. So we have to check.
+                if (!e._lcs.Contains(lc))
+                    e._lcs.Add(lc);
+
                 return e;
             }
 

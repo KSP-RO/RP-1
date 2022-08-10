@@ -19,6 +19,9 @@ namespace RP0.Leaders
         [Persistent]
         private double additionalMultIfNegative = 1d;
 
+        [Persistent]
+        private bool invertIfNegative = false;
+
         public CurrencyModifier(Strategy parent)
             : base(parent)
         {
@@ -56,7 +59,13 @@ namespace RP0.Leaders
 
         protected void OnEffectQuery(CurrencyModifierQuery qry)
         {
-            double multToUse = (qry.GetInput(currency.Stock()) < 0d ? additionalMultIfNegative : 1d) * multiplier;
+            double multToUse = multiplier;
+            if (qry.GetInput(currency.Stock()) < 0d)
+            {
+                multToUse *= additionalMultIfNegative;
+                if (invertIfNegative)
+                    multToUse = 1d / multToUse;
+            }
 
             if (qry is CurrencyModifierQueryRP0 qryRP0)
             {
@@ -67,7 +76,7 @@ namespace RP0.Leaders
             {
                 if (currency <= CurrencyRP0.Reputation && (listeningReasons & qry.reason.RP0()) != 0)
                 {
-                    qry.AddDelta(currency.Stock(), (float)(qry.GetInput(currency.Stock()) * (multToUse - 1d)));
+                    qry.AddDelta(currency.Stock(), (float)(qry.GetInput(currency.Stock()) * (multiplier - 1d)));
                 }
             }
                 

@@ -271,6 +271,7 @@ namespace KerbalConstructionTime
                 double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out isHumanRated);
                 double bp = Utilities.GetVesselBuildPoints(effCost);
                 KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL, isHumanRated);
+                KCTGameStates.LaunchedVessel.LCID = ship.LC.ID;
             }
             GUILayout.EndHorizontal();
 

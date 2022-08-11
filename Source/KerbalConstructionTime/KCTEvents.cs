@@ -67,8 +67,6 @@ namespace KerbalConstructionTime
             GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
             GameEvents.onEditorShowPartList.Add(PartListEvent);
             KSP.UI.BaseCrewAssignmentDialog.onCrewDialogChange.Add(CrewDialogChange);
-            GameEvents.OnPartPurchased.Add(PartPurchasedEvent);
-            GameEvents.OnPartUpgradePurchased.Add(PartUpgradePurchasedEvent);
             GameEvents.onGUIRnDComplexSpawn.Add(TechEnableEvent);
             GameEvents.onGUIRnDComplexDespawn.Add(TechDisableEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
@@ -300,43 +298,6 @@ namespace KerbalConstructionTime
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
-        }
-
-        public void PartPurchasedEvent(AvailablePart part)
-        {
-            if (HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
-                return;
-            TechItem tech = KCTGameStates.TechList.OfType<TechItem>().FirstOrDefault(t => t.TechID == part.TechRequired);
-            if (tech != null && tech.IsInList())
-            {
-                PopupDialog.SpawnPopupDialog(new UnityEngine.Vector2(0.5f, 0.5f), new UnityEngine.Vector2(0.5f, 0.5f), "", "KCT ERROR", "You tried to purchase a part from a node that you haven't researched yet. Please report how you did this to the KSP-RO devs.", "Understood", false, HighLogic.UISkin);
-                ScreenMessages.PostScreenMessage("You must wait until the node is fully researched to purchase parts!", 4f, ScreenMessageStyle.UPPER_LEFT);
-                if (part.costsFunds)
-                {
-                    Utilities.AddFunds(part.entryCost, TransactionReasons.RnDPartPurchase);
-                }
-                tech.ProtoNode.partsPurchased.Remove(part);
-                tech.DisableTech();
-            }
-            else
-            {
-                Utilities.RemoveExperimentalPart(part);
-            }
-        }
-
-        public void PartUpgradePurchasedEvent(PartUpgradeHandler.Upgrade upgrade)
-        {
-            if (HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
-                return;
-            TechItem tech = KCTGameStates.TechList.OfType<TechItem>().FirstOrDefault(t => t.TechID == upgrade.techRequired);
-            if (tech != null && tech.IsInList())
-            {
-                ScreenMessages.PostScreenMessage("You must wait until the node is fully researched to purchase upgrades!", 4f, ScreenMessageStyle.UPPER_LEFT);
-                PopupDialog.SpawnPopupDialog(new UnityEngine.Vector2(0.5f, 0.5f), new UnityEngine.Vector2(0.5f, 0.5f), "", "KCT ERROR", "You tried to purchase a part from a node that you haven't researched yet. Please report how you did this to the KSP-RO devs.", "Understood", false, HighLogic.UISkin);
-                Utilities.AddFunds(upgrade.entryCost, TransactionReasons.RnDPartPurchase);
-                PartUpgradeManager.Handler.SetUnlocked(upgrade.name, false);
-                tech.DisableTech();
-            }
         }
 
         public void TechUnlockEvent(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> ev)

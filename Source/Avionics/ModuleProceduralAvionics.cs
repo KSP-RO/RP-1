@@ -27,10 +27,10 @@ namespace RP0.ProceduralAvionics
         public float controllableMass = -1;
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Configuration", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
-        public string avionicsConfigName;
+        public string avionicsConfigName = string.Empty;
 
         [KSPField(isPersistant = true)]
-        public string avionicsTechLevel;
+        public string avionicsTechLevel = string.Empty;
 
         [KSPField(guiActiveEditor = true, guiName = "Avionics Utilization", groupName = PAWGroup)]
         public string utilizationDisplay;

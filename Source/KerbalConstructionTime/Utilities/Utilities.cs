@@ -1017,7 +1017,7 @@ namespace KerbalConstructionTime
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.GeneralSettings.MergingTimePenalty);
             }
 
-            double newTotalBP = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
+            double newTotalBP = KCTGameStates.EditorVessel.BuildPoints + KCTGameStates.EditorVessel.IntegrationPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
@@ -1359,18 +1359,14 @@ namespace KerbalConstructionTime
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
-            double effCost = GetEffectiveCost(ship.Parts, out KCTGameStates.EditorIsHumanRated);
-            KCTGameStates.EditorBuildPoints = GetVesselBuildPoints(effCost);
-            var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildPoints, EditorLogic.FlagURL, KCTGameStates.EditorIsHumanRated);
-            KCTGameStates.EditorShipMass = GetShipMass(ship, true, out _, out _);
-            KCTGameStates.EditorShipSize = GetShipSize(ship, true);
-            KCTGameStates.EditorIntegrationPoints = kctVessel.IntegrationPoints;
-            KCTGameStates.EditorIntegrationCosts = kctVessel.IntegrationCost;
+            double effCost = GetEffectiveCost(ship.Parts, out bool hr);
+            double bp = GetVesselBuildPoints(effCost);
+            KCTGameStates.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL, hr);
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KCTGameStates.EditorRolloutCosts = Formula.GetRolloutCost(kctVessel);
-                KCTGameStates.EditorRolloutTime = Formula.GetRolloutBP(kctVessel);
+                KCTGameStates.EditorRolloutCosts = Formula.GetRolloutCost(KCTGameStates.EditorVessel);
+                KCTGameStates.EditorRolloutTime = Formula.GetRolloutBP(KCTGameStates.EditorVessel);
             }
             else
             {

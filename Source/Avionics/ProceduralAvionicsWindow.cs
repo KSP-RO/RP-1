@@ -309,9 +309,11 @@ namespace RP0.ProceduralAvionics
             double subsidyToUse = Math.Min(trueCost, UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode.TechNodeName));
             cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidyToUse);
             GUI.enabled = techNode.IsAvailable && cmq.CanAfford();
-            _gc.text = $"Unlock ({BuildCostString(Math.Max(0d, trueCost - subsidyToUse))})";
-            string tooltip = $"Base cost: {BuildCostString(trueCost)}\nSubsidyApplied: {BuildCostString(subsidyToUse)}";
-            if(techNode.IsAvailable) tooltip += $"\nNeeds tech: {techNode.TechNodeTitle}";
+            _gc.text = $"Unlock ({BuildCostString(Math.Max(0d, trueCost - subsidyToUse), trueCost)})";
+            string tooltip = string.Empty;
+            if (trueCost > 0) tooltip = $"Base cost: {BuildCostString(trueCost, trueCost)}\nSubsidy Applied: {BuildCostString(subsidyToUse, -1)}";
+            if(techNode.IsAvailable) tooltip += (tooltip != string.Empty ? "\n" : string.Empty) + $"Needs tech: {techNode.TechNodeTitle}";
+            _gc.tooltip = tooltip;
             if (GUILayout.Button(_gc, HighLogic.Skin.button, GUILayout.Width(120)))
             {
                 switchedConfig = PurchaseConfig(curCfgName, techNode);
@@ -441,8 +443,8 @@ namespace RP0.ProceduralAvionics
 
         private string BuildTechName(ProceduralAvionicsTechNode techNode) => techNode.dispName ?? techNode.name;
 
-        private string BuildCostString(double cost) =>
-            (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $"{cost:N0}";
+        private string BuildCostString(double cost, double baseCost) =>
+            (baseCost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $"{cost:N0}";
 
         private string ConstructTooltipForAvionicsTL(ProceduralAvionicsTechNode techNode)
         {

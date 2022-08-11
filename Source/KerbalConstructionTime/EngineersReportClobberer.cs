@@ -139,7 +139,7 @@ namespace KerbalConstructionTime
                 minMassLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMin;
                 maxSize = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SizeMax;
                 lcHumanRated = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated;
-                vesselHumanRated = KCTGameStates.EditorIsHumanRated;
+                vesselHumanRated = KCTGameStates.EditorVessel.IsHumanRated;
             }
             else
             {

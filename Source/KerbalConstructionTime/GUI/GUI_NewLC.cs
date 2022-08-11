@@ -9,8 +9,36 @@ namespace KerbalConstructionTime
         private static string _heightLimit = "10";
         private static string _widthLimit = "2";
         private static string _lengthLimit = "2";
-        private static bool _isHumanRated = false;
-        private static LCItem.LCData _lcData = new LCItem.LCData();
+        private static LCItem.LCData _newLCData = new LCItem.LCData();
+
+        private static void SetStrings()
+        {
+            _tonnageLimit = _newLCData.massMax.ToString("F0");
+            _heightLimit = _newLCData.sizeMax.y.ToString("F0");
+            _widthLimit = _newLCData.sizeMax.x.ToString("F0");
+            _lengthLimit = _newLCData.sizeMax.z.ToString("F0");
+        }
+        private static void SetFieldsFromLCData(LCItem.LCData old)
+        {
+            _newLCData.SetFrom(old);
+            SetStrings();
+        }
+
+        private static void SetFieldsFromLC(LCItem LC)
+        {
+            _newLCData.SetFrom(LC);
+            SetFieldsFromLCData(_newLCData);
+        }
+
+        private static void SetFieldsFromVessel(BuildListVessel blv, LCItem lc = null)
+        {
+            _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.5f);
+            _newLCData.sizeMax.x = Mathf.Ceil(blv.ShipSize.x * 1.5f);
+            _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
+            _newLCData.massMax = Mathf.Ceil((float)(blv.TotalMass * 1.1d));
+            _newLCData.isHumanRated = blv.IsHumanRated;
+            SetStrings();
+        }
 
         public static void DrawNewLCWindow(int windowID)
         {
@@ -45,23 +73,22 @@ namespace KerbalConstructionTime
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:", GUILayout.ExpandWidth(false));
-                _newName = GUILayout.TextField(_newName);
+                _newLCData.Name = GUILayout.TextField(_newLCData.Name);
                 GUILayout.EndHorizontal();
             }
 
             GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
 
             bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
+            if (isHangar)
+                _newLCData.isHumanRated = true;
+
             double curPadCost = 0;
             double curVABCost = 0;
             float fractionalPadLvl = -1;
-            float tonnageLimit = isHangar ? activeLC.MassMax : 0;
-            int tonnageLimitInt = (int)tonnageLimit;
-            float heightLimit = 0;
-            float widthLimit = 0;
-            float lengthLimit = 0;
+            _newLCData.massMax = isHangar ? activeLC.MassMax : 0;
+            int tonnageLimitInt = (int)_newLCData.massMax;
             float minTonnage = 0f;
-            Vector3 curPadSize = Vector3.zero;
 
             bool parsedTonnage = true;
             if (!isHangar)
@@ -78,17 +105,15 @@ namespace KerbalConstructionTime
             }
 
             if (parsedTonnage &&
-                float.TryParse(_lengthLimit, out lengthLimit) &&
-                float.TryParse(_widthLimit, out widthLimit) &&
-                float.TryParse(_heightLimit, out heightLimit))
+                float.TryParse(_lengthLimit, out _newLCData.sizeMax.z) &&
+                float.TryParse(_widthLimit, out _newLCData.sizeMax.x) &&
+                float.TryParse(_heightLimit, out _newLCData.sizeMax.y))
             {
-                tonnageLimit = tonnageLimitInt;
-                curPadSize.x = widthLimit;
-                curPadSize.y = heightLimit;
-                curPadSize.z = lengthLimit;
-                Utilities.GetPadStats(isHangar ? activeLC.MassMax : tonnageLimit, curPadSize, isHangar ? activeLC.IsHumanRated : _isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
                 if (!isHangar)
-                    minTonnage = LCItem.CalcMassMin(tonnageLimit);
+                    _newLCData.massMax = tonnageLimitInt;
+                Utilities.GetPadStats(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
+                if (!isHangar)
+                    minTonnage = LCItem.CalcMassMin(_newLCData.massMax);
             }
             if (!isHangar)
             {
@@ -101,26 +126,30 @@ namespace KerbalConstructionTime
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Upgrade Limit for max tng:");
-                    GUILayout.Label($"{(int)(activeLC.MassOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{(int)(_newLCData.massOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Downgrade Limit for max tng:");
-                    GUILayout.Label($"{Math.Max(1, (int)(activeLC.MassOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{Math.Max(1, (int)(_newLCData.massOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     
                 }
                 else
                 {
+                    _newLCData.massOrig = _newLCData.massMax;
+                    if (_newLCData.massOrig < 1.5f)
+                        _newLCData.massOrig = 1.5f;
+
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Upgrade Limit for max tng:");
-                    GUILayout.Label($"{Math.Max(3, tonnageLimitInt * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{Math.Max(3, _newLCData.massOrig * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Downgrade Limit for max tng:");
-                    GUILayout.Label($"{Math.Max(1, tonnageLimit / 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{Math.Max(1, _newLCData.massOrig / 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
             }
@@ -147,7 +176,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" ");
-                _isHumanRated = GUILayout.Toggle(_isHumanRated, "Human-Rated", GUILayout.ExpandWidth(false));
+                _newLCData.isHumanRated = GUILayout.Toggle(_newLCData.isHumanRated, "Human-Rated", GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
             }
 
@@ -167,15 +196,15 @@ namespace KerbalConstructionTime
             {
                 // Enforce a min cost for pad size changes
                 const double minPadModifyCost = 1000d;
-                if (!isHangar && activeLC.MassMax != tonnageLimit && totalCost < minPadModifyCost)
+                if (!isHangar && activeLC.MassMax != _newLCData.massMax && totalCost < minPadModifyCost)
                     totalCost = minPadModifyCost;
 
-                double heightAbs = Math.Abs(heightLimit - activeLC.SizeMax.y);
-                double costScalingFactor = isHangar ? 500d : UtilMath.LerpUnclamped(100d, 1000d, UtilMath.InverseLerp(10d, 55d, UtilMath.Clamp(activeLC.MassOrig, 10d, 50d)));
+                double heightAbs = Math.Abs(_newLCData.sizeMax.y - activeLC.SizeMax.y);
+                double costScalingFactor = isHangar ? 500d : UtilMath.LerpUnclamped(100d, 1000d, UtilMath.InverseLerp(10d, 55d, UtilMath.Clamp(_newLCData.massOrig, 10d, 50d)));
                 double renovateCost = Math.Abs(curVABCost - oldVABCost)
                     + heightAbs * costScalingFactor
-                    + Math.Abs(widthLimit - activeLC.SizeMax.x) * costScalingFactor * 0.5d
-                    + Math.Abs(lengthLimit - activeLC.SizeMax.z) * costScalingFactor * 0.5d;
+                    + Math.Abs(_newLCData.sizeMax.x - activeLC.SizeMax.x) * costScalingFactor * 0.5d
+                    + Math.Abs(_newLCData.sizeMax.z - activeLC.SizeMax.z) * costScalingFactor * 0.5d;
 
                 //// moving the roof
                 //if (heightAbs > 0.1d)
@@ -205,7 +234,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));
-                GUILayout.Label($"{LCItem.MaxEngineersCalc(tonnageLimit, curPadSize, _isHumanRated):N0}", GetLabelRightAlignStyle());
+                GUILayout.Label($"{LCItem.MaxEngineersCalc(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated):N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 GUILayout.Label(" ");
@@ -217,7 +246,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
                 GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -totalCost):N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
-                if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
+                if (!isModify || _newLCData.lcType == LaunchComplexType.Pad)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Extra Pad Cost:", GUILayout.ExpandWidth(false));
@@ -236,18 +265,14 @@ namespace KerbalConstructionTime
                     projectedMaintenance = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureRepairLC, -projectedMaintenance);
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Est. Yearly Upkeep:", GUILayout.ExpandWidth(false));
-                    GUILayout.Label(new GUIContent((projectedMaintenance * 365.25d).ToString("N0"), $"Daily: {projectedMaintenance:N1}"), GetLabelRightAlignStyle());
+                    GUILayout.Label(new GUIContent($"√{(projectedMaintenance * 365.25d):N0}", $"Daily: √{projectedMaintenance:N1}"), GetLabelRightAlignStyle());
                     GUILayout.EndHorizontal();
                 }
             }
 
             if (!isHangar)
             {
-                _lcData.massMax = tonnageLimit;
-                _lcData.sizeMax = curPadSize;
-                _lcData.isHumanRated = _isHumanRated;
-                _lcData.lcType = LaunchComplexType.Pad;
-                LCEfficiency closestEff = LCEfficiency.FindClosest(_lcData, out double closeness);
+                LCEfficiency closestEff = LCEfficiency.FindClosest(_newLCData, out double closeness);
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Closest Existing LC:", GUILayout.ExpandWidth(false));
@@ -276,22 +301,21 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newName, fractionalPadLvl, tonnageLimit, curPadSize, isModify ? activeLC : null))
+            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, fractionalPadLvl, _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
                 KCTGameStates.StarterLCBuilding |= !isModify;
 
-                string lcName = isModify ? activeLC.Name : _newName;
                 if (!Utilities.CurrentGameIsCareer())
                 {
-                    KCTDebug.Log($"Building/Modifying launch complex {lcName}");
+                    KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
                     if (isModify)
-                        activeLC.Modify(new LCItem.LCData(activeLC.Name, tonnageLimit, activeLC.MassOrig, curPadSize, activeLC.LCType, _isHumanRated), Guid.NewGuid());
+                        activeLC.Modify(_newLCData, Guid.NewGuid());
                     else
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newName, tonnageLimit, tonnageLimit, curPadSize, LaunchComplexType.Pad, _isHumanRated, KCTGameStates.ActiveKSC));
+                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newLCData, KCTGameStates.ActiveKSC));
                 }
                 else
                 {
-                    KCTDebug.Log($"Building/Modifying launch complex {lcName}");
+                    KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
                     LCItem lc;
                     if (isModify)
                     {
@@ -301,19 +325,21 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        lc = new LCItem(_newName, tonnageLimit, Math.Max(1.5f, tonnageLimit), curPadSize, LaunchComplexType.Pad, _isHumanRated, KCTGameStates.ActiveKSC);
+                        lc = new LCItem(_newLCData,KCTGameStates.ActiveKSC);
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                     }
                     lc.IsOperational = false;
 
+                    var modData = new LCItem.LCData();
+                    modData.SetFrom(_newLCData);
                     var lcConstr = new LCConstruction
                     {
                         LCID = lc.ID,
                         Cost = totalCost,
-                        Name = lcName,
+                        Name = _newLCData.Name,
                         IsModify = isModify,
                         ModID = isModify ? Guid.NewGuid() : lc.ModID,
-                        LCData = new LCItem.LCData(lc.Name, tonnageLimit, lc.MassOrig, curPadSize, lc.LCType, _isHumanRated)
+                        LCData = modData
                     };
                     lcConstr.SetBP(totalCost);
                     KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
@@ -373,7 +399,7 @@ namespace KerbalConstructionTime
             if (lc != null)
                 return true;
 
-            if (string.IsNullOrEmpty(_newName))
+            if (string.IsNullOrEmpty(newName))
             {
                 ScreenMessages.PostScreenMessage("Enter a name for the new launch complex");
                 return false;
@@ -382,7 +408,7 @@ namespace KerbalConstructionTime
             for (int i = 0; i < KCTGameStates.ActiveKSC.LaunchComplexes.Count; i++)
             {
                 var lp = KCTGameStates.ActiveKSC.LaunchComplexes[i];
-                if (string.Equals(lp.Name, _newName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(lp.Name, newName, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launch complex with the same name already exists");
                     return false;

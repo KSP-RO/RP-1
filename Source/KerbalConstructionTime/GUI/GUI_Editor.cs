@@ -87,7 +87,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCosts):N1}");
 
             if (KCTGameStates.EditorUnlockCosts > 0)
-                GUILayout.Label($"Unlock Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RnDPartPurchase, -KCTGameStates.EditorUnlockCosts):N1}");
+                GUILayout.Label($"Unlock Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.PartOrUpgradeUnlock, -KCTGameStates.EditorUnlockCosts):N1}");
 
             if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {

@@ -649,7 +649,7 @@ namespace KerbalConstructionTime
                         if (!currentLC.IsOperational || currentLC.Engineers == 0 || !currentLC.IsActive)
                             continue;
 
-                        double portionEngineers = currentLC.Engineers / currentLC.MaxEngineers;
+                        double portionEngineers = currentLC.Engineers / (double)currentLC.MaxEngineers;
 
                         if (currentLC.IsRushing)
                             rushingEngs += currentLC.Engineers;

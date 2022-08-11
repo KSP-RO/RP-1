@@ -57,16 +57,10 @@ namespace RP0.Harmony
         internal static string techNode = null;
         internal static MethodInfo updateAll = typeof(RealFuels.EntryCostDatabase).GetMethod("UpdateEntryCosts", AccessTools.all);
 
-        [HarmonyPrefix]
-        [HarmonyPatch("PurchaseConfig")]
-        internal static bool Prefix_PurchaseConfig(RealFuels.EntryCostManager __instance, ref string cfgName, ref bool __result)
+        internal static bool PatchedPurchaseConfig(RealFuels.EntryCostManager __instance, string cfgName)
         {
-            if (techNode == null)
-                return true;
-
             if (__instance.ConfigUnlocked(cfgName))
             {
-                __result = false;
                 return false;
             }
 
@@ -81,7 +75,6 @@ namespace RP0.Harmony
                 cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidy);
                 if (!cmq.CanAfford())
                 {
-                    __result = false;
                     return false;
                 }
 
@@ -94,8 +87,32 @@ namespace RP0.Harmony
 
             RealFuels.EntryCostDatabase.SetUnlocked(cfgName);
             updateAll.Invoke(null, new object[] { });
+            techNode = null;
 
-            __result = true;
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("PurchaseConfig")]
+        [HarmonyPatch(new Type[] { typeof(string), typeof(string) })]
+        internal static bool Prefix_PurchaseConfigNew(RealFuels.EntryCostManager __instance, string cfgName, ref bool __result)
+        {
+            if (techNode == null)
+                return true;
+
+            __result = PatchedPurchaseConfig(__instance, cfgName);
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("PurchaseConfig")]
+        [HarmonyPatch(new Type[] { typeof(string), })]
+        internal static bool Prefix_PurchaseConfigOld(RealFuels.EntryCostManager __instance, string cfgName, ref bool __result)
+        {
+            if (techNode == null)
+                return true;
+
+            __result = PatchedPurchaseConfig(__instance, cfgName);
             return false;
         }
     }

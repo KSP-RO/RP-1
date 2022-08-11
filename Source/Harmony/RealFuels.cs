@@ -74,7 +74,7 @@ namespace RP0.Harmony
 
             if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
             {
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -cfgCost, 0d, 0d);
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -cfgCost, 0d, 0d);
                 double postCMQcost = -cmq.GetTotal(CurrencyRP0.Funds);
                 double invertCMQop = cfgCost / postCMQcost;
                 double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode);
@@ -88,7 +88,7 @@ namespace RP0.Harmony
                 double excessCost = UnlockSubsidyHandler.Instance.SpendSubsidy(techNode, postCMQcost);
                 if (excessCost > 0d)
                 {
-                    Funding.Instance.AddFunds(-excessCost * invertCMQop, TransactionReasons.RnDPartPurchase);
+                    Funding.Instance.AddFunds(-excessCost * invertCMQop, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());
                 }
             }
 

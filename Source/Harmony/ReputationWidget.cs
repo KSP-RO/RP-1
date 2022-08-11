@@ -68,7 +68,7 @@ namespace RP0.Harmony
         {
             MaintenanceHandler.SubsidyDetails details = MaintenanceHandler.GetSubsidyDetails();
 
-            double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.RepDecline, -Reputation.Instance.reputation * MaintenanceHandler.Settings.repPortionLostPerDay);
+            double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -Reputation.Instance.reputation * MaintenanceHandler.Settings.repPortionLostPerDay);
             return Localizer.Format("#rp0RepWidgetTooltip",
                                     CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.minSubsidy).ToString("N0"),
                                     CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.maxSubsidy).ToString("N0"),

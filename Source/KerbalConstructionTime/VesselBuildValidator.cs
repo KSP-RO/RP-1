@@ -166,7 +166,7 @@ namespace KerbalConstructionTime
             // PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
             
             double unlockCost = Utilities.FindUnlockCost(partList);
-            var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -unlockCost, 0d, 0d);
+            var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds);
 
             double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList);
@@ -368,7 +368,7 @@ namespace KerbalConstructionTime
                     if (error.CanBeResolved)
                     {
                         string txt = $"<color=green><b>{p.partInfo.title}: {error.Error}</b></color>\n";
-                        var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -error.CostToResolve, 0f, 0f);
+                        var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -error.CostToResolve, 0f, 0f);
                         string costStr = cmq.GetCostLineOverride(true, false, false, true);
                         double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
                         double invertCMQOp = error.CostToResolve / trueTotal;

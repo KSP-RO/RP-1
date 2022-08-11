@@ -192,7 +192,7 @@ namespace RP0
         public void SpendSubsidyAndCost(List<AvailablePart> parts)
         {
             // This is going to be expensive, because we have to chase down all the ECMs.
-            double cmqMultiplier = -CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -1d);
+            double cmqMultiplier = -CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -1d);
             if (cmqMultiplier == 0d)
                 return;
             
@@ -252,7 +252,7 @@ namespace RP0
                 totalCost += d;
 
             if (totalCost > 0d)
-                Funding.Instance.AddFunds(-totalCost * recipCMQMult, TransactionReasons.RnDPartPurchase);
+                Funding.Instance.AddFunds(-totalCost * recipCMQMult, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());
         }
 
         public double SpendSubsidy(string tech, double cost, Dictionary<string, UnlockSubsidyNode> dict = null)
@@ -349,7 +349,7 @@ namespace RP0
             if (entryCost == 0f)
                 return 0f;
             
-            double postCMQCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RnDPartPurchase, -entryCost);
+            double postCMQCost = -CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -entryCost);
             double remainingCost = SpendSubsidy(tech, postCMQCost);
             // Refresh description to show new subsidy remaining
             if (KSP.UI.Screens.RDController.Instance != null)

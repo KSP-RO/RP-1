@@ -416,16 +416,14 @@ namespace RP0
     public enum TransactionReasonsRP0 : long
     {
         None = 0,
-
-        ContractAdvance = 1 << 1,
+        //ContractAdvance = 1 << 1,
         ContractReward = 1 << 2,
         ContractPenalty = 1 << 3,
-        Contracts = ContractAdvance | ContractPenalty | ContractReward /*| ContractDecline*/,
+        Contracts = ContractPenalty | ContractReward | ContractDecline,
 
         VesselRollout = 1 << 4,
         VesselRecovery = 1 << 5,
-        VesselLoss = 1 << 6,
-        Vessels = VesselRollout | VesselRecovery | VesselLoss,
+        //used by ModuleExperienceManagement only - Vessels = VesselRollout | VesselRecovery,
 
         //StrategyInput = 1 << 7,
         //StrategyOutput = 1 << 8,
@@ -440,47 +438,57 @@ namespace RP0
         Structures = StructureRepair /*| StructureCollapse*/ | StructureConstruction,
 
         RnDTechResearch = 1 << 14,
-        RnDPartPurchase = 1 << 15,
-        RnDs = RnDTechResearch | RnDPartPurchase,
+        
+        //RnDs = RnDTechResearch | RnDPartPurchase,
 
         Cheating = 1 << 16,
+        
         CrewRecruited = 1 << 17,
-        //ContractDecline = 1 << 18,
-        //Progression = 1 << 19, -- We'll hijack this
+        LossOfCrew = 1 << 6,
 
-        ProgramFunding = 1 << 20, // was Mission
+        ContractDecline = 1 << 18,
+        //Progression = 1 << 19,
+
+        // Mission = 1 << 20,
+
+        ProgramFunding = 1 << 20,
         ProgramActivation = 1 << 21,
-        ProgramCompletion = 1 << 26,
+        ProgramCompletion = 1 << 22,
         Programs = ProgramFunding | ProgramActivation | ProgramCompletion,
 
-        RocketRollout = 1 << 22,
-        AirLaunchRollout = 1 << 23,
+        RocketRollout = 1 << 23,
+        AirLaunchRollout = 1 << 24,
 
-        LeaderAppoint = 1 << 24,
         LeaderRemove = 1 << 25,
-        Leaders = LeaderAppoint | LeaderRemove,
 
-        SalaryEngineers = 1 << 27,
-        SalaryResearchers = 1 << 28,
-        SalaryCrew = 1 << 29,
+        SalaryEngineers = 1 << 26,
+        SalaryResearchers = 1 << 27,
+        SalaryCrew = 1 << 28,
         Salary = SalaryEngineers | SalaryResearchers | SalaryCrew,
 
-        CrewTraining = 1 << 30,
+        CrewTraining = 1 << 29,
         Crew = CrewRecruited | SalaryCrew | CrewTraining,
 
-        HiringEngineers = 1 << 31,
-        HiringResearchers = 1 << 19,
+        HiringEngineers = 1 << 30,
+        HiringResearchers = 1 << 31,
         Hiring = HiringEngineers | HiringResearchers,
 
         Personnel = Salary | Crew | Hiring,
 
-        StructureConstructionLC = 1 << 7,
-        StructureRepairLC = 1 << 8,
+        // unused bits: 0,1,7,8,12,19
+
+        StructureConstructionLC = 1 << 0,
+        StructureRepairLC = 1 << 1,
         StructureConstructionAll = StructureConstruction | StructureConstructionLC,
         StructureRepairAll = StructureRepair | StructureRepairLC,
 
-        Subsidy = 1 << 12,
-        RepDecline = 1 << 18,
+        Subsidy = 1 << 7,
+        DailyRepDecline = 1 << 8,
+
+        PartOrUpgradeUnlock = 1 << 15, // RnDPartPurchase
+        ToolingPurchase = 1 << 12,
+        ToolingUpkeep = 1 << 19,
+        Tooling = ToolingPurchase | ToolingUpkeep,
 
         // Time
 

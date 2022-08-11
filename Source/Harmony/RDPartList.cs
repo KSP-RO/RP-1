@@ -31,7 +31,7 @@ namespace RP0.Harmony
             if (Funding.Instance != null)
             {
                 // standard stuff: get the cost line
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -part.entryCost, 0d, 0d);
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -part.entryCost, 0d, 0d);
                 text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
 
                 // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
@@ -73,7 +73,7 @@ namespace RP0.Harmony
             if (Funding.Instance != null)
             {
                 // standard stuff: get the cost line
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDPartPurchase, -upgrade.entryCost, 0d, 0d);
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0d, 0d);
                 text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
 
                 // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.

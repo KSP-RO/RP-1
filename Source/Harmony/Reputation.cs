@@ -26,7 +26,7 @@ namespace RP0.Harmony
             {
                 float repFixed = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossKerbalDeathFixed ?? 0f;
                 float repPct = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossKerbalDeathPercent ?? 0f;
-                __instance.AddReputation(-1f * (repFixed + repPct * __instance.reputation), TransactionReasons.VesselLoss);
+                __instance.AddReputation(-1f * (repFixed + repPct * __instance.reputation), TransactionReasonsRP0.LossOfCrew.Stock());
             }
             return false;
         }

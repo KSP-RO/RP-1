@@ -1388,11 +1388,7 @@ namespace KerbalConstructionTime
             {
                 if (canModify)
                 {
-                    _lengthLimit = activeLC.SizeMax.z.ToString("N0");
-                    _widthLimit = activeLC.SizeMax.x.ToString("N0");
-                    _heightLimit = activeLC.SizeMax.y.ToString("N0");
-                    _tonnageLimit = ((int)Math.Ceiling(activeLC.MassMax)).ToString();
-                    _isHumanRated = activeLC.IsHumanRated;
+                    SetFieldsFromLC(activeLC);
                     
                     GUIStates.ShowDismantlePad = false;
                     GUIStates.ShowModifyLC = true;
@@ -1411,12 +1407,8 @@ namespace KerbalConstructionTime
             }
             if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
             {
-                _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
-                _lengthLimit = "2";
-                _widthLimit = "2";
-                _heightLimit = "10";
-                _tonnageLimit = "1";
-                _isHumanRated = false;
+                SetFieldsFromLCData(LCItem.StartingLC);
+                _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
 
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;

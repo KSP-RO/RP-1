@@ -445,7 +445,7 @@ namespace RP0
                     lastRepUpdate = time;
 
                 lastRepUpdate += 3600d * 24d;
-                Reputation.Instance.AddReputation((float)(Reputation.Instance.reputation * -Settings.repPortionLostPerDay), TransactionReasonsRP0.RepDecline.Stock());
+                Reputation.Instance.AddReputation((float)(Reputation.Instance.reputation * -Settings.repPortionLostPerDay), TransactionReasonsRP0.DailyRepDecline.Stock());
             }
 
             if (TimeWarp.CurrentRate <= 100f)

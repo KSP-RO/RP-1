@@ -103,16 +103,6 @@ namespace KerbalConstructionTime
                 GUI.DragWindow();
         }
 
-        private static void CreateStartingPad(LCItem.LCData lcTemplate)
-        {
-            LCItem starterLC = new LCItem(lcTemplate, KCTGameStates.ActiveKSC)
-            {
-                IsOperational = true
-            };
-            KCTGameStates.ActiveKSC.LaunchComplexes.Add(starterLC);
-            KCTEvents.OnLCConstructionComplete.Fire(null, starterLC);
-        }
-
         private static void EnterVAB()
         {
             EditorFacility editorFacility = EditorFacility.None;

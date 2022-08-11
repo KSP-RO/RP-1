@@ -134,7 +134,7 @@ namespace RP0
             if (GUILayout.Button("Tool All", HighLogic.Skin.button))
             {
                 GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
-                bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -toolingCost, 0f, 0f).CanAfford();
+                bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasonsRP0.ToolingPurchase.Stock(), -toolingCost, 0f, 0f).CanAfford();
                 string buttonText = canAfford ? "Purchase All Toolings" : "Can't Afford";
 
                 var dialog = new MultiOptionDialog(
@@ -161,7 +161,7 @@ namespace RP0
         {
             GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
 
-            bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasons.RnDPartPurchase, -toolingCost, 0f, 0f).CanAfford();
+            bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasonsRP0.ToolingPurchase.Stock(), -toolingCost, 0f, 0f).CanAfford();
             if (canAfford)
             {
                 ModuleTooling.PurchaseToolingBatch(untooledParts);

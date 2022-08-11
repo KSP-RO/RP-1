@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -19,7 +20,7 @@ namespace KerbalConstructionTime
             [Persistent] public float massMax;
             [Persistent] public float massOrig;
             [Persistent] public Vector3 sizeMax;
-            [Persistent] public LaunchComplexType lcType;
+            [Persistent] public LaunchComplexType lcType = LaunchComplexType.Pad;
             [Persistent] public bool isHumanRated;
 
             public LCData() { }
@@ -36,18 +37,17 @@ namespace KerbalConstructionTime
 
             public LCData(LCData old)
             {
-                Name = old.Name;
                 SetFrom(old);
             }
 
             public LCData(LCItem lc)
             {
-                Name = lc.Name;
                 SetFrom(lc);
             }
 
             public void SetFrom(LCData old)
             {
+                Name = old.Name;
                 massMax = old.massMax;
                 massOrig = old.massOrig;
                 sizeMax = old.sizeMax;
@@ -57,11 +57,7 @@ namespace KerbalConstructionTime
 
             public void SetFrom(LCItem lc)
             {
-                massMax = lc.MassMax;
-                massOrig = lc.MassOrig;
-                sizeMax = lc.SizeMax;
-                lcType = lc.LCType;
-                isHumanRated = lc.IsHumanRated;
+                SetFrom(lc._lcData);
             }
 
             // NOTE: Not comparing name, which I think is correct here.
@@ -69,8 +65,7 @@ namespace KerbalConstructionTime
             public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated;
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true);
-        public static LCData StartingLC1 = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false);
-        public static LCData StartingLC15 = new LCData("Launch Complex 1", 15f, 15f, new Vector3(5f, 20f, 5f), LaunchComplexType.Pad, false);
+        public static LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false);
 
         public string Name;
         protected Guid _id;
@@ -83,6 +78,10 @@ namespace KerbalConstructionTime
         public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
         public List<ReconRollout> Recon_Rollout = new List<ReconRollout>();
         public List<AirlaunchPrep> AirlaunchPrep = new List<AirlaunchPrep>();
+
+        private LCData _lcData = new LCData();
+        public LCData Stats => _lcData;
+
         private double _rate;
         private double _rateHRCapped;
         public double Rate => _rate;
@@ -146,14 +145,14 @@ namespace KerbalConstructionTime
         public double RushSalary => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult : 1d;
 
         public bool IsOperational = false;
-        public LaunchComplexType LCType = LaunchComplexType.Pad;
-        public bool IsHumanRated = false;
 
-        public float MassMax;
-        public float MassOrig;
+        public LaunchComplexType LCType => _lcData.lcType;
+        public bool IsHumanRated => _lcData.isHumanRated;
+        public float MassMax => _lcData.massMax;
+        public float MassOrig => _lcData.massOrig;
         public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
         public float MassMin => CalcMassMin(MassMax);
-        public Vector3 SizeMax;
+        public Vector3 SizeMax => _lcData.sizeMax;
 
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
         public int ActiveLaunchPadIndex = 0;
@@ -168,59 +167,51 @@ namespace KerbalConstructionTime
 
         public KSCItem KSC => _ksc;
 
+        #region Observable funcs
+        void added(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Add(pc); }
+        void removed(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Remove(pc); }
+        void updated() { KCTEvents.OnRP0MaintenanceChanged.Fire(); }
+        #endregion
+
         public LCItem(KSCItem ksc)
         {
             _ksc = ksc;
         }
 
-        public LCItem(LCData lcData, KSCItem ksc) : this(lcData.Name, lcData.massMax, lcData.massOrig, lcData.sizeMax, lcData.lcType, lcData.isHumanRated, ksc) { }
-
-        public LCItem(string lcName, float mMax, float mOrig, Vector3 sMax, LaunchComplexType lcType, bool isHuman, KSCItem ksc)
+        public LCItem(LCData lcData, KSCItem ksc)
         {
-            Name = lcName;
-
-            _id = Guid.NewGuid();
-            _modID = _id;
             _ksc = ksc;
-            LCType = lcType;
-            IsHumanRated = isHuman;
-            MassMax = mMax;
-            MassOrig = mOrig;
-            float fracLevel;
+            _lcData.SetFrom(lcData);
+            Name = _lcData.Name;
 
-            Utilities.GetPadStats(MassMax, sMax, IsHumanRated, out _, out _, out fracLevel);
-
-            SizeMax = sMax;
-
-            if (LCType == LaunchComplexType.Pad)
+            if (_lcData.lcType == LaunchComplexType.Pad)
             {
-                var pad = new KCT_LaunchPad(Guid.NewGuid(), Name, fracLevel);
-                pad.isOperational = true;
-                LaunchPads.Add(pad);
+                Utilities.GetPadStats(_lcData.massMax, _lcData.sizeMax, _lcData.isHumanRated, out _, out _, out float fracLevel);
+
+                if (LCType == LaunchComplexType.Pad)
+                {
+                    var pad = new KCT_LaunchPad(Guid.NewGuid(), Name, fracLevel);
+                    pad.isOperational = true;
+                    LaunchPads.Add(pad);
+                }
             }
 
             PadConstructions.Added += added;
             PadConstructions.Removed += removed;
             PadConstructions.Updated += updated;
 
-            void added(int idx, ConstructionBuildItem pc) { ksc.Constructions.Add(pc); }
-            void removed(int idx, ConstructionBuildItem pc) { ksc.Constructions.Remove(pc); }
-
             BuildList.Updated += updated;
             Warehouse.Updated += updated;
-            void updated() { KCTEvents.OnRP0MaintenanceChanged.Fire(); }
+
+            _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
         }
 
         public void Modify(LCData data, Guid modId)
         {
             _modID = modId;
-            MassMax = data.massMax;
-            MassOrig = data.massOrig;
-            IsHumanRated = data.isHumanRated;
-            SizeMax = data.sizeMax;
-            float fracLevel;
+            _lcData.SetFrom(data);
 
-            Utilities.GetPadStats(MassMax, SizeMax, IsHumanRated, out _, out _, out fracLevel);
+            Utilities.GetPadStats(MassMax, SizeMax, IsHumanRated, out _, out _, out float fracLevel);
 
             foreach (var pad in LaunchPads)
             {
@@ -418,17 +409,14 @@ namespace KerbalConstructionTime
             node.AddValue("LCName", Name);
             node.AddValue("ActiveLPID", ActiveLaunchPadIndex);
             node.AddValue("operational", IsOperational);
-            node.AddValue("lcType", LCType);
-            node.AddValue("massMax", MassMax);
-            node.AddValue("massOrig", MassOrig);
-            node.AddValue("sizeMax", SizeMax);
             node.AddValue("id", _id);
             node.AddValue("modID", _modID);
             node.AddValue("Engineers", Engineers);
             node.AddValue("IsRushing", IsRushing);
-            node.AddValue("BuildRate", _rate);
-            node.AddValue("BuildRateCapped", _rateHRCapped);
-            node.AddValue("IsHumanRated", IsHumanRated);
+
+            var statsNode = new ConfigNode("Stats");
+            ConfigNode.CreateConfigFromObject(_lcData, statsNode);
+            node.AddNode(statsNode);
 
             var cnBuildl = new ConfigNode("BuildList");
             foreach (BuildListVessel blv in BuildList)
@@ -510,7 +498,6 @@ namespace KerbalConstructionTime
             _rateHRCapped = 0;
             Engineers = 0;
             IsRushing = false;
-            IsHumanRated = false;
 
             Name = node.GetValue("LCName");
             ActiveLaunchPadIndex = 0;
@@ -518,22 +505,17 @@ namespace KerbalConstructionTime
             if (ActiveLaunchPadIndex < 0)
                 ActiveLaunchPadIndex = 0;
             node.TryGetValue("operational", ref IsOperational);
-            string lcTypeVal = node.GetValue("lcType");
-            if (!string.IsNullOrEmpty(lcTypeVal))
-                Enum.TryParse(lcTypeVal, out LCType);
-            node.TryGetValue("massMax", ref MassMax);
-            node.TryGetValue("massOrig", ref MassOrig);
-            node.TryGetValue("sizeMax", ref SizeMax);
             node.TryGetValue("id", ref _id);
             if (!node.TryGetValue("modID", ref _modID) || _modID == (new Guid()) )
                 _modID = Guid.NewGuid();
             node.TryGetValue("Engineers", ref Engineers);
             node.TryGetValue("IsRushing", ref IsRushing);
-            node.TryGetValue("BuildRate", ref _rate);
-            node.TryGetValue("BuildRateCapped", ref _rateHRCapped);
-            node.TryGetValue("IsHumanRated", ref IsHumanRated);
 
-            ConfigNode tmp = node.GetNode("BuildList");
+            ConfigNode tmp = node.GetNode("Stats");
+            if (tmp != null)
+                ConfigNode.LoadObjectFromConfig(_lcData, tmp);
+
+            tmp = node.GetNode("BuildList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
                 BuildList.Add(CreateBLVFromNode(cn));
@@ -637,6 +619,14 @@ namespace KerbalConstructionTime
                         if (e.Efficiency < oldEffic)
                             e.IncreaseEfficiency(oldEffic - e.Efficiency, false);
                     }
+                }
+                if (KCTGameStates.LoadedSaveVersion < 7)
+                {
+                    node.TryGetEnum<LaunchComplexType>("lcType", ref _lcData.lcType, LaunchComplexType.Pad);
+                    node.TryGetValue("massMax", ref _lcData.massMax);
+                    node.TryGetValue("massOrig", ref _lcData.massOrig);
+                    node.TryGetValue("sizeMax", ref _lcData.sizeMax);
+                    node.TryGetValue("IsHumanRated", ref _lcData.isHumanRated);
                 }
             }
 

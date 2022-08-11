@@ -44,9 +44,9 @@ namespace KerbalConstructionTime
 
         private static void RenderBuildMode()
         {
-            double buildPoints = KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints;
+            double buildPoints = KCTGameStates.EditorVessel.BuildPoints + KCTGameStates.EditorVessel.IntegrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorIsHumanRated, 0)
+            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorVessel.IsHumanRated, 0)
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
             GUILayout.BeginHorizontal();
@@ -65,7 +65,7 @@ namespace KerbalConstructionTime
             if (double.TryParse(BuildRateForDisplay, out bR))
             {
                 GUILayout.EndHorizontal();
-                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorShipMass, buildPoints, KCTGameStates.EditorIsHumanRated)
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorVessel.TotalMass, buildPoints, KCTGameStates.EditorVessel.IsHumanRated)
                     * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier);
                 GUILayout.Label(Utilities.GetFormattedTime(buildPoints / buildRateCapped, 0, false));
 
@@ -80,8 +80,8 @@ namespace KerbalConstructionTime
                 GUILayout.Label("Invalid Build Rate");
             }
 
-            if (KCTGameStates.EditorIntegrationCosts > 0)
-                GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorIntegrationCosts:N1}");
+            if (KCTGameStates.EditorVessel.IntegrationCost > 0)
+                GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorVessel.IntegrationCost:N1}");
 
             if (KCTGameStates.EditorRolloutCosts > 0)
                 GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCosts):N1}");
@@ -104,7 +104,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(techLabel);
             }
 
-            if (KCTGameStates.EditorIsHumanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
+            if (KCTGameStates.EditorVessel.IsHumanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
             {
                 GUILayout.Label("WARNING: Cannot build vessel!");
                 GUILayout.Label("Select a human-rated Launch Complex.");
@@ -157,12 +157,10 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New LC", "Build a new launch complex for this vessel")))
             {
+                SetFieldsFromVessel(KCTGameStates.EditorVessel);
                 _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
-                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 1.5f).ToString();
-                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 1.5f).ToString();
-                _heightLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.y * 1.1f).ToString();
-                _tonnageLimit = Mathf.CeilToInt((float)(KCTGameStates.EditorShipMass * 1.1d)).ToString();
-                _isHumanRated = KCTGameStates.EditorIsHumanRated;
+                _newLCData.Name = _newName;
+                
 
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowModifyLC = false;
@@ -177,11 +175,7 @@ namespace KerbalConstructionTime
             if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton))
             {
-                _lengthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.z * 1.5f).ToString();
-                _widthLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.x * 1.5f).ToString();
-                _heightLimit = Mathf.CeilToInt(KCTGameStates.EditorShipSize.y * 1.1f).ToString();
-                _tonnageLimit = Mathf.CeilToInt((float)(KCTGameStates.EditorShipMass * 1.1d)).ToString();
-                _isHumanRated = EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH || KCTGameStates.EditorIsHumanRated;
+                SetFieldsFromVessel(KCTGameStates.EditorVessel);
 
                 GUIStates.ShowModifyLC = true;
                 GUIStates.ShowBuildList = false;
@@ -207,7 +201,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
-            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorIsHumanRated, 0)
+            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorVessel.IsHumanRated, 0)
                 * ship.LC.Efficiency * ship.LC.StrategyRateMultiplier;
 
             GUILayout.BeginHorizontal();
@@ -227,9 +221,10 @@ namespace KerbalConstructionTime
             if (double.TryParse(BuildRateForDisplay, out bR))
             {
                 GUILayout.EndHorizontal();
-                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KCTGameStates.EditorShipMass, KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints, KCTGameStates.EditorIsHumanRated)
+                double bp = KCTGameStates.EditorVessel.BuildPoints + KCTGameStates.EditorVessel.IntegrationPoints;
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KCTGameStates.EditorVessel.TotalMass, bp, KCTGameStates.EditorVessel.IsHumanRated)
                     * ship.LC.Efficiency * ship.LC.StrategyRateMultiplier);
-                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildPoints + KCTGameStates.EditorIntegrationPoints - newProgressBP) / buildRateCapped, 0, false));
+                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(bp - newProgressBP) / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
                 {

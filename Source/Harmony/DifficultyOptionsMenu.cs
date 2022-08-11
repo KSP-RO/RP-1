@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace RP0.Harmony
 {
@@ -15,24 +16,17 @@ namespace RP0.Harmony
         [HarmonyPatch("CreateDifficultWindow")]
         internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            bool skipNext = false;
-            foreach (var instruction in instructions)
+            List<CodeInstruction> code = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < code.Count; ++i)
             {
-                if (skipNext)
+                if (code[i].LoadsConstant(-100f))
                 {
-                    skipNext = false;
+                    code[i++] = new CodeInstruction(OpCodes.Ldc_R4, 0f);
+                    code[i] = new CodeInstruction(OpCodes.Ldc_R4, 10f);
                     continue;
                 }
-
-                if (instruction.LoadsConstant(-100f))
-                {
-                    yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 0f);
-                    yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 10f);
-                    skipNext = true;
-                }
-                else
-                    yield return instruction;
             }
+            return code;
         }
     }
 }

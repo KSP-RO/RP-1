@@ -727,7 +727,7 @@ namespace RP0
                 return;
             }
 
-            if (reason == TransactionReasons.RnDPartPurchase)
+            if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock.Stock())
             {
                 CurrentPeriod.EntryCosts -= changeDelta;
                 return;

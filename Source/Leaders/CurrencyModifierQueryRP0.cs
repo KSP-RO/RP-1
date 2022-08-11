@@ -438,8 +438,6 @@ namespace RP0
         Structures = StructureRepair /*| StructureCollapse*/ | StructureConstruction,
 
         RnDTechResearch = 1 << 14,
-        
-        //RnDs = RnDTechResearch | RnDPartPurchase,
 
         Cheating = 1 << 16,
         

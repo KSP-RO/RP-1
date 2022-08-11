@@ -30,6 +30,7 @@ namespace KerbalConstructionTime
         public LCEfficiency(LCItem lc)
         {
             _lcStats.SetFrom(lc);
+            _lcStats.Name = "EfficiencyData";
 
             LCEfficiency closest = FindClosest(lc, out double closeness);
             if (closest == null)

@@ -33,7 +33,7 @@ namespace KerbalConstructionTime
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 6;
+        public const int VERSION = 7;
 
         public static ToolbarControl ToolbarControl;
 
@@ -45,14 +45,9 @@ namespace KerbalConstructionTime
         public static bool AcceptedContract = false;
         public static bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
         public static bool IsSimulatedFlight = false;
-        public static double EditorBuildPoints = 0;
-        public static double EditorShipMass = 0;
-        public static UnityEngine.Vector3 EditorShipSize = UnityEngine.Vector3.zero;
-        public static bool EditorIsHumanRated = false;
-        public static double EditorIntegrationPoints = 0;
+        public static BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, 1, false);
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
-        public static double EditorIntegrationCosts = 0;
         public static double EditorUnlockCosts = 0;
         public static List<string> EditorRequiredTechs = new List<string>();
 

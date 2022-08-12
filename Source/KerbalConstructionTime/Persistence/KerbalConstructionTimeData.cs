@@ -181,10 +181,28 @@ namespace KerbalConstructionTime
                         }
                     }
                 }
-                if (KCTGameStates.LoadedSaveVersion < 2)
+                if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
                 {
-                    KCTGameStates.StarterLCBuilding = KCTGameStates.KSCs.FirstOrDefault(k => k.LaunchComplexes.Count > 1) != null;
+                    if (KCTGameStates.LoadedSaveVersion < 2)
+                    {
+                        KCTGameStates.StarterLCBuilding = KCTGameStates.KSCs.FirstOrDefault(k => k.LaunchComplexes.Count > 1) != null;
+                    }
+                    if (KCTGameStates.LoadedSaveVersion < 8)
+                    {
+                        foreach (var k in KCTGameStates.KSCs)
+                        {
+                            foreach (var lc in k.LaunchComplexes)
+                            {
+                                if (!lc.IsOperational)
+                                {
+                                    if (k.LCConstructions.Find(c => c.LCID == lc.ID) == null)
+                                        lc.IsOperational = true;
+                                }
+                            }
+                        }
+                    }
                 }
+
                 KCTGameStates.LoadedSaveVersion = KCTGameStates.VERSION;
 
                 LCEfficiency.RelinkAll();

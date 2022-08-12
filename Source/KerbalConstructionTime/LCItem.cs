@@ -22,7 +22,7 @@ namespace KerbalConstructionTime
             [Persistent] public Vector3 sizeMax;
             [Persistent] public LaunchComplexType lcType = LaunchComplexType.Pad;
             [Persistent] public bool isHumanRated;
-            [Persistent] PersistentDictionaryValueTypes<string, double> resourcesHandled = new PersistentDictionaryValueTypes<string, double>();
+            [Persistent] public PersistentDictionaryValueTypes<string, double> resourcesHandled = new PersistentDictionaryValueTypes<string, double>();
 
             public LCData() { }
 
@@ -65,8 +65,8 @@ namespace KerbalConstructionTime
             }
 
             // NOTE: Not comparing name, which I think is correct here.
-            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated;
-            public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated;
+            public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, lc.ResourcesHandled);
+            public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, data.resourcesHandled);
         }
         public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
         public static LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false, new PersistentDictionaryValueTypes<string, double>());
@@ -157,6 +157,7 @@ namespace KerbalConstructionTime
         public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
         public float MassMin => CalcMassMin(MassMax);
         public Vector3 SizeMax => _lcData.sizeMax;
+        public PersistentDictionaryValueTypes<string, double> ResourcesHandled => _lcData.resourcesHandled;
 
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
         public int ActiveLaunchPadIndex = 0;

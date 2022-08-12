@@ -325,7 +325,7 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        lc = new LCItem(_newLCData,KCTGameStates.ActiveKSC);
+                        lc = new LCItem(_newLCData, KCTGameStates.ActiveKSC);
                         KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                     }
                     lc.IsOperational = false;

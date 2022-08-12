@@ -3,7 +3,7 @@ using KerbalConstructionTime;
 using KSP.UI.TooltipTypes;
 using KSP.UI.Screens.Editor;
 using System;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 using KSP.Localization;
 

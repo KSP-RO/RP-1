@@ -4,7 +4,7 @@ using KSP.UI.Screens;
 using KSP.UI.Screens.Editor;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 using System.Reflection;
 using KSP.Localization;

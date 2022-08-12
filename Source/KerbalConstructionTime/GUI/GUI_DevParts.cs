@@ -1,7 +1,7 @@
 ﻿using KSP.UI;
 using KSP.UI.Screens;
 using KSP.UI.TooltipTypes;
-using System.Linq;
+using UniLinq;
 using ToolbarControl_NS;
 using UnityEngine;
 

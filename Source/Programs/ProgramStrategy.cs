@@ -130,6 +130,11 @@ namespace RP0.Programs
             return true;
         }
 
+        public override double DeactivateCost()
+        {
+            return 0d;
+        }
+
         protected override void OnRegister()
         {
             base.OnRegister();

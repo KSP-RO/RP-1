@@ -142,7 +142,7 @@ namespace RP0.Programs
         {
             base.OnUnregister();
 
-            if (ProgramHandler.Instance && ProgramHandler.Instance.IsInAdmin)
+            if (ProgramHandler.Instance && ProgramHandler.Instance.IsInAdmin && _program.CanComplete)
                 ProgramHandler.Instance.CompleteProgram(_program);
         }
     }

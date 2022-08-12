@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 
 namespace RP0InstallChecker

@@ -62,7 +62,7 @@ namespace RP0
 
         protected override bool CanDeactivate(ref string reason)
         {
-            if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -ConfigRP0.DeactivateCost(DateActivated)).CanAfford())
+            if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
             {
                 reason = Localizer.GetStringByTag("#rp0LeaderCannotAffordRemove");
                 return false;
@@ -102,7 +102,9 @@ namespace RP0
             if (!CanBeDeactivated(out _))
                 return false;
 
-            Reputation.Instance.AddReputation(-(float)ConfigRP0.DeactivateCost(DateActivated), TransactionReasonsRP0.LeaderRemove.Stock());
+            float deactivateRep = (float)DeactivateCost();
+            if (deactivateRep != 0f)
+                Reputation.Instance.AddReputation(-deactivateRep, TransactionReasonsRP0.LeaderRemove.Stock());
 
             isActive.SetValue(this, false);
 
@@ -117,6 +119,16 @@ namespace RP0
             KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
 
             return true;
+        }
+
+        public virtual double DeactivateCost()
+        {
+            return UtilMath.LerpUnclamped(Reputation.Instance.reputation * ConfigRP0.RemovalCostRepPercent, 0d, Math.Pow(UtilMath.InverseLerp(LeastDuration, LongestDuration, KSPUtils.GetUT() - DateActivated), ConfigRP0.RemovalCostLerpPower));
+        }
+
+        public virtual string DeactivateCostString()
+        {
+            return CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost(), 0d, 0d).GetCostLineOverride(true, false, true, true);
         }
 
         protected virtual string ConstructText(bool extendedInfo, bool useDescriptionHeader = true, bool showDescriptionInNonExtended = false)
@@ -148,7 +160,7 @@ namespace RP0
             text += "\n";
             if (IsActive)
             {
-                string costStr = ConfigRP0.DeactivateCostString(DateActivated);
+                string costStr = DeactivateCostString();
                 if (LeastDuration > 0 || !string.IsNullOrEmpty(costStr))
                 {
                     if (DateActivated + LeastDuration <= KSPUtils.GetUT())

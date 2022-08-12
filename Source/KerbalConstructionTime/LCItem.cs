@@ -68,8 +68,8 @@ namespace KerbalConstructionTime
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, lc.ResourcesHandled);
             public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, data.resourcesHandled);
         }
-        public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
-        public static LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false, new PersistentDictionaryValueTypes<string, double>());
+        public static readonly LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
+        public static readonly LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false, new PersistentDictionaryValueTypes<string, double>());
 
         public string Name;
         protected Guid _id;
@@ -186,19 +186,17 @@ namespace KerbalConstructionTime
         public LCItem(LCData lcData, KSCItem ksc)
         {
             _ksc = ksc;
+            _id = Guid.NewGuid();
+            _modID = _id;
             _lcData.SetFrom(lcData);
             Name = _lcData.Name;
 
             if (_lcData.lcType == LaunchComplexType.Pad)
             {
                 Utilities.GetPadStats(_lcData.massMax, _lcData.sizeMax, _lcData.isHumanRated, out _, out _, out float fracLevel);
-
-                if (LCType == LaunchComplexType.Pad)
-                {
-                    var pad = new KCT_LaunchPad(Guid.NewGuid(), Name, fracLevel);
-                    pad.isOperational = true;
-                    LaunchPads.Add(pad);
-                }
+                var pad = new KCT_LaunchPad(Guid.NewGuid(), Name, fracLevel);
+                pad.isOperational = true;
+                LaunchPads.Add(pad);
             }
 
             PadConstructions.Added += added;
@@ -632,6 +630,20 @@ namespace KerbalConstructionTime
                     node.TryGetValue("massOrig", ref _lcData.massOrig);
                     node.TryGetValue("sizeMax", ref _lcData.sizeMax);
                     node.TryGetValue("IsHumanRated", ref _lcData.isHumanRated);
+                }
+                if (KCTGameStates.LoadedSaveVersion < 8)
+                {
+                    if (_id == Guid.Empty)
+                        _id = Guid.NewGuid();
+                    if (_modID == Guid.Empty)
+                        _modID = Guid.NewGuid();
+
+                    // check if we're the hangar
+                    if (_ksc.LaunchComplexes.Count == 0)
+                    {
+                        if (_lcData.lcType != LaunchComplexType.Hangar || _lcData.massMax != float.MaxValue)
+                            _lcData.SetFrom(StartingHangar);
+                    }
                 }
             }
 

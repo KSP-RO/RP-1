@@ -327,19 +327,12 @@ namespace RP0.Harmony
         internal static void OnRemoveLeaderConfirm()
         {
             OnPopupDismiss();
-            var leader = Administration.Instance.SelectedWrapper.strategy;
-            double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated));
-
             if (!Administration.Instance.SelectedWrapper.strategy.Deactivate())
                 return;
-
-            Reputation.Instance.AddReputation(-(float)cost, TransactionReasonsRP0.LeaderRemove.Stock());
 
             Administration.Instance.UnselectStrategy();
             Administration.Instance.RedrawPanels();
         }
-
-        internal const double FireLeaderRepPenaltyPctMax = 0.1d;
 
         [HarmonyPrefix]
         [HarmonyPatch("BtnInputAccept")]
@@ -400,15 +393,16 @@ namespace RP0.Harmony
             if (state == "cancel")
             {
                 var leader = __instance.SelectedWrapper.strategy;
-                double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, Math.Pow(UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated), 2.5d));
-                string reappointStr = leader.Config is StrategyConfigRP0 cfg && cfg.RemoveOnDeactivate 
+                var cfg = leader.Config as StrategyConfigRP0;
+                string deactivateCostStr = cfg.DeactivateCostString(leader.DateActivated);
+                string reappointStr = cfg.RemoveOnDeactivate 
                     ? cfg.ReactivateCooldown > 0
                         ? $"\n\n{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"
                         : $"\n\n{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}"
                     : string.Empty;
-                string message = cost > 0
+                string message = !string.IsNullOrEmpty(deactivateCostStr)
                     ? Localizer.Format("#rp0LeaderRemoveConfirmWithCost", 
-                        CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -cost, 0d, 0d).GetCostLineOverride(true),
+                        deactivateCostStr,
                         reappointStr)
                     : Localizer.Format("#rp0LeaderRemoveConfirm", reappointStr);
 

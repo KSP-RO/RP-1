@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -112,7 +111,11 @@ namespace RP0.DataTypes
         public static bool AreEqual(Dictionary<TKey, TValue> d1, Dictionary<TKey, TValue> d2)
         {
             if (d1.Count != d2.Count) return false;
-            return d1.Keys.All(k => d2.ContainsKey(k) && d1[k].Equals(d2[k]));
+            foreach (TKey key in d1.Keys)
+                if (!d2.TryGetValue(key, out TValue val) || !val.Equals(d1[key]))
+                    return false;
+
+            return true;
         }
 
     }

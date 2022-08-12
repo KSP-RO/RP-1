@@ -1,6 +1,6 @@
 ﻿using RP0.Programs;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 
 namespace ContractConfigurator.RP0
 {

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using System.Reflection;
 
 //TODO: Change namespace to your mod's namespace

@@ -392,9 +392,9 @@ namespace RP0.Harmony
 
             if (state == "cancel")
             {
-                var leader = __instance.SelectedWrapper.strategy;
+                var leader = __instance.SelectedWrapper.strategy as StrategyRP0;
                 var cfg = leader.Config as StrategyConfigRP0;
-                string deactivateCostStr = cfg.DeactivateCostString(leader.DateActivated);
+                string deactivateCostStr = leader.DeactivateCostString();
                 string reappointStr = cfg.RemoveOnDeactivate 
                     ? cfg.ReactivateCooldown > 0
                         ? $"\n\n{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"

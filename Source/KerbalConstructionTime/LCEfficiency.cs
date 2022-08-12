@@ -60,7 +60,8 @@ namespace KerbalConstructionTime
             _lcs.Clear();
             foreach (var id in _lcIDs)
             {
-                _lcs.Add(KCTGameStates.FindLCFromID(id));
+                if (id != Guid.Empty)
+                    _lcs.Add(KCTGameStates.FindLCFromID(id));
             }
             _ignoreObserve = false;
         }
@@ -188,6 +189,8 @@ namespace KerbalConstructionTime
         {
             foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
                 e.Relink();
+
+            ClearEmpty();
         }
 
         public static void ClearEmpty()

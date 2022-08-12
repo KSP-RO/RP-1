@@ -60,6 +60,17 @@ namespace RP0
             return true;
         }
 
+        protected override bool CanDeactivate(ref string reason)
+        {
+            if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -ConfigRP0.DeactivateCost(DateActivated)).CanAfford())
+            {
+                reason = Localizer.GetStringByTag("#rp0LeaderCannotAffordRemove");
+                return false;
+            }
+
+            return base.CanDeactivate(ref reason);
+        }
+
         protected override void OnRegister()
         {
             base.OnRegister();
@@ -91,8 +102,10 @@ namespace RP0
             if (!CanBeDeactivated(out _))
                 return false;
 
+            Reputation.Instance.AddReputation(-(float)ConfigRP0.DeactivateCost(DateActivated), TransactionReasonsRP0.LeaderRemove.Stock());
+
             isActive.SetValue(this, false);
-            
+
             dateDeactivated = KSPUtils.GetUT();
             StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = dateDeactivated;
             if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
@@ -100,7 +113,6 @@ namespace RP0
 
 
             Unregister();
-            CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.EndCosts, true);
 
             KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
 
@@ -136,18 +148,19 @@ namespace RP0
             text += "\n";
             if (IsActive)
             {
-                if (LeastDuration > 0)
+                string costStr = ConfigRP0.DeactivateCostString(DateActivated);
+                if (LeastDuration > 0 || !string.IsNullOrEmpty(costStr))
                 {
                     if (DateActivated + LeastDuration <= KSPUtils.GetUT())
                     {
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemove"), Localizer.GetStringByTag("#autoLOC_6002417"));
+                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemove"), string.IsNullOrEmpty(costStr) ? Localizer.GetStringByTag("#autoLOC_6002417") : Localizer.Format("#rp0LeaderRemovalCost", costStr));
                     }
                     else
                     {
                         if (GameSettings.SHOW_DEADLINES_AS_DATES)
                             text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
                         else
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveIn"), 
+                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveIn"),
                                 extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
                                 : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
                     }
@@ -176,18 +189,17 @@ namespace RP0
                         extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration, false, false)
                             : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
                 }
-            }
 
-
-            string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLineOverride(true, true, true, false, "   ");
-            if (costString != string.Empty)
-            {
-                text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#autoLOC_304612"), costString);
-            }
-            string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLineOverride(true, true, true, false, "   ");
-            if (requireString != string.Empty)
-            {
-                text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#rp0LeaderHireRequirements"), requireString);
+                string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLineOverride(true, true, true, false, "   ");
+                if (costString != string.Empty)
+                {
+                    text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#autoLOC_304612"), costString);
+                }
+                string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLineOverride(true, true, true, false, "   ");
+                if (requireString != string.Empty)
+                {
+                    text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#rp0LeaderHireRequirements"), requireString);
+                }
             }
 
             return text;

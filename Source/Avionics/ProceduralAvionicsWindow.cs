@@ -304,7 +304,7 @@ namespace RP0.ProceduralAvionics
         {
             bool switchedConfig = false;
             if (unlockCost <= 0) return switchedConfig;
-            var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, unlockCost, 0d, 0d);
+            var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double trueCost = -cmq.GetTotal(CurrencyRP0.Funds);
             double subsidyToUse = Math.Min(trueCost, UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode.TechNodeName));
             cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidyToUse);

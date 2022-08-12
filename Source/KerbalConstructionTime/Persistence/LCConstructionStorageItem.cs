@@ -37,6 +37,17 @@ namespace KerbalConstructionTime
             lcc.LCID = lcID;
             lcc.IsModify = isModify;
             lcc.ModID = modId;
+            if (KCTGameStates.LoadedSaveVersion < 8)
+            {
+                if (lcc.ModID == Guid.Empty)
+                {
+                    lcc.ModID = Guid.NewGuid();
+                }
+                else
+                {
+                    lcc.ModID = lcc.LCID;
+                }
+            }
 
             lcc.LCData = new LCItem.LCData(lcData);
 

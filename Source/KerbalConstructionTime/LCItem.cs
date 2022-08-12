@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using RP0.DataTypes;
+using UniLinq;
 
 namespace KerbalConstructionTime
 {
@@ -22,10 +22,11 @@ namespace KerbalConstructionTime
             [Persistent] public Vector3 sizeMax;
             [Persistent] public LaunchComplexType lcType = LaunchComplexType.Pad;
             [Persistent] public bool isHumanRated;
+            [Persistent] PersistentDictionaryValueTypes<string, double> resourcesHandled = new PersistentDictionaryValueTypes<string, double>();
 
             public LCData() { }
 
-            public LCData(string Name, float massMax, float massOrig, Vector3 sizeMax, LaunchComplexType lcType, bool isHumanRated)
+            public LCData(string Name, float massMax, float massOrig, Vector3 sizeMax, LaunchComplexType lcType, bool isHumanRated, PersistentDictionaryValueTypes<string, double> resourcesHandled)
             {
                 this.Name = Name;
                 this.massMax = massMax;
@@ -33,6 +34,8 @@ namespace KerbalConstructionTime
                 this.sizeMax = sizeMax;
                 this.lcType = lcType;
                 this.isHumanRated = isHumanRated;
+                foreach (var kvp in resourcesHandled) { this.resourcesHandled[kvp.Key] = kvp.Value; }
+                //TODO: If setting starting hangar, apply default resources, which are?
             }
 
             public LCData(LCData old)
@@ -53,6 +56,7 @@ namespace KerbalConstructionTime
                 sizeMax = old.sizeMax;
                 lcType = old.lcType;
                 isHumanRated = old.isHumanRated;
+                foreach (var kvp in old.resourcesHandled) { resourcesHandled[kvp.Key] = kvp.Value; }
             }
 
             public void SetFrom(LCItem lc)
@@ -64,8 +68,8 @@ namespace KerbalConstructionTime
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated;
             public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated;
         }
-        public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true);
-        public static LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false);
+        public static LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
+        public static LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false, new PersistentDictionaryValueTypes<string, double>());
 
         public string Name;
         protected Guid _id;

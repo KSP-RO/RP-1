@@ -451,7 +451,7 @@ namespace RP0.Programs
             CompletedPrograms.Add(p);
             p.Complete();
             // No change needed to ProgramStrategy because reference holds.
-            ContractPreLoader.Instance.ResetGenerationFailure();
+            ContractPreLoader.Instance?.ResetGenerationFailure();
         }
 
         private void DisableProgram(string s)

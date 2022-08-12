@@ -108,5 +108,12 @@ namespace RP0.DataTypes
                 node.AddValue(kvp.Key.ToString(), kvp.Value.ToString());
             }
         }
+
+        public static bool AreEqual(Dictionary<TKey, TValue> d1, Dictionary<TKey, TValue> d2)
+        {
+            if (d1.Count != d2.Count) return false;
+            return d1.Keys.All(k => d2.ContainsKey(k) && d1[k].Equals(d2[k]));
+        }
+
     }
 }

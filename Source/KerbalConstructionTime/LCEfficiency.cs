@@ -18,6 +18,8 @@ namespace KerbalConstructionTime
 
         public KCTObservableList<LCItem> _lcs = new KCTObservableList<LCItem>();
 
+        protected Dictionary<LCEfficiency, double> _closenessCache = new Dictionary<LCEfficiency, double>();
+
 
         // Used by Persistence
         public LCEfficiency()
@@ -54,7 +56,7 @@ namespace KerbalConstructionTime
             ConfigNode.CreateConfigFromObject(this, node);
         }
 
-        public void Relink()
+        protected void Relink()
         {
             _ignoreObserve = true;
             _lcs.Clear();
@@ -64,6 +66,14 @@ namespace KerbalConstructionTime
                     _lcs.Add(KCTGameStates.FindLCFromID(id));
             }
             _ignoreObserve = false;
+        }
+
+        protected void RefreshCache()
+        {
+            _closenessCache.Clear();
+            foreach (LCEfficiency e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+                if (e != this)
+                    _closenessCache[e] = Utilities.GetLCCloseness(_lcStats, e._lcStats);
         }
 
         public void RemoveLC(LCItem lc)
@@ -88,7 +98,7 @@ namespace KerbalConstructionTime
 
         private void ReceiveDistributedEfficiency(LCEfficiency e, double increase)
         {
-            double closeness = Utilities.GetLCCloseness(_lcStats, e._lcStats);
+            _closenessCache.TryGetValue(e, out double closeness);
             if (closeness == 0d)
                 return;
 
@@ -177,11 +187,13 @@ namespace KerbalConstructionTime
                 if (!e._lcs.Contains(lc))
                     e._lcs.Add(lc);
 
+
                 return e;
             }
 
             e = new LCEfficiency(lc); // this will put it in the dict
             KerbalConstructionTimeData.Instance.LCEfficiencies.Add(e);
+            RefreshAllCaches();
             return e;
         }
 
@@ -190,14 +202,30 @@ namespace KerbalConstructionTime
             foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
                 e.Relink();
 
-            ClearEmpty();
+            if (!ClearEmpty())
+                RefreshAllCaches();
         }
 
-        public static void ClearEmpty()
+        protected static void RefreshAllCaches()
         {
+            foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+                e.RefreshCache();
+        }
+
+        public static bool ClearEmpty()
+        {
+            int oldCount = KerbalConstructionTimeData.Instance.LCEfficiencies.Count;
             for (int i = KerbalConstructionTimeData.Instance.LCEfficiencies.Count; i-- > 0;)
                 if (KerbalConstructionTimeData.Instance.LCEfficiencies[i]._lcs.Count == 0)
                     KerbalConstructionTimeData.Instance.LCEfficiencies.RemoveAt(i);
+
+            if (oldCount != KerbalConstructionTimeData.Instance.LCEfficiencies.Count)
+            {
+                RefreshAllCaches();
+                return true;
+            }
+
+            return false;
         }
 
         private static double _MinEfficiency = 0d;

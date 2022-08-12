@@ -50,9 +50,11 @@ namespace RP0
 
         [Persistent]
         protected double removalCostRepPercent;
+        public double RemovalCostRepPercent => removalCostRepPercent;
 
         [Persistent]
         protected double removalCostLerpPower;
+        public double RemovalCostLerpPower => removalCostLerpPower;
 
         // Will be called by transpiler of stock StrategyConfig.Create()
         protected static StrategyConfig NewBaseConfig() { return new StrategyConfigRP0(); }
@@ -79,16 +81,6 @@ namespace RP0
 
             if (!string.IsNullOrEmpty(iconDepartment))
                 iconDepartmentImage = GameDatabase.Instance.GetTexture(iconDepartment, false);
-        }
-
-        public double DeactivateCost(double dateActivated)
-        {
-            return UtilMath.LerpUnclamped(Reputation.Instance.reputation * removalCostRepPercent, 0d, System.Math.Pow(UtilMath.InverseLerp(MaxLeastDuration, MaxLongestDuration, KSPUtils.GetUT() - dateActivated), removalCostLerpPower)); ;
-        }
-
-        public string DeactivateCostString(double dateActivated)
-        {
-            return CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost(dateActivated), 0d, 0d).GetCostLineOverride(true, false, true, true);
         }
 
         new public static StrategyConfigRP0 Create(ConfigNode node, List<DepartmentConfig> departments)

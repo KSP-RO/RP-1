@@ -158,8 +158,8 @@ namespace RP0
                         text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
                     else
                         text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresIn"), 
-                            extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration, false, false)
-                            : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
+                            extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false)
+                            : KSPUtil.PrintDateDeltaCompact(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false));
                 }
             }
             else

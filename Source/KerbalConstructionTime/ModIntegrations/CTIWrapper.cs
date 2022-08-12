@@ -24,7 +24,7 @@ THE SOFTWARE.
 #endregion
 
 using System;
-using System.Linq;
+using UniLinq;
 using System.Reflection;
 using UnityEngine;
 

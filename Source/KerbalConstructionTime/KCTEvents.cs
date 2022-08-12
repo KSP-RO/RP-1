@@ -1,7 +1,7 @@
 using KSP.UI.Screens;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using RP0.DataTypes;
 
 namespace KerbalConstructionTime

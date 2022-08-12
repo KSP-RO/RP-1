@@ -2496,7 +2496,22 @@ namespace KerbalConstructionTime
             else if (ourStats.isHumanRated != otherStats.isHumanRated)
                 hrFactor = 0.9d;
 
-            return massFactor * sizeFactor * hrFactor;
+            // compare the resources handled at each complex
+            double resTotal = 0d;
+            double resDiffs = 0d;
+            HashSet<string> resourceKeys = new HashSet<string>();
+            ourStats.resourcesHandled.Keys.Select(x => resourceKeys.Add(x));
+            otherStats.resourcesHandled.Keys.Select(x => resourceKeys.Add(x));
+            foreach (string key in resourceKeys)
+            {
+                ourStats.resourcesHandled.TryGetValue(key, out double ours);
+                otherStats.resourcesHandled.TryGetValue(key, out double other);
+                resTotal += (ours + other);
+                resDiffs += Math.Abs(ours - other);
+            }
+            double resFactor = Math.Max(0.25d, ((resTotal - resDiffs) / resTotal));
+
+            return massFactor * sizeFactor * hrFactor * resFactor;
         }
     }
 }

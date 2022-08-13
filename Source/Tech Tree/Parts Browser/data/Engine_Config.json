@@ -9459,6 +9459,27 @@
         "module_tags": []
     },
     {
+        "name": "RL10A-3-3B",
+        "title": "RL10A-3-3B",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1985",
+        "technology": "hydrolox1981",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "20000,RL10A-3-3A",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RL10A-4",
         "title": "RL10A-4",
         "description": "",

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -33,6 +34,10 @@ namespace KerbalConstructionTime
         EditorFacility FacilityBuiltIn;
         [Persistent]
         bool humanRated;
+        [Persistent]
+        PersistentDictionaryValueTypes<string, double> resourceAmounts = new PersistentDictionaryValueTypes<string, double>();
+        [Persistent]
+        PersistentHashSetValueType<string> globalTags = new PersistentHashSetValueType<string>();
 
         public BuildListVessel ToBuildListVessel()
         {
@@ -51,7 +56,9 @@ namespace KerbalConstructionTime
                 LaunchSiteIndex = LaunchPadID,
                 DesiredManifest = desiredManifest,
                 KCTPersistentID = KCTPersistentID,
-                FacilityBuiltIn = FacilityBuiltIn
+                FacilityBuiltIn = FacilityBuiltIn,
+                resourceAmounts = resourceAmounts,
+                globalTags = globalTags
             };
             return ret;
         }
@@ -81,6 +88,8 @@ namespace KerbalConstructionTime
             KCTPersistentID = blv.KCTPersistentID;
             FacilityBuiltIn = blv.FacilityBuiltIn;
             humanRated = blv.IsHumanRated;
+            resourceAmounts = blv.resourceAmounts;
+            globalTags = blv.globalTags;
             return this;
         }
     }

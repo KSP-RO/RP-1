@@ -23,60 +23,61 @@ namespace RP0.Harmony
                 // FIXME support other strategy types?
                 for (int i = 0; i < ___strategies.Count; ++i)
                 {
-                    Strategy strat = ___strategies[i];
-                    if (strat.DepartmentName != department)
+                    StrategyRP0 stratR = ___strategies[i] as StrategyRP0;
+                    if (stratR == null)
                         continue;
 
-                    if (strat.Config is StrategyConfigRP0 cfg && strat is StrategyRP0 stratR)
-                    {
-                        if (cfg.RemoveOnDeactivate)
-                        {
-                            double nameDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.Name);
-                            double tagDeactivate = 0d;
-                            if (!string.IsNullOrEmpty(cfg.RemoveOnDeactivateTag))
-                                tagDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.RemoveOnDeactivateTag);
+                    StrategyConfigRP0 cfg = stratR.ConfigRP0;
 
-                            // we are skipping the case where the strategy or its tag is active, but 
-                            // groupTags will take care of that.
-                            double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
-                            if (lastActive > 0d)
+                    if (stratR.DepartmentName != department && (string.IsNullOrEmpty(cfg.DepartmentNameAlt) || cfg.DepartmentNameAlt != department))
+                        continue;
+
+                    if (cfg.RemoveOnDeactivate)
+                    {
+                        double nameDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.Name);
+                        double tagDeactivate = 0d;
+                        if (!string.IsNullOrEmpty(cfg.RemoveOnDeactivateTag))
+                            tagDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.RemoveOnDeactivateTag);
+
+                        // we are skipping the case where the strategy or its tag is active, but 
+                        // groupTags will take care of that.
+                        double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
+                        if (lastActive > 0d)
+                        {
+                            if (cfg.ReactivateCooldown == 0d || stratR.DateDeactivated + cfg.ReactivateCooldown > KSPUtils.GetUT())
+                                continue;
+                        }
+                    }
+
+                    // Check unlock criteria
+                    if (cfg.UnlockByContractComplete.Count > 0 || cfg.UnlockByProgramComplete.Count > 0)
+                    {
+                        bool skip = true;
+                        foreach (string s in cfg.UnlockByContractComplete)
+                        {
+                            if (ProgramHandler.Instance.CompletedCCContracts.Contains(s))
                             {
-                                if (cfg.ReactivateCooldown == 0d || stratR.DateDeactivated + cfg.ReactivateCooldown > KSPUtils.GetUT())
-                                    continue;
+                                skip = false;
+                                break;
                             }
                         }
-
-
-                        // Check unlock criteria
-                        if (cfg.UnlockByContractComplete.Count > 0 || cfg.UnlockByProgramComplete.Count > 0)
+                        if (skip)
                         {
-                            bool skip = true;
-                            foreach (string s in cfg.UnlockByContractComplete)
+                            foreach (string s in cfg.UnlockByProgramComplete)
                             {
-                                if (ProgramHandler.Instance.CompletedCCContracts.Contains(s))
+                                if (ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == s) != null)
                                 {
                                     skip = false;
                                     break;
                                 }
                             }
-                            if (skip)
-                            {
-                                foreach (string s in cfg.UnlockByProgramComplete)
-                                {
-                                    if (ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == s) != null)
-                                    {
-                                        skip = false;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (skip)
-                                continue;
                         }
+
+                        if (skip)
+                            continue;
                     }
 
-                    list.Add(strat);
+                    list.Add(stratR);
                 }
 
                 __result = list;
@@ -138,15 +139,32 @@ namespace RP0.Harmony
                     _activeStrats.Add(strategy);
                 }
             }
+
+            count = _activeStrats.Count;
+            int contractorCount = 0;
+            while (count-- > 0)
+                if (_activeStrats[count].DepartmentName == "Contractor1")
+                    ++contractorCount;
+
             count = _activeStrats.Count;
             while (count-- > 0)
             {
                 Strategy strategy = _activeStrats[count];
-                int idxTargetTag = strategy.GroupTags.Length;
-                while (idxTargetTag-- > 0)
+                int idxSourceTag = groupTags.Length;
+                while (idxSourceTag-- > 0) 
                 {
-                    int idxSourceTag = groupTags.Length;
-                    while (idxSourceTag-- > 0)
+                    if (groupTags[idxSourceTag] == "Contractor")
+                    {
+                        if (contractorCount < 2)
+                            continue;
+
+                        _activeStrats.Clear();
+                        __result = true;
+                        return false;
+                    }
+
+                    int idxTargetTag = strategy.GroupTags.Length;
+                    while (idxTargetTag-- > 0)
                     {
                         if ((strategy.GroupTags[idxTargetTag] == groupTags[idxSourceTag]))
                         {

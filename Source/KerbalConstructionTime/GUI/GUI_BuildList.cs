@@ -1677,12 +1677,12 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Duplicate"))
             {
-                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true);
+                Utilities.TryAddVesselToBuildList(b.CreateCopy(false), skipPartChecks: true);
             }
 
             if (GUILayout.Button("Add to Plans"))
             {
-                AddVesselToPlansList(b.CreateCopy(true));
+                AddVesselToPlansList(b.CreateCopy(false));
             }
 
             ReconRollout blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == blvID);

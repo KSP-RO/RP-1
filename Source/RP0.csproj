@@ -255,7 +255,6 @@
     <Compile Include="KerbalConstructionTime\Utilities\WindowHelper.cs" />
     <Compile Include="KerbalConstructionTime\KerbalConstructionTime.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\KerbalConstructionTimeData.cs" />
-    <Compile Include="KerbalConstructionTime\ModIntegrations\ScrapYardWrapper.cs" />
     <Compile Include="KerbalConstructionTime\ModIntegrations\StageRecoveryWrapper.cs" />
     <Compile Include="KerbalConstructionTime\Utilities\TextureScale.cs" />
     <Compile Include="KerbalConstructionTime\ModIntegrations\ToolbarRegistration.cs" />

@@ -439,12 +439,6 @@ namespace KerbalConstructionTime
             Message.AppendLine(ship.ShipName);
             Message.AppendLine($"Please check the Storage at {ship.LC.Name} at {ship.KSC.KSCName} to launch it.");
 
-            //Add parts to the tracker
-            if (!ship.CannotEarnScience) //if the vessel was previously completed, then we shouldn't register it as a new build
-            {
-                ScrapYardWrapper.RecordBuild(ship.ExtractedPartNodes);
-            }
-
             KCTDebug.Log($"Moved vessel {ship.ShipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
 
             KCT_GUI.ResetBLWindow(false);
@@ -623,8 +617,6 @@ namespace KerbalConstructionTime
                 KCTDebug.LogError($"Error! Tried to add {blv.ShipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
                 return;
             }
-
-            ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
             try
             {
@@ -1913,33 +1905,13 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Scrapping {b.ShipName}");
             if (!b.IsFinished)
             {
-                List<ConfigNode> parts = b.ExtractedPartNodes;
                 b.RemoveFromBuildList(out _);
-
-                //only add parts that were already a part of the inventory
-                if (ScrapYardWrapper.Available)
-                {
-                    List<ConfigNode> partsToReturn = new List<ConfigNode>();
-                    foreach (ConfigNode partNode in parts)
-                    {
-                        if (ScrapYardWrapper.PartIsFromInventory(partNode))
-                        {
-                            partsToReturn.Add(partNode);
-                        }
-                    }
-                    if (partsToReturn.Any())
-                    {
-                        ScrapYardWrapper.AddPartsToInventory(partsToReturn, false);
-                    }
-                }
             }
             else
             {
                 b.RemoveFromBuildList(out _);
-                ScrapYardWrapper.AddPartsToInventory(b.ExtractedPartNodes, false);    //don't count as a recovery
             }
-            ScrapYardWrapper.SetProcessedStatus(ScrapYardWrapper.GetPartID(b.ExtractedPartNodes[0]), false);
-            Utilities.AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
+            AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
         }
 
         public static void ChangeEngineers(LCItem currentLC, int delta)

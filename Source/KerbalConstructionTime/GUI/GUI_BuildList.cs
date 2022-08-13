@@ -1376,6 +1376,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1395,6 +1396,7 @@ namespace KerbalConstructionTime
                     GUIStates.ShowDismantleLC = false;
                     GUIStates.ShowNewPad = false;
                     GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
                     GUIStates.ShowRename = false;
                     GUIStates.ShowBuildList = false;
                     GUIStates.ShowBLPlus = false;
@@ -1415,6 +1417,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = true;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1430,6 +1433,7 @@ namespace KerbalConstructionTime
                     GUIStates.ShowDismantleLC = true;
                     GUIStates.ShowNewPad = false;
                     GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
                     GUIStates.ShowRename = false;
                     GUIStates.ShowBuildList = false;
                     GUIStates.ShowBLPlus = false;
@@ -1487,6 +1491,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1513,6 +1518,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = true;
                 GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1525,6 +1531,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1670,6 +1677,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = true;
                 _newName = b.ShipName;
                 _renameType = RenameType.Vessel;

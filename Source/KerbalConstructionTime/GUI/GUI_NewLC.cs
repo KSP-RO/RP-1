@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using static RP0.UIBase;
 
 namespace KerbalConstructionTime
 {
@@ -10,6 +12,10 @@ namespace KerbalConstructionTime
         private static string _widthLimit = "2";
         private static string _lengthLimit = "2";
         private static LCItem.LCData _newLCData = new LCItem.LCData();
+        private static int _resourceCount = 0;
+        private static string[] _allResourceKeys = new string[0];
+        private static string[] _allResourceValues = new string[0];
+        private static Vector2 _resourceListScroll = new Vector2();
 
         private static void SetStrings()
         {
@@ -18,10 +24,28 @@ namespace KerbalConstructionTime
             _widthLimit = _newLCData.sizeMax.x.ToString("F0");
             _lengthLimit = _newLCData.sizeMax.z.ToString("F0");
         }
+
+        private static void SetResources()
+        {
+            if (_resourceCount == 0) GetAllResourceKeys();
+            for (int i = 0; i < _resourceCount; i++)
+            {
+                if (_newLCData.resourcesHandled.TryGetValue(_allResourceKeys[i], out double resourceValue))
+                {
+                    _allResourceValues[i] = resourceValue.ToString("N1");
+                }
+                else
+                {
+                    _allResourceValues[i] = "";
+                }
+            }
+        }
+
         private static void SetFieldsFromLCData(LCItem.LCData old)
         {
             _newLCData.SetFrom(old);
             SetStrings();
+            SetResources();
         }
 
         private static void SetFieldsFromLC(LCItem LC)
@@ -38,6 +62,14 @@ namespace KerbalConstructionTime
             _newLCData.massMax = Mathf.Ceil((float)(blv.TotalMass * 1.1d));
             _newLCData.isHumanRated = blv.IsHumanRated;
             SetStrings();
+        }
+
+        private static void GetAllResourceKeys()
+        {
+            _resourceCount = GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Count;
+            _allResourceKeys = new string[_resourceCount];
+            _allResourceValues = new string[_resourceCount];
+            GuiDataAndWhitelistItemsDatabase.ValidFuelRes.CopyTo(_allResourceKeys);
         }
 
         public static void DrawNewLCWindow(int windowID)
@@ -175,6 +207,10 @@ namespace KerbalConstructionTime
             if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
             {
                 GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Show/Hide Resources"))
+                {
+                    GUIStates.ShowLCResources = !GUIStates.ShowLCResources;
+                }
                 GUILayout.Label(" ");
                 _newLCData.isHumanRated = GUILayout.Toggle(_newLCData.isHumanRated, "Human-Rated", GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
@@ -354,6 +390,7 @@ namespace KerbalConstructionTime
                     }
                 }
                 GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowModifyLC = false;
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 300;
@@ -369,6 +406,7 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.x = (Screen.width - 150) / 2;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowModifyLC = false;
+                GUIStates.ShowLCResources = false;
                 if (!HighLogic.LoadedSceneIsEditor)
                     GUIStates.ShowBuildList = true;
             }
@@ -376,6 +414,43 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             CenterWindow(ref _centralWindowPosition);
+        }
+
+        public static void DrawLCResourcesWindow(int windowID)
+        {
+            if (_resourceCount == 0) GetAllResourceKeys();
+
+            Rect parentPos = _centralWindowPosition;
+            _lcResourcesPosition.width = 250;
+            _lcResourcesPosition.yMin = parentPos.yMin;
+            _lcResourcesPosition.height = parentPos.height;
+            _lcResourcesPosition.xMin = parentPos.xMin - _lcResourcesPosition.width;
+
+            float scrollHeight = parentPos.height-40;
+            _resourceListScroll = GUILayout.BeginScrollView(_resourceListScroll, GUILayout.Width(215), GUILayout.Height(scrollHeight));
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Resource"));
+            GUILayout.Label(new GUIContent("Amount"), GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            for (int i=0;i<_resourceCount;i++)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(new GUIContent($"{_allResourceKeys[i]}"));
+                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90));
+
+                if (!string.IsNullOrEmpty(_allResourceValues[i]))
+                {
+                    if (double.TryParse(_allResourceValues[i], out double resValue))
+                    {
+                        _newLCData.resourcesHandled[_allResourceKeys[i]] = resValue;
+                    }
+                }
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.EndScrollView();
         }
 
         private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LCItem lc)

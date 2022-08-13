@@ -163,6 +163,7 @@ namespace KerbalConstructionTime
                 
 
                 GUIStates.ShowNewLC = true;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -181,6 +182,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 _centralWindowPosition.width = 300;
             }
             GUILayout.EndHorizontal();

@@ -209,6 +209,11 @@ namespace KerbalConstructionTime
             if (!upgrading.AlreadyInProgress())
             {
                 float cost = GetMember<float>("upgradeCost");
+                upgrading.SetBP(cost);
+                upgrading.Cost = cost;
+                double rate = Utilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, upgrading.FacilityType);
+                double time = upgrading.BP / rate;
+                double costPerDay = cost / (time / 86400d);
 
                 InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                 DialogGUIBase[] options = new DialogGUIBase[2];
@@ -216,8 +221,6 @@ namespace KerbalConstructionTime
                     KCT_GUI.RemoveInputLocks();
 
                     KCTGameStates.ActiveKSC.FacilityUpgrades.Add(upgrading);
-                    upgrading.SetBP(cost);
-                    upgrading.Cost = cost;
 
                     try
                     {
@@ -234,7 +237,9 @@ namespace KerbalConstructionTime
                 });
                 options[1] = new DialogGUIButton("No", KCT_GUI.RemoveInputLocks);
                 PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradeConfirm",
-                            "Upgrade facility?",
+                            $"Upgrade facility?\nExpected cost/day: {RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.StructureConstruction, -costPerDay, 0d, 0d).GetCostLineOverride(true, false, false, true)}\n"
+                            + (GameSettings.SHOW_DEADLINES_AS_DATES ? $"Completes on {KSPUtil.PrintDate(time + RP0.KSPUtils.GetUT(), false)}"
+                                : $"Completes in {KSPUtil.PrintDateDelta(time, false)}"),
                             "Upgrade",
                             HighLogic.UISkin,
                             options),

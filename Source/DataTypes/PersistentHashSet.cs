@@ -67,5 +67,14 @@ namespace RP0.DataTypes
                 node.AddValue("item", item.ToString());
             }
         }
+
+        public PersistentHashSetValueType<T> Clone()
+        {
+            var clone = new PersistentHashSetValueType<T>();
+            foreach (var key in this)
+                clone.Add(key);
+
+            return clone;
+        }
     }
 }

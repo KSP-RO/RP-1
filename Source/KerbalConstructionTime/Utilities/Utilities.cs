@@ -2497,6 +2497,7 @@ namespace KerbalConstructionTime
                 hrFactor = 0.9d;
 
             // compare the resources handled at each complex
+            double resFactor = 1d;
             double resTotal = 0d;
             double resDiffs = 0d;
             HashSet<string> resourceKeys = new HashSet<string>();
@@ -2509,7 +2510,8 @@ namespace KerbalConstructionTime
                 resTotal += (ours + other);
                 resDiffs += Math.Abs(ours - other);
             }
-            double resFactor = Math.Max(0.25d, ((resTotal - resDiffs) / resTotal));
+            if (resTotal > 0)
+                resFactor = Math.Max(0.25d, ((resTotal - resDiffs) / resTotal));
 
             return massFactor * sizeFactor * hrFactor * resFactor;
         }

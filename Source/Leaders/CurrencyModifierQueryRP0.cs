@@ -481,7 +481,7 @@ namespace RP0
         StructureRepairAll = StructureRepair | StructureRepairLC,
 
         Subsidy = 1 << 7,
-        DailyRepDecline = 1 << 8,
+        DailyRepDecline = 1 << 8, // RepDecline
 
         PartOrUpgradeUnlock = 1 << 15, // RnDPartPurchase
         ToolingPurchase = 1 << 12,

@@ -17,6 +17,7 @@
         public bool ShowNewPad;
         public bool ShowNewLC;
         public bool ShowModifyLC;
+        public bool ShowLCResources;
         public bool ShowDismantleLC;
         public bool ShowRename;
         public bool ShowDismantlePad;
@@ -38,7 +39,7 @@
             ShowSimConfig = ShowSimBodyChooser = ShowSimulationGUI = 
             ShowClearLaunch = ShowShipRoster = ShowCrewSelect = ShowSettings = ShowDismantleLC =
             ShowUpgradeWindow = ShowPersonnelWindow = ShowBLPlus = ShowNewPad = ShowModifyLC =
-            ShowNewLC = ShowRename = ShowDismantlePad = ShowFirstRun = ShowLaunchSiteSelector = 
+            ShowNewLC = ShowLCResources = ShowRename = ShowDismantlePad = ShowFirstRun = ShowLaunchSiteSelector = 
             ShowBuildPlansWindow = ShowAirlaunch = ShowPresetSaver = false;
         }
     }

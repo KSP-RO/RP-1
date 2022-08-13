@@ -63,6 +63,37 @@ namespace RP0.Harmony
                 Administration.Instance.SetSelectedStrategy(new Administration.StrategyWrapper(leader, (UIRadioButton)null));
         }
 
+        internal static Strategy FindStrategyForDepartment(DepartmentConfig dep)
+        {
+            bool skipFirst = true;
+            foreach (var s in StrategySystem.Instance.Strategies)
+            {
+                if (!s.IsActive)
+                    continue;
+
+                if (s.Department == dep)
+                    return s;
+
+                if (s is StrategyRP0 sR && sR.ConfigRP0.DepartmentNameAlt == dep.Name)
+                {
+                    // This check is necessary because all leaders with a primary and secondary
+                    // department will be first found for the primary department.
+                    // When we search for the secondary department, we'll find a leader
+                    // that was already returned for their primary. So we need to skip them
+                    // and the *second* active leader is the one to take.
+                    if (skipFirst)
+                    {
+                        skipFirst = false;
+                        continue;
+                    }
+
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch("CreateStrategiesList")]
         internal static void Postfix_CreateStrategiesList(Administration __instance)
@@ -74,7 +105,7 @@ namespace RP0.Harmony
                 if (dep.Name == "Programs")
                     continue;
 
-                var leader = StrategySystem.Instance.Strategies.FirstOrDefault(s => s.IsActive && s.Department == dep);
+                var leader = FindStrategyForDepartment(dep);
                 if (leader == null)
                     continue;
 

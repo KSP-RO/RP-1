@@ -467,7 +467,7 @@ namespace KerbalConstructionTime
             return 1.0;
         }
 
-        public double GetValueModifier(Dictionary<string, double> dict, List<string> tags)
+        public double GetValueModifier(Dictionary<string, double> dict, IEnumerable<string> tags)
         {
             double value = 1.0;
             foreach (var name in tags)
@@ -482,7 +482,7 @@ namespace KerbalConstructionTime
         //These are all multiplied in case multiple variables exist on one part
         public double GetResourceVariable(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
 
-        public double GetGlobalVariable(List<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
+        public double GetGlobalVariable(IEnumerable<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
 
         public double GetResourceVariable(PartResourceList resources)
         {

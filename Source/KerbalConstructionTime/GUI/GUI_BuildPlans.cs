@@ -181,11 +181,11 @@ namespace KerbalConstructionTime
                             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                         }
 
-                            if (GUILayout.Button(b.ShipName))
-                            {
-                                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks : true);
-                            }
+                        if (GUILayout.Button(b.ShipName))
+                        {
+                            Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true);
                         }
+                    }
 
                     GUILayout.EndHorizontal();
                 }
@@ -213,10 +213,7 @@ namespace KerbalConstructionTime
             {
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
-            bool isHumanRated;
-            double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out isHumanRated);
-            double bp = Utilities.GetVesselBuildPoints(effCost);
-            BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL, isHumanRated)
+            BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
             };

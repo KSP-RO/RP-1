@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -30,6 +31,9 @@ namespace KerbalConstructionTime
         public string KCTPersistentID;
         public string LandedAt = "";
         private double _buildRate = -1d;
+
+        public PersistentDictionaryValueTypes<string, double> resourceAmounts = new PersistentDictionaryValueTypes<string, double>();
+        public PersistentHashSetValueType<string> globalTags = new PersistentHashSetValueType<string>();
 
         internal ShipConstruct _ship;
 
@@ -143,7 +147,7 @@ namespace KerbalConstructionTime
         /// </summary>
         public List<string> DesiredManifest { set; get; } = new List<string>();
 
-        public BuildListVessel(ShipConstruct s, string ls, double effCost, double bP, string flagURL, bool isHuman)
+        public BuildListVessel(ShipConstruct s, string ls, string flagURL)
         {
             _ship = s;
             ShipNode = s.SaveShip();
@@ -154,7 +158,9 @@ namespace KerbalConstructionTime
             Cost = Utilities.GetTotalVesselCost(ShipNode, true);
             EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
             TotalMass = Utilities.GetShipMass(s, true, out EmptyMass, out _);
-            IsHumanRated = isHuman;
+
+            EffectiveCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            BuildPoints = Formula.GetVesselBuildPoints(EffectiveCost);
 
             HashSet<int> stages = new HashSet<int>();
             NumStageParts = 0;
@@ -172,8 +178,6 @@ namespace KerbalConstructionTime
             NumStages = stages.Count;
 
             LaunchSite = ls;
-            EffectiveCost = effCost;
-            BuildPoints = bP;
             Progress = 0;
             Flag = flagURL;
             if (s.shipFacility == EditorFacility.VAB)
@@ -208,13 +212,6 @@ namespace KerbalConstructionTime
                 {
                     DesiredManifest.Add(crew?.name ?? string.Empty);
                 }
-            }
-
-            if (EffectiveCost == default)
-            {
-                // Can only happen in older saves that didn't have Effective cost persisted as a separate field
-                // This code should be safe to remove after a while.
-                EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList(), out IsHumanRated);
             }
 
             IntegrationPoints = Formula.GetIntegrationBP(this);
@@ -296,8 +293,8 @@ namespace KerbalConstructionTime
             NumStages = stages.Count;
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
-            EffectiveCost = Utilities.GetEffectiveCost(ShipNode.GetNodes("PART").ToList(), out IsHumanRated);
-            BuildPoints = Utilities.GetVesselBuildPoints(EffectiveCost);
+            EffectiveCost = GetEffectiveCost(vessel.parts);
+            BuildPoints = Formula.GetVesselBuildPoints(EffectiveCost);
             Flag = HighLogic.CurrentGame.flagURL;
 
             DistanceFromKSC = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
@@ -341,6 +338,22 @@ namespace KerbalConstructionTime
             VesselToSave.SetPosition(OriginalPosition);
             //End of Claw's code. Thanks Claw!
             return cn;
+        }
+
+        public void RecalculateFromNode(bool setValues = true)
+        {
+            bool oldHR = IsHumanRated;
+            double ec = GetEffectiveCost(ExtractedPartNodes);
+            if (setValues)
+            {
+                EffectiveCost = ec;
+                BuildPoints = Formula.GetVesselBuildPoints(EffectiveCost);
+                IntegrationPoints = Formula.GetIntegrationBP(this);
+            }
+            else
+            {
+                IsHumanRated = oldHR;
+            }
         }
 
         private ConfigNode SanitizeShipNode(ConfigNode node)
@@ -411,6 +424,8 @@ namespace KerbalConstructionTime
             {
                 ShipNode = ShipNode.CreateCopy(),
                 _lc = _lc,
+                globalTags = globalTags.Clone(),
+                resourceAmounts = resourceAmounts.Clone()
             };
 
             //refresh all inventory parts to new
@@ -433,11 +448,12 @@ namespace KerbalConstructionTime
 
             if (RecalcTime)
             {
-                ret.EffectiveCost = Utilities.GetEffectiveCost(ret.ExtractedPartNodes, out IsHumanRated);
-                ret.BuildPoints = Utilities.GetVesselBuildPoints(ret.EffectiveCost);
-                ret.IntegrationPoints = Formula.GetIntegrationBP(ret);
-                ret.IntegrationCost = (float)Formula.GetIntegrationCost(ret);
+                ret.EffectiveCost = GetEffectiveCost(ret.ExtractedPartNodes);
             }
+            // Safe to always do these, they're cheap.
+            ret.BuildPoints = Formula.GetVesselBuildPoints(ret.EffectiveCost);
+            ret.IntegrationPoints = Formula.GetIntegrationBP(ret);
+            ret.IntegrationCost = (float)Formula.GetIntegrationCost(ret);
 
             return ret;
         }
@@ -841,6 +857,252 @@ namespace KerbalConstructionTime
 
             res = Utilities.GetPartsWithPurchasability(apList);
             return res;
+        }
+
+        public double GetEffectiveCost(List<Part> parts)
+        {
+            //get list of parts that are in the inventory
+            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
+            double totalEffectiveCost = 0;
+            foreach (Part p in parts)
+            {
+                totalEffectiveCost += GetEffectiveCostInternal(p, inventorySample);
+            }
+
+            double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
+            double multipliedCost = totalEffectiveCost * globalMultiplier;
+            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+
+            return multipliedCost;
+        }
+
+
+        public double GetEffectiveCost(List<ConfigNode> parts)
+        {
+            //get list of parts that are in the inventory
+            var apList = new List<Part>();
+            foreach (ConfigNode n in parts)
+            {
+                if (Utilities.GetPartNameFromNode(n) is string pName &&
+                    Utilities.GetAvailablePartByName(pName) is AvailablePart ap)
+                    apList.Add(ap.partPrefab);
+            }
+
+            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(apList, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
+            double totalEffectiveCost = 0;
+            foreach (ConfigNode p in parts)
+            {
+                totalEffectiveCost += GetEffectiveCostInternal(p, inventorySample);
+            }
+
+            double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
+            double multipliedCost = totalEffectiveCost * globalMultiplier;
+            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+
+            return multipliedCost;
+        }
+        
+        // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
+        private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
+        {
+            dryCost = (float)GetPartCosts(p, false);
+            fuelCost = (float)GetPartCosts(p) - dryCost;
+            dryMass = p.mass;
+            double fMass = 0;
+            for (int i = p.Resources.Count; i-- > 0;)
+            {
+                PartResource res = p.Resources[i];
+                fMass += res.amount * res.info.density;
+                resources.TryGetValue(res.resourceName, out double amt);
+                amt += res.maxAmount;
+                resources[res.resourceName] = amt;
+            }
+            fuelMass = (float)fMass;
+        }
+
+        private static Dictionary<string, double> _resourceAmounts = new Dictionary<string, double>();
+        private static HashSet<string> _tags = new HashSet<string>();
+
+        private double GetEffectiveCostInternal(object o, IList<Part> inventorySample)
+        {
+            if (!(o is Part) && !(o is ConfigNode))
+                return 0;
+            if (inventorySample == null)
+                return 0;
+
+            string name = (o as Part)?.partInfo.name ?? Utilities.GetPartNameFromNode(o as ConfigNode);
+            Part partRef = o as Part ?? Utilities.GetAvailablePartByName(name).partPrefab;
+
+            float dryCost;
+            float fuelCost;
+            float dryMass;
+            float fuelMass;
+
+            if (o is ConfigNode)
+                ShipConstruction.GetPartCostsAndMass(o as ConfigNode, Utilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
+            else
+            {
+                GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass, _resourceAmounts);
+            }
+
+            float wetMass = dryMass + fuelMass;
+            float cost = dryCost + fuelCost;
+
+            double partMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
+            double moduleMultiplier = ApplyModuleCostModifiers(partRef, out bool applyResourceMods);
+
+            // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
+            double resourceMultiplier = 1d;
+
+            if (o is ConfigNode)
+            {
+                var resourceNames = applyResourceMods ? new List<string>() : null;
+                foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
+                {
+                    string rName = rNode.GetValue("name");
+                    _resourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
+                    resourceNames?.Add(rName);
+                }
+                if (applyResourceMods)
+                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
+            }
+            else if (applyResourceMods)
+                resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
+
+            GatherGlobalModifiers(_tags, partRef);
+            foreach (var s in _tags)
+                globalTags.Add(s);
+
+            foreach (var kvp in _resourceAmounts)
+            {
+                resourceAmounts.TryGetValue(kvp.Key, out double amt);
+                amt += kvp.Value;
+                resourceAmounts[kvp.Key] = amt;
+            }
+
+            double InvEff = inventorySample.Contains(partRef) ? PresetManager.Instance.ActivePreset.GeneralSettings.InventoryEffect : 0;
+            int builds = ScrapYardWrapper.GetBuildCount(partRef);
+            int used = ScrapYardWrapper.GetUseCount(partRef);
+
+            //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
+            //double effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
+            //    new Dictionary<string, string>()
+            //    {
+            //            {"C", cost.ToString()},
+            //            {"c", dryCost.ToString()},
+            //            {"M", wetMass.ToString()},
+            //            {"m", dryMass.ToString()},
+            //            {"U", builds.ToString()},
+            //            {"u", used.ToString()},
+            //            {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
+            //            {"I", InvEff.ToString()},
+            //            {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
+            //            {"PV", partMultiplier.ToString()},
+            //            {"RV", resourceMultiplier.ToString()},
+            //            {"MV", moduleMultiplier.ToString()}
+            //    });
+            // [PV]*[RV]*[MV]*[C]
+            double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
+            effectiveCost *= RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(_tags, _resourceAmounts, name);
+
+            if (InvEff != 0)
+                inventorySample.Remove(partRef);
+
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                double runTime = 0;
+                if (o is Part)
+                {
+                    foreach (PartModule modNode in (o as Part).Modules)
+                    {
+                        string s = modNode.moduleName;
+                        if (s == "TestFlightReliability_EngineCycle")
+                            runTime = Convert.ToDouble(modNode.Fields.GetValue("engineOperatingTime"));
+                        else if (s == "ModuleTestLite")
+                            runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
+                        if (runTime > 0)  //There can be more than one TestLite module per part
+                            break;
+                    }
+                }
+                else
+                {
+                    foreach (ConfigNode modNode in (o as ConfigNode).GetNodes("MODULE"))
+                    {
+                        string s = modNode.GetValue("name");
+                        if (s == "TestFlightReliability_EngineCycle")
+                            double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
+                        else if (s == "ModuleTestLite")
+                            double.TryParse(modNode.GetValue("runTime"), out runTime);
+                        if (runTime > 0) //There can be more than one TestLite module per part
+                            break;
+                    }
+                }
+                if (runTime > 0)
+                    effectiveCost = Formula.GetEngineRefurbBPMultiplier(runTime) * effectiveCost;
+            }
+
+            if (effectiveCost < 0)
+                effectiveCost = 0;
+
+            KCTDebug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
+
+            _tags.Clear();
+            _resourceAmounts.Clear();
+
+            return effectiveCost;
+        }
+
+        public static void GatherGlobalModifiers(HashSet<string> modifiers, Part p)
+        {
+            PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(modifiers, p.Modules);
+            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+                foreach (var x in pm.tags)
+                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod) && mod.globalMult != 1)
+                        modifiers.Add(mod.name);
+        }
+
+        public double ApplyGlobalCostModifiers()
+        {
+            IsHumanRated = false;
+            double costMod = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(globalTags);
+            foreach (var x in globalTags)
+            {
+                if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                {
+                    costMod *= mod.globalMult;
+                    IsHumanRated |= mod.isHumanRating;
+                }
+            }
+            return costMod;
+        }
+
+        public static double ApplyModuleCostModifiers(Part p, out bool useResourceMult)
+        {
+            double res = 1;
+            useResourceMult = true;
+            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+            {
+                foreach (var x in pm.tags)
+                {
+                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                        res *= mod.partMult;
+
+                    useResourceMult &= !x.Equals("NoResourceCostMult", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            return res;
+        }
+
+        public static double GetPartCosts(Part part, bool includeFuel = true)
+        {
+            double cost = part.partInfo.cost + part.GetModuleCosts(part.partInfo.cost);
+            foreach (PartResource rsc in part.Resources)
+            {
+                PartResourceDefinition def = PartResourceLibrary.Instance.GetDefinition(rsc.resourceName);
+                double fuel = includeFuel ? (rsc.maxAmount - rsc.amount) : rsc.maxAmount;
+                cost -= fuel * def.unitCost;
+            }
+            return cost;
         }
 
         public bool AreAllPartsUnlocked() => GetPartsWithPurchasability().Values.All(v => v.Status == PurchasabilityStatus.Purchased);

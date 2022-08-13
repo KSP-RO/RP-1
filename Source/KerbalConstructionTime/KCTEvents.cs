@@ -83,10 +83,6 @@ namespace KerbalConstructionTime
             GameEvents.StageManager.OnGUIStageSequenceModified.Add(StagingOrderChangedEvent);
             GameEvents.StageManager.OnPartUpdateStageability.Add(PartStageabilityChangedEvent);
 
-            GameEvents.FindEvent<EventVoid>("OnSYInventoryAppliedToVessel")?.Add(SYInventoryApplied);
-            GameEvents.FindEvent<EventVoid>("OnSYReady")?.Add(SYReady);
-            GameEvents.FindEvent<EventData<Part>>("OnSYInventoryAppliedToPart")?.Add(OnSYInventoryAppliedToPart);
-
             GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubsceneAndHide);
@@ -231,34 +227,6 @@ namespace KerbalConstructionTime
         public void FacilityContextMenuSpawn(KSCFacilityContextMenu menu)
         {
             KerbalConstructionTime.Instance.OnFacilityContextMenuSpawn(menu);
-        }
-
-        private void SYInventoryApplied()
-        {
-            KCTDebug.Log("Inventory was applied. Recalculating.");
-            if (HighLogic.LoadedSceneIsEditor)
-            {
-                KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            }
-        }
-
-        private void SYReady()
-        {
-            if (HighLogic.LoadedSceneIsEditor && KCTGameStates.EditorShipEditingMode && KCTGameStates.EditedVessel != null)
-            {
-                KCTDebug.Log("Removing SY tracking of this vessel.");
-                string id = ScrapYardWrapper.GetPartID(KCTGameStates.EditedVessel.ExtractedPartNodes[0]);
-                ScrapYardWrapper.SetProcessedStatus(id, false);
-
-                KCTDebug.Log("Adding parts back to inventory for editing...");
-                foreach (ConfigNode partNode in KCTGameStates.EditedVessel.ExtractedPartNodes)
-                {
-                    if (ScrapYardWrapper.PartIsFromInventory(partNode))
-                    {
-                        ScrapYardWrapper.AddPartToInventory(partNode, false);
-                    }
-                }
-            }
         }
 
         private void ShipModifiedEvent(ShipConstruct vessel)
@@ -466,38 +434,8 @@ namespace KerbalConstructionTime
                 //KCTDebug.LogError("Recovered vessel, " + KCTGameStates.RecoveredVessel.ShipName +", doesn't match!");
                 return;
             }
-            //rebuy the ship if ScrapYard isn't overriding funds
-            if (!ScrapYardWrapper.OverrideFunds)
-            {
-                Utilities.SpendFunds(KCTGameStates.RecoveredVessel.Cost, TransactionReasons.VesselRollout);    //pay for the ship again
-            }
-
-            //pull all of the parts out of the inventory
-            //This is a bit funky since we grab the part id from our part, grab the inventory part out, then try to reapply that ontop of our part
-            if (ScrapYardWrapper.Available)
-            {
-                foreach (ConfigNode partNode in KCTGameStates.RecoveredVessel.ExtractedPartNodes)
-                {
-                    string id = ScrapYardWrapper.GetPartID(partNode);
-                    ConfigNode inventoryVersion = ScrapYardWrapper.FindInventoryPart(id);
-                    if (inventoryVersion != null)
-                    {
-                        //apply it to our copy of the part
-                        ConfigNode ourTracker = partNode.GetNodes("MODULE").FirstOrDefault(n => string.Equals(n.GetValue("name"), "ModuleSYPartTracker", StringComparison.Ordinal));
-                        if (ourTracker != null)
-                        {
-                            ourTracker.SetValue("TimesRecovered", inventoryVersion.GetValue("_timesRecovered"));
-                            ourTracker.SetValue("Inventoried", inventoryVersion.GetValue("_inventoried"));
-                        }
-                    }
-                }
-
-                //process the vessel in ScrapYard
-                ScrapYardWrapper.ProcessVessel(KCTGameStates.RecoveredVessel.ExtractedPartNodes);
-
-                //reset the BP
-                KCTGameStates.RecoveredVessel.RecalculateFromNode();
-            }
+            //rebuy the ship
+            Utilities.SpendFunds(KCTGameStates.RecoveredVessel.Cost, TransactionReasons.VesselRollout);    //pay for the ship again
 
             LCItem targetLC = KCTGameStates.RecoveredVessel.LC;
             if (targetLC == null)

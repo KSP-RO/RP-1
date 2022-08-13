@@ -2204,8 +2204,23 @@ namespace KerbalConstructionTime
             {
                 ourStats.resourcesHandled.TryGetValue(key, out double ours);
                 otherStats.resourcesHandled.TryGetValue(key, out double other);
-                resTotal += (ours + other);
-                resDiffs += Math.Abs(ours - other);
+                double massOurs = ours;
+                double massOther = other;
+                PartResourceDefinition resDef = PartResourceLibrary.Instance.GetDefinition(key);
+                if (resDef != null)
+                {
+                    massOurs *= resDef.density;
+                    massOther *= resDef.density;
+                }
+                else
+                {
+                    KCTDebug.Log($"Unable to find resource definition for {key}");
+                }
+                if (massOther == 0) massOurs *= 2;
+                if (massOurs == 0) massOther *= 2;
+
+                resTotal += (massOurs + massOther);
+                resDiffs += Math.Abs(massOurs - massOther);
             }
             if (resTotal > 0)
                 resFactor = Math.Max(0.25d, ((resTotal - resDiffs) / resTotal));

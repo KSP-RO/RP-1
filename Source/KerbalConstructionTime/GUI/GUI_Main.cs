@@ -11,6 +11,7 @@ namespace KerbalConstructionTime
 
         private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 150, 50);
         private static Rect _blPlusPosition = new Rect(Screen.width - 500, 40, 100, 1);
+        private static Rect _lcResourcesPosition = new Rect(_centralWindowPosition.xMin - 150, _centralWindowPosition.yMin, 250, 200);
         private static Vector2 _scrollPos;
         private static Vector2 _scrollPos2;
         private static GUISkin _windowSkin;
@@ -79,6 +80,8 @@ namespace KerbalConstructionTime
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewLCWindow", "New Launch Complex", DrawNewLCWindow);
                 if (GUIStates.ShowModifyLC)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawModifyLCWindow", "Modify Launch Complex", DrawNewLCWindow);
+                if (GUIStates.ShowLCResources)
+                    _lcResourcesPosition = DrawWindowWithTooltipSupport(_lcResourcesPosition, "DrawLCResourcesWindow", "Resources", DrawLCResourcesWindow);
                 if (GUIStates.ShowFirstRun)
                     _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Space Center Setup", DrawFirstRun);
                 if (GUIStates.ShowPresetSaver)
@@ -112,7 +115,7 @@ namespace KerbalConstructionTime
                 }
 
                 //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
+                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowLCResources || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
                 {
                     if (!_isKSCLocked)
                     {
@@ -247,6 +250,7 @@ namespace KerbalConstructionTime
             GUIStates.ShowDismantlePad = false;
             GUIStates.ShowDismantleLC = false;
             GUIStates.ShowNewLC = false;
+            GUIStates.ShowLCResources = false;
             GUIStates.ShowNewPad = false;
             GUIStates.ShowModifyLC = false;
             GUIStates.ShowFirstRun = false;

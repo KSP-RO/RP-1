@@ -1,0 +1,752 @@
+STRATEGY
+{
+	name = leaderVonBraunAdmin
+	RP0conf = True
+	title = Wernher von Braun
+	desc = Wernher von Braun did things. Some good, some VERY BAD.
+	department = Administration
+	icon = RP-0/Strategies/Leaders/WernherVonBraun_ICON
+	iconDepartment = RP-0/Strategies/Leaders/WernherVonBraun
+
+	// Conflicts with any other Engineering leader,
+	// and Von Braun if in use in any other slot.
+	groupTag = Administration,leaderVonBraun
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderVonBraun
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Confidence
+		effectDescription = gained from contracts
+		multiplier = 1.05
+		transactionReasons
+		{
+			item = ContractReward
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Confidence
+		effectDescription = gained from science
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = ScienceTransmission
+			item = VesselRecovery
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Reputation
+		effectDescription = gained from contracts
+		multiplier = 1.05
+		transactionReasons
+		{
+			item = ContractReward
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		locStringOverride = #rp0LeaderEffectCurrencyModifierIntegrationRate
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = RateIntegration
+		}
+	}
+	
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of vessel rollout or airlaunch
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = RateVesselPrep
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderVonBraunEngineering
+	RP0conf = True
+	title = Wernher von Braun
+	desc = Wernher von Braun did things. Some good, some VERY BAD.
+	department = Engineering
+	icon = RP-0/Strategies/Leaders/WernherVonBraun_ICON
+	iconDepartment = RP-0/Strategies/Leaders/WernherVonBraun
+
+	// Conflicts with any other Engineering leader,
+	// and Von Braun if in use in any other slot.
+	groupTag = Engineering,leaderVonBraun
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderVonBraun
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Confidence
+		effectDescription = gained from contracts
+		multiplier = 1.05
+		transactionReasons
+		{
+			item = ContractReward
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Confidence
+		effectDescription = gained from science
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = ScienceTransmission
+			item = VesselRecovery
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Reputation
+		effectDescription = gained from contracts
+		multiplier = 1.05
+		transactionReasons
+		{
+			item = ContractReward
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		locStringOverride = #rp0LeaderEffectCurrencyModifierIntegrationRate
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = RateIntegration
+		}
+	}
+	
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of vessel rollout or airlaunch
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = RateVesselPrep
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderKorolevAdmin
+	RP0conf = True
+	title = Sergei Korolev
+	desc = Sergei Korolev turned his back, and Voskhod was the result.
+	department = Administration
+	icon = RP-0/Strategies/Leaders/SergeiKorolev_ICON
+	iconDepartment = RP-0/Strategies/Leaders/SergeiKorolev
+  
+	groupTag = Administration,leaderKorolev
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderKorolev
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Reputation
+		effectDescription = gained/lost for program early/late completion
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = ProgramCompletion
+		}
+	}
+	
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Reputation
+		effectDescription = gained from contracts
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = ContractReward
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Funds
+		effectDescription = reduction in salary costs.
+		flipPositive = true
+		multiplier = 0.9
+		transactionReasons
+		{
+			item = Salary
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Funds
+		effectDescription = reduction in program ongoing funding
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = ProgramFunding
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Funds
+		effectDescription = cost to hire engineers
+		flipPositive = true
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = HiringEngineers
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderKorolevEngineering
+	RP0conf = True
+	title = Sergei Korolev
+	desc = Sergei Korolev turned his back, and Voskhod was the result.
+	department = Engineering
+	icon = RP-0/Strategies/Leaders/SergeiKorolev_ICON
+	iconDepartment = RP-0/Strategies/Leaders/SergeiKorolev
+  
+	groupTag = Engineering,leaderKorolev
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderKorolev
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Reputation
+		effectDescription = gained/lost for program early/late completion
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = ProgramCompletion
+		}
+	}
+	
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Reputation
+		effectDescription = gained from contracts
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = ContractReward
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Funds
+		effectDescription = reduction in salary costs.
+		flipPositive = true
+		multiplier = 0.9
+		transactionReasons
+		{
+			item = Salary
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Funds
+		effectDescription = reduction in program ongoing funding
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = ProgramFunding
+		}
+	}
+
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Funds
+		effectDescription = cost to hire engineers
+		flipPositive = true
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = HiringEngineers
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderVBarminEngineering
+	RP0conf = True
+	title = Vladimir Barmin
+	desc = Vladimir Pavlovich Barmin was an outstanding Soviet scientist in the field of mechanics and rocket engineering. Barmin is best known for designing the first rocket Launch Complex in the world at Baikonur. He also went on to design the launch facilities for the N1 and Energia rockets.
+	department = Engineering
+	icon = RP-0/Strategies/Leaders/VladimirBarmin_ICON
+	iconDepartment = RP-0/Strategies/Leaders/VladimirBarmin
+  
+	// Leaders need to have the department *twice* here.
+	groupTag = Engineering,leaderVBarmin
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderVBarmin
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Funds
+		effectDescription = reduction in the cost of launch complex construction and maintenance
+		flipPositive = true
+		multiplier = 0.95
+		transactionReasons
+		{
+			item = StructureRepairLC
+			item = StructureConstructionLC
+		}
+	}
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of constructing/modifying launch complexes
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = StructureConstructionLC
+		}
+	}
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of rolling out a rocket
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = RateRollout
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderGlushkoAdmin
+	RP0conf = True
+	title = Valentin Glushko
+	desc = Valentin Petrovich Glushko was a Soviet engineer of Ukrainian ethnicity and the designer of rocket engines in the Soviet space program during the heights of the Space Race between United States and the former Soviet Union. He is known for designing some of the best engines the world has ever seen, including the RD-107/108, the most powerful rocket engine ever built, the RD-170, and the RD-253 used on the Proton Rocket. His major fault was not believing that Hydrolox was a suitable propellant for a space engine.
+	department = Administration
+	icon = RP-0/Strategies/Leaders/ValentinGlushko_ICON
+	iconDepartment = RP-0/Strategies/Leaders/ValentinGlushko
+  
+	// Leaders need to have the department *twice* here.
+	groupTag = Administration,leaderGlushko
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderGlushko
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+		
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = early and orbital rocket engine   
+		nodeTypes
+		{
+			typeNode = RocketEngines
+		}
+	}
+	
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = staged combustion engine    
+		nodeTypes
+		{
+			typeNode = Staged
+		}
+	}
+
+	
+	EFFECT
+	{
+		name = EffectiveCostModifier
+		multiplier = 0.909090909091 // +10% speed
+		effectDescription = pump-fed liquid rocket engines
+		appliesToParts = true
+		tags
+		{
+			item = EngineLiquidTurbo
+		}
+	}
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 0.9
+		effectDescription = hydrolox engines
+		nodeTypes
+		{
+			typeNode = Hydrolox
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderGlushkoEngineer
+	RP0conf = True
+	title = Valentin Glushko
+	desc = Valentin Petrovich Glushko was a Soviet engineer of Ukrainian ethnicity and the designer of rocket engines in the Soviet space program during the heights of the Space Race between United States and the former Soviet Union. He is known for designing some of the best engines the world has ever seen, including the RD-107/108, the most powerful rocket engine ever built, the RD-170, and the RD-253 used on the Proton Rocket. His major fault was not believing that Hydrolox was a suitable propellant for a space engine.
+	department = Engineering
+	icon = RP-0/Strategies/Leaders/ValentinGlushko_ICON
+	iconDepartment = RP-0/Strategies/Leaders/ValentinGlushko
+  
+	// Leaders need to have the department *twice* here.
+	groupTag = Engineering,leaderGlushko
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderGlushko
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = early and orbital rocket engine   
+		nodeTypes
+		{
+			typeNode = RocketEngines
+		}
+	}
+	
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = staged combustion engine    
+		nodeTypes
+		{
+			typeNode = Staged
+		}
+	}
+
+	
+	EFFECT
+	{
+		name = EffectiveCostModifier
+		multiplier = 0.909090909091 // +10% speed
+		effectDescription = pump-fed liquid rocket engines
+		appliesToParts = true
+		tags
+		{
+			item = EngineLiquidTurbo
+		}
+	}
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 0.9
+		effectDescription = hydrolox engines
+		nodeTypes
+		{
+			typeNode = Hydrolox
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderYangelAdmin
+	RP0conf = True
+	title = Mikhail Yangel
+	desc = Mikhail Kuzmich Yangel was a Soviet engineer born in Irkutsk who was the leading designer in the missile program of the former Soviet Union. Yangel was responsible for developing the Kosmos, Tsyklon and Dnepr space launch vehicles, derived from ICBM missiles. He was a pioneer of using storable hypergolic fuels.
+	department = Administration
+	icon = RP-0/Strategies/Leaders/MikhailYangel_ICON
+	iconDepartment = RP-0/Strategies/Leaders/MikhailYangel
+  
+	// Leaders need to have the department *twice* here.
+	groupTag = Administration,leaderYangel
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderYangel
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = early and orbital rocket engine
+		nodeTypes
+		{
+			typeNode = RocketEngines
+		}
+	}
+	EFFECT
+	{
+		name = EffectiveCostModifier
+		multiplier = 0.95238095238 // +5% speed
+		effectDescription = pump-fed liquid rocket engines
+		appliesToParts = true
+		tags
+		{
+			item = EngineLiquidTurbo
+		}
+	}
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.1
+		effectDescription = RCS thrusters
+		nodeTypes
+		{
+			typeNode = RCS
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderYangelEngineer
+	RP0conf = True
+	title = Mikhail Yangel
+	desc = Mikhail Kuzmich Yangel was a Soviet engineer born in Irkutsk who was the leading designer in the missile program of the former Soviet Union. Yangel was responsible for developing the Kosmos, Tsyklon and Dnepr space launch vehicles, derived from ICBM missiles. He was a pioneer of using storable hypergolic fuels.
+	department = Engineering
+	icon = RP-0/Strategies/Leaders/MikhailYangel_ICON
+	iconDepartment = RP-0/Strategies/Leaders/MikhailYangel
+  
+	// Leaders need to have the department *twice* here.
+	groupTag = Engineering,leaderYangel
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderYangel
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = early and orbital rocket engine
+		nodeTypes
+		{
+			typeNode = RocketEngines
+		}
+	}
+	EFFECT
+	{
+		name = EffectiveCostModifier
+		multiplier = 0.95238095238 // +5% speed
+		effectDescription = pump-fed liquid rocket engines
+		appliesToParts = true
+		tags
+		{
+			item = EngineLiquidTurbo
+		}
+	}
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.1
+		effectDescription = RCS thrusters
+		nodeTypes
+		{
+			typeNode = RCS
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderChelomeyAdmin
+	RP0conf = True
+	title = Vladimir Chelomey
+	desc = Vladimir Nikolayevich Chelomey was a Soviet engineer of Ukranian ethnicity. Chelomey invented the first Soviet pulse jet engine and created the UR-XXX series of rockets which included the UR-500 Proton. The Proton is the second most flown rocket in the world, only recently losing the distinction of #1 to the Falcon 9. Chelomey was also instrumental in working on the Almaz Space Stations which became the basis of the Salyut, Mir and Zvezda space stations.
+	department = Administration
+	icon = RP-0/Strategies/Leaders/VladimirChelomey_ICON
+	iconDepartment = RP-0/Strategies/Leaders/VladimirChelomey
+  
+	// Leaders need to have the department *twice* here.
+	groupTag = Administration,leaderChelomey
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderChelomey
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.1
+		effectDescription = staged combustion engine
+		nodeTypes
+		{
+			typeNode = Staged
+		}
+	}
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = space station technology
+		nodeTypes
+		{
+			typeNode = Stations
+		}
+	}
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of vessel integration in a launch complex 
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = RateIntegrationVAB
+		}
+	}
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of vessel rollout
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = RateRollout
+		}
+	}
+}
+
+STRATEGY
+{
+	name = leaderChelomeyEngineer
+	RP0conf = True
+	title = Vladimir Chelomey
+	desc = Vladimir Nikolayevich Chelomey was a Soviet engineer of Ukranian ethnicity. Chelomey invented the first Soviet pulse jet engine and created the UR-XXX series of rockets which included the UR-500 Proton. The Proton is the second most flown rocket in the world, only recently losing the distinction of #1 to the Falcon 9. Chelomey was also instrumental in working on the Almaz Space Stations which became the basis of the Salyut, Mir and Zvezda space stations.
+	department = Engineering
+	icon = RP-0/Strategies/Leaders/VladimirChelomey_ICON
+	iconDepartment = RP-0/Strategies/Leaders/VladimirChelomey
+  
+	// Leaders need to have the department *twice* here.
+	groupTag = Engineering,leaderChelomey
+
+	removeOnDeactivate = True
+	removeOnDeactivateTag = leaderChelomey
+  
+	minDuration = 2592000 // 30 days
+	maxDuration = 315576000 // 10 years
+	reactivateCooldown = 31557600 // 1 year
+	
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.1
+		effectDescription = staged combustion engine
+		nodeTypes
+		{
+			typeNode = Staged
+		}
+	}
+	EFFECT
+	{
+		name = ResearchRateModifier
+		multiplier = 1.05
+		effectDescription = space station technology
+		nodeTypes
+		{
+			typeNode = Stations
+		}
+	}
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of vessel integration in a launch complex 
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = RateIntegrationVAB
+		}
+	}
+	EFFECT
+	{
+		name = CurrencyModifier
+		currency = Rate
+		effectDescription = of vessel rollout
+		multiplier = 1.1
+		transactionReasons
+		{
+			item = RateRollout
+		}
+	}
+}

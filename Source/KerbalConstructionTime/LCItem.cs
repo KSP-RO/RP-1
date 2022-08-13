@@ -399,12 +399,12 @@ namespace KerbalConstructionTime
             var listItem = new BuildListStorageItem();
             ConfigNode.LoadObjectFromConfig(listItem, cn);
             BuildListVessel blv = listItem.ToBuildListVessel();
+            blv.ShipNode = cn.GetNode("ShipNode");
+            blv.LC = this;
             if (KCTGameStates.LoadedSaveVersion < 10)
             {
                 blv.RecalculateFromNode(false);
             }
-            blv.ShipNode = cn.GetNode("ShipNode");
-            blv.LC = this;
             blv.UpdateBuildRate();
             return blv;
         }

@@ -428,12 +428,6 @@ namespace KerbalConstructionTime
                 resourceAmounts = resourceAmounts.Clone()
             };
 
-            //refresh all inventory parts to new
-            foreach (var p in ret.ExtractedPartNodes)
-            {
-                ScrapYardWrapper.RefreshPart(p);
-            }
-
             ret.Id = Guid.NewGuid();
             ret.KCTPersistentID = Guid.NewGuid().ToString("N");
             ret.TotalMass = TotalMass;
@@ -861,12 +855,10 @@ namespace KerbalConstructionTime
 
         public double GetEffectiveCost(List<Part> parts)
         {
-            //get list of parts that are in the inventory
-            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
             double totalEffectiveCost = 0;
             foreach (Part p in parts)
             {
-                totalEffectiveCost += GetEffectiveCostInternal(p, inventorySample);
+                totalEffectiveCost += GetEffectiveCostInternal(p);
             }
 
             double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
@@ -879,20 +871,10 @@ namespace KerbalConstructionTime
 
         public double GetEffectiveCost(List<ConfigNode> parts)
         {
-            //get list of parts that are in the inventory
-            var apList = new List<Part>();
-            foreach (ConfigNode n in parts)
-            {
-                if (Utilities.GetPartNameFromNode(n) is string pName &&
-                    Utilities.GetAvailablePartByName(pName) is AvailablePart ap)
-                    apList.Add(ap.partPrefab);
-            }
-
-            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(apList, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
             double totalEffectiveCost = 0;
             foreach (ConfigNode p in parts)
             {
-                totalEffectiveCost += GetEffectiveCostInternal(p, inventorySample);
+                totalEffectiveCost += GetEffectiveCostInternal(p);
             }
 
             double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
@@ -923,11 +905,9 @@ namespace KerbalConstructionTime
         private static Dictionary<string, double> _resourceAmounts = new Dictionary<string, double>();
         private static HashSet<string> _tags = new HashSet<string>();
 
-        private double GetEffectiveCostInternal(object o, IList<Part> inventorySample)
+        private double GetEffectiveCostInternal(object o)
         {
             if (!(o is Part) && !(o is ConfigNode))
-                return 0;
-            if (inventorySample == null)
                 return 0;
 
             string name = (o as Part)?.partInfo.name ?? Utilities.GetPartNameFromNode(o as ConfigNode);
@@ -980,10 +960,7 @@ namespace KerbalConstructionTime
                 resourceAmounts[kvp.Key] = amt;
             }
 
-            double InvEff = inventorySample.Contains(partRef) ? PresetManager.Instance.ActivePreset.GeneralSettings.InventoryEffect : 0;
-            int builds = ScrapYardWrapper.GetBuildCount(partRef);
-            int used = ScrapYardWrapper.GetUseCount(partRef);
-
+            
             //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
             //double effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
             //    new Dictionary<string, string>()
@@ -1004,9 +981,6 @@ namespace KerbalConstructionTime
             // [PV]*[RV]*[MV]*[C]
             double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
             effectiveCost *= RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(_tags, _resourceAmounts, name);
-
-            if (InvEff != 0)
-                inventorySample.Remove(partRef);
 
             if (HighLogic.LoadedSceneIsEditor)
             {

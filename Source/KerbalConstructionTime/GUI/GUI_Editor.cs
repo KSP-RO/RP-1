@@ -192,9 +192,8 @@ namespace KerbalConstructionTime
             if (_finishedShipBP < 0 && ship.IsFinished)
             {
                 // If ship is finished, then both build and integration times can be refreshed with newly calculated values
-                _finishedShipBP = Utilities.GetVesselBuildPoints(ship.ExtractedPartNodes);
-                ship.BuildPoints = _finishedShipBP;
-                ship.IntegrationPoints = Formula.GetIntegrationBP(ship);
+                ship.RecalculateFromNode();
+                _finishedShipBP = ship.BuildPoints;
             }
 
             Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
@@ -262,10 +261,7 @@ namespace KerbalConstructionTime
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
 
-                bool isHumanRated;
-                double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts, out isHumanRated);
-                double bp = Utilities.GetVesselBuildPoints(effCost);
-                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL, isHumanRated);
+                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
                 KCTGameStates.LaunchedVessel.LCID = ship.LC.ID;
             }
             GUILayout.EndHorizontal();

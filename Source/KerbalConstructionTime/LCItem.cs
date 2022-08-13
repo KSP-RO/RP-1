@@ -56,7 +56,7 @@ namespace KerbalConstructionTime
                 sizeMax = old.sizeMax;
                 lcType = old.lcType;
                 isHumanRated = old.isHumanRated;
-                foreach (var kvp in old.resourcesHandled) { resourcesHandled[kvp.Key] = kvp.Value; }
+                foreach (string key in old.resourcesHandled.Keys.ToList()) { resourcesHandled[key] = old.resourcesHandled[key]; }
             }
 
             public void SetFrom(LCItem lc)

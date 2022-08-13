@@ -39,8 +39,8 @@ namespace RP0.Programs
 
         protected override string GetEffectText()
         {
-            bool extendedInfo = NextTextIsShowSelected;
-            NextTextIsShowSelected = false;
+            bool extendedInfo = ShowExtendedInfo;
+            ShowExtendedInfo = false;
 
             if (_program == null)
                 return "Error finding program!";

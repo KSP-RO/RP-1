@@ -7,7 +7,7 @@ namespace RP0
 {
     public class StrategyRP0 : Strategies.Strategy
     {
-        public bool NextTextIsShowSelected = false;
+        public bool ShowExtendedInfo = false;
 
         // Reflection of private fields
         private static FieldInfo isActive = typeof(Strategy).GetField("isActive", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -150,12 +150,15 @@ namespace RP0
                     text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}</color>\n\n";
             }
 
+            // We'll use the ShowExtendedInfo field to signal we need to print title too
+            bool wasExtended = ShowExtendedInfo;
+            ShowExtendedInfo = extendedInfo;
             text += RichTextUtil.Title(Localizer.GetStringByTag("#autoLOC_304560"));
-
             foreach (StrategyEffect strategyEffect in Effects)
             {
                 text += "<b><color=#" + RUIutils.ColorToHex(RichTextUtil.colorParams) + ">* " + strategyEffect.Description + "</color></b>\n";
             }
+            ShowExtendedInfo = wasExtended;
 
             text += "\n";
             if (IsActive)
@@ -219,15 +222,15 @@ namespace RP0
 
         protected override string GetText()
         {
-            bool extendedInfo = NextTextIsShowSelected;
-            NextTextIsShowSelected = false;
+            bool extendedInfo = ShowExtendedInfo;
+            ShowExtendedInfo = false;
             return ConstructText(extendedInfo, true, true);
         }
 
         protected override string GetEffectText()
         {
-            bool extendedInfo = NextTextIsShowSelected;
-            NextTextIsShowSelected = false;
+            bool extendedInfo = ShowExtendedInfo;
+            ShowExtendedInfo = false;
             return ConstructText(extendedInfo, false, false);
         }
     }

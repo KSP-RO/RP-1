@@ -251,8 +251,6 @@ namespace KerbalConstructionTime
                 ScreenMessages.PostScreenMessage(message);
             }
             blv.LC.Plans.Add(blv.ShipName, blv);
-            
-            ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
 
             KCTDebug.Log($"Added {blv.ShipName} to {blv.LC.Name} plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
             KCTDebug.Log($"Launch site is {blv.LaunchSite}");

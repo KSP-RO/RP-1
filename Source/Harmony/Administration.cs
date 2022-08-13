@@ -432,5 +432,13 @@ namespace RP0.Harmony
                 AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Leaders);
             }
         }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("UpdateStrategyCount")]
+        internal static bool Prefix_UpdateStrategyCount(Administration __instance)
+        {
+            __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
+            return false;
+        }
     }
 }

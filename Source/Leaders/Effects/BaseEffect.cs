@@ -15,6 +15,9 @@ namespace RP0.Leaders
         protected string locStringOverride = string.Empty;
 
         [Persistent]
+        protected string effectTitle = string.Empty;
+
+        [Persistent]
         protected double multiplier = 1d;
 
         [Persistent]
@@ -34,7 +37,12 @@ namespace RP0.Leaders
 
         protected override string GetDescription()
         {
-            return $"<color={(IsPositive ? _GoodColor : _BadColor)}>{DescriptionString()}</color>";
+            string retStr = $"<color={(IsPositive ? _GoodColor : _BadColor)}>{DescriptionString()}</color>";
+
+            if (Parent is StrategyRP0 sr && sr.ShowExtendedInfo && !string.IsNullOrEmpty(effectTitle))
+                retStr = effectTitle + "\n  " + retStr;
+
+            return retStr;
         }
 
         protected override void OnLoadFromConfig(ConfigNode node)

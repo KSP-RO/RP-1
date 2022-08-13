@@ -41,7 +41,7 @@ namespace RP0.Harmony
 
             foreach (var strat in Strategies.StrategySystem.Instance.GetStrategies("Programs"))
             {
-                if (!strat.IsActive && strat is ProgramStrategy ps)
+                if (strat is ProgramStrategy ps && !ps.Program.IsActive && !ps.Program.IsComplete)
                 {
                     ps.Program.SetBestAllowableSpeed();
                 }
@@ -307,7 +307,7 @@ namespace RP0.Harmony
                 // Reset program speeds
                 foreach (var strat in StrategySystem.Instance.Strategies)
                 {
-                    if (!strat.IsActive && strat != newActiveStrat && strat is ProgramStrategy ps && !ps.IsActive)
+                    if (!strat.IsActive && strat != newActiveStrat && strat is ProgramStrategy ps && !ps.Program.IsActive && !ps.Program.IsComplete)
                         ps.Program.SetBestAllowableSpeed();
                 }
                 createStratList.Invoke(Administration.Instance, new object[] { StrategySystem.Instance.SystemConfig.Departments });

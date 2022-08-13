@@ -10,6 +10,10 @@ namespace RP0
         public static Dictionary<string, double> ActivatedStrategies = new Dictionary<string, double>();
 
         [Persistent]
+        protected string departmentNameAlt;
+        public string DepartmentNameAlt => departmentNameAlt;
+
+        [Persistent]
         protected string iconDepartment;
         public string IconDepartment => iconDepartment;
 

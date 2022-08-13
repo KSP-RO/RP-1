@@ -139,6 +139,25 @@ namespace KerbalConstructionTime
             return rate * yearToSec;
         }
 
+        public static double GetVesselBuildPoints(double totalEffectiveCost)
+        {
+            //var formulaParams = new Dictionary<string, string>()
+            //{
+            //    { "E", totalEffectiveCost.ToString() },
+            //    { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() }
+            //};
+            //double finalBP = MathParser.GetStandardFormulaValue("BP", formulaParams);
+            // 1000 + (([E]^0.95)*216*min(1,max(0.5,([E]-500)/1500))) + ((max(0,[E]-50000)^1.4)*0.864)
+            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 500d) / 1500d, 0.5d, 1d);
+            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 0.95) * 216 * bpScalar;
+            double powScalar = totalEffectiveCost - 50000d;
+            if (powScalar > 0)
+                finalBP += Math.Pow(totalEffectiveCost, 1.4d) * 0.864d;
+
+            KCTDebug.Log($"BP: {finalBP}");
+            return finalBP;
+        }
+
         public static double GetRolloutCost(BuildListVessel vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)

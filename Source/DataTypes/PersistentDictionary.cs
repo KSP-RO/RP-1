@@ -108,6 +108,15 @@ namespace RP0.DataTypes
             }
         }
 
+        public PersistentDictionaryValueTypes<TKey, TValue> Clone()
+        {
+            var dict = new PersistentDictionaryValueTypes<TKey, TValue>();
+            foreach (var kvp in this)
+                dict.Add(kvp.Key, kvp.Value);
+
+            return dict;
+        }
+
         public static bool AreEqual(Dictionary<TKey, TValue> d1, Dictionary<TKey, TValue> d2)
         {
             if (d1.Count != d2.Count) return false;
@@ -117,6 +126,5 @@ namespace RP0.DataTypes
 
             return true;
         }
-
     }
 }

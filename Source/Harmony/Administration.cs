@@ -239,7 +239,7 @@ namespace RP0.Harmony
         {
             if (wrapper.strategy is StrategyRP0 s)
             {
-                s.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
+                s.ShowExtendedInfo = true; // pass through we're about to print the long-form description.
             }
             if (wrapper.strategy is ProgramStrategy ps)
             {

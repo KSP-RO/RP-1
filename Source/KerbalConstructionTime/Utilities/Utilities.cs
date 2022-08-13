@@ -2198,8 +2198,11 @@ namespace KerbalConstructionTime
             double resTotal = 0d;
             double resDiffs = 0d;
             HashSet<string> resourceKeys = new HashSet<string>();
-            ourStats.resourcesHandled.Keys.Select(x => resourceKeys.Add(x));
-            otherStats.resourcesHandled.Keys.Select(x => resourceKeys.Add(x));
+            foreach (var r in ourStats.resourcesHandled.Keys)
+                resourceKeys.Add(r);
+            foreach (var r in otherStats.resourcesHandled.Keys)
+                resourceKeys.Add(r);
+
             foreach (string key in resourceKeys)
             {
                 ourStats.resourcesHandled.TryGetValue(key, out double ours);

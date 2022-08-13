@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using UniLinq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
@@ -2497,6 +2497,7 @@ namespace KerbalConstructionTime
                 hrFactor = 0.9d;
 
             // compare the resources handled at each complex
+            double resFactor = 1d;
             double resTotal = 0d;
             double resDiffs = 0d;
             HashSet<string> resourceKeys = new HashSet<string>();
@@ -2524,7 +2525,8 @@ namespace KerbalConstructionTime
                 resTotal += (massOurs + massOther);
                 resDiffs += Math.Abs(massOurs - massOther);
             }
-            double resFactor = Math.Max(0.25d, ((resTotal - resDiffs) / resTotal));
+            if (resTotal > 0)
+                resFactor = Math.Max(0.25d, ((resTotal - resDiffs) / resTotal));
 
             return massFactor * sizeFactor * hrFactor * resFactor;
         }

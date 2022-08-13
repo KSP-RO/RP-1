@@ -39,8 +39,8 @@ namespace RP0.Programs
 
         protected override string GetEffectText()
         {
-            bool extendedInfo = NextTextIsShowSelected;
-            NextTextIsShowSelected = false;
+            bool extendedInfo = ShowExtendedInfo;
+            ShowExtendedInfo = false;
 
             if (_program == null)
                 return "Error finding program!";
@@ -130,6 +130,11 @@ namespace RP0.Programs
             return true;
         }
 
+        public override double DeactivateCost()
+        {
+            return 0d;
+        }
+
         protected override void OnRegister()
         {
             base.OnRegister();
@@ -142,7 +147,7 @@ namespace RP0.Programs
         {
             base.OnUnregister();
 
-            if (ProgramHandler.Instance && ProgramHandler.Instance.IsInAdmin)
+            if (ProgramHandler.Instance && ProgramHandler.Instance.IsInAdmin && _program.CanComplete)
                 ProgramHandler.Instance.CompleteProgram(_program);
         }
     }

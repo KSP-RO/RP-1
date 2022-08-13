@@ -4,7 +4,7 @@ using ContractConfigurator;
 using Contracts;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -451,7 +451,7 @@ namespace RP0.Programs
             CompletedPrograms.Add(p);
             p.Complete();
             // No change needed to ProgramStrategy because reference holds.
-            ContractPreLoader.Instance.ResetGenerationFailure();
+            ContractPreLoader.Instance?.ResetGenerationFailure();
         }
 
         private void DisableProgram(string s)

@@ -10,6 +10,10 @@ namespace RP0
         public static Dictionary<string, double> ActivatedStrategies = new Dictionary<string, double>();
 
         [Persistent]
+        protected string departmentNameAlt;
+        public string DepartmentNameAlt => departmentNameAlt;
+
+        [Persistent]
         protected string iconDepartment;
         public string IconDepartment => iconDepartment;
 
@@ -24,9 +28,9 @@ namespace RP0
         protected PersistentDictionaryValueTypes<CurrencyRP0, double> setupRequirements = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
         public PersistentDictionaryValueTypes<CurrencyRP0, double> SetupRequirements => setupRequirements;
 
-        [Persistent]
-        protected PersistentDictionaryValueTypes<CurrencyRP0, double> endCosts = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
-        public PersistentDictionaryValueTypes<CurrencyRP0, double> EndCosts => endCosts;
+        //[Persistent]
+        //protected PersistentDictionaryValueTypes<CurrencyRP0, double> endCosts = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
+        //public PersistentDictionaryValueTypes<CurrencyRP0, double> EndCosts => endCosts;
 
         [Persistent]
         protected PersistentListValueType<string> unlockByContractComplete = new PersistentListValueType<string>();
@@ -48,6 +52,14 @@ namespace RP0
         protected double reactivateCooldown;
         public double ReactivateCooldown => reactivateCooldown;
 
+        [Persistent]
+        protected double removalCostRepPercent;
+        public double RemovalCostRepPercent => removalCostRepPercent;
+
+        [Persistent]
+        protected double removalCostLerpPower;
+        public double RemovalCostLerpPower => removalCostLerpPower;
+
         // Will be called by transpiler of stock StrategyConfig.Create()
         protected static StrategyConfig NewBaseConfig() { return new StrategyConfigRP0(); }
 
@@ -57,12 +69,17 @@ namespace RP0
                 setupCosts = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
             if (setupRequirements == null)
                 setupRequirements = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
-            if (endCosts == null)
-                endCosts = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
+            //if (endCosts == null)
+            //    endCosts = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
             if (unlockByContractComplete == null)
                 unlockByContractComplete = new PersistentListValueType<string>();
             if (unlockByProgramComplete == null)
                 unlockByProgramComplete = new PersistentListValueType<string>();
+
+            // For some reason need to set here, not in ctor.
+            removalCostRepPercent = 0.1d;
+            removalCostLerpPower = 3d;
+
 
             ConfigNode.LoadObjectFromConfig(this, node);
 

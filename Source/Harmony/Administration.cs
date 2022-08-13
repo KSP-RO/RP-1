@@ -41,7 +41,7 @@ namespace RP0.Harmony
 
             foreach (var strat in Strategies.StrategySystem.Instance.GetStrategies("Programs"))
             {
-                if (!strat.IsActive && strat is ProgramStrategy ps)
+                if (strat is ProgramStrategy ps && !ps.Program.IsActive && !ps.Program.IsComplete)
                 {
                     ps.Program.SetBestAllowableSpeed();
                 }
@@ -63,6 +63,37 @@ namespace RP0.Harmony
                 Administration.Instance.SetSelectedStrategy(new Administration.StrategyWrapper(leader, (UIRadioButton)null));
         }
 
+        internal static Strategy FindStrategyForDepartment(DepartmentConfig dep)
+        {
+            bool skipFirst = true;
+            foreach (var s in StrategySystem.Instance.Strategies)
+            {
+                if (!s.IsActive)
+                    continue;
+
+                if (s.Department == dep)
+                    return s;
+
+                if (s is StrategyRP0 sR && sR.ConfigRP0.DepartmentNameAlt == dep.Name)
+                {
+                    // This check is necessary because all leaders with a primary and secondary
+                    // department will be first found for the primary department.
+                    // When we search for the secondary department, we'll find a leader
+                    // that was already returned for their primary. So we need to skip them
+                    // and the *second* active leader is the one to take.
+                    if (skipFirst)
+                    {
+                        skipFirst = false;
+                        continue;
+                    }
+
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch("CreateStrategiesList")]
         internal static void Postfix_CreateStrategiesList(Administration __instance)
@@ -74,7 +105,7 @@ namespace RP0.Harmony
                 if (dep.Name == "Programs")
                     continue;
 
-                var leader = StrategySystem.Instance.Strategies.FirstOrDefault(s => s.IsActive && s.Department == dep);
+                var leader = FindStrategyForDepartment(dep);
                 if (leader == null)
                     continue;
 
@@ -208,7 +239,7 @@ namespace RP0.Harmony
         {
             if (wrapper.strategy is StrategyRP0 s)
             {
-                s.NextTextIsShowSelected = true; // pass through we're about to print the long-form description.
+                s.ShowExtendedInfo = true; // pass through we're about to print the long-form description.
             }
             if (wrapper.strategy is ProgramStrategy ps)
             {
@@ -307,7 +338,7 @@ namespace RP0.Harmony
                 // Reset program speeds
                 foreach (var strat in StrategySystem.Instance.Strategies)
                 {
-                    if (!strat.IsActive && strat != newActiveStrat && strat is ProgramStrategy ps && !ps.IsActive)
+                    if (!strat.IsActive && strat != newActiveStrat && strat is ProgramStrategy ps && !ps.Program.IsActive && !ps.Program.IsComplete)
                         ps.Program.SetBestAllowableSpeed();
                 }
                 createStratList.Invoke(Administration.Instance, new object[] { StrategySystem.Instance.SystemConfig.Departments });
@@ -327,19 +358,12 @@ namespace RP0.Harmony
         internal static void OnRemoveLeaderConfirm()
         {
             OnPopupDismiss();
-            var leader = Administration.Instance.SelectedWrapper.strategy;
-            double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated));
-
             if (!Administration.Instance.SelectedWrapper.strategy.Deactivate())
                 return;
-
-            Reputation.Instance.AddReputation(-(float)cost, TransactionReasonsRP0.LeaderRemove.Stock());
 
             Administration.Instance.UnselectStrategy();
             Administration.Instance.RedrawPanels();
         }
-
-        internal const double FireLeaderRepPenaltyPctMax = 0.1d;
 
         [HarmonyPrefix]
         [HarmonyPatch("BtnInputAccept")]
@@ -399,16 +423,17 @@ namespace RP0.Harmony
 
             if (state == "cancel")
             {
-                var leader = __instance.SelectedWrapper.strategy;
-                double cost = UtilMath.LerpUnclamped(Reputation.Instance.reputation * FireLeaderRepPenaltyPctMax, 0d, Math.Pow(UtilMath.InverseLerp(leader.LeastDuration, leader.LongestDuration, KSPUtils.GetUT() - leader.DateActivated), 2.5d));
-                string reappointStr = leader.Config is StrategyConfigRP0 cfg && cfg.RemoveOnDeactivate 
+                var leader = __instance.SelectedWrapper.strategy as StrategyRP0;
+                var cfg = leader.Config as StrategyConfigRP0;
+                string deactivateCostStr = leader.DeactivateCostString();
+                string reappointStr = cfg.RemoveOnDeactivate 
                     ? cfg.ReactivateCooldown > 0
                         ? $"\n\n{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"
                         : $"\n\n{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}"
                     : string.Empty;
-                string message = cost > 0
+                string message = !string.IsNullOrEmpty(deactivateCostStr)
                     ? Localizer.Format("#rp0LeaderRemoveConfirmWithCost", 
-                        CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -cost, 0d, 0d).GetCostLineOverride(true),
+                        deactivateCostStr,
                         reappointStr)
                     : Localizer.Format("#rp0LeaderRemoveConfirm", reappointStr);
 
@@ -437,6 +462,14 @@ namespace RP0.Harmony
             {
                 AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Leaders);
             }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("UpdateStrategyCount")]
+        internal static bool Prefix_UpdateStrategyCount(Administration __instance)
+        {
+            __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
+            return false;
         }
     }
 }

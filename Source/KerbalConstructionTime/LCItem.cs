@@ -510,9 +510,29 @@ namespace KerbalConstructionTime
             BuildListVessel blv = listItem.ToBuildListVessel();
             blv.ShipNode = cn.GetNode("ShipNode");
             blv.LC = this;
-            if (KCTGameStates.LoadedSaveVersion < 10)
+            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                blv.RecalculateFromNode(false);
+                if (KCTGameStates.LoadedSaveVersion < 10)
+                {
+                    blv.RecalculateFromNode(false);
+                }
+
+                if (KCTGameStates.LoadedSaveVersion < 11)
+                {
+                    HashSet<string> ignoredRes = _lcData.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+
+                    foreach (var kvp in blv.resourceAmounts)
+                    {
+                        if (ignoredRes.Contains(kvp.Key))
+                            continue;
+
+                        double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
+                        if (mass <= Formula.VesselMassMinForResourceValidation * blv.GetTotalMass())
+                            continue;
+
+                        _lcData.resourcesHandled[kvp.Key] = kvp.Value * 1.1d;
+                    }
+                }
             }
             blv.UpdateBuildRate();
             return blv;

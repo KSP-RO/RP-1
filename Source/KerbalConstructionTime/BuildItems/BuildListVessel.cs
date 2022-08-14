@@ -570,13 +570,13 @@ namespace KerbalConstructionTime
                     || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
                     continue;
 
-                if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount))
-                {
-                    if (lcAmount >= kvp.Value) continue;
-                    double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
-                    if (mass <= Formula.VesselMassMinForResourceValidation * totalMass)
-                        continue;
-                }
+                if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
+                    continue;
+
+                double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
+                if (mass <= Formula.VesselMassMinForResourceValidation * totalMass)
+                    continue;
+
                 failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify LC.");
             }
 

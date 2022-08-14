@@ -128,6 +128,7 @@ namespace KerbalConstructionTime
 
             double curPadCost = 0;
             double curVABCost = 0;
+            double curResCost = 0;
             float fractionalPadLvl = -1;
             _newLCData.massMax = isHangar ? activeLC.MassMax : 0;
             int tonnageLimitInt = (int)_newLCData.massMax;
@@ -155,7 +156,7 @@ namespace KerbalConstructionTime
                 if (!isHangar)
                     _newLCData.massMax = tonnageLimitInt;
 
-                _newLCData.GetCostStats(out curPadCost, out curVABCost, out fractionalPadLvl);
+                curResCost = _newLCData.GetCostStats(out curPadCost, out curVABCost, out fractionalPadLvl) - curPadCost - curVABCost;
 
                 if (!isHangar)
                     minTonnage = LCItem.CalcMassMin(_newLCData.massMax);
@@ -243,6 +244,8 @@ namespace KerbalConstructionTime
 
             if (isModify)
             {
+                curResCost = _newLCData.ResModifyCost(activeLC.Stats);
+
                 // Enforce a min cost for pad size changes
                 const double minPadModifyCost = 1000d;
                 if (!isHangar && activeLC.MassMax != _newLCData.massMax && totalCost < minPadModifyCost)
@@ -265,11 +268,11 @@ namespace KerbalConstructionTime
                 if (curVABCost > oldVABCost && renovateCost > curVABCost)
                     renovateCost = curVABCost;
 
-                totalCost += renovateCost;
+                totalCost += renovateCost + curResCost;
             }
             else
             {
-                totalCost += curVABCost;
+                totalCost += curVABCost + curResCost;
             }
 
             if (totalCost > 0)

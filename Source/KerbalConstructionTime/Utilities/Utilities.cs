@@ -2138,16 +2138,17 @@ namespace KerbalConstructionTime
             }
 
             double minMassDiff = Math.Max(1d, smaller.massMax * 0.05d);
+            double massFactor = 1d;
             if (bigger.massMax > smaller.massMax + minMassDiff)
             {
                 if (bigger.massMax > 2d * smaller.massMax)
                     return 0d;
                 if (smaller.massMax < 0.5d * bigger.massMax)
                     return 0d;
-            }
 
-            double massFactor = (smaller.massMax + minMassDiff) / bigger.massMax;
-            massFactor *= massFactor * massFactor;
+                massFactor = (smaller.massMax + minMassDiff) / bigger.massMax;
+                massFactor *= massFactor * massFactor;
+            }
 
             if (otherStats.sizeMax.y > ourStats.sizeMax.y)
             {
@@ -2160,14 +2161,10 @@ namespace KerbalConstructionTime
                 bigger = ourStats;
             }
 
-            double sizeFactor;
+            double sizeFactor = 1d;
 
             double minHeightDiff = Math.Max(smaller.sizeMax.y * 0.1d, 2d);
-            if (bigger.sizeMax.y - smaller.sizeMax.y < minHeightDiff)
-            {
-                sizeFactor = 1d;
-            }
-            else
+            if (bigger.sizeMax.y - smaller.sizeMax.y > minHeightDiff)
             {
                 sizeFactor = (smaller.sizeMax.y + minHeightDiff) / bigger.sizeMax.y;
                 sizeFactor *= sizeFactor * sizeFactor;
@@ -2181,11 +2178,14 @@ namespace KerbalConstructionTime
                 biggerXZ = smallerXZ;
                 smallerXZ = t;
             }
-            // Add the height in so the ratio is much closer to 1.
-            smallerXZ += smaller.sizeMax.y;
-            biggerXZ += smaller.sizeMax.y;
 
-            sizeFactor *= (smallerXZ / biggerXZ);
+            if (smallerXZ < biggerXZ - Math.Max(smallerXZ * 0.1d, 0.2d))
+            {
+                // Add the height in so the ratio is much closer to 1.
+                smallerXZ += smaller.sizeMax.y;
+                biggerXZ += smaller.sizeMax.y;
+                sizeFactor *= (smallerXZ / biggerXZ);
+            }
 
             double hrFactor = 1d;
             if (ourStats.isHumanRated && !otherStats.isHumanRated)

@@ -2077,6 +2077,30 @@ namespace KerbalConstructionTime
 
         private static HashSet<string> _resourceKeys = new HashSet<string>();
 
+        public static double ResourceTankCost(string res, double amount, LaunchComplexType type)
+        {
+            var def = TankDefSMIV;
+            const double amountMultiplier = 75d;
+            const double tankMultiplier = 1.5d;
+
+            HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+
+            if (ignoredRes.Contains(res))
+                return 0d;
+
+            if (def.tankList.TryGetValue(res, out var tank) && PartResourceLibrary.Instance.GetDefinition(res) is PartResourceDefinition resDef)
+            {
+                double tankVol = amount / tank.utilization;
+                double cost = (0.1d + tank.cost) * tankVol * tankMultiplier + amount * resDef.unitCost * amountMultiplier;
+                if (PresetManager.Instance.ActivePreset.PartVariables.Resource_Variables.TryGetValue(res, out double mult))
+                    cost *= mult;
+
+                return cost;
+            }
+
+            return 0d;
+        }
+
         /// <summary>
         /// Note this is NOT bidirectional.
         /// ourStats can be closer to 'stats'

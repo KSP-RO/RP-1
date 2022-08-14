@@ -108,6 +108,13 @@ namespace RP0.DataTypes
             }
         }
 
+        public void Clone(PersistentDictionaryValueTypes<TKey, TValue> source)
+        {
+            Clear();
+            foreach (var kvp in source)
+                Add(kvp.Key, kvp.Value);
+        }
+
         public PersistentDictionaryValueTypes<TKey, TValue> Clone()
         {
             var dict = new PersistentDictionaryValueTypes<TKey, TValue>();

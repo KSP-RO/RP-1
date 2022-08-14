@@ -6,6 +6,8 @@ namespace KerbalConstructionTime
 {
     public class Formula
     {
+        public const double VesselMassMinForResourceValidation = 0.005d;
+
         public static double GetConstructionBP(double cost, SpaceCenterFacility? facilityType)
         {
             //int isAdm = 0, isAC = 0, isLP = 0, isMC = 0, isRD = 0, isRW = 0, isTS = 0, isSPH = 0, isVAB = 0, isOther = 0;

@@ -64,8 +64,10 @@ namespace KerbalConstructionTime
             _newLCData.isHumanRated = blv.IsHumanRated;
             _newLCData.resourcesHandled.Clear();
             foreach (var kvp in blv.resourceAmounts)
-                _newLCData.resourcesHandled.Add(kvp.Key, kvp.Value * 1.1d);
-
+            {
+                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.VesselMassMinForResourceValidation)
+                    _newLCData.resourcesHandled.Add(kvp.Key, kvp.Value * 1.1d);
+            }
             SetStrings();
             SetResources();
         }
@@ -476,9 +478,11 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.EndScrollView();
+
+            GUILayout.BeginHorizontal();
             if (isModify)
             {
-                GUILayout.BeginHorizontal();
+
                 if (GUILayout.Button(new GUIContent("Combine with LC", "Combines these resources with complex's existing resource support")))
                 {
                     for (int i = 0; i < _resourceCount; i++)
@@ -492,11 +496,16 @@ namespace KerbalConstructionTime
                         }
                     }
                 }
-                GUILayout.EndHorizontal();
             }
+            else
+            {
+                GUILayout.Label(string.Empty);
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
             if (HighLogic.LoadedSceneIsEditor)
             {
-                GUILayout.BeginHorizontal();
                 if (GUILayout.Button(new GUIContent("Add Craft Resources", "Combines these resources with the loaded craft's resources")))
                 {
                     for (int i = 0; i < _resourceCount; i++)
@@ -510,8 +519,12 @@ namespace KerbalConstructionTime
                         }
                     }
                 }
-                GUILayout.EndHorizontal();
             }
+            else
+            {
+                GUILayout.Label(string.Empty);
+            }
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Clear Resources"))

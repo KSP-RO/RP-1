@@ -71,6 +71,85 @@ namespace KerbalConstructionTime
             // NOTE: Not comparing name, which I think is correct here.
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, lc.ResourcesHandled);
             public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, data.resourcesHandled);
+
+            public double GetCostStats(out double curPadCost, out double curVABCost, out float fractionalPadLvl)
+            {
+                Vector3 padSize = sizeMax; // we tweak it later.
+                fractionalPadLvl = 0f;
+                HashSet<string> ignoredRes;
+                if (lcType == LaunchComplexType.Pad)
+                {
+                    ignoredRes = GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+
+                    double mass = massMax;
+                    curPadCost = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2000d) + 1000d;
+
+                    if (Utilities.PadTons == null)
+                    {
+                        fractionalPadLvl = 0f;
+                    }
+                    else
+                    {
+                        float unlimitedTonnageThreshold = 2500f;
+
+                        if (massMax >= unlimitedTonnageThreshold)
+                        {
+                            int padLvl = Utilities.PadTons.Length - 1;
+                            fractionalPadLvl = padLvl;
+                        }
+                        else
+                        {
+                            for (int i = 1; i < Utilities.PadTons.Length; i++)
+                            {
+                                if (massMax < Utilities.PadTons[i])
+                                {
+                                    float lowerBound = Utilities.PadTons[i - 1];
+                                    float upperBound = Math.Min(Utilities.PadTons[i], unlimitedTonnageThreshold);
+                                    float fractionOverFullLvl = (massMax - lowerBound) / (upperBound - lowerBound);
+                                    fractionalPadLvl = (i - 1) + fractionOverFullLvl;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    ignoredRes = GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes;
+
+                    curPadCost = 0f;
+                    padSize.y *= 5f;
+                }
+                curVABCost = padSize.sqrMagnitude * 25d + 100d;
+                if (isHumanRated)
+                {
+                    curPadCost *= 1.5d;
+                    curVABCost *= 2d;
+                }
+
+                var def = Utilities.TankDefSMIV;
+                double resCost = 0d;
+                const double amountMultiplier = 100d;
+                const double tankMultiplier = 2d;
+                foreach (var kvp in resourcesHandled)
+                {
+                    if (ignoredRes.Contains(kvp.Key))
+                        continue;
+
+                    if (def.tankList.TryGetValue(kvp.Key, out var tank) && PartResourceLibrary.Instance.GetDefinition(kvp.Key) is PartResourceDefinition resDef)
+                    {
+                        double tankVol = kvp.Value / tank.utilization;
+                        double cost = (0.1d + tank.cost) * tankVol * tankMultiplier + kvp.Value * resDef.unitCost * amountMultiplier;
+                        if (PresetManager.Instance.ActivePreset.PartVariables.Resource_Variables.TryGetValue(kvp.Key, out double mult))
+                            cost *= mult;
+
+                        resCost += cost;
+                    }
+                }
+
+                return curVABCost + curPadCost + resCost;
+            }
         }
         public static readonly LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
         public static readonly LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false, new PersistentDictionaryValueTypes<string, double>());
@@ -89,6 +168,10 @@ namespace KerbalConstructionTime
 
         private LCData _lcData = new LCData();
         public LCData Stats => _lcData;
+        public double GetCostStats(out double curPadCost, out double curVABCost, out float fractionalPadLvl)
+        {
+            return _lcData.GetCostStats(out curPadCost, out curVABCost, out fractionalPadLvl);
+        }
 
         private double _rate;
         private double _rateHRCapped;
@@ -197,7 +280,7 @@ namespace KerbalConstructionTime
 
             if (_lcData.lcType == LaunchComplexType.Pad)
             {
-                Utilities.GetPadStats(_lcData.massMax, _lcData.sizeMax, _lcData.isHumanRated, out _, out _, out float fracLevel);
+                _lcData.GetCostStats(out _, out _, out float fracLevel);
                 var pad = new KCT_LaunchPad(Guid.NewGuid(), Name, fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
@@ -218,12 +301,15 @@ namespace KerbalConstructionTime
             _modID = modId;
             _lcData.SetFrom(data);
 
-            Utilities.GetPadStats(MassMax, SizeMax, IsHumanRated, out _, out _, out float fracLevel);
-
-            foreach (var pad in LaunchPads)
+            if (_lcData.lcType == LaunchComplexType.Pad)
             {
-                pad.fractionalLevel = fracLevel;
-                pad.level = (int)fracLevel;
+                _lcData.GetCostStats(out _, out _, out float fracLevel);
+
+                foreach (var pad in LaunchPads)
+                {
+                    pad.fractionalLevel = fracLevel;
+                    pad.level = (int)fracLevel;
+                }
             }
 
             // will create a new one if needed (it probably will be needed)

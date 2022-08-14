@@ -32,7 +32,7 @@ namespace KerbalConstructionTime
             {
                 if (_newLCData.resourcesHandled.TryGetValue(_allResourceKeys[i], out double resourceValue))
                 {
-                    _allResourceValues[i] = resourceValue.ToString("G17");
+                    _allResourceValues[i] = resourceValue.ToString("F0");
                 }
                 else
                 {
@@ -109,7 +109,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(activeLC.IsHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
 
-                Utilities.GetPadStats(activeLC.MassMax, activeLC.SizeMax, activeLC.IsHumanRated, out oldPadCost, out oldVABCost, out _);
+                activeLC.GetCostStats(out oldPadCost, out oldVABCost, out _);
                 lpMult = activeLC.LaunchPads.Count;
             }
             else
@@ -154,7 +154,9 @@ namespace KerbalConstructionTime
             {
                 if (!isHangar)
                     _newLCData.massMax = tonnageLimitInt;
-                Utilities.GetPadStats(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated, out curPadCost, out curVABCost, out fractionalPadLvl);
+
+                _newLCData.GetCostStats(out curPadCost, out curVABCost, out fractionalPadLvl);
+
                 if (!isHangar)
                     minTonnage = LCItem.CalcMassMin(_newLCData.massMax);
             }
@@ -429,6 +431,9 @@ namespace KerbalConstructionTime
 
         public static void DrawLCResourcesWindow(int windowID)
         {
+            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            bool isModify = GUIStates.ShowModifyLC;
+
             if (_resourceCount == 0) GetAllResourceKeys();
 
             Rect parentPos = _centralWindowPosition;
@@ -437,7 +442,7 @@ namespace KerbalConstructionTime
             _lcResourcesPosition.height = parentPos.height;
             _lcResourcesPosition.xMin = parentPos.xMin - _lcResourcesPosition.width;
 
-            float scrollHeight = parentPos.height-40;
+            float scrollHeight = parentPos.height - 40 - GUI.skin.label.lineHeight * 3;
             _resourceListScroll = GUILayout.BeginScrollView(_resourceListScroll, GUILayout.Width(215), GUILayout.Height(scrollHeight));
 
             GUILayout.BeginHorizontal();
@@ -445,11 +450,11 @@ namespace KerbalConstructionTime
             GUILayout.Label(new GUIContent("Amount"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            for (int i=0;i<_resourceCount;i++)
+            for (int i = 0; i < _resourceCount; i++)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(new GUIContent($"{_allResourceKeys[i]}"));
-                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90));
+                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty);
 
                 bool remove = true;
                 if (!string.IsNullOrEmpty(_allResourceValues[i]))
@@ -457,7 +462,7 @@ namespace KerbalConstructionTime
                     if (double.TryParse(_allResourceValues[i], out double resValue) && resValue > 0d)
                     {
                         remove = false;
-                        _newLCData.resourcesHandled[_allResourceKeys[i]] = resValue;
+                        _newLCData.resourcesHandled[_allResourceKeys[i]] = Math.Ceiling(resValue);
                     }
                 }
                 if (remove)
@@ -468,6 +473,52 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.EndScrollView();
+            if (isModify)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(new GUIContent("Combine with LC", "Combines these resources with complex's existing resource support")))
+                {
+                    for (int i = 0; i < _resourceCount; i++)
+                    {
+                        if (activeLC.ResourcesHandled.TryGetValue(_allResourceKeys[i], out double oldVal))
+                        {
+                            if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
+                            {
+                                _allResourceValues[i] = Math.Ceiling(oldVal).ToString("F0");
+                            }
+                        }
+                    }
+                }
+                GUILayout.EndHorizontal();
+            }
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(new GUIContent("Add Craft Resources", "Combines these resources with the loaded craft's resources")))
+                {
+                    for (int i = 0; i < _resourceCount; i++)
+                    {
+                        if (KCTGameStates.EditorVessel.resourceAmounts.TryGetValue(_allResourceKeys[i], out double oldVal))
+                        {
+                            if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
+                            {
+                                _allResourceValues[i] = Math.Ceiling(oldVal).ToString("F0");
+                            }
+                        }
+                    }
+                }
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Clear Resources"))
+            {
+                for (int i = 0; i < _resourceCount; i++)
+                {
+                    _allResourceValues[i] = "0";
+                }
+            }
+            GUILayout.EndHorizontal();
         }
 
         private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LCItem lc)

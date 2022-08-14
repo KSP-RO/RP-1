@@ -2085,7 +2085,8 @@ namespace KerbalConstructionTime
 
             HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
 
-            if (ignoredRes.Contains(res))
+            if (ignoredRes.Contains(res)
+                || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res))
                 return 0d;
 
             if (def.tankList.TryGetValue(res, out var tank) && PartResourceLibrary.Instance.GetDefinition(res) is PartResourceDefinition resDef)
@@ -2205,7 +2206,8 @@ namespace KerbalConstructionTime
             var def = TankDefSMIV;
             foreach (string key in _resourceKeys)
             {
-                if (GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(key))
+                if (GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(key)
+                    || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(key))
                     continue;
 
                 ourStats.resourcesHandled.TryGetValue(key, out double ours);

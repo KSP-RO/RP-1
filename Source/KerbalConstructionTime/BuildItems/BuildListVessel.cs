@@ -563,14 +563,20 @@ namespace KerbalConstructionTime
             {
                 failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
             }
-            foreach (string resourceKey in resourceAmounts.Keys)
+            HashSet<string> ignoredRes = selectedLC.LCType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+            foreach (var kvp in resourceAmounts)
             {
-                double reqAmount = resourceAmounts[resourceKey];
-                if (selectedLC.ResourcesHandled.TryGetValue(resourceKey, out double lcAmount))
+                if (ignoredRes.Contains(kvp.Key))
+                    continue;
+
+                if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount))
                 {
-                    if (lcAmount >= reqAmount) continue;
+                    if (lcAmount >= kvp.Value) continue;
+                    double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
+                    if (mass <= Formula.VesselMassMinForResourceValidation * totalMass)
+                        continue;
                 }
-                failedReasons.Add($"Insufficient {resourceKey} at LC: {reqAmount:N1} required, {lcAmount:N1} available. Modify LC.");
+                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify LC.");
             }
 
             // Facility doesn't matter here.

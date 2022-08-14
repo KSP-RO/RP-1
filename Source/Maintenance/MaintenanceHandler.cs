@@ -297,15 +297,29 @@ namespace RP0
             return upkeep;
         }
 
-        private double LCUpkeep(float massMax, Vector3 sizeMax, bool humanRated, int padCount, LaunchComplexType type)
+        private double LCUpkeep(LCItem lc, int padCount)
         {
-            switch (type)
+            switch (lc.LCType)
             {
                 case LaunchComplexType.Hangar:
-                    return ComputeDailyMaintenanceCost(KerbalConstructionTime.Utilities.GetPadStats(massMax, sizeMax, humanRated, out _, out _, out _), FacilityMaintenanceType.Hangar);
+                    return ComputeDailyMaintenanceCost(lc.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar);
 
                 case LaunchComplexType.Pad:
-                    KerbalConstructionTime.Utilities.GetPadStats(massMax, sizeMax, humanRated, out double padCost, out double vabCost, out _);
+                    lc.GetCostStats(out double padCost, out double vabCost, out _);
+                    return ComputeDailyMaintenanceCost((vabCost + padCount * padCost), FacilityMaintenanceType.LC);
+            }
+            return 0d;
+        }
+
+        private double LCUpkeep(LCItem.LCData lcData, int padCount)
+        {
+            switch (lcData.lcType)
+            {
+                case LaunchComplexType.Hangar:
+                    return ComputeDailyMaintenanceCost(lcData.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar);
+
+                case LaunchComplexType.Pad:
+                    lcData.GetCostStats(out double padCost, out double vabCost, out _);
                     return ComputeDailyMaintenanceCost((vabCost + padCount * padCost), FacilityMaintenanceType.LC);
             }
             return 0d;
@@ -319,12 +333,12 @@ namespace RP0
                 foreach (var lcc in lc.KSC.LCConstructions)
                 {
                     if (lcc.LCID != lc.ID)
-                        return lcc.Progress / lcc.BP * LCUpkeep(lcc.LCData.massMax, lcc.LCData.sizeMax, lcc.LCData.isHumanRated, lc.LaunchPadCount, lcc.LCData.lcType);
+                        return lcc.Progress / lcc.BP * LCUpkeep(lcc.LCData, lc.LaunchPadCount);
                 }
                 return 0d;
             }
 
-            return LCUpkeep(lc.MassMax, lc.SizeMax, lc.IsHumanRated, lc.LaunchPadCount, lc.LCType);
+            return LCUpkeep(lc, lc.LaunchPadCount);
         }
 
         private double GetFacilityUpgradeRatio(SpaceCenterFacility facility)

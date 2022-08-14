@@ -174,7 +174,7 @@ namespace KerbalConstructionTime
                     || (activeLC.LCType == LaunchComplexType.Pad && EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB));
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
             if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip),
-                canModify ? GUI.skin.button : _yellowButton))
+                canModify ? GUI.skin.button : _yellowButton) && canModify)
             {
                 SetFieldsFromVessel(KCTGameStates.EditorVessel);
 

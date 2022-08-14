@@ -34,7 +34,8 @@ namespace KerbalConstructionTime
                 this.sizeMax = sizeMax;
                 this.lcType = lcType;
                 this.isHumanRated = isHumanRated;
-                foreach (var kvp in resourcesHandled) { this.resourcesHandled[kvp.Key] = kvp.Value; }
+                foreach (var kvp in resourcesHandled)
+                    this.resourcesHandled[kvp.Key] = kvp.Value;
                 //TODO: If setting starting hangar, apply default resources, which are?
             }
 
@@ -56,7 +57,10 @@ namespace KerbalConstructionTime
                 sizeMax = old.sizeMax;
                 lcType = old.lcType;
                 isHumanRated = old.isHumanRated;
-                foreach (var kvp in old.resourcesHandled) { resourcesHandled[kvp.Key] = kvp.Value; }
+
+                resourcesHandled.Clear();
+                foreach (var kvp in old.resourcesHandled)
+                    resourcesHandled[kvp.Key] = kvp.Value;
             }
 
             public void SetFrom(LCItem lc)

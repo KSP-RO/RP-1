@@ -2018,7 +2018,28 @@ namespace KerbalConstructionTime
         }
 
         private static float[] _padTons = null;
-        private static Vector3[] _padSizes;
+        public static float[] PadTons
+        {
+            get
+            {
+                if (_padTons == null)
+                    LoadPadData();
+
+                return _padTons;
+            }
+        }
+
+        private static Vector3[] _padSizes = null;
+        public static Vector3[] PadSizes
+        {
+            get
+            {
+                if (_padSizes == null)
+                    LoadPadData();
+
+                return _padSizes;
+            }
+        }
 
         private static void LoadPadData()
         {
@@ -2042,64 +2063,19 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static double GetPadStats(float tonnageLimit, Vector3 padSize, bool humanRated, out double curPadCost, out double curVABCost, out float fractionalPadLvl)
+        private static RealFuels.Tanks.TankDefinition _tankDefSMIV = null;
+        public static RealFuels.Tanks.TankDefinition TankDefSMIV
         {
-            fractionalPadLvl = 0f;
-            if (tonnageLimit != float.MaxValue)
+            get
             {
-                double mass = tonnageLimit;
-                curPadCost = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2000d) + 1000d;
+                if (_tankDefSMIV == null)
+                    _tankDefSMIV = RealFuels.MFSSettings.tankDefinitions["SM-IV"];
 
-                if (_padTons == null)
-                {
-                    LoadPadData();
-                }
-
-                if (_padTons == null)
-                {
-                    fractionalPadLvl = 0f;
-                }
-                else
-                {
-                    float unlimitedTonnageThreshold = 2500f;
-
-                    if (tonnageLimit >= unlimitedTonnageThreshold)
-                    {
-                        int padLvl = _padTons.Length - 1;
-                        fractionalPadLvl = padLvl;
-                    }
-                    else
-                    {
-                        for (int i = 1; i < _padTons.Length; i++)
-                        {
-                            if (tonnageLimit < _padTons[i])
-                            {
-                                float lowerBound = _padTons[i - 1];
-                                float upperBound = Math.Min(_padTons[i], unlimitedTonnageThreshold);
-                                float fractionOverFullLvl = (tonnageLimit - lowerBound) / (upperBound - lowerBound);
-                                fractionalPadLvl = (i - 1) + fractionOverFullLvl;
-
-                                break;
-                            }
-                        }
-                    }
-                }
+                return _tankDefSMIV;
             }
-            else
-            {
-                // SPH case
-                curPadCost = 0f;
-                padSize.y *= 5f;
-            }
-            curVABCost = padSize.sqrMagnitude * 25d + 100d;
-            if (humanRated)
-            {
-                curPadCost *= 1.5d;
-                curVABCost *= 2d;
-            }
-
-            return curVABCost + curPadCost;
         }
+
+        private static HashSet<string> _resourceKeys = new HashSet<string>();
 
         /// <summary>
         /// Note this is NOT bidirectional.
@@ -2197,36 +2173,51 @@ namespace KerbalConstructionTime
             double resFactor = 1d;
             double resTotal = 0d;
             double resDiffs = 0d;
-            HashSet<string> resourceKeys = new HashSet<string>();
             foreach (var r in ourStats.resourcesHandled.Keys)
-                resourceKeys.Add(r);
+                _resourceKeys.Add(r);
             foreach (var r in otherStats.resourcesHandled.Keys)
-                resourceKeys.Add(r);
+                _resourceKeys.Add(r);
 
-            foreach (string key in resourceKeys)
+            var def = TankDefSMIV;
+            foreach (string key in _resourceKeys)
             {
+                if (GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(key))
+                    continue;
+
                 ourStats.resourcesHandled.TryGetValue(key, out double ours);
                 otherStats.resourcesHandled.TryGetValue(key, out double other);
-                double massOurs = ours;
-                double massOther = other;
-                PartResourceDefinition resDef = PartResourceLibrary.Instance.GetDefinition(key);
-                if (resDef != null)
+                double rescaledOurs = ours;
+                double rescaledTheirs = other;
+                if (def.tankList.TryGetValue(key, out var tank))
                 {
-                    massOurs *= resDef.density;
-                    massOther *= resDef.density;
+                    double mult = 1d / tank.utilization;
+                    rescaledOurs *= mult;
+                    rescaledTheirs *= mult;
                 }
                 else
                 {
-                    KCTDebug.Log($"Unable to find resource definition for {key}");
+                    PartResourceDefinition resDef = PartResourceLibrary.Instance.GetDefinition(key);
+                    if (resDef != null)
+                    {
+                        // convert to kg to be comparable with the corrected volumes from RF
+                        rescaledOurs *= resDef.density * 1000d;
+                        rescaledTheirs *= resDef.density * 1000d;
+                    }
+                    else
+                    {
+                        KCTDebug.Log($"Unable to find resource definition for {key}");
+                    }
                 }
-                if (massOther == 0) massOurs *= 2;
-                if (massOurs == 0) massOther *= 2;
+                if (rescaledTheirs == 0) rescaledOurs *= 2;
+                if (rescaledOurs == 0) rescaledTheirs *= 2;
 
-                resTotal += (massOurs + massOther);
-                resDiffs += Math.Abs(massOurs - massOther);
+                resTotal += (rescaledOurs + rescaledTheirs);
+                resDiffs += Math.Abs(rescaledOurs - rescaledTheirs);
             }
             if (resTotal > 0)
-                resFactor = Math.Max(0.25d, ((resTotal - resDiffs) / resTotal));
+                resFactor = 0.5d + ((resTotal - resDiffs) / resTotal) * 0.5d;
+
+            _resourceKeys.Clear();
 
             return massFactor * sizeFactor * hrFactor * resFactor;
         }

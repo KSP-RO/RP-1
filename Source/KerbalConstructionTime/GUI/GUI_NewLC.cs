@@ -459,7 +459,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(new GUIContent($"{_allResourceKeys[i]}"));
-                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty);
+                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
 
                 bool remove = true;
                 if (!string.IsNullOrEmpty(_allResourceValues[i]))

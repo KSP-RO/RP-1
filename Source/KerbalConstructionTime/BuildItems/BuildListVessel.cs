@@ -563,6 +563,16 @@ namespace KerbalConstructionTime
             {
                 failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
             }
+            foreach (string resourceKey in resourceAmounts.Keys)
+            {
+                double reqAmount = resourceAmounts[resourceKey];
+                if (selectedLC.ResourcesHandled.TryGetValue(resourceKey, out double lcAmount))
+                {
+                    if (lcAmount >= reqAmount) continue;
+                }
+                failedReasons.Add($"Insufficient {resourceKey}. {reqAmount:N1} required, {lcAmount:N1} available");
+            }
+
             // Facility doesn't matter here.
             CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.SizeMax);
             if (!sizeCheck.Test())

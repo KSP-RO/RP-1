@@ -570,7 +570,7 @@ namespace KerbalConstructionTime
                 {
                     if (lcAmount >= reqAmount) continue;
                 }
-                failedReasons.Add($"Insufficient {resourceKey}. {reqAmount:N1} required, {lcAmount:N1} available");
+                failedReasons.Add($"Insufficient {resourceKey} at LC: {reqAmount:N1} required, {lcAmount:N1} available. Modify LC.");
             }
 
             // Facility doesn't matter here.

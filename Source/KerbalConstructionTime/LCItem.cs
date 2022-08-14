@@ -128,27 +128,46 @@ namespace KerbalConstructionTime
                     curVABCost *= 2d;
                 }
 
-                var def = Utilities.TankDefSMIV;
+                curPadCost *= 0.75d;
+                curVABCost *= 0.75d;
+
                 double resCost = 0d;
-                const double amountMultiplier = 100d;
-                const double tankMultiplier = 2d;
                 foreach (var kvp in resourcesHandled)
                 {
                     if (ignoredRes.Contains(kvp.Key))
                         continue;
 
-                    if (def.tankList.TryGetValue(kvp.Key, out var tank) && PartResourceLibrary.Instance.GetDefinition(kvp.Key) is PartResourceDefinition resDef)
-                    {
-                        double tankVol = kvp.Value / tank.utilization;
-                        double cost = (0.1d + tank.cost) * tankVol * tankMultiplier + kvp.Value * resDef.unitCost * amountMultiplier;
-                        if (PresetManager.Instance.ActivePreset.PartVariables.Resource_Variables.TryGetValue(kvp.Key, out double mult))
-                            cost *= mult;
-
-                        resCost += cost;
-                    }
+                    resCost += Utilities.ResourceTankCost(kvp.Key, kvp.Value, lcType);
                 }
 
                 return curVABCost + curPadCost + resCost;
+            }
+
+            private static HashSet<string> _resourceNames = new HashSet<string>();
+
+            public double ResModifyCost(LCData old)
+            {
+                double totalCost = 0d;
+
+                foreach (var res in old.resourcesHandled.Keys)
+                    _resourceNames.Add(res);
+                foreach (var res in resourcesHandled.Keys)
+                    _resourceNames.Add(res);
+
+                const double _DownsizeMult = -0.1d;
+                foreach (var res in _resourceNames)
+                {
+                    old.resourcesHandled.TryGetValue(res, out double oldAmount);
+                    resourcesHandled.TryGetValue(res, out double newAmount);
+
+                    double delta = newAmount - oldAmount;
+                    if (delta < 0d)
+                        delta *= _DownsizeMult;
+
+                    totalCost += Utilities.ResourceTankCost(res, delta, lcType);
+                }
+
+                return totalCost;
             }
         }
         public static readonly LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());

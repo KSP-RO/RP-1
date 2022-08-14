@@ -13,8 +13,8 @@ namespace KerbalConstructionTime
         private static string _lengthLimit = "2";
         private static LCItem.LCData _newLCData = new LCItem.LCData();
         private static int _resourceCount = 0;
-        private static string[] _allResourceKeys = new string[0];
-        private static string[] _allResourceValues = new string[0];
+        private static List<string> _allResourceKeys = new List<string>();
+        private static List<string> _allResourceValues = new List<string>();
         private static Vector2 _resourceListScroll = new Vector2();
 
         private static void SetStrings()
@@ -32,11 +32,11 @@ namespace KerbalConstructionTime
             {
                 if (_newLCData.resourcesHandled.TryGetValue(_allResourceKeys[i], out double resourceValue))
                 {
-                    _allResourceValues[i] = resourceValue.ToString("N1");
+                    _allResourceValues[i] = resourceValue.ToString("G17");
                 }
                 else
                 {
-                    _allResourceValues[i] = "";
+                    _allResourceValues[i] = "0";
                 }
             }
         }
@@ -51,7 +51,8 @@ namespace KerbalConstructionTime
         private static void SetFieldsFromLC(LCItem LC)
         {
             _newLCData.SetFrom(LC);
-            SetFieldsFromLCData(_newLCData);
+            SetStrings();
+            SetResources();
         }
 
         private static void SetFieldsFromVessel(BuildListVessel blv, LCItem lc = null)
@@ -61,15 +62,25 @@ namespace KerbalConstructionTime
             _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
             _newLCData.massMax = Mathf.Ceil((float)(blv.TotalMass * 1.1d));
             _newLCData.isHumanRated = blv.IsHumanRated;
+            _newLCData.resourcesHandled.Clear();
+            foreach (var kvp in blv.resourceAmounts)
+                _newLCData.resourcesHandled.Add(kvp.Key, kvp.Value * 1.1d);
+
             SetStrings();
+            SetResources();
         }
 
         private static void GetAllResourceKeys()
         {
-            _resourceCount = GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Count;
-            _allResourceKeys = new string[_resourceCount];
-            _allResourceValues = new string[_resourceCount];
-            GuiDataAndWhitelistItemsDatabase.ValidFuelRes.CopyTo(_allResourceKeys);
+            foreach (var res in GuiDataAndWhitelistItemsDatabase.ValidFuelRes)
+            {
+                if (!GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(res))
+                {
+                    _allResourceKeys.Add(res);
+                    _allResourceValues.Add(string.Empty);
+                    ++_resourceCount;
+                }
+            }
         }
 
         public static void DrawNewLCWindow(int windowID)
@@ -440,13 +451,19 @@ namespace KerbalConstructionTime
                 GUILayout.Label(new GUIContent($"{_allResourceKeys[i]}"));
                 _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90));
 
+                bool remove = true;
                 if (!string.IsNullOrEmpty(_allResourceValues[i]))
                 {
-                    if (double.TryParse(_allResourceValues[i], out double resValue))
+                    if (double.TryParse(_allResourceValues[i], out double resValue) && resValue > 0d)
                     {
+                        remove = false;
                         _newLCData.resourcesHandled[_allResourceKeys[i]] = resValue;
                     }
                 }
+                if (remove)
+                    _newLCData.resourcesHandled.Remove(_allResourceKeys[i]);
+
+
                 GUILayout.EndHorizontal();
             }
 

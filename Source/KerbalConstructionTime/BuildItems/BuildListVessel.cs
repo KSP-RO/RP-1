@@ -566,7 +566,8 @@ namespace KerbalConstructionTime
             HashSet<string> ignoredRes = selectedLC.LCType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
             foreach (var kvp in resourceAmounts)
             {
-                if (ignoredRes.Contains(kvp.Key))
+                if (ignoredRes.Contains(kvp.Key)
+                    || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
                     continue;
 
                 if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount))

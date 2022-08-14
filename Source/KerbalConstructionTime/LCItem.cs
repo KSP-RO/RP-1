@@ -523,7 +523,8 @@ namespace KerbalConstructionTime
 
                     foreach (var kvp in blv.resourceAmounts)
                     {
-                        if (ignoredRes.Contains(kvp.Key))
+                        if (ignoredRes.Contains(kvp.Key)
+                            || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
                             continue;
 
                         double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;

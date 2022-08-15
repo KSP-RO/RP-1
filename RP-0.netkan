@@ -24,7 +24,10 @@
 		{ "name" : "MagiCore" },
 		{ "name" : "ClickThroughBlocker" },
 		{ "name" : "ToolbarController" },
-		{ "name" : "Kerbalism-Config-RO" },
+		{ 
+			"name" : "Kerbalism-Config-RO",
+			"min_version": "v1.2.7"
+		},
 		{ "name" : "KSPCommunityFixes" },
 		{ "name" : "KerbalChangelog" }
 	],

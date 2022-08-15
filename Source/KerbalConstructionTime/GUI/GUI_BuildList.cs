@@ -1409,8 +1409,7 @@ namespace KerbalConstructionTime
             }
             if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
             {
-                SetFieldsFromLCData(LCItem.StartingLC);
-                _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
+                SetFieldsFromStartingLCData(LCItem.StartingLC);
 
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowModifyLC = false;

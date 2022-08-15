@@ -157,10 +157,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New LC", "Build a new launch complex for this vessel")))
             {
-                SetFieldsFromVessel(KCTGameStates.EditorVessel);
-                _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
-                _newLCData.Name = _newName;
-                
+                SetFieldsFromVessel(KCTGameStates.EditorVessel);                
 
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowLCResources = false;
@@ -173,10 +170,22 @@ namespace KerbalConstructionTime
                 && ((activeLC.LCType == LaunchComplexType.Hangar && EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH) 
                     || (activeLC.LCType == LaunchComplexType.Pad && EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB));
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
-            if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : modifyFailTooltip),
+            if (GUILayout.Button(new GUIContent("Modify", canModify ? $"Upgrade {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} limits and resources." : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton) && canModify)
             {
-                SetFieldsFromVessel(KCTGameStates.EditorVessel);
+                SetFieldsFromVessel(KCTGameStates.EditorVessel, activeLC);
+
+                GUIStates.ShowModifyLC = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
+                _centralWindowPosition.width = 300;
+            }
+            if (GUILayout.Button(new GUIContent("Upgrade", canModify ? $"Upgrade {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} limits and resources, keeping existing support where possible." : modifyFailTooltip),
+                canModify ? GUI.skin.button : _yellowButton) && canModify)
+            {
+                SetFieldsFromVesselKeepOld(KCTGameStates.EditorVessel, activeLC);
 
                 GUIStates.ShowModifyLC = true;
                 GUIStates.ShowBuildList = false;

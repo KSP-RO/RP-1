@@ -781,6 +781,10 @@ namespace KerbalConstructionTime
                             _lcData.SetFrom(StartingHangar);
                     }
                 }
+                if (KCTGameStates.LoadedSaveVersion < 12)
+                {
+                    _lcData.Name = Name;
+                }
             }
 
             return this;

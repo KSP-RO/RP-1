@@ -859,8 +859,8 @@
     <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersAstronauts.cfg">
       <Link>Strategies\Leaders\LeadersAstronauts.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersCorntractors.cfg">
-      <Link>Strategies\Leaders\LeadersCorntractors.cfg</Link>
+    <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersContractors.cfg">
+      <Link>Strategies\Leaders\LeadersContractors.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersEngineers.cfg">
       <Link>Strategies\Leaders\LeadersEngineers.cfg</Link>

@@ -25,15 +25,15 @@ jobs:
         run: echo "::set-output name=defined::true"
         env:
             KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
-  #validate-cfg-files:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout repo
-#        uses: actions/checkout@v2
-#        with:
-#          fetch-depth: 1
-#      - name: Validate config files
-#        uses: KSP-CKAN/KSPMMCfgParser@master
+  validate-cfg-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Validate config files
+        uses: KSP-CKAN/KSPMMCfgParser@master
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest

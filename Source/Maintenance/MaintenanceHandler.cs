@@ -302,11 +302,11 @@ namespace RP0
             switch (lc.LCType)
             {
                 case LaunchComplexType.Hangar:
-                    return ComputeDailyMaintenanceCost(lc.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar);
+                    return ComputeDailyMaintenanceCost(lc.Stats.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar);
 
                 case LaunchComplexType.Pad:
-                    lc.GetCostStats(out double padCost, out double vabCost, out _);
-                    return ComputeDailyMaintenanceCost((vabCost + padCount * padCost), FacilityMaintenanceType.LC);
+                    lc.Stats.GetCostStats(out double padCost, out double vabCost, out double resCost);
+                    return ComputeDailyMaintenanceCost((vabCost + resCost + padCount * padCost), FacilityMaintenanceType.LC);
             }
             return 0d;
         }
@@ -319,8 +319,8 @@ namespace RP0
                     return ComputeDailyMaintenanceCost(lcData.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar);
 
                 case LaunchComplexType.Pad:
-                    lcData.GetCostStats(out double padCost, out double vabCost, out _);
-                    return ComputeDailyMaintenanceCost((vabCost + padCount * padCost), FacilityMaintenanceType.LC);
+                    lcData.GetCostStats(out double padCost, out double vabCost, out double resCost);
+                    return ComputeDailyMaintenanceCost((vabCost + resCost + padCount * padCost), FacilityMaintenanceType.LC);
             }
             return 0d;
         }

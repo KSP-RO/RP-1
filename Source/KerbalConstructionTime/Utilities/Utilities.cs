@@ -1100,8 +1100,7 @@ namespace KerbalConstructionTime
             // It's not easy to know if various buried fields in the blv changed.
             // It would *also* be nice to not run the ER before the blv is ready
             // post craft-load, but...also eh. This is fine.
-            if (EngineersReport.Instance != null && RP0.Harmony.PatchEngineersReport.IsValid)
-                RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
+            RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
         }
 
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)

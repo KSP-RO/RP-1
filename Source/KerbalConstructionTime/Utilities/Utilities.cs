@@ -2086,8 +2086,8 @@ namespace KerbalConstructionTime
         public static double ResourceTankCost(string res, double amount, LaunchComplexType type)
         {
             var def = TankDefSMIV;
-            const double amountMultiplier = 75d;
-            const double tankMultiplier = 1.5d;
+            const double amountMultiplier = 50d;
+            const double tankMultiplier = 1.0d;
 
             HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
 

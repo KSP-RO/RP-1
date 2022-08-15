@@ -151,8 +151,9 @@ namespace KerbalConstructionTime
                         _newLCData.resourcesHandled[kvp.Key] = kvp.Value * 1.1d;
                 }
             }
-            // Reset strings based on our new values
+            // Reset based on our new values.
             SetStrings();
+            SetResources();
         }
         private static void GetAllResourceKeys()
         {

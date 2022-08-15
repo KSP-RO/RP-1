@@ -251,7 +251,7 @@ namespace RP0.Harmony
 
             resourcesLH.text = cacheResLH;
             if (resourcesOK)
-                resourcesRH.text = $"<color={cacheColorGood}>{cacheOK}</color>";
+                resourcesRH.text = $"<color={cacheColorGood}>{cacheYes}</color>";
             else
                 resourcesRH.text = $"<color={cacheColorBad}>{cacheNo}</color>";
 

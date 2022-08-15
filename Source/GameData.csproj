@@ -59,7 +59,6 @@
     <Content Include="..\GameData\RP-0\ProgramHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-0\RealFuelsSettings.cfg" />
     <Content Include="..\GameData\RP-0\ResourceCosts.cfg" />
-    <Content Include="..\GameData\RP-0\TEMPexperimentFixer.cfg" />
     <Content Include="..\GameData\RP-0\TestFlightInterop.cfg" />
     <Content Include="..\GameData\RP-0\TestFlightRnD.cfg" />
     <Content Include="..\GameData\RP-0\ToolingDefinitions.cfg" />
@@ -692,6 +691,9 @@
     <Content Include="..\GameData\RP-0\Parts\Science\SS01-SurfaceSampler.cfg">
       <Link>Parts\Science\SS01-SurfaceSampler.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Parts\Science\US2.cfg">
+      <Link>Parts\Science\US2.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Parts\Science\VI01-EarlyTVCamera.cfg">
       <Link>Parts\Science\VI01-EarlyTVCamera.cfg</Link>
     </Content>
@@ -713,6 +715,12 @@
     <Content Include="..\GameData\RP-0\Science\BodyScienceParams.cfg">
       <Link>Science\BodyScienceParams.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Science\Configure.cfg">
+      <Link>Science\Configure.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\HardDriveConfigs.cfg">
+      <Link>Science\HardDriveConfigs.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Science\IgnoredExperiments.cfg">
       <Link>Science\IgnoredExperiments.cfg</Link>
     </Content>
@@ -721,6 +729,15 @@
     </Content>
     <Content Include="..\GameData\RP-0\Science\MOL.cfg">
       <Link>Science\MOL.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\SCANSat.cfg">
+      <Link>Science\SCANSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\ScienceLabs.cfg">
+      <Link>Science\ScienceLabs.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\SEP.cfg">
+      <Link>Science\SEP.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Science\CleanupParts\CoatlAerospaceScience.cfg">
       <Link>Science\CleanupParts\CoatlAerospaceScience.cfg</Link>
@@ -737,9 +754,6 @@
     <Content Include="..\GameData\RP-0\Science\Experiments\BioSample.cfg">
       <Link>Science\Experiments\BioSample.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\CapsuleReport.cfg">
-      <Link>Science\Experiments\CapsuleReport.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Science\Experiments\CosmicRay.cfg">
       <Link>Science\Experiments\CosmicRay.cfg</Link>
     </Content>
@@ -748,6 +762,9 @@
     </Content>
     <Content Include="..\GameData\RP-0\Science\Experiments\EVAReport.cfg">
       <Link>Science\Experiments\EVAReport.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\GlobalExperimentPatches.cfg">
+      <Link>Science\Experiments\GlobalExperimentPatches.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Science\Experiments\ImagingSpectrometry.cfg">
       <Link>Science\Experiments\ImagingSpectrometry.cfg</Link>
@@ -779,9 +796,6 @@
     <Content Include="..\GameData\RP-0\Science\Experiments\SCANSat.cfg">
       <Link>Science\Experiments\SCANSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Science\Experiments\StationScienceEarly.cfg">
-      <Link>Science\Experiments\StationScienceEarly.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Science\Experiments\SurfaceSample.cfg">
       <Link>Science\Experiments\SurfaceSample.cfg</Link>
     </Content>
@@ -793,6 +807,18 @@
     </Content>
     <Content Include="..\GameData\RP-0\Science\Experiments\VisibleImaging.cfg">
       <Link>Science\Experiments\VisibleImaging.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\CrewScience\BasicCapsuleExperiments.cfg">
+      <Link>Science\Experiments\CrewScience\BasicCapsuleExperiments.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\CrewScience\CockpitExperiments.cfg">
+      <Link>Science\Experiments\CrewScience\CockpitExperiments.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\CrewScience\MatureCapsuleExperiments.cfg">
+      <Link>Science\Experiments\CrewScience\MatureCapsuleExperiments.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Science\Experiments\CrewScience\SecondGenExperiments.cfg">
+      <Link>Science\Experiments\CrewScience\SecondGenExperiments.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Science\Results\BioSample.cfg">
       <Link>Science\Results\BioSample.cfg</Link>
@@ -829,6 +855,12 @@
     </Content>
     <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersAdmin.cfg">
       <Link>Strategies\Leaders\LeadersAdmin.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersAstronauts.cfg">
+      <Link>Strategies\Leaders\LeadersAstronauts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersCorntractors.cfg">
+      <Link>Strategies\Leaders\LeadersCorntractors.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersEngineers.cfg">
       <Link>Strategies\Leaders\LeadersEngineers.cfg</Link>

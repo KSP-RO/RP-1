@@ -302,17 +302,17 @@ namespace KerbalConstructionTime
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
-            if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Show/Hide Resources", GUILayout.ExpandWidth(false)))
             {
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Show/Hide Resources"))
-                {
-                    GUIStates.ShowLCResources = !GUIStates.ShowLCResources;
-                }
+                GUIStates.ShowLCResources = !GUIStates.ShowLCResources;
+            }
+            if (!isModify || activeLC.LCType == LaunchComplexType.Pad)
+            {    
                 GUILayout.Label(" ");
                 _newLCData.isHumanRated = GUILayout.Toggle(_newLCData.isHumanRated, "Human-Rated", GUILayout.ExpandWidth(false));
-                GUILayout.EndHorizontal();
             }
+            GUILayout.EndHorizontal();
 
             double totalCost = 0;
             if (!isHangar)

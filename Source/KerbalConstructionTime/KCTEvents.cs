@@ -111,17 +111,14 @@ namespace KerbalConstructionTime
         private void OnEditorStarted()
         {
             Utilities.HandleEditorButton();
-            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
         }
 
         private void OnEditorRestarted()
         {
-            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
         }
 
         private void OnEditorLoad(ShipConstruct c, CraftBrowserDialog.LoadType t)
         {
-            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
         }
 
         public void CreateEvents()
@@ -232,40 +229,33 @@ namespace KerbalConstructionTime
         private void ShipModifiedEvent(ShipConstruct vessel)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void PartListEvent()
         {
-            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void CrewDialogChange(VesselCrewManifest vcm)
         {
-            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void EngineersReportReady()
         {
-            KerbalConstructionTime.Instance.ERClobberer.BindToEngineersReport();
         }
 
         private void StageCountChangedEvent(int num)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void StagingOrderChangedEvent()
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void PartStageabilityChangedEvent(Part p)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         public void TechUnlockEvent(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> ev)

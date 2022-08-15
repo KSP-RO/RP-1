@@ -16,8 +16,6 @@ namespace KerbalConstructionTime
     {
         public static KerbalConstructionTime Instance { get; private set; }
 
-        public EngineersReportClobberer ERClobberer { get; private set; }
-
         public bool IsEditorRecalcuationRequired;
 
         private static bool _isGUIInitialized = false;
@@ -82,7 +80,6 @@ namespace KerbalConstructionTime
             KCTGameStates.PersistenceLoaded = false;
 
             Instance = this;
-            ERClobberer = new EngineersReportClobberer(this);
 
             KCTGameStates.Settings.Load();
 
@@ -423,8 +420,6 @@ namespace KerbalConstructionTime
             // Move constantly-checked things that don't need physics precision to here.
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
                 Utilities.SetActiveKSCToRSS();
-
-            ERClobberer.PollForChanges();
 
             if (!KCT_GUI.IsPrimarilyDisabled && HighLogic.LoadedScene == GameScenes.SPACECENTER &&
                 VesselSpawnDialog.Instance?.Visible == true)

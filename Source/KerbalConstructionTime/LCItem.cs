@@ -415,10 +415,8 @@ namespace KerbalConstructionTime
 
         public void Rename(string newName)
         {
-            //find everything that references this launchpad by name and update the name reference
-
             Name = newName;
-            // TODO: do we need to rename vessels?
+            _lcData.Name = newName;
         }
 
         public void SwitchLaunchPad(int LP_ID = -1, bool updateDestrNode = true)

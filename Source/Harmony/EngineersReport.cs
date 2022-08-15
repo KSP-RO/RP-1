@@ -150,7 +150,8 @@ namespace RP0.Harmony
 
         public static void UpdateCraftStats()
         {
-            Prefix_UpdateCratStats(EngineersReport.Instance, EditorLogic.fetch.ship);
+            if (EngineersReport.Instance != null && IsValid)
+                Prefix_UpdateCratStats(EngineersReport.Instance, EditorLogic.fetch.ship);
         }
 
         [HarmonyPrefix]

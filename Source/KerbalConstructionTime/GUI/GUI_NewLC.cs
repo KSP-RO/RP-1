@@ -57,6 +57,11 @@ namespace KerbalConstructionTime
 
         private static void SetFieldsFromVessel(BuildListVessel blv, LCItem lc = null)
         {
+            if (lc == null)
+                _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
+            else
+                _newLCData.Name = lc.Name;
+
             _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.5f);
             _newLCData.sizeMax.x = Mathf.Ceil(blv.ShipSize.x * 1.5f);
             _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);

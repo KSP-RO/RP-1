@@ -24,6 +24,12 @@ namespace KerbalConstructionTime
             [Persistent] public bool isHumanRated;
             [Persistent] public PersistentDictionaryValueTypes<string, double> resourcesHandled = new PersistentDictionaryValueTypes<string, double>();
 
+            public float MaxPossibleMass => Mathf.Floor(massOrig * 2f);
+            public float MinPossibleMass => Mathf.Ceil(massOrig * 0.5f);
+            public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
+            public float MassMin => CalcMassMin(massMax);
+            public static float CalcMassMaxFromMin(float massMin) => Mathf.Ceil(massMin / 0.75f);
+
             public LCData() { }
 
             public LCData(string Name, float massMax, float massOrig, Vector3 sizeMax, LaunchComplexType lcType, bool isHumanRated, PersistentDictionaryValueTypes<string, double> resourcesHandled)
@@ -72,75 +78,78 @@ namespace KerbalConstructionTime
             public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, lc.ResourcesHandled);
             public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, data.resourcesHandled);
 
-            public double GetCostStats(out double curPadCost, out double curVABCost, out float fractionalPadLvl)
+            public float GetPadFracLevel()
+            {
+                float fractionalPadLvl = 0f;
+
+                if (Utilities.PadTons != null)
+                {
+                    float unlimitedTonnageThreshold = 2500f;
+
+                    if (massMax >= unlimitedTonnageThreshold)
+                    {
+                        int padLvl = Utilities.PadTons.Length - 1;
+                        fractionalPadLvl = padLvl;
+                    }
+                    else
+                    {
+                        for (int i = 1; i < Utilities.PadTons.Length; i++)
+                        {
+                            if (massMax < Utilities.PadTons[i])
+                            {
+                                float lowerBound = Utilities.PadTons[i - 1];
+                                float upperBound = Math.Min(Utilities.PadTons[i], unlimitedTonnageThreshold);
+                                float fractionOverFullLvl = (massMax - lowerBound) / (upperBound - lowerBound);
+                                fractionalPadLvl = (i - 1) + fractionOverFullLvl;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return fractionalPadLvl;
+            }
+
+            public double GetCostStats(out double costPad, out double costVAB, out double costResources)
             {
                 Vector3 padSize = sizeMax; // we tweak it later.
-                fractionalPadLvl = 0f;
+                
                 HashSet<string> ignoredRes;
                 if (lcType == LaunchComplexType.Pad)
                 {
                     ignoredRes = GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
 
                     double mass = massMax;
-                    curPadCost = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2000d) + 1000d;
-
-                    if (Utilities.PadTons == null)
-                    {
-                        fractionalPadLvl = 0f;
-                    }
-                    else
-                    {
-                        float unlimitedTonnageThreshold = 2500f;
-
-                        if (massMax >= unlimitedTonnageThreshold)
-                        {
-                            int padLvl = Utilities.PadTons.Length - 1;
-                            fractionalPadLvl = padLvl;
-                        }
-                        else
-                        {
-                            for (int i = 1; i < Utilities.PadTons.Length; i++)
-                            {
-                                if (massMax < Utilities.PadTons[i])
-                                {
-                                    float lowerBound = Utilities.PadTons[i - 1];
-                                    float upperBound = Math.Min(Utilities.PadTons[i], unlimitedTonnageThreshold);
-                                    float fractionOverFullLvl = (massMax - lowerBound) / (upperBound - lowerBound);
-                                    fractionalPadLvl = (i - 1) + fractionOverFullLvl;
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    costPad = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2000d) + 1000d;
                 }
                 else
                 {
                     ignoredRes = GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes;
 
-                    curPadCost = 0f;
+                    costPad = 0f;
                     padSize.y *= 5f;
                 }
-                curVABCost = padSize.sqrMagnitude * 25d + 100d;
+                costVAB = padSize.sqrMagnitude * 25d + 100d;
                 if (isHumanRated)
                 {
-                    curPadCost *= 1.5d;
-                    curVABCost *= 2d;
+                    costPad *= 1.5d;
+                    costVAB *= 2d;
                 }
 
-                curPadCost *= 0.75d;
-                curVABCost *= 0.75d;
+                costPad *= 0.75d;
+                costVAB *= 0.75d;
 
-                double resCost = 0d;
+                costResources = 0d;
                 foreach (var kvp in resourcesHandled)
                 {
                     if (ignoredRes.Contains(kvp.Key))
                         continue;
 
-                    resCost += Utilities.ResourceTankCost(kvp.Key, kvp.Value, lcType);
+                    costResources += Utilities.ResourceTankCost(kvp.Key, kvp.Value, lcType);
                 }
 
-                return curVABCost + curPadCost + resCost;
+                return costVAB + costPad + costResources;
             }
 
             private static HashSet<string> _resourceNames = new HashSet<string>();
@@ -187,10 +196,6 @@ namespace KerbalConstructionTime
 
         private LCData _lcData = new LCData();
         public LCData Stats => _lcData;
-        public double GetCostStats(out double curPadCost, out double curVABCost, out float fractionalPadLvl)
-        {
-            return _lcData.GetCostStats(out curPadCost, out curVABCost, out fractionalPadLvl);
-        }
 
         private double _rate;
         private double _rateHRCapped;
@@ -260,15 +265,14 @@ namespace KerbalConstructionTime
         public bool IsHumanRated => _lcData.isHumanRated;
         public float MassMax => _lcData.massMax;
         public float MassOrig => _lcData.massOrig;
-        public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
-        public float MassMin => CalcMassMin(MassMax);
+        public float MassMin => _lcData.MassMin;
         public Vector3 SizeMax => _lcData.sizeMax;
         public PersistentDictionaryValueTypes<string, double> ResourcesHandled => _lcData.resourcesHandled;
 
         public List<KCT_LaunchPad> LaunchPads = new List<KCT_LaunchPad>();
         public int ActiveLaunchPadIndex = 0;
 
-        public static string SupportedMassAsPrettyTextCalc(float mass) => mass == float.MaxValue ? "unlimited" : $"{CalcMassMin(mass):N0}-{mass:N0}t";
+        public static string SupportedMassAsPrettyTextCalc(float mass) => mass == float.MaxValue ? "unlimited" : $"{LCData.CalcMassMin(mass):N0}-{mass:N0}t";
         public string SupportedMassAsPrettyText => SupportedMassAsPrettyTextCalc(MassMax);
 
         public static string SupportedSizeAsPrettyTextCalc(Vector3 size) => size.y == float.MaxValue ? "unlimited" : $"{size.z:N0}x{size.x:N0}x{size.y:N0}m";
@@ -299,7 +303,7 @@ namespace KerbalConstructionTime
 
             if (_lcData.lcType == LaunchComplexType.Pad)
             {
-                _lcData.GetCostStats(out _, out _, out float fracLevel);
+                float fracLevel = _lcData.GetPadFracLevel();
                 var pad = new KCT_LaunchPad(Guid.NewGuid(), Name, fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
@@ -322,7 +326,7 @@ namespace KerbalConstructionTime
 
             if (_lcData.lcType == LaunchComplexType.Pad)
             {
-                _lcData.GetCostStats(out _, out _, out float fracLevel);
+                float fracLevel = _lcData.GetPadFracLevel();
 
                 foreach (var pad in LaunchPads)
                 {

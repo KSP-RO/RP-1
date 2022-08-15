@@ -122,6 +122,9 @@ namespace KerbalConstructionTime
                 ActiveLaunchComplexIndex = LC_ID;
             }
 
+            if(HighLogic.LoadedSceneIsEditor)
+                RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
+
             LaunchComplexes[LC_ID].SwitchLaunchPad();
         }
 

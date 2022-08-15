@@ -2189,7 +2189,7 @@ namespace KerbalConstructionTime
                         bool CanBeResolved = (bool)parameters[1];
                         float CostToResolve = (float)parameters[2];
                         string techName = (string)parameters[3];
-                        if (!string.IsNullOrEmpty(techName))
+                        if (!CanBeResolved && !string.IsNullOrEmpty(techName))
                             pendingTech.Add(techName);
 
                         // use a helper to get the ECM name, each PartModule type stores it differently

@@ -213,7 +213,6 @@ namespace KerbalConstructionTime
             double curPadCost = 0;
             double curVABCost = 0;
             double curResCost = 0;
-            float fractionalPadLvl = -1;
             _newLCData.massMax = isHangar ? activeLC.MassMax : 0;
             int tonnageLimitInt = (int)_newLCData.massMax;
             float minTonnage = 0f;
@@ -437,7 +436,7 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, fractionalPadLvl, _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
+            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
                 KCTGameStates.StarterLCBuilding |= !isModify;
 
@@ -633,6 +632,7 @@ namespace KerbalConstructionTime
             if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < Math.Max(1, (int)lc.MassOrig / 2) || tonnageLimit > lc.MassOrig * 2)))
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid tonnage limit");
+                Debug.Log($"[RP-0] Invalid LC tonnage set, fractional: {fractionalPadLvl}, tonnageLimit {tonnageLimit}, orig {(lc != null ? lc.MassOrig : -1f)}");
                 return false;
             }
 

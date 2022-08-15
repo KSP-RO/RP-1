@@ -37,19 +37,28 @@ namespace KerbalConstructionTime
             lcc.LCID = lcID;
             lcc.IsModify = isModify;
             lcc.ModID = modId;
-            if (KCTGameStates.LoadedSaveVersion < 8)
+            lcc.LCData = new LCItem.LCData(lcData);
+
+            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (lcc.ModID == Guid.Empty)
+                if (KCTGameStates.LoadedSaveVersion < 8)
                 {
-                    lcc.ModID = Guid.NewGuid();
+                    if (lcc.ModID == Guid.Empty)
+                    {
+                        lcc.ModID = Guid.NewGuid();
+                    }
+                    else
+                    {
+                        lcc.ModID = lcc.LCID;
+                    }
                 }
-                else
+                if (KCTGameStates.LoadedSaveVersion < 12)
                 {
-                    lcc.ModID = lcc.LCID;
+                    lcc.LCData.Name = KCTGameStates.FindLCFromID(lcc.LCID)?.Name ?? lcc.LCData.Name;
+                    if (string.IsNullOrEmpty(lcc.Name))
+                        lcc.Name = lcc.LCData.Name;
                 }
             }
-
-            lcc.LCData = new LCItem.LCData(lcData);
 
             return lcc;
         }

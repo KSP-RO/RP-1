@@ -541,6 +541,33 @@ namespace KerbalConstructionTime
             FlightDriver.StartWithNewLaunch(tempFile, Flag, launchSiteName, new VesselCrewManifest());
         }
 
+        public bool ResourcesOK(LCItem selectedLC, List<string> failedReasons = null)
+        {
+            bool pass = true;
+            HashSet<string> ignoredRes = selectedLC.LCType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+            foreach (var kvp in resourceAmounts)
+            {
+                if (ignoredRes.Contains(kvp.Key)
+                    || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
+                    continue;
+
+                if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
+                    continue;
+
+                double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
+                if (mass <= Formula.VesselMassMinForResourceValidation * TotalMass)
+                    continue;
+
+                if (failedReasons == null)
+                    return false;
+
+                pass = false;
+                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify LC.");
+            }
+
+            return pass;
+        }
+
         public List<string> MeetsFacilityRequirements(bool skipMinMass, bool highestFacility = false)
         {
             List<string> failedReasons = new List<string>();
@@ -563,22 +590,7 @@ namespace KerbalConstructionTime
             {
                 failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
             }
-            HashSet<string> ignoredRes = selectedLC.LCType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
-            foreach (var kvp in resourceAmounts)
-            {
-                if (ignoredRes.Contains(kvp.Key)
-                    || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
-                    continue;
-
-                if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
-                    continue;
-
-                double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
-                if (mass <= Formula.VesselMassMinForResourceValidation * totalMass)
-                    continue;
-
-                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify LC.");
-            }
+            ResourcesOK(selectedLC, failedReasons);
 
             // Facility doesn't matter here.
             CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.SizeMax);

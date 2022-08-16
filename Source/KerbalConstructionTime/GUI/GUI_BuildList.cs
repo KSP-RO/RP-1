@@ -689,7 +689,15 @@ namespace KerbalConstructionTime
                 else if (t is ConstructionBuildItem constr)
                 {
                     Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
-                    GUILayout.Label(new GUIContent( t.GetItemName(), "name" + costTooltip ));
+                    GUILayout.Label(new GUIContent(t.GetItemName(), "name" + costTooltip));
+                }
+                else if (t is RP0.Crew.TrainingCourse course)
+                {
+                    var sb = StringBuilderCache.Acquire();
+                    sb.Append("Astronauts:");
+                    foreach (var pcm in course.Students)
+                        sb.Append("\n").Append(pcm.displayName);
+                    GUILayout.Label(new GUIContent(course.GetItemName(), sb.ToStringAndRelease()));
                 }
                 else
                     GUILayout.Label(t.GetItemName());

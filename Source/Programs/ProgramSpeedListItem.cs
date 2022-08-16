@@ -69,7 +69,9 @@ namespace RP0.Programs
             _allowable = allowed;
 
             toggleButton.Data = program;
+            ToggleButton.onTrue.RemoveAllListeners();
             toggleButton.onTrue.AddListener(onTrue);
+            ToggleButton.onFalse.RemoveAllListeners();
             toggleButton.onFalse.AddListener(onFalse);
             toggleButton.Interactable = true; // was allowed -- but we want it always clickable, just colored.
 

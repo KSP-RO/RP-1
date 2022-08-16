@@ -447,7 +447,7 @@ namespace KerbalConstructionTime
                 DisplayMessage("Vessel Complete!", Message, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE);
             }
 
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static double SpendFunds(double toSpend, TransactionReasons reason)
@@ -1924,21 +1924,21 @@ namespace KerbalConstructionTime
         {
             currentLC.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
         {
             ksc.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static void ChangeResearchers(int delta)
         {
             KCTGameStates.Researchers += delta;
             KCTEvents.OnPersonnelChange.Fire();
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         private const double MaxSecondsForDayDisplay = 7d * 86400d;

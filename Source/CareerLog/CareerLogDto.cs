@@ -365,7 +365,7 @@ namespace RP0
             totalFunding = p.totalFunding;
             fundsPaidOut = p.fundsPaidOut;
             repPenaltyAssessed = p.repPenaltyAssessed;
-            speed = p.speed;
+            speed = p.ProgramSpeed;
         }
 
         public override string ToString()

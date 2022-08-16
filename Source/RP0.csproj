@@ -61,6 +61,7 @@
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="Harmony\EditorExtensionsRedux.cs" />
     <Compile Include="Harmony\EngineersReport.cs" />
+    <Compile Include="Harmony\ScienceSubjectWidget.cs" />
     <Compile Include="Harmony\RDNode.cs" />
     <Compile Include="KerbalConstructionTime\LCEfficiency.cs" />
     <Compile Include="Leaders\CurrencyModifierQueryRP0.cs" />

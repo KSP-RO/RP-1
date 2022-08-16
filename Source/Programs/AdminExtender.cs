@@ -83,7 +83,7 @@ namespace RP0.Programs
 
             if (active)
             {
-                _speedButtons[program.speed].SetState(UIRadioButton.State.True);
+                _speedButtons[program.ProgramSpeed].SetState(UIRadioButton.State.True);
                 _speedOptionsCosts.text = Localizer.GetStringByTag("#rp0ProgramConfidenceCost") + costStr;
             }
 
@@ -107,8 +107,8 @@ namespace RP0.Programs
             {
                 var item = AdminExtender.Instance._speedButtons[speed];
                 item.ResetInteractivity(true);
-                var oldSpeed = programStrategy.Program.speed;
-                programStrategy.Program.speed = speed;
+                var oldSpeed = programStrategy.Program.ProgramSpeed;
+                programStrategy.Program.SetSpeed(speed);
 
                 // Update the description and the button on change
                 if (oldSpeed != speed)

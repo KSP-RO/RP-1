@@ -86,7 +86,13 @@ namespace RP0.Programs
         public double repPenaltyAssessed;
 
         [Persistent]
-        public Speed speed = Speed.Normal;
+        private Speed speed = Speed.Normal;
+        public Speed ProgramSpeed => speed;
+        public void SetSpeed(Speed spd)
+        {
+            if (!IsActive && !IsComplete)
+                speed = spd;
+        }
 
         private Dictionary<Speed, float> confidenceCosts = new Dictionary<Speed, float>();
         public float GetDisplayedConfidenceCostForSpeed(Speed spd) => -(float)CurrencyUtils.Conf(TransactionReasonsRP0.ProgramActivation, -confidenceCosts[spd]);
@@ -564,6 +570,9 @@ namespace RP0.Programs
 
         public void SetBestAllowableSpeed()
         {
+            if (IsActive || IsComplete)
+                return;
+
             int max = (int)Speed.MAX;
             speed = Speed.Slow;
             for (int i = 0; i < max; ++i)

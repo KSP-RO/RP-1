@@ -285,7 +285,7 @@ namespace KerbalConstructionTime
         #region Observable funcs
         void added(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Add(pc); }
         void removed(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Remove(pc); }
-        void updated() { KCTEvents.OnRP0MaintenanceChanged.Fire(); }
+        void updated() { RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
         #endregion
 
         public LCItem(KSCItem ksc)

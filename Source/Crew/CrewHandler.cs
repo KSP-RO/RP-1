@@ -314,7 +314,7 @@ namespace RP0.Crew
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.TryGetValue(name, out var coursePair))
             {
-                bool isPartUnlocked = !isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available;
+                bool isPartUnlocked = string.IsNullOrEmpty(ap.TechRequired) || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available);
 
                 TrainingTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
                 profCourse.partsCovered.Add(ap);
@@ -333,9 +333,13 @@ namespace RP0.Crew
                 TrainingTemplate pc = coursePair.Item1;
                 TrainingTemplate mc = coursePair.Item2;
                 pc.partsCovered.Add(ap);
-                mc.partsCovered.Add(ap);
                 AppendToPartTooltip(ap, pc);
-                if (mc != null) AppendToPartTooltip(ap, mc);
+
+                if (mc != null)
+                {
+                    AppendToPartTooltip(ap, mc);
+                    mc.partsCovered.Add(ap);
+                }
             }
         }
 

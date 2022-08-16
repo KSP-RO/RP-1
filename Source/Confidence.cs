@@ -17,7 +17,7 @@ namespace RP0
 
         public static float AllConfidenceEarned => Instance == null ? 0 : Instance.confidenceEarned;
 
-        public static EventData<float, TransactionReasons> OnConfidenceChanged;
+        public static EventData<float, TransactionReasons> OnConfidenceChanged = new EventData<float, TransactionReasons>("OnConfidenceChanged");
 
         public override void OnAwake()
         {

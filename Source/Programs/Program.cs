@@ -514,7 +514,7 @@ namespace RP0.Programs
             }
             else
             {
-                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years";
+                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years\nDeadline if accepted now: {KSPUtil.dateTimeFormatter.PrintDate(KSPUtils.GetUT() + duration * 365.25d * 86400d, false, false)}";
             }
 
             if (extendedInfo)

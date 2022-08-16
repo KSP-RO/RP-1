@@ -35,7 +35,7 @@ namespace KerbalConstructionTime
             void updated()
             {
                 if (_allowRecalcConstructions) RecalculateBuildRates(false);
-                KCTEvents.OnRP0MaintenanceChanged.Fire();
+                RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
             }
         }
 

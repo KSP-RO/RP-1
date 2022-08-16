@@ -99,7 +99,7 @@ namespace KerbalConstructionTime
                 TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
             }
 
-            void updated() { KCTEvents.OnRP0MaintenanceChanged.Fire(); }
+            void updated() { RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
             TechList.Updated += updated;
         }
 

@@ -234,7 +234,7 @@ namespace RP0.Crew
                 {
                     CrewHandler.Instance.TrainingCourses.Add(_selectedCourse);
                     _selectedCourse = null;
-                    MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                    MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
                 }
             }
             return _selectedCourse == null ? UITab.Astronauts : UITab.NewCourse;
@@ -313,7 +313,7 @@ namespace RP0.Crew
                 if (course.Students.Count == 0)
                 {
                     CrewHandler.Instance.TrainingCourses.Remove(course);
-                    MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                    MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
                 }
             });
             options[2] = new DialogGUIButton("No", () => { });
@@ -335,7 +335,7 @@ namespace RP0.Crew
                 // We "complete" the course but we didn't mark it as Completed, so it just releases the students and doesn't apply rewards
                 course.CompleteCourse();
                 CrewHandler.Instance.TrainingCourses.Remove(course);
-                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
             });
             options[2] = new DialogGUIButton("No", () => { });
             var sb = new StringBuilder("Are you sure you want to cancel this training? The following students will be removed (losing all retirement benefit from the training):");

@@ -9,6 +9,7 @@ using KSP.UI;
 using System.Collections.Generic;
 using System.Reflection;
 using PreFlightTests;
+using System.Collections;
 
 namespace RP0.Harmony
 {
@@ -54,7 +55,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("CacheLocalStrings")]
-        internal static void CacheLocalStrings()
+        internal static void Prefix_CacheLocalStrings()
         {
             cacheAutoLOC_442833 = Localizer.Format("#autoLOC_442833");
             cacheAutoLOC_443059 = Localizer.Format("#autoLOC_443059");
@@ -144,6 +145,9 @@ namespace RP0.Harmony
                 __instance.AddTest(new ResourceContainersReachable(current));
                 __instance.AddTest(new ResourceConsumersReachable(current));
             }
+
+            // RP-0 tests
+            __instance.AddTest(new DesignConcerns.UntooledParts());
 
             return false;
         }
@@ -274,5 +278,50 @@ namespace RP0.Harmony
 
             return false;
         }
+
+        // Don't need this yet.
+
+        // Coroutine patching
+        //[HarmonyPostfix]
+        //[HarmonyPatch("OnAppInitialized")]
+        //internal static void Postfix_OnAppInitialized(EngineersReport __instance, ref Coroutine ___updateRoutine)
+        //{
+        //    __instance.StopCoroutine(___updateRoutine);
+        //    ___updateRoutine = __instance.StartCoroutine(RunTests());
+        //}
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch("OnCraftModified")]
+        //[HarmonyPatch(new System.Type[] { typeof(ShipConstruct) })]
+        //internal static void Postfix_OnCraftModified(EngineersReport __instance, ref Coroutine ___testRoutine)
+        //{
+        //    __instance.StopCoroutine(___testRoutine);
+        //    ___testRoutine = __instance.StartCoroutine(RunTests());
+        //}
+
+        //private static FieldInfo tests = typeof(EngineersReport).GetField("tests", AccessTools.all);
+        //private static System.Type TestWrapper = AccessTools.TypeByName("KSP.UI.Screens.EngineersReport.TestWrapper");
+        //private static MethodInfo RunTest = TestWrapper.GetMethod("RunTest", AccessTools.all);
+        //private static MethodInfo UpdateDesignConcern = typeof(EngineersReport).GetMethod("UpdateDesignConcern", AccessTools.all);
+
+        //private static DictionaryValueList<int, Part> resourceConsumers = new DictionaryValueList<int, Part>();
+        //private static DictionaryValueList<int, PartSet> resourceProviders = new DictionaryValueList<int, PartSet>();
+
+        //// Our own coroutine
+        //internal static IEnumerator RunTests()
+        //{
+        //    yield return null;
+        //    yield return null;
+
+        //    IList list = tests.GetValue(EngineersReport.Instance) as IList;
+        //    if (EditorLogic.fetch.ship.parts.Count != 0)
+        //    {
+        //        for (int i = 0, count = list.Count; i < count; i++)
+        //        {
+        //            RunTest.Invoke(list[i], null);
+        //        }
+        //    }
+        //    UpdateDesignConcern.Invoke(EngineersReport.Instance, null);
+        //}
     }
 }

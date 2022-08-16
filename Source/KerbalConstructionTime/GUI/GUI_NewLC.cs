@@ -328,8 +328,6 @@ namespace KerbalConstructionTime
 
             if (isModify)
             {
-                curResCost = _newLCData.ResModifyCost(activeLC.Stats);
-
                 // Enforce a min cost for pad size changes
                 const double minPadModifyCost = 1000d;
                 if (!isHangar && activeLC.MassMax != _newLCData.massMax && totalCost < minPadModifyCost)
@@ -352,7 +350,7 @@ namespace KerbalConstructionTime
                 if (curVABCost > oldVABCost && renovateCost > curVABCost)
                     renovateCost = curVABCost;
 
-                totalCost += renovateCost + curResCost;
+                totalCost += renovateCost + _newLCData.ResModifyCost(activeLC.Stats);
             }
             else
             {
@@ -361,7 +359,7 @@ namespace KerbalConstructionTime
 
             if (totalCost > 0)
             {
-                double totalCostForMaintenance = curVABCost;
+                double totalCostForMaintenance = curVABCost + curResCost;
                 if(!isHangar)
                     totalCostForMaintenance += curPadCost * lpMult;
 
@@ -533,14 +531,14 @@ namespace KerbalConstructionTime
             _resourceListScroll = GUILayout.BeginScrollView(_resourceListScroll, GUILayout.Width(215), GUILayout.Height(scrollHeight));
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Resource"));
-            GUILayout.Label(new GUIContent("Amount"), GetLabelRightAlignStyle());
+            GUILayout.Label("Resource");
+            GUILayout.Label("Amount", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             for (int i = 0; i < _resourceCount; i++)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(new GUIContent($"{_allResourceKeys[i]}"));
+                GUILayout.Label(_allResourceKeys[i]);
                 _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
 
                 bool remove = true;
@@ -564,7 +562,6 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (isModify)
             {
-
                 if (GUILayout.Button(new GUIContent("Combine with LC", "Combines these resources with complex's existing resource support")))
                 {
                     for (int i = 0; i < _resourceCount; i++)

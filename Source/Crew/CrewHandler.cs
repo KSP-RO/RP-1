@@ -788,7 +788,7 @@ namespace RP0.Crew
                 }
 
                 _toRemove.Clear();
-                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
             }
         }
 
@@ -833,7 +833,7 @@ namespace RP0.Crew
 
             if (anyCourseEnded)
             {
-                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
             }
         }
 

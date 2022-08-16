@@ -9,8 +9,8 @@ namespace RP0.Programs
         protected Program _program;
         public Program Program => _program;
         public void SetProgram(Program p) { _program = p; }
-        public void SetSpeed(Program.Speed spd) { _program.speed = spd; }
-        public Program.Speed ProgramSpeed => _program?.speed ?? Program.Speed.Slow;
+        public void SetSpeed(Program.Speed spd) { _program.SetSpeed(spd); }
+        public Program.Speed ProgramSpeed => _program?.ProgramSpeed ?? Program.Speed.Slow;
 
         public override void OnSetupConfig()
         {

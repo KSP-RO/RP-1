@@ -106,6 +106,13 @@ namespace KerbalConstructionTime
             }
             node.AddNode(tech);
 
+            var cnPlans = new ConfigNode("Plans");
+            foreach (BuildListVessel blv in KCTGameStates.Plans.Values)
+            {
+                cnPlans.AddNode(blv.BuildVesselAndShipNodeConfigs());
+            }
+            node.AddNode(cnPlans);
+
             KCT_GUI.GuiDataSaver.Save();
         }
 
@@ -125,6 +132,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.SciPointsTotal = -1;
                 KCTGameStates.UnassignedPersonnel = 0;
                 KCTGameStates.Researchers = 0;
+                KCTGameStates.Plans.Clear();
 
                 var kctVS = new KCT_DataStorage();
                 if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
@@ -179,6 +187,16 @@ namespace KerbalConstructionTime
                         {
                             Utilities.AddExperimentalPart(ap);
                         }
+                    }
+                }
+                tmp = node.GetNode("Plans");
+                if (tmp != null)
+                {
+                    foreach (ConfigNode cnV in tmp.GetNodes("KCTVessel"))
+                    {
+                        var blv = BuildListVessel.CreateBLVFromNode(cnV, null);
+                        KCTGameStates.Plans.Remove(blv.ShipName);
+                        KCTGameStates.Plans.Add(blv.ShipName, blv);
                     }
                 }
                 if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)

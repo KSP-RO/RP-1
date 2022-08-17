@@ -9,89 +9,8 @@ namespace KerbalConstructionTime
     {
         private static Rect _buildPlansWindowPosition = new Rect(Screen.width - 300, 40, 300, 1);
         private static Vector2 _buildPlansScrollPos;
-        private static GUIStyle _buildPlansbutton;
-        private static Texture2D _background;
-        private static GUIContent _upContent;
-        private static GUIContent _hoverContent;
-        private static Rect _rect;
-        private static float _scale;
-        private static GUIContent _content;
 
-        private static SortedList<string, BuildListVessel> _plansList = null;
         private static int _planToDelete;
-        private static Texture2D _up;
-        private static Texture2D _hover;
-
-        internal static void InitBuildPlans()
-        {
-            _buildPlansbutton = new GUIStyle(HighLogic.Skin.button);
-            _buildPlansbutton.margin = new RectOffset(0, 0, 0, 0);
-            _buildPlansbutton.padding = new RectOffset(0, 0, 0, 0);
-            _buildPlansbutton.border = new RectOffset(0, 0, 0, 0);
-            _buildPlansbutton.normal = _buildPlansbutton.hover;
-            _buildPlansbutton.active = _buildPlansbutton.hover;
-
-            _background = new Texture2D(2, 2);
-            Color[] color = new Color[4];
-            color[0] = new Color(1, 1, 1, 0);
-            color[1] = color[0];
-            color[2] = color[0];
-            color[3] = color[0];
-            _background.SetPixels(color);
-
-            _buildPlansbutton.normal.background = _background;
-            _buildPlansbutton.hover.background = _background;
-            _buildPlansbutton.onHover.background = _background;
-            _buildPlansbutton.active.background = _background;
-            _buildPlansbutton.onActive.background = _background;
-
-            _up = new Texture2D(2, 2);
-            _hover = new Texture2D(2, 2);
-            ToolbarControl.LoadImageFromFile(ref _up, KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Icons/KCT_add_normal");
-            ToolbarControl.LoadImageFromFile(ref _hover, KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Icons/KCT_add_hover");
-            //up = GameDatabase.Instance.GetTexture("RP-0/PluginData/Icons/KCT_add_normal", false);
-            //hover = GameDatabase.Instance.GetTexture("RP-0/PluginData/Icons/KCT_add_hover", false);
-
-            PositionAndSizeIcon();
-        }
-
-        private static void PositionAndSizeIcon()
-        {
-            Texture2D upTex = Texture2D.Instantiate(_up);
-            Texture2D hoverTex = Texture2D.Instantiate(_hover);
-
-            int offset = 0;
-            bool steamPresent = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "KSPSteamCtrlr");
-            bool mechjebPresent = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "MechJeb2");
-            if (steamPresent)
-                offset = 46;
-            if (mechjebPresent)
-                offset = 140;
-            _scale = GameSettings.UI_SCALE;
-
-            _rect = new Rect(Screen.width - (304 + offset) * _scale, 0, 42 * _scale, 38 * _scale);
-            {
-                TextureScale.Bilinear(upTex, (int)(_up.width * _scale), (int)(_up.height * _scale));
-                TextureScale.Bilinear(hoverTex, (int)(_hover.width * _scale), (int)(_hover.height * _scale));
-            }
-            _upContent = new GUIContent("", upTex, "");
-            _hoverContent = new GUIContent("", hoverTex, "");
-        }
-
-        private static void DoBuildPlansList()
-        {
-            if (_rect.Contains(Mouse.screenPos))
-                _content = _hoverContent;
-            else
-                _content = _upContent;
-            if (_scale != GameSettings.UI_SCALE)
-            {
-                PositionAndSizeIcon();
-            }
-            // When this is true, and the mouse is NOT over the toggle, the toggle code is making the toggle active
-            // which is showing the corners of the button as unfilled
-            GUIStates.ShowBuildPlansWindow = GUI.Toggle(_rect, GUIStates.ShowBuildPlansWindow, _content, _buildPlansbutton);
-        }
 
         private static void DrawBuildPlansWindow(int id)
         {
@@ -110,7 +29,8 @@ namespace KerbalConstructionTime
                             {
                                 var message = new ScreenMessage("Vessel must have a name other than 'Untitled Space Craft'.", 4f, ScreenMessageStyle.UPPER_CENTER);
                                 ScreenMessages.PostScreenMessage(message);
-                            } else
+                            }
+                            else
                             {
                                 var message = new ScreenMessage("Vessel must have a name", 4f, ScreenMessageStyle.UPPER_CENTER);
                                 ScreenMessages.PostScreenMessage(message);
@@ -123,13 +43,6 @@ namespace KerbalConstructionTime
                         if (GUILayout.Button("Add To Building Plans", GUILayout.Height(2 * 22)))
                         {
                             AddVesselToPlansList();
-                        }
-                        GUILayout.EndHorizontal();
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("Build", GUILayout.Height(2 * 22)))
-                        {
-                            Utilities.TryAddVesselToBuildList();
-                            Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                         }
                         GUILayout.EndHorizontal();
                     }
@@ -151,20 +64,18 @@ namespace KerbalConstructionTime
 
             GUILayout.EndHorizontal();
             {
-                _plansList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Plans;
-
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:");
                 GUILayout.EndHorizontal();
                 _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
-                if (_plansList == null || _plansList.Count == 0)
+                if (KCTGameStates.Plans.Count == 0)
                 {
                     GUILayout.Label("No vessels in plans.");
                 }
-                for (int i = 0; i < _plansList.Count; i++)
+                for (int i = 0; i < KCTGameStates.Plans.Count; i++)
                 {
-                    BuildListVessel b = _plansList.Values[i];
+                    BuildListVessel b = KCTGameStates.Plans.Values[i];
                     if (!b.AllPartsValid)
                         continue;
                     GUILayout.BeginHorizontal();
@@ -183,7 +94,7 @@ namespace KerbalConstructionTime
 
                         if (GUILayout.Button(b.ShipName))
                         {
-                            Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true);
+                            Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
                         }
                     }
 
@@ -215,7 +126,8 @@ namespace KerbalConstructionTime
             }
             BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
-                ShipName = EditorLogic.fetch.shipNameField.text
+                ShipName = EditorLogic.fetch.shipNameField.text,
+                LCID = System.Guid.Empty
             };
 
             var v = new VesselBuildValidator
@@ -230,29 +142,15 @@ namespace KerbalConstructionTime
         public static void AddVesselToPlansList(BuildListVessel blv)
         {
             ScreenMessage message;
-            if (Utilities.CurrentGameIsCareer())
+            if (KCTGameStates.Plans.ContainsKey(blv.ShipName))
             {
-                //Check upgrades
-                //First, mass limit
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(false);
-                if (facilityChecks.Count != 0)
-                {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! Listed below are the failed checks:\n"
-                        + string.Join("\n", facilityChecks.ToArray()), "Acknowledged", false, HighLogic.UISkin);
-                    return;
-                }
-            }
-
-            if (blv.LC.Plans.ContainsKey(blv.ShipName))
-            {
-                blv.LC.Plans.Remove(blv.ShipName);
+                KCTGameStates.Plans.Remove(blv.ShipName);
                 message = new ScreenMessage($"Replacing previous plan for {blv.ShipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
-            blv.LC.Plans.Add(blv.ShipName, blv);
+            KCTGameStates.Plans.Add(blv.ShipName, blv);
 
-            KCTDebug.Log($"Added {blv.ShipName} to {blv.LC.Name} plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
+            KCTDebug.Log($"Added {blv.ShipName} to plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
             KCTDebug.Log($"Launch site is {blv.LaunchSite}");
             string text = $"Added {blv.ShipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -262,7 +160,7 @@ namespace KerbalConstructionTime
         private static void RemoveVesselFromPlans()
         {
             InputLockManager.RemoveControlLock("KCTPopupLock");
-            _plansList.RemoveAt(_planToDelete);
+            KCTGameStates.Plans.RemoveAt(_planToDelete);
         }
     }
 }

@@ -116,6 +116,11 @@ namespace KerbalConstructionTime
             return PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiency;
         }
 
+        public static bool IsClamp(Part part)
+        {
+            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag("PadInfrastructure");
+        }
+
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
         {
             float total = 0, totalDry = 0;
@@ -156,7 +161,7 @@ namespace KerbalConstructionTime
             }
             else if (!includeClamps)
             {
-                if (aPart.partPrefab.Modules.Contains<LaunchClamp>() || aPart.partPrefab.HasTag("PadInfrastructure"))
+                if (IsClamp(aPart.partPrefab))
                     return 0;
             }
             ShipConstruction.GetPartCostsAndMass(part, aPart, out _, out _, out float dryMass, out float fuelMass);
@@ -173,7 +178,7 @@ namespace KerbalConstructionTime
 
                 if (excludeClamps)
                 {
-                    if (part.Modules.Contains<LaunchClamp>() || part.HasTag("PadInfrastructure"))
+                    if (IsClamp(part))
                         continue;
                     if (part.parent != null && part.parent.HasTag("PadInfrastructure"))
                         continue;
@@ -212,7 +217,7 @@ namespace KerbalConstructionTime
                 p = ship.parts[i];
                 if (excludeClamps)
                 {
-                    if (p.Modules.Contains<LaunchClamp>() || p.HasTag("PadInfrastructure"))
+                    if (IsClamp(p))
                         continue;
                     if (p.parent != null && p.parent.HasTag("PadInfrastructure"))
                         continue;
@@ -447,7 +452,7 @@ namespace KerbalConstructionTime
                 DisplayMessage("Vessel Complete!", Message, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE);
             }
 
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static double SpendFunds(double toSpend, TransactionReasons reason)
@@ -557,15 +562,16 @@ namespace KerbalConstructionTime
                 string dialogStr;
                 if (type == BuildListVessel.ListType.VAB)
                 {
-                    if (KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() == null)
-                        dialogStr = $"a launch complex. You must wait for a launch complex to finish building or renovating before you can build this vessel.";
+                    if (KCTGameStates.ActiveKSC.IsAnyLCOperational)
+                        dialogStr = $"a launch complex. Please switch to a launch complex and try again.";
                     else
-                        dialogStr = $"a launch complex. Please switch to a launch complex in the Space Center Management window's Operations tab and try again.";
+                        dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can build this vessel.";
+
                 }
                 else
                 {
                     if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
-                        dialogStr = $"the Hangar. Please switch to the Hangar in the Space Center Management window's Operations tab and try again.";
+                        dialogStr = $"the Hangar. Please switch to the Hangar as active launch complex and try again.";
                     else
                         dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can build this vessel.";
                 }
@@ -579,16 +585,16 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
-            {
-                ShipName = EditorLogic.fetch.shipNameField.text
-            };
+            var blv = KCTGameStates.EditorVessel.CreateCopy(false);
 
             TryAddVesselToBuildList(blv);
         }
 
-        public static void TryAddVesselToBuildList(BuildListVessel blv, bool skipPartChecks = false)
+        public static void TryAddVesselToBuildList(BuildListVessel blv, bool skipPartChecks = false, LCItem overrideLC = null)
         {
+            if (overrideLC != null)
+                blv.LCID = overrideLC.ID;
+
             var v = new VesselBuildValidator
             {
                 CheckPartAvailability = !skipPartChecks,
@@ -644,7 +650,10 @@ namespace KerbalConstructionTime
             string launchSite = EditorLogic.fetch.launchSiteName;
             var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
-                ShipName = EditorLogic.fetch.shipNameField.text
+                ShipName = EditorLogic.fetch.shipNameField.text,
+                FacilityBuiltIn = editableShip.FacilityBuiltIn,
+                KCTPersistentID = editableShip.KCTPersistentID,
+                LCID = editableShip.LCID // not setting LC directly here
             };
 
             double usedShipsCost = editableShip.GetTotalCost();
@@ -665,10 +674,6 @@ namespace KerbalConstructionTime
         private static void SaveShipEdits(BuildListVessel editableShip, BuildListVessel newShip)
         {
             AddVesselToBuildList(newShip);
-
-            newShip.FacilityBuiltIn = editableShip.FacilityBuiltIn;
-            newShip.KCTPersistentID = editableShip.KCTPersistentID;
-            newShip.LCID = editableShip.LCID;
 
             int oldIdx;
             editableShip.RemoveFromBuildList(out oldIdx);
@@ -1924,21 +1929,21 @@ namespace KerbalConstructionTime
         {
             currentLC.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static void ChangeEngineers(KSCItem ksc, int delta)
         {
             ksc.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static void ChangeResearchers(int delta)
         {
             KCTGameStates.Researchers += delta;
             KCTEvents.OnPersonnelChange.Fire();
-            KCTEvents.OnRP0MaintenanceChanged.Fire();
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         private const double MaxSecondsForDayDisplay = 7d * 86400d;

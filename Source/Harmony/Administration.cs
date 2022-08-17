@@ -41,7 +41,7 @@ namespace RP0.Harmony
 
             foreach (var strat in Strategies.StrategySystem.Instance.GetStrategies("Programs"))
             {
-                if (strat is ProgramStrategy ps && !ps.Program.IsActive && !ps.Program.IsComplete)
+                if (strat is ProgramStrategy ps)
                 {
                     ps.Program.SetBestAllowableSpeed();
                 }
@@ -245,8 +245,7 @@ namespace RP0.Harmony
             {
                 // Set best speed before we get description
                 // This is maybe a duplicate of the work we did in CreateStrategiesList but eh.
-                if (!ps.Program.IsComplete && !ps.Program.IsActive && !AdminExtender.Instance.PressedSpeedButton)
-                    ps.Program.SetBestAllowableSpeed();
+                ps.Program.SetBestAllowableSpeed();
             }
         }
 
@@ -338,7 +337,7 @@ namespace RP0.Harmony
                 // Reset program speeds
                 foreach (var strat in StrategySystem.Instance.Strategies)
                 {
-                    if (!strat.IsActive && strat != newActiveStrat && strat is ProgramStrategy ps && !ps.Program.IsActive && !ps.Program.IsComplete)
+                    if (strat is ProgramStrategy ps)
                         ps.Program.SetBestAllowableSpeed();
                 }
                 createStratList.Invoke(Administration.Instance, new object[] { StrategySystem.Instance.SystemConfig.Departments });

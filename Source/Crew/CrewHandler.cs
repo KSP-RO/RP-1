@@ -308,13 +308,12 @@ namespace RP0.Crew
         public void AddPartCourses(AvailablePart ap, bool isKCTExperimentalNode = false)
         {
             if (ap.partPrefab.isVesselEVA || ap.name.StartsWith("kerbalEVA", StringComparison.OrdinalIgnoreCase) ||
-                ap.partPrefab.Modules.Contains<KerbalSeat>() ||
-                ap.partPrefab.Modules.Contains<LaunchClamp>() || ap.partPrefab.HasTag("PadInfrastructure")) return;
+                ap.partPrefab.Modules.Contains<KerbalSeat>() || KerbalConstructionTime.Utilities.IsClamp(ap.partPrefab)) return;
 
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.TryGetValue(name, out var coursePair))
             {
-                bool isPartUnlocked = !isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available;
+                bool isPartUnlocked = string.IsNullOrEmpty(ap.TechRequired) || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available);
 
                 TrainingTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
                 profCourse.partsCovered.Add(ap);
@@ -333,9 +332,13 @@ namespace RP0.Crew
                 TrainingTemplate pc = coursePair.Item1;
                 TrainingTemplate mc = coursePair.Item2;
                 pc.partsCovered.Add(ap);
-                mc.partsCovered.Add(ap);
                 AppendToPartTooltip(ap, pc);
-                if (mc != null) AppendToPartTooltip(ap, mc);
+
+                if (mc != null)
+                {
+                    AppendToPartTooltip(ap, mc);
+                    mc.partsCovered.Add(ap);
+                }
             }
         }
 
@@ -784,7 +787,7 @@ namespace RP0.Crew
                 }
 
                 _toRemove.Clear();
-                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
             }
         }
 
@@ -829,7 +832,7 @@ namespace RP0.Crew
 
             if (anyCourseEnded)
             {
-                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
             }
         }
 

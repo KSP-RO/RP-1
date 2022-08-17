@@ -30,7 +30,7 @@ namespace RP0
         private static readonly Dictionary<SpaceCenterFacility, float[]> _facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
         public static void ClearFacilityCosts() { _facilityLevelCosts.Clear(); }
 
-        public static EventVoid OnRP0MaintenanceChanged;
+        public static EventVoid OnRP0MaintenanceChanged = new EventVoid("OnRP0MaintenanceChanged");
 
         [KSPField(isPersistant = true)]
         public double nextUpdate = -1d;
@@ -595,25 +595,25 @@ namespace RP0
         private void onVesselRecoveryProcessingComplete(ProtoVessel pv, KSP.UI.Screens.MissionRecoveryDialog mrd, float x)
         {
             if (pv.GetVesselCrew().Count > 0)
-                MaintenanceHandler.OnRP0MaintenanceChanged.Fire();
+                ScheduleMaintenanceUpdate();
         }
 
         private void onKerbalTypeChanged(ProtoCrewMember pcm, ProtoCrewMember.KerbalType from, ProtoCrewMember.KerbalType to)
         {
             if (from != to && (from == ProtoCrewMember.KerbalType.Crew || to == ProtoCrewMember.KerbalType.Crew))
-                OnRP0MaintenanceChanged.Fire();
+                ScheduleMaintenanceUpdate();
         }
 
         private void onKerbalStatusChange(ProtoCrewMember pcm, ProtoCrewMember.RosterStatus from, ProtoCrewMember.RosterStatus to)
         {
             if (from != to)
-                OnRP0MaintenanceChanged.Fire();
+                ScheduleMaintenanceUpdate();
         }
 
         private void onKerbalInactiveChange(ProtoCrewMember pcm, bool from, bool to)
         {
             if (from != to)
-                OnRP0MaintenanceChanged.Fire();
+                ScheduleMaintenanceUpdate();
         }
     }
 }

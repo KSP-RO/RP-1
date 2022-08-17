@@ -689,7 +689,15 @@ namespace KerbalConstructionTime
                 else if (t is ConstructionBuildItem constr)
                 {
                     Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
-                    GUILayout.Label(new GUIContent( t.GetItemName(), "name" + costTooltip ));
+                    GUILayout.Label(new GUIContent(t.GetItemName(), "name" + costTooltip));
+                }
+                else if (t is RP0.Crew.TrainingCourse course)
+                {
+                    var sb = StringBuilderCache.Acquire();
+                    sb.Append("Astronauts:");
+                    foreach (var pcm in course.Students)
+                        sb.Append("\n").Append(pcm.displayName);
+                    GUILayout.Label(new GUIContent(course.GetItemName(), sb.ToStringAndRelease()));
                 }
                 else
                     GUILayout.Label(t.GetItemName());
@@ -1114,14 +1122,15 @@ namespace KerbalConstructionTime
 
                     if (!HighLogic.LoadedSceneIsEditor && lpState > LaunchPadState.Nonoperational) //rollout if the pad isn't busy
                     {
-                        List<string> facilityChecks = b.MeetsFacilityRequirements(false);
+                        List<string> facilityChecks = new List<string>();
+                        bool meetsChecks = b.MeetsFacilityRequirements(facilityChecks);
 
                         GUIStyle btnColor = _greenButton;
                         if (lpState == LaunchPadState.Destroyed)
                             btnColor = _redButton;
                         else if (lpState <  LaunchPadState.Free)
                             btnColor = _yellowButton;
-                        else if (facilityChecks.Count != 0)
+                        else if (!meetsChecks)
                             btnColor = _yellowButton;
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
                         if (tmpRollout.Cost > 0d)
@@ -1131,7 +1140,7 @@ namespace KerbalConstructionTime
                         {
                             if (foundPad != null && lpState == LaunchPadState.Free)
                             {
-                                if (facilityChecks.Count == 0)
+                                if (meetsChecks)
                                 {
                                     b.LaunchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
                                     vesselLC.Recon_Rollout.Add(tmpRollout);
@@ -1206,8 +1215,8 @@ namespace KerbalConstructionTime
                             }
                             b.LaunchSiteIndex = vesselLC.ActiveLaunchPadIndex;
 
-                            List<string> facilityChecks = b.MeetsFacilityRequirements(false);
-                            if (facilityChecks.Count == 0)
+                            List<string> facilityChecks = new List<string>();
+                            if (b.MeetsFacilityRequirements(facilityChecks))
                             {
                                 if (pad == null)
                                 {
@@ -1298,8 +1307,8 @@ namespace KerbalConstructionTime
                     if (HighLogic.LoadedScene != GameScenes.TRACKSTATION && (airlaunchPrep == null || airlaunchPrep.IsComplete()) &&
                         GUILayout.Button(launchBtnText, GUILayout.ExpandWidth(false)))
                     {
-                        List<string> facilityChecks = b.MeetsFacilityRequirements(false);
-                        if (facilityChecks.Count == 0)
+                        List<string> facilityChecks = new List<string>();
+                        if (b.MeetsFacilityRequirements(facilityChecks))
                         {
                             bool operational = Utilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
                             if (!operational)

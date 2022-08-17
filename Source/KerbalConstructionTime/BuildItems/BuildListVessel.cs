@@ -641,7 +641,7 @@ namespace KerbalConstructionTime
                 failedReasons.Add("Has launch clamps/GSE but is launching from runway");
             }
 
-            return true;
+            return failedReasons == null || failedReasons.Count == 0;
         }
 
         private bool HasClamps()
@@ -860,6 +860,54 @@ namespace KerbalConstructionTime
             return removed;
         }
 
+        public ConfigNode BuildVesselAndShipNodeConfigs()
+        {
+            var storageItem = new BuildListStorageItem();
+            storageItem.FromBuildListVessel(this);
+            var cnTemp = new ConfigNode("KCTVessel");
+            cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
+            var shipNode = new ConfigNode("ShipNode");
+            ShipNode.CopyTo(shipNode);
+            cnTemp.AddNode(shipNode);
+            return cnTemp;
+        }
+
+        public static BuildListVessel CreateBLVFromNode(in ConfigNode cn, LCItem LC)
+        {
+            var listItem = new BuildListStorageItem();
+            ConfigNode.LoadObjectFromConfig(listItem, cn);
+            BuildListVessel blv = listItem.ToBuildListVessel();
+            blv.ShipNode = cn.GetNode("ShipNode");
+            blv.LC = LC;
+            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            {
+                if (KCTGameStates.LoadedSaveVersion < 10)
+                {
+                    blv.RecalculateFromNode(false);
+                }
+
+                if (KCTGameStates.LoadedSaveVersion < 11 && LC != null)
+                {
+                    HashSet<string> ignoredRes = LC.Stats.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+
+                    foreach (var kvp in blv.resourceAmounts)
+                    {
+                        if (ignoredRes.Contains(kvp.Key)
+                            || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
+                            continue;
+
+                        double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
+                        if (mass <= Formula.VesselMassMinForResourceValidation * blv.GetTotalMass())
+                            continue;
+
+                        LC.Stats.resourcesHandled[kvp.Key] = kvp.Value * 1.1d;
+                    }
+                }
+            }
+            blv.UpdateBuildRate();
+            return blv;
+        }
+
         public List<PseudoPart> GetPseudoParts()
         {
             List<PseudoPart> retList = new List<PseudoPart>();
@@ -951,7 +999,6 @@ namespace KerbalConstructionTime
 
             return multipliedCost;
         }
-
 
         public double GetEffectiveCost(List<ConfigNode> parts)
         {
@@ -1171,7 +1218,10 @@ namespace KerbalConstructionTime
 
         public double UpdateBuildRate()
         {
-            _buildRate = Utilities.GetBuildRate(this) * LC?.StrategyRateMultiplier ?? 1d;
+            if (LC == null)
+                return 0d;
+
+            _buildRate = Utilities.GetBuildRate(this) * LC.StrategyRateMultiplier;
             if (_buildRate < 0d)
                 _buildRate = 0d;
 

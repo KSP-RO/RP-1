@@ -104,8 +104,8 @@ namespace KerbalConstructionTime
             if (CheckFacilityRequirements)
             {
                 //Check if vessel fails facility checks but can still be built
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(false);
-                if (facilityChecks.Count != 0)
+                List<string> facilityChecks = new List<string>();
+                if (!blv.MeetsFacilityRequirements(facilityChecks))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
                         "Failed editor checks!",

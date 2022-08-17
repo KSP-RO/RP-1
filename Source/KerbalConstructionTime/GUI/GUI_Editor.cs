@@ -12,6 +12,7 @@ namespace KerbalConstructionTime
 
         private static double _finishedShipBP = -1;
         private static bool _isEditorLocked = false;
+        private static bool _wasShowBuildList = false;
 
         public static void DrawEditorGUI(int windowID)
         {
@@ -125,7 +126,8 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Show/Hide Management"))
             {
-                GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
+                if (!GUIStates.ShowNewLC && !GUIStates.ShowModifyLC)
+                    GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
             }
 
             RenderEditorLaunchComplexControls();
@@ -157,8 +159,9 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New LC", "Build a new launch complex for this vessel")))
             {
-                SetFieldsFromVessel(KCTGameStates.EditorVessel);                
-
+                SetFieldsFromVessel(KCTGameStates.EditorVessel);
+                
+                _wasShowBuildList = GUIStates.ShowBuildList;
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowLCResources = false;
                 GUIStates.ShowModifyLC = false;
@@ -175,6 +178,7 @@ namespace KerbalConstructionTime
             {
                 SetFieldsFromVessel(KCTGameStates.EditorVessel, activeLC);
 
+                _wasShowBuildList = GUIStates.ShowBuildList;
                 GUIStates.ShowModifyLC = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -187,6 +191,7 @@ namespace KerbalConstructionTime
             {
                 SetFieldsFromVesselKeepOld(KCTGameStates.EditorVessel, activeLC);
 
+                _wasShowBuildList = GUIStates.ShowBuildList;
                 GUIStates.ShowModifyLC = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;

@@ -15,49 +15,61 @@ namespace KerbalConstructionTime
         private static void DrawBuildPlansWindow(int id)
         {
             int butW = 20;
-
+            bool lcMode = GUIStates.ShowNewLC || GUIStates.ShowModifyLC;
             GUILayout.BeginVertical();
-            if (HighLogic.LoadedSceneIsEditor)
+            if (lcMode)
             {
-                if (EditorLogic.fetch.ship != null && EditorLogic.fetch.ship.Parts != null && EditorLogic.fetch.ship.Parts.Count > 0)
+                GUILayout.Space(10);
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("Add LC Support For:");
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+            }
+            else
+            {
+                if (HighLogic.LoadedSceneIsEditor)
                 {
-                    if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft" || EditorLogic.fetch.ship.shipName == "")
+                    if (EditorLogic.fetch.ship != null && EditorLogic.fetch.ship.Parts != null && EditorLogic.fetch.ship.Parts.Count > 0)
                     {
-                        if (GUILayout.Button("Cannot Add a Plan Without a Valid Name", GUILayout.Height(2 * 22)))
+                        if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft" || EditorLogic.fetch.ship.shipName == "")
                         {
-                            if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft")
+                            if (GUILayout.Button("Cannot Add a Plan Without a Valid Name", GUILayout.Height(2 * 22)))
                             {
-                                var message = new ScreenMessage("Vessel must have a name other than 'Untitled Space Craft'.", 4f, ScreenMessageStyle.UPPER_CENTER);
-                                ScreenMessages.PostScreenMessage(message);
+                                if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft")
+                                {
+                                    var message = new ScreenMessage("Vessel must have a name other than 'Untitled Space Craft'.", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessages.PostScreenMessage(message);
+                                }
+                                else
+                                {
+                                    var message = new ScreenMessage("Vessel must have a name", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessages.PostScreenMessage(message);
+                                }
                             }
-                            else
+                        }
+                        else
+                        {
+                            GUILayout.BeginHorizontal();
+                            if (GUILayout.Button("Add To Building Plans", GUILayout.Height(2 * 22)))
                             {
-                                var message = new ScreenMessage("Vessel must have a name", 4f, ScreenMessageStyle.UPPER_CENTER);
-                                ScreenMessages.PostScreenMessage(message);
+                                AddVesselToPlansList();
                             }
+                            GUILayout.EndHorizontal();
                         }
                     }
                     else
                     {
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("Add To Building Plans", GUILayout.Height(2 * 22)))
-                        {
-                            AddVesselToPlansList();
-                        }
-                        GUILayout.EndHorizontal();
+                        GUILayout.Button("No vessel available", GUILayout.Height(2 * 22));
                     }
                 }
-                else
-                {
-                    GUILayout.Button("No vessel available", GUILayout.Height(2 * 22));
-                }
+                GUILayout.Space(10);
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("Available Building Plans");
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
             }
-            GUILayout.Space(10);
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.Label("Available Building Plans");
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
 
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
@@ -80,7 +92,11 @@ namespace KerbalConstructionTime
                         continue;
                     GUILayout.BeginHorizontal();
                     {
-                        if (GUILayout.Button("X", _redButton, GUILayout.Width(butW)))
+                        if (lcMode)
+                        {
+                            GUILayout.Label("", GUILayout.Width(butW));
+                        }
+                        else if (GUILayout.Button("X", _redButton, GUILayout.Width(butW)))
                         {
                             _planToDelete = i;
                             InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
@@ -94,7 +110,14 @@ namespace KerbalConstructionTime
 
                         if (GUILayout.Button(b.ShipName))
                         {
-                            Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
+                            if (lcMode)
+                            {
+                                SetFieldsFromVesselKeepOld(b, null);
+                            }
+                            else
+                            {
+                                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
+                            }
                         }
                     }
 

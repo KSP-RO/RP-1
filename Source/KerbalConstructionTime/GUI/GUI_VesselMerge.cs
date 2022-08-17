@@ -26,7 +26,8 @@ namespace KerbalConstructionTime
 
                 _activeLCMergeScroll = GUILayout.BeginScrollView(_activeLCMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
 
-                foreach (BuildListVessel vessel in KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Warehouse)
+                LCItem lc = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                foreach (BuildListVessel vessel in lc.Warehouse)
                 {
                     if (vessel.Id != ship.Id && !KCTGameStates.MergedVessels.Exists(x => x.Id == vessel.Id) && GUILayout.Button(vessel.ShipName))
                     {

@@ -191,12 +191,12 @@ namespace RP0.Harmony
                 craftSize = KCTGameStates.EditorVessel.ShipSize;
                 vesselHumanRated = KCTGameStates.EditorVessel.IsHumanRated;
 
-                resourcesOK = KCTGameStates.EditorVessel.ResourcesOK(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
+                resourcesOK = KCTGameStates.EditorVessel.ResourcesOK(KCTGameStates.EditorVessel.LC);
 
-                massLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMax;
-                minMassLimit = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.MassMin;
-                maxSize = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SizeMax;
-                lcHumanRated = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated;
+                massLimit = KCTGameStates.EditorVessel.LC.MassMax;
+                minMassLimit = KCTGameStates.EditorVessel.LC.MassMin;
+                maxSize = KCTGameStates.EditorVessel.LC.SizeMax;
+                lcHumanRated = KCTGameStates.EditorVessel.LC.IsHumanRated;
                 vesselHumanRated = KCTGameStates.EditorVessel.IsHumanRated;
             }
             else

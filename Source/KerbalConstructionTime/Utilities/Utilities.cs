@@ -644,7 +644,8 @@ namespace KerbalConstructionTime
             string launchSite = EditorLogic.fetch.launchSiteName;
             var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
-                ShipName = EditorLogic.fetch.shipNameField.text
+                ShipName = EditorLogic.fetch.shipNameField.text,
+                LC = editableShip.LC
             };
 
             double usedShipsCost = editableShip.GetTotalCost();

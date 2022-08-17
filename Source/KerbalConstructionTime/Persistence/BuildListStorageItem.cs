@@ -38,6 +38,8 @@ namespace KerbalConstructionTime
         PersistentDictionaryValueTypes<string, double> resourceAmounts = new PersistentDictionaryValueTypes<string, double>();
         [Persistent]
         PersistentHashSetValueType<string> globalTags = new PersistentHashSetValueType<string>();
+        [Persistent]
+        BuildListVessel.ClampsState clampState = BuildListVessel.ClampsState.Untested;
 
         public BuildListVessel ToBuildListVessel()
         {
@@ -58,7 +60,8 @@ namespace KerbalConstructionTime
                 KCTPersistentID = KCTPersistentID,
                 FacilityBuiltIn = FacilityBuiltIn,
                 resourceAmounts = resourceAmounts,
-                globalTags = globalTags
+                globalTags = globalTags,
+                hasClamps = clampState
             };
             return ret;
         }

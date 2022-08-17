@@ -189,7 +189,6 @@ namespace KerbalConstructionTime
         public Guid ModID => _modID;
         public KCTObservableList<BuildListVessel> BuildList = new KCTObservableList<BuildListVessel>();
         public KCTObservableList<BuildListVessel> Warehouse = new KCTObservableList<BuildListVessel>();
-        public SortedList<string, BuildListVessel> Plans = new SortedList<string, BuildListVessel>();
         public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
         public List<ReconRollout> Recon_Rollout = new List<ReconRollout>();
         public List<AirlaunchPrep> AirlaunchPrep = new List<AirlaunchPrep>();
@@ -493,54 +492,6 @@ namespace KerbalConstructionTime
                 LCEfficiency.ClearEmpty();
         }
 
-        private void BuildVesselAndShipNodeConfigs(BuildListVessel blv, ref ConfigNode node)
-        {
-            var storageItem = new BuildListStorageItem();
-            storageItem.FromBuildListVessel(blv);
-            var cnTemp = new ConfigNode("KCTVessel");
-            cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
-            var shipNode = new ConfigNode("ShipNode");
-            blv.ShipNode.CopyTo(shipNode);
-            cnTemp.AddNode(shipNode);
-            node.AddNode(cnTemp);
-        }
-
-        private BuildListVessel CreateBLVFromNode(in ConfigNode cn)
-        {
-            var listItem = new BuildListStorageItem();
-            ConfigNode.LoadObjectFromConfig(listItem, cn);
-            BuildListVessel blv = listItem.ToBuildListVessel();
-            blv.ShipNode = cn.GetNode("ShipNode");
-            blv.LC = this;
-            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KCTGameStates.LoadedSaveVersion < 10)
-                {
-                    blv.RecalculateFromNode(false);
-                }
-
-                if (KCTGameStates.LoadedSaveVersion < 11)
-                {
-                    HashSet<string> ignoredRes = _lcData.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
-
-                    foreach (var kvp in blv.resourceAmounts)
-                    {
-                        if (ignoredRes.Contains(kvp.Key)
-                            || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
-                            continue;
-
-                        double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
-                        if (mass <= Formula.VesselMassMinForResourceValidation * blv.GetTotalMass())
-                            continue;
-
-                        _lcData.resourcesHandled[kvp.Key] = kvp.Value * 1.1d;
-                    }
-                }
-            }
-            blv.UpdateBuildRate();
-            return blv;
-        }
-
         public ConfigNode AsConfigNode()
         {
             KCTDebug.Log("Saving LC " + Name);
@@ -560,14 +511,14 @@ namespace KerbalConstructionTime
             var cnBuildl = new ConfigNode("BuildList");
             foreach (BuildListVessel blv in BuildList)
             {
-                BuildVesselAndShipNodeConfigs(blv, ref cnBuildl);
+                cnBuildl.AddNode(blv.BuildVesselAndShipNodeConfigs());
             }
             node.AddNode(cnBuildl);
 
             var cnWh = new ConfigNode("Warehouse");
             foreach (BuildListVessel blv in Warehouse)
             {
-                BuildVesselAndShipNodeConfigs(blv, ref cnWh);
+                cnWh.AddNode(blv.BuildVesselAndShipNodeConfigs());
             }
             node.AddNode(cnWh);
 
@@ -582,13 +533,6 @@ namespace KerbalConstructionTime
                 cnPadConstructions.AddNode(cn);
             }
             node.AddNode(cnPadConstructions);
-
-            var cnPlans = new ConfigNode("Plans");
-            foreach (BuildListVessel blv in Plans.Values)
-            {
-                BuildVesselAndShipNodeConfigs(blv, ref cnPlans);
-            }
-            node.AddNode(cnPlans);
 
             var cnRR = new ConfigNode("Recon_Rollout");
             foreach (ReconRollout rr in Recon_Rollout)
@@ -628,7 +572,6 @@ namespace KerbalConstructionTime
         {
             BuildList.Clear();
             Warehouse.Clear();
-            Plans.Clear();
             PadConstructions.Clear();
             Recon_Rollout.Clear();
             AirlaunchPrep.Clear();
@@ -657,21 +600,13 @@ namespace KerbalConstructionTime
             tmp = node.GetNode("BuildList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
-                BuildList.Add(CreateBLVFromNode(cn));
+                BuildList.Add(BuildListVessel.CreateBLVFromNode(cn, this));
             }
 
             tmp = node.GetNode("Warehouse");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
-                Warehouse.Add(CreateBLVFromNode(cn));
-            }
-
-            tmp = node.GetNode("Plans");
-            foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
-            {
-                var blv = CreateBLVFromNode(cn);
-                Plans.Remove(blv.ShipName); 
-                Plans.Add(blv.ShipName, blv);
+                Warehouse.Add(BuildListVessel.CreateBLVFromNode(cn, this));
             }
 
             tmp = node.GetNode("Recon_Rollout");
@@ -784,6 +719,20 @@ namespace KerbalConstructionTime
                 if (KCTGameStates.LoadedSaveVersion < 12)
                 {
                     _lcData.Name = Name;
+                }
+                if (KCTGameStates.LoadedSaveVersion < 13)
+                {
+                    tmp = node.GetNode("Plans");
+                    if (tmp != null)
+                    {
+                        foreach (ConfigNode cnV in tmp.GetNodes("KCTVessel"))
+                        {
+                            var blv = BuildListVessel.CreateBLVFromNode(cnV, null);
+                            blv.LCID = Guid.Empty;
+                            KCTGameStates.Plans.Remove(blv.ShipName);
+                            KCTGameStates.Plans.Add(blv.ShipName, blv);
+                        }
+                    }
                 }
             }
 

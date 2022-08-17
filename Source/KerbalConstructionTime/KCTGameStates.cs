@@ -13,6 +13,7 @@ namespace KerbalConstructionTime
 
         public static KSCItem ActiveKSC = null;
         public static List<KSCItem> KSCs = new List<KSCItem>();
+        public static SortedList<string, BuildListVessel> Plans = new SortedList<string, BuildListVessel>();
         public static string ActiveKSCName = string.Empty;
         public static float SciPointsTotal = -1f;
         public static bool MergingAvailable;
@@ -33,7 +34,7 @@ namespace KerbalConstructionTime
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 12;
+        public const int VERSION = 13;
 
         public static ToolbarControl ToolbarControl;
 

@@ -527,7 +527,7 @@ namespace KerbalConstructionTime
             _lcResourcesPosition.height = parentPos.height;
             _lcResourcesPosition.xMin = parentPos.xMin - _lcResourcesPosition.width;
 
-            float scrollHeight = parentPos.height - 40 - GUI.skin.label.lineHeight * 3;
+            float scrollHeight = parentPos.height - 40 - GUI.skin.label.lineHeight * 1;
             _resourceListScroll = GUILayout.BeginScrollView(_resourceListScroll, GUILayout.Width(215), GUILayout.Height(scrollHeight));
 
             GUILayout.BeginHorizontal();
@@ -559,54 +559,58 @@ namespace KerbalConstructionTime
 
             GUILayout.EndScrollView();
 
-            GUILayout.BeginHorizontal();
-            if (isModify)
-            {
-                if (GUILayout.Button(new GUIContent("Combine with LC", "Combines these resources with complex's existing resource support")))
-                {
-                    for (int i = 0; i < _resourceCount; i++)
-                    {
-                        if (activeLC.ResourcesHandled.TryGetValue(_allResourceKeys[i], out double oldVal))
-                        {
-                            if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
-                            {
-                                _allResourceValues[i] = Math.Ceiling(oldVal).ToString("F0");
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                GUILayout.Label(string.Empty);
-            }
-            GUILayout.EndHorizontal();
+            //GUILayout.BeginHorizontal();
+            //if (isModify)
+            //{
+            //    if (GUILayout.Button(new GUIContent("Combine with LC", "Combines these resources with complex's existing resource support")))
+            //    {
+            //        for (int i = 0; i < _resourceCount; i++)
+            //        {
+            //            if (activeLC.ResourcesHandled.TryGetValue(_allResourceKeys[i], out double oldVal))
+            //            {
+            //                if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
+            //                {
+            //                    _allResourceValues[i] = Math.Ceiling(oldVal).ToString("F0");
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    GUILayout.Label(string.Empty);
+            //}
+            //GUILayout.EndHorizontal();
+
+            //GUILayout.BeginHorizontal();
+            //if (HighLogic.LoadedSceneIsEditor)
+            //{
+            //    if (GUILayout.Button(new GUIContent("Add Craft Resources", "Combines these resources with the loaded craft's resources")))
+            //    {
+            //        for (int i = 0; i < _resourceCount; i++)
+            //        {
+            //            if (KCTGameStates.EditorVessel.resourceAmounts.TryGetValue(_allResourceKeys[i], out double oldVal))
+            //            {
+            //                if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
+            //                {
+            //                    _allResourceValues[i] = Math.Ceiling(oldVal).ToString("F0");
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    GUILayout.Label(string.Empty);
+            //}
+            //GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             if (HighLogic.LoadedSceneIsEditor)
             {
-                if (GUILayout.Button(new GUIContent("Add Craft Resources", "Combines these resources with the loaded craft's resources")))
-                {
-                    for (int i = 0; i < _resourceCount; i++)
-                    {
-                        if (KCTGameStates.EditorVessel.resourceAmounts.TryGetValue(_allResourceKeys[i], out double oldVal))
-                        {
-                            if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
-                            {
-                                _allResourceValues[i] = Math.Ceiling(oldVal).ToString("F0");
-                            }
-                        }
-                    }
-                }
+                GUILayout.Label("");
             }
-            else
-            {
-                GUILayout.Label(string.Empty);
-            }
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Clear Resources"))
+            else if (GUILayout.Button("Clear Resources"))
             {
                 for (int i = 0; i < _resourceCount; i++)
                 {

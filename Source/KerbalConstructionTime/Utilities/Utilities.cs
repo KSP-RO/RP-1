@@ -651,7 +651,9 @@ namespace KerbalConstructionTime
             var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
                 ShipName = EditorLogic.fetch.shipNameField.text,
-                LC = editableShip.LC
+                FacilityBuiltIn = editableShip.FacilityBuiltIn,
+                KCTPersistentID = editableShip.KCTPersistentID,
+                LCID = editableShip.LCID // not setting LC directly here
             };
 
             double usedShipsCost = editableShip.GetTotalCost();
@@ -672,10 +674,6 @@ namespace KerbalConstructionTime
         private static void SaveShipEdits(BuildListVessel editableShip, BuildListVessel newShip)
         {
             AddVesselToBuildList(newShip);
-
-            newShip.FacilityBuiltIn = editableShip.FacilityBuiltIn;
-            newShip.KCTPersistentID = editableShip.KCTPersistentID;
-            newShip.LCID = editableShip.LCID;
 
             int oldIdx;
             editableShip.RemoveFromBuildList(out oldIdx);

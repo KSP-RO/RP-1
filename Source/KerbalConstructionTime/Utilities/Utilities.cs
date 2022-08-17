@@ -571,7 +571,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
-                        dialogStr = $"the Hangar. Please switch to the Hangar in the Space Center Management window's Operations tab and try again.";
+                        dialogStr = $"the Hangar. Please switch to the Hangar as active launch complex and try again.";
                     else
                         dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can build this vessel.";
                 }
@@ -585,16 +585,16 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
-            {
-                ShipName = EditorLogic.fetch.shipNameField.text
-            };
+            var blv = KCTGameStates.EditorVessel.CreateCopy(false);
 
             TryAddVesselToBuildList(blv);
         }
 
-        public static void TryAddVesselToBuildList(BuildListVessel blv, bool skipPartChecks = false)
+        public static void TryAddVesselToBuildList(BuildListVessel blv, bool skipPartChecks = false, LCItem overrideLC = null)
         {
+            if (overrideLC != null)
+                blv.LCID = overrideLC.ID;
+
             var v = new VesselBuildValidator
             {
                 CheckPartAvailability = !skipPartChecks,

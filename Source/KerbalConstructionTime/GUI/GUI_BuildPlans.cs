@@ -10,7 +10,6 @@ namespace KerbalConstructionTime
         private static Rect _buildPlansWindowPosition = new Rect(Screen.width - 300, 40, 300, 1);
         private static Vector2 _buildPlansScrollPos;
 
-        private static SortedList<string, BuildListVessel> _plansList = null;
         private static int _planToDelete;
 
         private static void DrawBuildPlansWindow(int id)
@@ -30,7 +29,8 @@ namespace KerbalConstructionTime
                             {
                                 var message = new ScreenMessage("Vessel must have a name other than 'Untitled Space Craft'.", 4f, ScreenMessageStyle.UPPER_CENTER);
                                 ScreenMessages.PostScreenMessage(message);
-                            } else
+                            }
+                            else
                             {
                                 var message = new ScreenMessage("Vessel must have a name", 4f, ScreenMessageStyle.UPPER_CENTER);
                                 ScreenMessages.PostScreenMessage(message);
@@ -43,13 +43,6 @@ namespace KerbalConstructionTime
                         if (GUILayout.Button("Add To Building Plans", GUILayout.Height(2 * 22)))
                         {
                             AddVesselToPlansList();
-                        }
-                        GUILayout.EndHorizontal();
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("Build", GUILayout.Height(2 * 22)))
-                        {
-                            Utilities.TryAddVesselToBuildList();
-                            Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                         }
                         GUILayout.EndHorizontal();
                     }
@@ -71,20 +64,18 @@ namespace KerbalConstructionTime
 
             GUILayout.EndHorizontal();
             {
-                _plansList = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Plans;
-
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:");
                 GUILayout.EndHorizontal();
                 _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
-                if (_plansList == null || _plansList.Count == 0)
+                if (KCTGameStates.Plans.Count == 0)
                 {
                     GUILayout.Label("No vessels in plans.");
                 }
-                for (int i = 0; i < _plansList.Count; i++)
+                for (int i = 0; i < KCTGameStates.Plans.Count; i++)
                 {
-                    BuildListVessel b = _plansList.Values[i];
+                    BuildListVessel b = KCTGameStates.Plans.Values[i];
                     if (!b.AllPartsValid)
                         continue;
                     GUILayout.BeginHorizontal();
@@ -103,7 +94,7 @@ namespace KerbalConstructionTime
 
                         if (GUILayout.Button(b.ShipName))
                         {
-                            Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true);
+                            Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
                         }
                     }
 
@@ -135,7 +126,8 @@ namespace KerbalConstructionTime
             }
             BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
-                ShipName = EditorLogic.fetch.shipNameField.text
+                ShipName = EditorLogic.fetch.shipNameField.text,
+                LCID = System.Guid.Empty
             };
 
             var v = new VesselBuildValidator
@@ -150,29 +142,15 @@ namespace KerbalConstructionTime
         public static void AddVesselToPlansList(BuildListVessel blv)
         {
             ScreenMessage message;
-            if (Utilities.CurrentGameIsCareer())
+            if (KCTGameStates.Plans.ContainsKey(blv.ShipName))
             {
-                //Check upgrades
-                //First, mass limit
-                List<string> facilityChecks = new List<string>();
-                if (!blv.MeetsFacilityRequirements(facilityChecks))
-                {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! Listed below are the failed checks:\n"
-                        + string.Join("\n", facilityChecks.ToArray()), "Acknowledged", false, HighLogic.UISkin);
-                    return;
-                }
-            }
-
-            if (blv.LC.Plans.ContainsKey(blv.ShipName))
-            {
-                blv.LC.Plans.Remove(blv.ShipName);
+                KCTGameStates.Plans.Remove(blv.ShipName);
                 message = new ScreenMessage($"Replacing previous plan for {blv.ShipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
-            blv.LC.Plans.Add(blv.ShipName, blv);
+            KCTGameStates.Plans.Add(blv.ShipName, blv);
 
-            KCTDebug.Log($"Added {blv.ShipName} to {blv.LC.Name} plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
+            KCTDebug.Log($"Added {blv.ShipName} to plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
             KCTDebug.Log($"Launch site is {blv.LaunchSite}");
             string text = $"Added {blv.ShipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -182,7 +160,7 @@ namespace KerbalConstructionTime
         private static void RemoveVesselFromPlans()
         {
             InputLockManager.RemoveControlLock("KCTPopupLock");
-            _plansList.RemoveAt(_planToDelete);
+            KCTGameStates.Plans.RemoveAt(_planToDelete);
         }
     }
 }

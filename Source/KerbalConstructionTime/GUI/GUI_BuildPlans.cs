@@ -234,8 +234,8 @@ namespace KerbalConstructionTime
             {
                 //Check upgrades
                 //First, mass limit
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(false);
-                if (facilityChecks.Count != 0)
+                List<string> facilityChecks = new List<string>();
+                if (!blv.MeetsFacilityRequirements(facilityChecks))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup", "Failed editor checks!",
                         "Warning! This vessel did not pass the editor checks! Listed below are the failed checks:\n"

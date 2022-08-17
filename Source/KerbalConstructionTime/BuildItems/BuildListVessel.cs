@@ -10,6 +10,13 @@ namespace KerbalConstructionTime
 {
     public class BuildListVessel : IKCTBuildItem
     {
+        public enum ClampsState
+        {
+            Untested,
+            NoClamps,
+            HasClamps,
+        }
+
         public enum ListType { None, VAB, SPH, TechNode, Reconditioning, KSC, AirLaunch, Crew };
 
         public double Progress, EffectiveCost, BuildPoints, IntegrationPoints;
@@ -27,6 +34,7 @@ namespace KerbalConstructionTime
         public int NumStageParts = 0;
         public double StagePartCost = 0;
         public float EmptyCost = 0, EmptyMass = 0;
+        public ClampsState hasClamps = ClampsState.Untested;
         public EditorFacility FacilityBuiltIn;
         public string KCTPersistentID;
         public string LandedAt = "";
@@ -150,6 +158,8 @@ namespace KerbalConstructionTime
         public BuildListVessel(ShipConstruct s, string ls, string flagURL)
         {
             _ship = s;
+            CacheClamps(s.parts);
+
             ShipNode = s.SaveShip();
             // Override KSP sizing of the ship construct
             ShipSize = Utilities.GetShipSize(s, true);
@@ -259,6 +269,7 @@ namespace KerbalConstructionTime
             if (listType != ListType.None)
                 Type = listType;
 
+            CacheClamps(vessel.parts);
             Cost = Utilities.GetTotalVesselCost(ShipNode);
             EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
             TotalMass = 0;
@@ -272,7 +283,7 @@ namespace KerbalConstructionTime
 
                 if (p.partPrefab != null)
                 {
-                    if (p.partPrefab.Modules.Contains<LaunchClamp>() || p.partPrefab.HasTag("PadInfrastructure"))
+                    if (Utilities.IsClamp(p.partPrefab))
                         continue;
                 }
 
@@ -568,61 +579,101 @@ namespace KerbalConstructionTime
             return pass;
         }
 
-        public List<string> MeetsFacilityRequirements(bool skipMinMass, bool highestFacility = false)
+        public bool MeetsFacilityRequirements(List<string> failedReasons)
         {
-            List<string> failedReasons = new List<string>();
             if (!Utilities.CurrentGameIsCareer())
-                return failedReasons;
+                return true;
 
             // Use blv's existing LC if available, else use active complex
-            LCItem selectedLC = LC != null ? LC : (Type == ListType.VAB ?
-                highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance :
-                Type == ListType.SPH ?
-                    KCTGameStates.ActiveKSC.Hangar :
-                    null);
+            LCItem selectedLC;
+            if (LC == null)
+            {
+                selectedLC = Type == ListType.VAB ? KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance :
+                    Type == ListType.SPH ? KCTGameStates.ActiveKSC.Hangar : null;
+            }
+            else
+            {
+                selectedLC = LC;
+            }
 
             double totalMass = GetTotalMass();
             if (totalMass > selectedLC.MassMax)
             {
+                if (failedReasons == null)
+                    return false;
+
                 failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.MassMax:N}");
             }
-            if (!skipMinMass && totalMass < selectedLC.MassMin)
+            if (totalMass < selectedLC.MassMin)
             {
+                if (failedReasons == null)
+                    return false;
+
                 failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
             }
-            ResourcesOK(selectedLC, failedReasons);
+            if (!ResourcesOK(selectedLC, failedReasons) && failedReasons == null)
+                return false;
 
             // Facility doesn't matter here.
-            CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedLC.SizeMax);
-            if (!sizeCheck.Test())
+            Vector3 size = GetShipSize();
+            if (size.x > selectedLC.SizeMax.x || size.y > selectedLC.SizeMax.y || size.z > selectedLC.SizeMax.z)
             {
+                if (failedReasons == null)
+                    return false;
+
                 failedReasons.Add("Size limits exceeded");
             }
 
             if (IsHumanRated && !selectedLC.IsHumanRated)
             {
+                if (failedReasons == null)
+                    return false;
+
                 failedReasons.Add("Vessel is human-rated but launch complex is not");
             }
 
             if (HasClamps() && selectedLC.LCType == LaunchComplexType.Hangar)
             {
+                if (failedReasons == null)
+                    return false;
+
                 failedReasons.Add("Has launch clamps/GSE but is launching from runway");
             }
 
-            return failedReasons;
+            return true;
         }
 
         private bool HasClamps()
         {
+            if (hasClamps != ClampsState.Untested)
+                return hasClamps == ClampsState.HasClamps;
+
+            hasClamps = ClampsState.HasClamps;
             foreach (var p in ExtractedPartNodes)
             {
                 AvailablePart aPart = Utilities.GetAvailablePartByName(Utilities.GetPartNameFromNode(p));
 
-                if (aPart != null && (aPart.partPrefab.Modules.Contains<LaunchClamp>() || aPart.partPrefab.HasTag("PadInfrastructure") ))
+                if (aPart != null && Utilities.IsClamp(aPart.partPrefab))
                     return true;
             }
 
+            hasClamps = ClampsState.NoClamps;
+
             return false;
+        }
+
+        private void CacheClamps(List<Part> parts)
+        {
+            hasClamps = ClampsState.NoClamps;
+
+            foreach (var p in parts)
+            {
+                if (Utilities.IsClamp(p))
+                {
+                    hasClamps = ClampsState.HasClamps;
+                    break;
+                }
+            }
         }
 
         public ListType FindTypeFromLists()

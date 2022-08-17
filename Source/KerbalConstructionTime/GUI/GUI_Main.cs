@@ -105,7 +105,6 @@ namespace KerbalConstructionTime
 
                 if (HighLogic.LoadedSceneIsEditor)
                 {
-                    DoBuildPlansList();
                     CreateDevPartsToggle();
                 }
                 else if (_inSCSubscene)

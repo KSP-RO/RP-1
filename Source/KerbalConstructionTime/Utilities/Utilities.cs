@@ -1084,6 +1084,7 @@ namespace KerbalConstructionTime
             if (!HighLogic.LoadedSceneIsEditor) return;
 
             KCTGameStates.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
+            KCTGameStates.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {

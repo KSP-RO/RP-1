@@ -308,8 +308,7 @@ namespace RP0.Crew
         public void AddPartCourses(AvailablePart ap, bool isKCTExperimentalNode = false)
         {
             if (ap.partPrefab.isVesselEVA || ap.name.StartsWith("kerbalEVA", StringComparison.OrdinalIgnoreCase) ||
-                ap.partPrefab.Modules.Contains<KerbalSeat>() ||
-                ap.partPrefab.Modules.Contains<LaunchClamp>() || ap.partPrefab.HasTag("PadInfrastructure")) return;
+                ap.partPrefab.Modules.Contains<KerbalSeat>() || KerbalConstructionTime.Utilities.IsClamp(ap.partPrefab)) return;
 
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.TryGetValue(name, out var coursePair))

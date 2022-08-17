@@ -52,6 +52,20 @@ namespace KerbalConstructionTime
             }
         }
 
+        public bool IsAnyLCOperational
+        {
+            get
+            {
+                {
+                    for (int i = LaunchComplexes.Count; i-- > 1;)
+                        if (LaunchComplexes[i].IsOperational)
+                            return true;
+
+                    return false;
+                }
+            }
+        }
+
         public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && Hangar.IsEmpty;
 
         public void EnsureStartingLaunchComplexes()
@@ -126,19 +140,6 @@ namespace KerbalConstructionTime
                 RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
 
             LaunchComplexes[LC_ID].SwitchLaunchPad();
-        }
-
-        /// <summary>
-        /// Finds the highest level LaunchPad on the KSC
-        /// </summary>
-        /// <returns>The instance of the highest level LaunchPad</returns>
-        public LCItem GetHighestLevelLaunchComplex()
-        {
-            LCItem highest = LaunchComplexes.First(p => p.LCType == LaunchComplexType.Pad && p.IsOperational);
-            foreach (var lc in LaunchComplexes)
-                if (lc.LCType == LaunchComplexType.Pad && lc.IsOperational && lc.MassMax > highest.MassMax)
-                    highest = lc;
-            return highest;
         }
 
         public ConfigNode AsConfigNode()

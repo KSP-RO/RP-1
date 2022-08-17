@@ -16,6 +16,8 @@ namespace KerbalConstructionTime
         private static List<string> _allResourceKeys = new List<string>();
         private static List<string> _allResourceValues = new List<string>();
         private static Vector2 _resourceListScroll = new Vector2();
+        private static bool _overrideShowBuildPlans = false;
+        private static float _requiredTonnage = 0;
 
         private static void SetStrings()
         {
@@ -110,7 +112,15 @@ namespace KerbalConstructionTime
 
         private static void SetFieldsFromVesselKeepOld(BuildListVessel blv, LCItem lc)
         {
-            SetFieldsFromLC(lc);
+            if (lc == null)
+            {
+                if (blv.TotalMass < _newLCData.MassMin && LCItem.LCData.CalcMassMaxFromMin(blv.TotalMass) < _requiredTonnage)
+                    return;
+            }
+            else
+            {
+                SetFieldsFromLC(lc);
+            }
 
             if(_newLCData.sizeMax.z < blv.ShipSize.z)
                 _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.1f);
@@ -141,6 +151,9 @@ namespace KerbalConstructionTime
                 }
             }
 
+            if (lc != null)
+                _requiredTonnage = _newLCData.massMax;
+
             _newLCData.isHumanRated |= blv.IsHumanRated;
             foreach (var kvp in blv.resourceAmounts)
             {
@@ -155,6 +168,7 @@ namespace KerbalConstructionTime
             SetStrings();
             SetResources();
         }
+
         private static void GetAllResourceKeys()
         {
             foreach (var res in GuiDataAndWhitelistItemsDatabase.ValidFuelRes)
@@ -493,8 +507,15 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 300;
                 _centralWindowPosition.x = (Screen.width - 300) / 2;
-                if (!HighLogic.LoadedSceneIsEditor)
+                if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
                     GUIStates.ShowBuildList = true;
+            }
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                if (GUILayout.Button(new GUIContent("Vessels", "Show/hide the Plans list. Clicking on a vessel there will merge the current LC stats with those needed to support that vessel, if possible.")))
+                {
+                    _overrideShowBuildPlans = !_overrideShowBuildPlans;
+                }
             }
 
             if (GUILayout.Button("Cancel"))
@@ -505,7 +526,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowLCResources = false;
-                if (!HighLogic.LoadedSceneIsEditor)
+                if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
                     GUIStates.ShowBuildList = true;
             }
 
@@ -516,8 +537,8 @@ namespace KerbalConstructionTime
 
         public static void DrawLCResourcesWindow(int windowID)
         {
-            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            bool isModify = GUIStates.ShowModifyLC;
+            //LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            //bool isModify = GUIStates.ShowModifyLC;
 
             if (_resourceCount == 0) GetAllResourceKeys();
 

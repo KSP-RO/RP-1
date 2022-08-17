@@ -9,89 +9,9 @@ namespace KerbalConstructionTime
     {
         private static Rect _buildPlansWindowPosition = new Rect(Screen.width - 300, 40, 300, 1);
         private static Vector2 _buildPlansScrollPos;
-        private static GUIStyle _buildPlansbutton;
-        private static Texture2D _background;
-        private static GUIContent _upContent;
-        private static GUIContent _hoverContent;
-        private static Rect _rect;
-        private static float _scale;
-        private static GUIContent _content;
 
         private static SortedList<string, BuildListVessel> _plansList = null;
         private static int _planToDelete;
-        private static Texture2D _up;
-        private static Texture2D _hover;
-
-        internal static void InitBuildPlans()
-        {
-            _buildPlansbutton = new GUIStyle(HighLogic.Skin.button);
-            _buildPlansbutton.margin = new RectOffset(0, 0, 0, 0);
-            _buildPlansbutton.padding = new RectOffset(0, 0, 0, 0);
-            _buildPlansbutton.border = new RectOffset(0, 0, 0, 0);
-            _buildPlansbutton.normal = _buildPlansbutton.hover;
-            _buildPlansbutton.active = _buildPlansbutton.hover;
-
-            _background = new Texture2D(2, 2);
-            Color[] color = new Color[4];
-            color[0] = new Color(1, 1, 1, 0);
-            color[1] = color[0];
-            color[2] = color[0];
-            color[3] = color[0];
-            _background.SetPixels(color);
-
-            _buildPlansbutton.normal.background = _background;
-            _buildPlansbutton.hover.background = _background;
-            _buildPlansbutton.onHover.background = _background;
-            _buildPlansbutton.active.background = _background;
-            _buildPlansbutton.onActive.background = _background;
-
-            _up = new Texture2D(2, 2);
-            _hover = new Texture2D(2, 2);
-            ToolbarControl.LoadImageFromFile(ref _up, KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Icons/KCT_add_normal");
-            ToolbarControl.LoadImageFromFile(ref _hover, KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Icons/KCT_add_hover");
-            //up = GameDatabase.Instance.GetTexture("RP-0/PluginData/Icons/KCT_add_normal", false);
-            //hover = GameDatabase.Instance.GetTexture("RP-0/PluginData/Icons/KCT_add_hover", false);
-
-            PositionAndSizeIcon();
-        }
-
-        private static void PositionAndSizeIcon()
-        {
-            Texture2D upTex = Texture2D.Instantiate(_up);
-            Texture2D hoverTex = Texture2D.Instantiate(_hover);
-
-            int offset = 0;
-            bool steamPresent = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "KSPSteamCtrlr");
-            bool mechjebPresent = AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name == "MechJeb2");
-            if (steamPresent)
-                offset = 46;
-            if (mechjebPresent)
-                offset = 140;
-            _scale = GameSettings.UI_SCALE;
-
-            _rect = new Rect(Screen.width - (304 + offset) * _scale, 0, 42 * _scale, 38 * _scale);
-            {
-                TextureScale.Bilinear(upTex, (int)(_up.width * _scale), (int)(_up.height * _scale));
-                TextureScale.Bilinear(hoverTex, (int)(_hover.width * _scale), (int)(_hover.height * _scale));
-            }
-            _upContent = new GUIContent("", upTex, "");
-            _hoverContent = new GUIContent("", hoverTex, "");
-        }
-
-        private static void DoBuildPlansList()
-        {
-            if (_rect.Contains(Mouse.screenPos))
-                _content = _hoverContent;
-            else
-                _content = _upContent;
-            if (_scale != GameSettings.UI_SCALE)
-            {
-                PositionAndSizeIcon();
-            }
-            // When this is true, and the mouse is NOT over the toggle, the toggle code is making the toggle active
-            // which is showing the corners of the button as unfilled
-            GUIStates.ShowBuildPlansWindow = GUI.Toggle(_rect, GUIStates.ShowBuildPlansWindow, _content, _buildPlansbutton);
-        }
 
         private static void DrawBuildPlansWindow(int id)
         {

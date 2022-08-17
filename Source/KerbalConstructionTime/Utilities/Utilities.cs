@@ -116,6 +116,11 @@ namespace KerbalConstructionTime
             return PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiency;
         }
 
+        public static bool IsClamp(Part part)
+        {
+            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag("PadInfrastructure");
+        }
+
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
         {
             float total = 0, totalDry = 0;
@@ -156,7 +161,7 @@ namespace KerbalConstructionTime
             }
             else if (!includeClamps)
             {
-                if (aPart.partPrefab.Modules.Contains<LaunchClamp>() || aPart.partPrefab.HasTag("PadInfrastructure"))
+                if (IsClamp(aPart.partPrefab))
                     return 0;
             }
             ShipConstruction.GetPartCostsAndMass(part, aPart, out _, out _, out float dryMass, out float fuelMass);
@@ -173,7 +178,7 @@ namespace KerbalConstructionTime
 
                 if (excludeClamps)
                 {
-                    if (part.Modules.Contains<LaunchClamp>() || part.HasTag("PadInfrastructure"))
+                    if (IsClamp(part))
                         continue;
                     if (part.parent != null && part.parent.HasTag("PadInfrastructure"))
                         continue;
@@ -212,7 +217,7 @@ namespace KerbalConstructionTime
                 p = ship.parts[i];
                 if (excludeClamps)
                 {
-                    if (p.Modules.Contains<LaunchClamp>() || p.HasTag("PadInfrastructure"))
+                    if (IsClamp(p))
                         continue;
                     if (p.parent != null && p.parent.HasTag("PadInfrastructure"))
                         continue;
@@ -557,10 +562,11 @@ namespace KerbalConstructionTime
                 string dialogStr;
                 if (type == BuildListVessel.ListType.VAB)
                 {
-                    if (KCTGameStates.ActiveKSC.GetHighestLevelLaunchComplex() == null)
-                        dialogStr = $"a launch complex. You must wait for a launch complex to finish building or renovating before you can build this vessel.";
+                    if (KCTGameStates.ActiveKSC.IsAnyLCOperational)
+                        dialogStr = $"a launch complex. Please switch to a launch complex and try again.";
                     else
-                        dialogStr = $"a launch complex. Please switch to a launch complex in the Space Center Management window's Operations tab and try again.";
+                        dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can build this vessel.";
+
                 }
                 else
                 {

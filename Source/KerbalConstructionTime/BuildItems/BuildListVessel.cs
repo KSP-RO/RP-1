@@ -112,21 +112,22 @@ namespace KerbalConstructionTime
             {
                 if (_lc == null)
                 {
-                    foreach (var ksc in KCTGameStates.KSCs)
-                    {
-                        foreach (var lc in ksc.LaunchComplexes)
-                        {
-                            if (lc.BuildList.FirstOrDefault(s => s.Id == Id) != null ||
-                                    lc.Warehouse.FirstOrDefault(s => s.Id == Id) != null)
-                            {
-                                _lc = lc;
-                                break;
-                            }
-                        }
-                    }
+                    _lc = KCTGameStates.FindLCFromID(_lcID);
+
                     if (_lc == null)
                     {
-                        _lc = KCTGameStates.FindLCFromID(_lcID);
+                        foreach (var ksc in KCTGameStates.KSCs)
+                        {
+                            foreach (var lc in ksc.LaunchComplexes)
+                            {
+                                if (lc.BuildList.FirstOrDefault(s => s.Id == Id) != null ||
+                                        lc.Warehouse.FirstOrDefault(s => s.Id == Id) != null)
+                                {
+                                    _lc = lc;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
                 return _lc;
@@ -787,6 +788,9 @@ namespace KerbalConstructionTime
         {
             bool removed = false;
             oldIndex = -1;
+            // We need to force a refind here because (yay KCT and its love of statics)
+            // This LC might be a lingering object from the space center scene rather than
+            // the live one here.
             LC = null; //force a refind
             if (LC == null) //I know this looks goofy, but it's a self-caching property that caches on "get"
             {

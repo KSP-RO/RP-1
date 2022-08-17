@@ -1216,7 +1216,7 @@ namespace KerbalConstructionTime
                             b.LaunchSiteIndex = vesselLC.ActiveLaunchPadIndex;
 
                             List<string> facilityChecks = new List<string>();
-                            if (!b.MeetsFacilityRequirements(facilityChecks))
+                            if (b.MeetsFacilityRequirements(facilityChecks))
                             {
                                 if (pad == null)
                                 {
@@ -1308,7 +1308,7 @@ namespace KerbalConstructionTime
                         GUILayout.Button(launchBtnText, GUILayout.ExpandWidth(false)))
                     {
                         List<string> facilityChecks = new List<string>();
-                        if (!b.MeetsFacilityRequirements(facilityChecks))
+                        if (b.MeetsFacilityRequirements(facilityChecks))
                         {
                             bool operational = Utilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
                             if (!operational)

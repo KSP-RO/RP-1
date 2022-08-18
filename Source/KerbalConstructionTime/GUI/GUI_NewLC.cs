@@ -216,7 +216,7 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
 
                 activeLC.Stats.GetCostStats(out oldPadCost, out oldVABCost, out _); // we'll compute resource cost delta ourselves
-                lpMult = activeLC.LaunchPads.Count;
+                lpMult = activeLC.LaunchPadCount; // i.e. skip pads that are building, since we'll change their PadConstructions
             }
             else
             {
@@ -236,7 +236,6 @@ namespace KerbalConstructionTime
             double curVABCost = 0;
             double curResCost = 0;
             _newLCData.massMax = isHangar ? activeLC.MassMax : 0;
-            int tonnageLimitInt = (int)_newLCData.massMax;
             float minTonnage = 0f;
 
             bool parsedTonnage = true;
@@ -259,9 +258,6 @@ namespace KerbalConstructionTime
                 float.TryParse(_widthLimit, out _newLCData.sizeMax.x) &&
                 float.TryParse(_heightLimit, out _newLCData.sizeMax.y))
             {
-                if (!isHangar)
-                    _newLCData.massMax = tonnageLimitInt;
-
                 _newLCData.GetCostStats(out curPadCost, out curVABCost, out curResCost);
 
                 if (!isHangar)
@@ -459,65 +455,87 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
-                KCTGameStates.StarterLCBuilding |= !isModify;
-
-                if (!Utilities.CurrentGameIsCareer())
+                if (isModify && ModifyFailure(out string failedVessels))
                 {
-                    KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
-                    if (isModify)
-                        activeLC.Modify(_newLCData, Guid.NewGuid());
-                    else
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newLCData, KCTGameStates.ActiveKSC));
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
+                                             "LCModifyFail",
+                                             "Can't Modify",
+                                             "The new limits and supported resources for this complex are incompatible with the following vessels:" + failedVessels + "\nEither scrap the vessels in question or choose settings that still support them too.",
+                                             "OK",
+                                             true,
+                                             HighLogic.UISkin);
                 }
                 else
                 {
-                    KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
-                    LCItem lc;
-                    if (isModify)
+
+                    KCTGameStates.StarterLCBuilding |= !isModify;
+
+                    if (!Utilities.CurrentGameIsCareer())
                     {
-                        lc = activeLC;
-                        Utilities.ChangeEngineers(lc, -lc.Engineers);
-                        KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+                        KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
+                        if (isModify)
+                            activeLC.Modify(_newLCData, Guid.NewGuid());
+                        else
+                            KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newLCData, KCTGameStates.ActiveKSC));
                     }
                     else
                     {
-                        lc = new LCItem(_newLCData, KCTGameStates.ActiveKSC);
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
-                    }
-                    lc.IsOperational = false;
+                        KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
+                        LCItem lc;
+                        if (isModify)
+                        {
+                            lc = activeLC;
+                            Utilities.ChangeEngineers(lc, -lc.Engineers);
+                            KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+                            
+                            // We have to update any ongoing pad constructions too
+                            foreach (var pc in lc.PadConstructions)
+                            {
+                                pc.SetBP(curPadCost);
+                                pc.Cost = curPadCost;
+                            }
+                        }
+                        else
+                        {
+                            lc = new LCItem(_newLCData, KCTGameStates.ActiveKSC);
+                            KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
+                        }
+                        lc.IsOperational = false;
 
-                    var modData = new LCItem.LCData();
-                    modData.SetFrom(_newLCData);
-                    var lcConstr = new LCConstruction
-                    {
-                        LCID = lc.ID,
-                        Cost = totalCost,
-                        Name = _newLCData.Name,
-                        IsModify = isModify,
-                        ModID = isModify ? Guid.NewGuid() : lc.ModID,
-                        LCData = modData
-                    };
-                    lcConstr.SetBP(totalCost);
-                    KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
+                        var modData = new LCItem.LCData();
+                        modData.SetFrom(_newLCData);
+                        var lcConstr = new LCConstruction
+                        {
+                            LCID = lc.ID,
+                            Cost = totalCost,
+                            Name = _newLCData.Name,
+                            IsModify = isModify,
+                            ModID = isModify ? Guid.NewGuid() : lc.ModID,
+                            LCData = modData
+                        };
+                        lcConstr.SetBP(totalCost);
+                        KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
 
-                    try
-                    {
-                        KCTEvents.OnLCConstructionQueued?.Fire(lcConstr, lc);
+                        try
+                        {
+                            KCTEvents.OnLCConstructionQueued?.Fire(lcConstr, lc);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogException(ex);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.LogException(ex);
-                    }
+                    _overrideShowBuildPlans = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
+                    GUIStates.ShowModifyLC = false;
+                    _centralWindowPosition.height = 1;
+                    _centralWindowPosition.width = 300;
+                    _centralWindowPosition.x = (Screen.width - 300) / 2;
+                    if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
+                        GUIStates.ShowBuildList = true;
                 }
-                _overrideShowBuildPlans = false;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowLCResources = false;
-                GUIStates.ShowModifyLC = false;
-                _centralWindowPosition.height = 1;
-                _centralWindowPosition.width = 300;
-                _centralWindowPosition.x = (Screen.width - 300) / 2;
-                if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
-                    GUIStates.ShowBuildList = true;
             }
             if (HighLogic.LoadedSceneIsEditor)
             {
@@ -568,6 +586,9 @@ namespace KerbalConstructionTime
 
             for (int i = 0; i < _resourceCount; i++)
             {
+                if (_newLCData.lcType == LaunchComplexType.Hangar && GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes.Contains(_allResourceKeys[i]))
+                    continue;
+
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(_allResourceKeys[i]);
                 _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
@@ -649,6 +670,24 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.EndHorizontal();
+        }
+
+        private static bool ModifyFailure(out string failedVessels)
+        {
+            failedVessels = string.Empty;
+            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            foreach (var blv in activeLC.BuildList)
+            {
+                if (!blv.MeetsFacilityRequirements(_newLCData, null))
+                    failedVessels += "\n" + blv.ShipName;
+            }
+            foreach (var blv in activeLC.Warehouse)
+            {
+                if (!blv.MeetsFacilityRequirements(_newLCData, null))
+                    failedVessels += "\n" + blv.ShipName;
+            }
+
+            return failedVessels != string.Empty;
         }
 
         private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LCItem lc)

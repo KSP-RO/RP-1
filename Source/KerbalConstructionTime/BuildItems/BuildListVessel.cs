@@ -553,10 +553,10 @@ namespace KerbalConstructionTime
             FlightDriver.StartWithNewLaunch(tempFile, Flag, launchSiteName, new VesselCrewManifest());
         }
 
-        public bool ResourcesOK(LCItem selectedLC, List<string> failedReasons = null)
+        public bool ResourcesOK(LCItem.LCData stats, List<string> failedReasons = null)
         {
             bool pass = true;
-            HashSet<string> ignoredRes = selectedLC.LCType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+            HashSet<string> ignoredRes = stats.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
             double massMin = Math.Max(Formula.ResourceValidationAbsoluteMassMin, Formula.ResourceValidationRatioOfVesselMassMin * TotalMass);
 
             foreach (var kvp in resourceAmounts)
@@ -565,7 +565,7 @@ namespace KerbalConstructionTime
                     || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
                     continue;
 
-                if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
+                if (stats.resourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
                     continue;
 
                 if (PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value <= massMin)
@@ -583,9 +583,6 @@ namespace KerbalConstructionTime
 
         public bool MeetsFacilityRequirements(List<string> failedReasons)
         {
-            if (!Utilities.CurrentGameIsCareer())
-                return true;
-
             // Use blv's existing LC if available, else use active complex
             LCItem selectedLC;
             if (LC == null)
@@ -598,27 +595,35 @@ namespace KerbalConstructionTime
                 selectedLC = LC;
             }
 
+            return MeetsFacilityRequirements(selectedLC.Stats, failedReasons);
+        }
+
+        public bool MeetsFacilityRequirements(LCItem.LCData stats, List<string> failedReasons)
+        {
+            if (!Utilities.CurrentGameIsCareer())
+                return true;
+
             double totalMass = GetTotalMass();
-            if (totalMass > selectedLC.MassMax)
+            if (totalMass > stats.massMax)
             {
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {selectedLC.MassMax:N}");
+                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {stats.massMax:N}");
             }
-            if (totalMass < selectedLC.MassMin)
+            if (totalMass < stats.MassMin)
             {
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {selectedLC.MassMin:N}");
+                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {stats.MassMin:N}");
             }
-            if (!ResourcesOK(selectedLC, failedReasons) && failedReasons == null)
+            if (!ResourcesOK(stats, failedReasons) && failedReasons == null)
                 return false;
 
             // Facility doesn't matter here.
             Vector3 size = GetShipSize();
-            if (size.x > selectedLC.SizeMax.x || size.y > selectedLC.SizeMax.y || size.z > selectedLC.SizeMax.z)
+            if (size.x > stats.sizeMax.x || size.y > stats.sizeMax.y || size.z > stats.sizeMax.z)
             {
                 if (failedReasons == null)
                     return false;
@@ -626,7 +631,7 @@ namespace KerbalConstructionTime
                 failedReasons.Add("Size limits exceeded");
             }
 
-            if (IsHumanRated && !selectedLC.IsHumanRated)
+            if (IsHumanRated && !stats.isHumanRated)
             {
                 if (failedReasons == null)
                     return false;
@@ -634,7 +639,7 @@ namespace KerbalConstructionTime
                 failedReasons.Add("Vessel is human-rated but launch complex is not");
             }
 
-            if (HasClamps() && selectedLC.LCType == LaunchComplexType.Hangar)
+            if (HasClamps() && stats.lcType == LaunchComplexType.Hangar)
             {
                 if (failedReasons == null)
                     return false;

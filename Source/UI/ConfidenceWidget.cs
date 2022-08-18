@@ -56,7 +56,8 @@ namespace RP0.UI
 
             var textComp = GameObject.Instantiate(new GameObject("Text"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
             textComp.alignment = TextAlignmentOptions.Right;
-            textComp.color = XKCDColors.KSPBadassGreen;
+            ColorUtility.TryParseHtmlString(CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence), out var color);
+            textComp.color = color;
             textComp.fontSize = 22;
             textComp.rectTransform.localPosition = new Vector3(-9, -1, 0);
             textComp.fontStyle = FontStyles.Bold;

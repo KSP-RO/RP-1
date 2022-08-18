@@ -557,6 +557,8 @@ namespace KerbalConstructionTime
         {
             bool pass = true;
             HashSet<string> ignoredRes = selectedLC.LCType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+            double massMin = Math.Max(Formula.ResourceValidationAbsoluteMassMin, Formula.ResourceValidationRatioOfVesselMassMin * TotalMass);
+
             foreach (var kvp in resourceAmounts)
             {
                 if (ignoredRes.Contains(kvp.Key)
@@ -566,8 +568,7 @@ namespace KerbalConstructionTime
                 if (selectedLC.ResourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
                     continue;
 
-                double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
-                if (mass <= Formula.VesselMassMinForResourceValidation * TotalMass)
+                if (PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value <= massMin)
                     continue;
 
                 if (failedReasons == null)
@@ -897,7 +898,7 @@ namespace KerbalConstructionTime
                             continue;
 
                         double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
-                        if (mass <= Formula.VesselMassMinForResourceValidation * blv.GetTotalMass())
+                        if (mass <= Formula.ResourceValidationRatioOfVesselMassMin * blv.GetTotalMass())
                             continue;
 
                         LC.Stats.resourcesHandled[kvp.Key] = kvp.Value * 1.1d;

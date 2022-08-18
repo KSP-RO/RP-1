@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static RP0.UIBase;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -457,6 +458,9 @@ namespace KerbalConstructionTime
             {
                 if (isModify && ModifyFailure(out string failedVessels))
                 {
+                    BackupUIState();
+                    GUIStates.ShowModifyLC = false;
+                    GUIStates.ShowLCResources = false;
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "LCModifyFail",
@@ -464,7 +468,7 @@ namespace KerbalConstructionTime
                                              "The new limits and supported resources for this complex are incompatible with the following vessels:" + failedVessels + "\nEither scrap the vessels in question or choose settings that still support them too.",
                                              "OK",
                                              true,
-                                             HighLogic.UISkin);
+                                             HighLogic.UISkin).PrePostActions(onDestroyAction: RestorePrevUIState);
                 }
                 else
                 {

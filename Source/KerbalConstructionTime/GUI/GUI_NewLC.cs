@@ -501,6 +501,7 @@ namespace KerbalConstructionTime
                         Debug.LogException(ex);
                     }
                 }
+                _overrideShowBuildPlans = false;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowLCResources = false;
                 GUIStates.ShowModifyLC = false;
@@ -520,6 +521,7 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Cancel"))
             {
+                _overrideShowBuildPlans = false;
                 _centralWindowPosition.height = 1;
                 _centralWindowPosition.width = 150;
                 _centralWindowPosition.x = (Screen.width - 150) / 2;

@@ -1394,44 +1394,44 @@ namespace KerbalConstructionTime
             bool canModify = activeLC.CanModify && !GUIStates.ShowPersonnelWindow;
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
             const string staffWindowFailTooltip = "Staff window open";
-            if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : (GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip)), 
-                canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
-            {
-                if (canModify)
-                {
-                    SetFieldsFromLC(activeLC);
+            //if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : (GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip)), 
+            //    canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
+            //{
+            //    if (canModify)
+            //    {
+            //        SetFieldsFromLC(activeLC);
                     
-                    GUIStates.ShowDismantlePad = false;
-                    GUIStates.ShowModifyLC = true;
-                    GUIStates.ShowDismantleLC = false;
-                    GUIStates.ShowNewPad = false;
-                    GUIStates.ShowNewLC = false;
-                    GUIStates.ShowLCResources = false;
-                    GUIStates.ShowRename = false;
-                    GUIStates.ShowBuildList = false;
-                    GUIStates.ShowBLPlus = false;
-                    _centralWindowPosition.width = 300;
-                }
-                else
-                {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Modify", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
-                }
-            }
-            if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
-            {
-                SetFieldsFromStartingLCData(LCItem.StartingLC);
+            //        GUIStates.ShowDismantlePad = false;
+            //        GUIStates.ShowModifyLC = true;
+            //        GUIStates.ShowDismantleLC = false;
+            //        GUIStates.ShowNewPad = false;
+            //        GUIStates.ShowNewLC = false;
+            //        GUIStates.ShowLCResources = false;
+            //        GUIStates.ShowRename = false;
+            //        GUIStates.ShowBuildList = false;
+            //        GUIStates.ShowBLPlus = false;
+            //        _centralWindowPosition.width = 300;
+            //    }
+            //    else
+            //    {
+            //        PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Modify", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+            //    }
+            //}
+            //if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
+            //{
+            //    SetFieldsFromStartingLCData(LCItem.StartingLC);
 
-                GUIStates.ShowDismantlePad = false;
-                GUIStates.ShowModifyLC = false;
-                GUIStates.ShowDismantleLC = false;
-                GUIStates.ShowNewPad = false;
-                GUIStates.ShowNewLC = true;
-                GUIStates.ShowLCResources = false;
-                GUIStates.ShowRename = false;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-                _centralWindowPosition.width = 300;
-            }
+            //    GUIStates.ShowDismantlePad = false;
+            //    GUIStates.ShowModifyLC = false;
+            //    GUIStates.ShowDismantleLC = false;
+            //    GUIStates.ShowNewPad = false;
+            //    GUIStates.ShowNewLC = true;
+            //    GUIStates.ShowLCResources = false;
+            //    GUIStates.ShowRename = false;
+            //    GUIStates.ShowBuildList = false;
+            //    GUIStates.ShowBLPlus = false;
+            //    _centralWindowPosition.width = 300;
+            //}
             if (!HighLogic.LoadedSceneIsEditor && activeLC.LCType == LaunchComplexType.Pad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip),
                 canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
             {

@@ -1433,7 +1433,7 @@ namespace KerbalConstructionTime
             //    _centralWindowPosition.width = 300;
             //}
             if (!HighLogic.LoadedSceneIsEditor && activeLC.LCType == LaunchComplexType.Pad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip),
-                canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
+                canModify ? GUI.skin.button : _redButton, GUILayout.ExpandWidth(false)))
             {
                 if (canModify)
                 {

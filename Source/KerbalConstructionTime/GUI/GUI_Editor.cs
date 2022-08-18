@@ -169,12 +169,15 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            bool canModify = activeLC.CanModify 
-                && ((activeLC.LCType == LaunchComplexType.Hangar && EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH) 
+            bool canModify = activeLC.CanModify;
+            
+            bool rightLC = ((activeLC.LCType == LaunchComplexType.Hangar && EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH) 
                     || (activeLC.LCType == LaunchComplexType.Pad && EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB));
-            const string modifyFailTooltip = "Currently in use! Can't do this with projects underway or vessels at pads/airlaunching, though vessels can be in storage.";
-            if (GUILayout.Button(new GUIContent("Reconstruct", canModify ? $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants." : modifyFailTooltip),
-                canModify ? GUI.skin.button : _yellowButton) && canModify)
+            const string modifyFailTooltip = "Currently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
+            const string wrongLCTooltip = "This is the wrong vessel type (plane/rocket) for this complex type. Select another complex / the hangar";
+            if (GUILayout.Button(new GUIContent("Reconstruct", 
+                rightLC ? ( canModify ? $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants." : modifyFailTooltip) : wrongLCTooltip),
+                rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
             {
                 SetFieldsFromVessel(KCTGameStates.EditorVessel, activeLC);
 
@@ -186,8 +189,9 @@ namespace KerbalConstructionTime
                 GUIStates.ShowLCResources = false;
                 _centralWindowPosition.width = 300;
             }
-            if (GUILayout.Button(new GUIContent("Upgrade", canModify ? $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible." : modifyFailTooltip),
-                canModify ? GUI.skin.button : _yellowButton) && canModify)
+            if (GUILayout.Button(new GUIContent("Upgrade", 
+                rightLC ? (canModify ? $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible." : modifyFailTooltip) : wrongLCTooltip),
+                rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
             {
                 SetFieldsFromVesselKeepOld(KCTGameStates.EditorVessel, activeLC);
 

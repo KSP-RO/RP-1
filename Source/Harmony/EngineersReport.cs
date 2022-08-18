@@ -191,7 +191,7 @@ namespace RP0.Harmony
                 craftSize = KCTGameStates.EditorVessel.ShipSize;
                 vesselHumanRated = KCTGameStates.EditorVessel.IsHumanRated;
 
-                resourcesOK = KCTGameStates.EditorVessel.ResourcesOK(KCTGameStates.EditorVessel.LC);
+                resourcesOK = KCTGameStates.EditorVessel.ResourcesOK(KCTGameStates.EditorVessel.LC.Stats);
 
                 massLimit = KCTGameStates.EditorVessel.LC.MassMax;
                 minMassLimit = KCTGameStates.EditorVessel.LC.MassMin;

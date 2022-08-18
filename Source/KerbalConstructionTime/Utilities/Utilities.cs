@@ -585,7 +585,10 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            var blv = KCTGameStates.EditorVessel.CreateCopy(false);
+            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
+            {
+                ShipName = EditorLogic.fetch.shipNameField.text
+            };
 
             TryAddVesselToBuildList(blv);
         }

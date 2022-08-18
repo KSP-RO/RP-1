@@ -156,7 +156,7 @@ namespace RP0
             "#B4D455", // funds
             "#6DCFF6", // sci
             "#E0D503", // rep
-            "#C8D986", // conf
+            "#f96efe", // conf
             "#B5B536", // time
             "#efa4e2" // rate
         };

@@ -103,7 +103,7 @@ namespace KerbalConstructionTime
             _newLCData.resourcesHandled.Clear();
             foreach (var kvp in blv.resourceAmounts)
             {
-                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.VesselMassMinForResourceValidation)
+                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
                     _newLCData.resourcesHandled.Add(kvp.Key, kvp.Value * 1.1d);
             }
             SetStrings();
@@ -157,7 +157,7 @@ namespace KerbalConstructionTime
             _newLCData.isHumanRated |= blv.IsHumanRated;
             foreach (var kvp in blv.resourceAmounts)
             {
-                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.VesselMassMinForResourceValidation)
+                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
                 {
                     _newLCData.resourcesHandled.TryGetValue(kvp.Key, out double oldAmount);
                     if (oldAmount < kvp.Value)

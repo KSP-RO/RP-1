@@ -352,7 +352,7 @@ namespace KerbalConstructionTime
             {
                 // Enforce a min cost for pad size changes
                 const double minPadModifyCost = 1000d;
-                if (!isHangar && activeLC.MassMax != _newLCData.massMax && totalCost < minPadModifyCost)
+                if (!isHangar && !Mathf.Approximately(activeLC.MassMax, _newLCData.massMax) && totalCost < minPadModifyCost)
                     totalCost = minPadModifyCost;
 
                 double heightAbs = Math.Abs(_newLCData.sizeMax.y - activeLC.SizeMax.y);

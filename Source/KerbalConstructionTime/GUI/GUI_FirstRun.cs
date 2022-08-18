@@ -62,7 +62,7 @@ namespace KerbalConstructionTime
             if (!KCTGameStates.StarterLCBuilding)
             {
                 GUILayout.Label($"{step++}) Build a starting Launch Complex.");
-                GUILayout.Label("To know what size LC you need, you should go to the VAB and create/load a vessel, and then click New in the Space Center Management (was KCT) window. The LC properties will be set to support that vessel.\nYou can also access the New LC window from the main Space Center Management UI's Operations tab, if you know what properties you want. Once you have LCs built you can also modify them the same way.");
+                GUILayout.Label("With a contract accepted, now it's time to build a vessel to complete it. If it's a rocket, you'll need a launch complex to launch it. Go to the VAB and make your rocket, then click New the Integration Info (was KCT) window. The LC properties will be set to support that vessel. Once you have LCs built you can also modify them the same way, either a simple Upgrade or a bigger Reconstruction");
                 if (GUILayout.Button($"Go to VAB", HighLogic.Skin.button))
                 {
                     EnterVAB();

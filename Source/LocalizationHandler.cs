@@ -14,6 +14,12 @@ namespace RP0
             DontDestroyOnLoad(this);
             GameEvents.onLanguageSwitched.Add(OnLanguageChange);
             OnLanguageChange(); // Initialize
+
+            // Handle sprite conversion
+            TMPro.TMP_SpriteAsset asset = Resources.Load<TMPro.TMP_SpriteAsset>("sprite assets/CurrencySpriteAsset");
+            asset.spriteSheet = GameDatabase.Instance.GetTexture("RP-0/Resources/CurrencySprites", false);
+            TMPro.ShaderUtilities.GetShaderPropertyIDs();
+            asset.material.SetTexture(TMPro.ShaderUtilities.ID_MainTex, asset.spriteSheet);
         }
 
         private void OnLanguageChange()

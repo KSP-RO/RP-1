@@ -64,12 +64,10 @@ namespace KerbalConstructionTime
 
             //double bp = MathParser.GetStandardFormulaValue("KSCUpgrade", variables);
             // max(1000,([C]-2000))^0.5
-            double effCost = cost - 2000d;
-            if (effCost < 1000d)
-                effCost = 1000d;
-            double bp = System.Math.Sqrt(effCost);
+            double bp = Math.Sqrt(cost);
 
-            return bp;
+            const double minDays = 3d;
+            return Math.Max(bp, minDays);
         }
 
         public static double GetVesselBuildRate(int index, LCItem LC, bool isHumanRatedCapped, int persDelta)

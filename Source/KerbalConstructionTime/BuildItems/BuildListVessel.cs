@@ -988,6 +988,8 @@ namespace KerbalConstructionTime
 
         public double GetEffectiveCost(List<Part> parts)
         {
+            resourceAmounts.Clear();
+            globalTags.Clear();
             double totalEffectiveCost = 0;
             foreach (Part p in parts)
             {
@@ -1003,6 +1005,8 @@ namespace KerbalConstructionTime
 
         public double GetEffectiveCost(List<ConfigNode> parts)
         {
+            resourceAmounts.Clear();
+            globalTags.Clear();
             double totalEffectiveCost = 0;
             foreach (ConfigNode p in parts)
             {

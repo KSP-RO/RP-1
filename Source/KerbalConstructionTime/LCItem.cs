@@ -356,8 +356,8 @@ namespace KerbalConstructionTime
                     PadConstructions.Count == 0 && !KerbalConstructionTimeData.Instance.LCToEfficiency.ContainsKey(this);
 
         public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0 || AirlaunchPrep.Count > 0;
-        public bool CanModify => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any() && !PadConstructions.Any();
-        public bool IsIdle => !BuildList.Any() && !Recon_Rollout.Any() && !AirlaunchPrep.Any();
+        public bool CanModify => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRollout.RolloutReconType.Reconditioning) && AirlaunchPrep.Count == 0;
+        public bool IsIdle => !IsActive;
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
             Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");

@@ -245,7 +245,9 @@ namespace RP0.Harmony
             {
                 // Set best speed before we get description
                 // This is maybe a duplicate of the work we did in CreateStrategiesList but eh.
-                ps.Program.SetBestAllowableSpeed();
+                // NOTE: We have to be sure this didn't happen because we pressed a speed button.
+                if (!AdminExtender.Instance.PressedSpeedButton)
+                    ps.Program.SetBestAllowableSpeed();
             }
         }
 

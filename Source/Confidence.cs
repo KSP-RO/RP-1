@@ -72,7 +72,15 @@ namespace RP0
             float changeDelta = query.GetTotal(Currency.Science);
             // Annoyingly Kerbalism uses TransactionReason.None
             if (changeDelta > 0f && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
-                AddConfidence((Programs.ProgramHandler.Settings?.sciToConfidence ?? 2) * changeDelta, query.reason);
+            {
+                float conf;
+                if (Programs.ProgramHandler.Settings != null)
+                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTime.KCTGameStates.SciPointsTotal)) * changeDelta;
+                else
+                    conf = changeDelta * 2f;
+
+                AddConfidence(conf, query.reason);
+            }
         }
     }
 }

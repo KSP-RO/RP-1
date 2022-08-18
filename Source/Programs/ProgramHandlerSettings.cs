@@ -8,7 +8,7 @@ namespace RP0.Programs
         public float repToConfidence = 5;
 
         [Persistent]
-        public float sciToConfidence = 2;
+        public FloatCurve scienceToConfidence = new FloatCurve();
 
         [Persistent]
         public PersistentDictionaryValueTypeKey<string, DoubleCurve> paymentCurves = new PersistentDictionaryValueTypeKey<string, DoubleCurve>();

@@ -19,6 +19,8 @@ namespace KerbalConstructionTime
         private static bool _overrideShowBuildPlans = false;
         private static float _requiredTonnage = 0;
 
+        private const double _MinResourceVolume = 500d;
+
         private static void SetStrings()
         {
             _tonnageLimit = _newLCData.massMax.ToString("F0");
@@ -66,6 +68,9 @@ namespace KerbalConstructionTime
             if (lc == null)
             {
                 _newLCData.massMax = Mathf.Ceil(blv.TotalMass * 1.1f);
+                if (blv.TotalMass < 1f) // special case
+                    _newLCData.massMax = 1f;
+
                 _newLCData.isHumanRated = blv.IsHumanRated;
 
                 _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
@@ -97,6 +102,8 @@ namespace KerbalConstructionTime
                             }
                         }
                     }
+                    if (blv.TotalMass < 1f) // special case
+                        _newLCData.massMax = 1f;
                 }
             }
 
@@ -235,13 +242,14 @@ namespace KerbalConstructionTime
             bool parsedTonnage = true;
             if (!isHangar)
             {
+                parsedTonnage = false;
+
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
-                string newStr = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle());
-                if (int.TryParse(newStr, out tonnageLimitInt))
+                _tonnageLimit = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+                if (float.TryParse(_tonnageLimit, out _newLCData.massMax))
                 {
                     parsedTonnage = true;
-                    _tonnageLimit = tonnageLimitInt.ToString();
                 }
                 GUILayout.EndHorizontal();
             }
@@ -300,19 +308,19 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));
-            _lengthLimit = GUILayout.TextField(_lengthLimit, GetTextFieldRightAlignStyle());
+            _lengthLimit = GUILayout.TextField(_lengthLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Width limit:", GUILayout.ExpandWidth(false));
-            _widthLimit = GUILayout.TextField(_widthLimit, GetTextFieldRightAlignStyle());
+            _widthLimit = GUILayout.TextField(_widthLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Height limit:", GUILayout.ExpandWidth(false));
-            _heightLimit = GUILayout.TextField(_heightLimit, GetTextFieldRightAlignStyle());
+            _heightLimit = GUILayout.TextField(_heightLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 

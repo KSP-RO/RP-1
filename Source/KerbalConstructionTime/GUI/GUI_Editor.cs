@@ -139,7 +139,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             int lcCount = KCTGameStates.ActiveKSC.LaunchComplexCount;
-            if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+            if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
                 KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                 BuildRateForDisplay = null;
@@ -149,7 +149,7 @@ namespace KerbalConstructionTime
             string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
             GUILayout.Label(new GUIContent(lcText, lcTooltip));
             GUILayout.FlexibleSpace();
-            if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
                 KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
                 BuildRateForDisplay = null;

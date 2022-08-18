@@ -19,7 +19,7 @@ namespace KerbalConstructionTime
         private static bool _overrideShowBuildPlans = false;
         private static float _requiredTonnage = 0;
 
-        private const double _MinResourceVolume = 500d;
+        private const double _MinResourceVolume = 250d;
 
         private static void SetStrings()
         {
@@ -111,7 +111,7 @@ namespace KerbalConstructionTime
             foreach (var kvp in blv.resourceAmounts)
             {
                 if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
-                    _newLCData.resourcesHandled.Add(kvp.Key, kvp.Value * 1.1d);
+                    _newLCData.resourcesHandled.Add(kvp.Key, Math.Max(_MinResourceVolume, kvp.Value * 1.1d));
             }
             SetStrings();
             SetResources();
@@ -168,7 +168,7 @@ namespace KerbalConstructionTime
                 {
                     _newLCData.resourcesHandled.TryGetValue(kvp.Key, out double oldAmount);
                     if (oldAmount < kvp.Value)
-                        _newLCData.resourcesHandled[kvp.Key] = kvp.Value * 1.1d;
+                        _newLCData.resourcesHandled[kvp.Key] = Math.Max(_MinResourceVolume, kvp.Value * 1.1d);
                 }
             }
             // Reset based on our new values.

@@ -9,6 +9,7 @@ namespace RP0.Harmony
     internal class PatchContractRewards
     {
         internal static ContractConfigurator.ConfiguredContract _contract;
+        internal static bool _isReward = false;
 
         [HarmonyPrefix]
         [HarmonyPatch("MessageRewards")]
@@ -17,6 +18,7 @@ namespace RP0.Harmony
             if (__instance is ContractConfigurator.ConfiguredContract cc)
             {
                 _contract = cc;
+                _isReward = true;
             }
         }
 
@@ -34,6 +36,7 @@ namespace RP0.Harmony
             if (__instance is ContractConfigurator.ConfiguredContract cc)
             {
                 _contract = cc;
+                _isReward = false;
             }
         }
 
@@ -63,6 +66,18 @@ namespace RP0.Harmony
                 if (applicants > 0)
                     value += $"\n{KSP.Localization.Localizer.Format("#rp0GainApplicants", applicants)}";
             }
+
+            string leaderString = string.Empty;
+            foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
+            {
+                if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
+                {
+                    if ((!_isReward || !cfg.IsUnlocked()) && cfg.UnlockByContractComplete.Contains(_contract.contractType.name))
+                        leaderString += "\n" + cfg.Title;
+                }
+            }
+            if (leaderString != string.Empty)
+                value += "\n" + KSP.Localization.Localizer.GetStringByTag(_isReward ? "#rp0LeaderNowAvailable" : "#rp0LeaderMakesAvailable") + leaderString;
 
             __result = $"<b><color=#{RUIutils.ColorToHex(RichTextUtil.colorAwards)}>{title}:</color></b> {value}";
             if (lines > 0)

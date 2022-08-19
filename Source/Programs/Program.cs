@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
+using KSP.Localization;
 using static ConfigNode;
 
 namespace RP0.Programs
@@ -353,6 +354,27 @@ namespace RP0.Programs
             Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT)/secsPerYear}. Adding {repDelta} rep.");
 
             CareerLog.Instance?.ProgramCompleted(this);
+
+            string leaderString = string.Empty;
+            foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
+            {
+                if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
+                {
+                    if (cfg.UnlockByProgramComplete.Contains(name))
+                        leaderString += "\n" + cfg.Title;
+                }
+            }
+            if (leaderString != string.Empty)
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
+                                             "LeaderUnlocked",
+                                             Localizer.GetStringByTag("#rp0LeaderNowAvailableTitle"),
+                                             Localizer.GetStringByTag("#rp0LeaderNowAvailable") + leaderString,
+                                             Localizer.GetStringByTag("#autoLOC_190905"),
+                                             true,
+                                             HighLogic.UISkin);
+            }
         }
 
         public double GetFundsAtTime(double time)
@@ -521,7 +543,7 @@ namespace RP0.Programs
             {
                 if (wasAccepted)
                 {
-                    text += $"\n\nProgram Speed: {KSP.Localization.Localizer.GetStringByTag("#rp0ProgramSpeed" + (int)speed)}";
+                    text += $"\n\nProgram Speed: {Localizer.GetStringByTag("#rp0ProgramSpeed" + (int)speed)}";
                 }
                 else
                 {
@@ -532,8 +554,20 @@ namespace RP0.Programs
                             text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
                     }
 
-                    text += $"\n\n{KSP.Localization.Localizer.Format("#rp0ProgramSpeedConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
+                    text += $"\n\n{Localizer.Format("#rp0ProgramSpeedConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
                 }
+
+                string leaderString = string.Empty;
+                foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
+                {
+                    if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
+                    {
+                        if (cfg.UnlockByProgramComplete.Contains(name))
+                            leaderString += "\n" + cfg.Title;
+                    }
+                }
+                if (leaderString != string.Empty)
+                    text += "\n\n" + Localizer.GetStringByTag("#rp0LeaderMakesAvailable") + leaderString;
 
                 if (!IsComplete)
                 {

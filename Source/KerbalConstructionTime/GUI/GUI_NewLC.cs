@@ -466,7 +466,7 @@ namespace KerbalConstructionTime
                                              "LCModifyFail",
                                              "Can't Modify",
                                              "The new limits and supported resources for this complex are incompatible with the following vessels:" + failedVessels + "\nEither scrap the vessels in question or choose settings that still support them too.",
-                                             "OK",
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
                                              HighLogic.UISkin).PrePostActions(onDestroyAction: RestorePrevUIState);
                 }

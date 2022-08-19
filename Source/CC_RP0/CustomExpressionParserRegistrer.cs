@@ -62,7 +62,7 @@ namespace ContractConfigurator.RP0
 
         private static float GetDeadlineMult()
         {
-            return HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.ContractDeadlineMult ?? 1;
+            return 1f;
         }
 
         private static int GetCommsPayload()

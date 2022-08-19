@@ -72,6 +72,9 @@ namespace KerbalConstructionTime
 
         public static double GetBuildRate(LCItem LC, double mass, double BP, bool isHumanRated, int delta = 0)
         {
+            if (!LC.IsOperational)
+                return 0d;
+
             bool useCap = LC.IsHumanRated && !isHumanRated;
             int engCap = LC.MaxEngineersFor(mass, BP, isHumanRated);
             if (engCap < LC.Engineers + delta)

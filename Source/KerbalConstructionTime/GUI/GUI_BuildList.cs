@@ -973,7 +973,7 @@ namespace KerbalConstructionTime
             {
                 if (!Utilities.RecoverActiveVesselToStorage(isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH))
                 {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", "OK", false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin);
                 }
             }
             if (buildList.Count == 0)
@@ -1414,7 +1414,7 @@ namespace KerbalConstructionTime
             //    }
             //    else
             //    {
-            //        PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Modify", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+            //        PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Modify", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
             //    }
             //}
             //if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
@@ -1450,7 +1450,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Dismantle", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Dismantle", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
                 }
             }
             GUILayout.FlexibleSpace();
@@ -1516,7 +1516,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
                 }
             }
             if (GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
@@ -1640,7 +1640,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available to choose from. Try visiting an editor first.", "No Launch Sites", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available to choose from. Try visiting an editor first.", "No Launch Sites", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
                 }
             }
 

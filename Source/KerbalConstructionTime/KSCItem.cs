@@ -47,7 +47,8 @@ namespace KerbalConstructionTime
             {
                 int count = 0;
                 foreach (LCItem lc in LaunchComplexes)
-                    if (lc.IsOperational) count++;
+                    if (lc.IsOperational) 
+                        ++count;
                 return count;
             }
         }

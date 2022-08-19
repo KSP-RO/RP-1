@@ -537,7 +537,7 @@ namespace RP0.ProceduralAvionics
                                          "ShowOutdatedProcPartWarning",
                                          "Outdated Procedural Parts version",
                                          "RP-1 has detected an outdated version of the Procedural Parts mod. Some procedural avionics features will now be disabled. For best experience please update to the latest Procedural Parts release.",
-                                         "OK",
+                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
                                          HighLogic.UISkin);
         }

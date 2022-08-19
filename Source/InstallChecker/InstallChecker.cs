@@ -57,7 +57,7 @@ namespace RP0InstallChecker
 
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "RP0InstallCheckerErr",
                 $"<color={titleColor}>{titleText}</color>",
-                contentText, "OK", true, HighLogic.UISkin,
+                contentText, KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), true, HighLogic.UISkin,
                 true, string.Empty);
         }
     }

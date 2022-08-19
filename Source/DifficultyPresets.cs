@@ -69,24 +69,15 @@ namespace RP0
         [GameParameters.CustomParameterUI("Downtime post mission", toolTip = "Enable crew downtime post mission, crew will be unavailable for flight/training.")]
         public bool IsCrewRnREnabled = true;
 
-        [GameParameters.CustomFloatParameterUI("Contract deadline multiplier", toolTip = "Used to lengthen or shorten all contract deadlines.", minValue = 0.5f, maxValue = 5f, stepCount = 46, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
-        public float ContractDeadlineMult = 1f;
-
-        [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
-        public float MaintenanceCostMult = 1f;
-
         [GameParameters.CustomFloatParameterUI("Starting Confidence", minValue = 0f, maxValue = 1000f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float StartingConfidence = 500f;
 
-        [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 0f, maxValue = 200f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
-        public float RepLossKerbalDeathFixed = 100f;
+        [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 200f, maxValue = 1000f, stepCount = 33, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
+        public float RepLossNautDeathFixed = 500f;
 
-        [GameParameters.CustomFloatParameterUI("Kerbal Death Percent Rep Loss", minValue = 0f, maxValue = 0.5f, stepCount = 51, displayFormat = "P0", gameMode = GameParameters.GameMode.CAREER)]
-        public float RepLossKerbalDeathPercent = 0.1f;
+        [GameParameters.CustomFloatParameterUI("Kerbal Death Percent Rep Loss", minValue = 0.05f, maxValue = 0.5f, stepCount = 46, displayFormat = "P0", gameMode = GameParameters.GameMode.CAREER)]
+        public float RepLossNautDeathPercent = 0.1f;
 
-        [GameParameters.CustomParameterUI("Enable part tooling", gameMode = GameParameters.GameMode.CAREER)]
-        public bool IsToolingEnabled = true;
-        
         [GameParameters.CustomParameterUI("Enable career progress logging", gameMode = GameParameters.GameMode.CAREER)]
         public bool CareerLogEnabled = true;
 
@@ -116,7 +107,6 @@ namespace RP0
             bool isCareer = MainMenu.newGameMode == Game.Modes.CAREER;
             IsCrewRnREnabled = isCareer;
             CareerLogEnabled = isCareer;
-            IsToolingEnabled = isCareer;
             NeverShowToolingReminders = !isCareer;
 
             switch (preset)
@@ -126,9 +116,8 @@ namespace RP0
                     IsTrainingEnabled = false;
                     IsMissionTrainingEnabled = false;
                     IsRetirementEnabled = false;
-                    ContractDeadlineMult = 1.7f;
-                    RepLossKerbalDeathFixed = 50f;
-                    RepLossKerbalDeathPercent = 0.05f;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 750f;
                     break;
                 case GameParameters.Preset.Normal:
@@ -136,9 +125,8 @@ namespace RP0
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    ContractDeadlineMult = 1.3f;
-                    RepLossKerbalDeathFixed = 80f;
-                    RepLossKerbalDeathPercent = 0.08f;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     break;
                 case GameParameters.Preset.Moderate:
@@ -146,9 +134,8 @@ namespace RP0
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    ContractDeadlineMult = 1f;
-                    RepLossKerbalDeathFixed = 100f;
-                    RepLossKerbalDeathPercent = 0.1f;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     break;
                 case GameParameters.Preset.Hard:
@@ -156,9 +143,8 @@ namespace RP0
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    ContractDeadlineMult = 0.8f;
-                    RepLossKerbalDeathFixed = 200f;
-                    RepLossKerbalDeathPercent = 0.2f;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.2f;
                     StartingConfidence = 350f;
                     break;
             }

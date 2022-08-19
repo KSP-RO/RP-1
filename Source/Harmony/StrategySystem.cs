@@ -32,50 +32,8 @@ namespace RP0.Harmony
                     if (stratR.DepartmentName != department && (string.IsNullOrEmpty(cfg.DepartmentNameAlt) || cfg.DepartmentNameAlt != department))
                         continue;
 
-                    if (cfg.RemoveOnDeactivate)
-                    {
-                        double nameDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.Name);
-                        double tagDeactivate = 0d;
-                        if (!string.IsNullOrEmpty(cfg.RemoveOnDeactivateTag))
-                            tagDeactivate = StrategyConfigRP0.ActivatedStrategies.ValueOrDefault(cfg.RemoveOnDeactivateTag);
-
-                        // we are skipping the case where the strategy or its tag is active, but 
-                        // groupTags will take care of that.
-                        double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
-                        if (lastActive > 0d)
-                        {
-                            if (cfg.ReactivateCooldown == 0d || stratR.DateDeactivated + cfg.ReactivateCooldown > KSPUtils.GetUT())
-                                continue;
-                        }
-                    }
-
-                    // Check unlock criteria
-                    if (cfg.UnlockByContractComplete.Count > 0 || cfg.UnlockByProgramComplete.Count > 0)
-                    {
-                        bool skip = true;
-                        foreach (string s in cfg.UnlockByContractComplete)
-                        {
-                            if (ProgramHandler.Instance.CompletedCCContracts.Contains(s))
-                            {
-                                skip = false;
-                                break;
-                            }
-                        }
-                        if (skip)
-                        {
-                            foreach (string s in cfg.UnlockByProgramComplete)
-                            {
-                                if (ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == s) != null)
-                                {
-                                    skip = false;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (skip)
-                            continue;
-                    }
+                    if (!cfg.IsAvailable(stratR.DateDeactivated))
+                        continue;
 
                     list.Add(stratR);
                 }

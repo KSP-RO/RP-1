@@ -24,8 +24,8 @@ namespace RP0.Harmony
         {
             if (evt.eventType == FlightEvents.CREW_KILLED)
             {
-                float repFixed = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossKerbalDeathFixed ?? 0f;
-                float repPct = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossKerbalDeathPercent ?? 0f;
+                float repFixed = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossNautDeathFixed ?? 0f;
+                float repPct = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossNautDeathPercent ?? 0f;
                 __instance.AddReputation(-1f * (repFixed + repPct * __instance.reputation), TransactionReasonsRP0.LossOfCrew.Stock());
             }
             return false;

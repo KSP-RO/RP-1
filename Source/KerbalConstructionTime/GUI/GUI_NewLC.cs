@@ -499,13 +499,15 @@ namespace KerbalConstructionTime
                                 pc.SetBP(curPadCost);
                                 pc.Cost = curPadCost;
                             }
+                            lc.IsOperational = false;
+                            lc.RecalculateBuildRates();
                         }
                         else
                         {
                             lc = new LCItem(_newLCData, KCTGameStates.ActiveKSC);
+                            lc.IsOperational = false;
                             KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                         }
-                        lc.IsOperational = false;
 
                         var modData = new LCItem.LCData();
                         modData.SetFrom(_newLCData);

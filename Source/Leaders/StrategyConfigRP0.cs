@@ -94,5 +94,41 @@ namespace RP0
 
             return cfg;
         }
+
+        public virtual bool IsUnlocked()
+        {
+            if (unlockByContractComplete.Count == 0 && unlockByProgramComplete.Count == 0)
+                return true;
+
+            foreach (string s in unlockByContractComplete)
+                if (Programs.ProgramHandler.Instance.CompletedCCContracts.Contains(s))
+                    return true;
+
+            foreach (string s in unlockByProgramComplete)
+                if (Programs.ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == s) != null)
+                    return true;
+
+            return false;
+        }
+
+        public virtual bool IsAvailable(double dateDeactivated)
+        {
+            // Check deactivation
+            double nameDeactivate = ActivatedStrategies.ValueOrDefault(Name);
+            double tagDeactivate = 0d;
+            if (!string.IsNullOrEmpty(removeOnDeactivateTag))
+                tagDeactivate = ActivatedStrategies.ValueOrDefault(removeOnDeactivateTag);
+
+            // we are skipping the case where the strategy or its tag is active, but 
+            // groupTags will take care of that.
+            double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
+            if (lastActive > 0d)
+            {
+                if (reactivateCooldown == 0d || dateDeactivated < 0d || dateDeactivated + reactivateCooldown > KSPUtils.GetUT())
+                    return false;
+            }
+
+            return IsUnlocked();
+        }
     }
 }

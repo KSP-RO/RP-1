@@ -48,7 +48,7 @@ namespace RP0
         #endregion
 
         protected void LoadSettings(ConfigNode n) => LoadSettings();
-        protected void LoadSettings() => toolingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsToolingEnabled;
+        protected void LoadSettings() => toolingEnabled = HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
 
         public ToolingDefinition GetToolingDefinition(string name)
         {

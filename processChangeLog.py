@@ -58,9 +58,6 @@ def create_subChange_from_item(item):
 	output += "\n"+nr_tabs*"\t"+"subchange = " + actual_item
 	return output
 
-def split_text(text):
-	return text.split("\n")
-
 def create_change_from_category(category, text):
 	output = ""
 	nr_tabs = 2
@@ -71,7 +68,7 @@ def create_change_from_category(category, text):
 	#	}
 	output += "\n"+nr_tabs*"\t"+"CHANGE\n"+nr_tabs*"\t"+"{\n"+(nr_tabs+1)*"\t"+"change = " + category
 
-	for row in split_text(text):
+	for row in text:
 		output += create_subChange_from_item(row)
 
 	output += "\n"+nr_tabs*"\t"+"}"
@@ -79,18 +76,16 @@ def create_change_from_category(category, text):
 
 def split_body(body):
 	category = ""
-	items = ""
+	items = []
 	for line in body.split("\n"):
-		if line.startswith("## "):
+		if re.search(r"^\s*#+\s", line): # Line starts with at least 1 '#'
 			if category != "":
 				yield (category, items)
-			category = line.split("## ")[1]
-			items = ""
-		elif line.startswith("* "):
-			item = line.split("* ")[1]
-			if items != "":
-				items += "\n"
-			items += item
+			category = re.split(r"^\s*#+\s", line)[1]
+			items = []
+		elif re.search(r"^\s*[-*]\s", line):
+			item = re.split(r"^\s*[-*]\s", line)[1]
+			items.append(item)
 	yield (category, items)
 
 def create_version(version, body):

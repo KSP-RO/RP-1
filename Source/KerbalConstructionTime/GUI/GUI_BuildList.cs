@@ -620,19 +620,16 @@ namespace KerbalConstructionTime
             {
                 foreach (var l in k.LaunchComplexes)
                 {
-                    if (l.IsOperational)
+                    accTime = 0d;
+                    foreach (var b in l.BuildList)
                     {
-                        accTime = 0d;
-                        foreach (var b in l.BuildList)
-                        {
-                            // FIXME handle multiple rates
-                            _timeBeforeItem[b] = accTime;
-                            accTime += b.GetTimeLeftEst(accTime);
-                            _allItems.Add(b);
-                        }
-                        _allItems.AddRange(l.Recon_Rollout);
-                        _allItems.AddRange(l.AirlaunchPrep);
+                        // FIXME handle multiple rates
+                        _timeBeforeItem[b] = accTime;
+                        accTime += b.GetTimeLeftEst(accTime);
+                        _allItems.Add(b);
                     }
+                    _allItems.AddRange(l.Recon_Rollout);
+                    _allItems.AddRange(l.AirlaunchPrep);
                 }
                 accTime = 0d;
                 foreach (var c in k.Constructions)
@@ -712,9 +709,11 @@ namespace KerbalConstructionTime
                     GUILayout.Space(18);
 
                 if (t.GetBuildRate() > 0d)
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined"+i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                else if (t is BuildListVessel b && !b.LC.IsOperational)
+                    GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined"+i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
 
@@ -730,8 +729,6 @@ namespace KerbalConstructionTime
             int idx = 0;
             foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
             {
-                if (!lc.IsOperational)
-                    continue;
                 foreach (var b in lc.Warehouse)
                     RenderWarehouseRow(b, idx++, true);
             }
@@ -1071,9 +1068,11 @@ namespace KerbalConstructionTime
                     textColor = _yellowText;
                 }
             }
+            if (!b.LC.IsOperational)
+                textColor = _redText;
 
             GUILayout.BeginHorizontal();
-            if (!HighLogic.LoadedSceneIsEditor && (padStatus == VesselPadStatus.InStorage || padStatus == VesselPadStatus.RolledOut))
+            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus == VesselPadStatus.InStorage || padStatus == VesselPadStatus.RolledOut))
             {
                 if (GUILayout.Button("*", GUILayout.Width(_butW)))
                 {
@@ -1089,7 +1088,16 @@ namespace KerbalConstructionTime
 
             DrawTypeIcon(typeIcon);
             GUILayout.Label(b.ShipName, textColor);
+            
+            if (!b.LC.IsOperational)
+            {
+                GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+                return;
+            }
+
             GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
+            
             if (recovery != null)
             {
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));

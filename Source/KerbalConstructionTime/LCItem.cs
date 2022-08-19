@@ -337,6 +337,8 @@ namespace KerbalConstructionTime
             // will create a new one if needed (it probably will be needed)
             // If it does, it will remove us from the old one, and then clear it if it's empty.
             _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
+
+            RecalculateBuildRates();
         }
 
         public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;

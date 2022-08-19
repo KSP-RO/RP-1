@@ -65,10 +65,8 @@ namespace RP0.Harmony
                     if (__instance.buttonPurchaseRed.gameObject.activeSelf)
                     {
                         __instance.buttonPurchase.gameObject.SetActive(true);
-                        __instance.buttonPurchaseCaption.gameObject.SetActive(true);
                         __instance.buttonPurchaseCaption.text = __instance.buttonPurchaseCaption.text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
                         __instance.buttonPurchaseRed.gameObject.SetActive(false);
-                        __instance.buttonPurchaseCaptionRed.gameObject.SetActive(false);
                     }
 
                     SetTooltip(__instance.buttonPurchase, cmq);

@@ -555,7 +555,7 @@ namespace RP0
 
         private void LoadSettings(ConfigNode data)
         {
-            _maintenanceCostMult = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().MaintenanceCostMult;
+            _maintenanceCostMult = 1f;
         }
 
         private void SettingsChanged()

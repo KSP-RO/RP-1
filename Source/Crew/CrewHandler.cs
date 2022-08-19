@@ -349,7 +349,7 @@ namespace RP0.Crew
             if (pcm == null)
                 return false;
 
-            bool requireTraining = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled;
+            bool requireTraining = HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled;
 
             if (!requireTraining || EntryCostStorage.GetCost(partName) == 1)
                 return true;

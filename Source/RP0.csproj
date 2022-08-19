@@ -94,6 +94,10 @@
     <Compile Include="Leaders\LeaderUtils.cs" />
     <Compile Include="Leaders\StrategyConfigRP0.cs" />
     <Compile Include="Leaders\StrategyRP0.cs" />
+    <Compile Include="Milestones\Milestone.cs" />
+    <Compile Include="Milestones\MilestoneHandler.cs" />
+    <Compile Include="Milestones\NewspaperLoader.cs" />
+    <Compile Include="Milestones\NewspaperUI.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
     <Compile Include="Confidence.cs" />
     <Compile Include="Debug.cs" />
@@ -302,6 +306,11 @@
     </Reference>
     <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\KSP DLL\1.12.3\UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">

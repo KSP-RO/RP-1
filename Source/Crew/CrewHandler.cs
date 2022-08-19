@@ -646,7 +646,7 @@ namespace RP0.Crew
                                              "CrewUpdateNotification",
                                              "Crew Updates",
                                              sb.ToString(),
-                                             "OK",
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
@@ -690,7 +690,7 @@ namespace RP0.Crew
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Date",
                                              $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
-                                             "OK",
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              false,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
@@ -727,7 +727,7 @@ namespace RP0.Crew
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Dates",
                                              sb.ToString(),
-                                             "OK",
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              false,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
@@ -781,7 +781,7 @@ namespace RP0.Crew
                                                  "CrewRetirementNotification",
                                                  "Crew Retirement",
                                                  "The following retirements have occurred:\n" + msgStr,
-                                                 "OK",
+                                                 KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                                  true,
                                                  HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
                 }

@@ -196,7 +196,7 @@ namespace RP0
             }
             else if (_isToolingTempDisabled && Event.current.type == EventType.Repaint)   // button events are handled on the Repaint pass
             {
-                ToolingManager.Instance.toolingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsToolingEnabled;
+                ToolingManager.Instance.toolingEnabled = HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 _isToolingTempDisabled = false;
                 Update();
                 GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);

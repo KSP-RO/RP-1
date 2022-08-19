@@ -231,7 +231,7 @@ namespace RP0.Crew
                                              "CrewUpdateNotification",
                                              "Crew Updates",
                                              sb.ToString(),
-                                             "OK",
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN);
                 }

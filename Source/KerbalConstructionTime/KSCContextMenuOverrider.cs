@@ -196,7 +196,7 @@ namespace KerbalConstructionTime
                             $"Can't upgrade this facility. Requires {KerbalConstructionTimeData.techNameToTitle[gate]}.",
                             "Lack Tech to Upgrade",
                             HighLogic.UISkin,
-                            new DialogGUIButton("Ok", () => { })),
+                            new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })),
                             false,
                             HighLogic.UISkin);
 

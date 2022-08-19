@@ -1,4 +1,4 @@
-import argparse, sys
+import argparse, sys, re
 
 class DefaultHelpParser(argparse.ArgumentParser):
 	def error(self, message):
@@ -36,9 +36,22 @@ path = args.path[0]
 if version.startswith('v'):
 	version = version.split('v')[1]
 
+def remove_author(item):
+	"""
+	Remove "by @author in https..."
+	"""
+	# Regex matches anything starting with "https" and stops before a space or a dot/comma followed by a space
+	regex = r"\bhttps[^\s]*[^[.,\s]]*"
+	split_on_links = re.split(regex, item)
+
+	trimmed_item = ""
+	for thing in split_on_links:
+		trimmed_item += thing.split(" by @")[0]
+
+	return trimmed_item
+
 def create_subChange_from_item(item):
-	# Remove "by @author in https..."
-	actual_item = item.split(" by @")[0]
+	actual_item = remove_author(item)
 	output = ""
 	nr_tabs = 3
 	#	subChange = "actual_item"

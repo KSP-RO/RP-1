@@ -348,7 +348,7 @@ namespace RP0.Crew
             if (pcm == null)
                 return false;
 
-            bool requireTraining = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled;
+            bool requireTraining = HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled;
 
             if (!requireTraining || EntryCostStorage.GetCost(partName) == 1)
                 return true;
@@ -508,8 +508,8 @@ namespace RP0.Crew
 
         private void LoadSettings()
         {
-            RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
-            IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
+            RetirementEnabled = HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
+            IsMissionTrainingEnabled = HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
             GenerateTrainingTemplates();
         }
 

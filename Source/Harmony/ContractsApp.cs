@@ -12,8 +12,6 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(ContractsApp))]
     internal class PatchContractsApp
     {
-        internal static MethodInfo CreateParameterListMethod = typeof(ContractsApp).GetMethod("CreateParameterList", AccessTools.all);
-        
         [HarmonyPrefix]
         [HarmonyPatch("CreateItem")]
         internal static bool Prefix_CreateItem(ContractsApp __instance, ref Contract contract, ref KSP.UI.UICascadingList.CascadingListItem __result, ref GenericCascadingList ___cascadingList, ref Dictionary<Guid, UICascadingList.CascadingListItem> ___contractList)
@@ -47,7 +45,7 @@ namespace RP0.Harmony
                 }
 
                 UIListItem header = ___cascadingList.CreateHeader("<color=#e6752a>" + contract.Title + "</color>", out button, scaleBg: true);
-                __result = ___cascadingList.ruiList.AddCascadingItem(header, ___cascadingList.CreateFooter(), CreateParameterListMethod.Invoke(__instance, new object[] { contract }) as List<UIListItem>, button, index);
+                __result = ___cascadingList.ruiList.AddCascadingItem(header, ___cascadingList.CreateFooter(), __instance.CreateParameterList(contract), button, index);
                 return false;
             }
 

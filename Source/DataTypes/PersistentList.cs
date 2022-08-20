@@ -69,7 +69,6 @@ namespace RP0.DataTypes
     /// </summary>
     public class PersistentListValueType<T> : List<T>, IConfigNode
     {
-        private static System.Reflection.MethodInfo ReadValueMethod = HarmonyLib.AccessTools.Method(typeof(ConfigNode), "ReadValue");
         private static System.Type type = typeof(T);
 
         public void Load(ConfigNode node)
@@ -85,7 +84,7 @@ namespace RP0.DataTypes
                 }
                 else
                 {
-                    item = (T)ReadValueMethod.Invoke(null, new object[] { type, v.value });
+                    item = (T)ConfigNode.ReadValue(type, v.value);
                 }
                 Add(item);
             }

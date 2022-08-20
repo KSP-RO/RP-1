@@ -48,7 +48,7 @@ namespace RP0.Harmony
                     techID = availablePart.TechRequired;
                     eCost = availablePart.entryCost;
                 }
-                if (KCTGameStates.TechList.Any(tech => tech.TechID == techID))
+                if (KCTGameStates.TechList.Any(tech => tech.techID == techID))
                 {
                     __instance.buttonPurchaseContainer.SetActive(false);
                     __instance.costPanel.SetActive(true);

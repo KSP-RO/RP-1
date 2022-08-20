@@ -5,7 +5,8 @@ namespace KerbalConstructionTime
 {
     public class PadConstruction : ConstructionBuildItem
     {
-        public Guid ID;
+        [Persistent]
+        public Guid id;
 
         private LCItem _lc = null;
 
@@ -37,14 +38,14 @@ namespace KerbalConstructionTime
 
         public PadConstruction(string name)
         {
-            Name = name;
+            base.name = name;
         }
 
-        public override string GetItemName() => $"{LC.Name}: {Name}";
+        public override string GetItemName() => $"{LC.Name}: {name}";
 
         protected override void ProcessCancel()
         {
-            KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == ID);
+            KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
             int index = LC.LaunchPads.IndexOf(lp);
             LC.LaunchPads.RemoveAt(index);
             if (LC.ActiveLaunchPadIndex >= index)
@@ -69,10 +70,10 @@ namespace KerbalConstructionTime
 
             if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
             {
-                KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == ID);
+                KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
                 lp.isOperational = true;
                 lp.DestructionNode = new ConfigNode("DestructionState");
-                UpgradeProcessed = true;
+                upgradeProcessed = true;
 
                 try
                 {

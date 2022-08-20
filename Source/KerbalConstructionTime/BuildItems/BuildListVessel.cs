@@ -8,7 +8,7 @@ using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class BuildListVessel : IKCTBuildItem
+    public class BuildListVessel : IKCTBuildItem, IConfigNode
     {
         public enum ClampsState
         {
@@ -1273,6 +1273,16 @@ namespace KerbalConstructionTime
             }
 
             return 0d;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(ConfigNode node)
+        {
+            throw new NotImplementedException();
         }
     }
 

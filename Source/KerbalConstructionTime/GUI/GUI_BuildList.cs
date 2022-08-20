@@ -388,7 +388,7 @@ namespace KerbalConstructionTime
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.SpentRushCost:N0} funds on this construction ({(constr.SpentCost / constr.Cost):P0} of the total).", "Cancel Construction?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.spentRushCost:N0} funds on this construction ({(constr.spentCost / constr.cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
@@ -422,10 +422,10 @@ namespace KerbalConstructionTime
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("     Work rate:", GUILayout.Width(90));
-                GUILayout.Label(new GUIContent(constr.WorkRate.ToString("P0"), $"rate{identifier}¶Daily cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                GUILayout.Label(new GUIContent(constr.workRate.ToString("P0"), $"rate{identifier}¶Daily cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
                 
-                float newWorkRate = GUILayout.HorizontalSlider(constr.WorkRate, 0f, 1.5f, GUILayout.Width(150));
-                constr.WorkRate = Mathf.RoundToInt(newWorkRate * 20f) * 0.05f;
+                float newWorkRate = GUILayout.HorizontalSlider(constr.workRate, 0f, 1.5f, GUILayout.Width(150));
+                constr.workRate = Mathf.RoundToInt(newWorkRate * 20f) * 0.05f;
 
                 GUILayout.Label("Remaining Cost:", GUILayout.Width(100));
                 GUILayout.Label($"√{rCost:N0}", GetLabelRightAlignStyle());
@@ -443,7 +443,7 @@ namespace KerbalConstructionTime
                 double br = c.GetBuildRate();
                 if (br > 0d)
                 {
-                    costday += br * 86400d / c.BP * -RP0.CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction, -c.Cost * c.RushMultiplier);
+                    costday += br * 86400d / c.BP * -RP0.CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction, -c.cost * c.RushMultiplier);
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());

@@ -67,12 +67,17 @@ namespace RP0
 
         public static int GetCost(PartEntryCostHolder h, bool clearTracker=true)
         {
+            if (h == null)
+                return 0;
             if (clearTracker) EntryCostDatabase.ClearTracker();
             return h.GetCost();
         }
 
         private static string CostString(PartEntryCostHolder h, int cost=-1)
         {
+            if (h == null)
+                return string.Empty;
+
             if (cost == -1) cost = GetCost(h);
             string ret = h.name;
             if (EntryCostDatabase.IsUnlocked(h.name))

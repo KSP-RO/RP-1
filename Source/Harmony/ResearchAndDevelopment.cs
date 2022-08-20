@@ -69,16 +69,16 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("AddScience")]
-        internal static bool Prefix_AddScience(ResearchAndDevelopment __instance, float value, TransactionReasons reason, ref float ___science)
+        internal static bool Prefix_AddScience(ResearchAndDevelopment __instance, float value, TransactionReasons reason)
         {
-            ___science += value;
-            if (!HighLogic.CurrentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().AllowNegativeCurrency && ___science < 0f)
-                ___science = 0f;
+            __instance.science += value;
+            if (!HighLogic.CurrentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().AllowNegativeCurrency && __instance.science < 0f)
+                __instance.science = 0f;
 
             CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason, 0f, value, 0f);
             GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(data);
             GameEvents.Modifiers.OnCurrencyModified.Fire(data);
-            GameEvents.OnScienceChanged.Fire(___science, reason);
+            GameEvents.OnScienceChanged.Fire(__instance.science, reason);
 
             return false;
         }
@@ -93,8 +93,7 @@ namespace RP0.Harmony
                 return false;
             }
 
-            Dictionary<string, ProtoTechNode> protoTechNodes = GetProtoTechNodes();
-            __result = PartTechAvailable(ap, protoTechNodes);
+            __result = PartTechAvailable(ap);
 
             return false;
         }
@@ -109,11 +108,9 @@ namespace RP0.Harmony
                 return false;
             }
 
-            Dictionary<string, ProtoTechNode> protoTechNodes = GetProtoTechNodes();
-
-            if (PartTechAvailable(ap, protoTechNodes))
+            if (PartTechAvailable(ap))
             {
-                if (protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn) &&
+                if (ResearchAndDevelopment.Instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn) &&
                     ptn.partsPurchased.Contains(ap))
                 {
                     __result = true;
@@ -128,21 +125,14 @@ namespace RP0.Harmony
             return false;
         }
 
-        private static Dictionary<string, ProtoTechNode> GetProtoTechNodes()
-        {
-            return Traverse.Create(ResearchAndDevelopment.Instance)
-                           .Field("protoTechNodes")
-                           .GetValue<Dictionary<string, ProtoTechNode>>();
-        }
-
-        private static bool PartTechAvailable(AvailablePart ap, Dictionary<string, ProtoTechNode> protoTechNodes)
+        private static bool PartTechAvailable(AvailablePart ap)
         {
             if (string.IsNullOrEmpty(ap.TechRequired))
             {
                 return false;
             }
 
-            if (protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn))
+            if (ResearchAndDevelopment.Instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn))
             {
                 return ptn.state == RDTech.State.Available;
             }

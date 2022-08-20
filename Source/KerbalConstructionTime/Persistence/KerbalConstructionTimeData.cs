@@ -19,7 +19,7 @@ namespace KerbalConstructionTime
         public Dictionary<LCItem, LCEfficiency> LCToEfficiency = new Dictionary<LCItem, LCEfficiency>();
 
         [KSPField(isPersistant = true)]
-        private PersistentList<TechItem> TechList = new PersistentList<TechItem>();
+        public KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
@@ -95,18 +95,6 @@ namespace KerbalConstructionTime
 
                 node.AddNode(KSC.AsConfigNode());
             }
-            var tech = new ConfigNode("TechList");
-            foreach (TechItem techItem in KCTGameStates.TechList)
-            {
-                var cnTemp = new ConfigNode("Tech");
-                techItem.Save(cnTemp);
-                cnTemp = ConfigNode.CreateConfigFromObject(techItem, cnTemp);
-                var protoNode = new ConfigNode("ProtoNode");
-                techItem.ProtoNode.Save(protoNode);
-                cnTemp.AddNode(protoNode);
-                tech.AddNode(cnTemp);
-            }
-            node.AddNode(tech);
 
             var cnPlans = new ConfigNode("Plans");
             foreach (BuildListVessel blv in KCTGameStates.Plans.Values)
@@ -130,7 +118,7 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("Reading from persistence.");
                 KCTGameStates.KSCs.Clear();
                 KCTGameStates.ActiveKSC = null;
-                KCTGameStates.InitAndClearTechList();
+                KCTGameStates.InitTechList();
                 KCTGameStates.SciPointsTotal = -1;
                 KCTGameStates.UnassignedPersonnel = 0;
                 KCTGameStates.Researchers = 0;
@@ -160,26 +148,18 @@ namespace KerbalConstructionTime
                 if (foundStockKSC)
                     TryMigrateStockKSC();
 
-                var protoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that have been researched
                 var inDevProtoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that are being researched
 
-                // get the TechList node containing the TechItems with the tech nodes currently being researched from KCT's ConfigNode
-                if (node.GetNode("TechList") is ConfigNode tmp)
+                // Load tech data from techlist
+                foreach (var techItem in TechList)
                 {
-                    foreach (ConfigNode techNode in tmp.GetNodes("Tech"))
-                    {
-                        TechItem techItem = new TechItem();
-                        techItem.Load(techNode);
-                        KCTGameStates.TechList.Add(techItem);
-
-                        // save proto nodes that are in development
-                        inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
-                    }
+                    // save proto nodes that are in development
+                    inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
                 }
                 if (HighLogic.LoadedSceneIsEditor)
                 {
                     // get the nodes that have been researched from ResearchAndDevelopment
-                    protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
+                    var protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
                     // iterate through all loaded parts to check if any of them should be experimental
                     foreach (AvailablePart ap in PartLoader.LoadedPartsList)
                     {
@@ -189,7 +169,7 @@ namespace KerbalConstructionTime
                         }
                     }
                 }
-                tmp = node.GetNode("Plans");
+                ConfigNode tmp = node.GetNode("Plans");
                 if (tmp != null)
                 {
                     foreach (ConfigNode cnV in tmp.GetNodes("KCTVessel"))

@@ -332,8 +332,8 @@ namespace RP0
                 // find LCConstruction
                 foreach (var lcc in lc.KSC.LCConstructions)
                 {
-                    if (lcc.LCID != lc.ID)
-                        return lcc.Progress / lcc.BP * LCUpkeep(lcc.LCData, lc.LaunchPadCount);
+                    if (lcc.lcID != lc.ID)
+                        return lcc.progress / lcc.BP * LCUpkeep(lcc.lcData, lc.LaunchPadCount);
                 }
                 return 0d;
             }
@@ -345,7 +345,7 @@ namespace RP0
         {
             foreach (var fac in KCTGameStates.ActiveKSC.FacilityUpgrades)
                 if (fac.FacilityType == facility)
-                    return fac.Progress / fac.BP;
+                    return fac.progress / fac.BP;
 
             return 0d;
         }

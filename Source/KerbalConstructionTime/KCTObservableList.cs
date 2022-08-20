@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class KCTObservableList<T> : List<T>
+    public class KCTObservableList<T> : PersistentList<T> where T : IConfigNode
     {
         public event Action Updated = delegate { };
         public event Action<int, T> Added = delegate (int idx, T element) { };

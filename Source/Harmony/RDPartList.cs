@@ -18,7 +18,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("AddPartListItem")]
-        private static bool Prefix_AddPartListItem(RDPartList __instance, ref AvailablePart part, ref bool purchased, ref RDNode ___selected_node, ref KSP.UI.UIList ___scrollList, ref List<RDPartListItem> ___partListItems)
+        private static bool Prefix_AddPartListItem(RDPartList __instance, ref AvailablePart part, ref bool purchased)
         {
             RDPartListItem listItem = GameObject.Instantiate(__instance.partListItem).GetComponentInChildren<RDPartListItem>();
             if (purchased)
@@ -42,7 +42,7 @@ namespace RP0.Harmony
                         text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
                 }
 
-                if (___selected_node.tech.state != RDTech.State.Available)
+                if (__instance.selected_node.tech.state != RDTech.State.Available)
                     text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
             }
             else
@@ -51,15 +51,15 @@ namespace RP0.Harmony
             }
             SetPart(listItem, false, text, part, null);
 
-            ___scrollList.AddItem(listItem.GetComponentInParent<KSP.UI.UIListItem>());
-            ___partListItems.Add(listItem);
+            __instance.scrollList.AddItem(listItem.GetComponentInParent<KSP.UI.UIListItem>());
+            __instance.partListItems.Add(listItem);
 
             return false;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch("AddUpgradeListItem")]
-        private static bool Prefix_AddUpgradeListItem(RDPartList __instance, ref PartUpgradeHandler.Upgrade upgrade, ref bool purchased, ref RDNode ___selected_node, ref KSP.UI.UIList ___scrollList, ref List<RDPartListItem> ___partListItems)
+        private static bool Prefix_AddUpgradeListItem(RDPartList __instance, ref PartUpgradeHandler.Upgrade upgrade, ref bool purchased)
         {
             RDPartListItem listItem = GameObject.Instantiate(__instance.partListItem).GetComponentInChildren<RDPartListItem>();
             AvailablePart part = PartLoader.getPartInfoByName(upgrade.partIcon);
@@ -84,7 +84,7 @@ namespace RP0.Harmony
                         text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
                 }
 
-                if (___selected_node.tech.state != RDTech.State.Available)
+                if (__instance.selected_node.tech.state != RDTech.State.Available)
                     text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
             }
             else
@@ -93,8 +93,8 @@ namespace RP0.Harmony
             }
             SetPart(listItem, false, text, part, upgrade);
 
-            ___scrollList.AddItem(listItem.GetComponentInParent<KSP.UI.UIListItem>());
-            ___partListItems.Add(listItem);
+            __instance.scrollList.AddItem(listItem.GetComponentInParent<KSP.UI.UIListItem>());
+            __instance.partListItems.Add(listItem);
 
             return false;
         }

@@ -75,8 +75,6 @@
     <Compile Include="DataTypes\PersistentList.cs" />
     <Compile Include="Harmony\EnumExtensions.cs" />
     <Compile Include="Harmony\GameSettings.cs" />
-    <Compile Include="Harmony\CurrencyOperation.cs" />
-    <Compile Include="Harmony\CurrencyConverter.cs" />
     <Compile Include="Harmony\CurrencyModifierQuery.cs" />
     <Compile Include="Harmony\ProgressTracking.cs" />
     <Compile Include="Harmony\Contract.cs" />
@@ -263,7 +261,6 @@
     <Compile Include="KerbalConstructionTime\ModIntegrations\StageRecoveryWrapper.cs" />
     <Compile Include="KerbalConstructionTime\Utilities\TextureScale.cs" />
     <Compile Include="KerbalConstructionTime\ModIntegrations\ToolbarRegistration.cs" />
-    <Compile Include="KerbalConstructionTime\Utilities\TypeExtensions.cs" />
     <Compile Include="KerbalConstructionTime\KCTVesselTracker.cs" />
     <Compile Include="KerbalConstructionTime\KCTVesselTrackerEventHandler.cs" />
     <Compile Include="KerbalConstructionTime\VesselBuildValidator.cs" />

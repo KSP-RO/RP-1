@@ -22,7 +22,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static double GetConstructionBP(double cost, SpaceCenterFacility? facilityType)
+        public static double GetConstructionBP(double cost, SpaceCenterFacility facilityType)
         {
             //int isAdm = 0, isAC = 0, isLP = 0, isMC = 0, isRD = 0, isRW = 0, isTS = 0, isSPH = 0, isVAB = 0, isOther = 0;
             //switch (facilityType)
@@ -113,7 +113,7 @@ namespace KerbalConstructionTime
             return personnel * 0.0025d;
         }
 
-        public static double GetConstructionBuildRate(int index, KSCItem KSC, SpaceCenterFacility? facilityType)
+        public static double GetConstructionBuildRate(int index, KSCItem KSC, SpaceCenterFacility facilityType)
         {
             //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             //if (KSC == null)

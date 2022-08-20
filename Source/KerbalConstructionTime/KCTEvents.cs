@@ -394,35 +394,10 @@ namespace KerbalConstructionTime
 
         public void VesselRecoverEvent(ProtoVessel v, bool quick)
         {
-            KCTDebug.Log($"VesselRecoverEvent for {v.vesselName}");
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
-            {
-                //KCTDebug.LogError("Disabled!");
+            if (!Utilities.IsVesselKCTRecovering(v))
                 return;
-            }
-            if (KCTGameStates.IsSimulatedFlight)
-            {
-                //KCTDebug.LogError("Sim!");
-                return;
-            }
 
-            if (v.vesselRef.isEVA)
-            {
-                //KCTDebug.LogError("Is eva!");
-                return;
-            }
-            if (KCTGameStates.RecoveredVessel == null)
-            {
-                //KCTDebug.LogError("Recovered vessel is null!");
-                return;
-            }
-            if (v.vesselName != KCTGameStates.RecoveredVessel.ShipName)
-            {
-                //KCTDebug.LogError("Recovered vessel, " + KCTGameStates.RecoveredVessel.ShipName +", doesn't match!");
-                return;
-            }
-            //rebuy the ship
-            Utilities.SpendFunds(KCTGameStates.RecoveredVessel.Cost, TransactionReasons.VesselRollout);    //pay for the ship again
+            KCTDebug.Log($"VesselRecoverEvent for {v.vesselName}");
 
             LCItem targetLC = KCTGameStates.RecoveredVessel.LC;
             if (targetLC == null)

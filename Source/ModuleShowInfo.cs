@@ -129,7 +129,7 @@ namespace RP0
 
             string data = null, apInfo = null;
             string nm = RealFuels.Utilities.SanitizeName(part.name);
-            if (EntryCostDatabase.GetHolder(nm) is PartEntryCostHolder h)
+            if (HighLogic.LoadedScene != GameScenes.LOADING && EntryCostDatabase.GetHolder(nm) is PartEntryCostHolder h)
                 data = $"Total cost: {EntryCostDatabaseAccessor.GetCost(h)}\n{EntryCostDatabaseAccessor.DisplayHolder(h, false)}";
             if (part.partInfo is AvailablePart ap)
             {

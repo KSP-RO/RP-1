@@ -35,7 +35,7 @@ namespace RP0.Leaders
 
         protected abstract string DescriptionString();
 
-        protected override string GetDescription()
+        public override string GetDescription()
         {
             string retStr = $"<color={(IsPositive ? _GoodColor : _BadColor)}>{DescriptionString()}</color>";
 
@@ -45,7 +45,7 @@ namespace RP0.Leaders
             return retStr;
         }
 
-        protected override void OnLoadFromConfig(ConfigNode node)
+        public override void OnLoadFromConfig(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
         }

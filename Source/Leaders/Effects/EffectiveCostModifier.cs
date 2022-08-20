@@ -34,7 +34,7 @@ namespace RP0.Leaders
                 effectDescription);
         }
 
-        protected override void OnRegister()
+        public override void OnRegister()
         {
             if (appliesToParts)
                 KCTEvents.ApplyPartEffectiveCostMultiplier.Add(OnEffectQueryParts);
@@ -42,7 +42,7 @@ namespace RP0.Leaders
                 KCTEvents.ApplyGlobalEffectiveCostMultiplier.Add(OnEffectQuery);
         }
 
-        protected override void OnUnregister()
+        public override void OnUnregister()
         {
             if (appliesToParts)
                 KCTEvents.ApplyPartEffectiveCostMultiplier.Remove(OnEffectQueryParts);

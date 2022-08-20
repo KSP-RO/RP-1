@@ -66,7 +66,6 @@ namespace RP0.Crew
         private bool _inAC = false;
         private int _countAvailable, _countAssigned, _countKIA;
         private AstronautComplex _astronautComplex = null;
-        private FieldInfo _cliTooltip;
 
         private static readonly Dictionary<CrewListItem, bool> _storedCrewListItemMouseovers = new Dictionary<CrewListItem, bool>();
         private static readonly List<UIListItem> _crewList = new List<UIListItem>();
@@ -152,8 +151,6 @@ namespace RP0.Crew
 
             KCT_GUI.UseAvailabilityChecker = true;
             KCT_GUI.AvailabilityChecker = CheckCrewForPart;
-
-            _cliTooltip = typeof(CrewListItem).GetField("tooltipController", BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (Settings == null)
             {
@@ -930,7 +927,7 @@ namespace RP0.Crew
             if (RetirementEnabled && (retTime = GetRetireTime(pcm.name)) > 0d)
             {
                 cli.SetTooltip(pcm);
-                var ttc = _cliTooltip.GetValue(cli) as TooltipController_CrewAC;
+                var ttc = cli.tooltipController;
                 // TODO: add flight-high entries here
                 ttc.descriptionString += $"\n\nRetires no earlier than {KSPUtil.PrintDate(retTime, false)}";
 

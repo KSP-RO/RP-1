@@ -16,7 +16,6 @@ namespace KerbalConstructionTime
     public static class Utilities
     {
         private static bool? _isKSCSwitcherInstalled = null;
-        private static bool? _isKRASHInstalled = null;
         private static bool? _isPrincipiaInstalled = null;
         private static bool? _isTestFlightInstalled = null;
         private static bool? _isTestLiteInstalled = null;
@@ -956,18 +955,6 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static bool IsKRASHInstalled
-        {
-            get
-            {
-                if (!_isKRASHInstalled.HasValue)
-                {
-                    _isKRASHInstalled = AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.name, "KRASH", StringComparison.OrdinalIgnoreCase));
-                }
-                return _isKRASHInstalled.Value;
-            }
-        }
-
         public static bool IsPrincipiaInstalled
         {
             get
@@ -980,22 +967,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static bool IsSimulationActive
-        {
-            get
-            {
-                if (KCTGameStates.IsSimulatedFlight) return true;
-
-                Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KRASH", StringComparison.OrdinalIgnoreCase))?.assembly;
-                Type t = a?.GetType("KRASH.KRASHShelter");
-                FieldInfo fi = t?.GetField("persistent", BindingFlags.Public | BindingFlags.Static);
-                object krashPersistent = fi?.GetValue(null);
-                fi = krashPersistent?.GetType().GetField("shelterSimulationActive", BindingFlags.Public | BindingFlags.Instance);
-                bool? isActive = (bool?)fi?.GetValue(krashPersistent);
-
-                return isActive ?? false;
-            }
-        }
+        public static bool IsSimulationActive => KCTGameStates.IsSimulatedFlight;
 
         public static string GetActiveRSSKSC()
         {

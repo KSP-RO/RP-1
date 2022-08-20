@@ -923,7 +923,7 @@ namespace KerbalConstructionTime
         public static List<string> GetLaunchSites(bool isVAB)
         {
             EditorDriver.editorFacility = isVAB ? EditorFacility.VAB : EditorFacility.SPH;
-            typeof(EditorDriver).GetMethod("setupValidLaunchSites", BindingFlags.NonPublic | BindingFlags.Static)?.Invoke(null, null);
+            EditorDriver.setupValidLaunchSites();
             return EditorDriver.ValidLaunchSites;
         }
 

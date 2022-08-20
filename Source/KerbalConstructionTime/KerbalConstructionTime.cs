@@ -695,10 +695,10 @@ namespace KerbalConstructionTime
                     // Remove all completed items
                     for (int i = ksc.LaunchComplexes.Count; i-- > 0;)
                     {
-                        ksc.LaunchComplexes[i].PadConstructions.RemoveAll(ub => ub.UpgradeProcessed);
+                        ksc.LaunchComplexes[i].PadConstructions.RemoveAll(ub => ub.upgradeProcessed);
                     }
-                    ksc.LCConstructions.RemoveAll(ub => ub.UpgradeProcessed);
-                    ksc.FacilityUpgrades.RemoveAll(ub => ub.UpgradeProcessed);
+                    ksc.LCConstructions.RemoveAll(ub => ub.upgradeProcessed);
+                    ksc.FacilityUpgrades.RemoveAll(ub => ub.upgradeProcessed);
                 }
                 
                 double researchTime = UTDiff;
@@ -882,7 +882,7 @@ namespace KerbalConstructionTime
                                 var c = ksc.Constructions[i];
                                 double t = c.GetTimeLeft();
                                 if (t <= UToffset)
-                                    c.Progress = c.BP;
+                                    c.progress = c.BP;
                             }
                         }
                     }

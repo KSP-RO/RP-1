@@ -336,7 +336,8 @@ namespace KerbalConstructionTime
 
             // will create a new one if needed (it probably will be needed)
             // If it does, it will remove us from the old one, and then clear it if it's empty.
-            _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
+            if (LCType != LaunchComplexType.Hangar)
+                _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
 
             RecalculateBuildRates();
         }

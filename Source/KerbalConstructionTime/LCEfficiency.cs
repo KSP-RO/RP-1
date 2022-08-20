@@ -299,8 +299,7 @@ namespace KerbalConstructionTime
 
         private void removed(int idx, LCItem lc)
         {
-            if (KerbalConstructionTimeData.Instance.LCToEfficiency.ContainsKey(lc))
-                KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
+            KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
 
             if (_ignoreObserve)
                 return;

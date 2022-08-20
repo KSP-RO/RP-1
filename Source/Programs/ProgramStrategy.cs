@@ -37,7 +37,7 @@ namespace RP0.Programs
             }
         }
 
-        protected override string GetEffectText()
+        public override string GetEffectText()
         {
             bool extendedInfo = ShowExtendedInfo;
             ShowExtendedInfo = false;
@@ -48,7 +48,7 @@ namespace RP0.Programs
             return _program.GetDescription(extendedInfo);
         }
 
-        protected override bool CanActivate(ref string reason)
+        public override bool CanActivate(ref string reason)
         {
             if (ProgramHandler.Instance == null)
             {
@@ -99,7 +99,7 @@ namespace RP0.Programs
             return true;
         }
 
-        protected override bool CanDeactivate(ref string reason)
+        public override bool CanDeactivate(ref string reason)
         {
             if (ProgramHandler.Instance == null)
             {
@@ -135,7 +135,7 @@ namespace RP0.Programs
             return 0d;
         }
 
-        protected override void OnRegister()
+        public override void OnRegister()
         {
             base.OnRegister();
 
@@ -143,7 +143,7 @@ namespace RP0.Programs
                 ProgramHandler.Instance.ActivateProgram(_program);
         }
 
-        protected override void OnUnregister()
+        public override void OnUnregister()
         {
             base.OnUnregister();
 

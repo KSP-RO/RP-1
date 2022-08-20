@@ -11,9 +11,9 @@ namespace RP0.Harmony
     {
         [HarmonyPrefix]
         [HarmonyPatch("addReputation_granular")]
-        internal static bool Prefix_addReputation_granular(Reputation __instance, ref float value, ref float __result, ref float ___rep)
+        internal static bool Prefix_addReputation_granular(Reputation __instance, ref float value, ref float __result)
         {
-            ___rep = ___rep + value;
+            __instance.rep = __instance.rep + value;
             __result = value;
             return false;
         }
@@ -33,15 +33,15 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("AddReputation")]
-        internal static bool Prefix_AddReputation(Reputation __instance, ref float __result, float r, TransactionReasons reason, ref float ___rep)
+        internal static bool Prefix_AddReputation(Reputation __instance, ref float __result, float r, TransactionReasons reason)
         {
-            ___rep += r;
+            __instance.rep += r;
             CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason, 0f, 0f, r);
             GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(data);
             GameEvents.Modifiers.OnCurrencyModified.Fire(data);
             if (reason == TransactionReasons.None)
             {
-                Debug.Log("Added " + r + " (" + r + ") reputation. Total Rep: " + ___rep);
+                Debug.Log("Added " + r + " (" + r + ") reputation. Total Rep: " + __instance.rep);
             }
             else
             {
@@ -49,7 +49,7 @@ namespace RP0.Harmony
             }
             if (r != 0f)
             {
-                GameEvents.OnReputationChanged.Fire(___rep, reason);
+                GameEvents.OnReputationChanged.Fire(__instance.rep, reason);
             }
             __result = r;
 

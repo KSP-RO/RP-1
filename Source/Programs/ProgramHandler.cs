@@ -20,7 +20,6 @@ namespace RP0.Programs
         private Rect _windowRect = new Rect(3, 40, 425, 600);
         private Vector2 _scrollPos = new Vector2();
         private readonly List<string> _expandedPrograms = new List<string>();
-        private DebugScreen _dbgScreen;
 
         public static ProgramHandler Instance { get; private set; }
         public static ProgramHandlerSettings Settings { get; private set; }
@@ -208,7 +207,7 @@ namespace RP0.Programs
 
         internal void OnGUI()
         {
-            if (IsInAdmin && (_dbgScreen?.isShown ?? false))
+            if (IsInAdmin && (DebugScreenSpawner.Instance?.screen?.isShown ?? false))
             {
                 _windowRect = ClickThruBlocker.GUILayoutWindow(_windowId, _windowRect, WindowFunction, "Programs", HighLogic.Skin.window);
                 Tooltip.Instance.ShowTooltip(_windowId, contentAlignment: TextAnchor.MiddleLeft);
@@ -280,12 +279,6 @@ namespace RP0.Programs
         private void ShowAdminGUI()
         {
             IsInAdmin = true;
-
-            if (_dbgScreen == null)
-            {
-                var fi = typeof(DebugScreenSpawner).GetField("screen", BindingFlags.Instance | BindingFlags.NonPublic);
-                _dbgScreen = (DebugScreen)fi.GetValue(DebugScreenSpawner.Instance);
-            }
         }
 
         private void HideAdminGUI()

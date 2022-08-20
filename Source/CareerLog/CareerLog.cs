@@ -53,7 +53,6 @@ namespace RP0
         private readonly List<TechResearchEvent> _techEvents = new List<TechResearchEvent>();
         private bool _eventsBound = false;
         private bool _launched = false;
-        private MethodInfo _mInfContractName;
         private double _prevFundsChangeAmount;
         private TransactionReasons _prevFundsChangeReason;
         private LogPeriod _currentPeriod;
@@ -876,14 +875,10 @@ namespace RP0
 
         private string GetContractInternalName(Contract c)
         {
-            if (_mInfContractName == null)
-            {
-                Assembly ccAssembly = AssemblyLoader.loadedAssemblies.First(a => a.assembly.GetName().Name == "ContractConfigurator").assembly;
-                Type ccType = ccAssembly.GetType("ContractConfigurator.ConfiguredContract", true);
-                _mInfContractName = ccType.GetMethod("contractTypeName", BindingFlags.Public | BindingFlags.Static);
-            }
+            if (c is ContractConfigurator.ConfiguredContract cc && cc.contractType != null)
+                return cc.contractType.name;
 
-            return (string)_mInfContractName.Invoke(null, new object[] { c });
+            return string.Empty;
         }
 
         private float GetSciPointTotalFromKCT()

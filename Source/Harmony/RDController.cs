@@ -27,7 +27,7 @@ namespace RP0.Harmony
         internal static void Postfix_ShowNodePanel(RDController __instance, ref RDNode node)
         {
             string techID = node.tech.techID;
-            if (node.tech.state == RDTech.State.Available || KCTGameStates.TechList.Any(tech => tech.TechID == techID))
+            if (node.tech.state == RDTech.State.Available || KCTGameStates.TechList.Any(tech => tech.techID == techID))
             {
                 __instance.node_description.text = Localizer.Format("#rp0UnlockSubsidyDesc",
                     UnlockSubsidyHandler.Instance.GetLocalSubsidyAmount(node.tech.techID).ToString("N0"),

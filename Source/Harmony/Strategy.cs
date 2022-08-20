@@ -31,9 +31,6 @@ namespace RP0.Harmony
             }
         }
 
-        internal static MethodInfo setupConfigMethod = typeof(Strategy).GetMethod("SetupConfig", BindingFlags.Instance | BindingFlags.NonPublic);
-        internal static FieldInfo factorField = typeof(Strategy).GetField("factor", BindingFlags.Instance | BindingFlags.NonPublic);
-
         [HarmonyPrefix]
         [HarmonyPatch("Create")]
         internal static bool Prefix_Create(System.Type type, StrategyConfig config, ref Strategy __result)
@@ -49,12 +46,12 @@ namespace RP0.Harmony
                 type = typeof(StrategyRP0);
             }
             Strategy strategy = (Strategy)System.Activator.CreateInstance(type);
-            setupConfigMethod.Invoke(strategy, new object[] { config });
+            strategy.SetupConfig(config);
             if (strategy.FactorSliderDefault != 0f)
             {
                 if (strategy.Factor == 0f)
                 {
-                    factorField.SetValue(strategy, strategy.FactorSliderDefault);
+                    strategy.factor = strategy.FactorSliderDefault;
                 }
             }
             __result = strategy;

@@ -111,8 +111,8 @@ namespace RP0.Milestones
 
         private static string GetNewspaperTitle()
         {
-            // TO-DO: Get the Newspaper Title from what the player has set it as (create option in RP0 GUI) or default it to Space Gazette
-            return "Space Gazette";
+            string title = "Space Gazette";
+            return title;
         }
 
         private static string GetMilestoneDate(Milestone m)

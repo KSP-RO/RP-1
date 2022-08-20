@@ -95,10 +95,9 @@ namespace KerbalConstructionTime
             var tech = new ConfigNode("TechList");
             foreach (TechItem techItem in KCTGameStates.TechList)
             {
-                var techNode = new KCT_TechStorageItem();
-                techNode.FromTechItem(techItem);
                 var cnTemp = new ConfigNode("Tech");
-                cnTemp = ConfigNode.CreateConfigFromObject(techNode, cnTemp);
+                techItem.Save(cnTemp);
+                cnTemp = ConfigNode.CreateConfigFromObject(techItem, cnTemp);
                 var protoNode = new ConfigNode("ProtoNode");
                 techItem.ProtoNode.Save(protoNode);
                 cnTemp.AddNode(protoNode);
@@ -166,10 +165,8 @@ namespace KerbalConstructionTime
                 {
                     foreach (ConfigNode techNode in tmp.GetNodes("Tech"))
                     {
-                        var techStorageItem = new KCT_TechStorageItem();
-                        ConfigNode.LoadObjectFromConfig(techStorageItem, techNode);
-                        TechItem techItem = techStorageItem.ToTechItem();
-                        techItem.ProtoNode = new ProtoTechNode(techNode.GetNode("ProtoNode"));
+                        TechItem techItem = new TechItem();
+                        techItem.Load(techNode);
                         KCTGameStates.TechList.Add(techItem);
 
                         // save proto nodes that are in development

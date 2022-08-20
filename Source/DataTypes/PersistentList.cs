@@ -10,7 +10,7 @@ namespace RP0.DataTypes
     {
         private static string typeName = typeof(T).Name;
 
-        public void Load(ConfigNode node)
+        public virtual void Load(ConfigNode node)
         {
             Clear();
             foreach (ConfigNode n in node.nodes)

@@ -485,18 +485,18 @@ namespace KerbalConstructionTime
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.TechName}?\n\nThis will also cancel any dependent techs."
-                        + (RP0.Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.TechID) ?? string.Empty), "Cancel Node?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.techName}?\n\nThis will also cancel any dependent techs."
+                        + (RP0.Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.techID) ?? string.Empty), "Cancel Node?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
                 // Can move up if item above is not a parent.
-                List<string> parentList = KerbalConstructionTimeData.techNameToParents[t.TechID];
-                bool canMoveUp = i > 0 && (parentList == null || !parentList.Contains(techList[i - 1].TechID));
+                List<string> parentList = KerbalConstructionTimeData.techNameToParents[t.techID];
+                bool canMoveUp = i > 0 && (parentList == null || !parentList.Contains(techList[i - 1].techID));
 
                 // Can move down if item below is not a child.
-                List<string> nextParentList = i < techList.Count - 1 ? KerbalConstructionTimeData.techNameToParents[techList[i + 1].TechID] : null;
-                bool canMoveDown = nextParentList == null || !nextParentList.Contains(t.TechID);
+                List<string> nextParentList = i < techList.Count - 1 ? KerbalConstructionTimeData.techNameToParents[techList[i + 1].techID] : null;
+                bool canMoveDown = nextParentList == null || !nextParentList.Contains(t.techID);
 
                 if (i > 0 && t.BuildRate != techList[0].BuildRate)
                 {
@@ -510,7 +510,7 @@ namespace KerbalConstructionTime
                             int newLocation = i - 1;
                             while (newLocation >= 0)
                             {
-                                if (parentList != null && parentList.Contains(techList[newLocation].TechID))
+                                if (parentList != null && parentList.Contains(techList[newLocation].techID))
                                     break;
                                 --newLocation;
                             }
@@ -539,8 +539,8 @@ namespace KerbalConstructionTime
                             int newLocation = i + 1;
                             while (newLocation < techList.Count)
                             {
-                                nextParentList = KerbalConstructionTimeData.techNameToParents[techList[newLocation].TechID];
-                                if (nextParentList != null && nextParentList.Contains(t.TechID))
+                                nextParentList = KerbalConstructionTimeData.techNameToParents[techList[newLocation].techID];
+                                if (nextParentList != null && nextParentList.Contains(t.techID))
                                     break;
                                 ++newLocation;
                             }
@@ -565,7 +565,7 @@ namespace KerbalConstructionTime
                 string blockingPrereq = t.GetBlockingTech(techList);
 
                 DrawTypeIcon(t);
-                GUILayout.Label(t.TechName);
+                GUILayout.Label(t.techName);
                 GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (t.BuildRate > 0)
                 {
@@ -1568,18 +1568,18 @@ namespace KerbalConstructionTime
             if (KCTGameStates.TechList.Count > index)
             {
                 TechItem node = KCTGameStates.TechList[index];
-                KCTDebug.Log($"Cancelling tech: {node.TechName}");
+                KCTDebug.Log($"Cancelling tech: {node.techName}");
 
                 // cancel children
                 for (int i = 0; i < KCTGameStates.TechList.Count; i++)
                 {
-                    List<string> parentList = KerbalConstructionTimeData.techNameToParents[KCTGameStates.TechList[i].TechID];
-                    if (parentList.Contains(node.TechID))
+                    List<string> parentList = KerbalConstructionTimeData.techNameToParents[KCTGameStates.TechList[i].techID];
+                    if (parentList.Contains(node.techID))
                     {
                         CancelTechNode(i);
                         // recheck list in case multiple levels of children were deleted.
                         i = -1;
-                        index = KCTGameStates.TechList.FindIndex(t => t.TechID == node.TechID);
+                        index = KCTGameStates.TechList.FindIndex(t => t.techID == node.techID);
                     }
                 }
 
@@ -1589,7 +1589,7 @@ namespace KerbalConstructionTime
                     KCTGameStates.IsRefunding = true;
                     try
                     {
-                        ResearchAndDevelopment.Instance.AddScience(node.ScienceCost, TransactionReasons.RnDTechResearch);
+                        ResearchAndDevelopment.Instance.AddScience(node.scienceCost, TransactionReasons.RnDTechResearch);
                     }
                     finally
                     {
@@ -1598,7 +1598,7 @@ namespace KerbalConstructionTime
                 }
                 node.DisableTech();
                 KCTGameStates.TechList.RemoveAt(index);
-                RP0.Crew.CrewHandler.Instance?.OnTechCanceled(node.TechID);
+                RP0.Crew.CrewHandler.Instance?.OnTechCanceled(node.techID);
             }
         }
 

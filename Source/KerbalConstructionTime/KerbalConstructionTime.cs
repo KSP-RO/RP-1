@@ -736,7 +736,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        protected bool HasTechInList(string id) => KCTGameStates.TechList.FirstOrDefault(x => x.TechID == id) != null;
+        protected bool HasTechInList(string id) => KCTGameStates.TechList.FirstOrDefault(x => x.techID == id) != null;
 
         public void DelayedStart()
         {

@@ -302,9 +302,9 @@ namespace KerbalConstructionTime
             if (KCTGameStates.TechList.Count > 0)
             {
                 TechItem t = KCTGameStates.TechList[0];
-                GUILayout.Label($"Current Research: {t.TechName}");
-                double techRate = Formula.GetResearchRate(t.ScienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
-                double timeLeft = (t.ScienceCost - t.Progress) / techRate;
+                GUILayout.Label($"Current Research: {t.techName}");
+                double techRate = Formula.GetResearchRate(t.scienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
+                double timeLeft = (t.scienceCost - t.progress) / techRate;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }
             else

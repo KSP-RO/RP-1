@@ -32,7 +32,7 @@ namespace RP0.Leaders
                 effectDescription);
         }
 
-        protected override void OnLoadFromConfig(ConfigNode node)
+        public override void OnLoadFromConfig(ConfigNode node)
         {
             base.OnLoadFromConfig(node);
 
@@ -44,12 +44,12 @@ namespace RP0.Leaders
                 listeningReasons |= r;
         }
 
-        protected override void OnRegister()
+        public override void OnRegister()
         {
             GameEvents.Modifiers.OnCurrencyModifierQuery.Add(OnEffectQuery);
         }
 
-        protected override void OnUnregister()
+        public override void OnUnregister()
         {
             GameEvents.Modifiers.OnCurrencyModifierQuery.Remove(OnEffectQuery);
         }

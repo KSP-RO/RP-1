@@ -14,7 +14,7 @@ namespace KerbalConstructionTime
         public KCTVesselData Data = new KCTVesselData();
         public Dictionary<uint, KCTVesselData> DockedVesselData;
 
-        protected override void OnStart()
+        public override void OnStart()
         {
             base.OnStart();
 
@@ -24,7 +24,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        protected override void OnLoad(ConfigNode node)
+        public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
 
@@ -43,7 +43,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        protected override void OnSave(ConfigNode node)
+        public override void OnSave(ConfigNode node)
         {
             base.OnSave(node);
 

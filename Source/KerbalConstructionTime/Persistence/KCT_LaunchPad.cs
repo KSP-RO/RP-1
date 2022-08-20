@@ -204,9 +204,9 @@ namespace KerbalConstructionTime
                 }
                 foreach (PadConstruction pc in lc.PadConstructions)
                 {
-                    if (pc.ID == id)
+                    if (pc.id == id)
                     {
-                        pc.Name = newName;
+                        pc.name = newName;
                     }
                 }
             }

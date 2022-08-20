@@ -30,10 +30,9 @@ namespace RP0.Programs
     {
         public static AdminExtender Instance;
 
-        private static FieldInfo CurrentListField = typeof(UIListToggleController).GetField("currentList", BindingFlags.NonPublic | BindingFlags.Instance);
         private UIListToggleController _tabController;
         private readonly Dictionary<AdministrationActiveTabView, Toggle> _adminTabToggles = new Dictionary<AdministrationActiveTabView, Toggle>();
-        public AdministrationActiveTabView ActiveTabView => _tabController == null ? AdministrationActiveTabView.Active : (AdministrationActiveTabView)CurrentListField.GetValue(_tabController);
+        public AdministrationActiveTabView ActiveTabView => _tabController == null ? AdministrationActiveTabView.Active : (AdministrationActiveTabView)_tabController.currentList;
 
         private void OnClickTab(bool active)
         {

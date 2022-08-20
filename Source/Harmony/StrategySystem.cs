@@ -14,16 +14,16 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("GetStrategies")]
-        internal static bool Prefix_GetStrategies(StrategySystem __instance, ref string department, ref List<Strategy> __result, ref List<Strategy> ___strategies)
+        internal static bool Prefix_GetStrategies(StrategySystem __instance, ref string department, ref List<Strategy> __result)
         {
             var list = new List<Strategy>();
 
             if (department != "Programs")
             {
                 // FIXME support other strategy types?
-                for (int i = 0; i < ___strategies.Count; ++i)
+                for (int i = 0; i < __instance.strategies.Count; ++i)
                 {
-                    StrategyRP0 stratR = ___strategies[i] as StrategyRP0;
+                    StrategyRP0 stratR = __instance.strategies[i] as StrategyRP0;
                     if (stratR == null)
                         continue;
 
@@ -52,9 +52,9 @@ namespace RP0.Harmony
                 completedPrograms.Add(p.name);
 
             // Insert acceptable programs first
-            for (int i = 0; i < ___strategies.Count; ++i)
+            for (int i = 0; i < __instance.strategies.Count; ++i)
             {
-                Strategy strat = ___strategies[i];
+                Strategy strat = __instance.strategies[i];
                 if (strat.DepartmentName != department)
                     continue;
 
@@ -64,9 +64,9 @@ namespace RP0.Harmony
             }
 
             // then insert other programs
-            for (int i = 0; i < ___strategies.Count; ++i)
+            for (int i = 0; i < __instance.strategies.Count; ++i)
             {
-                Strategy strat = ___strategies[i];
+                Strategy strat = __instance.strategies[i];
                 if (strat.DepartmentName != department)
                     continue;
 

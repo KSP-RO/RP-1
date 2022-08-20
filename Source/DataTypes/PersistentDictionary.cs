@@ -39,7 +39,6 @@ namespace RP0.DataTypes
     /// <typeparam name="TValue"></typeparam>
     public class PersistentDictionaryValueTypeKey<TKey, TValue> : PersistentDictionary<TKey, TValue> where TValue : IConfigNode
     {
-        private static System.Reflection.MethodInfo ReadValueMethod = HarmonyLib.AccessTools.Method(typeof(ConfigNode), "ReadValue");
         private static System.Type KeyType = typeof(TKey);
 
         protected override TKey ParseKey(string value)
@@ -52,7 +51,7 @@ namespace RP0.DataTypes
             }
             else
             {
-                key = (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, value });
+                key = (TKey)ConfigNode.ReadValue(KeyType, value);
             }
             return key;
         }
@@ -66,7 +65,6 @@ namespace RP0.DataTypes
     /// <typeparam name="TValue"></typeparam>
     public class PersistentDictionaryValueTypes<TKey, TValue> : Dictionary<TKey, TValue>, IConfigNode
     {
-        private static System.Reflection.MethodInfo ReadValueMethod = HarmonyLib.AccessTools.Method(typeof(ConfigNode), "ReadValue");
         private static System.Type KeyType = typeof(TKey);
         private static System.Type ValueType = typeof(TValue);
 
@@ -83,7 +81,7 @@ namespace RP0.DataTypes
                 }
                 else
                 {
-                    key = (TKey)ReadValueMethod.Invoke(null, new object[] { KeyType, v.name });
+                    key = (TKey)ConfigNode.ReadValue(KeyType, v.name);
                 }
 
                 TValue value;
@@ -94,7 +92,7 @@ namespace RP0.DataTypes
                 }
                 else
                 {
-                    value = (TValue)ReadValueMethod.Invoke(null, new object[] { ValueType, v.value });
+                    value = (TValue)ConfigNode.ReadValue(ValueType, v.value);
                 }
                 Add(key, value);
             }

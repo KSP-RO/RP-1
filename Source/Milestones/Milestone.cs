@@ -27,7 +27,7 @@ namespace RP0.Milestones
         {
             LoadObjectFromConfig(this, node);
 
-            name = node.name;
+            node.TryGetValue("title", ref name);
             node.TryGetValue("headline", ref headline);
             node.TryGetValue("article", ref article);
             node.TryGetValue("image", ref image);

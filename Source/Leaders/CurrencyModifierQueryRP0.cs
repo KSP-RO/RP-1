@@ -456,6 +456,7 @@ namespace RP0
 
         RocketRollout = 1 << 23,
         AirLaunchRollout = 1 << 24,
+        Rollouts = RocketRollout | AirLaunchRollout,
 
         LeaderRemove = 1 << 25,
 

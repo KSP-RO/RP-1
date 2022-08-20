@@ -6,7 +6,7 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
-    public class EffectiveCostModifier : BaseEffect
+    public class PartIntegrationRateModifier : BaseEffect
     {
         [Persistent]
         private PersistentHashSetValueType<string> tags = new PersistentHashSetValueType<string>();
@@ -20,17 +20,15 @@ namespace RP0.Leaders
         [Persistent]
         private bool appliesToVessel = false;
 
-        public EffectiveCostModifier(Strategy parent)
+        public PartIntegrationRateModifier(Strategy parent)
             : base(parent)
         {
         }
 
-        protected override bool IsPositive => multiplier < 1d ^ flipPositive;
-
         protected override string DescriptionString()
         {
             return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectIntegrationRateModifier" : locStringOverride,
-                LocalizationHandler.FormatRatioAsPercent(1d/multiplier),
+                LocalizationHandler.FormatRatioAsPercent(multiplier),
                 effectDescription);
         }
 
@@ -74,7 +72,7 @@ namespace RP0.Leaders
             }
 
             if (found)
-                rate.value *= multiplier;
+                rate.value /= multiplier;
         }
     }
 }

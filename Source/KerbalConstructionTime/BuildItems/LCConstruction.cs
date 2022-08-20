@@ -5,27 +5,58 @@ namespace KerbalConstructionTime
 {
     public class LCConstruction : ConstructionBuildItem
     {
-        public bool IsModify;
-        public Guid ModID;
-        public Guid LCID;
+        [Persistent]
+        public bool isModify = false;
 
-        public LCItem.LCData LCData;
+        [Persistent]
+        public Guid modId;
 
-        
+        [Persistent]
+        public Guid lcID;
+
+        [Persistent]
+        public LCItem.LCData lcData = new LCItem.LCData();
+
 
         public LCConstruction()
         {
+        }
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+
+            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            {
+                if (KCTGameStates.LoadedSaveVersion < 8)
+                {
+                    if (modId == Guid.Empty)
+                    {
+                        modId = Guid.NewGuid();
+                    }
+                    else
+                    {
+                        modId = lcID;
+                    }
+                }
+                if (KCTGameStates.LoadedSaveVersion < 12)
+                {
+                    lcData.Name = KCTGameStates.FindLCFromID(lcID)?.Name ?? lcData.Name;
+                    if (string.IsNullOrEmpty(name))
+                        name = lcData.Name;
+                }
+            }
         }
 
         protected override void ProcessComplete()
         {
             if (!KCTGameStates.ErroredDuringOnLoad)
             {
-                LCItem lc = KSC.LaunchComplexes.Find(l => l.ID == LCID);
+                LCItem lc = KSC.LaunchComplexes.Find(l => l.ID == lcID);
                 lc.IsOperational = true;
-                UpgradeProcessed = true;
-                if (IsModify)
-                    lc.Modify(LCData, ModID);
+                upgradeProcessed = true;
+                if (isModify)
+                    lc.Modify(lcData, modId);
 
                 try
                 {
@@ -45,7 +76,7 @@ namespace KerbalConstructionTime
             for (int i = 0; i < KSC.LaunchComplexes.Count; ++i)
             {
                 lc = KSC.LaunchComplexes[i];
-                if (lc.ID == LCID)
+                if (lc.ID == lcID)
                 {
                     index = i;
                     break;
@@ -53,10 +84,10 @@ namespace KerbalConstructionTime
             }
             if (index < 0)
             {
-                Debug.LogError($"[RP-0]: Error! Can't find LC from LCC, LC ID {LCID}");
+                Debug.LogError($"[RP-0]: Error! Can't find LC from LCC, LC ID {lcID}");
                 return;
             }
-            if (IsModify)
+            if (isModify)
             {
                 lc.IsOperational = true;
                 lc.RecalculateBuildRates();
@@ -65,7 +96,7 @@ namespace KerbalConstructionTime
                 foreach (var pc in lc.PadConstructions)
                 {
                     pc.SetBP(padCost);
-                    pc.Cost = padCost;
+                    pc.cost = padCost;
                 }
             }
             else

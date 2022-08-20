@@ -959,23 +959,23 @@ namespace RP0
 
         private void AddFacilityConstructionEvent(FacilityUpgrade data, ConstructionState state)
         {
-            if (CareerEventScope.ShouldIgnore || !IsEnabled || !data.FacilityType.HasValue) return;    // facility type can be null in case of third party mods that define custom facilities
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;    // facility type can be null in case of third party mods that define custom facilities
 
-            if (!_facilityConstructions.Any(fc => fc.FacilityID == data.ID))
+            if (!_facilityConstructions.Any(fc => fc.FacilityID == data.uid))
             {
                 _facilityConstructions.Add(new FacilityConstruction
                 {
-                    Facility = data.FacilityType.Value,
-                    FacilityID = data.ID,
-                    Cost = data.Cost,
-                    NewLevel = data.UpgradeLevel
+                    Facility = data.FacilityType,
+                    FacilityID = data.uid,
+                    Cost = data.cost,
+                    NewLevel = data.upgradeLevel
                 });
             }
 
             _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
             {
-                Facility = FacilityConstructionEvent.ParseFacilityType(data.FacilityType.Value),
-                FacilityID = data.ID,
+                Facility = FacilityConstructionEvent.ParseFacilityType(data.FacilityType),
+                FacilityID = data.uid,
                 State = state
             });
         }
@@ -984,7 +984,7 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            Guid modId = data?.ModID ?? lc.ModID;    // Should only happen when LCs are created through code and thus do not have Construction items
+            Guid modId = data?.modId ?? lc.ModID;    // Should only happen when LCs are created through code and thus do not have Construction items
             if (!_lcs.Any(logLC => logLC.ModID == modId))
             {
                 var logItem = data == null ? new LCLogItem(lc) : new LCLogItem(data);
@@ -1004,7 +1004,7 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            Guid id = data?.ID ?? lp.id;
+            Guid id = data?.id ?? lp.id;
             LCItem lc = data?.LC ?? lp.LC;
             if (!_lpConstructions.Any(lpc => lpc.LPID == id))
             {
@@ -1013,7 +1013,7 @@ namespace RP0
                     LPID = id,
                     LCID = lc.ID,
                     LCModID = lc.ModID,
-                    Cost = data?.Cost ?? 0
+                    Cost = data?.cost ?? 0
                 });
             }
 

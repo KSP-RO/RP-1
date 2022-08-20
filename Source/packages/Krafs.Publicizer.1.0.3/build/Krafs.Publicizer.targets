@@ -1,0 +1,35 @@
+<Project>
+
+	<Target
+		Name="PublicizeAssemblies"
+		BeforeTargets="FindReferenceAssembliesForReferences"
+		DependsOnTargets="ResolveAssemblyReferences">
+
+		<ItemGroup Condition="$(PublicizeAll) == 'true'">
+			<Publicize Include="@(ReferencePath->'%(Filename)')" />
+		</ItemGroup>
+
+		<PropertyGroup Condition="$(PublicizeAsReferenceAssemblies) != 'false'">
+			<PublicizeAsReferenceAssemblies>true</PublicizeAsReferenceAssemblies>
+		</PropertyGroup>
+
+		<PublicizeAssemblies
+			ReferencePaths="@(ReferencePath)"
+			Publicizes="@(Publicize)"
+			DoNotPublicizes="@(DoNotPublicize)"
+			OutputDirectory="$(IntermediateOutputPath)PublicizedAssemblies\"
+			PublicizeAsReferenceAssemblies="$(PublicizeAsReferenceAssemblies)">
+			<Output TaskParameter="ReferencePathsToDelete" ItemName="_ReferencePathsToDelete" />
+			<Output TaskParameter="ReferencePathsToAdd" ItemName="_ReferencePathsToAdd" />
+		</PublicizeAssemblies>
+
+		<ItemGroup>
+			<ReferencePath Remove="@(_ReferencePathsToDelete)" />
+			<ReferencePath Include="@(_ReferencePathsToAdd)" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		</PropertyGroup>
+	</Target>
+</Project>

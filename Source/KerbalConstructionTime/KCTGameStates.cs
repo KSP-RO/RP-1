@@ -19,7 +19,7 @@ namespace KerbalConstructionTime
         public static bool MergingAvailable;
         public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
-        public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
+        public static KCTObservableList<TechItem> TechList => KerbalConstructionTimeData.Instance?.TechList;
         
         public static void UpdateTechTimes()
         {
@@ -85,16 +85,18 @@ namespace KerbalConstructionTime
 
             BuildingMaxLevelCache.Clear();
 
-            InitAndClearTechList();
+            InitTechList();
 
             UnassignedPersonnel = 0;
             Researchers = 0;
             LoadedSaveVersion = 0;
         }
 
-        public static void InitAndClearTechList()
+        public static void InitTechList()
         {
-            TechList = new KCTObservableList<TechItem>();
+            if (TechList == null)
+                return;
+
             if (KerbalConstructionTime.Instance != null)    // Can be null/destroyed in the main menu scene
             {
                 TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;

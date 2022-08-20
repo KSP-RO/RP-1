@@ -78,7 +78,7 @@ namespace KerbalConstructionTime
             _closenessCache.Clear();
             foreach (LCEfficiency e in KerbalConstructionTimeData.Instance.LCEfficiencies)
                 if (e != this)
-                    _closenessCache[e] = Utilities.GetLCCloseness(_lcStats, e._lcStats);
+                    _closenessCache[e] = Formula.GetLCCloseness(_lcStats, e._lcStats);
         }
 
         public void RemoveLC(LCItem lc)
@@ -168,7 +168,7 @@ namespace KerbalConstructionTime
             
             foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
             {
-                double closeness = Utilities.GetLCCloseness(data, e._lcStats);
+                double closeness = Formula.GetLCCloseness(data, e._lcStats);
                 if (closeness > bestCloseness)
                 {
                     bestCloseness = closeness;

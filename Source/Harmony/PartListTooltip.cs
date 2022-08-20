@@ -17,24 +17,24 @@ namespace RP0.Harmony
         [HarmonyPostfix]
         [HarmonyPatch("Setup")]
         [HarmonyPatch(new Type[] { typeof(AvailablePart), typeof(Callback<PartListTooltip>), typeof(RenderTexture) })]
-        internal static void Postfix_Setup1(PartListTooltip __instance, AvailablePart availablePart, bool ___requiresEntryPurchase)
+        internal static void Postfix_Setup1(PartListTooltip __instance, AvailablePart availablePart)
         {
-            PatchButtons(__instance, availablePart, null, ___requiresEntryPurchase);
+            PatchButtons(__instance, availablePart, null);
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("Setup")]
         [HarmonyPatch(new Type[] { typeof(AvailablePart), typeof(PartUpgradeHandler.Upgrade), typeof(Callback<PartListTooltip>), typeof(RenderTexture) })]
-        internal static void Postfix_Setup2(PartListTooltip __instance, AvailablePart availablePart, PartUpgradeHandler.Upgrade up, bool ___requiresEntryPurchase)
+        internal static void Postfix_Setup2(PartListTooltip __instance, AvailablePart availablePart, PartUpgradeHandler.Upgrade up)
         {
-            PatchButtons(__instance, null, up, ___requiresEntryPurchase);
+            PatchButtons(__instance, null, up);
         }
 
-        private static void PatchButtons(PartListTooltip __instance, AvailablePart availablePart, PartUpgradeHandler.Upgrade up, bool ___requiresEntryPurchase)
+        private static void PatchButtons(PartListTooltip __instance, AvailablePart availablePart, PartUpgradeHandler.Upgrade up)
         {
             SetTooltip(null, null);
 
-            if (___requiresEntryPurchase)
+            if (__instance.requiresEntryPurchase)
             {
                 string techID;
                 float eCost;

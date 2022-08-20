@@ -108,7 +108,7 @@ namespace KerbalConstructionTime
             return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated, delta);
         }
 
-        public static double GetConstructionRate(int index, KSCItem KSC, SpaceCenterFacility? facilityType)
+        public static double GetConstructionRate(int index, KSCItem KSC, SpaceCenterFacility facilityType)
         {
             return Formula.GetConstructionBuildRate(index, KSC, facilityType);
         }
@@ -2025,10 +2025,10 @@ namespace KerbalConstructionTime
             costTooltip = $"Remaining Cost: √{constr.RemainingCost:N0}";
             if (constr is LCConstruction lcc)
             {
-                if (lcc.LCData.lcType == LaunchComplexType.Pad)
-                    costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.LCData.massMax)}\nHuman-Rated: {(lcc.LCData.isHumanRated ? "Yes" : "No")}\n{costTooltip}";
+                if (lcc.lcData.lcType == LaunchComplexType.Pad)
+                    costTooltip = $"Tonnage: {LCItem.SupportedMassAsPrettyTextCalc(lcc.lcData.massMax)}\nHuman-Rated: {(lcc.lcData.isHumanRated ? "Yes" : "No")}\n{costTooltip}";
 
-                costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.LCData.sizeMax)}\n{costTooltip}";
+                costTooltip = $"Dimensions: {LCItem.SupportedSizeAsPrettyTextCalc(lcc.lcData.sizeMax)}\n{costTooltip}";
             }
             costTooltip = $"{identifier}¶{costTooltip}";
         }

@@ -18,6 +18,9 @@ namespace KerbalConstructionTime
 
         public Dictionary<LCItem, LCEfficiency> LCToEfficiency = new Dictionary<LCItem, LCEfficiency>();
 
+        [KSPField(isPersistant = true)]
+        private PersistentList<TechItem> TechList = new PersistentList<TechItem>();
+
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
         public override void OnAwake()
@@ -210,7 +213,7 @@ namespace KerbalConstructionTime
                             {
                                 if (!lc.IsOperational)
                                 {
-                                    if (k.LCConstructions.Find(c => c.LCID == lc.ID) == null)
+                                    if (k.LCConstructions.Find(c => c.lcID == lc.ID) == null)
                                         lc.IsOperational = true;
                                 }
                             }

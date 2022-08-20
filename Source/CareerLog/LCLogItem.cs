@@ -56,15 +56,15 @@ namespace RP0
 
         public LCLogItem(LCConstruction data)
         {
-            Name = data.Name;
-            MassMax = data.LCData.massMax;
-            MassOrig = data.LCData.massOrig;
-            SizeMax = data.LCData.sizeMax;
-            LcType = data.LCData.lcType;
-            IsHumanRated = data.LCData.isHumanRated;
-            ID = data.LCID;
-            ModID = data.ModID;
-            ModCost = data.Cost;
+            Name = data.name;
+            MassMax = data.lcData.massMax;
+            MassOrig = data.lcData.massOrig;
+            SizeMax = data.lcData.sizeMax;
+            LcType = data.lcData.lcType;
+            IsHumanRated = data.lcData.isHumanRated;
+            ID = data.lcID;
+            ModID = data.modId;
+            ModCost = data.cost;
         }
 
         public void Load(ConfigNode node)

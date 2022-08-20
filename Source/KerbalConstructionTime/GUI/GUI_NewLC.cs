@@ -497,7 +497,7 @@ namespace KerbalConstructionTime
                             foreach (var pc in lc.PadConstructions)
                             {
                                 pc.SetBP(curPadCost);
-                                pc.Cost = curPadCost;
+                                pc.cost = curPadCost;
                             }
                             lc.IsOperational = false;
                             lc.RecalculateBuildRates();
@@ -513,12 +513,12 @@ namespace KerbalConstructionTime
                         modData.SetFrom(_newLCData);
                         var lcConstr = new LCConstruction
                         {
-                            LCID = lc.ID,
-                            Cost = totalCost,
-                            Name = _newLCData.Name,
-                            IsModify = isModify,
-                            ModID = isModify ? Guid.NewGuid() : lc.ModID,
-                            LCData = modData
+                            lcID = lc.ID,
+                            cost = totalCost,
+                            name = _newLCData.Name,
+                            isModify = isModify,
+                            modId = isModify ? Guid.NewGuid() : lc.ModID,
+                            lcData = modData
                         };
                         lcConstr.SetBP(totalCost);
                         KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);

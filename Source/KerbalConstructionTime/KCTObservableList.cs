@@ -119,5 +119,15 @@ namespace KerbalConstructionTime
                 Updated();
             }
         }
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            for (int i = 0; i < Count; ++i)
+            {
+                Added(i, base[i]);
+            }
+            Updated();
+        }
     }
 }

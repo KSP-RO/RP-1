@@ -144,6 +144,32 @@ namespace KerbalConstructionTime
             return total;
         }
 
+        public static float GetTotalVesselCost(List<Part> parts, bool includeFuel = true)
+        {
+            float total = 0f;
+            float resCost = 0f;
+            int count = parts.Count;
+            while (count-- > 0)
+            {
+                Part part = parts[count];
+                AvailablePart partInfo = part.partInfo;
+                float dryCost = partInfo.cost + part.GetModuleCosts(partInfo.cost);
+                int resCount = part.Resources.Count;
+                while (resCount-- > 0)
+                {
+                    PartResource partResource = part.Resources[resCount];
+                    PartResourceDefinition info = partResource.info;
+                    dryCost -= info.unitCost * (float)partResource.maxAmount;
+                    resCost += info.unitCost * (float)partResource.amount;
+                }
+                total += dryCost;
+            }
+            if (includeFuel)
+                total += resCost;
+
+            return total;
+        }
+
         public static float GetPartCostFromNode(ConfigNode part, bool includeFuel = true)
         {
             string name = GetPartNameFromNode(part);
@@ -2051,6 +2077,38 @@ namespace KerbalConstructionTime
                 Vector3 sizeLimit = GameVariables.Instance.GetCraftSizeLimit(normalizedLevel, true);
                 _padSizes[i] = sizeLimit;
             }
+        }
+
+        public static bool IsVesselKCTRecovering(ProtoVessel v)
+        {
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+            {
+                //KCTDebug.LogError("Disabled!");
+                return false;
+            }
+            if (KCTGameStates.IsSimulatedFlight)
+            {
+                //KCTDebug.LogError("Sim!");
+                return false;
+            }
+
+            if (v.vesselRef.isEVA)
+            {
+                //KCTDebug.LogError("Is eva!");
+                return false;
+            }
+            if (KCTGameStates.RecoveredVessel == null)
+            {
+                //KCTDebug.LogError("Recovered vessel is null!");
+                return false;
+            }
+            if (v.vesselName != KCTGameStates.RecoveredVessel.ShipName)
+            {
+                //KCTDebug.LogError("Recovered vessel, " + KCTGameStates.RecoveredVessel.ShipName +", doesn't match!");
+                return false;
+            }
+
+            return true;
         }
     }
 }

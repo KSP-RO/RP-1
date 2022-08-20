@@ -285,11 +285,22 @@ namespace KerbalConstructionTime
         void added(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Add(pc); }
         void removed(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Remove(pc); }
         void updated() { RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
+
+        void AddListeners()
+        {
+            PadConstructions.Added += added;
+            PadConstructions.Removed += removed;
+            PadConstructions.Updated += updated;
+
+            BuildList.Updated += updated;
+            Warehouse.Updated += updated;
+        }
         #endregion
 
         public LCItem(KSCItem ksc)
         {
             _ksc = ksc;
+            AddListeners();
         }
 
         public LCItem(LCData lcData, KSCItem ksc)
@@ -308,14 +319,7 @@ namespace KerbalConstructionTime
                 LaunchPads.Add(pad);
             }
 
-            PadConstructions.Added += added;
-            PadConstructions.Removed += removed;
-            PadConstructions.Updated += updated;
-
-            BuildList.Updated += updated;
-            Warehouse.Updated += updated;
-
-            _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
+            AddListeners();
         }
 
         public void Modify(LCData data, Guid modId)

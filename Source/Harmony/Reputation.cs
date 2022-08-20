@@ -66,22 +66,4 @@ namespace RP0.Harmony
             return false;
         }
     }
-
-    [HarmonyPatch]
-    internal class PatchPlayerProfileInfo_LoadDetailsFromGame
-    {
-        static MethodBase TargetMethod() => typeof(LoadGameDialog).GetNestedType("PlayerProfileInfo", AccessTools.all).GetMethod("LoadDetailsFromGame", AccessTools.all);
-
-        [HarmonyTranspiler]
-        internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            foreach (var instruction in instructions)
-            {
-                if (instruction.LoadsConstant(10f))
-                    yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 1f);
-                else
-                    yield return instruction;
-            }
-        }
-    }
 }

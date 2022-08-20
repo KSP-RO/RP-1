@@ -71,8 +71,7 @@ namespace RP0.UI
             _tooltipController.prefab = prefab;
             _tooltipController.RequireInteractable = false;
 
-            var fi = typeof(DialogGUIBase).GetField("toolTip", BindingFlags.Instance | BindingFlags.NonPublic);
-            fi.SetValue(this, _tooltipController);
+            this.toolTip = _tooltipController;
 
             return obj;
         }

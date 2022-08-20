@@ -26,18 +26,18 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        internal static void Postfix_Start(Administration __instance, ref int ___activeStrategyCount, ref int ___maxActiveStrategies)
+        internal static void Postfix_Start(Administration __instance)
         {
-            ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
-            ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
+            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch("CreateStrategiesList")]
-        internal static void Prefix_CreateStrategiesList(Administration __instance, ref int ___activeStrategyCount, ref int ___maxActiveStrategies)
+        internal static void Prefix_CreateStrategiesList(Administration __instance)
         {
-            ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
-            ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
+            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
 
             foreach (var strat in Strategies.StrategySystem.Instance.GetStrategies("Programs"))
             {
@@ -154,7 +154,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("CreateActiveStratList")]
-        internal static bool Prefix_CreateActiveStratList(Administration __instance, ref int ___activeStrategyCount, ref int ___maxActiveStrategies)
+        internal static bool Prefix_CreateActiveStratList(Administration __instance)
         {
             __instance.scrollListActive.Clear(true);
             Administration.StrategyWrapper wrapper = null;
@@ -209,8 +209,8 @@ namespace RP0.Harmony
             }
             _strategies.Clear();
 
-            ___activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
-            ___maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
+            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
             __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
 
             return false;

@@ -58,23 +58,21 @@ namespace RP0.Harmony
             return false;
         }
 
-        internal static FieldInfo curStrats = typeof(KSP.UI.Screens.Administration).GetField("activeStrategyCount", AccessTools.all);
-
         [HarmonyPrefix]
         [HarmonyPatch("CanBeActivated")]
-        internal static void Prefix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
+        internal static void Prefix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result)
         {
             if (__instance is ProgramStrategy)
                 return;
 
-            curStrats.SetValue(KSP.UI.Screens.Administration.Instance, 0);
+            KSP.UI.Screens.Administration.Instance.activeStrategyCount = 0;
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("CanBeActivated")]
-        internal static void Postfix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result, ref string ___cacheAutoLOC_304827, ref string ___cacheAutoLOC_304841)
+        internal static void Postfix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result)
         {
-            curStrats.SetValue(KSP.UI.Screens.Administration.Instance, ProgramHandler.Instance.ActivePrograms.Count);
+            KSP.UI.Screens.Administration.Instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
         }
 
         [HarmonyPrefix]

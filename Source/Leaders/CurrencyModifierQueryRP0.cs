@@ -421,7 +421,7 @@ namespace RP0
         ContractPenalty = 1 << 3,
         Contracts = ContractPenalty | ContractReward | ContractDecline,
 
-        VesselRollout = 1 << 4,
+        VesselPurchase = 1 << 4, // VesselRollout
         VesselRecovery = 1 << 5,
         //used by ModuleExperienceManagement only - Vessels = VesselRollout | VesselRecovery,
 

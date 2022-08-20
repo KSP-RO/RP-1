@@ -166,8 +166,8 @@ namespace KerbalConstructionTime
             ShipSize = Utilities.GetShipSize(s, true);
             ShipNode.SetValue("size", KSPUtil.WriteVector(ShipSize));
             ShipName = s.shipName;
-            Cost = Utilities.GetTotalVesselCost(ShipNode, true);
-            EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
+            Cost = Utilities.GetTotalVesselCost(s.parts, true);
+            EmptyCost = Utilities.GetTotalVesselCost(s.parts, false);
             TotalMass = Utilities.GetShipMass(s, true, out EmptyMass, out _);
 
             EffectiveCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
@@ -271,8 +271,8 @@ namespace KerbalConstructionTime
                 Type = listType;
 
             CacheClamps(vessel.parts);
-            Cost = Utilities.GetTotalVesselCost(ShipNode);
-            EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
+            Cost = Utilities.GetTotalVesselCost(vessel.parts);
+            EmptyCost = Utilities.GetTotalVesselCost(vessel.parts, false);
             TotalMass = 0;
             EmptyMass = 0;
 

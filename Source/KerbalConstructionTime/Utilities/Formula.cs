@@ -8,6 +8,19 @@ namespace KerbalConstructionTime
     {
         public const double ResourceValidationRatioOfVesselMassMin = 0.005d;
         public const double ResourceValidationAbsoluteMassMin = 0.0d;
+        private static HashSet<string> _resourceKeys = new HashSet<string>();
+
+        private static RealFuels.Tanks.TankDefinition _tankDefSMIV = null;
+        public static RealFuels.Tanks.TankDefinition TankDefSMIV
+        {
+            get
+            {
+                if (_tankDefSMIV == null)
+                    _tankDefSMIV = RealFuels.MFSSettings.tankDefinitions["SM-IV"];
+
+                return _tankDefSMIV;
+            }
+        }
 
         public static double GetConstructionBP(double cost, SpaceCenterFacility? facilityType)
         {
@@ -396,6 +409,183 @@ namespace KerbalConstructionTime
                     costDeltaHighPow = 0.001d;
             }
             return Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
+        }
+
+        public static double ResourceTankCost(string res, double amount, bool isModify, LaunchComplexType type)
+        {
+            var def = TankDefSMIV;
+            const double overallMultiplier = 1.0d;
+            const double amountMultiplier = 60d;
+            const double tankMultiplier = 1.0d;
+            const double baseTankCostPerL = 0.1d;
+            const double modifyMultiplier = 0.6d;
+
+            HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+
+            if (ignoredRes.Contains(res)
+                || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res))
+                return 0d;
+
+            if (def.tankList.TryGetValue(res, out var tank) && PartResourceLibrary.Instance.GetDefinition(res) is PartResourceDefinition resDef)
+            {
+                double tankVol = amount / tank.utilization;
+                double cost = (baseTankCostPerL + tank.cost) * tankVol * tankMultiplier + amount * resDef.unitCost * amountMultiplier;
+                if (PresetManager.Instance.ActivePreset.PartVariables.Resource_Variables.TryGetValue(res, out double mult))
+                    cost *= mult;
+
+                if (isModify)
+                    cost = modifyMultiplier;
+
+                return cost * overallMultiplier;
+            }
+
+            return 0d;
+        }
+
+        /// <summary>
+        /// Note this is NOT bidirectional.
+        /// ourStats can be closer to 'stats'
+        /// than 'stats' is to ourStats.
+        /// Always run this on the *destination* LC.
+        /// i.e. if you are removing HR from an LC,
+        /// make a new LCData with it off, and call
+        /// GetCloseness(newLCData, orig)
+        /// </summary>
+        /// </summary>
+        /// <param name="ourStats"></param>
+        /// <param name="otherStats"></param>
+        /// <returns></returns>
+        public static double GetLCCloseness(LCItem.LCData ourStats, LCItem.LCData otherStats)
+        {
+            if (ourStats.Compare(otherStats))
+                return 1d;
+
+            if (otherStats.lcType != ourStats.lcType)
+                return 0d;
+
+            if (ourStats.lcType == LaunchComplexType.Hangar)
+                return 1d;
+
+            LCItem.LCData bigger, smaller;
+            if (otherStats.massMax > ourStats.massMax)
+            {
+                bigger = otherStats;
+                smaller = ourStats;
+            }
+            else
+            {
+                smaller = otherStats;
+                bigger = ourStats;
+            }
+
+            double minMassDiff = Math.Max(1d, smaller.massMax * 0.05d);
+            double massFactor = 1d;
+            if (bigger.massMax > smaller.massMax + minMassDiff)
+            {
+                if (bigger.massMax > 2d * smaller.massMax)
+                    return 0d;
+                if (smaller.massMax < 0.5d * bigger.massMax)
+                    return 0d;
+
+                massFactor = (smaller.massMax + minMassDiff) / bigger.massMax;
+                massFactor *= massFactor * massFactor;
+            }
+
+            if (otherStats.sizeMax.y > ourStats.sizeMax.y)
+            {
+                bigger = otherStats;
+                smaller = ourStats;
+            }
+            else
+            {
+                smaller = otherStats;
+                bigger = ourStats;
+            }
+
+            double sizeFactor = 1d;
+
+            double minHeightDiff = Math.Max(smaller.sizeMax.y * 0.1d, 2d);
+            if (bigger.sizeMax.y - smaller.sizeMax.y > minHeightDiff)
+            {
+                sizeFactor = (smaller.sizeMax.y + minHeightDiff) / bigger.sizeMax.y;
+                sizeFactor *= sizeFactor * sizeFactor;
+            }
+
+            double biggerXZ = Math.Max(bigger.sizeMax.x, bigger.sizeMax.z);
+            double smallerXZ = Math.Max(smaller.sizeMax.x, smaller.sizeMax.z);
+            if (smallerXZ > biggerXZ)
+            {
+                double t = biggerXZ;
+                biggerXZ = smallerXZ;
+                smallerXZ = t;
+            }
+
+            if (smallerXZ < biggerXZ - Math.Max(smallerXZ * 0.1d, 0.2d))
+            {
+                // Add the height in so the ratio is much closer to 1.
+                smallerXZ += smaller.sizeMax.y;
+                biggerXZ += smaller.sizeMax.y;
+                sizeFactor *= (smallerXZ / biggerXZ);
+            }
+
+            double hrFactor = 1d;
+            if (ourStats.isHumanRated && !otherStats.isHumanRated)
+                hrFactor = 0.7d;
+            else if (ourStats.isHumanRated != otherStats.isHumanRated)
+                hrFactor = 0.9d;
+
+            // compare the resources handled at each complex
+            double resFactor = 1d;
+            double resTotal = 0d;
+            double resDiffs = 0d;
+            foreach (var r in ourStats.resourcesHandled.Keys)
+                _resourceKeys.Add(r);
+            foreach (var r in otherStats.resourcesHandled.Keys)
+                _resourceKeys.Add(r);
+
+            var def = TankDefSMIV;
+            foreach (string key in _resourceKeys)
+            {
+                if (GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(key)
+                    || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(key))
+                    continue;
+
+                ourStats.resourcesHandled.TryGetValue(key, out double ours);
+                otherStats.resourcesHandled.TryGetValue(key, out double other);
+                double rescaledOurs = ours;
+                double rescaledTheirs = other;
+                if (def.tankList.TryGetValue(key, out var tank))
+                {
+                    double mult = 1d / tank.utilization;
+                    rescaledOurs *= mult;
+                    rescaledTheirs *= mult;
+                }
+                else
+                {
+                    PartResourceDefinition resDef = PartResourceLibrary.Instance.GetDefinition(key);
+                    if (resDef != null)
+                    {
+                        // convert to kg to be comparable with the corrected volumes from RF
+                        rescaledOurs *= resDef.density * 1000d;
+                        rescaledTheirs *= resDef.density * 1000d;
+                    }
+                    else
+                    {
+                        KCTDebug.Log($"Unable to find resource definition for {key}");
+                    }
+                }
+                if (rescaledTheirs == 0) rescaledOurs *= 2;
+                if (rescaledOurs == 0) rescaledTheirs *= 2;
+
+                resTotal += (rescaledOurs + rescaledTheirs);
+                resDiffs += Math.Abs(rescaledOurs - rescaledTheirs);
+            }
+            if (resTotal > 0)
+                resFactor = 0.5d + ((resTotal - resDiffs) / resTotal) * 0.5d;
+
+            _resourceKeys.Clear();
+
+            return massFactor * sizeFactor * hrFactor * resFactor;
         }
 
         //public static double ParseReconditioningFormula(BuildListVessel vessel, bool isReconditioning)

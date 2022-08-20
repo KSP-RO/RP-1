@@ -146,7 +146,7 @@ namespace KerbalConstructionTime
                     if (ignoredRes.Contains(kvp.Key))
                         continue;
 
-                    costResources += Utilities.ResourceTankCost(kvp.Key, kvp.Value, lcType);
+                    costResources += Formula.ResourceTankCost(kvp.Key, kvp.Value, false, lcType);
                 }
 
                 return costVAB + costPad + costResources;
@@ -173,7 +173,7 @@ namespace KerbalConstructionTime
                     if (delta < 0d)
                         delta *= _DownsizeMult;
 
-                    totalCost += Utilities.ResourceTankCost(res, delta, lcType);
+                    totalCost += Formula.ResourceTankCost(res, delta, true, lcType);
                 }
 
                 return totalCost;

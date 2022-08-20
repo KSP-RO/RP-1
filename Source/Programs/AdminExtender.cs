@@ -92,8 +92,6 @@ namespace RP0.Programs
 
         public class SpeedButtonHolder
         {
-            private static MethodInfo GetStrategyDescriptionMethod = typeof(Administration).GetMethod("GetStrategyDescription", BindingFlags.NonPublic | BindingFlags.Instance);
-
             private ProgramStrategy programStrategy;
             private Program.Speed speed;
 

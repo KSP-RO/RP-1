@@ -4,31 +4,6 @@ namespace KerbalConstructionTime
 {
     public abstract class ConstructionBuildItem : IKCTBuildItem, IConfigNode
     {
-        public virtual string GetItemName() => name;
-        public double GetFractionComplete() => progress / BP;
-        public double GetTimeLeft() => (BP - progress) / GetBuildRate();
-        public double GetTimeLeftEst(double offset) => GetTimeLeft();
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
-        public bool IsComplete() => progress >= BP;
-        public virtual double IncrementProgress(double UTDiff)
-        {
-            double excessTime = 0d;
-            if (!IsComplete())
-            {
-                double bR = GetBuildRate();
-                excessTime = AddProgress(bR * UTDiff) / bR;
-            }
-
-            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
-            {
-                ProcessComplete();
-            }
-
-            return excessTime;
-        }
-
-        protected abstract void ProcessComplete();
-
         [Persistent]
         public double progress = 0;
         [Persistent]
@@ -76,6 +51,31 @@ namespace KerbalConstructionTime
                 return _ksc;
             }
         }
+
+        public virtual string GetItemName() => name;
+        public double GetFractionComplete() => progress / BP;
+        public double GetTimeLeft() => (BP - progress) / GetBuildRate();
+        public double GetTimeLeftEst(double offset) => GetTimeLeft();
+        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
+        public bool IsComplete() => progress >= BP;
+        public virtual double IncrementProgress(double UTDiff)
+        {
+            double excessTime = 0d;
+            if (!IsComplete())
+            {
+                double bR = GetBuildRate();
+                excessTime = AddProgress(bR * UTDiff) / bR;
+            }
+
+            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
+            {
+                ProcessComplete();
+            }
+
+            return excessTime;
+        }
+
+        protected abstract void ProcessComplete();
 
         public double GetConstructionCostOverTime(double time)
         {

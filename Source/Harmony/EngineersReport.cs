@@ -18,16 +18,6 @@ namespace RP0.Harmony
     {
         private static int hashcodeTEATEB = "TEATEB".GetHashCode();
 
-        private static string cacheAutoLOC_442833;
-        private static string cacheAutoLOC_443059;
-        private static string cacheAutoLOC_443064;
-        private static string cacheAutoLOC_443343;
-        private static string cacheAutoLOC_443417;
-        private static string cacheAutoLOC_443418;
-        private static string cacheAutoLOC_443419;
-        private static string cacheAutoLOC_443420;
-        private static string cacheAutoLOC_7001411;
-        private static string cacheAutoLOC_442811;
         private static string cacheHumanRatedLH;
         private static string cacheMassLH;
         private static string cacheSizeLH;
@@ -39,8 +29,6 @@ namespace RP0.Harmony
         private static string cacheColorBad = XKCDColors.HexFormat.KSPNotSoGoodOrange;
         private static string cacheColorNeutral = XKCDColors.HexFormat.KSPNeutralUIGrey;
 
-        private static GenericCascadingList cascadingListInfo;
-        private static GenericCascadingList cascadingListCheck;
         private static TextMeshProUGUI humanRatedLH;
         private static TextMeshProUGUI humanRatedRH;
         private static TextMeshProUGUI massLH;
@@ -49,64 +37,48 @@ namespace RP0.Harmony
         private static TextMeshProUGUI sizeRH;
         private static TextMeshProUGUI resourcesLH;
         private static TextMeshProUGUI resourcesRH;
-        private static GenericAppFrame appFrame;
 
-        public static bool IsValid => appFrame != null;
+        public static bool IsValid => humanRatedLH != null;
 
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch("CacheLocalStrings")]
         internal static void Prefix_CacheLocalStrings()
         {
-            cacheAutoLOC_442833 = Localizer.Format("#autoLOC_442833");
-            cacheAutoLOC_443059 = Localizer.Format("#autoLOC_443059");
-            cacheAutoLOC_443064 = Localizer.Format("#autoLOC_443064");
-            cacheAutoLOC_443343 = "<color=#e6752a>" + Localizer.Format("#autoLOC_443343") + "</color>";
-            cacheAutoLOC_443417 = Localizer.Format("#autoLOC_443417");
-            cacheAutoLOC_443418 = Localizer.Format("#autoLOC_443418");
-            cacheAutoLOC_443419 = Localizer.Format("#autoLOC_443419");
-            cacheAutoLOC_443420 = Localizer.Format("#autoLOC_443420");
-            cacheAutoLOC_7001411 = Localizer.Format("#autoLOC_7001411");
-            cacheAutoLOC_442811 = Localizer.Format("#autoLOC_442811");
-
             cacheYes = Localizer.Format("#autoLOC_439839");
             cacheNo = Localizer.Format("#autoLOC_439840");
             cacheOK = Localizer.Format("#autoLOC_174814");
 
             cacheHumanRatedLH = $"<color={cacheColorNeutral}>{Localizer.GetStringByTag("#rp0ER_HumanRatedLH")}</color>";
             cacheMassLH = Localizer.Format("#autoLOC_443401", cacheColorNeutral);
-            cacheSizeLH = "<line-height=110%><color=" + cacheColorNeutral + ">" + cacheAutoLOC_443417 + "</color>\n<color=" +
-                cacheColorNeutral + ">" + cacheAutoLOC_443418 + "</color>\n<color=" +
-                cacheColorNeutral + ">" + cacheAutoLOC_443419 + "</color>\n<color=" +
-                cacheColorNeutral + ">" + cacheAutoLOC_443420 + "</color></line-height>";
+            cacheSizeLH = "<line-height=110%><color=" + cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443417 + "</color>\n<color=" +
+                cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443418 + "</color>\n<color=" +
+                cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443419 + "</color>\n<color=" +
+                cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443420 + "</color></line-height>";
             cacheResLH = $"<color={cacheColorNeutral}>{Localizer.GetStringByTag("#rp0ER_ResourcesLH")}</color>";
         }
 
         // We'll use this to bind some private fields too
         [HarmonyPrefix]
         [HarmonyPatch("CreateCraftStatsbody")]
-        internal static bool Prefix_CreateCraftStatsbody(EngineersReport __instance, ref List<UIListItem> __result, ref GenericCascadingList ___cascadingListInfo, ref GenericCascadingList ___cascadingListCheck, ref GenericAppFrame ___appFrame)
+        internal static bool Prefix_CreateCraftStatsbody(EngineersReport __instance, ref List<UIListItem> __result)
         {
             List<UIListItem> list = new List<UIListItem>();
-            cascadingListInfo = ___cascadingListInfo;
-            UIListItem uIListItem = cascadingListInfo.CreateBodyKeyValueAutofit("HumanRated:", "");
+            UIListItem uIListItem = __instance.cascadingListInfo.CreateBodyKeyValueAutofit("HumanRated:", "");
             humanRatedLH = uIListItem.GetTextElement("keyRich");
             humanRatedRH = uIListItem.GetTextElement("valueRich");
             list.Add(uIListItem);
-            uIListItem = cascadingListInfo.CreateBodyKeyValueAutofit("Mass:", "");
+            uIListItem = __instance.cascadingListInfo.CreateBodyKeyValueAutofit("Mass:", "");
             massLH = uIListItem.GetTextElement("keyRich");
             massRH = uIListItem.GetTextElement("valueRich");
             list.Add(uIListItem);
-            uIListItem = cascadingListInfo.CreateBodyKeyValueAutofit("Size\nHeight:\nWidth:\nLength:", "Size\nHeight:\nWidth:\nLength:");
+            uIListItem = __instance.cascadingListInfo.CreateBodyKeyValueAutofit("Size\nHeight:\nWidth:\nLength:", "Size\nHeight:\nWidth:\nLength:");
             sizeLH = uIListItem.GetTextElement("keyRich");
             sizeRH = uIListItem.GetTextElement("valueRich");
             list.Add(uIListItem);
-            uIListItem = cascadingListInfo.CreateBodyKeyValueAutofit("Resources:", "");
+            uIListItem = __instance.cascadingListInfo.CreateBodyKeyValueAutofit("Resources:", "");
             resourcesLH = uIListItem.GetTextElement("keyRich");
             resourcesRH = uIListItem.GetTextElement("valueRich");
             list.Add(uIListItem);
-
-            cascadingListCheck = ___cascadingListCheck;
-            appFrame = ___appFrame;
 
             __result = list;
             return false;
@@ -114,14 +86,14 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("CreateStockDesignConcern")]
-        internal static bool Prefix_CreateStockDesignConcern(EngineersReport __instance, ref UIListItem ___listItem_SeveritySelector, ref UIListItem ___listItem_partCountZero, ref UIListItem ___listItem_allTestsPassed)
+        internal static bool Prefix_CreateStockDesignConcern(EngineersReport __instance)
         {
-            ___listItem_SeveritySelector = AccessTools.Method(typeof(EngineersReport), "CreateSeveritySelector").Invoke(__instance, null) as UIListItem;
-            ___listItem_SeveritySelector.transform.SetParent(cascadingListCheck.transform, worldPositionStays: false);
-            ___listItem_partCountZero = cascadingListCheck.CreateBody(cacheAutoLOC_443059);
-            ___listItem_partCountZero.transform.SetParent(cascadingListCheck.transform, worldPositionStays: false);
-            ___listItem_allTestsPassed = cascadingListCheck.CreateBody(cacheAutoLOC_443064);
-            ___listItem_allTestsPassed.transform.SetParent(cascadingListCheck.transform, worldPositionStays: false);
+            __instance.listItem_SeveritySelector = __instance.CreateSeveritySelector();
+            __instance.listItem_SeveritySelector.transform.SetParent(__instance.cascadingListCheck.transform, worldPositionStays: false);
+            __instance.listItem_partCountZero = __instance.cascadingListCheck.CreateBody(EngineersReport.cacheAutoLOC_443059);
+            __instance.listItem_partCountZero.transform.SetParent(__instance.cascadingListCheck.transform, worldPositionStays: false);
+            __instance.listItem_allTestsPassed = __instance.cascadingListCheck.CreateBody(EngineersReport.cacheAutoLOC_443064);
+            __instance.listItem_allTestsPassed.transform.SetParent(__instance.cascadingListCheck.transform, worldPositionStays: false);
             __instance.AddTest(new ParachuteOnFirstStage());
             __instance.AddTest(new ParachuteOnEngineStage());
             //__instance.AddTest(new EnginesJettisonedBeforeUse());
@@ -240,18 +212,18 @@ namespace RP0.Harmony
             if (maxSize.x < float.MaxValue && maxSize.y < float.MaxValue && maxSize.z < float.MaxValue)
             {
                 sizeRH.text =
-                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 +
-                                " / " + KSPUtil.LocalizeNumber(maxSize.y, "0.0") + cacheAutoLOC_7001411 + "</color>\n<color=" +
-                            sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 + " / " +
+                            "<line-height=110%>  \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + EngineersReport.cacheAutoLOC_7001411 +
+                                " / " + KSPUtil.LocalizeNumber(maxSize.y, "0.0") + EngineersReport.cacheAutoLOC_7001411 + "</color>\n<color=" +
+                            sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + EngineersReport.cacheAutoLOC_7001411 + " / " +
                             KSPUtil.LocalizeNumber(maxSize.x, "0.0") +
-                            cacheAutoLOC_7001411 + "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + cacheAutoLOC_7001411 + " / " +
-                            KSPUtil.LocalizeNumber(maxSize.z, "0.0") + cacheAutoLOC_7001411 + "</color></line-height>";
+                            EngineersReport.cacheAutoLOC_7001411 + "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + EngineersReport.cacheAutoLOC_7001411 + " / " +
+                            KSPUtil.LocalizeNumber(maxSize.z, "0.0") + EngineersReport.cacheAutoLOC_7001411 + "</color></line-height>";
             }
             else
             {
-                sizeRH.text = "<line-height=110%> \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + cacheAutoLOC_7001411 +
-                "</color>\n<color=" + sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + cacheAutoLOC_7001411 +
-                "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + cacheAutoLOC_7001411 + "</color></line-height>";
+                sizeRH.text = "<line-height=110%> \n<color=" + sizeForeAftHex + ">" + KSPUtil.LocalizeNumber(craftSize.y, "0.0") + EngineersReport.cacheAutoLOC_7001411 +
+                "</color>\n<color=" + sizeSpanHex + ">" + KSPUtil.LocalizeNumber(craftSize.x, "0.0") + EngineersReport.cacheAutoLOC_7001411 +
+                "</color>\n<color=" + sizeTHgtHex + ">" + KSPUtil.LocalizeNumber(craftSize.z, "0.0") + EngineersReport.cacheAutoLOC_7001411 + "</color></line-height>";
             }
 
             resourcesLH.text = cacheResLH;
@@ -267,12 +239,12 @@ namespace RP0.Harmony
                                 craftSize.y <= maxSize.y &&
                                  craftSize.z <= maxSize.z)
             {
-                appFrame.header.color = XKCDColors.ElectricLime;
+                __instance.appFrame.header.color = XKCDColors.ElectricLime;
                 __instance.appLauncherButton.sprite.color = Color.white;
             }
             else
             {
-                appFrame.header.color = XKCDColors.Orange;
+                __instance.appFrame.header.color = XKCDColors.Orange;
                 __instance.appLauncherButton.sprite.color = XKCDColors.Orange;
             }
 
@@ -284,19 +256,19 @@ namespace RP0.Harmony
         // Coroutine patching
         //[HarmonyPostfix]
         //[HarmonyPatch("OnAppInitialized")]
-        //internal static void Postfix_OnAppInitialized(EngineersReport __instance, ref Coroutine ___updateRoutine)
+        //internal static void Postfix_OnAppInitialized(EngineersReport __instance)
         //{
-        //    __instance.StopCoroutine(___updateRoutine);
-        //    ___updateRoutine = __instance.StartCoroutine(RunTests());
+        //    __instance.StopCoroutine(__instance.updateRoutine);
+        //    __instance.updateRoutine = __instance.StartCoroutine(RunTests());
         //}
 
         //[HarmonyPostfix]
         //[HarmonyPatch("OnCraftModified")]
         //[HarmonyPatch(new System.Type[] { typeof(ShipConstruct) })]
-        //internal static void Postfix_OnCraftModified(EngineersReport __instance, ref Coroutine ___testRoutine)
+        //internal static void Postfix_OnCraftModified(EngineersReport __instance)
         //{
-        //    __instance.StopCoroutine(___testRoutine);
-        //    ___testRoutine = __instance.StartCoroutine(RunTests());
+        //    __instance.StopCoroutine(__instance.testRoutine);
+        //    __instance.testRoutine = __instance.StartCoroutine(RunTests());
         //}
 
         //private static FieldInfo tests = typeof(EngineersReport).GetField("tests", AccessTools.all);

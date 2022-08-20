@@ -37,16 +37,10 @@ namespace KerbalConstructionTime
             yield return new WaitForFixedUpdate();
             if (PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes && _menu != null)
             {
-                SpaceCenterBuilding hostBuilding = GetMember<SpaceCenterBuilding>("host");
+                SpaceCenterBuilding hostBuilding = _menu.host;
                 KCTDebug.Log($"Trying to override upgrade button of menu for {hostBuilding.facilityName}");
-                Button button = GetMember<Button>("UpgradeButton");
-                TMPro.TextMeshProUGUI buttonText = GetMember<TMPro.TextMeshProUGUI>("UpgradeButtonText");
-                if (button == null)
-                {
-                    KCTDebug.Log("Could not find UpgradeButton by name, using index instead.");
-                    button = GetMember<Button>(2);
-                }
-
+                Button button = _menu.UpgradeButton;
+                TMPro.TextMeshProUGUI buttonText = _menu.UpgradeButtonText;
                 if (button != null)
                 {
                     KCTDebug.Log("Found upgrade button, overriding it.");
@@ -106,40 +100,6 @@ namespace KerbalConstructionTime
             return true;
         }
 
-        internal T GetMember<T>(string name)
-        {
-            MemberInfo member = _menu.GetType().GetMember(name, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)?.FirstOrDefault();
-            if (member == null)
-            {
-                KCTDebug.Log($"Member was null when trying to find '{name}'", true);
-                return default;
-            }
-            object o = Utilities.GetMemberInfoValue(member, _menu);
-            if (o is T)
-            {
-                return (T)o;
-            }
-            return default;
-        }
-
-        internal T GetMember<T>(int index)
-        {
-            IEnumerable<MemberInfo> memberList = _menu.GetType().GetMembers(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Where(m => m.ToString().Contains(typeof(T).ToString()));
-            KCTDebug.Log($"Found {memberList.Count()} matches for {typeof(T)}");
-            MemberInfo member = memberList.Count() >= index ? memberList.ElementAt(index) : null;
-            if (member == null)
-            {
-                KCTDebug.Log($"Member was null when trying to find element at index {index} for type '{typeof(T)}'", true);
-                return default;
-            }
-            object o = Utilities.GetMemberInfoValue(member, _menu);
-            if (o is T)
-            {
-                return (T)o;
-            }
-            return default;
-        }
-
         protected static void CheckLoadDict()
         {
             if (_techGatings != null)
@@ -180,7 +140,7 @@ namespace KerbalConstructionTime
 
         internal void ProcessUpgrade()
         {
-            int oldLevel = GetMember<int>("level");
+            int oldLevel = _menu.level;
             KCTDebug.Log($"Upgrading from level {oldLevel}");
 
             string facilityID = GetFacilityID();
@@ -208,7 +168,7 @@ namespace KerbalConstructionTime
 
             if (!upgrading.AlreadyInProgress())
             {
-                float cost = GetMember<float>("upgradeCost");
+                float cost = _menu.upgradeCost;
                 upgrading.SetBP(cost);
                 upgrading.Cost = cost;
                 double rate = Utilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, upgrading.FacilityType);
@@ -262,12 +222,12 @@ namespace KerbalConstructionTime
 
         public string GetFacilityID()
         {
-            return GetMember<SpaceCenterBuilding>("host").Facility.id;
+            return _menu.host.Facility.id;
         }
 
         public SpaceCenterFacility? GetFacilityType()
         {
-            var scb = GetMember<SpaceCenterBuilding>("host");
+            var scb = _menu.host;
             if (scb is AdministrationFacility) return SpaceCenterFacility.Administration;
             if (scb is AstronautComplexFacility) return SpaceCenterFacility.AstronautComplex;
             if (scb is LaunchSiteFacility lpFacility && lpFacility.facilityType == EditorFacility.VAB) return SpaceCenterFacility.LaunchPad;

@@ -324,9 +324,6 @@ namespace RP0.Harmony
             Administration.Instance.RedrawPanels();
         }
 
-        internal static MethodInfo addActive = typeof(Administration).GetMethod("AddActiveStratItem", AccessTools.all);
-        internal static MethodInfo createStratList = typeof(Administration).GetMethod("CreateStrategiesList", AccessTools.all);
-
         internal static void OnActivateProgramConfirm()
         {
             OnPopupDismiss();
@@ -334,7 +331,7 @@ namespace RP0.Harmony
             {
                 var newActiveStrat = Administration.Instance.SelectedWrapper.strategy;
                 AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Active);
-                Administration.StrategyWrapper selectedStrategy = addActive.Invoke(Administration.Instance, new object[] { Administration.Instance.SelectedWrapper.strategy }) as Administration.StrategyWrapper;
+                Administration.StrategyWrapper selectedStrategy = Administration.Instance.AddActiveStratItem(Administration.Instance.SelectedWrapper.strategy);
                 Administration.Instance.SetSelectedStrategy(selectedStrategy);
                 // Reset program speeds
                 foreach (var strat in StrategySystem.Instance.Strategies)
@@ -342,7 +339,7 @@ namespace RP0.Harmony
                     if (strat is ProgramStrategy ps)
                         ps.Program.SetBestAllowableSpeed();
                 }
-                createStratList.Invoke(Administration.Instance, new object[] { StrategySystem.Instance.SystemConfig.Departments });
+                Administration.Instance.CreateStrategiesList(StrategySystem.Instance.SystemConfig.Departments);
                 Administration.Instance.SelectedWrapper.ButtonInUse.Value = true;
             }
             StrategySystem.Instance.StartCoroutine(CallbackUtil.DelayedCallback(2, delegate

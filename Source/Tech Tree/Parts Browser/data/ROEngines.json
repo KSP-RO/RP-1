@@ -2855,6 +2855,54 @@
         ]
     },
     {
+        "name": "ROE-LE5",
+        "title": "LE-5",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 2650,
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1986",
+        "technology": "hydrolox1986",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LE5",
+        "upgrade": false,
+        "entry_cost_mods": "LE-5",
+        "identical_part_name": "LE-5",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROE-LE7",
+        "title": "LE-7",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 3500,
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1993",
+        "technology": "hydrolox1992",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LE7",
+        "upgrade": false,
+        "entry_cost_mods": "LE-7",
+        "identical_part_name": "LE-7",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "ROE-LEROS1B",
         "title": "LEROS-1b (635N)",
         "description": "LEROS is a family of chemical rocket engines manufactured by Moog-ISP. LEROS engines have been used as primary apogee engines for telecommunications satellites such as the Lockheed Martin A2100 as well as deep space missions such as Juno. Plume configured by RealPlume.",

@@ -13,13 +13,17 @@ namespace RP0.Harmony
         [HarmonyPatch("LoadDetailsFromGame")]
         internal static IEnumerable<CodeInstruction> Transpiler_LoadDetailsFromGame(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (var instruction in instructions)
+            List<CodeInstruction> code = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < code.Count; ++i)
             {
-                if (instruction.LoadsConstant(10f))
-                    yield return new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 1f);
-                else
-                    yield return instruction;
+                if (code[i].LoadsConstant(10f))
+                {
+                    code[i] = new CodeInstruction(System.Reflection.Emit.OpCodes.Ldc_R4, 1f);
+                    break;
+                }
             }
+
+            return code;
         }
 
         [HarmonyPostfix]

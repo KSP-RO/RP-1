@@ -234,7 +234,6 @@
     <Compile Include="KerbalConstructionTime\BuildItems\AirlaunchPrep.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\BuildListVessel.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_BuildPlans.cs" />
-    <Compile Include="KerbalConstructionTime\Persistence\KCT_TechStorageItem.cs" />
     <Compile Include="KerbalConstructionTime\SceneAddons\EditorAddon.cs" />
     <Compile Include="KerbalConstructionTime\KCTEvents.cs" />
     <Compile Include="KerbalConstructionTime\SceneAddons\FlightAddon.cs" />

@@ -144,7 +144,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Upgrading from level {oldLevel}");
 
             string facilityID = GetFacilityID();
-            SpaceCenterFacility? facilityType = GetFacilityType();
+            SpaceCenterFacility facilityType = GetFacilityType();
 
             string gate = GetTechGate(facilityID, oldLevel + 1);
             KCTDebug.Log($"Gate for {facilityID}: {gate}");
@@ -170,7 +170,7 @@ namespace KerbalConstructionTime
             {
                 float cost = _menu.upgradeCost;
                 upgrading.SetBP(cost);
-                upgrading.Cost = cost;
+                upgrading.cost = cost;
                 double rate = Utilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, upgrading.FacilityType);
                 double time = upgrading.BP / rate;
                 double costPerDay = cost / (time / 86400d);
@@ -206,7 +206,7 @@ namespace KerbalConstructionTime
                             false,
                             HighLogic.UISkin);
             }
-            else if (oldLevel + 1 != upgrading.CurrentLevel)
+            else if (oldLevel + 1 != upgrading.currentLevel)
             {
                 ScreenMessages.PostScreenMessage("Facility is already being upgraded!", 4f, ScreenMessageStyle.UPPER_CENTER);
                 KCTDebug.Log($"Facility {facilityID} tried to upgrade to lvl {oldLevel + 1} but already in list!");
@@ -225,7 +225,7 @@ namespace KerbalConstructionTime
             return _menu.host.Facility.id;
         }
 
-        public SpaceCenterFacility? GetFacilityType()
+        public SpaceCenterFacility GetFacilityType()
         {
             var scb = _menu.host;
             if (scb is AdministrationFacility) return SpaceCenterFacility.Administration;
@@ -236,10 +236,8 @@ namespace KerbalConstructionTime
             if (scb is RnDBuilding) return SpaceCenterFacility.ResearchAndDevelopment;
             if (scb is SpacePlaneHangarBuilding) return SpaceCenterFacility.SpaceplaneHangar;
             if (scb is TrackingStationBuilding) return SpaceCenterFacility.TrackingStation;
-            if (scb is VehicleAssemblyBuilding) return SpaceCenterFacility.VehicleAssemblyBuilding;
-
-            // Some mods define custom facilities
-            return null;
+            //if (scb is VehicleAssemblyBuilding) return SpaceCenterFacility.VehicleAssemblyBuilding;
+            return SpaceCenterFacility.VehicleAssemblyBuilding;
         }
     }
 }

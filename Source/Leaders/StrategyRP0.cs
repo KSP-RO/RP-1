@@ -10,9 +10,6 @@ namespace RP0
         public bool ShowExtendedInfo = false;
 
         // Reflection of private fields
-        private static FieldInfo isActive = typeof(Strategy).GetField("isActive", BindingFlags.Instance | BindingFlags.NonPublic);
-        private static FieldInfo dateActivated = typeof(Strategy).GetField("dateActivated", BindingFlags.Instance | BindingFlags.NonPublic);
-
         public StrategyConfigRP0 ConfigRP0 { get; protected set; }
 
         protected double dateDeactivated;
@@ -35,17 +32,17 @@ namespace RP0
         //    return true;
         //}
 
-        protected override void OnLoad(ConfigNode node)
+        public override void OnLoad(ConfigNode node)
         {
             node.TryGetValue("dateDeactivated", ref dateDeactivated);
         }
 
-        protected override void OnSave(ConfigNode node)
+        public override void OnSave(ConfigNode node)
         {
             node.AddValue("dateDeactivated", dateDeactivated.ToString("G17"));
         }
 
-        protected override bool CanActivate(ref string reason)
+        public override bool CanActivate(ref string reason)
         {
             if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).CanAfford())
             {
@@ -60,7 +57,7 @@ namespace RP0
             return true;
         }
 
-        protected override bool CanDeactivate(ref string reason)
+        public override bool CanDeactivate(ref string reason)
         {
             if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
             {
@@ -71,7 +68,7 @@ namespace RP0
             return base.CanDeactivate(ref reason);
         }
 
-        protected override void OnRegister()
+        public override void OnRegister()
         {
             base.OnRegister();
         }
@@ -81,9 +78,9 @@ namespace RP0
             if (!CanBeActivated(out _))
                 return false;
 
-            isActive.SetValue(this, true);
+            isActive = true;
             Register();
-            dateActivated.SetValue(this, KSPUtils.GetUT());
+            dateActivated = KSPUtils.GetUT();
             
             dateDeactivated = -1d;
             StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = -1d;
@@ -106,7 +103,7 @@ namespace RP0
             if (deactivateRep != 0f)
                 Reputation.Instance.AddReputation(-deactivateRep, TransactionReasonsRP0.LeaderRemove.Stock());
 
-            isActive.SetValue(this, false);
+            isActive = false;
 
             dateDeactivated = KSPUtils.GetUT();
             StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = dateDeactivated;
@@ -220,14 +217,14 @@ namespace RP0
             return text;
         }
 
-        protected override string GetText()
+        public override string GetText()
         {
             bool extendedInfo = ShowExtendedInfo;
             ShowExtendedInfo = false;
             return ConstructText(extendedInfo, true, true);
         }
 
-        protected override string GetEffectText()
+        public override string GetEffectText()
         {
             bool extendedInfo = ShowExtendedInfo;
             ShowExtendedInfo = false;

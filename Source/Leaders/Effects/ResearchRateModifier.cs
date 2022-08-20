@@ -25,7 +25,7 @@ namespace RP0.Leaders
                 effectDescription);
         }
 
-        protected override void OnLoadFromConfig(ConfigNode node)
+        public override void OnLoadFromConfig(ConfigNode node)
         {
             base.OnLoadFromConfig(node);
 
@@ -34,12 +34,12 @@ namespace RP0.Leaders
                 nodeType |= n;
         }
 
-        protected override void OnRegister()
+        public override void OnRegister()
         {
             KCTEvents.ApplyResearchRateMultiplier.Add(OnEffectQuery);
         }
 
-        protected override void OnUnregister()
+        public override void OnUnregister()
         {
             KCTEvents.ApplyResearchRateMultiplier.Remove(OnEffectQuery);
         }

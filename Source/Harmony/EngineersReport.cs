@@ -46,7 +46,7 @@ namespace RP0.Harmony
         {
             cacheYes = Localizer.Format("#autoLOC_439839");
             cacheNo = Localizer.Format("#autoLOC_439840");
-            cacheOK = Localizer.Format("#autoLOC_174814");
+            cacheOK = Localizer.Format("#autoLOC_190905");
 
             cacheHumanRatedLH = $"<color={cacheColorNeutral}>{Localizer.GetStringByTag("#rp0ER_HumanRatedLH")}</color>";
             cacheMassLH = Localizer.Format("#autoLOC_443401", cacheColorNeutral);
@@ -253,7 +253,6 @@ namespace RP0.Harmony
 
         // Don't need this yet.
 
-        // Coroutine patching
         //[HarmonyPostfix]
         //[HarmonyPatch("OnAppInitialized")]
         //internal static void Postfix_OnAppInitialized(EngineersReport __instance)
@@ -271,29 +270,22 @@ namespace RP0.Harmony
         //    __instance.testRoutine = __instance.StartCoroutine(RunTests());
         //}
 
-        //private static FieldInfo tests = typeof(EngineersReport).GetField("tests", AccessTools.all);
-        //private static System.Type TestWrapper = AccessTools.TypeByName("KSP.UI.Screens.EngineersReport.TestWrapper");
-        //private static MethodInfo RunTest = TestWrapper.GetMethod("RunTest", AccessTools.all);
-        //private static MethodInfo UpdateDesignConcern = typeof(EngineersReport).GetMethod("UpdateDesignConcern", AccessTools.all);
-
-        //private static DictionaryValueList<int, Part> resourceConsumers = new DictionaryValueList<int, Part>();
-        //private static DictionaryValueList<int, PartSet> resourceProviders = new DictionaryValueList<int, PartSet>();
-
         //// Our own coroutine
         //internal static IEnumerator RunTests()
         //{
         //    yield return null;
         //    yield return null;
 
-        //    IList list = tests.GetValue(EngineersReport.Instance) as IList;
+        //    EngineersReport.sccFlowGraphUCFinder = new RUI.Algorithms.SCCFlowGraphUCFinder(EditorLogic.fetch.ship.Parts);
+
         //    if (EditorLogic.fetch.ship.parts.Count != 0)
         //    {
-        //        for (int i = 0, count = list.Count; i < count; i++)
+        //        for (int i = 0, count = EngineersReport.Instance.tests.Count; i < count; i++)
         //        {
-        //            RunTest.Invoke(list[i], null);
+        //            EngineersReport.Instance.tests[i].RunTest();
         //        }
         //    }
-        //    UpdateDesignConcern.Invoke(EngineersReport.Instance, null);
+        //    EngineersReport.Instance.UpdateDesignConcern();
         //}
     }
 }

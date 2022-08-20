@@ -12,7 +12,7 @@ namespace KerbalConstructionTime
         Pad,
     }
 
-    public class LCItem
+    public class LCItem : IConfigNode
     {
         public class LCData
         {
@@ -525,15 +525,7 @@ namespace KerbalConstructionTime
             node.AddNode(cnWh);
 
             var cnPadConstructions = new ConfigNode("PadConstructions");
-            foreach (PadConstruction pc in PadConstructions)
-            {
-                pc.BuildListIndex = _ksc.Constructions.IndexOf(pc);
-                var storageItem = new PadConstructionStorageItem();
-                storageItem.FromPadConstruction(pc);
-                var cn = new ConfigNode("PadConstruction");
-                storageItem.Save(cn);
-                cnPadConstructions.AddNode(cn);
-            }
+            PadConstructions.Save(cnPadConstructions);
             node.AddNode(cnPadConstructions);
 
             var cnRR = new ConfigNode("Recon_Rollout");
@@ -649,12 +641,7 @@ namespace KerbalConstructionTime
             tmp = node.GetNode("PadConstructions");
             if (tmp != null)
             {
-                foreach (ConfigNode cn in tmp.GetNodes("PadConstruction"))
-                {
-                    var storageItem = new PadConstructionStorageItem();
-                    storageItem.Load(cn);
-                    PadConstructions.Add(storageItem.ToPadConstruction());
-                }
+                PadConstructions.Load(tmp);
             }
 
             if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
@@ -739,6 +726,16 @@ namespace KerbalConstructionTime
             }
 
             return this;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(ConfigNode node)
+        {
+            throw new NotImplementedException();
         }
     }
 }

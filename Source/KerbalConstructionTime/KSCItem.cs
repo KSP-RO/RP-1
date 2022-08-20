@@ -160,27 +160,11 @@ namespace KerbalConstructionTime
             node.AddNode(cnLCs);
 
             var cnUpgradeables = new ConfigNode("FacilityUpgrades");
-            foreach (FacilityUpgrade facUpgd in FacilityUpgrades)
-            {
-                facUpgd.BuildListIndex = Constructions.IndexOf(facUpgd);
-                var storageItem = new FacilityUpgradeStorageItem();
-                storageItem.FromFacilityUpgrade(facUpgd);
-                var cn = new ConfigNode("UpgradingBuilding");
-                storageItem.Save(cn);
-                cnUpgradeables.AddNode(cn);
-            }
+            FacilityUpgrades.Save(cnUpgradeables);
             node.AddNode(cnUpgradeables);
 
             var cnLCConstructions = new ConfigNode("LCConstructions");
-            foreach (LCConstruction lcc in LCConstructions)
-            {
-                lcc.BuildListIndex = Constructions.IndexOf(lcc);
-                var storageItem = new LCConstructionStorageItem();
-                storageItem.FromLCConstruction(lcc);
-                var cn = new ConfigNode("LCConstruction");
-                storageItem.Save(cn);
-                cnLCConstructions.AddNode(cn);
-            }
+            LCConstructions.Save(cnLCConstructions);
             node.AddNode(cnLCConstructions);
 
             return node;
@@ -223,26 +207,15 @@ namespace KerbalConstructionTime
             tmp = node.GetNode("LCConstructions");
             if (tmp != null)
             {
-                foreach (ConfigNode cn in tmp.GetNodes("LCConstruction"))
-                {
-                    var storageItem = new LCConstructionStorageItem();
-                    storageItem.Load(cn);
-                    LCConstructions.Add(storageItem.ToLCConstruction(this));
-                }
+                LCConstructions.Load(tmp);
             }
 
             tmp = node.GetNode("FacilityUpgrades");
             if (tmp != null)
             {
-                foreach (ConfigNode cn in tmp.GetNodes("UpgradingBuilding"))
-                {
-                    var storageItem = new FacilityUpgradeStorageItem();
-                    storageItem.Load(cn);
-                    FacilityUpgrades.Add(storageItem.ToFacilityUpgrade());
-                }
+                FacilityUpgrades.Load(tmp);
             }
 
-            Constructions.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
             _allowRecalcConstructions = true;
 
             return this;

@@ -86,9 +86,9 @@ namespace KerbalConstructionTime
 
                     var padConstr = new PadConstruction
                     {
-                        ID = id,
-                        Cost = curPadCost,
-                        Name = _newName
+                        id = id,
+                        cost = curPadCost,
+                        name = _newName
                     };
                     padConstr.SetBP(curPadCost);
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.PadConstructions.Add(padConstr);

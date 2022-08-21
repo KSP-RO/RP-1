@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToolbarControl_NS;
 using Upgradeables;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -13,7 +14,7 @@ namespace KerbalConstructionTime
 
         public static KSCItem ActiveKSC = null;
         public static List<KSCItem> KSCs = new List<KSCItem>();
-        public static SortedList<string, BuildListVessel> Plans = new SortedList<string, BuildListVessel>();
+        public static PersistentSortedListValueTypeKey<string, BuildListVessel> Plans => KerbalConstructionTimeData.Instance?.BuildPlans;
         public static string ActiveKSCName = string.Empty;
         public static float SciPointsTotal = -1f;
         public static bool MergingAvailable;
@@ -34,7 +35,7 @@ namespace KerbalConstructionTime
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 13;
+        public const int VERSION = 14;
 
         public static ToolbarControl ToolbarControl;
 
@@ -46,7 +47,7 @@ namespace KerbalConstructionTime
         public static bool AcceptedContract = false;
         public static bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
         public static bool IsSimulatedFlight = false;
-        public static BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, 1, false);
+        public static BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorUnlockCosts = 0;
@@ -165,7 +166,7 @@ namespace KerbalConstructionTime
                 if (lc.IsIdle) // not IsActive because completed rollouts/airlaunches still count
                     return lc.Engineers * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
 
-                if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].IsHumanRated)
+                if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
                     int num = System.Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
                     return num * lc.RushSalary + (lc.Engineers - num) * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;

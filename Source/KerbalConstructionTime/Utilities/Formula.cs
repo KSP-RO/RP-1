@@ -187,9 +187,9 @@ namespace KerbalConstructionTime
             double multHR = 1d;
             if (vLC.IsHumanRated)
                 multHR += 0.25d;
-            if (vessel.IsHumanRated)
+            if (vessel.humanRated)
                 multHR += 0.75d;
-            double vesselPortion = (vessel.EffectiveCost - (vessel.Cost * 0.9d)) * 0.6;
+            double vesselPortion = (vessel.effectiveCost - (vessel.cost * 0.9d)) * 0.6;
             double massToUse = vLC.LCType == LaunchComplexType.Pad ? vLC.MassMax : vessel.GetTotalMass();
             double lcPortion = Math.Pow(massToUse, 0.75d) * 20d * multHR;
             return vesselPortion + lcPortion;
@@ -217,11 +217,11 @@ namespace KerbalConstructionTime
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0d;
             
-            double BP = vessel.BuildPoints;
+            double BP = vessel.buildPoints;
             if (mergedVessels != null)
             {
                 foreach (var v in mergedVessels)
-                    BP += v.BuildPoints;
+                    BP += v.buildPoints;
             }
             return BP;
         }
@@ -235,7 +235,7 @@ namespace KerbalConstructionTime
             //return GetStandardFormulaValue("AirlaunchCost", variables);
 
             // [E]*0.25
-            return vessel.EffectiveCost * 0.25d;
+            return vessel.effectiveCost * 0.25d;
         }
 
         public static double GetAirlaunchBP(BuildListVessel vessel)
@@ -247,7 +247,7 @@ namespace KerbalConstructionTime
             //return GetStandardFormulaValue("AirlaunchTime", variables);
 
             // ([E] - (0.5 * [C])) * 12
-            return (vessel.EffectiveCost - (vessel.Cost * 0.5d)) * 12d;
+            return (vessel.effectiveCost - (vessel.cost * 0.5d)) * 12d;
         }
 
         public static double GetEngineRefurbBPMultiplier(double runTime)
@@ -350,7 +350,7 @@ namespace KerbalConstructionTime
         {
             // (((max(0.001, ([EC]-[C]))^1.12)*12)+((max(0.001, ([EC]-[C]-30000))^1.5)*0.35)))
             double costDeltaHighPow;
-            double costDelta = vessel.EffectiveCost - vessel.Cost;
+            double costDelta = vessel.effectiveCost - vessel.cost;
             if (costDelta < 0.001d)
             {
                 costDelta = 0.001d;
@@ -369,14 +369,14 @@ namespace KerbalConstructionTime
         public static double GetReconditioningBP(BuildListVessel vessel)
         {
             //(([BP]*0.01) + (max(1, [M]-20)*2000))
-            return vessel.BuildPoints * 0.01d + Math.Max(1, vessel.GetTotalMass() - 20d) * 2000d;
+            return vessel.buildPoints * 0.01d + Math.Max(1, vessel.GetTotalMass() - 20d) * 2000d;
         }
 
         public static double GetRecoveryBPSPH(BuildListVessel vessel)
         {
             //((1+((1-[VAB])*1.15)) * (((max(0.001, ([EC]-[C]))^1.12)*12)+((max(0.001, ([EC]-[C]-30000))^1.5)*0.35)))
             double costDeltaHighPow;
-            double costDelta = vessel.EffectiveCost - vessel.Cost;
+            double costDelta = vessel.effectiveCost - vessel.cost;
             if (costDelta < 0.001d)
             {
                 costDelta = 0.001d;
@@ -396,7 +396,7 @@ namespace KerbalConstructionTime
         {
             // (((max(0.001, ([EC]-[C]))^1.12)*12)+((max(0.001, ([EC]-[C]-30000))^1.5)*0.35)))
             double costDeltaHighPow;
-            double costDelta = vessel.EffectiveCost - vessel.Cost;
+            double costDelta = vessel.effectiveCost - vessel.cost;
             if (costDelta < 0.001d)
             {
                 costDelta = 0.001d;

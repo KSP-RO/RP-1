@@ -47,7 +47,7 @@ namespace RP0
         public MaintenanceGUI.MaintenancePeriod guiSelectedPeriod = MaintenanceGUI.MaintenancePeriod.Day;
 
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
-        public double Researchers => KCTGameStates.Researchers;
+        public double Researchers => KerbalConstructionTimeData.Instance.Researchers;
 
         private double _maintenanceCostMult = 1d;
         public double MaintenanceCostMult => _maintenanceCostMult;

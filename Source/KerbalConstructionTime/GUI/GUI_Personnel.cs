@@ -43,7 +43,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Applicants:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label(KerbalConstructionTimeData.Instance.UnassignedPersonnel.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             double salaryE = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryEngineers, -RP0.MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
@@ -57,7 +57,7 @@ namespace KerbalConstructionTime
             double salaryR = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryResearchers, -RP0.MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+            GUILayout.Label(KerbalConstructionTimeData.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
             GUILayout.Label($"√{salaryR:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -252,7 +252,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Researchers:", GUILayout.Width(90));
-            GUILayout.Label(KCTGameStates.Researchers.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label(KerbalConstructionTimeData.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -323,7 +323,7 @@ namespace KerbalConstructionTime
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? KCTGameStates.Researchers : KCTGameStates.ActiveKSC.UnassignedEngineers;
+                fireAmount = research ? KerbalConstructionTimeData.Instance.Researchers : KCTGameStates.ActiveKSC.UnassignedEngineers;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -356,14 +356,14 @@ namespace KerbalConstructionTime
                 double modifiedHireCost = -RP0.CurrencyUtils.Funds(research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers, -PresetManager.Instance.ActivePreset.GeneralSettings.HireCost);
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
-                    workers = Math.Max(_buyModifierMultsPersonnel[0], KCTGameStates.UnassignedPersonnel + (int)(Funding.Instance.Funds / modifiedHireCost));
+                    workers = Math.Max(_buyModifierMultsPersonnel[0], KerbalConstructionTimeData.Instance.UnassignedPersonnel + (int)(Funding.Instance.Funds / modifiedHireCost));
 
                 if (research)
-                    workers = Math.Max(0, Math.Min(workers, PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)] - KCTGameStates.Researchers));
+                    workers = Math.Max(0, Math.Min(workers, PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)] - KerbalConstructionTimeData.Instance.Researchers));
 
-                _fundsCost = modifiedHireCost * Math.Max(0, workers - KCTGameStates.UnassignedPersonnel);
+                _fundsCost = modifiedHireCost * Math.Max(0, workers - KerbalConstructionTimeData.Instance.UnassignedPersonnel);
                 // Show the result for whatever you're asking for, even if you can't afford it.
-                hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost) + KCTGameStates.UnassignedPersonnel);
+                hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost) + KerbalConstructionTimeData.Instance.UnassignedPersonnel);
 
                 canAfford = Funding.Instance.Funds >= _fundsCost;
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
@@ -381,9 +381,9 @@ namespace KerbalConstructionTime
                         Utilities.ChangeEngineers(ksc, workers);
                         ksc.RecalculateBuildRates(false);
                     }
-                    KCTGameStates.UnassignedPersonnel = Math.Max(0, KCTGameStates.UnassignedPersonnel - workers);
-                    if (KCTGameStates.UnassignedPersonnel == 0)
-                        KCTGameStates.HiredStarterApplicants = true;
+                    KerbalConstructionTimeData.Instance.UnassignedPersonnel = Math.Max(0, KerbalConstructionTimeData.Instance.UnassignedPersonnel - workers);
+                    if (KerbalConstructionTimeData.Instance.UnassignedPersonnel == 0)
+                        KerbalConstructionTimeData.Instance.HiredStarterApplicants = true;
 
                     _fundsCost = int.MinValue;
                 }

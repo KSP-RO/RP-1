@@ -77,7 +77,6 @@ namespace KerbalConstructionTime
             if (Utilities.CurrentGameIsMission()) return;
 
             KCTDebug.Log("Awake called");
-            KCTGameStates.PersistenceLoaded = false;
 
             Instance = this;
 
@@ -88,7 +87,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.IsFirstStart = true;
                 // In this case it is a new game, so we start on the current version.
                 // Should not be meaningful because we only check LoadedSaveVersion during Load
-                KCTGameStates.LoadedSaveVersion = KCTGameStates.VERSION;
+                KerbalConstructionTimeData.Instance.LoadedSaveVersion = KCTGameStates.VERSION;
             }
 
             if (PresetManager.Instance == null)
@@ -176,7 +175,7 @@ namespace KerbalConstructionTime
 
             if (!HighLogic.LoadedSceneIsFlight)
             {
-                KCTGameStates.SimulationParams.Reset();
+                KerbalConstructionTimeData.Instance.SimulationParams.Reset();
             }
 
             switch (HighLogic.LoadedScene)
@@ -257,7 +256,7 @@ namespace KerbalConstructionTime
 
             AssignCrewToCurrentVessel();
 
-            if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.IsSimulatedFlight)
+            if (KCTGameStates.LaunchedVessel != null && !KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
                 LCItem vesselLC = KCTGameStates.LaunchedVessel.LC;
                 KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
@@ -287,7 +286,7 @@ namespace KerbalConstructionTime
 
         private static void AssignCrewToCurrentVessel()
         {
-            if (!KCTGameStates.IsSimulatedFlight &&
+            if (!KerbalConstructionTimeData.Instance.IsSimulatedFlight &&
                 FlightGlobals.ActiveVessel.GetCrewCount() == 0 && KCTGameStates.LaunchedCrew.Count > 0)
             {
                 KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
@@ -452,7 +451,7 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (HighLogic.LoadedSceneIsFlight && KCTGameStates.IsSimulatedFlight && KCTGameStates.SimulationParams != null)
+            if (HighLogic.LoadedSceneIsFlight && KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
                 ProcessSimulation();
             }
@@ -505,7 +504,7 @@ namespace KerbalConstructionTime
         {
             HighLogic.CurrentGame.Parameters.Flight.CanAutoSave = false;
 
-            SimulationParams simParams = KCTGameStates.SimulationParams;
+            SimulationParams simParams = KerbalConstructionTimeData.Instance.SimulationParams;
             if (FlightGlobals.ActiveVessel.loaded && !FlightGlobals.ActiveVessel.packed && !simParams.IsVesselMoved)
             {
                 if (simParams.DisableFailures)
@@ -820,9 +819,9 @@ namespace KerbalConstructionTime
                     foreach (var ksc in KCTGameStates.KSCs)
                         ksc.EnsureStartingLaunchComplexes();
 
-                    KCTGameStates.UnassignedPersonnel = PresetManager.Instance.StartingPersonnel(HighLogic.CurrentGame.Mode);
+                    KerbalConstructionTimeData.Instance.UnassignedPersonnel = PresetManager.Instance.StartingPersonnel(HighLogic.CurrentGame.Mode);
                 }
-                else if (KCTGameStates.FirstRunNotComplete)
+                else if (KerbalConstructionTimeData.Instance.FirstRunNotComplete)
                 {
                     KCT_GUI.GUIStates.ShowFirstRun = true;
                 }
@@ -857,14 +856,14 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("SP done");
             }
 
-            if (HighLogic.LoadedSceneIsFlight && KCTGameStates.IsSimulatedFlight)
+            if (HighLogic.LoadedSceneIsFlight && KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
                 Utilities.EnableSimulationLocks();
-                if (KCTGameStates.SimulationParams.SimulationUT > 0 &&
+                if (KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT > 0 &&
                     FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
                     // Advance building construction
-                    double UToffset = KCTGameStates.SimulationParams.SimulationUT - Utilities.GetUT();
+                    double UToffset = KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT - Utilities.GetUT();
                     if (UToffset > 0)
                     {
                         foreach (var ksc in KCTGameStates.KSCs)
@@ -878,17 +877,17 @@ namespace KerbalConstructionTime
                             }
                         }
                     }
-                    KCTDebug.Log($"Setting simulation UT to {KCTGameStates.SimulationParams.SimulationUT}");
+                    KCTDebug.Log($"Setting simulation UT to {KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT}");
                     if (!Utilities.IsPrincipiaInstalled)
-                        Planetarium.SetUniversalTime(KCTGameStates.SimulationParams.SimulationUT);
+                        Planetarium.SetUniversalTime(KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT);
                     else
-                        StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), KCTGameStates.SimulationParams.SimulationUT));
+                        StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT));
                 }
 
                 AddSimulationWatermark();
             }
 
-            if (KCTGameStates.IsSimulatedFlight && HighLogic.LoadedSceneIsGame && !HighLogic.LoadedSceneIsFlight)
+            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight && HighLogic.LoadedSceneIsGame && !HighLogic.LoadedSceneIsFlight)
             {
                 string msg = $"The current save appears to be a simulation and we cannot automatically find a suitable pre-simulation save. Please load an older save manually; we recommend the backup that should have been saved to \\saves\\{HighLogic.SaveFolder}\\Backup\\KCT_simulation_backup.sfs";
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Simulation Error", msg, "Understood", false, HighLogic.UISkin);

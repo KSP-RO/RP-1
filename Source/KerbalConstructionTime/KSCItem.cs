@@ -73,7 +73,7 @@ namespace KerbalConstructionTime
         {
             if (LaunchComplexes.Count > 0) return;
 
-            LCItem sph = new LCItem(LCItem.StartingHangar, this);
+            LCItem sph = new LCItem(LCData.StartingHangar, this);
             sph.IsOperational = true;
             LaunchComplexes.Add(sph);
         }

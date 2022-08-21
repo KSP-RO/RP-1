@@ -455,7 +455,7 @@ namespace KerbalConstructionTime
         /// <param name="ourStats"></param>
         /// <param name="otherStats"></param>
         /// <returns></returns>
-        public static double GetLCCloseness(LCItem.LCData ourStats, LCItem.LCData otherStats)
+        public static double GetLCCloseness(LCData ourStats, LCData otherStats)
         {
             if (ourStats.Compare(otherStats))
                 return 1d;
@@ -466,7 +466,7 @@ namespace KerbalConstructionTime
             if (ourStats.lcType == LaunchComplexType.Hangar)
                 return 1d;
 
-            LCItem.LCData bigger, smaller;
+            LCData bigger, smaller;
             if (otherStats.massMax > ourStats.massMax)
             {
                 bigger = otherStats;

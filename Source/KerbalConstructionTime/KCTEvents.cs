@@ -380,12 +380,18 @@ namespace KerbalConstructionTime
             {
                 if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 {
-                    if (HighLogic.CurrentGame.editorFacility == EditorFacility.VAB)
+                    var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
+                    if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB && !dataModule.Data.HasStartedReconditioning)
                     {
                         string launchSite = FlightDriver.LaunchSiteName;
-                        LCItem lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                        if (launchSite == "LaunchPad") launchSite = lc.ActiveLPInstance.name;
-                        lc.Recon_Rollout.Add(new ReconRollout(ev.host, ReconRollout.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite, lc));
+                        LCItem lc = KCTGameStates.FindLCFromID(dataModule.Data.LCID);
+                        if (lc != null)
+                        {
+                            if (launchSite == "LaunchPad")
+                                launchSite = lc.ActiveLPInstance.name;
+                            lc.Recon_Rollout.Add(new ReconRollout(ev.host, ReconRollout.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite, lc));
+                            dataModule.Data.HasStartedReconditioning = true;
+                        }
                     }
                 }
             }

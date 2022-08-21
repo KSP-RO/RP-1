@@ -72,7 +72,7 @@ namespace KerbalConstructionTime
             
             if (!KerbalConstructionTimeData.Instance.HiredStarterApplicants)
             {
-                GUILayout.Label($"{step++}) Assign your {KerbalConstructionTimeData.Instance.UnassignedPersonnel} starting Applicants");
+                GUILayout.Label($"{step++}) Assign your {KerbalConstructionTimeData.Instance.Applicants} starting Applicants");
                 if (GUILayout.Button($"Go to Staffing", HighLogic.Skin.button))
                 {
                     GUIStates.ShowPersonnelWindow = true;

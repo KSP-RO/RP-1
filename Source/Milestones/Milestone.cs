@@ -6,38 +6,22 @@ using static ConfigNode;
 
 namespace RP0.Milestones
 {
-    public class Milestone : IConfigNode
+    public class Milestone
     {
         [Persistent] public string name;
-        [Persistent(isPersistant = false)] public string headline;
-        [Persistent(isPersistant = false)] public string article;
-        [Persistent(isPersistant = false)] public string image;
-        [Persistent(isPersistant = false)] public double date;
+        [Persistent] public string contractName;
+        [Persistent] public string programName;
+        [Persistent] public string headline;
+        [Persistent] public string article;
+        [Persistent] public string image;
 
         public Milestone()
         {
         }
 
-        public Milestone(ConfigNode n) : this()
+        public Milestone(ConfigNode n)
         {
-            Load(n);
+            LoadObjectFromConfig(this, n);
         }
-
-        public void Load(ConfigNode node)
-        {
-            LoadObjectFromConfig(this, node);
-
-            node.TryGetValue("title", ref name);
-            node.TryGetValue("headline", ref headline);
-            node.TryGetValue("article", ref article);
-            node.TryGetValue("image", ref image);
-            date = 0f;
-        }
-
-        public void Save(ConfigNode node)
-        {
-            CreateConfigFromObject(this, node);
-        }
-
     }
 }

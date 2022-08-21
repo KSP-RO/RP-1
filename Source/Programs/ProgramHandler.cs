@@ -262,7 +262,7 @@ namespace RP0.Programs
                 // Handle KCT applicants
                 int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)
-                    KerbalConstructionTime.KerbalConstructionTimeData.Instance.UnassignedPersonnel += applicants;
+                    KerbalConstructionTime.KerbalConstructionTimeData.Instance.Applicants += applicants;
 
                 // Handle Confidence
                 if (IsContractOptional(cc))

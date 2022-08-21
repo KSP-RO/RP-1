@@ -159,9 +159,9 @@ namespace RP0.Harmony
             bool resourcesOK = true;
             if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
-                totalMass = KCTGameStates.EditorVessel.TotalMass;
+                totalMass = KCTGameStates.EditorVessel.mass;
                 craftSize = KCTGameStates.EditorVessel.ShipSize;
-                vesselHumanRated = KCTGameStates.EditorVessel.IsHumanRated;
+                vesselHumanRated = KCTGameStates.EditorVessel.humanRated;
 
                 resourcesOK = KCTGameStates.EditorVessel.ResourcesOK(KCTGameStates.EditorVessel.LC.Stats);
 
@@ -169,7 +169,7 @@ namespace RP0.Harmony
                 minMassLimit = KCTGameStates.EditorVessel.LC.MassMin;
                 maxSize = KCTGameStates.EditorVessel.LC.SizeMax;
                 lcHumanRated = KCTGameStates.EditorVessel.LC.IsHumanRated;
-                vesselHumanRated = KCTGameStates.EditorVessel.IsHumanRated;
+                vesselHumanRated = KCTGameStates.EditorVessel.humanRated;
             }
             else
             {

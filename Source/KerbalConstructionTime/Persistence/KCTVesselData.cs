@@ -1,4 +1,6 @@
-﻿namespace KerbalConstructionTime
+﻿using System;
+
+namespace KerbalConstructionTime
 {
     public class KCTVesselData : IConfigNode
     {
@@ -12,10 +14,13 @@
         public string LaunchID = string.Empty;
 
         [Persistent]
-        public string LCID = string.Empty;
+        public Guid LCID = Guid.Empty;
 
         [Persistent]
         public string LCModID = string.Empty;
+
+        [Persistent]
+        public bool HasStartedReconditioning = false;
 
         public bool IsInitialized => FacilityBuiltIn != default || VesselID != string.Empty || LaunchID != string.Empty;
 
@@ -27,7 +32,8 @@
                 VesselID = d.Data.VesselID,
                 LaunchID = d.Data.LaunchID,
                 LCID = d.Data.LCID,
-                LCModID = d.Data.LCModID
+                LCModID = d.Data.LCModID,
+                HasStartedReconditioning = d.Data.HasStartedReconditioning
             };
         }
 
@@ -38,6 +44,16 @@
         public KCTVesselData(ConfigNode n)
         {
             Load(n);
+        }
+
+        public void SetFrom(KCTVesselData data)
+        {
+            FacilityBuiltIn = data.FacilityBuiltIn;
+            LaunchID = data.LaunchID;
+            VesselID = data.VesselID;
+            LCID = data.LCID;
+            LCModID = data.LCModID;
+            HasStartedReconditioning = data.HasStartedReconditioning;
         }
 
         public void Load(ConfigNode node)

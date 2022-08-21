@@ -107,11 +107,7 @@ namespace KerbalConstructionTime
             // Interestingly, OnPartDeCoupleNewVesselComplete doesn't get called for undocking.
             if (!vm.Data.IsInitialized && dict.TryGetValue(rootPartLaunchId, out KCTVesselData data))
             {
-                vm.Data.FacilityBuiltIn = data.FacilityBuiltIn;
-                vm.Data.LaunchID = data.LaunchID;
-                vm.Data.VesselID = data.VesselID;
-                vm.Data.LCID = data.LCID;
-				vm.Data.LCModID = data.LCModID;
+                vm.Data.SetFrom(data);
             }
 
             if (dict.Count == 1) dict = null;    // Only has data for the current vessel so no need to keep history
@@ -125,11 +121,7 @@ namespace KerbalConstructionTime
 
             if (vm1 != null && vm2 != null)
             {
-                vm2.Data.VesselID = vm1.Data.VesselID;
-                vm2.Data.LaunchID = vm1.Data.LaunchID;
-                vm2.Data.FacilityBuiltIn = vm1.Data.FacilityBuiltIn;
-                vm2.Data.LCID = vm1.Data.LCID;
-				vm2.Data.LCModID = vm1.Data.LCModID;
+                vm2.Data.SetFrom(vm1.Data);
             }
          }
     }

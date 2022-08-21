@@ -113,9 +113,11 @@ namespace RP0.Milestones
                 string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{milestone.name}.png";
 
                 float oldDist = FlightCamera.fetch.distance;
-
-                Vector3 vector = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
-                float newDist = KSPCameraUtil.GetDistanceToFit(vector, FlightCamera.fetch.FieldOfView) * FlightCamera.fetch.vesselSwitchBackoffFOVFactor + FlightCamera.fetch.vesselSwitchBackoffPadding;
+                float oldMin = FlightCamera.fetch.minDistance;
+                
+                FlightCamera.fetch.minDistance = 1f;
+                Vector3 size = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
+                float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
                 FlightCamera.fetch.SetDistanceImmediate(newDist);
 
                 yield return new WaitForEndOfFrame();
@@ -140,6 +142,7 @@ namespace RP0.Milestones
                 var bytes = ImageConversion.EncodeToPNG(result);
                 System.IO.File.WriteAllBytes(filePath, bytes);
 
+                FlightCamera.fetch.minDistance = oldMin;
                 FlightCamera.fetch.SetDistanceImmediate(oldDist);
 
                 if (wasShowing)

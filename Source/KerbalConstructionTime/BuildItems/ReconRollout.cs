@@ -7,15 +7,18 @@ namespace KerbalConstructionTime
 {
     public class ReconRollout : LCProject
     {
-        public override string Name => RRInverseDict[RRType];
-        public string LaunchPadID = "LaunchPad";
+        public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
+
         public const string ReconditioningStr = "Reconditioning";
         public const string RolloutStr = "Rollout";
         public const string RollbackStr = "Rollback";
         public const string RecoveryStr = "Recover";
         public const string UnknownStr = "Unknown Situation";
 
-        public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
+        public override string Name => RRInverseDict[RRType];
+        [Persistent]
+        public string launchPadID = "LaunchPad";
+        [Persistent]
         public RolloutReconType RRType = RolloutReconType.None;
 
         protected override TransactionReasonsRP0 transactionReason
@@ -58,7 +61,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static Dictionary<string, RolloutReconType> RRDict = new Dictionary<string, RolloutReconType>()
+        public static readonly Dictionary<string, RolloutReconType> RRDict = new Dictionary<string, RolloutReconType>()
         {
             {  ReconditioningStr, RolloutReconType.Reconditioning },
             {  RolloutStr, RolloutReconType.Rollout },
@@ -66,7 +69,8 @@ namespace KerbalConstructionTime
             {  RecoveryStr, RolloutReconType.Recovery },
             {  UnknownStr, RolloutReconType.None }
         };
-        public static Dictionary<RolloutReconType, string> RRInverseDict = new Dictionary<RolloutReconType, string>()
+
+        public static readonly Dictionary<RolloutReconType, string> RRInverseDict = new Dictionary<RolloutReconType, string>()
         {
             {  RolloutReconType.Reconditioning, ReconditioningStr },
             {  RolloutReconType.Rollout, RolloutStr },
@@ -77,33 +81,31 @@ namespace KerbalConstructionTime
 
         public ReconRollout() : base()
         {
-            RRType = RolloutReconType.None;
-            LaunchPadID = "LaunchPad";
         }
 
         public ReconRollout(Vessel vessel, RolloutReconType type, string id, string launchSite, LCItem lc)
         {
             RRType = type;
-            AssociatedID = id;
-            LaunchPadID = launchSite;
-            KCTDebug.Log("New recon_rollout at launchsite: " + LaunchPadID);
-            Progress = 0;
+            associatedID = id;
+            launchPadID = launchSite;
+            KCTDebug.Log("New recon_rollout at launchsite: " + launchPadID);
+            progress = 0;
             _lc = lc;
 
-            Mass = vessel.GetTotalMass();
+            mass = vessel.GetTotalMass();
             try
             {
                 var blv = new BuildListVessel(vessel);
-                IsHumanRated = blv.humanRated;
+                isHumanRated = blv.humanRated;
                 BP = Formula.GetReconditioningBP(blv);
-                VesselBP = blv.buildPoints + blv.integrationPoints;
+                vesselBP = blv.buildPoints + blv.integrationPoints;
             }
             catch
             {
                 KCTDebug.Log("Error while determining BP for recon_rollout");
             }
             if (type == RolloutReconType.Rollback)
-                Progress = BP;
+                progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
                 double KSCDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
@@ -114,13 +116,13 @@ namespace KerbalConstructionTime
         public ReconRollout(BuildListVessel vessel, RolloutReconType type, string id, string launchSite = "")
         {
             RRType = type;
-            AssociatedID = id;
-            LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.launchSite : launchSite;    //For when we add custom launchpads
-            Progress = 0;
-            Mass = vessel.GetTotalMass();
+            associatedID = id;
+            launchPadID = string.IsNullOrEmpty(launchSite) ? vessel.launchSite : launchSite;    //For when we add custom launchpads
+            progress = 0;
+            mass = vessel.GetTotalMass();
             _lc = vessel.LC;
-            VesselBP = vessel.buildPoints + vessel.integrationPoints;
-            IsHumanRated = vessel.humanRated;
+            vesselBP = vessel.buildPoints + vessel.integrationPoints;
+            isHumanRated = vessel.humanRated;
             
             switch (type)
             {
@@ -139,9 +141,9 @@ namespace KerbalConstructionTime
             }
 
             if (type == RolloutReconType.Rollout)
-                Cost = Formula.GetRolloutCost(vessel);
+                cost = Formula.GetRolloutCost(vessel);
             else if (type == RolloutReconType.Rollback)
-                Progress = BP;
+                progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
                 double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
@@ -165,6 +167,17 @@ namespace KerbalConstructionTime
         public override bool HasCost => RRType == RolloutReconType.Rollout;
 
         public override BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+
+            if (KCTGameStates.LoadedSaveVersion < 15)
+            {
+                string n = node.GetValue("name");
+                RRType = RRDict.ContainsKey(n) ? RRDict[n] : RolloutReconType.None;
+            }
+        }
     }
 }
 

@@ -75,7 +75,7 @@ namespace RP0
             {
                 float conf;
                 if (Programs.ProgramHandler.Settings != null)
-                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTime.KCTGameStates.SciPointsTotal)) * changeDelta;
+                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTime.KerbalConstructionTimeData.Instance.SciPointsTotal)) * changeDelta;
                 else
                     conf = changeDelta * 2f;
 

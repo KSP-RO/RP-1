@@ -173,7 +173,7 @@ namespace KerbalConstructionTime
         {
             ConfigNode.LoadObjectFromConfig(this, node);
 
-            if (KCTGameStates.LoadedSaveVersion < 4)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 4)
             {
                 workRate = 1f;
                 spentRushCost = spentCost;

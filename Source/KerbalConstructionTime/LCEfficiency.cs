@@ -49,7 +49,7 @@ namespace KerbalConstructionTime
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            if (KCTGameStates.LoadedSaveVersion < 9)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 9)
             {
                 if (double.IsNaN(_efficiency))
                     _efficiency = 0.01d; // will be clamped later

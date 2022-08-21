@@ -847,6 +847,9 @@
     <Content Include="..\GameData\RP-0\Strategies\LocPatches.cfg">
       <Link>Strategies\LocPatches.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Strategies\Milestones.cfg">
+      <Link>Strategies\Milestones.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Strategies\RemoveOtherStrategies.cfg">
       <Link>Strategies\RemoveOtherStrategies.cfg</Link>
     </Content>

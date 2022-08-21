@@ -103,6 +103,47 @@ namespace RP0.Milestones
             {
                 seenMilestones.Add(milestone.name);
                 queuedMilestones.Add(milestone.name);
+                if (!HighLogic.LoadedSceneIsFlight)
+                    yield break;
+
+                bool wasShowing = KSP.UI.UIMasterController.Instance.mainCanvas.enabled;
+                if (wasShowing)
+                    GameEvents.onHideUI.Fire();
+
+                string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{milestone.name}.png";
+
+                float oldDist = FlightCamera.fetch.distance;
+
+                Vector3 vector = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
+                float newDist = KSPCameraUtil.GetDistanceToFit(vector, FlightCamera.fetch.FieldOfView) * FlightCamera.fetch.vesselSwitchBackoffFOVFactor + FlightCamera.fetch.vesselSwitchBackoffPadding;
+                FlightCamera.fetch.SetDistanceImmediate(newDist);
+
+                yield return new WaitForEndOfFrame();
+
+                int width = Screen.width;
+                int height = Screen.height;
+                int desiredHeight = Mathf.CeilToInt(height / (float)width * 512f);
+
+                // This works around a Unity 2019.3+ bug. See http://answers.unity.com/answers/1914706/view.html
+                // Normally we'd use ScreenCapture.CaptureScreenAsTexture
+                Texture2D tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
+                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                tex.Apply();
+
+                RenderTexture rt = new RenderTexture(512, desiredHeight, 0);
+                RenderTexture.active = rt;
+                Graphics.Blit(tex, rt);
+                Texture2D result = new Texture2D(512, desiredHeight);
+                result.ReadPixels(new Rect(0, 0, 512, desiredHeight), 0, 0);
+                result.Apply();
+
+                var bytes = ImageConversion.EncodeToPNG(result);
+                System.IO.File.WriteAllBytes(filePath, bytes);
+
+                FlightCamera.fetch.SetDistanceImmediate(oldDist);
+
+                if (wasShowing)
+                    GameEvents.onShowUI.Fire();
             }
 
         }

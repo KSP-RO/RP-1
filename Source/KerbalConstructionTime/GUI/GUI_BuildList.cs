@@ -306,8 +306,8 @@ namespace KerbalConstructionTime
             if (!hasIdleEngineers && engCount > 0)
                 hasIdleEngineers = true;
 
-            if (GUILayout.Button(new GUIContent("Staff", hasIdleEngineers ? "Some engineers are idle!" : (KCTGameStates.UnassignedPersonnel > 0 ? "Applicants can be hired for free!" : "Hire/fire/reassign staff")),
-                hasIdleEngineers ? _yellowButton : (KCTGameStates.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button)))
+            if (GUILayout.Button(new GUIContent("Staff", hasIdleEngineers ? "Some engineers are idle!" : (KerbalConstructionTimeData.Instance.UnassignedPersonnel > 0 ? "Applicants can be hired for free!" : "Hire/fire/reassign staff")),
+                hasIdleEngineers ? _yellowButton : (KerbalConstructionTimeData.Instance.UnassignedPersonnel > 0 ? _greenButton : GUI.skin.button)))
             {
                 GUIStates.ShowPersonnelWindow = true;
                 //GUIStates.ShowBuildList = false;

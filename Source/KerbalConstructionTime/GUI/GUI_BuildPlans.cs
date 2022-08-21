@@ -100,7 +100,7 @@ namespace KerbalConstructionTime
                         {
                             _planToDelete = i;
                             InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
-                            _selectedVesselId = b.Id;
+                            _selectedVesselId = b.shipID;
                             DialogGUIBase[] options = new DialogGUIBase[2];
                             options[0] = new DialogGUIButton("Yes", RemoveVesselFromPlans);
                             options[1] = new DialogGUIButton("No", RemoveInputLocks);
@@ -108,7 +108,7 @@ namespace KerbalConstructionTime
                             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                         }
 
-                        if (GUILayout.Button(b.ShipName))
+                        if (GUILayout.Button(b.shipName))
                         {
                             if (lcMode)
                             {
@@ -149,7 +149,7 @@ namespace KerbalConstructionTime
             }
             BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
-                ShipName = EditorLogic.fetch.shipNameField.text,
+                shipName = EditorLogic.fetch.shipNameField.text,
                 LCID = System.Guid.Empty
             };
 
@@ -165,17 +165,17 @@ namespace KerbalConstructionTime
         public static void AddVesselToPlansList(BuildListVessel blv)
         {
             ScreenMessage message;
-            if (KCTGameStates.Plans.ContainsKey(blv.ShipName))
+            if (KCTGameStates.Plans.ContainsKey(blv.shipName))
             {
-                KCTGameStates.Plans.Remove(blv.ShipName);
-                message = new ScreenMessage($"Replacing previous plan for {blv.ShipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+                KCTGameStates.Plans.Remove(blv.shipName);
+                message = new ScreenMessage($"Replacing previous plan for {blv.shipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
-            KCTGameStates.Plans.Add(blv.ShipName, blv);
+            KCTGameStates.Plans.Add(blv.shipName, blv);
 
-            KCTDebug.Log($"Added {blv.ShipName} to plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
-            KCTDebug.Log($"Launch site is {blv.LaunchSite}");
-            string text = $"Added {blv.ShipName} to plans list.";
+            KCTDebug.Log($"Added {blv.shipName} to plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}");
+            KCTDebug.Log($"Launch site is {blv.launchSite}");
+            string text = $"Added {blv.shipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }

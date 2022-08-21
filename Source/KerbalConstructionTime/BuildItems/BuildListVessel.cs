@@ -576,7 +576,7 @@ namespace KerbalConstructionTime
             FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
         }
 
-        public bool ResourcesOK(LCItem.LCData stats, List<string> failedReasons = null)
+        public bool ResourcesOK(LCData stats, List<string> failedReasons = null)
         {
             bool pass = true;
             HashSet<string> ignoredRes = stats.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
@@ -621,7 +621,7 @@ namespace KerbalConstructionTime
             return MeetsFacilityRequirements(selectedLC.Stats, failedReasons);
         }
 
-        public bool MeetsFacilityRequirements(LCItem.LCData stats, List<string> failedReasons)
+        public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons)
         {
             if (!Utilities.CurrentGameIsCareer())
                 return true;

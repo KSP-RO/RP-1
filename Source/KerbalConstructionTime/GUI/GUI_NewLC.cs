@@ -12,7 +12,7 @@ namespace KerbalConstructionTime
         private static string _heightLimit = "10";
         private static string _widthLimit = "2";
         private static string _lengthLimit = "2";
-        private static LCItem.LCData _newLCData = new LCItem.LCData();
+        private static LCData _newLCData = new LCData();
         private static int _resourceCount = 0;
         private static List<string> _allResourceKeys = new List<string>();
         private static List<string> _allResourceValues = new List<string>();
@@ -46,7 +46,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        private static void SetFieldsFromStartingLCData(LCItem.LCData old)
+        private static void SetFieldsFromStartingLCData(LCData old)
         {
             _newLCData.SetFrom(old);
             _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
@@ -122,7 +122,7 @@ namespace KerbalConstructionTime
         {
             if (lc == null)
             {
-                if (blv.mass < _newLCData.MassMin && LCItem.LCData.CalcMassMaxFromMin(blv.mass) < _requiredTonnage)
+                if (blv.mass < _newLCData.MassMin && LCData.CalcMassMaxFromMin(blv.mass) < _requiredTonnage)
                     return;
             }
             else
@@ -147,7 +147,7 @@ namespace KerbalConstructionTime
             }
             else if (_newLCData.MassMin > blv.mass)
             {
-                _newLCData.massMax = Math.Max(_newLCData.MinPossibleMass, LCItem.LCData.CalcMassMaxFromMin(blv.mass * 0.9f));
+                _newLCData.massMax = Math.Max(_newLCData.MinPossibleMass, LCData.CalcMassMaxFromMin(blv.mass * 0.9f));
                 if (blv.mass < _newLCData.MassMin)
                 {
                     _newLCData.massMax = _newLCData.MinPossibleMass;
@@ -509,7 +509,7 @@ namespace KerbalConstructionTime
                             KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
                         }
 
-                        var modData = new LCItem.LCData();
+                        var modData = new LCData();
                         modData.SetFrom(_newLCData);
                         var lcConstr = new LCConstruction
                         {

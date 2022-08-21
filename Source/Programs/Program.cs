@@ -345,22 +345,12 @@ namespace RP0.Programs
 
         public void Complete()
         {
-            completedUT = KSPUtils.GetUT();
-            float repDelta = (float)RepForComplete(completedUT);
-            if (repDelta > 0)
-            {
-                Reputation.Instance.AddReputation(repDelta, TransactionReasonsRP0.ProgramCompletion.Stock());
-            }
-            Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT)/secsPerYear}. Adding {repDelta} rep.");
-
-            CareerLog.Instance?.ProgramCompleted(this);
-
             string leaderString = string.Empty;
             foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
             {
                 if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
                 {
-                    if (cfg.UnlockByProgramComplete.Contains(name))
+                    if (!cfg.IsUnlocked() && cfg.UnlockByProgramComplete.Contains(name))
                         leaderString += "\n" + cfg.Title;
                 }
             }
@@ -375,6 +365,17 @@ namespace RP0.Programs
                                              true,
                                              HighLogic.UISkin);
             }
+
+            completedUT = KSPUtils.GetUT();
+            float repDelta = (float)RepForComplete(completedUT);
+            if (repDelta > 0)
+            {
+                Reputation.Instance.AddReputation(repDelta, TransactionReasonsRP0.ProgramCompletion.Stock());
+            }
+            Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT) / secsPerYear}. Adding {repDelta} rep.");
+
+            CareerLog.Instance?.ProgramCompleted(this);
+            Milestones.MilestoneHandler.Instance.OnProgramComplete(name);
         }
 
         public double GetFundsAtTime(double time)

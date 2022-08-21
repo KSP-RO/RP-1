@@ -172,7 +172,7 @@ namespace KerbalConstructionTime
         {
             base.Load(node);
 
-            if (KCTGameStates.LoadedSaveVersion < 15)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 15)
             {
                 string n = node.GetValue("name");
                 RRType = RRDict.ContainsKey(n) ? RRDict[n] : RolloutReconType.None;

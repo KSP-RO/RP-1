@@ -37,7 +37,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.Label("");
 
-            if (!KCTGameStates.StartedProgram)
+            if (!KerbalConstructionTimeData.Instance.StartedProgram)
             {
                 GUILayout.Label($"{step++}) Choose your starting Programs.");
                 GUILayout.Label("These provide you with funds over time, and allow you to select relevant contracts in Mission Control. Go to the Admin Building to select them.");
@@ -48,7 +48,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label("");
             }
 
-            if (!KCTGameStates.AcceptedContract)
+            if (!KerbalConstructionTimeData.Instance.AcceptedContract)
             {
                 GUILayout.Label($"{step++}) Accept a Contract.");
                 GUILayout.Label("With a Program selected, you now have access to the Contracts associated with that Program. Programs have some number of optional and some number of required contracts. Optional contracts aren't necessary to complete the program, but award Confidence.");
@@ -59,7 +59,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label("");
             }
 
-            if (!KCTGameStates.StarterLCBuilding)
+            if (!KerbalConstructionTimeData.Instance.StarterLCBuilding)
             {
                 GUILayout.Label($"{step++}) Build a starting Launch Complex.");
                 GUILayout.Label("With a contract accepted, now it's time to build a vessel to complete it. If it's a rocket, you'll need a launch complex to launch it. Go to the VAB and make your rocket, then click New the Integration Info (was KCT) window. The LC properties will be set to support that vessel. Once you have LCs built you can also modify them the same way, either a simple Upgrade or a bigger Reconstruction");
@@ -70,9 +70,9 @@ namespace KerbalConstructionTime
                 GUILayout.Label("");
             }
             
-            if (!KCTGameStates.HiredStarterApplicants)
+            if (!KerbalConstructionTimeData.Instance.HiredStarterApplicants)
             {
-                GUILayout.Label($"{step++}) Assign your {KCTGameStates.UnassignedPersonnel} starting Applicants");
+                GUILayout.Label($"{step++}) Assign your {KerbalConstructionTimeData.Instance.UnassignedPersonnel} starting Applicants");
                 if (GUILayout.Button($"Go to Staffing", HighLogic.Skin.button))
                 {
                     GUIStates.ShowPersonnelWindow = true;
@@ -85,9 +85,9 @@ namespace KerbalConstructionTime
             {
                 if (_dontShowFirstRunAgain)
                 {
-                    KCTGameStates.StarterLCBuilding = true;
-                    KCTGameStates.HiredStarterApplicants = true;
-                    KCTGameStates.StartedProgram = true;
+                    KerbalConstructionTimeData.Instance.StarterLCBuilding = true;
+                    KerbalConstructionTimeData.Instance.HiredStarterApplicants = true;
+                    KerbalConstructionTimeData.Instance.StartedProgram = true;
                 }
                 GUIStates.ShowFirstRun = false;
             }

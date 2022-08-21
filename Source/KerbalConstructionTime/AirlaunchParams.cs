@@ -14,7 +14,7 @@ namespace KerbalConstructionTime
 
         public bool Validate(out string errorMsg)
         {
-            AirlaunchTechLevel lvl = Utilities.IsSimulationActive ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+            AirlaunchTechLevel lvl = KerbalConstructionTimeData.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
                                                                     AirlaunchTechLevel.GetCurrentLevel();
             if (lvl == null)
             {

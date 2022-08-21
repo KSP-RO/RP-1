@@ -133,7 +133,7 @@ namespace KerbalConstructionTime
         {
             //int RnDLvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
             //int RnDMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            int Personnel = KCTGameStates.Researchers + upgradeDelta;
+            int Personnel = KerbalConstructionTimeData.Instance.Researchers + upgradeDelta;
             //var variables = new Dictionary<string, string>
             //{
             //    { "S", ScienceValue.ToString() },

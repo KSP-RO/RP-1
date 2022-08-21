@@ -216,14 +216,14 @@ namespace KerbalConstructionTime
                     if (!r.IsComplete() && (lcp == null || lcp.GetTimeLeft() < r.GetTimeLeft()))
                         lcp = r;
                 }
-                foreach (var a in currentLC.AirlaunchPrep)
+                foreach (var a in currentLC.Airlaunch_Prep)
                 {
                     if (!a.IsComplete() && (lcp == null || lcp.GetTimeLeft() < a.GetTimeLeft()))
                         lcp = a;
                 }
                 if (lcp != null)
                 {
-                    int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.Mass, lcp.VesselBP, lcp.IsHumanRated) : int.MaxValue;
+                    int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.mass, lcp.vesselBP, lcp.isHumanRated) : int.MaxValue;
                     GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedBLV == null ? string.Empty : lcp.AssociatedBLV.shipName)}");
                     
                     int delta = assignDelta;
@@ -233,7 +233,7 @@ namespace KerbalConstructionTime
                         GUILayout.Label($"(max of {engCap} eng.)");
 
                     double buildRate = lcp.GetBuildRate(delta);
-                    double bpLeft = (lcp.IsReversed ? 0 : lcp.BP) - lcp.Progress;
+                    double bpLeft = (lcp.IsReversed ? 0 : lcp.BP) - lcp.progress;
                     GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
                 }
                 else

@@ -91,7 +91,7 @@ namespace KerbalConstructionTime
 
                 foreach (var rr in LC.Recon_Rollout)
                 {
-                    if (rr.LaunchPadID == launchSiteName)
+                    if (rr.launchPadID == launchSiteName)
                     {
                         switch (rr.RRType)
                         {
@@ -131,13 +131,6 @@ namespace KerbalConstructionTime
             isOperational = false;
         }
 
-        public override ConfigNode AsConfigNode()
-        {
-            ConfigNode cn = base.AsConfigNode();
-            cn.AddValue(nameof(id), id);
-            return cn;
-        }
-
         public bool Delete(out string failReason)
         {
             foreach (KSCItem currentKSC in KCTGameStates.KSCs)
@@ -147,7 +140,7 @@ namespace KerbalConstructionTime
                     int idx = currentLC.LaunchPads.IndexOf(this);
                     if (idx < 0) continue;
 
-                    var rr = currentLC.Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == name);
+                    var rr = currentLC.Recon_Rollout.FirstOrDefault(r => r.launchPadID == name);
                     if (rr != null)
                     {
                         failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout or reconditioning";
@@ -197,9 +190,9 @@ namespace KerbalConstructionTime
 
                 foreach (ReconRollout rr in lc.Recon_Rollout)
                 {
-                    if (rr.LaunchPadID == name)
+                    if (rr.launchPadID == name)
                     {
-                        rr.LaunchPadID = newName;
+                        rr.launchPadID = newName;
                     }
                 }
                 foreach (PadConstruction pc in lc.PadConstructions)

@@ -278,6 +278,7 @@ namespace KerbalConstructionTime
             cannotEarnScience = false;
             cost = spentFunds;
             integrationCost = integrCost;
+            FacilityBuiltIn = editorFacility;
         }
 
         /// <summary>
@@ -293,6 +294,7 @@ namespace KerbalConstructionTime
             ShipNode = FromInFlightVessel(vessel, listType);
             if (listType != ListType.None)
                 Type = listType;
+            FacilityBuiltIn = listType == ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
 
             CacheClamps(vessel.parts);
             cost = Utilities.GetTotalVesselCost(vessel.parts);

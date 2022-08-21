@@ -202,7 +202,6 @@ namespace KerbalConstructionTime
                 if (!e._lcs.Contains(lc))
                     e._lcs.Add(lc);
 
-
                 return e;
             }
 

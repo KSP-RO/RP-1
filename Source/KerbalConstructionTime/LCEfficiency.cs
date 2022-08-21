@@ -11,7 +11,7 @@ namespace KerbalConstructionTime
         public double Efficiency => _efficiency;
 
         [Persistent]
-        protected LCItem.LCData _lcStats = new LCItem.LCData();
+        protected LCData _lcStats = new LCData();
 
         [Persistent]
         protected PersistentListValueType<Guid> _lcIDs = new PersistentListValueType<Guid>();
@@ -153,7 +153,7 @@ namespace KerbalConstructionTime
 
         public string FirstLCName() => _lcs.Count > 0 ? _lcs[0].Name : "No Named LC";
 
-        static LCItem.LCData _comparisonLCData = new LCItem.LCData();
+        static LCData _comparisonLCData = new LCData();
 
         public static LCEfficiency FindClosest(LCItem lc, out double bestCloseness)
         {
@@ -161,7 +161,7 @@ namespace KerbalConstructionTime
             return FindClosest(_comparisonLCData, out bestCloseness);
         }
 
-        public static LCEfficiency FindClosest(LCItem.LCData data, out double bestCloseness)
+        public static LCEfficiency FindClosest(LCData data, out double bestCloseness)
         {
             bestCloseness = 0d;
             LCEfficiency bestItem = null;

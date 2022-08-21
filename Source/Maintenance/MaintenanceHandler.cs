@@ -311,7 +311,7 @@ namespace RP0
             return 0d;
         }
 
-        private double LCUpkeep(LCItem.LCData lcData, int padCount)
+        private double LCUpkeep(LCData lcData, int padCount)
         {
             switch (lcData.lcType)
             {

@@ -440,14 +440,14 @@ namespace KerbalConstructionTime
                 PadConstructions.Load(tmp);
             }
 
-            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (KCTGameStates.LoadedSaveVersion < 1)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 1)
                 {
                     Engineers *= 2;
                 }
 
-                if (KCTGameStates.LoadedSaveVersion < 6 && LCType != LaunchComplexType.Hangar)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 6 && LCType != LaunchComplexType.Hangar)
                 {
                     double oldEffic = 0.5d;
                     node.TryGetValue("EfficiencyEngineers", ref oldEffic);
@@ -479,7 +479,7 @@ namespace KerbalConstructionTime
                             e.IncreaseEfficiency(oldEffic - e.Efficiency, false);
                     }
                 }
-                if (KCTGameStates.LoadedSaveVersion < 7)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 7)
                 {
                     node.TryGetEnum<LaunchComplexType>("lcType", ref _lcData.lcType, LaunchComplexType.Pad);
                     node.TryGetValue("massMax", ref _lcData.massMax);
@@ -487,7 +487,7 @@ namespace KerbalConstructionTime
                     node.TryGetValue("sizeMax", ref _lcData.sizeMax);
                     node.TryGetValue("IsHumanRated", ref _lcData.isHumanRated);
                 }
-                if (KCTGameStates.LoadedSaveVersion < 8)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 8)
                 {
                     if (_id == Guid.Empty)
                         _id = Guid.NewGuid();
@@ -501,11 +501,11 @@ namespace KerbalConstructionTime
                             _lcData.SetFrom(LCData.StartingHangar);
                     }
                 }
-                if (KCTGameStates.LoadedSaveVersion < 12)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 12)
                 {
                     _lcData.Name = Name;
                 }
-                if (KCTGameStates.LoadedSaveVersion < 13)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 13)
                 {
                     tmp = node.GetNode("Plans");
 

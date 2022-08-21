@@ -1107,7 +1107,7 @@ namespace RP0.Crew
             if (!HighLogic.LoadedSceneIsFlight) yield return null;
             yield return new WaitForFixedUpdate();
 
-            if (KCTUtils.IsSimulationActive && FlightGlobals.ActiveVessel != null)
+            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight && FlightGlobals.ActiveVessel != null)
             {
                 foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
                 {

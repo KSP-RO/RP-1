@@ -6,15 +6,13 @@ namespace KerbalConstructionTime
     /// This type is used for serializing data to 'KerbalConstructionTimeData' scenario.
     /// Do not rename!
     /// </summary>
-    public class KCT_DataStorage : ConfigNodeStorage
+    public class KCT_DataStorage
     {
         [Persistent]
         public bool enabledForSave = HighLogic.CurrentGame.Mode == Game.Modes.CAREER ||
                                      HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX ||
                                      HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX;
 
-        [Persistent] public List<string> PartTracker = new List<string>();
-        [Persistent] public List<string> PartInventory = new List<string>();
         [Persistent] public string activeKSC = string.Empty;
         [Persistent] public float SciPoints = -1f;
         [Persistent] public bool IsSimulation;
@@ -28,52 +26,37 @@ namespace KerbalConstructionTime
 
         [Persistent] public int saveVersion;
 
-        public override void OnDecodeFromConfigNode()
+        public void ReadFields()
         {
-            KCTGameStates.ActiveKSCName = activeKSC;
-            KCTGameStates.SciPointsTotal = SciPoints;
-            KCTGameStates.IsSimulatedFlight = IsSimulation;
-            KCTGameStates.SimulationParams.DisableFailures = DisableFailuresInSim;
-            KCTGameStates.Researchers = Researchers;
-            KCTGameStates.UnassignedPersonnel = UnassignedPersonnel;
-            KCTGameStates.LoadedSaveVersion = saveVersion;
-            KCTGameStates.StarterLCBuilding = StarterLCSelected;
-            KCTGameStates.HiredStarterApplicants = HiredStarterApplicants;
-            KCTGameStates.StartedProgram = StartedProgram;
-            KCTGameStates.AcceptedContract = AcceptedContract;
+            KerbalConstructionTimeData.Instance.ActiveKSCName = activeKSC;
+            KerbalConstructionTimeData.Instance.SciPointsTotal = SciPoints;
+            KerbalConstructionTimeData.Instance.IsSimulatedFlight = IsSimulation;
+            KerbalConstructionTimeData.Instance.SimulationParams.DisableFailures = DisableFailuresInSim;
+            KerbalConstructionTimeData.Instance.Researchers = Researchers;
+            KerbalConstructionTimeData.Instance.UnassignedPersonnel = UnassignedPersonnel;
+            KerbalConstructionTimeData.Instance.LoadedSaveVersion = saveVersion;
+            KerbalConstructionTimeData.Instance.StarterLCBuilding = StarterLCSelected;
+            KerbalConstructionTimeData.Instance.HiredStarterApplicants = HiredStarterApplicants;
+            KerbalConstructionTimeData.Instance.StartedProgram = StartedProgram;
+            KerbalConstructionTimeData.Instance.AcceptedContract = AcceptedContract;
 
-            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
                 if (saveVersion < 1)
                 {
-                    KCTGameStates.UnassignedPersonnel *= 2;
-                    KCTGameStates.Researchers *= 2;
+                    KerbalConstructionTimeData.Instance.UnassignedPersonnel *= 2;
+                    KerbalConstructionTimeData.Instance.Researchers *= 2;
                 }
                 if (saveVersion < 3)
                 {
-                    KCTGameStates.HiredStarterApplicants = true;
-                    KCTGameStates.StartedProgram = true;
+                    KerbalConstructionTimeData.Instance.HiredStarterApplicants = true;
+                    KerbalConstructionTimeData.Instance.StartedProgram = true;
                 }
                 if (saveVersion < 5)
                 {
-                    KCTGameStates.AcceptedContract = true;
+                    KerbalConstructionTimeData.Instance.AcceptedContract = true;
                 }
             }
-        }
-
-        public override void OnEncodeToConfigNode()
-        {
-            SciPoints = KCTGameStates.SciPointsTotal;
-            activeKSC = KCTGameStates.ActiveKSC.KSCName;
-            IsSimulation = KCTGameStates.IsSimulatedFlight;
-            DisableFailuresInSim = KCTGameStates.SimulationParams.DisableFailures;
-            Researchers = KCTGameStates.Researchers;
-            UnassignedPersonnel = KCTGameStates.UnassignedPersonnel;
-            saveVersion = KCTGameStates.VERSION;
-            StarterLCSelected = KCTGameStates.StarterLCBuilding;
-            HiredStarterApplicants = KCTGameStates.HiredStarterApplicants;
-            StartedProgram = KCTGameStates.StartedProgram;
-            AcceptedContract = KCTGameStates.AcceptedContract;
         }
     }
 }

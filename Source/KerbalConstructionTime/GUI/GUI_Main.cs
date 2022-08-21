@@ -150,11 +150,11 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
 
-                if (Utilities.IsSimulationActive && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
+                if (KerbalConstructionTimeData.Instance.IsSimulatedFlight && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
                 {
                     GUIStates.ShowAirlaunch = isVisible;
                 }
-                if (KCTGameStates.IsSimulatedFlight)
+                if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
                 {
                     GUIStates.ShowSimulationGUI = isVisible;
                     _simulationWindowPosition.height = 1;

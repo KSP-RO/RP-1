@@ -49,7 +49,7 @@ namespace KerbalConstructionTime
 
         public void RecoverVessel()
         {
-            if (KCTGameStates.IsSimulatedFlight)
+            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
                 KCT_GUI.GUIStates.ShowSimulationGUI = true;
                 return;

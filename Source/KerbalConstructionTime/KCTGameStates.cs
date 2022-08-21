@@ -30,7 +30,7 @@ namespace KerbalConstructionTime
 
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
-        public const int VERSION = 16;
+        public const int VERSION = 17;
 
         public static ToolbarControl ToolbarControl;
 

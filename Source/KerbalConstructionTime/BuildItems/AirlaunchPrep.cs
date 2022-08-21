@@ -52,7 +52,7 @@ namespace KerbalConstructionTime
         public override void Load(ConfigNode node)
         {
             base.Load(node);
-            if (KCTGameStates.LoadedSaveVersion < 15)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 15)
             {
                 string n = node.GetValue("name");
                 direction = n == Name_Mount ? PrepDirection.Mount : PrepDirection.Unmount;

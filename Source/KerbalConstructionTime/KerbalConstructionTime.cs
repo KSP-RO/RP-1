@@ -82,14 +82,6 @@ namespace KerbalConstructionTime
 
             KCTGameStates.Settings.Load();
 
-            if (!File.Exists(PresetManager.SettingsFilePath))
-            {
-                KCTGameStates.IsFirstStart = true;
-                // In this case it is a new game, so we start on the current version.
-                // Should not be meaningful because we only check LoadedSaveVersion during Load
-                KerbalConstructionTimeData.Instance.LoadedSaveVersion = KCTGameStates.VERSION;
-            }
-
             if (PresetManager.Instance == null)
             {
                 PresetManager.Instance = new PresetManager();
@@ -819,7 +811,7 @@ namespace KerbalConstructionTime
                     foreach (var ksc in KCTGameStates.KSCs)
                         ksc.EnsureStartingLaunchComplexes();
 
-                    KerbalConstructionTimeData.Instance.UnassignedPersonnel = PresetManager.Instance.StartingPersonnel(HighLogic.CurrentGame.Mode);
+                    KerbalConstructionTimeData.Instance.Applicants = PresetManager.Instance.StartingPersonnel(HighLogic.CurrentGame.Mode);
                 }
                 else if (KerbalConstructionTimeData.Instance.FirstRunNotComplete)
                 {

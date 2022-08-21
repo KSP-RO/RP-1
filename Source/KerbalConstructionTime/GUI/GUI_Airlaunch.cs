@@ -20,7 +20,7 @@ namespace KerbalConstructionTime
             {
                 _airlaunchParams = new AirlaunchParams();
 
-                AirlaunchTechLevel lvl = Utilities.IsSimulationActive ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+                AirlaunchTechLevel lvl = KerbalConstructionTimeData.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
                                                                         AirlaunchTechLevel.GetCurrentLevel();
                 if (lvl != null)
                 {
@@ -99,7 +99,7 @@ namespace KerbalConstructionTime
         {
             try
             {
-                bool isSim = Utilities.IsSimulationActive;
+                bool isSim = KerbalConstructionTimeData.Instance.IsSimulatedFlight;
                 _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KCTGameStates.LaunchedVessel.shipID;
                 _airlaunchParams.Altitude = double.Parse(_sAltitude);
                 _airlaunchParams.Velocity = double.Parse(_sVelocity);

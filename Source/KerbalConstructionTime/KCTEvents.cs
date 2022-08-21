@@ -315,7 +315,6 @@ namespace KerbalConstructionTime
         public void GameSceneEvent(GameScenes scene)
         {
             KCT_GUI.HideAll();
-            KCTGameStates.SimulationParams.IsVesselMoved = false;
 
             if (scene == GameScenes.MAINMENU)
             {

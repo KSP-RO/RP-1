@@ -184,9 +184,9 @@ namespace KerbalConstructionTime
             Engineers = 0;
             node.TryGetValue("Engineers", ref Engineers);
 
-            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (KCTGameStates.LoadedSaveVersion < 1)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 1)
                 {
                     Engineers *= 2;
                 }

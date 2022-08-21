@@ -229,8 +229,8 @@ namespace RP0.Programs
 
         private void OnContractAccept(Contract data)
         {
-            if (KerbalConstructionTime.KCTGameStates.StartedProgram)
-                KerbalConstructionTime.KCTGameStates.AcceptedContract = true;
+            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance.StartedProgram)
+                KerbalConstructionTime.KerbalConstructionTimeData.Instance.AcceptedContract = true;
         }
 
         private void OnContractComplete(Contract data)
@@ -262,7 +262,7 @@ namespace RP0.Programs
                 // Handle KCT applicants
                 int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)
-                    KerbalConstructionTime.KCTGameStates.UnassignedPersonnel += applicants;
+                    KerbalConstructionTime.KerbalConstructionTimeData.Instance.UnassignedPersonnel += applicants;
 
                 // Handle Confidence
                 if (IsContractOptional(cc))
@@ -435,7 +435,7 @@ namespace RP0.Programs
                 ps.SetProgram(activeP);
 
 
-            KerbalConstructionTime.KCTGameStates.StartedProgram = true;
+            KerbalConstructionTime.KerbalConstructionTimeData.Instance.StartedProgram = true;
         }
 
         public void CompleteProgram(Program p)

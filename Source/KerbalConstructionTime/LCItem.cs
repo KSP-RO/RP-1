@@ -411,10 +411,14 @@ namespace KerbalConstructionTime
 
             tmp = node.GetNode("Recon_Rollout");
             Recon_Rollout.Load(tmp);
+            foreach (var rr in Recon_Rollout)
+                rr.LC = this;
 
             if (node.TryGetNode("Airlaunch_Prep", ref tmp))
             {
                 Airlaunch_Prep.Load(tmp);
+                foreach (var al in Airlaunch_Prep)
+                    al.LC = this;
             }
 
             tmp = node.GetNode("LaunchPads");

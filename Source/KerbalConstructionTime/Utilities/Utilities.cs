@@ -105,7 +105,7 @@ namespace KerbalConstructionTime
             if (engCap < ship.LC.Engineers)
                 delta = engCap - ship.LC.Engineers;
 
-            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.IsHumanRated, delta);
+            return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.humanRated, delta);
         }
 
         public static double GetConstructionRate(int index, KSCItem KSC, SpaceCenterFacility facilityType)
@@ -469,10 +469,10 @@ namespace KerbalConstructionTime
 
             var Message = new StringBuilder();
             Message.AppendLine("The following vessel is complete:");
-            Message.AppendLine(ship.ShipName);
+            Message.AppendLine(ship.shipName);
             Message.AppendLine($"Please check the Storage at {ship.LC.Name} at {ship.KSC.KSCName} to launch it.");
 
-            KCTDebug.Log($"Moved vessel {ship.ShipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
+            KCTDebug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
 
             KCT_GUI.ResetBLWindow(false);
             if (!KCTGameStates.Settings.DisableAllMessages)
@@ -615,7 +615,7 @@ namespace KerbalConstructionTime
 
             var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
-                ShipName = EditorLogic.fetch.shipNameField.text
+                shipName = EditorLogic.fetch.shipNameField.text
             };
 
             TryAddVesselToBuildList(blv);
@@ -640,9 +640,9 @@ namespace KerbalConstructionTime
             SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 
             if (blv.Type == BuildListVessel.ListType.VAB)
-                blv.LaunchSite = "LaunchPad";
+                blv.launchSite = "LaunchPad";
             else if (blv.Type == BuildListVessel.ListType.SPH)
-                blv.LaunchSite = "Runway";
+                blv.launchSite = "Runway";
 
             LCItem lc = blv.LC;
             if (lc != null)
@@ -651,7 +651,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                KCTDebug.LogError($"Error! Tried to add {blv.ShipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
+                KCTDebug.LogError($"Error! Tried to add {blv.shipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
                 return;
             }
 
@@ -664,9 +664,9 @@ namespace KerbalConstructionTime
                 Debug.LogException(ex);
             }
 
-            KCTDebug.Log($"Added {blv.ShipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
-            KCTDebug.Log("Launch site is " + blv.LaunchSite);
-            string text = $"Added {blv.ShipName} to build list at {lc.Name}.";
+            KCTDebug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
+            KCTDebug.Log("Launch site is " + blv.launchSite);
+            string text = $"Added {blv.shipName} to build list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }
@@ -681,7 +681,7 @@ namespace KerbalConstructionTime
             string launchSite = EditorLogic.fetch.launchSiteName;
             var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
             {
-                ShipName = EditorLogic.fetch.shipNameField.text,
+                shipName = EditorLogic.fetch.shipNameField.text,
                 FacilityBuiltIn = editableShip.FacilityBuiltIn,
                 KCTPersistentID = editableShip.KCTPersistentID,
                 LCID = editableShip.LCID // not setting LC directly here
@@ -721,11 +721,10 @@ namespace KerbalConstructionTime
             newShip.LC.RecalculateBuildRates();
 
             GetShipEditProgress(editableShip, out double progressBP, out _, out _);
-            newShip.Progress = progressBP;
-            newShip.RushBuildClicks = editableShip.RushBuildClicks;
+            newShip.progress = progressBP;
             KCTDebug.Log($"Finished? {editableShip.IsFinished}");
             if (editableShip.IsFinished)
-                newShip.CannotEarnScience = true;
+                newShip.cannotEarnScience = true;
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
@@ -757,22 +756,22 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.MergedVessels.Count == 0)
             {
-                origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
-                oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+                origTotalBP = ship.buildPoints + ship.integrationPoints;
+                oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
             }
             else
             {
-                double totalEffectiveCost = ship.EffectiveCost;
+                double totalEffectiveCost = ship.effectiveCost;
                 foreach (BuildListVessel v in KCTGameStates.MergedVessels)
                 {
-                    totalEffectiveCost += v.EffectiveCost;
+                    totalEffectiveCost += v.effectiveCost;
                 }
 
                 origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KCTGameStates.MergedVessels) + Formula.GetVesselBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.GeneralSettings.MergingTimePenalty);
             }
 
-            double newTotalBP = KCTGameStates.EditorVessel.BuildPoints + KCTGameStates.EditorVessel.IntegrationPoints;
+            double newTotalBP = KCTGameStates.EditorVessel.buildPoints + KCTGameStates.EditorVessel.integrationPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
@@ -1184,11 +1183,11 @@ namespace KerbalConstructionTime
         public static BuildListVessel FindBLVesselByIDInLC(Guid id, LCItem lc)
         {
 
-            BuildListVessel ves = lc.Warehouse.Find(blv => blv.Id == id);
+            BuildListVessel ves = lc.Warehouse.Find(blv => blv.shipID == id);
             if (ves != null)
                 return ves;
 
-            ves = lc.BuildList.Find(blv => blv.Id == id);
+            ves = lc.BuildList.Find(blv => blv.shipID == id);
             if (ves != null)
                 return ves;
 
@@ -1375,9 +1374,9 @@ namespace KerbalConstructionTime
 
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == BuildListVessel.ListType.VAB)
-                    KCTGameStates.RecoveredVessel.LaunchSite = "LaunchPad";
+                    KCTGameStates.RecoveredVessel.launchSite = "LaunchPad";
                 else
-                    KCTGameStates.RecoveredVessel.LaunchSite = "Runway";
+                    KCTGameStates.RecoveredVessel.launchSite = "Runway";
 
                 //check for symmetry parts and remove those references if they can't be found
                 RemoveMissingSymmetry(KCTGameStates.RecoveredVessel.ShipNode);
@@ -1918,7 +1917,7 @@ namespace KerbalConstructionTime
         
         public static void ScrapVessel(BuildListVessel b)
         {
-            KCTDebug.Log($"Scrapping {b.ShipName}");
+            KCTDebug.Log($"Scrapping {b.shipName}");
             if (!b.IsFinished)
             {
                 b.RemoveFromBuildList(out _);
@@ -2102,7 +2101,7 @@ namespace KerbalConstructionTime
                 //KCTDebug.LogError("Recovered vessel is null!");
                 return false;
             }
-            if (v.vesselName != KCTGameStates.RecoveredVessel.ShipName)
+            if (v.vesselName != KCTGameStates.RecoveredVessel.shipName)
             {
                 //KCTDebug.LogError("Recovered vessel, " + KCTGameStates.RecoveredVessel.ShipName +", doesn't match!");
                 return false;

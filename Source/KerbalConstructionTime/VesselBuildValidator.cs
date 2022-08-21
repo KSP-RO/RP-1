@@ -142,7 +142,7 @@ namespace KerbalConstructionTime
             IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable);
             if (lockedParts.Any())
             {
-                KCTDebug.Log($"Tried to add {blv.ShipName} to build list but it contains locked parts.");
+                KCTDebug.Log($"Tried to add {blv.shipName} to build list but it contains locked parts.");
 
                 // Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
                 string lockedMsg = ConstructLockedPartsWarning(lockedParts);
@@ -242,7 +242,7 @@ namespace KerbalConstructionTime
                 double totalCost = blv.GetTotalCost();
                 if (!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)totalCost, 0f, 0f).CanAfford())
                 {
-                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but not enough funds.");
+                    KCTDebug.Log($"Tried to add {blv.shipName} to build list but not enough funds.");
                     KCTDebug.Log($"Vessel cost: {Utilities.GetTotalVesselCost(blv.ShipNode)}, Current funds: {Funding.Instance.Funds}");
                     var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);

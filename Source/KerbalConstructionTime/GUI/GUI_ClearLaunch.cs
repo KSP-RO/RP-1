@@ -12,7 +12,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowClearLaunch = false;
 
-                List<ProtoVessel> list = ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, KCTGameStates.LaunchedVessel.LaunchSite);
+                List<ProtoVessel> list = ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, KCTGameStates.LaunchedVessel.launchSite);
                 foreach (ProtoVessel pv in list)
                     ShipConstruction.RecoverVesselFromFlight(pv, HighLogic.CurrentGame.flightState);
 

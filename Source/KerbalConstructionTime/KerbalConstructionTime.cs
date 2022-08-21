@@ -266,17 +266,17 @@ namespace KerbalConstructionTime
                 {
                     //Add the cost of the ship to the funds so it can be removed again by KSP
                     // FIXME fix this with harmony
-                    Utilities.AddFunds(KCTGameStates.LaunchedVessel.Cost, TransactionReasons.VesselRollout);
-                    FlightGlobals.ActiveVessel.vesselName = KCTGameStates.LaunchedVessel.ShipName;
+                    Utilities.AddFunds(KCTGameStates.LaunchedVessel.cost, TransactionReasons.VesselRollout);
+                    FlightGlobals.ActiveVessel.vesselName = KCTGameStates.LaunchedVessel.shipName;
                 }
                 if (vesselLC == null) vesselLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is ReconRollout rollout)
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.shipID.ToString()) is ReconRollout rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
-                if (vesselLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.Id.ToString()) is AirlaunchPrep alPrep)
+                if (vesselLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == KCTGameStates.LaunchedVessel.shipID.ToString()) is AirlaunchPrep alPrep)
                     vesselLC.AirlaunchPrep.Remove(alPrep);
 
-                if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KCTGameStates.LaunchedVessel.Id &&
+                if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KCTGameStates.LaunchedVessel.shipID &&
                     (!alParams.KSPVesselId.HasValue || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
                 {
                     if (!alParams.KSPVesselId.HasValue) alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
@@ -673,7 +673,7 @@ namespace KerbalConstructionTime
                             if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
                                 && Utilities.FindBLVesselByID(rr.LC, new Guid(rr.AssociatedID)) is BuildListVessel blv)
                             {
-                                blv.LaunchSiteIndex = -1;
+                                blv.launchSiteIndex = -1;
                             }
                             Profiler.EndSample();
                         }
@@ -768,7 +768,7 @@ namespace KerbalConstructionTime
                         {
                             if (!blv.AllPartsValid)
                             {
-                                KCTDebug.Log(blv.ShipName + " contains invalid parts!");
+                                KCTDebug.Log(blv.shipName + " contains invalid parts!");
                                 erroredVessels.Add(blv);
                             }
                         }
@@ -776,7 +776,7 @@ namespace KerbalConstructionTime
                         {
                             if (!blv.AllPartsValid)
                             {
-                                KCTDebug.Log(blv.ShipName + " contains invalid parts!");
+                                KCTDebug.Log(blv.shipName + " contains invalid parts!");
                                 erroredVessels.Add(blv);
                             }
                         }
@@ -789,8 +789,8 @@ namespace KerbalConstructionTime
 
             if (HighLogic.LoadedSceneIsEditor && KCTGameStates.EditorShipEditingMode)
             {
-                KCTDebug.Log($"Editing {KCTGameStates.EditedVessel.ShipName}");
-                EditorLogic.fetch.shipNameField.text = KCTGameStates.EditedVessel.ShipName;
+                KCTDebug.Log($"Editing {KCTGameStates.EditedVessel.shipName}");
+                EditorLogic.fetch.shipNameField.text = KCTGameStates.EditedVessel.shipName;
             }
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
@@ -949,8 +949,8 @@ namespace KerbalConstructionTime
             string txtToWrite = "";
             foreach (BuildListVessel blv in errored)
             {
-                txt += blv.ShipName + "\n";
-                txtToWrite += blv.ShipName + "\n";
+                txt += blv.shipName + "\n";
+                txtToWrite += blv.shipName + "\n";
                 txtToWrite += string.Join("\n", blv.GetMissingParts());
                 txtToWrite += "\n\n";
             }
@@ -970,7 +970,7 @@ namespace KerbalConstructionTime
                         for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
                         {
                             ReconRollout rr = currentLC.Recon_Rollout[i];
-                            if (rr.AssociatedID == blv.Id.ToString())
+                            if (rr.AssociatedID == blv.shipID.ToString())
                             {
                                 currentLC.Recon_Rollout.Remove(rr);
                                 i--;
@@ -980,7 +980,7 @@ namespace KerbalConstructionTime
                         for (int i = 0; i < currentLC.AirlaunchPrep.Count; i++)
                         {
                             AirlaunchPrep ap = currentLC.AirlaunchPrep[i];
-                            if (ap.AssociatedID == blv.Id.ToString())
+                            if (ap.AssociatedID == blv.shipID.ToString())
                             {
                                 currentLC.AirlaunchPrep.Remove(ap);
                                 i--;

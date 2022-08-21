@@ -470,10 +470,12 @@ namespace KerbalConstructionTime
                     if (createEffic)
                     {
                         LCEfficiency closest = LCEfficiency.FindClosest(this, out double closeness);
-                        if (closeness == 1d && closest.Efficiency < oldEffic)
+                        if (closeness == 1d)
                         {
-                            closest.IncreaseEfficiency(oldEffic - closest.Efficiency, false);
                             createEffic = false;
+
+                            if (closest.Efficiency < oldEffic)
+                                closest.IncreaseEfficiency(oldEffic - closest.Efficiency, false);
                         }
                     }
                     if (createEffic)

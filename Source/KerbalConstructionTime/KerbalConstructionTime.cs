@@ -213,7 +213,7 @@ namespace KerbalConstructionTime
                     break;
             }
             // Need to do this in every scene.
-            StartCoroutine(UpdateBuildRates());
+            StartCoroutine(CacheFacilityLevels());
             KCTDebug.Log("Start finished");
 
             DelayedStart();
@@ -483,20 +483,12 @@ namespace KerbalConstructionTime
             }
         }
 
-        private IEnumerator UpdateBuildRates()
+        private IEnumerator CacheFacilityLevels()
         {
             do
             {
                 yield return new WaitForFixedUpdate();    // No way to know when KSP has finally initialized the ScenarioUpgradeableFacilities data
             } while (HighLogic.LoadedScene == GameScenes.SPACECENTER && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) < 0);
-
-            // Need to always update build rates, regardless of scene
-            KCTDebug.Log("Updating build rates");
-            foreach (KSCItem KSC in KCTGameStates.KSCs)
-            {
-                KSC?.RecalculateBuildRates();
-            }
-            KCTDebug.Log("Rates updated");
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER
                 && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) >= 0)

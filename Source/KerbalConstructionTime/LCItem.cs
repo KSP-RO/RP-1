@@ -224,7 +224,7 @@ namespace KerbalConstructionTime
             double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
             return Math.Max(MinEngineersConst, (int)Math.Ceiling((tngMax * 0.25d + bpMax * 0.75d) * EngineersPerPacket));
         }
-        public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.BuildPoints + blv.IntegrationPoints, blv.IsHumanRated);
+        public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.buildPoints + blv.integrationPoints, blv.humanRated);
 
         protected double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;
@@ -516,17 +516,11 @@ namespace KerbalConstructionTime
             node.AddNode(statsNode);
 
             var cnBuildl = new ConfigNode("BuildList");
-            foreach (BuildListVessel blv in BuildList)
-            {
-                cnBuildl.AddNode(blv.BuildVesselAndShipNodeConfigs());
-            }
+            BuildList.Save(cnBuildl);
             node.AddNode(cnBuildl);
 
             var cnWh = new ConfigNode("Warehouse");
-            foreach (BuildListVessel blv in Warehouse)
-            {
-                cnWh.AddNode(blv.BuildVesselAndShipNodeConfigs());
-            }
+            Warehouse.Save(cnWh);
             node.AddNode(cnWh);
 
             var cnPadConstructions = new ConfigNode("PadConstructions");
@@ -596,17 +590,13 @@ namespace KerbalConstructionTime
             if (tmp != null)
                 ConfigNode.LoadObjectFromConfig(_lcData, tmp);
 
-            tmp = node.GetNode("BuildList");
-            foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
-            {
-                BuildList.Add(BuildListVessel.CreateBLVFromNode(cn, this));
-            }
+            BuildList.Load(node.GetNode("BuildList"));
+            foreach (var blv in BuildList)
+                blv.LinkToLC(this);
 
-            tmp = node.GetNode("Warehouse");
-            foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
-            {
-                Warehouse.Add(BuildListVessel.CreateBLVFromNode(cn, this));
-            }
+            Warehouse.Load(node.GetNode("Warehouse"));
+            foreach (var blv in Warehouse)
+                blv.LinkToLC(this);
 
             tmp = node.GetNode("Recon_Rollout");
             foreach (ConfigNode RRCN in tmp.GetNodes("Recon_Rollout_Item"))
@@ -717,14 +707,16 @@ namespace KerbalConstructionTime
                 if (KCTGameStates.LoadedSaveVersion < 13)
                 {
                     tmp = node.GetNode("Plans");
+
                     if (tmp != null)
                     {
                         foreach (ConfigNode cnV in tmp.GetNodes("KCTVessel"))
                         {
-                            var blv = BuildListVessel.CreateBLVFromNode(cnV, null);
+                            var blv = new BuildListVessel();
+                            blv.Load(cnV);
                             blv.LCID = Guid.Empty;
-                            KCTGameStates.Plans.Remove(blv.ShipName);
-                            KCTGameStates.Plans.Add(blv.ShipName, blv);
+                            KCTGameStates.Plans.Remove(blv.shipName);
+                            KCTGameStates.Plans.Add(blv.shipName, blv);
                         }
                     }
                 }

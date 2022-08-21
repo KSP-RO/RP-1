@@ -404,7 +404,7 @@ namespace KerbalConstructionTime
                 targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             targetLC.Warehouse.Add(KCTGameStates.RecoveredVessel);
-            targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.Id.ToString()));
+            targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.shipID.ToString()));
             KCTGameStates.RecoveredVessel = null;
         }
 

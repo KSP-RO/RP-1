@@ -68,11 +68,11 @@ namespace KerbalConstructionTime
             _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
             if (lc == null)
             {
-                _newLCData.massMax = Mathf.Ceil(blv.TotalMass * 1.1f);
-                if (blv.TotalMass < 1f) // special case
+                _newLCData.massMax = Mathf.Ceil(blv.mass * 1.1f);
+                if (blv.mass < 1f) // special case
                     _newLCData.massMax = 1f;
 
-                _newLCData.isHumanRated = blv.IsHumanRated;
+                _newLCData.isHumanRated = blv.humanRated;
 
                 _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
                 _newLCData.massOrig = _newLCData.massMax;
@@ -83,27 +83,27 @@ namespace KerbalConstructionTime
                 if (lc.LCType == LaunchComplexType.Pad)
                 {
                     _newLCData.massOrig = lc.MassOrig;
-                    _newLCData.massMax = Mathf.Ceil(blv.TotalMass * 1.1f);
+                    _newLCData.massMax = Mathf.Ceil(blv.mass * 1.1f);
 
                     if (_newLCData.massMax > _newLCData.MaxPossibleMass)
                     {
-                        if (blv.TotalMass <= _newLCData.MaxPossibleMass)
+                        if (blv.mass <= _newLCData.MaxPossibleMass)
                             _newLCData.massMax = _newLCData.MaxPossibleMass;
                     }
                     else if (_newLCData.massMax < _newLCData.MinPossibleMass)
                     {
                         _newLCData.massMax = lc.MassMax;
-                        if (blv.TotalMass < _newLCData.MassMin)
+                        if (blv.mass < _newLCData.MassMin)
                         {
                             _newLCData.massMax = _newLCData.MinPossibleMass;
-                            if (blv.TotalMass < _newLCData.MassMin)
+                            if (blv.mass < _newLCData.MassMin)
                             {
                                 // oh well. Set what we want, and let the user see the validate fail.
-                                _newLCData.massMax = Mathf.Ceil((float)(blv.TotalMass * 1.1d));
+                                _newLCData.massMax = Mathf.Ceil((float)(blv.mass * 1.1d));
                             }
                         }
                     }
-                    if (blv.TotalMass < 1f) // special case
+                    if (blv.mass < 1f) // special case
                         _newLCData.massMax = 1f;
                 }
             }
@@ -122,7 +122,7 @@ namespace KerbalConstructionTime
         {
             if (lc == null)
             {
-                if (blv.TotalMass < _newLCData.MassMin && LCItem.LCData.CalcMassMaxFromMin(blv.TotalMass) < _requiredTonnage)
+                if (blv.mass < _newLCData.MassMin && LCItem.LCData.CalcMassMaxFromMin(blv.mass) < _requiredTonnage)
                     return;
             }
             else
@@ -137,24 +137,24 @@ namespace KerbalConstructionTime
             if (_newLCData.sizeMax.y < blv.ShipSize.y)
                 _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
 
-            if (_newLCData.massMax < blv.TotalMass)
+            if (_newLCData.massMax < blv.mass)
             {
-                float desiredMass = Mathf.Ceil(blv.TotalMass * 1.1f);
+                float desiredMass = Mathf.Ceil(blv.mass * 1.1f);
                 _newLCData.massMax = Math.Min(desiredMass, _newLCData.MaxPossibleMass);
                 // If we still fail, just set it.
-                if (_newLCData.massMax < blv.TotalMass)
+                if (_newLCData.massMax < blv.mass)
                     _newLCData.massMax = desiredMass;
             }
-            else if (_newLCData.MassMin > blv.TotalMass)
+            else if (_newLCData.MassMin > blv.mass)
             {
-                _newLCData.massMax = Math.Max(_newLCData.MinPossibleMass, LCItem.LCData.CalcMassMaxFromMin(blv.TotalMass * 0.9f));
-                if (blv.TotalMass < _newLCData.MassMin)
+                _newLCData.massMax = Math.Max(_newLCData.MinPossibleMass, LCItem.LCData.CalcMassMaxFromMin(blv.mass * 0.9f));
+                if (blv.mass < _newLCData.MassMin)
                 {
                     _newLCData.massMax = _newLCData.MinPossibleMass;
-                    if (blv.TotalMass < _newLCData.MassMin)
+                    if (blv.mass < _newLCData.MassMin)
                     {
                         // oh well. Set what we want, and let the user see the validate fail.
-                        _newLCData.massMax = Mathf.Ceil((float)(blv.TotalMass * 1.1d));
+                        _newLCData.massMax = Mathf.Ceil((float)(blv.mass * 1.1d));
                     }
                 }
             }
@@ -162,7 +162,7 @@ namespace KerbalConstructionTime
             if (lc != null)
                 _requiredTonnage = _newLCData.massMax;
 
-            _newLCData.isHumanRated |= blv.IsHumanRated;
+            _newLCData.isHumanRated |= blv.humanRated;
             foreach (var kvp in blv.resourceAmounts)
             {
                 if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
@@ -685,12 +685,12 @@ namespace KerbalConstructionTime
             foreach (var blv in activeLC.BuildList)
             {
                 if (!blv.MeetsFacilityRequirements(_newLCData, null))
-                    failedVessels += "\n" + blv.ShipName;
+                    failedVessels += "\n" + blv.shipName;
             }
             foreach (var blv in activeLC.Warehouse)
             {
                 if (!blv.MeetsFacilityRequirements(_newLCData, null))
-                    failedVessels += "\n" + blv.ShipName;
+                    failedVessels += "\n" + blv.shipName;
             }
 
             return failedVessels != string.Empty;

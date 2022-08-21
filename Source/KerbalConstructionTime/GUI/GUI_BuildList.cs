@@ -133,20 +133,20 @@ namespace KerbalConstructionTime
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                        txt = $"{associated.ShipName} Rollout";
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                        txt = $"{associated.shipName} Rollout";
                         locTxt = reconRoll.LaunchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                        txt = $"{associated.ShipName} Rollback";
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                        txt = $"{associated.shipName} Rollback";
                         locTxt = reconRoll.LaunchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Recovery)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                        txt = $"{associated.ShipName} Recovery";
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                        txt = $"{associated.shipName} Recovery";
                         locTxt = associated.LC.Name;
                     }
                     else
@@ -161,9 +161,9 @@ namespace KerbalConstructionTime
                     if (associated != null)
                     {
                         if (ar.Direction == AirlaunchPrep.PrepDirection.Mount)
-                            txt = $"{associated.ShipName} Mounting";
+                            txt = $"{associated.shipName} Mounting";
                         else
-                            txt = $"{associated.ShipName} Unmounting";
+                            txt = $"{associated.shipName} Unmounting";
                     }
                     else
                         txt = "Airlaunch Operations";
@@ -231,13 +231,13 @@ namespace KerbalConstructionTime
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                             {
-                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                                txt += $"{associated.ShipName} rollout at {reconRoll.LaunchPadID}";
+                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                                txt += $"{associated.shipName} rollout at {reconRoll.LaunchPadID}";
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                             {
-                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                                txt += $"{associated.ShipName} rollback at {reconRoll.LaunchPadID}";
+                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                                txt += $"{associated.shipName} rollback at {reconRoll.LaunchPadID}";
                             }
                             else
                             {
@@ -672,15 +672,15 @@ namespace KerbalConstructionTime
                     else if ((blv = r.AssociatedBLV) != null)
                     {
                         if (r.RRType == ReconRollout.RolloutReconType.Rollout)
-                            GUILayout.Label($"{blv.LC.Name}: Rollout {blv.ShipName} to {r.LaunchPadID}");
+                            GUILayout.Label($"{blv.LC.Name}: Rollout {blv.shipName} to {r.LaunchPadID}");
                         else
-                            GUILayout.Label($"{blv.LC.Name}: {r.GetItemName()} {blv.ShipName}");
+                            GUILayout.Label($"{blv.LC.Name}: {r.GetItemName()} {blv.shipName}");
                     }
                     else
                         GUILayout.Label(r.GetItemName());
                 }
                 else if (t is AirlaunchPrep a && (blv = a.AssociatedBLV) != null)
-                    GUILayout.Label($"{a.GetItemName()}: {blv.ShipName}");
+                    GUILayout.Label($"{a.GetItemName()}: {blv.shipName}");
                 else if (t is BuildListVessel b)
                     GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
                 else if (t is ConstructionBuildItem constr)
@@ -887,12 +887,12 @@ namespace KerbalConstructionTime
                     if (GUILayout.Button("X", GUILayout.Width(_butW)))
                     {
                         InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
-                        _selectedVesselId = b.Id;
+                        _selectedVesselId = b.shipID;
                         DialogGUIBase[] options = new DialogGUIBase[2];
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
                         MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
-                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.Cost, 0f, 0f).GetCostLineOverride(false, false) +".",
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) +".",
                             "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                     }
@@ -901,11 +901,11 @@ namespace KerbalConstructionTime
                 {
                     if (GUILayout.Button("*", GUILayout.Width(_butW)))
                     {
-                        if (_selectedVesselId == b.Id)
+                        if (_selectedVesselId == b.shipID)
                             GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
                         else
                             GUIStates.ShowBLPlus = true;
-                        _selectedVesselId = b.Id;
+                        _selectedVesselId = b.shipID;
                     }
                 }
 
@@ -931,18 +931,18 @@ namespace KerbalConstructionTime
                 }
 
                 DrawTypeIcon(b);
-                GUILayout.Label(b.ShipName);
+                GUILayout.Label(b.shipName);
                 GUILayout.Label($"{b.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
                     double seconds = b.TimeLeft;
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.Id.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds; // FIXME what to do with multiple lines? Min() I guess?
                 }
                 else
                 {
                     double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.Id.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds;
                 }
                 GUILayout.EndHorizontal();
@@ -994,16 +994,16 @@ namespace KerbalConstructionTime
 
             bool isPad = vesselLC != KCTGameStates.ActiveKSC.Hangar;
 
-            string launchSite = b.LaunchSite;
+            string launchSite = b.launchSite;
             if (launchSite == "LaunchPad" && isPad)
             {
-                if (b.LaunchSiteIndex >= 0 && b.LaunchSiteIndex < b.LC.LaunchPads.Count)
-                    launchSite = b.LC.LaunchPads[b.LaunchSiteIndex].name;
+                if (b.launchSiteIndex >= 0 && b.launchSiteIndex < b.LC.LaunchPads.Count)
+                    launchSite = b.LC.LaunchPads[b.launchSiteIndex].name;
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
             ReconRollout rollout = null, rollback = null, recovery = null, padRollout = null;
-            string blvID = b.Id.ToString();
+            string blvID = b.shipID.ToString();
             foreach (var rr in vesselLC.Recon_Rollout)
             {
                 if (rr.AssociatedID == blvID)
@@ -1076,18 +1076,18 @@ namespace KerbalConstructionTime
             {
                 if (GUILayout.Button("*", GUILayout.Width(_butW)))
                 {
-                    if (_selectedVesselId == b.Id)
+                    if (_selectedVesselId == b.shipID)
                         GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
                     else
                         GUIStates.ShowBLPlus = true;
-                    _selectedVesselId = b.Id;
+                    _selectedVesselId = b.shipID;
                 }
             }
             else
                 GUILayout.Space(_butW + 4);
 
             DrawTypeIcon(typeIcon);
-            GUILayout.Label(b.ShipName, textColor);
+            GUILayout.Label(b.shipName, textColor);
             
             if (!b.LC.IsOperational)
             {
@@ -1150,7 +1150,7 @@ namespace KerbalConstructionTime
                             {
                                 if (meetsChecks)
                                 {
-                                    b.LaunchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                                    b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
                                     vesselLC.Recon_Rollout.Add(tmpRollout);
                                 }
                                 else
@@ -1217,11 +1217,11 @@ namespace KerbalConstructionTime
                         }
                         else if (!GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
                         {
-                            if (b.LaunchSiteIndex >= 0)
+                            if (b.launchSiteIndex >= 0)
                             {
-                                vesselLC.SwitchLaunchPad(b.LaunchSiteIndex);
+                                vesselLC.SwitchLaunchPad(b.launchSiteIndex);
                             }
-                            b.LaunchSiteIndex = vesselLC.ActiveLaunchPadIndex;
+                            b.launchSiteIndex = vesselLC.ActiveLaunchPadIndex;
 
                             List<string> facilityChecks = new List<string>();
                             if (b.MeetsFacilityRequirements(facilityChecks))
@@ -1621,16 +1621,16 @@ namespace KerbalConstructionTime
             _blPlusPosition.height = 225;
             BuildListVessel b = Utilities.FindBLVesselByID(KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
             GUILayout.BeginVertical();
-            string launchSite = b.LaunchSite;
+            string launchSite = b.launchSite;
 
             if (launchSite == "LaunchPad")
             {
-                if (b.LaunchSiteIndex >= 0 && b.LaunchSiteIndex < b.LC.LaunchPads.Count)
-                    launchSite = b.LC.LaunchPads[b.LaunchSiteIndex].name;
+                if (b.launchSiteIndex >= 0 && b.launchSiteIndex < b.LC.LaunchPads.Count)
+                    launchSite = b.LC.LaunchPads[b.launchSiteIndex].name;
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
-            string blvID = b.Id.ToString();
+            string blvID = b.shipID.ToString();
             ReconRollout rollout = b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
             bool isRollingOut = rollout != null && rollout.AssociatedID == blvID;
             bool onPad = isRollingOut && rollout.IsComplete();
@@ -1659,7 +1659,7 @@ namespace KerbalConstructionTime
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", RemoveInputLocks);
                 MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
-                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.Cost, 0f, 0f).GetCostLineOverride(false, false) + ".",
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) + ".",
                             "Scrap Vessel", null, options: options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
@@ -1696,7 +1696,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = true;
-                _newName = b.ShipName;
+                _newName = b.shipName;
                 _renameType = RenameType.Vessel;
             }
 
@@ -1763,7 +1763,7 @@ namespace KerbalConstructionTime
                     {
                         //Set the chosen vessel's launch site to the selected site
                         BuildListVessel blv = Utilities.FindBLVesselByID(null, _selectedVesselId);
-                        blv.LaunchSite = launchsite;
+                        blv.launchSite = launchsite;
                     }
                     else
                     {

@@ -29,7 +29,7 @@ namespace KerbalConstructionTime
                 LCItem lc = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
                 foreach (BuildListVessel vessel in lc.Warehouse)
                 {
-                    if (vessel.Id != ship.Id && !KCTGameStates.MergedVessels.Exists(x => x.Id == vessel.Id) && GUILayout.Button(vessel.ShipName))
+                    if (vessel.shipID != ship.shipID && !KCTGameStates.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))
                     {
                         vessel.RecalculateFromNode();
                         ShipConstruct mergedShip = new ShipConstruct();

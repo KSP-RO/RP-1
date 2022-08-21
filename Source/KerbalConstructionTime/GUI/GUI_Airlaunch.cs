@@ -100,7 +100,7 @@ namespace KerbalConstructionTime
             try
             {
                 bool isSim = Utilities.IsSimulationActive;
-                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KCTGameStates.LaunchedVessel.Id;
+                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KCTGameStates.LaunchedVessel.shipID;
                 _airlaunchParams.Altitude = double.Parse(_sAltitude);
                 _airlaunchParams.Velocity = double.Parse(_sVelocity);
                 _airlaunchParams.LaunchAzimuth = double.Parse(_sAzimuth);

@@ -194,7 +194,7 @@ namespace KerbalConstructionTime
             if (currentLC.BuildList.Count > 0)
             {
                 BuildListVessel b = currentLC.BuildList[0];
-                GUILayout.Label($"Current Vessel: {b.ShipName}");
+                GUILayout.Label($"Current Vessel: {b.shipName}");
 
                 int engCap = currentLC.MaxEngineersFor(b);
                 if (engCap != currentLC.MaxEngineers)
@@ -203,9 +203,9 @@ namespace KerbalConstructionTime
                 int delta = assignDelta;
                 if (engCap < currentLC.Engineers + assignDelta)
                     delta = engCap - currentLC.Engineers;
-                double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.IsHumanRated, delta)
+                double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
                     * efficiency * stratMult;
-                double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
+                double bpLeft = b.buildPoints + b.integrationPoints - b.progress;
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
@@ -224,7 +224,7 @@ namespace KerbalConstructionTime
                 if (lcp != null)
                 {
                     int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.Mass, lcp.VesselBP, lcp.IsHumanRated) : int.MaxValue;
-                    GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedBLV == null ? string.Empty : lcp.AssociatedBLV.ShipName)}");
+                    GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedBLV == null ? string.Empty : lcp.AssociatedBLV.shipName)}");
                     
                     int delta = assignDelta;
                     if (engCap < currentLC.Engineers + assignDelta)

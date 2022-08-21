@@ -31,8 +31,8 @@ namespace KerbalConstructionTime
             BP = Formula.GetAirlaunchBP(vessel);
             Cost = Formula.GetAirlaunchCost(vessel);
             Mass = vessel.GetTotalMass();
-            IsHumanRated = vessel.IsHumanRated;
-            VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;
+            IsHumanRated = vessel.humanRated;
+            VesselBP = vessel.buildPoints + vessel.integrationPoints;
             _lc = vessel.LC;
         }
 

@@ -94,9 +94,9 @@ namespace KerbalConstructionTime
             try
             {
                 var blv = new BuildListVessel(vessel);
-                IsHumanRated = blv.IsHumanRated;
+                IsHumanRated = blv.humanRated;
                 BP = Formula.GetReconditioningBP(blv);
-                VesselBP = blv.BuildPoints + blv.IntegrationPoints;
+                VesselBP = blv.buildPoints + blv.integrationPoints;
             }
             catch
             {
@@ -115,12 +115,12 @@ namespace KerbalConstructionTime
         {
             RRType = type;
             AssociatedID = id;
-            LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.LaunchSite : launchSite;    //For when we add custom launchpads
+            LaunchPadID = string.IsNullOrEmpty(launchSite) ? vessel.launchSite : launchSite;    //For when we add custom launchpads
             Progress = 0;
             Mass = vessel.GetTotalMass();
             _lc = vessel.LC;
-            VesselBP = vessel.BuildPoints + vessel.IntegrationPoints;
-            IsHumanRated = vessel.IsHumanRated;
+            VesselBP = vessel.buildPoints + vessel.integrationPoints;
+            IsHumanRated = vessel.humanRated;
             
             switch (type)
             {
@@ -145,7 +145,7 @@ namespace KerbalConstructionTime
             else if (type == RolloutReconType.Recovery)
             {
                 double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
-                BP += BP * (vessel.DistanceFromKSC / maxDist);
+                BP += BP * (vessel.kscDistance / maxDist);
                 BP *= (vessel.LandedAt?.Contains("Runway") ?? false) ? .75 : 1;
             } 
         }

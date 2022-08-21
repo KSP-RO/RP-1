@@ -1,39 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using KSP.UI.TooltipTypes;
 using RP0.UI;
+using UniLinq;
 
 namespace RP0.Milestones
 {
-    [KSPAddon(KSPAddon.Startup.AllGameScenes, true)]
+    [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
     public class NewspaperUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public static GameObject NewspaperCanvas = null;
-        public static GameObject NewspaperName = null;
-        public static GameObject NewspaperFlag = null;
-        public static GameObject NewspaperDate = null;
-        public static GameObject NewspaperHeadline = null;
-        public static GameObject NewspaperArticle = null;
-        public static GameObject NewspaperImage = null;
-        public static GameObject NewspaperButton = null;
-        public static GameObject NewspaperButtonText = null;
-        public static Text newspaperTitle;
-        public static Text milestoneDate;
-        public static Text headlineText;
-        public static Text articleText;
-        public static Image playerFlag;
-        public static Image milestoneImage;
         private static Vector2 dragStart;
         private static Vector2 altStart;
-        private static float windowWidth = 0f;
-        private static float windowHeight = 0f;
 
-        private static readonly DateTime epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static bool IsOpen => NewspaperCanvas != null;
 
         public static void ShowGUI(Milestone m)
         {
@@ -45,40 +27,31 @@ namespace RP0.Milestones
             NewspaperCanvas.AddComponent<NewspaperUI>();
 
             // Get the size of the panel and center it on the screen
-            windowWidth = NewspaperCanvas.GetComponent<RectTransform>().sizeDelta.x;
-            windowHeight = NewspaperCanvas.GetComponent<RectTransform>().sizeDelta.y;
+            float windowWidth = NewspaperCanvas.GetComponent<RectTransform>().sizeDelta.x;
+            float windowHeight = NewspaperCanvas.GetComponent<RectTransform>().sizeDelta.y;
             Vector3 currentPos = NewspaperCanvas.transform.position;
             Vector3 windowPos = new Vector3(currentPos.x - windowWidth / 2, currentPos.y + windowHeight / 2, 0f);
             NewspaperCanvas.transform.position = windowPos;
 
-            // Find the game objects by what they are named in Unity
-            NewspaperName = (GameObject)GameObject.Find("NewspaperName");
-            NewspaperFlag = (GameObject)GameObject.Find("ProgramFlag");
-            NewspaperDate = (GameObject)GameObject.Find("DateText");
-            NewspaperHeadline = (GameObject)GameObject.Find("HeadlineText");
-            NewspaperArticle = (GameObject)GameObject.Find("ArticleText");
-            NewspaperImage = (GameObject)GameObject.Find("NewsImage");
-            NewspaperButton = (GameObject)GameObject.Find("NewsButton");
-            NewspaperButtonText = (GameObject)GameObject.Find("NewsButtonText");
-
             // Add a callback for the button action
-            Button button = NewspaperButton.GetComponent<Button>();
-            button.onClick.AddListener(delegate { OnButtonPressed(); });
+            Button button = NewspaperCanvas.transform.FindDeepChild("NewsButton").GetComponent<Button>();
+            button.onClick.AddListener(OnButtonPressed);
 
             // Add tooltip to the button
-            var tooltip = NewspaperButton.AddComponent<TooltipController_TextFunc>();
-            var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
-            tooltip.prefab = prefab;
-            tooltip.getStringAction = GetTooltipTextButton;
-            tooltip.continuousUpdate = true;
+            //var tooltip = button.gameObject.AddComponent<TooltipController_TextFunc>();
+            //var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
+            //tooltip.prefab = prefab;
+            //tooltip.getStringAction = GetTooltipTextButton;
+            //tooltip.continuousUpdate = true;
 
             // Get the relevant parts that can be changed via config text
-            newspaperTitle = NewspaperName.GetComponent<Text>();
-            milestoneDate = NewspaperDate.GetComponent<Text>();
-            headlineText = NewspaperHeadline.GetComponent<Text>();
-            articleText = NewspaperArticle.GetComponent<Text>();
-            playerFlag = NewspaperFlag.GetComponent<Image>();
-            milestoneImage = NewspaperImage.GetComponent<Image>();
+            var newspaperTitle = NewspaperCanvas.transform.FindDeepChild("NewspaperName").GetComponent<Text>();
+            var milestoneDate = NewspaperCanvas.transform.FindDeepChild("DateText").GetComponent<Text>();
+            var headlineText = NewspaperCanvas.transform.FindDeepChild("HeadlineText").GetComponent<Text>();
+            var articleText = NewspaperCanvas.transform.FindDeepChild("ArticleText").GetComponent<Text>();
+            var playerFlag = NewspaperCanvas.transform.FindDeepChild("ProgramFlag").GetComponent<Image>();
+            var milestoneImage = NewspaperCanvas.transform.FindDeepChild("NewsImage").GetComponent<Image>();
+            //var newsButtonText = NewspaperCanvas.transform.FindDeepChild("NewsButtonText").GetComponent<Text>();
 
             // Set the variable text and data based on the completed contract
             newspaperTitle.text = GetNewspaperTitle();
@@ -87,7 +60,7 @@ namespace RP0.Milestones
             headlineText.text = m.headline;
             articleText.text = m.article;
             milestoneImage.sprite = GetMilestoneImage(m);
-    }
+        }
 
         private static string GetTooltipTextButton()
         {
@@ -100,6 +73,7 @@ namespace RP0.Milestones
             if (NewspaperCanvas != null)
             {
                 Destroy();
+                MilestoneHandler.Instance?.TryCreateNewspaper();
             }
         }
 
@@ -117,15 +91,21 @@ namespace RP0.Milestones
 
         private static string GetMilestoneDate(Milestone m)
         {
-            DateTime curDate = epoch.AddSeconds(m.date);
-            return curDate.ToString("D");
+            double contractDate = double.MaxValue, programDate = double.MaxValue ;
+            if(!string.IsNullOrEmpty(m.contractName))
+                contractDate = Contracts.ContractSystem.Instance.ContractsFinished.FirstOrDefault(c => c is ContractConfigurator.ConfiguredContract cc && cc.contractType.name == m.contractName)?.DateFinished ?? contractDate;
+            if (!string.IsNullOrEmpty(m.programName))
+                programDate = Programs.ProgramHandler.Instance.CompletedPrograms.FirstOrDefault(p => p.name == m.programName)?.completedUT ?? programDate;
+
+            double date = Math.Min(contractDate, programDate);
+            return KSPUtil.PrintDate(date, false);
         }
 
         private static Sprite GetMilestoneImage(Milestone m)
         {
-            Texture2D tex = GameDatabase.Instance.GetTexture(HighLogic.CurrentGame.flagURL, asNormalMap: false);
-            Sprite flagSprite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-            return flagSprite;
+            Texture2D tex = GameDatabase.Instance.GetTexture(m.image, asNormalMap: false);
+            Sprite sprite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+            return sprite;
         }
 
         private static Sprite GetPlayerFlag()

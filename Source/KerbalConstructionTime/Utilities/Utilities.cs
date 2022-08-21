@@ -1367,7 +1367,7 @@ namespace KerbalConstructionTime
                 KCTVesselData vData = FlightGlobals.ActiveVessel.GetKCTVesselData();
                 KCTGameStates.RecoveredVessel.KCTPersistentID = vData?.VesselID;
                 KCTGameStates.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
-                KCTGameStates.RecoveredVessel.LCID = vData == null ? Guid.Empty : new Guid(vData.LCID);
+                KCTGameStates.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
                 KCTGameStates.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
 
                 //KCT_GameStates.recoveredVessel.type = listType;
@@ -1537,7 +1537,7 @@ namespace KerbalConstructionTime
 
         public static string GetVesselLCID(this Vessel v)
         {
-            return v.GetKCTVesselData()?.LCID;
+            return v.GetKCTVesselData()?.LCID.ToString("N");
         }
 
         public static string GetVesselLCModID(this Vessel v)

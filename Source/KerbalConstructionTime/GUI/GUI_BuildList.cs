@@ -129,23 +129,23 @@ namespace KerbalConstructionTime
                     if (reconRoll.RRType == ReconRollout.RolloutReconType.Reconditioning)
                     {
                         txt = "Reconditioning";
-                        locTxt = reconRoll.LaunchPadID;
+                        locTxt = reconRoll.launchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                         txt = $"{associated.shipName} Rollout";
-                        locTxt = reconRoll.LaunchPadID;
+                        locTxt = reconRoll.launchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                         txt = $"{associated.shipName} Rollback";
-                        locTxt = reconRoll.LaunchPadID;
+                        locTxt = reconRoll.launchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Recovery)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                         txt = $"{associated.shipName} Recovery";
                         locTxt = associated.LC.Name;
                     }
@@ -160,7 +160,7 @@ namespace KerbalConstructionTime
                     BuildListVessel associated = ar.AssociatedBLV;
                     if (associated != null)
                     {
-                        if (ar.Direction == AirlaunchPrep.PrepDirection.Mount)
+                        if (ar.direction == AirlaunchPrep.PrepDirection.Mount)
                             txt = $"{associated.shipName} Mounting";
                         else
                             txt = $"{associated.shipName} Unmounting";
@@ -227,17 +227,17 @@ namespace KerbalConstructionTime
                             ReconRollout reconRoll = buildItem as ReconRollout;
                             if (reconRoll.RRType == ReconRollout.RolloutReconType.Reconditioning)
                             {
-                                txt += $"{reconRoll.LaunchPadID} Reconditioning";
+                                txt += $"{reconRoll.launchPadID} Reconditioning";
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                             {
-                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
-                                txt += $"{associated.shipName} rollout at {reconRoll.LaunchPadID}";
+                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                                txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                             {
-                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.AssociatedID);
-                                txt += $"{associated.shipName} rollback at {reconRoll.LaunchPadID}";
+                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                                txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
                             }
                             else
                             {
@@ -629,7 +629,7 @@ namespace KerbalConstructionTime
                         _allItems.Add(b);
                     }
                     _allItems.AddRange(l.Recon_Rollout);
-                    _allItems.AddRange(l.AirlaunchPrep);
+                    _allItems.AddRange(l.Airlaunch_Prep);
                 }
                 accTime = 0d;
                 foreach (var c in k.Constructions)
@@ -668,11 +668,11 @@ namespace KerbalConstructionTime
                 if (t is ReconRollout r)
                 {
                     if (r.RRType == ReconRollout.RolloutReconType.Reconditioning)
-                        GUILayout.Label($"{r.LC.Name}: {r.GetItemName()} {r.LaunchPadID}");
+                        GUILayout.Label($"{r.LC.Name}: {r.GetItemName()} {r.launchPadID}");
                     else if ((blv = r.AssociatedBLV) != null)
                     {
                         if (r.RRType == ReconRollout.RolloutReconType.Rollout)
-                            GUILayout.Label($"{blv.LC.Name}: Rollout {blv.shipName} to {r.LaunchPadID}");
+                            GUILayout.Label($"{blv.LC.Name}: Rollout {blv.shipName} to {r.launchPadID}");
                         else
                             GUILayout.Label($"{blv.LC.Name}: {r.GetItemName()} {blv.shipName}");
                     }
@@ -798,7 +798,7 @@ namespace KerbalConstructionTime
                     return _rocketTexture;
 
                 case BuildListVessel.ListType.AirLaunch:
-                    if (b is AirlaunchPrep a && a.Direction == AirlaunchPrep.PrepDirection.Mount)
+                    if (b is AirlaunchPrep a && a.direction == AirlaunchPrep.PrepDirection.Mount)
                         return _airlaunchTexture;
                     return _hangarTexture;
 
@@ -856,9 +856,9 @@ namespace KerbalConstructionTime
                     KCTWarpController.Create(reconditioning);
                 }
                 DrawTypeIcon(reconditioning);
-                GUILayout.Label($"Reconditioning: {reconditioning.LaunchPadID}");
+                GUILayout.Label($"Reconditioning: {reconditioning.launchPadID}");
                 GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.LaunchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
@@ -1006,7 +1006,7 @@ namespace KerbalConstructionTime
             string blvID = b.shipID.ToString();
             foreach (var rr in vesselLC.Recon_Rollout)
             {
-                if (rr.AssociatedID == blvID)
+                if (rr.associatedID == blvID)
                 {
                     switch (rr.RRType)
                     {
@@ -1016,10 +1016,10 @@ namespace KerbalConstructionTime
                         // any other type is wrong.
                     }
                 }
-                else if (isPad && rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.LaunchPadID == launchSite)
+                else if (isPad && rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.launchPadID == launchSite)
                     padRollout = rr; // something else is being rollout out to this launchsite.
             }
-            AirlaunchPrep airlaunchPrep = !isPad ? vesselLC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == blvID) : null;
+            AirlaunchPrep airlaunchPrep = !isPad ? vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blvID) : null;
 
             IKCTBuildItem typeIcon = rollout ?? rollback ?? recovery ?? null;
             typeIcon = typeIcon ?? airlaunchPrep;
@@ -1141,8 +1141,8 @@ namespace KerbalConstructionTime
                         else if (!meetsChecks)
                             btnColor = _yellowButton;
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
-                        if (tmpRollout.Cost > 0d)
-                            GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -tmpRollout.Cost):N0}");
+                        if (tmpRollout.cost > 0d)
+                            GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -tmpRollout.cost):N0}");
                         GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
@@ -1197,7 +1197,7 @@ namespace KerbalConstructionTime
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
                              (rollout != null && rollout.IsComplete()))
                     {
-                        KCT_LaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.LaunchPadID);
+                        KCT_LaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.launchPadID);
                         bool operational = pad != null && !pad.IsDestroyed && pad.isOperational;
                         GUIStyle btnColor = _greenButton;
                         string launchTxt = "Launch";
@@ -1206,7 +1206,7 @@ namespace KerbalConstructionTime
                             launchTxt = pad == null ? "No Pad" : "Repairs Required";
                             btnColor = _redButton;
                         }
-                        else if (Utilities.ReconditioningActive(vesselLC, rollout.LaunchPadID))
+                        else if (Utilities.ReconditioningActive(vesselLC, rollout.launchPadID))
                         {
                             launchTxt = "Reconditioning";
                             btnColor = _yellowButton;
@@ -1280,8 +1280,8 @@ namespace KerbalConstructionTime
                         if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
                         {
                             var tmpPrep = new AirlaunchPrep(b, blvID);
-                            if (tmpPrep.Cost > 0d)
-                                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.Cost):N0}");
+                            if (tmpPrep.cost > 0d)
+                                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
                             GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
@@ -1292,7 +1292,7 @@ namespace KerbalConstructionTime
                                 }
                                 else
                                 {
-                                    vesselLC.AirlaunchPrep.Add(tmpPrep);
+                                    vesselLC.Airlaunch_Prep.Add(tmpPrep);
                                 }
                             }
                             if (Event.current.type == EventType.Repaint)
@@ -1303,7 +1303,7 @@ namespace KerbalConstructionTime
                         }
                         else if (airlaunchPrep != null)
                         {
-                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : Utilities.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.AssociatedID);
+                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : Utilities.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.associatedID);
                             if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
                             {
                                 airlaunchPrep.SwitchDirection();
@@ -1632,12 +1632,12 @@ namespace KerbalConstructionTime
             }
             string blvID = b.shipID.ToString();
             ReconRollout rollout = b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
-            bool isRollingOut = rollout != null && rollout.AssociatedID == blvID;
+            bool isRollingOut = rollout != null && rollout.associatedID == blvID;
             bool onPad = isRollingOut && rollout.IsComplete();
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
-            if (b.Type == BuildListVessel.ListType.SPH && b.LC.AirlaunchPrep.Find(a => a.AssociatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
+            if (b.Type == BuildListVessel.ListType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
             {
                 _launchSites = Utilities.GetLaunchSites(b.Type == BuildListVessel.ListType.VAB);
                 if (_launchSites.Any())
@@ -1710,7 +1710,7 @@ namespace KerbalConstructionTime
                 AddVesselToPlansList(b.CreateCopy(false));
             }
 
-            ReconRollout blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == blvID);
+            ReconRollout blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.associatedID == blvID);
             if (blvRollout != null && GUILayout.Button("Rollback"))
             {
                 blvRollout.SwapRolloutType();

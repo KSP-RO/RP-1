@@ -911,7 +911,7 @@ namespace KerbalConstructionTime
                         _checkTime(blv, ref shortestTime, ref thing);
                     foreach (IKCTBuildItem rr in LC.Recon_Rollout)
                         _checkTime(rr, ref shortestTime, ref thing);
-                    foreach (IKCTBuildItem ap in LC.AirlaunchPrep)
+                    foreach (IKCTBuildItem ap in LC.Airlaunch_Prep)
                         _checkTime(ap, ref shortestTime, ref thing);
                 }
                 foreach (IKCTBuildItem ub in KSC.Constructions)

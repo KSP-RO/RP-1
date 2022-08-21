@@ -21,6 +21,9 @@ namespace KerbalConstructionTime
         [KSPField(isPersistant = true)]
         public KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 
+        [KSPField(isPersistant = true)]
+        public PersistentSortedListValueTypeKey<string, BuildListVessel> BuildPlans = new PersistentSortedListValueTypeKey<string, BuildListVessel>();
+
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
         public override void OnAwake()
@@ -96,13 +99,6 @@ namespace KerbalConstructionTime
                 node.AddNode(KSC.AsConfigNode());
             }
 
-            var cnPlans = new ConfigNode("Plans");
-            foreach (BuildListVessel blv in KCTGameStates.Plans.Values)
-            {
-                cnPlans.AddNode(blv.BuildVesselAndShipNodeConfigs());
-            }
-            node.AddNode(cnPlans);
-
             KCT_GUI.GuiDataSaver.Save();
         }
 
@@ -122,7 +118,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.SciPointsTotal = -1;
                 KCTGameStates.UnassignedPersonnel = 0;
                 KCTGameStates.Researchers = 0;
-                KCTGameStates.Plans.Clear();
 
                 var kctVS = new KCT_DataStorage();
                 if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
@@ -169,16 +164,7 @@ namespace KerbalConstructionTime
                         }
                     }
                 }
-                ConfigNode tmp = node.GetNode("Plans");
-                if (tmp != null)
-                {
-                    foreach (ConfigNode cnV in tmp.GetNodes("KCTVessel"))
-                    {
-                        var blv = BuildListVessel.CreateBLVFromNode(cnV, null);
-                        KCTGameStates.Plans.Remove(blv.ShipName);
-                        KCTGameStates.Plans.Add(blv.ShipName, blv);
-                    }
-                }
+
                 if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
                 {
                     if (KCTGameStates.LoadedSaveVersion < 2)
@@ -199,7 +185,20 @@ namespace KerbalConstructionTime
                             }
                         }
                     }
+                    if (KCTGameStates.LoadedSaveVersion < 14 && node.GetNode("Plans") is ConfigNode planNode)
+                    {
+                        foreach (ConfigNode cnV in planNode.GetNodes("KCTVessel"))
+                        {
+                            var blv = new BuildListVessel();
+                            blv.Load(cnV);
+                            BuildPlans.Remove(blv.shipName);
+                            BuildPlans.Add(blv.shipName, blv);
+                        }
+                    }
                 }
+
+                foreach (var blv in BuildPlans.Values)
+                    blv.LinkToLC(null);
 
                 LCEfficiency.RelinkAll();
                 

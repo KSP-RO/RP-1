@@ -545,13 +545,13 @@ namespace KerbalConstructionTime
             _availableCrew = GetAvailableCrew(string.Empty);
 
             //try to assign kerbals from the desired manifest
-            if (!UseAvailabilityChecker && KCTGameStates.LaunchedVessel.DesiredManifest?.Count > 0 && KCTGameStates.LaunchedVessel.DesiredManifest.Exists(c => c != null))
+            if (!UseAvailabilityChecker && KCTGameStates.LaunchedVessel.desiredManifest?.Count > 0 && KCTGameStates.LaunchedVessel.desiredManifest.Exists(c => c != null))
             {
                 KCTDebug.Log("Assigning desired crew manifest.");
                 List<ProtoCrewMember> available = GetAvailableCrew(string.Empty);
                 Queue<ProtoCrewMember> finalCrew = new Queue<ProtoCrewMember>();
                 //try to assign crew from the desired manifest
-                foreach (string name in KCTGameStates.LaunchedVessel.DesiredManifest)
+                foreach (string name in KCTGameStates.LaunchedVessel.desiredManifest)
                 {
                     //assign the kerbal with that name to each seat, in order. Let's try that
                     ProtoCrewMember crew = null;

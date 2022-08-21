@@ -624,7 +624,7 @@ namespace RP0
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
                 _prevPeriod.NumEngineers = KCTGameStates.TotalEngineers;
-                _prevPeriod.NumResearchers = KCTGameStates.Researchers;
+                _prevPeriod.NumResearchers = KerbalConstructionTimeData.Instance.Researchers;
                 _prevPeriod.EfficiencyEngineers = KCTGameStates.WeightedAverageEfficiencyEngineers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
@@ -886,7 +886,7 @@ namespace RP0
             try
             {
                 // KCT returns -1 if the player hasn't earned any sci yet
-                return Math.Max(0, KCTGameStates.SciPointsTotal);
+                return Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
             }
             catch (Exception ex)
             {

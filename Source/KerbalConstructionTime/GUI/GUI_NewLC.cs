@@ -473,7 +473,7 @@ namespace KerbalConstructionTime
                 else
                 {
 
-                    KCTGameStates.StarterLCBuilding |= !isModify;
+                    KerbalConstructionTimeData.Instance.StarterLCBuilding |= !isModify;
 
                     if (!Utilities.CurrentGameIsCareer())
                     {

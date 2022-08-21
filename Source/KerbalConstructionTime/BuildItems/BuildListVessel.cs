@@ -1254,14 +1254,14 @@ namespace KerbalConstructionTime
         {
             ConfigNode.LoadObjectFromConfig(this, node);
             ShipNode = node.GetNode("ShipNode");
-            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (KCTGameStates.LoadedSaveVersion < 10)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 10)
                 {
                     RecalculateFromNode(false);
                 }
 
-                if (KCTGameStates.LoadedSaveVersion < 14)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 14)
                 {
                     node.TryGetValue("LaunchPadID", ref launchSiteIndex);
                     emptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
@@ -1284,9 +1284,9 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (KCTGameStates.LoadedSaveVersion < 11)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 11)
                 {
                     HashSet<string> ignoredRes = LC.Stats.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
 

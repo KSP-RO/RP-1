@@ -26,9 +26,9 @@ namespace KerbalConstructionTime
         {
             base.Load(node);
 
-            if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (KCTGameStates.LoadedSaveVersion < 8)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 8)
                 {
                     if (modId == Guid.Empty)
                     {
@@ -39,7 +39,7 @@ namespace KerbalConstructionTime
                         modId = lcID;
                     }
                 }
-                if (KCTGameStates.LoadedSaveVersion < 12)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 12)
                 {
                     lcData.Name = KCTGameStates.FindLCFromID(lcID)?.Name ?? lcData.Name;
                     if (string.IsNullOrEmpty(name))

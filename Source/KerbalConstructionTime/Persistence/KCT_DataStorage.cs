@@ -33,7 +33,7 @@ namespace KerbalConstructionTime
             KerbalConstructionTimeData.Instance.IsSimulatedFlight = IsSimulation;
             KerbalConstructionTimeData.Instance.SimulationParams.DisableFailures = DisableFailuresInSim;
             KerbalConstructionTimeData.Instance.Researchers = Researchers;
-            KerbalConstructionTimeData.Instance.UnassignedPersonnel = UnassignedPersonnel;
+            KerbalConstructionTimeData.Instance.Applicants = UnassignedPersonnel;
             KerbalConstructionTimeData.Instance.LoadedSaveVersion = saveVersion;
             KerbalConstructionTimeData.Instance.StarterLCBuilding = StarterLCSelected;
             KerbalConstructionTimeData.Instance.HiredStarterApplicants = HiredStarterApplicants;
@@ -44,7 +44,7 @@ namespace KerbalConstructionTime
             {
                 if (saveVersion < 1)
                 {
-                    KerbalConstructionTimeData.Instance.UnassignedPersonnel *= 2;
+                    KerbalConstructionTimeData.Instance.Applicants *= 2;
                     KerbalConstructionTimeData.Instance.Researchers *= 2;
                 }
                 if (saveVersion < 3)

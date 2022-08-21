@@ -156,11 +156,11 @@ namespace KerbalConstructionTime
 
                     foreach (BuildListVessel vessel in currentLC.Warehouse)
                     {
-                        if (vessel.LaunchSiteIndex >= idx) vessel.LaunchSiteIndex--;
+                        if (vessel.launchSiteIndex >= idx) vessel.launchSiteIndex--;
                     }
                     foreach (BuildListVessel vessel in currentLC.BuildList)
                     {
-                        if (vessel.LaunchSiteIndex >= idx) vessel.LaunchSiteIndex--;
+                        if (vessel.launchSiteIndex >= idx) vessel.launchSiteIndex--;
                     }
                     
                     try

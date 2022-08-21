@@ -15,7 +15,7 @@ namespace KerbalConstructionTime
         public Guid lcID;
 
         [Persistent]
-        public LCItem.LCData lcData = new LCItem.LCData();
+        public LCData lcData = new LCData();
 
 
         public LCConstruction()

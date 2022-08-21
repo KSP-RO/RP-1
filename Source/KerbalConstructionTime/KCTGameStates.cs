@@ -28,25 +28,14 @@ namespace KerbalConstructionTime
                 TechList[j].UpdateBuildRate(j);
         }
 
-        //public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
-        //public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
-        public static int UnassignedPersonnel = 0;
-        public static int Researchers = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
-        public static int LoadedSaveVersion = 0;
-        public const int VERSION = 15;
+        public const int VERSION = 16;
 
         public static ToolbarControl ToolbarControl;
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
-        public static bool StarterLCBuilding = false;
-        public static bool HiredStarterApplicants = false;
-        public static bool StartedProgram = false;
-        public static bool AcceptedContract = false;
-        public static bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
-        public static bool IsSimulatedFlight = false;
         public static BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
@@ -62,22 +51,14 @@ namespace KerbalConstructionTime
         public static bool ErroredDuringOnLoad = false;
 
         public static bool VesselErrorAlerted = false;
-        public static bool PersistenceLoaded = false;
         public static bool IsRefunding = false;
 
         public static AirlaunchParams AirlaunchParams;
-        public static SimulationParams SimulationParams = new SimulationParams();
 
         public static void Reset()
         {
             IsFirstStart = false;
-            StarterLCBuilding = false;
-            HiredStarterApplicants = false;
-            StartedProgram = false;
             VesselErrorAlerted = false;
-
-            IsSimulatedFlight = false;
-            SimulationParams.Reset();
 
             AirlaunchParams = null;
 
@@ -87,10 +68,6 @@ namespace KerbalConstructionTime
             BuildingMaxLevelCache.Clear();
 
             InitTechList();
-
-            UnassignedPersonnel = 0;
-            Researchers = 0;
-            LoadedSaveVersion = 0;
         }
 
         public static void InitTechList()

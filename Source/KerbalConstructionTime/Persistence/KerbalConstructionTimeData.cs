@@ -13,9 +13,30 @@ namespace KerbalConstructionTime
         public static Dictionary<string, List<string>> techNameToParents = new Dictionary<string, List<string>>();
 
         [KSPField(isPersistant = true)]
+        public bool enabledForSave = HighLogic.CurrentGame.Mode == Game.Modes.CAREER ||
+                                     HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX ||
+                                     HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX;
+
+        [KSPField(isPersistant = true)] public string ActiveKSCName = string.Empty;
+        [KSPField(isPersistant = true)] public float SciPointsTotal = -1f;
+        [KSPField(isPersistant = true)] public bool IsSimulatedFlight;
+        [KSPField(isPersistant = true)] public bool DisableFailuresInSim = true;
+        [KSPField(isPersistant = true)] public int Researchers;
+        [KSPField(isPersistant = true)] public int UnassignedPersonnel;
+        [KSPField(isPersistant = true)] public bool StarterLCBuilding = false;
+        [KSPField(isPersistant = true)] public bool HiredStarterApplicants = false;
+        [KSPField(isPersistant = true)] public bool StartedProgram = false;
+        [KSPField(isPersistant = true)] public bool AcceptedContract = false;
+        public bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
+
+        [KSPField(isPersistant = true)] public int LoadedSaveVersion;
+
+        [KSPField(isPersistant = true)] public SimulationParams SimulationParams = new SimulationParams();
+
+
+        [KSPField(isPersistant = true)]
         private PersistentList<LCEfficiency> _lcEfficiencies = new PersistentList<LCEfficiency>();
         public PersistentList<LCEfficiency> LCEfficiencies => _lcEfficiencies;
-
         public Dictionary<LCItem, LCEfficiency> LCToEfficiency = new Dictionary<LCItem, LCEfficiency>();
 
         [KSPField(isPersistant = true)]
@@ -88,8 +109,8 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log("Writing to persistence.");
             base.OnSave(node);
-            var kctVS = new KCT_DataStorage();
-            node.AddNode(kctVS.AsConfigNode());
+            ActiveKSCName = KCTGameStates.ActiveKSC.KSCName;
+
             foreach (KSCItem KSC in KCTGameStates.KSCs.Where(x => x?.KSCName?.Length > 0))
             {
                 // Don't bother saving KSCs that aren't active
@@ -115,14 +136,16 @@ namespace KerbalConstructionTime
                 KCTGameStates.KSCs.Clear();
                 KCTGameStates.ActiveKSC = null;
                 KCTGameStates.InitTechList();
-                KCTGameStates.SciPointsTotal = -1;
-                KCTGameStates.UnassignedPersonnel = 0;
-                KCTGameStates.Researchers = 0;
 
-                var kctVS = new KCT_DataStorage();
-                if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
+                // Special check
+                if (LoadedSaveVersion == 0)
                 {
-                    ConfigNode.LoadObjectFromConfig(kctVS, cn);
+                    var kctVS = new KCT_DataStorage();
+                    if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
+                    {
+                        ConfigNode.LoadObjectFromConfig(kctVS, cn);
+                        kctVS.ReadFields();
+                    }
                 }
 
                 bool foundStockKSC = false;
@@ -165,13 +188,13 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                if (KCTGameStates.LoadedSaveVersion < KCTGameStates.VERSION)
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
                 {
-                    if (KCTGameStates.LoadedSaveVersion < 2)
+                    if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 2)
                     {
-                        KCTGameStates.StarterLCBuilding = KCTGameStates.KSCs.FirstOrDefault(k => k.LaunchComplexes.Count > 1) != null;
+                        KerbalConstructionTimeData.Instance.StarterLCBuilding = KCTGameStates.KSCs.FirstOrDefault(k => k.LaunchComplexes.Count > 1) != null;
                     }
-                    if (KCTGameStates.LoadedSaveVersion < 8)
+                    if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 8)
                     {
                         foreach (var k in KCTGameStates.KSCs)
                         {
@@ -185,7 +208,7 @@ namespace KerbalConstructionTime
                             }
                         }
                     }
-                    if (KCTGameStates.LoadedSaveVersion < 14 && node.GetNode("Plans") is ConfigNode planNode)
+                    if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 14 && node.GetNode("Plans") is ConfigNode planNode)
                     {
                         foreach (ConfigNode cnV in planNode.GetNodes("KCTVessel"))
                         {
@@ -202,7 +225,7 @@ namespace KerbalConstructionTime
 
                 LCEfficiency.RelinkAll();
                 
-                KCTGameStates.LoadedSaveVersion = KCTGameStates.VERSION;
+                LoadedSaveVersion = KCTGameStates.VERSION;
             }
             catch (Exception ex)
             {

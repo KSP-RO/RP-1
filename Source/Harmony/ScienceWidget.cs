@@ -26,7 +26,7 @@ namespace RP0.Harmony
         private static string GetTooltipText()
         {
             return Localizer.Format("#rp0ScienceWidgetTooltip",
-                                    System.Math.Max(0, KCTGameStates.SciPointsTotal).ToString("N1"),
+                                    System.Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal).ToString("N1"),
                                     UnlockSubsidyHandler.Instance.TotalSubsidy.ToString("N0"));
         }
     }

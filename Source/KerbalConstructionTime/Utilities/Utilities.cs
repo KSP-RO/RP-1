@@ -516,20 +516,20 @@ namespace KerbalConstructionTime
             if (changeDelta <= 0f || KCTGameStates.IsRefunding) return;
 
             EnsureCurrentSaveHasSciTotalsInitialized(changeDelta);
-            float pointsBef = Math.Max(0, KCTGameStates.SciPointsTotal);
+            float pointsBef = Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
 
-            KCTGameStates.SciPointsTotal += changeDelta;
-            KCTDebug.Log("Total sci points earned is now: " + KCTGameStates.SciPointsTotal);
+            KerbalConstructionTimeData.Instance.SciPointsTotal += changeDelta;
+            KCTDebug.Log("Total sci points earned is now: " + KerbalConstructionTimeData.Instance.SciPointsTotal);
 
             //double upgradesBef = ApplicantPacketsForScience(pointsBef);
-            //double upgradesAft = ApplicantPacketsForScience(KCTGameStates.SciPointsTotal);
+            //double upgradesAft = ApplicantPacketsForScience(KerbalConstructionTimeData.Instance.SciPointsTotal);
             //KCTDebug.Log($"Upg points bef: {upgradesBef}; aft: {upgradesAft}");
 
             //int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
             //if (upgradesToAdd > 0)
             //{
             //    int numWorkers = upgradesToAdd * LCItem.EngineersPerPacket;
-            //    KCTGameStates.UnassignedPersonnel += numWorkers;
+            //    KerbalConstructionTimeData.Instance.UnassignedPersonnel += numWorkers;
             //    KCTDebug.Log($"Added {numWorkers} workers from science points");
             //    ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
             //}
@@ -537,7 +537,7 @@ namespace KerbalConstructionTime
 
         public static void EnsureCurrentSaveHasSciTotalsInitialized(float changeDelta)
         {
-            if (KCTGameStates.SciPointsTotal == -1f)
+            if (KerbalConstructionTimeData.Instance.SciPointsTotal == -1f)
             {
                 KCTDebug.Log("Trying to determine total science points for current save...");
 
@@ -570,7 +570,7 @@ namespace KerbalConstructionTime
                 totalSci += ResearchAndDevelopment.Instance.Science - changeDelta;
 
                 KCTDebug.Log("Calculated total: " + totalSci);
-                KCTGameStates.SciPointsTotal = totalSci;
+                KerbalConstructionTimeData.Instance.SciPointsTotal = totalSci;
             }
         }
 
@@ -991,8 +991,6 @@ namespace KerbalConstructionTime
                 return _isPrincipiaInstalled.Value;
             }
         }
-
-        public static bool IsSimulationActive => KCTGameStates.IsSimulatedFlight;
 
         public static string GetActiveRSSKSC()
         {
@@ -1945,7 +1943,7 @@ namespace KerbalConstructionTime
 
         public static void ChangeResearchers(int delta)
         {
-            KCTGameStates.Researchers += delta;
+            KerbalConstructionTimeData.Instance.Researchers += delta;
             KCTEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
@@ -2014,7 +2012,7 @@ namespace KerbalConstructionTime
 
         public static double ScienceForNextApplicants()
         {
-            int applicantsCur = ApplicantPacketsForScience(Math.Max(0d, KCTGameStates.SciPointsTotal));
+            int applicantsCur = ApplicantPacketsForScience(Math.Max(0d, KerbalConstructionTimeData.Instance.SciPointsTotal));
             return Math.Pow(5d * (applicantsCur + 1d), 1d / ApplicantsPow);
         }
 
@@ -2085,7 +2083,7 @@ namespace KerbalConstructionTime
                 //KCTDebug.LogError("Disabled!");
                 return false;
             }
-            if (KCTGameStates.IsSimulatedFlight)
+            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
                 //KCTDebug.LogError("Sim!");
                 return false;

@@ -103,7 +103,15 @@ namespace RP0.Milestones
 
         private static Sprite GetMilestoneImage(Milestone m)
         {
-            Texture2D tex = GameDatabase.Instance.GetTexture(m.image, asNormalMap: false);
+            Texture2D tex = null;
+            string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{m.name}.png";
+            if (System.IO.File.Exists(filePath))
+            {
+                tex = new Texture2D(2, 2);
+                tex.LoadImage(System.IO.File.ReadAllBytes(filePath));
+            }
+            if (tex == null)
+                tex = GameDatabase.Instance.GetTexture(m.image, asNormalMap: false);
             Sprite sprite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
             return sprite;
         }

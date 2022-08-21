@@ -6,47 +6,57 @@ namespace KerbalConstructionTime
 {
     public class AirlaunchPrep : LCProject
     {
-        public override string Name => Direction == PrepDirection.Mount ? Name_Mount : Name_Unmount;
+        public enum PrepDirection { Mount, Unmount };
+
+        public override string Name => direction == PrepDirection.Mount ? Name_Mount : Name_Unmount;
 
         public const string Name_Mount = "Mounting to carrier";
         public const string Name_Unmount = "Unmounting";
-
-        public enum PrepDirection { Mount, Unmount };
-        public PrepDirection Direction = PrepDirection.Mount;
+        
+        [Persistent]
+        public PrepDirection direction = PrepDirection.Mount;
 
         protected override TransactionReasonsRP0 transactionReason => TransactionReasonsRP0.AirLaunchRollout;
         protected override TransactionReasonsRP0 transactionReasonTime => TransactionReasonsRP0.RateAirlaunch;
 
         public AirlaunchPrep() : base()
         {
-            Direction = PrepDirection.Mount;
         }
 
         public AirlaunchPrep(BuildListVessel vessel, string id)
         {
-            Direction = PrepDirection.Mount;
-            AssociatedID = id;
-            Progress = 0;
+            direction = PrepDirection.Mount;
+            associatedID = id;
+            progress = 0;
 
             BP = Formula.GetAirlaunchBP(vessel);
-            Cost = Formula.GetAirlaunchCost(vessel);
-            Mass = vessel.GetTotalMass();
-            IsHumanRated = vessel.humanRated;
-            VesselBP = vessel.buildPoints + vessel.integrationPoints;
+            cost = Formula.GetAirlaunchCost(vessel);
+            mass = vessel.GetTotalMass();
+            isHumanRated = vessel.humanRated;
+            vesselBP = vessel.buildPoints + vessel.integrationPoints;
             _lc = vessel.LC;
         }
 
-        public override bool IsReversed => Direction == PrepDirection.Unmount;
-        public override bool HasCost => Direction == PrepDirection.Mount;
+        public override bool IsReversed => direction == PrepDirection.Unmount;
+        public override bool HasCost => direction == PrepDirection.Mount;
 
         public override BuildListVessel.ListType GetListType() => BuildListVessel.ListType.AirLaunch;
 
         public void SwitchDirection()
         {
-            if (Direction == PrepDirection.Mount)
-                Direction = PrepDirection.Unmount;
+            if (direction == PrepDirection.Mount)
+                direction = PrepDirection.Unmount;
             else
-                Direction = PrepDirection.Mount;
+                direction = PrepDirection.Mount;
+        }
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            if (KCTGameStates.LoadedSaveVersion < 15)
+            {
+                string n = node.GetValue("name");
+                direction = n == Name_Mount ? PrepDirection.Mount : PrepDirection.Unmount;
+            }
         }
     }
 }

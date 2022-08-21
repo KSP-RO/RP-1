@@ -35,7 +35,7 @@ namespace KerbalConstructionTime
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public static int LoadedSaveVersion = 0;
-        public const int VERSION = 14;
+        public const int VERSION = 15;
 
         public static ToolbarControl ToolbarControl;
 
@@ -254,7 +254,7 @@ namespace KerbalConstructionTime
                 if (t > time)
                     fac = time / t;
 
-                delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -rr.Cost * (1d - rr.Progress / rr.BP) * fac);
+                delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -rr.cost * (1d - rr.progress / rr.BP) * fac);
             }
 
             return delta;
@@ -273,16 +273,16 @@ namespace KerbalConstructionTime
         public static double GetAirlaunchCostOverTime(double time, KSCItem ksc)
         {
             double delta = 0;
-            foreach (var al in ksc.Hangar.AirlaunchPrep)
+            foreach (var al in ksc.Hangar.Airlaunch_Prep)
             {
-                if (al.Direction == AirlaunchPrep.PrepDirection.Mount)
+                if (al.direction == AirlaunchPrep.PrepDirection.Mount)
                 {
                     double t = al.GetTimeLeft();
                     double fac = 1d;
                     if (t > time)
                         fac = time / t;
 
-                    delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -al.Cost * (1d - al.Progress / al.BP) * fac);
+                    delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -al.cost * (1d - al.progress / al.BP) * fac);
                 }
             }
 

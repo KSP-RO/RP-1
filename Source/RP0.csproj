@@ -60,6 +60,7 @@
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="Crew\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
+    <Compile Include="DataTypes\PersistentSortedList.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
     <Compile Include="Harmony\EditorExtensionsRedux.cs" />
     <Compile Include="Harmony\EngineersReport.cs" />
@@ -215,7 +216,6 @@
     <Compile Include="KerbalConstructionTime\ModIntegrations\CTIWrapper.cs" />
     <Compile Include="KerbalConstructionTime\ModuleTagList.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\AirlaunchPrepStorageItem.cs" />
-    <Compile Include="KerbalConstructionTime\Persistence\BuildListStorageItem.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\ConfigNodeStorage.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\GUIPosition.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\KCTVesselData.cs" />

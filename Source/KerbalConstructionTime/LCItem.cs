@@ -16,8 +16,8 @@ namespace KerbalConstructionTime
         public KCTObservableList<BuildListVessel> BuildList = new KCTObservableList<BuildListVessel>();
         public KCTObservableList<BuildListVessel> Warehouse = new KCTObservableList<BuildListVessel>();
         public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
-        public List<ReconRollout> Recon_Rollout = new List<ReconRollout>();
-        public List<AirlaunchPrep> AirlaunchPrep = new List<AirlaunchPrep>();
+        public PersistentList<ReconRollout> Recon_Rollout = new PersistentList<ReconRollout>();
+        public PersistentList<AirlaunchPrep> Airlaunch_Prep = new PersistentList<AirlaunchPrep>();
 
         private LCData _lcData = new LCData();
         public LCData Stats => _lcData;
@@ -185,17 +185,17 @@ namespace KerbalConstructionTime
             }
         }
 
-        public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && AirlaunchPrep.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
+        public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Airlaunch_Prep.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
-        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0 || AirlaunchPrep.Count > 0;
-        public bool CanModify => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRollout.RolloutReconType.Reconditioning) && AirlaunchPrep.Count == 0;
+        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0 || Airlaunch_Prep.Count > 0;
+        public bool CanModify => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRollout.RolloutReconType.Reconditioning) && Airlaunch_Prep.Count == 0;
         public bool IsIdle => !IsActive;
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
-            Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
+            Recon_Rollout.FirstOrDefault(r => r.launchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
 
         public ReconRollout GetReconRollout(ReconRollout.RolloutReconType type, string launchSite = "LaunchPad") =>
-            Recon_Rollout.FirstOrDefault(r => (type == ReconRollout.RolloutReconType.None ||  r.RRType == type) && r.LaunchPadID == launchSite);
+            Recon_Rollout.FirstOrDefault(r => (type == ReconRollout.RolloutReconType.None ||  r.RRType == type) && r.launchPadID == launchSite);
 
         public void RecalculateBuildRates()
         {
@@ -208,7 +208,7 @@ namespace KerbalConstructionTime
             foreach (var rr in Recon_Rollout)
                 rr.UpdateBuildRate();
 
-            foreach (var al in AirlaunchPrep)
+            foreach (var al in Airlaunch_Prep)
                 al.UpdateBuildRate();
 
             KCTDebug.Log($"Build rate for {Name} = {_rate:N3}, capped {_rateHRCapped:N3}");
@@ -353,25 +353,11 @@ namespace KerbalConstructionTime
             node.AddNode(cnPadConstructions);
 
             var cnRR = new ConfigNode("Recon_Rollout");
-            foreach (ReconRollout rr in Recon_Rollout)
-            {
-                var storageItem = new ReconRolloutStorageItem();
-                storageItem.FromReconRollout(rr);
-                var rrCN = new ConfigNode("Recon_Rollout_Item");
-                storageItem.Save(rrCN);
-                cnRR.AddNode(rrCN);
-            }
+            Recon_Rollout.Save(cnRR);
             node.AddNode(cnRR);
 
             var cnAP = new ConfigNode("Airlaunch_Prep");
-            foreach (AirlaunchPrep ap in AirlaunchPrep)
-            {
-                var storageItem = new AirlaunchPrepStorageItem();
-                storageItem.FromAirlaunchPrep(ap);
-                var cn = new ConfigNode("Airlaunch_Prep_Item");
-                storageItem.Save(cn);
-                cnAP.AddNode(cn);
-            }
+            Airlaunch_Prep.Save(cnAP);
             node.AddNode(cnAP);
 
             var cnLPs = new ConfigNode("LaunchPads");
@@ -392,7 +378,7 @@ namespace KerbalConstructionTime
             Warehouse.Clear();
             PadConstructions.Clear();
             Recon_Rollout.Clear();
-            AirlaunchPrep.Clear();
+            Airlaunch_Prep.Clear();
             LaunchPads.Clear();
             _rate = 0;
             _rateHRCapped = 0;
@@ -424,21 +410,11 @@ namespace KerbalConstructionTime
                 blv.LinkToLC(this);
 
             tmp = node.GetNode("Recon_Rollout");
-            foreach (ConfigNode RRCN in tmp.GetNodes("Recon_Rollout_Item"))
-            {
-                var tempRR = new ReconRolloutStorageItem();
-                tempRR.Load(RRCN);
-                Recon_Rollout.Add(tempRR.ToReconRollout());
-            }
+            Recon_Rollout.Load(tmp);
 
             if (node.TryGetNode("Airlaunch_Prep", ref tmp))
             {
-                foreach (ConfigNode cn in tmp.GetNodes("Airlaunch_Prep_Item"))
-                {
-                    var storageItem = new AirlaunchPrepStorageItem();
-                    storageItem.Load(cn);
-                    AirlaunchPrep.Add(storageItem.ToAirlaunchPrep());
-                }
+                Airlaunch_Prep.Load(tmp);
             }
 
             tmp = node.GetNode("LaunchPads");

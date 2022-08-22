@@ -117,7 +117,8 @@ namespace KerbalConstructionTime
                 if (KSC.IsEmpty && KSC != KCTGameStates.ActiveKSC)
                     continue;
 
-                node.AddNode(KSC.AsConfigNode());
+                var n = node.AddNode("KSC");
+                KSC.Save(n);
             }
 
             KCT_GUI.GuiDataSaver.Save();
@@ -140,6 +141,7 @@ namespace KerbalConstructionTime
                 // Special check
                 if (LoadedSaveVersion == 0)
                 {
+                    // Keep this around another few versions for back-compat.
                     var kctVS = new KCT_DataStorage();
                     if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
                     {
@@ -159,8 +161,8 @@ namespace KerbalConstructionTime
                 {
                     string name = ksc.GetValue("KSCName");
                     var loaded_KSC = new KSCItem(name);
-                    loaded_KSC.FromConfigNode(ksc);
-                    if (loaded_KSC?.KSCName?.Length > 0)
+                    loaded_KSC.Load(ksc);
+                    if (loaded_KSC.KSCName?.Length > 0)
                     {
                         if (KCTGameStates.KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
                             KCTGameStates.KSCs.Add(loaded_KSC);

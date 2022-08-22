@@ -9,47 +9,44 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(RDPartList))]
     internal class PatchRDParlist
     {
-        internal static string InsufficientCurrencyColorText = $"<color={XKCDColors.HexFormat.BrightOrange}>";
-
-        internal static void SetPart(RDPartListItem item, bool unlocked, string label, AvailablePart part, PartUpgradeHandler.Upgrade upgrade)
-        {
-            item.Setup(label, unlocked ? "unlocked" : "purchaseable", part, upgrade);
-        }
-
         [HarmonyPrefix]
         [HarmonyPatch("AddPartListItem")]
-        private static bool Prefix_AddPartListItem(RDPartList __instance, ref AvailablePart part, ref bool purchased)
+        private static bool Prefix_AddPartListItem(RDPartList __instance, AvailablePart part, bool purchased)
         {
-            RDPartListItem listItem = GameObject.Instantiate(__instance.partListItem).GetComponentInChildren<RDPartListItem>();
+            RDPartListItem listItem = Object.Instantiate(__instance.partListItem).GetComponentInChildren<RDPartListItem>();
             if (purchased)
             {
-                SetPart(listItem, true, Localizer.GetStringByTag("#autoLOC_470883"), part, null);
-                return false;
-            }
-
-            string text;
-            if (Funding.Instance != null)
-            {
-                // standard stuff: get the cost line
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -part.entryCost, 0d, 0d);
-                text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
-
-                // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
-                if (!cmq.CanAfford())
-                {
-                    cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(part.TechRequired)));
-                    if (cmq.CanAfford())
-                        text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
-                }
-
-                if (__instance.selected_node.tech.state != RDTech.State.Available)
-                    text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
+                __instance.SetPart(listItem, true, Localizer.GetStringByTag("#autoLOC_470883"), part, null);
             }
             else
             {
-                text = string.Empty;
+                string text;
+                if (Funding.Instance != null)
+                {
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -part.entryCost, 0d, 0d);
+                    text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: false, includePercentage: true);
+
+                    if (!cmq.CanAfford())
+                    {
+                        // try again, with subsidy
+                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(part.TechRequired)));
+                        if (!cmq.CanAfford())
+                        {
+                            // still can't afford, so use the can't afford color
+                            cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -part.entryCost, 0d, 0d);
+                            text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
+                        }
+                    }
+
+                    if (__instance.selected_node.tech.state != RDTech.State.Available)
+                        text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
+                }
+                else
+                {
+                    text = string.Empty;
+                }
+                __instance.SetPart(listItem, false, text, part, null);
             }
-            SetPart(listItem, false, text, part, null);
 
             __instance.scrollList.AddItem(listItem.GetComponentInParent<KSP.UI.UIListItem>());
             __instance.partListItems.Add(listItem);
@@ -59,39 +56,42 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("AddUpgradeListItem")]
-        private static bool Prefix_AddUpgradeListItem(RDPartList __instance, ref PartUpgradeHandler.Upgrade upgrade, ref bool purchased)
+        private static bool Prefix_AddUpgradeListItem(RDPartList __instance, PartUpgradeHandler.Upgrade upgrade, bool purchased)
         {
-            RDPartListItem listItem = GameObject.Instantiate(__instance.partListItem).GetComponentInChildren<RDPartListItem>();
+            RDPartListItem listItem = Object.Instantiate(__instance.partListItem).GetComponentInChildren<RDPartListItem>();
             AvailablePart part = PartLoader.getPartInfoByName(upgrade.partIcon);
             if (purchased)
             {
-                SetPart(listItem, true, Localizer.GetStringByTag("#autoLOC_470834"), part, upgrade);
-                return false;
-            }
-
-            string text;
-            if (Funding.Instance != null)
-            {
-                // standard stuff: get the cost line
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0d, 0d);
-                text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
-
-                // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
-                if (!cmq.CanAfford())
-                {
-                    cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(upgrade.techRequired)));
-                    if (cmq.CanAfford())
-                        text = text.Replace(InsufficientCurrencyColorText, string.Empty).Replace("</color>", string.Empty);
-                }
-
-                if (__instance.selected_node.tech.state != RDTech.State.Available)
-                    text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
+                __instance.SetPart(listItem, true, Localizer.GetStringByTag("#autoLOC_470834"), part, upgrade);
             }
             else
             {
-                text = string.Empty;
+                string text;
+                if (Funding.Instance != null)
+                {
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0d, 0d);
+                    text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: false, includePercentage: true);
+
+                    // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
+                    if (!cmq.CanAfford())
+                    {
+                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(upgrade.techRequired)));
+                        if (!cmq.CanAfford())
+                        {
+                            cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0d, 0d);
+                            text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: true, includePercentage: true);
+                        }
+                    }
+
+                    if (__instance.selected_node.tech.state != RDTech.State.Available)
+                        text = $"<color={XKCDColors.HexFormat.LightBlueGrey}>{text}</color>";
+                }
+                else
+                {
+                    text = string.Empty;
+                }
+                __instance.SetPart(listItem, false, text, part, upgrade);
             }
-            SetPart(listItem, false, text, part, upgrade);
 
             __instance.scrollList.AddItem(listItem.GetComponentInParent<KSP.UI.UIListItem>());
             __instance.partListItems.Add(listItem);

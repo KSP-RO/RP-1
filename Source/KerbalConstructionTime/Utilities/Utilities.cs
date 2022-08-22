@@ -542,7 +542,7 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("Trying to determine total science points for current save...");
 
                 float totalSci = 0f;
-                foreach (TechItem t in KCTGameStates.TechList)
+                foreach (TechItem t in KerbalConstructionTimeData.Instance.TechList)
                 {
                     KCTDebug.Log($"Found tech in KCT list: {t.ProtoNode.techID} | {t.ProtoNode.state} | {t.ProtoNode.scienceCost}");
                     if (t.ProtoNode.state == RDTech.State.Available) continue;
@@ -917,9 +917,9 @@ namespace KerbalConstructionTime
                 foreach (IKCTBuildItem ub in KSC.Constructions)
                     _checkTime(ub, ref shortestTime, ref thing);
             }
-            foreach (TechItem tech in KCTGameStates.TechList)
+            foreach (TechItem tech in KerbalConstructionTimeData.Instance.TechList)
             {
-                if (tech.GetBlockingTech(KCTGameStates.TechList) == null)   // Ignore items that are blocked
+                if (tech.GetBlockingTech(KerbalConstructionTimeData.Instance.TechList) == null)   // Ignore items that are blocked
                     _checkTime(tech, ref shortestTime, ref thing);
             }
             foreach (IKCTBuildItem course in RP0.Crew.CrewHandler.Instance.TrainingCourses)
@@ -1992,9 +1992,9 @@ namespace KerbalConstructionTime
         {
             double totalTime = 0d;
             double nodeTime = 0d;
-            for (int i = 0; i < KCTGameStates.TechList.Count; ++i)
+            for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count; ++i)
             {
-                TechItem techItem = KCTGameStates.TechList[i];
+                TechItem techItem = KerbalConstructionTimeData.Instance.TechList[i];
                 nodeTime = techItem.GetTimeLeftEst(totalTime);
                 totalTime += nodeTime;
                 if (techItem == tech)

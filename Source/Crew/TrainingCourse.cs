@@ -321,10 +321,6 @@ namespace RP0.Crew
 
         public double IncrementProgress(double UTDiff)
         {
-            // back-compat
-            if (BP == 0)
-                BP = template.GetBaseTime(Students);
-
             double increment = UTDiff * GetBuildRate();
             progress += increment;
             if (progress < BP)

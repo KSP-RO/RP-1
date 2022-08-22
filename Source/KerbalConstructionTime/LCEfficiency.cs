@@ -51,11 +51,6 @@ namespace KerbalConstructionTime
             ConfigNode.LoadObjectFromConfig(this, node);
             if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 9)
-                {
-                    if (double.IsNaN(_efficiency))
-                        _efficiency = 0.01d; // will be clamped later
-                }
                 if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 17)
                 {
                     HashSet<Guid> temp = new HashSet<Guid>(_lcIDs);

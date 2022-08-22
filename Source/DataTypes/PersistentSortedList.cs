@@ -90,76 +90,38 @@ namespace RP0.DataTypes
         public void Load(ConfigNode node)
         {
             Clear();
-            if (node.values.Count == 0 || node.nodes.Count == 0 || node.values[0].name != "version")
-            {
-                foreach (ConfigNode.Value v in node.values)
-                {
-                    TKey key;
-                    if (KeyType == typeof(Guid))
-                    {
-                        object o = new Guid(v.value);
-                        key = (TKey)o;
-                    }
-                    else
-                    {
-                        key = (TKey)ConfigNode.ReadValue(KeyType, v.name);
-                    }
-
-                    TValue value;
-                    if (ValueType == typeof(Guid))
-                    {
-                        object o = new Guid(v.value);
-                        value = (TValue)o;
-                    }
-                    else
-                    {
-                        value = (TValue)ConfigNode.ReadValue(ValueType, v.value);
-                    }
-                    Add(key, value);
-                }
-                return;
-            }
-
-            ConfigNode keyNode = node.nodes[0];
-            ConfigNode valueNode = node.nodes[1];
-            for (int i = 0; i < keyNode.values.Count; ++i)
+            foreach (ConfigNode.Value v in node.values)
             {
                 TKey key;
                 if (KeyType == typeof(Guid))
                 {
-                    object o = new Guid(keyNode.values[i].value);
+                    object o = new Guid(v.value);
                     key = (TKey)o;
                 }
                 else
                 {
-                    key = (TKey)ConfigNode.ReadValue(KeyType, keyNode.values[i].value);
+                    key = (TKey)ConfigNode.ReadValue(KeyType, v.name);
                 }
 
                 TValue value;
                 if (ValueType == typeof(Guid))
                 {
-                    object o = new Guid(valueNode.values[i].value);
+                    object o = new Guid(v.value);
                     value = (TValue)o;
                 }
                 else
                 {
-                    value = (TValue)ConfigNode.ReadValue(ValueType, valueNode.values[i].value);
+                    value = (TValue)ConfigNode.ReadValue(ValueType, v.value);
                 }
-
                 Add(key, value);
             }
         }
 
         public void Save(ConfigNode node)
         {
-            node.AddValue("version", 1);
-            ConfigNode keyNode = node.AddNode("Keys");
-            ConfigNode valueNode = node.AddNode("Values");
-
             foreach (var kvp in this)
             {
-                keyNode.AddValue("key", kvp.Key.ToString());
-                valueNode.AddValue("value", kvp.Value.ToString());
+                node.AddValue(kvp.Key.ToString(), kvp.Value.ToString());
             }
         }
 

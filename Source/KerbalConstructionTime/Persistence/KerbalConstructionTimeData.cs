@@ -196,24 +196,6 @@ namespace KerbalConstructionTime
 
                 if (LoadedSaveVersion < KCTGameStates.VERSION)
                 {
-                    if (LoadedSaveVersion < 2)
-                    {
-                        StarterLCBuilding = KCTGameStates.KSCs.FirstOrDefault(k => k.LaunchComplexes.Count > 1) != null;
-                    }
-                    if (LoadedSaveVersion < 8)
-                    {
-                        foreach (var k in KCTGameStates.KSCs)
-                        {
-                            foreach (var lc in k.LaunchComplexes)
-                            {
-                                if (!lc.IsOperational)
-                                {
-                                    if (k.LCConstructions.Find(c => c.lcID == lc.ID) == null)
-                                        lc.IsOperational = true;
-                                }
-                            }
-                        }
-                    }
                     if (LoadedSaveVersion < 14 && node.GetNode("Plans") is ConfigNode planNode)
                     {
                         foreach (ConfigNode cnV in planNode.GetNodes("KCTVessel"))

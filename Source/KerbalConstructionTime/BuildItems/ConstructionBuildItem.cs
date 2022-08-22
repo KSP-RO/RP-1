@@ -172,21 +172,6 @@ namespace KerbalConstructionTime
         public virtual void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 4)
-            {
-                workRate = 1f;
-                spentRushCost = spentCost;
-
-                double oldBP = BP;
-
-                // old formula was ([C]+10000)*36 so let's get Cost out.
-                oldBP /= 36d;
-                oldBP -= 10000d;
-
-                BP = Formula.GetConstructionBP(oldBP, FacilityType);
-                progress = progress / BP * oldBP;
-            }
         }
 
         public virtual void Save(ConfigNode node)

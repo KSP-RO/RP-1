@@ -299,9 +299,9 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (KCTGameStates.TechList.Count > 0)
+            if (KerbalConstructionTimeData.Instance.TechList.Count > 0)
             {
-                TechItem t = KCTGameStates.TechList[0];
+                TechItem t = KerbalConstructionTimeData.Instance.TechList[0];
                 GUILayout.Label($"Current Research: {t.techName}");
                 double techRate = Formula.GetResearchRate(t.scienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
                 double timeLeft = (t.scienceCost - t.progress) / techRate;
@@ -335,7 +335,7 @@ namespace KerbalConstructionTime
                     if (research)
                     {
                         Utilities.ChangeResearchers(-workers);
-                        KCTGameStates.UpdateTechTimes();
+                        KerbalConstructionTimeData.Instance.UpdateTechTimes();
                     }
                     else
                     {
@@ -373,7 +373,7 @@ namespace KerbalConstructionTime
                     if (research)
                     {
                         Utilities.ChangeResearchers(workers);
-                        KCTGameStates.UpdateTechTimes();
+                        KerbalConstructionTimeData.Instance.UpdateTechTimes();
                     }
                     else
                     {

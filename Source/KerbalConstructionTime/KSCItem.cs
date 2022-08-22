@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -8,7 +9,7 @@ namespace KerbalConstructionTime
     {
         public string KSCName;
         public List<ConstructionBuildItem> Constructions = new List<ConstructionBuildItem>();
-        public List<LCItem> LaunchComplexes = new List<LCItem>();
+        public PersistentList<LCItem> LaunchComplexes = new PersistentList<LCItem>();
         public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
         public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
         public int Engineers = 0;
@@ -152,11 +153,7 @@ namespace KerbalConstructionTime
             node.AddValue("Engineers", Engineers);
 
             var cnLCs = new ConfigNode("LaunchComplexes");
-            foreach (LCItem lc in LaunchComplexes)
-            {
-                var lcNode = lc.AsConfigNode();
-                cnLCs.AddNode("LaunchComplex", lcNode);
-            }
+            LaunchComplexes.Save(cnLCs);
             node.AddNode(cnLCs);
 
             var cnUpgradeables = new ConfigNode("FacilityUpgrades");
@@ -195,12 +192,10 @@ namespace KerbalConstructionTime
             ConfigNode tmp = node.GetNode("LaunchComplexes");
             if (tmp != null)
             {
-                LaunchComplexes.Clear();
-                foreach (ConfigNode cn in tmp.GetNodes("LaunchComplex"))
+                LaunchComplexes.Load(tmp);
+                foreach (var lc in LaunchComplexes)
                 {
-                    var tempLC = new LCItem(this);
-                    tempLC.FromConfigNode(cn);
-                    LaunchComplexes.Add(tempLC);
+                    lc.PostLoad(this);
                 }
             }
 

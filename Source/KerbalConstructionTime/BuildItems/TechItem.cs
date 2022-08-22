@@ -91,7 +91,7 @@ namespace KerbalConstructionTime
             {
                 if (_buildRate < 0)
                 {
-                    UpdateBuildRate(Math.Max(KCTGameStates.TechList.IndexOf(this), 0));
+                    UpdateBuildRate(Math.Max(KerbalConstructionTimeData.Instance.TechList.IndexOf(this), 0));
                 }
                 return _buildRate;
             }
@@ -189,7 +189,7 @@ namespace KerbalConstructionTime
 
         public bool IsInList()
         {
-            return KCTGameStates.TechList.FirstOrDefault(t => t.techID == techID) != null;
+            return KerbalConstructionTimeData.Instance.TechList.FirstOrDefault(t => t.techID == techID) != null;
         }
 
         public string GetItemName() => techName;
@@ -221,7 +221,7 @@ namespace KerbalConstructionTime
         public double IncrementProgress(double UTDiff)
         {
             // Don't progress blocked items
-            if (GetBlockingTech(KCTGameStates.TechList) != null)
+            if (GetBlockingTech(KerbalConstructionTimeData.Instance.TechList) != null)
                 return 0d;
 
             double bR = BuildRate;
@@ -245,7 +245,7 @@ namespace KerbalConstructionTime
                     Debug.LogException(ex);
                 }
 
-                KCTGameStates.TechList.Remove(this);
+                KerbalConstructionTimeData.Instance.TechList.Remove(this);
 
                 KCTGameStates.RecalculateBuildRates(); // this might change other rates
 

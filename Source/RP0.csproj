@@ -220,7 +220,6 @@
     <Compile Include="KerbalConstructionTime\KCTTechNodePeriod.cs" />
     <Compile Include="KerbalConstructionTime\ModIntegrations\CTIWrapper.cs" />
     <Compile Include="KerbalConstructionTime\ModuleTagList.cs" />
-    <Compile Include="KerbalConstructionTime\Persistence\ConfigNodeStorage.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\GUIPosition.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\KCTVesselData.cs" />
     <Compile Include="KerbalConstructionTime\KCTObservableList.cs" />

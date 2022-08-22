@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         Free,
     }
 
-    public class KCT_LaunchPad : ConfigNodeStorage
+    public class KCT_LaunchPad : IConfigNode
     {
         public const string LPID = "SpaceCenter/LaunchPad";
 
@@ -106,6 +106,8 @@ namespace KerbalConstructionTime
                 return LaunchPadState.Free;
             }
         }
+
+        public KCT_LaunchPad() { }
 
         /// <summary>
         /// Used for deserializing from ConfigNodes.
@@ -278,14 +280,6 @@ namespace KerbalConstructionTime
             return ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(LPID, out var f) ? f.facilityRefs.FirstOrDefault() : null;
         }
 
-        public void MigrateFromOldState()
-        {
-            if (level == -1) return;    // This is migrated in PadConstructionStorageItem instead
-
-            fractionalLevel = level;
-            if (level >= 0) isOperational = true;
-        }
-
         private List<DestructibleBuilding> GetDestructibleFacilityReferences()
         {
             List<DestructibleBuilding> destructibles = new List<DestructibleBuilding>();
@@ -297,6 +291,18 @@ namespace KerbalConstructionTime
                 }
             }
             return destructibles;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+            DestructionNode = node.GetNode("DestructionState");
+        }
+
+        public void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
+            node.AddNode(DestructionNode);
         }
     }
 }

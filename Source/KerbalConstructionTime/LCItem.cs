@@ -367,8 +367,8 @@ namespace KerbalConstructionTime
                             var blv = new BuildListVessel();
                             blv.Load(cnV);
                             blv.LCID = Guid.Empty;
-                            KCTGameStates.Plans.Remove(blv.shipName);
-                            KCTGameStates.Plans.Add(blv.shipName, blv);
+                            KerbalConstructionTimeData.Instance.BuildPlans.Remove(blv.shipName);
+                            KerbalConstructionTimeData.Instance.BuildPlans.Add(blv.shipName, blv);
                         }
                     }
                     if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 18)

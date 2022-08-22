@@ -1032,7 +1032,7 @@ namespace RP0.Crew
             {
                 if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0
                     && (ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available
-                        || KCTGameStates.TechList.Find(t => t.techID == ap.TechRequired) != null))
+                        || KerbalConstructionTimeData.Instance.TechList.Find(t => t.techID == ap.TechRequired) != null))
                     AddPartCourses(ap);
             }
 

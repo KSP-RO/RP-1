@@ -14,19 +14,10 @@ namespace KerbalConstructionTime
 
         public static KSCItem ActiveKSC = null;
         public static List<KSCItem> KSCs = new List<KSCItem>();
-        public static PersistentSortedListValueTypeKey<string, BuildListVessel> Plans => KerbalConstructionTimeData.Instance?.BuildPlans;
         public static string ActiveKSCName = string.Empty;
         public static float SciPointsTotal = -1f;
         public static bool MergingAvailable;
         public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
-
-        public static KCTObservableList<TechItem> TechList => KerbalConstructionTimeData.Instance?.TechList;
-        
-        public static void UpdateTechTimes()
-        {
-            for (int j = 0; j < TechList.Count; j++)
-                TechList[j].UpdateBuildRate(j);
-        }
 
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
@@ -66,22 +57,6 @@ namespace KerbalConstructionTime
             KCT_GUI.ResetShowFirstRunAgain();
 
             BuildingMaxLevelCache.Clear();
-
-            InitTechList();
-        }
-
-        public static void InitTechList()
-        {
-            if (TechList == null)
-                return;
-
-            if (KerbalConstructionTime.Instance != null)    // Can be null/destroyed in the main menu scene
-            {
-                TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
-            }
-
-            void updated() { RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
-            TechList.Updated += updated;
         }
 
         public static void ClearVesselEditMode()
@@ -119,9 +94,9 @@ namespace KerbalConstructionTime
             foreach (var ksc in KSCs)
                 ksc.RecalculateBuildRates(true);
 
-            for (int i = TechList.Count; i-- > 0;)
+            for (int i = KerbalConstructionTimeData.Instance.TechList.Count; i-- > 0;)
             {
-                TechItem tech = KCTGameStates.TechList[i];
+                TechItem tech = KerbalConstructionTimeData.Instance.TechList[i];
                 tech.UpdateBuildRate(i);
             }
         }

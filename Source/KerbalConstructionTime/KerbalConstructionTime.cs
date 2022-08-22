@@ -685,9 +685,9 @@ namespace KerbalConstructionTime
                 }
                 
                 double researchTime = UTDiff;
-                while (researchTime > 0d && KCTGameStates.TechList.Count > 0)
+                while (researchTime > 0d && KerbalConstructionTimeData.Instance.TechList.Count > 0)
                 {
-                    researchTime = KCTGameStates.TechList[0].IncrementProgress(UTDiff);
+                    researchTime = KerbalConstructionTimeData.Instance.TechList[0].IncrementProgress(UTDiff);
                 }
             }
             Profiler.EndSample();
@@ -695,9 +695,9 @@ namespace KerbalConstructionTime
 
         private void UpdateTechYearMults()
         {
-            for (int i = KCTGameStates.TechList.Count - 1; i >= 0; i--)
+            for (int i = KerbalConstructionTimeData.Instance.TechList.Count - 1; i >= 0; i--)
             {
-                var t = KCTGameStates.TechList[i];
+                var t = KerbalConstructionTimeData.Instance.TechList[i];
                 t.UpdateBuildRate(i);
             }
         }
@@ -719,7 +719,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        protected bool HasTechInList(string id) => KCTGameStates.TechList.FirstOrDefault(x => x.techID == id) != null;
+        protected bool HasTechInList(string id) => KerbalConstructionTimeData.Instance.TechList.FirstOrDefault(x => x.techID == id) != null;
 
         public void DelayedStart()
         {

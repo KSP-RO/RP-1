@@ -136,7 +136,13 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("Reading from persistence.");
                 KCTGameStates.KSCs.Clear();
                 KCTGameStates.ActiveKSC = null;
-                KCTGameStates.InitTechList();
+
+                if (KerbalConstructionTime.Instance != null)    // Can be null/destroyed in the main menu scene
+                {
+                    TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
+                }
+
+                TechList.Updated += techListUpdated;
 
                 // Special check
                 if (LoadedSaveVersion == 0)
@@ -265,6 +271,17 @@ namespace KerbalConstructionTime
                 // Need to switch back to the legacy "Stock" KSC if KSCSwitcher isn't installed
                 Utilities.SetActiveKSC(stockKsc.KSCName);
             }
+        }
+
+        public void UpdateTechTimes()
+        {
+            for (int j = 0; j < TechList.Count; j++)
+                TechList[j].UpdateBuildRate(j);
+        }
+
+        private void techListUpdated() 
+        { 
+            RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); 
         }
     }
 }

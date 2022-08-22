@@ -268,8 +268,8 @@ namespace KerbalConstructionTime
                 {
                     if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
                     {
-                        KCTGameStates.TechList.Add(tech);
-                        tech.UpdateBuildRate(KCTGameStates.TechList.Count - 1);
+                        KerbalConstructionTimeData.Instance.TechList.Add(tech);
+                        tech.UpdateBuildRate(KerbalConstructionTimeData.Instance.TechList.Count - 1);
 
                         OnTechQueued.Fire(ev.host);
                     }
@@ -292,7 +292,7 @@ namespace KerbalConstructionTime
         {
             if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
-                foreach (TechItem techItem in KCTGameStates.TechList)
+                foreach (TechItem techItem in KerbalConstructionTimeData.Instance.TechList)
                     techItem.EnableTech();
             }
 
@@ -305,7 +305,7 @@ namespace KerbalConstructionTime
                 PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes &&
                 PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
-                foreach (TechItem tech in KCTGameStates.TechList)
+                foreach (TechItem tech in KerbalConstructionTimeData.Instance.TechList)
                 {
                     tech.DisableTech();
                 }

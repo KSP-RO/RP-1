@@ -88,7 +88,7 @@ namespace RP0.Harmony
                             switch (save.gameMode)
                             {
                                 case Game.Modes.CAREER:
-                                    dialogGUIVerticalLayout.AddChild(new DialogGUILabel(string.Format("<color=" + XKCDColors.HexFormat.ElectricLime + ">{0, -21}</color><color=" + XKCDColors.HexFormat.BrightCyan + ">{1, -17}</color><color=" + XKCDColors.HexFormat.BrightYellow + ">{2, 13}</color><color=" + CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence) +">{3, 13}</color>", 
+                                    dialogGUIVerticalLayout.AddChild(new DialogGUILabel(string.Format("<color=" + XKCDColors.HexFormat.ElectricLime + ">{0, -20}</color><color=" + XKCDColors.HexFormat.BrightCyan + ">{1, -15}</color><color=" + XKCDColors.HexFormat.BrightYellow + ">{2, 14}</color><color=" + CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence) +">{3, 13}</color>", 
                                         Localizer.Format("#autoLOC_464659", save.funds.ToString("N0")), 
                                         Localizer.Format("#autoLOC_464660", save.science.ToString("N0")), 
                                         Localizer.Format("#loadgame_Rep", save.reputationPercent.ToString("N0")),

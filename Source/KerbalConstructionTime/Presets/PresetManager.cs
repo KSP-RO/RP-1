@@ -259,7 +259,7 @@ namespace KerbalConstructionTime
             ScienceEnabled = Source.ScienceEnabled;
             SandboxEnabled = Source.SandboxEnabled;
 
-            ConfigNode.LoadObjectFromConfig(GeneralSettings, Source.GeneralSettings.AsConfigNode());
+            ConfigNode.LoadObjectFromConfig(GeneralSettings, ConfigNode.CreateConfigFromObject(Source.GeneralSettings));
             PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
@@ -277,7 +277,8 @@ namespace KerbalConstructionTime
             node.AddValue("science", ScienceEnabled);
             node.AddValue("sandbox", SandboxEnabled);
 
-            node.AddNode(GeneralSettings.AsConfigNode());
+            var gs = node.AddNode("KCT_Preset_General");
+            ConfigNode.CreateConfigFromObject(GeneralSettings, gs);
 
             node.AddNode(PartVariables.AsConfigNode());
             return node;
@@ -389,7 +390,7 @@ namespace KerbalConstructionTime
         }
     }
 
-    public class KCT_Preset_General : ConfigNodeStorage
+    public class KCT_Preset_General
     {
         [Persistent]
         public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true;

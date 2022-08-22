@@ -130,13 +130,6 @@ namespace RP0.Programs
                 var program = new Program(programTemplate);
                 program.Load(cn);
                 ActivePrograms.Add(program);
-
-                // back-compat
-                foreach (var s in program.programsToDisableOnAccept)
-                {
-                    Debug.Log($"[RP-0] Back-compat: Program {progName} asks to disable {s}");
-                    DisableProgram(s);
-                }
             }
 
             foreach (ConfigNode cn in node.GetNodes("COMPLETEDPROGRAM"))
@@ -146,13 +139,6 @@ namespace RP0.Programs
                 var program = new Program(programTemplate);
                 program.Load(cn);
                 CompletedPrograms.Add(program);
-
-                // back-compat
-                foreach (var s in program.programsToDisableOnAccept)
-                {
-                    Debug.Log($"[RP-0] Back-compat: Program {progName} asks to disable {s}");
-                    DisableProgram(s);
-                }
             }
         }
 

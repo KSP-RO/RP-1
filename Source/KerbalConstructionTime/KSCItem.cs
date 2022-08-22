@@ -5,39 +5,53 @@ using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class KSCItem
+    public class KSCItem : IConfigNode
     {
+        [Persistent]
         public string KSCName;
-        public List<ConstructionBuildItem> Constructions = new List<ConstructionBuildItem>();
-        public PersistentList<LCItem> LaunchComplexes = new PersistentList<LCItem>();
-        public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
-        public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
+        [Persistent]
         public int Engineers = 0;
         public int UnassignedEngineers => Engineers - LaunchComplexes.Sum(lc => lc.Engineers);
-
+        [Persistent]
         public int ActiveLaunchComplexIndex = 0;
+
+        [Persistent]
+        public PersistentList<LCItem> LaunchComplexes = new PersistentList<LCItem>();
+        [Persistent]
+        public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
+        [Persistent]
+        public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
+                
+
+        public List<ConstructionBuildItem> Constructions = new List<ConstructionBuildItem>();
+
         private bool _allowRecalcConstructions = true;
 
         public LCItem Hangar => LaunchComplexes[0];
 
-        public KSCItem(string name)
+        void added(int idx, ConstructionBuildItem item) { Constructions.Add(item); }
+        void removed(int idx, ConstructionBuildItem item) { Constructions.Remove(item); }
+        void updated()
         {
-            KSCName = name;
+            if (_allowRecalcConstructions) RecalculateBuildRates(false);
+            RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+        }
 
+        private void SetListeners()
+        {
             LCConstructions.Added += added;
             LCConstructions.Removed += removed;
             LCConstructions.Updated += updated;
             FacilityUpgrades.Added += added;
             FacilityUpgrades.Removed += removed;
             FacilityUpgrades.Updated += updated;
+        }
 
-            void added(int idx, ConstructionBuildItem item) { Constructions.Add(item); }
-            void removed(int idx, ConstructionBuildItem item) { Constructions.Remove(item); }
-            void updated()
-            {
-                if (_allowRecalcConstructions) RecalculateBuildRates(false);
-                RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
-            }
+        public KSCItem(string name)
+        {
+            KSCName = name;
+
+            SetListeners();
         }
 
         public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;
@@ -144,74 +158,34 @@ namespace KerbalConstructionTime
             LaunchComplexes[LC_ID].SwitchLaunchPad();
         }
 
-        public ConfigNode AsConfigNode()
+        public void Save(ConfigNode node)
         {
             KCTDebug.Log("Saving KSC " + KSCName);
-            var node = new ConfigNode("KSC");
-            node.AddValue("KSCName", KSCName);
-            node.AddValue("ActiveLCID", ActiveLaunchComplexIndex);
-            node.AddValue("Engineers", Engineers);
-
-            var cnLCs = new ConfigNode("LaunchComplexes");
-            LaunchComplexes.Save(cnLCs);
-            node.AddNode(cnLCs);
-
-            var cnUpgradeables = new ConfigNode("FacilityUpgrades");
-            FacilityUpgrades.Save(cnUpgradeables);
-            node.AddNode(cnUpgradeables);
-
-            var cnLCConstructions = new ConfigNode("LCConstructions");
-            LCConstructions.Save(cnLCConstructions);
-            node.AddNode(cnLCConstructions);
-
-            return node;
+            ConfigNode.CreateConfigFromObject(this, node);
         }
 
-        public KSCItem FromConfigNode(ConfigNode node)
+        public void Load(ConfigNode node)
         {
             _allowRecalcConstructions = false;
+            ConfigNode.LoadObjectFromConfig(this, node);
 
-            FacilityUpgrades.Clear();
-            LCConstructions.Clear();
-
-            KSCName = node.GetValue("KSCName");
-            if (!int.TryParse(node.GetValue("ActiveLCID"), out ActiveLaunchComplexIndex))
-                ActiveLaunchComplexIndex = 0;
-
-            Engineers = 0;
-            node.TryGetValue("Engineers", ref Engineers);
-
-            
-
-            ConfigNode tmp = node.GetNode("LaunchComplexes");
-            if (tmp != null)
-            {
-                LaunchComplexes.Load(tmp);
                 foreach (var lc in LaunchComplexes)
                 {
                     lc.PostLoad(this);
                 }
-            }
 
-            tmp = node.GetNode("LCConstructions");
-            if (tmp != null)
-            {
-                LCConstructions.Load(tmp);
-            }
-
-            tmp = node.GetNode("FacilityUpgrades");
-            if (tmp != null)
-            {
-                FacilityUpgrades.Load(tmp);
-            }
+            
 
             _allowRecalcConstructions = true;
 
             if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 18)
+                {
+                    if (!int.TryParse(node.GetValue("ActiveLCID"), out ActiveLaunchComplexIndex))
+                        ActiveLaunchComplexIndex = 0;
+                }
             }
-
-            return this;
         }
     }
 }

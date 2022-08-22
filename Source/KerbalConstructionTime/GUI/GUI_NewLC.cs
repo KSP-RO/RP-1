@@ -66,13 +66,12 @@ namespace KerbalConstructionTime
             _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.2f);
             _newLCData.sizeMax.x = Mathf.Ceil(blv.ShipSize.x * 1.2f);
             _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
+            _newLCData.isHumanRated = blv.humanRated;
             if (lc == null)
             {
                 _newLCData.massMax = Mathf.Ceil(blv.mass * 1.1f);
                 if (blv.mass < 1f) // special case
                     _newLCData.massMax = 1f;
-
-                _newLCData.isHumanRated = blv.humanRated;
 
                 _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
                 _newLCData.massOrig = _newLCData.massMax;
@@ -124,6 +123,7 @@ namespace KerbalConstructionTime
             {
                 if (blv.mass < _newLCData.MassMin && LCData.CalcMassMaxFromMin(blv.mass) < _requiredTonnage)
                     return;
+                _newLCData.isHumanRated |= blv.humanRated;
             }
             else
             {

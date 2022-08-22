@@ -28,17 +28,6 @@ namespace KerbalConstructionTime
 
             if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 8)
-                {
-                    if (modId == Guid.Empty)
-                    {
-                        modId = Guid.NewGuid();
-                    }
-                    else
-                    {
-                        modId = lcID;
-                    }
-                }
                 if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 12)
                 {
                     lcData.Name = KCTGameStates.FindLCFromID(lcID)?.Name ?? lcData.Name;

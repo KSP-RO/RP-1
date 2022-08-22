@@ -181,13 +181,7 @@ namespace KerbalConstructionTime
             Engineers = 0;
             node.TryGetValue("Engineers", ref Engineers);
 
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 1)
-                {
-                    Engineers *= 2;
-                }
-            }
+            
 
             ConfigNode tmp = node.GetNode("LaunchComplexes");
             if (tmp != null)
@@ -212,6 +206,10 @@ namespace KerbalConstructionTime
             }
 
             _allowRecalcConstructions = true;
+
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
+            {
+            }
 
             return this;
         }

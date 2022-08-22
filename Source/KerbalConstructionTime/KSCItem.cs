@@ -37,7 +37,7 @@ namespace KerbalConstructionTime
             RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
-        private void SetListeners()
+        private void AddListeners()
         {
             LCConstructions.Added += added;
             LCConstructions.Removed += removed;
@@ -51,7 +51,7 @@ namespace KerbalConstructionTime
         {
             KSCName = name;
 
-            SetListeners();
+            AddListeners();
         }
 
         public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;
@@ -169,12 +169,23 @@ namespace KerbalConstructionTime
             _allowRecalcConstructions = false;
             ConfigNode.LoadObjectFromConfig(this, node);
 
-                foreach (var lc in LaunchComplexes)
-                {
-                    lc.PostLoad(this);
-                }
+            foreach (var lc in LaunchComplexes)
+            {
+                // This will link to us
+                // and add the padconstructions
+                lc.PostLoad(this);
+            }
 
-            
+            // Loading these objects from confignode creates them fresh,
+            // so the listeners get nuked. We have to re-add the listeners
+            // and then iterate.
+            AddListeners();
+            // We need to add LCCs and facility upgrades (pads done above)
+            foreach (var c in LCConstructions)
+                Constructions.Add(c);
+            foreach (var c in FacilityUpgrades)
+                Constructions.Add(c);
+
 
             _allowRecalcConstructions = true;
 

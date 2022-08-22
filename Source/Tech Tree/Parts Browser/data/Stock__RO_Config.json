@@ -2333,6 +2333,29 @@
         ]
     },
     {
+        "name": "ROMeteoSustainer",
+        "title": "U-1250",
+        "description": "",
+        "mod": "Stock (RO Config)",
+        "cost": "45",
+        "entry_cost": "1",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "MR-1",
+        "engine_config": "U1250",
+        "upgrade": false,
+        "entry_cost_mods": "U-1250",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "RO_EarlyMediumSolarPanel",
         "title": "ST1 Medium Solar Panel",
         "description": "Medium static Level 1 solar panel. 0.125m^2.",

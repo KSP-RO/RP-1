@@ -393,11 +393,12 @@ namespace KerbalConstructionTime
                 GUILayout.Label(" ");
 
                 double buildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad, null);
+                double buildCost = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -totalCost);
                 string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
-                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -totalCost):N0}", GetLabelRightAlignStyle());
+                GUILayout.Label(new GUIContent($"√{buildCost:N0}", $"Daily: √{(buildCost * 86400d / buildTime):N1}"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
                 if (!isModify || _newLCData.lcType == LaunchComplexType.Pad)
                 {

@@ -363,8 +363,8 @@ namespace KerbalConstructionTime
             var cnLPs = new ConfigNode("LaunchPads");
             foreach (KCT_LaunchPad lp in LaunchPads)
             {
-                ConfigNode lpCN = lp.AsConfigNode();
-                lpCN.AddNode(lp.DestructionNode);
+                ConfigNode lpCN = new ConfigNode("KCT_LauncHPad");
+                lp.Save(lpCN);
                 cnLPs.AddNode(lpCN);
             }
             node.AddNode(cnLPs);
@@ -427,13 +427,7 @@ namespace KerbalConstructionTime
                 foreach (ConfigNode cn in tmp.GetNodes("KCT_LaunchPad"))
                 {
                     var tempLP = new KCT_LaunchPad("LP0");
-                    ConfigNode.LoadObjectFromConfig(tempLP, cn);
-                    if (!cn.TryGetValue(nameof(KCT_LaunchPad.id), ref tempLP.id) || tempLP.id == Guid.Empty)
-                    {
-                        tempLP.id = Guid.NewGuid();
-                    }
-                    tempLP.DestructionNode = cn.GetNode("DestructionState");
-                    if (tempLP.fractionalLevel == -1) tempLP.MigrateFromOldState();
+                    tempLP.Load(cn);
                     LaunchPads.Add(tempLP);
                 }
             }

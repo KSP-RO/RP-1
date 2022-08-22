@@ -81,13 +81,13 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
                 _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
-                if (KCTGameStates.Plans.Count == 0)
+                if (KerbalConstructionTimeData.Instance.BuildPlans.Count == 0)
                 {
                     GUILayout.Label("No vessels in plans.");
                 }
-                for (int i = 0; i < KCTGameStates.Plans.Count; i++)
+                for (int i = 0; i < KerbalConstructionTimeData.Instance.BuildPlans.Count; i++)
                 {
-                    BuildListVessel b = KCTGameStates.Plans.Values[i];
+                    BuildListVessel b = KerbalConstructionTimeData.Instance.BuildPlans.Values[i];
                     if (!b.AllPartsValid)
                         continue;
                     GUILayout.BeginHorizontal();
@@ -165,13 +165,13 @@ namespace KerbalConstructionTime
         public static void AddVesselToPlansList(BuildListVessel blv)
         {
             ScreenMessage message;
-            if (KCTGameStates.Plans.ContainsKey(blv.shipName))
+            if (KerbalConstructionTimeData.Instance.BuildPlans.ContainsKey(blv.shipName))
             {
-                KCTGameStates.Plans.Remove(blv.shipName);
+                KerbalConstructionTimeData.Instance.BuildPlans.Remove(blv.shipName);
                 message = new ScreenMessage($"Replacing previous plan for {blv.shipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
-            KCTGameStates.Plans.Add(blv.shipName, blv);
+            KerbalConstructionTimeData.Instance.BuildPlans.Add(blv.shipName, blv);
 
             KCTDebug.Log($"Added {blv.shipName} to plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}");
             KCTDebug.Log($"Launch site is {blv.launchSite}");
@@ -183,7 +183,7 @@ namespace KerbalConstructionTime
         private static void RemoveVesselFromPlans()
         {
             InputLockManager.RemoveControlLock("KCTPopupLock");
-            KCTGameStates.Plans.RemoveAt(_planToDelete);
+            KerbalConstructionTimeData.Instance.BuildPlans.RemoveAt(_planToDelete);
         }
     }
 }

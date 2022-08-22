@@ -459,7 +459,7 @@ namespace KerbalConstructionTime
         {
             _accumulatedTimeBefore = 0d;
 
-            KCTObservableList<TechItem> techList = KCTGameStates.TechList;
+            KCTObservableList<TechItem> techList = KerbalConstructionTimeData.Instance.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
@@ -559,7 +559,7 @@ namespace KerbalConstructionTime
                 if (forceRecheck)
                 {
                     forceRecheck = false;
-                    KCTGameStates.UpdateTechTimes();
+                    KerbalConstructionTimeData.Instance.UpdateTechTimes();
                 }
 
                 string blockingPrereq = t.GetBlockingTech(techList);
@@ -639,7 +639,7 @@ namespace KerbalConstructionTime
                 }
             }
             accTime = 0d;
-            foreach (var t in KCTGameStates.TechList)
+            foreach (var t in KerbalConstructionTimeData.Instance.TechList)
             {
                 _timeBeforeItem[t] = accTime;
                 accTime += t.GetTimeLeftEst(accTime);
@@ -1565,21 +1565,21 @@ namespace KerbalConstructionTime
         {
             RemoveInputLocks();
 
-            if (KCTGameStates.TechList.Count > index)
+            if (KerbalConstructionTimeData.Instance.TechList.Count > index)
             {
-                TechItem node = KCTGameStates.TechList[index];
+                TechItem node = KerbalConstructionTimeData.Instance.TechList[index];
                 KCTDebug.Log($"Cancelling tech: {node.techName}");
 
                 // cancel children
-                for (int i = 0; i < KCTGameStates.TechList.Count; i++)
+                for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count; i++)
                 {
-                    List<string> parentList = KerbalConstructionTimeData.techNameToParents[KCTGameStates.TechList[i].techID];
+                    List<string> parentList = KerbalConstructionTimeData.techNameToParents[KerbalConstructionTimeData.Instance.TechList[i].techID];
                     if (parentList.Contains(node.techID))
                     {
                         CancelTechNode(i);
                         // recheck list in case multiple levels of children were deleted.
                         i = -1;
-                        index = KCTGameStates.TechList.FindIndex(t => t.techID == node.techID);
+                        index = KerbalConstructionTimeData.Instance.TechList.FindIndex(t => t.techID == node.techID);
                     }
                 }
 
@@ -1597,7 +1597,7 @@ namespace KerbalConstructionTime
                     }
                 }
                 node.DisableTech();
-                KCTGameStates.TechList.RemoveAt(index);
+                KerbalConstructionTimeData.Instance.TechList.RemoveAt(index);
                 RP0.Crew.CrewHandler.Instance?.OnTechCanceled(node.techID);
             }
         }

@@ -106,7 +106,7 @@ namespace RP0.Milestones
             else
                 AddData(milestone, string.Empty);
 
-            AddData(milestone, v.name);
+            AddData(milestone, v.vesselName);
         }
 
         /// <summary>

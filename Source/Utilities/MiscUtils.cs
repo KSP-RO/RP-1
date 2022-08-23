@@ -9,5 +9,12 @@ namespace RP0
             dict.TryGetValue(key, out TValue value);
             return value;
         }
+
+        public static T Pop<T>(this List<T> list)
+        {
+            T val = list[0];
+            list.RemoveAt(0);
+            return val;
+        }
     }
 }

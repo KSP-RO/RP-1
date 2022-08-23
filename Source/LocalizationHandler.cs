@@ -165,5 +165,27 @@ namespace RP0
 
             return Localizer.Format("#rp0PositiveValue", value.ToString(format));
         }
+
+        public static string FormatList(List<string> list, bool isAnd = true)
+        {
+            if (list.Count == 0)
+                return string.Empty;
+
+            if (list.Count == 1)
+                return list[0];
+
+            // This just returns "one" ????
+            //return Localizer.Format($"<<and(1,{list.Count})>>", list.ToArray());
+
+            var sb = StringBuilderCache.Acquire();
+            string sep = Localizer.GetStringByTag("#rp0_list_separator") + " ";
+            sb.Append(list[0]);
+            int last = list.Count - 1;
+            for (int i = 1; i < last; ++i)
+                sb.Append(sep).Append(list[i]);
+            sb.Append(sep).Append(Localizer.GetStringByTag(isAnd ? "#rp0_list_and_final" : "#rp0_list_or_final")).Append(" ").Append(list[last]);
+
+            return sb.ToStringAndRelease();
+        }
     }
 }

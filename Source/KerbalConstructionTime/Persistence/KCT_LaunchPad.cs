@@ -210,6 +210,9 @@ namespace KerbalConstructionTime
 
         public void SetActive()
         {
+            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+                return;
+
             try
             {
                 int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);

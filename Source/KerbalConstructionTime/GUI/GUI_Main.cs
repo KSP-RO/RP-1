@@ -43,6 +43,9 @@ namespace KerbalConstructionTime
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     return;
 
+                if (RP0.Milestones.NewspaperUI.IsOpen)
+                    return;
+
                 if (GUIStates.ShowEditorGUI)
                     EditorWindowPosition = DrawWindowWithTooltipSupport(EditorWindowPosition, "DrawEditorGUI", "Integration Info", DrawEditorGUI);
                 if (GUIStates.ShowSimulationGUI)

@@ -48,7 +48,7 @@ namespace RP0
 
         protected void OnGUI()
         {
-            if (_isGuiEnabled)
+            if (_isGuiEnabled && !Milestones.NewspaperUI.IsOpen)
                 _tw.OnGUI();
         }
 

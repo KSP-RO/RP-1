@@ -77,10 +77,10 @@ namespace RP0
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(up.Name, BoldLabel, GUILayout.Width(312));
-                    GUILayout.Label($"{up.ToolingCost:N0}f", RightLabel, GUILayout.Width(72));
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -up.ToolingCost):N0}", RightLabel, GUILayout.Width(72));
                     float untooledExtraCost = GetUntooledExtraCost(up);
-                    GUILayout.Label($"{up.TotalCost:N0}f", RightLabel, GUILayout.Width(72));
-                    GUILayout.Label($"{(up.TotalCost - untooledExtraCost):N0}f", RightLabel, GUILayout.Width(72));
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -up.TotalCost):N0}", RightLabel, GUILayout.Width(72));
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -(up.TotalCost - untooledExtraCost)):N0}", RightLabel, GUILayout.Width(72));
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.EndScrollView();
@@ -134,12 +134,13 @@ namespace RP0
             if (GUILayout.Button("Tool All", HighLogic.Skin.button))
             {
                 GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
-                bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasonsRP0.ToolingPurchase.Stock(), -toolingCost, 0f, 0f).CanAfford();
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ToolingPurchase, -toolingCost, 0d, 0d);
+                bool canAfford = cmq.CanAfford();
                 string buttonText = canAfford ? "Purchase All Toolings" : "Can't Afford";
 
                 var dialog = new MultiOptionDialog(
                         "ConfirmAllToolingsPurchase",
-                        $"Tooling for all untooled parts will cost {toolingCost:N0} funds.",
+                        $"Tooling for all untooled parts will cost {-cmq.GetTotal(CurrencyRP0.Funds):N0} funds.",
                         "Tooling Purchase",
                         HighLogic.UISkin,
                         new Rect(0.5f, 0.5f, 150f, 60f),
@@ -161,7 +162,7 @@ namespace RP0
         {
             GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
 
-            bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasonsRP0.ToolingPurchase.Stock(), -toolingCost, 0f, 0f).CanAfford();
+            bool canAfford = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ToolingPurchase, -toolingCost, 0d, 0d).CanAfford();
             if (canAfford)
             {
                 ModuleTooling.PurchaseToolingBatch(untooledParts);
@@ -212,6 +213,8 @@ namespace RP0
             }
         }
 
+        private static HashSet<Part> _parts = new HashSet<Part>();
+
         private void Update()
         {
             _untooledParts.Clear();
@@ -230,7 +233,15 @@ namespace RP0
                             up.Name = $"{p.partInfo.title} ({mT.ToolingType}) {mT.GetToolingParameterInfo()}";
                             up.ToolingCost = mT.GetToolingCost();
                             up.UntooledMultiplier = mT.untooledMultiplier;
-                            up.TotalCost = p.GetModuleCosts(p.partInfo.cost) + p.partInfo.cost;
+                            if (_parts.Contains(p))
+                            {
+                                up.TotalCost = 0f;
+                            }
+                            else
+                            {
+                                _parts.Add(p);
+                                up.TotalCost = p.GetModuleCosts(p.partInfo.cost) + p.partInfo.cost;
+                            }
                             _untooledParts.Add(up);
                             totalUntooledExtraCost += GetUntooledExtraCost(up);
                         }
@@ -238,6 +249,7 @@ namespace RP0
                 }
             }
 
+            _parts.Clear();
             _allTooledCost = EditorLogic.fetch.ship.GetShipCosts(out _, out _) - totalUntooledExtraCost;
         }
 

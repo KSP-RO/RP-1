@@ -14,6 +14,7 @@ namespace RP0.Milestones
         [Persistent] public string headline;
         [Persistent] public string article;
         [Persistent] public string image;
+        [Persistent] public bool canRequeue = false;
 
         public Milestone()
         {

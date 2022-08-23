@@ -115,32 +115,6 @@ namespace RP0.Milestones
             if (data == null || data.Count == 0)
                 return template;
 
-            // We have to reimplement some Lingoona logic here because Squad's lib is busted.
-            Regex regex = new Regex("\\[\\[(and|or)\\((\\d+)\\,(\\d+)\\)\\]\\]");
-            Match match;
-            while ((match = regex.Match(template)).Success)
-            {
-                template = template.Remove(match.Groups[0].Index, match.Groups[0].Length);
-
-                bool isAnd = match.Groups[1].Value == "and";
-                char c = match.Groups[2].Value[0];
-                if (c >= '0' && c <= '9')
-                {
-                    int start = int.Parse(match.Groups[2].Value);
-                    start--;
-                    if (start >= 0 && start < data.Count)
-                    {
-                        int end = int.Parse(match.Groups[3].Value);
-                        end = Math.Min(end, data.Count);
-
-                        List<string> newList = new List<string>(end - start + 1);
-                        for (int i = start; i < end; ++i)
-                            newList.Add(data[i]);
-
-                        template = template.Insert(match.Groups[0].Index, LocalizationHandler.FormatList(newList, isAnd));
-                    }
-                }
-            }
             return Localizer.Format(template, data.ToArray());
         }
 

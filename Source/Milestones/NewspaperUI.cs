@@ -61,7 +61,7 @@ namespace RP0.Milestones
             newspaperTitle.text = GetTitle();
             milestoneDate.text = GetDate(m, data);
             playerFlag.sprite = GetPlayerFlag();
-            headlineText.text = m.headline;
+            headlineText.text = FillText(m.headline, data);
             articleText.text = FillText(m.article, data);
             milestoneImage.sprite = GetImage(m);
         }

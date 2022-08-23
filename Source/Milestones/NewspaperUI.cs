@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using KSP.UI.TooltipTypes;
 using RP0.UI;
 using UniLinq;
+using System.Collections.Generic;
+using KSP.Localization;
+using System.Text.RegularExpressions;
 
 namespace RP0.Milestones
 {
@@ -17,7 +20,7 @@ namespace RP0.Milestones
 
         public static bool IsOpen => NewspaperCanvas != null;
 
-        public static void ShowGUI(Milestone m)
+        public static void ShowGUI(Milestone m, List<string> data)
         {
             // Load the UI and show it
             NewspaperCanvas = (GameObject)Instantiate(NewspaperLoader.PanelPrefab);
@@ -53,13 +56,14 @@ namespace RP0.Milestones
             var milestoneImage = NewspaperCanvas.transform.FindDeepChild("NewsImage").GetComponent<Image>();
             //var newsButtonText = NewspaperCanvas.transform.FindDeepChild("NewsButtonText").GetComponent<Text>();
 
+
             // Set the variable text and data based on the completed contract
-            newspaperTitle.text = GetNewspaperTitle();
-            milestoneDate.text = GetMilestoneDate(m);
+            newspaperTitle.text = GetTitle();
+            milestoneDate.text = GetDate(m, data);
             playerFlag.sprite = GetPlayerFlag();
             headlineText.text = m.headline;
-            articleText.text = m.article;
-            milestoneImage.sprite = GetMilestoneImage(m);
+            articleText.text = FillText(m.article, data);
+            milestoneImage.sprite = GetImage(m);
         }
 
         private static string GetTooltipTextButton()
@@ -83,14 +87,19 @@ namespace RP0.Milestones
             NewspaperCanvas = null;
         }
 
-        private static string GetNewspaperTitle()
+        private static string GetTitle()
         {
             string title = "Space Gazette";
             return title;
         }
 
-        private static string GetMilestoneDate(Milestone m)
+        private static string GetDate(Milestone m, List<string> data)
         {
+            if (data != null && data.Count > 0)
+            {
+                return data.Pop();
+            }
+
             double contractDate = double.MaxValue, programDate = double.MaxValue ;
             if(!string.IsNullOrEmpty(m.contractName))
                 contractDate = Contracts.ContractSystem.Instance.ContractsFinished.FirstOrDefault(c => c is ContractConfigurator.ConfiguredContract cc && cc.contractType.name == m.contractName)?.DateFinished ?? contractDate;
@@ -101,7 +110,41 @@ namespace RP0.Milestones
             return KSPUtil.PrintDate(date, false);
         }
 
-        private static Sprite GetMilestoneImage(Milestone m)
+        private static string FillText(string template, List<string> data)
+        {
+            if (data == null || data.Count == 0)
+                return template;
+
+            // We have to reimplement some Lingoona logic here because Squad's lib is busted.
+            Regex regex = new Regex("\\[\\[(and|or)\\((\\d+)\\,(\\d+)\\)\\]\\]");
+            Match match;
+            while ((match = regex.Match(template)).Success)
+            {
+                template = template.Remove(match.Groups[0].Index, match.Groups[0].Length);
+
+                bool isAnd = match.Groups[1].Value == "and";
+                char c = match.Groups[2].Value[0];
+                if (c >= '0' && c <= '9')
+                {
+                    int start = int.Parse(match.Groups[2].Value);
+                    start--;
+                    if (start >= 0 && start < data.Count)
+                    {
+                        int end = int.Parse(match.Groups[3].Value);
+                        end = Math.Min(end, data.Count);
+
+                        List<string> newList = new List<string>(end - start + 1);
+                        for (int i = start; i < end; ++i)
+                            newList.Add(data[i]);
+
+                        template = template.Insert(match.Groups[0].Index, LocalizationHandler.FormatList(newList, isAnd));
+                    }
+                }
+            }
+            return Localizer.Format(template, data.ToArray());
+        }
+
+        private static Sprite GetImage(Milestone m)
         {
             Texture2D tex = null;
             string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{m.name}.png";

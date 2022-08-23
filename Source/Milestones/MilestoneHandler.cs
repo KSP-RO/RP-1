@@ -23,10 +23,13 @@ namespace RP0.Milestones
         private const int _TicksToStart = 3;
 
         [KSPField(isPersistant = true)]
-        public PersistentHashSetValueType<string> seenMilestones = new PersistentHashSetValueType<string>();
+        private PersistentHashSetValueType<string> seenMilestones = new PersistentHashSetValueType<string>();
 
         [KSPField(isPersistant = true)]
-        public PersistentListValueType<string> queuedMilestones = new PersistentListValueType<string>();
+        private PersistentListValueType<string> queuedMilestones = new PersistentListValueType<string>();
+
+        [KSPField(isPersistant = true)]
+        private PersistentDictionaryValueTypeKey<string, PersistentListValueType<string>> milestoneData = new PersistentDictionaryValueTypeKey<string, PersistentListValueType<string>>();
 
         public override void OnAwake()
         {
@@ -37,6 +40,7 @@ namespace RP0.Milestones
             Instance = this;
 
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
+            GameEvents.onCrewKilled.Add(OnCrewKilled);
 
             if (ContractToMilestone == null)
             {
@@ -75,6 +79,66 @@ namespace RP0.Milestones
         public void OnDestroy()
         {
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
+            GameEvents.onCrewKilled.Remove(OnCrewKilled);
+        }
+
+        private void TryAddDate(string name)
+        {
+            if (!milestoneData.TryGetValue(name, out var list))
+            {
+                list = new PersistentListValueType<string>();
+                milestoneData.Add(name, list);
+                list.Add(KSPUtil.PrintDate(KSPUtils.GetUT(), false));
+            }
+        }
+
+        private void AddVesselCrewData(string milestone, Vessel v)
+        {
+            if (v == null)
+            {
+                AddData(milestone, string.Empty);
+                AddData(milestone, string.Empty);
+                return;
+            }
+                var crew = v.GetVesselCrew();
+            if (crew.Count > 0)
+                AddData(milestone, crew[0].displayName);
+            else
+                AddData(milestone, string.Empty);
+
+            AddData(milestone, v.name);
+        }
+
+        /// <summary>
+        /// Returns the index of the data added, or -1 if it did not add because
+        /// there wasn't a date yet (or there was no data assigned at all)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private int AddData(string name, string data)
+        {
+            if (!milestoneData.TryGetValue(name, out var list) || list.Count == 0)
+                return -1; // can't add data before adding a date.
+
+            list.Add(data);
+            return list.Count - 1;
+        }
+
+        private void OnCrewKilled(EventReport evt)
+        {
+            const string crewKilledMilestoneName = "CrewKilledMilestone";
+            if (Milestones.ContainsKey(crewKilledMilestoneName) && evt.eventType == FlightEvents.CREW_KILLED)
+            {
+                if (!queuedMilestones.Contains(crewKilledMilestoneName))
+                {
+                    queuedMilestones.Add(crewKilledMilestoneName);
+                    TryAddDate(crewKilledMilestoneName);
+                    // empty vessel and first-crewmember data
+                    AddVesselCrewData(crewKilledMilestoneName, null);
+                }
+                AddData(crewKilledMilestoneName, HighLogic.CurrentGame.CrewRoster[evt.sender].displayName);
+            }
         }
 
         public void OnProgramComplete(string name)
@@ -83,6 +147,10 @@ namespace RP0.Milestones
             {
                 seenMilestones.Add(milestone.name);
                 queuedMilestones.Add(milestone.name);
+                TryAddDate(milestone.name);
+                // No vessel or crew
+                AddVesselCrewData(milestone.name, null);
+                // Add extra data here if desired
             }
         }
 
@@ -103,6 +171,10 @@ namespace RP0.Milestones
             {
                 seenMilestones.Add(milestone.name);
                 queuedMilestones.Add(milestone.name);
+                TryAddDate(milestone.name);
+                AddVesselCrewData(milestone.name, FlightGlobals.ActiveVessel);
+                // Add extra data here if desired
+
                 if (!HighLogic.LoadedSceneIsFlight)
                     yield break;
 
@@ -155,9 +227,10 @@ namespace RP0.Milestones
         {
             if (queuedMilestones.Count > 0)
             {
-                string mName = queuedMilestones[0];
-                queuedMilestones.RemoveAt(0);
-                NewspaperUI.ShowGUI(Milestones[mName]);
+                var m = Milestones[queuedMilestones.Pop()];
+                NewspaperUI.ShowGUI(m, milestoneData.ValueOrDefault(m.name));
+                if (m.canRequeue)
+                    seenMilestones.Remove(m.name);
             }
         }
     }

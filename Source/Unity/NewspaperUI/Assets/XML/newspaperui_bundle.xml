@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<KSPBundleDefinition xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" UrlName="newspaperui" Name="newspaperui" CreatedTime="-8585405175827079069" AutoLoad="false">
+  <Author />
+  <Info />
+  <Assets>
+    <Asset Name="NewsBorder" Path="Assets/UI Export/NewsBorder.prefab" Type="GameObject" Url="UI Export/NewsBorder" AutoLoad="false" />
+  </Assets>
+  <Dependencies />
+</KSPBundleDefinition>

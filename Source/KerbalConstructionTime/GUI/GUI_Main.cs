@@ -1,20 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using RP0;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
+        private const int _centralWindowWidth = 150;
+        private const int _blPlusWidth = 100;
+        
         public static GUIStates GUIStates = new GUIStates();
         public static GUIStates PrevGUIStates = null;
         public static GUIDataSaver GuiDataSaver = new GUIDataSaver();
 
-        private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 150, 50);
-        private static Rect _blPlusPosition = new Rect(Screen.width - 500, 40, 100, 1);
+        private static Rect _centralWindowPosition = new Rect((Screen.width - _centralWindowWidth * UIHolder.UIScale) / 2, (Screen.height - 50) / 2, _centralWindowWidth * UIHolder.UIScale, 1);
+        private static Rect _blPlusPosition = new Rect(Screen.width - _blPlusWidth * UIHolder.UIScale, 40, _blPlusWidth * UIHolder.UIScale, 1);
         private static Rect _lcResourcesPosition = new Rect(_centralWindowPosition.xMin - 150, _centralWindowPosition.yMin, 250, 200);
         private static Vector2 _scrollPos;
         private static Vector2 _scrollPos2;
-        private static GUISkin _windowSkin;
         private static GUIStyle _orangeText;
 
         private static bool _unlockEditor;
@@ -25,21 +28,17 @@ namespace KerbalConstructionTime
         private static GUIStyle _styleLabelRightAlign;
         private static GUIStyle _styleLabelCenterAlign;
         private static GUIStyle _styleTextFieldRightAlign;
+        private static GUIStyle _styleLabelMultiline;
 
         public static bool IsPrimarilyDisabled => PresetManager.PresetLoaded() && (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                                                                                    !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes);
 
         public static void SetGUIPositions()
         {
-            GUISkin oldSkin = GUI.skin;
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && _windowSkin == null)
-                _windowSkin = GUI.skin;
-            GUI.skin = _windowSkin;
-
             if (_validScenes.Contains(HighLogic.LoadedScene))
             {
                 if (GUIStates.ShowSettings)
-                    _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "Settings", DrawPresetWindow);
+                    _presetWindowPosition = DrawWindowWithTooltipSupport(_presetWindowPosition, "DrawPresetWindow", "Settings", DrawPresetWindow);
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     return;
 
@@ -131,8 +130,6 @@ namespace KerbalConstructionTime
                     InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
                     _isKSCLocked = false;
                 }
-
-                GUI.skin = oldSkin;
             }
         }
 
@@ -343,6 +340,17 @@ namespace KerbalConstructionTime
             }
             return _styleTextFieldRightAlign;
         }
+        
+        private static GUIStyle GetMultilineStyle(GUIStyle template)
+        {
+            if (_styleLabelMultiline == null)
+            {
+                _styleLabelMultiline = new GUIStyle(template);
+                _styleLabelMultiline.fixedHeight = 0;
+                _styleLabelMultiline.wordWrap = true;
+            }
+            return _styleLabelMultiline;
+        }
 
         public static void EnterSCSubcene()
         {
@@ -357,6 +365,38 @@ namespace KerbalConstructionTime
         {
             _wasShowBuildList = false;
             _overrideShowBuildPlans = false;
+        }
+        
+        /// <summary>
+        /// Resets all GUIStyles and Rects used in the UI so that UI scale can change instantly
+        /// </summary>
+        public static void ResetStylesAndPositions()
+        {
+            KerbalConstructionTime.ReinitializeUIs();
+            
+            _styleLabelRightAlign = null;
+            _styleLabelCenterAlign = null;
+            _styleTextFieldRightAlign = null;
+            _styleLabelMultiline = null;
+            
+            ResetTooltipStyle();
+            InitTooltips();
+            
+            PositionAndSizeDevPartsIcon();
+            
+            _centralWindowPosition.size = new Vector2(_centralWindowWidth * UIHolder.UIScale, 1);
+            _blPlusPosition.size = new Vector2(_blPlusWidth * UIHolder.UIScale, 1);
+            _airlaunchWindowPosition.size = new Vector2(_airLaunchWindowWidth * UIHolder.UIScale, 1);
+            BuildListWindowPosition.size = new Vector2(_buildListWindowWidth * UIHolder.UIScale, 1);
+            EditorBuildListWindowPosition.size = new Vector2(_editorBuildListWindowWidth * UIHolder.UIScale, 1);
+            _crewListWindowPosition.size = new Vector2(_crewListWindowWidth * UIHolder.UIScale, 1);
+            EditorWindowPosition.size = new Vector2(_editorWindowWidth * UIHolder.UIScale, 1);
+            _firstRunWindowPosition.size = new Vector2(_firstRunWindowWidth * UIHolder.UIScale, 1);
+            _personnelPosition.size = new Vector2(_personnelWindowWidth * UIHolder.UIScale, 1);
+            _presetWindowPosition.size = new Vector2(_presetWindowWidth * UIHolder.UIScale, 1);
+            _presetNamingWindowPosition.size = new Vector2(_presetNamingWindowWidth * UIHolder.UIScale, 1);
+            _simulationWindowPosition.size = new Vector2(_simulationWindowWidth * UIHolder.UIScale, 1);
+            _simulationConfigPosition.size = new Vector2(_simulationConfigWidth * UIHolder.UIScale, 1);
         }
     }
 }

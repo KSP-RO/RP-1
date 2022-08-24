@@ -34,19 +34,19 @@ namespace RP0
                 return;
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Supports:", HighLogic.Skin.label, GUILayout.Width(80));
-            GUILayout.Label($"{_maxMass:N3}t", RightLabel, GUILayout.Width(80));
+            GUILayout.Label("Supports:", UIHolder.Width(80));
+            GUILayout.Label($"{_maxMass:N3}t", RightLabel, UIHolder.Width(80));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Vessel:", HighLogic.Skin.label, GUILayout.Width(80));
-            GUILayout.Label($"{_vesselMass:N3}t", RightLabel, GUILayout.Width(80));
+            GUILayout.Label("Vessel:", UIHolder.Width(80));
+            GUILayout.Label($"{_vesselMass:N3}t", RightLabel, UIHolder.Width(80));
             GUILayout.EndHorizontal();
 
             if (_lockLevel != ControlLockerUtils.LockLevel.Unlocked)
                 GUILayout.Label("Insufficient avionics!", BoldLabel);
             else
-                GUILayout.Label("Avionics are sufficient", HighLogic.Skin.label);
+                GUILayout.Label("Avionics are sufficient");
         }
     }
 }

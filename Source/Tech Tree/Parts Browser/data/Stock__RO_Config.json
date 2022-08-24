@@ -6606,7 +6606,7 @@
         "title": "RD-855 [Radial]",
         "description": "Vernier thruster used on the first stage of the Tsyklon rocket. Diameter: [0.3 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
-        "cost": "350",
+        "cost": 90,
         "entry_cost": "15000",
         "category": "ORBITAL",
         "info": "",

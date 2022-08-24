@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using RP0;
+
 
 namespace KerbalConstructionTime
 {
@@ -24,7 +26,7 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("No"))
             {
-                _centralWindowPosition.width = 150;
+                _centralWindowPosition.width = 150 * UIHolder.UIScale;
                 _centralWindowPosition.x = (Screen.width - 150) / 2;
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowDismantleLC = false;

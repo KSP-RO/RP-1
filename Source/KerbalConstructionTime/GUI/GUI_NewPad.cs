@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -65,8 +66,8 @@ namespace KerbalConstructionTime
 
                 GUIStates.ShowNewPad = false;
                 _centralWindowPosition.height = 1;
-                _centralWindowPosition.width = 150;
-                _centralWindowPosition.x = (Screen.width - 150) / 2;
+                _centralWindowPosition.width = 150 * UIHolder.UIScale;
+                _centralWindowPosition.x = (Screen.width - _centralWindowPosition.width) / 2;
                 GUIStates.ShowBuildList = true;
 
                 Guid id = Guid.NewGuid();
@@ -107,8 +108,8 @@ namespace KerbalConstructionTime
             if (GUILayout.Button("Cancel"))
             {
                 _centralWindowPosition.height = 1;
-                _centralWindowPosition.width = 150;
-                _centralWindowPosition.x = (Screen.width - 150) / 2;
+                _centralWindowPosition.width = 150 * UIHolder.UIScale;
+                _centralWindowPosition.x = (Screen.width - _centralWindowPosition.width) / 2;
                 GUIStates.ShowNewPad = false;
                 GUIStates.ShowBuildList = true;
             }
@@ -149,14 +150,14 @@ namespace KerbalConstructionTime
                     }
                 }
                 GUIStates.ShowRename = false;
-                _centralWindowPosition.width = 150;
-                _centralWindowPosition.x = (Screen.width - 150) / 2;
+                _centralWindowPosition.width = 150 * UIHolder.UIScale;
+                _centralWindowPosition.x = (Screen.width - _centralWindowPosition.width) / 2;
                 GUIStates.ShowBuildList = true;
             }
             if (GUILayout.Button("Cancel"))
             {
-                _centralWindowPosition.width = 150;
-                _centralWindowPosition.x = (Screen.width - 150) / 2;
+                _centralWindowPosition.width = 150 * UIHolder.UIScale;
+                _centralWindowPosition.x = (Screen.width - _centralWindowPosition.width) / 2;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = true;
             }

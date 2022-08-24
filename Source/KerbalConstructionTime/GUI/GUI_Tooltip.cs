@@ -2,13 +2,14 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using RP0;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private const float TooltipMaxWidth = 200f;
-        private const double TooltipShowDelay = 500;
+        private static float TooltipMaxWidth => 200f * RP0.UIHolder.UIScale;
+        private static double TooltipShowDelay => 500 * RP0.UIHolder.UIScale;
 
         private static Rect _tooltipRect;
         private static GUIStyle _tooltipStyle;
@@ -30,10 +31,18 @@ namespace KerbalConstructionTime
 
             if (_tooltipStyle == null)
             {
-                _tooltipStyle = new GUIStyle(HighLogic.Skin.label);
+                _tooltipStyle = new GUIStyle(UIHolder.RescaledKSPSkin.label);
                 _tooltipStyle.normal.textColor = new Color32(224, 224, 224, 255);
-                _tooltipStyle.padding = new RectOffset(3, 3, 3, 3);
+                _tooltipStyle.padding = new RectOffset(
+                    (int)(3 * UIHolder.UIScale), 
+                    (int)(3 * UIHolder.UIScale), 
+                    (int)(3 * UIHolder.UIScale), 
+                    (int)(3 * UIHolder.UIScale));
                 _tooltipStyle.alignment = TextAnchor.MiddleCenter;
+                _tooltipStyle.font = UIHolder.RescaledKSPSkin.font;
+                _tooltipStyle.fontSize = UIHolder.RescaledKSPSkin.font.fontSize;
+                _tooltipStyle.fixedHeight = 0;
+                _tooltipStyle.wordWrap = true;
             }
 
             Texture2D backTex = new Texture2D(1, 1, TextureFormat.ARGB32, false);
@@ -89,11 +98,15 @@ namespace KerbalConstructionTime
             }
         }
 
-        private static void ShowTooltip( int windowID)
+        private static void ShowTooltip(int windowID, TextAnchor contentAlignment = TextAnchor.MiddleCenter)
         {
             if (_windowTooltipTexts.TryGetValue(windowID, out string tooltipText) && !string.IsNullOrEmpty(tooltipText) &&
                 (DateTime.UtcNow - _tooltipBeginDt).TotalMilliseconds > TooltipShowDelay)
             {
+                // overwrite the standard KSP skin with our own rescaled version
+                var oldSkin = GUI.skin;
+                GUI.skin = UIHolder.RescaledKSPSkin;
+                
                 int idx = tooltipText.IndexOf('¶');
                 if (idx != -1)
                     tooltipText = tooltipText.Substring(idx + 1);
@@ -102,9 +115,10 @@ namespace KerbalConstructionTime
                 {
                     var c = new GUIContent(tooltipText);
                     _tooltipStyle.CalcMinMaxWidth(c, out _, out float width);
-
+                    _tooltipStyle.alignment = contentAlignment;
+                    
                     width = Math.Min(width, TooltipMaxWidth);
-                    float height = _tooltipStyle.CalcHeight(c, TooltipMaxWidth);
+                    float height = _tooltipStyle.CalcHeight(c, width);
                     _tooltipRect = new Rect(
                         Math.Min(Screen.width - width, Input.mousePosition.x + 15),
                         Math.Min(Screen.height - height, Screen.height - Input.mousePosition.y + 10),
@@ -120,7 +134,14 @@ namespace KerbalConstructionTime
                     tooltipText,
                     _tooltipStyle);
                 GUI.BringWindowToFront(id);
+
+                GUI.skin = oldSkin;
             }
+        }
+        
+        public static void ResetTooltipStyle()
+        {
+            _tooltipStyle = null;
         }
     }
 }

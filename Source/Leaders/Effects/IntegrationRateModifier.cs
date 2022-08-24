@@ -27,7 +27,7 @@ namespace RP0.Leaders
 
         protected override string DescriptionString()
         {
-            return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectIntegrationRateModifier" : locStringOverride,
+            return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0_Leaders_Effect_IntegrationRateModifier" : locStringOverride,
                 LocalizationHandler.FormatRatioAsPercent(multiplier),
                 effectDescription);
         }

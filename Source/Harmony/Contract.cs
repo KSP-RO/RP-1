@@ -64,7 +64,7 @@ namespace RP0.Harmony
             {
                 int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);
                 if (applicants > 0)
-                    value += $"\n{KSP.Localization.Localizer.Format("#rp0GainApplicants", applicants)}";
+                    value += $"\n{KSP.Localization.Localizer.Format("#rp0_ContractRewards_GainApplicants", applicants)}";
             }
 
             string leaderString = string.Empty;
@@ -77,7 +77,7 @@ namespace RP0.Harmony
                 }
             }
             if (leaderString != string.Empty)
-                value += "\n" + KSP.Localization.Localizer.GetStringByTag(_isReward ? "#rp0LeaderNowAvailable" : "#rp0LeaderMakesAvailable") + leaderString;
+                value += "\n" + KSP.Localization.Localizer.GetStringByTag(_isReward ? "#rp0_Leaders_LeadersUnlocked" : "#rp0_Leaders_UnlocksLeader") + leaderString;
 
             __result = $"<b><color=#{RUIutils.ColorToHex(RichTextUtil.colorAwards)}>{title}:</color></b> {value}";
             if (lines > 0)

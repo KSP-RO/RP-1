@@ -222,7 +222,7 @@ namespace RP0
                     }
                     else
                     {
-                        amountText = Localizer.Format("#rp0CurrencyRateFormat", amount.ToString("N2"));
+                        amountText = Localizer.Format("#rp0_Currency_Format_Rate", amount.ToString("N2"));
                     }
                 }
                 else
@@ -529,11 +529,11 @@ namespace RP0
         Science = 1,
         [Description("#autoLOC_7001033")]
         Reputation = 2,
-        [Description("#rp0CurrencyConfidence")]
+        [Description("#rp0_Currency_Confidence")]
         Confidence = 3,
-        [Description("#rp0CurrencyTime")]
+        [Description("#rp0_Currency_Time")]
         Time = 4,
-        [Description("#rp0CurrencyRate")]
+        [Description("#rp0_Currency_Rate")]
         Rate = 5,
 
         MAX = Rate,

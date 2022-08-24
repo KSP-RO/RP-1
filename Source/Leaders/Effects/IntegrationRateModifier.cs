@@ -6,13 +6,13 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
-    public class PartIntegrationRateModifier : BaseEffect
+    public class IntegrationRateModifier : BaseEffect
     {
         [Persistent]
         private PersistentHashSetValueType<string> tags = new PersistentHashSetValueType<string>();
 
         [Persistent]
-        private PersistentHashSetValueType<string> resources = new PersistentHashSetValueType<string>();
+        private PersistentDictionaryValueTypes<string, double> resources = new PersistentDictionaryValueTypes<string, double>();
 
         [Persistent]
         private bool appliesToParts = false;
@@ -20,7 +20,7 @@ namespace RP0.Leaders
         [Persistent]
         private bool appliesToVessel = false;
 
-        public PartIntegrationRateModifier(Strategy parent)
+        public IntegrationRateModifier(Strategy parent)
             : base(parent)
         {
         }
@@ -64,10 +64,13 @@ namespace RP0.Leaders
 
             if (!found)
             {
-                foreach (string s in resources.Keys)
+                foreach (var kvp in resources)
                 {
-                    if (this.resources.Contains(s))
+                    if (this.resources.TryGetValue(kvp.Key, out double amount) && kvp.Value >= amount)
+                    {
+                        found = true;
                         break;
+                    }
                 }
             }
 

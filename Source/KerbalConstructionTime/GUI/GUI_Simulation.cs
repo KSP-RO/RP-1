@@ -1,12 +1,16 @@
 ﻿using System;
 using UnityEngine;
+using RP0;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _simulationWindowPosition = new Rect((Screen.width - 250) / 2, (Screen.height - 250) / 2, 250, 1);
-        private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
+        private const int _simulationWindowWidth = 250;
+        private const int _simulationConfigWidth = 300;
+        
+        private static Rect _simulationWindowPosition = new Rect((Screen.width - 250) / 2, (Screen.height - 250) / 2, _simulationWindowWidth * UIHolder.UIScale, 1);
+        private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), _simulationConfigWidth * UIHolder.UIScale, 1);
         private static Vector2 _bodyChooserScrollPos;
 
         private static string _sOrbitAlt = "", _sOrbitInc = "", _UTString = "", _sDelay = "0";
@@ -42,8 +46,8 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndVertical();
 
-            if (_simulationWindowPosition.width > 250)
-                _simulationWindowPosition.width = 250;
+            if (_simulationWindowPosition.width > _simulationWindowWidth * UIHolder.UIScale)
+                _simulationWindowPosition.width = _simulationWindowWidth * UIHolder.UIScale;
 
             CenterWindow(ref _simulationWindowPosition);
         }
@@ -79,7 +83,7 @@ namespace KerbalConstructionTime
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Orbit Altitude (km): ");
-                _sOrbitAlt = GUILayout.TextField(_sOrbitAlt, GUILayout.Width(100));
+                _sOrbitAlt = GUILayout.TextField(_sOrbitAlt, UIHolder.Width(100));
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Min: " + simParams.SimulationBody.atmosphereDepth / 1000);
@@ -93,28 +97,28 @@ namespace KerbalConstructionTime
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Delay: (s)");
-                _sDelay = GUILayout.TextField(_sDelay, 3, GUILayout.Width(40));
+                _sDelay = GUILayout.TextField(_sDelay, 3, UIHolder.Width(40));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Inclination: ");
-                _sOrbitInc = GUILayout.TextField(_sOrbitInc, GUILayout.Width(50));
+                _sOrbitInc = GUILayout.TextField(_sOrbitInc, UIHolder.Width(50));
                 GUILayout.EndHorizontal();
             }
 
-            GUILayout.Space(4);
+            UIHolder.Space(4);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Time: ");
-            _UTString = GUILayout.TextField(_UTString, GUILayout.Width(100));
+            _UTString = GUILayout.TextField(_UTString, UIHolder.Width(100));
             _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
             GUILayout.EndHorizontal();
             GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\"");
-            GUILayout.Space(4);
+            UIHolder.Space(4);
 
             if (Utilities.IsTestFlightInstalled || Utilities.IsTestLiteInstalled)
             {
                 simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures");
-                GUILayout.Space(4);
+                UIHolder.Space(4);
             }
 
             GUILayout.BeginHorizontal();
@@ -138,7 +142,7 @@ namespace KerbalConstructionTime
 
         public static void DrawBodyChooser(int windowID)
         {
-            _bodyChooserScrollPos = GUILayout.BeginScrollView(_bodyChooserScrollPos, GUILayout.Height(500));
+            _bodyChooserScrollPos = GUILayout.BeginScrollView(_bodyChooserScrollPos, UIHolder.Height(500));
             GUILayout.BeginVertical();
             foreach (CelestialBody body in FlightGlobals.Bodies)
             {

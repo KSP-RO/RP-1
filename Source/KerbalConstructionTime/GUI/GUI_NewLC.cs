@@ -538,7 +538,7 @@ namespace KerbalConstructionTime
                     GUIStates.ShowLCResources = false;
                     GUIStates.ShowModifyLC = false;
                     _centralWindowPosition.height = 1;
-                    _centralWindowPosition.width = 300;
+                    _centralWindowPosition.width = 300 * UIHolder.UIScale;
                     _centralWindowPosition.x = (Screen.width - 300) / 2;
                     if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
                         GUIStates.ShowBuildList = true;
@@ -556,7 +556,7 @@ namespace KerbalConstructionTime
             {
                 _overrideShowBuildPlans = false;
                 _centralWindowPosition.height = 1;
-                _centralWindowPosition.width = 150;
+                _centralWindowPosition.width = 150 * UIHolder.UIScale;
                 _centralWindowPosition.x = (Screen.width - 150) / 2;
                 GUIStates.ShowNewLC = false;
                 GUIStates.ShowModifyLC = false;
@@ -584,7 +584,7 @@ namespace KerbalConstructionTime
             _lcResourcesPosition.xMin = parentPos.xMin - _lcResourcesPosition.width;
 
             float scrollHeight = parentPos.height - 40 - GUI.skin.label.lineHeight * 1;
-            _resourceListScroll = GUILayout.BeginScrollView(_resourceListScroll, GUILayout.Width(215), GUILayout.Height(scrollHeight));
+            _resourceListScroll = GUILayout.BeginScrollView(_resourceListScroll, UIHolder.Width(215), UIHolder.Height(scrollHeight));
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Resource");
@@ -598,7 +598,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(_allResourceKeys[i]);
-                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
+                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), UIHolder.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
 
                 bool remove = true;
                 if (!string.IsNullOrEmpty(_allResourceValues[i]))

@@ -18,7 +18,7 @@ namespace RP0.ProceduralAvionics
         [KSPField]
         public string info3Text = string.Empty;
 
-        private Rect _windowRect = new Rect(267, 104, 400, 300);
+        private Rect _windowRect = new Rect(267, 104, 400*UIHolder.UIScale, 300*UIHolder.UIScale);
         private GUIContent _gc;
         private string[] _avionicsConfigNames;
         private int _selectedConfigIndex = 0;
@@ -45,10 +45,10 @@ namespace RP0.ProceduralAvionics
 
                 if (_shouldResetUIHeight && Event.current.type == EventType.Layout)
                 {
-                    _windowRect.height = 300;
+                    _windowRect.height = 300 * UIHolder.UIScale;
                     _shouldResetUIHeight = false;
                 }
-                _windowRect = ClickThruBlocker.GUILayoutWindow(_windowId, _windowRect, WindowFunction, "Configure Procedural Avionics", HighLogic.Skin.window);
+                _windowRect = ClickThruBlocker.GUILayoutWindow(_windowId, _windowRect, WindowFunction, "Configure Procedural Avionics", UIHolder.RescaledKSPSkin.window);
                 Tooltip.Instance.ShowTooltip(_windowId, contentAlignment: TextAnchor.MiddleLeft);
             }
         }
@@ -56,10 +56,14 @@ namespace RP0.ProceduralAvionics
 
         private void WindowFunction(int windowID)
         {
+            // overwrite the standard KSP skin with our own rescaled version
+            var oldSkin = GUI.skin;
+            GUI.skin = UIHolder.RescaledKSPSkin;
+            
             GUILayout.BeginHorizontal();
 
             bool oldShowInfo = _showInfo1;
-            _showInfo1 = GUILayout.Toggle(_showInfo1, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
+            _showInfo1 = GUILayout.Toggle(_showInfo1, "ⓘ", GUILayout.ExpandWidth(false), UIHolder.Height(20));
             if (oldShowInfo != _showInfo1)
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
@@ -71,10 +75,10 @@ namespace RP0.ProceduralAvionics
                 GUILayout.Label(info1Text);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginVertical(HighLogic.Skin.box);
-            GUILayout.Label("Choose the avionics type:", HighLogic.Skin.label);
+            GUILayout.BeginVertical();
+            GUILayout.Label("Choose the avionics type:");
             int oldConfigIdx = _selectedConfigIndex;
-            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames, HighLogic.Skin.button);
+            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames);
             if (oldConfigIdx != _selectedConfigIndex)
             {
                 _shouldResetUIHeight = true;
@@ -87,7 +91,7 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginHorizontal();
 
             oldShowInfo = _showInfo2;
-            _showInfo2 = GUILayout.Toggle(_showInfo2, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
+            _showInfo2 = GUILayout.Toggle(_showInfo2, "ⓘ", GUILayout.ExpandWidth(false), UIHolder.Height(20));
             if (oldShowInfo != _showInfo2)
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
@@ -100,23 +104,23 @@ namespace RP0.ProceduralAvionics
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
 
-            GUILayout.Space(7);
+            UIHolder.Space(7);
 
-            GUILayout.BeginVertical(HighLogic.Skin.box);
-            GUILayout.Label("Choose the tech level:", HighLogic.Skin.label);
+            GUILayout.BeginVertical();
+            GUILayout.Label("Choose the tech level:");
             foreach (ProceduralAvionicsTechNode techNode in curCfg.TechNodes.Values)
             {
                 DrawAvionicsConfigSelector(curCfg, techNode);
             }
             GUILayout.EndVertical();
 
-            GUILayout.Space(7);
+            UIHolder.Space(7);
 
-            GUILayout.BeginVertical(HighLogic.Skin.box);
+            GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
 
             oldShowInfo = _showInfo3;
-            _showInfo3 = GUILayout.Toggle(_showInfo3, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
+            _showInfo3 = GUILayout.Toggle(_showInfo3, "ⓘ", GUILayout.ExpandWidth(false), UIHolder.Height(20));
             if (oldShowInfo != _showInfo3)
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
@@ -131,18 +135,18 @@ namespace RP0.ProceduralAvionics
             if (!IsScienceCore)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.BeginHorizontal(GUILayout.Width(250));
-                GUILayout.Label("Controllable mass: ", HighLogic.Skin.label, GUILayout.Width(150));
-                _sControllableMass = GUILayout.TextField(_sControllableMass, HighLogic.Skin.textField);
-                GUILayout.Label("t", HighLogic.Skin.label);
+                GUILayout.BeginHorizontal(UIHolder.Width(250));
+                GUILayout.Label("Controllable mass: ", UIHolder.Width(150));
+                _sControllableMass = GUILayout.TextField(_sControllableMass);
+                GUILayout.Label("t");
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
+                GUILayout.BeginHorizontal(UIHolder.MaxWidth(50));
                 float oldControlMass = _newControlMass;
                 if (float.TryParse(_sControllableMass, out _newControlMass))
                 {
                     float avionicsMass = GetShieldedAvionicsMass(_newControlMass);
-                    GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+                    GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", UIHolder.Width(150));
                 }
 
                 if (oldControlMass != _newControlMass)
@@ -155,37 +159,37 @@ namespace RP0.ProceduralAvionics
             }
 
             GUILayout.BeginHorizontal();
-            GUILayout.BeginHorizontal(GUILayout.Width(250));
-            GUILayout.Label("EC amount: ", HighLogic.Skin.label, GUILayout.Width(150));
-            _sECAmount = GUILayout.TextField(_sECAmount, HighLogic.Skin.textField);
+            GUILayout.BeginHorizontal(UIHolder.Width(250));
+            GUILayout.Label("EC amount: ", UIHolder.Width(150));
+            _sECAmount = GUILayout.TextField(_sECAmount);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
+            GUILayout.BeginHorizontal(UIHolder.MaxWidth(50));
             if (float.TryParse(_sECAmount, out float ecAmount))
             {
-                GUILayout.Label($" ({_ecTank.mass * ecAmount:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+                GUILayout.Label($" ({_ecTank.mass * ecAmount:0.#} kg)", UIHolder.Width(150));
             }
             GUILayout.EndHorizontal();
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.Width(250));
+            GUILayout.BeginHorizontal(UIHolder.Width(250));
             _gc ??= new GUIContent();
             _gc.text = "Additional tank volume: ";
             _gc.tooltip = "How much tank volume will be left for other resources after applying the desired controllable mass and amount of EC.";
-            GUILayout.Label(_gc, HighLogic.Skin.label, GUILayout.Width(150));
+            GUILayout.Label(_gc, UIHolder.Width(150));
             GUI.enabled = _seekVolumeMethod != null;
-            _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);
+            _sExtraVolume = GUILayout.TextField(_sExtraVolume);
             GUI.enabled = true;
-            GUILayout.Label("l", HighLogic.Skin.label);
+            GUILayout.Label("l");
             GUILayout.EndHorizontal();
 
             if (_showROTankSizeWarning)
             {
-                GUILayout.Label("ROTanks does not currently support automatic resizing to correct dimensions. Increase the part size manually until it has sufficient volume.", HighLogic.Skin.label);
+                GUILayout.Label("ROTanks does not currently support automatic resizing to correct dimensions. Increase the part size manually until it has sufficient volume.");
             }
             else if (_showSizeWarning)
             {
-                GUILayout.Label("Not enough volume to apply parameters. Increase the part size manually until it has sufficient volume.", HighLogic.Skin.label);
+                GUILayout.Label("Not enough volume to apply parameters. Increase the part size manually until it has sufficient volume.");
             }
 
             GUILayout.EndVertical();
@@ -193,19 +197,19 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginHorizontal();
             _gc.text = "Apply (resize to fit)";
             _gc.tooltip = "Applies the parameters above and resizes the part to have the correct amount of volume";
-            if (GUILayout.Button(_gc, HighLogic.Skin.button))
+            if (GUILayout.Button(_gc))
             {
                 ApplyAvionicsSettings(shouldSeekVolume: true);
             }
 
             _gc.text = "Apply (preserve dimensions)";
             _gc.tooltip = "Tries to apply the parameters above but doesn't resize the part even if there isn't enough volume, or if there's extra volume";
-            if (GUILayout.Button(_gc, HighLogic.Skin.button))
+            if (GUILayout.Button(_gc))
             {
                 ApplyAvionicsSettings(shouldSeekVolume: false);
             }
 
-            if (GUILayout.Button("Close", HighLogic.Skin.button))
+            if (GUILayout.Button("Close"))
             {
                 if (!avionicsConfigName.Equals(curCfgName))
                 {
@@ -245,6 +249,8 @@ namespace RP0.ProceduralAvionics
             GUI.DragWindow();
 
             Tooltip.Instance.RecordTooltip(_windowId);
+
+            GUI.skin = oldSkin; //restore the skin
         }
 
         private void DrawAvionicsConfigSelector(ProceduralAvionicsConfig curCfg, ProceduralAvionicsTechNode techNode)
@@ -260,27 +266,27 @@ namespace RP0.ProceduralAvionics
             {
                 _gc.text = BuildTechName(techNode);
                 GUILayout.BeginHorizontal();
-                GUILayout.Toggle(true, _gc, HighLogic.Skin.button);
+                GUILayout.Toggle(true, _gc);
                 DrawUnlockButton(curCfg.name, techNode, unlockCost);
                 GUILayout.EndHorizontal();
 
                 _gc.text = $"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}";
                 _gc.tooltip = "Whether samples can be transferred and stored in the avionics unit.";
-                GUILayout.Label(_gc, HighLogic.Skin.label);
+                GUILayout.Label(_gc);
 
                 _gc.text = $"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}";
                 _gc.tooltip = "Whether the avionics unit can enter hibernation mode that greatly reduces power consumption.";
-                GUILayout.Label(_gc, HighLogic.Skin.label);
+                GUILayout.Label(_gc);
 
                 _gc.text = $"Axial control: {BoolToYesNoString(techNode.allowAxial)}";
                 _gc.tooltip = "Whether fore-aft translation is allowed despite having insufficient controllable mass or being outside the max range of Near-Earth avionics.";
-                GUILayout.Label(_gc, HighLogic.Skin.label);
+                GUILayout.Label(_gc);
             }
             else
             {
                 _gc.text = $"Switch to {BuildTechName(techNode)}";
                 GUILayout.BeginHorizontal();
-                switchedConfig = GUILayout.Button(_gc, HighLogic.Skin.button);
+                switchedConfig = GUILayout.Button(_gc);
                 switchedConfig |= DrawUnlockButton(curCfg.name, techNode, unlockCost);
                 GUILayout.EndHorizontal();
             }
@@ -314,7 +320,7 @@ namespace RP0.ProceduralAvionics
             if (trueCost > 0) tooltip = $"Base cost: {BuildCostString(trueCost, trueCost)}\nSubsidy Applied: {BuildCostString(subsidyToUse, -1)}";
             if(techNode.IsAvailable) tooltip += (tooltip != string.Empty ? "\n" : string.Empty) + $"Needs tech: {techNode.TechNodeTitle}";
             _gc.tooltip = tooltip;
-            if (GUILayout.Button(_gc, HighLogic.Skin.button, GUILayout.Width(120)))
+            if (GUILayout.Button(_gc, UIHolder.Width(120)))
             {
                 switchedConfig = PurchaseConfig(curCfgName, techNode);
             }

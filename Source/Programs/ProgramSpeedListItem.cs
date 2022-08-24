@@ -30,7 +30,7 @@ namespace RP0.Programs
             text = buttonTransform.Find("Text").GetComponent<TMPro.TextMeshProUGUI>();
             text.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             toggleButton = buttonTransform.GetComponent<UIRadioButton>();
-            toggleButton.SetGroup("RP0ProgramSpeed".GetHashCode());
+            toggleButton.SetGroup("rp0_Admin_Program_Speed".GetHashCode());
             toggleStateChanger = buttonTransform.GetComponent<UIRadioButtonStateChanger>();
             tooltipController = GetComponent<KSP.UI.TooltipTypes.TooltipController_Text>();
 

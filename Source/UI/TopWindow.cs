@@ -23,6 +23,8 @@ namespace RP0
             // Reset the tab on scene changes
             _currentTab = HighLogic.LoadedSceneIsEditor ? UITab.Tooling : default;
             _shouldResetUISize = true;
+            
+            Tooltip.RecreateInstance();    // Need to make sure that a new Tooltip instance is created after every scene change
         }
 
         public void OnGUI()
@@ -33,7 +35,7 @@ namespace RP0
                 _windowPos.height = 0;
                 _shouldResetUISize = false;
             }
-            _windowPos = ClickThruBlocker.GUILayoutWindow(_mainWindowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+            _windowPos = ClickThruBlocker.GUILayoutWindow(_mainWindowId, _windowPos, DrawWindow, "RP-1", UIHolder.RescaledKSPSkin.window);
             Tooltip.Instance.ShowTooltip(_mainWindowId);
         }
 
@@ -54,7 +56,7 @@ namespace RP0
             _currentTab = newTab;
             _shouldResetUISize = true;
         }
-
+        
         private void UpdateSelectedTab()
         {
             GUILayout.BeginHorizontal();
@@ -77,6 +79,10 @@ namespace RP0
 
         public void DrawWindow(int windowID)
         {
+            // overwrite the standard KSP skin with our own rescaled version
+            var oldSkin = GUI.skin;
+            GUI.skin = UIHolder.RescaledKSPSkin;
+            
             GUILayout.BeginVertical();
             try
             {
@@ -145,6 +151,8 @@ namespace RP0
             GUI.DragWindow();
 
             Tooltip.Instance.RecordTooltip(_mainWindowId);
+            
+            GUI.skin = oldSkin; //restore the skin
         }
     }
 }

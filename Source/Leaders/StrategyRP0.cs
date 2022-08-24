@@ -46,12 +46,12 @@ namespace RP0
         {
             if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).CanAfford())
             {
-                reason = Localizer.GetStringByTag("#rp0LeaderCannotAffordAppoint");
+                reason = Localizer.GetStringByTag("#rp0_Leaders_Appoint_CannotAfford");
                 return false;
             }
             if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).CanAfford())
             {
-                reason = Localizer.GetStringByTag("##rp0LeaderUnderReqAppoint");
+                reason = Localizer.GetStringByTag("##rp0_Leaders_HiringRequirements_Unmet");
                 return false;
             }
             return true;
@@ -61,7 +61,7 @@ namespace RP0
         {
             if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
             {
-                reason = Localizer.GetStringByTag("#rp0LeaderCannotAffordRemove");
+                reason = Localizer.GetStringByTag("#rp0_Leaders_Remove_CannotAfford");
                 return false;
             }
 
@@ -142,9 +142,9 @@ namespace RP0
             if (extendedInfo && ConfigRP0.RemoveOnDeactivate)
             {
                 if (ConfigRP0.ReactivateCooldown > 0d)
-                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(ConfigRP0.ReactivateCooldown, false))}</color>\n\n";
+                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", KSPUtil.PrintDateDelta(ConfigRP0.ReactivateCooldown, false))}</color>\n\n";
                 else
-                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}</color>\n\n";
+                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.GetStringByTag("#rp0_Leaders_Deactivates")}</color>\n\n";
             }
 
             // We'll use the ShowExtendedInfo field to signal we need to print title too
@@ -165,14 +165,14 @@ namespace RP0
                 {
                     if (DateActivated + LeastDuration <= KSPUtils.GetUT())
                     {
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemove"), string.IsNullOrEmpty(costStr) ? Localizer.GetStringByTag("#autoLOC_6002417") : Localizer.Format("#rp0LeaderRemovalCost", costStr));
+                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemove"), string.IsNullOrEmpty(costStr) ? Localizer.GetStringByTag("#autoLOC_6002417") : Localizer.Format("#rp0_Generic_Cost", costStr));
                     }
                     else
                     {
                         if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
+                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
                         else
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveIn"),
+                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemoveIn"),
                                 extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
                                 : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
                     }
@@ -180,9 +180,9 @@ namespace RP0
                 if (LongestDuration > 0)
                 {
                     if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
+                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_RetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
                     else
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresIn"), 
+                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_RetiresIn"), 
                             extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false)
                             : KSPUtil.PrintDateDeltaCompact(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false));
                 }
@@ -191,13 +191,13 @@ namespace RP0
             {
                 if (LeastDuration > 0)
                 {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderCanRemoveAfter"),
+                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemoveAfter"),
                         extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
                             : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
                 }
                 if (LongestDuration > 0)
                 {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0LeaderRetiresAfter"),
+                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_RetiresAfter"),
                         extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration, false, false)
                             : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
                 }
@@ -210,7 +210,7 @@ namespace RP0
                 string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLineOverride(true, true, true, false, "   ");
                 if (requireString != string.Empty)
                 {
-                    text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#rp0LeaderHireRequirements"), requireString);
+                    text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#rp0_Leaders_HiringRequirements"), requireString);
                 }
             }
 

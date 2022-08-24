@@ -26,7 +26,7 @@ namespace RP0.Leaders
 
         protected override string DescriptionString()
         {
-            return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0LeaderEffectCurrencyModifier" : locStringOverride,
+            return KSP.Localization.Localizer.Format(string.IsNullOrEmpty(locStringOverride) ? "#rp0_Leaders_Effect_CurrencyModifier" : locStringOverride,
                 LocalizationHandler.FormatRatioAsPercent(multiplier),
                 currency.displayDescription(),
                 effectDescription);

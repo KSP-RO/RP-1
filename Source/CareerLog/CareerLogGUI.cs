@@ -28,7 +28,7 @@ namespace RP0
         public void RenderTab()
         {
             GUILayout.BeginVertical();
-            if (GUILayout.Button("Export to file", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(30), GUILayout.Width(125)))
+            if (GUILayout.Button("Export to file", GUILayout.ExpandWidth(false), UIHolder.Height(30), UIHolder.Width(125)))
             {
                 try
                 {
@@ -44,13 +44,12 @@ namespace RP0
             GUILayout.Label(_exportStatus);
 
             GUILayout.Label("Server URL:");
-            _serverUrl = GUILayout.TextField(_serverUrl, HighLogic.Skin.textField);
+            _serverUrl = GUILayout.TextField(_serverUrl);
 
             GUILayout.Label("Token:");
-            _token = GUILayout.TextField(_token, HighLogic.Skin.textField);
+            _token = GUILayout.TextField(_token);
 
-            if (GUILayout.Button("Export to web", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(30),
-                GUILayout.Width(125)))
+            if (GUILayout.Button("Export to web", GUILayout.ExpandWidth(false), UIHolder.Height(30), UIHolder.Width(125)))
             {
                 try
                 {

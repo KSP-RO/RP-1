@@ -89,7 +89,7 @@
     <Compile Include="Harmony\StrategyConfig.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\FundTarget.cs" />
     <Compile Include="Leaders\Effects\BaseEffect.cs" />
-    <Compile Include="Leaders\Effects\PartIntegrationRateModifier.cs" />
+    <Compile Include="Leaders\Effects\IntegrationRateModifier.cs" />
     <Compile Include="Leaders\Effects\CurrencyModifier.cs" />
     <Compile Include="Leaders\Effects\ResearchRateModifier.cs" />
     <Compile Include="Leaders\LeaderUtils.cs" />

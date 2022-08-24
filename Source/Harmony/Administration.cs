@@ -272,9 +272,9 @@ namespace RP0.Harmony
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
                     string costStr = cmq.GetCostLine(true, true, true, true);
                     if (string.IsNullOrEmpty(costStr))
-                        stateAccept.tooltipText = Localizer.GetStringByTag("#rp0AcceptProgram");
+                        stateAccept.tooltipText = Localizer.GetStringByTag("#rp0_Admin_AcceptProgram");
                     else
-                        stateAccept.tooltipText = Localizer.Format("#rp0AcceptProgramWithCost", costStr);
+                        stateAccept.tooltipText = Localizer.Format("#rp0_Admin_AcceptProgramWithCost", costStr);
                 }
                 else
                 {
@@ -284,9 +284,9 @@ namespace RP0.Harmony
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (string.IsNullOrEmpty(rewardStr))
-                        state.tooltipText = Localizer.GetStringByTag("#rp0ProgramComplete");
+                        state.tooltipText = Localizer.GetStringByTag("#rp0_Admin_CompleteProgram");
                     else
-                        state.tooltipText = Localizer.Format("#rp0ProgramCompleteWithReward", rewardStr);
+                        state.tooltipText = Localizer.Format("#rp0_Admin_CompleteProgramWithReward", rewardStr);
                     __instance.btnAcceptCancel.SetState("accept");
                 }
 
@@ -294,8 +294,8 @@ namespace RP0.Harmony
             }
             else
             {
-                tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.GetStringByTag("#rp0AppointLeader");
-                tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText = Localizer.GetStringByTag("#rp0RemoveLeader");
+                tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.GetStringByTag("#rp0_Leaders_Appoint");
+                tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText = Localizer.GetStringByTag("#rp0_Leaders_Remove");
                 AdminExtender.Instance.SetSpeedButtonsActive(null);
             }
             AdminExtender.Instance.BtnSpacer.gameObject.SetActive(!Administration.Instance.btnAcceptCancel.gameObject.activeSelf);
@@ -380,13 +380,13 @@ namespace RP0.Harmony
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (!string.IsNullOrEmpty(rewardStr))
-                        rewardStr = $"\n\n{Localizer.Format("#rp0GenericReward", rewardStr)}";
+                        rewardStr = $"\n\n{Localizer.Format("#rp0_Generic_Reward", rewardStr)}";
 
 
                     var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog("StrategyConfirmation",
-                            Localizer.Format("#rp0ProgramCompleteConfirm", rewardStr),
+                            Localizer.Format("#rp0_Admin_CompleteProgram_Confirm", rewardStr),
                             Localizer.GetStringByTag("#autoLOC_464288"),
                             HighLogic.UISkin,
                             new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439855"), OnCompleteProgramConfirm),
@@ -403,12 +403,12 @@ namespace RP0.Harmony
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
                     string costStr = cmq.GetCostLine(true, true, true, true);
                     if (!string.IsNullOrEmpty(costStr))
-                        costStr = $"\n\n{Localizer.Format("#rp0GenericCost", costStr)}";
+                        costStr = $"\n\n{Localizer.Format("#rp0_Generic_Cost", costStr)}";
 
                     var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog("StrategyConfirmation",
-                        Localizer.Format("#rp0ProrgamActivateConfirm", costStr),
+                        Localizer.Format("#rp0_Admin_AcceptProgram_Confirm", costStr),
                         Localizer.Format("#autoLOC_464288"),
                         HighLogic.UISkin,
                         new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnActivateProgramConfirm),
@@ -426,14 +426,14 @@ namespace RP0.Harmony
                 string deactivateCostStr = leader.DeactivateCostString();
                 string reappointStr = cfg.RemoveOnDeactivate 
                     ? cfg.ReactivateCooldown > 0
-                        ? $"\n\n{Localizer.Format("#rp0LeaderCantReappointCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"
-                        : $"\n\n{Localizer.GetStringByTag("#rp0LeaderCantReappoint")}"
+                        ? $"\n\n{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"
+                        : $"\n\n{Localizer.GetStringByTag("#rp0_Leaders_Deactivates")}"
                     : string.Empty;
                 string message = !string.IsNullOrEmpty(deactivateCostStr)
-                    ? Localizer.Format("#rp0LeaderRemoveConfirmWithCost", 
+                    ? Localizer.Format("#rp0_Leaders_Remove_ConfirmWithCost", 
                         deactivateCostStr,
                         reappointStr)
-                    : Localizer.Format("#rp0LeaderRemoveConfirm", reappointStr);
+                    : Localizer.Format("#rp0_Leaders_Remove_Confirm", reappointStr);
 
                 var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                     new Vector2(0.5f, 0.5f),

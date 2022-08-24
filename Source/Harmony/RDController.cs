@@ -29,7 +29,7 @@ namespace RP0.Harmony
             string techID = node.tech.techID;
             if (node.tech.state == RDTech.State.Available || KerbalConstructionTimeData.Instance.TechList.Any(tech => tech.techID == techID))
             {
-                __instance.node_description.text = Localizer.Format("#rp0UnlockSubsidyDesc",
+                __instance.node_description.text = Localizer.Format("#rp0_UnlockSubsidy_NodeInfo",
                     UnlockSubsidyHandler.Instance.GetLocalSubsidyAmount(node.tech.techID).ToString("N0"),
                     UnlockSubsidyHandler.Instance.GetSubsidyAmount(node.tech.techID).ToString("N0"))
                     + "\n\n" + __instance.node_description.text;

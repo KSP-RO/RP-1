@@ -75,7 +75,7 @@ namespace RP0.UI
         }
         private static string GetTooltipTextConf()
         {
-            return Localizer.Format("#rp0ConfidenceWidgetTooltip", Confidence.AllConfidenceEarned.ToString("N0"));
+            return Localizer.Format("#rp0_Widgets_Confidence_Tooltip", Confidence.AllConfidenceEarned.ToString("N0"));
         }
     }
 }

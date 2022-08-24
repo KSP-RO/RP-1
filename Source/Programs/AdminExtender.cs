@@ -72,7 +72,7 @@ namespace RP0.Programs
                     double cost = program.GetDisplayedConfidenceCostForSpeed(item.Speed);
                     bool allowable = program.IsSpeedAllowed(item.Speed);
                     var sph = new SpeedButtonHolder(program.GetStrategy(), item.Speed);
-                    item.SetupButton(allowable, Localizer.Format("#rp0ProgramSpeedConfidenceRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
+                    item.SetupButton(allowable, Localizer.Format("#rp0_Admin_Program_ConfidenceRequired", cost.ToString("N0")), program, sph.OnSpeedSet, sph.OnSpeedUnset);
                     costStr += "\n" + cost.ToString("N0");
                 }
             }
@@ -83,7 +83,7 @@ namespace RP0.Programs
             if (active)
             {
                 _speedButtons[program.ProgramSpeed].SetState(UIRadioButton.State.True);
-                _speedOptionsCosts.text = Localizer.GetStringByTag("#rp0ProgramConfidenceCost") + costStr;
+                _speedOptionsCosts.text = Localizer.GetStringByTag("#rp0_Admin_Program_ConfidenceCost") + costStr;
             }
 
             PressedSpeedButton = false; // clear state
@@ -173,11 +173,11 @@ namespace RP0.Programs
                 foreach (var text in child.gameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>())
                 {
                     if (i == 0)
-                        text.text = Localizer.GetStringByTag("#rp0ActivePrograms");
+                        text.text = Localizer.GetStringByTag("#rp0_Admin_ActivePrograms");
                     else if (i == 1)
-                        text.text = Localizer.GetStringByTag("#rp0CompletedPrograms");
+                        text.text = Localizer.GetStringByTag("#rp0_Admin_CompletedPrograms");
                     else
-                        text.text = Localizer.GetStringByTag("#rp0Leaders");
+                        text.text = Localizer.GetStringByTag("#rp0_Leaders_Title");
                 }
                 _adminTabToggles[(AdministrationActiveTabView)i] = child.GetComponentInChildren<Toggle>();
             }
@@ -228,7 +228,7 @@ namespace RP0.Programs
 
                 var speedItem = newButton.gameObject.AddComponent<ProgramSpeedListItem>();
                 newButton.gameObject.SetActive(true); // so Awake runs, if it hasn't
-                speedItem.Initialize(Localizer.GetStringByTag("#rp0ProgramSpeed" + i), spd);
+                speedItem.Initialize(Localizer.GetStringByTag("#rp0_Admin_Program_Speed" + i), spd);
                 _speedButtons[spd] = speedItem;
 
                 // Set layout
@@ -252,10 +252,10 @@ namespace RP0.Programs
             var namesLE = _speedOptionsNames.gameObject.AddComponent<LayoutElement>();
             namesLE.preferredWidth = 120;
             _speedOptionsNames.alignment = TextAlignmentOptions.MidlineLeft;
-            string namesStr = Localizer.GetStringByTag("#rp0ProgramSpeed");
+            string namesStr = Localizer.GetStringByTag("#rp0_Admin_Program_Speed");
             for (int i = 0; i < max; ++i)
             {
-                namesStr += "\n" + Localizer.GetStringByTag("#rp0ProgramSpeed" + i);
+                namesStr += "\n" + Localizer.GetStringByTag("#rp0_Admin_Program_Speed" + i);
             }
             _speedOptionsNames.text = namesStr;
 

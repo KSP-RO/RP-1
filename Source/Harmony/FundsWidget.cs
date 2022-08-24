@@ -35,7 +35,7 @@ namespace RP0.Harmony
 
         private static string GetTooltipText()
         {
-            return Localizer.Format("#rp0FundsWidgetTooltip",
+            return Localizer.Format("#rp0_Widgets_Funds_Tooltip",
                                     LocalizationHandler.FormatValuePositiveNegative(KCTGameStates.GetBudgetDelta(86400d), "N1"),
                                     LocalizationHandler.FormatValuePositiveNegative(KCTGameStates.GetBudgetDelta(86400d * 30d), "N0"),
                                     LocalizationHandler.FormatValuePositiveNegative(KCTGameStates.GetBudgetDelta(86400d * 365.25d), "N0"));

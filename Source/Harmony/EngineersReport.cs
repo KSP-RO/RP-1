@@ -48,13 +48,13 @@ namespace RP0.Harmony
             cacheNo = Localizer.Format("#autoLOC_439840");
             cacheOK = Localizer.Format("#autoLOC_190905");
 
-            cacheHumanRatedLH = $"<color={cacheColorNeutral}>{Localizer.GetStringByTag("#rp0ER_HumanRatedLH")}</color>";
+            cacheHumanRatedLH = $"<color={cacheColorNeutral}>{Localizer.GetStringByTag("#rp0_EngineersReport_HumanRatedLH")}</color>";
             cacheMassLH = Localizer.Format("#autoLOC_443401", cacheColorNeutral);
             cacheSizeLH = "<line-height=110%><color=" + cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443417 + "</color>\n<color=" +
                 cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443418 + "</color>\n<color=" +
                 cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443419 + "</color>\n<color=" +
                 cacheColorNeutral + ">" + EngineersReport.cacheAutoLOC_443420 + "</color></line-height>";
-            cacheResLH = $"<color={cacheColorNeutral}>{Localizer.GetStringByTag("#rp0ER_ResourcesLH")}</color>";
+            cacheResLH = $"<color={cacheColorNeutral}>{Localizer.GetStringByTag("#rp0_EngineersReport_ResourcesLH")}</color>";
         }
 
         // We'll use this to bind some private fields too
@@ -188,7 +188,7 @@ namespace RP0.Harmony
             bool humanRatingOK = !vesselHumanRated || lcHumanRated;
             string humanRatingColorHex = humanRatingOK ? XKCDColors.HexFormat.KSPBadassGreen : cacheColorBad;
             humanRatedLH.text = cacheHumanRatedLH;
-            humanRatedRH.text = $"<color={(humanRatingOK ? cacheColorGood : cacheColorBad)}>{(vesselHumanRated ? cacheYes : cacheNo)} {Localizer.GetStringByTag(lcHumanRated ? "#rp0ER_HumanRatedLCYes" : "#rp0ER_HumanRatedLCNo")}</color>";
+            humanRatedRH.text = $"<color={(humanRatingOK ? cacheColorGood : cacheColorBad)}>{(vesselHumanRated ? cacheYes : cacheNo)} {Localizer.GetStringByTag(lcHumanRated ? "#rp0_EngineersReport_HumanRatedLCYes" : "#rp0_EngineersReport_HumanRatedLCNo")}</color>";
 
             string partMassColorHex = totalMass <= massLimit && totalMass >= minMassLimit ? cacheColorGood : cacheColorBad;
             massLH.text = cacheMassLH;

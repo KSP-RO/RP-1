@@ -359,8 +359,8 @@ namespace RP0.Programs
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "LeaderUnlocked",
-                                             Localizer.GetStringByTag("#rp0LeaderNowAvailableTitle"),
-                                             Localizer.GetStringByTag("#rp0LeaderNowAvailable") + leaderString,
+                                             Localizer.GetStringByTag("#rp0_Leaders_LeadersUnlockedTitle"),
+                                             Localizer.GetStringByTag("#rp0_Leaders_LeadersUnlocked") + leaderString,
                                              Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
                                              HighLogic.UISkin);
@@ -544,7 +544,7 @@ namespace RP0.Programs
             {
                 if (wasAccepted)
                 {
-                    text += $"\n\nProgram Speed: {Localizer.GetStringByTag("#rp0ProgramSpeed" + (int)speed)}";
+                    text += $"\n\nProgram Speed: {Localizer.GetStringByTag("#rp0_Admin_Program_Speed" + (int)speed)}";
                 }
                 else
                 {
@@ -555,7 +555,7 @@ namespace RP0.Programs
                             text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
                     }
 
-                    text += $"\n\n{Localizer.Format("#rp0ProgramSpeedConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
+                    text += $"\n\n{Localizer.Format("#rp0_Admin_Program_ConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
                 }
 
                 string leaderString = string.Empty;
@@ -568,7 +568,7 @@ namespace RP0.Programs
                     }
                 }
                 if (leaderString != string.Empty)
-                    text += "\n\n" + Localizer.GetStringByTag("#rp0LeaderMakesAvailable") + leaderString;
+                    text += "\n\n" + Localizer.GetStringByTag("#rp0_Leaders_UnlocksLeader") + leaderString;
 
                 if (!IsComplete)
                 {

@@ -27,7 +27,7 @@ namespace RP0.Harmony
         {
             if (__instance is ProgramStrategy ps && __result)
             {
-                reason = KSP.Localization.Localizer.GetStringByTag("#rp0CanCompleteProgram");
+                reason = KSP.Localization.Localizer.GetStringByTag("#rp0_Admin_CanCompleteProgram");
             }
         }
 

@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using RP0;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
+        private const int _width1 = 120;
+        private const int _width2 = 100;
+        private const int _butW = 20;
+        private const int _buildListWindowWidth = 400;
+        private const int _editorBuildListWindowWidth = 400;
+        
         public enum VesselPadStatus { InStorage, RollingOut, RolledOut, RollingBack, Recovering };
         public enum RenameType { None, Vessel, Pad, LaunchComplex };
 
-        public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, 500, 1);
-        public static Rect EditorBuildListWindowPosition = new Rect(Screen.width - 400, 40, 500, 1);
+        public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, _buildListWindowWidth * UIHolder.UIScale, 1);
+        public static Rect EditorBuildListWindowPosition = new Rect(Screen.width - 400, 40, _editorBuildListWindowWidth * UIHolder.UIScale, 1);
 
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
@@ -26,9 +33,6 @@ namespace KerbalConstructionTime
         private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
         private static GUIContent _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
             _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture;
-        private const int _width1 = 120;
-        private const int _width2 = 100;
-        private const int _butW = 20;
 
         public static void SelectList(string list)
         {
@@ -68,7 +72,7 @@ namespace KerbalConstructionTime
         public static void ResetBLWindow(bool deselectList = true)
         {
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
-            BuildListWindowPosition.width = EditorBuildListWindowPosition.width = 500;
+            BuildListWindowPosition.width = EditorBuildListWindowPosition.width = 500 * UIHolder.UIScale;
             //if (deselectList)
             //    SelectList("None");
         }
@@ -83,8 +87,8 @@ namespace KerbalConstructionTime
             _greenText = new GUIStyle(GUI.skin.label);
             _greenText.normal.textColor = Color.green;
             _blobText = new GUIStyle(GUI.skin.label);
-            _blobText.fontSize = 30;
-            _blobText.fixedHeight = 20;
+            _blobText.fontSize = (int)(30 * UIHolder.UIScale);
+            _blobText.fixedHeight = 20 * UIHolder.UIScale;
             _blobText.alignment = TextAnchor.MiddleCenter;
 
             _yellowButton = new GUIStyle(GUI.skin.button);
@@ -118,7 +122,7 @@ namespace KerbalConstructionTime
         {
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Next:", _windowSkin.label);
+            GUILayout.Label("Next:");
             IKCTBuildItem buildItem = Utilities.GetNextThingToFinish();
             if (buildItem != null)
             {
@@ -191,10 +195,10 @@ namespace KerbalConstructionTime
                 }
 
                 GUILayout.Label(txt);
-                GUILayout.Label(locTxt, _windowSkin.label);
+                GUILayout.Label(locTxt);
                 GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
 
-                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(buildItem.GetTimeLeft()):N0}")))
+                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(buildItem.GetTimeLeft()):N0}"), GetMultilineStyle(GUI.skin.button)))
                 {
                     KCTWarpController.Create(null); // warp to next item
                 }
@@ -362,11 +366,11 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
-            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2 + 30));
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
-            GUILayout.Space(20);
+            GUILayout.Label("Progress:", UIHolder.Width(_width1 / 2 + 30));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", UIHolder.Width(_width1));
+            UIHolder.Space(20);
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, UIHolder.Height(350));
 
             if (ksc.Constructions.Count == 0)
                 GUILayout.Label("No constructions under way at this space center.");
@@ -380,7 +384,7 @@ namespace KerbalConstructionTime
                 totalCost += rCost;
                 GUILayout.BeginHorizontal();
 
-                if (GUILayout.Button("X", GUILayout.Width(_butW)))
+                if (GUILayout.Button("X", UIHolder.Width(_butW)))
                 {
                     InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
 
@@ -391,43 +395,43 @@ namespace KerbalConstructionTime
                     MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.spentRushCost:N0} funds on this construction ({(constr.spentCost / constr.cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
-
+                
                 double buildRate = constr.GetBuildRate();
                 DrawTypeIcon(constr);
                 Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                 GUILayout.Label(new GUIContent(constr.GetItemName(), "name" + costTooltip));
-                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), UIHolder.Width(_width1 / 2));
                 if (buildRate > 0d)
                 {
                     double seconds = constr.GetTimeLeft();
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), UIHolder.Width(_width1));
                 }
                 else
                 {
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), UIHolder.Width(_width1));
                 }
 
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
                 {
-                    if (GUILayout.Button(new GUIContent("Warp", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(constr.GetTimeLeft()):N0}"), GUILayout.Width(45)))
+                    if (GUILayout.Button(new GUIContent("Warp", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(constr.GetTimeLeft()):N0}"), UIHolder.Width(45)))
                     {
                         KCTWarpController.Create(constr);
                     }
                 }
                 else
                 {
-                    GUILayout.Space(45);
+                    UIHolder.Space(45);
                 }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("     Work rate:", GUILayout.Width(90));
-                GUILayout.Label(new GUIContent(constr.workRate.ToString("P0"), $"rate{identifier}¶Daily cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                GUILayout.Label("     Work rate:", UIHolder.Width(90));
+                GUILayout.Label(new GUIContent(constr.workRate.ToString("P0"), $"rate{identifier}¶Daily cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), UIHolder.Width(40));
                 
-                float newWorkRate = GUILayout.HorizontalSlider(constr.workRate, 0f, 1.5f, GUILayout.Width(150));
+                float newWorkRate = GUILayout.HorizontalSlider(constr.workRate, 0f, 1.5f, UIHolder.Width(150));
                 constr.workRate = Mathf.RoundToInt(newWorkRate * 20f) * 0.05f;
 
-                GUILayout.Label("Remaining Cost:", GUILayout.Width(100));
+                GUILayout.Label("Remaining Cost:", UIHolder.Width(100));
                 GUILayout.Label($"√{rCost:N0}", GetLabelRightAlignStyle());
 
                 
@@ -462,14 +466,17 @@ namespace KerbalConstructionTime
             KCTObservableList<TechItem> techList = KerbalConstructionTimeData.Instance.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
-            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
-            GUILayout.Space(70);
+            GUILayout.Label("Progress:", UIHolder.Width(_width1 / 2));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", UIHolder.Width(_width1));
+            UIHolder.Space(70);
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, UIHolder.Height(350));
 
             if (techList.Count == 0)
-                GUILayout.Label("No tech nodes are being researched!\nBegin research by unlocking tech in the R&D building.");
+            {
+                GUILayout.Label("No tech nodes are being researched!");
+                GUILayout.Label("Begin research by unlocking tech in the R&D building.");
+            }
             bool forceRecheck = false;
             int cancelID = -1;
             for (int i = 0; i < techList.Count; i++)
@@ -477,7 +484,7 @@ namespace KerbalConstructionTime
                 TechItem t = techList[i];
                 GUILayout.BeginHorizontal();
 
-                if (GUILayout.Button("X", GUILayout.Width(_butW)))
+                if (GUILayout.Button("X", UIHolder.Width(_butW)))
                 {
                     InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                     forceRecheck = true;
@@ -501,7 +508,7 @@ namespace KerbalConstructionTime
                 if (i > 0 && t.BuildRate != techList[0].BuildRate)
                 {
                     GUI.enabled = canMoveUp;
-                    if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
+                    if (i > 0 && GUILayout.Button("^", UIHolder.Width(_butW)))
                     {
                         techList.RemoveAt(i);
                         if (GameSettings.MODIFIER_KEY.GetKey())
@@ -530,7 +537,7 @@ namespace KerbalConstructionTime
                 if ((i == 0 && t.BuildRate != techList[techList.Count - 1].BuildRate) || t.BuildRate != techList[techList.Count - 1].BuildRate)
                 {
                     GUI.enabled = canMoveDown;
-                    if (i < techList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
+                    if (i < techList.Count - 1 && GUILayout.Button("v", UIHolder.Width(_butW)))
                     {
                         techList.RemoveAt(i);
                         if (GameSettings.MODIFIER_KEY.GetKey())
@@ -566,37 +573,37 @@ namespace KerbalConstructionTime
 
                 DrawTypeIcon(t);
                 GUILayout.Label(t.techName);
-                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), UIHolder.Width(_width1 / 2));
                 if (t.BuildRate > 0)
                 {
                     DrawYearBasedMult(t, 0);
                     if (blockingPrereq == null)
                     {
                         double seconds = t.TimeLeft;
-                        GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                        GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), UIHolder.Width(_width1));
                         _accumulatedTimeBefore += seconds;
                     }
                     else
-                        GUILayout.Label("Waiting for PreReq", GUILayout.Width(_width1));
+                        GUILayout.Label("Waiting for PreReq", UIHolder.Width(_width1));
                 }
                 else
                 {
                     DrawYearBasedMult(t, _accumulatedTimeBefore);
                     double seconds = t.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), UIHolder.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
                 {
-                    if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp", GUILayout.Width(45)))
+                    if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp", UIHolder.Width(45)))
                     {
                         KCTWarpController.Create(t);
                     }
                     else if (HighLogic.LoadedSceneIsEditor)
-                        GUILayout.Space(45);
+                        UIHolder.Space(45);
                 }
                 else
-                    GUILayout.Space(45);
+                    UIHolder.Space(45);
 
                 GUILayout.EndHorizontal();
             }
@@ -649,12 +656,12 @@ namespace KerbalConstructionTime
             _allItems.Sort(CompareBuildItems);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Name:", GUILayout.Width(250));
+            GUILayout.Label("Name:", UIHolder.Width(250));
             GUILayout.Label("Progress:");
-            GUILayout.Space(18);
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            UIHolder.Space(18);
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", UIHolder.Width(_width2));
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350 - GUI.skin.label.lineHeight * 5));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, UIHolder.Height(350 - GUI.skin.label.lineHeight * 5));
 
             for (int i = 0; i < _allItems.Count; i++)
             {
@@ -699,21 +706,21 @@ namespace KerbalConstructionTime
                 else
                     GUILayout.Label(t.GetItemName());
 
-                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), UIHolder.Width(_width1 / 2));
 
                 double timeBeforeItem;
                 _timeBeforeItem.TryGetValue(t, out timeBeforeItem);
                 if (t is TechItem tech)
                     DrawYearBasedMult(tech, timeBeforeItem);
                 else
-                    GUILayout.Space(18);
+                    UIHolder.Space(18);
 
                 if (t.GetBuildRate() > 0d)
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), UIHolder.Width(_width1));
                 else if (t is BuildListVessel b && !b.LC.IsOperational)
-                    GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), UIHolder.Width(_width1));
                 else
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), UIHolder.Width(_width1));
                 GUILayout.EndHorizontal();
             }
 
@@ -724,7 +731,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("Storage");
             GUILayout.EndHorizontal();
 
-            _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, GUILayout.Height(GUI.skin.label.lineHeight * 5));
+            _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, UIHolder.Height(GUI.skin.label.lineHeight * 5));
 
             int idx = 0;
             foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
@@ -767,7 +774,7 @@ namespace KerbalConstructionTime
             }
 
             string txt = $"{rateDesc}\nResearch rate: {mult:F2}x";
-            GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.Width(15));
+            GUILayout.Label(new GUIContent("•", txt), _blobText, UIHolder.Width(15));
         }
 
         private static GUIContent GetTypeIcon(IKCTBuildItem b)
@@ -823,7 +830,7 @@ namespace KerbalConstructionTime
 
             RenderBuildlistHeader();
 
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(375));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, UIHolder.Height(375));
 
             if (activeLC.LCType == LaunchComplexType.Pad)
                 RenderRollouts();
@@ -840,8 +847,8 @@ namespace KerbalConstructionTime
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
-            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label("Progress:", UIHolder.Width(_width1 / 2));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", UIHolder.Width(_width2));
             GUILayout.EndHorizontal();
         }
 
@@ -851,14 +858,14 @@ namespace KerbalConstructionTime
             foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
-                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(reconditioning.GetTimeLeft()):N0}"), GUILayout.Width((_butW + 4) * 3)))
+                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(reconditioning.GetTimeLeft()):N0}"), UIHolder.Width((_butW + 4) * 3)))
                 {
                     KCTWarpController.Create(reconditioning);
                 }
                 DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.launchPadID}");
-                GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), UIHolder.Width(_width1 / 2));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), UIHolder.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
@@ -884,7 +891,7 @@ namespace KerbalConstructionTime
 
                 if (HighLogic.LoadedSceneIsEditor)
                 {
-                    if (GUILayout.Button("X", GUILayout.Width(_butW)))
+                    if (GUILayout.Button("X", UIHolder.Width(_butW)))
                     {
                         InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
                         _selectedVesselId = b.shipID;
@@ -899,7 +906,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    if (GUILayout.Button("*", GUILayout.Width(_butW)))
+                    if (GUILayout.Button("*", UIHolder.Width(_butW)))
                     {
                         if (_selectedVesselId == b.shipID)
                             GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
@@ -909,14 +916,14 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
+                if (i > 0 && GUILayout.Button("^", UIHolder.Width(_butW)))
                 {
                     buildList.RemoveAt(i);
                     buildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
                     recalc = true;
                 }
 
-                if (i < buildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
+                if (i < buildList.Count - 1 && GUILayout.Button("v", UIHolder.Width(_butW)))
                 {
                     recalc = true;
                     buildList.RemoveAt(i);
@@ -932,17 +939,17 @@ namespace KerbalConstructionTime
 
                 DrawTypeIcon(b);
                 GUILayout.Label(b.shipName);
-                GUILayout.Label($"{b.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label($"{b.GetFractionComplete():P2}", GetLabelRightAlignStyle(), UIHolder.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
                     double seconds = b.TimeLeft;
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), UIHolder.Width(_width2));
                     _accumulatedTimeBefore += seconds; // FIXME what to do with multiple lines? Min() I guess?
                 }
                 else
                 {
                     double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), UIHolder.Width(_width2));
                     _accumulatedTimeBefore += seconds;
                 }
                 GUILayout.EndHorizontal();
@@ -975,7 +982,8 @@ namespace KerbalConstructionTime
             }
             if (buildList.Count == 0)
             {
-                GUILayout.Label("No vessels in storage!\nThey will be stored here when they are complete.");
+                GUILayout.Label("No vessels in storage!");
+                GUILayout.Label("They will be stored here when they are complete.");
             }
 
             for (int i = 0; i < buildList.Count; i++)
@@ -1074,7 +1082,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus == VesselPadStatus.InStorage || padStatus == VesselPadStatus.RolledOut))
             {
-                if (GUILayout.Button("*", GUILayout.Width(_butW)))
+                if (GUILayout.Button("*", UIHolder.Width(_butW)))
                 {
                     if (_selectedVesselId == b.shipID)
                         GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
@@ -1084,7 +1092,7 @@ namespace KerbalConstructionTime
                 }
             }
             else
-                GUILayout.Space(_butW + 4);
+                UIHolder.Space(_butW + 4);
 
             DrawTypeIcon(typeIcon);
             GUILayout.Label(b.shipName, textColor);
@@ -1397,7 +1405,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowRename = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
-                _centralWindowPosition.width = 300;
+                _centralWindowPosition.width = 300 * UIHolder.UIScale;
             }
             bool canModify = activeLC.CanModify && !GUIStates.ShowPersonnelWindow;
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
@@ -1418,7 +1426,7 @@ namespace KerbalConstructionTime
             //        GUIStates.ShowRename = false;
             //        GUIStates.ShowBuildList = false;
             //        GUIStates.ShowBLPlus = false;
-            //        _centralWindowPosition.width = 300;
+            //        _centralWindowPosition.width = 300 * UIHolder.UIScale;
             //    }
             //    else
             //    {
@@ -1438,7 +1446,7 @@ namespace KerbalConstructionTime
             //    GUIStates.ShowRename = false;
             //    GUIStates.ShowBuildList = false;
             //    GUIStates.ShowBLPlus = false;
-            //    _centralWindowPosition.width = 300;
+            //    _centralWindowPosition.width = 300 * UIHolder.UIScale;
             //}
             if (!HighLogic.LoadedSceneIsEditor && activeLC.LCType == LaunchComplexType.Pad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip),
                 canModify ? GUI.skin.button : _redButton, GUILayout.ExpandWidth(false)))
@@ -1454,7 +1462,7 @@ namespace KerbalConstructionTime
                     GUIStates.ShowRename = false;
                     GUIStates.ShowBuildList = false;
                     GUIStates.ShowBLPlus = false;
-                    _centralWindowPosition.width = 300;
+                    _centralWindowPosition.width = 300 * UIHolder.UIScale;
                 }
                 else
                 {
@@ -1482,7 +1490,7 @@ namespace KerbalConstructionTime
 
             KCT_LaunchPad activePad = activeLC.ActiveLPInstance;
             
-            GUILayout.Space(15);
+            UIHolder.Space(15);
 
             if (activePad == null)
             {
@@ -1520,7 +1528,7 @@ namespace KerbalConstructionTime
                 {
                     _isSelectingLaunchSiteForVessel = false;
                     GUIStates.ShowLaunchSiteSelector = true;
-                    _centralWindowPosition.width = 300;
+                    _centralWindowPosition.width = 300 * UIHolder.UIScale;
                 }
                 else
                 {
@@ -1539,7 +1547,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
-                _centralWindowPosition.width = 300;
+                _centralWindowPosition.width = 300 * UIHolder.UIScale;
             }
             if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
             {
@@ -1618,7 +1626,7 @@ namespace KerbalConstructionTime
         {
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
-            _blPlusPosition.height = 225;
+            _blPlusPosition.height = 225 * UIHolder.UIScale;
             BuildListVessel b = Utilities.FindBLVesselByID(KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.launchSite;
@@ -1644,7 +1652,7 @@ namespace KerbalConstructionTime
                 {
                     GUIStates.ShowBLPlus = false;
                     GUIStates.ShowLaunchSiteSelector = true;
-                    _centralWindowPosition.width = 300;
+                    _centralWindowPosition.width = 300 * UIHolder.UIScale;
                 }
                 else
                 {
@@ -1687,7 +1695,7 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Rename"))
             {
-                _centralWindowPosition.width = 360;
+                _centralWindowPosition.width = 360 * UIHolder.UIScale;
                 _centralWindowPosition.x = (Screen.width - 360) / 2;
                 _centralWindowPosition.height = 1;
                 GUIStates.ShowBuildList = false;
@@ -1753,7 +1761,7 @@ namespace KerbalConstructionTime
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginVertical();
-            _launchSiteScrollView = GUILayout.BeginScrollView(_launchSiteScrollView, GUILayout.Height((float)Math.Min(Screen.height * 0.75, 25 * _launchSites.Count + 10)));
+            _launchSiteScrollView = GUILayout.BeginScrollView(_launchSiteScrollView, UIHolder.Height((float)Math.Min(Screen.height * 0.75, 25 * _launchSites.Count + 10)));
 
             foreach (string launchsite in _launchSites)
             {

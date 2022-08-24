@@ -14,11 +14,11 @@ namespace RP0
 
         public UIBase()
         {
-            RightLabel = new GUIStyle(HighLogic.Skin.label)
+            RightLabel = new GUIStyle(UIHolder.RescaledKSPSkin.label)
             {
                 alignment = TextAnchor.MiddleRight
             };
-            BoldLabel = new GUIStyle(HighLogic.Skin.label)
+            BoldLabel = new GUIStyle(UIHolder.RescaledKSPSkin.label)
             {
                 fontStyle = FontStyle.Bold
             };
@@ -27,16 +27,19 @@ namespace RP0
                 fontStyle = FontStyle.Bold
             };
 
-            PressedButton = new GUIStyle(HighLogic.Skin.button);
+            PressedButton = new GUIStyle(UIHolder.RescaledKSPSkin.button);
             PressedButton.normal = PressedButton.active;
-
-            InfoButton = new GUIStyle(HighLogic.Skin.button)
+            
+            InfoButton = new GUIStyle(UIHolder.RescaledKSPSkin.button)
             {
                 alignment = TextAnchor.MiddleCenter,
-                fixedHeight = 17f,
-                fixedWidth = 19f,
-                contentOffset = new Vector2(1, -1),
-                margin = new RectOffset(4, 4, 6, 4)
+                fixedHeight = 17f * UIHolder.UIScale,
+                fixedWidth = 19f * UIHolder.UIScale,
+                contentOffset = new Vector2(1 * UIHolder.UIScale, -1 * UIHolder.UIScale),
+                margin = new RectOffset((int)(4 * UIHolder.UIScale),
+                    (int)(4 * UIHolder.UIScale),
+                    (int)(6 * UIHolder.UIScale),
+                    (int)(4 * UIHolder.UIScale))
             };
         }
 
@@ -75,12 +78,12 @@ namespace RP0
 
         public bool RenderToggleButton(string text, bool selected, params GUILayoutOption[] options)
         {
-            return GUILayout.Button(text, selected ? PressedButton : HighLogic.Skin.button, options);
+            return GUILayout.Button(text, selected ? PressedButton : UIHolder.RescaledKSPSkin.button, options);
         }
 
         public bool RenderToggleButton(GUIContent c, bool selected, params GUILayoutOption[] options)
         {
-            return GUILayout.Button(c, selected ? PressedButton : HighLogic.Skin.button, options);
+            return GUILayout.Button(c, selected ? PressedButton : UIHolder.RescaledKSPSkin.button, options);
         }
     }
 }

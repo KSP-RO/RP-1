@@ -37,7 +37,7 @@ namespace RP0
                 {
                     string desc = BuildAvionicsStats(up.techRequired);
                     if (!string.IsNullOrEmpty(desc))
-                        up.description = Localizer.GetStringByTag("#rp0AvionicsUpgradeText") + desc;
+                        up.description = Localizer.GetStringByTag("#rp0_Avionics_Upgrade_Text") + desc;
 
                     continue;
                 }
@@ -46,7 +46,7 @@ namespace RP0
                 {
                     if (up.name.StartsWith("rp0EngineerUpgrade"))
                     {
-                        up.description = Localizer.Format("#rp0EngineerUpgradeText", 
+                        up.description = Localizer.Format("#rp0_EfficiencyUpgrade_Engineers_Text", 
                             (PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyUpgradesMin.GetValue(up.techRequired) * 100d).ToString("N0"),
                             (PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyUpgradesMax.GetValue(up.techRequired) * 100d).ToString("N0"));
                         continue;
@@ -54,7 +54,7 @@ namespace RP0
 
                     if (up.name.StartsWith("rp0ResearcherUpgrade"))
                     {
-                        up.description = Localizer.Format("#rp0ResearcherUpgradeText", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                        up.description = Localizer.Format("#rp0_EfficiencyUpgrade_Researchers_Text", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
                         continue;
                     }
                 }
@@ -75,8 +75,8 @@ namespace RP0
                         ModuleProceduralAvionics.GetStatsForTechNode(avConfig.TechNodesSorted[i - 1], -1f, out float massOld, out float costOld, out float powerOld);
                         ModuleProceduralAvionics.GetStatsForTechNode(node, -1f, out float massNew, out float costNew, out float powerNew);
 
-                        retStr += "\n" + Localizer.Format("#rp0AvionicsUpgradeTextLine",
-                            Localizer.GetStringByTag("#rp0AvionicsType_" + avConfig.name),
+                        retStr += "\n" + Localizer.Format("#rp0_Avionics_Upgrade_TextLine",
+                            Localizer.GetStringByTag("#rp0_Avionics_Type_" + avConfig.name),
                             FormatRatioAsPercent(massNew / massOld),
                             FormatRatioAsPercent(costNew / costOld),
                             FormatRatioAsPercent(powerNew / powerOld),
@@ -112,19 +112,19 @@ namespace RP0
             if (facilityType == SpaceCenterFacility.VehicleAssemblyBuilding || facilityType == SpaceCenterFacility.LaunchPad)
             {
                 lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuVAB";
+                lvl.levelStats.textBase = "#autoLOC_rp0_FacilityContextMenu_VAB";
             }
             else if (facilityType == SpaceCenterFacility.SpaceplaneHangar || facilityType == SpaceCenterFacility.Runway)
             {
                 lvl.levelStats.linePrefix = string.Empty;
-                lvl.levelStats.textBase = "#autoLOC_rp0FacilityContextMenuSPH";
+                lvl.levelStats.textBase = "#autoLOC_rp0_FacilityContextMenu_SPH";
             }
             else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
             {
                 if (PresetManager.Instance != null)
                 {
                     int limit = PresetManager.Instance.ActivePreset.ResearcherCaps[lvlIdx];
-                    lvl.levelStats.textBase += $"\n{Localizer.GetStringByTag("#rp0FacilityContextMenuRnD_ResearcherLimit")} {(limit == -1 ? "#rp0FacilityContextMenuRnD_ResearcherLimit_unlimited" : limit.ToString("N0"))}";
+                    lvl.levelStats.textBase += $"\n{Localizer.GetStringByTag("#rp0_FacilityContextMenu_RnD_ResearcherLimit")} {(limit == -1 ? "#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited" : limit.ToString("N0"))}";
                 }
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex)
@@ -133,37 +133,37 @@ namespace RP0
                 double trainingTimeMult = 1d / Crew.TrainingCourse.FacilityTrainingRate(fracLevel);
 
                 if (rrMult != 1d)
-                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_RnR", FormatRatioAsPercent(rrMult))}";
+                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_RnR", FormatRatioAsPercent(rrMult))}";
 
                 if (trainingTimeMult != 1d)
-                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0FacilityContextMenuAC_Training", FormatRatioAsPercent(trainingTimeMult))}";
+                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_Training", FormatRatioAsPercent(trainingTimeMult))}";
             }
         }
 
         public static string FormatRatioAsPercent(double ratio)
         {
             if (ratio < 1d)
-                return Localizer.Format("#rp0NegativePercent", ((1d - ratio) * 100d).ToString("N0"));
+                return Localizer.Format("#rp0_Generic_Percent_Negative", ((1d - ratio) * 100d).ToString("N0"));
 
-            return Localizer.Format("#rp0PositivePercent", ((ratio - 1d) * 100d).ToString("N0"));
+            return Localizer.Format("#rp0_Generic_Percent_Positive", ((ratio - 1d) * 100d).ToString("N0"));
         }
 
         public static string FormatBytes(int amount)
         {
             if (amount < 1024)
-                return Localizer.Format("#rp0DiskSpaceB", amount);
+                return Localizer.Format("#rp0_Generic_DiskSpace_B", amount);
             if(amount < 1024*1024)
-                return Localizer.Format("#rp0DiskSpacekB", (amount / 1024d).ToString("0.#"));
+                return Localizer.Format("#rp0_Generic_DiskSpace_kB", (amount / 1024d).ToString("0.#"));
 
-            return Localizer.Format("#rp0DiskSpaceMB", (amount / (1024d * 1024d)).ToString("0.#"));
+            return Localizer.Format("#rp0_Generic_DiskSpace_MB", (amount / (1024d * 1024d)).ToString("0.#"));
         }
 
         public static string FormatValuePositiveNegative(double value, string format)
         {
             if (value < 0d)
-                return Localizer.Format("#rp0NegativeValue", (-value).ToString(format));
+                return Localizer.Format("#rp0_Generic_Value_Negative", (-value).ToString(format));
 
-            return Localizer.Format("#rp0PositiveValue", value.ToString(format));
+            return Localizer.Format("#rp0_Generic_Value_Positive", value.ToString(format));
         }
 
         public static string FormatList(List<string> list, bool isAnd = true)

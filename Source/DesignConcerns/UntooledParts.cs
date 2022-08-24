@@ -10,14 +10,14 @@ namespace RP0.DesignConcerns
         public override string GetConcernDescription()
         {
             if (failureCount < 2)
-                return Localizer.GetStringByTag("#pr0ER_Concern_UntooledParts_DescriptionSingle");
+                return Localizer.GetStringByTag("#rp0_EngineersReport_Concern_UntooledParts_DescriptionSingle");
 
-            return Localizer.Format("#pr0ER_Concern_UntooledParts_DescriptionMany", failureCount.ToString());
+            return Localizer.Format("#rp0_EngineersReport_Concern_UntooledParts_DescriptionMany", failureCount.ToString());
         }
 
         public override string GetConcernTitle()
         {
-            return Localizer.GetStringByTag("#pr0ER_Concern_UntooledParts_Title");
+            return Localizer.GetStringByTag("#rp0_EngineersReport_Concern_UntooledParts_Title");
         }
 
         public override DesignConcernSeverity GetSeverity()

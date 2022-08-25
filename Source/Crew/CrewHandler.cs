@@ -754,6 +754,8 @@ namespace RP0.Crew
                             _toRemove.Add(kvp.Key);
                             _retirees.Add(kvp.Key);
                             pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
+                            if (pcm.type == ProtoCrewMember.KerbalType.Applicant)
+                                pcm.UTaR = KSPUtils.GetUT();
                         }
                     }
                 }

@@ -67,10 +67,7 @@ namespace KerbalConstructionTime
                 reason = $"mass ({mass:0.#}t) is higher than the allowed {MaxMass:0.#}";
                 return false;
             }
-
-            var template = new ShipTemplate();
-            template.LoadShip(vessel.ShipNode);
-            Vector3 dimensions = ShipConstruction.CalculateCraftSize(template); // Note: For a ShipTemplate, this just returns template.shipSize so is safe.
+            Vector3 dimensions = vessel.GetShipSize();
             if (dimensions.x > MaxSize.x | dimensions.y > MaxSize.y | dimensions.z > MaxSize.z)
             {
                 reason = $"size ({dimensions.x:0.#} x {dimensions.y:0.#} x {dimensions.z:0.#} m) is more than the allowed {MaxSize.x:0.#} x {MaxSize.y:0.#} x {MaxSize.z:0.#} m";

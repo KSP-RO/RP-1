@@ -1254,7 +1254,7 @@ namespace KerbalConstructionTime
                                     if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
                                     {
                                         GUIStates.ShowBLPlus = false;
-                                        if (!IsCrewable(b.ExtractedParts))
+                                        if (!b.IsCrewable())
                                             b.Launch();
                                         else
                                         {
@@ -1344,7 +1344,7 @@ namespace KerbalConstructionTime
                                         GUIStates.ShowBuildList = false;
                                         GUIStates.ShowAirlaunch = true;
                                     }
-                                    else if (!IsCrewable(b.ExtractedParts))
+                                    else if (!b.IsCrewable())
                                     {
                                         b.Launch();
                                     }
@@ -1679,7 +1679,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 EditorWindowPosition.height = 1;
                 string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
-                b.ShipNode.Save(tempFile);
+                b.UpdateNodeAndSave(tempFile);
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 KCTGameStates.EditedVessel = b;
                 KCTGameStates.EditedVessel.LCID = KCTGameStates.EditedVessel.LC.ID; // clear LC and force refind later.
@@ -1710,12 +1710,12 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Duplicate"))
             {
-                Utilities.TryAddVesselToBuildList(b.CreateCopy(false), skipPartChecks: true);
+                Utilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true);
             }
 
             if (GUILayout.Button("Add to Plans"))
             {
-                AddVesselToPlansList(b.CreateCopy(false));
+                AddVesselToPlansList(b.CreateCopy());
             }
 
             ReconRollout blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.associatedID == blvID);

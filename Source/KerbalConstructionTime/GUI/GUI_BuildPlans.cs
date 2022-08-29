@@ -119,7 +119,7 @@ namespace KerbalConstructionTime
                             }
                             else
                             {
-                                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
+                                Utilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance);
                             }
                         }
                     }

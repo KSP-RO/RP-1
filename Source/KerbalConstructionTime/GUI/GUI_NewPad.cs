@@ -133,7 +133,6 @@ namespace KerbalConstructionTime
                     {
                         BuildListVessel b = Utilities.FindBLVesselByID(null, _selectedVesselId);
                         b.shipName = _newName; //Change the name from our point of view
-                        b.ShipNode.SetValue("ship", _newName);
                         break;
                     }
                     case RenameType.Pad:

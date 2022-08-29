@@ -33,8 +33,7 @@ namespace KerbalConstructionTime
                     if (vessel.shipID != ship.shipID && !KCTGameStates.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))
                     {
                         vessel.RecalculateFromNode();
-                        ShipConstruct mergedShip = new ShipConstruct();
-                        mergedShip.LoadShip(vessel.ShipNode);
+                        ShipConstruct mergedShip = vessel.CreateShipConstructAndRelease();
                         EditorLogic.fetch.SpawnConstruct(mergedShip);
 
                         KCTGameStates.MergedVessels.Add(vessel);

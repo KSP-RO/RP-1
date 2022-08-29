@@ -22,7 +22,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    if (!IsCrewable(KCTGameStates.LaunchedVessel.ExtractedParts))
+                    if (!KCTGameStates.LaunchedVessel.IsCrewable())
                     {
                         KCTGameStates.LaunchedVessel.Launch();
                     }

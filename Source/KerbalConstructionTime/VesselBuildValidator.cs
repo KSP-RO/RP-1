@@ -215,7 +215,7 @@ namespace KerbalConstructionTime
             }
 
             Dictionary<Part, List<PartConfigValidationError>> dict = GetConfigErrorsDict(blv);
-            if (dict.Count == 0)
+            if (dict == null || dict.Count == 0)
             {
                 _validationResult = ValidationResult.Success;
                 return;
@@ -240,10 +240,11 @@ namespace KerbalConstructionTime
             if (CheckAvailableFunds)
             {
                 double totalCost = blv.GetTotalCost();
-                if (!CurrencyModifierQuery.RunQuery(TransactionReasons.VesselRollout, -(float)totalCost, 0f, 0f).CanAfford())
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -totalCost, 0d, 0d);
+                if (!cmq.CanAfford())
                 {
                     KCTDebug.Log($"Tried to add {blv.shipName} to build list but not enough funds.");
-                    KCTDebug.Log($"Vessel cost: {Utilities.GetTotalVesselCost(blv.ShipNode)}, Current funds: {Funding.Instance.Funds}");
+                    KCTDebug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds)}, Current funds: {Funding.Instance.Funds}");
                     var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
 
@@ -289,9 +290,11 @@ namespace KerbalConstructionTime
 
         private Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(BuildListVessel blv)
         {
-            var dict = new Dictionary<Part, List<PartConfigValidationError>>();
-
             ShipConstruct sc = blv.GetShip();
+            if (sc == null)
+                return null;
+
+            var dict = new Dictionary<Part, List<PartConfigValidationError>>();
             foreach (Part part in sc.parts)
             {
                 foreach (PartModule pm in part.Modules)

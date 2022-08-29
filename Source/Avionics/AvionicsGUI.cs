@@ -44,9 +44,9 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             if (_lockLevel != ControlLockerUtils.LockLevel.Unlocked)
-                GUILayout.Label("Insufficient avionics!", BoldLabel);
+                GUILayout.Label("Insufficient avionics!", BoldLabel, GUILayout.ExpandWidth(true));
             else
-                GUILayout.Label("Avionics are sufficient");
+                GUILayout.Label("Avionics are sufficient", GUILayout.ExpandWidth(true));
         }
     }
 }

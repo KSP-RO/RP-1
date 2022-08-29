@@ -73,8 +73,15 @@ namespace KerbalConstructionTime
         public PersistentDictionaryValueTypes<string, double> resourceAmounts = new PersistentDictionaryValueTypes<string, double>();
         [Persistent]
         public PersistentHashSetValueType<string> globalTags = new PersistentHashSetValueType<string>();
+        [Persistent]
+        private bool tanksFull = true;
+        [Persistent]
+        private bool isCrewable = false;
+        [Persistent]
+        private PersistentHashSetValueType<string> partNames = new PersistentHashSetValueType<string>();
+        [Persistent]
+        private PersistentCompressedConfigNode ShipNodeCompressed = new PersistentCompressedConfigNode();
 
-        public ConfigNode ShipNode;
         public string LandedAt = "";
         private double _buildRate = -1d;
 
@@ -94,22 +101,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public List<Part> ExtractedParts
-        {
-            get
-            {
-                List<Part> temp = new List<Part>();
-                foreach (PseudoPart pp in GetPseudoParts())
-                {
-                    Part p = Utilities.GetAvailablePartByName(pp.Name).partPrefab;
-                    p.craftID = pp.Uid;
-                    temp.Add(p);
-                }
-                return temp;
-            }
-        }
-
-        public List<ConfigNode> ExtractedPartNodes => ShipNode.GetNodes("PART").ToList();
+        private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
 
         public bool IsFinished => progress >= buildPoints + integrationPoints;
 
@@ -196,16 +188,20 @@ namespace KerbalConstructionTime
             _ship = s;
             CacheClamps(s.parts);
 
-            ShipNode = s.SaveShip();
+            ShipNodeCompressed.Node = s.SaveShip();
+            StorePartNames(s.parts);
             // Override KSP sizing of the ship construct
             ShipSize = Utilities.GetShipSize(s, true);
-            ShipNode.SetValue("size", KSPUtil.WriteVector(ShipSize));
+            ShipNodeCompressed.Node.SetValue("size", KSPUtil.WriteVector(ShipSize));
+            ShipNodeCompressed.CompressAndRelease();
             shipName = s.shipName;
             cost = Utilities.GetTotalVesselCost(s.parts, true);
             emptyCost = Utilities.GetTotalVesselCost(s.parts, false);
             mass = Utilities.GetShipMass(s, true, out emptyMass, out _);
+            tanksFull = AreTanksFull(s.parts);
+            isCrewable = IsCrewable(s.parts);
 
-            effectiveCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            effectiveCost = GetEffectiveCost(s.parts);
             buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
 
             HashSet<int> stages = new HashSet<int>();
@@ -291,7 +287,9 @@ namespace KerbalConstructionTime
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
             shipName = vessel.vesselName;
-            ShipNode = FromInFlightVessel(vessel, listType);
+            StorePartNames(vessel.parts);
+            ShipNodeCompressed.Node = FromInFlightVessel(vessel, listType);
+            // don't compress and release, we need to make later changes
             if (listType != ListType.None)
                 Type = listType;
             FacilityBuiltIn = listType == ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
@@ -301,6 +299,8 @@ namespace KerbalConstructionTime
             emptyCost = Utilities.GetTotalVesselCost(vessel.parts, false);
             mass = 0;
             emptyMass = 0;
+            tanksFull = AreTanksFull(vessel.parts);
+            isCrewable = IsCrewable(vessel.parts);
 
             HashSet<int> stages = new HashSet<int>();
 
@@ -455,14 +455,15 @@ namespace KerbalConstructionTime
                 SanitizeNode(partName, node, templates);
         }
 
-        public BuildListVessel CreateCopy(bool RecalcTime)
+        public BuildListVessel CreateCopy()
         {
             BuildListVessel ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated)
             {
-                ShipNode = ShipNode.CreateCopy(),
+                ShipNodeCompressed = ShipNodeCompressed.CreateCopy(),
                 _lc = _lc,
                 globalTags = globalTags.Clone(),
-                resourceAmounts = resourceAmounts.Clone()
+                partNames = partNames.Clone(),
+                resourceAmounts = resourceAmounts.Clone(),
             };
 
             ret.shipID = Guid.NewGuid();
@@ -476,11 +477,11 @@ namespace KerbalConstructionTime
             ret.numStages = numStages;
             ret.stagePartCost = stagePartCost;
             ret.ShipSize = ShipSize;
+            ret.tanksFull = tanksFull;
+            ret.isCrewable = isCrewable;
 
-            if (RecalcTime)
-            {
-                ret.effectiveCost = GetEffectiveCost(ret.ExtractedPartNodes);
-            }
+            ret.ShipNodeCompressed.CompressAndRelease();
+
             // Safe to always do these, they're cheap.
             ret.buildPoints = Formula.GetVesselBuildPoints(ret.effectiveCost);
             ret.integrationPoints = Formula.GetIntegrationBP(ret);
@@ -538,12 +539,20 @@ namespace KerbalConstructionTime
             {
                 return _ship;
             }
-            else if (ShipNode != null)    //Otherwise load the ship from the ConfigNode
+            else if (HighLogic.LoadedSceneIsEditor)
             {
-                if (_ship == null) _ship = new ShipConstruct();
-                _ship.LoadShip(ShipNode);
+                KCTDebug.LogError("BLV tried to get ShipConstruct from within editor but _ship was null! Returning EditorLogic's shipconstruct.");
+                return EditorLogic.fetch.ship;
             }
             return _ship;
+        }
+
+        public void UpdateNodeAndSave(string file, bool release = true)
+        {
+            ShipNodeCompressed.Node.SetValue("ship", shipName);
+            ShipNodeCompressed.Node.Save(file);
+            if (release)
+                ShipNodeCompressed.CompressAndRelease();
         }
 
         public void Launch(bool fillFuel = false)
@@ -560,7 +569,7 @@ namespace KerbalConstructionTime
             UpdateRFTanks();
             if (fillFuel)
                 FillUnlockedFuelTanks();
-            ShipNode.Save(tempFile);
+            UpdateNodeAndSave(tempFile);
             string launchSiteName = launchSite;
             if (launchSiteName == "LaunchPad")
             {
@@ -676,21 +685,7 @@ namespace KerbalConstructionTime
 
         private bool HasClamps()
         {
-            if (clampState != ClampsState.Untested)
-                return clampState == ClampsState.HasClamps;
-
-            clampState = ClampsState.HasClamps;
-            foreach (var p in ExtractedPartNodes)
-            {
-                AvailablePart aPart = Utilities.GetAvailablePartByName(Utilities.GetPartNameFromNode(p));
-
-                if (aPart != null && Utilities.IsClamp(aPart.partPrefab))
-                    return true;
-            }
-
-            clampState = ClampsState.NoClamps;
-
-            return false;
+            return clampState == ClampsState.HasClamps;
         }
 
         private void CacheClamps(List<Part> parts)
@@ -716,7 +711,7 @@ namespace KerbalConstructionTime
 
         private void UpdateRFTanks()
         {
-            foreach (var cn in ShipNode.GetNodes("PART"))
+            foreach (var cn in ShipNodeCompressed.Node.GetNodes("PART"))
             {
                 foreach (var module in cn.GetNodes("MODULE"))
                 {
@@ -732,28 +727,26 @@ namespace KerbalConstructionTime
             }
         }
 
-        public bool AreTanksFull()
+        private bool AreTanksFull(List<Part> parts)
         {
-            foreach (ConfigNode p in ShipNode.GetNodes("PART"))
+            foreach (var p in parts)
             {
-                foreach (var res in p.GetNodes("RESOURCE"))
+                foreach (var r in p.Resources)
                 {
-                    if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
-                        bool.Parse(res.GetValue("flowState")))
-                    {
-                        var maxAmt = float.Parse(res.GetValue("maxAmount"));
-                        var amt = float.Parse(res.GetValue("amount"));
-                        if (Math.Abs(amt - maxAmt) >= 1)
+                    if (r.flowState && GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(r.resourceName))
+                        if (Math.Abs(r.amount - r.maxAmount) >= 1)
                             return false;
-                    }
                 }
             }
+
             return true;
         }
 
+        public bool AreTanksFull() => tanksFull;
+
         private void FillUnlockedFuelTanks()
         {
-            foreach (ConfigNode p in ShipNode.GetNodes("PART"))
+            foreach (ConfigNode p in ShipNodeCompressed.Node.GetNodes("PART"))
             {
                 var resList = p.GetNodes("RESOURCE");
                 foreach (var res in resList)
@@ -768,18 +761,26 @@ namespace KerbalConstructionTime
             }
         }
 
+        private void StorePartNames(List<Part> parts)
+        {
+            partNames.Clear();
+            foreach (var p in parts)
+                partNames.Add(p.partInfo.name);
+        }
+
+        public bool IsCrewable() => isCrewable;
+
+        private bool IsCrewable(List<Part> parts)
+        {
+            foreach (var p in parts)
+                if (p.CrewCapacity > 0)
+                    return true;
+
+            return false;
+        }
+
         public double GetTotalMass()
         {
-            if (mass != 0 && emptyMass != 0) return mass;
-            mass = 0;
-            emptyMass = 0;
-            foreach (var p in ExtractedPartNodes)
-            {
-                mass += Utilities.GetPartMassFromNode(p, includeFuel: true, includeClamps: false);
-                emptyMass += Utilities.GetPartMassFromNode(p, includeFuel: false, includeClamps: false);
-            }
-            mass = Math.Max(mass, 0);
-            emptyMass = Math.Max(emptyMass, 0);
             return mass;
         }
 
@@ -789,8 +790,9 @@ namespace KerbalConstructionTime
                 return ShipSize;
 
             ShipTemplate template = new ShipTemplate();
-            template.LoadShip(ShipNode);
+            template.LoadShip(ShipNodeCompressed.Node);
             ShipSize = template.GetShipSize();
+            ShipNodeCompressed.CompressAndRelease();
             
             return ShipSize;
         }
@@ -799,9 +801,10 @@ namespace KerbalConstructionTime
         {
             if (cost == 0 || emptyCost == 0)
             {
-                cost = Utilities.GetTotalVesselCost(ShipNode);
-                emptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
+                cost = Utilities.GetTotalVesselCost(ShipNodeCompressed.Node);
+                emptyCost = Utilities.GetTotalVesselCost(ShipNodeCompressed.Node, false);
                 integrationCost = (float)Formula.GetIntegrationCost(this);
+                ShipNodeCompressed.CompressAndRelease();
             }
 
             return cost + integrationCost;
@@ -894,7 +897,7 @@ namespace KerbalConstructionTime
         {
             List<PseudoPart> retList = new List<PseudoPart>();
 
-            foreach (ConfigNode cn in ShipNode.GetNodes("PART"))
+            foreach (ConfigNode cn in ShipNodeCompressed.Node.GetNodes("PART"))
             {
                 string name = cn.GetValue("part");
                 string pID;
@@ -918,27 +921,21 @@ namespace KerbalConstructionTime
 
         public bool AreAllPartsValid()
         {
-            //loop through the ship's parts and check if any don't have AvailableParts that match.
-
-            bool valid = true;
-            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
+            if (partNames.Count > 0)
             {
-                if (Utilities.GetAvailablePartByName(Utilities.GetPartNameFromNode(pNode)) == null)
-                {
-                    valid = false;
-                    break;
-                }
+                foreach (var s in partNames)
+                    if (Utilities.GetAvailablePartByName(s) == null)
+                        return false;
             }
 
-            return valid;
+            return true;
         }
 
         public List<string> GetMissingParts()
         {
             List<string> missing = new List<string>();
-            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
+            foreach(var name in partNames)
             {
-                string name = Utilities.GetPartNameFromNode(pNode);
                 if (Utilities.GetAvailablePartByName(name) == null)
                 {
                     //invalid part detected!
@@ -956,9 +953,8 @@ namespace KerbalConstructionTime
                 return res;
 
             List<AvailablePart> apList = new List<AvailablePart>();
-            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
+            foreach (string partName in partNames)
             {
-                string partName = Utilities.GetPartNameFromNode(pNode);
                 AvailablePart part = PartLoader.getPartInfoByName(partName);
                 apList.Add(part);
             }
@@ -1251,21 +1247,135 @@ namespace KerbalConstructionTime
             return 0d;
         }
 
+        public void ReleaseShipNode()
+        {
+            ShipNodeCompressed.CompressAndRelease();
+        }
+
+        public void RemoveMissingSymmetry()
+        {
+            //loop through, find all sym = lines and find the part they reference
+            int referencesRemoved = 0;
+            foreach (ConfigNode partNode in ShipNodeCompressed.Node.GetNodes("PART"))
+            {
+                List<string> toRemove = new List<string>();
+                foreach (string symPart in partNode.GetValues("sym"))
+                {
+                    //find the part in the ship
+                    if (ShipNodeCompressed.Node.GetNodes("PART").FirstOrDefault(cn => cn.GetValue("part") == symPart) == null)
+                        toRemove.Add(symPart);
+                }
+
+                foreach (string remove in toRemove)
+                {
+                    foreach (ConfigNode.Value val in partNode.values)
+                    {
+                        if (val.value == remove)
+                        {
+                            referencesRemoved++;
+                            partNode.values.Remove(val);
+                            break;
+                        }
+                    }
+                }
+            }
+            KCTDebug.Log($"Removed {referencesRemoved} invalid symmetry references.");
+        }
+
+        public ShipConstruct CreateShipConstructAndRelease()
+        {
+            var sc = new ShipConstruct();
+            if (!sc.LoadShip(ShipNodeCompressed.Node))
+                sc = null;
+
+            ReleaseShipNode();
+
+            return sc;
+        }
+
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            ShipNode = node.GetNode("ShipNode");
+            var sNode = node.GetNode("ShipNode");
             if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
             {
                 if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 10)
                 {
+                    ShipNodeCompressed.Node = sNode;
                     RecalculateFromNode(false);
                 }
 
                 if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 14)
                 {
                     node.TryGetValue("LaunchPadID", ref launchSiteIndex);
-                    emptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
+                    emptyCost = Utilities.GetTotalVesselCost(sNode, false);
+                }
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 19)
+                {
+                    ShipNodeCompressed.Node = sNode;
+                    tanksFull = true;
+                    isCrewable = false;
+                    bool checkMass = mass == 0 || emptyMass == 0;
+                    if (checkMass)
+                    {
+                        mass = 0;
+                        emptyMass = 0;
+                    }
+
+                    foreach (ConfigNode p in sNode.GetNodes("PART"))
+                    {
+                        var partName = Utilities.GetPartNameFromNode(p);
+                        partNames.Add(partName);
+
+                        if (tanksFull)
+                        {
+                            foreach (var res in p.GetNodes("RESOURCE"))
+                            {
+                                if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
+                                    bool.Parse(res.GetValue("flowState")))
+                                {
+                                    var maxAmt = float.Parse(res.GetValue("maxAmount"));
+                                    var amt = float.Parse(res.GetValue("amount"));
+                                    if (Math.Abs(amt - maxAmt) >= 1)
+                                    {
+                                        tanksFull = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (clampState == ClampsState.Untested)
+                        {
+                            AvailablePart aPart = Utilities.GetAvailablePartByName(partName);
+                            if (aPart != null && Utilities.IsClamp(aPart.partPrefab))
+                                clampState = ClampsState.HasClamps;
+                        }
+
+                        if (checkMass)
+                        {
+                            mass += Utilities.GetPartMassFromNode(p, includeFuel: true, includeClamps: false);
+                            emptyMass += Utilities.GetPartMassFromNode(p, includeFuel: false, includeClamps: false);
+                        }
+                    }
+
+                    if (clampState == ClampsState.Untested)
+                        clampState = ClampsState.NoClamps;
+
+                    foreach (var s in partNames)
+                    {
+                        Part p = Utilities.GetAvailablePartByName(s)?.partPrefab;
+                        if (p != null && p.CrewCapacity > 0)
+                        {
+                            isCrewable = true;
+                            break;
+                        }
+                    }
+
+                    mass = Math.Max(mass, 0);
+                    emptyMass = Math.Max(emptyMass, 0);
+
+                    ShipNodeCompressed.CompressAndRelease();
                 }
             }
         }
@@ -1273,7 +1383,6 @@ namespace KerbalConstructionTime
         public void Save(ConfigNode node)
         {
             ConfigNode.CreateConfigFromObject(this, node);
-            node.AddNode("ShipNode", ShipNode); // safe to not copy because this will be created fresh on vessel change
         }
 
         public void LinkToLC(LCItem lc)

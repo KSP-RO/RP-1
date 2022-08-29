@@ -150,9 +150,6 @@ namespace RP0.Crew
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
 
-            KCT_GUI.UseAvailabilityChecker = true;
-            KCT_GUI.AvailabilityChecker = CheckCrewForPart;
-
             if (Settings == null)
             {
                 Settings = new CrewHandlerSettings();

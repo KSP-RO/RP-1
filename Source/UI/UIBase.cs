@@ -16,15 +16,17 @@ namespace RP0
         {
             RightLabel = new GUIStyle(UIHolder.RescaledKSPSkin.label)
             {
-                alignment = TextAnchor.MiddleRight
+                alignment = TextAnchor.MiddleRight,
+                fixedHeight = 0
             };
             BoldLabel = new GUIStyle(UIHolder.RescaledKSPSkin.label)
             {
-                fontStyle = FontStyle.Bold
+                fontStyle = FontStyle.Bold,
+                fixedHeight = 0
             };
             BoldRightLabel = new GUIStyle(RightLabel)
             {
-                fontStyle = FontStyle.Bold
+                fontStyle = FontStyle.Bold,
             };
 
             PressedButton = new GUIStyle(UIHolder.RescaledKSPSkin.button);

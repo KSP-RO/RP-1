@@ -30,7 +30,7 @@ namespace RP0
             GUILayout.BeginVertical();
             try
             {
-                GUILayout.Label($"Use this tab to set the required payload amount for contracts.", BoldLabel);
+                GUILayout.Label($"Use this tab to set the required payload amount for contracts.", BoldLabel, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
                 UIHolder.Space(10f);
 
                 GUILayout.Label($"CommSat Payload range: {Math.Max(CommsPayload / 2, 300)} - {CommsPayload}", UIHolder.Width(250));

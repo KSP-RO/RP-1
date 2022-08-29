@@ -12,7 +12,6 @@ namespace KerbalConstructionTime
         public static Rect EditorWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, _editorWindowWidth * UIHolder.UIScale, 1);
         public static string BuildRateForDisplay;
 
-        private static double _finishedShipBP = -1;
         private static bool _isEditorLocked = false;
         private static bool _wasShowBuildList = false;
 
@@ -211,13 +210,7 @@ namespace KerbalConstructionTime
         private static void RenderEditMode()
         {
             BuildListVessel ship = KCTGameStates.EditedVessel;
-            if (_finishedShipBP < 0 && ship.IsFinished)
-            {
-                // If ship is finished, then both build and integration times can be refreshed with newly calculated values
-                ship.RecalculateFromNode();
-                _finishedShipBP = ship.buildPoints;
-            }
-
+            
             Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
@@ -261,13 +254,11 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Edits"))
             {
-                _finishedShipBP = -1;
                 Utilities.TrySaveShipEdits(ship);
             }
             if (GUILayout.Button("Cancel Edits"))
             {
                 KCTDebug.Log("Edits cancelled.");
-                _finishedShipBP = -1;
                 KCTGameStates.ClearVesselEditMode();
 
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
@@ -277,7 +268,6 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {
-                _finishedShipBP = -1;
                 _simulationConfigPosition.height = 1;
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
@@ -287,7 +277,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.LaunchedVessel.AreTanksFull() &&
+            if (!KCTGameStates.EditorVessel.AreTanksFull() &&
                 GUILayout.Button("Fill Tanks"))
             {
                 foreach (Part p in EditorLogic.fetch.ship.parts)

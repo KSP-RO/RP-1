@@ -67,7 +67,7 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Untooled Parts:", UIHolder.Width(312));
-                GUILayout.Label("Tooling cost", RightLabel, UIHolder.Width(72));
+                GUILayout.Label("Tooling cost", RightLabel, UIHolder.Width(84));
                 GUILayout.Label("Untooled", RightLabel, UIHolder.Width(72));
                 GUILayout.Label("Tooled", RightLabel, UIHolder.Width(72));
                 GUILayout.EndHorizontal();
@@ -76,7 +76,10 @@ namespace RP0
                 foreach (UntooledPart up in _untooledParts)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label(up.Name, BoldLabel, UIHolder.Width(312));
+                    
+                    float pixelHeight = BoldLabel.CalcHeight(new GUIContent(up.Name), 312);
+                    GUILayout.Label(up.Name, BoldLabel, UIHolder.Width(312), GUILayout.Height(pixelHeight));
+                    
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -up.ToolingCost):N0}", RightLabel, UIHolder.Width(72));
                     float untooledExtraCost = GetUntooledExtraCost(up);
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -up.TotalCost):N0}", RightLabel, UIHolder.Width(72));

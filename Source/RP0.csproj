@@ -60,6 +60,7 @@
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="Crew\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
+    <Compile Include="DataTypes\PersistentCompressedConfigNode.cs" />
     <Compile Include="DataTypes\PersistentSortedList.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
     <Compile Include="Harmony\EditorExtensionsRedux.cs" />
@@ -283,6 +284,11 @@
     <Reference Include="ContractConfigurator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\ContractConfigurator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\Ionic.Zip.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ModularFlightIntegrator">

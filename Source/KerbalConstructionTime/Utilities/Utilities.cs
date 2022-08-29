@@ -1356,7 +1356,6 @@ namespace KerbalConstructionTime
 
         public static bool RecoverActiveVesselToStorage(BuildListVessel.ListType listType)
         {
-            var test = new ShipConstruct();
             try
             {
                 KCTDebug.Log("Attempting to recover active vessel to storage.  listType: " + listType);
@@ -1377,18 +1376,18 @@ namespace KerbalConstructionTime
                     KCTGameStates.RecoveredVessel.launchSite = "Runway";
 
                 //check for symmetry parts and remove those references if they can't be found
-                RemoveMissingSymmetry(KCTGameStates.RecoveredVessel.ShipNode);
+                KCTGameStates.RecoveredVessel.RemoveMissingSymmetry();
 
                 // debug, save to a file
-                KCTGameStates.RecoveredVessel.ShipNode.Save("KCTVesselSave");
+                KCTGameStates.RecoveredVessel.UpdateNodeAndSave("KCTVesselSave", false);
 
                 //test if we can actually convert it
-                bool success = test.LoadShip(KCTGameStates.RecoveredVessel.ShipNode);
+                var test = KCTGameStates.RecoveredVessel.CreateShipConstructAndRelease();
 
-                if (success)
+                if (test != null)
                     ShipConstruction.CreateBackup(test);
-                KCTDebug.Log("Load test reported success = " + success);
-                if (!success)
+                KCTDebug.Log("Load test reported success = " + (test == null ? "false" : "true"));
+                if (test == null)
                 {
                     KCTGameStates.RecoveredVessel = null;
                     return false;
@@ -1410,36 +1409,6 @@ namespace KerbalConstructionTime
                 ShipConstruction.ClearBackups();
                 return false;
             }
-        }
-
-        public static void RemoveMissingSymmetry(ConfigNode ship)
-        {
-            //loop through, find all sym = lines and find the part they reference
-            int referencesRemoved = 0;
-            foreach (ConfigNode partNode in ship.GetNodes("PART"))
-            {
-                List<string> toRemove = new List<string>();
-                foreach (string symPart in partNode.GetValues("sym"))
-                {
-                    //find the part in the ship
-                    if (ship.GetNodes("PART").FirstOrDefault(cn => cn.GetValue("part") == symPart) == null)
-                        toRemove.Add(symPart);
-                }
-
-                foreach (string remove in toRemove)
-                {
-                    foreach (ConfigNode.Value val in partNode.values)
-                    {
-                        if (val.value == remove)
-                        {
-                            referencesRemoved++;
-                            partNode.values.Remove(val);
-                            break;
-                        }
-                    }
-                }
-            }
-            KCTDebug.Log($"Removed {referencesRemoved} invalid symmetry references.");
         }
 
         /// <summary>

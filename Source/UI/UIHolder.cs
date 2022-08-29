@@ -167,28 +167,23 @@ namespace RP0
             skin.font = Font.CreateDynamicFontFromOSFont(
                 skin.font.fontNames,
                 (int)(skin.font.fontSize * UIScale));
+            skin.font.material.mainTexture.filterMode = FilterMode.Bilinear;
+            skin.font.material.mainTexture.anisoLevel = 4;
 
-            skin.button.alignment = TextAnchor.MiddleCenter;
             skin.button.contentOffset = new Vector2(0, -buttonHeight * UIScale / 10);
             skin.button.fixedHeight = buttonHeight * UIScale;
             skin.horizontalSlider.fixedHeight = 21 * UIScale;
             skin.horizontalSliderThumb.fixedHeight = 21 * UIScale;
             skin.horizontalSliderThumb.fixedWidth = 12 * UIScale;
-            skin.label.alignment = TextAnchor.MiddleLeft;
             skin.label.contentOffset = new Vector2(0, -labelHeight * UIScale / 20);
             skin.label.fixedHeight = labelHeight * UIScale;
             skin.label.wordWrap = true;
-            skin.label.stretchHeight = true;
-            skin.label.stretchWidth = true;
-            skin.textArea.alignment = TextAnchor.MiddleLeft;
             skin.textArea.contentOffset = new Vector2(0, -textAreaHeight * UIScale / 20);
             skin.textArea.fixedHeight = textAreaHeight * UIScale;
-            skin.textField.alignment = TextAnchor.MiddleLeft;
             skin.textField.contentOffset = new Vector2(0, -textAreaHeight * UIScale / 20);
             skin.textField.fixedHeight = textFieldHeight * UIScale;
             skin.toggle.fixedHeight = toggleHeight * UIScale;
             skin.toggle.contentOffset = new Vector2(0, -toggleHeight * (UIScale - 1) / 3);
-            skin.toggle.alignment = TextAnchor.UpperLeft;
             skin.toggle.margin = new RectOffset(
                 (int)(skin.toggle.margin.left * UIScale),
                 skin.toggle.margin.right,

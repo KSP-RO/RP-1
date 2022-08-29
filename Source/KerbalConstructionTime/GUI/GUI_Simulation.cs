@@ -231,7 +231,7 @@ namespace KerbalConstructionTime
 
             Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
 
-            KCTGameStates.LaunchedVessel = KCTGameStates.EditorVessel.CreateCopy(false);
+            KCTGameStates.LaunchedVessel = KCTGameStates.EditorVessel.CreateCopy();
             KCTGameStates.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();

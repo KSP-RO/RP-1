@@ -1422,6 +1422,8 @@ namespace KerbalConstructionTime
             KCT_GUI.EditorWindowPosition.height = 1;
 
             var kctInstance = KerbalConstructionTime.Instance as EditorAddon;
+            if (EditorLogic.fetch == null)
+                return;
 
             if (KCTGameStates.Settings.OverrideLaunchButton)
             {

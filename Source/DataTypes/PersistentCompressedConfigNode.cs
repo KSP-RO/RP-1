@@ -56,15 +56,20 @@ namespace RP0.DataTypes
                 CompressAndRelease();
         }
 
+        private void Compress()
+        {
+            _bytes = ObjectSerializer.Zip(_node.ToString());
+            _name = _node.name;
+            _id = _node.id;
+            _comment = _node.comment;
+        }
+
         public void CompressAndRelease()
         {
             if (_node == null)
                 return;
 
-            _bytes = ObjectSerializer.Zip(_node.ToString());
-            _name = _node.name;
-            _id = _node.id;
-            _comment = _node.comment;
+            Compress();
             _node = null;
         }
 
@@ -74,6 +79,15 @@ namespace RP0.DataTypes
             int index = 0;
             fixed (char* pszData = data)
             {
+                for (int i = 0; i < len; ++i)
+                {
+                    char c = pszData[i];
+                    if (c == '+')
+                        pszData[i] = '-';
+                    else if (c == '/')
+                        pszData[i] = '_';
+                }
+
                 for(;;)
                 {
                     int length;
@@ -97,6 +111,23 @@ namespace RP0.DataTypes
                     index += length;
                 }
             }
+        }
+
+        private unsafe void LoadData(string s)
+        {
+            int len = s.Length;
+            fixed (char* pszData = s)
+            {
+                for (int i = 0; i < len; ++i)
+                {
+                    char c = pszData[i];
+                    if (c == '-')
+                        pszData[i] = '+';
+                    else if (c == '_')
+                        pszData[i] = '/';
+                }
+            }
+            _bytes = ObjectSerializer.Base64Decode(s);
         }
 
         public PersistentCompressedConfigNode CreateCopy()
@@ -146,7 +177,7 @@ namespace RP0.DataTypes
             
             string s = sb.ToString();
             sb.Clear();
-            _bytes = ObjectSerializer.Base64Decode(s);
+            LoadData(s);
         }
 
         public void Save(ConfigNode node)

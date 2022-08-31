@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RP0.DataTypes;
+using UnityEngine;
 
 namespace KerbalConstructionTime
 {
@@ -70,10 +71,25 @@ namespace KerbalConstructionTime
         {
             _ignoreObserve = true;
             _lcs.Clear();
-            foreach (var id in _lcIDs)
+            for (int i = _lcIDs.Count; i-- > 0;)
             {
-                if (id != Guid.Empty)
-                    _lcs.Add(KCTGameStates.FindLCFromID(id));
+                var id = _lcIDs[i];
+                if (id == Guid.Empty)
+                {
+                    Debug.LogError("[RP-0] Error: found empty guid relinking LCEfficiency");
+                    _lcIDs.RemoveAt(i);
+                    continue;
+                }
+
+                var lc = KCTGameStates.FindLCFromID(id);
+                if (lc == null)
+                {
+                    _lcIDs.RemoveAt(i);
+                    Debug.LogError($"[RP-0] Error: could not find LC for guid {id} relinking LCEfficiency");
+                    continue;
+                }
+
+                _lcs.Add(lc);
             }
             _ignoreObserve = false;
         }

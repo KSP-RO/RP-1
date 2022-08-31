@@ -405,7 +405,7 @@ namespace KerbalConstructionTime
         {
             while (true)
             {
-                if (HighLogic.LoadedSceneIsEditor)
+                if (HighLogic.LoadedSceneIsEditor && EditorLogic.fetch != null)
                     Utilities.HandleEditorButton();
                 yield return _wfsHalf;
             }

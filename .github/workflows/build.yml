@@ -16,12 +16,14 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   check-secret:
-    uses: KSP-RO/BuildTools/.github/workflows/check-secret.yml
+    uses: StonesmileGit/BuildTools/.github/workflows/check-secret.yml@main
     secrets:
       KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
 
   validate-cfg-files:
-    uses: KSP-RO/BuildTools/.github/workflows/validate-cfg-files.yml
+    uses: StonesmileGit/BuildTools/.github/workflows/validate-cfg-files.yml@main
+    with:
+      blacklist_path: "GameData/RP-0/validatorblackList.txt"
 
   build:
     # The type of runner that the job will run on
@@ -37,7 +39,7 @@ jobs:
           fetch-depth: 100
 
       - name: Download required assemblies
-        uses: KSP-RO/BuildTools/download-assemblies
+        uses: StonesmileGit/BuildTools/download-assemblies@main
         with:
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
 

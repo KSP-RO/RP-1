@@ -128,3 +128,5 @@ jobs:
           git add "${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg"
           git commit -m "Update version to $TAG_STRING"
           git push origin $RELEASEBRANCH
+          git tag $TAG_STRING $RELEASEBRANCH --force
+          git push origin $TAG_STRING --force

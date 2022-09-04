@@ -24,7 +24,20 @@ namespace RP0
         public const double UpdateInterval = 3600d;
 
         public static MaintenanceHandler Instance { get; private set; } = null;
-        public static MaintenanceSettings Settings { get; private set; } = null;
+        private static MaintenanceSettings _settings = null;
+        public static MaintenanceSettings Settings
+        {
+            get
+            {
+                if (_settings == null)
+                {
+                    _settings = new MaintenanceSettings();
+                    foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
+                        ConfigNode.LoadObjectFromConfig(Settings, n);
+                }
+                return _settings;
+            }
+        }
 
         private bool _isFirstLoad = true;
         private static readonly Dictionary<SpaceCenterFacility, float[]> _facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
@@ -185,18 +198,6 @@ namespace RP0
         public void Start()
         {
             OnRP0MaintenanceChanged.Add(ScheduleMaintenanceUpdate);
-        }
-
-        public override void OnLoad(ConfigNode node)
-        {
-            base.OnLoad(node);
-
-            if (Settings == null)
-            {
-                Settings = new MaintenanceSettings();
-                foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
-                    ConfigNode.LoadObjectFromConfig(Settings, n);
-            }
         }
 
         protected double SumCosts(float[] costs, int idx)

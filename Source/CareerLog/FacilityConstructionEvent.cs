@@ -21,18 +21,6 @@ namespace RP0
         {
         }
 
-        public override void Load(ConfigNode node)
-        {
-            base.Load(node);
-            node.TryGetValue(nameof(FacilityID), ref FacilityID);
-        }
-
-        public override void Save(ConfigNode node)
-        {
-            base.Save(node);
-            node.AddValue(nameof(FacilityID), FacilityID);
-        }
-
         public static FacilityType ParseFacilityType(SpaceCenterFacility scf)
         {
             return (FacilityType)Enum.Parse(typeof(FacilityType), scf.ToString());

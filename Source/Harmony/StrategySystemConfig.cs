@@ -54,7 +54,15 @@ namespace RP0.Harmony
                 node.AddValue("title", p.title);
                 node.AddValue("desc", p.description);
                 if (!string.IsNullOrEmpty(p.icon))
+                {
                     node.AddValue("icon", p.icon);
+                }
+                else
+                {
+                    string tName = $"RP-0/Programs/{p.name}";
+                    if (GameDatabase.Instance.ExistsTexture(tName))
+                        node.AddValue("icon", tName);
+                }
                 node.AddValue("groupTag", p.name); // will never conflict except with itself.
                 StrategyConfig cfg = StrategyConfig.Create(node, __instance.Departments);
                 __instance.Strategies.Add(cfg);

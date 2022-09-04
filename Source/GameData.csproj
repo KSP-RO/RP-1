@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -69,9 +69,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Groups.cfg">
       <Link>Contracts\Groups.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Programs.cfg">
-      <Link>Contracts\Programs.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\RP0_Contract_Resources.cfg">
       <Link>Contracts\RP0_Contract_Resources.cfg</Link>
@@ -709,6 +706,9 @@
     <Content Include="..\GameData\RP-0\Parts\Science\VI05-HIResImager.cfg">
       <Link>Parts\Science\VI05-HIResImager.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Programs\Programs.cfg">
+      <Link>Programs\Programs.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Scenarios\1957Start.cfg">
       <Link>Scenarios\1957Start.cfg</Link>
     </Content>
@@ -946,9 +946,7 @@
     <Content Include="..\GameData\RP-0\Tree\TREE-Parts.cfg">
       <Link>Tree\TREE-Parts.cfg</Link>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

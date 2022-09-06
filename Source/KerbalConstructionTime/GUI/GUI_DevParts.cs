@@ -16,6 +16,7 @@ namespace KerbalConstructionTime
         private static GUIContent _devPartsOnContent;
         private static GUIContent _devPartsOffContent;
         private static Rect _devPartsRect;
+        private static float _devPartsScale;
 
         private static Texture2D _devPartsOnTex;
         private static Texture2D _devPartsOffTex;
@@ -109,12 +110,12 @@ namespace KerbalConstructionTime
             if (mechjebPresent)
                 offset = 140;
 
-            var scale = GameSettings.UI_SCALE;
+            _devPartsScale = GameSettings.UI_SCALE;
 
-            _devPartsRect = new Rect(Screen.width - (260 + offset) * scale, 0, 42 * scale, 38 * scale);
+            _devPartsRect = new Rect(Screen.width - (260 + offset) * _devPartsScale, 0, 42 * _devPartsScale, 38 * _devPartsScale);
             {
-                TextureScale.Bilinear(onTex, (int)(_devPartsOnTex.width * scale), (int)(_devPartsOnTex.height * scale));
-                TextureScale.Bilinear(offTex, (int)(_devPartsOffTex.width * scale), (int)(_devPartsOffTex.height * scale));
+                TextureScale.Bilinear(onTex, (int)(_devPartsOnTex.width * _devPartsScale), (int)(_devPartsOnTex.height * _devPartsScale));
+                TextureScale.Bilinear(offTex, (int)(_devPartsOffTex.width * _devPartsScale), (int)(_devPartsOffTex.height * _devPartsScale));
             }
             _devPartsOnContent = new GUIContent("", onTex, _tooltipOnText);
             _devPartsOffContent = new GUIContent("", offTex, _tooltipOffText);
@@ -128,6 +129,9 @@ namespace KerbalConstructionTime
                 _devPartsContent = _devPartsOnContent;
             else
                 _devPartsContent = _devPartsOffContent;
+
+            if (_devPartsScale != GameSettings.UI_SCALE)
+                PositionAndSizeDevPartsIcon();
 
             if (EditorPartList.Instance != null && FirstOnGUIUpdate && !DevPartsVisible)
             {

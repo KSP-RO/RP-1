@@ -111,7 +111,7 @@ namespace KerbalConstructionTime
 
             _devPartsScale = GameSettings.UI_SCALE;
 
-            _devPartsRect = new Rect(Screen.width - (260 + offset) * scale, 0, 42 * scale, 38 * scale);
+            _devPartsRect = new Rect(Screen.width - (260 + offset) * _devPartsScale, 0, 42 * _devPartsScale, 38 * _devPartsScale);
             {
                 TextureScale.Bilinear(onTex, (int)(_devPartsOnTex.width * _devPartsScale), (int)(_devPartsOnTex.height * _devPartsScale));
                 TextureScale.Bilinear(offTex, (int)(_devPartsOffTex.width * _devPartsScale), (int)(_devPartsOffTex.height * _devPartsScale));

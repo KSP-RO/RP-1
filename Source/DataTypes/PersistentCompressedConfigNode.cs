@@ -12,9 +12,6 @@ namespace RP0.DataTypes
         const int _ChunkSize = 32720;
         const string _ValueName = "serialized";
         
-        private string _name = null;
-        private string _id = null;
-        private string _comment = null;
         private byte[] _bytes = null;
         private ConfigNode _node = null;
         public ConfigNode Node
@@ -31,9 +28,6 @@ namespace RP0.DataTypes
                     _node = ConfigNode.Parse(s);
                     if (_node.nodes.Count > 0)
                         _node = _node.nodes[0]; // this is because when we parse, we wrap in a root node.
-                    _node.name = _name;
-                    _node.id = _id;
-                    _node.comment = _comment;
                     //UnityEngine.Debug.Log("Resulting node:\n" + _node.ToString());
                 }
 
@@ -59,9 +53,6 @@ namespace RP0.DataTypes
         private void Compress()
         {
             _bytes = ObjectSerializer.Zip(_node.ToString());
-            _name = _node.name;
-            _id = _node.id;
-            _comment = _node.comment;
         }
 
         public void CompressAndRelease()
@@ -133,12 +124,9 @@ namespace RP0.DataTypes
         public PersistentCompressedConfigNode CreateCopy()
         {
             var ret = new PersistentCompressedConfigNode();
-            ret._name = _name;
-            ret._id = _id;
-            ret._comment = _comment;
             if (_node != null)
                 ret._node = _node.CreateCopy();
-            else if (_bytes != null)
+            if (_bytes != null)
                 ret._bytes = _bytes;
 
             return ret;
@@ -146,31 +134,24 @@ namespace RP0.DataTypes
 
         public virtual void Load(ConfigNode node)
         {
-            if (node.values.Count == 0)
+            if (node.values.Count == 0 && node.nodes.Count == 0)
                 return;
 
-            _name = null;
-            _id = null;
-            _comment = null;
+            if (node.nodes.Count > 0)
+            {
+                _node = node.nodes[0];
+            }
+
             var sb = new StringBuilder(_ChunkSize);
             for (int i = 0; i < node._values.Count; ++i)
             {
                 var v = node._values[i];
-                switch (v.name)
-                {
-                    case "name":
-                        _name = v.value;
-                        break;
-                    case "id":
-                        _id = v.value;
-                        break;
-                    case "comment":
-                        _comment = v.value;
-                        break;
-                    default:
+                //switch (v.name)
+                //{
+                //    default:
                         sb.Append(v.value);
-                        break;
-                }
+                //        break;
+                //}
             }
             if (sb.Length == 0)
                 return;
@@ -184,12 +165,6 @@ namespace RP0.DataTypes
         {
             // will early-out if we're already in the compressed state.
             CompressAndRelease();
-            if (_name != null)
-                node.AddValue("name", _name);
-            if (_id != null)
-                node.AddValue("id", _id);
-            if (_comment != null)
-                node.AddValue("comment", _comment);
 
             string data = ObjectSerializer.Base64Encode(_bytes);
             WriteChunks(node, data);

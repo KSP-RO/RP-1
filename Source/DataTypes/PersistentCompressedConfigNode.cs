@@ -118,6 +118,12 @@ namespace RP0.DataTypes
                         pszData[i] = '/';
                 }
             }
+            int mod = len % 4;
+            if (mod != 0)
+            {
+                UnityEngine.Debug.LogError("[RP-0] error: base64 string length is not divisble by 4! Padding.");
+                s += new string('=', 4 - mod); // yuck, concatenation sucks here.
+            }
             _bytes = ObjectSerializer.Base64Decode(s);
         }
 

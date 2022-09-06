@@ -152,12 +152,12 @@ namespace RP0.DataTypes
             for (int i = 0; i < node._values.Count; ++i)
             {
                 var v = node._values[i];
-                //switch (v.name)
-                //{
-                //    default:
+                switch (v.name)
+                {
+                    case _ValueName:
                         sb.Append(v.value);
-                //        break;
-                //}
+                        break;
+                }
             }
             if (sb.Length == 0)
                 return;

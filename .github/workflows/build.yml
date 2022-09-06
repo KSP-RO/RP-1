@@ -44,19 +44,13 @@ jobs:
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
 
       - name: Build mod solution
-        run: |
-          rm -f ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/*.dll
-          msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
-        
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.0
-        
+        run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+
       - name: Build metadata
-        shell: bash
-        run: |
-          python ${GITHUB_WORKSPACE}/makeMeta.py 2.0.0.0
+        uses: StonesmileGit/BuildTools/update-version-file@main
+        with:
+          path: ${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version
+          tag: "v2.0.0.0"
 
       - name: Assemble release
         id: assemble-release

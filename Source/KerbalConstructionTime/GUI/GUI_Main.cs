@@ -382,8 +382,6 @@ namespace KerbalConstructionTime
             ResetTooltipStyle();
             InitTooltips();
             
-            PositionAndSizeDevPartsIcon();
-            
             _centralWindowPosition.size = new Vector2(_centralWindowWidth * UIHolder.UIScale, 1);
             _blPlusPosition.size = new Vector2(_blPlusWidth * UIHolder.UIScale, 1);
             _airlaunchWindowPosition.size = new Vector2(_airLaunchWindowWidth * UIHolder.UIScale, 1);

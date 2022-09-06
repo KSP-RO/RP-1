@@ -31,7 +31,7 @@ jobs:
         with:
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
 
-      - name: Get Version
+      - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@master
         with:
           path: ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs

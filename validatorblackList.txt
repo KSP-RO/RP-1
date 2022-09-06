@@ -1,1 +1,0 @@
-GameData/RP-0/AdminDisable.cfg

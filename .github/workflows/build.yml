@@ -22,8 +22,6 @@ jobs:
 
   validate-cfg-files:
     uses: StonesmileGit/BuildTools/.github/workflows/validate-cfg-files.yml@main
-    with:
-      blacklist_path: ${GITHUB_WORKSPACE}/validatorblackList.txt
 
   build:
     # The type of runner that the job will run on

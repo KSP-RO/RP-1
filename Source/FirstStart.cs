@@ -78,6 +78,11 @@ namespace RP0
         private static void MarkExperimentAsDone(string experimentID, string situationName, string bodyName)
         {
             ScienceExperiment experiment = ResearchAndDevelopment.GetExperiment(experimentID);
+            if (experiment == null)
+            {
+                Debug.LogError($"[RP-0] MarkExperimentAsDone: Invalid experiment {experimentID}");
+                return;
+            }
             CelestialBody body = FlightGlobals.GetBodyByName(bodyName);
             if (!Enum.TryParse(situationName, out ExperimentSituations situation))
             {

@@ -7,17 +7,10 @@ namespace RP0.Harmony
     internal class PatchEditorDriver
     {
         [HarmonyPrefix]
-        [HarmonyPatch("StartEditor")]
-        internal static void Prefix_StartEditor(EditorFacility facility)
+        [HarmonyPatch("onEditorStarted")]
+        internal static void Prefix_onEditorStarted()
         {
-            FixActiveLC(facility);
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch("StartAndLoadVessel")]
-        internal static void Prefix_StartAndLoadVessel(EditorFacility facility)
-        {
-            FixActiveLC(facility);
+            FixActiveLC(EditorDriver.editorFacility);
         }
 
         [HarmonyPrefix]

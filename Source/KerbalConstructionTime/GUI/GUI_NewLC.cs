@@ -75,6 +75,7 @@ namespace KerbalConstructionTime
 
                 _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
                 _newLCData.massOrig = _newLCData.massMax;
+                _newLCData.lcType = LaunchComplexType.Pad;
             }
             else
             {

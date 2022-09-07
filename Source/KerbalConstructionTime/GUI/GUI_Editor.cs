@@ -14,6 +14,13 @@ namespace KerbalConstructionTime
 
         private static bool _isEditorLocked = false;
         private static bool _wasShowBuildList = false;
+        private static readonly GUIContent _gcResetBuildRate = new GUIContent("*", "Reset Build Rate");
+        private static readonly GUIContent _gcSwitchToLC = new GUIContent("Switch to LC", "The Hangar is currently selected; this will switch to a launch complex, needed for rockets.");
+        private static readonly GUIContent _gcNoLCAvailable = new GUIContent("No LC Available", "Build a new one.");
+        private static readonly GUIContent _gcNoLCAvailableSomeConstructing = new GUIContent("No LC Available Now", "There is no operational launch complex. Build a new one or wait for an existing one to finish construction.");
+        private static readonly GUIContent _gcNewLC = new GUIContent("New LC", "Build a new launch complex to support this vessel, with a margin of 10% to vessel mass and size upgrades.");
+        private static readonly GUIContent _gcNoHangar = new GUIContent("Hangar Unavailable", "The Hangar is currently being modified.");
+        private static readonly GUIContent _gcSwitchToHangar = new GUIContent("Switch to Hangar", "A Launch Complex is currently selected; this will switch to the Hangar, needed for planes.");
 
         public static void DrawEditorGUI(int windowID)
         {
@@ -59,7 +66,7 @@ namespace KerbalConstructionTime
             GUILayout.Label(" BP/s:");
 
             double bR;
-            if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(_gcResetBuildRate, GUILayout.ExpandWidth(false)))
             {
                 bR = rate;
                 BuildRateForDisplay = bR.ToString();
@@ -137,31 +144,68 @@ namespace KerbalConstructionTime
         private static void RenderEditorLaunchComplexControls()
         {
             LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            bool rightLC = (EditorDriver.editorFacility == EditorFacility.SPH) == (activeLC.LCType == LaunchComplexType.Hangar);
+            int lcCount = KCTGameStates.ActiveKSC.LaunchComplexCountPad;
 
             GUILayout.BeginHorizontal();
-            int lcCount = KCTGameStates.ActiveKSC.LaunchComplexCount;
-            if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+            if (rightLC)
             {
-                KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
-                BuildRateForDisplay = null;
+                if (EditorDriver.editorFacility == EditorFacility.VAB)
+                {
+                    if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+                    {
+                        KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+                        BuildRateForDisplay = null;
+                    }
+                }
+                GUILayout.FlexibleSpace();
+                string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
+                string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
+                GUILayout.Label(new GUIContent(lcText, lcTooltip));
+                GUILayout.FlexibleSpace();
+                if (EditorDriver.editorFacility == EditorFacility.VAB)
+                {
+                    if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+                    {
+                        KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
+                        BuildRateForDisplay = null;
+                    }
+                }
             }
-            GUILayout.FlexibleSpace();
-            string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
-            string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
-            GUILayout.Label(new GUIContent(lcText, lcTooltip));
-            GUILayout.FlexibleSpace();
-            if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            else
             {
-                KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
-                BuildRateForDisplay = null;
+                if (EditorDriver.editorFacility == EditorFacility.VAB)
+                {
+                    if (lcCount > 0)
+                    {
+                        if (GUILayout.Button(_gcSwitchToLC))
+                            KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
+                    }
+                    else
+                    {
+                        GUILayout.Label(KCTGameStates.ActiveKSC.LaunchComplexes.Count > 1 ? _gcNoLCAvailableSomeConstructing : _gcNoLCAvailable, GetLabelCenterAlignStyle());
+                    }
+                }
+                else
+                {
+                    if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                    {
+                        if (GUILayout.Button(_gcSwitchToHangar))
+                            KCTGameStates.ActiveKSC.SwitchLaunchComplex(KCTGameStates.ActiveKSC.LaunchComplexes.IndexOf(KCTGameStates.ActiveKSC.Hangar));
+                    }
+                    else
+                    {
+                        GUILayout.Label(_gcNoHangar, GetLabelCenterAlignStyle());
+                    }
+                }
             }
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(new GUIContent("New LC", "Build a new launch complex to support this vessel, with a margin of 10% to vessel mass and size upgrades.")))
+            if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(_gcNewLC))
             {
                 SetFieldsFromVessel(KCTGameStates.EditorVessel);
-                
+
                 _wasShowBuildList = GUIStates.ShowBuildList;
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowLCResources = false;
@@ -170,39 +214,40 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300 * UIHolder.UIScale;
             }
-            bool canModify = activeLC.CanModify;
-            
-            bool rightLC = ((activeLC.LCType == LaunchComplexType.Hangar && EditorLogic.fetch.ship.shipFacility == EditorFacility.SPH) 
-                    || (activeLC.LCType == LaunchComplexType.Pad && EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB));
-            const string modifyFailTooltip = "Currently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
-            const string wrongLCTooltip = "This is the wrong vessel type (plane/rocket) for this complex type. Select another complex / the hangar";
-            if (GUILayout.Button(new GUIContent("Reconstruct", 
-                rightLC ? ( canModify ? $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants." : modifyFailTooltip) : wrongLCTooltip),
-                rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
+            if (rightLC)
             {
-                SetFieldsFromVessel(KCTGameStates.EditorVessel, activeLC);
+                bool canModify = activeLC.CanModify;
 
-                _wasShowBuildList = GUIStates.ShowBuildList;
-                GUIStates.ShowModifyLC = true;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowLCResources = false;
-                _centralWindowPosition.width = 300;
-            }
-            if (GUILayout.Button(new GUIContent("Upgrade", 
-                rightLC ? (canModify ? $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible." : modifyFailTooltip) : wrongLCTooltip),
-                rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
-            {
-                SetFieldsFromVesselKeepOld(KCTGameStates.EditorVessel, activeLC);
+                const string modifyFailTooltip = "Currently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
+                const string wrongLCTooltip = "This is the wrong vessel type (plane/rocket) for this complex type. Select another complex / the hangar";
+                if (GUILayout.Button(new GUIContent("Reconstruct",
+                    rightLC ? (canModify ? $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants." : modifyFailTooltip) : wrongLCTooltip),
+                    rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
+                {
+                    SetFieldsFromVessel(KCTGameStates.EditorVessel, activeLC);
 
-                _wasShowBuildList = GUIStates.ShowBuildList;
-                GUIStates.ShowModifyLC = true;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowLCResources = false;
-                _centralWindowPosition.width = 300;
+                    _wasShowBuildList = GUIStates.ShowBuildList;
+                    GUIStates.ShowModifyLC = true;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
+                    _centralWindowPosition.width = 300;
+                }
+                if (GUILayout.Button(new GUIContent("Upgrade",
+                    rightLC ? (canModify ? $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible." : modifyFailTooltip) : wrongLCTooltip),
+                    rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
+                {
+                    SetFieldsFromVesselKeepOld(KCTGameStates.EditorVessel, activeLC);
+
+                    _wasShowBuildList = GUIStates.ShowBuildList;
+                    GUIStates.ShowModifyLC = true;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
+                    _centralWindowPosition.width = 300;
+                }
             }
             GUILayout.EndHorizontal();
         }
@@ -226,7 +271,7 @@ namespace KerbalConstructionTime
             GUILayout.Label(" BP/s:");
 
             double bR;
-            if (GUILayout.Button(new GUIContent("*", "Reset Build Rate"), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(_gcResetBuildRate, GUILayout.ExpandWidth(false)))
             {
                 bR = rate;
                 BuildRateForDisplay = bR.ToString();

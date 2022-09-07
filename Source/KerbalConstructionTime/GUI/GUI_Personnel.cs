@@ -106,13 +106,13 @@ namespace KerbalConstructionTime
             int lcCount = KSC.LaunchComplexCount;
             if (lcCount > 1)
             {
-                int idx = KSC.SwitchLaunchComplex(false, _LCIndex, false);
+                int idx = KSC.SwitchLaunchComplex(false, false, _LCIndex, false);
                 if (GUILayout.Button($"<<{KSC.LaunchComplexes[idx].Name}", GUILayout.ExpandWidth(false))) { _LCIndex = idx; }
             }
             GUILayout.Label(currentLC.IsRushing ? $"{currentLC.Name} (rushing)" : currentLC.Name, GetLabelCenterAlignStyle());
             if (lcCount > 1)
             {
-                int idx = KSC.SwitchLaunchComplex(true, _LCIndex, false);
+                int idx = KSC.SwitchLaunchComplex(true, false, _LCIndex, false);
                 if (GUILayout.Button($"{KSC.LaunchComplexes[idx].Name}>>", GUILayout.ExpandWidth(false))) { _LCIndex = idx; }
             }
             GUILayout.EndHorizontal();

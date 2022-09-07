@@ -68,6 +68,18 @@ namespace KerbalConstructionTime
             }
         }
 
+        public int LaunchComplexCountPad
+        {
+            get
+            {
+                int count = 0;
+                foreach (LCItem lc in LaunchComplexes)
+                    if (lc.IsOperational && lc.LCType == LaunchComplexType.Pad)
+                        ++count;
+                return count;
+            }
+        }
+
         public bool IsAnyLCOperational
         {
             get
@@ -103,10 +115,10 @@ namespace KerbalConstructionTime
                 Constructions[j].UpdateBuildRate(j);
         }
 
-        public void SwitchToPrevLaunchComplex() => SwitchLaunchComplex(false);
-        public void SwitchToNextLaunchComplex() => SwitchLaunchComplex(true);
+        public void SwitchToPrevLaunchComplex(bool padOnly = false) => SwitchLaunchComplex(false, padOnly);
+        public void SwitchToNextLaunchComplex(bool padOnly = false) => SwitchLaunchComplex(true, padOnly);
 
-        public int SwitchLaunchComplex(bool forwardDirection, int startIndex = -1, bool doSwitch = true)
+        public int SwitchLaunchComplex(bool forwardDirection, bool padOnly, int startIndex = -1, bool doSwitch = true)
         {
             if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexIndex : startIndex;
 
@@ -130,7 +142,7 @@ namespace KerbalConstructionTime
                     --startIndex;
                 }
                 lc = LaunchComplexes[startIndex];
-            } while (!lc.IsOperational);
+            } while (!lc.IsOperational && padOnly && lc.LCType != LaunchComplexType.Pad);
 
             if (doSwitch)
                 SwitchLaunchComplex(startIndex);

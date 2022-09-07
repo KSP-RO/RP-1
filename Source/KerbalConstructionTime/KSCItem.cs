@@ -39,6 +39,15 @@ namespace KerbalConstructionTime
 
         private void AddListeners()
         {
+            // Remove, because KSPCF 1.21 and below nuke IConfigNode objects
+            // but KSPCF 1.22+ preserves them.
+            LCConstructions.Added -= added;
+            LCConstructions.Removed -= removed;
+            LCConstructions.Updated -= updated;
+            FacilityUpgrades.Added -= added;
+            FacilityUpgrades.Removed -= removed;
+            FacilityUpgrades.Updated -= updated;
+
             LCConstructions.Added += added;
             LCConstructions.Removed += removed;
             LCConstructions.Updated += updated;
@@ -181,6 +190,14 @@ namespace KerbalConstructionTime
             _allowRecalcConstructions = false;
             ConfigNode.LoadObjectFromConfig(this, node);
 
+            // Because KSPCF 1.21 and below nuke IConfigNode objects
+            // but KSPCF 1.22+ preserves them, the listeners will actually
+            // have been added in 1.22+ and *not* nuked by the above call.
+            // So we have to clear, just in case, and add later.
+            // Once KSPCF 1.22 is out, and it's been long enough,
+            // this can get nuked. Yay back-compat code!
+            Constructions.Clear();
+
             foreach (var lc in LaunchComplexes)
             {
                 // This will link to us
@@ -188,9 +205,7 @@ namespace KerbalConstructionTime
                 lc.PostLoad(this);
             }
 
-            // Loading these objects from confignode creates them fresh,
-            // so the listeners get nuked. We have to re-add the listeners
-            // and then iterate.
+            // see above re KSPCF back-compat
             AddListeners();
             // We need to add LCCs and facility upgrades (pads done above)
             foreach (var c in LCConstructions)

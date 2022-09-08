@@ -380,7 +380,7 @@ namespace KerbalConstructionTime
             {
                 if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 {
-                    var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
+                    var dataModule = FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker) as KCTVesselTracker;
                     if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB && !dataModule.Data.HasStartedReconditioning)
                     {
                         string launchSite = FlightDriver.LaunchSiteName;

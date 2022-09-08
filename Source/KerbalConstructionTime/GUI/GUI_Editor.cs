@@ -89,6 +89,14 @@ namespace KerbalConstructionTime
                 GUILayout.Label("Invalid Build Rate");
             }
 
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated && !KCTGameStates.EditorVessel.humanRated))
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Engineer Cap:");
+                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KCTGameStates.ActiveKSC.Hangar : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance).MaxEngineersFor(KCTGameStates.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+            }
+
             if (KCTGameStates.EditorVessel.integrationCost > 0)
                 GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorVessel.integrationCost:N1}");
 
@@ -295,6 +303,18 @@ namespace KerbalConstructionTime
                 GUILayout.EndHorizontal();
                 GUILayout.Label("Invalid Build Rate");
             }
+
+            GUILayout.BeginHorizontal();
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (KCTGameStates.EditorVessel.LC.IsHumanRated && !KCTGameStates.EditorVessel.humanRated))
+            {
+                GUILayout.Label("Engineer Cap:");
+                GUILayout.Label(KCTGameStates.EditorVessel.LC.MaxEngineersFor(KCTGameStates.EditorVessel).ToString(), GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label(string.Empty);
+            }
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Edits"))

@@ -12,23 +12,16 @@ namespace RP0.DataTypes
         const int _ChunkSize = 32720;
         const string _ValueName = "serialized";
         
-        private byte[] _bytes = null;
-        private ConfigNode _node = null;
-        public ConfigNode Node
+        protected byte[] _bytes = null;
+        protected ConfigNode _node = null;
+        public virtual ConfigNode Node
         {
             get
             {
                 if (_node == null)
                 {
-                    if (_bytes == null)
+                    if(!Decompress())
                         return null;
-
-                    //UnityEngine.Debug.Log("@@Extracting Shipnode!! Stack: " + Environment.StackTrace);
-                    string s = ObjectSerializer.UnZip(_bytes);
-                    _node = ConfigNode.Parse(s);
-                    if (_node.nodes.Count > 0)
-                        _node = _node.nodes[0]; // this is because when we parse, we wrap in a root node.
-                    //UnityEngine.Debug.Log("Resulting node:\n" + _node.ToString());
                 }
 
                 return _node;
@@ -50,7 +43,23 @@ namespace RP0.DataTypes
                 CompressAndRelease();
         }
 
-        private void Compress()
+        protected bool Decompress()
+        {
+            if (_bytes == null)
+                return false;
+
+            //UnityEngine.Debug.Log("@@Extracting Shipnode!! Stack: " + Environment.StackTrace);
+            string s = ObjectSerializer.UnZip(_bytes);
+            _node = ConfigNode.Parse(s);
+            // Parsing wraps the node in a rootnode. That's fine, because it means the node's name is saved.
+            // So let's extract it out.
+            _node = _node.nodes[0];
+            //UnityEngine.Debug.Log("Resulting node:\n" + _node.ToString());
+
+            return true;
+        }
+
+        protected void Compress()
         {
             _bytes = ObjectSerializer.Zip(_node.ToString());
         }
@@ -64,7 +73,7 @@ namespace RP0.DataTypes
             _node = null;
         }
 
-        private unsafe void WriteChunks(ConfigNode node, string data)
+        protected unsafe void WriteChunks(ConfigNode node, string data)
         {
             int len = data.Length;
             int index = 0;
@@ -104,7 +113,7 @@ namespace RP0.DataTypes
             }
         }
 
-        private unsafe void LoadData(string s)
+        protected unsafe void LoadData(string s)
         {
             int len = s.Length;
             fixed (char* pszData = s)
@@ -127,15 +136,12 @@ namespace RP0.DataTypes
             _bytes = ObjectSerializer.Base64Decode(s);
         }
 
-        public PersistentCompressedConfigNode CreateCopy()
+        public void Copy(PersistentCompressedConfigNode src)
         {
-            var ret = new PersistentCompressedConfigNode();
-            if (_node != null)
-                ret._node = _node.CreateCopy();
-            if (_bytes != null)
-                ret._bytes = _bytes;
-
-            return ret;
+            if (src._node != null)
+                _node = src._node.CreateCopy();
+            if (src._bytes != null)
+                _bytes = src._bytes;
         }
 
         public virtual void Load(ConfigNode node)
@@ -174,6 +180,38 @@ namespace RP0.DataTypes
 
             string data = ObjectSerializer.Base64Encode(_bytes);
             WriteChunks(node, data);
+        }
+    }
+
+    public class PersistentCompressedCraftNode : PersistentCompressedConfigNode
+    {
+        public override ConfigNode Node
+        {
+            get
+            {
+                if (_node == null)
+                {
+                    Decompress();
+                    Version gameVersion = new Version(Versioning.version_major, Versioning.version_minor, Versioning.Revision);
+
+                    ConfigNode newNode = KSPUpgradePipeline.Pipeline.Run(_node, SaveUpgradePipeline.LoadContext.Craft, gameVersion, out bool runSuccess, out string runInfo);
+                    if (!runSuccess)
+                    {
+                        UnityEngine.Debug.LogError($"[RP-0] Error upgrading craft node with ship name {_node.GetValue("ship") ?? "<unknown"}. Information from the upgrade run: {runInfo}");
+                        return _node;
+                    }
+                    if (newNode != _node)
+                    {
+                        base.Node = newNode;
+                        UnityEngine.Debug.Log($"[RP-0] Upgraded craft node with ship name {_node.GetValue("ship") ?? "<unknown>"}.");
+                    }
+                }
+                return _node;
+            }
+            set
+            {
+                base.Node = value;
+            }
         }
     }
 }

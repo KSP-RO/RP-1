@@ -80,7 +80,7 @@ namespace KerbalConstructionTime
         [Persistent]
         private PersistentHashSetValueType<string> partNames = new PersistentHashSetValueType<string>();
         [Persistent]
-        private PersistentCompressedConfigNode ShipNodeCompressed = new PersistentCompressedConfigNode();
+        private PersistentCompressedCraftNode ShipNodeCompressed = new PersistentCompressedCraftNode();
 
         public string LandedAt = "";
         private double _buildRate = -1d;
@@ -459,12 +459,12 @@ namespace KerbalConstructionTime
         {
             BuildListVessel ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated)
             {
-                ShipNodeCompressed = ShipNodeCompressed.CreateCopy(),
                 _lc = _lc,
                 globalTags = globalTags.Clone(),
                 partNames = partNames.Clone(),
                 resourceAmounts = resourceAmounts.Clone(),
             };
+            ret.ShipNodeCompressed.Copy(ShipNodeCompressed);
 
             ret.shipID = Guid.NewGuid();
             ret.KCTPersistentID = Guid.NewGuid().ToString("N");

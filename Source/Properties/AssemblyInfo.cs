@@ -45,3 +45,4 @@ using System.Runtime.InteropServices;
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
 [assembly: KSPAssemblyDependency("ContractConfigurator", 2, 0)]
 [assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]
+[assembly: KSPAssemblyDependency("KSPCommunityFixes", 1, 22, 1)]

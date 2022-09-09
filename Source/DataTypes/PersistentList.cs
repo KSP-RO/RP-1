@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniLinq;
-using System.Text;
-using System.Threading.Tasks;
+using KSPCommunityFixes.Modding;
 
 namespace RP0.DataTypes
 {
@@ -34,11 +32,28 @@ namespace RP0.DataTypes
 
     public class PersistentParsableList<T> : List<T>, IConfigNode where T : class
     {
-        protected virtual T Parse(string s)
+        private enum ParseableType
         {
-            if (typeof(T) == typeof(ProtoCrewMember))
+            INVALID,
+            ProtoCrewMember,
+        }
+
+        private static ParseableType GetParseableType(System.Type t)
+        {
+            if (t == typeof(ProtoCrewMember))
+                return ParseableType.ProtoCrewMember;
+
+            return ParseableType.INVALID;
+        }
+
+        private static readonly ParseableType _ParseType = GetParseableType(typeof(T)); 
+
+        private T Parse(string s)
+        {
+            switch(_ParseType)
             {
-                return HighLogic.CurrentGame.CrewRoster[s] as T;
+                case ParseableType.ProtoCrewMember:
+                    return HighLogic.CurrentGame.CrewRoster[s] as T;
             }
 
             return null;
@@ -50,7 +65,8 @@ namespace RP0.DataTypes
             foreach (ConfigNode.Value v in node.values)
             {
                 T item = Parse(v.value);
-                Add(item);
+                if (item != null)
+                    Add(item);
             }
         }
 
@@ -69,23 +85,15 @@ namespace RP0.DataTypes
     /// </summary>
     public class PersistentListValueType<T> : List<T>, IConfigNode
     {
-        private static System.Type type = typeof(T);
+        private readonly static System.Type _Type = typeof(T);
+        private readonly static DataType _DataType = FieldData.ValueDataType(_Type);
 
         public void Load(ConfigNode node)
         {
             Clear();
             foreach (ConfigNode.Value v in node.values)
             {
-                T item;
-                if (type == typeof(Guid))
-                {
-                    object o = new Guid(v.value);
-                    item = (T)o;
-                }
-                else
-                {
-                    item = (T)ConfigNode.ReadValue(type, v.value);
-                }
+                T item = (T)FieldData.ReadValue(v.value, _DataType, _Type);
                 Add(item);
             }
         }
@@ -94,7 +102,7 @@ namespace RP0.DataTypes
         {
             foreach (var item in this)
             {
-                node.AddValue("item", item.ToString());
+                node.AddValue("item", FieldData.WriteValue(item, _DataType));
             }
         }
     }

@@ -9,6 +9,14 @@ namespace RP0InstallChecker
     {
         protected void Start()
         {
+            if (!AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals("KSPCommunityFixes") && a.versionMajor > 1 || a.versionMinor > 22 || (a.versionMinor == 22 && a.versionRevision >= 1)))
+            {
+                string titleText = "Incorrect RP-1 Installation";
+                string contentText = "Make sure you have installed version 1.22.1 or above of KSPCommunityFixes. RP-1 will not load without this installed.";
+                ShowErrorDialog(titleText, contentText);
+                return;
+            }
+
             var assembliesToCheck = new[] { "CC_RP0", "RP-0" };    // These are values of KSPAssembly attribute
             if (assembliesToCheck.Any(an => !AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals(an, StringComparison.OrdinalIgnoreCase))))
             {

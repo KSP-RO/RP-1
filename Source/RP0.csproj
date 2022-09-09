@@ -292,6 +292,10 @@
       <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\Ionic.Zip.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="KSPCommunityFixes">
+      <HintPath>..\..\..\..\..\..\Games\R112\GameData\KSPCommunityFixes\Plugins\KSPCommunityFixes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="ModularFlightIntegrator">
       <Private>False</Private>
     </Reference>

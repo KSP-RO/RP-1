@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using KSPCommunityFixes.Modding;
 
 namespace RP0.DataTypes
 {
     public abstract class PersistentSortedList<TKey, TValue> : SortedList<TKey, TValue>, IConfigNode where TValue : IConfigNode
     {
         protected abstract TKey ParseKey(string key);
+
+        protected abstract string WriteKey(TKey key);
 
         public void Load(ConfigNode node)
         {
@@ -43,7 +44,7 @@ namespace RP0.DataTypes
 
             foreach (var kvp in this)
             {
-                keyNode.AddValue("key", kvp.Key.ToString());
+                keyNode.AddValue("key", WriteKey(kvp.Key));
                 ConfigNode n = new ConfigNode("VALUE");
                 kvp.Value.Save(n);
                 valueNode.AddNode(n);
@@ -58,21 +59,17 @@ namespace RP0.DataTypes
     /// <typeparam name="TValue"></typeparam>
     public class PersistentSortedListValueTypeKey<TKey, TValue> : PersistentSortedList<TKey, TValue> where TValue : IConfigNode
     {
-        private static System.Type KeyType = typeof(TKey);
+        private static readonly System.Type _KeyType = typeof(TKey);
+        private static readonly DataType _KeyDataType = FieldData.ValueDataType(_KeyType);
 
         protected override TKey ParseKey(string value)
         {
-            TKey key;
-            if (KeyType == typeof(Guid))
-            {
-                object o = new Guid(value);
-                key = (TKey)o;
-            }
-            else
-            {
-                key = (TKey)ConfigNode.ReadValue(KeyType, value);
-            }
-            return key;
+            return (TKey)FieldData.ReadValue(value, _KeyDataType, _KeyType);
+        }
+
+        protected override string WriteKey(TKey key)
+        {
+            return FieldData.WriteValue(key, _KeyDataType);
         }
     }
 
@@ -84,35 +81,18 @@ namespace RP0.DataTypes
     /// <typeparam name="TValue"></typeparam>
     public class PersistentSortedListValueTypes<TKey, TValue> : SortedList<TKey, TValue>, IConfigNode
     {
-        private static Type KeyType = typeof(TKey);
-        private static Type ValueType = typeof(TValue);
+        private static System.Type _KeyType = typeof(TKey);
+        private static readonly DataType _KeyDataType = FieldData.ValueDataType(_KeyType);
+        private static System.Type _ValueType = typeof(TValue);
+        private static readonly DataType _ValueDataType = FieldData.ValueDataType(_ValueType);
 
         public void Load(ConfigNode node)
         {
             Clear();
             foreach (ConfigNode.Value v in node.values)
             {
-                TKey key;
-                if (KeyType == typeof(Guid))
-                {
-                    object o = new Guid(v.value);
-                    key = (TKey)o;
-                }
-                else
-                {
-                    key = (TKey)ConfigNode.ReadValue(KeyType, v.name);
-                }
-
-                TValue value;
-                if (ValueType == typeof(Guid))
-                {
-                    object o = new Guid(v.value);
-                    value = (TValue)o;
-                }
-                else
-                {
-                    value = (TValue)ConfigNode.ReadValue(ValueType, v.value);
-                }
+                TKey key = (TKey)FieldData.ReadValue(v.name, _KeyDataType, _KeyType);
+                TValue value = (TValue)FieldData.ReadValue(v.value, _ValueDataType, _ValueType);
                 Add(key, value);
             }
         }
@@ -121,20 +101,22 @@ namespace RP0.DataTypes
         {
             foreach (var kvp in this)
             {
-                node.AddValue(kvp.Key.ToString(), kvp.Value.ToString());
+                string key = FieldData.WriteValue(kvp.Key, _KeyDataType);
+                string value = FieldData.WriteValue(kvp.Value, _ValueDataType);
+                node.AddValue(key, value);
             }
         }
 
-        public void Clone(PersistentDictionaryValueTypes<TKey, TValue> source)
+        public void Clone(PersistentSortedListValueTypes<TKey, TValue> source)
         {
             Clear();
             foreach (var kvp in source)
                 Add(kvp.Key, kvp.Value);
         }
 
-        public PersistentDictionaryValueTypes<TKey, TValue> Clone()
+        public PersistentSortedListValueTypes<TKey, TValue> Clone()
         {
-            var dict = new PersistentDictionaryValueTypes<TKey, TValue>();
+            var dict = new PersistentSortedListValueTypes<TKey, TValue>();
             foreach (var kvp in this)
                 dict.Add(kvp.Key, kvp.Value);
 

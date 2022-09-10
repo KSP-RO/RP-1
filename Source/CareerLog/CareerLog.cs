@@ -596,6 +596,7 @@ namespace RP0
                 efficiencyEngineers = logPeriod.EfficiencyEngineers,
                 currentFunds = logPeriod.CurrentFunds,
                 currentSci = logPeriod.CurrentSci,
+                rndQueueLength = logPeriod.RnDQueueLength,
                 scienceEarned = logPeriod.ScienceEarned,
                 programFunds = logPeriod.ProgramFunds,
                 otherFundsEarned = logPeriod.OtherFundsEarned,
@@ -623,6 +624,7 @@ namespace RP0
             {
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
+                _prevPeriod.RnDQueueLength = KerbalConstructionTimeData.Instance.TechList.Sum(t => t.scienceCost);
                 _prevPeriod.NumEngineers = KCTGameStates.TotalEngineers;
                 _prevPeriod.NumResearchers = KerbalConstructionTimeData.Instance.Researchers;
                 _prevPeriod.EfficiencyEngineers = KCTGameStates.WeightedAverageEfficiencyEngineers;

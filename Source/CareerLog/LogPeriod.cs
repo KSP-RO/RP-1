@@ -15,6 +15,9 @@
         public double CurrentSci;
 
         [Persistent]
+        public int RnDQueueLength;
+
+        [Persistent]
         public double ProgramFunds;
 
         [Persistent]

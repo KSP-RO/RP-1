@@ -457,15 +457,12 @@ namespace KerbalConstructionTime
 
         public BuildListVessel CreateCopy()
         {
-            BuildListVessel ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated)
-            {
-                _lc = _lc,
-                globalTags = globalTags.Clone(),
-                partNames = partNames.Clone(),
-                resourceAmounts = resourceAmounts.Clone(),
-            };
+            BuildListVessel ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated);
+            ret._lc = _lc;
+            ret.globalTags = globalTags.Clone();
+            ret.partNames = partNames.Clone();
+            ret.resourceAmounts = resourceAmounts.Clone();
             ret.ShipNodeCompressed.Copy(ShipNodeCompressed);
-
             ret.shipID = Guid.NewGuid();
             ret.KCTPersistentID = Guid.NewGuid().ToString("N");
             ret.mass = mass;

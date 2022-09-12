@@ -189,31 +189,12 @@ namespace KerbalConstructionTime
         {
             _allowRecalcConstructions = false;
             ConfigNode.LoadObjectFromConfig(this, node);
-
-            // Because KSPCF 1.21 and below nuke IConfigNode objects
-            // but KSPCF 1.22+ preserves them, the listeners will actually
-            // have been added in 1.22+ and *not* nuked by the above call.
-            // So we have to clear, just in case, and add later.
-            // Once KSPCF 1.22 is out, and it's been long enough,
-            // this can get nuked. Yay back-compat code!
-            Constructions.Clear();
-
             foreach (var lc in LaunchComplexes)
             {
                 // This will link to us
                 // and add the padconstructions
                 lc.PostLoad(this);
             }
-
-            // see above re KSPCF back-compat
-            AddListeners();
-            // We need to add LCCs and facility upgrades (pads done above)
-            foreach (var c in LCConstructions)
-                Constructions.Add(c);
-            foreach (var c in FacilityUpgrades)
-                Constructions.Add(c);
-
-
             _allowRecalcConstructions = true;
 
             if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)

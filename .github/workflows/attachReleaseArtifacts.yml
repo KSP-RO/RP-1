@@ -27,6 +27,7 @@ jobs:
           ref: ${{ env.tagged_branch }}
         
       - name: Download required assemblies
+        id: download-assemblies
         uses: KSP-RO/BuildTools/download-assemblies@master
         with:
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}

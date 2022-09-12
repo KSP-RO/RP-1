@@ -3482,7 +3482,7 @@
         "spacecraft": "Ares I, Ares V",
         "engine_config": "J2X",
         "upgrade": false,
-        "entry_cost_mods": "0,HydroloxPumps",
+        "entry_cost_mods": "158860,HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5337,6 +5337,27 @@
         "engine_config": "M1",
         "upgrade": true,
         "entry_cost_mods": "50000,M-1U,M-1SL",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "M10",
+        "title": "M10",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "2026",
+        "technology": "orbitalRocketryNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "M10",
+        "upgrade": false,
+        "entry_cost_mods": "25000,RD0146",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7238,7 +7259,7 @@
         "spacecraft": "Energia",
         "engine_config": "RD0120",
         "upgrade": false,
-        "entry_cost_mods": "0,StagedHydrolox",
+        "entry_cost_mods": "100000,StagedHydrolox",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -9886,7 +9907,7 @@
         "spacecraft": "Replacement for RL10",
         "engine_config": "RL60",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "46000,RL10B-2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10568,7 +10589,7 @@
         "spacecraft": "ITS",
         "engine_config": "Raptor",
         "upgrade": false,
-        "entry_cost_mods": "0,StagedMethalox,StagedFullFlow",
+        "entry_cost_mods": "60000,StagedMethalox,StagedFullFlow",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -10591,7 +10612,7 @@
         "spacecraft": "",
         "engine_config": "Raptor",
         "upgrade": false,
-        "entry_cost_mods": "0,StagedMethalox,StagedFullFlow",
+        "entry_cost_mods": "60000,StagedMethalox,StagedFullFlow",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -12644,7 +12665,7 @@
         "spacecraft": "Ariane 5",
         "engine_config": "Vulcain",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "320000,HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -12667,7 +12688,7 @@
         "spacecraft": "Ariane 5",
         "engine_config": "Vulcain",
         "upgrade": true,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "50000",
         "identical_part_name": "",
         "module_tags": []
     },

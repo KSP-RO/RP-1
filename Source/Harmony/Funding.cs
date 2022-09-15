@@ -28,7 +28,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("onVesselRecoveryProcessing")]
-        internal static bool Prefix_onVesselRecoveryProcessing(Funding __instance, ProtoVessel pv, KSP.UI.Screens.MissionRecoveryDialog mrDialog, ref float recoveryScore)
+        internal static bool Prefix_onVesselRecoveryProcessing(Funding __instance, ProtoVessel pv, KSP.UI.Screens.MissionRecoveryDialog mrDialog, float recoveryScore)
         {
             if (pv == null)
                 return false;

@@ -12,7 +12,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("SendStateMessage")]
-        internal static void Prefix_SendStateMessage(ContractParameter __instance, ref string title, ref string message, ref MessageSystemButton.MessageButtonColor color, ref MessageSystemButton.ButtonIcons icon)
+        internal static void Prefix_SendStateMessage(ContractParameter __instance, ref string message, MessageSystemButton.ButtonIcons icon)
         {
             if (icon != MessageSystemButton.ButtonIcons.COMPLETE || !__instance.Optional)
                 return;

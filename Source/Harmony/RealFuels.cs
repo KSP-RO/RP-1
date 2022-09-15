@@ -38,14 +38,14 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("DrawSelectButton")]
-        internal static void Prefix_DrawSelectButton(RealFuels.ModuleEngineConfigsBase __instance, ref ConfigNode node)
+        internal static void Prefix_DrawSelectButton(RealFuels.ModuleEngineConfigsBase __instance, ConfigNode node)
         {
             RFECMPatcher.techNode = node.GetValue("techRequired");
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("DrawSelectButton")]
-        internal static void Postfix_DrawSelectButton(RealFuels.ModuleEngineConfigsBase __instance, ref ConfigNode node)
+        internal static void Postfix_DrawSelectButton(RealFuels.ModuleEngineConfigsBase __instance, ConfigNode node)
         {
             RFECMPatcher.techNode = null;
         }

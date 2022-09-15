@@ -20,7 +20,7 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("ShowNodePanel")]
-        internal static void Postfix_ShowNodePanel(RDController __instance, ref RDNode node)
+        internal static void Postfix_ShowNodePanel(RDController __instance, RDNode node)
         {
             string techID = node.tech.techID;
             bool showSubsidy = node.tech.state == RDTech.State.Available;

@@ -11,7 +11,7 @@ namespace RP0.Harmony
     {
         [HarmonyPrefix]
         [HarmonyPatch("addReputation_granular")]
-        internal static bool Prefix_addReputation_granular(Reputation __instance, ref float value, ref float __result)
+        internal static bool Prefix_addReputation_granular(Reputation __instance, float value, out float __result)
         {
             __instance.rep = __instance.rep + value;
             __result = value;
@@ -20,7 +20,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("OnCrewKilled")]
-        internal static bool Prefix_OnCrewKilled(Reputation __instance, ref EventReport evt)
+        internal static bool Prefix_OnCrewKilled(Reputation __instance, EventReport evt)
         {
             if (evt.eventType == FlightEvents.CREW_KILLED)
             {
@@ -33,7 +33,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("AddReputation")]
-        internal static bool Prefix_AddReputation(Reputation __instance, ref float __result, float r, TransactionReasons reason)
+        internal static bool Prefix_AddReputation(Reputation __instance, out float __result, float r, TransactionReasons reason)
         {
             __instance.rep += r;
             CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason, 0f, 0f, r);
@@ -58,7 +58,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("onvesselRecoveryProcessing")]
-        internal static bool Prefix_onvesselRecoveryProcessing(Reputation __instance, ref ProtoVessel pv, ref MissionRecoveryDialog mrDialog, ref float recoveryScore)
+        internal static bool Prefix_onvesselRecoveryProcessing(Reputation __instance, ProtoVessel pv, MissionRecoveryDialog mrDialog, float recoveryScore)
         {
             if (mrDialog != null)
                 mrDialog.reputationEarned = 0f;

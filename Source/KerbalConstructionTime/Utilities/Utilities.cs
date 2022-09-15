@@ -737,9 +737,15 @@ namespace KerbalConstructionTime
 
         public static Dictionary<string, ProtoTechNode> GetUnlockedProtoTechNodes()
         {
+            if (ResearchAndDevelopment.Instance == null)
+                return new Dictionary<string, ProtoTechNode>();
+
+            if (ResearchAndDevelopment.Instance.protoTechNodes.Count > 0)
+                return ResearchAndDevelopment.Instance.protoTechNodes;
+
             var protoTechNodes = new Dictionary<string, ProtoTechNode>();
             // get the nodes that have been researched from ResearchAndDevelopment
-            foreach (ConfigNode cn in ResearchAndDevelopment.Instance?.snapshot.GetData().GetNodes("Tech") ?? Enumerable.Empty<ConfigNode>())
+            foreach (ConfigNode cn in ResearchAndDevelopment.Instance.snapshot.GetData().GetNodes("Tech"))
             {
                 // save proto nodes that have been researched
                 ProtoTechNode protoTechNode = new ProtoTechNode(cn);
@@ -812,11 +818,20 @@ namespace KerbalConstructionTime
 
         public static void AddResearchedPartsToExperimental()
         {
-            Dictionary<string, ProtoTechNode> protoTechNodes = GetUnlockedProtoTechNodes();
-
             foreach (var ap in PartLoader.LoadedPartsList)
             {
-                if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
+                if (PartIsUnlockedButNotPurchased(ap))
+                {
+                    AddExperimentalPart(ap);
+                }
+            }
+        }
+
+        public static void AddNodePartsToExperimental(string techID)
+        {
+            foreach (var ap in PartLoader.LoadedPartsList)
+            {
+                if (ap.TechRequired == techID && PartIsUnlockedButNotPurchased(ap))
                 {
                     AddExperimentalPart(ap);
                 }
@@ -825,21 +840,19 @@ namespace KerbalConstructionTime
 
         public static void RemoveResearchedPartsFromExperimental()
         {
-            Dictionary<string, ProtoTechNode> protoTechNodes = GetUnlockedProtoTechNodes();
-
             foreach (var ap in PartLoader.LoadedPartsList)
             {
-                if (PartIsUnlockedButNotPurchased(protoTechNodes, ap))
+                if (PartIsUnlockedButNotPurchased(ap))
                 {
                     RemoveExperimentalPart(ap);
                 }
             }
         }
 
-        public static bool PartIsUnlockedButNotPurchased(Dictionary<string, ProtoTechNode> unlockedProtoTechNodes, AvailablePart ap)
+        public static bool PartIsUnlockedButNotPurchased(AvailablePart ap)
         {
-            bool nodeIsInList = unlockedProtoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn);
-            if (!nodeIsInList) return false;
+            bool nodeIsInList = ResearchAndDevelopment.Instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn);
+            if (!nodeIsInList) return KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired);
 
             bool nodeIsUnlocked = ptn.state == RDTech.State.Available;
             bool partNotPurchased = !ptn.partsPurchased.Contains(ap);

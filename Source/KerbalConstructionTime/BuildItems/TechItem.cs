@@ -119,7 +119,9 @@ namespace KerbalConstructionTime
             techName = techNode.title;
             techID = techNode.techID;
             progress = 0;
-            ProtoNode = ResearchAndDevelopment.Instance.GetTechState(techID);
+            ProtoNode = new ProtoTechNode();
+            ProtoNode.UpdateFromTechNode(techNode);
+            // No need to feed this back into RnD yet--we'll do so on complete
 
             if (KerbalConstructionTime.TechNodePeriods.TryGetValue(techID, out KCTTechNodePeriod period))
             {
@@ -189,7 +191,7 @@ namespace KerbalConstructionTime
 
         public bool IsInList()
         {
-            return KerbalConstructionTimeData.Instance.TechList.FirstOrDefault(t => t.techID == techID) != null;
+            return KerbalConstructionTimeData.Instance.TechListHas(techID);
         }
 
         public string GetItemName() => techName;
@@ -233,17 +235,37 @@ namespace KerbalConstructionTime
             progress += increment;
             if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
             {
-                if (ProtoNode == null) return 0d;
-                EnableTech();
+                if (ProtoNode == null)
+                    return 0d;
+                
+                ProtoNode.state = RDTech.State.Available;
+                if (ResearchAndDevelopment.Instance == null)
+                    return 0d;
 
+                ResearchAndDevelopment.Instance.SetTechState(techID, ProtoNode);
+
+                // Shouldn't be needed - ProtoTechNode.UpdateFromTechNode(<RDTech>);
+                // analytics doesn't make sense here - AnalyticsUtil.LogTechTreeNodeUnlocked(ProtoNode, ResearchAndDevelopment.Instance.Science);
+
+                // Fire event with fake RDTech since we're outside the RnD screen
+                GameObject go = new GameObject();
                 try
                 {
+                    var rdt = go.AddComponent<RDTech>();
+                    rdt.techID = techID;
+                    rdt.techState = ProtoNode;
+                    rdt.scienceCost = scienceCost;
+                    rdt.Warmup(); // this will find speculative-level-hidden parts, but that's ok.
+                    GameEvents.OnTechnologyResearched.Fire(new GameEvents.HostTargetAction<RDTech, RDTech.OperationResult>(rdt, RDTech.OperationResult.Successful));
+
+                    // fire our own event
                     KCTEvents.OnTechCompleted.Fire(this);
                 }
                 catch (Exception ex)
                 {
                     Debug.LogException(ex);
                 }
+                go.DestroyGameObject();
 
                 KerbalConstructionTimeData.Instance.TechList.Remove(this);
 

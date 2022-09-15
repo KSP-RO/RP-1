@@ -30,7 +30,7 @@ namespace RP0.Harmony
         [HarmonyPrefix]
         [HarmonyPatch("CanAfford")]
         [HarmonyPatch(new Type[] { typeof(Action<Currency>) })]
-        internal static bool Prefix_CanAfford(CurrencyModifierQuery __instance, ref Action<Currency> onInsufficientCurrency, ref bool __result)
+        internal static bool Prefix_CanAfford(CurrencyModifierQuery __instance, Action<Currency> onInsufficientCurrency, ref bool __result)
         {
             if (__instance is CurrencyModifierQueryRP0 cmq)
             {
@@ -43,7 +43,7 @@ namespace RP0.Harmony
         [HarmonyPrefix]
         [HarmonyPatch("CanAfford")]
         [HarmonyPatch(new Type[] { typeof(Currency) })]
-        internal static bool Prefix_CanAfford2(CurrencyModifierQuery __instance, ref Currency c, ref bool __result)
+        internal static bool Prefix_CanAfford2(CurrencyModifierQuery __instance, Currency c, ref bool __result)
         {
             if (__instance is CurrencyModifierQueryRP0 cmq)
             {

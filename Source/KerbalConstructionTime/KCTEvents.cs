@@ -57,17 +57,13 @@ namespace KerbalConstructionTime
 
         public void SubscribeToEvents()
         {
-            GameEvents.onGUILaunchScreenSpawn.Add(LaunchScreenOpenEvent);
             GameEvents.onVesselRecovered.Add(VesselRecoverEvent);
 
             GameEvents.onVesselSituationChange.Add(VesselSituationChange);
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
-            GameEvents.OnTechnologyResearched.Add(TechUnlockEvent);
             GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
             GameEvents.onEditorShowPartList.Add(PartListEvent);
             KSP.UI.BaseCrewAssignmentDialog.onCrewDialogChange.Add(CrewDialogChange);
-            GameEvents.onGUIRnDComplexSpawn.Add(TechEnableEvent);
-            GameEvents.onGUIRnDComplexDespawn.Add(TechDisableEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
 
             GameEvents.onGUIEngineersReportReady.Add(EngineersReportReady);
@@ -255,63 +251,6 @@ namespace KerbalConstructionTime
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
         }
 
-        public void TechUnlockEvent(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> ev)
-        {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
-            if (ev.target == RDTech.OperationResult.Successful)
-            {
-                var tech = new TechItem();
-                if (ev.host != null)
-                    tech = new TechItem(ev.host);
-
-                if (!tech.IsInList())
-                {
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
-                    {
-                        KerbalConstructionTimeData.Instance.TechList.Add(tech);
-                        tech.UpdateBuildRate(KerbalConstructionTimeData.Instance.TechList.Count - 1);
-
-                        OnTechQueued.Fire(ev.host);
-                    }
-                }
-                else
-                {
-                    ResearchAndDevelopment.Instance.AddScience(tech.scienceCost, TransactionReasons.RnDTechResearch);
-                    ScreenMessages.PostScreenMessage("This node is already being researched!", 4f, ScreenMessageStyle.UPPER_LEFT);
-                }
-            }
-        }
-
-        public void TechDisableEvent()
-        {
-            TechDisableEventFinal();
-            Utilities.AddResearchedPartsToExperimental();
-        }
-
-        public void TechEnableEvent()
-        {
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
-            {
-                foreach (TechItem techItem in KerbalConstructionTimeData.Instance.TechList)
-                    techItem.EnableTech();
-            }
-
-            Utilities.RemoveResearchedPartsFromExperimental();
-        }
-
-        public void TechDisableEventFinal()
-        {
-            if (PresetManager.Instance?.ActivePreset != null &&
-                PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes &&
-                PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
-            {
-                foreach (TechItem tech in KerbalConstructionTimeData.Instance.TechList)
-                {
-                    tech.DisableTech();
-                }
-            }
-        }
-
         public void GameSceneEvent(GameScenes scene)
         {
             KCT_GUI.HideAll();
@@ -343,7 +282,6 @@ namespace KerbalConstructionTime
                 {
                     Utilities.LoadSimulationSave(false);
                 }
-                TechDisableEventFinal();
             }
 
             if (HighLogic.LoadedScene == scene && scene == GameScenes.EDITOR)    //Fix for null reference when using new or load buttons in editor
@@ -358,20 +296,6 @@ namespace KerbalConstructionTime
 
             if (scene == GameScenes.EDITOR && !HighLogic.LoadedSceneIsEditor)
                 KCT_GUI.FirstOnGUIUpdate = true;
-        }
-
-        public void LaunchScreenOpenEvent(GameEvents.VesselSpawnInfo v)
-        {
-            if (!KCT_GUI.IsPrimarilyDisabled)
-            {
-                // PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "Warning!", "To launch vessels you must first build them in the VAB or SPH, then launch them through the main KCT window in the Space Center!", "Ok", false, HighLogic.UISkin);
-                //open the build list to the right page
-                string selection = v.craftSubfolder.Contains("SPH") ? "SPH" : "VAB";
-                KCT_GUI.ToggleVisibility(true);
-                KCT_GUI.SelectList("");
-                KCT_GUI.SelectList("Operations");
-                KCTDebug.Log($"Opening the GUI to the {selection}");
-            }
         }
 
         public void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)

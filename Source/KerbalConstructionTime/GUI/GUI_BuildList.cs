@@ -1569,9 +1569,14 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
         }
 
-        public static void CancelTechNode(int index)
+        public static void CancelTechNode(int index, bool initialCancel = true)
         {
-            RemoveInputLocks();
+            if (initialCancel)
+            {
+                RemoveInputLocks();
+                KerbalConstructionTimeData.Instance.TechIgnoreUpdates = true;
+                Utilities.RemoveResearchedPartsFromExperimental();
+            }
 
             if (KerbalConstructionTimeData.Instance.TechList.Count > index)
             {
@@ -1584,7 +1589,7 @@ namespace KerbalConstructionTime
                     List<string> parentList = KerbalConstructionTimeData.techNameToParents[KerbalConstructionTimeData.Instance.TechList[i].techID];
                     if (parentList.Contains(node.techID))
                     {
-                        CancelTechNode(i);
+                        CancelTechNode(i, false);
                         // recheck list in case multiple levels of children were deleted.
                         i = -1;
                         index = KerbalConstructionTimeData.Instance.TechList.FindIndex(t => t.techID == node.techID);
@@ -1604,9 +1609,15 @@ namespace KerbalConstructionTime
                         KCTGameStates.IsRefunding = valBef;
                     }
                 }
-                node.DisableTech();
                 KerbalConstructionTimeData.Instance.TechList.RemoveAt(index);
                 RP0.Crew.CrewHandler.Instance?.OnTechCanceled(node.techID);
+
+                if (initialCancel) // do this only once
+                {
+                    KerbalConstructionTimeData.Instance.TechListUpdated();
+                    KerbalConstructionTimeData.Instance.TechIgnoreUpdates = false;
+                    Utilities.AddResearchedPartsToExperimental();
+                }
             }
         }
 

@@ -69,6 +69,8 @@
     <Compile Include="Harmony\CostWidget.cs" />
     <Compile Include="Harmony\LoadGameDialog.cs" />
     <Compile Include="Harmony\PlayerProfileInfo.cs" />
+    <Compile Include="Harmony\RDTechTree.cs" />
+    <Compile Include="Harmony\RDTech.cs" />
     <Compile Include="Harmony\ScienceSubjectWidget.cs" />
     <Compile Include="Harmony\RDNode.cs" />
     <Compile Include="KerbalConstructionTime\LCEfficiency.cs" />

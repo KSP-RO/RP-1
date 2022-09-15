@@ -14,7 +14,7 @@ namespace RP0.Harmony
     {
         [HarmonyPrefix]
         [HarmonyPatch("CreateItem")]
-        internal static bool Prefix_CreateItem(ContractsApp __instance, ref Contract contract, ref UICascadingList.CascadingListItem __result)
+        internal static bool Prefix_CreateItem(ContractsApp __instance, Contract contract, ref UICascadingList.CascadingListItem __result)
         {
             if (contract is ContractConfigurator.ConfiguredContract configuredContract)
             {

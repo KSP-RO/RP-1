@@ -62,11 +62,7 @@ namespace KerbalConstructionTime
             GameEvents.onVesselSituationChange.Add(VesselSituationChange);
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
             GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
-            GameEvents.onEditorShowPartList.Add(PartListEvent);
-            KSP.UI.BaseCrewAssignmentDialog.onCrewDialogChange.Add(CrewDialogChange);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
-
-            GameEvents.onGUIEngineersReportReady.Add(EngineersReportReady);
 
             GameEvents.OnKSCStructureRepaired.Add(FaciliyRepaired);
             GameEvents.OnKSCStructureCollapsed.Add(FacilityDestroyed);
@@ -91,8 +87,7 @@ namespace KerbalConstructionTime
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 
             GameEvents.onEditorStarted.Add(OnEditorStarted);
-            GameEvents.onEditorRestart.Add(OnEditorRestarted);
-            GameEvents.onEditorLoad.Add(OnEditorLoad);
+
             GameEvents.onFacilityContextMenuSpawn.Add(FacilityContextMenuSpawn);
 
             SubscribedToEvents = true;
@@ -106,14 +101,6 @@ namespace KerbalConstructionTime
         private void OnEditorStarted()
         {
             Utilities.HandleEditorButton();
-        }
-
-        private void OnEditorRestarted()
-        {
-        }
-
-        private void OnEditorLoad(ShipConstruct c, CraftBrowserDialog.LoadType t)
-        {
         }
 
         public void CreateEvents()
@@ -222,18 +209,6 @@ namespace KerbalConstructionTime
         private void ShipModifiedEvent(ShipConstruct vessel)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
-        }
-
-        private void PartListEvent()
-        {
-        }
-
-        private void CrewDialogChange(VesselCrewManifest vcm)
-        {
-        }
-
-        private void EngineersReportReady()
-        {
         }
 
         private void StageCountChangedEvent(int num)

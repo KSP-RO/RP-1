@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
@@ -41,6 +42,10 @@ namespace KerbalConstructionTime
 
         [KSPField(isPersistant = true)]
         public KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
+        public bool TechIgnoreUpdates = false;
+
+        private bool _experimentalPartsLoaded = false;
+        public bool ExperimentalPartsLoaded => _experimentalPartsLoaded;
 
         [KSPField(isPersistant = true)]
         public PersistentSortedListValueTypeKey<string, BuildListVessel> BuildPlans = new PersistentSortedListValueTypeKey<string, BuildListVessel>();
@@ -137,11 +142,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.KSCs.Clear();
                 KCTGameStates.ActiveKSC = null;
 
-                if (KerbalConstructionTime.Instance != null)    // Can be null/destroyed in the main menu scene
-                {
-                    TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
-                }
-
                 TechList.Updated += techListUpdated;
 
                 // Special check
@@ -180,27 +180,7 @@ namespace KerbalConstructionTime
                 if (foundStockKSC)
                     TryMigrateStockKSC();
 
-                var inDevProtoTechNodes = new Dictionary<string, ProtoTechNode>(); // list of all the protoTechNodes that are being researched
-
-                // Load tech data from techlist
-                foreach (var techItem in TechList)
-                {
-                    // save proto nodes that are in development
-                    inDevProtoTechNodes.Add(techItem.ProtoNode.techID, techItem.ProtoNode);
-                }
-                if (HighLogic.LoadedSceneIsEditor)
-                {
-                    // get the nodes that have been researched from ResearchAndDevelopment
-                    var protoTechNodes = Utilities.GetUnlockedProtoTechNodes();
-                    // iterate through all loaded parts to check if any of them should be experimental
-                    foreach (AvailablePart ap in PartLoader.LoadedPartsList)
-                    {
-                        if (Utilities.PartIsUnlockedButNotPurchased(protoTechNodes, ap) || inDevProtoTechNodes.ContainsKey(ap.TechRequired))
-                        {
-                            Utilities.AddExperimentalPart(ap);
-                        }
-                    }
-                }
+                StartCoroutine(FillExperimentalParts());
 
                 if (LoadedSaveVersion < KCTGameStates.VERSION)
                 {
@@ -273,15 +253,50 @@ namespace KerbalConstructionTime
             }
         }
 
+        public bool TechListHas(string techID)
+        {
+            for (int i = TechList.Count; i-- > 0;)
+                if (TechList[i].techID == techID)
+                    return true;
+
+            return false;
+        }
+
+        public int TechListIndex(string techID)
+        {
+            for (int i = TechList.Count; i-- > 0;)
+                if (TechList[i].techID == techID)
+                    return i;
+
+            return -1;
+        }
+
         public void UpdateTechTimes()
         {
             for (int j = 0; j < TechList.Count; j++)
                 TechList[j].UpdateBuildRate(j);
         }
 
-        private void techListUpdated() 
-        { 
-            RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); 
+        private void techListUpdated()
+        {
+            if (TechIgnoreUpdates)
+                return;
+
+            TechListUpdated();
+        }
+
+        public void TechListUpdated()
+        {
+            RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+            RP0.Harmony.PatchRDTechTree.Instance?.RefreshUI();
+        }
+
+        private IEnumerator FillExperimentalParts()
+        {
+            // Wait for RnD to finish loading
+            yield return null;
+
+            Utilities.AddResearchedPartsToExperimental();
         }
     }
 }

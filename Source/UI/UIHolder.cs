@@ -126,7 +126,7 @@ namespace RP0
                 null,
                 null,
                 null,
-                ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
+                ApplicationLauncher.AppScenes.ALWAYS & ~ApplicationLauncher.AppScenes.MAINMENU,
                 GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
         }
 

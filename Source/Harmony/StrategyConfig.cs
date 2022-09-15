@@ -29,7 +29,7 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("Create")]
-        internal static void Postfix_Create(ConfigNode node, ref StrategyConfig __result)
+        internal static void Postfix_Create(ConfigNode node, StrategyConfig __result)
         {
             if (__result is StrategyConfigRP0 s)
                 s.Load(node);

@@ -23,9 +23,9 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("CanBeDeactivated")]
-        internal static void Postfix_CanBeDeactivated(Strategies.Strategy __instance, ref string reason, ref bool __result)
+        internal static void Postfix_CanBeDeactivated(Strategies.Strategy __instance, ref string reason, bool __result)
         {
-            if (__instance is ProgramStrategy ps && __result)
+            if (__instance is ProgramStrategy && __result)
             {
                 reason = KSP.Localization.Localizer.GetStringByTag("#rp0_Admin_CanCompleteProgram");
             }
@@ -33,7 +33,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("Create")]
-        internal static bool Prefix_Create(System.Type type, StrategyConfig config, ref Strategy __result)
+        internal static bool Prefix_Create(System.Type type, StrategyConfig config, out Strategy __result)
         {
             if (config == null)
             {
@@ -60,7 +60,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("CanBeActivated")]
-        internal static void Prefix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result)
+        internal static void Prefix_CanBeActivated(Strategies.Strategy __instance)
         {
             if (__instance is ProgramStrategy)
                 return;
@@ -70,7 +70,7 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("CanBeActivated")]
-        internal static void Postfix_CanBeActivated(Strategies.Strategy __instance, ref string reason, ref bool __result)
+        internal static void Postfix_CanBeActivated()
         {
             KSP.UI.Screens.Administration.Instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
         }

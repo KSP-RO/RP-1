@@ -235,7 +235,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("SetSelectedStrategy")]
-        internal static void Prefix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
+        internal static void Prefix_SetSelectedStrategy(Administration __instance, Administration.StrategyWrapper wrapper)
         {
             if (wrapper.strategy is StrategyRP0 s)
             {
@@ -253,7 +253,7 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("SetSelectedStrategy")]
-        internal static void Postfix_SetSelectedStrategy(Administration __instance, ref Administration.StrategyWrapper wrapper)
+        internal static void Postfix_SetSelectedStrategy(Administration __instance, Administration.StrategyWrapper wrapper)
         {
             var tooltip = __instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
 
@@ -365,7 +365,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("BtnInputAccept")]
-        internal static bool Prefix_BtnInputAccept(Administration __instance, ref string state)
+        internal static bool Prefix_BtnInputAccept(Administration __instance, string state)
         {
             if (__instance.SelectedWrapper.strategy is ProgramStrategy ps)
             {

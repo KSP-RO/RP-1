@@ -60,7 +60,7 @@ namespace RP0.Harmony
         // We'll use this to bind some private fields too
         [HarmonyPrefix]
         [HarmonyPatch("CreateCraftStatsbody")]
-        internal static bool Prefix_CreateCraftStatsbody(EngineersReport __instance, ref List<UIListItem> __result)
+        internal static bool Prefix_CreateCraftStatsbody(EngineersReport __instance, out List<UIListItem> __result)
         {
             List<UIListItem> list = new List<UIListItem>();
             UIListItem uIListItem = __instance.cascadingListInfo.CreateBodyKeyValueAutofit("HumanRated:", "");

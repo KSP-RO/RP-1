@@ -21,7 +21,6 @@ namespace KerbalConstructionTime
         private static bool _isGUIInitialized = false;
 
         private WaitForSeconds _wfsHalf = null, _wfsOne = null, _wfsTwo = null;
-        private bool _isIconUpdated = false;
         private double _lastRateUpdateUT = 0;
         private double _lastYearMultUpdateUT = 0;
 
@@ -214,7 +213,6 @@ namespace KerbalConstructionTime
 
             DelayedStart();
 
-            UpdateTechlistIconColor();
             StartCoroutine(HandleEditorButton_Coroutine());
         }
 
@@ -423,8 +421,6 @@ namespace KerbalConstructionTime
                 VesselSpawnDialog.Instance.ButtonClose();
                 KCTDebug.Log("Attempting to close spawn dialog!");
             }
-
-            UpdateRndScreen();
         }
 
         public void FixedUpdate()
@@ -581,30 +577,6 @@ namespace KerbalConstructionTime
             }
         }
 
-        public void UpdateRndScreen()
-        {
-            if (Utilities.CurrentGameIsMission()) return;
-
-            // If we're in the R&D and we haven't reset the tech node colors yet, do so.
-            // Note: the nodes list is initialized at a later frame than RDController.Instance becomes available.
-            if (!_isIconUpdated && RDController.Instance?.nodes?.Count > 0)
-            {
-                StartCoroutine(UpdateTechlistIconColorDelayed());
-                _isIconUpdated = true;
-            }
-
-            if (RDController.Instance == null)
-            {
-                _isIconUpdated = false;
-            }
-        }
-
-        public void ForceUpdateRndScreen()
-        {
-            _isIconUpdated = false;
-            UpdateRndScreen();
-        }
-
         public void ProgressBuildTime(double UTDiff)
         {
             Profiler.BeginSample("KCT ProgressBuildTime");
@@ -706,25 +678,6 @@ namespace KerbalConstructionTime
                 t.UpdateBuildRate(i);
             }
         }
-
-        private IEnumerator UpdateTechlistIconColorDelayed()
-        {
-            yield return new WaitForEndOfFrame();
-            UpdateTechlistIconColor();
-        }
-
-        private void UpdateTechlistIconColor()
-        {
-            foreach (var node in RDController.Instance?.nodes.Where(x => x?.tech is RDTech) ?? Enumerable.Empty<RDNode>())
-            {
-                if (HasTechInList(node.tech.techID))
-                {
-                    node.graphics?.SetIconColor(XKCDColors.KSPNotSoGoodOrange);
-                }
-            }
-        }
-
-        protected bool HasTechInList(string id) => KerbalConstructionTimeData.Instance.TechList.FirstOrDefault(x => x.techID == id) != null;
 
         public void DelayedStart()
         {

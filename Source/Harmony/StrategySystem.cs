@@ -14,7 +14,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("GetStrategies")]
-        internal static bool Prefix_GetStrategies(StrategySystem __instance, ref string department, ref List<Strategy> __result)
+        internal static bool Prefix_GetStrategies(StrategySystem __instance, string department, out List<Strategy> __result)
         {
             var list = new List<Strategy>();
 
@@ -84,7 +84,7 @@ namespace RP0.Harmony
         internal static List<Strategy> _activeStrats = new List<Strategy>();
         [HarmonyPrefix]
         [HarmonyPatch("HasConflictingActiveStrategies")]
-        internal static bool Prefix_HasConflictingActiveStrategies(StrategySystem __instance, ref bool __result, string[] groupTags)
+        internal static bool Prefix_HasConflictingActiveStrategies(StrategySystem __instance, out bool __result, string[] groupTags)
         {
             // Vastly simplify all this code.
             // If we match on a single tag, we can't activate.

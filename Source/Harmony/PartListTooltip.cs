@@ -48,7 +48,7 @@ namespace RP0.Harmony
                     techID = availablePart.TechRequired;
                     eCost = availablePart.entryCost;
                 }
-                if (KerbalConstructionTimeData.Instance.TechList.Any(tech => tech.techID == techID))
+                if (KerbalConstructionTimeData.Instance.TechListHas(techID))
                 {
                     __instance.buttonPurchaseContainer.SetActive(false);
                     __instance.costPanel.SetActive(true);

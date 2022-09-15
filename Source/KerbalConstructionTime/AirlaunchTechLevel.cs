@@ -80,7 +80,7 @@ namespace KerbalConstructionTime
 
         public bool IsUnlocked => ResearchAndDevelopment.GetTechnologyState(TechRequired) == RDTech.State.Available;
 
-        public bool IsUnderResearch => KerbalConstructionTimeData.Instance.TechList.Any(tech => tech.techID == TechRequired);
+        public bool IsUnderResearch => KerbalConstructionTimeData.Instance.TechListHas(TechRequired);
 
         public static bool AnyUnlocked()
         {
@@ -90,7 +90,7 @@ namespace KerbalConstructionTime
         public static bool AnyUnderResearch()
         {
             EnsureLevelsLoaded();
-            return _techLevels.Any(tl => KerbalConstructionTimeData.Instance.TechList.Any(tech => tech.techID == tl.TechRequired));
+            return _techLevels.Any(tl => KerbalConstructionTimeData.Instance.TechListHas(tl.TechRequired));
         }
 
         public static AirlaunchTechLevel GetCurrentLevel()

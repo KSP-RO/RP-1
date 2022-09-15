@@ -50,7 +50,7 @@ namespace RP0.Harmony
         [HarmonyPrefix]
         [HarmonyPatch(typeof(RichTextUtil))]
         [HarmonyPatch("TextAward")]
-        internal static bool Postfix_TextAward(ref string __result, ref string title, ref string value, ref int lines)
+        internal static bool Postfix_TextAward(ref string __result, string title, string value, int lines)
         {
             if (_contract == null)
                 return true;

@@ -85,7 +85,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("PartTechAvailable")]
-        internal static bool Prefix(AvailablePart ap, ref bool __result)
+        internal static bool Prefix_PartTechAvailable(AvailablePart ap, out bool __result)
         {
             if (ResearchAndDevelopment.Instance == null)
             {
@@ -100,7 +100,7 @@ namespace RP0.Harmony
 
         [HarmonyPrefix]
         [HarmonyPatch("PartModelPurchased")]
-        internal static bool Prefix_PartModelPurchased(AvailablePart ap, ref bool __result)
+        internal static bool Prefix_PartModelPurchased(AvailablePart ap, out bool __result)
         {
             if (ResearchAndDevelopment.Instance == null)
             {

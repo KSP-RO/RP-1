@@ -69,6 +69,7 @@
     <Compile Include="Harmony\CostWidget.cs" />
     <Compile Include="Harmony\LoadGameDialog.cs" />
     <Compile Include="Harmony\PlayerProfileInfo.cs" />
+    <Compile Include="Harmony\KSCFacilityContextMenu.cs" />
     <Compile Include="Harmony\RDTechTree.cs" />
     <Compile Include="Harmony\RDTech.cs" />
     <Compile Include="Harmony\ScienceSubjectWidget.cs" />
@@ -247,7 +248,6 @@
     <Compile Include="KerbalConstructionTime\GUI\GUI_BuildList.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_Presets.cs" />
     <Compile Include="KerbalConstructionTime\KSCItem.cs" />
-    <Compile Include="KerbalConstructionTime\KSCContextMenuOverrider.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\KCT_LaunchPad.cs" />
     <Compile Include="KerbalConstructionTime\KCTWarpController.cs" />
     <Compile Include="KerbalConstructionTime\Utilities\Formula.cs" />

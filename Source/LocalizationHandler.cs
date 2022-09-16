@@ -29,7 +29,7 @@ namespace RP0
 
         public static void UpdateLocalizedText()
         {
-            KSCContextMenuOverrider.AreTextsUpdated = false;
+            Harmony.PatchKSCFacilityContextMenu.AreTextsUpdated = false;
             foreach (PartUpgradeHandler.Upgrade up in PartUpgradeManager.Handler)
             {
                 // Proc avionics upgrades

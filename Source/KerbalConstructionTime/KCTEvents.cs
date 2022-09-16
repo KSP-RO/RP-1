@@ -88,14 +88,7 @@ namespace KerbalConstructionTime
 
             GameEvents.onEditorStarted.Add(OnEditorStarted);
 
-            GameEvents.onFacilityContextMenuSpawn.Add(FacilityContextMenuSpawn);
-
             SubscribedToEvents = true;
-        }
-
-        private void OnSYInventoryAppliedToPart(Part p)
-        {
-            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
         }
 
         private void OnEditorStarted()
@@ -199,11 +192,6 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Detected sci point change: {changeDelta}");
             Utilities.ProcessSciPointTotalChange(changeDelta);
-        }
-
-        public void FacilityContextMenuSpawn(KSCFacilityContextMenu menu)
-        {
-            KerbalConstructionTime.Instance.OnFacilityContextMenuSpawn(menu);
         }
 
         private void ShipModifiedEvent(ShipConstruct vessel)

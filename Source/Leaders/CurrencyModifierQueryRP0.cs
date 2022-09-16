@@ -117,6 +117,12 @@ namespace RP0
             multipliers[c] = multipliers[c] * mult;
         }
 
+        public void Multiply(double mult)
+        {
+            for (int i = multipliers.values.Length; i-- > 0;)
+                multipliers[i] = multipliers[i] * mult;
+        }
+
         public double GetEffectDelta(CurrencyRP0 c)
         {
             //return c switch

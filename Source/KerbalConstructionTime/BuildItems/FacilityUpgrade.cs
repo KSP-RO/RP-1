@@ -93,7 +93,12 @@ namespace KerbalConstructionTime
 
         public bool AlreadyInProgress()
         {
-            return KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == this.id) != null) != null;
+            return AlreadyInProgressByID(this.id);
+        }
+
+        public static bool AlreadyInProgressByID(string id)
+        {
+            return KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
         }
 
         protected override void ProcessCancel()

@@ -150,7 +150,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.RecalculateBuildRates();
 
                 ResetFormulaRateHolders();
-                KSCContextMenuOverrider.AreTextsUpdated = false;
+                RP0.Harmony.PatchKSCFacilityContextMenu.AreTextsUpdated = false;
             }
             if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
             {

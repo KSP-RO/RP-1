@@ -37,14 +37,6 @@ namespace KerbalConstructionTime
 
         private GameObject _simWatermark;
 
-        internal void OnFacilityContextMenuSpawn(KSCFacilityContextMenu menu)
-        {
-            if (KCT_GUI.IsPrimarilyDisabled) return;
-
-            var overrider = new KSCContextMenuOverrider(menu);
-            StartCoroutine(overrider.OnContextMenuSpawn());
-        }
-
         public void OnDestroy()
         {
             _simWatermark?.DestroyGameObject();

@@ -53,9 +53,9 @@ namespace KerbalConstructionTime
 
         private static void RenderBuildMode()
         {
-            double buildPoints = KCTGameStates.EditorVessel.buildPoints + KCTGameStates.EditorVessel.integrationPoints;
+            double buildPoints = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorVessel.humanRated, 0)
+            double rate = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
             GUILayout.BeginHorizontal();
@@ -74,7 +74,7 @@ namespace KerbalConstructionTime
             if (double.TryParse(BuildRateForDisplay, out bR))
             {
                 GUILayout.EndHorizontal();
-                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KCTGameStates.EditorVessel.mass, buildPoints, KCTGameStates.EditorVessel.humanRated)
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated)
                     * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier);
                 GUILayout.Label(Utilities.GetFormattedTime(buildPoints / buildRateCapped, 0, false));
 
@@ -89,16 +89,16 @@ namespace KerbalConstructionTime
                 GUILayout.Label("Invalid Build Rate");
             }
 
-            if (EditorDriver.editorFacility == EditorFacility.SPH || (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated && !KCTGameStates.EditorVessel.humanRated))
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated && !KerbalConstructionTime.Instance.EditorVessel.humanRated))
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Engineer Cap:");
-                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KCTGameStates.ActiveKSC.Hangar : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance).MaxEngineersFor(KCTGameStates.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KCTGameStates.ActiveKSC.Hangar : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance).MaxEngineersFor(KerbalConstructionTime.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
             }
 
-            if (KCTGameStates.EditorVessel.integrationCost > 0)
-                GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorVessel.integrationCost:N1}");
+            if (KerbalConstructionTime.Instance.EditorVessel.integrationCost > 0)
+                GUILayout.Label($"Integration Cost: √{KerbalConstructionTime.Instance.EditorVessel.integrationCost:N1}");
 
             if (KCTGameStates.EditorRolloutCosts > 0)
                 GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCosts):N1}");
@@ -121,7 +121,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(techLabel);
             }
 
-            if (KCTGameStates.EditorVessel.humanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
+            if (KerbalConstructionTime.Instance.EditorVessel.humanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
             {
                 GUILayout.Label("WARNING: Cannot build vessel!");
                 GUILayout.Label("Select a human-rated Launch Complex.");
@@ -212,7 +212,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(_gcNewLC))
             {
-                SetFieldsFromVessel(KCTGameStates.EditorVessel);
+                SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel);
 
                 _wasShowBuildList = GUIStates.ShowBuildList;
                 GUIStates.ShowNewLC = true;
@@ -232,7 +232,7 @@ namespace KerbalConstructionTime
                     rightLC ? (canModify ? $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants." : modifyFailTooltip) : wrongLCTooltip),
                     rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
                 {
-                    SetFieldsFromVessel(KCTGameStates.EditorVessel, activeLC);
+                    SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel, activeLC);
 
                     _wasShowBuildList = GUIStates.ShowBuildList;
                     GUIStates.ShowModifyLC = true;
@@ -246,7 +246,7 @@ namespace KerbalConstructionTime
                     rightLC ? (canModify ? $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible." : modifyFailTooltip) : wrongLCTooltip),
                     rightLC ? canModify ? GUI.skin.button : _yellowButton : _redButton))
                 {
-                    SetFieldsFromVesselKeepOld(KCTGameStates.EditorVessel, activeLC);
+                    SetFieldsFromVesselKeepOld(KerbalConstructionTime.Instance.EditorVessel, activeLC);
 
                     _wasShowBuildList = GUIStates.ShowBuildList;
                     GUIStates.ShowModifyLC = true;
@@ -268,7 +268,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
-            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KCTGameStates.EditorVessel.humanRated, 0)
+            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * ship.LC.Efficiency * ship.LC.StrategyRateMultiplier;
 
             GUILayout.BeginHorizontal();
@@ -288,8 +288,8 @@ namespace KerbalConstructionTime
             if (double.TryParse(BuildRateForDisplay, out bR))
             {
                 GUILayout.EndHorizontal();
-                double bp = KCTGameStates.EditorVessel.buildPoints + KCTGameStates.EditorVessel.integrationPoints;
-                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KCTGameStates.EditorVessel.mass, bp, KCTGameStates.EditorVessel.humanRated)
+                double bp = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KerbalConstructionTime.Instance.EditorVessel.mass, bp, KerbalConstructionTime.Instance.EditorVessel.humanRated)
                     * ship.LC.Efficiency * ship.LC.StrategyRateMultiplier);
                 GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(bp - newProgressBP) / buildRateCapped, 0, false));
 
@@ -305,10 +305,10 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.BeginHorizontal();
-            if (EditorDriver.editorFacility == EditorFacility.SPH || (KCTGameStates.EditorVessel.LC.IsHumanRated && !KCTGameStates.EditorVessel.humanRated))
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (KerbalConstructionTime.Instance.EditorVessel.LC.IsHumanRated && !KerbalConstructionTime.Instance.EditorVessel.humanRated))
             {
                 GUILayout.Label("Engineer Cap:");
-                GUILayout.Label(KCTGameStates.EditorVessel.LC.MaxEngineersFor(KCTGameStates.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.Label(KerbalConstructionTime.Instance.EditorVessel.LC.MaxEngineersFor(KerbalConstructionTime.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
             }
             else
             {
@@ -342,7 +342,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            if (!KCTGameStates.EditorVessel.AreTanksFull() &&
+            if (!KerbalConstructionTime.Instance.EditorVessel.AreTanksFull() &&
                 GUILayout.Button("Fill Tanks"))
             {
                 foreach (Part p in EditorLogic.fetch.ship.parts)

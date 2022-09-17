@@ -649,7 +649,7 @@ namespace KerbalConstructionTime
             //    {
             //        for (int i = 0; i < _resourceCount; i++)
             //        {
-            //            if (KCTGameStates.EditorVessel.resourceAmounts.TryGetValue(_allResourceKeys[i], out double oldVal))
+            //            if (KerbalConstructionTime.Instance.EditorVessel.resourceAmounts.TryGetValue(_allResourceKeys[i], out double oldVal))
             //            {
             //                if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
             //                {

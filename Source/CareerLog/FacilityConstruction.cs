@@ -28,13 +28,11 @@ namespace RP0
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            node.TryGetValue(nameof(FacilityID), ref FacilityID);
         }
 
         public void Save(ConfigNode node)
         {
             ConfigNode.CreateConfigFromObject(this, node);
-            node.AddValue(nameof(FacilityID), FacilityID);
         }
     }
 }

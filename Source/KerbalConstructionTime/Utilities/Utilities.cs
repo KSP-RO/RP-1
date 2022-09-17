@@ -1057,8 +1057,7 @@ namespace KerbalConstructionTime
         {
             if (ksc == null) return;
 
-            KCTGameStates.ActiveKSC = ksc;
-            KCTGameStates.ActiveKSCName = ksc.KSCName;
+            KerbalConstructionTimeData.Instance.ActiveKSC = ksc;
         }
 
         public static PQSCity FindKSC(CelestialBody home)

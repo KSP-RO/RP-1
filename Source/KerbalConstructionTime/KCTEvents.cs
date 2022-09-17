@@ -224,9 +224,6 @@ namespace KerbalConstructionTime
                 KCTGameStates.IsFirstStart = false;
                 Utilities.DisableSimulationLocks();
                 InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
-                KCTGameStates.ActiveKSCName = Utilities._defaultKscId;
-                KCTGameStates.ActiveKSC = new KSCItem(Utilities._defaultKscId);
-                KCTGameStates.KSCs = new List<KSCItem>() { KCTGameStates.ActiveKSC };
 
                 if (PresetManager.Instance != null)
                 {

@@ -12,16 +12,15 @@ namespace KerbalConstructionTime
 
         public static KCTSettings Settings = new KCTSettings();
 
-        public static KSCItem ActiveKSC = null;
-        public static List<KSCItem> KSCs = new List<KSCItem>();
-        public static string ActiveKSCName = string.Empty;
-        public static float SciPointsTotal = -1f;
+        public static KSCItem ActiveKSC => KerbalConstructionTimeData.Instance?.ActiveKSC ?? null;
+        private static readonly List<KSCItem> _EmptyKSCs = new List<KSCItem>();
+        public static List<KSCItem> KSCs => KerbalConstructionTimeData.Instance?.KSCs ?? _EmptyKSCs;
         public static bool MergingAvailable;
         public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
         public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
-        public const int VERSION = 19;
+        public const int VERSION = 20;
 
         public static ToolbarControl ToolbarControl;
 

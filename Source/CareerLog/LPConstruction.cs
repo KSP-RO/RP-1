@@ -28,17 +28,11 @@ namespace RP0
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            node.TryGetValue(nameof(LPID), ref LPID);
-            node.TryGetValue(nameof(LCID), ref LCID);
-            node.TryGetValue(nameof(LCModID), ref LCModID);
         }
 
         public void Save(ConfigNode node)
         {
             ConfigNode.CreateConfigFromObject(this, node);
-            node.AddValue(nameof(LPID), LPID);
-            node.AddValue(nameof(LCID), LCID);
-            node.AddValue(nameof(LCModID), LCModID);
         }
     }
 }

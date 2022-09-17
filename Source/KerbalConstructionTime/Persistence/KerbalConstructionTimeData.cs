@@ -18,7 +18,6 @@ namespace KerbalConstructionTime
                                      HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX ||
                                      HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX;
 
-        [KSPField(isPersistant = true)] public string ActiveKSCName = string.Empty;
         [KSPField(isPersistant = true)] public float SciPointsTotal = -1f;
         [KSPField(isPersistant = true)] public bool IsSimulatedFlight = false;
         [KSPField(isPersistant = true)] public bool DisableFailuresInSim = true;
@@ -49,6 +48,10 @@ namespace KerbalConstructionTime
 
         [KSPField(isPersistant = true)]
         public PersistentSortedListValueTypeKey<string, BuildListVessel> BuildPlans = new PersistentSortedListValueTypeKey<string, BuildListVessel>();
+
+        [KSPField(isPersistant = true)]
+        public PersistentList<KSCItem> KSCs = new PersistentList<KSCItem>();
+        public KSCItem ActiveKSC = null;
 
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
@@ -114,17 +117,6 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log("Writing to persistence.");
             base.OnSave(node);
-            ActiveKSCName = KCTGameStates.ActiveKSC.KSCName;
-
-            foreach (KSCItem KSC in KCTGameStates.KSCs.Where(x => x?.KSCName?.Length > 0))
-            {
-                // Don't bother saving KSCs that aren't active
-                if (KSC.IsEmpty && KSC != KCTGameStates.ActiveKSC)
-                    continue;
-
-                var n = node.AddNode("KSC");
-                KSC.Save(n);
-            }
 
             KCT_GUI.GuiDataSaver.Save();
         }
@@ -139,8 +131,6 @@ namespace KerbalConstructionTime
                 if (Utilities.CurrentGameIsMission()) return;
 
                 KCTDebug.Log("Reading from persistence.");
-                KCTGameStates.KSCs.Clear();
-                KCTGameStates.ActiveKSC = null;
 
                 TechList.Updated += techListUpdated;
 
@@ -163,22 +153,46 @@ namespace KerbalConstructionTime
                 }
 
                 bool foundStockKSC = false;
-                foreach (ConfigNode ksc in node.GetNodes("KSC"))
+                // Special back-compat check, before everything else
+                if (LoadedSaveVersion < 20)
                 {
-                    string name = ksc.GetValue("KSCName");
-                    var loaded_KSC = new KSCItem(name);
-                    loaded_KSC.Load(ksc);
-                    if (loaded_KSC.KSCName?.Length > 0)
+                    foreach (ConfigNode ksc in node.GetNodes("KSC"))
                     {
-                        if (KCTGameStates.KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
-                            KCTGameStates.KSCs.Add(loaded_KSC);
-                        foundStockKSC |= string.Equals(loaded_KSC.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
+                        string name = ksc.GetValue("KSCName");
+                        var loaded_KSC = new KSCItem(name);
+                        loaded_KSC.Load(ksc);
+                        if (loaded_KSC.KSCName?.Length > 0)
+                        {
+                            if (KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
+                                KSCs.Add(loaded_KSC);
+                            foundStockKSC |= string.Equals(loaded_KSC.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
+                        }
+                    }
+                }
+                else
+                {
+                    // Normal loading: we've already loaded all KSCs.
+                    foreach (var ksc in KSCs)
+                    {
+                        if (ksc.KSCName.Length > 0 && string.Equals(ksc.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            foundStockKSC = true;
+                            break;
+                        }
                     }
                 }
 
                 Utilities.SetActiveKSCToRSS();
                 if (foundStockKSC)
                     TryMigrateStockKSC();
+
+                // Prune bad or inactive KSCs.
+                for (int i = KSCs.Count; i-- > 0;)
+                {
+                    KSCItem ksc = KSCs[i];
+                    if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveKSC))
+                        KSCs.RemoveAt(i);
+                }
 
                 StartCoroutine(FillExperimentalParts());
 
@@ -213,8 +227,8 @@ namespace KerbalConstructionTime
 
         private void TryMigrateStockKSC()
         {
-            KSCItem stockKsc = KCTGameStates.KSCs.Find(k => string.Equals(k.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
-            if (KCTGameStates.KSCs.Count == 1)
+            KSCItem stockKsc = KSCs.Find(k => string.Equals(k.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
+            if (KSCs.Count == 1)
             {
                 // Rename the stock KSC to the new default (Cape)
                 stockKsc.KSCName = Utilities._defaultKscId;
@@ -225,21 +239,21 @@ namespace KerbalConstructionTime
             if (stockKsc.IsEmpty)
             {
                 // Nothing provisioned into the stock KSC so it's safe to just delete it
-                KCTGameStates.KSCs.Remove(stockKsc);
+                KSCs.Remove(stockKsc);
                 Utilities.SetActiveKSCToRSS();
                 return;
             }
 
-            int numOtherUsedKSCs = KCTGameStates.KSCs.Count(k => !k.IsEmpty && k != stockKsc);
+            int numOtherUsedKSCs = KSCs.Count(k => !k.IsEmpty && k != stockKsc);
             if (numOtherUsedKSCs == 0)
             {
                 string kscName = Utilities.GetActiveRSSKSC() ?? Utilities._defaultKscId;
-                KSCItem newDefault = KCTGameStates.KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
+                KSCItem newDefault = KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
                 if (newDefault != null)
                 {
                     // Stock KSC isn't empty but the new default one is - safe to rename the stock and remove the old default item
                     stockKsc.KSCName = newDefault.KSCName;
-                    KCTGameStates.KSCs.Remove(newDefault);
+                    KSCs.Remove(newDefault);
                     Utilities.SetActiveKSC(stockKsc);
                     return;
                 }

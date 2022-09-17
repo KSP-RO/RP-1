@@ -28,7 +28,6 @@ namespace KerbalConstructionTime
 
         public void ReadFields()
         {
-            KerbalConstructionTimeData.Instance.ActiveKSCName = activeKSC;
             KerbalConstructionTimeData.Instance.SciPointsTotal = SciPoints;
             KerbalConstructionTimeData.Instance.IsSimulatedFlight = IsSimulation;
             KerbalConstructionTimeData.Instance.SimulationParams.DisableFailures = DisableFailuresInSim;

@@ -27,7 +27,6 @@ namespace KerbalConstructionTime
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
-        public static BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorUnlockCosts = 0;

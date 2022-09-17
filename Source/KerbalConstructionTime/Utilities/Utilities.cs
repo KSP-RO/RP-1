@@ -777,7 +777,7 @@ namespace KerbalConstructionTime
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.GeneralSettings.MergingTimePenalty);
             }
 
-            double newTotalBP = KCTGameStates.EditorVessel.buildPoints + KCTGameStates.EditorVessel.integrationPoints;
+            double newTotalBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
@@ -1097,13 +1097,13 @@ namespace KerbalConstructionTime
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
-            KCTGameStates.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
-            KCTGameStates.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+            KerbalConstructionTime.Instance.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
+            KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KCTGameStates.EditorRolloutCosts = Formula.GetRolloutCost(KCTGameStates.EditorVessel);
-                KCTGameStates.EditorRolloutTime = Formula.GetRolloutBP(KCTGameStates.EditorVessel);
+                KCTGameStates.EditorRolloutCosts = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
+                KCTGameStates.EditorRolloutTime = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
             }
             else
             {

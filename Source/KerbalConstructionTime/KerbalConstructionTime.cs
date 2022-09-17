@@ -32,6 +32,9 @@ namespace KerbalConstructionTime
         public static readonly Dictionary<string, KCTTechNodePeriod> TechNodePeriods = new Dictionary<string, KCTTechNodePeriod>();
         public static readonly RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType>();
 
+        // This should live in the EditorAddon but we can't easily access it then.
+        public BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
+
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
 
@@ -48,6 +51,8 @@ namespace KerbalConstructionTime
             }
             KCT_GUI.ClearTooltips();
             KCT_GUI.OnDestroy();
+            
+            Instance = null;
         }
 
         internal void OnGUI()
@@ -73,6 +78,9 @@ namespace KerbalConstructionTime
             if (Utilities.CurrentGameIsMission()) return;
 
             KCTDebug.Log("Awake called");
+
+            if (Instance != null)
+                GameObject.Destroy(Instance);
 
             Instance = this;
 
@@ -937,6 +945,7 @@ namespace KerbalConstructionTime
             else
             {
                 Utilities.TryAddVesselToBuildList(launchSite);
+                // We are recalculating because vessel validation might have changed state.
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             }
         }

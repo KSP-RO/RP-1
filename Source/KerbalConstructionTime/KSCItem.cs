@@ -39,21 +39,17 @@ namespace KerbalConstructionTime
 
         private void AddListeners()
         {
-            // Remove, because KSPCF 1.21 and below nuke IConfigNode objects
-            // but KSPCF 1.22+ preserves them.
-            LCConstructions.Added -= added;
-            LCConstructions.Removed -= removed;
-            LCConstructions.Updated -= updated;
-            FacilityUpgrades.Added -= added;
-            FacilityUpgrades.Removed -= removed;
-            FacilityUpgrades.Updated -= updated;
-
             LCConstructions.Added += added;
             LCConstructions.Removed += removed;
             LCConstructions.Updated += updated;
             FacilityUpgrades.Added += added;
             FacilityUpgrades.Removed += removed;
             FacilityUpgrades.Updated += updated;
+        }
+
+        public KSCItem()
+        {
+            AddListeners();
         }
 
         public KSCItem(string name)

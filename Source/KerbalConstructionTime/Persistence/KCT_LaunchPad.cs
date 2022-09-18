@@ -110,15 +110,6 @@ namespace KerbalConstructionTime
         public KCT_LaunchPad() { }
 
         /// <summary>
-        /// Used for deserializing from ConfigNodes.
-        /// </summary>
-        /// <param name="name"></param>
-        public KCT_LaunchPad(string name)
-        {
-            this.name = name;
-        }
-
-        /// <summary>
         /// Creates a new pad with fractional level. Will NOT mark it as built/operational.
         /// </summary>
         /// <param name="id"></param>
@@ -131,6 +122,8 @@ namespace KerbalConstructionTime
             fractionalLevel = lvl;
             level = (int)lvl;
             isOperational = false;
+
+            KerbalConstructionTimeData.Instance.RegisterLP(this);
         }
 
         public bool Delete(out string failReason)
@@ -173,6 +166,8 @@ namespace KerbalConstructionTime
                     {
                         currentLC.SwitchLaunchPad(0);
                     }
+
+                    KerbalConstructionTimeData.Instance.UnregsiterLP(this);
                 }
             }
 

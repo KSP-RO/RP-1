@@ -40,6 +40,7 @@ namespace KerbalConstructionTime
             color[2] = color[0];
             color[3] = color[0];
             _background.SetPixels(color);
+            _background.Apply();
 
             _buildPlansbutton.normal.background = _background;
             _buildPlansbutton.hover.background = _background;

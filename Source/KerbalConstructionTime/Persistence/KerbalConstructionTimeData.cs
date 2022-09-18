@@ -316,6 +316,7 @@ namespace KerbalConstructionTime
             yield return null;
 
             Utilities.AddResearchedPartsToExperimental();
+            _experimentalPartsLoaded = true;
         }
 
         public void RegisterLC(LCItem lc)

@@ -90,10 +90,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                KSC.LaunchComplexes[index].OnRemove();
-                KSC.LaunchComplexes.RemoveAt(index);
-                if (KSC.ActiveLaunchComplexIndex >= index)
-                    --KSC.ActiveLaunchComplexIndex; // should not change active LC.
+                KSC.LaunchComplexes[index].Delete();
             }
 
             KSC.LCConstructions.Remove(this);

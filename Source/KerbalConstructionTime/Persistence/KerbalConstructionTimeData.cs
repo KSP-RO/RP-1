@@ -39,6 +39,11 @@ namespace KerbalConstructionTime
         public PersistentList<LCEfficiency> LCEfficiencies => _lcEfficiencies;
         public Dictionary<LCItem, LCEfficiency> LCToEfficiency = new Dictionary<LCItem, LCEfficiency>();
 
+        private readonly Dictionary<Guid, LCItem> _LCIDtoLC = new Dictionary<Guid, LCItem>();
+        public LCItem LC(Guid id) => _LCIDtoLC.TryGetValue(id, out var lc) ? lc : null;
+        private readonly Dictionary<Guid, KCT_LaunchPad> _LPIDtoLP = new Dictionary<Guid, KCT_LaunchPad>();
+        public KCT_LaunchPad LP(Guid id) => _LPIDtoLP[id];
+
         [KSPField(isPersistant = true)]
         public KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
         public bool TechIgnoreUpdates = false;
@@ -311,6 +316,26 @@ namespace KerbalConstructionTime
             yield return null;
 
             Utilities.AddResearchedPartsToExperimental();
+        }
+
+        public void RegisterLC(LCItem lc)
+        {
+            _LCIDtoLC[lc.ID] = lc;
+        }
+
+        public bool UnregisterLC(LCItem lc)
+        {
+            return _LCIDtoLC.Remove(lc.ID);
+        }
+
+        public void RegisterLP(KCT_LaunchPad lp)
+        {
+            _LPIDtoLP[lp.id] = lp;
+        }
+
+        public bool UnregsiterLP(KCT_LaunchPad lp)
+        {
+            return _LPIDtoLP.Remove(lp.id);
         }
     }
 }

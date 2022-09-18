@@ -77,12 +77,7 @@ namespace KerbalConstructionTime
 
         public static LCItem FindLCFromID(System.Guid guid)
         {
-            foreach (var ksc in KSCs)
-                foreach (LCItem lc in ksc.LaunchComplexes)
-                    if (lc.ID == guid)
-                        return lc;
-
-            return null;
+            return KerbalConstructionTimeData.Instance.LC(guid);
         }
 
         public static void RecalculateBuildRates()

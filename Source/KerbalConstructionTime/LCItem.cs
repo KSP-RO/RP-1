@@ -157,6 +157,8 @@ namespace KerbalConstructionTime
             }
 
             AddListeners();
+
+            KerbalConstructionTimeData.Instance.RegisterLC(this);
         }
 
         public void Modify(LCData data, Guid modId)
@@ -325,7 +327,7 @@ namespace KerbalConstructionTime
             return null;
         }
 
-        public void OnRemove()
+        public void Delete()
         {
             if (_efficiencySource == null)
                 KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(this, out _efficiencySource);
@@ -333,6 +335,16 @@ namespace KerbalConstructionTime
                 _efficiencySource.RemoveLC(this);
             else
                 LCEfficiency.ClearEmpty();
+
+            foreach (var lp in LaunchPads)
+                KerbalConstructionTimeData.Instance.UnregsiterLP(lp);
+
+            KerbalConstructionTimeData.Instance.UnregisterLC(this);
+
+            int index = KSC.LaunchComplexes.IndexOf(this);
+            KSC.LaunchComplexes.RemoveAt(index);
+            if (KSC.ActiveLaunchComplexIndex >= index)
+                --KSC.ActiveLaunchComplexIndex; // should not change active LC unless it was this
         }
 
         public void Save(ConfigNode node)
@@ -389,6 +401,10 @@ namespace KerbalConstructionTime
             int i = 0;
             foreach (var pc in PadConstructions)
                 added(i++, pc);
+
+            KerbalConstructionTimeData.Instance.RegisterLC(this);
+            foreach(var lp in LaunchPads)
+                KerbalConstructionTimeData.Instance.RegisterLP(lp);
         }
     }
 }

@@ -59,8 +59,10 @@ namespace KerbalConstructionTime
         {
             GameEvents.onVesselRecovered.Add(VesselRecoverEvent);
 
-            GameEvents.onVesselSituationChange.Add(VesselSituationChange);
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
+            GameEvents.onGameStateLoad.Add(OnGameStateLoad);
+
+            GameEvents.onVesselSituationChange.Add(VesselSituationChange);
             GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
 
@@ -307,6 +309,12 @@ namespace KerbalConstructionTime
         {
             GameEvents.onGUIMissionControlDespawn.Remove(OnExitMC);
             InputLockManager.RemoveControlLock("administrationFacility");
+        }
+
+        public void OnGameStateLoad(ConfigNode config)
+        {
+            // Run this after all scenariomodules have loaded (i.e. both us *and* RnD)
+            Utilities.AddResearchedPartsToExperimental();
         }
     }
 }

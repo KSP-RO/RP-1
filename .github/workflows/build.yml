@@ -53,13 +53,15 @@ jobs:
             echo "commit_sha=$GITHUB_SHA" >> $GITHUB_ENV
             echo commit SHA: $GITHUB_SHA
           fi
+          echo 'info_text="2.0.0.0-$(echo ${{env.commit_sha}} | cut -c1-7)-$(date -u '+%y%m%dT%H%M')"' >> $GITHUB_ENV
+          echo "Info Text: ${{env.info_text}}"
 
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@AssemblyInformationalVersion
         with:
           path: ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
           tag: "2.0.0.0"
-          informational-version: "2.0.0.0-$(echo ${{env.commit_sha}} | cut -c1-7)-$(date -u '+%y%m%dT%H%M')"
+          informational-version: ${{env.info_text}}
 
       - name: Build mod solution
         run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln

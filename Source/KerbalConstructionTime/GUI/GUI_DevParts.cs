@@ -133,9 +133,6 @@ namespace KerbalConstructionTime
             if (_devPartsScale != GameSettings.UI_SCALE)
                 PositionAndSizeDevPartsIcon();
 
-            if (KerbalConstructionTimeData.Instance == null || !KerbalConstructionTimeData.Instance.ExperimentalPartsLoaded)
-                return;
-
             if (EditorPartList.Instance != null && FirstOnGUIUpdate && !DevPartsVisible)
             {
                 EditorPartList.Instance.ExcludeFilters.AddFilter(expPartsFilter);

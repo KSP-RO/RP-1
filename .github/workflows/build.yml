@@ -51,7 +51,7 @@ jobs:
           else
             echo "commit_sha=$GITHUB_SHA" >> $GITHUB_ENV
           fi
-          echo commit SHA: ${{commit_sha}}
+          echo commit SHA: ${{env.commit_sha}}
 
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@AssemblyInformationalVersion

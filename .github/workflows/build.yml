@@ -54,8 +54,8 @@ jobs:
           echo "commit_sha=$GIT_SHA" >> $GITHUB_ENV
           echo commit SHA: $GIT_SHA
           INFO_TEXT="2.0.0.0-$(echo $GIT_SHA | cut -c1-7)-$(date -u '+%y%m%dT%H%M')"
-          echo 'info_text=$INFO_TEXT' >> $GITHUB_ENV
-          echo 'Info Text: $INFO_TEXT'
+          echo "info_text=$INFO_TEXT" >> $GITHUB_ENV
+          echo Info Text: $INFO_TEXT
 
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@AssemblyInformationalVersion

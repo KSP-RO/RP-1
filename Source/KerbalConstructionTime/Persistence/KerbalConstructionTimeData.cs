@@ -48,9 +48,6 @@ namespace KerbalConstructionTime
         public KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
         public bool TechIgnoreUpdates = false;
 
-        private bool _experimentalPartsLoaded = false;
-        public bool ExperimentalPartsLoaded => _experimentalPartsLoaded;
-
         [KSPField(isPersistant = true)]
         public PersistentSortedListValueTypeKey<string, BuildListVessel> BuildPlans = new PersistentSortedListValueTypeKey<string, BuildListVessel>();
 
@@ -199,8 +196,6 @@ namespace KerbalConstructionTime
                         KSCs.RemoveAt(i);
                 }
 
-                StartCoroutine(FillExperimentalParts());
-
                 if (LoadedSaveVersion < KCTGameStates.VERSION)
                 {
                     if (LoadedSaveVersion < 14 && node.GetNode("Plans") is ConfigNode planNode)
@@ -308,15 +303,6 @@ namespace KerbalConstructionTime
         {
             RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
             RP0.Harmony.PatchRDTechTree.Instance?.RefreshUI();
-        }
-
-        private IEnumerator FillExperimentalParts()
-        {
-            // Wait for RnD to finish loading
-            yield return null;
-
-            Utilities.AddResearchedPartsToExperimental();
-            _experimentalPartsLoaded = true;
         }
 
         public void RegisterLC(LCItem lc)

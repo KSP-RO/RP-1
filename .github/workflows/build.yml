@@ -47,14 +47,15 @@ jobs:
         run: |
           EVENTNAME=${{github.event_name}}
           if [ $EVENTNAME = 'pull_request' ]; then
-            echo "commit_sha=${{github.event.pull_request.head.sha}}" >> $GITHUB_ENV
-            echo commit SHA: ${{github.event.pull_request.head.sha}}
+            GIT_SHA=${{github.event.pull_request.head.sha}}
           else
-            echo "commit_sha=$GITHUB_SHA" >> $GITHUB_ENV
-            echo commit SHA: $GITHUB_SHA
+            GIT_SHA=$GITHUB_SHA
           fi
-          echo 'info_text="2.0.0.0-$(echo ${{env.commit_sha}} | cut -c1-7)-$(date -u '+%y%m%dT%H%M')"' >> $GITHUB_ENV
-          echo "Info Text: ${{env.info_text}}"
+          echo "commit_sha=$GIT_SHA" >> $GITHUB_ENV
+          echo commit SHA: $GIT_SHA
+          INFO_TEXT="2.0.0.0-$(echo $GIT_SHA | cut -c1-7)-$(date -u '+%y%m%dT%H%M')"
+          echo 'info_text=$INFO_TEXT' >> $GITHUB_ENV
+          echo 'Info Text: $INFO_TEXT'
 
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@AssemblyInformationalVersion

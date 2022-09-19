@@ -116,6 +116,7 @@ namespace KerbalConstructionTime
             }
         }
 
+        [Persistent]
         private Guid _lcID = Guid.Empty;
         public Guid LCID
         {

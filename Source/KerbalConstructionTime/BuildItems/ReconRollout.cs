@@ -95,7 +95,7 @@ namespace KerbalConstructionTime
             mass = vessel.GetTotalMass();
             try
             {
-                var blv = new BuildListVessel(vessel);
+                var blv = new BuildListVessel(vessel, BuildListVessel.ListType.VAB);
                 isHumanRated = blv.humanRated;
                 BP = Formula.GetReconditioningBP(blv);
                 vesselBP = blv.buildPoints + blv.integrationPoints;

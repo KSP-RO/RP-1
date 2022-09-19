@@ -97,9 +97,6 @@ namespace KerbalConstructionTime
 
         public static double GetBuildRate(BuildListVessel ship)
         {
-            if (ship.Type == BuildListVessel.ListType.None)
-                ship.FindTypeFromLists();
-
             int engCap = ship.LC.MaxEngineersFor(ship);
             int delta = 0;
             if (engCap < ship.LC.Engineers)
@@ -454,12 +451,6 @@ namespace KerbalConstructionTime
 
         public static void MoveVesselToWarehouse(BuildListVessel ship)
         {
-            if (ship.Type == BuildListVessel.ListType.None)
-                ship.FindTypeFromLists();
-            if (ship.Type != BuildListVessel.ListType.VAB && ship.Type != BuildListVessel.ListType.SPH)
-                return;
-            // will also return if ship.LC==null
-
             KCTEvents.Instance.KCTButtonStockImportant = true;
             _startedFlashing = DateTime.Now;    //Set the time to start flashing
 
@@ -467,16 +458,15 @@ namespace KerbalConstructionTime
             ship.LC.Warehouse.Add(ship);
             ship.LC.RecalculateBuildRates();
 
-            var Message = new StringBuilder();
-            Message.AppendLine("The following vessel is complete:");
-            Message.AppendLine(ship.shipName);
-            Message.AppendLine($"Please check the Storage at {ship.LC.Name} at {ship.KSC.KSCName} to launch it.");
-
             KCTDebug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
 
             KCT_GUI.ResetBLWindow(false);
             if (!KCTGameStates.Settings.DisableAllMessages)
             {
+                var Message = new StringBuilder();
+                Message.AppendLine("The following vessel is complete:");
+                Message.AppendLine(ship.shipName);
+                Message.AppendLine($"Please check the Storage at {ship.LC.Name} at {ship.KSC.KSCName} to launch it.");
                 DisplayMessage("Vessel Complete!", Message, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE);
             }
 
@@ -639,10 +629,10 @@ namespace KerbalConstructionTime
         {
             SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 
-            if (blv.Type == BuildListVessel.ListType.VAB)
-                blv.launchSite = "LaunchPad";
-            else if (blv.Type == BuildListVessel.ListType.SPH)
+            if (blv.Type == BuildListVessel.ListType.SPH)
                 blv.launchSite = "Runway";
+            else
+                blv.launchSite = "LaunchPad";
 
             LCItem lc = blv.LC;
             if (lc != null)

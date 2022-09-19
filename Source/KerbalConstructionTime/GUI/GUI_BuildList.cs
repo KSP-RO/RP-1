@@ -1701,7 +1701,7 @@ namespace KerbalConstructionTime
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_NEW, "KCTEditNew");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, "KCTEditLaunch");
 
-                EditorDriver.StartAndLoadVessel(tempFile, b.Type == BuildListVessel.ListType.VAB ? EditorFacility.VAB : EditorFacility.SPH);
+                EditorDriver.StartAndLoadVessel(tempFile, b.Type == BuildListVessel.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB);
             }
 
             if (GUILayout.Button("Rename"))

@@ -222,7 +222,14 @@ namespace KerbalConstructionTime
             launchSite = ls;
             progress = 0;
             flag = flagURL;
-            if (s.shipFacility == EditorFacility.VAB)
+            // This is always called from within the editor, so the shipconstruct will have a facility.
+            if (s.shipFacility == EditorFacility.SPH)
+            {
+                Type = ListType.SPH;
+                FacilityBuiltIn = EditorFacility.SPH;
+                _lc = KCTGameStates.ActiveKSC.Hangar;
+            }
+            else
             {
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
@@ -230,14 +237,6 @@ namespace KerbalConstructionTime
                 if (_lc.LCType == LaunchComplexType.Hangar)
                     KCTDebug.LogError($"ERROR: Tried to add vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
             }
-            else if (s.shipFacility == EditorFacility.SPH)
-            {
-                Type = ListType.SPH;
-                FacilityBuiltIn = EditorFacility.SPH;
-                _lc = KCTGameStates.ActiveKSC.Hangar;
-            }
-            else
-                Type = ListType.None;
 
             if(_lc != null && !_lc.IsOperational)
                 KCTDebug.LogError($"ERROR: Tried to add vessel {shipName} to LC {_lc.Name} but LC is not operational!");
@@ -282,7 +281,7 @@ namespace KerbalConstructionTime
         /// </summary>
         /// <param name="vessel"></param>
         /// <param name="listType"></param>
-        public BuildListVessel(Vessel vessel, ListType listType = ListType.None)
+        public BuildListVessel(Vessel vessel, ListType listType)
         {
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
@@ -290,8 +289,7 @@ namespace KerbalConstructionTime
             StorePartNames(vessel.parts);
             ShipNodeCompressed.Node = FromInFlightVessel(vessel, listType);
             // don't compress and release, we need to make later changes
-            if (listType != ListType.None)
-                Type = listType;
+            Type = listType;
             FacilityBuiltIn = listType == ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
 
             CacheClamps(vessel.parts);
@@ -489,38 +487,7 @@ namespace KerbalConstructionTime
 
         public EditorFacilities GetEditorFacility()
         {
-            EditorFacilities ret = EditorFacilities.NONE;
-            if (Type == ListType.None)
-            {
-                BruteForceLocateVessel();
-            }
-
-            if (Type == ListType.VAB)
-                ret = EditorFacilities.VAB;
-            else if (Type == ListType.SPH)
-                ret = EditorFacilities.SPH;
-
-            return ret;
-        }
-
-        public void BruteForceLocateVessel()
-        {
-            KCTDebug.Log($"Brute force looking for {shipName}");
-            bool found = false;
-            // This is weird, but we're forcing a reacquire of the LC
-            LC = null;
-            if (LC != null)
-            {
-                found = LC.BuildList.Exists(b => b.shipID == shipID);
-                if (found) { Type = ListType.VAB; return; }
-                found = LC.Warehouse.Exists(b => b.shipID == shipID);
-                if (found) { Type = ListType.VAB; return; }
-            }
-
-            if (!found)
-            {
-                KCTDebug.Log("Still can't find ship even after checking every list...");
-            }
+            return Type == ListType.SPH ? EditorFacilities.SPH : EditorFacilities.VAB;
         }
 
         /// <summary>
@@ -617,8 +584,7 @@ namespace KerbalConstructionTime
             LCItem selectedLC;
             if (LC == null)
             {
-                selectedLC = Type == ListType.VAB ? KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance :
-                    Type == ListType.SPH ? KCTGameStates.ActiveKSC.Hangar : null;
+                selectedLC = Type == ListType.VAB ? KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance : KCTGameStates.ActiveKSC.Hangar;
             }
             else
             {
@@ -697,13 +663,6 @@ namespace KerbalConstructionTime
                     break;
                 }
             }
-        }
-
-        public ListType FindTypeFromLists()
-        {
-            Type = ListType.None;
-            BruteForceLocateVessel();
-            return Type;
         }
 
         private void UpdateRFTanks()

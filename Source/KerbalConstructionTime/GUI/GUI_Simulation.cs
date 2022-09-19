@@ -35,7 +35,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowSimulationGUI = false;
                 Utilities.DisableSimulationLocks();
-                var facility = KCTGameStates.LaunchedVessel.Type == BuildListVessel.ListType.VAB ? EditorFacility.VAB : EditorFacility.SPH;
+                var facility = KCTGameStates.LaunchedVessel.Type == BuildListVessel.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
                 FlightDriver.RevertToPrelaunch(facility);
                 _centralWindowPosition.height = 1;
             }

@@ -16,24 +16,13 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   check-secret:
-    runs-on: ubuntu-latest
-    outputs:
-      has-password: ${{ steps.has-password.outputs.defined }}
-    steps:
-      - id: has-password
-        if: "${{ env.KSP_ZIP_PASSWORD != '' }}"
-        run: echo "::set-output name=defined::true"
-        env:
-            KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+    uses: KSP-RO/BuildTools/.github/workflows/check-secret.yml@master
+    secrets:
+      KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+
   validate-cfg-files:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-      - name: Validate config files
-        uses: KSP-CKAN/KSPMMCfgParser@master
+    uses: KSP-RO/BuildTools/.github/workflows/validate-cfg-files.yml@master
+
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -49,35 +38,18 @@ jobs:
 
       - name: Download required assemblies
         id: download-assemblies
-        shell: bash
-        env: 
+        uses: KSP-RO/BuildTools/download-assemblies@master
+        with:
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
-        run: |
-          curl https://ksp-ro.s3-us-west-2.amazonaws.com/KSPAssemblies-1.12.zip --output /tmp/bins.zip
-          KSP_DLL_PATH="/opt/ksp/assembly"
-          echo "::set-output name=ksp-dll-path::${KSP_DLL_PATH}"
-          mkdir -p "${KSP_DLL_PATH}"
-          unzip -P "${KSP_ZIP_PASSWORD}" '/tmp/bins.zip' -d "${KSP_DLL_PATH}"
-          rm '/tmp/bins.zip'
 
       - name: Build mod solution
-        run: |
-          rm -f ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/*.dll
-          msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
-          cp -v ${GITHUB_WORKSPACE}/Source/ClearInputLocks/obj/x64/Release/ClearInputLocks.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/ClearInputLocks.dll
-          cp -v ${GITHUB_WORKSPACE}/Source/CC_RP0/obj/x64/Release/CC_RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/CC_RP0.dll
-          cp -v ${GITHUB_WORKSPACE}/Source/KerbalConstructionTime/obj/Release/RP0KCT.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0KCT.dll
-          cp -v ${GITHUB_WORKSPACE}/Source/obj/x64/Release/RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0.dll
-        
-      - name: Setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.0
-        
+        run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+
       - name: Build metadata
-        shell: bash
-        run: |
-          python ${GITHUB_WORKSPACE}/makeMeta.py 2.0.0.0
+        uses: KSP-RO/BuildTools/update-version-file@master
+        with:
+          path: ${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version
+          tag: "v2.0.0.0"
 
       - name: Assemble release
         id: assemble-release

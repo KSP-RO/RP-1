@@ -913,6 +913,9 @@
     <Content Include="..\GameData\RP-0\Tree\OrphanNode.cfg">
       <Link>Tree\OrphanNode.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Tree\PFTechLevels.cfg">
+      <Link>Tree\PFTechLevels.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Tree\ProceduralAvionics.cfg">
       <Link>Tree\ProceduralAvionics.cfg</Link>
     </Content>

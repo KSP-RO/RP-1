@@ -229,21 +229,14 @@ namespace KerbalConstructionTime
                     KCTDebug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
                 }
 
-                if (KCTGameStates.LaunchedVessel != null)
+                // This will only fire the first time, because we make it invalid afterwards.
+                if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid)
                 {
-                    dataModule.Data.FacilityBuiltIn = KCTGameStates.LaunchedVessel.FacilityBuiltIn;
-                    dataModule.Data.VesselID = KCTGameStates.LaunchedVessel.KCTPersistentID;
-                    dataModule.Data.LCID = KCTGameStates.LaunchedVessel.LCID;
-                    if (KCTGameStates.LaunchedVessel.LC == null)
-                    {
-                        LCItem lc = KCTGameStates.FindLCFromID(KCTGameStates.LaunchedVessel.LCID);
-                        if (lc != null)
-                            dataModule.Data.LCModID = lc.ModID.ToString("N");
-                    }
-                    else
-                    {
-                        dataModule.Data.LCModID = KCTGameStates.LaunchedVessel.LC.ModID.ToString("N");
-                    }
+                    dataModule.Data.FacilityBuiltIn = KerbalConstructionTimeData.Instance.LaunchedVessel.FacilityBuiltIn;
+                    dataModule.Data.VesselID = KerbalConstructionTimeData.Instance.LaunchedVessel.KCTPersistentID;
+                    dataModule.Data.LCID = KerbalConstructionTimeData.Instance.LaunchedVessel.LCID;
+                    if (dataModule.Data.LCID != Guid.Empty)
+                        dataModule.Data.LCModID = KerbalConstructionTimeData.Instance.LaunchedVessel.LC.ModID;
                 }
             }
 
@@ -251,31 +244,34 @@ namespace KerbalConstructionTime
 
             AssignCrewToCurrentVessel();
 
-            if (KCTGameStates.LaunchedVessel != null && !KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+            if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid)
             {
-                LCItem vesselLC = KCTGameStates.LaunchedVessel.LC;
-                KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
+                // We needn't check for simulated flight anymore because
+                // we store these things on the scenario, not static, now.
+                //if (!KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+                //{
+                LCItem vesselLC = KerbalConstructionTimeData.Instance.LaunchedVessel.LC;
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
-                if (KCTGameStates.LaunchedVessel.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
+                if (KerbalConstructionTimeData.Instance.LaunchedVessel.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
                 {
                     //Add the cost of the ship to the funds so it can be removed again by KSP
-                    // FIXME fix this with harmony
-                    Utilities.AddFunds(KCTGameStates.LaunchedVessel.cost, TransactionReasons.VesselRollout);
-                    FlightGlobals.ActiveVessel.vesselName = KCTGameStates.LaunchedVessel.shipName;
+                    FlightGlobals.ActiveVessel.vesselName = KerbalConstructionTimeData.Instance.LaunchedVessel.shipName;
                 }
                 if (vesselLC == null) vesselLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == KCTGameStates.LaunchedVessel.shipID.ToString()) is ReconRollout rollout)
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID.ToString()) is ReconRollout rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
-                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == KCTGameStates.LaunchedVessel.shipID.ToString()) is AirlaunchPrep alPrep)
+                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID.ToString()) is AirlaunchPrep alPrep)
                     vesselLC.Airlaunch_Prep.Remove(alPrep);
 
-                if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KCTGameStates.LaunchedVessel.shipID &&
+                if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID &&
                     (!alParams.KSPVesselId.HasValue || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
                 {
                     if (!alParams.KSPVesselId.HasValue) alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
                     StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
                 }
+                //}
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
             }
         }
 
@@ -730,8 +726,8 @@ namespace KerbalConstructionTime
 
             if (HighLogic.LoadedSceneIsEditor && KCTGameStates.EditorShipEditingMode)
             {
-                KCTDebug.Log($"Editing {KCTGameStates.EditedVessel.shipName}");
-                EditorLogic.fetch.shipNameField.text = KCTGameStates.EditedVessel.shipName;
+                KCTDebug.Log($"Editing {KerbalConstructionTimeData.Instance.EditedVessel.shipName}");
+                EditorLogic.fetch.shipNameField.text = KerbalConstructionTimeData.Instance.EditedVessel.shipName;
             }
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)

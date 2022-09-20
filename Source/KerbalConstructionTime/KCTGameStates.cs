@@ -15,8 +15,7 @@ namespace KerbalConstructionTime
         public static KSCItem ActiveKSC => KerbalConstructionTimeData.Instance?.ActiveKSC ?? null;
         private static readonly List<KSCItem> _EmptyKSCs = new List<KSCItem>();
         public static List<KSCItem> KSCs => KerbalConstructionTimeData.Instance?.KSCs ?? _EmptyKSCs;
-        public static bool MergingAvailable;
-        public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
+        
         public const int VERSION = 20;
 
         public static ToolbarControl ToolbarControl;
@@ -58,7 +57,7 @@ namespace KerbalConstructionTime
         {
             EditorShipEditingMode = false;
             KerbalConstructionTimeData.Instance.EditedVessel = new BuildListVessel();
-            MergedVessels.Clear();
+            KerbalConstructionTimeData.Instance.MergedVessels.Clear();
 
             InputLockManager.RemoveControlLock("KCTEditExit");
             InputLockManager.RemoveControlLock("KCTEditLoad");

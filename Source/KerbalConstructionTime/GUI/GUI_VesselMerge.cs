@@ -10,12 +10,12 @@ namespace KerbalConstructionTime
 
         private static void RenderMergeSection(BuildListVessel ship)
         {
-            if (!_showMergeSelectionList && KCTGameStates.MergingAvailable && GUILayout.Button("Merge Built Vessel"))
+            if (!_showMergeSelectionList && KerbalConstructionTimeData.Instance.MergingAvailable && GUILayout.Button("Merge Built Vessel"))
             {
                 _showMergeSelectionList = true;
             }
 
-            if (_showMergeSelectionList && KCTGameStates.MergingAvailable)
+            if (_showMergeSelectionList && KerbalConstructionTimeData.Instance.MergingAvailable)
             {
                 if (GUILayout.Button("Hide Merge Selection"))
                 {
@@ -30,13 +30,13 @@ namespace KerbalConstructionTime
                 LCItem lc = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
                 foreach (BuildListVessel vessel in lc.Warehouse)
                 {
-                    if (vessel.shipID != ship.shipID && !KCTGameStates.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))
+                    if (vessel.shipID != ship.shipID && !KerbalConstructionTimeData.Instance.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))
                     {
                         vessel.RecalculateFromNode();
                         ShipConstruct mergedShip = vessel.CreateShipConstructAndRelease();
                         EditorLogic.fetch.SpawnConstruct(mergedShip);
 
-                        KCTGameStates.MergedVessels.Add(vessel);
+                        KerbalConstructionTimeData.Instance.MergedVessels.Add(vessel);
                     }
                 }
                 GUILayout.EndScrollView();

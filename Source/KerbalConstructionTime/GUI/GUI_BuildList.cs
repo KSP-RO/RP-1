@@ -1692,7 +1692,7 @@ namespace KerbalConstructionTime
                 KerbalConstructionTimeData.Instance.EditedVessel = b;
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 KCTGameStates.EditorShipEditingMode = true;
-                KCTGameStates.MergingAvailable = b.IsFinished;
+                KerbalConstructionTimeData.Instance.MergingAvailable = b.IsFinished;
 
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_EXIT, "KCTEditExit");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_NEW, "KCTEditNew");

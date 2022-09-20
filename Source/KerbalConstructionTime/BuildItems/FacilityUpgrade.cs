@@ -52,7 +52,6 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Downgrading {name} to level {currentLevel}");
             foreach (UpgradeableFacility facility in GetFacilityReferencesById(id))
             {
-                KCTEvents.AllowedToUpgrade = true;
                 facility.SetLevel(currentLevel);
             }
         }
@@ -68,7 +67,6 @@ namespace KerbalConstructionTime
                 facilityRefs.AddRange(GetFacilityReferencesByType(SpaceCenterFacility.SpaceplaneHangar));
             }
 
-            KCTEvents.AllowedToUpgrade = true;
             foreach (UpgradeableFacility facility in facilityRefs)
             {
                 facility.SetLevel(upgradeLevel);

@@ -2,15 +2,45 @@
 
 namespace KerbalConstructionTime
 {
-    public class AirlaunchParams
+    public class AirlaunchParams : IConfigNode
     {
-        public Guid KCTVesselId { get; set; }
-        public Guid? KSPVesselId { get; set; }
-        public double Altitude { get; set; }
-        public double KscAzimuth { get; set; }
-        public double KscDistance { get; set; }
-        public double LaunchAzimuth { get; set; }
-        public double Velocity { get; set; }
+        [Persistent]
+        public Guid KCTVesselId = Guid.Empty;
+        [Persistent]
+        public Guid KSPVesselId = Guid.Empty;
+        [Persistent]
+        public double Altitude;
+        [Persistent]
+        public double KscAzimuth = 90d;
+        [Persistent]
+        public double KscDistance;
+        [Persistent]
+        public double LaunchAzimuth = 270d;
+        [Persistent]
+        public double Velocity;
+
+        public AirlaunchParams() { }
+        public AirlaunchParams(AirlaunchParams src)
+        {
+            // Leave these empty
+            //KCTVesselId = src.KCTVesselId;
+            //KSPVesselId = src.KSPVesselId;
+
+            Altitude = src.Altitude;
+            KscAzimuth = src.KscAzimuth;
+            KscDistance = src.KscDistance;
+            Velocity = src.Velocity;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+        }
+
+        public void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
+        }
 
         public bool Validate(out string errorMsg)
         {

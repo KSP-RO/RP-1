@@ -290,13 +290,13 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"VesselRecoverEvent for {v.vesselName}");
 
-            LCItem targetLC = KCTGameStates.RecoveredVessel.LC;
+            LCItem targetLC = KerbalConstructionTimeData.Instance.RecoveredVessel.LC;
             if (targetLC == null)
                 targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
-            targetLC.Warehouse.Add(KCTGameStates.RecoveredVessel);
-            targetLC.Recon_Rollout.Add(new ReconRollout(KCTGameStates.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KCTGameStates.RecoveredVessel.shipID.ToString()));
-            KCTGameStates.RecoveredVessel = null;
+            targetLC.Warehouse.Add(KerbalConstructionTimeData.Instance.RecoveredVessel);
+            targetLC.Recon_Rollout.Add(new ReconRollout(KerbalConstructionTimeData.Instance.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KerbalConstructionTimeData.Instance.RecoveredVessel.shipID.ToString()));
+            KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel();
         }
 
         public void OnExitAdmin()

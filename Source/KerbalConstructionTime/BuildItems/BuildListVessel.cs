@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
         [Persistent]
         public int launchSiteIndex = -1;
         [Persistent]
-        public ListType Type;
+        public ListType Type = ListType.None;
         [Persistent]
         public Guid shipID;
         [Persistent]
@@ -88,7 +88,7 @@ namespace KerbalConstructionTime
         internal ShipConstruct _ship;
 
         public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
-            * LC.Efficiency * LC.RushRate;
+            * (LC == null ? 1d : _lc.Efficiency * _lc.RushRate);
 
         public double TimeLeft
         {
@@ -100,6 +100,8 @@ namespace KerbalConstructionTime
                     return double.PositiveInfinity;
             }
         }
+
+        public bool IsValid => Type != ListType.None;
 
         private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
 
@@ -126,42 +128,31 @@ namespace KerbalConstructionTime
             }
             set
             {
-                _lc = null; // force a refind
                 _lcID = value;
+                if (_lcID == Guid.Empty)
+                    _lc = null;
+                else
+                    _lc = KerbalConstructionTimeData.Instance.LC(_lcID);
             }
         }
-        private LCItem _lc = null;
 
+        private LCItem _lc = null;
         public LCItem LC
         {
             get
             {
                 if (_lc == null)
                 {
-                    _lc = KCTGameStates.FindLCFromID(_lcID);
-
-                    if (_lc == null)
-                    {
-                        foreach (var ksc in KCTGameStates.KSCs)
-                        {
-                            foreach (var lc in ksc.LaunchComplexes)
-                            {
-                                if (lc.BuildList.FirstOrDefault(s => s.shipID == shipID) != null ||
-                                        lc.Warehouse.FirstOrDefault(s => s.shipID == shipID) != null)
-                                {
-                                    _lc = lc;
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    _lc = KerbalConstructionTimeData.Instance.LC(_lcID);
                 }
                 return _lc;
             }
             set
             {
                 _lc = value;
-                if (_lc != null)
+                if (_lc == null)
+                    _lcID = Guid.Empty;
+                else
                     _lcID = _lc.ID;
             }
         }
@@ -778,75 +769,75 @@ namespace KerbalConstructionTime
         {
             bool removed = false;
             oldIndex = -1;
-            // We need to force a refind here because (yay KCT and its love of statics)
-            // This LC might be a lingering object from the space center scene rather than
-            // the live one here.
-            LC = null; //force a refind
-            if (LC == null) //I know this looks goofy, but it's a self-caching property that caches on "get"
+            if (LC == null)
             {
                 KCTDebug.Log("Could not find the LC to remove vessel!");
                 return false;
             }
             else
             {
-                oldIndex = LC.Warehouse.IndexOf(this);
+                oldIndex = _lc.Warehouse.IndexOf(this);
                 if (oldIndex >= 0)
                 {
                     removed = true;
-                    LC.Warehouse.RemoveAt(oldIndex);
+                    _lc.Warehouse.RemoveAt(oldIndex);
                     oldIndex = -1; // report notfound for removed from warehouse
                 }
                 if (!removed)
                 {
-                    oldIndex = LC.BuildList.IndexOf(this);
+                    oldIndex = _lc.BuildList.IndexOf(this);
                     if (oldIndex >= 0)
                     {
                         removed = true;
-                        LC.BuildList.RemoveAt(oldIndex);
-                        LC.RecalculateBuildRates();
+                        _lc.BuildList.RemoveAt(oldIndex);
+                        _lc.RecalculateBuildRates();
                     }
                 }
             }
-            KCTDebug.Log($"Removing {shipName} from {LC.Name} storage/list.");
+            KCTDebug.Log($"Removing {shipName} from {_lc.Name} storage/list.");
             if (!removed)
             {
+                // This will happen when we launch the vessel (or we remove an edited vessel)
+                // because the BLV instance is not the same instance as what's stored in the LC, just a copy.
+                // We could try to be smarter, but eh. At least we're going to check warehouse first
+                // since launching is the usual case.
                 KCTDebug.Log("Failed to remove ship from list! Performing direct comparison of ids...");
 
-                for (int i = LC.BuildList.Count; i-- > 0;)
+                for (int i = _lc.Warehouse.Count; i-- > 0;)
                 {
-                    BuildListVessel blv = LC.BuildList[i];
+                    BuildListVessel blv = _lc.Warehouse[i];
                     if (blv.shipID == shipID)
                     {
-                        KCTDebug.Log("Ship found in BuildList. Removing...");
+                        KCTDebug.Log("Ship found in Warehouse list. Removing...");
+                        oldIndex = -1; // report notfound for removed from warehouse
                         removed = true;
-                        LC.BuildList.RemoveAt(i);
-                        oldIndex = i;
-                        LC.RecalculateBuildRates();
+                        _lc.Warehouse.RemoveAt(i);
                         break;
                     }
                 }
                 if (!removed)
                 {
-                    for( int i = LC.Warehouse.Count; i-- > 0;)
+                    for (int i = _lc.BuildList.Count; i-- > 0;)
                     {
-                        BuildListVessel blv = LC.Warehouse[i];
+                        BuildListVessel blv = _lc.BuildList[i];
                         if (blv.shipID == shipID)
                         {
-                            KCTDebug.Log("Ship found in Warehouse list. Removing...");
-                            oldIndex = -1; // report notfound for removed from warehouse
+                            KCTDebug.Log("Ship found in BuildList. Removing...");
                             removed = true;
-                            LC.Warehouse.RemoveAt(i);
+                            _lc.BuildList.RemoveAt(i);
+                            oldIndex = i;
+                            _lc.RecalculateBuildRates();
                             break;
                         }
                     }
                 }
             }
+
             if (removed)
-            {
                 KCTDebug.Log("Sucessfully removed vessel from LC.");
-            }
             else 
                 KCTDebug.Log("Still couldn't remove ship!");
+
             return removed;
         }
 

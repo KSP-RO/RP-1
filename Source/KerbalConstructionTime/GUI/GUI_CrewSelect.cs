@@ -195,7 +195,7 @@ namespace KerbalConstructionTime
             {
                 CheckTanksAndLaunch(false);
             }
-            if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.LaunchedVessel.AreTanksFull())
+            if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid && !KerbalConstructionTimeData.Instance.LaunchedVessel.AreTanksFull())
             {
                 if (GUILayout.Button("Fill Tanks & Launch"))
                 {
@@ -207,7 +207,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowShipRoster = false;
                 GUIStates.ShowBuildList = true;
-                KCTGameStates.LaunchedVessel = null;
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
                 KCTGameStates.LaunchedCrew.Clear();
                 _crewListWindowPosition.height = 1;
                 _availableCrew = null;
@@ -529,7 +529,7 @@ namespace KerbalConstructionTime
         {
             RefreshInventoryAvailability();
             KCTGameStates.LaunchedCrew.Clear();
-            _pseudoParts = KCTGameStates.LaunchedVessel.GetPseudoParts();
+            _pseudoParts = KerbalConstructionTimeData.Instance.LaunchedVessel.GetPseudoParts();
             _parts.Clear();
             KCTGameStates.LaunchedCrew = new List<PartCrewAssignment>();
             foreach (PseudoPart pp in _pseudoParts)
@@ -661,7 +661,7 @@ namespace KerbalConstructionTime
             }
 
             KCTGameStates.Settings.RandomizeCrew = AssignRandomCrew;
-            KCTGameStates.LaunchedVessel.Launch(fillTanks);
+            KerbalConstructionTimeData.Instance.LaunchedVessel.Launch(fillTanks);
 
             GUIStates.ShowShipRoster = false;
             _crewListWindowPosition.height = 1;

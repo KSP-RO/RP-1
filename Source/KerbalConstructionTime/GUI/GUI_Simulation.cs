@@ -35,7 +35,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowSimulationGUI = false;
                 Utilities.DisableSimulationLocks();
-                var facility = KCTGameStates.LaunchedVessel.Type == BuildListVessel.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
+                var facility = KerbalConstructionTimeData.Instance.LaunchedVessel.Type == BuildListVessel.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
                 FlightDriver.RevertToPrelaunch(facility);
                 _centralWindowPosition.height = 1;
             }
@@ -231,8 +231,9 @@ namespace KerbalConstructionTime
 
             Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
 
-            KCTGameStates.LaunchedVessel = KerbalConstructionTime.Instance.EditorVessel.CreateCopy();
-            KCTGameStates.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+            KerbalConstructionTimeData.Instance.LaunchedVessel = KerbalConstructionTime.Instance.EditorVessel.CreateCopy();
+            // Just in case, let's set the LCID
+            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)

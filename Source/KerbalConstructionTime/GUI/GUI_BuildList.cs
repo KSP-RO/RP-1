@@ -826,7 +826,7 @@ namespace KerbalConstructionTime
 
         private static void RenderBuildList()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
 
@@ -854,7 +854,7 @@ namespace KerbalConstructionTime
 
         private static void RenderRollouts()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
@@ -963,7 +963,7 @@ namespace KerbalConstructionTime
 
         private static void RenderWarehouse()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             bool isPad = activeLC.LCType == LaunchComplexType.Pad;
             List<BuildListVessel> buildList = activeLC.Warehouse;
             GUILayout.Label("__________________________________________________");
@@ -1249,8 +1249,7 @@ namespace KerbalConstructionTime
                                 }
                                 else
                                 {
-                                    KCTGameStates.LaunchedVessel = b;
-                                    KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
+                                    KerbalConstructionTimeData.Instance.LaunchedVessel = b;
                                     if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
                                     {
                                         GUIStates.ShowBLPlus = false;
@@ -1334,8 +1333,7 @@ namespace KerbalConstructionTime
                             else
                             {
                                 GUIStates.ShowBLPlus = false;
-                                KCTGameStates.LaunchedVessel = b;
-                                KCTGameStates.LaunchedVessel.LCID = KCTGameStates.LaunchedVessel.LC.ID; // clear LC and force refind later.
+                                KerbalConstructionTimeData.Instance.LaunchedVessel = b;
 
                                 if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
                                 {
@@ -1378,7 +1376,7 @@ namespace KerbalConstructionTime
 
         private static void RenderLaunchComplexControls()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
             // Don't allow switching in edit mode
@@ -1479,7 +1477,7 @@ namespace KerbalConstructionTime
 
         private static void RenderLaunchPadControls()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
@@ -1638,7 +1636,7 @@ namespace KerbalConstructionTime
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225 * UIHolder.UIScale;
-            BuildListVessel b = Utilities.FindBLVesselByID(KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
+            BuildListVessel b = Utilities.FindBLVesselByID(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.launchSite;
 
@@ -1691,9 +1689,8 @@ namespace KerbalConstructionTime
                 EditorWindowPosition.height = 1;
                 string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
                 b.UpdateNodeAndSave(tempFile);
+                KerbalConstructionTimeData.Instance.EditedVessel = b;
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
-                KCTGameStates.EditedVessel = b;
-                KCTGameStates.EditedVessel.LCID = KCTGameStates.EditedVessel.LC.ID; // clear LC and force refind later.
                 KCTGameStates.EditorShipEditingMode = true;
                 KCTGameStates.MergingAvailable = b.IsFinished;
 
@@ -1769,7 +1766,7 @@ namespace KerbalConstructionTime
 
         public static void DrawLaunchSiteChooser(int windowID)
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginVertical();
             _launchSiteScrollView = GUILayout.BeginScrollView(_launchSiteScrollView, UIHolder.Height((float)Math.Min(Screen.height * 0.75, 25 * _launchSites.Count + 10)));

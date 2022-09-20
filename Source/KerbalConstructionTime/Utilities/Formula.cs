@@ -9,6 +9,9 @@ namespace KerbalConstructionTime
         public const double ResourceValidationRatioOfVesselMassMin = 0.005d;
         public const double ResourceValidationAbsoluteMassMin = 0.0d;
         private static HashSet<string> _resourceKeys = new HashSet<string>();
+        private const double _EngineerBPRate = 0.0025d;
+        private const double _RolloutCostBasePortion = 0.5d;
+        private const double _RolloutCostSubsidyPortion = 1d - _RolloutCostBasePortion;
 
         private static RealFuels.Tanks.TankDefinition _tankDefSMIV = null;
         public static RealFuels.Tanks.TankDefinition TankDefSMIV
@@ -110,7 +113,7 @@ namespace KerbalConstructionTime
 
             //return GetStandardFormulaValue("BuildRate", variables);
             //(([I] + 1) *[N] * 0.0025) * sign([L] -[I])
-            return personnel * 0.0025d;
+            return personnel * _EngineerBPRate;
         }
 
         public static double GetConstructionBuildRate(int index, KSCItem KSC, SpaceCenterFacility facilityType)
@@ -192,7 +195,8 @@ namespace KerbalConstructionTime
             double vesselPortion = (vessel.effectiveCost - (vessel.cost * 0.9d)) * 0.6;
             double massToUse = vLC.LCType == LaunchComplexType.Pad ? vLC.MassMax : vessel.GetTotalMass();
             double lcPortion = Math.Pow(massToUse, 0.75d) * 20d * multHR;
-            return vesselPortion + lcPortion;
+            double result = vesselPortion + lcPortion;
+            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * RP0.MaintenanceHandler.Settings.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
         }
 
         public static double GetIntegrationCost(BuildListVessel vessel)
@@ -235,7 +239,8 @@ namespace KerbalConstructionTime
             //return GetStandardFormulaValue("AirlaunchCost", variables);
 
             // [E]*0.25
-            return vessel.effectiveCost * 0.25d;
+            double result = vessel.effectiveCost * 0.25d;
+            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel) * RP0.MaintenanceHandler.Settings.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
         }
 
         public static double GetAirlaunchBP(BuildListVessel vessel)

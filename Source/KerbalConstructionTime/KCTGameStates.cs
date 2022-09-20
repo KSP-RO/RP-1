@@ -38,14 +38,10 @@ namespace KerbalConstructionTime
         public static bool VesselErrorAlerted = false;
         public static bool IsRefunding = false;
 
-        public static AirlaunchParams AirlaunchParams;
-
         public static void Reset()
         {
             IsFirstStart = false;
             VesselErrorAlerted = false;
-
-            AirlaunchParams = null;
 
             KCT_GUI.ResetFormulaRateHolders();
             KCT_GUI.ResetShowFirstRunAgain();

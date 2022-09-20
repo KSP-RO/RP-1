@@ -9,7 +9,6 @@ namespace KerbalConstructionTime
     public class KCTEvents
     {
         public static KCTEvents Instance { get; private set; } = new KCTEvents();
-        public static bool AllowedToUpgrade = false;
 
         public bool SubscribedToEvents { get; private set; }
         public bool CreatedEvents { get; private set; }
@@ -57,25 +56,31 @@ namespace KerbalConstructionTime
 
         public void SubscribeToEvents()
         {
+            // Fired via Tracking Station or via VesselRetrieval
             GameEvents.onVesselRecovered.Add(VesselRecoverEvent);
 
+            // Global events
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
             GameEvents.onGameStateLoad.Add(OnGameStateLoad);
-
-            GameEvents.onVesselSituationChange.Add(VesselSituationChange);
-            GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
-            GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
-
-            GameEvents.OnKSCStructureRepaired.Add(FaciliyRepaired);
-            GameEvents.OnKSCStructureCollapsed.Add(FacilityDestroyed);
-
             GameEvents.Modifiers.OnCurrencyModified.Add(OnCurrenciesModified);
 
+            // Flight
+            GameEvents.onVesselSituationChange.Add(VesselSituationChange);
+            
+            // Editor
+            GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
             GameEvents.StageManager.OnGUIStageAdded.Add(StageCountChangedEvent);
             GameEvents.StageManager.OnGUIStageRemoved.Add(StageCountChangedEvent);
             GameEvents.StageManager.OnGUIStageSequenceModified.Add(StagingOrderChangedEvent);
             GameEvents.StageManager.OnPartUpdateStageability.Add(PartStageabilityChangedEvent);
+            GameEvents.onEditorStarted.Add(OnEditorStarted);
 
+            // Space Center
+            GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
+            GameEvents.OnKSCStructureRepaired.Add(FaciliyRepaired);
+            GameEvents.OnKSCStructureCollapsed.Add(FacilityDestroyed);
+
+            // Space Center GUIs
             GameEvents.onGUIAdministrationFacilitySpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIAstronautComplexSpawn.Add(EnterSCSubsceneAndHide);
             GameEvents.onGUIMissionControlSpawn.Add(EnterSCSubsceneAndHide);
@@ -87,8 +92,6 @@ namespace KerbalConstructionTime
             GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
-
-            GameEvents.onEditorStarted.Add(OnEditorStarted);
 
             SubscribedToEvents = true;
         }
@@ -164,7 +167,6 @@ namespace KerbalConstructionTime
             if (KCT_GUI.IsPrimarilyDisabled) return;
 
             KCTDebug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
-            AllowedToUpgrade = false;
             KCTGameStates.RecalculateBuildRates();
         }
 

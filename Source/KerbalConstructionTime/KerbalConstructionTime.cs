@@ -264,11 +264,16 @@ namespace KerbalConstructionTime
                 if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID.ToString()) is AirlaunchPrep alPrep)
                     vesselLC.Airlaunch_Prep.Remove(alPrep);
 
-                if (KCTGameStates.AirlaunchParams is AirlaunchParams alParams && alParams.KCTVesselId == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID &&
-                    (!alParams.KSPVesselId.HasValue || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
+                var alParams = KerbalConstructionTimeData.Instance.AirlaunchParams;
+                if (alParams.KCTVesselId == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID &&
+                    (alParams.KSPVesselId == Guid.Empty || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
                 {
-                    if (!alParams.KSPVesselId.HasValue) alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
+                    if (alParams.KSPVesselId == Guid.Empty)
+                        alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
                     StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
+
+                    // This clears the guids (and changes the pointer, so the object is distinct from what we passed above) but keeps the rest
+                    KerbalConstructionTimeData.Instance.AirlaunchParams = new AirlaunchParams(KerbalConstructionTimeData.Instance.AirlaunchParams);
                 }
                 //}
                 KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();

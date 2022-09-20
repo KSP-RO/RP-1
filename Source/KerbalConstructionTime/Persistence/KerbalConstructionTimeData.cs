@@ -55,6 +55,13 @@ namespace KerbalConstructionTime
         public PersistentList<KSCItem> KSCs = new PersistentList<KSCItem>();
         public KSCItem ActiveKSC = null;
 
+        [KSPField(isPersistant = true)]
+        public BuildListVessel LaunchedVessel = new BuildListVessel();
+        [KSPField(isPersistant = true)]
+        public BuildListVessel EditedVessel = new BuildListVessel();
+        [KSPField(isPersistant = true)]
+        public BuildListVessel RecoveredVessel = new BuildListVessel();
+
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
         public override void OnAwake()
@@ -213,8 +220,12 @@ namespace KerbalConstructionTime
                 foreach (var blv in BuildPlans.Values)
                     blv.LinkToLC(null);
 
+                LaunchedVessel.LinkToLC(LC(LaunchedVessel.LCID));
+                RecoveredVessel.LinkToLC(LC(RecoveredVessel.LCID));
+                EditedVessel.LinkToLC(LC(EditedVessel.LCID));
+
                 LCEfficiency.RelinkAll();
-                
+
                 LoadedSaveVersion = KCTGameStates.VERSION;
             }
             catch (Exception ex)

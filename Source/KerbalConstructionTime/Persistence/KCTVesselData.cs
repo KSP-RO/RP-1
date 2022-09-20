@@ -17,7 +17,7 @@ namespace KerbalConstructionTime
         public Guid LCID = Guid.Empty;
 
         [Persistent]
-        public string LCModID = string.Empty;
+        public Guid LCModID = Guid.Empty;
 
         [Persistent]
         public bool HasStartedReconditioning = false;

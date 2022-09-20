@@ -178,6 +178,9 @@ namespace RP0.DataTypes
             // will early-out if we're already in the compressed state.
             CompressAndRelease();
 
+            if (_bytes == null)
+                return;
+
             string data = ObjectSerializer.Base64Encode(_bytes);
             WriteChunks(node, data);
         }

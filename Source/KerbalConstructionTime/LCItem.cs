@@ -392,6 +392,11 @@ namespace KerbalConstructionTime
                 }
             }
 
+            foreach (var blv in BuildList)
+                blv.LinkToLC(this);
+            foreach (var blv in Warehouse)
+                blv.LinkToLC(this);
+
             AddListeners();
         }
 

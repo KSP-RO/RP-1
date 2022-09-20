@@ -674,7 +674,7 @@ namespace KerbalConstructionTime
                 shipName = EditorLogic.fetch.shipNameField.text,
                 FacilityBuiltIn = editableShip.FacilityBuiltIn,
                 KCTPersistentID = editableShip.KCTPersistentID,
-                LCID = editableShip.LCID // not setting LC directly here
+                LCID = editableShip.LCID
             };
 
             double usedShipsCost = editableShip.GetTotalCost();
@@ -1087,7 +1087,8 @@ namespace KerbalConstructionTime
             if (!HighLogic.LoadedSceneIsEditor) return;
 
             KerbalConstructionTime.Instance.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
-            KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KCTGameStates.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+            // override LC in case of vessel editing
+            KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
@@ -1363,35 +1364,35 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("Attempting to recover active vessel to storage.  listType: " + listType);
                 GamePersistence.SaveGame("KCT_Backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
-                KCTGameStates.RecoveredVessel = new BuildListVessel(FlightGlobals.ActiveVessel, listType);
+                KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel(FlightGlobals.ActiveVessel, listType);
 
                 KCTVesselData vData = FlightGlobals.ActiveVessel.GetKCTVesselData();
-                KCTGameStates.RecoveredVessel.KCTPersistentID = vData?.VesselID;
-                KCTGameStates.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
-                KCTGameStates.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
-                KCTGameStates.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
+                KerbalConstructionTimeData.Instance.RecoveredVessel.KCTPersistentID = vData?.VesselID;
+                KerbalConstructionTimeData.Instance.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
+                KerbalConstructionTimeData.Instance.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
+                KerbalConstructionTimeData.Instance.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
 
                 //KCT_GameStates.recoveredVessel.type = listType;
-                if (listType == BuildListVessel.ListType.VAB)
-                    KCTGameStates.RecoveredVessel.launchSite = "LaunchPad";
+                if (listType == BuildListVessel.ListType.SPH)
+                    KerbalConstructionTimeData.Instance.RecoveredVessel.launchSite = "Runway";
                 else
-                    KCTGameStates.RecoveredVessel.launchSite = "Runway";
+                    KerbalConstructionTimeData.Instance.RecoveredVessel.launchSite = "LaunchPad";
 
                 //check for symmetry parts and remove those references if they can't be found
-                KCTGameStates.RecoveredVessel.RemoveMissingSymmetry();
+                KerbalConstructionTimeData.Instance.RecoveredVessel.RemoveMissingSymmetry();
 
                 // debug, save to a file
-                KCTGameStates.RecoveredVessel.UpdateNodeAndSave("KCTVesselSave", false);
+                KerbalConstructionTimeData.Instance.RecoveredVessel.UpdateNodeAndSave("KCTVesselSave", false);
 
                 //test if we can actually convert it
-                var test = KCTGameStates.RecoveredVessel.CreateShipConstructAndRelease();
+                var test = KerbalConstructionTimeData.Instance.RecoveredVessel.CreateShipConstructAndRelease();
 
                 if (test != null)
                     ShipConstruction.CreateBackup(test);
                 KCTDebug.Log("Load test reported success = " + (test == null ? "false" : "true"));
                 if (test == null)
                 {
-                    KCTGameStates.RecoveredVessel = null;
+                    KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel();
                     return false;
                 }
 
@@ -1407,7 +1408,7 @@ namespace KerbalConstructionTime
             {
                 Debug.LogError("[KCT] Error while recovering craft into inventory.");
                 Debug.LogError("[KCT] error: " + ex);
-                KCTGameStates.RecoveredVessel = null;
+                KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel();
                 ShipConstruction.ClearBackups();
                 return false;
             }
@@ -1515,7 +1516,7 @@ namespace KerbalConstructionTime
 
         public static string GetVesselLCModID(this Vessel v)
         {
-            return v.GetKCTVesselData()?.LCModID;
+            return v.GetKCTVesselData()?.LCModID.ToString("N");
         }
 
         public static EditorFacility? GetVesselBuiltAt(this Vessel v)
@@ -2067,12 +2068,12 @@ namespace KerbalConstructionTime
                 //KCTDebug.LogError("Is eva!");
                 return false;
             }
-            if (KCTGameStates.RecoveredVessel == null)
+            if (!KerbalConstructionTimeData.Instance.RecoveredVessel.IsValid)
             {
                 //KCTDebug.LogError("Recovered vessel is null!");
                 return false;
             }
-            if (v.vesselName != KCTGameStates.RecoveredVessel.shipName)
+            if (v.vesselName != KerbalConstructionTimeData.Instance.RecoveredVessel.shipName)
             {
                 //KCTDebug.LogError("Recovered vessel, " + KCTGameStates.RecoveredVessel.ShipName +", doesn't match!");
                 return false;

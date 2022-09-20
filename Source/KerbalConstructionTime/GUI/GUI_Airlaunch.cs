@@ -104,7 +104,7 @@ namespace KerbalConstructionTime
             try
             {
                 bool isSim = KerbalConstructionTimeData.Instance.IsSimulatedFlight;
-                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KCTGameStates.LaunchedVessel.shipID;
+                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KerbalConstructionTimeData.Instance.LaunchedVessel.shipID;
                 _airlaunchParams.Altitude = double.Parse(_sAltitude);
                 _airlaunchParams.Velocity = double.Parse(_sVelocity);
                 _airlaunchParams.LaunchAzimuth = double.Parse(_sAzimuth);
@@ -126,7 +126,7 @@ namespace KerbalConstructionTime
                     KCTGameStates.AirlaunchParams = _airlaunchParams;
                     _airlaunchParams = null;
 
-                    BuildListVessel b = KCTGameStates.LaunchedVessel;
+                    BuildListVessel b = KerbalConstructionTimeData.Instance.LaunchedVessel;
                     if (!b.IsCrewable())
                     {
                         b.Launch();

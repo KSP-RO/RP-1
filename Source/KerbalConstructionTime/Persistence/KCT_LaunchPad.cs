@@ -217,7 +217,6 @@ namespace KerbalConstructionTime
                 if (Utilities.CurrentGameIsCareer())
                 {
                     UpgradeableFacility facility = GetUpgradeableFacilityReference();
-                    KCTEvents.AllowedToUpgrade = true;
                     facility.SetLevel(level);
                 }
 

@@ -81,6 +81,9 @@ namespace RP0.Harmony
         [HarmonyPatch("onVesselRollout")]
         internal static bool Prefix_onVesselRollout(Funding __instance, ShipConstruct ship)
         {
+            if (!KerbalConstructionTime.KCT_GUI.IsPrimarilyDisabled)
+                return false;
+
             __instance.AddFunds(-KerbalConstructionTime.Utilities.GetTotalVesselCost(ship.Parts), TransactionReasonsRP0.VesselPurchase.Stock());
             return false;
         }

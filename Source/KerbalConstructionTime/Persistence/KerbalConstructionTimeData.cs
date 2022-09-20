@@ -62,6 +62,9 @@ namespace KerbalConstructionTime
         [KSPField(isPersistant = true)]
         public BuildListVessel RecoveredVessel = new BuildListVessel();
 
+        [KSPField(isPersistant = true)]
+        public PersistentList<PartCrewAssignment> LaunchedCrew = new PersistentList<PartCrewAssignment>();
+
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
         public override void OnAwake()

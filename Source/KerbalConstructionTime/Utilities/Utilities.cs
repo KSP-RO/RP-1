@@ -678,7 +678,7 @@ namespace KerbalConstructionTime
             };
 
             double usedShipsCost = editableShip.GetTotalCost();
-            foreach (BuildListVessel v in KCTGameStates.MergedVessels)
+            foreach (BuildListVessel v in KerbalConstructionTimeData.Instance.MergedVessels)
             {
                 usedShipsCost += v.GetTotalCost();
                 v.RemoveFromBuildList(out _);
@@ -750,7 +750,7 @@ namespace KerbalConstructionTime
             double origTotalBP;
             double oldProgressBP;
 
-            if (KCTGameStates.MergedVessels.Count == 0)
+            if (KerbalConstructionTimeData.Instance.MergedVessels.Count == 0)
             {
                 origTotalBP = ship.buildPoints + ship.integrationPoints;
                 oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
@@ -758,12 +758,12 @@ namespace KerbalConstructionTime
             else
             {
                 double totalEffectiveCost = ship.effectiveCost;
-                foreach (BuildListVessel v in KCTGameStates.MergedVessels)
+                foreach (BuildListVessel v in KerbalConstructionTimeData.Instance.MergedVessels)
                 {
                     totalEffectiveCost += v.effectiveCost;
                 }
 
-                origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KCTGameStates.MergedVessels) + Formula.GetVesselBuildPoints(totalEffectiveCost);
+                origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KerbalConstructionTimeData.Instance.MergedVessels) + Formula.GetVesselBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.GeneralSettings.MergingTimePenalty);
             }
 

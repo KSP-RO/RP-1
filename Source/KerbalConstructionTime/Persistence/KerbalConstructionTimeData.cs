@@ -65,6 +65,9 @@ namespace KerbalConstructionTime
         [KSPField(isPersistant = true)]
         public PersistentList<PartCrewAssignment> LaunchedCrew = new PersistentList<PartCrewAssignment>();
 
+        public bool MergingAvailable;
+        public List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
+
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
         public override void OnAwake()

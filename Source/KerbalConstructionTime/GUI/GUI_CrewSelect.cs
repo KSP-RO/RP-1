@@ -75,11 +75,11 @@ namespace KerbalConstructionTime
                 Part p = _parts[j];
                 if (p.CrewCapacity == 0) continue;
 
-                List<CrewMemberAssignment> launchedCrew = KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID)?.CrewList;
+                List<CrewMemberAssignment> launchedCrew = KerbalConstructionTimeData.Instance.LaunchedCrew.Find(part => part.PartID == p.craftID)?.CrewList;
                 if (launchedCrew == null)
                 {
                     launchedCrew = new List<CrewMemberAssignment>();
-                    KCTGameStates.LaunchedCrew.Add(new PartCrewAssignment(p.craftID, launchedCrew));
+                    KerbalConstructionTimeData.Instance.LaunchedCrew.Add(new PartCrewAssignment(p.craftID, launchedCrew));
                 }
 
                 
@@ -112,7 +112,7 @@ namespace KerbalConstructionTime
                                 }
                             }
                         }
-                        else if (launchedCrew[i] == null)
+                        else if (launchedCrew[i].PCM == null)
                         {
                             if (_possibleCrewForPart.Count > 0)
                             {
@@ -137,7 +137,7 @@ namespace KerbalConstructionTime
                 for (int i = 0; i < p.CrewCapacity; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    if (i < launchedCrew.Count && launchedCrew[i] != null)
+                    if (i < launchedCrew.Count && launchedCrew[i].PCM != null)
                     {
                         foundAssignableCrew = true;
                         ProtoCrewMember kerbal = launchedCrew[i].PCM;
@@ -156,7 +156,7 @@ namespace KerbalConstructionTime
                         if (GUILayout.Button("Remove", UIHolder.Width(120)))
                         {
                             launchedCrew[i].PCM.rosterStatus = ProtoCrewMember.RosterStatus.Available;
-                            launchedCrew[i] = null;
+                            launchedCrew[i].PCM = null;
                             _availableCrew = GetAvailableCrew(string.Empty);
                         }
                     }
@@ -208,7 +208,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowShipRoster = false;
                 GUIStates.ShowBuildList = true;
                 KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
-                KCTGameStates.LaunchedCrew.Clear();
+                KerbalConstructionTimeData.Instance.LaunchedCrew.Clear();
                 _crewListWindowPosition.height = 1;
                 _availableCrew = null;
                 _possibleCrewForPart.Clear();
@@ -222,7 +222,7 @@ namespace KerbalConstructionTime
 
         private static void RemoveAllCrewFromPods()
         {
-            foreach (PartCrewAssignment cp in KCTGameStates.LaunchedCrew)
+            foreach (PartCrewAssignment cp in KerbalConstructionTimeData.Instance.LaunchedCrew)
             {
                 cp.CrewList.Clear();
             }
@@ -245,7 +245,7 @@ namespace KerbalConstructionTime
 
                     for (int i = 0; i < p.CrewCapacity; i++)
                     {
-                        if (KCTGameStates.LaunchedCrew[j].CrewList.Count <= i)
+                        if (KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList.Count <= i)
                         {
                             if (_possibleCrewForPart.Count > 0)
                             {
@@ -253,14 +253,14 @@ namespace KerbalConstructionTime
                                 ProtoCrewMember crewMember = _possibleCrewForPart[index];
                                 if (crewMember != null)
                                 {
-                                    KCTGameStates.LaunchedCrew[j].CrewList.Add(new CrewMemberAssignment(crewMember));
+                                    KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList.Add(new CrewMemberAssignment(crewMember));
                                     _possibleCrewForPart.RemoveAt(index);
                                     if (_possibleCrewForPart != _availableCrew)
                                         _availableCrew.Remove(crewMember);
                                 }
                             }
                         }
-                        else if (KCTGameStates.LaunchedCrew[j].CrewList[i] == null)
+                        else if (KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList[i].PCM == null)
                         {
                             if (_possibleCrewForPart.Count > 0)
                             {
@@ -268,7 +268,7 @@ namespace KerbalConstructionTime
                                 ProtoCrewMember crewMember = _possibleCrewForPart[index];
                                 if (crewMember != null)
                                 {
-                                    KCTGameStates.LaunchedCrew[j].CrewList[i] = new CrewMemberAssignment(crewMember);
+                                    KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList[i] = new CrewMemberAssignment(crewMember);
                                     _possibleCrewForPart.RemoveAt(index);
                                     if (_possibleCrewForPart != _availableCrew)
                                         _availableCrew.Remove(crewMember);
@@ -390,7 +390,7 @@ namespace KerbalConstructionTime
 
                 if (clickedNautButton)
                 {
-                    List<CrewMemberAssignment> activeCrew = KCTGameStates.LaunchedCrew[_partIndexToCrew].CrewList;
+                    List<CrewMemberAssignment> activeCrew = KerbalConstructionTimeData.Instance.LaunchedCrew[_partIndexToCrew].CrewList;
                     if (activeCrew.Count > _indexToCrew)
                     {
                         activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
@@ -406,7 +406,7 @@ namespace KerbalConstructionTime
                         activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
                     }
                     _rosterForCrewSelect.Remove(crew);
-                    KCTGameStates.LaunchedCrew[_partIndexToCrew].CrewList = activeCrew;
+                    KerbalConstructionTimeData.Instance.LaunchedCrew[_partIndexToCrew].CrewList = activeCrew;
                     GUIStates.ShowCrewSelect = false;
                     GUIStates.ShowShipRoster = true;
                     _crewListWindowPosition.height = 1;
@@ -528,16 +528,15 @@ namespace KerbalConstructionTime
         public static void AssignInitialCrew()
         {
             RefreshInventoryAvailability();
-            KCTGameStates.LaunchedCrew.Clear();
+            KerbalConstructionTimeData.Instance.LaunchedCrew.Clear();
             _pseudoParts = KerbalConstructionTimeData.Instance.LaunchedVessel.GetPseudoParts();
             _parts.Clear();
-            KCTGameStates.LaunchedCrew = new List<PartCrewAssignment>();
             foreach (PseudoPart pp in _pseudoParts)
             {
                 Part p = Utilities.GetAvailablePartByName(pp.Name).partPrefab;
                 p.craftID = pp.Uid;
                 _parts.Add(p);
-                KCTGameStates.LaunchedCrew.Add(new PartCrewAssignment(pp.Uid, new List<CrewMemberAssignment>()));
+                KerbalConstructionTimeData.Instance.LaunchedCrew.Add(new PartCrewAssignment(pp.Uid, new List<CrewMemberAssignment>()));
             }
 
             CrewFirstAvailable();
@@ -549,12 +548,12 @@ namespace KerbalConstructionTime
             if (partIndex > -1)
             {
                 Part p = _parts[partIndex];
-                if (KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) == null)
-                    KCTGameStates.LaunchedCrew.Add(new PartCrewAssignment(p.craftID, new List<CrewMemberAssignment>()));
+                if (KerbalConstructionTimeData.Instance.LaunchedCrew.Find(part => part.PartID == p.craftID) == null)
+                    KerbalConstructionTimeData.Instance.LaunchedCrew.Add(new PartCrewAssignment(p.craftID, new List<CrewMemberAssignment>()));
                 _availableCrew = GetAvailableCrew(p.partInfo.name);
                 for (int i = 0; i < p.CrewCapacity; i++)
                 {
-                    if (KCTGameStates.LaunchedCrew[partIndex].CrewList.Count <= i)
+                    if (KerbalConstructionTimeData.Instance.LaunchedCrew[partIndex].CrewList.Count <= i)
                     {
                         if (_availableCrew.Count > 0)
                         {
@@ -562,17 +561,17 @@ namespace KerbalConstructionTime
                             ProtoCrewMember crewMember = _availableCrew[index];
                             if (crewMember != null)
                             {
-                                KCTGameStates.LaunchedCrew[partIndex].CrewList.Add(new CrewMemberAssignment(crewMember));
+                                KerbalConstructionTimeData.Instance.LaunchedCrew[partIndex].CrewList.Add(new CrewMemberAssignment(crewMember));
                                 _availableCrew.RemoveAt(index);
                             }
                         }
                     }
-                    else if (KCTGameStates.LaunchedCrew[partIndex].CrewList[i] == null)
+                    else if (KerbalConstructionTimeData.Instance.LaunchedCrew[partIndex].CrewList[i].PCM == null)
                     {
                         if (_availableCrew.Count > 0)
                         {
                             int index = AssignRandomCrew ? new System.Random().Next(_availableCrew.Count) : 0;
-                            KCTGameStates.LaunchedCrew[partIndex].CrewList[i] = new CrewMemberAssignment(_availableCrew[index]);
+                            KerbalConstructionTimeData.Instance.LaunchedCrew[partIndex].CrewList[i] = new CrewMemberAssignment(_availableCrew[index]);
                             _availableCrew.RemoveAt(index);
                         }
                     }
@@ -601,7 +600,7 @@ namespace KerbalConstructionTime
                 {
                     if (crewMember.rosterStatus == ProtoCrewMember.RosterStatus.Available && !crewMember.inactive)
                     {
-                        foreach (PartCrewAssignment cP in KCTGameStates.LaunchedCrew)
+                        foreach (PartCrewAssignment cP in KerbalConstructionTimeData.Instance.LaunchedCrew)
                         {
                             if (cP.CrewList.Any(c => c?.PCM == crewMember))
                             {
@@ -622,7 +621,7 @@ namespace KerbalConstructionTime
                 bool available = true;
                 if (crewMember.rosterStatus == ProtoCrewMember.RosterStatus.Available && !crewMember.inactive)
                 {
-                    foreach (PartCrewAssignment cP in KCTGameStates.LaunchedCrew)
+                    foreach (PartCrewAssignment cP in KerbalConstructionTimeData.Instance.LaunchedCrew)
                     {
                         if (cP.CrewList.Any(c => c?.PCM == crewMember))
                         {
@@ -642,7 +641,7 @@ namespace KerbalConstructionTime
 
         private static void CheckTanksAndLaunch(bool fillTanks)
         {
-            foreach (PartCrewAssignment crewedPart in KCTGameStates.LaunchedCrew)
+            foreach (PartCrewAssignment crewedPart in KerbalConstructionTimeData.Instance.LaunchedCrew)
             {
                 foreach (CrewMemberAssignment assign in crewedPart.CrewList)
                 {

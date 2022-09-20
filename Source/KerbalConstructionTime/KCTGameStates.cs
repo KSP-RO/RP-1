@@ -17,7 +17,6 @@ namespace KerbalConstructionTime
         public static List<KSCItem> KSCs => KerbalConstructionTimeData.Instance?.KSCs ?? _EmptyKSCs;
         public static bool MergingAvailable;
         public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
-        public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
         public const int VERSION = 20;
 
         public static ToolbarControl ToolbarControl;

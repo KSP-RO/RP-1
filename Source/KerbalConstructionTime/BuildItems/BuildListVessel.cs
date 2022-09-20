@@ -538,7 +538,7 @@ namespace KerbalConstructionTime
             }
 
             Utilities.CleanupDebris(launchSiteName);
-            if (KCTGameStates.AirlaunchParams != null) KCTGameStates.AirlaunchParams.KSPVesselId = null;
+            KerbalConstructionTimeData.Instance.AirlaunchParams.KSPVesselId = Guid.Empty;
             FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
         }
 

@@ -37,6 +37,10 @@ namespace KerbalConstructionTime
 
         public static void DrawShipRoster(int windowID)
         {
+            // This window can stay alive during scene transition
+            if (KerbalConstructionTimeData.Instance == null)
+                return;
+
             System.Random rand = new System.Random();
             GUILayout.BeginVertical(GUILayout.ExpandHeight(true), UIHolder.MaxHeight(Screen.height / 2));
             GUILayout.BeginHorizontal();

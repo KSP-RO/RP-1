@@ -262,14 +262,14 @@ namespace KerbalConstructionTime
 
         private static void RenderEditMode()
         {
-            BuildListVessel ship = KCTGameStates.EditedVessel;
-            
-            Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
+            BuildListVessel editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
+
+            Utilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
-            double rate = Utilities.GetBuildRate(0, ship.Type, ship.LC, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
-                * ship.LC.Efficiency * ship.LC.StrategyRateMultiplier;
+            double rate = Utilities.GetBuildRate(0, editedVessel.Type, editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+                * editedVessel.LC.Efficiency * editedVessel.LC.StrategyRateMultiplier;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Time at ");
@@ -289,8 +289,8 @@ namespace KerbalConstructionTime
             {
                 GUILayout.EndHorizontal();
                 double bp = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
-                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(ship.LC, KerbalConstructionTime.Instance.EditorVessel.mass, bp, KerbalConstructionTime.Instance.EditorVessel.humanRated)
-                    * ship.LC.Efficiency * ship.LC.StrategyRateMultiplier);
+                double buildRateCapped = Math.Min(bR, Utilities.GetBuildRate(editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.mass, bp, KerbalConstructionTime.Instance.EditorVessel.humanRated)
+                    * editedVessel.LC.Efficiency * editedVessel.LC.StrategyRateMultiplier);
                 GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(bp - newProgressBP) / buildRateCapped, 0, false));
 
                 if (KCTGameStates.EditorRolloutTime > 0)
@@ -319,7 +319,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Edits"))
             {
-                Utilities.TrySaveShipEdits(ship);
+                Utilities.TrySaveShipEdits(editedVessel);
             }
             if (GUILayout.Button("Cancel Edits"))
             {
@@ -337,8 +337,8 @@ namespace KerbalConstructionTime
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
 
-                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
-                KCTGameStates.LaunchedVessel.LCID = ship.LC.ID;
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
+                KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = editedVessel.LC.ID; // should already be correct, but just in case.
             }
             GUILayout.EndHorizontal();
 

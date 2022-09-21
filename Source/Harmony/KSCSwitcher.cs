@@ -10,7 +10,7 @@ namespace RP0.Harmony
     {
         internal static readonly System.Type KSCSwitcherType = AccessTools.TypeByName("regexKSP.KSCSwitcher");
 
-        internal static MethodBase TargetMethod() => KSCSwitcherType?.GetMethod("SetSite", AccessTools.all);
+        internal static MethodBase TargetMethod() => KSCSwitcherType == null ? null : AccessTools.Method(KSCSwitcherType, "SetSite", new System.Type[] { typeof(ConfigNode) });
 
         [HarmonyPrepare]
         internal static bool Prepare()

@@ -64,12 +64,14 @@
     <Compile Include="DataTypes\PersistentSortedList.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
     <Compile Include="Harmony\EditorDriver.cs" />
+    <Compile Include="Harmony\KSCSwitcher.cs" />
     <Compile Include="Harmony\EditorExtensionsRedux.cs" />
     <Compile Include="Harmony\EngineersReport.cs" />
     <Compile Include="Harmony\CostWidget.cs" />
     <Compile Include="Harmony\LoadGameDialog.cs" />
     <Compile Include="Harmony\PlayerProfileInfo.cs" />
     <Compile Include="Harmony\KSCFacilityContextMenu.cs" />
+    <Compile Include="Harmony\LaunchSiteFacility.cs" />
     <Compile Include="Harmony\RDTechTree.cs" />
     <Compile Include="Harmony\RDTech.cs" />
     <Compile Include="Harmony\ScienceSubjectWidget.cs" />

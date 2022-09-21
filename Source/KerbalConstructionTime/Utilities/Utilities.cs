@@ -15,7 +15,6 @@ namespace KerbalConstructionTime
 {
     public static class Utilities
     {
-        private static bool? _isKSCSwitcherInstalled = null;
         private static bool? _isPrincipiaInstalled = null;
         private static bool? _isTestFlightInstalled = null;
         private static bool? _isTestLiteInstalled = null;
@@ -24,14 +23,8 @@ namespace KerbalConstructionTime
         private static PropertyInfo _piTFSettingsEnabled;
         private static Type _tlSettingsType;
         private static FieldInfo _fiTLSettingsDisabled;
-        private static FieldInfo _fiKSCSwInstance;
-        private static FieldInfo _fiKSCSwSites;
-        private static FieldInfo _fiKSCSwLastSite;
-        private static FieldInfo _fiKSCSwDefaultSite;
 
         private static DateTime _startedFlashing;
-        internal const string _legacyDefaultKscId = "Stock";
-        internal const string _defaultKscId = "us_cape_canaveral";
         internal const string _iconPath = "RP-0/PluginData/Icons/";
         internal const string _icon_KCT_Off_24 = _iconPath + "KCT_off-24";
         internal const string _icon_KCT_Off_38 = _iconPath + "KCT_off-38";
@@ -954,35 +947,6 @@ namespace KerbalConstructionTime
             return EditorDriver.ValidLaunchSites;
         }
 
-        public static bool IsKSCSwitcherInstalled
-        {
-            get
-            {
-                if (!_isKSCSwitcherInstalled.HasValue)
-                {
-                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KSCSwitcher", StringComparison.OrdinalIgnoreCase))?.assembly;
-                    _isKSCSwitcherInstalled = a != null;
-                    if (_isKSCSwitcherInstalled.Value)
-                    {
-                        Type t = a.GetType("regexKSP.KSCLoader");
-                        _fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
-                        _fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-
-                        t = a.GetType("regexKSP.KSCSiteManager");
-                        _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-                        _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-
-                        if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
-                        {
-                            KCTDebug.LogError("Failed to bind to KSCSwitcher");
-                            _isKSCSwitcherInstalled = false;
-                        }
-                    }
-                }
-                return _isKSCSwitcherInstalled.Value;
-            }
-        }
-
         public static bool IsPrincipiaInstalled
         {
             get
@@ -993,61 +957,6 @@ namespace KerbalConstructionTime
                 }
                 return _isPrincipiaInstalled.Value;
             }
-        }
-
-        public static string GetActiveRSSKSC()
-        {
-            if (!IsKSCSwitcherInstalled) return null;
-
-            // get the LastKSC.KSCLoader.instance object
-            // check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
-
-            object loaderInstance = _fiKSCSwInstance.GetValue(null);
-            if (loaderInstance == null)
-                return null;
-            object sites = _fiKSCSwSites.GetValue(loaderInstance);
-            string lastSite = _fiKSCSwLastSite.GetValue(sites) as string;
-
-            if (lastSite == string.Empty)
-                lastSite = _fiKSCSwDefaultSite.GetValue(sites) as string;
-            return lastSite;
-        }
-
-        public static void SetActiveKSCToRSS()
-        {
-            Profiler.BeginSample("KCT SetActiveKSCToRSS");
-            string site = GetActiveRSSKSC();
-            SetActiveKSC(site);
-            Profiler.EndSample();
-        }
-
-        public static void SetActiveKSC(string site)
-        {
-            if (string.IsNullOrEmpty(site))
-                site = _defaultKscId;
-            if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
-            {
-                KCTDebug.Log($"Setting active site to {site}");
-                KSCItem newKsc = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
-                if (newKsc != null)
-                {
-                    SetActiveKSC(newKsc);
-                }
-                else
-                {
-                    newKsc = new KSCItem(site);
-                    newKsc.EnsureStartingLaunchComplexes();
-                    KCTGameStates.KSCs.Add(newKsc);
-                    SetActiveKSC(newKsc);
-                }
-            }
-        }
-
-        public static void SetActiveKSC(KSCItem ksc)
-        {
-            if (ksc == null) return;
-
-            KerbalConstructionTimeData.Instance.ActiveKSC = ksc;
         }
 
         public static PQSCity FindKSC(CelestialBody home)

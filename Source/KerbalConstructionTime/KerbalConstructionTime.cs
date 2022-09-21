@@ -400,20 +400,6 @@ namespace KerbalConstructionTime
             }
         }
 
-        public void Update()
-        {
-            // Move constantly-checked things that don't need physics precision to here.
-            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
-                Utilities.SetActiveKSCToRSS();
-
-            if (!KCT_GUI.IsPrimarilyDisabled && HighLogic.LoadedScene == GameScenes.SPACECENTER &&
-                VesselSpawnDialog.Instance?.Visible == true)
-            {
-                VesselSpawnDialog.Instance.ButtonClose();
-                KCTDebug.Log("Attempting to close spawn dialog!");
-            }
-        }
-
         public void FixedUpdate()
         {
             if (Utilities.CurrentGameIsMission()) return;
@@ -682,9 +668,12 @@ namespace KerbalConstructionTime
 
             //The following should only be executed when fully enabled for the save
 
-            if (KCTGameStates.ActiveKSC == null)
+            if (KerbalConstructionTimeData.Instance.ActiveKSC == null)
             {
-                Utilities.SetActiveKSCToRSS();
+                // This should not be hit, because either KSCSwitcher's LastKSC loads after KCTData
+                // or KCTData loads first and the harmony patch runs.
+                // But I'm leaving it here just in case.
+                KerbalConstructionTimeData.Instance.SetActiveKSCToRSS();
             }
 
             KCTDebug.Log("Checking vessels for missing parts.");
@@ -767,33 +756,6 @@ namespace KerbalConstructionTime
                     KCT_GUI.GUIStates.ShowFirstRun = true;
                 }
 
-                foreach (KSCItem ksc in KCTGameStates.KSCs)
-                {
-                    foreach (LCItem currentLC in ksc.LaunchComplexes)
-                    {
-                        for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
-                        {
-                            ReconRollout rr = currentLC.Recon_Rollout[i];
-                            if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning && Utilities.FindBLVesselByID(rr.LC, new Guid(rr.associatedID)) == null)
-                            {
-                                KCTDebug.Log($"Invalid Recon_Rollout at {ksc.KSCName}. ID {rr.associatedID} not found.");
-                                currentLC.Recon_Rollout.Remove(rr);
-                                i--;
-                            }
-                        }
-
-                        for (int i = 0; i < currentLC.Airlaunch_Prep.Count; i++)
-                        {
-                            AirlaunchPrep ap = currentLC.Airlaunch_Prep[i];
-                            if (Utilities.FindBLVesselByID(ap.LC, new Guid(ap.associatedID)) == null)
-                            {
-                                KCTDebug.Log($"Invalid KCT_AirlaunchPrep at {ksc.KSCName}. ID {ap.associatedID} not found.");
-                                currentLC.Airlaunch_Prep.Remove(ap);
-                                i--;
-                            }
-                        }
-                    }
-                }
                 KCTDebug.Log("SP done");
             }
 

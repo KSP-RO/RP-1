@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Reflection;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
@@ -183,7 +183,7 @@ namespace KerbalConstructionTime
                         {
                             if (KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
                                 KSCs.Add(loaded_KSC);
-                            foundStockKSC |= string.Equals(loaded_KSC.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
+                            foundStockKSC |= string.Equals(loaded_KSC.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                 }
@@ -192,7 +192,7 @@ namespace KerbalConstructionTime
                     // Normal loading: we've already loaded all KSCs.
                     foreach (var ksc in KSCs)
                     {
-                        if (ksc.KSCName.Length > 0 && string.Equals(ksc.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase))
+                        if (ksc.KSCName.Length > 0 && string.Equals(ksc.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase))
                         {
                             foundStockKSC = true;
                             break;
@@ -200,7 +200,7 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                Utilities.SetActiveKSCToRSS();
+                SetActiveKSCToRSS();
                 if (foundStockKSC)
                     TryMigrateStockKSC();
 
@@ -247,12 +247,12 @@ namespace KerbalConstructionTime
 
         private void TryMigrateStockKSC()
         {
-            KSCItem stockKsc = KSCs.Find(k => string.Equals(k.KSCName, Utilities._legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
+            KSCItem stockKsc = KSCs.Find(k => string.Equals(k.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
             if (KSCs.Count == 1)
             {
                 // Rename the stock KSC to the new default (Cape)
-                stockKsc.KSCName = Utilities._defaultKscId;
-                Utilities.SetActiveKSC(stockKsc.KSCName);
+                stockKsc.KSCName = _defaultKscId;
+                SetActiveKSC(stockKsc.KSCName);
                 return;
             }
 
@@ -260,30 +260,30 @@ namespace KerbalConstructionTime
             {
                 // Nothing provisioned into the stock KSC so it's safe to just delete it
                 KSCs.Remove(stockKsc);
-                Utilities.SetActiveKSCToRSS();
+                SetActiveKSCToRSS();
                 return;
             }
 
             int numOtherUsedKSCs = KSCs.Count(k => !k.IsEmpty && k != stockKsc);
             if (numOtherUsedKSCs == 0)
             {
-                string kscName = Utilities.GetActiveRSSKSC() ?? Utilities._defaultKscId;
+                string kscName = GetActiveRSSKSC() ?? _defaultKscId;
                 KSCItem newDefault = KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
                 if (newDefault != null)
                 {
                     // Stock KSC isn't empty but the new default one is - safe to rename the stock and remove the old default item
                     stockKsc.KSCName = newDefault.KSCName;
                     KSCs.Remove(newDefault);
-                    Utilities.SetActiveKSC(stockKsc);
+                    SetActiveKSC(stockKsc);
                     return;
                 }
             }
 
             // Can't really do anything if there's multiple KSCs in use.
-            if (!Utilities.IsKSCSwitcherInstalled)
+            if (!IsKSCSwitcherInstalled)
             {
                 // Need to switch back to the legacy "Stock" KSC if KSCSwitcher isn't installed
-                Utilities.SetActiveKSC(stockKsc.KSCName);
+                SetActiveKSC(stockKsc.KSCName);
             }
         }
 
@@ -343,6 +343,100 @@ namespace KerbalConstructionTime
         public bool UnregsiterLP(KCT_LaunchPad lp)
         {
             return _LPIDtoLP.Remove(lp.id);
+        }
+
+        #region KSCSwitcher section
+
+        private static bool? _isKSCSwitcherInstalled = null;
+        private static FieldInfo _fiKSCSwInstance;
+        private static FieldInfo _fiKSCSwSites;
+        private static FieldInfo _fiKSCSwLastSite;
+        private static FieldInfo _fiKSCSwDefaultSite;
+        private const string _legacyDefaultKscId = "Stock";
+        private const string _defaultKscId = "us_cape_canaveral";
+
+        private static bool IsKSCSwitcherInstalled
+        {
+            get
+            {
+                if (!_isKSCSwitcherInstalled.HasValue)
+                {
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KSCSwitcher", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isKSCSwitcherInstalled = a != null;
+                    if (_isKSCSwitcherInstalled.Value)
+                    {
+                        Type t = a.GetType("regexKSP.KSCLoader");
+                        _fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
+                        _fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                        t = a.GetType("regexKSP.KSCSiteManager");
+                        _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                        _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                        if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
+                        {
+                            KCTDebug.LogError("Failed to bind to KSCSwitcher");
+                            _isKSCSwitcherInstalled = false;
+                        }
+                    }
+                }
+                return _isKSCSwitcherInstalled.Value;
+            }
+        }
+
+        private string GetActiveRSSKSC()
+        {
+            if (!IsKSCSwitcherInstalled) return null;
+
+            // get the LastKSC.KSCLoader.instance object
+            // check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
+
+            object loaderInstance = _fiKSCSwInstance.GetValue(null);
+            if (loaderInstance == null)
+                return null;
+            object sites = _fiKSCSwSites.GetValue(loaderInstance);
+            string lastSite = _fiKSCSwLastSite.GetValue(sites) as string;
+
+            if (lastSite == string.Empty)
+                lastSite = _fiKSCSwDefaultSite.GetValue(sites) as string;
+            return lastSite;
+        }
+
+        #endregion
+
+        public void SetActiveKSCToRSS()
+        {
+            string site = GetActiveRSSKSC();
+            SetActiveKSC(site);
+        }
+
+        public void SetActiveKSC(string site)
+        {
+            if (site == null || site.Length == 0)
+                site = _defaultKscId;
+            if (ActiveKSC == null || site != ActiveKSC.KSCName)
+            {
+                KCTDebug.Log($"Setting active site to {site}");
+                KSCItem newKsc = KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                if (newKsc == null)
+                {
+                    newKsc = new KSCItem(site);
+                    newKsc.EnsureStartingLaunchComplexes();
+                    KSCs.Add(newKsc);
+                }
+
+                SetActiveKSC(newKsc);
+            }
+        }
+
+        public void SetActiveKSC(KSCItem ksc)
+        {
+            if (ksc == null || ksc == ActiveKSC)
+                return;
+
+            // TODO: Allow setting KSC outside the tracking station
+            // which will require doing some work on KSC switch
+            ActiveKSC = ksc;
         }
     }
 }

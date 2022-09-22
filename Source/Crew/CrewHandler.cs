@@ -63,9 +63,6 @@ namespace RP0.Crew
         private HashSet<string> _toRemove = new HashSet<string>();
         private Dictionary<string, Tuple<TrainingTemplate, TrainingTemplate>> _partSynsHandled = new Dictionary<string, Tuple<TrainingTemplate, TrainingTemplate>>();
         private bool _isFirstLoad = true;    // true if it's a freshly started career
-        private bool _inAC = false;
-        private int _countAvailable, _countAssigned, _countKIA;
-        private AstronautComplex _astronautComplex = null;
 
         private static readonly Dictionary<CrewListItem, bool> _storedCrewListItemMouseovers = new Dictionary<CrewListItem, bool>();
         private static readonly List<UIListItem> _crewList = new List<UIListItem>();
@@ -90,11 +87,10 @@ namespace RP0.Crew
 
         private void LockCrewItems(bool shouldLock)
         {
-            AstronautComplex[] mbs = FindObjectsOfType<AstronautComplex>();
-            if (mbs.Length != 1)
-                return;
+            AstronautComplex ac = Harmony.PatchAstronautComplex.Instance;
 
-            AstronautComplex ac = mbs[0];
+            if (ac == null)
+                return;
 
             if (shouldLock)
             {
@@ -143,8 +139,6 @@ namespace RP0.Crew
 
             GameEvents.onVesselRecoveryProcessing.Add(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
-            GameEvents.onGUIAstronautComplexSpawn.Add(ACSpawn);
-            GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
             GameEvents.OnPartPurchased.Add(new EventData<AvailablePart>.OnEvent(OnPartPurchased));
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
@@ -261,19 +255,12 @@ namespace RP0.Crew
                 _isFirstLoad = false;
                 ProcessFirstLoad();
             }
-
-            if (_inAC)
-            {
-                FixAstronauComplexUI();
-            }
         }
 
         public void OnDestroy()
         {
             GameEvents.onVesselRecoveryProcessing.Remove(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
-            GameEvents.onGUIAstronautComplexSpawn.Remove(ACSpawn);
-            GameEvents.onGUIAstronautComplexDespawn.Remove(ACDespawn);
             GameEvents.OnPartPurchased.Remove(new EventData<AvailablePart>.OnEvent(OnPartPurchased));
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
@@ -481,18 +468,6 @@ namespace RP0.Crew
 
             _retireTimes[pcmName] = GetRetireTime(pcmName) + retireOffset;
             return retireOffset;
-        }
-
-        private void ACSpawn()
-        {
-            _inAC = true;
-            _countAvailable = _countKIA = -1;
-        }
-
-        private void ACDespawn()
-        {
-            _inAC = false;
-            _astronautComplex = null;
         }
 
         private void LoadSettings(ConfigNode n)
@@ -840,102 +815,18 @@ namespace RP0.Crew
                  UtilMath.Lerp(Settings.retireStupidMin, Settings.retireStupidMax, pcm.stupidity)));
         }
 
-        private void FixAstronauComplexUI()
+        public double GetTrainingFinishTime(ProtoCrewMember pcm)
         {
-            if (_astronautComplex == null)
+            for (int i = TrainingCourses.Count; i-- > 0;)
             {
-                AstronautComplex[] mbs = FindObjectsOfType<AstronautComplex>();
-                int maxCount = -1;
-                foreach (AstronautComplex c in mbs)
-                {
-                    int count = c.ScrollListApplicants.Count + c.ScrollListAssigned.Count + c.ScrollListAvailable.Count + c.ScrollListKia.Count;
-                    if (count > maxCount)
-                    {
-                        maxCount = count;
-                        _astronautComplex = c;
-                    }
-                }
-
-                if (_astronautComplex == null)
-                    return;
+                if (TrainingCourses[i].Students.Contains(pcm))
+                    return TrainingCourses[i].GetTimeLeft() + KSPUtils.GetUT();
             }
-            int newAv = _astronautComplex.ScrollListAvailable.Count;
-            int newAsgn = _astronautComplex.ScrollListAssigned.Count;
-            int newKIA = _astronautComplex.ScrollListKia.Count;
-            if (newAv != _countAvailable || newKIA != _countKIA || newAsgn != _countAssigned)
-            {
-                _countAvailable = newAv;
-                _countAssigned = newAsgn;
-                _countKIA = newKIA;
 
-                foreach (UIListData<UIListItem> u in _astronautComplex.ScrollListAvailable)
-                {
-                    CrewListItem cli = u.listItem.GetComponent<CrewListItem>();
-                    if (cli == null) continue;
-
-                    FixTooltip(cli);
-                    if (cli.GetCrewRef().inactive)
-                    {
-                        cli.MouseoverEnabled = false;
-                        bool notTraining = true;
-                        for (int i = TrainingCourses.Count; i-- > 0 && notTraining;)
-                        {
-                            foreach (ProtoCrewMember pcm in TrainingCourses[i].Students)
-                            {
-                                if (pcm == cli.GetCrewRef())
-                                {
-                                    notTraining = false;
-                                    cli.SetLabel("Training, done " + KSPUtil.PrintDate(TrainingCourses[i].GetTimeLeft() + KSPUtils.GetUT(), false));
-                                    break;
-                                }
-                            }
-                        }
-                        if (notTraining)
-                            cli.SetLabel("Recovering");
-                    }
-                }
-
-                foreach (UIListData<UIListItem> u in _astronautComplex.ScrollListAssigned)
-                {
-                    CrewListItem cli = u.listItem.GetComponent<CrewListItem>();
-                    if (cli != null)
-                    {
-                        FixTooltip(cli);
-                    }
-                }
-
-                foreach (UIListData<UIListItem> u in _astronautComplex.ScrollListKia)
-                {
-                    CrewListItem cli = u.listItem.GetComponent<CrewListItem>();
-                    if (cli != null)
-                    {
-                        if (_retirees.Contains(cli.GetName()))
-                        {
-                            cli.SetLabel("Retired");
-                            cli.MouseoverEnabled = false;
-                        }
-                    }
-                }
-            }
+            return -1d;
         }
 
-        private void FixTooltip(CrewListItem cli)
-        {
-            ProtoCrewMember pcm = cli.GetCrewRef();
-            double retTime;
-            if (RetirementEnabled && (retTime = GetRetireTime(pcm.name)) > 0d)
-            {
-                cli.SetTooltip(pcm);
-                var ttc = cli.tooltipController;
-                // TODO: add flight-high entries here
-                ttc.descriptionString += $"\n\nRetires no earlier than {KSPUtil.PrintDate(retTime, false)}";
-
-                // Training
-                string trainingStr = GetTrainingString(pcm);
-                if (!string.IsNullOrEmpty(trainingStr))
-                    ttc.descriptionString += trainingStr;
-            }
-        }
+        public bool IsRetired(ProtoCrewMember pcm) => _retirees.Contains(pcm.name);
 
         private double GetExpiration(string pcmName, FlightLog.Entry ent)
         {

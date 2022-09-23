@@ -113,6 +113,9 @@ namespace RP0
 
         public virtual bool IsAvailable(double dateDeactivated)
         {
+            if (dateDeactivated < 0d)
+                return false;
+
             // Check deactivation
             double nameDeactivate = ActivatedStrategies.ValueOrDefault(Name);
             double tagDeactivate = 0d;
@@ -124,7 +127,7 @@ namespace RP0
             double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
             if (lastActive > 0d)
             {
-                if (reactivateCooldown == 0d || dateDeactivated < 0d || dateDeactivated + reactivateCooldown > KSPUtils.GetUT())
+                if (reactivateCooldown == 0d || lastActive + reactivateCooldown > KSPUtils.GetUT())
                     return false;
             }
 

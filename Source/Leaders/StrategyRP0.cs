@@ -46,12 +46,12 @@ namespace RP0
         {
             if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).CanAfford())
             {
-                reason = Localizer.GetStringByTag("#rp0_Leaders_Appoint_CannotAfford");
+                reason = Localizer.Format("#rp0_Leaders_Appoint_CannotAfford");
                 return false;
             }
             if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).CanAfford())
             {
-                reason = Localizer.GetStringByTag("##rp0_Leaders_HiringRequirements_Unmet");
+                reason = Localizer.Format("#rp0_Leaders_HiringRequirements_Unmet");
                 return false;
             }
             return true;
@@ -150,7 +150,7 @@ namespace RP0
             // We'll use the ShowExtendedInfo field to signal we need to print title too
             bool wasExtended = ShowExtendedInfo;
             ShowExtendedInfo = extendedInfo;
-            text += RichTextUtil.Title(Localizer.GetStringByTag("#autoLOC_304560"));
+            text += RichTextUtil.Title(Localizer.Format("#autoLOC_304560"));
             foreach (StrategyEffect strategyEffect in Effects)
             {
                 text += "<b><color=#" + RUIutils.ColorToHex(RichTextUtil.colorParams) + ">* " + strategyEffect.Description + "</color></b>\n";
@@ -165,14 +165,14 @@ namespace RP0
                 {
                     if (DateActivated + LeastDuration <= KSPUtils.GetUT())
                     {
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemove"), string.IsNullOrEmpty(costStr) ? Localizer.GetStringByTag("#autoLOC_6002417") : Localizer.Format("#rp0_Generic_Cost", costStr));
+                        text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemove"), string.IsNullOrEmpty(costStr) ? Localizer.Format("#autoLOC_6002417") : Localizer.Format("#rp0_Generic_Cost", costStr));
                     }
                     else
                     {
                         if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
+                            text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
                         else
-                            text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemoveIn"),
+                            text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveIn"),
                                 extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
                                 : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
                     }
@@ -180,9 +180,9 @@ namespace RP0
                 if (LongestDuration > 0)
                 {
                     if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_RetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
+                        text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
                     else
-                        text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_RetiresIn"), 
+                        text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresIn"), 
                             extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false)
                             : KSPUtil.PrintDateDeltaCompact(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false));
                 }
@@ -191,13 +191,13 @@ namespace RP0
             {
                 if (LeastDuration > 0)
                 {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_CanRemoveAfter"),
+                    text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveAfter"),
                         extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
                             : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
                 }
                 if (LongestDuration > 0)
                 {
-                    text += RichTextUtil.TextParam(Localizer.GetStringByTag("#rp0_Leaders_RetiresAfter"),
+                    text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresAfter"),
                         extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration, false, false)
                             : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
                 }
@@ -205,12 +205,12 @@ namespace RP0
                 string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLineOverride(true, true, true, false, "   ");
                 if (costString != string.Empty)
                 {
-                    text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#autoLOC_304612"), costString);
+                    text += RichTextUtil.TextAdvance(Localizer.Format("#autoLOC_304612"), costString);
                 }
                 string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLineOverride(true, true, true, false, "   ");
                 if (requireString != string.Empty)
                 {
-                    text += RichTextUtil.TextAdvance(Localizer.GetStringByTag("#rp0_Leaders_HiringRequirements"), requireString);
+                    text += RichTextUtil.TextAdvance(Localizer.Format("#rp0_Leaders_HiringRequirements"), requireString);
                 }
             }
 

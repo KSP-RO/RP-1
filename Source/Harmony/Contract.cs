@@ -77,7 +77,7 @@ namespace RP0.Harmony
                 }
             }
             if (leaderString != string.Empty)
-                value += "\n" + KSP.Localization.Localizer.GetStringByTag(_isReward ? "#rp0_Leaders_LeadersUnlocked" : "#rp0_Leaders_UnlocksLeader") + leaderString;
+                value += "\n" + KSP.Localization.Localizer.Format(_isReward ? "#rp0_Leaders_LeadersUnlocked" : "#rp0_Leaders_UnlocksLeader") + leaderString;
 
             __result = $"<b><color=#{RUIutils.ColorToHex(RichTextUtil.colorAwards)}>{title}:</color></b> {value}";
             if (lines > 0)

@@ -272,7 +272,7 @@ namespace RP0.Harmony
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
                     string costStr = cmq.GetCostLine(true, true, true, true);
                     if (string.IsNullOrEmpty(costStr))
-                        stateAccept.tooltipText = Localizer.GetStringByTag("#rp0_Admin_AcceptProgram");
+                        stateAccept.tooltipText = Localizer.Format("#rp0_Admin_AcceptProgram");
                     else
                         stateAccept.tooltipText = Localizer.Format("#rp0_Admin_AcceptProgramWithCost", costStr);
                 }
@@ -284,7 +284,7 @@ namespace RP0.Harmony
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (string.IsNullOrEmpty(rewardStr))
-                        state.tooltipText = Localizer.GetStringByTag("#rp0_Admin_CompleteProgram");
+                        state.tooltipText = Localizer.Format("#rp0_Admin_CompleteProgram");
                     else
                         state.tooltipText = Localizer.Format("#rp0_Admin_CompleteProgramWithReward", rewardStr);
                     __instance.btnAcceptCancel.SetState("accept");
@@ -294,8 +294,8 @@ namespace RP0.Harmony
             }
             else
             {
-                tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.GetStringByTag("#rp0_Leaders_Appoint");
-                tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText = Localizer.GetStringByTag("#rp0_Leaders_Remove");
+                tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.Format("#rp0_Leaders_Appoint");
+                tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText = Localizer.Format("#rp0_Leaders_Remove");
                 AdminExtender.Instance.SetSpeedButtonsActive(null);
             }
             AdminExtender.Instance.BtnSpacer.gameObject.SetActive(!Administration.Instance.btnAcceptCancel.gameObject.activeSelf);

@@ -37,7 +37,7 @@ namespace RP0
                 {
                     string desc = BuildAvionicsStats(up.techRequired);
                     if (!string.IsNullOrEmpty(desc))
-                        up.description = Localizer.GetStringByTag("#rp0_Avionics_Upgrade_Text") + desc;
+                        up.description = Localizer.Format("#rp0_Avionics_Upgrade_Text") + desc;
 
                     continue;
                 }
@@ -76,7 +76,7 @@ namespace RP0
                         ModuleProceduralAvionics.GetStatsForTechNode(node, -1f, out float massNew, out float costNew, out float powerNew);
 
                         retStr += "\n" + Localizer.Format("#rp0_Avionics_Upgrade_TextLine",
-                            Localizer.GetStringByTag("#rp0_Avionics_Type_" + avConfig.name),
+                            Localizer.Format("#rp0_Avionics_Type_" + avConfig.name),
                             FormatRatioAsPercent(massNew / massOld),
                             FormatRatioAsPercent(costNew / costOld),
                             FormatRatioAsPercent(powerNew / powerOld),
@@ -124,7 +124,7 @@ namespace RP0
                 if (PresetManager.Instance != null)
                 {
                     int limit = PresetManager.Instance.ActivePreset.ResearcherCaps[lvlIdx];
-                    lvl.levelStats.textBase += $"\n{Localizer.GetStringByTag("#rp0_FacilityContextMenu_RnD_ResearcherLimit")} {(limit == -1 ? "#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited" : limit.ToString("N0"))}";
+                    lvl.levelStats.textBase += $"\n{Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit", (limit == -1 ? Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited") : limit.ToString("N0")))}";
                 }
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex)

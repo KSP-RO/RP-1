@@ -83,7 +83,7 @@ namespace RP0.Programs
             if (active)
             {
                 _speedButtons[program.ProgramSpeed].SetState(UIRadioButton.State.True);
-                _speedOptionsCosts.text = Localizer.GetStringByTag("#rp0_Admin_Program_ConfidenceCost") + costStr;
+                _speedOptionsCosts.text = Localizer.Format("#rp0_Admin_Program_ConfidenceCost") + costStr;
             }
 
             PressedSpeedButton = false; // clear state
@@ -173,11 +173,11 @@ namespace RP0.Programs
                 foreach (var text in child.gameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>())
                 {
                     if (i == 0)
-                        text.text = Localizer.GetStringByTag("#rp0_Admin_ActivePrograms");
+                        text.text = Localizer.Format("#rp0_Admin_ActivePrograms");
                     else if (i == 1)
-                        text.text = Localizer.GetStringByTag("#rp0_Admin_CompletedPrograms");
+                        text.text = Localizer.Format("#rp0_Admin_CompletedPrograms");
                     else
-                        text.text = Localizer.GetStringByTag("#rp0_Leaders_Title");
+                        text.text = Localizer.Format("#rp0_Leaders_Title");
                 }
                 _adminTabToggles[(AdministrationActiveTabView)i] = child.GetComponentInChildren<Toggle>();
             }

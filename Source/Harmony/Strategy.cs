@@ -98,5 +98,26 @@ namespace RP0.Harmony
             }
             return true;
         }
+
+        internal const string _ReplacementString = "</b>\n\n";
+
+        // This patch will start failing when next KSPCF releases, and that's fine.
+        [HarmonyTranspiler]
+        [HarmonyPatch("SendStateMessage")]
+        internal static IEnumerable<CodeInstruction> Transpiler_SendStateMessage(IEnumerable<CodeInstruction> instructions)
+        {
+            List<CodeInstruction> code = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < code.Count; ++i)
+            {
+                // Fix a Squad typo
+                if (code[i].opcode == OpCodes.Ldstr && (code[i].operand as string) == "</>\n\n")
+                {
+                    code[i].operand = _ReplacementString;
+                    break;
+                }
+            }
+
+            return code;
+        }
     }
 }

@@ -359,8 +359,8 @@ namespace RP0.Programs
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "LeaderUnlocked",
-                                             Localizer.GetStringByTag("#rp0_Leaders_LeadersUnlockedTitle"),
-                                             Localizer.GetStringByTag("#rp0_Leaders_LeadersUnlocked") + leaderString,
+                                             Localizer.Format("#rp0_Leaders_LeadersUnlockedTitle"),
+                                             Localizer.Format("#rp0_Leaders_LeadersUnlocked") + leaderString,
                                              Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
                                              HighLogic.UISkin);
@@ -568,7 +568,7 @@ namespace RP0.Programs
                     }
                 }
                 if (leaderString != string.Empty)
-                    text += "\n\n" + Localizer.GetStringByTag("#rp0_Leaders_UnlocksLeader") + leaderString;
+                    text += "\n\n" + Localizer.Format("#rp0_Leaders_UnlocksLeader") + leaderString;
 
                 if (!IsComplete)
                 {

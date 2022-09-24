@@ -77,7 +77,7 @@ namespace RP0.Harmony
                 return;
 
             var cli = __instance.scrollListKia.list.items[__instance.scrollListKia.list.Count - 1].listItem.GetComponent<CrewListItem>();
-            cli.SetLabel(Localizer.GetStringByTag("#rp0_AC_Crew_Status_Retired"));
+            cli.SetLabel(Localizer.Format("#rp0_AC_Crew_Status_Retired"));
             cli.MouseoverEnabled = false;
         }
     }

@@ -422,7 +422,8 @@ namespace KerbalConstructionTime
             const double overallMultiplier = 1.0d;
             const double amountMultiplier = 60d;
             const double tankMultiplier = 1.0d;
-            const double baseTankCostPerL = 0.1d;
+            const double baseTankCostPerL = 0.5d;
+            const double rfTankCostPerLMultiplier = 20d;
             const double modifyMultiplier = 0.6d;
 
             HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
@@ -434,7 +435,7 @@ namespace KerbalConstructionTime
             if (def.tankList.TryGetValue(res, out var tank) && PartResourceLibrary.Instance.GetDefinition(res) is PartResourceDefinition resDef)
             {
                 double tankVol = amount / tank.utilization;
-                double cost = (baseTankCostPerL + tank.cost) * tankVol * tankMultiplier + amount * resDef.unitCost * amountMultiplier;
+                double cost = (baseTankCostPerL + tank.cost * rfTankCostPerLMultiplier) * tankVol * tankMultiplier + amount * resDef.unitCost * amountMultiplier;
                 if (PresetManager.Instance.ActivePreset.PartVariables.Resource_Variables.TryGetValue(res, out double mult))
                     cost *= mult;
 

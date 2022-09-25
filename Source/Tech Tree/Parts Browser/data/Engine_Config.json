@@ -5535,7 +5535,7 @@
         "spacecraft": "",
         "engine_config": "RCS",
         "upgrade": true,
-        "entry_cost_mods": "MMHRCS",
+        "entry_cost_mods": "1000, MMHRCS",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -12185,7 +12185,7 @@
         "spacecraft": "",
         "engine_config": "RCS",
         "upgrade": true,
-        "entry_cost_mods": "BipropRCS",
+        "entry_cost_mods": "1000, BipropRCS",
         "identical_part_name": "",
         "module_tags": []
     },

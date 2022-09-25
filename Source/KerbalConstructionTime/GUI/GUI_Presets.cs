@@ -1,18 +1,13 @@
 ﻿using System;
 using UnityEngine;
-using RP0;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private const int _presetWindowWidth = 900;
-        private const int _presetWindowHeight = 600;
-        private const int _presetNamingWindowWidth = 250;
-        private const int _presetNamingWindowHeight = 50;
-        
-        private static Rect _presetWindowPosition = new Rect((Screen.width-_presetWindowWidth) / 2, (Screen.height-_presetWindowHeight) / 2, _presetWindowWidth, _presetWindowHeight);
-        private static Rect _presetNamingWindowPosition = new Rect((Screen.width - _presetNamingWindowWidth) / 2, (Screen.height - _presetNamingWindowHeight) / 2, _presetNamingWindowWidth, _presetNamingWindowHeight);
+        private const int _presetsWidth = 900, _presetsHeight = 600;
+        private static Rect _presetPosition = new Rect((Screen.width-_presetsWidth) / 2, (Screen.height-_presetsHeight) / 2, _presetsWidth, _presetsHeight);
+        private static Rect _presetNamingWindowPosition = new Rect((Screen.width - 250) / 2, (Screen.height - 50) / 2, 250, 50);
         private static int _presetIndex = -1;
         private static KCT_Preset _workingPreset;
         private static Vector2 _presetScrollView, _presetMainScroll;
@@ -25,7 +20,6 @@ namespace KerbalConstructionTime
         private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms, _cleanUpKSCDebris, _useDates, _inPlaceEdit;
         private static int _newTimewarp;
 
-        // TODO: add scaling
         public static void DrawPresetWindow(int windowID)
         {
             if (_workingPreset == null)
@@ -41,7 +35,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
             GUILayout.Label("Presets", _yellowText, GUILayout.ExpandHeight(false));
             //preset toolbar in a scrollview
-            _presetScrollView = GUILayout.BeginScrollView(_presetScrollView, GUILayout.Width(_presetWindowPosition.width / 6f));
+            _presetScrollView = GUILayout.BeginScrollView(_presetScrollView, GUILayout.Width(_presetPosition.width / 6f)); //TODO: update HighLogic.Skin.textArea
             string[] presetShortNames = PresetManager.Instance.PresetShortNames(true);
             if (_presetIndex == -1)
             {
@@ -112,8 +106,10 @@ namespace KerbalConstructionTime
             GUILayout.EndVertical();
             GUILayout.EndVertical(); //end Features
 
+
             
             GUILayout.EndHorizontal(); //end feature/time setting split
+
             
             GUILayout.EndScrollView();
 

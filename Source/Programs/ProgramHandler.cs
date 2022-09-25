@@ -274,15 +274,12 @@ namespace RP0.Programs
 
         private void WindowFunction(int windowID)
         {
-            var oldSkin = GUI.skin;
-            GUI.skin = UIHolder.RescaledKSPSkin;
-
             using (var scrollScope = new GUILayout.ScrollViewScope(_scrollPos))
             {
                 _scrollPos = scrollScope.scrollPosition;
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"Active programs: {ActivePrograms.Count}/{ActiveProgramLimit}");
+                GUILayout.Label($"Active programs: {ActivePrograms.Count}/{ActiveProgramLimit}", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
                 foreach (Program p in ActivePrograms)
@@ -305,8 +302,6 @@ namespace RP0.Programs
             GUI.DragWindow();
 
             Tooltip.Instance.RecordTooltip(_windowId);
-
-            GUI.skin = oldSkin;
         }
 
         private void DrawProgramSection(Program p)
@@ -316,26 +311,26 @@ namespace RP0.Programs
             bool canAccept = p.CanAccept && p.MeetsConfidenceThreshold;
             bool canComplete = p.CanComplete;
 
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(HighLogic.Skin.box);
             GUILayout.BeginHorizontal();
 
             bool oldIsExpanded = _expandedPrograms.Contains(p.name);
-            bool newIsExpanded = GUILayout.Toggle(oldIsExpanded, "ⓘ", GUILayout.ExpandWidth(false), UIHolder.Height(20));
+            bool newIsExpanded = GUILayout.Toggle(oldIsExpanded, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
             if (oldIsExpanded && !newIsExpanded)
                 _expandedPrograms.Remove(p.name);
             if (newIsExpanded && !oldIsExpanded)
                 _expandedPrograms.Add(p.name);
 
-            GUILayout.Label(p.title, GUILayout.ExpandWidth(true));
+            GUILayout.Label(p.title, HighLogic.Skin.label, GUILayout.ExpandWidth(true));
 
             if (isCompleted)
             {
-                GUILayout.Label("Completed");
+                GUILayout.Label("Completed", HighLogic.Skin.label);
             }
             else if (!isActive)
             {
                 GUI.enabled = ActivePrograms.Count < ActiveProgramLimit;
-                if (GUILayout.Button(canAccept ? "Accept" : "CHTAccept"))
+                if (GUILayout.Button(canAccept ? "Accept" : "CHTAccept", HighLogic.Skin.button))
                 {
                     ActivateProgram(p);
                     if (KSP.UI.Screens.Administration.Instance != null)
@@ -345,7 +340,7 @@ namespace RP0.Programs
             }
             else
             {
-                if (GUILayout.Button(canComplete ? "Complete" : "CHTComplete"))
+                if (GUILayout.Button(canComplete ? "Complete" : "CHTComplete", HighLogic.Skin.button))
                 {
                     CompleteProgram(p);
                     if (KSP.UI.Screens.Administration.Instance != null)
@@ -358,45 +353,45 @@ namespace RP0.Programs
             if (newIsExpanded)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(p.description);
+                GUILayout.Label(p.description, HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Objectives: ");
-                GUILayout.Label(p.objectivesPrettyText);
+                GUILayout.Label("Objectives: ", HighLogic.Skin.label);
+                GUILayout.Label(p.objectivesPrettyText, HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Total funds: ");
-                GUILayout.Label($"{p.TotalFunding:N0}");
+                GUILayout.Label("Total funds: ", HighLogic.Skin.label);
+                GUILayout.Label($"{p.TotalFunding:N0}", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
                 if (isActive || isCompleted)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Funds paid out: ");
-                    GUILayout.Label($"{p.fundsPaidOut:N0}");
+                    GUILayout.Label("Funds paid out: ", HighLogic.Skin.label);
+                    GUILayout.Label($"{p.fundsPaidOut:N0}", HighLogic.Skin.label);
                     GUILayout.EndHorizontal();
                 }
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Nominal duration: ");
-                GUILayout.Label($"{p.DurationYears:0.#} years");
+                GUILayout.Label("Nominal duration: ", HighLogic.Skin.label);
+                GUILayout.Label($"{p.DurationYears:0.#} years", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
                 if (isActive || isCompleted)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Accepted: ");
-                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.acceptedUT, false, false));
+                    GUILayout.Label("Accepted: ", HighLogic.Skin.label);
+                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.acceptedUT, false, false), HighLogic.Skin.label);
                     GUILayout.EndHorizontal();
                 }
 
                 if (isCompleted)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Completed: ");
-                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.completedUT, false, false));
+                    GUILayout.Label("Completed: ", HighLogic.Skin.label);
+                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.completedUT, false, false), HighLogic.Skin.label);
                     GUILayout.EndHorizontal();
                 }
             }

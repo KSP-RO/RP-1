@@ -34,7 +34,7 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
-                GUILayout.Label("Part tooling is disabled");
+                GUILayout.Label("Part tooling is disabled", HighLogic.Skin.label);
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
 
@@ -44,7 +44,7 @@ namespace RP0
             _currentToolingType = null;
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Tooling Types");
+            GUILayout.Label("Tooling Types", HighLogic.Skin.label);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
@@ -58,7 +58,7 @@ namespace RP0
                     GUILayout.BeginHorizontal();
                 }
                 counter++;
-                if (GUILayout.Button(type))
+                if (GUILayout.Button(type, HighLogic.Skin.button))
                     _currentToolingType = type;
             }
             GUILayout.EndHorizontal();
@@ -66,24 +66,21 @@ namespace RP0
             if (_isToolingTempDisabled || _untooledParts.Count > 0)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Untooled Parts:", UIHolder.Width(312));
-                GUILayout.Label("Tooling cost", RightLabel, UIHolder.Width(84));
-                GUILayout.Label("Untooled", RightLabel, UIHolder.Width(72));
-                GUILayout.Label("Tooled", RightLabel, UIHolder.Width(72));
+                GUILayout.Label("Untooled Parts:", HighLogic.Skin.label, GUILayout.Width(312));
+                GUILayout.Label("Tooling cost", RightLabel, GUILayout.Width(72));
+                GUILayout.Label("Untooled", RightLabel, GUILayout.Width(72));
+                GUILayout.Label("Tooled", RightLabel, GUILayout.Width(72));
                 GUILayout.EndHorizontal();
 
-                _untooledTypesScroll = GUILayout.BeginScrollView(_untooledTypesScroll, UIHolder.Height(204), UIHolder.Width(572));
+                _untooledTypesScroll = GUILayout.BeginScrollView(_untooledTypesScroll, GUILayout.Height(204), GUILayout.Width(572));
                 foreach (UntooledPart up in _untooledParts)
                 {
                     GUILayout.BeginHorizontal();
-                    
-                    float pixelHeight = BoldLabel.CalcHeight(new GUIContent(up.Name), 312);
-                    GUILayout.Label(up.Name, BoldLabel, UIHolder.Width(312), GUILayout.Height(pixelHeight));
-                    
-                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -up.ToolingCost):N0}", RightLabel, UIHolder.Width(72));
+                    GUILayout.Label(up.Name, BoldLabel, GUILayout.Width(312));
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -up.ToolingCost):N0}", RightLabel, GUILayout.Width(72));
                     float untooledExtraCost = GetUntooledExtraCost(up);
-                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -up.TotalCost):N0}", RightLabel, UIHolder.Width(72));
-                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -(up.TotalCost - untooledExtraCost)):N0}", RightLabel, UIHolder.Width(72));
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -up.TotalCost):N0}", RightLabel, GUILayout.Width(72));
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -(up.TotalCost - untooledExtraCost)):N0}", RightLabel, GUILayout.Width(72));
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.EndScrollView();
@@ -112,13 +109,13 @@ namespace RP0
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label($"Toolings for type {_currentToolingType}");
+            GUILayout.Label($"Toolings for type {_currentToolingType}", HighLogic.Skin.label);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
             Parameter[] parameters = Parameters.GetParametersForToolingType(_currentToolingType);
             DisplayTypeHeadings(parameters);
-            _toolingTypesScroll = GUILayout.BeginScrollView(_toolingTypesScroll, UIHolder.Width(360), UIHolder.Height(300));
+            _toolingTypesScroll = GUILayout.BeginScrollView(_toolingTypesScroll, GUILayout.Width(360), GUILayout.Height(300));
             try
             {
                 var entries = ToolingDatabase.toolings[_currentToolingType];
@@ -134,7 +131,7 @@ namespace RP0
 
         private static void RenderToolAllButton()
         {
-            if (GUILayout.Button("Tool All"))
+            if (GUILayout.Button("Tool All", HighLogic.Skin.button))
             {
                 GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ToolingPurchase, -toolingCost, 0d, 0d);
@@ -188,7 +185,7 @@ namespace RP0
         private void RenderToolingPreviewButton()
         {
             var c = new GUIContent("Press to preview fully tooled build time & cost", "Hold the button pressed and watch the cost & time values change in the Integration Info window");
-            if (GUILayout.RepeatButton(c))
+            if (GUILayout.RepeatButton(c, HighLogic.Skin.button))
             {
                 if (!_isToolingTempDisabled)
                 {
@@ -264,11 +261,11 @@ namespace RP0
         private void DisplayTypeHeadings(Parameter[] parameters)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label(parameters[0].Title, UIHolder.Width(80));
+            GUILayout.Label(parameters[0].Title, HighLogic.Skin.label, GUILayout.Width(80));
             for (int i = 1; i < parameters.Length; ++i)
             {
-                GUILayout.Label("×");
-                GUILayout.Label(parameters[i].Title, UIHolder.Width(80));
+                GUILayout.Label("×", HighLogic.Skin.label);
+                GUILayout.Label(parameters[i].Title, HighLogic.Skin.label, GUILayout.Width(80));
             }
             GUILayout.EndHorizontal();
         }
@@ -276,11 +273,11 @@ namespace RP0
         private void DisplayRow(float[] values, Parameter[] parameters)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"{values[0]:F3} {parameters[0].Unit}", UIHolder.Width(80));
+            GUILayout.Label($"{values[0]:F3} {parameters[0].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
             for (int i = 1; i < values.Length; ++i)
             {
-                GUILayout.Label("×");
-                GUILayout.Label($"{values[i]:F3} {parameters[i].Unit}", UIHolder.Width(80));
+                GUILayout.Label("×", HighLogic.Skin.label);
+                GUILayout.Label($"{values[i]:F3} {parameters[i].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
             }
             GUILayout.EndHorizontal();
         }

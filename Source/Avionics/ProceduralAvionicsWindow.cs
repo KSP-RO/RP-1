@@ -12,14 +12,13 @@ namespace RP0.ProceduralAvionics
     public partial class ModuleProceduralAvionics
     {
         private static readonly int _windowId = "RP0ProcAviWindow".GetHashCode();
-        private static GUIStyle _styleLabelMultiline, _styleInfoButton;
 
         [KSPField]
         public string info1Text = string.Empty;
         [KSPField]
         public string info3Text = string.Empty;
 
-        private Rect _windowRect = new Rect(267, 104, 400*UIHolder.UIScale, 300*UIHolder.UIScale);
+        private Rect _windowRect = new Rect(267, 104, 400, 300);
         private GUIContent _gc;
         private string[] _avionicsConfigNames;
         private int _selectedConfigIndex = 0;
@@ -46,10 +45,10 @@ namespace RP0.ProceduralAvionics
 
                 if (_shouldResetUIHeight && Event.current.type == EventType.Layout)
                 {
-                    _windowRect.height = 300 * UIHolder.UIScale;
+                    _windowRect.height = 300;
                     _shouldResetUIHeight = false;
                 }
-                _windowRect = ClickThruBlocker.GUILayoutWindow(_windowId, _windowRect, WindowFunction, "Configure Procedural Avionics", UIHolder.RescaledKSPSkin.window);
+                _windowRect = ClickThruBlocker.GUILayoutWindow(_windowId, _windowRect, WindowFunction, "Configure Procedural Avionics", HighLogic.Skin.window);
                 Tooltip.Instance.ShowTooltip(_windowId, contentAlignment: TextAnchor.MiddleLeft);
             }
         }
@@ -57,13 +56,10 @@ namespace RP0.ProceduralAvionics
 
         private void WindowFunction(int windowID)
         {
-            // overwrite the standard skin with our own rescaled version
-            var oldSkin = GUI.skin;
-            GUI.skin = UIHolder.RescaledSkin;
-            
             GUILayout.BeginHorizontal();
+
             bool oldShowInfo = _showInfo1;
-            _showInfo1 = GUILayout.Toggle(_showInfo1, "ⓘ", GetInfoButton(UIHolder.RescaledKSPSkin.button), GUILayout.ExpandWidth(false), UIHolder.Height(20));
+            _showInfo1 = GUILayout.Toggle(_showInfo1, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
             if (oldShowInfo != _showInfo1)
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
@@ -72,19 +68,13 @@ namespace RP0.ProceduralAvionics
             }
 
             if (_showInfo1)
-            {
-                _gc ??= new GUIContent();
-                _gc.text = info1Text;
-                var multilineStyle = GetMultiline(GUI.skin.label);
-                var height = multilineStyle.CalcHeight(_gc, 400*UIHolder.UIScale);
-                GUILayout.Label(info1Text, multilineStyle, GUILayout.MinHeight(height), GUILayout.ExpandHeight(true));
-            }
+                GUILayout.Label(info1Text);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginVertical(UIHolder.RescaledKSPSkin.box);
-            GUILayout.Label("Choose the avionics type:", UIHolder.RescaledKSPSkin.label);
+            GUILayout.BeginVertical(HighLogic.Skin.box);
+            GUILayout.Label("Choose the avionics type:", HighLogic.Skin.label);
             int oldConfigIdx = _selectedConfigIndex;
-            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames, UIHolder.RescaledKSPSkin.button);
+            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames, HighLogic.Skin.button);
             if (oldConfigIdx != _selectedConfigIndex)
             {
                 _shouldResetUIHeight = true;
@@ -97,7 +87,7 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginHorizontal();
 
             oldShowInfo = _showInfo2;
-            _showInfo2 = GUILayout.Toggle(_showInfo2, "ⓘ", GetInfoButton(UIHolder.RescaledKSPSkin.button), GUILayout.ExpandWidth(false), UIHolder.Height(20));
+            _showInfo2 = GUILayout.Toggle(_showInfo2, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
             if (oldShowInfo != _showInfo2)
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
@@ -106,33 +96,27 @@ namespace RP0.ProceduralAvionics
             }
 
             if (_showInfo2)
-            {
-                _gc ??= new GUIContent();
-                _gc.text = curCfg.description;
-                var multilineStyle = GetMultiline(GUI.skin.label);
-                var height = multilineStyle.CalcHeight(_gc, 400*UIHolder.UIScale);
-                GUILayout.Label(curCfg.description, multilineStyle, GUILayout.MinHeight(height), GUILayout.ExpandHeight(true));
-            }
+                GUILayout.Label(curCfg.description);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
 
-            UIHolder.Space(7);
+            GUILayout.Space(7);
 
-            GUILayout.BeginVertical(UIHolder.RescaledKSPSkin.box);
-            GUILayout.Label("Choose the tech level:", UIHolder.RescaledKSPSkin.label);
+            GUILayout.BeginVertical(HighLogic.Skin.box);
+            GUILayout.Label("Choose the tech level:", HighLogic.Skin.label);
             foreach (ProceduralAvionicsTechNode techNode in curCfg.TechNodes.Values)
             {
                 DrawAvionicsConfigSelector(curCfg, techNode);
             }
             GUILayout.EndVertical();
 
-            UIHolder.Space(7);
+            GUILayout.Space(7);
 
-            GUILayout.BeginVertical(UIHolder.RescaledKSPSkin.box);
+            GUILayout.BeginVertical(HighLogic.Skin.box);
             GUILayout.BeginHorizontal();
 
             oldShowInfo = _showInfo3;
-            _showInfo3 = GUILayout.Toggle(_showInfo3, "ⓘ", GetInfoButton(UIHolder.RescaledKSPSkin.button), GUILayout.ExpandWidth(false), UIHolder.Height(20));
+            _showInfo3 = GUILayout.Toggle(_showInfo3, "ⓘ", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(20));
             if (oldShowInfo != _showInfo3)
             {
                 var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
@@ -141,30 +125,24 @@ namespace RP0.ProceduralAvionics
             }
 
             if (_showInfo3)
-            {
-                _gc ??= new GUIContent();
-                _gc.text = info3Text;
-                var multilineStyle = GetMultiline(GUI.skin.label);
-                var height = multilineStyle.CalcHeight(_gc, 400*UIHolder.UIScale);
-                GUILayout.Label(info3Text, multilineStyle, GUILayout.MinHeight(height), GUILayout.ExpandHeight(true));
-            }
+                GUILayout.Label(info3Text);
             GUILayout.EndHorizontal();
 
             if (!IsScienceCore)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.BeginHorizontal(UIHolder.Width(250));
-                GUILayout.Label("Controllable mass: ", UIHolder.RescaledKSPSkin.label, UIHolder.Width(150));
-                _sControllableMass = GUILayout.TextField(_sControllableMass, UIHolder.RescaledKSPSkin.textField);
-                GUILayout.Label("t", UIHolder.RescaledKSPSkin.label);
+                GUILayout.BeginHorizontal(GUILayout.Width(250));
+                GUILayout.Label("Controllable mass: ", HighLogic.Skin.label, GUILayout.Width(150));
+                _sControllableMass = GUILayout.TextField(_sControllableMass, HighLogic.Skin.textField);
+                GUILayout.Label("t", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
-                GUILayout.BeginHorizontal(UIHolder.MaxWidth(50));
+                GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
                 float oldControlMass = _newControlMass;
                 if (float.TryParse(_sControllableMass, out _newControlMass))
                 {
                     float avionicsMass = GetShieldedAvionicsMass(_newControlMass);
-                    GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", UIHolder.RescaledKSPSkin.label, UIHolder.Width(150));
+                    GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
                 }
 
                 if (oldControlMass != _newControlMass)
@@ -177,36 +155,37 @@ namespace RP0.ProceduralAvionics
             }
 
             GUILayout.BeginHorizontal();
-            GUILayout.BeginHorizontal(UIHolder.Width(250));
-            GUILayout.Label("EC amount: ", UIHolder.RescaledKSPSkin.label, UIHolder.Width(150));
-            _sECAmount = GUILayout.TextField(_sECAmount, UIHolder.RescaledKSPSkin.textField);
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
+            GUILayout.Label("EC amount: ", HighLogic.Skin.label, GUILayout.Width(150));
+            _sECAmount = GUILayout.TextField(_sECAmount, HighLogic.Skin.textField);
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(UIHolder.MaxWidth(50));
+            GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
             if (float.TryParse(_sECAmount, out float ecAmount))
             {
-                GUILayout.Label($" ({_ecTank.mass * ecAmount:0.#} kg)", UIHolder.RescaledKSPSkin.label, UIHolder.Width(150));
+                GUILayout.Label($" ({_ecTank.mass * ecAmount:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
             }
             GUILayout.EndHorizontal();
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(UIHolder.Width(250));
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
+            _gc ??= new GUIContent();
             _gc.text = "Additional tank volume: ";
             _gc.tooltip = "How much tank volume will be left for other resources after applying the desired controllable mass and amount of EC.";
-            GUILayout.Label(_gc, UIHolder.RescaledKSPSkin.label, UIHolder.Width(150));
+            GUILayout.Label(_gc, HighLogic.Skin.label, GUILayout.Width(150));
             GUI.enabled = _seekVolumeMethod != null;
-            _sExtraVolume = GUILayout.TextField(_sExtraVolume, UIHolder.RescaledKSPSkin.textField);
+            _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);
             GUI.enabled = true;
-            GUILayout.Label("l", UIHolder.RescaledKSPSkin.label);
+            GUILayout.Label("l", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             if (_showROTankSizeWarning)
             {
-                GUILayout.Label("ROTanks does not currently support automatic resizing to correct dimensions. Increase the part size manually until it has sufficient volume.");
+                GUILayout.Label("ROTanks does not currently support automatic resizing to correct dimensions. Increase the part size manually until it has sufficient volume.", HighLogic.Skin.label);
             }
             else if (_showSizeWarning)
             {
-                GUILayout.Label("Not enough volume to apply parameters. Increase the part size manually until it has sufficient volume.");
+                GUILayout.Label("Not enough volume to apply parameters. Increase the part size manually until it has sufficient volume.", HighLogic.Skin.label);
             }
 
             GUILayout.EndVertical();
@@ -214,19 +193,19 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginHorizontal();
             _gc.text = "Apply (resize to fit)";
             _gc.tooltip = "Applies the parameters above and resizes the part to have the correct amount of volume";
-            if (GUILayout.Button(_gc, UIHolder.RescaledKSPSkin.button))
+            if (GUILayout.Button(_gc, HighLogic.Skin.button))
             {
                 ApplyAvionicsSettings(shouldSeekVolume: true);
             }
 
             _gc.text = "Apply (preserve dimensions)";
             _gc.tooltip = "Tries to apply the parameters above but doesn't resize the part even if there isn't enough volume, or if there's extra volume";
-            if (GUILayout.Button(_gc, UIHolder.RescaledKSPSkin.button))
+            if (GUILayout.Button(_gc, HighLogic.Skin.button))
             {
                 ApplyAvionicsSettings(shouldSeekVolume: false);
             }
 
-            if (GUILayout.Button("Close", UIHolder.RescaledKSPSkin.button))
+            if (GUILayout.Button("Close", HighLogic.Skin.button))
             {
                 if (!avionicsConfigName.Equals(curCfgName))
                 {
@@ -266,8 +245,6 @@ namespace RP0.ProceduralAvionics
             GUI.DragWindow();
 
             Tooltip.Instance.RecordTooltip(_windowId);
-
-            GUI.skin = oldSkin; //restore the skin
         }
 
         private void DrawAvionicsConfigSelector(ProceduralAvionicsConfig curCfg, ProceduralAvionicsTechNode techNode)
@@ -283,27 +260,27 @@ namespace RP0.ProceduralAvionics
             {
                 _gc.text = BuildTechName(techNode);
                 GUILayout.BeginHorizontal();
-                GUILayout.Toggle(true, _gc, UIHolder.RescaledKSPSkin.button);
+                GUILayout.Toggle(true, _gc, HighLogic.Skin.button);
                 DrawUnlockButton(curCfg.name, techNode, unlockCost);
                 GUILayout.EndHorizontal();
 
                 _gc.text = $"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}";
                 _gc.tooltip = "Whether samples can be transferred and stored in the avionics unit.";
-                GUILayout.Label(_gc, UIHolder.RescaledKSPSkin.label);
+                GUILayout.Label(_gc, HighLogic.Skin.label);
 
                 _gc.text = $"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}";
                 _gc.tooltip = "Whether the avionics unit can enter hibernation mode that greatly reduces power consumption.";
-                GUILayout.Label(_gc, UIHolder.RescaledKSPSkin.label);
+                GUILayout.Label(_gc, HighLogic.Skin.label);
 
                 _gc.text = $"Axial control: {BoolToYesNoString(techNode.allowAxial)}";
                 _gc.tooltip = "Whether fore-aft translation is allowed despite having insufficient controllable mass or being outside the max range of Near-Earth avionics.";
-                GUILayout.Label(_gc, UIHolder.RescaledKSPSkin.label);
+                GUILayout.Label(_gc, HighLogic.Skin.label);
             }
             else
             {
                 _gc.text = $"Switch to {BuildTechName(techNode)}";
                 GUILayout.BeginHorizontal();
-                switchedConfig = GUILayout.Button(_gc, UIHolder.RescaledKSPSkin.button);
+                switchedConfig = GUILayout.Button(_gc, HighLogic.Skin.button);
                 switchedConfig |= DrawUnlockButton(curCfg.name, techNode, unlockCost);
                 GUILayout.EndHorizontal();
             }
@@ -337,7 +314,7 @@ namespace RP0.ProceduralAvionics
             if (trueCost > 0) tooltip = $"Base cost: {BuildCostString(trueCost, trueCost)}\nSubsidy Applied: {BuildCostString(subsidyToUse, -1)}";
             if(techNode.IsAvailable) tooltip += (tooltip != string.Empty ? "\n" : string.Empty) + $"Needs tech: {techNode.TechNodeTitle}";
             _gc.tooltip = tooltip;
-            if (GUILayout.Button(_gc, UIHolder.RescaledKSPSkin.button, UIHolder.Width(120)))
+            if (GUILayout.Button(_gc, HighLogic.Skin.button, GUILayout.Width(120)))
             {
                 switchedConfig = PurchaseConfig(curCfgName, techNode);
             }
@@ -487,27 +464,6 @@ namespace RP0.ProceduralAvionics
             sb.Append($"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}");
 
             return sb.ToStringAndRelease();
-        }
-        
-        private static GUIStyle GetMultiline(GUIStyle template)
-        {
-            if (_styleLabelMultiline == null)
-            {
-                _styleLabelMultiline = new GUIStyle(template);
-                _styleLabelMultiline.fixedHeight = 0;
-                _styleLabelMultiline.wordWrap = true;
-            }
-            return _styleLabelMultiline;
-        }
-
-        private static GUIStyle GetInfoButton(GUIStyle template)
-        {
-            if (_styleInfoButton == null)
-            {
-                _styleInfoButton = new GUIStyle(template);
-                _styleInfoButton.fixedHeight = 0;
-            }
-            return _styleInfoButton;
         }
 
         public static float GetStatsForTechNode(ProceduralAvionicsTechNode techNode, float controllableMass, out float massKG, out float cost, out float powerWatts)

@@ -86,19 +86,19 @@ namespace RP0
             double totalCost = 0d;
             double cost;
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Budget (per ");
+            GUILayout.Label("Budget (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
-            GUILayout.Label(")");
+            GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Facilities", UIHolder.Width(160));
+                GUILayout.Label("Facilities", HighLogic.Skin.label, GUILayout.Width(160));
                 cost = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -MaintenanceHandler.Instance.FacilityUpkeepPerDay * PeriodFactor);
                 cost += CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -MaintenanceHandler.Instance.LCsCostPerDay * PeriodFactor);
                 totalCost += cost;
-                GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Facilities);
@@ -113,10 +113,10 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Integration Teams", UIHolder.Width(160));
+                GUILayout.Label("Integration Teams", HighLogic.Skin.label, GUILayout.Width(160));
                 cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * PeriodFactor);
                 totalCost += cost;
-                GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.Integration);
@@ -131,10 +131,10 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Research Teams", UIHolder.Width(160));
+                GUILayout.Label("Research Teams", HighLogic.Skin.label, GUILayout.Width(160));
                 cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * PeriodFactor);
                 totalCost += cost;
-                GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {
@@ -145,14 +145,14 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Astronauts", UIHolder.Width(160));
+                GUILayout.Label("Astronauts", HighLogic.Skin.label, GUILayout.Width(160));
                 cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautBaseUpkeepPerDay * PeriodFactor)
                     + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautInFlightUpkeepPerDay * PeriodFactor);
                 totalCost += cost;
                 double cost2 = CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -MaintenanceHandler.Instance.TrainingUpkeepPerDay * PeriodFactor);
                 totalCost += cost2;
                 cost += cost2;
-                GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 if (GUILayout.Button(_infoBtnContent, InfoButton))
                 {
                     TopWindow.SwitchTabTo(UITab.AstronautCosts);
@@ -165,17 +165,17 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Subsidy", UIHolder.Width(160));
+            GUILayout.Label("Subsidy", HighLogic.Skin.label, GUILayout.Width(160));
             // NOT formatcost since it is not, strictly speaking, a fund gain.
             double subsidy = MaintenanceHandler.GetAverageSubsidyForPeriod(PeriodFactor * 86400d);
             subsidy = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidy) * (PeriodFactor / 365.25d);
-            GUILayout.Label(subsidy.ToString(PeriodDispFormat), RightLabel, UIHolder.Width(160));
+            GUILayout.Label(subsidy.ToString(PeriodDispFormat), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             totalCost = Math.Min(0, totalCost + subsidy);
-            GUILayout.Label("Net (after subsidy)", BoldLabel, UIHolder.Width(160));
-            GUILayout.Label(FormatCost(totalCost), BoldRightLabel, UIHolder.Width(160));
+            GUILayout.Label("Net (after subsidy)", BoldLabel, GUILayout.Width(160));
+            GUILayout.Label(FormatCost(totalCost), BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -184,8 +184,8 @@ namespace RP0
             {
                 rolloutCost = KerbalConstructionTime.KCTGameStates.GetRolloutCostOverTime(PeriodFactor * 86400d)
                     + KerbalConstructionTime.KCTGameStates.GetAirlaunchCostOverTime(PeriodFactor * 86400d);
-                GUILayout.Label("Rollout/Airlaunch Prep", UIHolder.Width(160));
-                GUILayout.Label(FormatCost(rolloutCost), RightLabel, UIHolder.Width(160));
+                GUILayout.Label("Rollout/Airlaunch Prep", HighLogic.Skin.label, GUILayout.Width(160));
+                GUILayout.Label(FormatCost(rolloutCost), RightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {
@@ -195,8 +195,8 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             double constrMaterials = KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d);
-            GUILayout.Label("Constructions", UIHolder.Width(160));
-            GUILayout.Label(FormatCost(constrMaterials), RightLabel, UIHolder.Width(160));
+            GUILayout.Label("Constructions", HighLogic.Skin.label, GUILayout.Width(160));
+            GUILayout.Label(FormatCost(constrMaterials), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
             {
                 TopWindow.SwitchTabTo(UITab.Construction);
@@ -204,9 +204,9 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Program Budget",UIHolder.Width(160));
+            GUILayout.Label("Program Budget", HighLogic.Skin.label, GUILayout.Width(160));
             double programBudget = Programs.ProgramHandler.Instance.GetDisplayProgramFunding(PeriodFactor * 86400d);
-            GUILayout.Label(FormatCost(programBudget), RightLabel, UIHolder.Width(160));
+            GUILayout.Label(FormatCost(programBudget), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
             {
                 TopWindow.SwitchTabTo(UITab.Programs);
@@ -214,12 +214,12 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Balance", BoldLabel, UIHolder.Width(160));
+            GUILayout.Label("Balance", BoldLabel, GUILayout.Width(160));
             double delta = programBudget + totalCost + constrMaterials + rolloutCost;
-            GUILayout.Label(FormatCost(delta), BoldRightLabel, UIHolder.Width(160));
+            GUILayout.Label(FormatCost(delta), BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you\nspecify in the resulting dialog")))
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you specify in the resulting dialog"), HighLogic.Skin.button))
             {
                 InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "warptofunds");
                 UIHolder.Instance.HideWindow();
@@ -299,9 +299,9 @@ namespace RP0
         public void RenderFacilitiesTab()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Facilities costs (per ");
+            GUILayout.Label("Facilities costs (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
-            GUILayout.Label(")");
+            GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             double grandTotal = 0d;
@@ -309,7 +309,7 @@ namespace RP0
             {
                 string site = LocalizeSiteName(ksc.KSCName);
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(site, BoldLabel, UIHolder.Width(160));
+                GUILayout.Label(site, BoldLabel, GUILayout.Width(160));
                 GUILayout.EndHorizontal();
 
                 double siteTotal = 0d;
@@ -322,14 +322,14 @@ namespace RP0
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -cost);
                     siteTotal += cost;
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label($"   {lc.Name}", UIHolder.Width(160));
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                    GUILayout.Label($"   {lc.Name}", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                     GUILayout.EndHorizontal();
                 }
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(" Total", BoldLabel, UIHolder.Width(160));
-                GUILayout.Label(FormatCost(siteTotal), BoldRightLabel, UIHolder.Width(160));
+                GUILayout.Label(" Total", BoldLabel, GUILayout.Width(160));
+                GUILayout.Label(FormatCost(siteTotal), BoldRightLabel, GUILayout.Width(160));
                 GUILayout.EndHorizontal();
                 grandTotal += siteTotal;
             }
@@ -342,9 +342,9 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label(ScenarioUpgradeableFacilities.GetFacilityName(facility), UIHolder.Width(200));
+                    GUILayout.Label(ScenarioUpgradeableFacilities.GetFacilityName(facility), HighLogic.Skin.label, GUILayout.Width(200));
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -cost * PeriodFactor);
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(120));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(120));
                     grandTotal += cost;
                 }
                 catch (Exception ex)
@@ -357,8 +357,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Grand Total", BoldLabel, UIHolder.Width(160));
-                GUILayout.Label(FormatCost(grandTotal), BoldRightLabel, UIHolder.Width(160));
+                GUILayout.Label("Grand Total", BoldLabel, GUILayout.Width(160));
+                GUILayout.Label(FormatCost(grandTotal), BoldRightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {
@@ -370,9 +370,9 @@ namespace RP0
         public void RenderIntegrationTab()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Integration Teams Cost (per ");
+            GUILayout.Label("Integration Teams Cost (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
-            GUILayout.Label(")");
+            GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             double grandTotal = 0d;
@@ -386,11 +386,11 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label(site, UIHolder.Width(160));
+                    GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
                     double cost = -engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365.25d;
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, cost);
                     grandTotal += cost;
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -402,8 +402,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Total", BoldLabel, UIHolder.Width(160));
-                GUILayout.Label(FormatCost(grandTotal), BoldRightLabel, UIHolder.Width(160));
+                GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
+                GUILayout.Label(FormatCost(grandTotal), BoldRightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {
@@ -416,9 +416,9 @@ namespace RP0
         {
             double totalCost = 0d;
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Construction Cost (per ");
+            GUILayout.Label("Construction Cost (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
-            GUILayout.Label(")");
+            GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             foreach (var ksc in KerbalConstructionTime.KCTGameStates.KSCs)
@@ -432,8 +432,8 @@ namespace RP0
                 {
                     double cost = KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
                     totalCost += cost;
-                    GUILayout.Label(site, UIHolder.Width(160));
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                    GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -448,8 +448,8 @@ namespace RP0
                     try
                     {
                         KerbalConstructionTime.Utilities.GetConstructionTooltip(c, i, out string tooltip, out _);
-                        GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), UIHolder.Width(200));
-                        GUILayout.Label(FormatCost(c.GetConstructionCostOverTime(PeriodFactor * 86400d)), RightLabel, UIHolder.Width(120));
+                        GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label, GUILayout.Width(200));
+                        GUILayout.Label(FormatCost(c.GetConstructionCostOverTime(PeriodFactor * 86400d)), RightLabel, GUILayout.Width(120));
                     }
                     catch (Exception ex)
                     {
@@ -462,8 +462,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             try
             {
-                GUILayout.Label("Total", BoldLabel, UIHolder.Width(160));
-                GUILayout.Label(FormatCost(totalCost), BoldRightLabel, UIHolder.Width(160));
+                GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
+                GUILayout.Label(FormatCost(totalCost), BoldRightLabel, GUILayout.Width(160));
             }
             catch (Exception ex)
             {
@@ -475,9 +475,9 @@ namespace RP0
         public void RenderProgramTab()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Active Programs (per ");
+            GUILayout.Label("Active Programs (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
-            GUILayout.Label(")");
+            GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             double total = 0d;
@@ -488,33 +488,33 @@ namespace RP0
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(" Nominal Deadline:", UIHolder.Width(160));
+                GUILayout.Label(" Nominal Deadline:", HighLogic.Skin.label, GUILayout.Width(160));
                 const double secsPerYear = 365.25d * 86400d;
-                GUILayout.Label(KSPUtil.PrintDate(p.acceptedUT + p.DurationYears * secsPerYear, false), RightLabel, UIHolder.Width(160));
+                GUILayout.Label(KSPUtil.PrintDate(p.acceptedUT + p.DurationYears * secsPerYear, false), RightLabel, GUILayout.Width(160));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(" Funding:", UIHolder.Width(160));
+                GUILayout.Label(" Funding:", HighLogic.Skin.label, GUILayout.Width(160));
                 double amt = p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
                 amt = CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, amt);
                 total += amt;
-                GUILayout.Label(FormatCost(amt), RightLabel, UIHolder.Width(160));
+                GUILayout.Label(FormatCost(amt), RightLabel, GUILayout.Width(160));
                 GUILayout.EndHorizontal();
             }
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Total", BoldLabel, UIHolder.Width(160));
-            GUILayout.Label(FormatCost(total), BoldRightLabel, UIHolder.Width(160));
+            GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
+            GUILayout.Label(FormatCost(total), BoldRightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
         }
 
         private void RenderNautList()
         {
             GUILayout.BeginHorizontal();
-            UIHolder.Space(20);
-            GUILayout.Label("Name", UIHolder.Width(144));
-            GUILayout.Label("Retires NET", UIHolder.Width(120));
-            GUILayout.Label("Upkeep", UIHolder.Width(50));
+            GUILayout.Space(20);
+            GUILayout.Label("Name", HighLogic.Skin.label, GUILayout.Width(144));
+            GUILayout.Label("Retires NET", HighLogic.Skin.label, GUILayout.Width(120));
+            GUILayout.Label("Upkeep", HighLogic.Skin.label, GUILayout.Width(50));
             GUILayout.EndHorizontal();
             for (int i = 0; i < HighLogic.CurrentGame.CrewRoster.Count; ++i)
             {
@@ -530,14 +530,14 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    UIHolder.Space(20);
-                    GUILayout.Label(k.displayName, UIHolder.Width(144));
-                    GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", UIHolder.Width(120));
+                    GUILayout.Space(20);
+                    GUILayout.Label(k.displayName, HighLogic.Skin.label, GUILayout.Width(144));
+                    GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(120));
                     double cost, flightCost;
                     MaintenanceHandler.Instance.GetNautCost(k, out cost, out flightCost);
                     cost += flightCost;
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -cost * PeriodFactor);
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(50));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(50));
                 }
                 catch (Exception ex)
                 {
@@ -552,9 +552,9 @@ namespace RP0
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Astronaut costs (per ");
+                GUILayout.Label("Astronaut costs (per ", HighLogic.Skin.label);
                 RenderPeriodSelector();
-                GUILayout.Label(")");
+                GUILayout.Label(")", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
             }
 
@@ -562,7 +562,7 @@ namespace RP0
             try
             {
                 int nautCount = HighLogic.CurrentGame.CrewRoster.GetActiveCrewCount();
-                GUILayout.Label($"Corps: {nautCount:N0} astronauts", UIHolder.Width(160));
+                GUILayout.Label($"Corps: {nautCount:N0} astronauts", HighLogic.Skin.label, GUILayout.Width(160));
             }
             catch (Exception ex)
             {
@@ -570,7 +570,7 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
-            _nautListScroll = GUILayout.BeginScrollView(_nautListScroll, UIHolder.Width(360), UIHolder.Height(280));
+            _nautListScroll = GUILayout.BeginScrollView(_nautListScroll, GUILayout.Width(360), GUILayout.Height(280));
             RenderNautList();
             GUILayout.EndScrollView();
 
@@ -581,10 +581,10 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label("Astronaut base cost", UIHolder.Width(160));
+                    GUILayout.Label("Astronaut base cost", HighLogic.Skin.label, GUILayout.Width(160));
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautBaseUpkeepPerDay * PeriodFactor);
                     total += cost;
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -595,10 +595,10 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label("Astronaut operational cost", UIHolder.Width(160));
+                    GUILayout.Label("Astronaut operational cost", HighLogic.Skin.label, GUILayout.Width(160));
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -MaintenanceHandler.Instance.NautInFlightUpkeepPerDay * PeriodFactor);
                     total += cost;
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -609,10 +609,10 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label("Astronaut training cost", UIHolder.Width(160));
+                    GUILayout.Label("Astronaut training cost", HighLogic.Skin.label, GUILayout.Width(160));
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -MaintenanceHandler.Instance.TrainingUpkeepPerDay * PeriodFactor);
                     total += cost;
-                    GUILayout.Label(FormatCost(cost), RightLabel, UIHolder.Width(160));
+                    GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {
@@ -623,8 +623,8 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label("Total", BoldLabel, UIHolder.Width(160));
-                    GUILayout.Label(FormatCost(total), BoldRightLabel, UIHolder.Width(160));
+                    GUILayout.Label("Total", BoldLabel, GUILayout.Width(160));
+                    GUILayout.Label(FormatCost(total), BoldRightLabel, GUILayout.Width(160));
                 }
                 catch (Exception ex)
                 {

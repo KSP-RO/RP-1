@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -10,13 +9,12 @@ namespace KerbalConstructionTime
     {
         private const string JetpackPartName = "evaJetpack";
         private const string ChutePartName = "evaChute";
-        private const int _crewListWindowWidth = 400;
 
         internal enum SortBy { Name, Type, Level };
 
         public static bool AssignRandomCrew;
 
-        private static Rect _crewListWindowPosition = new Rect((Screen.width - 400) / 2, (Screen.height / 4), _crewListWindowWidth * UIHolder.UIScale, 1);
+        private static Rect _crewListWindowPosition = new Rect((Screen.width - 400) / 2, (Screen.height / 4), 400, 1);
         private static int _partIndexToCrew;
         private static int _indexToCrew;
         private static List<ProtoCrewMember> _availableCrew;
@@ -42,7 +40,7 @@ namespace KerbalConstructionTime
                 return;
 
             System.Random rand = new System.Random();
-            GUILayout.BeginVertical(GUILayout.ExpandHeight(true), UIHolder.MaxHeight(Screen.height / 2));
+            GUILayout.BeginVertical(GUILayout.ExpandHeight(true), GUILayout.MaxHeight(Screen.height / 2));
             GUILayout.BeginHorizontal();
             AssignRandomCrew = GUILayout.Toggle(AssignRandomCrew, " Randomize Filling");
             GUILayout.EndHorizontal();
@@ -73,7 +71,7 @@ namespace KerbalConstructionTime
             }
 
             bool foundAssignableCrew = false;
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, UIHolder.Height(numberItems * 25 + 10), UIHolder.MaxHeight(Screen.height / 2));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(numberItems * 25 + 10), GUILayout.MaxHeight(Screen.height / 2));
             for (int j = 0; j < _parts.Count; j++)
             {
                 Part p = _parts[j];
@@ -97,7 +95,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(p.partInfo.title.Length <= 25 ? p.partInfo.title : p.partInfo.title.Substring(0, 25));
-                if (GUILayout.Button("Fill", UIHolder.Width(75)))
+                if (GUILayout.Button("Fill", GUILayout.Width(75)))
                 {
                     for (int i = 0; i < p.CrewCapacity; i++)
                     {
@@ -130,7 +128,7 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                if (GUILayout.Button("Clear", UIHolder.Width(75)))
+                if (GUILayout.Button("Clear", GUILayout.Width(75)))
                 {
                     launchedCrew.Clear();
                     _possibleCrewForPart.Clear();
@@ -149,15 +147,15 @@ namespace KerbalConstructionTime
 
                         if (_chutePartAvailable)
                         {
-                            launchedCrew[i].HasChute = GUILayout.Toggle(launchedCrew[i].HasChute, new GUIContent("Chute", "Include Parachute"), GUILayout.ExpandWidth(false), UIHolder.Height(20));
+                            launchedCrew[i].HasChute = GUILayout.Toggle(launchedCrew[i].HasChute, new GUIContent("Chute", "Include Parachute"), GUILayout.ExpandWidth(false), GUILayout.Height(20));
                         }
 
                         if (_jetpackPartAvailable)
                         {
-                            launchedCrew[i].HasJetpack = GUILayout.Toggle(launchedCrew[i].HasJetpack, new GUIContent("EVA", "Include EVA pack"), GUILayout.ExpandWidth(false), UIHolder.Height(20));
+                            launchedCrew[i].HasJetpack = GUILayout.Toggle(launchedCrew[i].HasJetpack, new GUIContent("EVA", "Include EVA pack"), GUILayout.ExpandWidth(false), GUILayout.Height(20));
                         }
 
-                        if (GUILayout.Button("Remove", UIHolder.Width(120)))
+                        if (GUILayout.Button("Remove", GUILayout.Width(120)))
                         {
                             launchedCrew[i].PCM.rosterStatus = ProtoCrewMember.RosterStatus.Available;
                             launchedCrew[i].PCM = null;
@@ -168,7 +166,7 @@ namespace KerbalConstructionTime
                     {
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Empty");
-                        if (_possibleCrewForPart.Count > 0 && GUILayout.Button("Add", UIHolder.Width(120)))
+                        if (_possibleCrewForPart.Count > 0 && GUILayout.Button("Add", GUILayout.Width(120)))
                         {
                             GUIStates.ShowShipRoster = false;
                             GUIStates.ShowCrewSelect = true;
@@ -286,12 +284,12 @@ namespace KerbalConstructionTime
 
         public static void DrawCrewSelect(int windowID)
         {
-            GUILayout.BeginVertical(GUILayout.ExpandWidth(true), UIHolder.MaxHeight(Screen.height / 2));
+            GUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.MaxHeight(Screen.height / 2));
             GUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
 
             GUILayout.Label("Sort:");
 
-            if (GUILayout.Button("▲", UIHolder.Width(20)))
+            if (GUILayout.Button("▲", GUILayout.Width(20)))
             {
                 _third = _first;
                 _first--;
@@ -302,7 +300,7 @@ namespace KerbalConstructionTime
                 SortPossibleCrew();
             }
             GUILayout.Label(_sortNames[(int)_first]);
-            if (GUILayout.Button("▼", UIHolder.Width(20)))
+            if (GUILayout.Button("▼", GUILayout.Width(20)))
             {
                 _third = _first;
                 _first++;
@@ -312,8 +310,8 @@ namespace KerbalConstructionTime
                     _second = _third;
                 SortPossibleCrew();
             }
-            UIHolder.Space(10);
-            if (GUILayout.Button("▲", UIHolder.Width(20)))
+            GUILayout.Space(10);
+            if (GUILayout.Button("▲", GUILayout.Width(20)))
             {
                 _second--;
                 if (_second < 0)
@@ -327,7 +325,7 @@ namespace KerbalConstructionTime
                 SortPossibleCrew();
             }
             GUILayout.Label(_sortNames[(int)_second]);
-            if (GUILayout.Button("▼", UIHolder.Width(20)))
+            if (GUILayout.Button("▼", GUILayout.Width(20)))
             {
                 _second++;
                 if (_second > SortBy.Level)
@@ -342,15 +340,15 @@ namespace KerbalConstructionTime
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, UIHolder.Height(_rosterForCrewSelect.Count * 28 * 2 + 35), UIHolder.MaxHeight(Screen.height / 2));
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(_rosterForCrewSelect.Count * 28 * 2 + 35), GUILayout.MaxHeight(Screen.height / 2));
 
             float cWidth = 80;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
-            GUILayout.Label("Courage:", UIHolder.Width(cWidth));
-            GUILayout.Label("Stupidity:", UIHolder.Width(cWidth));
-            //UIHolder.Space(cWidth/2);
+            GUILayout.Label("Courage:", GUILayout.Width(cWidth));
+            GUILayout.Label("Stupidity:", GUILayout.Width(cWidth));
+            //GUILayout.Space(cWidth/2);
             GUILayout.EndHorizontal();
 
 
@@ -382,13 +380,13 @@ namespace KerbalConstructionTime
                         gc = new GUIContent(btnTxt);
 
                     GUI.skin.button.alignment = TextAnchor.MiddleLeft;
-                    clickedNautButton = GUILayout.Button(gc, UIHolder.Height(56));
+                    clickedNautButton = GUILayout.Button(gc, GUILayout.Height(56));
                     GUI.skin.button.alignment = oldBtnAlignment;
                 }
                 else
                 {
                     gc = new GUIContent(btnTxt);
-                    clickedNautButton = GUILayout.Button(gc, UIHolder.Height(56));
+                    clickedNautButton = GUILayout.Button(gc, GUILayout.Height(56));
                 }
 
 
@@ -416,8 +414,8 @@ namespace KerbalConstructionTime
                     _crewListWindowPosition.height = 1;
                     break;
                 }
-                GUILayout.HorizontalSlider(crew.courage, 0, 1,UIHolder.Width(cWidth));
-                GUILayout.HorizontalSlider(crew.stupidity, 0, 1, UIHolder.Width(cWidth));
+                GUILayout.HorizontalSlider(crew.courage, 0, 1, HighLogic.Skin.horizontalSlider, HighLogic.Skin.horizontalSliderThumb, GUILayout.Width(cWidth));
+                GUILayout.HorizontalSlider(crew.stupidity, 0, 1, HighLogic.Skin.horizontalSlider, HighLogic.Skin.horizontalSliderThumb, GUILayout.Width(cWidth));
 
                 GUILayout.EndHorizontal();
             }

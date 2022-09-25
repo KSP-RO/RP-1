@@ -4,7 +4,6 @@ using KSP.UI.TooltipTypes;
 using UniLinq;
 using ToolbarControl_NS;
 using UnityEngine;
-using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -66,7 +65,7 @@ namespace KerbalConstructionTime
 
         internal static void InitDevPartsToggle()
         {
-            _devPartsToggle = new GUIStyle(UIHolder.RescaledKSPSkin.button)
+            _devPartsToggle = new GUIStyle(HighLogic.Skin.button)
             {
                 margin = new RectOffset(0, 0, 0, 0),
                 padding = new RectOffset(0, 0, 0, 0),
@@ -109,7 +108,6 @@ namespace KerbalConstructionTime
                 offset = 46;
             if (mechjebPresent)
                 offset = 140;
-
             _devPartsScale = GameSettings.UI_SCALE;
 
             _devPartsRect = new Rect(Screen.width - (260 + offset) * _devPartsScale, 0, 42 * _devPartsScale, 38 * _devPartsScale);
@@ -129,6 +127,7 @@ namespace KerbalConstructionTime
                 _devPartsContent = _devPartsOnContent;
             else
                 _devPartsContent = _devPartsOffContent;
+
 
             if (_devPartsScale != GameSettings.UI_SCALE)
                 PositionAndSizeDevPartsIcon();

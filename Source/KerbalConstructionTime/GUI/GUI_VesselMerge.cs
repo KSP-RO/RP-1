@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -25,7 +24,7 @@ namespace KerbalConstructionTime
                 GUILayout.BeginVertical();
                 GUILayout.Label("Choose a vessel");
 
-                _activeLCMergeScroll = GUILayout.BeginScrollView(_activeLCMergeScroll, UIHolder.Height(5 * 26 + 5), UIHolder.MaxHeight(1 * Screen.height / 4));
+                _activeLCMergeScroll = GUILayout.BeginScrollView(_activeLCMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
 
                 LCItem lc = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
                 foreach (BuildListVessel vessel in lc.Warehouse)

@@ -6,8 +6,8 @@ namespace RP0
 {
     public class Tooltip
     {
-        private static float TooltipMaxWidth => 200f * UIHolder.UIScale;
-        private static double TooltipShowDelay => 500 * UIHolder.UIScale;
+        private const float TooltipMaxWidth = 200f;
+        private const double TooltipShowDelay = 500;
 
         private static readonly int _tooltipWindowId = "RP0Tooltip".GetHashCode();
         private static GUIStyle _tooltipStyle;
@@ -34,18 +34,10 @@ namespace RP0
         {
             if (_tooltipStyle == null)
             {
-                _tooltipStyle = new GUIStyle(UIHolder.RescaledKSPSkin.label);
+                _tooltipStyle = new GUIStyle(HighLogic.Skin.label);
                 _tooltipStyle.normal.textColor = new Color32(224, 224, 224, 255);
-                _tooltipStyle.padding = new RectOffset(
-                    (int)(3 * UIHolder.UIScale), 
-                    (int)(3 * UIHolder.UIScale), 
-                    (int)(3 * UIHolder.UIScale), 
-                    (int)(3 * UIHolder.UIScale));
+                _tooltipStyle.padding = new RectOffset(3, 3, 3, 3);
                 _tooltipStyle.alignment = TextAnchor.MiddleCenter;
-                _tooltipStyle.font = UIHolder.RescaledKSPSkin.font;
-                _tooltipStyle.fontSize = UIHolder.RescaledKSPSkin.font.fontSize;
-                _tooltipStyle.fixedHeight = 0;
-                _tooltipStyle.wordWrap = true;
             }
 
             // The texture needs to be re-applied after every scene change
@@ -83,10 +75,6 @@ namespace RP0
             if (_windowTooltipTexts.TryGetValue(windowId, out string tooltipText) && !string.IsNullOrEmpty(tooltipText) &&
                 (DateTime.UtcNow - _tooltipBeginDt).TotalMilliseconds > TooltipShowDelay)
             {
-                // overwrite the standard KSP skin with our own rescaled version
-                var oldSkin = GUI.skin;
-                GUI.skin = UIHolder.RescaledKSPSkin;
-
                 if (_isTooltipChanged)
                 {
                     var c = new GUIContent(tooltipText);
@@ -94,7 +82,7 @@ namespace RP0
                     _tooltipStyle.alignment = contentAlignment;
 
                     width = Math.Min(width, TooltipMaxWidth);
-                    float height = _tooltipStyle.CalcHeight(c, width);
+                    float height = _tooltipStyle.CalcHeight(c, TooltipMaxWidth);
                     _tooltipRect = new Rect(
                         Math.Min(Screen.width - width, Input.mousePosition.x + 15),
                         Math.Min(Screen.height - height, Screen.height - Input.mousePosition.y + 10),
@@ -109,14 +97,7 @@ namespace RP0
                     tooltipText,
                     _tooltipStyle);
                 GUI.BringWindowToFront(_tooltipWindowId);
-
-                GUI.skin = oldSkin;
             }
-        }
-
-        public static void ResetTooltipStyle()
-        {
-            _tooltipStyle = null;
         }
     }
 }

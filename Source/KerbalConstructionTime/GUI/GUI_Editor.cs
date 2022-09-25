@@ -1,15 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using RP0;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private const int _editorWindowWidth = 275;
-
-        public static Rect EditorWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, _editorWindowWidth * UIHolder.UIScale, 1);
+        public static Rect EditorWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, 275, 135);
         public static string BuildRateForDisplay;
 
         private static bool _isEditorLocked = false;
@@ -28,9 +26,9 @@ namespace KerbalConstructionTime
             {
                 return;
             }
-            if (EditorWindowPosition.width < _editorWindowWidth * UIHolder.UIScale)    // the size keeps getting changed for some reason, so this will avoid that
+            if (EditorWindowPosition.width < 275)    // the size keeps getting changed for some reason, so this will avoid that
             {
-                EditorWindowPosition.width = _editorWindowWidth * UIHolder.UIScale;
+                EditorWindowPosition.width = 275;
                 EditorWindowPosition.height = 1;
             }
             GUILayout.BeginVertical();
@@ -62,7 +60,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
                 BuildRateForDisplay = rate.ToString();
-            BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, UIHolder.Width(75));
+            BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
 
             double bR;
@@ -220,7 +218,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
-                _centralWindowPosition.width = 300 * UIHolder.UIScale;
+                _centralWindowPosition.width = 300;
             }
             if (rightLC)
             {
@@ -275,7 +273,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("Build Time at ");
             if (BuildRateForDisplay == null)
                 BuildRateForDisplay = rate.ToString();
-            BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, UIHolder.Width(75));
+            BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");
 
             double bR;

@@ -2,15 +2,12 @@
 using UniLinq;
 using ToolbarControl_NS;
 using UnityEngine;
-using RP0;
 
 namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private const int _buildPlansWindowWidth = 300;
-        
-        private static Rect _buildPlansWindowPosition = new Rect(Screen.width - _buildPlansWindowWidth * UIHolder.UIScale, 40, _buildPlansWindowWidth * UIHolder.UIScale, 1);
+        private static Rect _buildPlansWindowPosition = new Rect(Screen.width - 300, 40, 300, 1);
         private static Vector2 _buildPlansScrollPos;
 
         private static int _planToDelete;
@@ -22,7 +19,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
             if (lcMode)
             {
-                UIHolder.Space(10);
+                GUILayout.Space(10);
                 GUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
                 GUILayout.Label("Add LC Support For:");
@@ -37,7 +34,7 @@ namespace KerbalConstructionTime
                     {
                         if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft" || EditorLogic.fetch.ship.shipName == "")
                         {
-                            if (GUILayout.Button("Cannot Add a Plan Without a Valid Name", UIHolder.Height(2 * 22)))
+                            if (GUILayout.Button("Cannot Add a Plan Without a Valid Name", GUILayout.Height(2 * 22)))
                             {
                                 if (EditorLogic.fetch.ship.shipName == "Untitled Space Craft")
                                 {
@@ -54,7 +51,7 @@ namespace KerbalConstructionTime
                         else
                         {
                             GUILayout.BeginHorizontal();
-                            if (GUILayout.Button("Add To Building Plans", UIHolder.Height(2 * 22)))
+                            if (GUILayout.Button("Add To Building Plans", GUILayout.Height(2 * 22)))
                             {
                                 AddVesselToPlansList();
                             }
@@ -63,10 +60,10 @@ namespace KerbalConstructionTime
                     }
                     else
                     {
-                        GUILayout.Button("No vessel available", UIHolder.Height(2 * 22));
+                        GUILayout.Button("No vessel available", GUILayout.Height(2 * 22));
                     }
                 }
-                UIHolder.Space(10);
+                GUILayout.Space(10);
                 GUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
                 GUILayout.Label("Available Building Plans");
@@ -82,7 +79,7 @@ namespace KerbalConstructionTime
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:");
                 GUILayout.EndHorizontal();
-                _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, UIHolder.Height(250));
+                _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
                 if (KerbalConstructionTimeData.Instance.BuildPlans.Count == 0)
                 {
@@ -97,9 +94,9 @@ namespace KerbalConstructionTime
                     {
                         if (lcMode)
                         {
-                            GUILayout.Label("", UIHolder.Width(butW));
+                            GUILayout.Label("", GUILayout.Width(butW));
                         }
-                        else if (GUILayout.Button("X", _redButton, UIHolder.Width(butW)))
+                        else if (GUILayout.Button("X", _redButton, GUILayout.Width(butW)))
                         {
                             _planToDelete = i;
                             InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");

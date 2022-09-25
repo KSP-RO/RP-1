@@ -35,4 +35,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: KSPAssembly("RP-0", 1, 00)]
+[assembly: KSPAssembly("ClearInputLocks", 1, 00)]

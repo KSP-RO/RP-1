@@ -59,7 +59,7 @@ namespace KerbalConstructionTime
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button("*", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
                 {
                     _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
                     bR = rates[_rateIndexHolder];
@@ -83,26 +83,46 @@ namespace KerbalConstructionTime
 
             if (KCTGameStates.EditorRolloutTime > 0)
             {
-                bR = Utilities.GetVABBuildRateSum(KCTGameStates.ActiveKSC);
+                bR = Utilities.GetBuildRateForFastestVABLine(KCTGameStates.ActiveKSC);
                 GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
             }
 
             if (KCTGameStates.EditorIntegrationCosts > 0)
-                GUILayout.Label($"Integration Cost: {Math.Round(KCTGameStates.EditorIntegrationCosts, 1)}");
+                GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorIntegrationCosts:N1}");
 
             if (KCTGameStates.EditorRolloutCosts > 0)
-                GUILayout.Label($"Rollout Cost: {Math.Round(KCTGameStates.EditorRolloutCosts, 1)}");
+                GUILayout.Label($"Rollout Cost: √{KCTGameStates.EditorRolloutCosts:N1}");
 
-            if (!KCTGameStates.Settings.OverrideLaunchButton)
+            if (KCTGameStates.EditorUnlockCosts > 0)
+                GUILayout.Label($"Unlock Cost: √{KCTGameStates.EditorUnlockCosts:N1}");
+
+            if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Build"))
+                string techLabel = string.Empty;
+                foreach (string techId in KCTGameStates.EditorRequiredTechs)
                 {
-                    Utilities.AddVesselToBuildList();
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                    string techName = ResearchAndDevelopment.GetTechnologyTitle(techId);
+
+                    if (string.IsNullOrEmpty(techLabel))
+                        techLabel = $"Needs: {techName}";
+                    else
+                        techLabel += $"\n       {techName}";
                 }
-                GUILayout.EndHorizontal();
+                GUILayout.Label(techLabel);
             }
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Simulate"))
+            {
+                _simulationConfigPosition.height = 1;
+                EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
+                GUIStates.ShowSimConfig = true;
+            }
+            if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Build"))
+            {
+                Utilities.TryAddVesselToBuildList();
+                Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+            }
+            GUILayout.EndHorizontal();
             if (GUILayout.Button("Show/Hide Build List"))
             {
                 GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
@@ -120,16 +140,9 @@ namespace KerbalConstructionTime
                 ship.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ship);
             }
 
-            double origBP = ship.IsFinished ? _finishedShipBP : ship.BuildPoints;
-            origBP += ship.IntegrationPoints;
-            double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
-            double difference = Math.Abs(buildTime - origBP);
-            double progress;
-            if (ship.IsFinished) progress = origBP;
-            else progress = ship.Progress;
-            double newProgress = Math.Max(0, progress - (1.1 * difference));
-            GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * (progress / origBP), 2))}%");
-            GUILayout.Label($"Edited: {Math.Round(100 * newProgress / buildTime, 2)}%");
+            Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
+            GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * originalCompletionPercent, 2))}%");
+            GUILayout.Label($"Edited: {Math.Round(100 * newCompletionPercent, 2)}%");
 
             BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
             GUILayout.BeginHorizontal();
@@ -142,14 +155,14 @@ namespace KerbalConstructionTime
             else rates = Utilities.GetSPHBuildRates(null);
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button("*", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
                 {
                     _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
                     bR = rates[_rateIndexHolder];
                     BuildRateForDisplay = bR.ToString();
                 }
                 GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(buildTime - newProgress) / bR));
+                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime - newProgressBP) / bR));
             }
             else
             {
@@ -160,53 +173,34 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Edits"))
             {
-
                 _finishedShipBP = -1;
-                Utilities.AddFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
-                BuildListVessel newShip = Utilities.AddVesselToBuildList();
-                if (newShip == null)
-                {
-                    Utilities.SpendFunds(ship.GetTotalCost(), TransactionReasons.VesselRollout);
-                    return;
-                }
-
-                ship.RemoveFromBuildList();
-                newShip.Progress = newProgress;
-                newShip.RushBuildClicks = ship.RushBuildClicks;
-                KCTDebug.Log($"Finished? {ship.IsFinished}");
-                if (ship.IsFinished)
-                    newShip.CannotEarnScience = true;
-
-                GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
-
-                KCTGameStates.EditorShipEditingMode = false;
-
-                InputLockManager.RemoveControlLock("KCTEditExit");
-                InputLockManager.RemoveControlLock("KCTEditLoad");
-                InputLockManager.RemoveControlLock("KCTEditNew");
-                InputLockManager.RemoveControlLock("KCTEditLaunch");
-                EditorLogic.fetch.Unlock("KCTEditorMouseLock");
-                KCTDebug.Log("Edits saved.");
-
-                HighLogic.LoadScene(GameScenes.SPACECENTER);
+                Utilities.TrySaveShipEdits(ship);
             }
             if (GUILayout.Button("Cancel Edits"))
             {
                 KCTDebug.Log("Edits cancelled.");
                 _finishedShipBP = -1;
-                KCTGameStates.EditorShipEditingMode = false;
-
-                InputLockManager.RemoveControlLock("KCTEditExit");
-                InputLockManager.RemoveControlLock("KCTEditLoad");
-                InputLockManager.RemoveControlLock("KCTEditNew");
-                InputLockManager.RemoveControlLock("KCTEditLaunch");
-                EditorLogic.fetch.Unlock("KCTEditorMouseLock");
-
                 ScrapYardWrapper.ProcessVessel(KCTGameStates.EditedVessel.ExtractedPartNodes);
+                KCTGameStates.ClearVesselEditMode();
 
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
             }
             GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Simulate"))
+            {
+                _finishedShipBP = -1;
+                _simulationConfigPosition.height = 1;
+                EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
+                GUIStates.ShowSimConfig = true;
+
+                double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+                double bp = Utilities.GetBuildTime(effCost);
+                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL);
+            }
+            GUILayout.EndHorizontal();
+
             if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.LaunchedVessel.AreTanksFull() &&
                 GUILayout.Button("Fill Tanks"))
             {
@@ -237,6 +231,8 @@ namespace KerbalConstructionTime
                     }
                 }
             }
+
+            RenderMergeSection(ship);
         }
 
         private static void CheckEditorLock()

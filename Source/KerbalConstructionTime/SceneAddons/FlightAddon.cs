@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using KSP.UI.Screens;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace KerbalConstructionTime
 {
@@ -15,8 +16,7 @@ namespace KerbalConstructionTime
             if (KCT_GUI.IsPrimarilyDisabled)
                 return;
             KCTDebug.Log("KCT_Flight, Start");
-            var altimeter = FindObjectOfType<AltimeterSliderButtons>();
-            if (altimeter != null)
+            if (FindObjectOfType<AltimeterSliderButtons>() is AltimeterSliderButtons altimeter)
             {
                 _originalCallback = altimeter.vesselRecoveryButton.onClick;
 
@@ -48,38 +48,50 @@ namespace KerbalConstructionTime
 
         public void RecoverVessel()
         {
-            bool isSPH = FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.IsRecoverable && 
-                         FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
-            bool isVAB = Utilities.IsVabRecoveryAvailable();
-
-            int cnt = 2;
-            if (!FlightGlobals.ActiveVessel.isEVA)
+            if (KCTGameStates.IsSimulatedFlight)
             {
-                if (isSPH) cnt++;
-                if (isVAB) cnt++;
+                KCT_GUI.GUIStates.ShowSimulationGUI = true;
+                return;
             }
-            DialogGUIBase[] options = new DialogGUIBase[cnt];
-            cnt = 0;
+
+            bool isSPHAllowed = Utilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel);
+            bool isVABAllowed = Utilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel);
+            var options = new List<DialogGUIBase>();
             if (!FlightGlobals.ActiveVessel.isEVA)
             {
-                if (isSPH)
+                string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech);
+                string techLimitText = string.IsNullOrEmpty(nodeTitle) ? string.Empty :
+                                       $"\nAdditionally requires {nodeTitle} tech node to be researched (unless the vessel is in Prelaunch state).";
+                string genericReuseText = "Allows the vessel to be launched again after a short recovery delay.";
+
+                options.Add(new DialogGUIButtonWithTooltip("Recover to SPH", RecoverToSPH)
                 {
-                    options[cnt++] = new DialogGUIButton("Recover to SPH", RecoverToSPH);
-                }
-                if (isVAB)
+                    OptionInteractableCondition = () => isSPHAllowed,
+                    tooltipText = isSPHAllowed ? genericReuseText : "Can only be used when the vessel was built in SPH."
+                });
+
+                options.Add(new DialogGUIButtonWithTooltip("Recover to VAB", RecoverToVAB)
                 {
-                    options[cnt++] = new DialogGUIButton("Recover to VAB", RecoverToVAB);
-                }
-                options[cnt++] = new DialogGUIButton("Normal recovery", DoNormalRecovery);
-            } 
+                    OptionInteractableCondition = () => isVABAllowed,
+                    tooltipText = isVABAllowed ? genericReuseText : $"Can only be used when the vessel was built in VAB.{techLimitText}"
+                });
+
+                options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecovery)
+                {
+                    tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
+                });
+            }
             else
-                options[cnt++] = new DialogGUIButton("Recover", DoNormalRecovery);
-            options[cnt] = new DialogGUIButton("Cancel", () => { });
+            {
+                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecovery));
+            }
+
+            options.Add(new DialogGUIButton("Cancel", () => { }));
 
             var diag = new MultiOptionDialog("RecoverVesselPopup",
                 "Do you want KCT to do the recovery?", 
-                "RP-1's KCT", 
-                null, options: options);
+                "Recover vessel", 
+                null, options: options.ToArray());
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }
     }

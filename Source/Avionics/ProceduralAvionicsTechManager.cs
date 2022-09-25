@@ -154,7 +154,7 @@ namespace RP0.ProceduralAvionics
             return EntryCostManager.Instance.PurchaseConfig(ecmName);
         }
 
-        private static string GetEcmName(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
+        public static string GetEcmName(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
         {
             return $"{avionicsConfigName}-{techNode.name}";
         }

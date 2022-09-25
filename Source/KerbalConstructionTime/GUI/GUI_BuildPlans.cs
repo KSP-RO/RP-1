@@ -8,6 +8,7 @@ namespace KerbalConstructionTime
     public static partial class KCT_GUI
     {
         private static Rect _buildPlansWindowPosition = new Rect(Screen.width - 300, 40, 300, 1);
+        private static Vector2 _buildPlansScrollPos;
         private static GUIStyle _buildPlansbutton;
         private static Texture2D _background;
         private static GUIContent _upContent;
@@ -39,6 +40,7 @@ namespace KerbalConstructionTime
             color[2] = color[0];
             color[3] = color[0];
             _background.SetPixels(color);
+            _background.Apply();
 
             _buildPlansbutton.normal.background = _background;
             _buildPlansbutton.hover.background = _background;
@@ -129,7 +131,7 @@ namespace KerbalConstructionTime
                         GUILayout.BeginHorizontal();
                         if (GUILayout.Button("Build", GUILayout.Height(2 * 22)))
                         {
-                            Utilities.AddVesselToBuildList();
+                            Utilities.TryAddVesselToBuildList();
                             Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                         }
                         GUILayout.EndHorizontal();
@@ -174,7 +176,7 @@ namespace KerbalConstructionTime
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Name:");
                     GUILayout.EndHorizontal();
-                    _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+                    _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
                     if (_plansList == null || _plansList.Count == 0)
                     {
@@ -201,7 +203,7 @@ namespace KerbalConstructionTime
 
                             if (GUILayout.Button(b.ShipName))
                             {
-                                Utilities.AddVesselToBuildList(b.CreateCopy(true));
+                                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks : true);
                             }
                         }
 
@@ -221,12 +223,12 @@ namespace KerbalConstructionTime
         }
 
         // Following is mostly duplicating the AddVesselToBuildList set of methods
-        public static BuildListVessel AddVesselToPlansList()
+        public static void AddVesselToPlansList()
         {
-            return AddVesselToPlansList(EditorLogic.fetch.launchSiteName);
+            AddVesselToPlansList(EditorLogic.fetch.launchSiteName);
         }
 
-        public static BuildListVessel AddVesselToPlansList(string launchSite)
+        public static void AddVesselToPlansList(string launchSite)
         {
             if (string.IsNullOrEmpty(launchSite))
             {
@@ -238,10 +240,17 @@ namespace KerbalConstructionTime
             {
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
-            return AddVesselToPlansList(blv);
+
+            var v = new VesselBuildValidator
+            {
+                SuccessAction = AddVesselToPlansList,
+                CheckAvailableFunds = false,
+                CheckFacilityRequirements = false
+            };
+            v.ProcessVessel(blv);
         }
 
-        public static BuildListVessel AddVesselToPlansList(BuildListVessel blv)
+        public static void AddVesselToPlansList(BuildListVessel blv)
         {
             ScreenMessage message;
             if (Utilities.CurrentGameIsCareer())
@@ -284,9 +293,10 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}");
             KCTDebug.Log($"Launch site is {blv.LaunchSite}");
-            message = new ScreenMessage($"[KCT] Added {blv.ShipName} to {type} build list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+            bool isCommonLine = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;
+            string text = isCommonLine ? $"Added {blv.ShipName} to build list." : $"Added {blv.ShipName} to {type} build list.";
+            message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
-            return blv;
         }
 
         private static void RemoveVesselFromPlans()

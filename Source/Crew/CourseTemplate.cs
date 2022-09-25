@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RP0.Crew
 {
-    public enum RepeatMode {NEVER, EXPIRED, ALWAYS}; //is the course repeatable?
+    public enum RepeatMode { NEVER, EXPIRED, ALWAYS }; //is the course repeatable?
 
     public class CourseTemplate
     {
@@ -41,6 +41,8 @@ namespace RP0.Crew
         public ConfigNode ExpireLog = null; // expire all these on complete
 
         public bool isTemporary = false;
+
+        internal string PartsTooltip;
 
         public CourseTemplate(ConfigNode source)
         {

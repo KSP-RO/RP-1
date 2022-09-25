@@ -226,8 +226,8 @@
         "spacecraft": "",
         "engine_config": "SNTPPFE100",
         "upgrade": false,
-        "entry_cost_mods": "SNTPPFE100-Hydrogen",
-        "identical_part_name": "",
+        "entry_cost_mods": "SNTPPFE100-Prototype",
+        "identical_part_name": "SNTP",
         "module_tags": [
             "EngineLiquidTurbo",
             "Nuclear"

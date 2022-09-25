@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToolbarControl_NS;
+using Upgradeables;
 
 namespace KerbalConstructionTime
 {
@@ -8,37 +9,36 @@ namespace KerbalConstructionTime
         internal const string _modId = "KCT_NS";
         internal const string _modName = "Kerbal Construction Time";
 
-        public static double UT, LastUT = 0;
-        public static bool CanWarp = false, WarpInitiated = false;
-        public static int LastWarpRate = 0;
         public static KCTSettings Settings = new KCTSettings();
 
         public static KSCItem ActiveKSC = null;
         public static List<KSCItem> KSCs = new List<KSCItem>();
         public static string ActiveKSCName = string.Empty;
-        public static bool UpdateLaunchpadDestructionState = false;
         public static int TechUpgradesTotal = 0;
         public static float SciPointsTotal = -1f;
+        public static bool MergingAvailable;
+        public static List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
-        public static KCTObservableList<TechItem> TechList;
+        public static KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
 
         public static List<int> PurchasedUpgrades = new List<int>() { 0, 0 };
         public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int UpgradesResetCounter = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
-        public static List<CrewedPart> LaunchedCrew = new List<CrewedPart>();
+        public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
 
         public static ToolbarControl ToolbarControl;
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
-        public static IKCTBuildItem TargetedItem = null;
+        public static bool IsSimulatedFlight = false;
         public static double EditorBuildTime = 0;
         public static double EditorIntegrationTime = 0;
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorIntegrationCosts = 0;
-        public static bool LaunchFromTS = false;
+        public static double EditorUnlockCosts = 0;
+        public static List<string> EditorRequiredTechs = new List<string>();
 
         public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();
 
@@ -46,58 +46,68 @@ namespace KerbalConstructionTime
         public static string KACAlarmId = string.Empty;
         public static double KACAlarmUT = 0;
 
-        public static KCTOnLoadError ErroredDuringOnLoad = new KCTOnLoadError();
+        public static bool ErroredDuringOnLoad = false;
 
         public static bool VesselErrorAlerted = false;
         public static bool PersistenceLoaded = false;
         public static bool IsRefunding = false;
 
         public static AirlaunchParams AirlaunchParams;
+        public static SimulationParams SimulationParams = new SimulationParams();
 
         public static void Reset()
         {
             IsFirstStart = false;
             VesselErrorAlerted = false;
 
+            IsSimulatedFlight = false;
+            SimulationParams.Reset();
+
             PurchasedUpgrades = new List<int>() { 0, 0 };
-            TargetedItem = null;
             KCT_GUI.ResetFormulaRateHolders();
 
             MiscellaneousTempUpgrades = 0;
 
             BuildingMaxLevelCache.Clear();
 
-            LastUT = 0;
-
             InitAndClearTechList();
         }
 
         public static void InitAndClearTechList()
         {
-            if (TechList != null)
-                TechList.Clear();
-            else
-                TechList = new KCTObservableList<TechItem>();
-            TechList.Updated += KerbalConstructionTime.Instance.UpdateTechlistIconColor;
-        }
-    }
-
-    public class CrewedPart
-    {
-        public List<ProtoCrewMember> CrewList { get; set; }
-        public uint PartID { get; set; }
-
-        public CrewedPart(uint ID, List<ProtoCrewMember> crew)
-        {
-            PartID = ID;
-            CrewList = crew;
+            TechList = new KCTObservableList<TechItem>();
+            if (KerbalConstructionTime.Instance != null)    // Can be null/destroyed in the main menu scene
+            {
+                TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
+            }
         }
 
-        public CrewedPart FromPart(Part part, List<ProtoCrewMember> crew)
+        public static void ClearVesselEditMode()
         {
-            PartID = part.flightID;
-            CrewList = crew;
-            return this;
+            EditorShipEditingMode = false;
+            EditedVessel = null;
+            MergedVessels.Clear();
+
+            InputLockManager.RemoveControlLock("KCTEditExit");
+            InputLockManager.RemoveControlLock("KCTEditLoad");
+            InputLockManager.RemoveControlLock("KCTEditNew");
+            InputLockManager.RemoveControlLock("KCTEditLaunch");
+            EditorLogic.fetch?.Unlock("KCTEditorMouseLock");
+        }
+
+        /// <summary>
+        /// API for creating new launch pads. ConfigurableStart mod is know to use this.
+        /// </summary>
+        /// <param name="padName"></param>
+        /// <param name="padLevel"></param>
+        public static void CreateNewPad(string padName, int padLevel)
+        {
+            ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
+        }
+
+        public static void ClearLaunchpadList()
+        {
+            ActiveKSC.LaunchPads.Clear();
         }
     }
 }

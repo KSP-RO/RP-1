@@ -12,20 +12,17 @@ namespace KerbalConstructionTime
         private static KCT_Preset _workingPreset;
         private static Vector2 _presetScrollView, _presetMainScroll;
         private static bool _isChanged = false, _showFormula = false;
-        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _reEffTmp = "", _maxReTmp = "";
+        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _reEffTmp = "", _maxReTmp = "", _mTimePTmp = "";
 
         private static string _saveName, _saveShort, _saveDesc, _saveAuthor;
         private static bool _saveCareer, _saveScience, _saveSandbox;
         private static KCT_Preset _toSave;
 
-        private static bool _forceStopWarp, _disableAllMsgs, _debug, _overrideLaunchBtn, _autoAlarms;
+        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms, _cleanUpKSCDebris;
         private static int _newTimewarp;
 
         public static void DrawPresetWindow(int windowID)
         {
-            GUIStyle yellowText = new GUIStyle(GUI.skin.label);
-            yellowText.normal.textColor = Color.yellow;
-
             if (_workingPreset == null)
             {
                 SetNewWorkingPreset(new KCT_Preset(PresetManager.Instance.ActivePreset), false); //might need to copy instead of assign here
@@ -37,7 +34,7 @@ namespace KerbalConstructionTime
 
             //preset selector
             GUILayout.BeginVertical();
-            GUILayout.Label("Presets", yellowText, GUILayout.ExpandHeight(false));
+            GUILayout.Label("Presets", _yellowText, GUILayout.ExpandHeight(false));
             //preset toolbar in a scrollview
             _presetScrollView = GUILayout.BeginScrollView(_presetScrollView, GUILayout.Width(_presetPosition.width / 6f)); //TODO: update HighLogic.Skin.textArea
             string[] presetShortNames = PresetManager.Instance.PresetShortNames(true);
@@ -96,7 +93,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             //Features section
             GUILayout.BeginVertical();
-            GUILayout.Label("Features", yellowText);
+            GUILayout.Label("Features", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             _workingPreset.GeneralSettings.Enabled = GUILayout.Toggle(_workingPreset.GeneralSettings.Enabled, "Mod Enabled", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.BuildTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.BuildTimes, "Build Times", HighLogic.Skin.button);
@@ -117,11 +114,15 @@ namespace KerbalConstructionTime
 
 
             GUILayout.BeginVertical(); //Begin time settings
-            GUILayout.Label("Time Settings", yellowText);
+            GUILayout.Label("Time Settings", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical();
             GUILayout.Label("Overall Multiplier: ");
             double.TryParse(_oMultTmp = GUILayout.TextField(_oMultTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.OverallMultiplier);
+            GUILayout.Label("Merging Time Penalty: ");
+            double.TryParse(_mTimePTmp = GUILayout.TextField(_mTimePTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MergingTimePenalty);
+            GUILayout.EndVertical(); 
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Build Effect: ");
@@ -152,7 +153,7 @@ namespace KerbalConstructionTime
 
             //begin formula settings
             GUILayout.BeginVertical();
-            GUILayout.Label("Formula Settings (Advanced)", yellowText);
+            GUILayout.Label("Formula Settings (Advanced)", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Show/Hide Formulas"))
@@ -259,6 +260,11 @@ namespace KerbalConstructionTime
                 GUILayout.Label("AirlaunchTime: ");
                 _workingPreset.FormulaSettings.AirlaunchTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.AirlaunchTimeFormula, GUILayout.Width(textWidth));
                 GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("EngineRefurbCredit: ");
+                _workingPreset.FormulaSettings.EngineRefurbFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EngineRefurbFormula, GUILayout.Width(textWidth));
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndVertical();
@@ -277,11 +283,12 @@ namespace KerbalConstructionTime
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     Utilities.DisableModFunctionality();
                 KCTGameStates.Settings.MaxTimeWarp = _newTimewarp;
-                KCTGameStates.Settings.ForceStopWarp = _forceStopWarp;
                 KCTGameStates.Settings.DisableAllMessages = _disableAllMsgs;
+                KCTGameStates.Settings.ShowSimWatermark = _showSimWatermark;
                 KCTGameStates.Settings.OverrideLaunchButton = _overrideLaunchBtn;
                 KCTGameStates.Settings.Debug = _debug;
                 KCTGameStates.Settings.AutoKACAlarms = _autoAlarms;
+                KCTGameStates.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
 
                 KCTGameStates.Settings.Save();
                 GUIStates.ShowSettings = false;
@@ -291,7 +298,7 @@ namespace KerbalConstructionTime
                     GUIStates.ShowBuildList = true;
                     RefreshToolbarState();
                 }
-                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock("KCTKSCLock");
+                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
 
                 for (int j = 0; j < KCTGameStates.TechList.Count; j++)
                     KCTGameStates.TechList[j].UpdateBuildRate(j);
@@ -324,8 +331,8 @@ namespace KerbalConstructionTime
             GUILayout.EndVertical(); //end column 2
 
             GUILayout.BeginVertical(GUILayout.Width(100)); //Start general settings
-            GUILayout.Label("General Settings", yellowText);
-            GUILayout.Label("NOTE: Affects all saves!", yellowText);
+            GUILayout.Label("General Settings", _yellowText);
+            GUILayout.Label("NOTE: Affects all saves!", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.Label("Max Timewarp");
             GUILayout.BeginHorizontal();
@@ -341,12 +348,13 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            _forceStopWarp = GUILayout.Toggle(_forceStopWarp, "Auto Stop TimeWarp", HighLogic.Skin.button);
             _autoAlarms = GUILayout.Toggle(_autoAlarms, "Auto KAC Alarms", HighLogic.Skin.button);
             _overrideLaunchBtn = GUILayout.Toggle(_overrideLaunchBtn, "Override Launch Button", HighLogic.Skin.button);
             //useBlizzyToolbar = GUILayout.Toggle(useBlizzyToolbar, "Use Toolbar Mod", HighLogic.Skin.button);
             _disableAllMsgs = !GUILayout.Toggle(!_disableAllMsgs, "Use Message System", HighLogic.Skin.button);
+            _showSimWatermark = GUILayout.Toggle(_showSimWatermark, "Show sim watermark", HighLogic.Skin.button);
             _debug = GUILayout.Toggle(_debug, "Debug Logging", HighLogic.Skin.button);
+            _cleanUpKSCDebris = GUILayout.Toggle(_cleanUpKSCDebris, "Autoclean KSC Debris", HighLogic.Skin.button);
 
             GUILayout.EndVertical();
             GUILayout.EndVertical();
@@ -374,6 +382,7 @@ namespace KerbalConstructionTime
             }
 
             _oMultTmp = _workingPreset.TimeSettings.OverallMultiplier.ToString();
+            _mTimePTmp = _workingPreset.TimeSettings.MergingTimePenalty.ToString(); 
             _bEffTmp = _workingPreset.TimeSettings.BuildEffect.ToString();
             _iEffTmp = _workingPreset.TimeSettings.InventoryEffect.ToString();
             _reEffTmp = _workingPreset.TimeSettings.ReconditioningEffect.ToString();
@@ -467,11 +476,12 @@ namespace KerbalConstructionTime
         private static void ShowSettings()
         {
             _newTimewarp = KCTGameStates.Settings.MaxTimeWarp;
-            _forceStopWarp = KCTGameStates.Settings.ForceStopWarp;
             _disableAllMsgs = KCTGameStates.Settings.DisableAllMessages;
+            _showSimWatermark = KCTGameStates.Settings.ShowSimWatermark;
             _debug = KCTGameStates.Settings.Debug;
             _overrideLaunchBtn = KCTGameStates.Settings.OverrideLaunchButton;
             _autoAlarms = KCTGameStates.Settings.AutoKACAlarms;
+            _cleanUpKSCDebris = KCTGameStates.Settings.CleanUpKSCDebris;
 
             GUIStates.ShowSettings = !GUIStates.ShowSettings;
         }

@@ -7,7 +7,7 @@ namespace RP0
     public class TopWindow : UIBase
     {
         private static Rect _windowPos = new Rect(500, 240, 0, 0);
-        private static readonly int _windowId = "RP0Top".GetHashCode();
+        private static readonly int _mainWindowId = "RP0Top".GetHashCode();
         private static UITab _currentTab;
         private static bool _shouldResetUISize;
 
@@ -15,6 +15,7 @@ namespace RP0
         private readonly ToolingGUI _toolUI = new ToolingGUI();
         private readonly Crew.FSGUI _fsUI = new Crew.FSGUI();
         private readonly AvionicsGUI _avUI = new AvionicsGUI();
+        private readonly ContractGUI _contractUI = new ContractGUI();
         private readonly CareerLogGUI _logUI = new CareerLogGUI();
 
         public TopWindow()
@@ -32,7 +33,8 @@ namespace RP0
                 _windowPos.height = 0;
                 _shouldResetUISize = false;
             }
-            _windowPos = ClickThruBlocker.GUILayoutWindow(_windowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+            _windowPos = ClickThruBlocker.GUILayoutWindow(_mainWindowId, _windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+            Tooltip.Instance.ShowTooltip(_mainWindowId);
         }
 
         protected override void OnStart()
@@ -41,6 +43,7 @@ namespace RP0
             _toolUI.Start();
             _fsUI.Start();
             _avUI.Start();
+            _contractUI.Start();
             _logUI.Start();
         }
 
@@ -65,6 +68,8 @@ namespace RP0
                 SwitchTabTo(UITab.Courses);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
                 SwitchTabTo(UITab.Avionics);
+            if (ShouldShowTab(UITab.Contracts) && RenderToggleButton("Contracts", _currentTab == UITab.Contracts))
+                SwitchTabTo(UITab.Contracts);
             if (ShouldShowTab(UITab.CareerLog) && RenderToggleButton("Career Log", _currentTab == UITab.CareerLog))
                 SwitchTabTo(UITab.CareerLog);
             GUILayout.EndHorizontal();
@@ -117,6 +122,9 @@ namespace RP0
                         case UITab.Avionics:
                             _avUI.RenderAvionicsTab();
                             break;
+                        case UITab.Contracts:
+                            _contractUI.RenderContractsTab();
+                            break;
                         case UITab.CareerLog:
                             _logUI.RenderTab();
                             break;
@@ -133,6 +141,8 @@ namespace RP0
             GUILayout.FlexibleSpace();
             GUILayout.EndVertical();
             GUI.DragWindow();
+
+            Tooltip.Instance.RecordTooltip(_mainWindowId);
         }
     }
 }

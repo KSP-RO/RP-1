@@ -4,6 +4,9 @@
     {
         public bool ShowEditorGUI;
         public bool ShowBuildList;
+        public bool ShowSimulationGUI;
+        public bool ShowSimConfig;
+        public bool ShowSimBodyChooser;
         public bool ShowClearLaunch;
         public bool ShowShipRoster;
         public bool ShowCrewSelect;
@@ -28,8 +31,9 @@
 
         public void HideAllNonMainWindows()
         {
-            ShowClearLaunch = ShowShipRoster = ShowCrewSelect = ShowSettings = ShowUpgradeWindow = 
-            ShowBLPlus = ShowNewPad = ShowRename = ShowDismantlePad = ShowFirstRun =
+            ShowSimConfig = ShowSimBodyChooser = ShowSimulationGUI = 
+            ShowClearLaunch = ShowShipRoster = ShowCrewSelect = ShowSettings = 
+            ShowUpgradeWindow = ShowBLPlus = ShowNewPad = ShowRename = ShowDismantlePad = ShowFirstRun =
             ShowLaunchSiteSelector = ShowBuildPlansWindow = ShowAirlaunch = ShowPresetSaver = false;
         }
     }

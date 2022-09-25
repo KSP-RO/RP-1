@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿#define CIBUILD_disabled
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -9,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KSP-RO")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright © KSP-RO 2014-2020 CC-BY-NC-SA 4.0")]
+[assembly: AssemblyCopyright("Copyright © KSP-RO 2014-2021 CC-BY-NC-SA 4.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,10 +33,14 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.7.0.0")]
+#if CIBUILD
+[assembly: AssemblyFileVersion("@MAJOR@.@MINOR@.@PATCH@.@BUILD@")]
+#else
+[assembly: AssemblyFileVersion("1.11.2.0")]
+#endif
 
 [assembly: KSPAssembly("RP-0", 1, 0)]
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]
-[assembly: KSPAssemblyDependency("RealFuels", 12, 7)]
+[assembly: KSPAssemblyDependency("RealFuels", 15, 1)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
 [assembly: KSPAssemblyDependency("KerbalConstructionTime", 2, 0)]

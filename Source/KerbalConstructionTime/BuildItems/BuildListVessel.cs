@@ -26,9 +26,13 @@ namespace KerbalConstructionTime
         public double StagePartCost = 0;
         public float EmptyCost = 0, EmptyMass = 0;
         public int BuildListIndex = -1;
+        public EditorFacility FacilityBuiltIn;
+        public string KCTPersistentID;
 
         internal ShipConstruct _ship;
         private double _rushCost = -1;
+
+        public Vector3 ShipSize = Vector3.zero;
 
         public double BuildRate => Utilities.GetBuildRate(this);
 
@@ -102,9 +106,13 @@ namespace KerbalConstructionTime
         {
             _ship = s;
             ShipNode = s.SaveShip();
+            // Override KSP sizing of the ship construct
+            ShipSize = Utilities.GetShipSize(s, true);
+            ShipNode.SetValue("size", KSPUtil.WriteVector(ShipSize));
             ShipName = s.shipName;
-            Cost = s.GetShipCosts(out EmptyCost, out _);
-            TotalMass = s.GetShipMass(true, out EmptyMass, out _);
+            Cost = Utilities.GetTotalVesselCost(ShipNode, true);
+            EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
+            TotalMass = Utilities.GetShipMass(s, true, out EmptyMass, out _);
 
             HashSet<int> stages = new HashSet<int>();
             NumStageParts = 0;
@@ -127,12 +135,19 @@ namespace KerbalConstructionTime
             Progress = 0;
             Flag = flagURL;
             if (s.shipFacility == EditorFacility.VAB)
+            {
                 Type = ListType.VAB;
+                FacilityBuiltIn = EditorFacility.VAB;
+            }
             else if (s.shipFacility == EditorFacility.SPH)
+            {
                 Type = ListType.SPH;
+                FacilityBuiltIn = EditorFacility.SPH;
+            }
             else
                 Type = ListType.None;
             Id = Guid.NewGuid();
+            KCTPersistentID = Guid.NewGuid().ToString("N");
             CannotEarnScience = false;
 
             //get the crew from the editorlogic
@@ -156,7 +171,7 @@ namespace KerbalConstructionTime
             IntegrationCost = (float)MathParser.ParseIntegrationCostFormula(this);
         }
 
-        public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int EditorFacility)
+        public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, int editorFacility)
         {
             LaunchSite = ls;
             ShipName = name;
@@ -165,60 +180,21 @@ namespace KerbalConstructionTime
             IntegrationPoints = integrP;
             Progress = 0;
             Flag = flagURL;
-            if (EditorFacility == (int)EditorFacilities.VAB)
+            if (editorFacility == (int)EditorFacilities.VAB)
+            {
                 Type = ListType.VAB;
-            else if (EditorFacility == (int)EditorFacilities.SPH)
+                FacilityBuiltIn = EditorFacility.VAB;
+            }
+            else if (editorFacility == (int)EditorFacilities.SPH)
+            {
                 Type = ListType.SPH;
+                FacilityBuiltIn = EditorFacility.SPH;
+            }
             else
                 Type = ListType.None;
             CannotEarnScience = false;
             Cost = spentFunds;
             IntegrationCost = integrCost;
-        }
-
-        public BuildListVessel(ProtoVessel pvessel, ConfigNode vesselNode, ListType listType = ListType.None) //For recovered vessels
-        {
-            Id = Guid.NewGuid();
-            ShipName = pvessel.vesselName;
-            ShipNode = vesselNode;
-
-            if (listType != ListType.None)
-                Type = listType;
-
-            Cost = Utilities.GetTotalVesselCost(ShipNode);
-            EmptyCost = Utilities.GetTotalVesselCost(ShipNode, false);
-            TotalMass = 0;
-            EmptyMass = 0;
-
-            HashSet<int> stages = new HashSet<int>();
-
-            foreach (ProtoPartSnapshot p in pvessel.protoPartSnapshots)
-            {
-                stages.Add(p.inverseStageIndex);
-
-                if (p.partPrefab != null && p.partPrefab.Modules.Contains<LaunchClamp>())
-                    continue;
-
-                TotalMass += p.mass;
-                EmptyMass += p.mass;
-
-                foreach (ProtoPartResourceSnapshot rsc in p.resources)
-                {
-                    PartResourceDefinition def = PartResourceLibrary.Instance.GetDefinition(rsc.resourceName);
-                    if (def != null)
-                        TotalMass += def.density * (float)rsc.amount;
-                }
-            }
-            CannotEarnScience = true;
-            NumStages = stages.Count;
-            // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
-
-            BuildPoints = Utilities.GetBuildTime(ShipNode.GetNodes("PART").ToList());
-            Flag = HighLogic.CurrentGame.flagURL;
-            Progress = BuildPoints;
-
-            DistanceFromKSC = 0; // (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
-            RushBuildClicks = 0;
         }
 
         /// <summary>
@@ -229,6 +205,7 @@ namespace KerbalConstructionTime
         public BuildListVessel(Vessel vessel, ListType listType = ListType.None)
         {
             Id = Guid.NewGuid();
+            KCTPersistentID = Guid.NewGuid().ToString("N");
             ShipName = vessel.vesselName;
             ShipNode = FromInFlightVessel(vessel, listType);
             if (listType != ListType.None)
@@ -245,8 +222,11 @@ namespace KerbalConstructionTime
             {
                 stages.Add(p.inverseStageIndex);
 
-                if (p.partPrefab != null && p.partPrefab.Modules.Contains<LaunchClamp>())
-                    continue;
+                if (p.partPrefab != null)
+                {
+                    if (p.partPrefab.Modules.Contains<LaunchClamp>() || p.partPrefab.HasTag("PadInfrastructure"))
+                        continue;
+                }
 
                 TotalMass += p.mass;
                 EmptyMass += p.mass;
@@ -300,6 +280,8 @@ namespace KerbalConstructionTime
 
             ConfigNode cn = ConstructToSave.SaveShip();
             SanitizeShipNode(cn);
+            // override KSP sizing of the ship construct
+            cn.SetValue("size", KSPUtil.WriteVector(Utilities.GetShipSize(ConstructToSave, true)));
             // These are actually needed, do not comment them out
             VesselToSave.SetRotation(OriginalRotation);
             VesselToSave.SetPosition(OriginalPosition);
@@ -319,6 +301,16 @@ namespace KerbalConstructionTime
                 foreach(ConfigNode module in part.GetNodes("MODULE"))
                 {
                     SanitizeNode(Utilities.GetPartNameFromNode(part), module, templates);
+                }
+
+                // Remove all waste resources
+                var resList = part.GetNodes("RESOURCE");
+                foreach (var res in resList)
+                {
+                    if (GuiDataAndWhitelistItemsDatabase.WasteRes.Contains(res.GetValue("name")))
+                    {
+                        res.SetValue("amount", 0);
+                    }
                 }
             }
             return node;
@@ -367,13 +359,13 @@ namespace KerbalConstructionTime
             };
 
             //refresh all inventory parts to new
-            for (int i = ret.ExtractedPartNodes.Count - 1; i >= 0; i--)
+            foreach (var p in ret.ExtractedPartNodes)
             {
-                ConfigNode part = ret.ExtractedPartNodes[i];
-                ScrapYardWrapper.RefreshPart(part);
+                ScrapYardWrapper.RefreshPart(p);
             }
 
             ret.Id = Guid.NewGuid();
+            ret.KCTPersistentID = Guid.NewGuid().ToString("N");
             ret.TotalMass = TotalMass;
             ret.EmptyMass = EmptyMass;
             ret.Cost = Cost;
@@ -382,6 +374,7 @@ namespace KerbalConstructionTime
             ret.NumStageParts = NumStageParts;
             ret.NumStages = NumStages;
             ret.StagePartCost = StagePartCost;
+            ret.ShipSize = ShipSize;
 
             if (RecalcTime)
             {
@@ -460,8 +453,20 @@ namespace KerbalConstructionTime
             if (fillFuel)
                 FillUnlockedFuelTanks();
             ShipNode.Save(tempFile);
-            FlightDriver.StartWithNewLaunch(tempFile, Flag, LaunchSite, new VesselCrewManifest());
-            KCTGameStates.LaunchFromTS = false;
+            string launchSiteName = LaunchSite;
+            if (launchSiteName == "LaunchPad")
+            {
+                KCT_LaunchPad pad = null;
+                if (LaunchSiteID >= 0)
+                    pad = KCTGameStates.ActiveKSC.LaunchPads[LaunchSiteID];
+                else
+                    pad = KCTGameStates.ActiveKSC.ActiveLPInstance;
+                
+                launchSiteName = pad.launchSiteName;
+            }
+
+            Utilities.CleanupDebris(launchSiteName);
+            FlightDriver.StartWithNewLaunch(tempFile, Flag, launchSiteName, new VesselCrewManifest());
             if (KCTGameStates.AirlaunchParams != null) KCTGameStates.AirlaunchParams.KSPVesselId = null;
         }
 
@@ -471,16 +476,12 @@ namespace KerbalConstructionTime
             if (!Utilities.CurrentGameIsCareer())
                 return failedReasons;
 
-            ShipTemplate template = new ShipTemplate();
-            template.LoadShip(ShipNode);
-
             if (Type == ListType.VAB)
             {
                 KCT_LaunchPad selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchPad() : KCTGameStates.ActiveKSC.ActiveLPInstance;
-                float launchpadNormalizedLevel = 1f * selectedPad.level / KCTGameStates.BuildingMaxLevelCache["LaunchPad"];
 
                 double totalMass = GetTotalMass();
-                if (totalMass > GameVariables.Instance.GetCraftMassLimit(launchpadNormalizedLevel, true))
+                if (totalMass > selectedPad.SupportedMass)
                 {
                     failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons");
                 }
@@ -488,7 +489,7 @@ namespace KerbalConstructionTime
                 {
                     failedReasons.Add("Part Count limit exceeded");
                 }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(template, SpaceCenterFacility.LaunchPad, GameVariables.Instance.GetCraftSizeLimit(launchpadNormalizedLevel, true));
+                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedPad.SupportedSize);
                 if (!sizeCheck.Test())
                 {
                     failedReasons.Add("Size limits exceeded");
@@ -505,7 +506,7 @@ namespace KerbalConstructionTime
                 {
                     failedReasons.Add("Part Count limit exceeded");
                 }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(template, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false));
+                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.Runway, GameVariables.Instance.GetCraftSizeLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Runway), false));
                 if (!sizeCheck.Test())
                 {
                     failedReasons.Add("Size limits exceeded");
@@ -528,21 +529,16 @@ namespace KerbalConstructionTime
 
         private void UpdateRFTanks()
         {
-            var nodes = ShipNode.GetNodes("PART");
-            for (int i = nodes.Count() - 1; i >= 0; i--)
+            foreach (var cn in ShipNode.GetNodes("PART"))
             {
-                ConfigNode cn = nodes[i];
-
-                var modules = cn.GetNodes("MODULE");
-                for (int im = modules.Count() - 1; im >= 0; im--)
+                foreach (var module in cn.GetNodes("MODULE"))
                 {
-                    ConfigNode module = modules[im];
                     if (module.GetValue("name") == "ModuleFuelTanks")
                     {
                         if (module.HasValue("timestamp"))
                         {
                             KCTDebug.Log("Updating RF timestamp on a part");
-                            module.SetValue("timestamp", Planetarium.GetUniversalTime().ToString());
+                            module.SetValue("timestamp", Utilities.GetUT().ToString());
                         }
                     }
                 }
@@ -553,45 +549,15 @@ namespace KerbalConstructionTime
         {
             foreach (ConfigNode p in ShipNode.GetNodes("PART"))
             {
-                if (Utilities.PartIsProcedural(p))
+                foreach (var res in p.GetNodes("RESOURCE"))
                 {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
+                    if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
+                        bool.Parse(res.GetValue("flowState")))
                     {
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = float.Parse( res.GetValue("maxAmount"));
-                                var amt = float.Parse(res.GetValue("amount"));
-                                if (Math.Abs(amt-maxAmt) >= 1)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
-                    {
-                        var name = res.GetValue("name");
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(name))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = float.Parse(res.GetValue("maxAmount"));
-                                var amt = float.Parse(res.GetValue("amount"));
-                                if (Math.Abs(amt - maxAmt) >= 1)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
+                        var maxAmt = float.Parse(res.GetValue("maxAmount"));
+                        var amt = float.Parse(res.GetValue("amount"));
+                        if (Math.Abs(amt - maxAmt) >= 1)
+                            return false;
                     }
                 }
             }
@@ -602,38 +568,14 @@ namespace KerbalConstructionTime
         {
             foreach (ConfigNode p in ShipNode.GetNodes("PART"))
             {
-                //fill as part prefab would be filled?
-                if (Utilities.PartIsProcedural(p))
+                var resList = p.GetNodes("RESOURCE");
+                foreach (var res in resList)
                 {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
+                    if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
+                        bool.Parse(res.GetValue("flowState")))
                     {
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = res.GetValue("maxAmount");
-                                res.SetValue("amount", maxAmt);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var resList = p.GetNodes("RESOURCE");
-                    foreach (var res in resList)
-                    {
-                        var name = res.GetValue("name");
-                        if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(name))
-                        {
-                            bool flowState = bool.Parse(res.GetValue("flowState"));
-                            if (flowState)
-                            {
-                                var maxAmt = res.GetValue("maxAmount");
-                                res.SetValue("amount", maxAmt);
-                            }
-                        }
+                        var maxAmt = res.GetValue("maxAmount");
+                        res.SetValue("amount", maxAmt);
                     }
                 }
             }
@@ -644,17 +586,26 @@ namespace KerbalConstructionTime
             if (TotalMass != 0 && EmptyMass != 0) return TotalMass;
             TotalMass = 0;
             EmptyMass = 0;
-            for (int i = ExtractedPartNodes.Count - 1; i >= 0; i--)
+            foreach (var p in ExtractedPartNodes)
             {
-                ConfigNode p = ExtractedPartNodes[i];
                 TotalMass += Utilities.GetPartMassFromNode(p, includeFuel: true, includeClamps: false);
                 EmptyMass += Utilities.GetPartMassFromNode(p, includeFuel: false, includeClamps: false);
             }
-            if (TotalMass < 0)
-                TotalMass = 0;
-            if (EmptyMass < 0)
-                EmptyMass = 0;
+            TotalMass = Math.Max(TotalMass, 0);
+            EmptyMass = Math.Max(EmptyMass, 0);
             return TotalMass;
+        }
+
+        public Vector3 GetShipSize()
+        {
+            if (ShipSize.sqrMagnitude > 0)
+                return ShipSize;
+
+            ShipTemplate template = new ShipTemplate();
+            template.LoadShip(ShipNode);
+            ShipSize = template.GetShipSize();
+            
+            return ShipSize;
         }
 
         public double GetTotalCost()
@@ -683,7 +634,7 @@ namespace KerbalConstructionTime
             if (Funding.Instance.Funds < rushCost) return false;
 
             double remainingBP = BuildPoints + IntegrationPoints - Progress;
-            AddProgress(remainingBP * 0.1);
+            Progress += remainingBP * 0.1;
             Utilities.SpendFunds(rushCost, TransactionReasons.VesselRollout);
             ++RushBuildClicks;
             _rushCost = -1;    // force recalculation of rush cost
@@ -778,9 +729,8 @@ namespace KerbalConstructionTime
         public List<PseudoPart> GetPseudoParts()
         {
             List<PseudoPart> retList = new List<PseudoPart>();
-            ConfigNode[] partNodes = ShipNode.GetNodes("PART");
 
-            foreach (ConfigNode cn in partNodes)
+            foreach (ConfigNode cn in ShipNode.GetNodes("PART"))
             {
                 string name = cn.GetValue("part");
                 string pID;
@@ -834,76 +784,39 @@ namespace KerbalConstructionTime
             return missing;
         }
 
-        public bool AreAllPartsUnlocked()
+        public Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability()
         {
-            if (ResearchAndDevelopment.Instance == null)
-                return true;
-
-            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
-            {
-                if (!Utilities.PartIsUnlocked(pNode))
-                    return false;
-            }
-
-            return true;
-        }
-
-        public Dictionary<AvailablePart, int> GetLockedParts()
-        {
-            var lockedPartsOnShip = new Dictionary<AvailablePart, int>();
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
 
             if (ResearchAndDevelopment.Instance == null)
-                return lockedPartsOnShip;
+                return res;
 
+            List<AvailablePart> apList = new List<AvailablePart>();
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
                 string partName = Utilities.GetPartNameFromNode(pNode);
-                if (!Utilities.PartIsUnlocked(partName))
-                {
-                    AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
-                    if (!lockedPartsOnShip.ContainsKey(partInfoByName))
-                        lockedPartsOnShip.Add(partInfoByName, 1);
-                    else
-                        ++lockedPartsOnShip[partInfoByName];
-                }
+                AvailablePart part = PartLoader.getPartInfoByName(partName);
+                apList.Add(part);
             }
 
-            return lockedPartsOnShip;
+            res = Utilities.GetPartsWithPurchasability(apList);
+            return res;
         }
 
-        public Dictionary<AvailablePart, int> GetExperimentalParts()
-        {
-            var devPartsOnShip = new Dictionary<AvailablePart, int>();
-
-            if (ResearchAndDevelopment.Instance == null)
-                return devPartsOnShip;
-
-            foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
-            {
-                string partName = Utilities.GetPartNameFromNode(pNode);
-                if (Utilities.PartIsExperimental(partName))
-                {
-                    AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
-                    if (!devPartsOnShip.ContainsKey(partInfoByName))
-                        devPartsOnShip.Add(partInfoByName, 1);
-                    else
-                        ++devPartsOnShip[partInfoByName];
-                }
-            }
-
-            return devPartsOnShip;
-        }
+        public bool AreAllPartsUnlocked() => GetPartsWithPurchasability().Values.All(v => v.Status == PurchasabilityStatus.Purchased);
 
         public double ProgressPercent()
         {
-            return 100 * (Progress / (BuildPoints + IntegrationPoints));
+            return 100 * GetFractionComplete();
         }
 
         public string GetItemName() => ShipName;
 
         public double GetBuildRate() => BuildRate;
 
-        public double GetTimeLeft()=> TimeLeft;
+        public double GetFractionComplete() => Progress / (BuildPoints + IntegrationPoints);
+
+        public double GetTimeLeft() => TimeLeft;
 
         public ListType GetListType() => Type;
 
@@ -912,15 +825,9 @@ namespace KerbalConstructionTime
         public void IncrementProgress(double UTDiff)
         {
             double buildRate = Utilities.GetBuildRate(this);
-            AddProgress(buildRate * UTDiff);
+            Progress += buildRate * UTDiff;
             if (IsComplete())
                 Utilities.MoveVesselToWarehouse(this);
-        }
-
-        private double AddProgress(double toAdd)
-        {
-            Progress += toAdd;
-            return Progress;
         }
     }
 
@@ -939,6 +846,20 @@ namespace KerbalConstructionTime
         {
             Name = PartName;
             Uid = uint.Parse(ID);
+        }
+    }
+
+    public enum PurchasabilityStatus { Unavailable = 0, Purchasable = 1, Purchased = 2 }
+
+    public struct PartPurchasability
+    {
+        public PurchasabilityStatus Status;
+        public int PartCount;
+
+        public PartPurchasability(PurchasabilityStatus status, int partCount)
+        {
+            Status = status;
+            PartCount = partCount;
         }
     }
 }

@@ -9,16 +9,15 @@
 
         public ReconRollout ToReconRollout()
         {
-            var ret = new ReconRollout
+            return new ReconRollout
             {
-                Name = name,
                 BP = BP,
                 Progress = progress,
                 Cost = cost,
+                RRType = ReconRollout.RRDict.ContainsKey(name) ? ReconRollout.RRDict[name] : ReconRollout.RolloutReconType.None,
                 AssociatedID = associatedID,
                 LaunchPadID = launchPadID
             };
-            return ret;
         }
 
         public ReconRolloutStorageItem FromReconRollout(ReconRollout rr)

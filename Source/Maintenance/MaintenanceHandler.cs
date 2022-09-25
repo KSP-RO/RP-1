@@ -13,7 +13,7 @@ namespace RP0
     public class MaintenanceHandler : ScenarioModule
     {
         public const double UpdateInterval = 3600d;
-        public const int PadLevelCount = 10;
+        public const int PadLevelCount = 7;
         public const double BuildRateOffset = -0.0001d;    // if we change the min build rate, FIX THIS.
 
         public static MaintenanceHandler Instance { get; private set; } = null;
@@ -30,6 +30,7 @@ namespace RP0
 
         public readonly Dictionary<string, double> KCTBuildRates = new Dictionary<string, double>();
         public int[] KCTPadCounts = new int[PadLevelCount];
+        public List<float> KCTPadLevels = new List<float>();
         public double KCTResearchRate = 0;
 
         private double _maintenanceCostMult = 1d;
@@ -86,17 +87,6 @@ namespace RP0
             GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
-        public void Start()
-        {
-            double ut = Planetarium.GetUniversalTime();
-            if (nextUpdate > ut + UpdateInterval)
-            {
-                // KRASH has a bad habit of not reverting state properly when exiting sims.
-                // This means that the updateInterval could end up years into the future.
-                nextUpdate = ut + 5;
-            }
-        }
-
         public override void OnLoad(ConfigNode node)
         {
             base.OnLoad(node);
@@ -124,6 +114,23 @@ namespace RP0
             return s;
         }
 
+        protected double SumCosts(float[] costs, float fractionalIdx)
+        {
+            double s = 0d;
+            int i = (int)fractionalIdx;
+            if (i != fractionalIdx && i + 1 < costs.Length)
+            {
+                float fractionOverFullLvl = fractionalIdx - i;
+                float fractionCost = costs[i + 1] * fractionOverFullLvl;
+                s = fractionCost;
+            }
+
+            for (; i >= 0; i--)
+                s += costs[i];
+
+            return s;
+        }
+
         public void ScheduleMaintenanceUpdate()
         {
             nextUpdate = 0;
@@ -132,6 +139,7 @@ namespace RP0
         private void UpdateKCTRates()
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTRates");
+            KCTPadLevels.Clear();
             for (int i = KCTPadCounts.Length; i-- > 0;)
                 KCTPadCounts[i] = 0;
 
@@ -151,9 +159,13 @@ namespace RP0
 
                 for (int i = ksc.LaunchPads.Count; i-- > 0;)
                 {
-                    int lvl = ksc.LaunchPads[i].level;
-                    if (lvl >= 0 && lvl < PadLevelCount)
-                        ++KCTPadCounts[lvl];
+                    KCT_LaunchPad pad = ksc.LaunchPads[i];
+                    int roundedPadLvl = (int)Math.Round(pad.fractionalLevel);
+                    if (pad.isOperational && roundedPadLvl < PadLevelCount)
+                    {
+                        ++KCTPadCounts[roundedPadLvl];
+                        KCTPadLevels.Add(pad.fractionalLevel);
+                    }
                 }
             }
 
@@ -168,21 +180,19 @@ namespace RP0
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.LaunchPad, out float[] costs))
             {
-                if (KCTResearchRate > 0d)
+                for (int i = 0; i < PadLevelCount; i++)
                 {
-                    int lC = costs.Length;
-                    for (int i = 0; i < PadLevelCount; i++)
-                    {
-                        PadCosts[i] = 0d;
-                        if (i < lC)
-                            PadCosts[i] = _maintenanceCostMult * Settings.facilityLevelCostMult * KCTPadCounts[i] * Math.Pow(SumCosts(costs, i), Settings.facilityLevelCostPow);
-                    }
-                    PadCost = 0;
-                    for (int i = PadLevelCount; i-- > 0;)
-                        PadCost += PadCosts[i];
+                    PadCosts[i] = 0d;
                 }
-                else
-                    PadCost = Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) * (costs.Length - 0.95f))), Settings.facilityLevelCostPow);
+
+                foreach (float lvl in KCTPadLevels)
+                {
+                    int roundedPadLvl = (int)Math.Round(lvl);
+                    PadCosts[roundedPadLvl] += _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(SumCosts(costs, lvl), Settings.facilityLevelCostPow);
+                }
+                PadCost = 0;
+                for (int i = PadLevelCount; i-- > 0;)
+                    PadCost += PadCosts[i];
             }
 
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.Runway, out costs))
@@ -288,7 +298,7 @@ namespace RP0
                 return;
             }
 
-            double time = Planetarium.GetUniversalTime();
+            double time = KSPUtils.GetUT();
             if (nextUpdate > time)
             {
                 if (_wasWarpingHigh && TimeWarp.CurrentRate <= 100f)
@@ -306,9 +316,10 @@ namespace RP0
 
             using (new CareerEventScope(CareerEventType.Maintenance))
             {
-                double cost = -timePassed * ((TotalUpkeep + Settings.maintenanceOffset) * (1d / 86400d));
-                Debug.Log($"[RP-0] MaintenanceHandler removing {cost} funds");
-                Funding.Instance.AddFunds(cost, TransactionReasons.StructureRepair);
+                double costPerDay = Math.Max(0, TotalUpkeep + Settings.maintenanceOffset);
+                double costForPassedSeconds = -timePassed * (costPerDay * (1d / 86400d));
+                Debug.Log($"[RP-0] MaintenanceHandler removing {costForPassedSeconds} funds");
+                Funding.Instance.AddFunds(costForPassedSeconds, TransactionReasons.StructureRepair);
             }
 
             lastUpdate = time;

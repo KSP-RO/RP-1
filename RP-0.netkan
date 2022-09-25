@@ -10,7 +10,8 @@
 	"x_netkan_force_v": true,
 	"release_status" : "stable",
 	"resources": {
-		"homepage": "https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*"
+		"homepage": "https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*",
+		"manual": "https://github.com/KSP-RO/RP-0/wiki"
 	},
 	"depends" : [
 		{ "name" : "ModuleManager" },
@@ -18,16 +19,17 @@
 		{ "name" : "SXTContinued" },
 		{ "name" : "ContractConfigurator" },
 		{ "name" : "CustomBarnKit" },
-		{ "name" : "DeadlyReentry" },
 		{ "name" : "VenStockRevamp-NewParts" },
 		{ "name" : "RealSolarSystem" },
-		{ "name" : "DMagicOrbitalScience" },
-		{ "name" : "DMagicScienceAnimate" },
 		{ "name" : "MagiCore" },
 		{ "name" : "ClickThroughBlocker" },
-		{ "name" : "ToolbarController" }
+		{ "name" : "ToolbarController" },
+		{ "name" : "Kerbalism-Config-RO" },
+		{ "name" : "KSPCommunityFixes" },
+		{ "name" : "KerbalChangelog" }
 	],
 	"recommends" : [
+		{ "name" : "RSSDateTimeFormatter" },
 		{ "any_of": [
 			{ "name" : "VenStockRevamp" },
 			{ "name" : "ReStock" }
@@ -36,30 +38,27 @@
 		{ "name" : "ROTanks" },
 		{ "name" : "ROCapsules" },
 		{ "name" : "ROSolar" },
+		{ "name" : "ROHeatshields" },
 		{ "name" : "B9-PWings-Fork" },
-		{ "name" : "PersistentRotation" },
+		{ "name" : "KSPWheel" },
+		{ "name" : "PersistentRotationUpgraded" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },
 		{ "name" : "KerbalRenamer" },
-		{ "name" : "KRASH" },
 		{ "name" : "KSCSwitcher" },
 		{ "name" : "MechJeb2" },
 		{ "name" : "AtmosphereAutopilot" },
 		{ "name" : "ProceduralFairings" },
 		{ "name" : "ProceduralParts" },
+		{ "name" : "RCSBuildAid" },
 		{ "name" : "RCSBuildAidCont" },
 		{ "name" : "RealAntennas" },
-		{ "name" : "SCANsat" },
-		{ "name" : "ScienceSituationInfo" },
 		{ "name" : "ShipManifest" },
-		{ "any_of": [
-			{ "name" : "Kerbalism-Config-RO" },
-			{ "name" : "TACLS" }
-		] },
 		{ "any_of": [
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }
-		] }
+		] },
+		{ "name" : "RSSVE-Textures" }
 	],
 	"suggests" : [
 		{ "name" : "BluedogDB" },
@@ -72,28 +71,20 @@
 		{ "name" : "KerbalEngineerRedux" },
 		{ "name" : "kOS" },
 		{ "name" : "RealScaleBoosters" },
-		{ "name" : "RN-SalyutStations" },
-		{ "name" : "RN-Skylab" },
-		{ "name" : "RN-SPP" },
-		{ "name" : "RN-SovietProbes" },
-		{ "name" : "RN-SovietRockets" },
-		{ "name" : "RN-SovietSpacecraft" },
-		{ "name" : "RN-USProbesPack" },
-		{ "name" : "RN-USRockets" },
-		{ "name" : "SovietEnginePack" },
-		{ "name" : "Taerobee" },
 		{ "name" : "NearFutureSolar" },
 		{ "name" : "NearFutureConstruction" },
 		{ "name" : "InternalRCS" },
 		{ "name" : "ProbesPlus" },
 		{ "name" : "ATKPropulsionPack" },
 		{ "name" : "WaypointManager" },
+		{ "name" : "SCANsat" },
 		{ "name" : "NavHudRenewed" }
 	],
 	"conflicts" : [
 		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
-		{ "name" : "MechJebForAll" }
+		{ "name" : "MechJebForAll" },
+		{ "name" : "KRASH" }
 	]
 }

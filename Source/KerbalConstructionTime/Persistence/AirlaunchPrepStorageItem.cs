@@ -10,10 +10,10 @@
         {
             var ret = new AirlaunchPrep
             {
-                Name = name,
                 BP = BP,
                 Progress = progress,
                 Cost = cost,
+                Direction = name == AirlaunchPrep.Name_Mount ? AirlaunchPrep.PrepDirection.Mount : AirlaunchPrep.PrepDirection.Unmount,
                 AssociatedID = associatedID
             };
             return ret;

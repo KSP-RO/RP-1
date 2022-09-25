@@ -220,6 +220,7 @@ namespace KerbalConstructionTime
             ConfigNode.LoadObjectFromConfig(GeneralSettings, Source.GeneralSettings.AsConfigNode());
             ConfigNode.LoadObjectFromConfig(TimeSettings, Source.TimeSettings.AsConfigNode());
             ConfigNode.LoadObjectFromConfig(FormulaSettings, Source.FormulaSettings.AsConfigNode());
+            FormulaSettings.YearBasedRateMult = Source.FormulaSettings.YearBasedRateMult;
             PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
@@ -239,7 +240,15 @@ namespace KerbalConstructionTime
 
             node.AddNode(GeneralSettings.AsConfigNode());
             node.AddNode(TimeSettings.AsConfigNode());
-            node.AddNode(FormulaSettings.AsConfigNode());
+
+            ConfigNode fNode = FormulaSettings.AsConfigNode();
+            if (FormulaSettings.YearBasedRateMult != null)
+            {
+                ConfigNode rateNode = fNode.AddNode("YearBasedRateMult");
+                FormulaSettings.YearBasedRateMult.Save(rateNode);
+            }
+            node.AddNode(fNode);
+
             node.AddNode(PartVariables.AsConfigNode());
             return node;
         }
@@ -259,7 +268,17 @@ namespace KerbalConstructionTime
 
             ConfigNode.LoadObjectFromConfig(GeneralSettings, node.GetNode("KCT_Preset_General"));
             ConfigNode.LoadObjectFromConfig(TimeSettings, node.GetNode("KCT_Preset_Time"));
-            ConfigNode.LoadObjectFromConfig(FormulaSettings, node.GetNode("KCT_Preset_Formula"));
+
+            ConfigNode fNode = node.GetNode("KCT_Preset_Formula");
+            ConfigNode.LoadObjectFromConfig(FormulaSettings, fNode);
+            if (fNode.HasNode("YearBasedRateMult"))
+            {
+                var fc = new FloatCurve();
+                var rateNode = fNode.GetNode("YearBasedRateMult");
+                fc.Load(rateNode);
+                FormulaSettings.YearBasedRateMult = fc;
+            }
+
             if (node.HasNode("KCT_Preset_Part_Variables"))
                 PartVariables.FromConfigNode(node.GetNode("KCT_Preset_Part_Variables"));
         }
@@ -289,18 +308,20 @@ namespace KerbalConstructionTime
     {
         [Persistent]
         public bool Enabled = true, BuildTimes = true, ReconditioningTimes = true, ReconditioningBlocksPad = false, TechUnlockTimes = true, KSCUpgradeTimes = true,
-            TechUpgrades = true, SharedUpgradePool = false, DisableLPUpgrades = false, CommonBuildLine = false;
+            TechUpgrades = true, SharedUpgradePool = false, CommonBuildLine = false;
         [Persistent]
         public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
             VABRecoveryTech = null;
         [Persistent]
         public int MaxRushClicks = 0;
+        [Persistent]
+        public float PadUnlimitedTonnageThreshold = 3500;
     }
 
     public class KCT_Preset_Time : ConfigNodeStorage
     {
         [Persistent]
-        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25;
+        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25, MergingTimePenalty = 0.05;
     }
 
     public class KCT_Preset_Formula : ConfigNodeStorage
@@ -324,14 +345,17 @@ namespace KerbalConstructionTime
             NewLaunchPadCostFormula = "100000*([N]^3)",    //[N]=total number of unlocked launchpads (negative disables)
             RushCostFormula = "[TC]*0.2",
             AirlaunchCostFormula = "[E]*0.25",
-            AirlaunchTimeFormula = "[BP]*0.25";
+            AirlaunchTimeFormula = "[BP]*0.25",
+            EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))";    //[RT]=Runtime of used engine
+
+        [Persistent]
+        public FloatCurve YearBasedRateMult = null;
     }
 
     public class KCT_Preset_Part_Variables
     {
-        //provides the variables [PV] and [MV] to the EffectiveCost functions
+        //provides the variables [PV] and [RV] to the EffectiveCost functions
         public Dictionary<string, double> Part_Variables = new Dictionary<string, double>();
-        public Dictionary<string, double> Module_Variables = new Dictionary<string, double>();
         public Dictionary<string, double> Resource_Variables = new Dictionary<string, double>();
 
         public Dictionary<string, double> Global_Variables = new Dictionary<string, double>();
@@ -362,7 +386,6 @@ namespace KerbalConstructionTime
         {
             var node = new ConfigNode("KCT_Preset_Part_Variables");
             node.AddNode(DictionaryToNode(Part_Variables, "Part_Variables"));
-            node.AddNode(DictionaryToNode(Module_Variables, "Module_Variables"));
             node.AddNode(DictionaryToNode(Resource_Variables, "Resource_Variables"));
             node.AddNode(DictionaryToNode(Global_Variables, "Global_Variables"));
 
@@ -372,14 +395,11 @@ namespace KerbalConstructionTime
         public void FromConfigNode(ConfigNode node)
         {
             Part_Variables.Clear();
-            Module_Variables.Clear();
             Resource_Variables.Clear();
             Global_Variables.Clear();
 
             if (node.HasNode("Part_Variables"))
                 Part_Variables = NodeToDictionary(node.GetNode("Part_Variables"));
-            if (node.HasNode("Module_Variables"))
-                Module_Variables = NodeToDictionary(node.GetNode("Module_Variables"));
             if (node.HasNode("Resource_Variables"))
                 Resource_Variables = NodeToDictionary(node.GetNode("Resource_Variables"));
             if (node.HasNode("Global_Variables"))
@@ -393,60 +413,22 @@ namespace KerbalConstructionTime
             return 1.0;
         }
 
-        //These are all multiplied in case multiple modules exist on one part
-        public double GetModuleVariable(List<string> moduleNames)
+        public double GetValueModifier(Dictionary<string, double> dict, List<string> tags)
         {
             double value = 1.0;
-            for (int i = moduleNames.Count - 1; i >= 0; i--)
+            foreach (var name in tags)
             {
-                string name = moduleNames[i];
-
-                if (Module_Variables.ContainsKey(name))
-                    value *= Module_Variables[name];
+                if (dict?.ContainsKey(name) == true)
+                    value *= dict[name];
             }
             return value;
+
         }
 
-        public double GetResourceVariable(List<string> resourceNames)
-        {
-            double value = 1.0;
-            for (int i = resourceNames.Count - 1; i >= 0; i--)
-            {
-                string name = resourceNames[i];
+        //These are all multiplied in case multiple variables exist on one part
+        public double GetResourceVariable(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
 
-                if (Resource_Variables.ContainsKey(name))
-                    value *= Resource_Variables[name];
-            }
-            return value;
-        }
-
-        public double GetGlobalVariable(List<string> moduleNames)
-        {
-            double value = 1.0;
-            for (int i = moduleNames.Count - 1; i >= 0; i--)
-            {
-                string name = moduleNames[i];
-                if (Global_Variables.ContainsKey(name))
-                    value *= Global_Variables[name];
-            }
-            return value;
-        }
-
-        //These are all multiplied in case multiple modules exist on one part (this one takes a PartModuleList instead)
-        public double GetModuleVariable(PartModuleList modules, out bool hasResourceMult)
-        {
-            double value = 1.0;
-            hasResourceMult = true;
-            foreach (PartModule mod in modules)
-            {
-                if (mod.moduleName == "ModuleTagNoResourceCostMult")
-                    hasResourceMult = false;
-
-                if (Module_Variables.ContainsKey(mod.moduleName))
-                    value *= Module_Variables[mod.moduleName];
-            }
-            return value;
-        }
+        public double GetGlobalVariable(List<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
 
         public double GetResourceVariable(PartResourceList resources)
         {
@@ -459,22 +441,21 @@ namespace KerbalConstructionTime
             return value;
         }
 
-        public void SetGlobalVariables(List<string> variables, PartModuleList modules)
+        public void SetGlobalVariables(HashSet<string> variables, PartModuleList modules)
         {
             foreach (PartModule mod in modules)
             {
                 if (Global_Variables.ContainsKey(mod.moduleName))
-                    variables.AddUnique(mod.moduleName);
+                    variables.Add(mod.moduleName);
             }
         }
 
-        public void SetGlobalVariables(List<string> variables, List<string> moduleNames)
+        public void SetGlobalVariables(HashSet<string> variables, List<string> moduleNames)
         {
-            for (int i = moduleNames.Count - 1; i >= 0; i--)
+            foreach (var name in moduleNames)
             {
-                string name = moduleNames[i];
                 if (Global_Variables.ContainsKey(name))
-                    variables.AddUnique(name);
+                    variables.Add(name);
             }
         }
     }

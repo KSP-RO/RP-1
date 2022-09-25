@@ -14,6 +14,7 @@ namespace KerbalConstructionTime
         public List<BuildListVessel> SPHWarehouse = new List<BuildListVessel>();
         public SortedList<string, BuildListVessel> SPHPlans = new SortedList<string, BuildListVessel>();
         public List<FacilityUpgrade> KSCTech = new List<FacilityUpgrade>();
+        public List<PadConstruction> PadConstructions = new List<PadConstruction>();
         public List<int> VABUpgrades = new List<int>() { 0 };
         public List<int> SPHUpgrades = new List<int>() { 0 };
         public List<int> RDUpgrades = new List<int>() { 0, 0 }; //research/development
@@ -29,7 +30,6 @@ namespace KerbalConstructionTime
         {
             KSCName = name;
             RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
-            LaunchPads.Add(new KCT_LaunchPad("LaunchPad", Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad)));
 
             VABList.Added += added;
             VABList.Removed += removed;
@@ -46,13 +46,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public KCT_LaunchPad ActiveLPInstance
-        {
-            get
-            {
-                return LaunchPads.Count > ActiveLaunchPadID ? LaunchPads[ActiveLaunchPadID] : null; 
-            }
-        }
+        public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadID ? LaunchPads[ActiveLaunchPadID] : null;
 
         public int LaunchPadCount
         {
@@ -60,30 +54,27 @@ namespace KerbalConstructionTime
             {
                 int count = 0;
                 foreach (KCT_LaunchPad lp in LaunchPads)
-                    if (lp.level >= 0) count++;
+                    if (lp.isOperational) count++;
                 return count;
             }
         }
 
-        public bool IsEmpty
-        {
-            get
-            {
-                return !VABList.Any() && !VABWarehouse.Any() && !SPHList.Any() && !SPHWarehouse.Any() && !KSCTech.Any() &&
+        public bool IsEmpty => !VABList.Any() && !VABWarehouse.Any() && !SPHList.Any() && !SPHWarehouse.Any() && !KSCTech.Any() &&
                     VABUpgrades.All(i => i == 0) && SPHUpgrades.All(i => i == 0) && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
-                    LaunchPads.Count < 2 && LaunchPads.All(lp => lp.level < 1);
-            }
+                    !PadConstructions.Any() && LaunchPads.Count < 2 && LaunchPads.All(lp => lp.level < 1);
+
+        public void EnsureStartingLaunchPad()
+        {
+            if (LaunchPads.Count > 0) return;
+
+            LaunchPads.Add(new KCT_LaunchPad("LaunchPad", 0));
         }
 
-        public ReconRollout GetReconditioning(string launchSite = "LaunchPad")
-        {
-            return Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
-        }
+        public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
+            Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
 
-        public ReconRollout GetReconRollout(ReconRollout.RolloutReconType type, string launchSite = "LaunchPad")
-        {
-            return Recon_Rollout.FirstOrDefault(r => r.RRType == type && r.LaunchPadID == launchSite);
-        }
+        public ReconRollout GetReconRollout(ReconRollout.RolloutReconType type, string launchSite = "LaunchPad") =>
+            Recon_Rollout.FirstOrDefault(r => r.RRType == type && r.LaunchPadID == launchSite);
 
         public void RecalculateBuildRates()
         {
@@ -91,6 +82,7 @@ namespace KerbalConstructionTime
             SPHRates.Clear();
             double rate = 0.1;
             int index = 0;
+            // These loops could clean up a little, is it intended to add a rate=0 in the loop as the last entry?
             while (rate > 0)
             {
                 rate = MathParser.ParseBuildRateFormula(BuildListVessel.ListType.VAB, index, this);
@@ -108,17 +100,16 @@ namespace KerbalConstructionTime
                 index++;
             }
 
-            KCTDebug.Log("VAB Rates:");
+            var m = StringBuilderCache.Acquire();
+            m.AppendLine("VAB Rates:");
             foreach (double v in VABRates)
-            {
-                KCTDebug.Log(v);
-            }
+                m.AppendLine($"{v}");
 
-            KCTDebug.Log("SPH Rates:");
+            m.AppendLine("SPH Rates:");
             foreach (double v in SPHRates)
-            {
-                KCTDebug.Log(v);
-            }
+                m.AppendLine($"{v}");
+
+            KCTDebug.Log(m.ToStringAndRelease());
         }
 
         public void RecalculateUpgradedBuildRates()
@@ -149,21 +140,14 @@ namespace KerbalConstructionTime
             }
         }
 
-        public void SwitchToPrevLaunchPad()
-        {
-            SwitchLaunchPad(false);
-        }
-
-        public void SwitchToNextLaunchPad()
-        {
-            SwitchLaunchPad(true);
-        }
+        public void SwitchToPrevLaunchPad() => SwitchLaunchPad(false);
+        public void SwitchToNextLaunchPad() => SwitchLaunchPad(true);
 
         public void SwitchLaunchPad(bool forwardDirection)
         {
             if (KCTGameStates.ActiveKSC.LaunchPadCount < 2) return;
 
-            int activePadCount = LaunchPads.Count(p => p.level >= 0);
+            int activePadCount = LaunchPads.Count(p => p.isOperational);
             if (activePadCount < 2) return;
 
             int idx = KCTGameStates.ActiveKSC.ActiveLaunchPadID;
@@ -181,7 +165,7 @@ namespace KerbalConstructionTime
                     idx = ((idx - 1) % LaunchPads.Count + LaunchPads.Count) % LaunchPads.Count;
                 }
                 pad = LaunchPads[idx];
-            } while (pad.level < 0);
+            } while (!pad.isOperational);
 
             KCTGameStates.ActiveKSC.SwitchLaunchPad(idx);
         }
@@ -203,16 +187,33 @@ namespace KerbalConstructionTime
         /// <returns>The instance of the highest level LaunchPad</returns>
         public KCT_LaunchPad GetHighestLevelLaunchPad()
         {
-            KCT_LaunchPad highest = LaunchPads[0];
-            for (int i = LaunchPads.Count - 1; i >= 0; i--)
-            {
-                KCT_LaunchPad pad = LaunchPads[i];
-                if (pad.level > highest.level)
-                {
+            KCT_LaunchPad highest = LaunchPads.First(p => p.isOperational);
+            foreach (var pad in LaunchPads)
+                if (pad.isOperational && pad.level > highest.level)
                     highest = pad;
-                }
-            }
             return highest;
+        }
+
+        private void BuildVesselAndShipNodeConfigs(BuildListVessel blv, ref ConfigNode node)
+        {
+            var storageItem = new BuildListStorageItem();
+            storageItem.FromBuildListVessel(blv);
+            var cnTemp = new ConfigNode("KCTVessel");
+            cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
+            var shipNode = new ConfigNode("ShipNode");
+            blv.ShipNode.CopyTo(shipNode);
+            cnTemp.AddNode(shipNode);
+            node.AddNode(cnTemp);
+        }
+
+        private BuildListVessel CreateBLVFromNode(in ConfigNode cn)
+        {
+            var listItem = new BuildListStorageItem();
+            ConfigNode.LoadObjectFromConfig(listItem, cn);
+            BuildListVessel blv = listItem.ToBuildListVessel();
+            blv.ShipNode = cn.GetNode("ShipNode");
+            blv.KSC = this;
+            return blv;
         }
 
         public ConfigNode AsConfigNode()
@@ -247,14 +248,7 @@ namespace KerbalConstructionTime
             foreach (BuildListVessel blv in VABList)
             {
                 blv.BuildListIndex = BuildList.IndexOf(blv);
-                var storageItem = new BuildListStorageItem();
-                storageItem.FromBuildListVessel(blv);
-                var cnTemp = new ConfigNode("KCTVessel");
-                cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
-                var shipNode = new ConfigNode("ShipNode");
-                blv.ShipNode.CopyTo(shipNode);
-                cnTemp.AddNode(shipNode);
-                cnVABl.AddNode(cnTemp);
+                BuildVesselAndShipNodeConfigs(blv, ref cnVABl);
             }
             node.AddNode(cnVABl);
 
@@ -262,42 +256,21 @@ namespace KerbalConstructionTime
             foreach (BuildListVessel blv in SPHList)
             {
                 blv.BuildListIndex = BuildList.IndexOf(blv);
-                var storageItem = new BuildListStorageItem();
-                storageItem.FromBuildListVessel(blv);
-                var cnTemp = new ConfigNode("KCTVessel");
-                cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
-                var shipNode = new ConfigNode("ShipNode");
-                blv.ShipNode.CopyTo(shipNode);
-                cnTemp.AddNode(shipNode);
-                cnSPHl.AddNode(cnTemp);
+                BuildVesselAndShipNodeConfigs(blv, ref cnSPHl);
             }
             node.AddNode(cnSPHl);
 
             var cnVABWh = new ConfigNode("VABWarehouse");
             foreach (BuildListVessel blv in VABWarehouse)
             {
-                var storageItem = new BuildListStorageItem();
-                storageItem.FromBuildListVessel(blv);
-                var cnTemp = new ConfigNode("KCTVessel");
-                cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
-                var shipNode = new ConfigNode("ShipNode");
-                blv.ShipNode.CopyTo(shipNode);
-                cnTemp.AddNode(shipNode);
-                cnVABWh.AddNode(cnTemp);
+                BuildVesselAndShipNodeConfigs(blv, ref cnVABWh);
             }
             node.AddNode(cnVABWh);
 
             var cnSPHWh = new ConfigNode("SPHWarehouse");
             foreach (BuildListVessel blv in SPHWarehouse)
             {
-                var storageItem = new BuildListStorageItem();
-                storageItem.FromBuildListVessel(blv);
-                var cnTemp = new ConfigNode("KCTVessel");
-                cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
-                var shipNode = new ConfigNode("ShipNode");
-                blv.ShipNode.CopyTo(shipNode);
-                cnTemp.AddNode(shipNode);
-                cnSPHWh.AddNode(cnTemp);
+                BuildVesselAndShipNodeConfigs(blv, ref cnSPHWh);
             }
             node.AddNode(cnSPHWh);
 
@@ -312,31 +285,28 @@ namespace KerbalConstructionTime
             }
             node.AddNode(cnUpgradeables);
 
+            var cnPadConstructions = new ConfigNode("PadConstructions");
+            foreach (PadConstruction pc in PadConstructions)
+            {
+                var storageItem = new PadConstructionStorageItem();
+                storageItem.FromPadConstruction(pc);
+                var cn = new ConfigNode("PadConstruction");
+                cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
+                cnPadConstructions.AddNode(cn);
+            }
+            node.AddNode(cnPadConstructions);
+
             var cnVABPlans = new ConfigNode("VABPlans");
             foreach (BuildListVessel blv in VABPlans.Values)
             {
-                var storageItem = new BuildListStorageItem();
-                storageItem.FromBuildListVessel(blv);
-                var cnTemp = new ConfigNode("KCTVessel");
-                cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
-                var shipNode = new ConfigNode("ShipNode");
-                blv.ShipNode.CopyTo(shipNode);
-                cnTemp.AddNode(shipNode);
-                cnVABPlans.AddNode(cnTemp);
+                BuildVesselAndShipNodeConfigs(blv, ref cnVABPlans);
             }
             node.AddNode(cnVABPlans);
 
             var cnSPHPlans = new ConfigNode("SPHPlans");
             foreach (BuildListVessel blv in SPHPlans.Values)
             {
-                var storageItem = new BuildListStorageItem();
-                storageItem.FromBuildListVessel(blv);
-                var cnTemp = new ConfigNode("KCTVessel");
-                cnTemp = ConfigNode.CreateConfigFromObject(storageItem, cnTemp);
-                var shipNode = new ConfigNode("ShipNode");
-                blv.ShipNode.CopyTo(shipNode);
-                cnTemp.AddNode(shipNode);
-                cnSPHPlans.AddNode(cnTemp);
+                BuildVesselAndShipNodeConfigs(blv, ref cnSPHPlans);
             }
             node.AddNode(cnSPHPlans);
 
@@ -400,6 +370,7 @@ namespace KerbalConstructionTime
             VABPlans.Clear();
             SPHPlans.Clear();
             KSCTech.Clear();
+            PadConstructions.Clear();
             Recon_Rollout.Clear();
             AirlaunchPrep.Clear();
             VABRates.Clear();
@@ -427,23 +398,13 @@ namespace KerbalConstructionTime
             ConfigNode tmp = node.GetNode("VABList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
-                var listItem = new BuildListStorageItem();
-                ConfigNode.LoadObjectFromConfig(listItem, cn);
-                BuildListVessel blv = listItem.ToBuildListVessel();
-                blv.ShipNode = cn.GetNode("ShipNode");
-                blv.KSC = this;
-                VABList.Add(blv);
+                VABList.Add(CreateBLVFromNode(cn));
             }
 
             tmp = node.GetNode("SPHList");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
-                var listItem = new BuildListStorageItem();
-                ConfigNode.LoadObjectFromConfig(listItem, cn);
-                BuildListVessel blv = listItem.ToBuildListVessel();
-                blv.ShipNode = cn.GetNode("ShipNode");
-                blv.KSC = this;
-                SPHList.Add(blv);
+                SPHList.Add(CreateBLVFromNode(cn));
             }
 
             BuildList.Sort((a, b) => a.BuildListIndex.CompareTo(b.BuildListIndex));
@@ -451,56 +412,35 @@ namespace KerbalConstructionTime
             tmp = node.GetNode("VABWarehouse");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
-                var listItem = new BuildListStorageItem();
-                ConfigNode.LoadObjectFromConfig(listItem, cn);
-                BuildListVessel blv = listItem.ToBuildListVessel();
-                blv.ShipNode = cn.GetNode("ShipNode");
-                blv.KSC = this;
-                VABWarehouse.Add(blv);
+                VABWarehouse.Add(CreateBLVFromNode(cn));
             }
 
             tmp = node.GetNode("SPHWarehouse");
             foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
             {
-                var listItem = new BuildListStorageItem();
-                ConfigNode.LoadObjectFromConfig(listItem, cn);
-                BuildListVessel blv = listItem.ToBuildListVessel();
-                blv.ShipNode = cn.GetNode("ShipNode");
-                blv.KSC = this;
-                SPHWarehouse.Add(blv);
+                SPHWarehouse.Add(CreateBLVFromNode(cn));
             }
 
             if (node.TryGetNode("VABPlans", ref tmp))
             {
                 if (tmp.HasNode("KCTVessel"))
-                foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
-                {
-                    var listItem = new BuildListStorageItem();
-                    ConfigNode.LoadObjectFromConfig(listItem, cn);
-                    BuildListVessel blv = listItem.ToBuildListVessel();
-                    blv.ShipNode = cn.GetNode("ShipNode");
-                    blv.KSC = this;
-                    if (VABPlans.ContainsKey(blv.ShipName))
-                        VABPlans.Remove(blv.ShipName);
-                    
-                    VABPlans.Add(blv.ShipName, blv);
-                }
+                    foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
+                    {
+                        var blv = CreateBLVFromNode(cn);
+                        VABPlans.Remove(blv.ShipName); 
+                        VABPlans.Add(blv.ShipName, blv);
+                    }
             }
 
             if (node.TryGetNode("SPHPlans", ref tmp))
             {
                 if (tmp.HasNode("KCTVessel"))
-                foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
-                {
-                    var listItem = new BuildListStorageItem();
-                    ConfigNode.LoadObjectFromConfig(listItem, cn);
-                    BuildListVessel blv = listItem.ToBuildListVessel();
-                    blv.ShipNode = cn.GetNode("ShipNode");
-                    blv.KSC = this;
-                    if (SPHPlans.ContainsKey(blv.ShipName))
+                    foreach (ConfigNode cn in tmp.GetNodes("KCTVessel"))
+                    {
+                        var blv = CreateBLVFromNode(cn);
                         SPHPlans.Remove(blv.ShipName);
-                    SPHPlans.Add(blv.ShipName, blv);
-                }
+                        SPHPlans.Add(blv.ShipName, blv);
+                    }
             }
 
             tmp = node.GetNode("Recon_Rollout");
@@ -521,17 +461,6 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (node.HasNode("KSCTech"))
-            {
-                tmp = node.GetNode("KSCTech");
-                foreach (ConfigNode cn in tmp.GetNodes("UpgradingBuilding"))
-                {
-                    var storageItem = new FacilityUpgradeStorageItem();
-                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
-                    KSCTech.Add(storageItem.ToFacilityUpgrade());
-                }
-            }
-
             if (node.HasNode("LaunchPads"))
             {
                 LaunchPads.Clear();
@@ -541,7 +470,38 @@ namespace KerbalConstructionTime
                     var tempLP = new KCT_LaunchPad("LP0");
                     ConfigNode.LoadObjectFromConfig(tempLP, cn);
                     tempLP.DestructionNode = cn.GetNode("DestructionState");
+                    if (tempLP.fractionalLevel == -1) tempLP.MigrateFromOldState();
                     LaunchPads.Add(tempLP);
+                }
+            }
+
+            if (node.HasNode("PadConstructions"))
+            {
+                tmp = node.GetNode("PadConstructions");
+                foreach (ConfigNode cn in tmp.GetNodes("PadConstruction"))
+                {
+                    var storageItem = new PadConstructionStorageItem();
+                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    PadConstructions.Add(storageItem.ToPadConstruction());
+                }
+            }
+
+            if (node.HasNode("KSCTech"))
+            {
+                tmp = node.GetNode("KSCTech");
+                foreach (ConfigNode cn in tmp.GetNodes("UpgradingBuilding"))
+                {
+                    var storageItem = new FacilityUpgradeStorageItem();
+                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    if (storageItem.isLaunchpad)
+                    {
+                        PadConstructionStorageItem migratedItem = PadConstructionStorageItem.MigrateFromOldFacilityUpgrade(this, storageItem);
+                        PadConstructions.Add(migratedItem.ToPadConstruction());
+                    }
+                    else
+                    {
+                        KSCTech.Add(storageItem.ToFacilityUpgrade());
+                    }
                 }
             }
 

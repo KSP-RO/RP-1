@@ -1,32 +1,27 @@
 {
-    "NAME"     : "Realistic Progression One",
-    "URL"      : "https://raw.githubusercontent.com/KSP-RO/RP-0/master/GameData/RP-0/RP-1.version",
-    "DOWNLOAD" : "https://github.com/KSP-RO/RP-0/releases",
-    "HOMEPAGE"  : "https://github.com/KSP-RO/RP-0/",
-    "GITHUB" : {
-        "USERNAME"          : "KSP-RO",
-        "REPOSITORY"        : "RP-0",
-        "ALLOW_PRE_RELEASE" : false
-    },
+    "NAME": "Realistic Progression One",
+    "URL": "https://raw.githubusercontent.com/KSP-RO/RP-0/master/GameData/RP-0/RP-1.version",
+    "DOWNLOAD": "https://github.com/KSP-RO/RP-0/releases/download/v1.12.10.0/RP-1-v1.12.10.0.zip",
+    "HOMEPAGE": "https://github.com/KSP-RO/RP-0/",
     "VERSION": {
-        "MAJOR": "1",
-        "MINOR": "7",
-        "PATCH": "0",
-        "BUILD": "0"
+        "MAJOR": 1,
+        "MINOR": 12,
+        "PATCH": 10,
+        "BUILD": 0
     },
-    "KSP_VERSION" : {
+    "KSP_VERSION": {
         "MAJOR": "1",
-        "MINOR": "8",
-        "PATCH": "1"
+        "MINOR": "12",
+        "PATCH": "3"
     },
-    "KSP_VERSION_MIN" : {
+    "KSP_VERSION_MIN": {
         "MAJOR": "1",
-        "MINOR": "8",
+        "MINOR": "12",
         "PATCH": "0"
     },
-    "KSP_VERSION_MAX" : {
+    "KSP_VERSION_MAX": {
         "MAJOR": "1",
-        "MINOR": "10",
+        "MINOR": "12",
         "PATCH": "99"
     }
 }

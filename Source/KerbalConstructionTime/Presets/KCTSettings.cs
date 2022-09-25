@@ -11,9 +11,9 @@ namespace KerbalConstructionTime
         [Persistent]
         public int MaxTimeWarp;
         [Persistent]
-        public bool ForceStopWarp;
-        [Persistent]
         public bool DisableAllMessages;
+        [Persistent]
+        public bool ShowSimWatermark;
         [Persistent]
         public bool AutoKACAlarms;
         [Persistent]
@@ -26,20 +26,27 @@ namespace KerbalConstructionTime
         public bool RandomizeCrew;
         [Persistent]
         public int WindowMode = 1;
+        [Persistent]
+        public bool CleanUpKSCDebris;
 
         public KCTSettings()
         {
-            MaxTimeWarp = TimeWarp.fetch.warpRates.Count() - 1;
-            ForceStopWarp = false;
             DisableAllMessages = false;
+            ShowSimWatermark = true;
             Debug = false;
             OverrideLaunchButton = true;
             AutoKACAlarms = false;
             PreferBlizzyToolbar = false;
+            CleanUpKSCDebris = true;
         }
 
         public void Load()
         {
+            if (TimeWarp.fetch != null)
+            {
+                MaxTimeWarp = TimeWarp.fetch.warpRates.Length - 1;
+            }
+
             if (File.Exists(Path.Combine(_directory, _fileName)))
             {
                 ConfigNode cnToLoad = ConfigNode.Load(Path.Combine(_directory, _fileName));

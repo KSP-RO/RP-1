@@ -4,6 +4,7 @@
     {
         string GetItemName();
         double GetBuildRate();
+        double GetFractionComplete();
         double GetTimeLeft();
         BuildListVessel.ListType GetListType();
         bool IsComplete();

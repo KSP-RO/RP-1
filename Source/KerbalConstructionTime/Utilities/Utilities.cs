@@ -3,6 +3,7 @@ using KSP.UI.Screens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,41 +18,42 @@ namespace KerbalConstructionTime
         private static bool? _isKSCSwitcherInstalled = null;
         private static bool? _isKRASHInstalled = null;
         private static bool? _isPrincipiaInstalled = null;
-        private static DateTime _startedFlashing;
+        private static bool? _isTestFlightInstalled = null;
+        private static bool? _isTestLiteInstalled = null;
 
+        private static PropertyInfo _piTFInstance;
+        private static PropertyInfo _piTFSettingsEnabled;
+        private static Type _tlSettingsType;
+        private static FieldInfo _fiTLSettingsDisabled;
+        private static FieldInfo _fiKSCSwInstance;
+        private static FieldInfo _fiKSCSwSites;
+        private static FieldInfo _fiKSCSwLastSite;
+        private static FieldInfo _fiKSCSwDefaultSite;
+
+        private static DateTime _startedFlashing;
         internal const string _legacyDefaultKscId = "Stock";
         internal const string _defaultKscId = "us_cape_canaveral";
-        internal const string _icon_KCT_Off_24 = "RP-0/PluginData/Icons/KCT_off-24";
-        internal const string _icon_KCT_Off_38 = "RP-0/PluginData/Icons/KCT_off-38";
-        internal const string _icon_KCT_On_24 = "RP-0/PluginData/Icons/KCT_on-24";
-        internal const string _icon_KCT_On_38 = "RP-0/PluginData/Icons/KCT_on-38";
-        internal const string _icon_KCT_Off = "RP-0/PluginData/Icons/KCT_off";
-        internal const string _icon_KCT_On = "RP-0/PluginData/Icons/KCT_on";
-        internal const string _icon_plane = "RP-0/PluginData/Icons/KCT_flight";
-        internal const string _icon_rocket = "RP-0/PluginData/Icons/KCT_rocket";
-        internal const string _icon_settings = "RP-0/PluginData/Icons/KCT_setting";
+        internal const string _iconPath = "RP-0/PluginData/Icons/";
+        internal const string _icon_KCT_Off_24 = _iconPath + "KCT_off-24";
+        internal const string _icon_KCT_Off_38 = _iconPath + "KCT_off-38";
+        internal const string _icon_KCT_On_24 = _iconPath + "KCT_on-24";
+        internal const string _icon_KCT_On_38 = _iconPath + "KCT_on-38";
+        internal const string _icon_KCT_Off = _iconPath + "KCT_off";
+        internal const string _icon_KCT_On = _iconPath + "KCT_on";
+        internal const string _icon_plane = _iconPath + "KCT_flight";
+        internal const string _icon_rocket = _iconPath + "KCT_rocket";
+        internal const string _icon_settings = _iconPath + "KCT_setting";
 
-        public static AvailablePart GetAvailablePartByName(string partName)
-        {
-            return PartLoader.getPartInfoByName(partName);
-        }
+        public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
         /// <summary>
-        /// This is actually the cost in BPs which can in turn be used to calculate the ingame time it takes to build the vessel.
+        /// Returns cost in BPs, used to calculate the ingame time to build the vessel.
         /// </summary>
         /// <param name="parts"></param>
         /// <returns></returns>
-        public static double GetBuildTime(List<Part> parts)
-        {
-            double totalEffectiveCost = GetEffectiveCost(parts);
-            return GetBuildTime(totalEffectiveCost);
-        }
+        public static double GetBuildTime(List<Part> parts) => GetBuildTime(GetEffectiveCost(parts));
 
-        public static double GetBuildTime(List<ConfigNode> parts)
-        {
-            double totalEffectiveCost = GetEffectiveCost(parts);
-            return GetBuildTime(totalEffectiveCost);
-        }
+        public static double GetBuildTime(List<ConfigNode> parts) => GetBuildTime(GetEffectiveCost(parts));
 
         public static double GetBuildTime(double totalEffectiveCost)
         {
@@ -61,121 +63,70 @@ namespace KerbalConstructionTime
                 { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() }
             };
             double finalBP = MathParser.GetStandardFormulaValue("BP", formulaParams);
+            KCTDebug.Log($"BP: {finalBP}");
             return finalBP;
         }
 
-        public static double GetEffectiveCost(List<Part> parts)
+        // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
+        private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass)
         {
-            //get list of parts that are in the inventory
-            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
-
-            double totalEffectiveCost = 0;
-
-            List<string> globalVariables = new List<string>();
-
-            foreach (Part p in parts)
-            {
-                string name = p.partInfo.name;
-                double effectiveCost = 0;
-                double cost = GetPartCosts(p);
-                double dryCost = GetPartCosts(p, false);
-
-                double drymass = p.mass;
-                double wetmass = p.GetResourceMass() + drymass;
-
-                double PartMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
-                double ModuleMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetModuleVariable(p.Modules, out bool doRes);
-                double ResourceMultiplier = 1d;
-                if (doRes)
-                    ResourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(p.Resources);
-                PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(globalVariables, p.Modules);
-
-                double InvEff = (inventorySample.Contains(p) ? PresetManager.Instance.ActivePreset.TimeSettings.InventoryEffect : 0);
-                int builds = ScrapYardWrapper.GetBuildCount(p);
-                int used = ScrapYardWrapper.GetUseCount(p);
-                //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
-
-                effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
-                    new Dictionary<string, string>()
-                    {
-                        {"C", cost.ToString()},
-                        {"c", dryCost.ToString()},
-                        {"M", wetmass.ToString()},
-                        {"m", drymass.ToString()},
-                        {"U", builds.ToString()},
-                        {"u", used.ToString() },
-                        {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
-                        {"I", InvEff.ToString()},
-                        {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
-                        {"PV", PartMultiplier.ToString()},
-                        {"RV", ResourceMultiplier.ToString()},
-                        {"MV", ModuleMultiplier.ToString()}
-                    });
-
-                if (InvEff != 0)
-                {
-                    inventorySample.Remove(p);
-                }
-
-                if (effectiveCost < 0) effectiveCost = 0;
-                totalEffectiveCost += effectiveCost;
-            }
-
-            double globalMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(globalVariables);
-
-            return totalEffectiveCost * globalMultiplier;
+            dryCost = (float)GetPartCosts(p, false);
+            fuelCost = (float)GetPartCosts(p) - dryCost;
+            dryMass = p.mass;
+            fuelMass = p.GetResourceMass();
         }
 
-        public static double GetEffectiveCost(List<ConfigNode> parts)
+        private static double GetEffectiveCostInternal(object o, HashSet<string> globalMods, IList<Part> inventorySample)
         {
-            //get list of parts that are in the inventory
-            IList<ConfigNode> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<ConfigNode>();
+            if (!(o is Part) && !(o is ConfigNode))
+                return 0;
+            if (globalMods == null || inventorySample == null)
+                return 0;
 
-            double totalEffectiveCost = 0;
-            var globalVariables = new List<string>();
-            foreach (ConfigNode p in parts)
+            string name = (o as Part)?.partInfo.name ?? GetPartNameFromNode(o as ConfigNode);
+            Part partRef = o as Part ?? GetAvailablePartByName(name).partPrefab;
+
+            float dryCost;
+            float fuelCost;
+            float dryMass;
+            float fuelMass;
+
+            if (o is ConfigNode)
+                ShipConstruction.GetPartCostsAndMass(o as ConfigNode, GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
+            else
+                GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass);
+
+            float wetMass = dryMass + fuelMass;
+            float cost = dryCost + fuelCost;
+
+            double partMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
+            double moduleMultiplier = ApplyModuleCostModifiers(partRef, out bool applyResourceMods);
+
+            // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
+            double resourceMultiplier = 1d;
+            if (applyResourceMods)
             {
-                string name = GetPartNameFromNode(p);
-                string raw_name = name;
-                double effectiveCost = 0;
-                double cost;
-                float wetMass;
-
-                ShipConstruction.GetPartCostsAndMass(p, GetAvailablePartByName(name), out float dryCost, out float fuelCost, out float dryMass, out float fuelMass);
-                cost = dryCost + fuelCost;
-                wetMass = dryMass + fuelMass;
-
-                double PartMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(raw_name);
-                var moduleNames = new List<string>();
-                bool hasResourceCostMult = true;
-                foreach (ConfigNode modNode in GetModulesFromPartNode(p))
-                {
-                    string s = modNode.GetValue("name");
-                    if (s == "ModuleTagNoResourceCostMult")
-                        hasResourceCostMult = false;
-                    moduleNames.Add(s);
-                }
-                double ModuleMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetModuleVariable(moduleNames);
-
-                double ResourceMultiplier = 1d;
-                if (hasResourceCostMult)
+                if (o is ConfigNode)
                 {
                     var resourceNames = new List<string>();
-                    foreach (ConfigNode rNode in GetResourcesFromPartNode(p))
+                    foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
                         resourceNames.Add(rNode.GetValue("name"));
-                    ResourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
+                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
                 }
+                else
+                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
+            }
 
-                PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(globalVariables, moduleNames);
+            GatherGlobalModifiers(globalMods, partRef);
 
-                double InvEff = inventorySample.Contains(p) ? PresetManager.Instance.ActivePreset.TimeSettings.InventoryEffect : 0;
-                int builds = ScrapYardWrapper.GetBuildCount(p);
-                int used = ScrapYardWrapper.GetUseCount(p);
-                //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
+            double InvEff = inventorySample.Contains(partRef) ? PresetManager.Instance.ActivePreset.TimeSettings.InventoryEffect : 0;
+            int builds = ScrapYardWrapper.GetBuildCount(partRef);
+            int used = ScrapYardWrapper.GetUseCount(partRef);
 
-                effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
-                    new Dictionary<string, string>()
-                    {
+            //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
+            double effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
+                new Dictionary<string, string>()
+                {
                         {"C", cost.ToString()},
                         {"c", dryCost.ToString()},
                         {"M", wetMass.ToString()},
@@ -185,23 +136,130 @@ namespace KerbalConstructionTime
                         {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
                         {"I", InvEff.ToString()},
                         {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
-                        {"PV", PartMultiplier.ToString()},
-                        {"RV", ResourceMultiplier.ToString()},
-                        {"MV", ModuleMultiplier.ToString()}
-                    });
+                        {"PV", partMultiplier.ToString()},
+                        {"RV", resourceMultiplier.ToString()},
+                        {"MV", moduleMultiplier.ToString()}
+                });
 
-                if (InvEff != 0)
+            if (InvEff != 0)
+                inventorySample.Remove(partRef);
+
+            double runTime = 0;
+            if (o is Part)
+            {
+                foreach (PartModule modNode in (o as Part).Modules)
                 {
-                    inventorySample.Remove(p);
+                    string s = modNode.moduleName;
+                    if (s == "TestFlightReliability_EngineCycle")
+                        runTime = Convert.ToDouble(modNode.Fields.GetValue("engineOperatingTime"));
+                    else if (s == "ModuleTestLite")
+                        runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
+                    if (runTime > 0)  //There can be more than one TestLite module per part
+                        break;
                 }
+            }
+            else
+            {
+                foreach (ConfigNode modNode in (o as ConfigNode).GetNodes("MODULE"))
+                {
+                    string s = modNode.GetValue("name");
+                    if (s == "TestFlightReliability_EngineCycle")
+                        double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
+                    else if (s == "ModuleTestLite")
+                        double.TryParse(modNode.GetValue("runTime"), out runTime);
+                    if (runTime > 0) //There can be more than one TestLite module per part
+                        break;
+                }
+            }
+            if (runTime > 0)
+                effectiveCost = MathParser.ParseEngineRefurbFormula(runTime) * effectiveCost;
 
-                if (effectiveCost < 0) effectiveCost = 0;
-                totalEffectiveCost += effectiveCost;
+            if (effectiveCost < 0)
+                effectiveCost = 0;
+
+            KCTDebug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
+
+            return effectiveCost;
+        }
+
+        public static double GetEffectiveCost(List<Part> parts)
+        {
+            //get list of parts that are in the inventory
+            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(parts, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
+            var globalVariables = new HashSet<string>();
+            double totalEffectiveCost = 0;
+            foreach (Part p in parts)
+            {
+                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
             }
 
-            double globalMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(globalVariables);
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
+            double multipliedCost = totalEffectiveCost * globalMultiplier;
+            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
-            return totalEffectiveCost * globalMultiplier;
+            return multipliedCost;
+        }
+
+
+        public static double GetEffectiveCost(List<ConfigNode> parts)
+        {
+            //get list of parts that are in the inventory
+            var apList = new List<Part>();
+            foreach (ConfigNode n in parts)
+            {
+                if (GetPartNameFromNode(n) is string pName &&
+                    GetAvailablePartByName(pName) is AvailablePart ap)
+                    apList.Add(ap.partPrefab);
+            }
+
+            IList<Part> inventorySample = ScrapYardWrapper.GetPartsInInventory(apList, ScrapYardWrapper.ComparisonStrength.STRICT) ?? new List<Part>();
+            var globalVariables = new HashSet<string>();
+            double totalEffectiveCost = 0;
+            foreach (ConfigNode p in parts)
+            {
+                totalEffectiveCost += GetEffectiveCostInternal(p, globalVariables, inventorySample);
+            }
+
+            double globalMultiplier = ApplyGlobalCostModifiers(globalVariables);
+            double multipliedCost = totalEffectiveCost * globalMultiplier;
+            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+
+            return multipliedCost;
+        }
+
+        public static void GatherGlobalModifiers(HashSet<string> modifiers, Part p)
+        {
+            PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(modifiers, p.Modules);
+            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+                foreach (var x in pm.tags)
+                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod) && mod.globalMult != 1)
+                        modifiers.Add(mod.name);
+        }
+
+        public static double ApplyGlobalCostModifiers(HashSet<string> modifiers)
+        {
+            double res = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(modifiers.ToList()); 
+            foreach (var x in modifiers)
+                if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                    res *= mod.globalMult;
+            return res;
+        }
+
+        public static double ApplyModuleCostModifiers(Part p, out bool useResourceMult)
+        {
+            double res = 1;
+            useResourceMult = true;
+            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+            {
+                foreach (var x in pm.tags)
+                {
+                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                        res *= mod.partMult;
+
+                    useResourceMult &= !x.Equals("NoResourceCostMult", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            return res;
         }
 
         public static string GetPartNameFromNode(ConfigNode part)
@@ -220,36 +278,10 @@ namespace KerbalConstructionTime
             foreach (PartResource rsc in part.Resources)
             {
                 PartResourceDefinition def = PartResourceLibrary.Instance.GetDefinition(rsc.resourceName);
-                if (!includeFuel)
-                {
-                    cost -= rsc.maxAmount * def.unitCost;
-                }
-                else //accounts for if you remove some fuel from a tank
-                {
-                    cost -= (rsc.maxAmount - rsc.amount) * def.unitCost;
-                }
+                double fuel = includeFuel ? (rsc.maxAmount - rsc.amount) : rsc.maxAmount;
+                cost -= fuel * def.unitCost;
             }
             return cost;
-        }
-
-        public static ConfigNode[] GetModulesFromPartNode(ConfigNode partNode)
-        {
-            var n = partNode.GetNodes("MODULE").ToList();
-            for (int i = n.Count - 1; i >= 0; i--)
-            {
-                ConfigNode cn = n[i];
-
-                string s = null;
-                var b = cn.TryGetValue("name", ref s);
-                if (!b || string.IsNullOrEmpty(s))
-                    n.Remove(cn);
-            }
-            return n.ToArray();
-        }
-
-        public static ConfigNode[] GetResourcesFromPartNode(ConfigNode partNode)
-        {
-            return partNode.GetNodes("RESOURCE");
         }
 
         public static double GetBuildRate(int index, BuildListVessel.ListType type, KSCItem KSC, bool UpgradedRate = false)
@@ -338,27 +370,29 @@ namespace KerbalConstructionTime
             return KSC.SPHRates;
         }
 
+        public static double GetBuildRateForFastestVABLine(KSCItem KSC)
+        {
+            return GetVABBuildRates(KSC).FirstOrDefault();
+        }
+
+        public static double GetBuildRateForFastestSPHLine(KSCItem KSC)
+        {
+            return GetSPHBuildRates(KSC).FirstOrDefault();
+        }
+
         public static double GetVABBuildRateSum(KSCItem KSC)
         {
             double rateTotal = 0;
-            List<double> rates = GetVABBuildRates(KSC);
-            for (int i = 0; i < rates.Count; i++)
-            {
-                double rate = rates[i];
+            foreach (var rate in GetVABBuildRates(KSC))
                 rateTotal += rate;
-            }
             return rateTotal;
         }
 
         public static double GetSPHBuildRateSum(KSCItem KSC)
         {
             double rateTotal = 0;
-            List<double> rates = GetSPHBuildRates(KSC);
-            for (int i = 0; i < rates.Count; i++)
-            {
-                double rate = rates[i];
+            foreach (var rate in GetSPHBuildRates(KSC))
                 rateTotal += rate;
-            }
             return rateTotal;
         }
 
@@ -371,77 +405,6 @@ namespace KerbalConstructionTime
             return rateTotal;
         }
 
-        public static void ProgressBuildTime()
-        {
-            Profiler.BeginSample("KCT ProgressBuildTime");
-            double UT = 0;
-            if (HighLogic.LoadedSceneIsEditor) //support for EditorTime
-                UT = HighLogic.CurrentGame.flightState.universalTime;
-            else
-                UT = Planetarium.GetUniversalTime();
-            if (KCTGameStates.LastUT == 0)
-                KCTGameStates.LastUT = UT;
-            double UTDiff = UT - KCTGameStates.LastUT;
-            if (UTDiff > 0 && (HighLogic.LoadedSceneIsEditor || UTDiff < (TimeWarp.fetch.warpRates[TimeWarp.fetch.warpRates.Length - 1] * 2)))
-            {
-                foreach (KSCItem ksc in KCTGameStates.KSCs)
-                {
-                    for (int i = 0; i < ksc.VABList.Count; i++)
-                    {
-                        ksc.VABList[i].IncrementProgress(UTDiff);
-                    }
-                    for (int i = 0; i < ksc.SPHList.Count; i++)
-                    {
-                        ksc.SPHList[i].IncrementProgress(UTDiff);
-                    }
-
-                    foreach (ReconRollout rr in ksc.Recon_Rollout)
-                    {
-                        rr.IncrementProgress(UTDiff);
-                    }
-                    //Reset the associated launchpad id when rollback completes
-                    ksc.Recon_Rollout.ForEach(delegate (ReconRollout rr)
-                    {
-                        if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete())
-                        {
-                            BuildListVessel blv = FindBLVesselByID(new Guid(rr.AssociatedID));
-                            if (blv != null)
-                                blv.LaunchSiteID = -1;
-                        }
-                    });
-                    ksc.Recon_Rollout.RemoveAll(rr => !PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes ||
-                                                      (rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete()));
-
-                    foreach (AirlaunchPrep ap in ksc.AirlaunchPrep)
-                    {
-                        ap.IncrementProgress(UTDiff);
-                    }
-                    ksc.AirlaunchPrep.RemoveAll(ap => ap.Direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
-
-                    foreach (FacilityUpgrade kscTech in ksc.KSCTech)
-                    {
-                        kscTech.IncrementProgress(UTDiff);
-                    }
-                    if (HighLogic.LoadedScene == GameScenes.SPACECENTER) ksc.KSCTech.RemoveAll(ub => ub.UpgradeProcessed);
-
-                }
-                for (int i = 0; i < KCTGameStates.TechList.Count; i++)
-                {
-                    TechItem tech = KCTGameStates.TechList[i];
-                    tech.IncrementProgress(UTDiff);
-                }
-            }
-
-            if (KCTGameStates.TargetedItem != null && KCTGameStates.TargetedItem.IsComplete())
-            {
-                TimeWarp.SetRate(0, true);
-                KCTGameStates.TargetedItem = null;
-                KCTGameStates.WarpInitiated = false;
-            }
-            KCTGameStates.LastUT = UT;
-            Profiler.EndSample();
-        }
-
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
         {
             float total = 0, totalDry = 0;
@@ -450,10 +413,7 @@ namespace KerbalConstructionTime
                 total += ShipConstruction.GetPartCosts(part, part.partInfo, out float dry, out float wet);
                 totalDry += dry;
             }
-            if (includeFuel)
-                return total;
-            else
-                return totalDry;
+            return includeFuel ? total : totalDry;
         }
 
         public static float GetTotalVesselCost(ConfigNode vessel, bool includeFuel = true)
@@ -469,51 +429,48 @@ namespace KerbalConstructionTime
         public static float GetPartCostFromNode(ConfigNode part, bool includeFuel = true)
         {
             string name = GetPartNameFromNode(part);
-            AvailablePart aPart = GetAvailablePartByName(name);
-            if (aPart == null)
+            if (!(GetAvailablePartByName(name) is AvailablePart aPart))
                 return 0;
             ShipConstruction.GetPartCostsAndMass(part, aPart, out float dryCost, out float fuelCost, out _, out _);
-
-            if (includeFuel)
-                return dryCost + fuelCost;
-            else
-                return dryCost;
+            return includeFuel ? dryCost + fuelCost : dryCost;
         }
 
         public static float GetPartMassFromNode(ConfigNode part, bool includeFuel = true, bool includeClamps = true)
         {
             AvailablePart aPart = GetAvailablePartByName(GetPartNameFromNode(part));
 
-            if (aPart == null || (!includeClamps && aPart.partPrefab != null && aPart.partPrefab.Modules.Contains<LaunchClamp>()))
+            if (aPart == null)
+            {
                 return 0;
+            }
+            else if (!includeClamps)
+            {
+                if (aPart.partPrefab.Modules.Contains<LaunchClamp>() || aPart.partPrefab.HasTag("PadInfrastructure"))
+                    return 0;
+            }
             ShipConstruction.GetPartCostsAndMass(part, aPart, out _, out _, out float dryMass, out float fuelMass);
-            if (includeFuel)
-                return dryMass + fuelMass;
-            else
-                return dryMass;
+            return includeFuel ? dryMass + fuelMass : dryMass;
         }
 
         public static float GetShipMass(this ShipConstruct sc, bool excludeClamps, out float dryMass, out float fuelMass)
         {
             dryMass = 0f;
             fuelMass = 0f;
-            int partCount = sc.parts.Count;
-            while (partCount-- > 0)
+            foreach (var part in sc.parts)
             {
-                Part part = sc.parts[partCount];
                 AvailablePart partInfo = part.partInfo;
 
-                if (excludeClamps && part.partInfo.partPrefab.Modules.Contains<LaunchClamp>())
-                    continue;
+                if (excludeClamps)
+                {
+                    if (part.Modules.Contains<LaunchClamp>() || part.HasTag("PadInfrastructure"))
+                        continue;
+                }
 
                 float partDryMass = partInfo.partPrefab.mass + part.GetModuleMass(partInfo.partPrefab.mass, ModifierStagingSituation.CURRENT);
                 float partFuelMass = 0f;
-                int resCount = part.Resources.Count;
-                while (resCount-- > 0)
+                foreach (var resource in part.Resources)
                 {
-                    PartResource resource = part.Resources[resCount];
-                    PartResourceDefinition info = resource.info;
-                    partFuelMass += info.density * (float)resource.amount;
+                    partFuelMass += resource.info.density * (float)resource.amount;
                 }
                 dryMass += partDryMass;
                 fuelMass += partFuelMass;
@@ -521,20 +478,92 @@ namespace KerbalConstructionTime
             return dryMass + fuelMass;
         }
 
+        // Reimplemented from stock so we ignore tags.
+        public static Vector3 GetShipSize(ShipConstruct ship, bool excludeClamps)
+        {
+            if (ship.parts.Count == 0)
+                return Vector3.zero;
+
+            Bounds craftBounds = new Bounds();
+            Vector3 rootPos = ship.parts[0].orgPos;
+            craftBounds.center = rootPos;
+
+
+            List<Bounds> pBounds = new List<Bounds>();
+            Vector3 sz;
+
+            Part p;
+            int iC = ship.parts.Count;
+            for (int i = 0; i < iC; ++i)
+            {
+                p = ship.parts[i];
+                if (excludeClamps)
+                {
+                    if (p.Modules.Contains<LaunchClamp>() || p.HasTag("PadInfrastructure"))
+                        continue;
+                }
+
+                Bounds[] bounds = GetPartRendererBounds(p);
+                Bounds b;
+                Bounds cb;
+                int jC = bounds.Length;
+                for (int j = 0; j < jC; ++j)
+                {
+                    b = bounds[j];
+                    cb = b;
+                    cb.size *= p.boundsMultiplier;
+                    sz = cb.size;
+                    cb.Expand(p.GetModuleSize(sz));
+                    pBounds.Add(b);
+                }
+            }
+            craftBounds = PartGeometryUtil.MergeBounds(pBounds.ToArray(), ship.parts[0].transform.root);
+
+            return craftBounds.size;
+        }
+
+        // Reimplemented from stock so we ignore disabled renderers.
+        public static Bounds[] GetPartRendererBounds(Part p)
+        {
+            List<MeshRenderer> mRenderers = p.FindModelComponents<MeshRenderer>();
+            List<SkinnedMeshRenderer> smRenderers = p.FindModelComponents<SkinnedMeshRenderer>();
+
+            for (int i = mRenderers.Count - 1; i >= 0; --i)
+            {
+                if (!mRenderers[i].enabled)
+                    mRenderers.RemoveAt(i);
+            }
+
+            for (int i = smRenderers.Count - 1; i >= 0; --i)
+            {
+                if (!smRenderers[i].enabled)
+                    smRenderers.RemoveAt(i);
+            }
+
+            Bounds[] bs = new Bounds[mRenderers.Count + smRenderers.Count];
+
+            int j = 0;
+            for (int i = 0; i < mRenderers.Count; ++i)
+            {
+                bs[j++] = mRenderers[i].bounds;
+            }
+            for (int i = 0; i < smRenderers.Count; ++i)
+            {
+                bs[j++] = smRenderers[i].bounds;
+            }
+            return bs;
+        }
+
         public static string GetTweakScaleSize(ProtoPartSnapshot part)
         {
             string partSize = string.Empty;
-            if (part.modules != null)
+            if (part?.modules?.Find(mod => mod.moduleName == "TweakScale") is ProtoPartModuleSnapshot tweakscale)
             {
-                ProtoPartModuleSnapshot tweakscale = part.modules.Find(mod => mod.moduleName == "TweakScale");
-                if (tweakscale != null)
-                {
-                    ConfigNode tsCN = tweakscale.moduleValues;
-                    string defaultScale = tsCN.GetValue("defaultScale");
-                    string currentScale = tsCN.GetValue("currentScale");
-                    if (!defaultScale.Equals(currentScale))
-                        partSize = "," + currentScale;
-                }
+                ConfigNode tsCN = tweakscale.moduleValues;
+                string defaultScale = tsCN.GetValue("defaultScale");
+                string currentScale = tsCN.GetValue("currentScale");
+                if (!defaultScale.Equals(currentScale))
+                    partSize = "," + currentScale;
             }
             return partSize;
         }
@@ -542,17 +571,13 @@ namespace KerbalConstructionTime
         public static string GetTweakScaleSize(ConfigNode part)
         {
             string partSize = string.Empty;
-            if (part.HasNode("MODULE"))
+            if (part.HasNode("MODULE") &&
+                part.GetNodes("MODULE").FirstOrDefault(m => m.GetValue("name") == "TweakScale") is ConfigNode tsCN)
             {
-                ConfigNode[] Modules = part.GetNodes("MODULE");
-                if (Modules.Length > 0 && Modules.FirstOrDefault(mod => mod.GetValue("name") == "TweakScale") != null)
-                {
-                    ConfigNode tsCN = Modules.First(mod => mod.GetValue("name") == "TweakScale");
-                    string defaultScale = tsCN.GetValue("defaultScale");
-                    string currentScale = tsCN.GetValue("currentScale");
-                    if (!defaultScale.Equals(currentScale))
-                        partSize = "," + currentScale;
-                }
+                string defaultScale = tsCN.GetValue("defaultScale");
+                string currentScale = tsCN.GetValue("currentScale");
+                if (!defaultScale.Equals(currentScale))
+                    partSize = "," + currentScale;
             }
             return partSize;
         }
@@ -560,10 +585,8 @@ namespace KerbalConstructionTime
         public static string GetTweakScaleSize(Part part)
         {
             string partSize = "";
-            if (part.Modules != null && part.Modules.Contains("TweakScale"))
+            if (part?.Modules?.GetModule("TweakScale") is PartModule tweakscale)
             {
-                PartModule tweakscale = part.Modules["TweakScale"];
-
                 object defaultScale = tweakscale.Fields.GetValue("defaultScale");
                 object currentScale = tweakscale.Fields.GetValue("currentScale");
                 if (!defaultScale.Equals(currentScale))
@@ -605,7 +628,6 @@ namespace KerbalConstructionTime
 
         public static string GetStockButtonTexturePath()
         {
-
             if (KCTEvents.Instance.KCTButtonStockImportant && DateTime.Now.CompareTo(_startedFlashing.AddSeconds(0)) > 0 && DateTime.Now.Millisecond < 500)
                 return _icon_KCT_Off_38;
             else if (KCTEvents.Instance.KCTButtonStockImportant && DateTime.Now.CompareTo(_startedFlashing.AddSeconds(3)) > 0)
@@ -660,6 +682,16 @@ namespace KerbalConstructionTime
             return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
         }
 
+        /// <summary>
+        /// Use this method instead of Planetarium.GetUniversalTime().
+        /// Fixes the KSP stupidity where wrong UT can be returned when reverting back to the Editor.
+        /// </summary>
+        /// <returns></returns>
+        public static double GetUT()
+        {
+            return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
+        }
+
         public static string AddScienceWithMessage(float science, TransactionReasons reason)
         {
             if (science > 0)
@@ -676,48 +708,39 @@ namespace KerbalConstructionTime
         {
             if (ship.Type == BuildListVessel.ListType.None)
                 ship.FindTypeFromLists();
-
-            if (ship.Type == BuildListVessel.ListType.VAB)
-                MoveVesselToWarehouse(ship.Type, ship.KSC.VABList.IndexOf(ship), ship.KSC);
-            else if (ship.Type == BuildListVessel.ListType.SPH)
-                MoveVesselToWarehouse(ship.Type, ship.KSC.SPHList.IndexOf(ship), ship.KSC);
+            if (ship.Type != BuildListVessel.ListType.VAB && ship.Type != BuildListVessel.ListType.SPH)
+                return;
+            var list = ship.Type == BuildListVessel.ListType.VAB ? ship.KSC.VABList : ship.KSC.SPHList;
+            MoveVesselToWarehouse(ship.Type, list.IndexOf(ship), ship.KSC);
         }
 
         public static void MoveVesselToWarehouse(BuildListVessel.ListType ListIdentifier, int index, KSCItem KSC)
         {
             if (KSC == null) KSC = KCTGameStates.ActiveKSC;
+            if (ListIdentifier != BuildListVessel.ListType.VAB && ListIdentifier != BuildListVessel.ListType.SPH)
+                return;
 
             KCTEvents.Instance.KCTButtonStockImportant = true;
             _startedFlashing = DateTime.Now;    //Set the time to start flashing
 
             var Message = new StringBuilder();
             Message.AppendLine("The following vessel is complete:");
-            BuildListVessel vessel = null;
+            BuildListVessel vessel;
+            string stor = ListIdentifier == BuildListVessel.ListType.VAB ? "VAB" : "SPH";
             if (ListIdentifier == BuildListVessel.ListType.VAB)
             {
                 vessel = KSC.VABList[index];
                 KSC.VABList.RemoveAt(index);
                 KSC.VABWarehouse.Add(vessel);
-
-                Message.AppendLine(vessel.ShipName);
-                Message.AppendLine("Please check the VAB Storage at " + KSC.KSCName + " to launch it.");
-
             }
-            else if (ListIdentifier == BuildListVessel.ListType.SPH)
+            else
             {
                 vessel = KSC.SPHList[index];
                 KSC.SPHList.RemoveAt(index);
                 KSC.SPHWarehouse.Add(vessel);
-
-                Message.AppendLine(vessel.ShipName);
-                Message.AppendLine("Please check the SPH Storage at " + KSC.KSCName + " to launch it.");
             }
-
-            if ((KCTGameStates.Settings.ForceStopWarp || vessel == KCTGameStates.TargetedItem) && TimeWarp.CurrentRateIndex != 0)
-            {
-                TimeWarp.SetRate(0, true);
-                KCTGameStates.WarpInitiated = false;
-            }
+            Message.AppendLine(vessel.ShipName);
+            Message.AppendLine($"Please check the {stor} Storage at {KSC.KSCName} to launch it.");
 
             //Assign science based on science rate
             if (CurrentGameHasScience() && !vessel.CannotEarnScience)
@@ -735,7 +758,6 @@ namespace KerbalConstructionTime
                 ScrapYardWrapper.RecordBuild(vessel.ExtractedPartNodes);
             }
 
-            string stor = ListIdentifier == 0 ? "VAB" : "SPH";
             KCTDebug.Log($"Moved vessel {vessel.ShipName} to {KSC.KSCName}'s {stor} storage.");
 
             KCT_GUI.ResetBLWindow(false);
@@ -769,14 +791,8 @@ namespace KerbalConstructionTime
             // Earned point totals shouldn't decrease. This would only make sense when done through the cheat menu.
             if (changeDelta <= 0f || KCTGameStates.IsRefunding) return;
 
-            bool addSavePts = KCTGameStates.SciPointsTotal == -1f;
             EnsureCurrentSaveHasSciTotalsInitialized(changeDelta);
-
-            float pointsBef;
-            if (addSavePts)
-                pointsBef = 0f;
-            else
-                pointsBef = KCTGameStates.SciPointsTotal;
+            float pointsBef = Math.Max(0, KCTGameStates.SciPointsTotal);
 
             KCTGameStates.SciPointsTotal += changeDelta;
             KCTDebug.Log("Total sci points earned is now: " + KCTGameStates.SciPointsTotal);
@@ -833,12 +849,9 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static BuildListVessel AddVesselToBuildList()
-        {
-            return AddVesselToBuildList(EditorLogic.fetch.launchSiteName);
-        }
+        public static void TryAddVesselToBuildList() => TryAddVesselToBuildList(EditorLogic.fetch.launchSiteName);
 
-        public static BuildListVessel AddVesselToBuildList(string launchSite)
+        public static void TryAddVesselToBuildList(string launchSite)
         {
             if (string.IsNullOrEmpty(launchSite))
             {
@@ -852,89 +865,23 @@ namespace KerbalConstructionTime
                 ShipName = EditorLogic.fetch.shipNameField.text
             };
 
-            return AddVesselToBuildList(blv);
+            TryAddVesselToBuildList(blv);
         }
 
-        public static BuildListVessel AddVesselToBuildList(BuildListVessel blv)
+        public static void TryAddVesselToBuildList(BuildListVessel blv, bool skipPartChecks = false)
         {
-            if (CurrentGameIsCareer())
+            var v = new VesselBuildValidator
             {
-                //Check if vessel fails facility checks but can still be built
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
-                if (facilityChecks.Count != 0)
-                {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
-                        "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
-                        + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
-                        "Acknowledged",
-                        false,
-                        HighLogic.UISkin);
-                }
+                CheckPartAvailability = !skipPartChecks,
+                CheckPartConfigs = !skipPartChecks,
+                SuccessAction = AddVesselToBuildList
+            };
+            v.ProcessVessel(blv);
+        }
 
-                //Check if vessel contains locked or experimental parts, and therefore cannot be built
-                Dictionary<AvailablePart, int> lockedParts = blv.GetLockedParts();
-                if (lockedParts?.Count > 0)
-                {
-                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but it contains locked parts.");
-
-                    //Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
-                    var lockedMsg = ConstructLockedPartsWarning(lockedParts);
-                    var msg = new ScreenMessage(lockedMsg, 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(msg);
-                    return null;
-                }
-                Dictionary<AvailablePart, int> devParts = blv.GetExperimentalParts();
-                if (devParts?.Count > 0)
-                {
-                    var devMsg = ConstructExperimentalPartsWarning(devParts);
-
-                    //PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
-                    DialogGUIButton[] buttons;
-
-                    var unlockableParts = devParts.Keys.Where(p => ResearchAndDevelopment.GetTechnologyState(p.TechRequired) == RDTech.State.Available).ToList();
-                    int n = unlockableParts.Count();
-                    if (unlockableParts.Any())
-                    {
-                        buttons = new DialogGUIButton[] {
-                            new DialogGUIButton("Acknowledged", () => { }),
-                            new DialogGUIButton($"Unlock {n} part{(n > 1? "s":"")} for {FindUnlockCost(unlockableParts)} Funds and Build", () => { UnlockExperimentalParts(unlockableParts); AddVesselToBuildList(blv); })
-                        };
-                    }
-                    else
-                    {
-                        buttons = new DialogGUIButton[] {
-                            new DialogGUIButton("Acknowledged", () => { })
-                        };
-                    }
-
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                        new MultiOptionDialog("devPartsCheckFailedPopup",
-                            devMsg,
-                            "Vessel cannot be built!",
-                            HighLogic.UISkin,
-                            buttons),
-                        false,
-                        HighLogic.UISkin);
-                    return null;
-                }
-
-
-                double totalCost = blv.GetTotalCost();
-                double prevFunds = Funding.Instance.Funds;
-                if (totalCost > prevFunds)
-                {
-                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but not enough funds.");
-                    KCTDebug.Log($"Vessel cost: {GetTotalVesselCost(blv.ShipNode)}, Current funds: {prevFunds}");
-                    var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(msg);
-                    return null;
-                }
-                else
-                {
-                    SpendFunds(totalCost, TransactionReasons.VesselRollout);
-                }
-            }
+        public static void AddVesselToBuildList(BuildListVessel blv)
+        {
+            SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 
             string type = string.Empty;
             if (blv.Type == BuildListVessel.ListType.VAB)
@@ -949,14 +896,78 @@ namespace KerbalConstructionTime
                 KCTGameStates.ActiveKSC.SPHList.Add(blv);
                 type = "SPH";
             }
-
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
+
+            try
+            {
+                KCTEvents.OnVesselAddedToBuildQueue.Fire(blv);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
 
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
             KCTDebug.Log("Launch site is " + blv.LaunchSite);
-            var message = new ScreenMessage($"[KCT] Added {blv.ShipName} to {type} build list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+            bool isCommonLine = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;
+            string text = isCommonLine ? $"Added {blv.ShipName} to build list." : $"Added {blv.ShipName} to {type} build list.";
+            var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
-            return blv;
+        }
+
+        /// <summary>
+        /// Validates and saves the vessel edits as a new buildlist item.
+        /// </summary>
+        /// <param name="editableShip">Must be the pre-edits (i.e what was initially loaded into the edit session) state of the vessel</param>
+        public static void TrySaveShipEdits(BuildListVessel editableShip)
+        {
+            // Load the current editor state as a fresh BuildListVessel
+            string launchSite = EditorLogic.fetch.launchSiteName;
+            double effCost = GetEffectiveCost(EditorLogic.fetch.ship.Parts);
+            double bp = GetBuildTime(effCost);
+            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, effCost, bp, EditorLogic.FlagURL)
+            {
+                ShipName = EditorLogic.fetch.shipNameField.text
+            };
+
+            double usedShipsCost = editableShip.GetTotalCost();
+            foreach (BuildListVessel v in KCTGameStates.MergedVessels)
+            {
+                usedShipsCost += v.GetTotalCost();
+                v.RemoveFromBuildList();
+            }
+            AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
+
+            var validator = new VesselBuildValidator();
+            validator.SuccessAction = (postEditShip2) => SaveShipEdits(editableShip, postEditShip2);
+            validator.FailureAction = () => SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
+
+            validator.ProcessVessel(postEditShip);
+        }
+
+        private static void SaveShipEdits(BuildListVessel editableShip, BuildListVessel newShip)
+        {
+            AddVesselToBuildList(newShip);
+
+            newShip.FacilityBuiltIn = editableShip.FacilityBuiltIn;
+            newShip.KCTPersistentID = editableShip.KCTPersistentID;
+
+            editableShip.RemoveFromBuildList();
+
+            GetShipEditProgress(editableShip, out double progressBP, out _, out _);
+            newShip.Progress = progressBP;
+            newShip.RushBuildClicks = editableShip.RushBuildClicks;
+            KCTDebug.Log($"Finished? {editableShip.IsFinished}");
+            if (editableShip.IsFinished)
+                newShip.CannotEarnScience = true;
+
+            GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+
+            KCTGameStates.ClearVesselEditMode();
+
+            KCTDebug.Log("Edits saved.");
+
+            HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
         public static Dictionary<string, ProtoTechNode> GetUnlockedProtoTechNodes()
@@ -973,14 +984,67 @@ namespace KerbalConstructionTime
             return protoTechNodes;
         }
 
+        public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent) 
+        {
+            double origTotalBP; 
+            double oldProgressBP;
+
+            if (KCTGameStates.MergedVessels.Count == 0)
+            {
+                origTotalBP = ship.BuildPoints + ship.IntegrationPoints;
+                oldProgressBP = ship.IsFinished ? origTotalBP : ship.Progress;
+            }
+            else
+            {
+                double totalEffectiveCost = ship.EffectiveCost;
+                foreach (BuildListVessel v in KCTGameStates.MergedVessels)
+                {
+                    totalEffectiveCost += v.EffectiveCost;
+                }
+
+                origTotalBP = oldProgressBP = MathParser.ParseIntegrationTimeFormula(ship, KCTGameStates.MergedVessels) + GetBuildTime(totalEffectiveCost);
+                oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.TimeSettings.MergingTimePenalty);
+            }
+
+            double newTotalBP = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
+            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
+            newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
+            originalCompletionPercent = oldProgressBP / origTotalBP;
+            newCompletionPercent = newProgressBP / newTotalBP;
+        }
+
         public static int FindUnlockCost(List<AvailablePart> availableParts)
         {
-            int cost = 0;
-            foreach (var p in availableParts)
+            Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RealFuels", StringComparison.OrdinalIgnoreCase))?.assembly;
+            Type t = a?.GetType("RealFuels.EntryCostManager");
+
+            // Older RF versions can lack these methods
+            var bestMethodInf = t?.GetMethod("EntryCostForParts", new Type[] { typeof(IEnumerable<AvailablePart>) });
+            var worseMethodInf = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
+
+            var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            object instance = pi.GetValue(null);
+
+            if (bestMethodInf != null)
             {
-                cost += p.entryCost;
+                double sum = (double)bestMethodInf.Invoke(instance, new[] { availableParts });
+                return (int)sum;
             }
-            return cost;
+            else if (worseMethodInf != null)    // Worse than the one above but probably still better than the 3rd one.
+            {
+                IEnumerable<string> partNames = availableParts.Select(p => p.name);
+                double sum = (double)worseMethodInf.Invoke(instance, new[] { partNames });
+                return (int)sum;
+            }
+            else
+            {
+                int cost = 0;
+                foreach (var p in availableParts)
+                {
+                    cost += p.entryCost;
+                }
+                return cost;
+            }
         }
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
@@ -1064,18 +1128,27 @@ namespace KerbalConstructionTime
         {
             ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(partInfo.TechRequired);
 
-            string[] identicalPartsNames = partInfo.identicalParts.Split(',');
-
-            for (int i = identicalPartsNames.Length; i-- > 0;)
+            foreach (var name in partInfo.identicalParts.Split(','))
             {
-                AvailablePart partInfoByName = PartLoader.getPartInfoByName(identicalPartsNames[i].Replace('_', '.').Trim());
-                if (partInfoByName != null && partInfoByName.TechRequired == partInfo.TechRequired)
+                if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info 
+                    && info.TechRequired == partInfo.TechRequired)
                 {
-                    partInfoByName.costsFunds = false;
-                    techState.partsPurchased.Add(partInfoByName);
-                    GameEvents.OnPartPurchased.Fire(partInfoByName);
-                    partInfoByName.costsFunds = true;
+                    info.costsFunds = false;
+                    techState.partsPurchased.Add(info);
+                    GameEvents.OnPartPurchased.Fire(info);
+                    info.costsFunds = true;
                 }
+            }
+        }
+
+        private static void _checkTime(in IKCTBuildItem item, ref double shortestTime, ref IKCTBuildItem closest)
+        {
+            if (item.IsComplete()) return;
+            double time = item.GetTimeLeft();
+            if (time < shortestTime)
+            {
+                closest = item;
+                shortestTime = time;
             }
         }
 
@@ -1088,108 +1161,38 @@ namespace KerbalConstructionTime
             foreach (KSCItem KSC in KCTGameStates.KSCs)
             {
                 foreach (IKCTBuildItem blv in KSC.VABList)
-                {
-                    double time = blv.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = blv;
-                        shortestTime = time;
-                    }
-                }
+                    _checkTime(blv, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem blv in KSC.SPHList)
-                {
-                    double time = blv.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = blv;
-                        shortestTime = time;
-                    }
-                }
-
+                    _checkTime(blv, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem rr in KSC.Recon_Rollout)
-                {
-                    if (rr.IsComplete())
-                        continue;
-                    double time = rr.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = rr;
-                        shortestTime = time;
-                    }
-                }
-
+                    _checkTime(rr, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ap in KSC.AirlaunchPrep)
-                {
-                    if (ap.IsComplete())
-                        continue;
-                    double time = ap.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = ap;
-                        shortestTime = time;
-                    }
-                }
-
+                    _checkTime(ap, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ub in KSC.KSCTech)
-                {
-                    if (ub.IsComplete())
-                        continue;
-                    double time = ub.GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = ub;
-                        shortestTime = time;
-                    }
-                }
+                    _checkTime(ub, ref shortestTime, ref thing);
+                foreach (IKCTBuildItem pc in KSC.PadConstructions)
+                    _checkTime(pc, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
             {
-                // Ignore items that are blocked
-                if (tech.GetBlockingTech(KCTGameStates.TechList) == null)
-                {
-                    double time = ((IKCTBuildItem)tech).GetTimeLeft();
-                    if (time < shortestTime)
-                    {
-                        thing = tech;
-                        shortestTime = time;
-                    }
-                }
+                if (tech.GetBlockingTech(KCTGameStates.TechList) == null)   // Ignore items that are blocked
+                    _checkTime(tech, ref shortestTime, ref thing);
             }
             return thing;
         }
 
-        public static void RampUpWarp()
-        {
-            IKCTBuildItem ship = GetNextThingToFinish();
-            RampUpWarp(ship);
-        }
-
-        public static void RampUpWarp(IKCTBuildItem item)
-        {
-            int newRate = TimeWarp.CurrentRateIndex;
-            double timeLeft = item.GetTimeLeft();
-            if (double.IsPositiveInfinity(timeLeft))
-                timeLeft = GetNextThingToFinish().GetTimeLeft();
-            while ((newRate + 1 < TimeWarp.fetch.warpRates.Length) &&
-                   (timeLeft > TimeWarp.fetch.warpRates[newRate + 1] * Planetarium.fetch.fixedDeltaTime) &&
-                   (newRate < KCTGameStates.Settings.MaxTimeWarp))
-            {
-                newRate++;
-            }
-            TimeWarp.SetRate(newRate, true);
-        }
-
         public static void DisableModFunctionality()
         {
-            InputLockManager.RemoveControlLock("KCTLaunchLock");
+            DisableSimulationLocks();
+            InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
             KCT_GUI.HideAll();
         }
 
         public static object GetMemberInfoValue(MemberInfo member, object sourceObject)
         {
             object newVal;
-            if (member is FieldInfo)
-                newVal = ((FieldInfo)member).GetValue(sourceObject);
+            if (member is FieldInfo info)
+                newVal = info.GetValue(sourceObject);
             else
                 newVal = ((PropertyInfo)member).GetValue(sourceObject, null);
             return newVal;
@@ -1201,20 +1204,19 @@ namespace KerbalConstructionTime
             int spentPoints = 0;
             if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
             {
-                for (int j = 0; j < KCTGameStates.KSCs.Count; j++)
+                foreach (var KSC in KCTGameStates.KSCs)
                 {
-                    KSCItem KSC = KCTGameStates.KSCs[j];
-                    for (int i = 0; i < KSC.VABUpgrades.Count; i++) spentPoints += KSC.VABUpgrades[i];
-                    for (int i = 0; i < KSC.SPHUpgrades.Count; i++) spentPoints += KSC.SPHUpgrades[i];
+                    foreach (var vabPoints in KSC.VABUpgrades) spentPoints += vabPoints;
+                    foreach (var sphPoints in KSC.SPHUpgrades) spentPoints += sphPoints;
                     spentPoints += KSC.RDUpgrades[0];
                 }
                 spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
             }
             else
             {
-                for (int i = 0; i < ksc.VABUpgrades.Count; i++) spentPoints += ksc.VABUpgrades[i];
-                for (int i = 0; i < ksc.SPHUpgrades.Count; i++) spentPoints += ksc.SPHUpgrades[i];
-                for (int i = 0; i < ksc.RDUpgrades.Count; i++) spentPoints += ksc.RDUpgrades[i];
+                foreach (var vabPoints in ksc.VABUpgrades) spentPoints += vabPoints;
+                foreach (var sphPoints in ksc.SPHUpgrades) spentPoints += sphPoints;
+                foreach (var rndPoints in ksc.RDUpgrades) spentPoints += rndPoints;
             }
             return spentPoints;
         }
@@ -1228,44 +1230,39 @@ namespace KerbalConstructionTime
                 case SpaceCenterFacility.ResearchAndDevelopment:
                     if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
                     {
-                        for (int j = 0; j < KCTGameStates.KSCs.Count; j++)
-                        {
-                            KSCItem KSC = KCTGameStates.KSCs[j];
+                        foreach (var KSC in KCTGameStates.KSCs)
                             spentPoints += KSC.RDUpgrades[0];
-                        }
                         spentPoints += ksc.RDUpgrades[1]; //only count this once, all KSCs share this value
                     }
                     else
                     {
-                        for (int i = 0; i < ksc.RDUpgrades.Count; i++) spentPoints += ksc.RDUpgrades[i];
+                        foreach (var rndPoints in ksc.RDUpgrades) spentPoints += rndPoints;
                     }
                     break;
                 case SpaceCenterFacility.SpaceplaneHangar:
                     if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
                     {
-                        for (int j = 0; j < KCTGameStates.KSCs.Count; j++)
+                        foreach (var KSC in KCTGameStates.KSCs)
                         {
-                            KSCItem KSC = KCTGameStates.KSCs[j];
-                            for (int i = 0; i < KSC.SPHUpgrades.Count; i++) spentPoints += KSC.SPHUpgrades[i];
+                            foreach (var points in KSC.SPHUpgrades) spentPoints += points;
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < ksc.SPHUpgrades.Count; i++) spentPoints += ksc.SPHUpgrades[i];
+                        foreach (var points in ksc.SPHUpgrades) spentPoints += points;
                     }
                     break;
                 case SpaceCenterFacility.VehicleAssemblyBuilding:
                     if (PresetManager.Instance.ActivePreset.GeneralSettings.SharedUpgradePool)
                     {
-                        for (int j = 0; j < KCTGameStates.KSCs.Count; j++)
+                        foreach (var KSC in KCTGameStates.KSCs)
                         {
-                            KSCItem KSC = KCTGameStates.KSCs[j];
-                            for (int i = 0; i < KSC.VABUpgrades.Count; i++) spentPoints += KSC.VABUpgrades[i];
+                            foreach (var points in KSC.VABUpgrades) spentPoints += points;
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < ksc.VABUpgrades.Count; i++) spentPoints += ksc.VABUpgrades[i];
+                        foreach (var points in ksc.VABUpgrades) spentPoints += points;
                     }
                     break;
                 default:
@@ -1288,16 +1285,24 @@ namespace KerbalConstructionTime
             {
                 if (!_isKSCSwitcherInstalled.HasValue)
                 {
-                    Type Switcher = null;
-                    AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KSCSwitcher", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isKSCSwitcherInstalled = a != null;
+                    if (_isKSCSwitcherInstalled.Value)
                     {
-                        if (t.FullName == "regexKSP.KSCSwitcher")
-                        {
-                            Switcher = t;
-                        }
-                    });
+                        Type t = a.GetType("regexKSP.KSCLoader");
+                        _fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
+                        _fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-                    _isKSCSwitcherInstalled = Switcher != null;
+                        t = a.GetType("regexKSP.KSCSiteManager");
+                        _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                        _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                        if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
+                        {
+                            KCTDebug.LogError("Failed to bind to KSCSwitcher");
+                            _isKSCSwitcherInstalled = false;
+                        }
+                    }
                 }
                 return _isKSCSwitcherInstalled.Value;
             }
@@ -1327,10 +1332,12 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static bool IsKRASHSimActive
+        public static bool IsSimulationActive
         {
             get
             {
+                if (KCTGameStates.IsSimulatedFlight) return true;
+
                 Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KRASH", StringComparison.OrdinalIgnoreCase))?.assembly;
                 Type t = a?.GetType("KRASH.KRASHShelter");
                 FieldInfo fi = t?.GetField("persistent", BindingFlags.Public | BindingFlags.Static);
@@ -1346,27 +1353,17 @@ namespace KerbalConstructionTime
         {
             if (!IsKSCSwitcherInstalled) return null;
 
-            //get the LastKSC.KSCLoader.instance object
-            //check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
-            Type Loader = null;
-            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
-            {
-                if (t.FullName == "regexKSP.KSCLoader")
-                {
-                    Loader = t;
-                }
-            });
-            object LoaderInstance = GetMemberInfoValue(Loader.GetMember("instance")[0], null);
-            if (LoaderInstance == null)
+            // get the LastKSC.KSCLoader.instance object
+            // check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
+
+            object loaderInstance = _fiKSCSwInstance.GetValue(null);
+            if (loaderInstance == null)
                 return null;
-            object sitesObj = GetMemberInfoValue(Loader.GetMember("Sites")[0], LoaderInstance);
-            string lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("lastSite")[0], sitesObj);
+            object sites = _fiKSCSwSites.GetValue(loaderInstance);
+            string lastSite = _fiKSCSwLastSite.GetValue(sites) as string;
 
             if (lastSite == string.Empty)
-            {
-                string defaultSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("defaultSite")[0], sitesObj);
-                return defaultSite;
-            }
+                lastSite = _fiKSCSwDefaultSite.GetValue(sites) as string;
             return lastSite;
         }
 
@@ -1385,18 +1382,17 @@ namespace KerbalConstructionTime
             if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
             {
                 KCTDebug.Log($"Setting active site to {site}");
-                KSCItem setActive = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
-                if (setActive != null)
+                KSCItem newKsc = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                if (newKsc != null)
                 {
-                    SetActiveKSC(setActive);
+                    SetActiveKSC(newKsc);
                 }
                 else
                 {
-                    setActive = new KSCItem(site);
-                    if (CurrentGameIsCareer())
-                        setActive.ActiveLPInstance.level = 0;
-                    KCTGameStates.KSCs.Add(setActive);
-                    SetActiveKSC(setActive);
+                    newKsc = new KSCItem(site);
+                    newKsc.EnsureStartingLaunchPad();
+                    KCTGameStates.KSCs.Add(newKsc);
+                    SetActiveKSC(newKsc);
                 }
             }
         }
@@ -1411,29 +1407,13 @@ namespace KerbalConstructionTime
 
         public static PQSCity FindKSC(CelestialBody home)
         {
-            if (home != null)
+            if (home?.pqsController?.transform?.Find("KSC") is Transform t &&
+                t.GetComponent(typeof(PQSCity)) is PQSCity KSC)
             {
-                if (home.pqsController != null && home.pqsController.transform != null)
-                {
-                    Transform t = home.pqsController.transform.Find("KSC");
-                    if (t != null)
-                    {
-                        PQSCity KSC = (PQSCity)t.GetComponent(typeof(PQSCity));
-                        if (KSC != null) { return KSC; }
-                    }
-                }
+                return KSC;
             }
 
-            PQSCity[] cities = Resources.FindObjectsOfTypeAll<PQSCity>();
-            foreach (PQSCity c in cities)
-            {
-                if (c.name == "KSC")
-                {
-                    return c;
-                }
-            }
-
-            return null;
+            return Resources.FindObjectsOfTypeAll<PQSCity>().FirstOrDefault(x => x.name == "KSC");
         }
 
         public static void DisplayMessage(string title, StringBuilder text, MessageSystemButton.MessageButtonColor color, MessageSystemButton.ButtonIcons icon)
@@ -1466,9 +1446,23 @@ namespace KerbalConstructionTime
             var kctVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, effCost, KCTGameStates.EditorBuildTime, EditorLogic.FlagURL);
 
             KCTGameStates.EditorIntegrationTime = MathParser.ParseIntegrationTimeFormula(kctVessel);
-            KCTGameStates.EditorRolloutCosts = MathParser.ParseRolloutCostFormula(kctVessel);
             KCTGameStates.EditorIntegrationCosts = MathParser.ParseIntegrationCostFormula(kctVessel);
-            KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
+
+            if (EditorDriver.editorFacility == EditorFacility.VAB)
+            {
+                KCTGameStates.EditorRolloutCosts = MathParser.ParseRolloutCostFormula(kctVessel);
+                KCTGameStates.EditorRolloutTime = MathParser.ParseReconditioningFormula(kctVessel, false);
+            }
+            else
+            {
+                // SPH lacks rollout times and costs
+                KCTGameStates.EditorRolloutCosts = 0;
+                KCTGameStates.EditorRolloutTime = 0;
+            }
+
+            Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
+            KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
+            KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
         }
 
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
@@ -1517,17 +1511,15 @@ namespace KerbalConstructionTime
         public static bool ReconditioningActive(KSCItem KSC, string launchSite = "LaunchPad")
         {
             if (KSC == null) KSC = KCTGameStates.ActiveKSC;
-
-            ReconRollout recon = KSC.GetReconditioning(launchSite);
-            return (recon != null);
+            return KSC.GetReconditioning(launchSite) is ReconRollout;
         }
 
         public static BuildListVessel FindBLVesselByID(Guid id)
         {
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
-                var v = FindBLVesselByID(id, ksc);
-                if (v != null) return v;
+                if (FindBLVesselByID(id, ksc) is BuildListVessel blv)
+                    return blv;
             }
 
             return null;
@@ -1590,15 +1582,19 @@ namespace KerbalConstructionTime
             if (partName == null) return false;
 
             AvailablePart partInfoByName = PartLoader.getPartInfoByName(partName);
-            if (partInfoByName == null) return false;
+            return PartIsUnlocked(partInfoByName);
+        }
 
-            ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(partInfoByName.TechRequired);
+        public static bool PartIsUnlocked(AvailablePart ap)
+        {
+            if (ap == null) return false;
+
+            string partName = ap.name;
+            ProtoTechNode techState = ResearchAndDevelopment.Instance.GetTechState(ap.TechRequired);
             bool partIsUnlocked = techState != null && techState.state == RDTech.State.Available &&
                                   RUIutils.Any(techState.partsPurchased, (a => a.name == partName));
 
-            bool partIsExperimental = ResearchAndDevelopment.IsExperimentalPart(partInfoByName);
-
-            return partIsUnlocked || partIsExperimental;
+            return partIsUnlocked;
         }
 
         public static bool PartIsExperimental(string partName)
@@ -1648,45 +1644,6 @@ namespace KerbalConstructionTime
                 }
             }
             return false;
-        }
-
-        public static string ConstructLockedPartsWarning(Dictionary<AvailablePart, int> lockedPartsOnShip)
-        {
-            if (lockedPartsOnShip == null || lockedPartsOnShip.Count == 0)
-                return null;
-
-            var sb = new StringBuilder();
-            sb.Append("Warning! This vessel cannot be built. It contains parts which are not available at the moment:\n");
-
-            foreach (KeyValuePair<AvailablePart, int> kvp in lockedPartsOnShip)
-            {
-                sb.Append($" <color=orange><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
-            }
-
-            return sb.ToString();
-        }
-
-        public static string ConstructExperimentalPartsWarning(Dictionary<AvailablePart, int> devPartsOnShip)
-        {
-            if (devPartsOnShip == null || devPartsOnShip.Count == 0)
-                return null;
-
-            var sb = new StringBuilder();
-            sb.Append("This vessel contains parts that are still in development. ");
-            if (devPartsOnShip.Any(kvp => ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available))
-                sb.Append("Green parts have been researched and can be unlocked.\n");
-            else
-                sb.Append("\n");
-
-            foreach (KeyValuePair<AvailablePart, int> kvp in devPartsOnShip)
-            {
-                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key.TechRequired) == RDTech.State.Available)
-                    sb.Append($" <color=green><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
-                else
-                    sb.Append($" <color=orange><b>{kvp.Value}x {kvp.Key.title}</b></color>\n");
-            }
-
-            return sb.ToString();
         }
 
         public static int GetBuildingUpgradeLevel(SpaceCenterFacility facility)
@@ -1781,6 +1738,10 @@ namespace KerbalConstructionTime
                 GamePersistence.SaveGame("KCT_Backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
                 KCTGameStates.RecoveredVessel = new BuildListVessel(FlightGlobals.ActiveVessel, listType);
+
+                KCTVesselData vData = FlightGlobals.ActiveVessel.GetKCTVesselData();
+                KCTGameStates.RecoveredVessel.KCTPersistentID = vData?.VesselID;
+                KCTGameStates.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
 
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == BuildListVessel.ListType.VAB)
@@ -1882,57 +1843,30 @@ namespace KerbalConstructionTime
                     });
                 }
 
-                KCTDebug.Log("Attempting to take control of launch button");
-
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
 
-                if (!kctInstance.IsLaunchSiteControllerBound)
+                if (!kctInstance.IsLaunchSiteControllerDisabled)
                 {
-                    kctInstance.IsLaunchSiteControllerBound = true;
-                    KCTDebug.Log("Attempting to take control of launchsite specific buttons");
-                    //delete listeners to the launchsite specific buttons
+                    kctInstance.IsLaunchSiteControllerDisabled = true;
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller == null)
-                        KCTDebug.Log("HandleEditorButton.controller is null");
+                    {
+                        KCTDebug.Log("UILaunchsiteController is null");
+                    }
                     else
                     {
-                        // Need to use the try/catch because if multiple launch sites are disabled, then this would generate
-                        // the following error:
-                        //                          Cannot cast from source type to destination type
-                        // which happens because the private member "launchPadItems" is a list, and if it is null, then it is
-                        // not castable to a IEnumerable
-                        try
-                        {
-                            if (controller.GetType().GetPrivateMemberValue("launchPadItems", controller, 4) is IEnumerable list)
-                            {
-                                foreach (object site in list)
-                                {
-                                    //find and disable the button
-                                    //why isn't EditorLaunchPadItem public despite all of its members being public?
-                                    Button button = site.GetType().GetPublicValue<Button>("buttonLaunch", site);
-                                    if (button != null)
-                                    {
-                                        button.onClick.RemoveAllListeners();
-                                        string siteName = site.GetType().GetPublicValue<string>("siteName", site);
-                                        button.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(siteName); });
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            KCTDebug.Log("HandleEditorButton: Exception: " + ex);
-                        }
+                        KCTDebug.Log("Killing UILaunchsiteController");
+                        UnityEngine.Object.Destroy(controller);
                     }
                 }
             }
             else
             {
-                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, "KCTLaunchLock");
-                if (!kctInstance.IsLaunchSiteControllerBound)
+                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, KerbalConstructionTime.KCTLaunchLock);
+                if (!kctInstance.IsLaunchSiteControllerDisabled)
                 {
-                    kctInstance.IsLaunchSiteControllerBound = true;
+                    kctInstance.IsLaunchSiteControllerDisabled = true;
                     KCTDebug.Log("Attempting to disable launchsite specific buttons");
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller != null)
@@ -1943,22 +1877,398 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static bool IsVabRecoveryAvailable()
+        /// <summary>
+        /// Check whether the part has a tag with specified name defined using the ModuleTagList PartModule.
+        /// </summary>
+        /// <param name="p">Part to check</param>
+        /// <param name="tag">Name of the tag to check</param>
+        /// <returns>True if Part has ModuleTagList PM and a tag with given name is defined in that PM</returns>
+        public static bool HasTag(this Part p, string tag)
         {
-            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
-            return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
-                   FlightGlobals.ActiveVessel.IsRecoverable &&
-                   FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR &&
-                   (FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH ||
-                    string.IsNullOrEmpty(reqTech) ||
-                    ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
+            ModuleTagList mTags = p.FindModuleImplementing<ModuleTagList>();
+            return mTags?.tags.Contains(tag) ?? false;
         }
 
-        public static bool IsSphRecoveryAvailable()
+        public static KCTVesselData GetKCTVesselData(this Vessel v)
         {
-            return HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null &&
-                   FlightGlobals.ActiveVessel.IsRecoverable &&
-                   FlightGlobals.ActiveVessel.IsClearToSave() == ClearToSaveStatus.CLEAR;
+            var kctvm = (KCTVesselTracker)v.vesselModules.FirstOrDefault(vm => vm is KCTVesselTracker);
+            return kctvm?.Data;
+        }
+
+        public static string GetKCTVesselId(this Vessel v)
+        {
+            return v.GetKCTVesselData()?.VesselID;
+        }
+
+        public static string GetVesselLaunchId(this Vessel v)
+        {
+            return v.GetKCTVesselData()?.LaunchID;
+        }
+
+        public static EditorFacility? GetVesselBuiltAt(this Vessel v)
+        {
+            return v.GetKCTVesselData()?.FacilityBuiltIn;
+        }
+
+        public static bool IsVabRecoveryAvailable(Vessel v)
+        {
+            return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
+                   v.GetVesselBuiltAt() != EditorFacility.SPH &&
+                   (v.situation == Vessel.Situations.PRELAUNCH || IsVabRecoveryTechResearched());
+        }
+
+        public static bool IsSphRecoveryAvailable(Vessel v)
+        {
+            return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
+                   v.GetVesselBuiltAt() != EditorFacility.VAB;
+        }
+
+        public static bool IsVabRecoveryTechResearched()
+        {
+            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
+            return string.IsNullOrEmpty(reqTech) ||
+                   ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available;
+        }
+
+        public static void EnableSimulationLocks()
+        {
+            InputLockManager.SetControlLock(ControlTypes.QUICKSAVE, "KCTLockSimQS");
+            InputLockManager.SetControlLock(ControlTypes.QUICKLOAD, "KCTLockSimQL");
+        }
+
+        public static void DisableSimulationLocks()
+        {
+            InputLockManager.RemoveControlLock("KCTLockSimQS");
+            InputLockManager.RemoveControlLock("KCTLockSimQL");
+        }
+
+        public static void MakeSimulationSave()
+        {
+            KCTDebug.Log("Making simulation backup file.");
+            GamePersistence.SaveGame("KCT_simulation_backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+        }
+
+        public static bool SimulationSaveExists()
+        {
+            return File.Exists($"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs");
+        }
+
+        /// <summary>
+        /// Copies the simulation save to /Backup/ folder and deletes it from the main savegame folder.
+        /// </summary>
+        public static void DeleteSimulationSave()
+        {
+            string preSimFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs";
+            string backupFolderPath = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup";
+            string backupFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Backup/KCT_simulation_backup.sfs";
+
+            Directory.CreateDirectory(backupFolderPath);
+            File.Delete(backupFile);
+            File.Move(preSimFile, backupFile);
+        }
+
+        public static void LoadSimulationSave(bool useNewMethod)
+        {
+            string backupFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/KCT_simulation_backup.sfs";
+            string saveFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/persistent.sfs";
+            DisableSimulationLocks();
+
+            if (FlightGlobals.fetch != null)
+            {
+                FlightGlobals.PersistentVesselIds.Clear();
+                FlightGlobals.PersistentLoadedPartIds.Clear();
+                FlightGlobals.PersistentUnloadedPartIds.Clear();
+            }
+
+            KCTDebug.Log("Swapping persistent.sfs with simulation backup file.");
+            if (useNewMethod)
+            {
+                ConfigNode lastShip = ShipConstruction.ShipConfig;
+                EditorFacility lastEditor = HighLogic.CurrentGame.editorFacility;
+
+                Game newGame = GamePersistence.LoadGame("KCT_simulation_backup", HighLogic.SaveFolder, true, false);
+                GamePersistence.SaveGame(newGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
+                GameScenes targetScene = HighLogic.LoadedScene;
+                newGame.startScene = targetScene;
+
+                // This has to be before... newGame.Start()
+                if (targetScene == GameScenes.EDITOR)
+                {
+                    newGame.editorFacility = lastEditor;
+                }
+                newGame.Start();
+
+                // ... And this has to be after. <3 KSP
+                if (targetScene == GameScenes.EDITOR)
+                {
+                    EditorDriver.StartupBehaviour = EditorDriver.StartupBehaviours.LOAD_FROM_CACHE;
+                    ShipConstruction.ShipConfig = lastShip;
+                }
+            }
+            else
+            {
+                File.Copy(backupFile, saveFile, true);
+                Game newGame = GamePersistence.LoadGame("KCT_simulation_backup", HighLogic.SaveFolder, true, false);
+                GameEvents.onGameStatePostLoad.Fire(newGame.config);
+            }
+
+            DeleteSimulationSave();
+        }
+
+        public static bool IsTestFlightInstalled
+        {
+            get
+            {
+                if (!_isTestFlightInstalled.HasValue)
+                {
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestFlightCore", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isTestFlightInstalled = a != null;
+                    if (_isTestFlightInstalled.Value)
+                    {
+                        Type t = a.GetType("TestFlightCore.TestFlightManagerScenario");
+                        _piTFInstance = t?.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                        _piTFSettingsEnabled = t?.GetProperty("SettingsEnabled", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                    }
+                }
+                return _isTestFlightInstalled.Value;
+            }
+        }
+
+        public static bool IsTestLiteInstalled
+        {
+            get
+            {
+                if (!_isTestLiteInstalled.HasValue)
+                {
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestLite", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isTestLiteInstalled = a != null;
+                    if (_isTestLiteInstalled.Value)
+                    {
+                        _tlSettingsType = a.GetType("TestLite.TestLiteGameSettings");
+                        _fiTLSettingsDisabled = _tlSettingsType?.GetField("disabled");
+                    }
+                }
+                return _isTestLiteInstalled.Value;
+            }
+        }
+
+        public static void ToggleFailures(bool isEnabled)
+        {
+            if (IsTestFlightInstalled) ToggleTFFailures(isEnabled);
+            else if (IsTestLiteInstalled) ToggleTLFailures(isEnabled);
+        }
+
+        public static void ToggleTFFailures(bool isEnabled)
+        {
+            object tfInstance = _piTFInstance.GetValue(null);
+            _piTFSettingsEnabled.SetValue(tfInstance, isEnabled);
+        }
+
+        private static void ToggleTLFailures(bool isEnabled)
+        {
+            _fiTLSettingsDisabled.SetValue(HighLogic.CurrentGame.Parameters.CustomParams(_tlSettingsType), !isEnabled);
+            GameEvents.OnGameSettingsApplied.Fire();
+        }
+
+        public static void CleanupDebris(string launchSiteName)
+        {
+            if (KCTGameStates.Settings.CleanUpKSCDebris)
+            {
+                PSystemSetup.SpaceCenterFacility launchFacility = PSystemSetup.Instance.GetSpaceCenterFacility(launchSiteName);
+                double lat = 0, lon = 0;
+                bool foundSite = false;
+                if (launchFacility != null)
+                {
+                    PSystemSetup.SpaceCenterFacility.SpawnPoint sp = launchFacility.GetSpawnPoint(launchSiteName);
+                    lat = sp.latitude;
+                    lon = sp.longitude;
+                    foundSite = true;
+                }
+                if (!foundSite)
+                {
+                    LaunchSite launchSite = PSystemSetup.Instance.GetLaunchSite(launchSiteName);
+                    if (launchSite != null)
+                    {
+                        LaunchSite.SpawnPoint sp = launchSite.GetSpawnPoint(launchSiteName);
+                        lat = sp.latitude;
+                        lon = sp.longitude;
+                        foundSite = true;
+                    }
+                }
+                if (foundSite)
+                {
+                    const string msg = "it was debris cluttering up KSC";
+                    foreach (Vessel v in FlightGlobals.Vessels)
+                    {
+                        // TODO: check isPersistent?
+                        if (v.loaded)
+                        {
+                            if (v.vesselType == VesselType.Debris && v.LandedOrSplashed && v.mainBody == Planetarium.fetch.Home)
+                            {
+                                if (Math.Abs(v.latitude - lat) < 1d && Math.Abs(v.longitude - lon) < 1d)
+                                    v.SetAutoClean(msg);
+                            }
+                        }
+                        else if (v.protoVessel != null)
+                        {
+                            if (v.protoVessel.vesselType == VesselType.Debris && (v.protoVessel.landed || v.protoVessel.splashed)
+                                && FlightGlobals.Bodies[v.protoVessel.orbitSnapShot.ReferenceBodyIndex] == Planetarium.fetch.Home)
+                            {
+                                if (Math.Abs(v.protoVessel.latitude - lat) < 1d && Math.Abs(v.protoVessel.longitude - lon) < 1d)
+                                {
+                                    v.SetAutoClean(msg);
+                                    v.protoVessel.autoClean = true;
+                                    v.protoVessel.autoCleanReason = msg;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static Tuple<float, List<string>> GetVesselUnlockInfo(ShipConstruct ship)
+        {
+            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return new Tuple<float, List<string>>(0, new List<string>());
+
+            // filter the ship parts list to those parts that are not already purchased
+            IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> purchasableParts = GetPartsWithPurchasability(ship.Parts).Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable || kvp.Value.Status == PurchasabilityStatus.Unavailable);
+            HashSet<string> ecmPartsList = new HashSet<string>();
+            float runningCost = 0;
+
+            // compare the part specified entry cost to the ECM database
+            foreach (AvailablePart part in purchasableParts.Select(kvp => kvp.Key))
+            {
+                int rawCost = part.entryCost;
+                double ecmEstCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(part.name);
+                if (rawCost == ecmEstCost)
+                {
+                    // this part is managed by the ECM, save its name later for a batch request
+                    ecmPartsList.Add(part.name);
+                }
+                else
+                {
+                    // this part is not in the ECM, take the raw cost
+                    runningCost += rawCost;
+                }
+            }
+
+            // filter down further to those parts that can't be unlocked with our current tech and get the tech names needed
+            List<AvailablePart> lockedParts = purchasableParts.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable).Select(kvp => kvp.Key).ToList();
+            HashSet<string> pendingTech = new HashSet<string>(lockedParts.Select(ap => ap.TechRequired));
+
+            // now back through the list looking for upgrades to add to our batch list
+            foreach (Part p in ship.Parts)
+            {
+                foreach (PartModule pm in p.Modules)
+                {
+                    var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
+                    var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
+                    if (mi != null)
+                    {
+                        var parameters = new object[] { null, null, null, null };
+                        bool allSucceeded;
+                        try
+                        {
+                            allSucceeded = (bool)mi.Invoke(pm, parameters);
+                        }
+                        catch (Exception ex)
+                        {
+                            KCTDebug.LogError($"Config validation failed for {p.name}");
+                            Debug.LogException(ex);
+                            allSucceeded = false;
+                            parameters[0] = "error occurred, check the logs";
+                            parameters[1] = false;
+                            parameters[2] = 0f;
+                            parameters[3] = string.Empty;
+                        }
+
+                        if (allSucceeded)
+                            continue;   // if validate passed, this partmodule is already unlocked and purchased, nothing to do
+
+                        bool CanBeResolved = (bool)parameters[1];
+                        float CostToResolve = (float)parameters[2];
+                        string techName = (string)parameters[3];
+                        if (!CanBeResolved && !string.IsNullOrEmpty(techName))
+                            pendingTech.Add(techName);
+
+                        // use a helper to get the ECM name, each PartModule type stores it differently
+                        string ecmName = ECMHelper.GetEcmNameFromPartModule(pm);
+                        if (!string.IsNullOrEmpty(ecmName))
+                            ecmPartsList.Add(ecmName);
+                    }
+                }
+            }
+
+            double ecmCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList);
+
+            List<string> techList = SortAndFilterTechListForFinalNodes(pendingTech);
+            float totalCost = runningCost + Convert.ToSingle(ecmCost);
+            KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Raw cost: {runningCost}, ECM cost: {ecmCost}");
+            return new Tuple<float, List<string>>(totalCost, techList);
+        }
+
+        public static List<string> SortAndFilterTechListForFinalNodes(HashSet<string> input)
+        {
+            HashSet<string> blacklist = new HashSet<string>();
+            SortedList<string, string> slist = new SortedList<string, string>();
+            foreach(string s in input)
+            {
+                foreach (string parent in KerbalConstructionTimeData.techNameToParents[s])
+                {
+                    blacklist.Add(parent);
+                }
+            }
+            foreach (string s in input)
+            {
+                if (!blacklist.Contains(s))
+                {
+                    // sort our result, depth into the tree then alpha
+                    int depth = KerbalConstructionTimeData.techNameToParents[s].Count();
+                    string skey = $"{depth:d2}{s}";
+                    if (!slist.ContainsKey(skey))
+                        slist.Add(skey, s);
+                }
+            }
+
+            return slist.Values.ToList();
+        }
+
+ 
+
+
+        public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<Part> parts)
+        {
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
+
+            if (ResearchAndDevelopment.Instance == null)
+                return res;
+
+            List<AvailablePart> apList = parts.Select(p => p.partInfo).ToList();
+            res = GetPartsWithPurchasability(apList);
+            return res;
+        }
+
+        public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<AvailablePart> parts)
+        {
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
+            foreach (AvailablePart part in parts)
+            {
+                if (res.TryGetValue(part, out PartPurchasability pp))
+                {
+                    pp.PartCount++;
+                }
+                else
+                {
+                    PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
+                    if (Utilities.PartIsUnlocked(part))
+                        status = PurchasabilityStatus.Purchased;
+                    else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
+                        status = PurchasabilityStatus.Purchasable;
+                    res.Add(part, new PartPurchasability(status, 1));
+                }
+            }
+            return res;
         }
     }
 }

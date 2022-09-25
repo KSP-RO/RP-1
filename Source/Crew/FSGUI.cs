@@ -14,7 +14,7 @@ namespace RP0.Crew
         private Vector2 _courseSelectorScroll = new Vector2();
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
-        private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false));
+        private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false), "Add alarm");
 
         protected void RenderNautListHeading()
         {
@@ -39,7 +39,8 @@ namespace RP0.Crew
                 GUILayout.Label($"{student.trait.Substring(0, 1)} {student.experienceLevel}", GUILayout.Width(24));
                 if (currentCourse == null && _selectedCourse != null && (selectedForCourse || _selectedCourse.MeetsStudentReqs(student)))
                 {
-                    if (RenderToggleButton(student.name, selectedForCourse, GUILayout.Width(144)))
+                    var c = new GUIContent(student.name, "Select for course");
+                    if (RenderToggleButton(c, selectedForCourse, GUILayout.Width(144)))
                     {
                         if (selectedForCourse)
                             _selectedCourse.RemoveStudent(student);
@@ -60,17 +61,19 @@ namespace RP0.Crew
                 }
 
                 string course, complete, retires;
+                bool isInactive = false;
                 if (currentCourse == null)
                 {
                     if (student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
                     {
                         course = "(in-flight)";
-                        complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
+                        complete = "(n/a)";
                     }
                     else if (student.inactive)
                     {
                         course = "(inactive)";
                         complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
+                        isInactive = true;
                     }
                     else
                     {
@@ -100,12 +103,12 @@ namespace RP0.Crew
                 {
                     if (currentCourse.seatMin > 1)
                     {
-                        if (GUILayout.Button("X", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button(new GUIContent("X", "Cancel course"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             CancelCourse(currentCourse);
                     }
                     else
                     {
-                        if (GUILayout.Button("X", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                        if (GUILayout.Button(new GUIContent("X", "Remove from course"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             LeaveCourse(currentCourse, student);
                     }
 
@@ -113,6 +116,10 @@ namespace RP0.Crew
                     {
                         CreateCourseFinishAlarm(student, currentCourse);
                     }
+                }
+                else if (KACWrapper.APIReady && isInactive && GUILayout.Button(_nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                {
+                    CreateReturnToDutyAlarm(student);
                 }
             }
             catch (Exception ex)
@@ -170,7 +177,8 @@ namespace RP0.Crew
                 foreach (CourseTemplate course in CrewHandler.Instance.OfferedCourses)
                 {
                     var style = course.isTemporary ? _courseBtnStyle : HighLogic.Skin.button;
-                    if (GUILayout.Button(course.name, style))
+                    var c = new GUIContent(course.name, course.PartsTooltip);
+                    if (GUILayout.Button(c, style))
                         _selectedCourse = new ActiveCourse(course);
                 }
             }
@@ -346,6 +354,12 @@ namespace RP0.Crew
             double alarmUT = CrewHandler.Instance.NextUpdate + timesChRun * CrewHandler.UpdateInterval;
             string alarmTxt = $"{currentCourse.name} - {student.name}";
             KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, alarmUT);
+        }
+
+        private static void CreateReturnToDutyAlarm(ProtoCrewMember crew)
+        {
+            string alarmTxt = $"Return to duty - {crew.name}";
+            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, crew.inactiveTimeEnd);
         }
 
         private void UpdateActiveCourseMap()

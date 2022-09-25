@@ -93,10 +93,21 @@
     <Reference Include="MagiCore">
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RealFuels">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirlaunchParams.cs" />
     <Compile Include="AirlaunchTechLevel.cs" />
+    <Compile Include="EngineersReportClobberer.cs" />
+    <Compile Include="PartCrewAssignment.cs" />
+    <Compile Include="BuildItems\PadConstruction.cs" />
+    <Compile Include="GUI\DialogGUIButtonWithTooltip.cs" />
+    <Compile Include="GUI\GUI_Tooltip.cs" />
     <Compile Include="GUI\GUIStates.cs" />
     <Compile Include="GUI\GUI_Airlaunch.cs" />
     <Compile Include="GUI\GUI_ClearLaunch.cs" />
@@ -105,17 +116,26 @@
     <Compile Include="GUI\GUI_Editor.cs" />
     <Compile Include="GUI\GUI_FirstRun.cs" />
     <Compile Include="GUI\GUI_NewPad.cs" />
+    <Compile Include="GUI\GUI_VesselMerge.cs" />
+    <Compile Include="GUI\GUI_Simulation.cs" />
     <Compile Include="GUI\GUI_Upgrades.cs" />
     <Compile Include="GUI\GUI_DevParts.cs" />
-    <Compile Include="KCTOnLoadError.cs" />
+    <Compile Include="KCTCostModifier.cs" />
+    <Compile Include="KCTTechNodePeriod.cs" />
     <Compile Include="ModIntegrations\CTIWrapper.cs" />
+    <Compile Include="ModuleTagList.cs" />
     <Compile Include="Persistence\AirlaunchPrepStorageItem.cs" />
     <Compile Include="Persistence\BuildListStorageItem.cs" />
     <Compile Include="Persistence\ConfigNodeStorage.cs" />
     <Compile Include="Persistence\FacilityUpgradeStorageItem.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
+    <Compile Include="Persistence\KCTVesselData.cs" />
+    <Compile Include="Persistence\PadConstructionStorageItem.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
     <Compile Include="KCTObservableList.cs" />
+    <Compile Include="SceneAddons\MainMenuAddon.cs" />
+    <Compile Include="SimulationParams.cs" />
+    <Compile Include="Utilities\ECMHelper.cs" />
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="BuildItems\IKCTBuildItem.cs" />
     <Compile Include="InstallChecker.cs" />
@@ -128,7 +148,7 @@
     <Compile Include="SceneAddons\EditorAddon.cs" />
     <Compile Include="KCTEvents.cs" />
     <Compile Include="SceneAddons\FlightAddon.cs" />
-    <Compile Include="FuelWhitelistLoader.cs" />
+    <Compile Include="KCTDataLoader.cs" />
     <Compile Include="KCTGameStates.cs" />
     <Compile Include="GUI\GUI_Main.cs" />
     <Compile Include="Persistence\KCT_DataStorage.cs" />
@@ -137,6 +157,7 @@
     <Compile Include="KSCItem.cs" />
     <Compile Include="KSCContextMenuOverrider.cs" />
     <Compile Include="Persistence\KCT_LaunchPad.cs" />
+    <Compile Include="KCTWarpController.cs" />
     <Compile Include="Utilities\MathParser.cs" />
     <Compile Include="Presets\PresetManager.cs" />
     <Compile Include="BuildItems\ReconRollout.cs" />
@@ -155,14 +176,14 @@
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
+    <Compile Include="KCTVesselTracker.cs" />
+    <Compile Include="KCTVesselTrackerEventHandler.cs" />
+    <Compile Include="VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>del "System.Core.dll"</PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>

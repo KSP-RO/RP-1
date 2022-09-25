@@ -33,14 +33,17 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
     <Compile Include="Avionics\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />
     <Compile Include="CareerLog\CareerEventScope.cs" />
     <Compile Include="CareerLog\CareerLog.cs" />
+    <Compile Include="CareerLog\CareerLogDto.cs" />
     <Compile Include="CareerLog\CareerLogGUI.cs" />
     <Compile Include="CareerLog\ContractEvent.cs" />
     <Compile Include="CareerLog\FacilityConstructionEvent.cs" />
+    <Compile Include="CareerLog\FailureEvent.cs" />
     <Compile Include="CareerLog\LaunchEvent.cs" />
     <Compile Include="CareerLog\LogPeriod.cs" />
     <Compile Include="CareerLog\TechResearchEvent.cs" />
@@ -51,6 +54,9 @@
     <Compile Include="Crew\FSGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="EntryCostStorage.cs" />
+    <Compile Include="FirstStart.cs" />
+    <Compile Include="GameplayTips.cs" />
+    <Compile Include="HarmonyPatcher.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
@@ -59,23 +65,8 @@
     <Compile Include="ModuleNonRecharge.cs" />
     <Compile Include="ModuleNonReentryRated.cs" />
     <Compile Include="ModuleNoEVA.cs" />
-    <Compile Include="ModuleTag\ModuleTag.cs" />
-    <Compile Include="ModuleTag\NoResourceCostMult.cs" />
-    <Compile Include="ModuleTag\NuclearRTG.cs" />
+    <Compile Include="HideEmptyNodes.cs" />
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
-    <Compile Include="ModuleTag\EngineLiquidPF.cs" />
-    <Compile Include="ModuleTag\Decoupler.cs" />
-    <Compile Include="ModuleTag\TankServiceModule.cs" />
-    <Compile Include="ModuleTag\TankBalloon.cs" />
-    <Compile Include="ModuleTag\Habitable.cs" />
-    <Compile Include="ModuleTag\Toxic.cs" />
-    <Compile Include="ModuleTag\Reentry.cs" />
-    <Compile Include="ModuleTag\Instruments.cs" />
-    <Compile Include="ModuleTag\HumanRated.cs" />
-    <Compile Include="ModuleTag\Avionics.cs" />
-    <Compile Include="ModuleTag\Nuclear.cs" />
-    <Compile Include="ModuleTag\EngineLiquidTurbo.cs" />
-    <Compile Include="ModuleTag\EngineSolid.cs" />
     <Compile Include="Avionics\ProceduralAvionicsConfig.cs" />
     <Compile Include="Avionics\ControlLocker.cs" />
     <Compile Include="Avionics\ModuleAvionicsModifier.cs" />
@@ -102,6 +93,7 @@
     <Compile Include="Tooling\ToolingDefinition.cs" />
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />
+    <Compile Include="Utilities\BypassCertificateHandler.cs" />
     <Compile Include="Utilities\CSV\CsvWriter.cs" />
     <Compile Include="Utilities\SphericalTankUtilities.cs" />
     <Compile Include="Utilities\KACWrapper.cs" />
@@ -112,10 +104,16 @@
     <Compile Include="UI\TopWindow.cs" />
     <Compile Include="UI\UIBase.cs" />
     <Compile Include="UI\UIHolder.cs" />
+    <Compile Include="UI\ContractGUI.cs" />
+    <Compile Include="UI\Tooltip.cs" />
     <Compile Include="Tooling\ToolingGUI.cs" />
     <Compile Include="Avionics\AvionicsGUI.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <Private>False</Private>
     </Reference>
@@ -150,6 +148,10 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -159,6 +161,12 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -171,9 +179,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>del "System.Core.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

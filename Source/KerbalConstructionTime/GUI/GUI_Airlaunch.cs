@@ -19,7 +19,9 @@ namespace KerbalConstructionTime
             if (_airlaunchParams == null)
             {
                 _airlaunchParams = new AirlaunchParams();
-                var lvl = AirlaunchTechLevel.GetCurrentLevel();
+
+                AirlaunchTechLevel lvl = Utilities.IsSimulationActive ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+                                                                        AirlaunchTechLevel.GetCurrentLevel();
                 if (lvl != null)
                 {
                     _sKscDistance = (lvl.MaxKscDistance / 1000).ToString();
@@ -97,8 +99,8 @@ namespace KerbalConstructionTime
         {
             try
             {
-                bool isKrashSim = Utilities.IsKRASHSimActive;
-                _airlaunchParams.KCTVesselId = isKrashSim ? FlightGlobals.ActiveVessel.id : KCTGameStates.LaunchedVessel.Id;
+                bool isSim = Utilities.IsSimulationActive;
+                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KCTGameStates.LaunchedVessel.Id;
                 _airlaunchParams.Altitude = double.Parse(_sAltitude);
                 _airlaunchParams.Velocity = double.Parse(_sVelocity);
                 _airlaunchParams.LaunchAzimuth = double.Parse(_sAzimuth);
@@ -109,7 +111,7 @@ namespace KerbalConstructionTime
                 if (valid)
                 {
                     _errorMsg = null;
-                    if (isKrashSim)
+                    if (isSim)
                     {
                         var kct = KerbalConstructionTime.Instance;
                         kct.StartCoroutine(kct.AirlaunchRoutine(_airlaunchParams, _airlaunchParams.KCTVesselId, skipCountdown: true));

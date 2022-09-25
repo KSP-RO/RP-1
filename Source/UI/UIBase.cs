@@ -7,7 +7,7 @@ namespace RP0
         public enum UITab
         {
             Maintenance, Facilities, Integration, Astronauts, Tooling, ToolingType,
-            Training, Courses, NewCourse, Naut, Avionics, CareerLog
+            Training, Courses, NewCourse, Naut, Avionics, Contracts, CareerLog
         };
 
         protected GUIStyle RightLabel, BoldLabel, BoldRightLabel, PressedButton, InfoButton;
@@ -57,6 +57,7 @@ namespace RP0
                     return HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Tooling:
                 case UITab.ToolingType:
+                case UITab.Contracts:
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Avionics:
                     return HighLogic.LoadedSceneIsEditor;
@@ -75,6 +76,11 @@ namespace RP0
         public bool RenderToggleButton(string text, bool selected, params GUILayoutOption[] options)
         {
             return GUILayout.Button(text, selected ? PressedButton : HighLogic.Skin.button, options);
+        }
+
+        public bool RenderToggleButton(GUIContent c, bool selected, params GUILayoutOption[] options)
+        {
+            return GUILayout.Button(c, selected ? PressedButton : HighLogic.Skin.button, options);
         }
     }
 }

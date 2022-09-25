@@ -1,0 +1,50 @@
+R-3B Radar Altimeter					Poseidon Radar Jason-3 Satellite					LoResAltim									(70kg, 78W, 2001)
+	https://www.nesdis.noaa.gov/jason-3/pdf/Jason-3%20Poseidon%203B%20Altimeter.pdf
+R-EO-1 SAR Antenna						Seasat SAR											LoResAltim									(125W)
+SAR-X Antenna							COSMO SkyMed X-Band									HiResAltim
+SAR-C Antenna							RADARSAT 2 Satellite C-Band							HiResAltim
+SAR-L Antenna							DLR Tandem-L-L Band SAR								HiResAltim / Biome
+MS-1 Multispectral Scanner				MODerate Imaging Spectrometer Terra / Aqua Sats		LowResVisible / Biomes
+MS-R Enhanced Multispectral Scanner		Advanced Baseline Imager on GOES-R					LowResVisible / Biomes / LowResResources
+MS-2A Advanced Multispectral Scanner	Multi-Spectral Imager on Sentinel-2A/B				LowResVisible / Biomes / LowResResources
+SCAN-R Resource Mapper					Compact Recon Imaging Spectrometer on MRO			HighResResources
+SCAN-R2 Advanced Resource Mapper		Mapping & Imaging Spectrometer on Europa Clipper	HighResResources
+SCAN-RX Hyperspectral Resource Mapper	HYPERION Imager on EO-1 Satellite					HighResResources
+VS-1 High Resolution Imager				IKONOS Satellite									HighResVisible
+VS-3 Advanced High Resolution Imager	Maxar World-View-3 Satellite						HighResVisible
+VS-11 Classified High Resolution Imager	NRO KH-11 Satellite									HighResVisible
+
+
+
+Radar Altimeter
+Very Early = Ranger (150-400W, 6.5lbs)
+Middle = Pioneer Venus Orbiter ORAD (10.9kg, 23W)
+Late = Jason-1 (78W, 70kg)
+
+SAR
+Early = Seasat (147kg, 216W) - 1978 https://directory.eoportal.org/web/eoportal/satellite-missions/s/seasat#:~:text=The%20SAR%20instrument%20had%20a,from%2010%20minutes%20per%20orbit.
+Middle = MAGELLAN (154kg, 200W) LoRes & HiRes
+Middle = COSMO SkyMed (Antenna is 5.7m x 1.4m) - 1992 https://directory.eoportal.org/web/eoportal/satellite-missions/c-missions/cosmo-skymed
+Late = RADARSAT 2 (Antenna is 15m x 1.5m) (750kg)
+
+
+
+
+
+
+New SCANSat Contract Progression
+
+AltimetryLoRes = Early RADAR Scanning
+	* Earth Scan 80%+
+	* Moon Scan 25%+ (Ranger / Zond Spacecraft)
+	* Moon Scan 80%+ (Lunar Orbiter)
+	* First Step of only 25% (Pioneer Venus Orbiter, Venera 14/15) -> Mars and Venus only
+	* Full Scan 80%+ (MAGELLAN) -> All Planets
+	
+AltimetryHiRes = SAR Scanning
+	* Earth Scan 80%+
+	* Lunar Scan 80%+ (Lunar Reconnaissance Orbiter)
+	* Full Scan 80%+ (MAGELLAN)
+	
+LowResVisible = Photography
+	* 

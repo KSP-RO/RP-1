@@ -52,8 +52,7 @@ namespace KerbalConstructionTime
                     button.onClick = new Button.ButtonClickedEvent();    //Clear existing KSP listener
                     button.onClick.AddListener(HandleUpgrade);
 
-                    if ((PresetManager.Instance.ActivePreset.GeneralSettings.DisableLPUpgrades &&
-                         GetFacilityID().IndexOf("launchpad", StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    if (GetFacilityID().IndexOf("launchpad", StringComparison.OrdinalIgnoreCase) >= 0 ||
                         (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
                          GetFacilityID().IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0))
                     {
@@ -149,8 +148,7 @@ namespace KerbalConstructionTime
                 lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter R&R times";
                 lvl.levelStats.textBase += $"\n{lvlIdx * 25}% shorter training times";
             }
-            else if (facilityType == SpaceCenterFacility.LaunchPad &&
-                     PresetManager.Instance.ActivePreset.GeneralSettings.DisableLPUpgrades)
+            else if (facilityType == SpaceCenterFacility.LaunchPad)
             {
                 lvl.levelStats.linePrefix = string.Empty;
                 lvl.levelStats.textBase = "<color=\"red\"><b>Launchpads cannot be upgraded. Build a new launchpad from the KCT Build List tab instead.</b></color>";
@@ -243,7 +241,7 @@ namespace KerbalConstructionTime
             {
                 if (ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available)
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradePadConfirm",
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradeConfirm",
                             $"Can't upgrade this facility. Requires {KerbalConstructionTimeData.techNameToTitle[gate]}.",
                             "Lack Tech to Upgrade",
                             HighLogic.UISkin,
@@ -257,15 +255,8 @@ namespace KerbalConstructionTime
 
             var upgrading = new FacilityUpgrade(facilityType, facilityID, oldLevel + 1, oldLevel, facilityID.Split('/').Last())
             {
-                IsLaunchpad = facilityID.ToLower().Contains("launchpad")
+                IsLaunchpad = false
             };
-
-            if (upgrading.IsLaunchpad)
-            {
-                upgrading.LaunchpadID = KCTGameStates.ActiveKSC.ActiveLaunchPadID;
-                if (upgrading.LaunchpadID > 0)
-                    upgrading.CommonName += KCTGameStates.ActiveKSC.ActiveLPInstance.name;
-            }
 
             if (!upgrading.AlreadyInProgress())
             {
@@ -305,19 +296,7 @@ namespace KerbalConstructionTime
 
         internal void HandleUpgrade()
         {
-            if (GetFacilityID().ToLower().Contains("launchpad"))
-            {
-                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("kctUpgradePadConfirm",
-                            "Upgrading this launchpad will render it unusable until the upgrade finishes.\n\nAre you sure you want to?",
-                            "Upgrade Launchpad?",
-                            HighLogic.UISkin,
-                            new DialogGUIButton("Yes", ProcessUpgrade),
-                            new DialogGUIButton("No", () => { })),
-                            false,
-                            HighLogic.UISkin);
-            }
-            else
-                ProcessUpgrade();
+            ProcessUpgrade();
 
             _menu.Dismiss(KSCFacilityContextMenu.DismissAction.None);
         }

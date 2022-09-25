@@ -1,0 +1,97 @@
+name: "Attach Release Artifacts"
+
+# Controls when the action will run. 
+on:
+  release:
+    types: [published]
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  attach-release-artifacts:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Get Branch
+        shell: bash
+        run: |
+          releaseBranch=${{ github.event.release.target_commitish }}
+          echo "Found branch ${releaseBranch}"
+          echo "tagged_branch=${releaseBranch}" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.tagged_branch }}
+        
+      - name: Download required assemblies
+        id: download-assemblies
+        uses: KSP-RO/BuildTools/download-assemblies@master
+        with:
+          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+
+      - name: Update AssemblyInfo
+        uses: KSP-RO/BuildTools/update-assembly-info@master
+        with:
+          path: ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+          tag: ${{ github.event.release.tag_name }}
+
+      - name: Build mod solution
+        run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+        
+      - name: Update version file
+        uses: KSP-RO/BuildTools/update-version-file@master
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          path: ${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version
+          
+      - name: Update changelog file
+        uses: KSP-RO/BuildTools/process-changelog@master
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          body: ${{ github.event.release.body }}
+          path: ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg
+          
+      - name: Assemble release
+        id: assemble-release
+        run: |
+          RELEASE_DIR="${RUNNER_TEMP}/release"
+          echo "Release dir: ${RELEASE_DIR}"
+          echo "Release zip: ${RELEASE_DIR}/RP-1-${{ github.event.release.tag_name }}.zip"
+          mkdir -v "${RELEASE_DIR}"
+          echo "::set-output name=release-dir::${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
+          cp -v -R "${GITHUB_WORKSPACE}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-0/LICENSE.md"
+          cd ${RELEASE_DIR}
+          zip -r RP-1-${{ github.event.release.tag_name }}.zip GameData
+        
+      - name: Upload package to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.assemble-release.outputs.release-dir }}/RP-1-${{ github.event.release.tag_name }}.zip
+          asset_name: RP-1-${{ github.event.release.tag_name }}.zip
+          asset_content_type: application/zip
+          
+      - name: Setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          
+      - name: Commit changes
+        shell: bash
+        env:
+          TAG_STRING: ${{ github.event.release.tag_name }}
+        run: |
+          RELEASEBRANCH=${{ env.tagged_branch }}
+          git add "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
+          git add "${GITHUB_WORKSPACE}/README.md"
+          git add "${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg"
+          git commit -m "Update version to $TAG_STRING"
+          git push origin $RELEASEBRANCH
+          git tag $TAG_STRING $RELEASEBRANCH --force
+          git push origin $TAG_STRING --force

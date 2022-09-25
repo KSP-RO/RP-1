@@ -44,6 +44,7 @@ namespace RP0
         public static Dictionary<string, RealFuels.PartEntryCostHolder> holders = null;
         public static Dictionary<string, AvailablePart> nameToPart = null;
         private static FieldInfo holdersField = null, nameToPartField = null;
+        public static MethodInfo GetPartName = null;
         private static bool initialized = false;
 
         public static void Init()
@@ -56,6 +57,7 @@ namespace RP0
             {
                 holdersField = rfEntryCostDatabaseType.GetField("holders", BindingFlags.NonPublic | BindingFlags.Static);
                 nameToPartField = rfEntryCostDatabaseType.GetField("nameToPart", BindingFlags.NonPublic | BindingFlags.Static);
+                GetPartName = rfEntryCostDatabaseType.GetMethod("GetPartName", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[1] { typeof(string) }, null);
             } 
         }
 
@@ -151,13 +153,14 @@ namespace RP0
             EntryCostDatabaseAccessor.GetFields();
 
             string data = null, apInfo = null;
-            if (EntryCostDatabaseAccessor.GetHolder(part.name) is RealFuels.PartEntryCostHolder h)
+            string nm = (string)EntryCostDatabaseAccessor.GetPartName.Invoke(null, new object[] { part.name });
+            if (EntryCostDatabaseAccessor.GetHolder(nm) is RealFuels.PartEntryCostHolder h)
                 data = $"Total cost: {EntryCostDatabaseAccessor.GetCost(h)}\n{EntryCostDatabaseAccessor.DisplayHolder(h, false)}";
             if (part.partInfo is AvailablePart ap)
             {
                 apInfo = $"Tech Required: {ap.TechRequired}";
                 if (part.CrewCapacity > 0)
-                    apInfo = $"Training course: {TrainingDatabase.SynonymReplace(part.name)}\n{apInfo}";
+                    apInfo = $"Training course: {(TrainingDatabase.SynonymReplace(part.name, out string name) ? name : ap.title)}\n{apInfo}";
             }
             string res = $"Part name: {part.name}\n{apInfo}\n{data}";
             return res;

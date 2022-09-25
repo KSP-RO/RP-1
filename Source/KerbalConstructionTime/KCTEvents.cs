@@ -14,10 +14,13 @@ namespace KerbalConstructionTime
         public bool CreatedEvents { get; private set; }
         public bool KCTButtonStockImportant { get; set; }
 
+        public static EventData<BuildListVessel> OnVesselAddedToBuildQueue;
         public static EventData<RDTech> OnTechQueued;
-        public static EventData<ProtoTechNode> OnTechCompleted;
+        public static EventData<TechItem> OnTechCompleted;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeQueued;
         public static EventData<FacilityUpgrade> OnFacilityUpgradeComplete;
+        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionQueued;
+        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
 
 
         public KCTEvents()
@@ -36,11 +39,15 @@ namespace KerbalConstructionTime
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
             GameEvents.OnTechnologyResearched.Add(TechUnlockEvent);
             GameEvents.onEditorShipModified.Add(ShipModifiedEvent);
+            GameEvents.onEditorShowPartList.Add(PartListEvent);
+            KSP.UI.BaseCrewAssignmentDialog.onCrewDialogChange.Add(CrewDialogChange);
             GameEvents.OnPartPurchased.Add(PartPurchasedEvent);
             GameEvents.onGUIRnDComplexSpawn.Add(TechEnableEvent);
             GameEvents.onGUIRnDComplexDespawn.Add(TechDisableEvent);
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
             GameEvents.onGameStateLoad.Add(PersistenceLoadEvent);
+
+            GameEvents.onGUIEngineersReportReady.Add(EngineersReportReady);
 
             GameEvents.OnKSCStructureRepaired.Add(FaciliyRepaired);
             GameEvents.OnKSCStructureCollapsed.Add(FacilityDestroyed);
@@ -82,14 +89,18 @@ namespace KerbalConstructionTime
         private void OnEditorStarted()
         {
             Utilities.HandleEditorButton();
+            KerbalConstructionTime.Instance.ERClobberer.EditorStarted();
         }
 
         public void CreateEvents()
         {
+            OnVesselAddedToBuildQueue = new EventData<BuildListVessel>("OnKctVesselAddedToBuildQueue");
             OnTechQueued = new EventData<RDTech>("OnKctTechQueued");
-            OnTechCompleted = new EventData<ProtoTechNode>("OnKctTechCompleted");
+            OnTechCompleted = new EventData<TechItem>("OnKctTechCompleted");
             OnFacilityUpgradeQueued = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeQueued");
             OnFacilityUpgradeComplete = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeComplete");
+            OnPadConstructionQueued = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionQueued");
+            OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
             CreatedEvents = true;
         }
 
@@ -118,23 +129,9 @@ namespace KerbalConstructionTime
 
         public void FacilityUpgradedEvent(Upgradeables.UpgradeableFacility facility, int lvl)
         {
-            if (KCT_GUI.IsPrimarilyDisabled)
-            {
-                bool isLaunchpad = facility.id.ToLower().Contains("launchpad");
-                if (!isLaunchpad)
-                    return;
-
-                KCTGameStates.ActiveKSC.ActiveLPInstance.Upgrade(lvl);
-            }
+            if (KCT_GUI.IsPrimarilyDisabled) return;
 
             KCTDebug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
-            if (facility.id.ToLower().Contains("launchpad"))
-            {
-                if (!AllowedToUpgrade)
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.Upgrade(lvl);    //also repairs the launchpad
-                else
-                    KCTGameStates.ActiveKSC.ActiveLPInstance.level = lvl;
-            }
             AllowedToUpgrade = false;
             foreach (KSCItem ksc in KCTGameStates.KSCs)
             {
@@ -212,21 +209,40 @@ namespace KerbalConstructionTime
         private void ShipModifiedEvent(ShipConstruct vessel)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
+        }
+
+        private void PartListEvent()
+        {
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
+        }
+
+        private void CrewDialogChange(VesselCrewManifest vcm)
+        {
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
+        }
+
+        private void EngineersReportReady()
+        {
+            KerbalConstructionTime.Instance.ERClobberer.BindToEngineersReport();
         }
 
         private void StageCountChangedEvent(int num)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void StagingOrderChangedEvent()
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         private void PartStageabilityChangedEvent(Part p)
         {
             KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTime.Instance.ERClobberer.StartClobberingCoroutine();
         }
 
         public void PartPurchasedEvent(AvailablePart part)
@@ -271,12 +287,6 @@ namespace KerbalConstructionTime
                             techItem.UpdateBuildRate(KCTGameStates.TechList.IndexOf(techItem));
                         double timeLeft = tech.BuildRate > 0 ? tech.TimeLeft : tech.EstimatedTimeLeft;
                         ScreenMessages.PostScreenMessage($"[KCT] Node will unlock in {MagiCore.Utilities.GetFormattedTime(timeLeft)}", 4f, ScreenMessageStyle.UPPER_LEFT);
-
-                        foreach (AvailablePart ap in ev.host.partsAssigned)
-                        {
-                            if (Utilities.AddExperimentalPart(ap))
-                                KCTDebug.Log($"{ap.name} added to ExpParts: {ResearchAndDevelopment.IsExperimentalPart(ap)}");
-                        }
 
                         OnTechQueued.Fire(ev.host);
                     }
@@ -330,12 +340,14 @@ namespace KerbalConstructionTime
         public void GameSceneEvent(GameScenes scene)
         {
             KCT_GUI.HideAll();
+            KCTGameStates.SimulationParams.IsVesselMoved = false;
 
             if (scene == GameScenes.MAINMENU)
             {
                 KCTGameStates.Reset();
                 KCTGameStates.IsFirstStart = false;
-                InputLockManager.RemoveControlLock("KCTLaunchLock");
+                Utilities.DisableSimulationLocks();
+                InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
                 KCTGameStates.ActiveKSCName = Utilities._defaultKscId;
                 KCTGameStates.ActiveKSC = new KSCItem(Utilities._defaultKscId);
                 KCTGameStates.KSCs = new List<KSCItem>() { KCTGameStates.ActiveKSC };
@@ -356,6 +368,10 @@ namespace KerbalConstructionTime
             var validScenes = new List<GameScenes> { GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.EDITOR };
             if (validScenes.Contains(scene))
             {
+                if (Utilities.SimulationSaveExists())
+                {
+                    Utilities.LoadSimulationSave(false);
+                }
                 TechDisableEventFinal();
             }
 
@@ -408,7 +424,7 @@ namespace KerbalConstructionTime
         {
             KCTDebug.Log("VesselRecoverEvent");
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
-            if (!v.vesselRef.isEVA)
+            if (!KCTGameStates.IsSimulatedFlight && !v.vesselRef.isEVA)
             {
                 if (KCTGameStates.RecoveredVessel != null && v.vesselName == KCTGameStates.RecoveredVessel.ShipName)
                 {

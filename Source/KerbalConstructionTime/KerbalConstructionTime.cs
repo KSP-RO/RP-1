@@ -59,9 +59,6 @@ namespace KerbalConstructionTime
         {
             if (Utilities.CurrentGameIsMission()) return;
 
-            var oldSkin = GUI.skin;
-            GUI.skin = RP0.UIHolder.RescaledSkin;
-
             if (!_isGUIInitialized)
             {
                 KCT_GUI.InitBuildListVars();
@@ -69,8 +66,6 @@ namespace KerbalConstructionTime
                 _isGUIInitialized = true;
             }
             KCT_GUI.SetGUIPositions();
-
-            GUI.skin = oldSkin;
         }
 
         public void Awake()
@@ -901,11 +896,6 @@ namespace KerbalConstructionTime
                 // We are recalculating because vessel validation might have changed state.
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             }
-        }
-
-        public static void ReinitializeUIs()
-        {
-            _isGUIInitialized = false;
         }
     }
 }

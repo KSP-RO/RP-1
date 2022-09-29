@@ -102,6 +102,7 @@ namespace RP0
                 procShape = shapeName switch
                 {
                     "Smooth Cone" => part.Modules["ProceduralShapeBezierCone"],
+                    "Smooth Cone Offset" => part.Modules["ProceduralShapeBezierOffset"],
                     "Cone" => part.Modules["ProceduralShapeCone"],
                     "Fillet Cylinder" => part.Modules["ProceduralShapePill"],
                     "Polygon" => part.Modules["ProceduralShapePolygon"],

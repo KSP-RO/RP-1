@@ -420,10 +420,10 @@ namespace KerbalConstructionTime
         {
             var def = TankDefSMIV;
             const double overallMultiplier = 1.0d;
-            const double amountMultiplier = 60d;
-            const double tankMultiplier = 1.0d;
-            const double baseTankCostPerL = 0.5d;
-            const double rfTankCostPerLMultiplier = 20d;
+            const double amountMultiplier = 10d;
+            const double tankMultiplier = 0.17d;
+            const double baseTankCostPerL = 0.55d;
+            const double rfTankCostPerLMultiplier = 10d;
             const double modifyMultiplier = 0.6d;
 
             HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;

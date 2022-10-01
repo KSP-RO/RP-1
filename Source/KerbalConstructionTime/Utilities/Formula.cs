@@ -440,7 +440,7 @@ namespace KerbalConstructionTime
                     cost *= mult;
 
                 if (isModify)
-                    cost = modifyMultiplier;
+                    cost *= modifyMultiplier;
 
                 return cost * overallMultiplier;
             }

@@ -122,7 +122,7 @@ namespace KerbalConstructionTime
                 ignoredRes = GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
 
                 double mass = massMax;
-                costPad = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2500d) * 0.9d + 500d;
+                costPad = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2500d) + 500d;
             }
             else
             {
@@ -138,8 +138,8 @@ namespace KerbalConstructionTime
                 costVAB *= 2d;
             }
 
-            costPad *= 0.75d;
-            costVAB *= 0.75d;
+            costPad *= 0.5d;
+            costVAB *= 0.5d;
 
             costResources = 0d;
             foreach (var kvp in resourcesHandled)

@@ -78,6 +78,10 @@
     <Compile Include="Harmony\RDTech.cs" />
     <Compile Include="Harmony\ScienceSubjectWidget.cs" />
     <Compile Include="Harmony\RDNode.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_AbMcButton.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_DevPartsButton.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_TopRightButton.cs" />
+    <Compile Include="KerbalConstructionTime\GUI\GUI_TopRightButtons.cs" />
     <Compile Include="KerbalConstructionTime\LCEfficiency.cs" />
     <Compile Include="KerbalConstructionTime\LCData.cs" />
     <Compile Include="Leaders\CurrencyModifierQueryRP0.cs" />
@@ -224,7 +228,6 @@
     <Compile Include="KerbalConstructionTime\GUI\GUI_NewPad.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_VesselMerge.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_Simulation.cs" />
-    <Compile Include="KerbalConstructionTime\GUI\GUI_DevParts.cs" />
     <Compile Include="KerbalConstructionTime\KCTCostModifier.cs" />
     <Compile Include="KerbalConstructionTime\KCTTechNodePeriod.cs" />
     <Compile Include="KerbalConstructionTime\ModIntegrations\CTIWrapper.cs" />

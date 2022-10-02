@@ -257,9 +257,6 @@ namespace KerbalConstructionTime
             {
                 EditorLogic.fetch.Unlock("KCTEditorMouseLock");
             }
-
-            if (scene == GameScenes.EDITOR && !HighLogic.LoadedSceneIsEditor)
-                KCT_GUI.FirstOnGUIUpdate = true;
         }
 
         public void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)

@@ -20,6 +20,7 @@ namespace KerbalConstructionTime
 
         [KSPField(isPersistant = true)] public float SciPointsTotal = -1f;
         [KSPField(isPersistant = true)] public bool IsSimulatedFlight = false;
+        [KSPField(isPersistant = true)] public bool ExperimentalPartsEnabled = true;
         [KSPField(isPersistant = true)] public bool DisableFailuresInSim = true;
         [KSPField(isPersistant = true)] public int Researchers = 0;
         [KSPField(isPersistant = true)] public int Applicants = 0;

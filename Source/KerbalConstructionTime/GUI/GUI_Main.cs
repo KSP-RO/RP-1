@@ -107,13 +107,8 @@ namespace KerbalConstructionTime
                     _unlockEditor = false;
                 }
 
-                if (HighLogic.LoadedSceneIsEditor)
+                if (_inSCSubscene && HighLogic.LoadedScene != GameScenes.SPACECENTER)
                 {
-                    CreateDevPartsToggle();
-                }
-                else if (_inSCSubscene)
-                {
-                    if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
                         _inSCSubscene = false;
                 }
 

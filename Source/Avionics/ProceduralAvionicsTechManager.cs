@@ -141,24 +141,42 @@ namespace RP0.ProceduralAvionics
 
         internal static int GetUnlockCost(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
         {
-            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return 0;
+            if (!PartUpgradeManager.Handler.CanHaveUpgrades()) return 0;
 
-            string ecmName = GetEcmName(avionicsConfigName, techNode);
-            double cost = EntryCostManager.Instance.ConfigEntryCost(ecmName);
+            string upgdName = GetPartUpgradeName(avionicsConfigName, techNode);
+            PartUpgradeHandler.Upgrade upgd = PartUpgradeManager.Handler.GetUpgrade(upgdName);
+            if (upgd == null) return 0;
 
-            return (int)cost;
+            if (PartUpgradeManager.Handler.IsEnabled(upgdName)) return 0;
+
+            if (upgd.entryCost < 1.1 && PartUpgradeManager.Handler.IsAvailableToUnlock(upgdName) &&
+                PurchaseConfig(avionicsConfigName, techNode))
+            {
+                return 0;
+            }
+
+            return (int)upgd.entryCost;
         }
 
         internal static bool PurchaseConfig(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
         {
+            string upgdName = GetPartUpgradeName(avionicsConfigName, techNode);
+            PartUpgradeHandler.Upgrade upgd = PartUpgradeManager.Handler.GetUpgrade(upgdName);
+            if (upgd == null) return false;
+
             RP0.Harmony.RFECMPatcher.techNode = techNode.TechNodeName;
-            string ecmName = GetEcmName(avionicsConfigName, techNode);
-            bool retVal = EntryCostManager.Instance.PurchaseConfig(ecmName);
+            bool success = EntryCostManager.Instance.PurchaseConfig(upgdName);
             RP0.Harmony.RFECMPatcher.techNode = null;
-            return retVal;
+            if (success)
+            {
+                PartUpgradeManager.Handler.SetUnlocked(upgd.name, true);
+                GameEvents.OnPartUpgradePurchased.Fire(upgd);
+            }
+
+            return success;
         }
 
-        public static string GetEcmName(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
+        public static string GetPartUpgradeName(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
         {
             return $"{avionicsConfigName}-{techNode.name}";
         }

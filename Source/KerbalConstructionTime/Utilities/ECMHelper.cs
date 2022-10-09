@@ -23,7 +23,7 @@ namespace KerbalConstructionTime
 
         internal static string GetEcmNameFromModuleProceduralAvionics(RP0.ProceduralAvionics.ModuleProceduralAvionics pm)
         {
-            return RP0.ProceduralAvionics.ProceduralAvionicsTechManager.GetEcmName(pm.CurrentProceduralAvionicsConfig.name, pm.CurrentProceduralAvionicsTechNode);
+            return RP0.ProceduralAvionics.ProceduralAvionicsTechManager.GetPartUpgradeName(pm.CurrentProceduralAvionicsConfig.name, pm.CurrentProceduralAvionicsTechNode);
         }
 
         internal static string GetEcmNameFromModuleEngineConfigsBase(PartModule pm)

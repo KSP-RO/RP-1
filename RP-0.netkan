@@ -57,7 +57,10 @@
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }
 		] },
-		{ "name" : "RSSVE-Textures" }
+		{ "name" : "RSSVE-Textures" },
+		{ "name" : "TransferWindowPlannerFork" },
+		{ "name" : "Waterfall" },
+		{ "name" : "ModularLaunchPads" }
 	],
 	"suggests" : [
 		{ "name" : "BluedogDB" },
@@ -77,7 +80,9 @@
 		{ "name" : "ATKPropulsionPack" },
 		{ "name" : "WaypointManager" },
 		{ "name" : "SCANsat" },
-		{ "name" : "NavHudRenewed" }
+		{ "name" : "NavHudRenewed" },
+		{ "name" : "ConformalDecals" },
+		{ "name" : "CanaveralPads" }
 	],
 	"conflicts" : [
 		{ "name" : "KerbalConstructionTime" },

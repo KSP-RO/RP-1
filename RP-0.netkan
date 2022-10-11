@@ -31,8 +31,8 @@
 	"recommends" : [
 		{ "name" : "RSSDateTimeFormatter" },
 		{ "any_of": [
-			{ "name" : "VenStockRevamp" },
-			{ "name" : "ReStock" }
+			{ "name" : "ReStock" },
+			{ "name" : "VenStockRevamp" }
 		] },
 		{ "name" : "ROEngines" },
 		{ "name" : "ROTanks" },

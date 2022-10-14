@@ -35,7 +35,7 @@
         "technology": "matureAvionics",
         "ro": true,
         "orphan": false,
-        "rp0_conf": true,
+        "rp0_conf": false,
         "spacecraft": "Saturn IB",
         "engine_config": "",
         "upgrade": false,

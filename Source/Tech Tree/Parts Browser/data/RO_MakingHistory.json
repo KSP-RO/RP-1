@@ -75,7 +75,7 @@
         "title": "J-2 Series",
         "description": "The Rocketdyne J-2 rocket engine found on the Saturn S-IVB and S-II stages. Ensure you enable roll capability or disable gimbal as required for your application. Diameter: [2.01 m]. Plume configured by RealPlume.",
         "mod": "RO-MakingHistory",
-        "cost": "1355",
+        "cost": 1355,
         "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "US Engine",

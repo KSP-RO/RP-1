@@ -426,7 +426,7 @@
         "description": "",
         "mod": "RealEngines",
         "cost": "400",
-        "entry_cost": "9000",
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "2013",

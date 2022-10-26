@@ -4629,6 +4629,29 @@
         ]
     },
     {
+        "name": "ROE-RD0110R",
+        "title": "RD-0110R",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "2013",
+        "technology": "orbitalRocketry2009",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD0110R",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0110R",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD0110Vernier",
         "title": "RD-0110 Vernier",
         "description": "",

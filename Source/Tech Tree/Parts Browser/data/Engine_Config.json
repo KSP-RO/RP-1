@@ -7236,7 +7236,7 @@
         "spacecraft": "Soyuz-2-IV",
         "engine_config": "RD0110R",
         "upgrade": false,
-        "entry_cost_mods": "0,RD-0110",
+        "entry_cost_mods": "9000,RD-0110",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -791,7 +791,7 @@
         "engine_config": "RD215",
         "upgrade": false,
         "entry_cost_mods": "RD-215-8D513",
-        "identical_part_name": "",
+        "identical_part_name": "RD-216",
         "module_tags": [
             "EngineLiquidTurbo",
             "Toxic"

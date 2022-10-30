@@ -50,15 +50,16 @@ namespace RP0
 
         private float GetCostReductionFactor(float d, float l)
         {
-            foreach (string s in CostReducers)
+            float factor = 1;
+            foreach (KeyValuePair<string, float> reducer in CostReducers)
             {
-                if (ToolingDatabase.GetToolingLevel(s, d, l) > 0)
+                if (ToolingDatabase.GetToolingLevel(reducer.Key, d, l) > 0)
                 {
-                    return costReductionMult;
+                    factor = Math.Min(reducer.Value, factor);
                 }
             }
 
-            return 1;
+            return factor;
         }
 
         protected virtual float GetDiameterToolingCost(float diameter) => diameterToolingCost.x * diameter * diameter + diameterToolingCost.y * diameter + diameterToolingCost.z;

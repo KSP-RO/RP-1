@@ -21,12 +21,6 @@ namespace RP0
                 // This PartModule is also used on structural bits which may not have a RF tank
                 if (rfTank != null && rfTank.type is string rfType)
                 {
-                    if (rfType.EndsWith("-HP"))
-                    {
-                        // Highly Pressurised tanks currently share the tooling with regular tanks
-                        rfType = rfType.Substring(0, rfType.Length - 3);
-                    }
-
                     return rfType;
                 }
 
@@ -77,7 +71,7 @@ namespace RP0
                 if (!string.Equals(toolingDef.costReducers, costReducers))
                 {
                     costReducers = toolingDef.costReducers;
-                    reducerList = null;    // force base class to recalculate the list from string
+                    reducerDict = null;    // force base class to recalculate the list from string
                 }
             }
         }

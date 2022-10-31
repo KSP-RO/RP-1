@@ -1,0 +1,23 @@
+[
+    {
+        "name": "K-35B",
+        "title": "Pratt & Whitney F-135 turbofan",
+        "description": "",
+        "mod": "QuizTech Aero",
+        "cost": "1349",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "Engine",
+        "year": "2015",
+        "technology": "scramjetEngines",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "F-35B",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "100000,B9_Engine_Jet_Turbofan_F119",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

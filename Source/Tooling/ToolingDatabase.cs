@@ -146,6 +146,11 @@ namespace RP0
                     toolings[type] = entries;
                 }
             }
+
+            // TODO: remove at a later date
+            bool migratedHPTooling = false;
+            node.TryGetValue("migratedHPTooling", ref migratedHPTooling);
+            if (!migratedHPTooling) MigrateHPTooling();
         }
 
         private static void LoadEntries(ConfigNode node, List<ToolingEntry> entries)
@@ -174,6 +179,8 @@ namespace RP0
                 var entries = typeToEntries.Value;
                 SaveEntries(typeNode, entries);
             }
+
+            node.AddValue("migratedHPTooling", true);    // TODO: remove at a later date
         }
 
         private static void SaveEntries(ConfigNode typeNode, List<ToolingEntry> entries)
@@ -183,6 +190,22 @@ namespace RP0
                 var entryNode = typeNode.AddNode("ENTRY");
                 entryNode.AddValue("value", entry.Value.ToString("G17"));
                 SaveEntries(entryNode, entry.Children);
+            }
+        }
+
+        /// <summary>
+        /// TODO: remove at a later date
+        /// Used for duplicating non-HP tooling as HP.
+        /// </summary>
+        private static void MigrateHPTooling()
+        {
+            var keys = new List<string>(toolings.Keys);
+            foreach (string key in keys)
+            {
+                if (!key.StartsWith("Tank-Sep-", StringComparison.OrdinalIgnoreCase) &&
+                    !key.StartsWith("Tank-Int-", StringComparison.OrdinalIgnoreCase)) continue;
+                string newKey = $"{key}-HP";
+                toolings[newKey] = new List<ToolingEntry>(toolings[key]);   // Shallow copy should be good enough as long as we don't allow editing of tooling entries
             }
         }
     }

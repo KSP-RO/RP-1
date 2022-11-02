@@ -122,23 +122,15 @@ namespace RP0
 
         public static void Load(ConfigNode node)
         {
-            toolings.Clear();
-
-            if (node == null)
-            {
-                return;
-            }
-
-            LoadNewDbFormat(node);
-
-            if (toolings.Count == 0)
-            {
-                LoadOldDbFormat(node);
-            }
+            LoadDBFromNode(node);
         }
 
-        private static void LoadNewDbFormat(ConfigNode node)
+        private static void LoadDBFromNode(ConfigNode node)
         {
+            toolings.Clear();
+
+            if (node == null) return;
+
             foreach (var typeNode in node.GetNodes("TYPE"))
             {
                 string type = typeNode.GetValue("type");
@@ -191,43 +183,6 @@ namespace RP0
                 var entryNode = typeNode.AddNode("ENTRY");
                 entryNode.AddValue("value", entry.Value.ToString("G17"));
                 SaveEntries(entryNode, entry.Children);
-            }
-        }
-
-        public static void LoadOldDbFormat(ConfigNode node)
-        {
-            foreach (var c in node.GetNodes("TYPE"))
-            {
-                string type = c.GetValue("type");
-                if (string.IsNullOrEmpty(type))
-                    continue;
-
-                var entries = new List<ToolingEntry>();
-
-                foreach (var n in c.GetNodes("DIAMETER"))
-                {
-                    float tmp = 0f;
-                    if (!n.TryGetValue("diameter", ref tmp))
-                        continue;
-
-                    var diameter = new ToolingEntry(tmp);
-
-                    var length = n.GetNode("LENGTHS");
-                    if (length != null)
-                    {
-                        foreach (ConfigNode.Value v in length.values)
-                        {
-                            if (float.TryParse(v.value, out tmp))
-                            {
-                                diameter.Children.Add(new ToolingEntry(tmp));
-                            }
-                        }
-                    }
-
-                    entries.Add(diameter);
-                }
-
-                toolings[type] = entries;
             }
         }
     }

@@ -19,6 +19,7 @@ namespace RP0
         private const float UpdateInterval = 0.5f;
 
         private string _currentToolingType;
+        private string _currentToolingTitle;
         private bool _isToolingTempDisabled = false;
         private float _nextUpdate = 0f;
         private float _allTooledCost;
@@ -41,7 +42,7 @@ namespace RP0
                 return UITab.Tooling;
             }
 
-            _currentToolingType = null;
+            _currentToolingType = _currentToolingTitle = null;
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.Label("Tooling Types", HighLogic.Skin.label);
@@ -58,8 +59,12 @@ namespace RP0
                     GUILayout.BeginHorizontal();
                 }
                 counter++;
-                if (GUILayout.Button(type, HighLogic.Skin.button))
+                string title = ToolingManager.Instance.GetTitleForTooling(type);
+                if (GUILayout.Button(title, HighLogic.Skin.button))
+                {
                     _currentToolingType = type;
+                    _currentToolingTitle = title;
+                }
             }
             GUILayout.EndHorizontal();
 
@@ -109,7 +114,7 @@ namespace RP0
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label($"Toolings for type {_currentToolingType}", HighLogic.Skin.label);
+            GUILayout.Label($"Toolings for type {_currentToolingTitle}", HighLogic.Skin.label);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
@@ -227,7 +232,7 @@ namespace RP0
                         if (p.Modules[j] is ModuleTooling mT && !mT.IsUnlocked())
                         {
                             UntooledPart up;
-                            up.Name = $"{p.partInfo.title} ({mT.ToolingType}) {mT.GetToolingParameterInfo()}";
+                            up.Name = $"{p.partInfo.title} ({mT.ToolingTypeTitle}) {mT.GetToolingParameterInfo()}";
                             up.ToolingCost = mT.GetToolingCost();
                             up.UntooledMultiplier = mT.untooledMultiplier;
                             up.TotalCost = p.GetModuleCosts(p.partInfo.cost) + p.partInfo.cost;

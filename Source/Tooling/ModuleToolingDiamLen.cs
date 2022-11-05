@@ -48,6 +48,14 @@ namespace RP0
             return cost * finalToolingCostMultiplier;
         }
 
+        protected override void ApplyToolingDefinition(ToolingDefinition toolingDef)
+        {
+            base.ApplyToolingDefinition(toolingDef);
+
+            if (toolingDef.costMultiplierDL != default)
+                costMultiplierDL = toolingDef.costMultiplierDL;
+        }
+
         private float GetCostReductionFactor(float d, float l)
         {
             float factor = 1;

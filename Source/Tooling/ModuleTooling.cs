@@ -7,9 +7,10 @@ namespace RP0
 {
     public abstract class ModuleTooling : PartModule, IPartCostModifier
     {
+        public const float DefaultCostReductionFactor = 0.5f;
+
         [KSPField] public string toolingType = string.Empty;
         [KSPField] public string costReducers = string.Empty;
-        [KSPField] public float costReductionMult = 0.5f;
         [KSPField] public string toolingName = "Tool Part";
         [KSPField] public float untooledMultiplier = 0.25f;
         [KSPField] public float finalToolingCostMultiplier = 1;
@@ -20,20 +21,17 @@ namespace RP0
         [KSPField] public Vector4 lengthToolingCost = new Vector4(250f, 1000f, 100f, 50f); // d^2, d^1, l^1, 1
 
         protected BaseEvent tEvent;
-        protected List<string> reducerList;
+        protected Dictionary<string, float> reducerDict;
         protected bool onStartFinished;
 
-        public virtual string ToolingType { get => toolingType; }
+        public virtual string ToolingType => toolingType;
 
-        public virtual List<string> CostReducers
+        public virtual Dictionary<string, float> CostReducers
         {
             get
             {
-                reducerList ??= string.IsNullOrEmpty(costReducers)
-                                ? new List<string>(0)
-                                : new List<string>(costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                                  .Select(s => s.Trim()));
-                return reducerList;
+                reducerDict ??= LoadCostReducers();
+                return reducerDict;
             }
         }
 
@@ -84,6 +82,19 @@ namespace RP0
         }
 
         private void UpdateButtonName() => tEvent.guiName = IsUnlocked() ? "Tooled" : toolingName;
+
+        private Dictionary<string, float> LoadCostReducers()
+        {
+            if (string.IsNullOrEmpty(costReducers)) return new Dictionary<string, float>(0);
+             
+            var lines = costReducers.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var valuePairs = lines.Select(s => s.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries)
+                                                .Select(s => s.Trim())
+                                                .ToArray());
+            return valuePairs.ToDictionary(v => v[0],
+                                            v => v.Length > 1 ? float.Parse(v[1]) : DefaultCostReductionFactor);
+        }
+
         public abstract float GetToolingCost();
 
         public abstract void PurchaseTooling();

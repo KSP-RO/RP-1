@@ -65,7 +65,7 @@ jobs:
           informational-version: ${{env.info_text}}
 
       - name: Build mod solution
-        run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+        run: msbuild ${GITHUB_WORKSPACE}/Source/RP0.sln /t:build /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}"
 
       - name: Build metadata
         uses: KSP-RO/BuildTools/update-version-file@master

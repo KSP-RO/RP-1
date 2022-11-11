@@ -39,7 +39,7 @@ jobs:
           tag: ${{ github.event.release.tag_name }}
 
       - name: Build mod solution
-        run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+        run: msbuild ${GITHUB_WORKSPACE}/Source/RP0.sln /t:build /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}"
         
       - name: Update version file
         uses: KSP-RO/BuildTools/update-version-file@master

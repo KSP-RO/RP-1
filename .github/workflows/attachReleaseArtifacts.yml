@@ -46,6 +46,12 @@ jobs:
         with:
           tag: ${{ github.event.release.tag_name }}
           path: ${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version
+
+      - name: Update Readme
+        uses: KSP-RO/BuildTools/update-version-in-readme@master
+        with:
+          path: ${GITHUB_WORKSPACE}/README.md
+          tag: ${{ github.event.release.tag_name }}
           
       - name: Update changelog file
         uses: KSP-RO/BuildTools/process-changelog@master

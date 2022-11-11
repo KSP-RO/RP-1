@@ -4629,6 +4629,29 @@
         ]
     },
     {
+        "name": "ROE-RD0110R",
+        "title": "RD-0110R",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "2013",
+        "technology": "orbitalRocketry2009",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD0110R",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0110R",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-RD0110Vernier",
         "title": "RD-0110 Vernier",
         "description": "",
@@ -5261,10 +5284,56 @@
         "engine_config": "RD215",
         "upgrade": false,
         "entry_cost_mods": "RD-215-8D513",
-        "identical_part_name": "",
+        "identical_part_name": "RD-216",
         "module_tags": [
             "EngineLiquidTurbo",
             "Toxic"
+        ]
+    },
+    {
+        "name": "ROE-RD215_Single",
+        "title": "RD-215",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "330",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD215",
+        "upgrade": false,
+        "entry_cost_mods": "RD-215-8D513",
+        "identical_part_name": "RD-215",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD219",
+        "title": "RD-219",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "350",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "Engine",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD219",
+        "upgrade": false,
+        "entry_cost_mods": "RD-219-8D713",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -5478,6 +5547,52 @@
         "engine_config": "RD8",
         "upgrade": false,
         "entry_cost_mods": "RD-8",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD855",
+        "title": "RD-851/855",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "90",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "Engine",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD855",
+        "upgrade": false,
+        "entry_cost_mods": "RD-851",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-RD856",
+        "title": "RD-852/856",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "60",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "Engine",
+        "year": "1961",
+        "technology": "orbitalRocketry1961",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD856",
+        "upgrade": false,
+        "entry_cost_mods": "RD-852",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -6301,6 +6416,29 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "ROE-S523",
+        "title": "S5.23",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "175",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "Engine",
+        "year": "1964",
+        "technology": "orbitalRocketry1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Kosmos-3",
+        "engine_config": "S5_23",
+        "upgrade": false,
+        "entry_cost_mods": "S5.23",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "ROE-S592",

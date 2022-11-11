@@ -85,6 +85,7 @@
 		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
 		{ "name" : "MechJebForAll" },
+		{ "name" : "NearFutureElectrical-DecayingRTGs" },
 		{ "name" : "KRASH" }
 	]
 }

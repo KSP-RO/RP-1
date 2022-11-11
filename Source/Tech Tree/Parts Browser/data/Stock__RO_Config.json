@@ -2287,7 +2287,7 @@
         "description": "LOX/Ammonia gas generator engine which powered the X-15 spaceplane. The first large, throttleable, restartable liquid fuel rocket engine. Diameter: [1.42 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
         "cost": "1130",
-        "entry_cost": "44000",
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "Engine",
         "year": "1959",

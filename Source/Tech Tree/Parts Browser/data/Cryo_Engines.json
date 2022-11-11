@@ -170,7 +170,7 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
-        "engine_config": "STBE3",
+        "engine_config": "STBE1",
         "upgrade": false,
         "entry_cost_mods": "STBE-3",
         "identical_part_name": "",

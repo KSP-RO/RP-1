@@ -433,7 +433,7 @@
         "title": "Derwent V",
         "description": "The Derwent V, rather than being a development of the Derwent line (a straight-through-flow development of the W.2), was instead a scaled-down Nene. It powered the Meteor F.4, and was available in mid-late 1945. SFC 1.03 lb/lbf-hr static. Temperature limit Mach 1.",
         "mod": "SXT",
-        "cost": 206,
+        "cost": 160,
         "entry_cost": 0,
         "category": "FLIGHT",
         "info": "Engine",

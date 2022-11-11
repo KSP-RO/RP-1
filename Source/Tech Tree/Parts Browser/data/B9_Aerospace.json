@@ -182,7 +182,7 @@
         "title": "Rolls-Royce Welland turbojet",
         "description": "",
         "mod": "B9 Aerospace",
-        "cost": "137",
+        "cost": 106,
         "entry_cost": "0",
         "category": "FLIGHT",
         "info": "Engine",

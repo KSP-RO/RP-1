@@ -31,8 +31,8 @@
 	"recommends" : [
 		{ "name" : "RSSDateTimeFormatter" },
 		{ "any_of": [
-			{ "name" : "VenStockRevamp" },
-			{ "name" : "ReStock" }
+			{ "name" : "ReStock" },
+			{ "name" : "VenStockRevamp" }
 		] },
 		{ "name" : "ROEngines" },
 		{ "name" : "ROTanks" },
@@ -41,7 +41,6 @@
 		{ "name" : "ROHeatshields" },
 		{ "name" : "B9-PWings-Fork" },
 		{ "name" : "KSPWheel" },
-		{ "name" : "PersistentRotationUpgraded" },
 		{ "name" : "HangerExtenderExtended" },
 		{ "name" : "KerbalAlarmClock" },
 		{ "name" : "KerbalRenamer" },
@@ -58,7 +57,10 @@
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }
 		] },
-		{ "name" : "RSSVE-Textures" }
+		{ "name" : "RSSVE-Textures" },
+		{ "name" : "TransferWindowPlannerFork" },
+		{ "name" : "Waterfall" },
+		{ "name" : "ModularLaunchPads" }
 	],
 	"suggests" : [
 		{ "name" : "BluedogDB" },
@@ -78,7 +80,9 @@
 		{ "name" : "ATKPropulsionPack" },
 		{ "name" : "WaypointManager" },
 		{ "name" : "SCANsat" },
-		{ "name" : "NavHudRenewed" }
+		{ "name" : "NavHudRenewed" },
+		{ "name" : "ConformalDecals" },
+		{ "name" : "CanaveralPads" }
 	],
 	"conflicts" : [
 		{ "name" : "KerbalConstructionTime" },

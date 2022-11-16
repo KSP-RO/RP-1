@@ -50,7 +50,6 @@ namespace ContractConfigurator.RP0
         private static void RegisterMethods()
         {
             Debug.Log("[RP0] CustomExpressionParserRegistrer registering methods");
-            RegisterGlobalFunction(new Function<float>("RP1DeadlineMult", GetDeadlineMult, false));
             RegisterGlobalFunction(new Function<int>("RP1CommsPayload", GetCommsPayload, false));
             RegisterGlobalFunction(new Function<int>("RP1WeatherPayload", GetWeatherPayload, false));
         }
@@ -58,11 +57,6 @@ namespace ContractConfigurator.RP0
         private static void RegisterRP0Hooks()
         {
             ContractGUI.WithdrawContractAction = WithdrawContract;
-        }
-
-        private static float GetDeadlineMult()
-        {
-            return 1f;
         }
 
         private static int GetCommsPayload()

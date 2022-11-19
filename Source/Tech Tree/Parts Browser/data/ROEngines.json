@@ -4437,6 +4437,29 @@
         "module_tags": []
     },
     {
+        "name": "ROE-R103",
+        "title": "R-103 Booster",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "4",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "MR-1",
+        "engine_config": "R103",
+        "upgrade": false,
+        "entry_cost_mods": "R-103",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-R40B",
         "title": "R-40B Bipropellant Engine",
         "description": "The R-40B bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes.",

@@ -449,6 +449,7 @@ namespace KerbalConstructionTime
         {
             BuildListVessel ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated);
             ret._lc = _lc;
+            ret._lcID = _lcID;
             ret.globalTags = globalTags.Clone();
             ret.partNames = partNames.Clone();
             ret.resourceAmounts = resourceAmounts.Clone();

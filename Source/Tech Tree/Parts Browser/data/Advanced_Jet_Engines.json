@@ -147,6 +147,27 @@
         "module_tags": []
     },
     {
+        "name": "RO-J85GE5",
+        "title": "J85-GE-5 Turbojet",
+        "description": "",
+        "mod": "Advanced Jet Engines",
+        "cost": "366",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "Engine",
+        "year": "1959",
+        "technology": "highSpeedFlight",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "5000,miniJetEngine",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RO-Olympus593",
         "title": "Olympus 593 Mk.610 Turbojet",
         "description": "",

@@ -212,9 +212,7 @@ namespace KerbalConstructionTime
 
         public void RecalculateBuildRates()
         {
-            _strategyRateMultiplier = RP0.CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? RP0.TransactionReasonsRP0.RateIntegrationVAB : RP0.TransactionReasonsRP0.RateIntegrationSPH);
-            _rate = Utilities.GetBuildRate(0, this, IsHumanRated, true);
-            _rateHRCapped = Utilities.GetBuildRate(0, this, false, true);
+            CalculateAndSetRates();
             foreach (var blv in BuildList)
                 blv.UpdateBuildRate();
 
@@ -410,6 +408,19 @@ namespace KerbalConstructionTime
             KerbalConstructionTimeData.Instance.RegisterLC(this);
             foreach(var lp in LaunchPads)
                 KerbalConstructionTimeData.Instance.RegisterLP(lp);
+
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                // Editor scene needs LC rates to show build time estimates
+                CalculateAndSetRates();
+            }
+        }
+
+        private void CalculateAndSetRates()
+        {
+            _strategyRateMultiplier = RP0.CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? RP0.TransactionReasonsRP0.RateIntegrationVAB : RP0.TransactionReasonsRP0.RateIntegrationSPH);
+            _rate = Utilities.GetBuildRate(0, this, IsHumanRated, true);
+            _rateHRCapped = Utilities.GetBuildRate(0, this, false, true);
         }
     }
 }

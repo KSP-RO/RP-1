@@ -1961,30 +1961,28 @@ namespace KerbalConstructionTime
 
         public static bool IsVesselKCTRecovering(ProtoVessel v)
         {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
-            {
-                //KCTDebug.LogError("Disabled!");
+            if (v == null)
                 return false;
-            }
+
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                return false;
+
             if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+                return false;
+
+            if (v.vesselRef.isEVA)
+                return false;
+
+            // Is also called at the start of the flight scene when recovering clamps & debris
+            if (KerbalConstructionTimeData.Instance.RecoveredVessel?.IsValid != true)
             {
-                //KCTDebug.LogError("Sim!");
+                KCTDebug.Log("Recovered vessel is null!");
                 return false;
             }
 
-            if (v.vesselRef.isEVA)
-            {
-                //KCTDebug.LogError("Is eva!");
-                return false;
-            }
-            if (!KerbalConstructionTimeData.Instance.RecoveredVessel.IsValid)
-            {
-                //KCTDebug.LogError("Recovered vessel is null!");
-                return false;
-            }
             if (v.vesselName != KerbalConstructionTimeData.Instance.RecoveredVessel.shipName)
             {
-                //KCTDebug.LogError("Recovered vessel, " + KCTGameStates.RecoveredVessel.ShipName +", doesn't match!");
+                KCTDebug.Log($"Recovered vessel '{v.vesselName}' and '{KerbalConstructionTimeData.Instance.RecoveredVessel.shipName}' do not match ");
                 return false;
             }
 

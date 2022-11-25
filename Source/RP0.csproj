@@ -125,7 +125,6 @@
     <Compile Include="Harmony\StrategySystemConfig.cs" />
     <Compile Include="UnlockSubsidyHandler.cs" />
     <Compile Include="LocalizationHandler.cs" />
-    <Compile Include="EventRegisterer.cs" />
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
     <Compile Include="Harmony\ApplicationLauncher.cs" />

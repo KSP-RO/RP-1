@@ -542,6 +542,8 @@ namespace KerbalConstructionTime
             KCTGameStates.LaunchedCrew = new List<PartCrewAssignment>();
             foreach (PseudoPart pp in _pseudoParts)
                 KCTGameStates.LaunchedCrew.Add(new PartCrewAssignment(pp.Uid, new List<CrewMemberAssignment>()));
+            _availableCrew = GetAvailableCrew(string.Empty);
+
             //try to assign kerbals from the desired manifest
             if (!UseAvailabilityChecker && KCTGameStates.LaunchedVessel.DesiredManifest?.Count > 0 && KCTGameStates.LaunchedVessel.DesiredManifest.Exists(c => c != null))
             {
@@ -565,11 +567,11 @@ namespace KerbalConstructionTime
                     finalCrew.Enqueue(crew);
                 }
 
-                //check if any of these crew are even available, if not then go back to CrewFirstAvailable
+                //check if any of these crew are even available, if not then fill all command pods
                 if (finalCrew.FirstOrDefault(c => c != null) == null)
                 {
                     KCTDebug.Log("Desired crew not available, falling back to default.");
-                    CrewFirstAvailable();
+                    FillAllPodsWithCrew();
                     return;
                 }
 
@@ -590,44 +592,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                CrewFirstAvailable();
-            }
-        }
-
-        public static void CrewFirstAvailable()
-        {
-            int partIndex = GetFirstCrewableIndex(_parts);
-            if (partIndex > -1)
-            {
-                Part p = _parts[partIndex];
-                if (KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID) == null)
-                    KCTGameStates.LaunchedCrew.Add(new PartCrewAssignment(p.craftID, new List<CrewMemberAssignment>()));
-                _availableCrew = GetAvailableCrew(p.partInfo.name);
-                for (int i = 0; i < p.CrewCapacity; i++)
-                {
-                    if (KCTGameStates.LaunchedCrew[partIndex].CrewList.Count <= i)
-                    {
-                        if (_availableCrew.Count > 0)
-                        {
-                            int index = AssignRandomCrew ? new System.Random().Next(_availableCrew.Count) : 0;
-                            ProtoCrewMember crewMember = _availableCrew[index];
-                            if (crewMember != null)
-                            {
-                                KCTGameStates.LaunchedCrew[partIndex].CrewList.Add(new CrewMemberAssignment(crewMember));
-                                _availableCrew.RemoveAt(index);
-                            }
-                        }
-                    }
-                    else if (KCTGameStates.LaunchedCrew[partIndex].CrewList[i] == null)
-                    {
-                        if (_availableCrew.Count > 0)
-                        {
-                            int index = AssignRandomCrew ? new System.Random().Next(_availableCrew.Count) : 0;
-                            KCTGameStates.LaunchedCrew[partIndex].CrewList[i] = new CrewMemberAssignment(_availableCrew[index]);
-                            _availableCrew.RemoveAt(index);
-                        }
-                    }
-                }
+                FillAllPodsWithCrew();
             }
         }
 

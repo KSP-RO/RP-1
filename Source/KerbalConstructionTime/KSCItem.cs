@@ -169,8 +169,12 @@ namespace KerbalConstructionTime
                 ActiveLaunchComplexIndex = LC_ID;
             }
 
-            if(HighLogic.LoadedSceneIsEditor)
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                if (!KCTGameStates.EditorShipEditingMode)
+                    KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
                 RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
+            }
 
             LaunchComplexes[LC_ID].SwitchLaunchPad();
         }

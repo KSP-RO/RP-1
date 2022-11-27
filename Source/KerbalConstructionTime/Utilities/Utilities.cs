@@ -1815,6 +1815,7 @@ namespace KerbalConstructionTime
             currentLC.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            KCT_GUI.BuildRateForDisplay = null;
         }
 
         public static void ChangeEngineers(KSCItem ksc, int delta)

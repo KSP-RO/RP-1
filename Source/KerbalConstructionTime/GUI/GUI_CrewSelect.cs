@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
                 Part p = _parts[j];
                 if (p.CrewCapacity == 0) continue;
 
-                List<CrewMemberAssignment> launchedCrew = KerbalConstructionTimeData.Instance.LaunchedCrew.Find(part => part.PartID == p.craftID)?.CrewList;
+                List<CrewMemberAssignment> launchedCrew = KerbalConstructionTimeData.Instance.LaunchedCrew[j]?.CrewList;
                 if (launchedCrew == null)
                 {
                     launchedCrew = new List<CrewMemberAssignment>();
@@ -541,7 +541,11 @@ namespace KerbalConstructionTime
                 KerbalConstructionTimeData.Instance.LaunchedCrew.Add(new PartCrewAssignment(pp.Uid, new List<CrewMemberAssignment>()));
             }
 
-            CrewFirstAvailable();
+            //CrewFirstAvailable();
+
+            //get all available crew from the roster and then fill all crewable parts with 'nauts that finished proficiency and mission training
+            _availableCrew = GetAvailableCrew(string.Empty);
+            FillAllPodsWithCrew();
         }
 
         public static void CrewFirstAvailable()
@@ -590,6 +594,11 @@ namespace KerbalConstructionTime
             _jetpackPartAvailable = ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available;
         }
 
+        /// <summary>
+        /// Get all available (not inactive) crew from the CrewRoster for the given partName, or all available crew in general if partName isn't passed 
+        /// </summary>
+        /// <param name="partName"></param>
+        /// <returns></returns>
         private static List<ProtoCrewMember> GetAvailableCrew(string partName)
         {
             List<ProtoCrewMember> availableCrew = new List<ProtoCrewMember>();

@@ -421,6 +421,7 @@ namespace KerbalConstructionTime
             _strategyRateMultiplier = RP0.CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? RP0.TransactionReasonsRP0.RateIntegrationVAB : RP0.TransactionReasonsRP0.RateIntegrationSPH);
             _rate = Utilities.GetBuildRate(0, this, IsHumanRated, true);
             _rateHRCapped = Utilities.GetBuildRate(0, this, false, true);
+            KCT_GUI.BuildRateForDisplay = null;
         }
     }
 }

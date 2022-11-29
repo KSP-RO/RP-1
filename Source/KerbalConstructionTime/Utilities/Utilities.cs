@@ -56,7 +56,7 @@ namespace KerbalConstructionTime
             // optimization: if we are checking index 0 use the cached rate, otherwise recalc
             if (forceRecalc || index != 0)
             {
-                return Formula.GetVesselBuildRate(index, LC, useCap, 0) * LC.StrategyRateMultiplier;
+                return Formula.GetVesselBuildRate(index, LC, useCap, 0);
             }
 
             return useCap ? LC.Rate : LC.RateHRCapped;

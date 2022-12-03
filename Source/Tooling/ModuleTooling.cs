@@ -10,6 +10,7 @@ namespace RP0
         public const float DefaultCostReductionFactor = 0.5f;
 
         [KSPField] public string toolingType = string.Empty;
+        [KSPField] public string toolingTypeTitle = string.Empty;
         [KSPField] public string costReducers = string.Empty;
         [KSPField] public string toolingName = "Tool Part";
         [KSPField] public float untooledMultiplier = 0.25f;
@@ -25,6 +26,7 @@ namespace RP0
         protected bool onStartFinished;
 
         public virtual string ToolingType => toolingType;
+        public virtual string ToolingTypeTitle => string.IsNullOrEmpty(toolingTypeTitle) ? ToolingType : toolingTypeTitle;
 
         public virtual Dictionary<string, float> CostReducers
         {
@@ -115,6 +117,8 @@ namespace RP0
             }
             UpdateButtonName();
             onStartFinished = true;
+
+            TryApplyToolingDefinition();
         }
 
         protected virtual void LoadPartModules()
@@ -135,6 +139,46 @@ namespace RP0
         {
             UpdateButtonName();
             return IsUnlocked() ? 0 : GetToolingCost() * untooledMultiplier;
+        }
+
+        protected bool TryApplyToolingDefinition()
+        {
+            if (ToolingManager.Instance.GetToolingDefinition(ToolingType) is ToolingDefinition toolingDef)
+            {
+                try
+                {
+                    ApplyToolingDefinition(toolingDef);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Applying tooling definition {ToolingType} to part {part.name} failed: {ex}");
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        protected virtual void ApplyToolingDefinition(ToolingDefinition toolingDef)
+        {
+            if (toolingDef.untooledMultiplier != default)
+                untooledMultiplier = toolingDef.untooledMultiplier;
+
+            if (toolingDef.finalToolingCostMultiplier != default)
+                finalToolingCostMultiplier = toolingDef.finalToolingCostMultiplier;
+
+            if (!string.IsNullOrEmpty(toolingDef.toolingName))
+                toolingName = toolingDef.toolingName;
+
+            if (!string.IsNullOrEmpty(toolingDef.title))
+                toolingTypeTitle = toolingDef.title;
+
+            if (!string.Equals(toolingDef.costReducers, costReducers))
+            {
+                costReducers = toolingDef.costReducers;
+                reducerDict = null;    // force base class to recalculate the list from string
+            }
         }
 
         public ModifierChangeWhen GetModuleCostChangeWhen() => ModifierChangeWhen.FIXED;

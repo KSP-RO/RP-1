@@ -30,13 +30,13 @@ namespace RP0
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (onStartFinished) UpdateToolingDefinition();
+            if (onStartFinished) TryApplyToolingDefinition();
             return base.GetModuleCost(defaultCost, sit);
         }
 
         public override float GetToolingCost()
         {
-            UpdateToolingDefinition();
+            TryApplyToolingDefinition();
             return base.GetToolingCost();
         }
 
@@ -50,30 +50,6 @@ namespace RP0
                 _ => null
             };
             rfTank = part.Modules.GetModule<ModuleFuelTanks>();
-        }
-
-        private void UpdateToolingDefinition()
-        {
-            if (ToolingManager.Instance.GetToolingDefinition(ToolingType) is ToolingDefinition toolingDef)
-            {
-                if (toolingDef.untooledMultiplier != default)
-                    untooledMultiplier = toolingDef.untooledMultiplier;
-
-                if (toolingDef.finalToolingCostMultiplier != default)
-                    finalToolingCostMultiplier = toolingDef.finalToolingCostMultiplier;
-
-                if (toolingDef.costMultiplierDL != default)
-                    costMultiplierDL = toolingDef.costMultiplierDL;
-
-                if (!string.IsNullOrEmpty(toolingDef.toolingName))
-                    toolingName = toolingDef.toolingName;
-
-                if (!string.Equals(toolingDef.costReducers, costReducers))
-                {
-                    costReducers = toolingDef.costReducers;
-                    reducerDict = null;    // force base class to recalculate the list from string
-                }
-            }
         }
 
         public override void GetDimensions(out float diam, out float len)

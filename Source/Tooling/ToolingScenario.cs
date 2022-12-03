@@ -74,5 +74,11 @@ namespace RP0
                 }
             }
         }
+
+        public string GetTitleForTooling(string name)
+        {
+            ToolingDefinition def = GetToolingDefinition(name);
+            return def?.title ?? name;
+        }
     }
 }

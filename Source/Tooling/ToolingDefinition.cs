@@ -8,6 +8,9 @@ namespace RP0
         [Persistent]
         public string name;
 
+        [Persistent]
+        public string title;
+
         /// <summary>
         /// Text to show on the PAW action - for example "Tool Tank"
         /// </summary>

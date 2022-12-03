@@ -59,19 +59,38 @@ namespace KerbalConstructionTime
             var options = new List<DialogGUIBase>();
             if (!FlightGlobals.ActiveVessel.isEVA)
             {
-                if (isSPHAllowed)
-                    options.Add(new DialogGUIButton("Recover to SPH", RecoverToSPH));
-                if (isVABAllowed)
-                    options.Add(new DialogGUIButton("Recover to VAB", RecoverToVAB));
-                options.Add(new DialogGUIButton("Normal recovery", DoNormalRecovery));
+                string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech);
+                string techLimitText = string.IsNullOrEmpty(nodeTitle) ? string.Empty :
+                                       $"\nAdditionally requires {nodeTitle} tech node to be researched (unless the vessel is in Prelaunch state).";
+                string genericReuseText = "Allows the vessel to be launched again after a short recovery delay.";
+
+                options.Add(new DialogGUIButtonWithTooltip("Recover to SPH", RecoverToSPH)
+                {
+                    OptionInteractableCondition = () => isSPHAllowed,
+                    tooltipText = isSPHAllowed ? genericReuseText : "Can only be used when the vessel was built in SPH."
+                });
+
+                options.Add(new DialogGUIButtonWithTooltip("Recover to VAB", RecoverToVAB)
+                {
+                    OptionInteractableCondition = () => isVABAllowed,
+                    tooltipText = isVABAllowed ? genericReuseText : $"Can only be used when the vessel was built in VAB.{techLimitText}"
+                });
+
+                options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecovery)
+                {
+                    tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
+                });
             }
             else
-                options.Add(new DialogGUIButton("Recover", DoNormalRecovery));
+            {
+                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecovery));
+            }
+
             options.Add(new DialogGUIButton("Cancel", () => { }));
 
             var diag = new MultiOptionDialog("RecoverVesselPopup",
                 "Do you want KCT to do the recovery?", 
-                "RP-1's KCT", 
+                "Recover vessel", 
                 null, options: options.ToArray());
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
         }

@@ -25,6 +25,10 @@ namespace KerbalConstructionTime
         private static PropertyInfo _piTFSettingsEnabled;
         private static Type _tlSettingsType;
         private static FieldInfo _fiTLSettingsDisabled;
+        private static FieldInfo _fiKSCSwInstance;
+        private static FieldInfo _fiKSCSwSites;
+        private static FieldInfo _fiKSCSwLastSite;
+        private static FieldInfo _fiKSCSwDefaultSite;
 
         private static DateTime _startedFlashing;
         internal const string _legacyDefaultKscId = "Stock";
@@ -864,14 +868,18 @@ namespace KerbalConstructionTime
             TryAddVesselToBuildList(blv);
         }
 
-        public static void TryAddVesselToBuildList(BuildListVessel blv)
+        public static void TryAddVesselToBuildList(BuildListVessel blv, bool skipPartChecks = false)
         {
-            var v = new VesselBuildValidator();
-            v.SuccessAction = AddVesselToBuildList;
+            var v = new VesselBuildValidator
+            {
+                CheckPartAvailability = !skipPartChecks,
+                CheckPartConfigs = !skipPartChecks,
+                SuccessAction = AddVesselToBuildList
+            };
             v.ProcessVessel(blv);
         }
 
-        private static void AddVesselToBuildList(BuildListVessel blv)
+        public static void AddVesselToBuildList(BuildListVessel blv)
         {
             SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
 
@@ -889,6 +897,15 @@ namespace KerbalConstructionTime
                 type = "SPH";
             }
             ScrapYardWrapper.ProcessVessel(blv.ExtractedPartNodes);
+
+            try
+            {
+                KCTEvents.OnVesselAddedToBuildQueue.Fire(blv);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
 
             KCTDebug.Log($"Added {blv.ShipName} to {type} build list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.Cost}. IntegrationCost: {blv.IntegrationCost}");
             KCTDebug.Log("Launch site is " + blv.LaunchSite);
@@ -1000,13 +1017,23 @@ namespace KerbalConstructionTime
         {
             Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "RealFuels", StringComparison.OrdinalIgnoreCase))?.assembly;
             Type t = a?.GetType("RealFuels.EntryCostManager");
-            var mi = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
-            if (mi != null)    // Older RF versions lack this method
+
+            // Older RF versions can lack these methods
+            var bestMethodInf = t?.GetMethod("EntryCostForParts", new Type[] { typeof(IEnumerable<AvailablePart>) });
+            var worseMethodInf = t?.GetMethod("ConfigEntryCost", new Type[] { typeof(IEnumerable<string>) });
+
+            var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+            object instance = pi.GetValue(null);
+
+            if (bestMethodInf != null)
             {
-                var pi = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                object instance = pi.GetValue(null);
+                double sum = (double)bestMethodInf.Invoke(instance, new[] { availableParts });
+                return (int)sum;
+            }
+            else if (worseMethodInf != null)    // Worse than the one above but probably still better than the 3rd one.
+            {
                 IEnumerable<string> partNames = availableParts.Select(p => p.name);
-                double sum = (double)mi.Invoke(instance, new[] { partNames });
+                double sum = (double)worseMethodInf.Invoke(instance, new[] { partNames });
                 return (int)sum;
             }
             else
@@ -1143,6 +1170,8 @@ namespace KerbalConstructionTime
                     _checkTime(ap, ref shortestTime, ref thing);
                 foreach (IKCTBuildItem ub in KSC.KSCTech)
                     _checkTime(ub, ref shortestTime, ref thing);
+                foreach (IKCTBuildItem pc in KSC.PadConstructions)
+                    _checkTime(pc, ref shortestTime, ref thing);
             }
             foreach (TechItem tech in KCTGameStates.TechList)
             {
@@ -1256,16 +1285,24 @@ namespace KerbalConstructionTime
             {
                 if (!_isKSCSwitcherInstalled.HasValue)
                 {
-                    Type Switcher = null;
-                    AssemblyLoader.loadedAssemblies.TypeOperation(t =>
+                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KSCSwitcher", StringComparison.OrdinalIgnoreCase))?.assembly;
+                    _isKSCSwitcherInstalled = a != null;
+                    if (_isKSCSwitcherInstalled.Value)
                     {
-                        if (t.FullName == "regexKSP.KSCSwitcher")
-                        {
-                            Switcher = t;
-                        }
-                    });
+                        Type t = a.GetType("regexKSP.KSCLoader");
+                        _fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
+                        _fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-                    _isKSCSwitcherInstalled = Switcher != null;
+                        t = a.GetType("regexKSP.KSCSiteManager");
+                        _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                        _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+                        if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
+                        {
+                            KCTDebug.LogError("Failed to bind to KSCSwitcher");
+                            _isKSCSwitcherInstalled = false;
+                        }
+                    }
                 }
                 return _isKSCSwitcherInstalled.Value;
             }
@@ -1316,24 +1353,17 @@ namespace KerbalConstructionTime
         {
             if (!IsKSCSwitcherInstalled) return null;
 
-            //get the LastKSC.KSCLoader.instance object
-            //check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
-            Type Loader = null;
-            AssemblyLoader.loadedAssemblies.TypeOperation(t =>
-            {
-                if (t.FullName == "regexKSP.KSCLoader")
-                {
-                    Loader = t;
-                }
-            });
-            object LoaderInstance = GetMemberInfoValue(Loader.GetMember("instance")[0], null);
-            if (LoaderInstance == null)
+            // get the LastKSC.KSCLoader.instance object
+            // check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
+
+            object loaderInstance = _fiKSCSwInstance.GetValue(null);
+            if (loaderInstance == null)
                 return null;
-            object sitesObj = GetMemberInfoValue(Loader.GetMember("Sites")[0], LoaderInstance);
-            string lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("lastSite")[0], sitesObj);
+            object sites = _fiKSCSwSites.GetValue(loaderInstance);
+            string lastSite = _fiKSCSwLastSite.GetValue(sites) as string;
 
             if (lastSite == string.Empty)
-                lastSite = (string)GetMemberInfoValue(sitesObj.GetType().GetMember("defaultSite")[0], sitesObj);
+                lastSite = _fiKSCSwDefaultSite.GetValue(sites) as string;
             return lastSite;
         }
 
@@ -1352,18 +1382,17 @@ namespace KerbalConstructionTime
             if (KCTGameStates.ActiveKSC == null || site != KCTGameStates.ActiveKSC.KSCName)
             {
                 KCTDebug.Log($"Setting active site to {site}");
-                KSCItem setActive = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
-                if (setActive != null)
+                KSCItem newKsc = KCTGameStates.KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                if (newKsc != null)
                 {
-                    SetActiveKSC(setActive);
+                    SetActiveKSC(newKsc);
                 }
                 else
                 {
-                    setActive = new KSCItem(site);
-                    if (CurrentGameIsCareer())
-                        setActive.ActiveLPInstance.level = 0;
-                    KCTGameStates.KSCs.Add(setActive);
-                    SetActiveKSC(setActive);
+                    newKsc = new KSCItem(site);
+                    newKsc.EnsureStartingLaunchPad();
+                    KCTGameStates.KSCs.Add(newKsc);
+                    SetActiveKSC(newKsc);
                 }
             }
         }
@@ -1430,6 +1459,10 @@ namespace KerbalConstructionTime
                 KCTGameStates.EditorRolloutCosts = 0;
                 KCTGameStates.EditorRolloutTime = 0;
             }
+
+            Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
+            KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
+            KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
         }
 
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
@@ -1810,8 +1843,6 @@ namespace KerbalConstructionTime
                     });
                 }
 
-                KCTDebug.Log("Attempting to take control of launch button");
-
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
 
@@ -1881,18 +1912,22 @@ namespace KerbalConstructionTime
 
         public static bool IsVabRecoveryAvailable(Vessel v)
         {
-            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.SPH &&
-                   (v.situation == Vessel.Situations.PRELAUNCH ||
-                    string.IsNullOrEmpty(reqTech) ||
-                    ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available);
+                   (v.situation == Vessel.Situations.PRELAUNCH || IsVabRecoveryTechResearched());
         }
 
         public static bool IsSphRecoveryAvailable(Vessel v)
         {
             return v != null && v.IsRecoverable && v.IsClearToSave() == ClearToSaveStatus.CLEAR &&
                    v.GetVesselBuiltAt() != EditorFacility.VAB;
+        }
+
+        public static bool IsVabRecoveryTechResearched()
+        {
+            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
+            return string.IsNullOrEmpty(reqTech) ||
+                   ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available;
         }
 
         public static void EnableSimulationLocks()
@@ -2090,6 +2125,150 @@ namespace KerbalConstructionTime
                     }
                 }
             }
+        }
+
+        public static Tuple<float, List<string>> GetVesselUnlockInfo(ShipConstruct ship)
+        {
+            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return new Tuple<float, List<string>>(0, new List<string>());
+
+            // filter the ship parts list to those parts that are not already purchased
+            IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> purchasableParts = GetPartsWithPurchasability(ship.Parts).Where(kvp => kvp.Value.Status == PurchasabilityStatus.Purchasable || kvp.Value.Status == PurchasabilityStatus.Unavailable);
+            HashSet<string> ecmPartsList = new HashSet<string>();
+            float runningCost = 0;
+
+            // compare the part specified entry cost to the ECM database
+            foreach (AvailablePart part in purchasableParts.Select(kvp => kvp.Key))
+            {
+                int rawCost = part.entryCost;
+                double ecmEstCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(part.name);
+                if (rawCost == ecmEstCost)
+                {
+                    // this part is managed by the ECM, save its name later for a batch request
+                    ecmPartsList.Add(part.name);
+                }
+                else
+                {
+                    // this part is not in the ECM, take the raw cost
+                    runningCost += rawCost;
+                }
+            }
+
+            // filter down further to those parts that can't be unlocked with our current tech and get the tech names needed
+            List<AvailablePart> lockedParts = purchasableParts.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable).Select(kvp => kvp.Key).ToList();
+            HashSet<string> pendingTech = new HashSet<string>(lockedParts.Select(ap => ap.TechRequired));
+
+            // now back through the list looking for upgrades to add to our batch list
+            foreach (Part p in ship.Parts)
+            {
+                foreach (PartModule pm in p.Modules)
+                {
+                    var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
+                    var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
+                    if (mi != null)
+                    {
+                        var parameters = new object[] { null, null, null, null };
+                        bool allSucceeded;
+                        try
+                        {
+                            allSucceeded = (bool)mi.Invoke(pm, parameters);
+                        }
+                        catch (Exception ex)
+                        {
+                            KCTDebug.LogError($"Config validation failed for {p.name}");
+                            Debug.LogException(ex);
+                            allSucceeded = false;
+                            parameters[0] = "error occurred, check the logs";
+                            parameters[1] = false;
+                            parameters[2] = 0f;
+                            parameters[3] = string.Empty;
+                        }
+
+                        if (allSucceeded)
+                            continue;   // if validate passed, this partmodule is already unlocked and purchased, nothing to do
+
+                        bool CanBeResolved = (bool)parameters[1];
+                        float CostToResolve = (float)parameters[2];
+                        string techName = (string)parameters[3];
+                        if (!CanBeResolved && !string.IsNullOrEmpty(techName))
+                            pendingTech.Add(techName);
+
+                        // use a helper to get the ECM name, each PartModule type stores it differently
+                        string ecmName = ECMHelper.GetEcmNameFromPartModule(pm);
+                        if (!string.IsNullOrEmpty(ecmName))
+                            ecmPartsList.Add(ecmName);
+                    }
+                }
+            }
+
+            double ecmCost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList);
+
+            List<string> techList = SortAndFilterTechListForFinalNodes(pendingTech);
+            float totalCost = runningCost + Convert.ToSingle(ecmCost);
+            KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Raw cost: {runningCost}, ECM cost: {ecmCost}");
+            return new Tuple<float, List<string>>(totalCost, techList);
+        }
+
+        public static List<string> SortAndFilterTechListForFinalNodes(HashSet<string> input)
+        {
+            HashSet<string> blacklist = new HashSet<string>();
+            SortedList<string, string> slist = new SortedList<string, string>();
+            foreach(string s in input)
+            {
+                foreach (string parent in KerbalConstructionTimeData.techNameToParents[s])
+                {
+                    blacklist.Add(parent);
+                }
+            }
+            foreach (string s in input)
+            {
+                if (!blacklist.Contains(s))
+                {
+                    // sort our result, depth into the tree then alpha
+                    int depth = KerbalConstructionTimeData.techNameToParents[s].Count();
+                    string skey = $"{depth:d2}{s}";
+                    if (!slist.ContainsKey(skey))
+                        slist.Add(skey, s);
+                }
+            }
+
+            return slist.Values.ToList();
+        }
+
+ 
+
+
+        public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<Part> parts)
+        {
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
+
+            if (ResearchAndDevelopment.Instance == null)
+                return res;
+
+            List<AvailablePart> apList = parts.Select(p => p.partInfo).ToList();
+            res = GetPartsWithPurchasability(apList);
+            return res;
+        }
+
+        public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<AvailablePart> parts)
+        {
+            var res = new Dictionary<AvailablePart, PartPurchasability>();
+            foreach (AvailablePart part in parts)
+            {
+                if (res.TryGetValue(part, out PartPurchasability pp))
+                {
+                    pp.PartCount++;
+                }
+                else
+                {
+                    PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
+                    if (Utilities.PartIsUnlocked(part))
+                        status = PurchasabilityStatus.Purchased;
+                    else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
+                        status = PurchasabilityStatus.Purchasable;
+                    res.Add(part, new PartPurchasability(status, 1));
+                }
+            }
+            return res;
         }
     }
 }

@@ -78,6 +78,10 @@ namespace RP0
         public int CommsPayload = ContractGUI.MinPayload;
         public int WeatherPayload = ContractGUI.MinPayload;
 
+        public bool AirlaunchTipShown = false;
+        public bool RealChuteTipShown = false;
+        public bool NeverShowToolingReminders = false;
+        public bool Avionics_InterplanetaryWarningShown = false;
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;
         public bool AvionicsWindow_ShowInfo3 = true;

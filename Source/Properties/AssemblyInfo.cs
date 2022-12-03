@@ -34,13 +34,13 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 #if CIBUILD
-[assembly: AssemblyFileVersion("@MAJOR@.@MINOR@.@PATCH.@BUILD@")]
+[assembly: AssemblyFileVersion("@MAJOR@.@MINOR@.@PATCH@.@BUILD@")]
 #else
 [assembly: AssemblyFileVersion("1.11.2.0")]
 #endif
 
 [assembly: KSPAssembly("RP-0", 1, 0)]
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]
-[assembly: KSPAssemblyDependency("RealFuels", 12, 7)]
+[assembly: KSPAssemblyDependency("RealFuels", 15, 1)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
 [assembly: KSPAssemblyDependency("KerbalConstructionTime", 2, 0)]

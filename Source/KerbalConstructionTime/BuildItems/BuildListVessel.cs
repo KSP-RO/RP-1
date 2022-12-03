@@ -479,10 +479,9 @@ namespace KerbalConstructionTime
             if (Type == ListType.VAB)
             {
                 KCT_LaunchPad selectedPad = highestFacility ? KCTGameStates.ActiveKSC.GetHighestLevelLaunchPad() : KCTGameStates.ActiveKSC.ActiveLPInstance;
-                float launchpadNormalizedLevel = 1f * selectedPad.level / KCTGameStates.BuildingMaxLevelCache["LaunchPad"];
 
                 double totalMass = GetTotalMass();
-                if (totalMass > GameVariables.Instance.GetCraftMassLimit(launchpadNormalizedLevel, true))
+                if (totalMass > selectedPad.SupportedMass)
                 {
                     failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons");
                 }
@@ -490,7 +489,7 @@ namespace KerbalConstructionTime
                 {
                     failedReasons.Add("Part Count limit exceeded");
                 }
-                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, GameVariables.Instance.GetCraftSizeLimit(launchpadNormalizedLevel, true));
+                CraftWithinSizeLimits sizeCheck = new CraftWithinSizeLimits(GetShipSize(), ShipName, SpaceCenterFacility.LaunchPad, selectedPad.SupportedSize);
                 if (!sizeCheck.Test())
                 {
                     failedReasons.Add("Size limits exceeded");
@@ -792,25 +791,15 @@ namespace KerbalConstructionTime
             if (ResearchAndDevelopment.Instance == null)
                 return res;
 
+            List<AvailablePart> apList = new List<AvailablePart>();
             foreach (ConfigNode pNode in ShipNode.GetNodes("PART"))
             {
                 string partName = Utilities.GetPartNameFromNode(pNode);
                 AvailablePart part = PartLoader.getPartInfoByName(partName);
-                if (res.TryGetValue(part, out PartPurchasability pp))
-                {
-                    pp.PartCount++;
-                }
-                else
-                {
-                    PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
-                    if (Utilities.PartIsUnlocked(part))
-                        status = PurchasabilityStatus.Purchased;
-                    else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
-                        status = PurchasabilityStatus.Purchasable;
-
-                    res.Add(part, new PartPurchasability(status, 1));
-                }
+                apList.Add(part);
             }
+
+            res = Utilities.GetPartsWithPurchasability(apList);
             return res;
         }
 
@@ -818,14 +807,16 @@ namespace KerbalConstructionTime
 
         public double ProgressPercent()
         {
-            return 100 * (Progress / (BuildPoints + IntegrationPoints));
+            return 100 * GetFractionComplete();
         }
 
         public string GetItemName() => ShipName;
 
         public double GetBuildRate() => BuildRate;
 
-        public double GetTimeLeft()=> TimeLeft;
+        public double GetFractionComplete() => Progress / (BuildPoints + IntegrationPoints);
+
+        public double GetTimeLeft() => TimeLeft;
 
         public ListType GetListType() => Type;
 

@@ -21,7 +21,7 @@ namespace RP0
                 _lockLevel = ControlLockerUtils.LockLevel.Unlocked;
                 if (EditorLogic.fetch.ship?.Parts is List<Part> parts && parts.Count > 0)
                 {
-                    _lockLevel = ControlLockerUtils.ShouldLock(parts, false, out _maxMass, out _vesselMass);
+                    _lockLevel = ControlLockerUtils.ShouldLock(parts, false, out _maxMass, out _vesselMass, out _);
                     _haveParts = true;
                 }
             }

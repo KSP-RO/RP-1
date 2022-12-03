@@ -219,14 +219,15 @@ namespace KerbalConstructionTime
                 BP = vessel.BuildPoints;
             }
 
-            int EditorLevel = 0, LaunchSiteLvl = 0, EditorMax = 0, LaunchSiteMax = 0;
+            float LaunchSiteLvl = 0;
+            int EditorLevel = 0, EditorMax = 0, LaunchSiteMax = 0;
             int isVABVessel = 0;
             if (vessel.Type == BuildListVessel.ListType.None)
                 vessel.FindTypeFromLists();
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
                 EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.level;
+                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.fractionalLevel;
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
                 isVABVessel = 1;
@@ -274,12 +275,13 @@ namespace KerbalConstructionTime
             loadedMass = vessel.GetTotalMass();
             emptyMass = vessel.EmptyMass;
 
-            int EditorLevel, LaunchSiteLvl, EditorMax, LaunchSiteMax;
+            float LaunchSiteLvl;
+            int EditorLevel, EditorMax, LaunchSiteMax;
             int isVABVessel = 0;
             if (vessel.Type == BuildListVessel.ListType.VAB)
             {
                 EditorLevel = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
-                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.level;
+                LaunchSiteLvl = KCTGameStates.ActiveKSC.ActiveLPInstance.fractionalLevel;
                 EditorMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.VehicleAssemblyBuilding);
                 LaunchSiteMax = Utilities.GetBuildingUpgradeMaxLevel(SpaceCenterFacility.LaunchPad);
                 isVABVessel = 1;

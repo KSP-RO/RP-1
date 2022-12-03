@@ -122,23 +122,15 @@ namespace RP0
 
         public static void Load(ConfigNode node)
         {
-            toolings.Clear();
-
-            if (node == null)
-            {
-                return;
-            }
-
-            LoadNewDbFormat(node);
-
-            if (toolings.Count == 0)
-            {
-                LoadOldDbFormat(node);
-            }
+            LoadDBFromNode(node);
         }
 
-        private static void LoadNewDbFormat(ConfigNode node)
+        private static void LoadDBFromNode(ConfigNode node)
         {
+            toolings.Clear();
+
+            if (node == null) return;
+
             foreach (var typeNode in node.GetNodes("TYPE"))
             {
                 string type = typeNode.GetValue("type");
@@ -154,6 +146,11 @@ namespace RP0
                     toolings[type] = entries;
                 }
             }
+
+            // TODO: remove at a later date
+            bool migratedHPTooling = false;
+            node.TryGetValue("migratedHPTooling", ref migratedHPTooling);
+            if (!migratedHPTooling) MigrateHPTooling();
         }
 
         private static void LoadEntries(ConfigNode node, List<ToolingEntry> entries)
@@ -182,6 +179,8 @@ namespace RP0
                 var entries = typeToEntries.Value;
                 SaveEntries(typeNode, entries);
             }
+
+            node.AddValue("migratedHPTooling", true);    // TODO: remove at a later date
         }
 
         private static void SaveEntries(ConfigNode typeNode, List<ToolingEntry> entries)
@@ -194,40 +193,19 @@ namespace RP0
             }
         }
 
-        public static void LoadOldDbFormat(ConfigNode node)
+        /// <summary>
+        /// TODO: remove at a later date
+        /// Used for duplicating non-HP tooling as HP.
+        /// </summary>
+        private static void MigrateHPTooling()
         {
-            foreach (var c in node.GetNodes("TYPE"))
+            var keys = new List<string>(toolings.Keys);
+            foreach (string key in keys)
             {
-                string type = c.GetValue("type");
-                if (string.IsNullOrEmpty(type))
-                    continue;
-
-                var entries = new List<ToolingEntry>();
-
-                foreach (var n in c.GetNodes("DIAMETER"))
-                {
-                    float tmp = 0f;
-                    if (!n.TryGetValue("diameter", ref tmp))
-                        continue;
-
-                    var diameter = new ToolingEntry(tmp);
-
-                    var length = n.GetNode("LENGTHS");
-                    if (length != null)
-                    {
-                        foreach (ConfigNode.Value v in length.values)
-                        {
-                            if (float.TryParse(v.value, out tmp))
-                            {
-                                diameter.Children.Add(new ToolingEntry(tmp));
-                            }
-                        }
-                    }
-
-                    entries.Add(diameter);
-                }
-
-                toolings[type] = entries;
+                if (!key.StartsWith("Tank-Sep-", StringComparison.OrdinalIgnoreCase) &&
+                    !key.StartsWith("Tank-Int-", StringComparison.OrdinalIgnoreCase)) continue;
+                string newKey = $"{key}-HP";
+                toolings[newKey] = new List<ToolingEntry>(toolings[key]);   // Shallow copy should be good enough as long as we don't allow editing of tooling entries
             }
         }
     }

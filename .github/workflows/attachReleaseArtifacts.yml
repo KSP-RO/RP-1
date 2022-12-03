@@ -13,69 +13,52 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Get Branch
+        shell: bash
+        run: |
+          releaseBranch=${{ github.event.release.target_commitish }}
+          echo "Found branch ${releaseBranch}"
+          echo "tagged_branch=${releaseBranch}" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          
-      - name: Get Branch
-        shell: bash
-        run: |
-          releaseBranch=$(git branch -a --contains ${GITHUB_SHA} | head -n 2 | tail -n 1 | sed -e "s/\s*//" | sed -e "s/remotes\/origin\///")
-          echo "Found branch ${releaseBranch}"
-          echo "tagged_branch=${releaseBranch}" >> $GITHUB_ENV
+          ref: ${{ env.tagged_branch }}
         
       - name: Download required assemblies
         id: download-assemblies
-        shell: bash
-        env: 
-          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
-        run: |
-          curl https://ksp-ro.s3-us-west-2.amazonaws.com/KSPAssemblies-1.10.zip --output /tmp/bins.zip
-          KSP_DLL_PATH="/opt/ksp/assembly"
-          echo "::set-output name=ksp-dll-path::${KSP_DLL_PATH}"
-          mkdir -p "${KSP_DLL_PATH}"
-          unzip -P "${KSP_ZIP_PASSWORD}" '/tmp/bins.zip' -d "${KSP_DLL_PATH}"
-          rm '/tmp/bins.zip'          
-                    
-      - name: Build mod solution
-        env:
-          TAG_STRING: ${{ github.event.release.tag_name }}
-        run: |
-          VFULL="$(echo $TAG_STRING | sed -e s/v//)"
-          VMAJOR="$(echo $VFULL | cut -f 1 -d '.')"
-          VMINOR="$(echo $VFULL | cut -f 2 -d '.')"
-          VPATCH="$(echo $VFULL | cut -f 3 -d '.')"
-          VBUILD="$(echo $VFULL | cut -f 4 -d '.')"
-          
-          echo "Version string: $TAG_STRING"
-          echo "Version is $VMAJOR dot $VMINOR dot $VPATCH dot $VBUILD"
-          sed \
-            -e "s/CIBUILD_disabled/CIBUILD/" \
-            -e "s/@MAJOR@/$VMAJOR/" \
-            -e "s/@MINOR@/$VMINOR/" \
-            -e "s/@PATCH/$VPATCH/" \
-            -e "s/@BUILD@/$VBUILD/" \
-            -i ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
-            
-          grep CIBUILD ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
-          grep AssemblyFileVersion ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
-          
-          rm -f ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/*.dll
-          msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
-          cp -v ${GITHUB_WORKSPACE}/Source/ClearInputLocks/obj/x64/Release/ClearInputLocks.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/ClearInputLocks.dll
-          cp -v ${GITHUB_WORKSPACE}/Source/CC_RP0/obj/x64/Release/CC_RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/CC_RP0.dll
-          cp -v ${GITHUB_WORKSPACE}/Source/KerbalConstructionTime/obj/Release/RP0KCT.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0KCT.dll
-          cp -v ${GITHUB_WORKSPACE}/Source/obj/x64/Release/RP0.dll ${GITHUB_WORKSPACE}/GameData/RP-0/Plugins/RP0.dll
-        
-      - name: Setup python
-        uses: actions/setup-python@v2
+        uses: KSP-RO/BuildTools/download-assemblies@master
         with:
-          python-version: 3.0
+          KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+
+      - name: Update AssemblyInfo
+        uses: KSP-RO/BuildTools/update-assembly-info@master
+        with:
+          path: ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+          tag: ${{ github.event.release.tag_name }}
+
+      - name: Build mod solution
+        run: msbuild /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" ${GITHUB_WORKSPACE}/Source/RP0.sln
+        
+      - name: Update version file
+        uses: KSP-RO/BuildTools/update-version-file@master
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          path: ${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version
+
+      - name: Update Readme
+        uses: KSP-RO/BuildTools/update-version-in-readme@master
+        with:
+          path: ${GITHUB_WORKSPACE}/README.md
+          tag: ${{ github.event.release.tag_name }}
           
-      - name: Make metadata
-        run: |
-          python ${GITHUB_WORKSPACE}/makeMeta.py ${{ github.event.release.tag_name }}
+      - name: Update changelog file
+        uses: KSP-RO/BuildTools/process-changelog@master
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          body: ${{ github.event.release.body }}
+          path: ${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg
           
       - name: Assemble release
         id: assemble-release
@@ -87,7 +70,6 @@ jobs:
           echo "::set-output name=release-dir::${RELEASE_DIR}"
           cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
           cp -v -R "${GITHUB_WORKSPACE}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-0/LICENSE.md"
-          cp -v -R "${GITHUB_WORKSPACE}/RP-1.version" "${RELEASE_DIR}/GameData/RP-0/RP-1.version"
           cd ${RELEASE_DIR}
           zip -r RP-1-${{ github.event.release.tag_name }}.zip GameData
         
@@ -106,16 +88,16 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           
-      - name: Commit new version file
+      - name: Commit changes
         shell: bash
         env:
           TAG_STRING: ${{ github.event.release.tag_name }}
         run: |
           RELEASEBRANCH=${{ env.tagged_branch }}
-          echo "Checking out branch ${RELEASEBRANCH}"
-          git checkout $RELEASEBRANCH
-          git reset --hard origin/$RELEASEBRANCH
-          cp -v "${GITHUB_WORKSPACE}/RP-1.version" "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
           git add "${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version"
+          git add "${GITHUB_WORKSPACE}/README.md"
+          git add "${GITHUB_WORKSPACE}/GameData/RP-0/changelog.cfg"
           git commit -m "Update version to $TAG_STRING"
           git push origin $RELEASEBRANCH
+          git tag $TAG_STRING $RELEASEBRANCH --force
+          git push origin $TAG_STRING --force

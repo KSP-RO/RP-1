@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using Upgradeables;
 
 namespace KerbalConstructionTime
 {
@@ -14,6 +16,26 @@ namespace KerbalConstructionTime
         [Persistent] public int level = 0;
 
         /// <summary>
+        /// Used for creating custom pad sizes that lie somewhere between the full levels
+        /// </summary>
+        [Persistent] public float fractionalLevel = -1;
+
+        /// <summary>
+        /// Whether the pad is fully built. Does not account for destruction state.
+        /// </summary>
+        [Persistent] public bool isOperational = false;
+
+        /// <summary>
+        /// Max mass in tons that can be launched from this pad
+        /// </summary>
+        [Persistent] public float supportedMass = 0;
+
+        /// <summary>
+        /// Max size of the vessel that can be launched from this pad (width x height x width)
+        /// </summary>
+        [Persistent] public Vector3 supportedSize;
+
+        /// <summary>
         /// Name given to the launch pad. Is also used for associating rollout/reconditioning with pads.
         /// </summary>
         [Persistent] public string name = "LaunchPad";
@@ -24,6 +46,28 @@ namespace KerbalConstructionTime
         [Persistent] public string launchSiteName = "LaunchPad";
 
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
+
+        public float SupportedMass
+        {
+            get
+            {
+                EnsureMassAndSizeInitialized();
+                return supportedMass;
+            }
+        }
+
+        public Vector3 SupportedSize
+        {
+            get
+            {
+                EnsureMassAndSizeInitialized();
+                return supportedSize;
+            }
+        }
+
+        public string SupportedMassAsPrettyText => SupportedMass == float.MaxValue ? "unlimited" : $"{SupportedMass:#.#}t";
+
+        public string SupportedSizeAsPrettyText => SupportedSize.y == float.MaxValue ? "unlimited" : $"{SupportedSize.x:#.#}x{SupportedSize.y:#.#}m";
 
         public bool IsDestroyed
         {
@@ -36,17 +80,45 @@ namespace KerbalConstructionTime
             }
         }
 
-        public KCT_LaunchPad(string LPName, int lvl = 0)
+        /// <summary>
+        /// Used for deserializing from ConfigNodes.
+        /// </summary>
+        /// <param name="name"></param>
+        public KCT_LaunchPad(string name)
         {
-            name = LPName;
-            level = lvl;
+            this.name = name;
         }
 
-        public void Upgrade(int lvl)
+        /// <summary>
+        /// Creates a new pad with non-fractional level. Will also mark it as built/operational.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="lvl">0-based level</param>
+        public KCT_LaunchPad(string name, int lvl)
         {
-            //sets the new level, assumes completely repaired
+            this.name = name;
+            fractionalLevel = lvl;
             level = lvl;
-            UpdateLaunchpadDestructionState(true);
+            isOperational = true;
+
+            EnsureMassAndSizeInitialized();
+        }
+
+        /// <summary>
+        /// Creates a new pad with fractional level. Will NOT mark it as built/operational.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="lvl">0-based level, can be fractional</param>
+        /// <param name="supportedMass"></param>
+        /// <param name="supportedSize"></param>
+        public KCT_LaunchPad(string name, float lvl, float supportedMass, Vector3 supportedSize)
+        {
+            this.name = name;
+            fractionalLevel = lvl;
+            level = (int)lvl;
+            isOperational = false;
+            this.supportedMass = supportedMass;
+            this.supportedSize = supportedSize;
         }
 
         public bool Delete(out string failReason)
@@ -72,9 +144,9 @@ namespace KerbalConstructionTime
                 {
                     if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
                 }
-                foreach (FacilityUpgrade building in ksc.KSCTech)
+                foreach (PadConstruction building in ksc.PadConstructions)
                 {
-                    if (building.FacilityType == SpaceCenterFacility.LaunchPad && building.LaunchpadID > idx) building.LaunchpadID--;
+                    if (building.LaunchpadIndex > idx) building.LaunchpadIndex--;
                 }
 
                 ksc.LaunchPads.RemoveAt(idx);
@@ -104,11 +176,11 @@ namespace KerbalConstructionTime
                         rr.LaunchPadID = newName;
                     }
                 }
-                foreach (FacilityUpgrade up in ksc.KSCTech)
+                foreach (PadConstruction pc in ksc.PadConstructions)
                 {
-                    if (up.IsLaunchpad && up.LaunchpadID == ksc.LaunchPads.IndexOf(this))
+                    if (pc.LaunchpadIndex == ksc.LaunchPads.IndexOf(this))
                     {
-                        up.CommonName = newName;
+                        pc.Name = newName;
                     }
                 }
             }
@@ -119,17 +191,17 @@ namespace KerbalConstructionTime
         {
             try
             {
+                EnsureMassAndSizeInitialized();
+
                 KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}");
                 KCTGameStates.ActiveKSC.ActiveLaunchPadID = KCTGameStates.ActiveKSC.LaunchPads.IndexOf(this);
 
                 //set the level to this level
                 if (Utilities.CurrentGameIsCareer())
                 {
-                    foreach (Upgradeables.UpgradeableFacility facility in GetUpgradeableFacilityReferences())
-                    {
-                        KCTEvents.AllowedToUpgrade = true;
-                        facility.SetLevel(level);
-                    }
+                    UpgradeableFacility facility = GetUpgradeableFacilityReference();
+                    KCTEvents.AllowedToUpgrade = true;
+                    facility.SetLevel(level);
                 }
 
                 //set the destroyed state to this destroyed state
@@ -138,6 +210,23 @@ namespace KerbalConstructionTime
             catch (Exception ex)
             {
                 KCTDebug.LogError("Error while calling SetActive: " + ex);
+            }
+        }
+
+        private void EnsureMassAndSizeInitialized()
+        {
+            if (supportedMass == default || supportedSize == default)
+            {
+                var upgdFacility = GetUpgradeableFacilityReference();
+                if (upgdFacility == null) return;   // Looks like facility upgrades are not initialized yet. Need to retry at a later time.
+
+                float normalizedLevel = (float)level / (float)upgdFacility.MaxLevel;
+                float massLimit = GameVariables.Instance.GetCraftMassLimit(normalizedLevel, true);
+                Vector3 sizeLimit = GameVariables.Instance.GetCraftSizeLimit(normalizedLevel, true);
+
+                supportedMass = massLimit;
+                supportedSize = sizeLimit;
+                fractionalLevel = level;
             }
         }
 
@@ -163,6 +252,10 @@ namespace KerbalConstructionTime
             }
         }
 
+        /// <summary>
+        /// Will read the per-component destruction state of the LP and save that to the current pad item.
+        /// It is used for keeping track of which pads are damaged.
+        /// </summary>
         public void RefreshDestructionNode()
         {
             DestructionNode = new ConfigNode("DestructionState");
@@ -180,14 +273,23 @@ namespace KerbalConstructionTime
                 node.SetValue("intact", "True", false);     // Only update value if already exists
         }
 
-        public List<Upgradeables.UpgradeableFacility> GetUpgradeableFacilityReferences()
+        public static UpgradeableFacility GetUpgradeableFacilityReference()
         {
-            return ScenarioUpgradeableFacilities.protoUpgradeables[LPID].facilityRefs;
+            return ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(LPID, out var f) ? f.facilityRefs.FirstOrDefault() : null;
         }
 
-        List<DestructibleBuilding> GetDestructibleFacilityReferences()
+        public void MigrateFromOldState()
         {
+            if (level == -1) return;    // This is migrated in PadConstructionStorageItem instead
 
+            fractionalLevel = level;
+            if (level >= 0) isOperational = true;
+
+            EnsureMassAndSizeInitialized();
+        }
+
+        private List<DestructibleBuilding> GetDestructibleFacilityReferences()
+        {
             List<DestructibleBuilding> destructibles = new List<DestructibleBuilding>();
             foreach (KeyValuePair<string, ScenarioDestructibles.ProtoDestructible> kvp in ScenarioDestructibles.protoDestructibles)
             {

@@ -96,10 +96,17 @@
     <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <Private>False</Private>
     </Reference>
+    <Reference Include="RealFuels">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AirlaunchParams.cs" />
     <Compile Include="AirlaunchTechLevel.cs" />
+    <Compile Include="EngineersReportClobberer.cs" />
+    <Compile Include="PartCrewAssignment.cs" />
+    <Compile Include="BuildItems\PadConstruction.cs" />
+    <Compile Include="GUI\DialogGUIButtonWithTooltip.cs" />
     <Compile Include="GUI\GUI_Tooltip.cs" />
     <Compile Include="GUI\GUIStates.cs" />
     <Compile Include="GUI\GUI_Airlaunch.cs" />
@@ -123,10 +130,12 @@
     <Compile Include="Persistence\FacilityUpgradeStorageItem.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\KCTVesselData.cs" />
+    <Compile Include="Persistence\PadConstructionStorageItem.cs" />
     <Compile Include="Persistence\ReconRolloutStorageItem.cs" />
     <Compile Include="KCTObservableList.cs" />
     <Compile Include="SceneAddons\MainMenuAddon.cs" />
     <Compile Include="SimulationParams.cs" />
+    <Compile Include="Utilities\ECMHelper.cs" />
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="BuildItems\IKCTBuildItem.cs" />
     <Compile Include="InstallChecker.cs" />
@@ -168,6 +177,7 @@
     <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
     <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="KCTVesselTracker.cs" />
+    <Compile Include="KCTVesselTrackerEventHandler.cs" />
     <Compile Include="VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>

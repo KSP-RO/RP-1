@@ -23,9 +23,6 @@ namespace KerbalConstructionTime
 
         public static void DrawPresetWindow(int windowID)
         {
-            GUIStyle yellowText = new GUIStyle(GUI.skin.label);
-            yellowText.normal.textColor = Color.yellow;
-
             if (_workingPreset == null)
             {
                 SetNewWorkingPreset(new KCT_Preset(PresetManager.Instance.ActivePreset), false); //might need to copy instead of assign here
@@ -37,7 +34,7 @@ namespace KerbalConstructionTime
 
             //preset selector
             GUILayout.BeginVertical();
-            GUILayout.Label("Presets", yellowText, GUILayout.ExpandHeight(false));
+            GUILayout.Label("Presets", _yellowText, GUILayout.ExpandHeight(false));
             //preset toolbar in a scrollview
             _presetScrollView = GUILayout.BeginScrollView(_presetScrollView, GUILayout.Width(_presetPosition.width / 6f)); //TODO: update HighLogic.Skin.textArea
             string[] presetShortNames = PresetManager.Instance.PresetShortNames(true);
@@ -96,7 +93,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             //Features section
             GUILayout.BeginVertical();
-            GUILayout.Label("Features", yellowText);
+            GUILayout.Label("Features", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             _workingPreset.GeneralSettings.Enabled = GUILayout.Toggle(_workingPreset.GeneralSettings.Enabled, "Mod Enabled", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.BuildTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.BuildTimes, "Build Times", HighLogic.Skin.button);
@@ -117,7 +114,7 @@ namespace KerbalConstructionTime
 
 
             GUILayout.BeginVertical(); //Begin time settings
-            GUILayout.Label("Time Settings", yellowText);
+            GUILayout.Label("Time Settings", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
@@ -156,7 +153,7 @@ namespace KerbalConstructionTime
 
             //begin formula settings
             GUILayout.BeginVertical();
-            GUILayout.Label("Formula Settings (Advanced)", yellowText);
+            GUILayout.Label("Formula Settings (Advanced)", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Show/Hide Formulas"))
@@ -334,8 +331,8 @@ namespace KerbalConstructionTime
             GUILayout.EndVertical(); //end column 2
 
             GUILayout.BeginVertical(GUILayout.Width(100)); //Start general settings
-            GUILayout.Label("General Settings", yellowText);
-            GUILayout.Label("NOTE: Affects all saves!", yellowText);
+            GUILayout.Label("General Settings", _yellowText);
+            GUILayout.Label("NOTE: Affects all saves!", _yellowText);
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             GUILayout.Label("Max Timewarp");
             GUILayout.BeginHorizontal();

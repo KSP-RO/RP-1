@@ -14,6 +14,7 @@ namespace KerbalConstructionTime
         public List<BuildListVessel> SPHWarehouse = new List<BuildListVessel>();
         public SortedList<string, BuildListVessel> SPHPlans = new SortedList<string, BuildListVessel>();
         public List<FacilityUpgrade> KSCTech = new List<FacilityUpgrade>();
+        public List<PadConstruction> PadConstructions = new List<PadConstruction>();
         public List<int> VABUpgrades = new List<int>() { 0 };
         public List<int> SPHUpgrades = new List<int>() { 0 };
         public List<int> RDUpgrades = new List<int>() { 0, 0 }; //research/development
@@ -29,7 +30,6 @@ namespace KerbalConstructionTime
         {
             KSCName = name;
             RDUpgrades[1] = KCTGameStates.TechUpgradesTotal;
-            LaunchPads.Add(new KCT_LaunchPad("LaunchPad", Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad)));
 
             VABList.Added += added;
             VABList.Removed += removed;
@@ -54,14 +54,21 @@ namespace KerbalConstructionTime
             {
                 int count = 0;
                 foreach (KCT_LaunchPad lp in LaunchPads)
-                    if (lp.level >= 0) count++;
+                    if (lp.isOperational) count++;
                 return count;
             }
         }
 
         public bool IsEmpty => !VABList.Any() && !VABWarehouse.Any() && !SPHList.Any() && !SPHWarehouse.Any() && !KSCTech.Any() &&
                     VABUpgrades.All(i => i == 0) && SPHUpgrades.All(i => i == 0) && !Recon_Rollout.Any() && !AirlaunchPrep.Any() &&
-                    LaunchPads.Count < 2 && LaunchPads.All(lp => lp.level < 1);
+                    !PadConstructions.Any() && LaunchPads.Count < 2 && LaunchPads.All(lp => lp.level < 1);
+
+        public void EnsureStartingLaunchPad()
+        {
+            if (LaunchPads.Count > 0) return;
+
+            LaunchPads.Add(new KCT_LaunchPad("LaunchPad", 0));
+        }
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
             Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
@@ -140,7 +147,7 @@ namespace KerbalConstructionTime
         {
             if (KCTGameStates.ActiveKSC.LaunchPadCount < 2) return;
 
-            int activePadCount = LaunchPads.Count(p => p.level >= 0);
+            int activePadCount = LaunchPads.Count(p => p.isOperational);
             if (activePadCount < 2) return;
 
             int idx = KCTGameStates.ActiveKSC.ActiveLaunchPadID;
@@ -158,7 +165,7 @@ namespace KerbalConstructionTime
                     idx = ((idx - 1) % LaunchPads.Count + LaunchPads.Count) % LaunchPads.Count;
                 }
                 pad = LaunchPads[idx];
-            } while (pad.level < 0);
+            } while (!pad.isOperational);
 
             KCTGameStates.ActiveKSC.SwitchLaunchPad(idx);
         }
@@ -180,9 +187,9 @@ namespace KerbalConstructionTime
         /// <returns>The instance of the highest level LaunchPad</returns>
         public KCT_LaunchPad GetHighestLevelLaunchPad()
         {
-            KCT_LaunchPad highest = LaunchPads.First();
+            KCT_LaunchPad highest = LaunchPads.First(p => p.isOperational);
             foreach (var pad in LaunchPads)
-                if (pad.level > highest.level)
+                if (pad.isOperational && pad.level > highest.level)
                     highest = pad;
             return highest;
         }
@@ -278,6 +285,17 @@ namespace KerbalConstructionTime
             }
             node.AddNode(cnUpgradeables);
 
+            var cnPadConstructions = new ConfigNode("PadConstructions");
+            foreach (PadConstruction pc in PadConstructions)
+            {
+                var storageItem = new PadConstructionStorageItem();
+                storageItem.FromPadConstruction(pc);
+                var cn = new ConfigNode("PadConstruction");
+                cn = ConfigNode.CreateConfigFromObject(storageItem, cn);
+                cnPadConstructions.AddNode(cn);
+            }
+            node.AddNode(cnPadConstructions);
+
             var cnVABPlans = new ConfigNode("VABPlans");
             foreach (BuildListVessel blv in VABPlans.Values)
             {
@@ -352,6 +370,7 @@ namespace KerbalConstructionTime
             VABPlans.Clear();
             SPHPlans.Clear();
             KSCTech.Clear();
+            PadConstructions.Clear();
             Recon_Rollout.Clear();
             AirlaunchPrep.Clear();
             VABRates.Clear();
@@ -442,17 +461,6 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (node.HasNode("KSCTech"))
-            {
-                tmp = node.GetNode("KSCTech");
-                foreach (ConfigNode cn in tmp.GetNodes("UpgradingBuilding"))
-                {
-                    var storageItem = new FacilityUpgradeStorageItem();
-                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
-                    KSCTech.Add(storageItem.ToFacilityUpgrade());
-                }
-            }
-
             if (node.HasNode("LaunchPads"))
             {
                 LaunchPads.Clear();
@@ -462,7 +470,38 @@ namespace KerbalConstructionTime
                     var tempLP = new KCT_LaunchPad("LP0");
                     ConfigNode.LoadObjectFromConfig(tempLP, cn);
                     tempLP.DestructionNode = cn.GetNode("DestructionState");
+                    if (tempLP.fractionalLevel == -1) tempLP.MigrateFromOldState();
                     LaunchPads.Add(tempLP);
+                }
+            }
+
+            if (node.HasNode("PadConstructions"))
+            {
+                tmp = node.GetNode("PadConstructions");
+                foreach (ConfigNode cn in tmp.GetNodes("PadConstruction"))
+                {
+                    var storageItem = new PadConstructionStorageItem();
+                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    PadConstructions.Add(storageItem.ToPadConstruction());
+                }
+            }
+
+            if (node.HasNode("KSCTech"))
+            {
+                tmp = node.GetNode("KSCTech");
+                foreach (ConfigNode cn in tmp.GetNodes("UpgradingBuilding"))
+                {
+                    var storageItem = new FacilityUpgradeStorageItem();
+                    ConfigNode.LoadObjectFromConfig(storageItem, cn);
+                    if (storageItem.isLaunchpad)
+                    {
+                        PadConstructionStorageItem migratedItem = PadConstructionStorageItem.MigrateFromOldFacilityUpgrade(this, storageItem);
+                        PadConstructions.Add(migratedItem.ToPadConstruction());
+                    }
+                    else
+                    {
+                        KSCTech.Add(storageItem.ToFacilityUpgrade());
+                    }
                 }
             }
 

@@ -21,12 +21,6 @@ namespace RP0
                 // This PartModule is also used on structural bits which may not have a RF tank
                 if (rfTank != null && rfTank.type is string rfType)
                 {
-                    if (rfType.EndsWith("-HP"))
-                    {
-                        // Highly Pressurised tanks currently share the tooling with regular tanks
-                        rfType = rfType.Substring(0, rfType.Length - 3);
-                    }
-
                     return rfType;
                 }
 
@@ -77,7 +71,7 @@ namespace RP0
                 if (!string.Equals(toolingDef.costReducers, costReducers))
                 {
                     costReducers = toolingDef.costReducers;
-                    reducerList = null;    // force base class to recalculate the list from string
+                    reducerDict = null;    // force base class to recalculate the list from string
                 }
             }
         }
@@ -89,6 +83,7 @@ namespace RP0
             object host = null;
             bool isCone = false;
             bool isHollow = false;
+            bool isTruss = false;
 
             if (procTank == null)
             {
@@ -101,24 +96,27 @@ namespace RP0
                 procShape = shapeName switch
                 {
                     "Smooth Cone" => part.Modules["ProceduralShapeBezierCone"],
+                    "Smooth Cone Offset" => part.Modules["ProceduralShapeBezierOffset"],
                     "Cone" => part.Modules["ProceduralShapeCone"],
                     "Fillet Cylinder" => part.Modules["ProceduralShapePill"],
                     "Polygon" => part.Modules["ProceduralShapePolygon"],
                     "Hollow Cylinder" => part.Modules["ProceduralShapeHollowCylinder"],
                     "Hollow Cone" => part.Modules["ProceduralShapeHollowCone"],
                     "Hollow Fillet Cylinder" => part.Modules["ProceduralShapeHollowPill"],
+                    "Truss" => part.Modules["ProceduralShapeHollowTruss"],
                     _ => part.Modules["ProceduralShapeCylinder"]
                 };
                 isCone = shapeName.Contains("Cone");
                 isHollow = shapeName.Contains("Hollow");
+                isTruss = shapeName.Contains("Truss");
 
                 if (procShape == null)
                 {
                     Debug.LogError("[ModuleTooling] Could not find proc SHAPE to bind to");
                     return;
                 }
-                length = procShape.Fields["length"];
-                diam1 = GetPrimaryDiameterFieldForShape(procShape, isCone, isHollow);
+                length = GetRealLengthFieldForShape(procShape, isTruss);
+                diam1 = GetPrimaryDiameterFieldForShape(procShape, isCone, isHollow, isTruss);
                 diam2 = GetSecondaryDiameterFieldForShape(procShape, isCone, isHollow);
                 host = procShape;
             } else if (TTank == TankType.ROTank)
@@ -138,13 +136,21 @@ namespace RP0
             len = length.GetValue<float>(host);
         }
 
-        private static BaseField GetPrimaryDiameterFieldForShape(PartModule shape, bool isCone, bool isHollow)
-        => (isCone, isHollow) switch
+        private BaseField GetRealLengthFieldForShape(PartModule shape, bool isTruss)
+        => isTruss switch
         {
-            (false, false) => shape.Fields["diameter"],
-            (false, true)  => shape.Fields["outerDiameter"],
-            (true, false)  => shape.Fields["topDiameter"],
-            (true, true)   => shape.Fields["topOuterDiameter"]
+            (true) => shape.Fields["realLength"],
+            (_) => shape.Fields["length"]
+        };
+
+        private static BaseField GetPrimaryDiameterFieldForShape(PartModule shape, bool isCone, bool isHollow, bool isTruss)
+        => (isCone, isHollow, isTruss) switch
+        {
+            (_, _, true)      => shape.Fields["rodDiameter"],
+            (false, false, _) => shape.Fields["diameter"],
+            (false, true, _)  => shape.Fields["outerDiameter"],
+            (true, false, _)  => shape.Fields["topDiameter"],
+            (true, true, _)   => shape.Fields["topOuterDiameter"]
         };
 
         private static BaseField GetSecondaryDiameterFieldForShape(PartModule shape, bool isCone, bool isHollow)

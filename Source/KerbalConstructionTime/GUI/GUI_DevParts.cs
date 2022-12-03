@@ -81,6 +81,7 @@ namespace KerbalConstructionTime
             color[2] = color[0];
             color[3] = color[0];
             _devPartsBackground.SetPixels(color);
+            _devPartsBackground.Apply();
 
             _devPartsToggle.normal.background = _devPartsBackground;
             _devPartsToggle.hover.background = _devPartsBackground;

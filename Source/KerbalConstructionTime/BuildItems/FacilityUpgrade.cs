@@ -8,10 +8,15 @@ namespace KerbalConstructionTime
     public class FacilityUpgrade : IKCTBuildItem
     {
         public SpaceCenterFacility? FacilityType;
-        public int UpgradeLevel, CurrentLevel, LaunchpadID = 0;
+        public int UpgradeLevel, CurrentLevel;
         public string Id, CommonName;
         public double Progress = 0, BP = 0, Cost = 0;
-        public bool UpgradeProcessed = false, IsLaunchpad = false;
+        public bool UpgradeProcessed = false;
+
+        [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
+        public int LaunchpadID = 0;
+        [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
+        public bool IsLaunchpad = false;
 
         private KSCItem _ksc = null;
 
@@ -33,14 +38,6 @@ namespace KerbalConstructionTime
         public void Downgrade()
         {
             KCTDebug.Log($"Downgrading {CommonName} to level {CurrentLevel}");
-            if (IsLaunchpad)
-            {
-                KSC.LaunchPads[LaunchpadID].level = CurrentLevel;
-                if (KCTGameStates.ActiveKSCName != KSC.KSCName || KCTGameStates.ActiveKSC.ActiveLaunchPadID != LaunchpadID)
-                {
-                    return;
-                }
-            }
             foreach (UpgradeableFacility facility in GetFacilityReferencesById(Id))
             {
                 KCTEvents.AllowedToUpgrade = true;
@@ -51,17 +48,6 @@ namespace KerbalConstructionTime
         public void Upgrade()
         {
             KCTDebug.Log($"Upgrading {CommonName} to level {UpgradeLevel}");
-            if (IsLaunchpad)
-            {
-                KSC.LaunchPads[LaunchpadID].level = UpgradeLevel;
-                KSC.LaunchPads[LaunchpadID].DestructionNode = new ConfigNode("DestructionState");
-                if (KCTGameStates.ActiveKSCName != KSC.KSCName || KCTGameStates.ActiveKSC.ActiveLaunchPadID != LaunchpadID)
-                {
-                    UpgradeProcessed = true;
-                    return;
-                }
-                KSC.LaunchPads[LaunchpadID].Upgrade(UpgradeLevel);
-            }
 
             List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(Id);
             if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
@@ -110,10 +96,7 @@ namespace KerbalConstructionTime
             {
                 if (_ksc == null)
                 {
-                    if (!IsLaunchpad)
-                        _ksc = KCTGameStates.KSCs.Find(ksc => ksc.KSCTech.Find(ub => ub.Id == this.Id) != null);
-                    else
-                        _ksc = KCTGameStates.KSCs.Find(ksc => ksc.KSCTech.Find(ub => ub.Id == this.Id && ub.IsLaunchpad && ub.LaunchpadID == this.LaunchpadID) != null);
+                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.KSCTech.Find(ub => ub.Id == this.Id) != null);
                 }
                 return _ksc;
             }
@@ -131,7 +114,9 @@ namespace KerbalConstructionTime
             return rateTotal;
         }
 
-        public double GetTimeLeft() => (BP - Progress) / ((IKCTBuildItem)this).GetBuildRate();
+        public double GetFractionComplete() => Progress / BP;
+
+        public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
 
         public bool IsComplete() => Progress >= BP;
 

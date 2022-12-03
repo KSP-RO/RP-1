@@ -31,8 +31,8 @@
         "entry_cost": "1",
         "category": "RCS",
         "info": "RCS",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1963",
+        "technology": "improvedFlightControl",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -41,9 +41,11 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": "",
-        "entry_cost_mods": "1",
-        "identical_part_name": "",
-        "module_tags": []
+        "entry_cost_mods": "1000, rcsMult",
+        "identical_part_name": "RCS_275",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx1_28_45",
@@ -88,7 +90,7 @@
         "engine_config": "",
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "RCS_550",
         "module_tags": []
     },
     {
@@ -146,8 +148,8 @@
         "entry_cost": "1",
         "category": "RCS",
         "info": "RCS",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1963",
+        "technology": "improvedFlightControl",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -156,9 +158,11 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": "",
-        "entry_cost_mods": "1",
-        "identical_part_name": "",
-        "module_tags": []
+        "entry_cost_mods": "1000, rcsMult",
+        "identical_part_name": "RCS_275",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx2_28_45",
@@ -203,7 +207,7 @@
         "engine_config": "",
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "RCS_550",
         "module_tags": []
     },
     {
@@ -261,8 +265,8 @@
         "entry_cost": "1",
         "category": "RCS",
         "info": "RCS",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1963",
+        "technology": "improvedFlightControl",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -271,9 +275,11 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": "",
-        "entry_cost_mods": "1",
-        "identical_part_name": "",
-        "module_tags": []
+        "entry_cost_mods": "1000, rcsMult",
+        "identical_part_name": "RCS_275",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx3_28_45",
@@ -318,7 +324,7 @@
         "engine_config": "",
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "RCS_550",
         "module_tags": []
     },
     {
@@ -373,11 +379,11 @@
         "description": "",
         "mod": "Internal RCS",
         "cost": "40",
-        "entry_cost": "1",
+        "entry_cost": 1,
         "category": "RCS",
         "info": "RCS",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1963",
+        "technology": "improvedFlightControl",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -386,9 +392,11 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": "",
-        "entry_cost_mods": "1",
-        "identical_part_name": "",
-        "module_tags": []
+        "entry_cost_mods": "1000, rcsMult",
+        "identical_part_name": "RCS_275",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx4_28_45",
@@ -433,7 +441,7 @@
         "engine_config": "",
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "RCS_550",
         "module_tags": []
     },
     {
@@ -491,8 +499,8 @@
         "entry_cost": "1",
         "category": "RCS",
         "info": "RCS",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1963",
+        "technology": "improvedFlightControl",
         "era": "00-START",
         "ro": true,
         "rp0": true,
@@ -501,9 +509,11 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": "",
-        "entry_cost_mods": "1",
-        "identical_part_name": "",
-        "module_tags": []
+        "entry_cost_mods": "1000, rcsMult",
+        "identical_part_name": "RCS_275",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx5_28_45",
@@ -548,7 +558,7 @@
         "engine_config": "",
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
-        "identical_part_name": "",
+        "identical_part_name": "RCS_550",
         "module_tags": []
     },
     {

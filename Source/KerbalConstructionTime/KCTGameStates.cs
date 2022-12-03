@@ -25,7 +25,7 @@ namespace KerbalConstructionTime
         public static int MiscellaneousTempUpgrades = 0, LastKnownTechCount = 0;
         public static int UpgradesResetCounter = 0;
         public static BuildListVessel LaunchedVessel, EditedVessel, RecoveredVessel;
-        public static List<CrewedPart> LaunchedCrew = new List<CrewedPart>();
+        public static List<PartCrewAssignment> LaunchedCrew = new List<PartCrewAssignment>();
 
         public static ToolbarControl ToolbarControl;
 
@@ -37,6 +37,8 @@ namespace KerbalConstructionTime
         public static double EditorRolloutCosts = 0;
         public static double EditorRolloutTime = 0;
         public static double EditorIntegrationCosts = 0;
+        public static double EditorUnlockCosts = 0;
+        public static List<string> EditorRequiredTechs = new List<string>();
 
         public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();
 
@@ -74,7 +76,10 @@ namespace KerbalConstructionTime
         public static void InitAndClearTechList()
         {
             TechList = new KCTObservableList<TechItem>();
-            TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
+            if (KerbalConstructionTime.Instance != null)    // Can be null/destroyed in the main menu scene
+            {
+                TechList.Updated += KerbalConstructionTime.Instance.ForceUpdateRndScreen;
+            }
         }
 
         public static void ClearVesselEditMode()
@@ -90,39 +95,19 @@ namespace KerbalConstructionTime
             EditorLogic.fetch?.Unlock("KCTEditorMouseLock");
         }
 
+        /// <summary>
+        /// API for creating new launch pads. ConfigurableStart mod is know to use this.
+        /// </summary>
+        /// <param name="padName"></param>
+        /// <param name="padLevel"></param>
         public static void CreateNewPad(string padName, int padLevel)
         {
-            KCT_LaunchPad lp = ActiveKSC.ActiveLPInstance;
-
-            if (lp.GetUpgradeableFacilityReferences()?[0]?.UpgradeLevels is UpgradeableObject.UpgradeLevel[] padUpgdLvls)
-            {
-                padLevel = UnityEngine.Mathf.Clamp(padLevel, 1, padUpgdLvls.Length);
-                ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
-            }
+            ActiveKSC.LaunchPads.Add(new KCT_LaunchPad(padName, padLevel));
         }
 
         public static void ClearLaunchpadList()
         {
             ActiveKSC.LaunchPads.Clear();
-        }
-    }
-
-    public class CrewedPart
-    {
-        public List<ProtoCrewMember> CrewList { get; set; }
-        public uint PartID { get; set; }
-
-        public CrewedPart(uint ID, List<ProtoCrewMember> crew)
-        {
-            PartID = ID;
-            CrewList = crew;
-        }
-
-        public CrewedPart FromPart(Part part, List<ProtoCrewMember> crew)
-        {
-            PartID = part.flightID;
-            CrewList = crew;
-            return this;
         }
     }
 }

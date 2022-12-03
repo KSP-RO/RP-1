@@ -23,6 +23,8 @@ namespace RP0
         private ControlLockerUtils.LockLevel _cachedLockResult = ControlLockerUtils.LockLevel.Unlocked;
         private const string LockID = "RP0ControlLocker";
         private float _maxMass, _vesselMass;
+        private bool _isLimitedByNonInterplanetary;
+        private bool _isStartFinished;
 
         private const float UpdateFrequency = 1; // Default check interval
 
@@ -69,12 +71,12 @@ namespace RP0
             if (v1 && v2 && v2.loaded) v2.OnPostAutopilotUpdate += FlightInputModifier;
         }
 
-        protected void OnVesselModifiedHandler(Vessel v) => _requested = true;
+        protected void OnVesselModifiedHandler(Vessel v) => _requested = _isStartFinished;    // Other mods (looking at you B9PS!) can fire this event before everything has finished initializing. Need to ignore those until we have done our own first avionics check.
         private void OnRailsHandler(Vessel v) => _onRails = true;
         private void OffRailsHandler(Vessel v)
         {
             _onRails = false;
-            if (!CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(Vessel.Parts, true, out float _, out float _) != ControlLockerUtils.LockLevel.Unlocked)
+            if (!CheatOptions.InfiniteElectricity && ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _, out _, out _) != ControlLockerUtils.LockLevel.Unlocked)
                 DisableAutopilot();
         }
 
@@ -95,7 +97,7 @@ namespace RP0
             if (Vessel is null)
                 return _cachedLockResult = ControlLockerUtils.LockLevel.Unlocked;
             if (_requested)
-                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass);
+                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass, out _isLimitedByNonInterplanetary);
             _requested = false;
             return _cachedLockResult;
         }
@@ -109,10 +111,12 @@ namespace RP0
                 yield return new WaitForFixedUpdate();
             } while ((FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.packed) && i++ < maxFramesWaited);
 
+            _isStartFinished = true;
+
             while (HighLogic.LoadedSceneIsFlight)
             {
                 yield return new WaitForSeconds(UpdateFrequency);
-                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass);
+                _cachedLockResult = CheatOptions.InfiniteElectricity ? ControlLockerUtils.LockLevel.Unlocked : ControlLockerUtils.ShouldLock(Vessel.Parts, true, out _maxMass, out _vesselMass, out _isLimitedByNonInterplanetary);
             }
         }
 
@@ -128,7 +132,12 @@ namespace RP0
                 Vessel = FlightGlobals.ActiveVessel;
                 _masterMechJeb = null;
             }
+
             ControlLockerUtils.LockLevel lockLevel = ShouldLock();
+
+            if (_isLimitedByNonInterplanetary)
+                GameplayTips.Instance.ShowInterplanetaryAvionicsReminder();
+
             if (lockLevel != _oldLockLevel)
             {
                 if (_oldLockLevel != ControlLockerUtils.LockLevel.Unlocked)

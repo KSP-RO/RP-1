@@ -27,10 +27,10 @@ namespace RP0.ProceduralAvionics
         public float controllableMass = -1;
 
         [KSPField(isPersistant = true, guiActiveEditor = true, guiName = "Configuration", groupName = PAWGroup, groupDisplayName = PAWGroup), UI_ChooseOption(scene = UI_Scene.Editor)]
-        public string avionicsConfigName;
+        public string avionicsConfigName = string.Empty;
 
         [KSPField(isPersistant = true)]
-        public string avionicsTechLevel;
+        public string avionicsTechLevel = string.Empty;
 
         [KSPField(guiActiveEditor = true, guiName = "Avionics Utilization", groupName = PAWGroup)]
         public string utilizationDisplay;
@@ -47,9 +47,9 @@ namespace RP0.ProceduralAvionics
         [KSPField(guiActiveEditor = true, guiName = "Configure", groupName = PAWGroup)]
         [UI_Toggle(enabledText = "Hide GUI", disabledText = "Show GUI")]
         [NonSerialized]
-        public bool showGUI;        
+        public bool showGUI;
 
-        public bool IsScienceCore => CurrentProceduralAvionicsTechNode.massExponent == 0 && CurrentProceduralAvionicsTechNode.powerExponent == 0 && CurrentProceduralAvionicsTechNode.costExponent == 0;
+        public bool IsScienceCore => CurrentProceduralAvionicsTechNode.IsScienceCore;
 
         private static bool _configsLoaded = false;
 
@@ -60,7 +60,8 @@ namespace RP0.ProceduralAvionics
         private PartModule _procPartPM;
         private PartModule _roTankPM;
         private ModuleFuelTanks _rfPM;
-        private FuelTankList _tankList;
+        private System.Collections.ObjectModel.KeyedCollection<string, FuelTank> _tankList = null;
+        private Dictionary<string, FuelTank> _tanksDict = null;
         private FuelTank _ecTank;
         private MethodInfo _seekVolumeMethod;
         private FieldInfo _procPartMinVolumeField;
@@ -117,6 +118,7 @@ namespace RP0.ProceduralAvionics
 
         private float GetAvionicsMass() => GetAvionicsMass(GetInternalMassLimit());
         private float GetAvionicsMass(float controllableMass) => GetPolynomial(controllableMass, CurrentProceduralAvionicsTechNode.massExponent, CurrentProceduralAvionicsTechNode.massConstant, CurrentProceduralAvionicsTechNode.massFactor) / 1000f;
+        private static float GetAvionicsMass(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.massExponent, techNode.massConstant, techNode.massFactor) / 1000f;
         private float GetAvionicsCost() => GetPolynomial(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode.costExponent, CurrentProceduralAvionicsTechNode.costConstant, CurrentProceduralAvionicsTechNode.costFactor);
         private float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
         private float GetShieldedAvionicsMass() => GetShieldedAvionicsMass(GetInternalMassLimit());
@@ -128,7 +130,8 @@ namespace RP0.ProceduralAvionics
 
         private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor;
 
-        protected override float GetEnabledkW() => GetPolynomial(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode.powerExponent, CurrentProceduralAvionicsTechNode.powerConstant, CurrentProceduralAvionicsTechNode.powerFactor) / 1000f;
+        protected override float GetEnabledkW() => GetEnabledkW(CurrentProceduralAvionicsTechNode, GetInternalMassLimit());
+        private static float GetEnabledkW(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.powerExponent, techNode.powerConstant, techNode.powerFactor) / 1000f;
         protected override float GetDisabledkW() => GetEnabledkW() * CurrentProceduralAvionicsTechNode.disabledPowerFactor;
 
         private static float GetPolynomial(float value, float exponent, float constant, float factor) => (Mathf.Pow(value, exponent) + constant) * factor;
@@ -207,9 +210,19 @@ namespace RP0.ProceduralAvionics
             }
 
             _rfPM = part.Modules.GetModule<ModuleFuelTanks>();
-            var fiTanks = typeof(ModuleFuelTanks).GetField("tankList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            _tankList = (FuelTankList)fiTanks.GetValue(_rfPM);
-            _ecTank = _tankList["ElectricCharge"];
+            FieldInfo fiDict = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (fiDict != null)
+            {
+                _tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(_rfPM);
+                _ecTank = _tanksDict["ElectricCharge"];
+            }
+            else
+            {
+                Debug.Log("[RP-0] Could not find tank dictionary on RF part module, falling back to FuelTankList");
+                FieldInfo fiTanks = typeof(ModuleFuelTanks).GetField("tankList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+                _tankList = (System.Collections.ObjectModel.KeyedCollection<string, FuelTank>)fiTanks.GetValue(_rfPM);
+                _ecTank = _tankList["ElectricCharge"];
+            }
 
             _seekVolumeMethod = GetSeekVolumeMethod();
         }
@@ -578,6 +591,54 @@ namespace RP0.ProceduralAvionics
                     part.RemoveModule(module);
             }
             Log($"Setting science container to {(CurrentProceduralAvionicsTechNode.hasScienceContainer ? "enabled." : "disabled.")}");
+        }
+
+        public virtual bool Validate(out string validationError, out bool canBeResolved, out float costToResolve, out string techToResolve)
+        {
+            validationError = null;
+            canBeResolved = false;
+            costToResolve = 0;
+            techToResolve = null;
+
+            if (CurrentProceduralAvionicsConfig == null && !string.IsNullOrEmpty(avionicsConfigName))
+                CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
+
+            if (!CurrentProceduralAvionicsTechNode.IsAvailable)
+            {
+                validationError = $"unlock tech {CurrentProceduralAvionicsTechNode.TechNodeTitle}";
+                techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
+                return false;
+            }
+
+            int unlockCost = ProceduralAvionicsTechManager.GetUnlockCost(CurrentProceduralAvionicsConfig.name, CurrentProceduralAvionicsTechNode);
+            if (unlockCost == 0) return true;
+
+            canBeResolved = true;
+            costToResolve = unlockCost;
+            validationError = $"purchase config {CurrentProceduralAvionicsTechNode.dispName}";
+
+            return false;
+        }
+
+        public virtual bool ResolveValidationError()
+        {
+            return PurchaseConfig(avionicsConfigName, CurrentProceduralAvionicsTechNode);
+        }
+
+        private static bool PurchaseConfig(string curCfgName, ProceduralAvionicsTechNode techNode)
+        {
+            bool success = false;
+            if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
+            {
+                success = ProceduralAvionicsTechManager.PurchaseConfig(curCfgName, techNode);
+            }
+
+            if (success)
+            {
+                ProceduralAvionicsTechManager.SetMaxUnlockedTech(curCfgName, techNode.name);
+            }
+
+            return success;
         }
     }
 }

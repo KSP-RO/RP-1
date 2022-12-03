@@ -2186,6 +2186,27 @@
         "module_tags": []
     },
     {
+        "name": "SXTVTOLturboFan",
+        "title": "F-135 Turbofan",
+        "description": "",
+        "mod": "SXT",
+        "cost": "1379",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "Engine",
+        "year": "2015",
+        "technology": "scramjetEngines",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "100000,B9_Engine_Jet_Turbofan_F119",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "SXTWaxWing",
         "title": "Waxwing Kick Motor",
         "description": "Small solid kick motor for circularizing payloads in orbit. Third stage of the Black Arrow launch vehicle. 29.4kN average thrust. Diameter: [0.71 m]. Plume configured by RealPlume.",

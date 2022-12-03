@@ -4,7 +4,7 @@
         "title": "Pratt & Whitney F-135 turbofan",
         "description": "",
         "mod": "QuizTech Aero",
-        "cost": "1349",
+        "cost": 1379,
         "entry_cost": "0",
         "category": "FLIGHT",
         "info": "Engine",
@@ -16,7 +16,7 @@
         "spacecraft": "F-35B",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "100000,B9_Engine_Jet_Turbofan_F119",
+        "entry_cost_mods": "SXTVTOLturboFan",
         "identical_part_name": "",
         "module_tags": []
     }

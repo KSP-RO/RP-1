@@ -7148,6 +7148,27 @@
         "module_tags": []
     },
     {
+        "name": "R-103",
+        "title": "R-103",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "MR-1",
+        "engine_config": "R103",
+        "upgrade": false,
+        "entry_cost_mods": "0",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "R-40A",
         "title": "R-40A",
         "description": "",

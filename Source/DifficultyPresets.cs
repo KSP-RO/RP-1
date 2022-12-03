@@ -44,6 +44,9 @@ namespace RP0
         [GameParameters.CustomParameterUI("Enable X-Plane contracts", toolTip = "Disable this option if don't intend to build and fly any planes at all. Will slightly increase rewards of other contracts in the early game.", newGameOnly = true)]
         public bool PlaneContractsEnabled = true;
 
+        [GameParameters.CustomParameterUI("Include craft files", toolTip = "", newGameOnly = true)]
+        public bool IncludeCraftFiles = true;
+
         [GameParameters.CustomParameterUI("Crews require proficiency training", toolTip = "Astronauts must complete lengthy proficiency training prior to their first launch in each cockpit or capsule.")]
         public bool IsTrainingEnabled = true;
 
@@ -94,6 +97,7 @@ namespace RP0
             switch (preset)
             {
                 case GameParameters.Preset.Easy:
+                    IncludeCraftFiles = true;
                     IsTrainingEnabled = false;
                     IsMissionTrainingEnabled = false;
                     IsRetirementEnabled = false;
@@ -101,6 +105,7 @@ namespace RP0
                     IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Normal:
+                    IncludeCraftFiles = true;
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
@@ -108,6 +113,7 @@ namespace RP0
                     IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Moderate:
+                    IncludeCraftFiles = false;
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;
@@ -115,6 +121,7 @@ namespace RP0
                     IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Hard:
+                    IncludeCraftFiles = false;
                     IsTrainingEnabled = true;
                     IsMissionTrainingEnabled = true;
                     IsRetirementEnabled = true;

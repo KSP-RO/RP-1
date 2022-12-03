@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace RP0
                 }
 
                 ClobberRealChuteDefaultSettings();
+                CopyCraftFiles();
             }
         }
 
@@ -64,6 +66,35 @@ namespace RP0
             else
             {
                 Debug.Log("[RP-0] FirstStart: RealChute not found");
+            }
+        }
+
+        private static void CopyCraftFiles()
+        {
+            try
+            {
+                if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IncludeCraftFiles)
+                {
+                    string rp1ShipsPath = $"{KSPUtil.ApplicationRootPath}GameData/RP-0/Craft Files/";
+                    string saveShipsPath = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/";
+                    var subfolders = new[] { "SPH/", "VAB/" };
+                    foreach (string sf in subfolders)
+                    {
+                        string sourceFolderPath = rp1ShipsPath + sf;
+                        string destFolderPath = saveShipsPath + sf;
+
+                        var srcDInf = new DirectoryInfo(sourceFolderPath);
+                        foreach (FileInfo fi in srcDInf.GetFiles())
+                        {
+                            string destFilePath = destFolderPath + fi.Name;
+                            fi.CopyTo(destFilePath, true);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
             }
         }
     }

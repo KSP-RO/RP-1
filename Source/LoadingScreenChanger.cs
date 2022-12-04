@@ -10,12 +10,15 @@ namespace RP0
     class LoadingScreenChanger : MonoBehaviour
     {
         public const string TipFilePath = @"GameData/RP-0/PluginData/LoadingScreenTips.txt";
+        public const string ScreenshotsFolderPath = @"GameData/RP-0/PluginData/Screens";
+
         protected bool done = false;
 
         protected void Awake()
         {
             DontDestroyOnLoad(this);
         }
+
 
         protected void Update()
         {
@@ -25,40 +28,30 @@ namespace RP0
             if (LoadingScreen.Instance.Screens.Count < 1)
                 return;
 
-            //foreach (LoadingScreen.LoadingScreenState state in LoadingScreen.Instance.Screens)
-            //{
-            //    Debug.Log("*pRP1 found a state. Disp/In/Out" + state.displayTime + ", " + state.fadeInTime + ", " + state.fadeOutTime
-            //        + "\nHas " + state.screens.Length + " screens. Tips:");
-            //    string s = string.Empty;
-            //    foreach (string t in state.tips)
-            //        s += " " + t;
-            //    Debug.Log(s);
-            //}
-
             try
             {
-                Debug.Log("[RP-0]: Replacing loading screens.");
-                int loadingScreenIdx = Versioning.version_minor < 4 ? 1 : 3;    // KSP 1.4+ has 2 extra loading screens
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                Debug.Log("[RP-0] Replacing loading screens.");
 
+                const int loadingScreenIdx = 3;
                 LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[loadingScreenIdx];
 
                 List<Texture2D> textures = new List<Texture2D>();
 
-                DirectoryInfo di = new DirectoryInfo(KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/Screens");
+                DirectoryInfo di = new DirectoryInfo(KSPUtil.ApplicationRootPath + ScreenshotsFolderPath);
                 foreach (FileInfo fi in di.GetFiles())
                 {
-                    if (fi.FullName.ToLowerInvariant().EndsWith(".dds"))
+                    if (fi.FullName.EndsWith(".dds", StringComparison.OrdinalIgnoreCase))
                     {
-                        //Debug.Log("Loading " + fi.FullName);
                         try
                         {
                             Texture2D t = LoadDDS(fi.FullName);
                             if (t != null)
                                 textures.Add(t);
                         }
-                        catch (Exception e)
+                        catch (Exception ex)
                         {
-                            Debug.LogError("[RP-0]: Exception loading " + fi.FullName + ":\n" + e);
+                            Debug.LogError($"[RP-0] Exception loading {fi.FullName}:\n{ex}");
                         }
                     }
                 }
@@ -76,18 +69,16 @@ namespace RP0
                         sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
                     }
 
-                    string msgStr = "[RP-0]: Loading screens replaced.";
-
-                    Debug.Log(msgStr);
+                    Debug.Log($"[RP-0] Loading screens replaced in {sw.ElapsedMilliseconds} ms.");
                 }
                 else
                 {
-                    Debug.LogError("[RP-0]: No screens found in RP-0/PluginData/Screens!");
+                    Debug.LogError("[RP-0] No screens found in RP-0/PluginData/Screens!");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Debug.LogError("[RP-0]: Patching failed: with error " + error + ", exception " + e);
+                Debug.LogError($"[RP-0] Patching failed: with error {error}, exception {ex}");
             }
 
             GameObject.Destroy(this);
@@ -97,9 +88,10 @@ namespace RP0
 
         private string[] LoadTips()
         {
-            if (!File.Exists(TipFilePath)) return null;
+            string fullPath = KSPUtil.ApplicationRootPath + TipFilePath;
+            if (!File.Exists(fullPath)) return null;
 
-            return File.ReadAllLines(TipFilePath);
+            return File.ReadAllLines(fullPath);
         }
 
         // DDS Loader by Sarbian

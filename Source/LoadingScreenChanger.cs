@@ -30,11 +30,14 @@ namespace RP0
 
             try
             {
+                const int loadingScreenIdx = 3;
+#if DEBUG
+                LoadingScreen.LoadingScreenState lss = LoadingScreen.Instance.Screens[loadingScreenIdx];
+                lss.screens = new Texture2D[0];
+                return;
+#endif
                 var sw = System.Diagnostics.Stopwatch.StartNew();
                 Debug.Log("[RP-0] Replacing loading screens.");
-
-                const int loadingScreenIdx = 3;
-                LoadingScreen.LoadingScreenState origState = LoadingScreen.Instance.Screens[loadingScreenIdx];
 
                 List<Texture2D> textures = new List<Texture2D>();
 

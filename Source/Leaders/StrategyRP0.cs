@@ -59,7 +59,8 @@ namespace RP0
 
         public override bool CanDeactivate(ref string reason)
         {
-            if (!CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
+            if (KSPUtils.GetUT() - DateActivated < LongestDuration &&    // Leader retirement is free
+                !CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
             {
                 reason = Localizer.GetStringByTag("#rp0_Leaders_Remove_CannotAfford");
                 return false;
@@ -120,7 +121,9 @@ namespace RP0
 
         public virtual double DeactivateCost()
         {
-            return UtilMath.LerpUnclamped(Reputation.Instance.reputation * ConfigRP0.RemovalCostRepPercent, 0d, Math.Pow(UtilMath.InverseLerp(LeastDuration, LongestDuration, KSPUtils.GetUT() - DateActivated), ConfigRP0.RemovalCostLerpPower));
+            return UtilMath.LerpUnclamped(Reputation.Instance.reputation * ConfigRP0.RemovalCostRepPercent,
+                                          0d,
+                                          Math.Pow(UtilMath.InverseLerp(LeastDuration, LongestDuration, KSPUtils.GetUT() - DateActivated), ConfigRP0.RemovalCostLerpPower));
         }
 
         public virtual string DeactivateCostString()

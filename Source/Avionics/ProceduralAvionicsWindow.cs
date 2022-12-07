@@ -435,7 +435,11 @@ namespace RP0.ProceduralAvionics
             return tooltip;
         }
 
-        private string BuildTechName(ProceduralAvionicsTechNode techNode) => techNode.dispName ?? techNode.name;
+        private string BuildTechName(ProceduralAvionicsTechNode techNode) 
+        {
+            string title = techNode.dispName ?? techNode.name;
+            return techNode.IsAvailable ? title : $"<color=orange>{title}</color>";
+        }
 
         private string BuildCostString(int cost) =>
             (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $"{cost:N0}";
@@ -443,6 +447,11 @@ namespace RP0.ProceduralAvionics
         private string ConstructTooltipForAvionicsTL(ProceduralAvionicsTechNode techNode)
         {
             var sb = StringBuilderCache.Acquire();
+            if (!techNode.IsAvailable)
+            {
+                sb.AppendLine($"<color=orange>This tech level can be used in simulations but will prevent the vessel from being built until {techNode.TechNodeTitle} has been researched.</color>\n");
+            }
+
             if (techNode.IsScienceCore)
             {
                 sb.AppendLine($"Mass: {GetAvionicsMass(techNode, 0) * 1000:0.#}kg");

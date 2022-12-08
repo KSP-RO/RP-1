@@ -1,5 +1,6 @@
 ﻿using KerbalConstructionTime;
 using RealFuels;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace RP0
 
         public static GameplayTips Instance { get; private set; }
 
-        private void Awake()
+        internal void Awake()
         {
             if (Instance != null)
             {
@@ -25,7 +26,7 @@ namespace RP0
             Instance = this;
         }
 
-        private void Start()
+        internal void Start()
         {
             var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
 
@@ -62,9 +63,14 @@ namespace RP0
                 GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
                 _subcribedToPAWEvent = true;
             }
+
+            if (HighLogic.LoadedSceneIsFlight)
+            {
+                StartCoroutine(CheckLandedWhileActuallyFlying());
+            }
         }
 
-        public void OnDestroy()
+        internal void OnDestroy()
         {
             if (_onKctVesselAddedToBuildQueueEvent != null) _onKctVesselAddedToBuildQueueEvent.Remove(OnKctVesselAddedToBuildQueue);
             if (_subcribedToPAWEvent) GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
@@ -154,6 +160,33 @@ namespace RP0
                                          "OK",
                                          false,
                                          HighLogic.UISkin);
+        }
+
+        private IEnumerator CheckLandedWhileActuallyFlying()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(5f);
+
+                Vessel v = FlightGlobals.ActiveVessel;
+                if (v != null && v.LandedOrSplashed)
+                {
+                    const float checkThreshold = 150;
+                    if (v.radarAltitude - v.vesselSize.magnitude > checkThreshold)
+                    {
+                        string msg = "Error: the game thinks you've landed while you're actually flying. Revert to launch and try again.";
+                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                             new Vector2(0.5f, 0.5f),
+                             "ShowLandedWhileActuallyFlyingTip",
+                             "Vessel landed",
+                             msg,
+                             "OK",
+                             false,
+                             HighLogic.UISkin);
+                        yield break;
+                    }
+                }
+            }
         }
     }
 }

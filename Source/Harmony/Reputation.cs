@@ -41,12 +41,13 @@ namespace RP0.Harmony
             GameEvents.Modifiers.OnCurrencyModified.Fire(data);
             if (reason == TransactionReasons.None)
             {
-                Debug.Log("Added " + r + " (" + r + ") reputation. Total Rep: " + __instance.rep);
+                RP0Debug.Log($"Added {r} ({r}) reputation. Total Rep: {__instance.rep}");
             }
             else
             {
-                Debug.Log("Added " + r + " (" + r + ") reputation: '" + reason.ToString() + "'.");
+                RP0Debug.Log($"Added {r} ({r}) reputation: '{reason}'.");
             }
+
             if (r != 0f)
             {
                 GameEvents.OnReputationChanged.Fire(__instance.rep, reason);

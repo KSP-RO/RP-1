@@ -517,6 +517,9 @@
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\First Space Station.cfg">
       <Link>Contracts\Space Stations\First Space Station.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Space Stations\Improved Space Station.cfg">
+      <Link>Contracts\Space Stations\Improved Space Station.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\Life Support Station.cfg">
       <Link>Contracts\Space Stations\Life Support Station.cfg</Link>
     </Content>

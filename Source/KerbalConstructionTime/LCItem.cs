@@ -50,7 +50,9 @@ namespace KerbalConstructionTime
         private double _rateHRCapped;
         public double Rate => _rate;
         public double RateHRCapped => _rateHRCapped;
-        
+
+        public override string ToString() => $"{Name} ({(IsOperational ? "Operational" : "Inop")})";
+
         private static double RawMaxEngineers(float massMax, Vector3 sizeMax) =>
             massMax != float.MaxValue ? Math.Pow(massMax, 0.75d) : sizeMax.sqrMagnitude * 0.01d;
         public static int MaxEngineersCalc(float massMax, Vector3 sizeMax, bool isHuman) => 

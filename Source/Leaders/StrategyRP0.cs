@@ -233,5 +233,6 @@ namespace RP0
             ShowExtendedInfo = false;
             return ConstructText(extendedInfo, false, false);
         }
+        public override string ToString() => ConfigRP0?.Name;
     }
 }

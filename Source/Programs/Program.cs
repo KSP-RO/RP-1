@@ -185,6 +185,8 @@ namespace RP0.Programs
             confidenceCosts = toCopy.confidenceCosts;
         }
 
+        public override string ToString() => $"{name} ({(IsComplete ? "Complete" : IsActive ? "Active" : "Inactive")})";
+
         public void Load(ConfigNode node)
         {
             LoadObjectFromConfig(this, node);

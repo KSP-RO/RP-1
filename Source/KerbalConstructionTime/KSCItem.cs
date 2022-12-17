@@ -123,7 +123,41 @@ namespace KerbalConstructionTime
         public void SwitchToPrevLaunchComplex(bool padOnly = false) => SwitchLaunchComplex(false, padOnly);
         public void SwitchToNextLaunchComplex(bool padOnly = false) => SwitchLaunchComplex(true, padOnly);
 
-        public int SwitchLaunchComplex(bool forwardDirection, bool padOnly, int startIndex = -1, bool doSwitch = true)
+        public int SwitchLaunchComplex(bool forwardDirection, bool padOnly, int startIndex = -1)
+        {
+            if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexIndex : startIndex;
+
+            startIndex = GetLaunchComplexIdxToSwitchTo(forwardDirection, padOnly, startIndex);
+            SwitchLaunchComplex(startIndex);
+
+            return startIndex;
+        }
+
+        public void SwitchLaunchComplex(int LC_index, bool updateDestrNode = true)
+        {
+            if (LC_index < 0)
+            {
+                LC_index = ActiveLaunchComplexIndex;
+            }
+            else
+            {
+                if (LC_index == ActiveLaunchComplexIndex)
+                    return;
+
+                ActiveLaunchComplexIndex = LC_index;
+            }
+
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                if (!KCTGameStates.EditorShipEditingMode)
+                    KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+                RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
+            }
+
+            LaunchComplexes[LC_index].SwitchLaunchPad();
+        }
+
+        public int GetLaunchComplexIdxToSwitchTo(bool forwardDirection, bool padOnly, int startIndex = -1)
         {
             if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexIndex : startIndex;
 
@@ -147,36 +181,9 @@ namespace KerbalConstructionTime
                     --startIndex;
                 }
                 lc = LaunchComplexes[startIndex];
-            } while (!lc.IsOperational && padOnly && lc.LCType != LaunchComplexType.Pad);
-
-            if (doSwitch)
-                SwitchLaunchComplex(startIndex);
+            } while (!lc.IsOperational || (padOnly && lc.LCType != LaunchComplexType.Pad));
 
             return startIndex;
-        }
-
-        public void SwitchLaunchComplex(int LC_ID, bool updateDestrNode = true)
-        {
-            if (LC_ID < 0)
-            {
-                LC_ID = ActiveLaunchComplexIndex;
-            }
-            else
-            {
-                if (LC_ID == ActiveLaunchComplexIndex)
-                    return;
-
-                ActiveLaunchComplexIndex = LC_ID;
-            }
-
-            if (HighLogic.LoadedSceneIsEditor)
-            {
-                if (!KCTGameStates.EditorShipEditingMode)
-                    KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
-                RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
-            }
-
-            LaunchComplexes[LC_ID].SwitchLaunchPad();
         }
 
         public void Save(ConfigNode node)

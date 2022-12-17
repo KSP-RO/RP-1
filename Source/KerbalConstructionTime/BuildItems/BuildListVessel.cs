@@ -333,6 +333,8 @@ namespace KerbalConstructionTime
             progress = buildPoints + integrationPoints;
         }
 
+        public override string ToString() => $"{Type}: {shipName}";
+
         private ConfigNode FromInFlightVessel(Vessel VesselToSave, ListType listType)
         {
             //This code is taken from InflightShipSave by Claw, using the CC-BY-NC-SA license.

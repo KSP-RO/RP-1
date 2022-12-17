@@ -133,7 +133,9 @@ namespace KerbalConstructionTime
             KCTDebug.Log("TimeLeft = " + TimeLeft);
         }
 
-        public TechItem() {}
+        public TechItem() { }
+
+        public override string ToString() => techID;
 
         public double UpdateBuildRate(int index)
         {

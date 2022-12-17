@@ -101,6 +101,8 @@ namespace KerbalConstructionTime
 
         public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && Hangar.IsEmpty;
 
+        public override string ToString() => KSCName;
+
         public void EnsureStartingLaunchComplexes()
         {
             if (LaunchComplexes.Count > 0) return;

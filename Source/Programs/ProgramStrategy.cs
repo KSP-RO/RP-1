@@ -150,5 +150,7 @@ namespace RP0.Programs
             if (ProgramHandler.Instance && ProgramHandler.Instance.IsInAdmin && _program.CanComplete)
                 ProgramHandler.Instance.CompleteProgram(_program);
         }
+
+        public override string ToString() => $"{_program?.name} ({(IsActive ? "Active" : "Inactive")})";
     }
 }

@@ -64,6 +64,8 @@ namespace KerbalConstructionTime
         {
         }
 
+        public override string ToString() => Name;
+
         public string GetItemName() => Name;
 
         public virtual bool IsCapped => true;

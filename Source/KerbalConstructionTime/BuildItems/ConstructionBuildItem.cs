@@ -52,6 +52,8 @@ namespace KerbalConstructionTime
             }
         }
 
+        public override string ToString() => name;
+
         public virtual string GetItemName() => name;
         public double GetFractionComplete() => progress / BP;
         public double GetTimeLeft() => (BP - progress) / GetBuildRate();

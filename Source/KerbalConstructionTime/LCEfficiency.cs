@@ -298,6 +298,9 @@ namespace KerbalConstructionTime
         }
 
         // List operations ---------------------------------------------------
+        /// <summary>
+        /// Used during relinking to signal that certain collections should not be modified.
+        /// </summary>
         private bool _ignoreObserve = false;
 
         private void added(int idx, LCItem lc)
@@ -305,7 +308,7 @@ namespace KerbalConstructionTime
             if (KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out var oldEffic))
             {
                 oldEffic._lcs.Remove(lc);
-                if (oldEffic._lcs.Count == 0)
+                if (oldEffic._lcs.Count == 0 && !_ignoreObserve)
                     ClearEmpty();
             }
 

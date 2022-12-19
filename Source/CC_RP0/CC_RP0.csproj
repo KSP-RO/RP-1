@@ -59,6 +59,7 @@
     <Compile Include="AcceptContractBehaviourFactory.cs" />
     <Compile Include="AvionicsCheckVesselParam.cs" />
     <Compile Include="AvionicsCheckFactory.cs" />
+    <Compile Include="ContractClobberer.cs" />
     <Compile Include="CustomExpressionParserRegistrer.cs" />
     <Compile Include="DownrangeDistanceFactory.cs" />
     <Compile Include="DownrangeDistanceVesselParam.cs" />

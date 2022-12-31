@@ -801,6 +801,8 @@ namespace KerbalConstructionTime
 
         public static void AddResearchedPartsToExperimental()
         {
+            if (ResearchAndDevelopment.Instance == null) return;
+
             foreach (var ap in PartLoader.LoadedPartsList)
             {
                 if (PartIsUnlockedButNotPurchased(ap))

@@ -994,6 +994,52 @@
         ]
     },
     {
+        "name": "ROE-Algol3",
+        "title": "Algol III",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1972",
+        "technology": "solids1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Scout D, E, F, G",
+        "engine_config": "Algol-III",
+        "upgrade": false,
+        "entry_cost_mods": "Algol-III",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Algol3_Inline",
+        "title": "Algol III Inline",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "410",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1972",
+        "technology": "solids1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Scout D, E, F, G",
+        "engine_config": "Algol-III",
+        "upgrade": false,
+        "entry_cost_mods": "1000,Algol-III",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Altair",
         "title": "Altair",
         "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",

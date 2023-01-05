@@ -76,7 +76,7 @@ namespace KerbalConstructionTime
                 Part p = _parts[j];
                 if (p.CrewCapacity == 0) continue;
 
-                List<CrewMemberAssignment> launchedCrew = KCTGameStates.LaunchedCrew.Find(part => part.PartID == p.craftID)?.CrewList;
+                List<CrewMemberAssignment> launchedCrew = KCTGameStates.LaunchedCrew[j]?.CrewList;
                 if (launchedCrew == null)
                 {
                     launchedCrew = new List<CrewMemberAssignment>();

@@ -325,7 +325,7 @@
         "spacecraft": "Molniya",
         "engine_config": "RD0110",
         "upgrade": false,
-        "entry_cost_mods": "RD-0107",
+        "entry_cost_mods": "",
         "identical_part_name": "RD-0110",
         "module_tags": [
             "EngineLiquidTurbo"

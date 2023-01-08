@@ -47,6 +47,32 @@ PARTUPGRADE
         deleteme = 1
         description = The ${engine_config} Engine now supports the ${name} configuration for increased performance. Unlock it in the VAB/SPH through the engine configs interface.\\n\\n${description}
 }
+
+PART
+{
+    name = RFUpgrade_engineConfigSource_${name}
+    engineType = ${engine_config}
+}
+
+@PART[RFUpgrade_engineConfigSource_${name}]:AFTER[RealismOverhaulEngines]
+{
+    %MODULE[Module*EngineConfigs] {
+        @name = ModuleEngineConfigs
+        %CONFIG[${name}] {
+            &specLevel = operational
+        }
+    }
+}
+
+@PARTUPGRADE[RFUpgrade_${name}]:AFTER[RealismOverhaulEngines]
+{
+    %description = #$$description$$\\nAvailable at specLevel $$@PART[RFUpgrade_engineConfigSource_${name}]/MODULE[ModuleEngineConfigs]/CONFIG[${name}]/specLevel$$
+    // TODO: could add any number of other useful fields from the CONFIG here. cost? description?
+}
+
+!PART[RFUpgrade_engineConfigSource_${name}]:AFTER[RealismOverhaulEngines]
+{
+}
 """)
 
 def generate_engine_tree(parts):

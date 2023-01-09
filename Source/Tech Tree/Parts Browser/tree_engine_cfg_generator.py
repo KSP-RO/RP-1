@@ -14,9 +14,9 @@ tree_engine_header = """
 //
 //*********************************************************************************************
 
-@PART[*]:HAS[@MODULE[ModuleEngineConfigs]]:BEFORE[RealismOverhaulEnginesPost]
+@PART[*]:HAS[@MODULE[Module*EngineConfigs]]:BEFORE[RealismOverhaulEnginesPost]
 {
-        @MODULE[ModuleEngineConfigs],*
+        @MODULE[Module*EngineConfigs],*
         {
 """
 

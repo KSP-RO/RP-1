@@ -1,0 +1,128 @@
+CONTRACT_TYPE
+{
+    name = flybyJupiterMoons
+    title = Flyby @/targetBodyValid1
+    genericTitle = Jovian Moon Flyby
+    group = Flybys
+    agent = Federation Aeronautique Internationale
+
+    description = Send a probe on a flyby of @/targetBodyValid1 with an approach of @/flybyKM.Print() km or closer, then record science and transmit or return science to Earth.
+    genericDescription = Send a probe on a flyby of the moon with an approach of twice the diameter of the moon, or closer, then record science and transmit or return science to Earth.
+
+    synopsis = Flyby @/targetBodyValid1 closer than @/flybyKM.Print() km and collect science.
+
+    completedMessage = Congratulations on the flyby! The data is coming in now and is being analyzed by our scientists.
+
+    sortKey = 811
+
+    cancellable         	= true
+	declinable          	= true
+	autoAccept          	= false
+	minExpiry           	= 0
+	maxExpiry           	= 0
+	maxCompletions      	= 1
+	maxSimultaneous     	= 1
+	deadline            	= 1825  // 5 years
+
+    targetBody = @/targetBodyValid1
+
+
+    // ************ REWARDS ************
+
+    prestige            	= Exceptional // 1.50
+    advanceFunds        	= 2000 * @RP0:globalHardContractMultiplier
+    rewardScience       	= 0
+    rewardReputation    	= 20
+    rewardFunds         	= @advanceFunds * 4
+    failureReputation   	= 40
+    failureFunds        	= @advanceFunds * 1.5
+
+
+    // ************ DATA BLOCKS ************
+    
+    DATA_EXPAND
+	{
+		type				= CelestialBody
+		targetBody1			= @RP0:jupiterMoons
+	}
+	
+	DATA
+	{
+		title				= Is not already offered
+		type				= CelestialBody
+		requiredValue		= true
+		uniquenessCheck		= CONTRACT_ALL
+		targetBodyValid1	= @/targetBody1
+	}
+
+	DATA
+	{
+		title				= Radius of CB
+		type				= float
+		requiredValue		= true
+		cbRadius			= @/targetBodyValid1.Radius()
+		flybyMeters			= Round( ( @cbRadius * 4 ), 1000 )
+		flybyKM				= Round( ( @flybyMeters / 1000 ), 0 )
+	}
+
+	DATA
+	{
+		title				= Reached Bodies
+		type				= List<CelestialBody>
+		requiredValue		= false
+		targetBodyList1		= @RP0:reachBodies
+	}
+
+
+    // ************ REQUIREMENTS ************
+
+	REQUIREMENT
+	{
+		name 				= Reached Parent Body
+		type				= Expression
+		title				= Must have reached Parent Body
+		Expression			= @/targetBodyList1.Contains(Jupiter) == true
+	}
+
+
+	// ************ PARAMETERS ************
+
+	PARAMETER
+	{
+		name	= VesselGroup
+		type	= VesselParameterGroup
+		title 	= Flyby @/targetBodyValid1.Name()
+		define 	= FlybyJupiterMoon
+
+		PARAMETER
+		{
+			name 				= Crewmembers
+			type 				= HasCrew
+			minCrew 			= 0
+			maxCrew 			= 0
+			title 				= Uncrewed
+			hideChildren 		= true
+		}
+
+		PARAMETER
+		{
+			name 				= FlybyMoon
+			type				= ReachState
+			maxAltitude			= @/flybyMeters
+			disableOnStateChange = true
+			title				= Flyby the Moon within @/flybyKM km
+			hideChildren		= true
+		}
+
+		PARAMETER
+		{
+			name 				= CollectSpaceScience
+			type 				= CollectScience
+			location			= Space
+            targetBody          = @/targetBodyValid1
+			recoveryMethod 		= RecoverOrTransmit
+			title 				= Collect Science Data from Space near @/targetBodyValid1.Name()
+			hideChildren 		= true
+		}
+	}
+}

@@ -797,7 +797,7 @@
         "category": "HYDROLOX",
         "info": "US Engine",
         "year": "2020",
-        "technology": "hydrolox2019",
+        "technology": "hydroloxNF",
         "era": "11-NF",
         "ro": true,
         "rp0": true,

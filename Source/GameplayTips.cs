@@ -172,7 +172,8 @@ namespace RP0
                 if (v != null && v.LandedOrSplashed)
                 {
                     const float checkThreshold = 150;
-                    if (v.radarAltitude - v.vesselSize.magnitude > checkThreshold)
+                    if (v.altitude > 0 &&                                             // Apparently the radar altitude is calculated from the bottom of the sea as soon as the vessel goes under the water
+                        v.radarAltitude - v.vesselSize.magnitude > checkThreshold)
                     {
                         string msg = "Error: the game thinks you've landed while you're actually flying. Revert to launch and try again.";
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),

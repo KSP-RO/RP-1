@@ -9665,7 +9665,7 @@
         "spacecraft": "R-36",
         "engine_config": "RD219",
         "upgrade": true,
-        "entry_cost_mods": "5000,RD-219-8D713,R36-TP--1966",
+        "entry_cost_mods": "5000,RD-219-8D713,R36-TP-1966",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -674,7 +674,7 @@
         "rp0_conf": true,
         "spacecraft": "Delta K",
         "engine_config": "AJ10_Adv",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "5000, AJ10-118F",
         "identical_part_name": "",
         "module_tags": []
@@ -6077,7 +6077,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "Merlin1",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "15000,MerlinTP",
         "identical_part_name": "",
         "module_tags": []
@@ -6100,7 +6100,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "Merlin1",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "18000,Merlin1C",
         "identical_part_name": "",
         "module_tags": []
@@ -6123,7 +6123,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "Merlin1",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "20000,MerlinDTP",
         "identical_part_name": "",
         "module_tags": []
@@ -6192,7 +6192,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "Merlin1",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "23000,Merlin1D",
         "identical_part_name": "",
         "module_tags": []
@@ -10560,7 +10560,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "RL10",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "37549, HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
@@ -10801,7 +10801,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "RL10",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "30000,RL10A-4",
         "identical_part_name": "",
         "module_tags": []
@@ -10847,7 +10847,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "RL10",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "80000,RL10A-4-1-2",
         "identical_part_name": "",
         "module_tags": []
@@ -11937,7 +11937,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "Rutherford-SL",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "15000, ElectricPumps",
         "identical_part_name": "",
         "module_tags": []
@@ -11960,7 +11960,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "RutherfordVac",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "5000, Rutherford-SL",
         "identical_part_name": "",
         "module_tags": []
@@ -13938,7 +13938,7 @@
         "rp0_conf": true,
         "spacecraft": "Ariane 1",
         "engine_config": "Viking",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "10000, Viking-2",
         "identical_part_name": "",
         "module_tags": []
@@ -13980,7 +13980,7 @@
         "rp0_conf": true,
         "spacecraft": "Ariane 4",
         "engine_config": "Viking",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "5000, Viking-2B",
         "identical_part_name": "",
         "module_tags": []
@@ -14185,7 +14185,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "X405",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "10000, PumpReignition, X-405",
         "identical_part_name": "",
         "module_tags": []
@@ -14579,7 +14579,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "LR89",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "5000,Navaho-PhaseIV-TP",
         "identical_part_name": "",
         "module_tags": []

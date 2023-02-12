@@ -10698,6 +10698,27 @@
         "module_tags": []
     },
     {
+        "name": "RL10A-3-9",
+        "title": "RL10A-3-9",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1972",
+        "technology": "hydrolox1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": false,
+        "entry_cost_mods": "25000,RL10A-3-9,throttlingTP",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RL10A-4",
         "title": "RL10A-4",
         "description": "",

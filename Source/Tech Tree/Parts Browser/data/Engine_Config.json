@@ -2175,7 +2175,7 @@
         "spacecraft": "",
         "engine_config": "CF6",
         "upgrade": true,
-        "entry_cost_mods": "5000,CF-50A",
+        "entry_cost_mods": "5000,CF6-50A",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3063,7 +3063,7 @@
         "spacecraft": "",
         "engine_config": "F100",
         "upgrade": false,
-        "entry_cost_mods": "17000",
+        "entry_cost_mods": "17000,J57-P-21",
         "identical_part_name": "",
         "module_tags": []
     },

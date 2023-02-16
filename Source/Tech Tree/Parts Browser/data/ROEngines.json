@@ -2578,7 +2578,7 @@
         "spacecraft": "",
         "engine_config": "HG3",
         "upgrade": false,
-        "entry_cost_mods": "HG3",
+        "entry_cost_mods": "HG-3",
         "identical_part_name": "HG3",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -3389,22 +3389,22 @@
     },
     {
         "name": "ROE-LR87_11",
-        "title": "LR87 (Extended Nozzle)",
+        "title": "LR87 (Shielded)",
         "description": "",
         "mod": "ROEngines",
         "cost": "500",
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
-        "year": "1970",
-        "technology": "orbitalRocketry1970",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Titan III",
         "engine_config": "LR87",
         "upgrade": false,
-        "entry_cost_mods": "LR87-AJ-11",
+        "entry_cost_mods": "LR87-AJ-3",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3418,7 +3418,7 @@
         "cost": "250",
         "entry_cost": "0",
         "category": "ORBITAL",
-        "info": "",
+        "info": "Deprecated",
         "year": "1970",
         "technology": "orbitalRocketry1970",
         "ro": true,
@@ -5918,7 +5918,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": false,
-        "entry_cost_mods": "RL10B-3",
+        "entry_cost_mods": "RL10B-2",
         "identical_part_name": "RL10B-2",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -5944,7 +5944,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": false,
-        "entry_cost_mods": "RL10B-3",
+        "entry_cost_mods": "RL10B-2",
         "identical_part_name": "RL10B-2",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -6503,7 +6503,7 @@
         "spacecraft": "Kosmos-3",
         "engine_config": "S5_23",
         "upgrade": false,
-        "entry_cost_mods": "S5.23",
+        "entry_cost_mods": "S5-23",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -6572,9 +6572,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Briz",
-        "engine_config": "",
+        "engine_config": "S5_98M",
         "upgrade": false,
-        "entry_cost_mods": "S5.98M",
+        "entry_cost_mods": "S5-98M",
         "identical_part_name": "S5.98M",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -6597,9 +6597,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Briz",
-        "engine_config": "",
+        "engine_config": "S5_98M",
         "upgrade": false,
-        "entry_cost_mods": "S5.98M",
+        "entry_cost_mods": "S5-98M",
         "identical_part_name": "S5.98M",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -7470,8 +7470,8 @@
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
-        "year": "1965",
-        "technology": "orbitalRocketry1965",
+        "year": "1962",
+        "technology": "orbitalRocketry1962",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

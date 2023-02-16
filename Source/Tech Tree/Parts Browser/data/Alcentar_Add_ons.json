@@ -125,7 +125,7 @@
         "spacecraft": "Energia",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ENergiaLH2Tank",
+        "entry_cost_mods": "EnergiaLH2Tank",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -387,7 +387,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "rn_tks",
+        "entry_cost_mods": "rn-tks",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",
@@ -412,7 +412,7 @@
         "spacecraft": "Polyus",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "Kosmos_TKS_Solar_Array_rn2",
+        "entry_cost_mods": "Kosmos-TKS-Solar-Array-rn2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -454,7 +454,7 @@
         "spacecraft": "Polyus",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "rn_proton_fgb_fairing",
+        "entry_cost_mods": "rn-proton-fgb-fairing",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -522,7 +522,7 @@
         "spacecraft": "Polyus",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "s1_dp",
+        "entry_cost_mods": "s1-dp",
         "identical_part_name": "",
         "module_tags": []
     }

@@ -1015,7 +1015,7 @@
         "spacecraft": "Fregat",
         "engine_config": "S5_92",
         "upgrade": false,
-        "entry_cost_mods": "S5.92-BT",
+        "entry_cost_mods": "S5-92-BT",
         "identical_part_name": "S5.92",
         "module_tags": []
     },
@@ -1038,7 +1038,7 @@
         "spacecraft": "Briz",
         "engine_config": "S5_98M",
         "upgrade": false,
-        "entry_cost_mods": "S5.98M",
+        "entry_cost_mods": "S5-98M",
         "identical_part_name": "S5.98M",
         "module_tags": [
             "EngineLiquidTurbo"

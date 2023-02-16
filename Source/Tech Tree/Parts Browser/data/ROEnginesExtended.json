@@ -63,7 +63,7 @@
         "spacecraft": "",
         "engine_config": "AMBR",
         "upgrade": false,
-        "entry_cost_mods": "AMBR",
+        "entry_cost_mods": "AMBR-623N",
         "identical_part_name": "AMBR",
         "module_tags": [
             "EngineLiquidPF",

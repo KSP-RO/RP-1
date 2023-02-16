@@ -39,7 +39,7 @@
         "spacecraft": "",
         "engine_config": "HG3",
         "upgrade": false,
-        "entry_cost_mods": "HG3",
+        "entry_cost_mods": "HG-3",
         "identical_part_name": "HG3",
         "module_tags": [
             "EngineLiquidTurbo",

@@ -214,7 +214,7 @@
         "spacecraft": "X-1",
         "engine_config": "XLR11",
         "upgrade": false,
-        "entry_cost_mods": "XLR11",
+        "entry_cost_mods": "XLR11-RM-3",
         "identical_part_name": "XLR11",
         "module_tags": [
             "EngineLiquidPF"

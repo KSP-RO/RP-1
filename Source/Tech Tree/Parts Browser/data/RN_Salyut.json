@@ -18,7 +18,7 @@
         "spacecraft": "Salyut 7",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "9000,Kosmos_TKS_Solar_Array_rn2_2",
+        "entry_cost_mods": "9000,Kosmos-TKS-Solar-Array-rn2-2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -62,7 +62,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "10000,Kosmos_TKS_Solar_Array_rn2",
+        "entry_cost_mods": "10000,Kosmos-TKS-Solar-Array-rn2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -134,7 +134,7 @@
         "spacecraft": "Almaz",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "almaz_pan_l",
+        "entry_cost_mods": "almaz-pan-l",
         "identical_part_name": "Almaz Solar",
         "module_tags": []
     },
@@ -251,7 +251,7 @@
         "spacecraft": "Almaz",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "s1_dp",
+        "entry_cost_mods": "s1-dp",
         "identical_part_name": "",
         "module_tags": []
     },

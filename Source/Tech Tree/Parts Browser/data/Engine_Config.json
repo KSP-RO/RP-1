@@ -3142,6 +3142,29 @@
         "module_tags": []
     },
     {
+        "name": "HG-3",
+        "title": "HG-3",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": 0,
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "Engine",
+        "year": "1976",
+        "technology": "hydrolox1976",
+        "era": "06-STATION",
+        "ro": false,
+        "rp0": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "HG3",
+        "upgrade": false,
+        "entry_cost_mods": "260000,StagedHydrolox,J-2S",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "HG-3-SL",
         "title": "HG-3-SL",
         "description": "",
@@ -3160,7 +3183,7 @@
         "spacecraft": "",
         "engine_config": "HG3",
         "upgrade": true,
-        "entry_cost_mods": "80000,HG3",
+        "entry_cost_mods": "80000,HG-3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3181,7 +3204,7 @@
         "spacecraft": "",
         "engine_config": "HG3",
         "upgrade": true,
-        "entry_cost_mods": "40000,HG3",
+        "entry_cost_mods": "40000,HG-3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3291,29 +3314,6 @@
         "module_tags": []
     },
     {
-        "name": "HG3",
-        "title": "HG3",
-        "description": "",
-        "mod": "Engine_Config",
-        "cost": 0,
-        "entry_cost": "0",
-        "category": "HYDROLOX",
-        "info": "Engine",
-        "year": "1976",
-        "technology": "hydrolox1976",
-        "era": "06-STATION",
-        "ro": false,
-        "rp0": false,
-        "orphan": false,
-        "rp0_conf": false,
-        "spacecraft": "",
-        "engine_config": "HG3",
-        "upgrade": false,
-        "entry_cost_mods": "260000,StagedHydrolox,J-2S",
-        "identical_part_name": "",
-        "module_tags": []
-    },
-    {
         "name": "HM-7",
         "title": "HM-7",
         "description": "",
@@ -3355,7 +3355,7 @@
         "spacecraft": "Ariane",
         "engine_config": "HM7",
         "upgrade": true,
-        "entry_cost_mods": "25000,HM-7B_Early",
+        "entry_cost_mods": "25000,HM-7",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -11169,7 +11169,7 @@
         "spacecraft": "Shuttle",
         "engine_config": "SSME",
         "upgrade": false,
-        "entry_cost_mods": "388927,HG3",
+        "entry_cost_mods": "388927,HG-3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -12366,7 +12366,7 @@
         "spacecraft": "",
         "engine_config": "SPT100",
         "upgrade": true,
-        "entry_cost_mods": "1000,SPT100",
+        "entry_cost_mods": "1000,SPT-100",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -13432,7 +13432,7 @@
         "spacecraft": "R-112",
         "engine_config": "U1250",
         "upgrade": true,
-        "entry_cost_mods": "U-1750,2500",
+        "entry_cost_mods": "2500,U-1700",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -14714,7 +14714,7 @@
         "spacecraft": "Alternate Apollo",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "80000,Model8096 //No source, assumed similar to RL10 based on complexity",
+        "entry_cost_mods": "80000,Model8096",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -14737,7 +14737,7 @@
         "spacecraft": "X-15",
         "engine_config": "XLR99",
         "upgrade": false,
-        "entry_cost_mods": "50000, XLR11",
+        "entry_cost_mods": "50000, XLR11-RM-3",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

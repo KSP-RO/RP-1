@@ -16,7 +16,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "B9_Engine_VA1",
+        "entry_cost_mods": "B9-Engine-VA1",
         "identical_part_name": "",
         "module_tags": []
     }

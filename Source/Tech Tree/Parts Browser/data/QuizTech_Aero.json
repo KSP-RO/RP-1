@@ -1,10 +1,10 @@
 [
     {
         "name": "K-35B",
-        "title": "Pratt & Whitney F-135 turbofan",
+        "title": "F135 Low-Bypass Turbofan",
         "description": "",
         "mod": "QuizTech Aero",
-        "cost": 1379,
+        "cost": "1048",
         "entry_cost": "0",
         "category": "FLIGHT",
         "info": "Engine",
@@ -14,9 +14,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "F-35B",
-        "engine_config": "",
+        "engine_config": "F135",
         "upgrade": false,
-        "entry_cost_mods": "SXTVTOLturboFan",
+        "entry_cost_mods": "F135-PW-100",
         "identical_part_name": "",
         "module_tags": []
     }

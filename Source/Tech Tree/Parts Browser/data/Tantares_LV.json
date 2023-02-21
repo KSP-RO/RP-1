@@ -177,7 +177,7 @@
         "spacecraft": "",
         "engine_config": "S5_23",
         "upgrade": false,
-        "entry_cost_mods": "S5_23",
+        "entry_cost_mods": "S5-23",
         "identical_part_name": "S5.23",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -200,7 +200,7 @@
         "spacecraft": "",
         "engine_config": "S5_98M",
         "upgrade": false,
-        "entry_cost_mods": "S5_98M",
+        "entry_cost_mods": "S5-98M",
         "identical_part_name": "S5.98M",
         "module_tags": [
             "EngineLiquidTurbo"

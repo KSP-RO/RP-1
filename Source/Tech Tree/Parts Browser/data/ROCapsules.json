@@ -1001,7 +1001,7 @@
         "spacecraft": "Apollo",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "dockingApollo.capsulesApollo",
+        "entry_cost_mods": "dockingApollo,capsulesApollo",
         "identical_part_name": "Apollo Probe",
         "module_tags": []
     },
@@ -3325,7 +3325,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "LMDE",
         "upgrade": false,
-        "entry_cost_mods": "LMDE",
+        "entry_cost_mods": "LMDE-H",
         "identical_part_name": "Apollo LMDE",
         "module_tags": [
             "EngineLiquidPF"
@@ -3369,7 +3369,7 @@
         "spacecraft": "Apollo LEM",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ApolloLunarDescent",
+        "entry_cost_mods": "LunarModuleDescent",
         "identical_part_name": "",
         "module_tags": []
     },

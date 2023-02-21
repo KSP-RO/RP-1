@@ -544,7 +544,7 @@
         "spacecraft": "Fregat",
         "engine_config": "S5_92",
         "upgrade": false,
-        "entry_cost_mods": "S5.92-BT",
+        "entry_cost_mods": "S5-92-BT",
         "identical_part_name": "S5.92",
         "module_tags": []
     },

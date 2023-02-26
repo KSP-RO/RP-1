@@ -216,7 +216,7 @@
         "category": "COMMS",
         "info": "Dish",
         "year": "1961",
-        "technology": "advancedComms",
+        "technology": "interplanetaryComms",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

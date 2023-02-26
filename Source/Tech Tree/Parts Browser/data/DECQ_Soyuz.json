@@ -32,7 +32,7 @@
         "category": "COMMS",
         "info": "Omni",
         "year": "1978",
-        "technology": "deepSpaceComms",
+        "technology": "highDataRateComms",
         "era": "06-STATION",
         "ro": true,
         "rp0": false,

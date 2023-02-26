@@ -59,7 +59,7 @@
         "category": "COMMS",
         "info": "Dish",
         "year": "1977",
-        "technology": "deepSpaceComms",
+        "technology": "highDataRateComms",
         "era": "06-STATION",
         "ro": true,
         "rp0": true,

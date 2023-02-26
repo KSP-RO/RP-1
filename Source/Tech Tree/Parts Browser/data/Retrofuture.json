@@ -9,7 +9,7 @@
         "category": "FLIGHT",
         "info": "Engine",
         "year": "2020",
-        "technology": "experimentalAircraft",
+        "technology": "scramjetEngines",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

@@ -1,15 +1,15 @@
 [
     {
         "name": "cf34",
-        "title": "CF34 Turbofan",
+        "title": "TF/CF34 Turbofan",
         "description": "",
         "mod": "Airplane Plus",
         "cost": "242",
         "entry_cost": "0",
         "category": "FLIGHT",
         "info": "",
-        "year": "1983",
-        "technology": "refinedTurbofans",
+        "year": "1972",
+        "technology": "matureTurbofans",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

@@ -904,6 +904,9 @@
     <Content Include="..\GameData\RP-0\Tree\ECM-Parts.cfg">
       <Link>Tree\ECM-Parts.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Tree\EjectionSeats.cfg">
+      <Link>Tree\EjectionSeats.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Tree\EntryCostModifiers.cfg">
       <Link>Tree\EntryCostModifiers.cfg</Link>
     </Content>

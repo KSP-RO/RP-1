@@ -26,16 +26,30 @@ namespace RP0.Programs
         MAX
     }
 
+    /// <summary>
+    /// Helper class for the Administration UI since we can't add fields to stock classes.
+    /// This stores state (and gameobject links) for Administration
+    /// </summary>
     public class AdminExtender : MonoBehaviour
     {
         public static AdminExtender Instance;
 
+        /// <summary>
+        /// This controls the tabs at the bottom of the screen (swapping between active and complete programs, and active leaders)
+        /// </summary>
         private UIListToggleController _tabController;
+        /// <summary>
+        /// These are the tab toggle buttons
+        /// </summary>
         private readonly Dictionary<AdministrationActiveTabView, Toggle> _adminTabToggles = new Dictionary<AdministrationActiveTabView, Toggle>();
+        /// <summary>
+        /// Getter for the active tab view.
+        /// </summary>
         public AdministrationActiveTabView ActiveTabView => _tabController == null ? AdministrationActiveTabView.Active : (AdministrationActiveTabView)_tabController.currentList;
 
         private void OnClickTab(bool active)
         {
+            // Force a whole redraw. Bleh, but it's fine.
             if (active)
                 Administration.Instance.RedrawPanels();
         }
@@ -45,15 +59,21 @@ namespace RP0.Programs
             if (ActiveTabView == view)
                 return;
 
-            _adminTabToggles[view].isOn = true;
+            _adminTabToggles[view].isOn = true; // this will trip OnClickTab.
         }
-
+                
         private LayoutElement _btnSpacer = null;
         public LayoutElement BtnSpacer => _btnSpacer;
 
+        /// <summary>
+        /// We need a dictionary of the speeds and their buttons
+        /// </summary>
         private readonly Dictionary<Program.Speed, ProgramSpeedListItem> _speedButtons = new Dictionary<Program.Speed, ProgramSpeedListItem>();
         private KSP.UI.TooltipTypes.UIStateButtonTooltip _buttonTooltip;
 
+        /// <summary>
+        /// Gross global to pass data between Administration and the speed buttons
+        /// </summary>
         public bool PressedSpeedButton = false;
 
         private TMPro.TextMeshProUGUI _speedOptionsNames;
@@ -61,8 +81,10 @@ namespace RP0.Programs
 
         public void SetSpeedButtonsActive(Program program)
         {
+            // If no program is set, then no buttons can be active.
             bool active = program != null;
 
+            // Otherwise, setup the buttons with their costs
             string costStr = string.Empty;
             foreach (var item in _speedButtons.Values)
             {
@@ -89,6 +111,10 @@ namespace RP0.Programs
             PressedSpeedButton = false; // clear state
         }
 
+        /// <summary>
+        /// We need this gross class (like StrategyWrapper) to handle the linkage between the button and the current active program
+        /// So when you click the button, the program gets the input
+        /// </summary>
         public class SpeedButtonHolder
         {
             private ProgramStrategy programStrategy;
@@ -102,25 +128,31 @@ namespace RP0.Programs
 
             public void OnSpeedSet(UnityEngine.EventSystems.PointerEventData data, UIRadioButton.CallType callType)
             {
+                // Find the speedbutton of this speed
                 var item = AdminExtender.Instance._speedButtons[speed];
                 item.ResetInteractivity(true);
                 var oldSpeed = programStrategy.Program.ProgramSpeed;
-                programStrategy.Program.SetSpeed(speed);
+                programStrategy.Program.SetSpeed(speed); // no-op if same speed
 
                 // Update the description and the button on change
                 if (oldSpeed != speed)
                 {
-                    AdminExtender.Instance.PressedSpeedButton = true; // so we don't reset program speed
+                    AdminExtender.Instance.PressedSpeedButton = true; // so we don't reset program speed when we rebuild UI
+                    // Rebuild the UI
                     Administration.Instance.SetSelectedStrategy(Administration.Instance.SelectedWrapper);
                 }
             }
 
             public void OnSpeedUnset(UnityEngine.EventSystems.PointerEventData data, UIRadioButton.CallType callType)
             {
+                // These are radio buttons, so this runs on the buttons that just got inactivated
                 AdminExtender.Instance._speedButtons[speed].ResetInteractivity(false);
             }
         }
 
+        /// <summary>
+        /// This code just makes the main UI bigger to better take advantage of wide screens.
+        /// </summary>
         private void RescaleMainUI()
         {
             // Resize the root element that handles the width
@@ -138,11 +170,15 @@ namespace RP0.Programs
             }
         }
 
+        /// <summary>
+        /// This adds the tab buttons to the active strategy tab
+        /// (We steal them from the AC)
+        /// </summary>
         private void AddTabs()
         {
             Transform oldTabTransform = transform.FindDeepChild("ActiveStrategiesTab");
             Transform oldText = oldTabTransform.parent.transform.Find("ActiveStratCount");
-            // Grab tabs from AC
+            // Grab tabs from Astronaut Complex UI
             var ACSpawner = TimeWarp.fetch.gameObject.GetComponent<ACSceneSpawner>(); // Timewarp lives on the SpaceCenter object
             // Have to do it this way because it's inactive
             Transform[] ACtransforms = ACSpawner.ACScreenPrefab.transform.GetComponentsInChildren<Transform>(true);
@@ -164,6 +200,7 @@ namespace RP0.Programs
             // Ok it's safe to set active and fix the tab text
             newTabSetObj.SetActive(true);
 
+            // Setup the actual tabs we just grabbed
             for (int i = 0; i < newTabSetObj.transform.childCount; ++i)
             {
                 Transform child = newTabSetObj.transform.GetChild(i);
@@ -187,6 +224,10 @@ namespace RP0.Programs
             oldText.SetParent(newTabSetObj.transform, false);
         }
 
+        /// <summary>
+        /// Here we create the speed buttons. They're stolen from existing buttons
+        /// and repurposed. To do this we need to add a layout group.
+        /// </summary>
         private void AddSpeedButtons()
         {
             var buttonLE = Administration.Instance.btnAcceptCancel.gameObject.AddComponent<LayoutElement>();
@@ -241,7 +282,7 @@ namespace RP0.Programs
             newSpacerLE.preferredWidth = 100;
             newSpacerLE.gameObject.SetActive(true);
 
-            // Add a spacer to replace the button
+            // Add a spacer to replace the button (sometimes the accept button isn't shown at all)
             _btnSpacer = GameObject.Instantiate(ApplicationLauncher.Instance.CurrentLayout.GetTopRightSpacer(), buttonArea.transform, worldPositionStays: false);
             _btnSpacer.preferredWidth = 48;
             _btnSpacer.gameObject.SetActive(false);

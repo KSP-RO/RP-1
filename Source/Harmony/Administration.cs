@@ -16,10 +16,20 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Administration))]
     internal class PatchAdministration
     {
+        internal static void FixProgramCounts(Administration __instance)
+        {
+            // We need to reset the strategy count because we only want to track programs, not leaders too.
+            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
+            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+        }
+
         [HarmonyPrefix]
         [HarmonyPatch("Start")]
         internal static void Prefix_Start(Administration __instance)
         {
+            // We need another component to live on the Admin UI because we can only
+            // use harmony to override methods, not add fields, and we need
+            // to store a bunch of references to new objects.
             var adminExt = __instance.gameObject.GetComponent<AdminExtender>() ?? __instance.gameObject.AddComponent<AdminExtender>();
             adminExt.BindAndFixUI();
         }
@@ -28,17 +38,18 @@ namespace RP0.Harmony
         [HarmonyPatch("Start")]
         internal static void Postfix_Start(Administration __instance)
         {
-            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
-            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+            FixProgramCounts(__instance);
         }
 
         [HarmonyPrefix]
         [HarmonyPatch("CreateStrategiesList")]
         internal static void Prefix_CreateStrategiesList(Administration __instance)
         {
-            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
-            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+            FixProgramCounts(__instance);
 
+            // First we need to find each program (well, each ProgramStrategy) and
+            // figure out what its best allowable speed is, because that depends on
+            // the current confidence quantity.
             foreach (var strat in Strategies.StrategySystem.Instance.GetStrategies("Programs"))
             {
                 if (strat is ProgramStrategy ps)
@@ -47,6 +58,7 @@ namespace RP0.Harmony
                 }
             }
 
+            // We'll also kill the old spacers since we create them again in the Postfix of this method.
             Transform[] trfs = __instance.scrollListKerbals.gameObject.GetComponentsInChildren<Transform>(true);
             foreach (var trf in trfs)
             {
@@ -63,7 +75,13 @@ namespace RP0.Harmony
                 Administration.Instance.SetSelectedStrategy(new Administration.StrategyWrapper(leader, (UIRadioButton)null));
         }
 
-        internal static Strategy FindStrategyForDepartment(DepartmentConfig dep)
+        /// <summary>
+        /// Helper method to find the first active strategy in a given department.
+        /// Supports StrategyRP0 strategies with alternate departments.
+        /// </summary>
+        /// <param name="dep"></param>
+        /// <returns></returns>
+        internal static Strategy FindActiveStrategyForDepartment(DepartmentConfig dep)
         {
             bool skipFirst = true;
             foreach (var s in StrategySystem.Instance.Strategies)
@@ -98,24 +116,28 @@ namespace RP0.Harmony
         [HarmonyPatch("CreateStrategiesList")]
         internal static void Postfix_CreateStrategiesList(Administration __instance)
         {
-            // Replace Department images if required
+            // Replace Department images if required.
+            // (Leaders replace the department image when active)
             for (int i = 0; i < __instance.scrollListKerbals.Count; ++i)
             {
                 var dep = StrategySystem.Instance.Departments[i];
+                // Hardcoded check for Programs department -- not a leader.
                 if (dep.Name == "Programs")
                     continue;
 
-                var leader = FindStrategyForDepartment(dep);
+                var leader = FindActiveStrategyForDepartment(dep);
                 if (leader == null)
                     continue;
 
+                // We found a leader. Replace the image (and its tooltip).
                 var kerbal = __instance.scrollListKerbals.GetUilistItemAt(i).GetComponent<KerbalListItem>();
                 string headName = $"<color=#{RUIutils.ColorToHex(dep.Color)}>{leader.Title}\n({dep.Title})</color>";
                 kerbal.Initialize(headName, dep.Description, null);
                 kerbal.tooltip.textString = dep.Description + "\n\n" + leader.Effect;
                 kerbal.kerbalImage.texture = (leader.Config as StrategyConfigRP0).IconDepartmentImage;
 
-                
+                // There will not previously be a button here because all this UI is recreated as part of the stock
+                // code for this method. So it's safe to just add, not replace.
                 var button = kerbal.gameObject.AddComponent<UnityEngine.UI.Button>();
                 button.transition = Selectable.Transition.None;
                 //button.transition = Selectable.Transition.ColorTint;
@@ -127,6 +149,8 @@ namespace RP0.Harmony
                 button.onClick.AddListener(() => SetOrUnsetLeader(leader));
 
             }
+
+            // Create some spacers to make everything look nicer.
             __instance.scrollListStrategies.GetUilistItemAt(0).GetComponent<LayoutElement>().minWidth = 280f;
             var firstDep = __instance.scrollListKerbals.GetUilistItemAt(0);
             GameObject spacer = GameObject.Instantiate(firstDep.gameObject);
@@ -150,6 +174,7 @@ namespace RP0.Harmony
             spacer2.transform.SetAsFirstSibling();
         }
 
+        // We'll cache the strategy list to save a tiny bit of GC
         internal static List<Strategies.Strategy> _strategies = new List<Strategies.Strategy>();
 
         [HarmonyPrefix]
@@ -159,27 +184,35 @@ namespace RP0.Harmony
             __instance.scrollListActive.Clear(true);
             Administration.StrategyWrapper wrapper = null;
 
+            // We have to handle multiple tabs here: We support active and completed programs, and active leaders.
             if (AdminExtender.Instance.ActiveTabView == AdministrationActiveTabView.Leaders)
             {
+                // Simple case: We just find all active strategies that _aren't_ programs.
+                // If they're not programs, they're leaders.
                 foreach (var s in StrategySystem.Instance.Strategies)
                     if (s.IsActive && !(s is ProgramStrategy))
                         _strategies.Add(s);
             }
             else
             {
+                // Find the right set of programs
                 List<Program> programs = AdminExtender.Instance.ActiveTabView == AdministrationActiveTabView.Active ? ProgramHandler.Instance.ActivePrograms : ProgramHandler.Instance.CompletedPrograms;
                 foreach (Program p in programs)
                 {
+                    // Find the matching ProgramStrategy for the program
                     Strategies.Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
                     if (strategy == null)
                         continue;
 
                     // Just in case. This should never happen unless you use the debugging UI...
+                    // (But in certain load scenarious it might not be? Bleh.)
                     if (AdminExtender.Instance.ActiveTabView == AdministrationActiveTabView.Active && !strategy.IsActive)
                     {
+                        Debug.LogError($"[RP-0] ProgramStrategy {p.name} is not active but program is active. Activating...");
                         strategy.Activate();
                     }
 
+                    // This should *also* always be true at this point.
                     if (strategy is ProgramStrategy ps)
                     {
                         if (ps.Program != p)
@@ -189,6 +222,8 @@ namespace RP0.Harmony
                     _strategies.Add(strategy);
                 }
             }
+
+            // Now we actually create the items. This broadly equates to stock code.
             foreach (Strategies.Strategy strategy in _strategies)
             {
                 UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
@@ -209,8 +244,7 @@ namespace RP0.Harmony
             }
             _strategies.Clear();
 
-            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
-            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+            FixProgramCounts(__instance);
             __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
 
             return false;
@@ -220,6 +254,8 @@ namespace RP0.Harmony
         [HarmonyPatch("AddStrategiesListItem")]
         internal static void Postfix_AddStrategiesListItem(Administration __instance, UIList itemList)
         {
+            // This is called from stock code. We need to postfix it however
+            // to fix the text on leaders.
             for (int i = 0; i < itemList.Count; ++i)
             {
                 var item = itemList.GetUilistItemAt(i);
@@ -237,15 +273,20 @@ namespace RP0.Harmony
         [HarmonyPatch("SetSelectedStrategy")]
         internal static void Prefix_SetSelectedStrategy(Administration __instance, Administration.StrategyWrapper wrapper)
         {
+            // This is a bit of a pain. We need to pass some state to the Strategy code
+            // so it knows whether to show short info (for the active tab at the bottom) or long info
+            // (for the entire strategy-info tab on the right).
             if (wrapper.strategy is StrategyRP0 s)
             {
                 s.ShowExtendedInfo = true; // pass through we're about to print the long-form description.
             }
+
             if (wrapper.strategy is ProgramStrategy ps)
             {
                 // Set best speed before we get description
                 // This is maybe a duplicate of the work we did in CreateStrategiesList but eh.
                 // NOTE: We have to be sure this didn't happen because we pressed a speed button.
+                // Because if we did press a speed button, we want that speed, we don't want to clobber.
                 if (!AdminExtender.Instance.PressedSpeedButton)
                     ps.Program.SetBestAllowableSpeed();
             }
@@ -305,6 +346,7 @@ namespace RP0.Harmony
         [HarmonyPatch("UnselectStrategy")]
         internal static void Postfix_UnselectStrategy()
         {
+            // If we deselect a strategy, hide the speed buttons too.
             AdminExtender.Instance.SetSpeedButtonsActive(null);
         }
 
@@ -313,6 +355,7 @@ namespace RP0.Harmony
             // Stock does nothing here. Leaving this in case we need it.
         }
 
+        // Essentially a copy of the stock code, but we need to be able to call it.
         internal static void OnCompleteProgramConfirm()
         {
             OnPopupDismiss();
@@ -324,6 +367,8 @@ namespace RP0.Harmony
             Administration.Instance.RedrawPanels();
         }
 
+        // A modified version of the stock code.
+        // We need to do some extra work on programs.
         internal static void OnActivateProgramConfirm()
         {
             OnPopupDismiss();
@@ -333,12 +378,13 @@ namespace RP0.Harmony
                 AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Active);
                 Administration.StrategyWrapper selectedStrategy = Administration.Instance.AddActiveStratItem(Administration.Instance.SelectedWrapper.strategy);
                 Administration.Instance.SetSelectedStrategy(selectedStrategy);
-                // Reset program speeds
+                // Reset program speeds - safe because we early-out if a program is active or complete.
                 foreach (var strat in StrategySystem.Instance.Strategies)
                 {
                     if (strat is ProgramStrategy ps)
                         ps.Program.SetBestAllowableSpeed();
                 }
+                // Reset the strategy UI (as stock does)
                 Administration.Instance.CreateStrategiesList(StrategySystem.Instance.SystemConfig.Departments);
                 Administration.Instance.SelectedWrapper.ButtonInUse.Value = true;
             }
@@ -346,13 +392,13 @@ namespace RP0.Harmony
             {
                 if (!Administration.Instance.SelectedWrapper.strategy.IsActive)
                 {
-
                     Administration.Instance.UnselectStrategy();
                     return;
                 }
             }));
         }
 
+        // Helper for the popup
         internal static void OnRemoveLeaderConfirm()
         {
             OnPopupDismiss();
@@ -367,22 +413,26 @@ namespace RP0.Harmony
         [HarmonyPatch("BtnInputAccept")]
         internal static bool Prefix_BtnInputAccept(Administration __instance, string state)
         {
+            // This is what runs when you click the checkmark. We have to handle both programs and leaders.
+
             if (__instance.SelectedWrapper.strategy is ProgramStrategy ps)
             {
                 if (state != "accept" && state != "cancel")
                     return false;
 
+                // If it's active, we're trying to complete it.
                 if (ps.IsActive)
                 {
                     if (!ps.CanBeDeactivated(out _))
                         return false;
 
+                    // Calculate the reward for display in the popup
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (!string.IsNullOrEmpty(rewardStr))
                         rewardStr = $"\n\n{Localizer.Format("#rp0_Generic_Reward", rewardStr)}";
 
-
+                    // and then actually spawn the popup.
                     var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog("StrategyConfirmation",
@@ -396,15 +446,19 @@ namespace RP0.Harmony
                 }
                 else
                 {
+                    // If it's not active and it's complete, how did we get here?
                     if (ps.Program.IsComplete)
                         return false;
 
-                    
+                    // Else we need to activate.
+
+                    // Create the activation cost string
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
                     string costStr = cmq.GetCostLine(true, true, true, true);
                     if (!string.IsNullOrEmpty(costStr))
                         costStr = $"\n\n{Localizer.Format("#rp0_Generic_Cost", costStr)}";
 
+                    // and spawn the popup
                     var dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog("StrategyConfirmation",
@@ -421,6 +475,7 @@ namespace RP0.Harmony
 
             if (state == "cancel")
             {
+                // Leaders have a deactivate cost and a cooldown. Compute these.
                 var leader = __instance.SelectedWrapper.strategy as StrategyRP0;
                 var cfg = leader.Config as StrategyConfigRP0;
                 string deactivateCostStr = leader.DeactivateCostString();

@@ -21,6 +21,7 @@ namespace RP0.Harmony
             if (department != "Programs")
             {
                 // FIXME support other strategy types?
+                // For now we just skip everything that isn't a StrategyRP0 (and isn't a Program in the Programs department)
                 for (int i = 0; i < __instance.strategies.Count; ++i)
                 {
                     StrategyRP0 stratR = __instance.strategies[i] as StrategyRP0;
@@ -86,7 +87,7 @@ namespace RP0.Harmony
         [HarmonyPatch("HasConflictingActiveStrategies")]
         internal static bool Prefix_HasConflictingActiveStrategies(StrategySystem __instance, out bool __result, string[] groupTags)
         {
-            // Vastly simplify all this code.
+            // Stock code is wacky. So let's vastly simplify all this code.
             // If we match on a single tag, we can't activate.
             int count = __instance.Strategies.Count;
             while (count-- > 0)
@@ -138,6 +139,7 @@ namespace RP0.Harmony
             return false;
         }
 
+        // Save and load the deactivation date data
         [HarmonyPostfix]
         [HarmonyPatch("OnSave")]
         internal static void Postfix_OnSave(StrategySystem __instance, ConfigNode gameNode)

@@ -6,6 +6,9 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
+    /// <summary>
+    /// Leader effect to add multiplier to research rate for given node type(s)
+    /// </summary>
     public class ResearchRateModifier : BaseEffect
     {
         [Persistent]

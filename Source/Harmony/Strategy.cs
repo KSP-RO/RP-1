@@ -13,6 +13,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Strategies.Strategy))]
     internal class PatchStrategy
     {
+        // Fix SetupConfig to fire an OnSetupConfig after completion
+        // if the StrategyConfig is a StrategyConfigRP0
         [HarmonyPostfix]
         [HarmonyPatch("SetupConfig")]
         internal static void Postfix_SetupConfig(Strategies.Strategy __instance)
@@ -21,6 +23,7 @@ namespace RP0.Harmony
                 s.OnSetupConfig();
         }
 
+        // Add one more test and reason string to CanBeDeactivated to support Programs
         [HarmonyPostfix]
         [HarmonyPatch("CanBeDeactivated")]
         internal static void Postfix_CanBeDeactivated(Strategies.Strategy __instance, ref string reason, bool __result)
@@ -31,6 +34,8 @@ namespace RP0.Harmony
             }
         }
 
+        // Replace Create entirely so that the strategy created is a StrategyRP0 instead of stock Strategy
+        // (in cases where a stock Strategy would have been created)
         [HarmonyPrefix]
         [HarmonyPatch("Create")]
         internal static bool Prefix_Create(System.Type type, StrategyConfig config, out Strategy __result)
@@ -58,6 +63,10 @@ namespace RP0.Harmony
             return false;
         }
 
+        // Some hijinks here. Stock KSP has a strategy limit. Part of stock KSP's CanBeActivated checks
+        // is a check that the current number of active strategies is < this limit. But we use
+        // this limit to control programs only, not leaders. So we need to temporarily
+        // set the number of active strategies to 0, and then reset it after CanBeActivated finishes.
         [HarmonyPrefix]
         [HarmonyPatch("CanBeActivated")]
         internal static void Prefix_CanBeActivated(Strategies.Strategy __instance)
@@ -68,6 +77,7 @@ namespace RP0.Harmony
             KSP.UI.Screens.Administration.Instance.activeStrategyCount = 0;
         }
 
+        // Now that we're done, reset the active strategy count.
         [HarmonyPostfix]
         [HarmonyPatch("CanBeActivated")]
         internal static void Postfix_CanBeActivated()
@@ -75,6 +85,7 @@ namespace RP0.Harmony
             KSP.UI.Screens.Administration.Instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
         }
 
+        // For our Strategy class, replace the basic Activate with a virtual one.
         [HarmonyPrefix]
         [HarmonyPatch("Activate")]
         internal static bool Prefix_Activate(Strategy __instance, ref bool __result)
@@ -87,6 +98,7 @@ namespace RP0.Harmony
             return true;
         }
 
+        // For our Strategy class, replace the basic Deactivate with a virtual one.
         [HarmonyPrefix]
         [HarmonyPatch("Deactivate")]
         internal static bool Prefix_Deactivate(Strategy __instance, ref bool __result)

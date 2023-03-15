@@ -6,16 +6,33 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
+    /// <summary>
+    /// Generic leader multiplier to currencies
+    /// </summary>
     public class CurrencyModifier : BaseEffect
     {
+        /// <summary>
+        /// List of transaction reasons this effect applies to
+        /// </summary>
         [Persistent]
         private PersistentListValueType<TransactionReasonsRP0> transactionReasons = new PersistentListValueType<TransactionReasonsRP0>();
 
+        /// <summary>
+        /// On load, the various reasons will be composited into this flags enum
+        /// </summary>
         private TransactionReasonsRP0 listeningReasons = TransactionReasonsRP0.None;
 
+        /// <summary>
+        /// The currency affected
+        /// </summary>
         [Persistent]
         private CurrencyRP0 currency = CurrencyRP0.Invalid;
 
+        /// <summary>
+        /// In some circumstances, we want to handle positive and negative currency inputs differently.
+        /// In that case, when the input is negative and this is true, we'll use 2 - (multiplier)
+        /// as the multiplier to use.
+        /// </summary>
         [Persistent]
         private bool invertIfNegative = false;
 
@@ -56,6 +73,9 @@ namespace RP0.Leaders
 
         protected void OnEffectQuery(CurrencyModifierQuery qry)
         {
+            // this is a stock event, so the CMQ passed in has a stock TransactionReasons and stock Currency.
+            // So we need to call .Stock() on our currency and TR, and call .RP0() on its, as needed.
+
             double multToUse = multiplier;
             if (invertIfNegative && qry.GetInput(currency.Stock()) < 0d)
             {

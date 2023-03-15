@@ -6,13 +6,24 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
+    /// <summary>
+    /// Leader effect to add multiplier to integration rate for parts or whole-vessel
+    /// </summary>
     public class IntegrationRateModifier : BaseEffect
     {
+        /// <summary>
+        /// The KCT Module Tags to look for
+        /// </summary>
         [Persistent]
         private PersistentHashSetValueType<string> tags = new PersistentHashSetValueType<string>();
 
+        /// <summary>
+        /// The resources to look for
+        /// </summary>
         [Persistent]
         private PersistentDictionaryValueTypes<string, double> resources = new PersistentDictionaryValueTypes<string, double>();
+
+        // DO NOT set both of these.
 
         [Persistent]
         private bool appliesToParts = false;
@@ -74,6 +85,8 @@ namespace RP0.Leaders
                 }
             }
 
+            // We store the multiplier as a rate, but what we're returning is the multiplier
+            // to the _cost_ in BP
             if (found)
                 rate.value /= multiplier;
         }

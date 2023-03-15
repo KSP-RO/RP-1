@@ -30,6 +30,7 @@ namespace RP0
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
+            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return 0f;
             if (onStartFinished) TryApplyToolingDefinition();
             return base.GetModuleCost(defaultCost, sit);
         }

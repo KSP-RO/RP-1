@@ -6,11 +6,21 @@ using KerbalConstructionTime;
 
 namespace RP0.Leaders
 {
+    /// <summary>
+    /// Abstract base for simple multiplier-based leader effects
+    /// </summary>
     public abstract class BaseEffect : StrategyEffect
     {
+        /// <summary>
+        /// The base effect description, combined with effect multiplier and the actual thing the effect touches (in child class)
+        /// </summary>
         [Persistent]
         protected string effectDescription = string.Empty;
 
+        /// <summary>
+        /// Ordinarily the loc string is generated from the effect multiplier and the effect data.
+        /// If this is specified, it is used as-is.
+        /// </summary>
         [Persistent]
         protected string locStringOverride = string.Empty;
 
@@ -20,6 +30,9 @@ namespace RP0.Leaders
         [Persistent]
         protected double multiplier = 1d;
 
+        /// <summary>
+        /// Ordinarily multipliers > 1 are positive and <1 are negative effects. This will flip the coloration.
+        /// </summary>
         [Persistent]
         protected bool flipPositive = false;
 

@@ -13,6 +13,7 @@ using UniLinq;
 
 namespace RP0.Harmony
 {
+    // Make sure Programs is the first department
     [HarmonyPatch(typeof(StrategySystemConfig))]
     internal class PatchStrategySystemConfig
     {
@@ -35,6 +36,7 @@ namespace RP0.Harmony
                 __instance.Departments.Insert(0, dep);
         }
 
+        // Create all the ProgramStrategies dynamically after we load all the cfg-based strategies
         [HarmonyPostfix]
         [HarmonyPatch("LoadStrategyConfigs")]
         internal static void Postfix_LoadStrategyConfigs(StrategySystemConfig __instance)

@@ -179,7 +179,7 @@ namespace RP0.Programs
         }
 
         /// <summary>
-        /// This runs when tearing down an old games as well as when completing the program via the UI;
+        /// This runs when tearing down an old game as well as when completing the program via the UI;
         /// we only want to interact with the program when the user initiates this in the UI.
         /// Further we want to check that the program really can be completed.
         /// </summary>

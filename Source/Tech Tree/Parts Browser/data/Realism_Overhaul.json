@@ -478,7 +478,7 @@
         "cost": "28",
         "entry_cost": "1",
         "category": "FLIGHT",
-        "info": "",
+        "info": "Cockpit",
         "year": "0",
         "technology": "unlockParts",
         "ro": true,
@@ -487,7 +487,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",

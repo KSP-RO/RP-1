@@ -110,6 +110,18 @@ namespace RP0
             if (!CanBeActivated(out _))
                 return false;
 
+            PerformActivate(true, true);
+
+            
+
+            return true;
+        }
+
+        /// <summary>
+        /// Teh
+        /// </summary>
+        public void PerformActivate(bool useCurrency, bool recalcRates)
+        {
             isActive = true;
             Register();
             dateActivated = KSPUtils.GetUT();
@@ -123,11 +135,11 @@ namespace RP0
             if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
                 StrategyConfigRP0.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = -1d;
 
-            CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
+            if (useCurrency)
+                CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
-            KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
-
-            return true;
+            if (recalcRates)
+                KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
         }
 
         /// <summary>

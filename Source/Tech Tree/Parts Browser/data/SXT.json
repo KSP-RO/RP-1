@@ -210,7 +210,7 @@
         "title": "XM-C200 Radial Air Intake",
         "description": "A large radial turboprop intake, perfect for jet aircraft that just need that bit extra air.",
         "mod": "SXT",
-        "cost": "20",
+        "cost": 10,
         "entry_cost": "1",
         "category": "FLIGHT",
         "info": "",

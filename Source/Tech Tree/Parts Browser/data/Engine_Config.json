@@ -3448,8 +3448,8 @@
         "module_tags": []
     },
     {
-        "name": "GE4/J5P",
-        "title": "GE4/J5P",
+        "name": "GE4-J5P",
+        "title": "GE4-J5P",
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",
@@ -3469,8 +3469,8 @@
         "module_tags": []
     },
     {
-        "name": "GE4/J6H",
-        "title": "GE4/J6H",
+        "name": "GE4-J6H",
+        "title": "GE4-J6H",
         "description": "",
         "mod": "Engine_Config",
         "cost": "-244",
@@ -3485,7 +3485,7 @@
         "spacecraft": "",
         "engine_config": "GE4",
         "upgrade": true,
-        "entry_cost_mods": "25000,GE4/J5P",
+        "entry_cost_mods": "25000,GE4-J5P",
         "identical_part_name": "",
         "module_tags": []
     },

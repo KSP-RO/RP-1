@@ -16,7 +16,7 @@
         "spacecraft": "Boeing 2707",
         "engine_config": "GE4",
         "upgrade": false,
-        "entry_cost_mods": "GE4/J5P",
+        "entry_cost_mods": "GE4-J5P",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -374,11 +374,8 @@ namespace KerbalConstructionTime
                 _workingPreset = preset;
             if (setCustom)
             {
-                _presetIndex = PresetManager.Instance.PresetShortNames(true).Length - 1; //Custom preset
-                _workingPreset.Name = "Custom";
-                _workingPreset.ShortName = "Custom";
-                _workingPreset.Description = "A custom set of configs.";
-                _workingPreset.Author = HighLogic.SaveFolder;
+                _presetIndex = PresetManager.Instance.PresetShortNames(true).Length - 1;
+                _workingPreset.RenameToCustom();
             }
 
             _oMultTmp = _workingPreset.TimeSettings.OverallMultiplier.ToString();

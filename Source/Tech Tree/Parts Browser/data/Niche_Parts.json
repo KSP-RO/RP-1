@@ -548,9 +548,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Briz",
-        "engine_config": "",
+        "engine_config": "S5_98M",
         "upgrade": false,
-        "entry_cost_mods": "S5.98M",
+        "entry_cost_mods": "S5-98M",
         "identical_part_name": "S5.98M",
         "module_tags": [
             "EngineLiquidTurbo"

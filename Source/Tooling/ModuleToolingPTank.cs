@@ -30,6 +30,7 @@ namespace RP0
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
+            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return 0f;
             if (onStartFinished) TryApplyToolingDefinition();
             return base.GetModuleCost(defaultCost, sit);
         }
@@ -72,7 +73,6 @@ namespace RP0
                 procShape = shapeName switch
                 {
                     "Smooth Cone" => part.Modules["ProceduralShapeBezierCone"],
-                    "Smooth Cone Offset" => part.Modules["ProceduralShapeBezierOffset"],
                     "Cone" => part.Modules["ProceduralShapeCone"],
                     "Fillet Cylinder" => part.Modules["ProceduralShapePill"],
                     "Polygon" => part.Modules["ProceduralShapePolygon"],

@@ -564,6 +564,30 @@
         ]
     },
     {
+        "name": "restock-engine-cherenkov",
+        "title": "RD-0410",
+        "description": "",
+        "mod": "ReStock Plus",
+        "cost": "433",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "Engine",
+        "year": "1986",
+        "technology": "improvedNuclearPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RD0410MID",
+        "upgrade": false,
+        "entry_cost_mods": "RD-0410MID-Hydrogen",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
+        ]
+    },
+    {
         "name": "restock-engine-torch",
         "title": "H-1/RS-27 Series Engine",
         "description": "",

@@ -90,7 +90,7 @@ namespace RP0
 
         public override float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (!onStartFinished) return 0f;
+            if (!onStartFinished || HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return 0f;
 
             float baseCost = base.GetModuleCost(defaultCost, sit);
             GetDimensions(out var d, out var l);

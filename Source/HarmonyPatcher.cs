@@ -16,7 +16,7 @@ namespace RP0
     {
         internal void Start()
         {
-            var harmony = new Harmony("RP0.HarmonyPatcher");
+            var harmony = new HarmonyLib.Harmony("RP0.HarmonyPatcher");
             harmony.PatchAll();
         }
 

@@ -12009,7 +12009,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "RL10",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "37549, HydroloxPumps",
         "identical_part_name": "",
         "module_tags": []
@@ -13428,7 +13428,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "Rutherford-SL",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "15000, ElectricPumps",
         "identical_part_name": "",
         "module_tags": []
@@ -13451,7 +13451,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "RutherfordVac",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "5000, Rutherford-SL",
         "identical_part_name": "",
         "module_tags": []
@@ -16133,7 +16133,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "LR89",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "5000,Navaho-PhaseIV-TP",
         "identical_part_name": "",
         "module_tags": []

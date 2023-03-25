@@ -127,7 +127,9 @@ namespace RP0
 
         public virtual float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
-            if (HighLogic.LoadedSceneIsEditor && HighLogic.CurrentGame.Mode == Game.Modes.CAREER && onStartFinished)
+            if (HighLogic.CurrentGame.Mode != Game.Modes.CAREER) return 0f;
+
+            if (HighLogic.LoadedSceneIsEditor && onStartFinished)
             {
                 addedCost = GetUntooledPenaltyCost();
             }

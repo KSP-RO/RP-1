@@ -41,7 +41,7 @@ namespace RP0
         public override int SectionOrder { get { return 1; } }
         public override bool HasPresets { get { return true; } }
 
-        [GameParameters.CustomParameterUI("Enable X-Plane contracts", toolTip = "Disable this option if don't intend to build and fly any planes at all. Will slightly increase rewards of other contracts in the early game.", newGameOnly = true)]
+        [GameParameters.CustomParameterUI("Enable X-Plane contracts", toolTip = "Disable this option if don't intend to build and fly any planes at all. Will slightly increase rewards of other contracts in the early game.", newGameOnly = true, gameMode = GameParameters.GameMode.CAREER)]
         public bool PlaneContractsEnabled = true;
 
         [GameParameters.CustomParameterUI("Include craft files", toolTip = "", newGameOnly = true)]
@@ -62,10 +62,10 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float MaintenanceCostMult = 1f;
 
-        [GameParameters.CustomParameterUI("Enable part tooling")]
+        [GameParameters.CustomParameterUI("Enable part tooling", gameMode = GameParameters.GameMode.CAREER)]
         public bool IsToolingEnabled = true;
         
-        [GameParameters.CustomParameterUI("Enable career progress logging")]
+        [GameParameters.CustomParameterUI("Enable career progress logging", gameMode = GameParameters.GameMode.CAREER)]
         public bool CareerLogEnabled = true;
 
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
@@ -94,6 +94,11 @@ namespace RP0
 
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
+            bool isCareer = MainMenu.newGameMode == Game.Modes.CAREER;
+            CareerLogEnabled = isCareer;
+            IsToolingEnabled = MainMenu.newGameMode == Game.Modes.CAREER;
+            NeverShowToolingReminders = MainMenu.newGameMode == Game.Modes.CAREER;
+
             switch (preset)
             {
                 case GameParameters.Preset.Easy:
@@ -106,25 +111,25 @@ namespace RP0
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
-                    IsTrainingEnabled = true;
-                    IsMissionTrainingEnabled = true;
-                    IsRetirementEnabled = true;
+                    IsTrainingEnabled = isCareer;
+                    IsMissionTrainingEnabled = isCareer;
+                    IsRetirementEnabled = isCareer;
                     ContractDeadlineMult = 1.3f;
                     IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
-                    IsTrainingEnabled = true;
-                    IsMissionTrainingEnabled = true;
-                    IsRetirementEnabled = true;
+                    IsTrainingEnabled = isCareer;
+                    IsMissionTrainingEnabled = isCareer;
+                    IsRetirementEnabled = isCareer;
                     ContractDeadlineMult = 1f;
                     IsAvionicsStackable = false;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
-                    IsTrainingEnabled = true;
-                    IsMissionTrainingEnabled = true;
-                    IsRetirementEnabled = true;
+                    IsTrainingEnabled = isCareer;
+                    IsMissionTrainingEnabled = isCareer;
+                    IsRetirementEnabled = isCareer;
                     ContractDeadlineMult = 0.8f;
                     IsAvionicsStackable = false;
                     break;

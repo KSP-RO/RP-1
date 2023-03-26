@@ -46,6 +46,27 @@
         "module_tags": []
     },
     {
+        "name": "RO-JT3C",
+        "title": "J57 Turbojet (No Afterburner)",
+        "description": "",
+        "mod": "Stock (RO Addition)",
+        "cost": "395",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "Engine",
+        "year": "1951",
+        "technology": "supersonicFlightRP0",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "J57",
+        "upgrade": false,
+        "entry_cost_mods": "J57-P-1W",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RO-shockConeIntake125",
         "title": "1.25m Shock Cone Intake",
         "description": "",

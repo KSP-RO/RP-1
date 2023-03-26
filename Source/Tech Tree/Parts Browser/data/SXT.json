@@ -2260,7 +2260,7 @@
         "description": "A very early kerolox gas generator booster engine used on the Vanguard launch vehicle. Diameter: 1.0 m. Plume configured by RealPlume.",
         "mod": "SXT",
         "cost": "400",
-        "entry_cost": "13000",
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1956",

@@ -2696,7 +2696,7 @@
         "description": "First stage engine used on the Vanguard launch vehicle. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
         "cost": "400",
-        "entry_cost": "12000",
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1956",

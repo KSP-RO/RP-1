@@ -340,7 +340,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ca_RM02",
@@ -386,7 +388,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ca_RM04",
@@ -409,7 +413,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ca_RPWS",
@@ -1534,7 +1540,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ca_rs04",
@@ -1557,7 +1565,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ca_rst",
@@ -1580,7 +1590,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ca_rtg2000",

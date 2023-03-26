@@ -503,7 +503,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RSBadapterArianeV5m",
@@ -3114,7 +3116,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RSBtankAgenaD",

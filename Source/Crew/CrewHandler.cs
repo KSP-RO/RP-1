@@ -35,6 +35,7 @@ namespace RP0.Crew
         public List<CourseTemplate> OfferedCourses = new List<CourseTemplate>();
         public List<ActiveCourse> ActiveCourses = new List<ActiveCourse>();
         public bool RetirementEnabled = true;
+        public bool CrewRnREnabled = true;
         public bool IsMissionTrainingEnabled;
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
@@ -421,6 +422,7 @@ namespace RP0.Crew
         private void LoadSettings()
         {
             RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
+            CrewRnREnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsCrewRnREnabled;
             IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
             GenerateOfferedCourses();
         }
@@ -544,26 +546,33 @@ namespace RP0.Crew
                 double inactiveTime = inactiveTimeDays * 86400;
                 Debug.Log("[RP-0] inactive for: " + KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false));
 
-                pcm.SetInactive(inactiveTime, false);
-                inactivity.Add($"\n{pcm.name}, until {KSPUtil.PrintDate(inactiveTime + UT, true, false)}");
+                if (CrewRnREnabled)
+                {
+                    pcm.SetInactive(inactiveTime, false);
+                    inactivity.Add($"\n{pcm.name}, until {KSPUtil.PrintDate(inactiveTime + UT, true, false)}");
+                }
             }
 
+            StringBuilder sb = new StringBuilder();
             if (inactivity.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
                 sb.Append("The following crew members will be on leave:");
                 foreach (string s in inactivity)
                 {
                     sb.Append(s);
                 }
+                sb.Append("\n\n");
+            }
 
-                if (RetirementEnabled && retirementChanges.Count > 0)
-                {
-                    sb.Append("\n\nThe following retirement changes have occurred:");
-                    foreach (string s in retirementChanges)
-                        sb.Append(s);
-                }
+            if (RetirementEnabled && retirementChanges.Count > 0)
+            {
+                sb.Append("The following retirement changes have occurred:");
+                foreach (string s in retirementChanges)
+                    sb.Append(s);
+            }
 
+            if (sb.Length > 0)
+            {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "CrewUpdateNotification",

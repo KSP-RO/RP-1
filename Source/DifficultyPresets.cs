@@ -56,6 +56,9 @@ namespace RP0
         [GameParameters.CustomParameterUI("Enable crew retirement", toolTip = "Re-enabling this option can cause some of the older crewmembers to instantly retire.")]
         public bool IsRetirementEnabled = true;
 
+        [GameParameters.CustomParameterUI("Enable crew R&R", toolTip = "Crew members will be temporarily unavailable after every flight for rest & recuperation")]
+        public bool IsCrewRnREnabled = true;
+
         [GameParameters.CustomFloatParameterUI("Contract deadline multiplier", toolTip = "Used to lengthen or shorten all contract deadlines.", minValue = 0.5f, maxValue = 5f, stepCount = 46, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float ContractDeadlineMult = 1f;
 
@@ -95,9 +98,10 @@ namespace RP0
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
             bool isCareer = MainMenu.newGameMode == Game.Modes.CAREER;
+            IsCrewRnREnabled = isCareer;
             CareerLogEnabled = isCareer;
-            IsToolingEnabled = MainMenu.newGameMode == Game.Modes.CAREER;
-            NeverShowToolingReminders = MainMenu.newGameMode == Game.Modes.CAREER;
+            IsToolingEnabled = isCareer;
+            NeverShowToolingReminders = !isCareer;
 
             switch (preset)
             {

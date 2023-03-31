@@ -56,7 +56,7 @@ namespace RP0
         [GameParameters.CustomParameterUI("Enable crew retirement", toolTip = "Re-enabling this option can cause some of the older crewmembers to instantly retire.")]
         public bool IsRetirementEnabled = true;
 
-        [GameParameters.CustomParameterUI("Enable crew R&R", toolTip = "Crew members will be temporarily unavailable after every flight for rest & recuperation")]
+        [GameParameters.CustomParameterUI("Downtime post mission", toolTip = "Enable crew downtime post mission, crew will be unavailable for flight/training.")]
         public bool IsCrewRnREnabled = true;
 
         [GameParameters.CustomFloatParameterUI("Contract deadline multiplier", toolTip = "Used to lengthen or shorten all contract deadlines.", minValue = 0.5f, maxValue = 5f, stepCount = 46, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]

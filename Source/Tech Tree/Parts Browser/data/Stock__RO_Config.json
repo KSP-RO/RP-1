@@ -1108,7 +1108,8 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "UnpressurizedCockpit"
         ]
     },
     {
@@ -1135,7 +1136,8 @@
         "module_tags": [
             "Cockpit",
             "NoEVA",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "UnpressurizedCockpit"
         ]
     },
     {

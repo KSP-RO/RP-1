@@ -39,8 +39,6 @@ namespace RP0.Programs
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
 
-        public HashSet<string> CompletedCCContracts { get; private set; } = new HashSet<string>();
-
         public int ActiveProgramLimit => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
 
         public static void EnsurePrograms()
@@ -86,11 +84,6 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilityDespawn.Add(HideAdminGUI);
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
             GameEvents.Contract.onAccepted.Add(OnContractAccept);
-
-            if (CompletedCCContracts == null)
-                CompletedCCContracts = new HashSet<string>();
-            else
-                CompletedCCContracts.Clear();
         }
 
         public void OnDestroy()
@@ -242,9 +235,6 @@ namespace RP0.Programs
 
             if (data is ConfiguredContract cc)
             {
-                // Add to completed hashset
-                CompletedCCContracts.Add(cc.contractType.name);
-
                 // Handle KCT applicants
                 int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)

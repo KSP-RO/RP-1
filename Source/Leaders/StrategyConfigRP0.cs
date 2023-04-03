@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using RP0.DataTypes;
+using ContractConfigurator;
 
 namespace RP0
 {
@@ -152,7 +153,7 @@ namespace RP0
                 return true;
 
             foreach (string s in unlockByContractComplete)
-                if (Programs.ProgramHandler.Instance.CompletedCCContracts.Contains(s))
+                if (ConfiguredContract.CompletedContractsByName.TryGetValue(s, out List<ConfiguredContract> list) && list.Count > 0)
                     return true;
 
             foreach (string s in unlockByProgramComplete)

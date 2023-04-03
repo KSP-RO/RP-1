@@ -167,12 +167,12 @@ namespace RP0.Programs
                 bool isMet;
                 if (MinCount.HasValue && MinCount > 1)
                 {
-                    int c = ConfiguredContract.CompletedContracts.Count(c => c.contractType?.name == ContractName);
+                    int c = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) ? list.Count : 0;
                     isMet =  c >= MinCount;
                 }
                 else
                 {
-                    isMet = ConfiguredContract.CompletedContracts.Any(c => c.contractType?.name == ContractName);
+                    isMet = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) && list.Count > 0;
                 }
 
                 return IsInverted ? !isMet : isMet;

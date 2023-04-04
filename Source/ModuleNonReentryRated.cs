@@ -19,8 +19,7 @@ namespace RP0
 
         protected void OnDestroy()
         {
-            if (HighLogic.LoadedSceneIsFlight)
-                RP0ThermoChanger.Instance?.UnregisterPart(part);
+            RP0ThermoChanger.Instance?.UnregisterPart(part);
         }
     }
 

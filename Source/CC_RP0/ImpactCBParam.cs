@@ -54,19 +54,19 @@ namespace ContractConfigurator.RP0
         protected override void OnRegister()
         {
             base.OnRegister();
-            GameEvents.onCollision.Add(new EventData<EventReport>.OnEvent(OnVesselAboutToBeDestroyed));
-            GameEvents.onCrash.Add(new EventData<EventReport>.OnEvent(OnVesselAboutToBeDestroyed));
-            GameEvents.onVesselDestroy.Add(new EventData<Vessel>.OnEvent(OnVesselDestroy));
-            GameEvents.onVesselWillDestroy.Add(new EventData<Vessel>.OnEvent(OnVesselDestroy));
+            GameEvents.onCollision.Add(OnVesselAboutToBeDestroyed);
+            GameEvents.onCrash.Add(OnVesselAboutToBeDestroyed);
+            GameEvents.onVesselDestroy.Add(OnVesselDestroy);
+            GameEvents.onVesselWillDestroy.Add(OnVesselDestroy);
         }
 
         protected override void OnUnregister()
         {
             base.OnUnregister();
-            GameEvents.onCollision.Remove(new EventData<EventReport>.OnEvent(OnVesselAboutToBeDestroyed));
-            GameEvents.onCrash.Remove(new EventData<EventReport>.OnEvent(OnVesselAboutToBeDestroyed));
-            GameEvents.onVesselDestroy.Remove(new EventData<Vessel>.OnEvent(OnVesselDestroy));
-            GameEvents.onVesselWillDestroy.Remove(new EventData<Vessel>.OnEvent(OnVesselDestroy));
+            GameEvents.onCollision.Remove(OnVesselAboutToBeDestroyed);
+            GameEvents.onCrash.Remove(OnVesselAboutToBeDestroyed);
+            GameEvents.onVesselDestroy.Remove(OnVesselDestroy);
+            GameEvents.onVesselWillDestroy.Remove(OnVesselDestroy);
         }
 
         protected override void OnUpdate()

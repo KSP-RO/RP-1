@@ -64,7 +64,7 @@ namespace RP0.Crew
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Add(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Add(ACDespawn);
-            GameEvents.OnPartPurchased.Add(new EventData<AvailablePart>.OnEvent(OnPartPurchased));
+            GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
 
@@ -229,7 +229,7 @@ namespace RP0.Crew
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
             GameEvents.onGUIAstronautComplexSpawn.Remove(ACSpawn);
             GameEvents.onGUIAstronautComplexDespawn.Remove(ACDespawn);
-            GameEvents.OnPartPurchased.Remove(new EventData<AvailablePart>.OnEvent(OnPartPurchased));
+            GameEvents.OnPartPurchased.Remove(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
 

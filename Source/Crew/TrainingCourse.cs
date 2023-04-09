@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using UniLinq;
-using System.Text;
-using KerbalConstructionTime;
+﻿using KerbalConstructionTime;
 using RP0.DataTypes;
+using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
 
 namespace RP0.Crew
 {
@@ -30,13 +29,14 @@ namespace RP0.Crew
         [Persistent]
         public bool Completed = false;
 
-        private TrainingTemplate template;
-        public int seatMin => template.seatMin;
-        public int seatMax => template.seatMax;
-        public string description => template.description;
-        public bool isTemporary => template.isTemporary;
+        private TrainingTemplate _template;
 
-        public List<AvailablePart> partsCovered => template.partsCovered;
+        public int SeatMin => _template?.seatMin ?? 0;
+        public int SeatMax => _template?.seatMax ?? 0;
+        public string Description => _template?.description;
+        public bool IsTemporary => _template?.isTemporary ?? false;
+
+        public List<AvailablePart> PartsCovered => _template?.partsCovered;
 
         protected double _buildRate = 1d;
 
@@ -47,7 +47,7 @@ namespace RP0.Crew
         public TrainingCourse(TrainingTemplate template)
         {
             id = template.id;
-            this.template = template;
+            _template = template;
             RecalculateBP();
         }
 
@@ -84,25 +84,27 @@ namespace RP0.Crew
 
         public void LinkTemplate()
         {
-            template = CrewHandler.Instance.TrainingTemplates.Find(c => c.id == id);
+            _template = CrewHandler.Instance.TrainingTemplates.Find(c => c.id == id);
+            if (_template == null)
+                Debug.LogWarning($"[RP-0] Template not found for linking: {id}");
         }
 
         public bool MeetsStudentReqs(ProtoCrewMember student)
         {
-            if (!(student.type == ProtoCrewMember.KerbalType.Crew && (template.seatMax <= 0 || Students.Count < template.seatMax) && !student.inactive 
+            if (!(student.type == ProtoCrewMember.KerbalType.Crew && (_template.seatMax <= 0 || Students.Count < _template.seatMax) && !student.inactive 
                 && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && !Students.Contains(student)))
                 return false;
 
-            bool checkPrereq = template.prereq != null;
-            bool checkConflict = template.conflict != null;
+            bool checkPrereq = _template.prereq != null;
+            bool checkConflict = _template.conflict != null;
             for (int entryIdx = student.careerLog.Count; entryIdx-- > 0 && (checkPrereq || checkConflict);)
             {
                 FlightLog.Entry e = student.careerLog.Entries[entryIdx];
 
-                if (checkPrereq && e.type == template.prereq.type && e.target == template.prereq.target)
+                if (checkPrereq && e.type == _template.prereq.type && e.target == _template.prereq.target)
                     checkPrereq = false;
 
-                if (checkConflict && e.type == template.conflict.type && e.target == template.conflict.target)
+                if (checkConflict && e.type == _template.conflict.type && e.target == _template.conflict.target)
                     return false;
             }
 
@@ -111,7 +113,7 @@ namespace RP0.Crew
 
         public void AddStudent(ProtoCrewMember student)
         {
-            if (template.seatMax <= 0 || Students.Count < template.seatMax)
+            if (_template.seatMax <= 0 || Students.Count < _template.seatMax)
             {
                 if (!Students.Contains(student))
                 {
@@ -169,7 +171,7 @@ namespace RP0.Crew
         public void CompleteCourse()
         {
             //assign rewards to all kerbals and set them to free
-            if (Completed)
+            if (Completed && _template != null)
             {
                 double length = KSPUtils.GetUT() - startTime;
                 List<string> retirementChanges = new List<string>();
@@ -182,7 +184,7 @@ namespace RP0.Crew
                         student.ArchiveFlightLog();
 
                     // First, expire any old mission trainings.
-                    if (template.training.type == CrewHandler.TrainingType_Mission)
+                    if (_template.training.type == CrewHandler.TrainingType_Mission)
                     {
                         // Expire any previous mission trainings because only 1 should be active at a time
                         for (int i = student.careerLog.Count; i-- > 0;)
@@ -197,21 +199,21 @@ namespace RP0.Crew
                     }
 
                     // Create a new TrainingExpiration if needed
-                    if (template.expiration > 0d)
+                    if (_template.expiration > 0d)
                     {
-                        double expireTime = template.expiration;
-                        if (template.expirationUseStupid)
+                        double expireTime = _template.expiration;
+                        if (_template.expirationUseStupid)
                             expireTime *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
                                 CrewHandler.Settings.trainingProficiencyStupidMax,
                                 student.stupidity);
                         expireTime += KSPUtils.GetUT();
 
-                        CrewHandler.Instance.AddExpiration(new TrainingExpiration(student.name, expireTime, new TrainingFlightEntry(template.training.type, template.training.target)));
+                        CrewHandler.Instance.AddExpiration(new TrainingExpiration(student.name, expireTime, new TrainingFlightEntry(_template.training.type, _template.training.target)));
                     }
 
-                    double retireTimeOffset = CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, template.training.type, template.training.target, student.careerLog.Entries.Count - 1);
+                    double retireTimeOffset = CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, _template.training.type, _template.training.target, student.careerLog.Entries.Count - 1);
 
-                    student.flightLog.AddEntry(template.training.type, template.training.target);
+                    student.flightLog.AddEntry(_template.training.type, _template.training.target);
                     student.ArchiveFlightLog();
 
                     double actualRetireOffset = CrewHandler.Instance.IncreaseRetireTime(student.name, retireTimeOffset);
@@ -222,7 +224,7 @@ namespace RP0.Crew
                 if (CrewHandler.Instance.RetirementEnabled && retirementChanges.Count > 0)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.Append($"{template.name} training completed! The following retirement changes have occurred:");
+                    sb.Append($"{_template.name} training completed! The following retirement changes have occurred:");
                     foreach (string s in retirementChanges)
                         sb.Append(s);
 
@@ -251,16 +253,16 @@ namespace RP0.Crew
 
             //ensure we have more than the minimum number of students and not more than the maximum number
             int studentCount = Students.Count;
-            if (template.seatMax > 0 && studentCount > template.seatMax)
+            if (_template.seatMax > 0 && studentCount > _template.seatMax)
                 return false;
-            if (template.seatMin > 0 && studentCount < template.seatMin)
+            if (_template.seatMin > 0 && studentCount < _template.seatMin)
                 return false;
 
             Started = true;
             startTime = KSPUtils.GetUT();
 
             foreach (ProtoCrewMember student in Students)
-                student.SetInactive(template.GetBaseTime(Students) * 1.2d);
+                student.SetInactive(_template.GetBaseTime(Students) * 1.2d);
 
             return true;
             //fire an event
@@ -268,7 +270,7 @@ namespace RP0.Crew
 
         public string GetItemName()
         {
-            return template.name;
+            return _template?.name ?? "Unknown training course";
         }
 
         public double GetFractionComplete()
@@ -333,7 +335,15 @@ namespace RP0.Crew
             return remainder / increment * UTDiff;
         }
 
-        private void RecalculateBP() { BP = template.GetBaseTime(Students); }
+        private void RecalculateBP()
+        {
+            if (_template == null)
+            {
+                Debug.LogWarning($"[RP-0] TrainingCourse RecalculateBP not possible because template is empty: {id}");
+                return;
+            }
+            BP = _template.GetBaseTime(Students);
+        }
 
         public double AverageRetireExtension()
         {
@@ -345,7 +355,7 @@ namespace RP0.Crew
             double trainingLength = BP / GetBuildRate();
             foreach (var pcm in Students)
             {
-                sumOffset += CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, template.training.type, template.training.target);
+                sumOffset += CrewHandler.Instance.GetRetirementOffsetForTraining(pcm, trainingLength, _template.training.type, _template.training.target);
             }
             return sumOffset / count;
         }

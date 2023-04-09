@@ -290,7 +290,7 @@ namespace RP0.Crew
         public void AddPartCourses(AvailablePart ap, bool isKCTExperimentalNode = false)
         {
             if (ap.partPrefab.isVesselEVA || ap.name.StartsWith("kerbalEVA", StringComparison.OrdinalIgnoreCase) ||
-                ap.partPrefab.Modules.Contains<KerbalSeat>() || KerbalConstructionTime.Utilities.IsClamp(ap.partPrefab)) return;
+                ap.partPrefab.Modules.Contains<KerbalSeat>() || KCTUtils.IsClamp(ap.partPrefab)) return;
 
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.TryGetValue(name, out var coursePair))
@@ -872,7 +872,7 @@ namespace RP0.Crew
             foreach(var course in TrainingCourses)
             {
                 bool found = false;
-                foreach (var ap in course.partsCovered)
+                foreach (var ap in course.PartsCovered)
                 {
                     if (ap.TechRequired == techID)
                     {
@@ -906,7 +906,7 @@ namespace RP0.Crew
             {
                 var course = TrainingCourses[i];
                 bool found = false;
-                foreach (var ap in course.partsCovered)
+                foreach (var ap in course.PartsCovered)
                 {
                     if (ap.TechRequired == techID)
                     {
@@ -933,7 +933,9 @@ namespace RP0.Crew
                 if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0
                     && (ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available
                         || KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired)))
+                {
                     AddPartCourses(ap);
+                }
             }
 
             foreach (var c in TrainingCourses)

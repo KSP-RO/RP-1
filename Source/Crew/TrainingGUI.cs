@@ -102,7 +102,7 @@ namespace RP0.Crew
 
                 if (currentCourse != null)
                 {
-                    if (currentCourse.seatMin > 1)
+                    if (currentCourse.SeatMin > 1)
                     {
                         if (GUILayout.Button(new GUIContent("X", "Cancel training"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             CancelCourse(currentCourse);
@@ -211,16 +211,16 @@ namespace RP0.Crew
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
-            if (!string.IsNullOrEmpty(_selectedCourse.description))
-                GUILayout.Label(_selectedCourse.description);
-            if (_selectedCourse.isTemporary)
+            if (!string.IsNullOrEmpty(_selectedCourse.Description))
+                GUILayout.Label(_selectedCourse.Description);
+            if (_selectedCourse.IsTemporary)
                 GUILayout.Label("Tech for this part is still being researched", _tempCourseLblStyle);
 
             RenderSummaryBody(UITab.NewCourse);
-            if (_selectedCourse.seatMax > 0)
-                GUILayout.Label($"{_selectedCourse.seatMax - _selectedCourse.Students.Count} remaining seat(s).");
-            if (_selectedCourse.seatMin > _selectedCourse.Students.Count)
-                GUILayout.Label($"{_selectedCourse.seatMin - _selectedCourse.Students.Count} more naut(s) required.");
+            if (_selectedCourse.SeatMax > 0)
+                GUILayout.Label($"{_selectedCourse.SeatMax - _selectedCourse.Students.Count} remaining seat(s).");
+            if (_selectedCourse.SeatMin > _selectedCourse.Students.Count)
+                GUILayout.Label($"{_selectedCourse.SeatMin - _selectedCourse.Students.Count} more naut(s) required.");
             const string tooltip = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
             GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTimeLeft(), true, false)}", tooltip));
             GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(KSPUtils.GetUT() + _selectedCourse.GetTimeLeft(), false)}", tooltip));
@@ -283,7 +283,7 @@ namespace RP0.Crew
                 try
                 {
                     GUILayout.Label($"Training for {currentCourse.GetItemName()} until {KSPUtil.PrintDate(KSPUtils.GetUT() + currentCourse.GetTimeLeft(), false)}");
-                    if (currentCourse.seatMin > 1)
+                    if (currentCourse.SeatMin > 1)
                     {
                         if (GUILayout.Button("Cancel", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                             CancelCourse(currentCourse);

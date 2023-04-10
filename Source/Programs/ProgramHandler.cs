@@ -9,6 +9,7 @@ using UnityEngine;
 using System.Reflection;
 using System.Reflection.Emit;
 using KSP.UI.Screens.DebugToolbar;
+using KSP.Localization;
 
 namespace RP0.Programs
 {
@@ -416,11 +417,18 @@ namespace RP0.Programs
 
         public void CompleteProgram(Program p)
         {
+            List<StrategyConfigRP0> unlockedLeadersBef = GetAllUnlockedLeaders();
+
             ActivePrograms.Remove(p);
             CompletedPrograms.Add(p);
             p.Complete();
             // No change needed to ProgramStrategy because reference holds.
             ContractPreLoader.Instance?.ResetGenerationFailure();
+
+            List<StrategyConfigRP0> unlockedLeadersAft = GetAllUnlockedLeaders();
+            IEnumerable<StrategyConfigRP0> newLeaders = unlockedLeadersAft.Except(unlockedLeadersBef);
+
+            ShowNotificationForNewLeaders(newLeaders);
         }
 
         private void DisableProgram(string s)
@@ -429,6 +437,30 @@ namespace RP0.Programs
                 Debug.Log($"[RP-0] Disabling program {s}");
             else
                 Debug.Log($"[RP-0] tried to disable program {s} but it already was!");
+        }
+
+        private static List<StrategyConfigRP0> GetAllUnlockedLeaders()
+        {
+            return Strategies.StrategySystem.Instance.SystemConfig.Strategies
+                .OfType<StrategyConfigRP0>()
+                .Where(s => s.DepartmentName != "Programs" && s.IsUnlocked())
+                .ToList();
+        }
+
+        private static void ShowNotificationForNewLeaders(IEnumerable<StrategyConfigRP0> newLeaders)
+        {
+            string leaderString = string.Join("\n", newLeaders.Select(s => s.Title));
+            if (!string.IsNullOrEmpty(leaderString))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
+                                             "LeaderUnlocked",
+                                             Localizer.Format("#rp0_Leaders_LeadersUnlockedTitle"),
+                                             Localizer.Format("#rp0_Leaders_LeadersUnlocked") + leaderString,
+                                             Localizer.GetStringByTag("#autoLOC_190905"),
+                                             true,
+                                             HighLogic.UISkin);
+            }
         }
     }
 }

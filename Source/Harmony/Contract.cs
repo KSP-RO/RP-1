@@ -1,7 +1,8 @@
-﻿using HarmonyLib;
-using UnityEngine;
-using KSP.UI.Screens;
-using Contracts;
+﻿using Contracts;
+using HarmonyLib;
+using RP0.Requirements;
+using Strategies;
+using UniLinq;
 
 namespace RP0.Harmony
 {
@@ -67,16 +68,21 @@ namespace RP0.Harmony
                     value += $"\n{KSP.Localization.Localizer.Format("#rp0_ContractRewards_GainApplicants", applicants)}";
             }
 
-            string leaderString = string.Empty;
-            foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
-            {
-                if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
-                {
-                    if ((!_isReward || !cfg.IsUnlocked()) && cfg.UnlockByContractComplete.Contains(_contract.contractType.name))
-                        leaderString += "\n" + cfg.Title;
-                }
-            }
-            if (leaderString != string.Empty)
+            var leadersUnlockedByThis = StrategySystem.Instance.SystemConfig.Strategies
+                .OfType<StrategyConfigRP0>()
+                .Where(s => s.DepartmentName != "Programs" &&
+                            s.RequirementsBlock != null &&
+                            (!_isReward || !s.IsUnlocked()) &&
+                            (s.RequirementsBlock.Op is Any ||
+                             s.RequirementsBlock.Op is All && s.RequirementsBlock.Reqs.Count == 1) &&
+                            s.RequirementsBlock.ChildBlocks.Count == 0 &&
+                            s.RequirementsBlock.Reqs.Any(r => !r.IsInverted &&
+                                                              r is ContractRequirement cr &&
+                                                              cr.ContractName == _contract.contractType.name))
+                .Select(s => s.title);
+
+            string leaderString = string.Join("\n", leadersUnlockedByThis);
+            if (!string.IsNullOrEmpty(leaderString))
                 value += "\n" + KSP.Localization.Localizer.Format(_isReward ? "#rp0_Leaders_LeadersUnlocked" : "#rp0_Leaders_UnlocksLeader") + leaderString;
 
             __result = $"<b><color=#{RUIutils.ColorToHex(RichTextUtil.colorAwards)}>{title}:</color></b> {value}";

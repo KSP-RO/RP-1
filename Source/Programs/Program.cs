@@ -1,7 +1,9 @@
 ﻿using KSP.Localization;
 using RP0.Requirements;
+using Strategies;
 using System;
 using System.Collections.Generic;
+using UniLinq;
 using UnityEngine;
 using static ConfigNode;
 
@@ -346,27 +348,6 @@ namespace RP0.Programs
 
         public void Complete()
         {
-            string leaderString = string.Empty;
-            foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
-            {
-                if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
-                {
-                    if (!cfg.IsUnlocked() && cfg.UnlockByProgramComplete.Contains(name))
-                        leaderString += "\n" + cfg.Title;
-                }
-            }
-            if (leaderString != string.Empty)
-            {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                             new Vector2(0.5f, 0.5f),
-                                             "LeaderUnlocked",
-                                             Localizer.Format("#rp0_Leaders_LeadersUnlockedTitle"),
-                                             Localizer.Format("#rp0_Leaders_LeadersUnlocked") + leaderString,
-                                             Localizer.GetStringByTag("#autoLOC_190905"),
-                                             true,
-                                             HighLogic.UISkin);
-            }
-
             completedUT = KSPUtils.GetUT();
             float repDelta = (float)RepForComplete(completedUT);
             if (repDelta > 0)
@@ -465,16 +446,20 @@ namespace RP0.Programs
                     text += $"\n\n{Localizer.Format("#rp0_Admin_Program_ConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
                 }
 
-                string leaderString = string.Empty;
-                foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
-                {
-                    if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
-                    {
-                        if (cfg.UnlockByProgramComplete.Contains(name))
-                            leaderString += "\n" + cfg.Title;
-                    }
-                }
-                if (leaderString != string.Empty)
+                var leadersUnlockedByThis = StrategySystem.Instance.SystemConfig.Strategies
+                    .OfType<StrategyConfigRP0>()
+                    .Where(s => s.DepartmentName != "Programs" &&
+                                s.RequirementsBlock != null &&
+                                (s.RequirementsBlock.Op is Any ||
+                                 s.RequirementsBlock.Op is All && s.RequirementsBlock.Reqs.Count == 1) &&
+                                s.RequirementsBlock.ChildBlocks.Count == 0 &&
+                                s.RequirementsBlock.Reqs.Any(r => !r.IsInverted &&
+                                                                  r is ProgramRequirement pr &&
+                                                                  pr.ProgramName == name))
+                    .Select(s => s.title);
+
+                string leaderString = string.Join("\n", leadersUnlockedByThis);
+                if (!string.IsNullOrEmpty(leaderString))
                     text += "\n\n" + Localizer.Format("#rp0_Leaders_UnlocksLeader") + leaderString;
 
                 if (!IsComplete)
@@ -482,7 +467,7 @@ namespace RP0.Programs
                     text += "\n\nFunding Summary:";
                     double totalPaid;
                     int startYear;
-                    int lastYear = (int)System.Math.Ceiling(duration) + 1;
+                    int lastYear = (int)Math.Ceiling(duration) + 1;
                     if (IsActive)
                     {
                         double relativeUT = KSPUtils.GetUT() - acceptedUT;
@@ -529,6 +514,6 @@ namespace RP0.Programs
                 speed = Speed.Normal;
         }
 
-        public ProgramStrategy GetStrategy() => Strategies.StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;
+        public ProgramStrategy GetStrategy() => StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;
     }
 }

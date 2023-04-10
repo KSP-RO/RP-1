@@ -1,8 +1,8 @@
-﻿using System;
+﻿using KSP.Localization;
+using RP0.Requirements;
+using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
-using KSP.Localization;
 using static ConfigNode;
 
 namespace RP0.Programs
@@ -17,7 +17,7 @@ namespace RP0.Programs
 
             MAX
         }
-        private const string CN_CompleteContract = "COMPLETE_CONTRACT";
+
         private const double secsPerYear = 3600 * 24 * 365.25;
 
         [Persistent]
@@ -172,7 +172,6 @@ namespace RP0.Programs
             nominalDurationYears = toCopy.nominalDurationYears;
             baseFunding = toCopy.baseFunding;
             fundingCurve = toCopy.fundingCurve;
-            ConfigNode n = new ConfigNode();
             repDeltaOnCompletePerYearEarly = toCopy.repDeltaOnCompletePerYearEarly;
             repPenaltyPerYearLate = toCopy.repPenaltyPerYearLate;
             RequirementsBlock = toCopy.RequirementsBlock;
@@ -196,7 +195,7 @@ namespace RP0.Programs
             {
                 try
                 {
-                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    RequirementBlock reqBlock = RequirementBlock.Load(cn);
                     RequirementsBlock = reqBlock;
                     _requirementsPredicate = reqBlock?.Expression.Compile();
                 }
@@ -211,7 +210,7 @@ namespace RP0.Programs
             {
                 try
                 {
-                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    RequirementBlock reqBlock = RequirementBlock.Load(cn);
                     ObjectivesBlock = reqBlock;
                     _objectivesPredicate = reqBlock?.Expression.Compile();
                 }
@@ -397,100 +396,6 @@ namespace RP0.Programs
                 return RepPenaltyPerYearLate * (extraTime * recip);
             }
             return 0d;
-        }
-
-        private RequirementBlock ParseRequirementBlock(ConfigNode cn)
-        {
-            List<ProgramRequirement> reqs = ParseRequirements(cn);
-            var expressions = new List<Expression<Func<bool>>>();
-            if (reqs != null)
-            {
-                foreach (var r in reqs)
-                {
-                    expressions.Add(() => r.IsMet);
-                }
-            }
-
-            var childBlocks = new List<RequirementBlock>();
-            foreach (ConfigNode innerCn in cn.nodes)
-            {
-                RequirementBlock block = ParseRequirementBlock(innerCn);
-                if (block == null) continue;
-
-                int bCount = block.ChildBlocks?.Count ?? 0;
-                int rCount = block.Reqs?.Count ?? 0;
-                if (bCount == 0 && rCount == 1)
-                {
-                    ProgramRequirement req = block.Reqs[0];
-                    reqs ??= new List<ProgramRequirement>();
-                    reqs.Add(req);
-                    expressions.Add(() => req.IsMet);
-                }
-                else
-                {
-                    childBlocks.Add(block);
-                    expressions.Add(block.Expression);
-                }
-            }
-
-            if (expressions == null || expressions.Count == 0) return null;
-
-            if (childBlocks.Count == 1 && (reqs == null || reqs.Count == 0)) return childBlocks[0];
-
-            var op = RequirementBlock.LogicOp.Parse(cn);
-
-            return new RequirementBlock
-            {
-                Expression = op.CombineExpressions(expressions),
-                Op = op,
-                Reqs = reqs,
-                ChildBlocks = childBlocks
-            };
-        }
-
-        private List<ProgramRequirement> ParseRequirements(ConfigNode cn)
-        {
-            if (cn == null || (cn.values.Count == 0 && !cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))) return null;
-
-            var reqs = new List<ProgramRequirement>();
-
-            if (cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))
-            {
-                reqs.Add(new ContractRequirement(cn));
-            }
-            else
-            {
-                foreach (Value cnVal in cn.values)
-                {
-                    ProgramRequirement req = ParseRequirementAsExpression(cnVal);
-                    if (req != null)
-                    {
-                        reqs.Add(req);
-                    }
-                }
-            }
-
-            return reqs;
-        }
-
-        private ProgramRequirement ParseRequirementAsExpression(Value cnVal)
-        {
-            ProgramRequirement req = null;
-            switch (cnVal.name)
-            {
-                case "complete_program":
-                case "not_complete_program":
-                    req = new OtherProgramRequirement(cnVal);
-                    break;
-                case "complete_contract":
-                case "not_complete_contract":
-                    req = new ContractRequirement(cnVal);
-                    break;
-                default:
-                    break;
-            }
-
-            return req;
         }
 
         public string GetDescription(bool extendedInfo)

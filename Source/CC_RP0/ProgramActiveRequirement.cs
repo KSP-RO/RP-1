@@ -41,7 +41,7 @@ namespace ContractConfigurator.RP0
 
         protected override string RequirementText()
         {
-            IEnumerable<string> prettyNames = programs.Select(name => ProgramHandler.PrettyPrintProgramName(base.name));
+            IEnumerable<string> prettyNames = programs.Select(name => ProgramHandler.PrettyPrintProgramName(name));
             if (invertRequirement)
             {
                 return $"Must NOT have active program{(programs.Count > 1 ? "s" : "")}: {string.Join(", ", prettyNames)}";

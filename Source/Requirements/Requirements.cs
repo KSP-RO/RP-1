@@ -137,4 +137,44 @@ namespace RP0.Requirements
             return doColoring ? SurroundWithConditionalColorTags(s, IsMet) : s;
         }
     }
+
+    public class TechRequirement : Requirement
+    {
+        public string TechName { get; set; }
+
+        public string TechTitle => ResearchAndDevelopment.GetTechnologyTitle(TechName);
+
+        public override bool IsMet
+        {
+            get
+            {
+                bool b = ResearchAndDevelopment.GetTechnologyState(TechName) == RDTech.State.Available;
+                return IsInverted ? !b : b;
+            }
+        }
+
+        public TechRequirement()
+        {
+        }
+
+        public TechRequirement(Value cnVal)
+        {
+
+            TechName = cnVal.value;
+            IsInverted = cnVal.name == "not_research_tech";
+        }
+
+        public override string ToString()
+        {
+            return ToString(doColoring: false, prefix: null);
+        }
+
+        public override string ToString(bool doColoring = false, string prefix = null)
+        {
+            string s = IsInverted ? $"Haven't researched tech {TechTitle}" :
+                                    $"Research tech {TechTitle}";
+            if (prefix != null) s = prefix + s;
+            return doColoring ? SurroundWithConditionalColorTags(s, IsMet) : s;
+        }
+    }
 }

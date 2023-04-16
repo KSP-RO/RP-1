@@ -137,6 +137,10 @@ namespace RP0.Requirements
                 case "not_complete_contract":
                     req = new ContractRequirement(cnVal);
                     break;
+                case "research_tech":
+                case "not_research_tech":
+                    req = new TechRequirement(cnVal);
+                    break;
                 default:
                     break;
             }

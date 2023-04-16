@@ -20,7 +20,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "890N_Engine",
@@ -43,7 +45,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "BE-3",
@@ -115,7 +119,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "CHT400_Thruster",
@@ -138,7 +144,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "Draco",
@@ -161,7 +169,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "HiPAT",
@@ -184,7 +194,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "LEROS1b",
@@ -207,7 +219,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "LEROS4",
@@ -230,7 +244,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR103",
@@ -253,7 +269,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR104",
@@ -276,7 +294,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR106Axial",
@@ -299,7 +319,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR106Lateral",
@@ -322,7 +344,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR107",
@@ -345,7 +369,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR111",
@@ -368,7 +394,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR80TDE",
@@ -391,7 +419,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MRM106D",
@@ -414,7 +444,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MRM106D4",
@@ -437,7 +469,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MRM106F",
@@ -460,7 +494,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MRM111",
@@ -483,7 +519,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "MR_80b_MLE",
@@ -506,7 +544,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "NP_S592",
@@ -577,7 +617,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "R_40B_4kN",
@@ -600,7 +642,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "R-40",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "Rutherford",
@@ -673,7 +717,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "S10_Thruster",
@@ -696,7 +742,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "S200_Block",
@@ -719,7 +767,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "S200_Thruster",
@@ -742,7 +792,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "STAR5D",

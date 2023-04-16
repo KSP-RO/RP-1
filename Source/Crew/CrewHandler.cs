@@ -58,6 +58,7 @@ namespace RP0.Crew
         public List<TrainingTemplate> TrainingTemplates = new List<TrainingTemplate>();
         
         public bool RetirementEnabled = true;
+        public bool CrewRnREnabled = true;
         public bool IsMissionTrainingEnabled;
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
@@ -139,7 +140,7 @@ namespace RP0.Crew
 
             GameEvents.onVesselRecoveryProcessing.Add(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
-            GameEvents.OnPartPurchased.Add(new EventData<AvailablePart>.OnEvent(OnPartPurchased));
+            GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
 
@@ -261,7 +262,7 @@ namespace RP0.Crew
         {
             GameEvents.onVesselRecoveryProcessing.Remove(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
-            GameEvents.OnPartPurchased.Remove(new EventData<AvailablePart>.OnEvent(OnPartPurchased));
+            GameEvents.OnPartPurchased.Remove(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
 
@@ -289,7 +290,7 @@ namespace RP0.Crew
         public void AddPartCourses(AvailablePart ap, bool isKCTExperimentalNode = false)
         {
             if (ap.partPrefab.isVesselEVA || ap.name.StartsWith("kerbalEVA", StringComparison.OrdinalIgnoreCase) ||
-                ap.partPrefab.Modules.Contains<KerbalSeat>() || KerbalConstructionTime.Utilities.IsClamp(ap.partPrefab)) return;
+                ap.partPrefab.Modules.Contains<KerbalSeat>() || KCTUtils.IsClamp(ap.partPrefab)) return;
 
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.TryGetValue(name, out var coursePair))
@@ -477,8 +478,9 @@ namespace RP0.Crew
 
         private void LoadSettings()
         {
-            RetirementEnabled = HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
-            IsMissionTrainingEnabled = HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
+            RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
+            CrewRnREnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsCrewRnREnabled;
+            IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
             GenerateTrainingTemplates();
         }
 
@@ -590,26 +592,33 @@ namespace RP0.Crew
                 double inactiveTime = inactiveTimeDays * 86400d * inactiveCMQmult;
                 Debug.Log($"[RP-0] inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
 
-                pcm.SetInactive(inactiveTime, false);
-                inactivity.Add($"\n{pcm.name}, until {KSPUtil.PrintDate(inactiveTime + UT, true, false)}");
+                if (CrewRnREnabled)
+                {
+                    pcm.SetInactive(inactiveTime, false);
+                    inactivity.Add($"\n{pcm.name}, until {KSPUtil.PrintDate(inactiveTime + UT, true, false)}");
+                }
             }
 
+            StringBuilder sb = new StringBuilder();
             if (inactivity.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
                 sb.Append("The following crew members will be on leave:");
                 foreach (string s in inactivity)
                 {
                     sb.Append(s);
                 }
+                sb.Append("\n\n");
+            }
 
-                if (RetirementEnabled && retirementChanges.Count > 0)
-                {
-                    sb.Append("\n\nThe following retirement changes have occurred:");
-                    foreach (string s in retirementChanges)
-                        sb.Append(s);
-                }
+            if (RetirementEnabled && retirementChanges.Count > 0)
+            {
+                sb.Append("The following retirement changes have occurred:");
+                foreach (string s in retirementChanges)
+                    sb.Append(s);
+            }
 
+            if (sb.Length > 0)
+            {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "CrewUpdateNotification",
@@ -617,7 +626,8 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
-                                             HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                             HighLogic.UISkin)
+                    .PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -862,7 +872,7 @@ namespace RP0.Crew
             foreach(var course in TrainingCourses)
             {
                 bool found = false;
-                foreach (var ap in course.partsCovered)
+                foreach (var ap in course.PartsCovered)
                 {
                     if (ap.TechRequired == techID)
                     {
@@ -896,7 +906,7 @@ namespace RP0.Crew
             {
                 var course = TrainingCourses[i];
                 bool found = false;
-                foreach (var ap in course.partsCovered)
+                foreach (var ap in course.PartsCovered)
                 {
                     if (ap.TechRequired == techID)
                     {
@@ -923,7 +933,9 @@ namespace RP0.Crew
                 if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0
                     && (ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available
                         || KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired)))
+                {
                     AddPartCourses(ap);
+                }
             }
 
             foreach (var c in TrainingCourses)

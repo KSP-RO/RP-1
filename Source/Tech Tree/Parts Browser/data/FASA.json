@@ -3183,7 +3183,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "GeminiReentryControl",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "FASAGeminiPod2RCSWhite",
@@ -3206,7 +3208,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "FASAGeminiPod2White",
@@ -3302,7 +3306,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "FASAGeminiUtilityPack",
@@ -3350,7 +3356,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "FASAGerminiSRB175",
@@ -5214,7 +5222,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "TitanIUpper",

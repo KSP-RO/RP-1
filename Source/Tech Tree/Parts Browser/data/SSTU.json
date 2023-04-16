@@ -1597,7 +1597,7 @@
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -1647,7 +1647,7 @@
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo"
+            "EngineLiquidPF"
         ]
     },
     {

@@ -20,7 +20,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx1_275_445",
@@ -68,7 +70,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx1_550_890",
@@ -91,7 +95,9 @@
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx1_69_111",
@@ -114,7 +120,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx2_128_223",
@@ -137,7 +145,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx2_275_445",
@@ -185,7 +195,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx2_550_890",
@@ -208,7 +220,9 @@
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx2_69_111",
@@ -231,7 +245,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx3_128_223",
@@ -254,7 +270,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx3_275_445",
@@ -302,7 +320,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx3_550_890",
@@ -325,7 +345,9 @@
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx3_69_111",
@@ -348,7 +370,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx4_128_223",
@@ -371,7 +395,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx4_275_445",
@@ -419,7 +445,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx4_550_890",
@@ -442,7 +470,9 @@
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx4_69_111",
@@ -465,7 +495,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx5_128_223",
@@ -488,7 +520,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx5_275_445",
@@ -536,7 +570,9 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx5_550_890",
@@ -559,7 +595,9 @@
         "upgrade": "",
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO_InternalRCSx5_69_111",
@@ -582,6 +620,8 @@
         "upgrade": "",
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     }
 ]

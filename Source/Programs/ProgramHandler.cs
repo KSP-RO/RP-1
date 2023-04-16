@@ -9,6 +9,7 @@ using UnityEngine;
 using System.Reflection;
 using System.Reflection.Emit;
 using KSP.UI.Screens.DebugToolbar;
+using KSP.Localization;
 
 namespace RP0.Programs
 {
@@ -38,8 +39,6 @@ namespace RP0.Programs
         public List<Program> CompletedPrograms { get; private set; } = new List<Program>();
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
-
-        public HashSet<string> CompletedCCContracts { get; private set; } = new HashSet<string>();
 
         public int ActiveProgramLimit => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
 
@@ -86,11 +85,6 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilityDespawn.Add(HideAdminGUI);
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
             GameEvents.Contract.onAccepted.Add(OnContractAccept);
-
-            if (CompletedCCContracts == null)
-                CompletedCCContracts = new HashSet<string>();
-            else
-                CompletedCCContracts.Clear();
         }
 
         public void OnDestroy()
@@ -242,9 +236,6 @@ namespace RP0.Programs
 
             if (data is ConfiguredContract cc)
             {
-                // Add to completed hashset
-                CompletedCCContracts.Add(cc.contractType.name);
-
                 // Handle KCT applicants
                 int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)
@@ -426,11 +417,18 @@ namespace RP0.Programs
 
         public void CompleteProgram(Program p)
         {
+            List<StrategyConfigRP0> unlockedLeadersBef = GetAllUnlockedLeaders();
+
             ActivePrograms.Remove(p);
             CompletedPrograms.Add(p);
             p.Complete();
             // No change needed to ProgramStrategy because reference holds.
             ContractPreLoader.Instance?.ResetGenerationFailure();
+
+            List<StrategyConfigRP0> unlockedLeadersAft = GetAllUnlockedLeaders();
+            IEnumerable<StrategyConfigRP0> newLeaders = unlockedLeadersAft.Except(unlockedLeadersBef);
+
+            ShowNotificationForNewLeaders(newLeaders);
         }
 
         private void DisableProgram(string s)
@@ -439,6 +437,30 @@ namespace RP0.Programs
                 Debug.Log($"[RP-0] Disabling program {s}");
             else
                 Debug.Log($"[RP-0] tried to disable program {s} but it already was!");
+        }
+
+        private static List<StrategyConfigRP0> GetAllUnlockedLeaders()
+        {
+            return Strategies.StrategySystem.Instance.SystemConfig.Strategies
+                .OfType<StrategyConfigRP0>()
+                .Where(s => s.DepartmentName != "Programs" && s.IsUnlocked())
+                .ToList();
+        }
+
+        private static void ShowNotificationForNewLeaders(IEnumerable<StrategyConfigRP0> newLeaders)
+        {
+            string leaderString = string.Join("\n", newLeaders.Select(s => s.Title));
+            if (!string.IsNullOrEmpty(leaderString))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
+                                             "LeaderUnlocked",
+                                             Localizer.Format("#rp0_Leaders_LeadersUnlockedTitle"),
+                                             Localizer.Format("#rp0_Leaders_LeadersUnlocked") + leaderString,
+                                             Localizer.GetStringByTag("#autoLOC_190905"),
+                                             true,
+                                             HighLogic.UISkin);
+            }
         }
     }
 }

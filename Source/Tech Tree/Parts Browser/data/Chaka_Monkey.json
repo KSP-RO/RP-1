@@ -116,7 +116,9 @@
         "upgrade": false,
         "entry_cost_mods": "AJ10-190",
         "identical_part_name": "AJ10-190",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ICPSAdapterx",
@@ -686,7 +688,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "X84NEWTALUSXX2",
@@ -873,7 +877,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "XFASAApolloStrJ2StrJ23m5mDecX",
@@ -1585,7 +1591,9 @@
         "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "OrionRCS",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "XROVERENGINE",

@@ -678,7 +678,9 @@
         "upgrade": false,
         "entry_cost_mods": "4000, rcsMult, BipropRCS",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "rn_tks_retro",
@@ -726,7 +728,9 @@
         "upgrade": false,
         "entry_cost_mods": "16000, rcsMult, BipropRCS, capsulesVA",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "rn_uda",

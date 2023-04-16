@@ -104,7 +104,7 @@ namespace ContractConfigurator.RP0
         protected override void OnRegister()
         {
             base.OnRegister();
-            GameEvents.onLaunch.Add(new EventData<EventReport>.OnEvent(OnLaunch));
+            GameEvents.onLaunch.Add(OnLaunch);
 
             try
             {
@@ -130,7 +130,7 @@ namespace ContractConfigurator.RP0
         protected override void OnUnregister()
         {
             base.OnUnregister();
-            GameEvents.onLaunch.Remove(new EventData<EventReport>.OnEvent(OnLaunch));
+            GameEvents.onLaunch.Remove(OnLaunch);
         }
 
         protected void OnLaunch(EventReport er)

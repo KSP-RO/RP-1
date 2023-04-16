@@ -111,6 +111,8 @@
     <Compile Include="Milestones\MilestoneHandler.cs" />
     <Compile Include="Milestones\NewspaperLoader.cs" />
     <Compile Include="Milestones\NewspaperUI.cs" />
+    <Compile Include="Requirements\LogicOps.cs" />
+    <Compile Include="Requirements\RequirementBlock.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
     <Compile Include="Confidence.cs" />
     <Compile Include="Debug.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Harmony\ResearchAndDevelopment.cs" />
     <Compile Include="GameplayTips.cs" />
     <Compile Include="HarmonyPatcher.cs" />
+    <Compile Include="Harmony\BaseCrewAssignmentDialog.cs" />
     <Compile Include="Harmony\FlightEVA.cs" />
     <Compile Include="Harmony\CustomBarnKit.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
@@ -165,11 +168,11 @@
     <Compile Include="Programs\ProgramSpeedListItem.cs" />
     <Compile Include="Programs\AdminExtender.cs" />
     <Compile Include="Programs\ProgramStrategy.cs" />
-    <Compile Include="Programs\PredicateBuilder.cs" />
+    <Compile Include="Requirements\PredicateBuilder.cs" />
     <Compile Include="Programs\Program.cs" />
     <Compile Include="Programs\ProgramHandler.cs" />
     <Compile Include="Programs\ProgramHandlerSettings.cs" />
-    <Compile Include="Programs\Requirements.cs" />
+    <Compile Include="Requirements\Requirements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
     <Compile Include="Tooling\ModuleTooling.cs" />

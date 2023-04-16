@@ -143,7 +143,9 @@
         "upgrade": false,
         "entry_cost_mods": "AJ10-190",
         "identical_part_name": "AJ10-190",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "RO-RealEngines-AJ10-37",

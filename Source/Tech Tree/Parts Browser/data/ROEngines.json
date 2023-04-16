@@ -2653,7 +2653,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-HiPAT-NicheParts",
@@ -2676,7 +2678,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-J2",
@@ -2992,7 +2996,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-LEROS1B-NicheParts",
@@ -3015,7 +3021,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-LEROS4",
@@ -3038,7 +3046,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-LEROS4-NicheParts",
@@ -3061,7 +3071,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-LMAE",
@@ -3882,7 +3894,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-MR104-NicheParts",
@@ -3905,7 +3919,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-MR80B",
@@ -4669,7 +4685,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "R-40",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-R40B-NicheParts",
@@ -4692,7 +4710,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "R-40",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-R42",
@@ -4715,7 +4735,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-R42-NicheParts",
@@ -4738,7 +4760,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-RD0105",
@@ -6604,7 +6628,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-S400-NicheParts",
@@ -6627,7 +6653,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-S523",
@@ -7634,7 +7662,7 @@
         "description": "",
         "mod": "ROEngines",
         "cost": 400,
-        "entry_cost": 12000,
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1956",
@@ -7659,7 +7687,7 @@
         "description": "",
         "mod": "ROEngines",
         "cost": 400,
-        "entry_cost": 12000,
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1956",
@@ -7729,6 +7757,29 @@
         ]
     },
     {
+        "name": "ROE-XLR10",
+        "title": "XLR10",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "100",
+        "entry_cost": "",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "PW",
+        "technology": "rocketryTesting",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Viking",
+        "engine_config": "XLR10",
+        "upgrade": false,
+        "entry_cost_mods": "XLR10-RM-2",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "ROE-XLR11",
         "title": "XLR11",
         "description": "",
@@ -7779,7 +7830,7 @@
         "title": "XLR41 Series Engine",
         "description": "Americanized version of the V-2 Model 39 (A-4). It was very similar to its predecessor, but was built using American SAE components rather than Metric components, and featured several minor upgrades.",
         "mod": "ROEngines",
-        "cost": "125",
+        "cost": 135,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
@@ -7864,7 +7915,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-generic-half",
@@ -7887,7 +7940,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "ROE-generic-quarter",
@@ -7910,6 +7965,8 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     }
 ]

@@ -62,8 +62,6 @@ namespace RP0
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
         public double Researchers => KerbalConstructionTimeData.Instance.Researchers;
 
-        private double _maintenanceCostMult = 1d;
-        public double MaintenanceCostMult => _maintenanceCostMult;
         private bool _wasWarpingHigh = false;
         private int _frameCount = 0;
         private bool _waitingForLevelLoad = false;
@@ -96,11 +94,11 @@ namespace RP0
                 foreach (double d in IntegrationSalaries.Values)
                     tmp += d;
 
-                return tmp * Settings.salaryEngineers * _maintenanceCostMult / 365.25d;
+                return tmp * Settings.salaryEngineers / 365.25d;
             }
         }
 
-        public double ResearchSalaryPerDay => _maintenanceCostMult * Researchers * Settings.salaryResearchers / 365.25d;
+        public double ResearchSalaryPerDay => Researchers * Settings.salaryResearchers / 365.25d;
 
         public struct SubsidyDetails
         {
@@ -188,7 +186,6 @@ namespace RP0
             Instance = this;
 
             GameEvents.OnGameSettingsApplied.Add(SettingsChanged);
-            GameEvents.onGameStateLoad.Add(LoadSettings);
             GameEvents.onVesselRecoveryProcessingComplete.Add(onVesselRecoveryProcessingComplete);
             GameEvents.onKerbalInactiveChange.Add(onKerbalInactiveChange);
             GameEvents.onKerbalStatusChange.Add(onKerbalStatusChange);
@@ -270,7 +267,7 @@ namespace RP0
             baseCostPerDay = Settings.nautYearlyUpkeepBase + ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * Settings.nautYearlyUpkeepAdd;
             if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
             {
-                flightCostPerDay = _maintenanceCostMult * Settings.nautInFlightDailyRate;
+                flightCostPerDay = Settings.nautInFlightDailyRate;
             }
             else
             {
@@ -282,7 +279,7 @@ namespace RP0
                 }
             }
 
-            baseCostPerDay *= (_maintenanceCostMult / 365.25d);
+            baseCostPerDay /= 365.25d;
         }
 
         public double ComputeDailyMaintenanceCost(double cost, FacilityMaintenanceType facilityType = FacilityMaintenanceType.Building)
@@ -290,7 +287,7 @@ namespace RP0
             if (facilityType == FacilityMaintenanceType.Hangar)
                 cost = Math.Max(Settings.hangarCostForMaintenanceMin, cost - Settings.hangarCostForMaintenanceOffset);
 
-            double upkeep = _maintenanceCostMult * Settings.facilityLevelCostMult * Math.Pow(cost, Settings.facilityLevelCostPow);
+            double upkeep = Settings.facilityLevelCostMult * Math.Pow(cost, Settings.facilityLevelCostPow);
 
             if (facilityType == FacilityMaintenanceType.LC)
                 upkeep *= Settings.lcCostMultiplier;
@@ -542,7 +539,6 @@ namespace RP0
 
         public void OnDestroy()
         {
-            GameEvents.onGameStateLoad.Remove(LoadSettings);
             GameEvents.OnGameSettingsApplied.Remove(SettingsChanged);
             GameEvents.onVesselRecoveryProcessingComplete.Remove(onVesselRecoveryProcessingComplete);
             GameEvents.onKerbalInactiveChange.Remove(onKerbalInactiveChange);
@@ -554,14 +550,8 @@ namespace RP0
 
         #endregion
 
-        private void LoadSettings(ConfigNode data)
-        {
-            _maintenanceCostMult = 1f;
-        }
-
         private void SettingsChanged()
         {
-            LoadSettings(null);
             UpdateUpkeep();
         }
 

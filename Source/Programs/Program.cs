@@ -1,8 +1,10 @@
-﻿using System;
+﻿using KSP.Localization;
+using RP0.Requirements;
+using Strategies;
+using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using UniLinq;
 using UnityEngine;
-using KSP.Localization;
 using static ConfigNode;
 
 namespace RP0.Programs
@@ -17,7 +19,7 @@ namespace RP0.Programs
 
             MAX
         }
-        private const string CN_CompleteContract = "COMPLETE_CONTRACT";
+
         private const double secsPerYear = 3600 * 24 * 365.25;
 
         [Persistent]
@@ -172,7 +174,6 @@ namespace RP0.Programs
             nominalDurationYears = toCopy.nominalDurationYears;
             baseFunding = toCopy.baseFunding;
             fundingCurve = toCopy.fundingCurve;
-            ConfigNode n = new ConfigNode();
             repDeltaOnCompletePerYearEarly = toCopy.repDeltaOnCompletePerYearEarly;
             repPenaltyPerYearLate = toCopy.repPenaltyPerYearLate;
             RequirementsBlock = toCopy.RequirementsBlock;
@@ -196,7 +197,7 @@ namespace RP0.Programs
             {
                 try
                 {
-                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    RequirementBlock reqBlock = RequirementBlock.Load(cn);
                     RequirementsBlock = reqBlock;
                     _requirementsPredicate = reqBlock?.Expression.Compile();
                 }
@@ -211,7 +212,7 @@ namespace RP0.Programs
             {
                 try
                 {
-                    RequirementBlock reqBlock = ParseRequirementBlock(cn);
+                    RequirementBlock reqBlock = RequirementBlock.Load(cn);
                     ObjectivesBlock = reqBlock;
                     _objectivesPredicate = reqBlock?.Expression.Compile();
                 }
@@ -347,27 +348,6 @@ namespace RP0.Programs
 
         public void Complete()
         {
-            string leaderString = string.Empty;
-            foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
-            {
-                if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
-                {
-                    if (!cfg.IsUnlocked() && cfg.UnlockByProgramComplete.Contains(name))
-                        leaderString += "\n" + cfg.Title;
-                }
-            }
-            if (leaderString != string.Empty)
-            {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                             new Vector2(0.5f, 0.5f),
-                                             "LeaderUnlocked",
-                                             Localizer.Format("#rp0_Leaders_LeadersUnlockedTitle"),
-                                             Localizer.Format("#rp0_Leaders_LeadersUnlocked") + leaderString,
-                                             Localizer.GetStringByTag("#autoLOC_190905"),
-                                             true,
-                                             HighLogic.UISkin);
-            }
-
             completedUT = KSPUtils.GetUT();
             float repDelta = (float)RepForComplete(completedUT);
             if (repDelta > 0)
@@ -397,100 +377,6 @@ namespace RP0.Programs
                 return RepPenaltyPerYearLate * (extraTime * recip);
             }
             return 0d;
-        }
-
-        private RequirementBlock ParseRequirementBlock(ConfigNode cn)
-        {
-            List<ProgramRequirement> reqs = ParseRequirements(cn);
-            var expressions = new List<Expression<Func<bool>>>();
-            if (reqs != null)
-            {
-                foreach (var r in reqs)
-                {
-                    expressions.Add(() => r.IsMet);
-                }
-            }
-
-            var childBlocks = new List<RequirementBlock>();
-            foreach (ConfigNode innerCn in cn.nodes)
-            {
-                RequirementBlock block = ParseRequirementBlock(innerCn);
-                if (block == null) continue;
-
-                int bCount = block.ChildBlocks?.Count ?? 0;
-                int rCount = block.Reqs?.Count ?? 0;
-                if (bCount == 0 && rCount == 1)
-                {
-                    ProgramRequirement req = block.Reqs[0];
-                    reqs ??= new List<ProgramRequirement>();
-                    reqs.Add(req);
-                    expressions.Add(() => req.IsMet);
-                }
-                else
-                {
-                    childBlocks.Add(block);
-                    expressions.Add(block.Expression);
-                }
-            }
-
-            if (expressions == null || expressions.Count == 0) return null;
-
-            if (childBlocks.Count == 1 && (reqs == null || reqs.Count == 0)) return childBlocks[0];
-
-            var op = RequirementBlock.LogicOp.Parse(cn);
-
-            return new RequirementBlock
-            {
-                Expression = op.CombineExpressions(expressions),
-                Op = op,
-                Reqs = reqs,
-                ChildBlocks = childBlocks
-            };
-        }
-
-        private List<ProgramRequirement> ParseRequirements(ConfigNode cn)
-        {
-            if (cn == null || (cn.values.Count == 0 && !cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))) return null;
-
-            var reqs = new List<ProgramRequirement>();
-
-            if (cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))
-            {
-                reqs.Add(new ContractRequirement(cn));
-            }
-            else
-            {
-                foreach (Value cnVal in cn.values)
-                {
-                    ProgramRequirement req = ParseRequirementAsExpression(cnVal);
-                    if (req != null)
-                    {
-                        reqs.Add(req);
-                    }
-                }
-            }
-
-            return reqs;
-        }
-
-        private ProgramRequirement ParseRequirementAsExpression(Value cnVal)
-        {
-            ProgramRequirement req = null;
-            switch (cnVal.name)
-            {
-                case "complete_program":
-                case "not_complete_program":
-                    req = new OtherProgramRequirement(cnVal);
-                    break;
-                case "complete_contract":
-                case "not_complete_contract":
-                    req = new ContractRequirement(cnVal);
-                    break;
-                default:
-                    break;
-            }
-
-            return req;
         }
 
         public string GetDescription(bool extendedInfo)
@@ -560,16 +446,20 @@ namespace RP0.Programs
                     text += $"\n\n{Localizer.Format("#rp0_Admin_Program_ConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
                 }
 
-                string leaderString = string.Empty;
-                foreach (var s in Strategies.StrategySystem.Instance.SystemConfig.Strategies)
-                {
-                    if (s is StrategyConfigRP0 cfg && s.DepartmentName != "Programs")
-                    {
-                        if (cfg.UnlockByProgramComplete.Contains(name))
-                            leaderString += "\n" + cfg.Title;
-                    }
-                }
-                if (leaderString != string.Empty)
+                var leadersUnlockedByThis = StrategySystem.Instance.SystemConfig.Strategies
+                    .OfType<StrategyConfigRP0>()
+                    .Where(s => s.DepartmentName != "Programs" &&
+                                s.RequirementsBlock != null &&
+                                (s.RequirementsBlock.Op is Any ||
+                                 s.RequirementsBlock.Op is All && s.RequirementsBlock.Reqs.Count == 1) &&
+                                s.RequirementsBlock.ChildBlocks.Count == 0 &&
+                                s.RequirementsBlock.Reqs.Any(r => !r.IsInverted &&
+                                                                  r is ProgramRequirement pr &&
+                                                                  pr.ProgramName == name))
+                    .Select(s => s.title);
+
+                string leaderString = string.Join("\n", leadersUnlockedByThis);
+                if (!string.IsNullOrEmpty(leaderString))
                     text += "\n\n" + Localizer.Format("#rp0_Leaders_UnlocksLeader") + leaderString;
 
                 if (!IsComplete)
@@ -577,7 +467,7 @@ namespace RP0.Programs
                     text += "\n\nFunding Summary:";
                     double totalPaid;
                     int startYear;
-                    int lastYear = (int)System.Math.Ceiling(duration) + 1;
+                    int lastYear = (int)Math.Ceiling(duration) + 1;
                     if (IsActive)
                     {
                         double relativeUT = KSPUtils.GetUT() - acceptedUT;
@@ -624,6 +514,6 @@ namespace RP0.Programs
                 speed = Speed.Normal;
         }
 
-        public ProgramStrategy GetStrategy() => Strategies.StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;
+        public ProgramStrategy GetStrategy() => StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;
     }
 }

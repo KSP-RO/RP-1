@@ -66,7 +66,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "AdvancedCanard",
@@ -795,7 +797,7 @@
         "title": "Adjustable Ramp Intake (Radial)",
         "description": "This intake addresses those sometimes absurd contraptions that SSTO engineers designed in an attempt to pump more and more air into their engines. Optimized for supersonic flight.",
         "mod": "Stock (RO Config)",
-        "cost": "10",
+        "cost": 22,
         "entry_cost": "200",
         "category": "FLIGHT",
         "info": "Intake",
@@ -815,15 +817,15 @@
     },
     {
         "name": "JetEngine",
-        "title": "CF34 Turbofan",
+        "title": "TF/CF34 Turbofan",
         "description": "The CF34 series high bypass turbofan powers many of the CRJ and Challenger lines of civil aircraft. 41.0kN thrust, SFC 0.346 lb/lbf-hr. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
         "cost": "242",
         "entry_cost": 0,
         "category": "FLIGHT",
         "info": "Engine",
-        "year": "1983",
-        "technology": "refinedTurbofans",
+        "year": "1972",
+        "technology": "matureTurbofans",
         "era": "07-SPCPLANES",
         "ro": true,
         "rp0": true,
@@ -832,7 +834,7 @@
         "spacecraft": "CRJ, Challenger",
         "engine_config": "CF34",
         "upgrade": false,
-        "entry_cost_mods": "CF34-1A",
+        "entry_cost_mods": "TF34-GE-100",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5200,7 +5202,7 @@
         "title": "Small Circular Intake",
         "description": "A must-have for air breathing engines, this intake duct will pull in outside air to run turbine engines on, as long as there is any outside air to begin with, of course. Optimized for subsonic flight.",
         "mod": "Stock (RO Config)",
-        "cost": "20",
+        "cost": 5,
         "entry_cost": "1",
         "category": "FLIGHT",
         "info": "Intake",
@@ -6173,7 +6175,9 @@
         "upgrade": false,
         "entry_cost_mods": "AJ10-190",
         "identical_part_name": "AJ10-190",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "parachuteDrogue",
@@ -6702,7 +6706,7 @@
         "title": "Ramp Intake",
         "description": "At supersonic speeds, -PATENT PENDING, CLASSIFIED INFO- inside the intake duct deflect the incoming air stream, causing -PATENT PENDING, CLASSIFIED INFO-, which creates a -PATENT PENDING, CLASSIFIED INFO-, thereby greatly increasing the efficiency of this unit at supersonic speeds. Patents Pending.",
         "mod": "Stock (RO Config)",
-        "cost": "40",
+        "cost": 50,
         "entry_cost": "800",
         "category": "FLIGHT",
         "info": "Intake",

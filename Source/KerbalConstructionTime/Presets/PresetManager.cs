@@ -98,6 +98,14 @@ namespace KerbalConstructionTime
                     ActivePreset = defaultSettings;
                 else
                     ActivePreset = new KCT_Preset("UNINIT", "UNINIT", "NA", "NA");
+
+                // Start sandbox saves with KCT disabled
+                if (HighLogic.CurrentGame?.Mode == Game.Modes.SANDBOX)
+                {
+                    ActivePreset = new KCT_Preset(ActivePreset);
+                    ActivePreset.RenameToCustom();
+                    ActivePreset.GeneralSettings.Enabled = false;
+                }
             }
         }
 
@@ -314,6 +322,14 @@ namespace KerbalConstructionTime
         public void SetActive()
         {
             PresetManager.Instance.ActivePreset = this;
+        }
+
+        public void RenameToCustom()
+        {
+            Name = "Custom";
+            ShortName = "Custom";
+            Description = "A custom set of configs.";
+            Author = HighLogic.SaveFolder;
         }
     }
 

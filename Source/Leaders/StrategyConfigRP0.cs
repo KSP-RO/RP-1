@@ -1,7 +1,9 @@
-﻿using Strategies;
-using UnityEngine;
+﻿using RP0.DataTypes;
+using RP0.Requirements;
+using Strategies;
+using System;
 using System.Collections.Generic;
-using RP0.DataTypes;
+using UnityEngine;
 
 namespace RP0
 {
@@ -47,24 +49,12 @@ namespace RP0
         //public PersistentDictionaryValueTypes<CurrencyRP0, double> EndCosts => endCosts;
 
         /// <summary>
-        /// The strategy only becomes available when the given contract(s) complete.
-        /// If any of these contracts are complete, the strategy becomes available.
-        /// This is not exclusive with Program unlocks; a strategy with both set becomes available
-        /// once the first condition is met.
+        /// The strategy only becomes available when conditions in the predicate are met.
         /// </summary>
-        [Persistent]
-        protected PersistentListValueType<string> unlockByContractComplete = new PersistentListValueType<string>();
-        public PersistentListValueType<string> UnlockByContractComplete => unlockByContractComplete;
+        private Func<bool> requirementsPredicate;
 
-        /// <summary>
-        /// The strategy only becomes available when the given program(s) complete.
-        /// If any of these programs are complete, the strategy becomes available.
-        /// This is not exclusive with Contract unlocks; a strategy with both set becomes available
-        /// once the first condition is met.
-        /// </summary>
-        [Persistent]
-        protected PersistentListValueType<string> unlockByProgramComplete = new PersistentListValueType<string>();
-        public PersistentListValueType<string> UnlockByProgramComplete => unlockByProgramComplete;
+        public RequirementBlock RequirementsBlock => requirementsBlock;
+        private RequirementBlock requirementsBlock;
 
         /// <summary>
         /// Does the strategy disappear from the list when it is deactivated?
@@ -116,10 +106,21 @@ namespace RP0
                 setupRequirements = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
             //if (endCosts == null)
             //    endCosts = new PersistentDictionaryValueTypes<CurrencyRP0, double>();
-            if (unlockByContractComplete == null)
-                unlockByContractComplete = new PersistentListValueType<string>();
-            if (unlockByProgramComplete == null)
-                unlockByProgramComplete = new PersistentListValueType<string>();
+
+            ConfigNode cn = node.GetNode("REQUIREMENTS");
+            if (cn != null)
+            {
+                try
+                {
+                    RequirementBlock reqBlock = RequirementBlock.Load(cn);
+                    requirementsBlock = reqBlock;
+                    requirementsPredicate = reqBlock?.Expression.Compile();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[RP-0] Exception loading requirements for strategy {name}: {ex}");
+                }
+            }
 
             // For some reason need to set here, not in ctor.
             removalCostRepPercent = 0.1d;
@@ -148,18 +149,7 @@ namespace RP0
         /// <returns></returns>
         public virtual bool IsUnlocked()
         {
-            if (unlockByContractComplete.Count == 0 && unlockByProgramComplete.Count == 0)
-                return true;
-
-            foreach (string s in unlockByContractComplete)
-                if (Programs.ProgramHandler.Instance.CompletedCCContracts.Contains(s))
-                    return true;
-
-            foreach (string s in unlockByProgramComplete)
-                if (Programs.ProgramHandler.Instance.CompletedPrograms.Find(p => p.name == s) != null)
-                    return true;
-
-            return false;
+            return requirementsPredicate == null || requirementsPredicate();
         }
 
         /// <summary>

@@ -93,57 +93,7 @@
         "spacecraft": "MAG-3/3",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "5000,RO-HeliumMagnet-BDB",
-        "identical_part_name": "",
-        "module_tags": [
-            "Instruments"
-        ]
-    },
-    {
-        "name": "RO-HighResFilmCamera",
-        "title": "PH03 - High Resolution Film Camera",
-        "description": "The High Resolution Film Camera is used to take photographs of Earth from space. This camera provides very high resolution photographs of Earth. They can be transmitted back to Earth, but some fidelity is lost. It is still recommended to physically return them. Historically, these were flown as Spy Satellites under the KH-9 Hexagon name.\\nThe photos can be transmitted, but at a penalty of only 50% data. Level 3 Photograph Experiment. Can gather 100% of Photography Science. You can store up to 5 different photos before you need to return them to Earth.",
-        "mod": "RP-0 (DMagic Model)",
-        "cost": "1000",
-        "entry_cost": 25000,
-        "category": "SCIENCE",
-        "info": "Deprecated",
-        "year": "1971",
-        "technology": "surfaceScience",
-        "era": "05-LUNAR",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": false,
-        "spacecraft": "PHOTO-3/4",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "2500, RO-ImprovedFilmCamera",
-        "identical_part_name": "",
-        "module_tags": [
-            "Instruments"
-        ]
-    },
-    {
-        "name": "RO-ImprovedFilmCamera",
-        "title": "PH02 - Improved Film Camera",
-        "description": "The Improved Film Camera is used to take photographs of Earth from space. This is an early camera, but is a vast improvement over the Early Camera. Historically, these were flown as Spy Satellites under the Corona name.\\nThe photos can be transmitted, but at a severe penalty of only 25% data. Level 2 Photograph Experiment. Can gather 50% of Photography Science. You can store up to 3 different photos before you need to return them to Earth.",
-        "mod": "RP-0 (DMagic Model)",
-        "cost": "500",
-        "entry_cost": "2500",
-        "category": "SCIENCE",
-        "info": "Deprecated",
-        "year": "1959",
-        "technology": "scienceSatellite",
-        "era": "02-SAT",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": false,
-        "spacecraft": "PHOTO-2/4",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "2500, science-module",
+        "entry_cost_mods": "5000,RO-HeliumMagnet",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"
@@ -193,7 +143,7 @@
         "spacecraft": "IR-4/4",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "2500,RO-TwoChannelIR-BDB",
+        "entry_cost_mods": "2500,RO-TwoChannelIR",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"
@@ -218,7 +168,7 @@
         "spacecraft": "RPWS-3/3",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "2500,RO-SWPlasmaAnalyzer-BDB",
+        "entry_cost_mods": "2500,RO-SWPlasmaAnalyzer",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"

@@ -125,7 +125,7 @@
         "category": "FLIGHT",
         "info": "Cockpit",
         "year": "1978",
-        "technology": "matureTurbofans",
+        "technology": "efficientSupersonic",
         "era": "06-STATION",
         "ro": false,
         "rp0": false,

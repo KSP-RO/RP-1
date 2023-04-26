@@ -201,7 +201,7 @@
         "category": "FLIGHT",
         "info": "Engine",
         "year": "1983",
-        "technology": "refinedTurbofans",
+        "technology": "matureTurbofans",
         "era": "07-SPCPLANES",
         "ro": true,
         "rp0": false,

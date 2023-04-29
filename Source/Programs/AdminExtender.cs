@@ -330,11 +330,10 @@ namespace RP0.Programs
         private void AddProgramFundingOverview()
         {
             // Don't have the VLG force the child width
-            Administration.Instance.prefabStratListItem.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
+            // Administration.Instance.prefabStratListItem.gameObject.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
 
-            // Instantiate the new GO
-            var fundingGraphArea = GameObject.Instantiate(Administration.Instance.prefabStratListItem, Administration.Instance.textPanel.transform, worldPositionStays: false);
-            fundingGraphArea.gameObject.name = "ProgramFundingGraphArea";
+            GameObject fundingGraphArea = new GameObject("ProgramFundingGraphArea", typeof(RectTransform));
+            fundingGraphArea.transform.SetParent(Administration.Instance.textPanel.transform);
             fundingGraphArea.gameObject.SetActive(true);
 
             // Create a Panel with a Layout Element
@@ -348,30 +347,38 @@ namespace RP0.Programs
             hLG.spacing = 5;
 
             // Create the Y-Axis Label
-            var yAxisLabel = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphPanel.transform, worldPositionStays: false);
+            GameObject yAxisLabel = new GameObject("ProgramFundingGraphYAxis", typeof(RectTransform));
+            yAxisLabel.transform.SetParent(fundingGraphPanel.transform);
             yAxisLabel.gameObject.name = "FundingPerMonth";
             var yAxisLabelLG = yAxisLabel.gameObject.AddComponent<LayoutElement>();
             yAxisLabelLG.preferredWidth = 100;
-            TextMeshProUGUI yAxisText = yAxisLabel.gameObject.AddComponent<TextMeshProUGUI>();
+            TextMeshProUGUI yAxisTM = null;                
+            yAxisLabel.gameObject.AddComponent<TextMeshProUGUI>();
+            var yAxisText = yAxisLabel.GetComponent<TextMeshProUGUI>();
+            yAxisTM = yAxisText;
             yAxisText.alignment = TextAlignmentOptions.Midline;
             yAxisText.fontSizeMax = 14;
             yAxisText.text = "<sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> per Month";
 
             // Create the Graph and X-Axis Label Area
-            var fundingGraphLayout = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphPanel.transform, worldPositionStays: false);
+            GameObject fundingGraphLayout = new GameObject("ProgramFundingGraphLayout", typeof(RectTransform));
+            fundingGraphLayout.transform.SetParent(fundingGraphPanel.transform);
             fundingGraphLayout.name = "FundingGraphLayout";
             fundingGraphLayout.gameObject.AddComponent<LayoutElement>().preferredWidth = 395;
             var vLG = fundingGraphLayout.gameObject.AddComponent<VerticalLayoutGroup>();
             vLG.childForceExpandWidth = true;
             vLG.childForceExpandHeight = false;
 
-            var fundingGraph = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphLayout.transform, worldPositionStays: false);
+            var fundingGraph = GameObject.Instantiate(fundingGraphPanel, fundingGraphLayout.transform, worldPositionStays: false);
             fundingGraph.name = "FundingGraph";
-            var graphTex = fundingGraph.gameObject.AddComponent<Image>();
+            //Image graphTex = fundingGraph.gameObject.AddComponent<Image>();
             Texture2D graphImage = GameDatabase.Instance.GetTexture("RP-0/Strategies/Leaders/VladimirChelomey", false);
-            graphTex.sprite = Sprite.Create(graphImage, graphTex.sprite.rect, graphTex.sprite.pivot);
+            SpriteRenderer sRend = fundingGraph.gameObject.AddComponent<SpriteRenderer>();
+            Sprite newSprite = Sprite.Create(graphImage, new Rect(0,0, graphImage.width, graphImage.height), new Vector2(0.5f, 0.5f), 100f);
+            sRend.sprite = newSprite;
 
-            var xAxisLabel = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphLayout.transform, worldPositionStays: false);
+            GameObject xAxisLabel = new GameObject("ProgramFundingGraphXAxis", typeof(RectTransform));
+            xAxisLabel.transform.SetParent(fundingGraphLayout.transform);
             xAxisLabel.name = "FundingGraphYear";
             TextMeshProUGUI xAxisText = xAxisLabel.gameObject.AddComponent<TextMeshProUGUI>();
             xAxisText.alignment = TextAlignmentOptions.Midline;

@@ -332,12 +332,14 @@ namespace RP0.Harmony
                 }
 
                 AdminExtender.Instance.SetSpeedButtonsActive(!ps.Program.IsActive && !ps.Program.IsComplete ? ps.Program : null);
+                AdminExtender.Instance.SetFundingGraphActive(ps.Program);
             }
             else
             {
                 tooltip.tooltipStates.First(s => s.name == "accept").tooltipText = Localizer.Format("#rp0_Leaders_Appoint");
                 tooltip.tooltipStates.First(s => s.name == "cancel").tooltipText = Localizer.Format("#rp0_Leaders_Remove");
                 AdminExtender.Instance.SetSpeedButtonsActive(null);
+                AdminExtender.Instance.SetFundingGraphActive(null);
             }
             AdminExtender.Instance.BtnSpacer.gameObject.SetActive(!Administration.Instance.btnAcceptCancel.gameObject.activeSelf);
         }

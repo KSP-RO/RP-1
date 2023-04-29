@@ -111,6 +111,16 @@ namespace RP0.Programs
             PressedSpeedButton = false; // clear state
         }
 
+        public void SetFundingGraphActive(Program program)
+        {
+            bool active = program != null;
+
+            if (active)
+            {
+                AddProgramFundingOverview();
+            }
+        }
+
         /// <summary>
         /// We need this gross class (like StrategyWrapper) to handle the linkage between the button and the current active program
         /// So when you click the button, the program gets the input
@@ -315,6 +325,63 @@ namespace RP0.Programs
 
             foreach (var button in _speedButtons.Values)
                 button.gameObject.SetActive(false);
+        }
+
+        private void AddProgramFundingOverview()
+        {
+            // Don't have the VLG force the child width
+            Administration.Instance.prefabStratListItem.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
+
+            // Instantiate the new GO
+            var fundingGraphArea = GameObject.Instantiate(Administration.Instance.prefabStratListItem, Administration.Instance.textPanel.transform, worldPositionStays: false);
+            fundingGraphArea.gameObject.name = "ProgramFundingGraphArea";
+            fundingGraphArea.gameObject.SetActive(true);
+
+            // Create a Panel with a Layout Element
+            var fundingGraphPanel = fundingGraphArea.gameObject.AddComponent<LayoutElement>();
+            fundingGraphPanel.preferredWidth = 500;
+
+            // Create a HLG to control the elements below it
+            var hLG = fundingGraphArea.gameObject.AddComponent<HorizontalLayoutGroup>();
+            hLG.childForceExpandWidth = true;
+            hLG.childForceExpandHeight = true;
+            hLG.spacing = 5;
+
+            // Create the Y-Axis Label
+            var yAxisLabel = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphPanel.transform, worldPositionStays: false);
+            yAxisLabel.gameObject.name = "FundingPerMonth";
+            var yAxisLabelLG = yAxisLabel.gameObject.AddComponent<LayoutElement>();
+            yAxisLabelLG.preferredWidth = 100;
+            TextMeshProUGUI yAxisText = yAxisLabel.gameObject.AddComponent<TextMeshProUGUI>();
+            yAxisText.alignment = TextAlignmentOptions.Midline;
+            yAxisText.fontSizeMax = 14;
+            yAxisText.text = "<sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> per Month";
+
+            // Create the Graph and X-Axis Label Area
+            var fundingGraphLayout = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphPanel.transform, worldPositionStays: false);
+            fundingGraphLayout.name = "FundingGraphLayout";
+            fundingGraphLayout.gameObject.AddComponent<LayoutElement>().preferredWidth = 395;
+            var vLG = fundingGraphLayout.gameObject.AddComponent<VerticalLayoutGroup>();
+            vLG.childForceExpandWidth = true;
+            vLG.childForceExpandHeight = false;
+
+            var fundingGraph = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphLayout.transform, worldPositionStays: false);
+            fundingGraph.name = "FundingGraph";
+            var graphTex = fundingGraph.gameObject.AddComponent<Image>();
+            Texture2D graphImage = GameDatabase.Instance.GetTexture("RP-0/Strategies/Leaders/VladimirChelomey", false);
+            graphTex.sprite = Sprite.Create(graphImage, graphTex.sprite.rect, graphTex.sprite.pivot);
+
+            var xAxisLabel = GameObject.Instantiate(Administration.Instance.prefabStratListItem, fundingGraphLayout.transform, worldPositionStays: false);
+            xAxisLabel.name = "FundingGraphYear";
+            TextMeshProUGUI xAxisText = xAxisLabel.gameObject.AddComponent<TextMeshProUGUI>();
+            xAxisText.alignment = TextAlignmentOptions.Midline;
+            xAxisText.fontSizeMax = 14;
+            xAxisText.text = "Year";
+
+            yAxisLabel.gameObject.SetActive(true);
+            fundingGraphLayout.gameObject.SetActive(true);
+            fundingGraph.gameObject.SetActive(true);
+            xAxisLabel.gameObject.SetActive(true);
         }
 
         public void BindAndFixUI()

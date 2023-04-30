@@ -62,9 +62,6 @@ namespace RP0.Programs
             _adminTabToggles[view].isOn = true; // this will trip OnClickTab.
         }
 
-        private Image _imgFundingGraph = null;
-        private GameObject _fundingGraphPanel = null;
-                
         private LayoutElement _btnSpacer = null;
         public LayoutElement BtnSpacer => _btnSpacer;
 
@@ -81,6 +78,8 @@ namespace RP0.Programs
 
         private TMPro.TextMeshProUGUI _speedOptionsNames;
         private TMPro.TextMeshProUGUI _speedOptionsCosts;
+
+        private ProgramFundingOverview _fundingOverview;
 
         public void SetSpeedButtonsActive(Program program)
         {
@@ -116,17 +115,7 @@ namespace RP0.Programs
 
         public void SetFundingGraphActive(Program program)
         {
-            bool active = program != null;
-
-            if (active)
-            {
-                //_imgFundingGraph.sprite = Sprite.Create(...)
-                _fundingGraphPanel.SetActive(true);
-            }
-            else
-            {
-                _fundingGraphPanel.SetActive(false);
-            }
+            _fundingOverview.SetupProgram(program);
         }
 
         /// <summary>
@@ -340,67 +329,11 @@ namespace RP0.Programs
             // Don't have the VLG force the child width
             // Administration.Instance.prefabStratListItem.gameObject.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
 
-            _fundingGraphPanel = new GameObject("ProgramFundingGraphArea", typeof(RectTransform));
+            var _fundingGraphPanel = new GameObject("ProgramFundingGraphArea", typeof(RectTransform));
             _fundingGraphPanel.transform.SetParent(Administration.Instance.textPanel.transform);
+            _fundingOverview = _fundingGraphPanel.gameObject.AddComponent<ProgramFundingOverview>();
+
             _fundingGraphPanel.gameObject.SetActive(true);
-
-            // Create a Panel with a Layout Element
-            var mainGraphAreaLE = _fundingGraphPanel.gameObject.AddComponent<LayoutElement>();
-            mainGraphAreaLE.preferredWidth = 500;
-
-            // Create a HLG to control the elements below it
-            var hLG = _fundingGraphPanel.AddComponent<HorizontalLayoutGroup>();
-            hLG.childForceExpandWidth = true;
-            hLG.childForceExpandHeight = true;
-            hLG.spacing = 5;
-
-            // Create the Y-Axis Label
-            GameObject yAxisLabelGO = new GameObject("ProgramFundingGraphYAxis", typeof(RectTransform));
-            yAxisLabelGO.transform.SetParent(mainGraphAreaLE.transform);
-            yAxisLabelGO.gameObject.name = "FundingPerMonth";
-            var yAxisLabelLE = yAxisLabelGO.gameObject.AddComponent<LayoutElement>();
-            yAxisLabelLE.preferredWidth = 100;
-            TextMeshProUGUI yAxisText = yAxisLabelGO.gameObject.AddComponent<TextMeshProUGUI>();
-            yAxisText.alignment = TextAlignmentOptions.Midline;
-            yAxisText.fontSizeMax = 14;
-            yAxisText.fontSizeMin = 4;
-            yAxisText.fontSize = 12;
-            yAxisText.text = "<sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> per Month";
-
-            // Create the Graph and X-Axis Label Area
-            GameObject graphRightPanelGO = new GameObject("ProgramFundingGraphLayout", typeof(RectTransform));
-            graphRightPanelGO.transform.SetParent(mainGraphAreaLE.transform);
-            graphRightPanelGO.name = "FundingGraphLayout";
-            graphRightPanelGO.gameObject.AddComponent<LayoutElement>().preferredWidth = 395;
-            var vLG = graphRightPanelGO.gameObject.AddComponent<VerticalLayoutGroup>();
-            vLG.childForceExpandWidth = true;
-            vLG.childForceExpandHeight = false;
-
-            var fundingGraph = new GameObject("FundingGraph", typeof(RectTransform));
-            fundingGraph.transform.SetParent(graphRightPanelGO.transform);
-            fundingGraph.name = "FundingGraph";
-            Texture2D graphImage = GameDatabase.Instance.GetTexture("RP-0/Strategies/Leaders/VladimirChelomey", false);
-            _imgFundingGraph = fundingGraph.gameObject.AddComponent<Image>();
-            Sprite newSprite = Sprite.Create(graphImage, new Rect(0,0, graphImage.width, graphImage.height), new Vector2(0.5f, 0.5f));
-            _imgFundingGraph.sprite = newSprite;
-
-
-            GameObject xAxisLabel = new GameObject("ProgramFundingGraphXAxis", typeof(RectTransform));
-            xAxisLabel.transform.SetParent(graphRightPanelGO.transform);
-            xAxisLabel.name = "FundingGraphYear";
-            TextMeshProUGUI xAxisText = xAxisLabel.gameObject.AddComponent<TextMeshProUGUI>();
-            xAxisText.alignment = TextAlignmentOptions.Midline;
-            xAxisText.fontSizeMax = 14;
-            xAxisText.fontSizeMin = 4;
-            xAxisText.fontSize = 12;
-            xAxisText.text = "Year";
-
-            yAxisLabelGO.gameObject.SetActive(true);
-            graphRightPanelGO.gameObject.SetActive(true);
-            fundingGraph.gameObject.SetActive(true);
-            xAxisLabel.gameObject.SetActive(true);
-
-            _fundingGraphPanel.SetActive(false);
         }
 
         public void BindAndFixUI()
@@ -426,7 +359,7 @@ namespace RP0.Programs
             AddSpeedButtons();
             AddProgramFundingOverview();
         }
-        
+
         public void Awake()
         {
             if (Instance != null)

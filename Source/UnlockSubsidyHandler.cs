@@ -56,6 +56,10 @@ namespace RP0
         /// <param name="amount"></param>
         public void IncrementSubsidy(string tech, double amount)
         {
+            // Will also catch NaN
+            if (!(amount > 0))
+                return;
+
             if (!_subsidyStorage.TryGetValue(tech, out var sNode))
             {
                 sNode = new UnlockSubsidyNode() { tech = tech };
@@ -344,17 +348,38 @@ namespace RP0
             }
         }
 
+        /// <summary>
+        /// Transforms entrycost to post-strategy entrycost, spends subsidy,
+        /// and returns remaining (unsubsidized) cost
+        /// </summary>
+        /// <param name="entryCost"></param>
+        /// <param name="tech"></param>
+        /// <returns></returns>
         private float ProcessSubsidy(float entryCost, string tech)
         {
             if (entryCost == 0f)
                 return 0f;
             
             double postCMQCost = -CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -entryCost);
+            if (double.IsNaN(postCMQCost))
+            {
+                Debug.LogError("[RP-0] CMQ for a subsidy unlock returned NaN, ignoring and going back to regular cost.");
+                postCMQCost = entryCost;
+            }
+            else if (postCMQCost == 0d)
+            {
+                Debug.LogError("[RP-0] CMQ for a subsidy unlock returned 0, not spending any subsidy.");
+                return 0f;
+            }
+
+            // Actually spend subsidy and get (post-effect) remainder
             double remainingCost = SpendSubsidy(tech, postCMQCost);
+
             // Refresh description to show new subsidy remaining
             if (KSP.UI.Screens.RDController.Instance != null)
                 KSP.UI.Screens.RDController.Instance.ShowNodePanel(KSP.UI.Screens.RDController.Instance.node_selected);
 
+            //return the remainder after transforming to pre-effect numbers
             return (float)(remainingCost * (entryCost / postCMQCost));
         }
 

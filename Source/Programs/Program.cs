@@ -41,6 +41,8 @@ namespace RP0.Programs
         public double nominalDurationYears;
         public double DurationYears => DurationYearsCalc(speed, nominalDurationYears);
 
+        public double ElapsedYears => (KSPUtils.GetUT() - acceptedUT) / secsPerYear;
+
         public static double DurationYearsCalc(Speed spd, double years)
         {
             double mult = 1d;

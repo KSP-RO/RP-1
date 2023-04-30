@@ -111,6 +111,7 @@
     <Compile Include="Milestones\MilestoneHandler.cs" />
     <Compile Include="Milestones\NewspaperLoader.cs" />
     <Compile Include="Milestones\NewspaperUI.cs" />
+    <Compile Include="Programs\ProgramFundingOverview.cs" />
     <Compile Include="Requirements\LogicOps.cs" />
     <Compile Include="Requirements\RequirementBlock.cs" />
     <Compile Include="UI\ConfidenceWidget.cs" />
@@ -296,6 +297,9 @@
     <Reference Include="ContractConfigurator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\ContractConfigurator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ferramGraph">
       <Private>False</Private>
     </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">

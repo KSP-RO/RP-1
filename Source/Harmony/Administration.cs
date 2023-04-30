@@ -348,8 +348,9 @@ namespace RP0.Harmony
         [HarmonyPatch("UnselectStrategy")]
         internal static void Postfix_UnselectStrategy()
         {
-            // If we deselect a strategy, hide the speed buttons too.
+            // If we deselect a strategy, hide the custom controls too.
             AdminExtender.Instance.SetSpeedButtonsActive(null);
+            AdminExtender.Instance.SetFundingGraphActive(null);
         }
 
         internal static void OnPopupDismiss()

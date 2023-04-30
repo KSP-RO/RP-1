@@ -873,7 +873,7 @@
         "spacecraft": "Agena D",
         "engine_config": "AgenaSPS",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "Model8250",
         "identical_part_name": "Agena-D SPS",
         "module_tags": [
             "EngineLiquidPF",

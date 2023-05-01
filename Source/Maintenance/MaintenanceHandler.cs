@@ -154,8 +154,11 @@ namespace RP0
             if (steps == 0)
                 steps = 1 + (int)(deltaTime / (86400d * 29.999d));
 
-            double deltaPerStep = deltaTime / (steps - 1);
             double subsidy = GetSubsidyAtTimeDelta(0d);
+            if (steps <= 1)
+                return subsidy;
+
+            double deltaPerStep = deltaTime / (steps - 1);
             double ut = 0d;
             for (int i = 1; i < steps; ++i)
             {

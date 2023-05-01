@@ -165,7 +165,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Subsidy", HighLogic.Skin.label, GUILayout.Width(160));
+            GUILayout.Label("Avg. Subsidy", HighLogic.Skin.label, GUILayout.Width(160));
             // NOT formatcost since it is not, strictly speaking, a fund gain.
             double subsidy = MaintenanceHandler.GetAverageSubsidyForPeriod(PeriodFactor * 86400d);
             subsidy = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidy) * (PeriodFactor / 365.25d);

@@ -14511,8 +14511,8 @@
         "module_tags": []
     },
     {
-        "name": "S-3DH",
-        "title": "S-3DH",
+        "name": "S-3FH",
+        "title": "S-3FH",
         "description": "",
         "mod": "Engine_Config",
         "cost": "5",
@@ -14527,7 +14527,7 @@
         "spacecraft": "Juno IV",
         "engine_config": "LR79",
         "upgrade": true,
-        "entry_cost_mods": "5000,S-3D,Navaho-TP-1960",
+        "entry_cost_mods": "5000,S-3D,Navaho-TP-1962,HydrazineFuel",
         "identical_part_name": "",
         "module_tags": []
     },

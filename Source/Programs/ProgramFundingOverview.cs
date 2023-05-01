@@ -15,6 +15,7 @@ namespace RP0.Programs
         private Program _program;
 
         private Image _imgFundingGraph = null;
+        private Material _blitMataterial;
 
         internal void Awake()
         {
@@ -24,21 +25,22 @@ namespace RP0.Programs
 
             // Create a HLG to control the elements below it
             var hLG = gameObject.AddComponent<HorizontalLayoutGroup>();
-            hLG.childForceExpandWidth = true;
+            hLG.childForceExpandWidth = false;
             hLG.childForceExpandHeight = true;
             hLG.spacing = 5;
 
             // Create the Y-Axis Label
             GameObject yAxisLabelGO = new GameObject("ProgramFundingGraphYAxis", typeof(RectTransform));
             yAxisLabelGO.transform.SetParent(mainGraphAreaLE.transform);
+            yAxisLabelGO.transform.eulerAngles = new Vector3(0, 0, 90);
             yAxisLabelGO.gameObject.name = "FundingPerMonth";
             var yAxisLabelLE = yAxisLabelGO.gameObject.AddComponent<LayoutElement>();
             yAxisLabelLE.preferredWidth = 100;
             TextMeshProUGUI yAxisText = yAxisLabelGO.gameObject.AddComponent<TextMeshProUGUI>();
             yAxisText.alignment = TextAlignmentOptions.Midline;
-            yAxisText.fontSizeMax = 14;
-            yAxisText.fontSizeMin = 4;
-            yAxisText.fontSize = 12;
+            yAxisText.fontSizeMax = 15;
+            yAxisText.fontSizeMin = 12;
+            yAxisText.fontSize = 15;
             yAxisText.text = "<sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> per Month";
 
             // Create the Graph and X-Axis Label Area
@@ -60,9 +62,9 @@ namespace RP0.Programs
             xAxisLabel.name = "FundingGraphYear";
             TextMeshProUGUI xAxisText = xAxisLabel.gameObject.AddComponent<TextMeshProUGUI>();
             xAxisText.alignment = TextAlignmentOptions.Midline;
-            xAxisText.fontSizeMax = 14;
-            xAxisText.fontSizeMin = 4;
-            xAxisText.fontSize = 12;
+            xAxisText.fontSizeMax = 15;
+            xAxisText.fontSizeMin = 12;
+            xAxisText.fontSize = 15;
             xAxisText.text = "Year";
 
             yAxisLabelGO.gameObject.SetActive(true);
@@ -71,6 +73,8 @@ namespace RP0.Programs
             xAxisLabel.gameObject.SetActive(true);
 
             gameObject.SetActive(false);
+
+            _blitMataterial = new Material(Shader.Find("Unlit/Transparent"));
 
             InitGraph();
         }
@@ -123,19 +127,30 @@ namespace RP0.Programs
             var obj = fi.GetValue(_graph);
             var graphImage = (Texture2D)obj;
 
-            Sprite newSprite = Sprite.Create(graphImage, new Rect(0, 0, graphImage.width, graphImage.height), new Vector2(0.5f, 0.5f));
-            _imgFundingGraph.sprite = newSprite;
-
             fi = typeof(ferramGraph).GetField("allLines", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             obj = fi.GetValue(_graph);    // of type Dictionary<string, ferramGraphLine>
+
+            RenderTexture oldRt = RenderTexture.active;
+            RenderTexture rt = new RenderTexture(graphImage.width, graphImage.height, 0);
+            RenderTexture.active = rt;
+            Graphics.Blit(graphImage, rt);
 
             var dict = (IDictionary)obj;
             foreach (var val in dict.Values)
             {
                 var mi = val.GetType().GetMethod("Line");
                 var lineTexture = (Texture2D)mi.Invoke(val, new object[0]);
-                // TODO: display
+                Graphics.Blit(lineTexture, rt, _blitMataterial);
             }
+
+            var tex = new Texture2D(rt.width, rt.height, TextureFormat.RGBA32, true);
+            tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0, false);
+            tex.Apply();
+            rt.Release();
+            RenderTexture.active = oldRt;
+
+            Sprite newSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+            _imgFundingGraph.sprite = newSprite;
         }
 
         private void InitGraph()

@@ -1,10 +1,12 @@
 ﻿using Contracts;
+using System;
 
 namespace ContractConfigurator.RP0
 {
     /// <summary>
     /// ParameterFactory wrapper for HasResource ContractParameter.
     /// </summary>
+    [Obsolete("Remove at a later date. CC's own paramter also has that fix now.")]
     public class RP1FixedResourceConsumptionFactory : ParameterFactory
     {
         protected double minRate;

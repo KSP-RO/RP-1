@@ -128,6 +128,7 @@ namespace ContractConfigurator.RP0
     /// <summary>
     /// Parameter for checking the consumption of the given resource
     /// </summary>
+    [Obsolete("Remove at a later date. CC's own paramter also has that fix now.")]
     public class RP1FixedResourceConsumption : VesselParameter
     {
         public PartResourceDefinition resource { get; set; }

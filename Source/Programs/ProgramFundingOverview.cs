@@ -11,23 +11,28 @@ namespace RP0.Programs
 {
     public class ProgramFundingOverview : MonoBehaviour
     {
+        private const int GraphWidth = 400;
+        private const int GraphHeight = 300;
+
         private ferramGraph _graph;
         private Program _program;
 
-        private Image _imgFundingGraph = null;
+        private RawImage _imgFundingGraph = null;
+        private RenderTexture _rt;
         private Material _blitMataterial;
 
         internal void Awake()
         {
             // Create a Panel with a Layout Element
             var mainGraphAreaLE = gameObject.AddComponent<LayoutElement>();
-            mainGraphAreaLE.preferredWidth = 500;
+            mainGraphAreaLE.preferredWidth = GraphWidth + 100;
 
             // Create a HLG to control the elements below it
             var hLG = gameObject.AddComponent<HorizontalLayoutGroup>();
             hLG.childForceExpandWidth = false;
             hLG.childForceExpandHeight = true;
             hLG.spacing = 5;
+            hLG.padding = new RectOffset(5, 5, 5, 0);
 
             // Create the Y-Axis Label
             GameObject yAxisLabelGO = new GameObject("ProgramFundingGraphYAxis", typeof(RectTransform));
@@ -55,7 +60,8 @@ namespace RP0.Programs
             var fundingGraph = new GameObject("FundingGraph", typeof(RectTransform));
             fundingGraph.transform.SetParent(graphRightPanelGO.transform);
             fundingGraph.name = "FundingGraph";
-            _imgFundingGraph = fundingGraph.gameObject.AddComponent<Image>();
+            _imgFundingGraph = fundingGraph.gameObject.AddComponent<RawImage>();
+            fundingGraph.gameObject.AddComponent<LayoutElement>().preferredHeight = GraphHeight;
 
             GameObject xAxisLabel = new GameObject("ProgramFundingGraphXAxis", typeof(RectTransform));
             xAxisLabel.transform.SetParent(graphRightPanelGO.transform);
@@ -74,6 +80,7 @@ namespace RP0.Programs
 
             gameObject.SetActive(false);
 
+            _rt = new RenderTexture(GraphWidth, GraphHeight, 0);
             _blitMataterial = new Material(Shader.Find("Unlit/Transparent"));
 
             InitGraph();
@@ -82,6 +89,7 @@ namespace RP0.Programs
         internal void OnDestroy()
         {
             _graph?.Dispose();
+            _rt.Release();
         }
 
         public void SetupProgram(Program program)
@@ -130,32 +138,22 @@ namespace RP0.Programs
             fi = typeof(ferramGraph).GetField("allLines", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             obj = fi.GetValue(_graph);    // of type Dictionary<string, ferramGraphLine>
 
-            RenderTexture oldRt = RenderTexture.active;
-            RenderTexture rt = new RenderTexture(graphImage.width, graphImage.height, 0);
-            RenderTexture.active = rt;
-            Graphics.Blit(graphImage, rt);
+            Graphics.Blit(graphImage, _rt);
 
             var dict = (IDictionary)obj;
             foreach (var val in dict.Values)
             {
                 var mi = val.GetType().GetMethod("Line");
                 var lineTexture = (Texture2D)mi.Invoke(val, new object[0]);
-                Graphics.Blit(lineTexture, rt, _blitMataterial);
+                Graphics.Blit(lineTexture, _rt, _blitMataterial);
             }
 
-            var tex = new Texture2D(rt.width, rt.height, TextureFormat.RGBA32, true);
-            tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0, false);
-            tex.Apply();
-            rt.Release();
-            RenderTexture.active = oldRt;
-
-            Sprite newSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-            _imgFundingGraph.sprite = newSprite;
+            _imgFundingGraph.texture = _rt;
         }
 
         private void InitGraph()
         {
-            _graph = new ferramGraph(400, 300);
+            _graph = new ferramGraph(GraphWidth, GraphHeight);
             _graph.SetBoundaries(0, 10, 0, 2);
             _graph.SetGridScaleUsingValues(1, 1000);
             _graph.horizontalLabel = "Year";
@@ -189,12 +187,15 @@ namespace RP0.Programs
                                1,
                                data.lineNameVisible[i]);
 
-            _graph.AddLine("elapsedDuration",
-                           new double[] { elapsedDuration, elapsedDuration },
-                           new double[] { 0, realMax },
-                           Color.green,
-                           1,
-                           false);
+            if (_program.IsActive)
+            {
+                _graph.AddLine("elapsedDuration",
+                               new double[] { elapsedDuration, elapsedDuration },
+                               new double[] { 0, realMax },
+                               Color.green,
+                               1,
+                               false);
+            }
 
             _graph.AddLine("nominalDuration",
                            new double[] { nominalDuration, nominalDuration },

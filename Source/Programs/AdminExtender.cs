@@ -326,9 +326,6 @@ namespace RP0.Programs
 
         private void AddProgramFundingOverview()
         {
-            // Don't have the VLG force the child width
-            // Administration.Instance.prefabStratListItem.gameObject.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
-
             var _fundingGraphPanel = new GameObject("ProgramFundingGraphArea", typeof(RectTransform));
             _fundingGraphPanel.transform.SetParent(Administration.Instance.textPanel.transform);
             _fundingOverview = _fundingGraphPanel.gameObject.AddComponent<ProgramFundingOverview>();

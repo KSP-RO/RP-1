@@ -53,6 +53,6 @@ Discord Link: https://discord.gg/V73jjNd
 - ROCapsules
 - ROSolar
 
-For more mod suggestions, go to [our recommended mod page](https://github.com/KSP-RO/RP-0/wiki/Recommended-Extra-Mods)
+For more mod suggestions, go to [our recommended mod page](https://github.com/KSP-RO/RP-0/wiki/Extra-Mods-to-Consider)
 
 Note that more effort has gone into balancing earlier nodes than later nodes. Your feedback and assistance in balancing all nodes is appreciated!

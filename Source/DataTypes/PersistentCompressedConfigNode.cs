@@ -4,6 +4,7 @@ using UniLinq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using UnityEngine.Profiling;
 
 namespace RP0.DataTypes
 {
@@ -48,6 +49,7 @@ namespace RP0.DataTypes
             if (_bytes == null)
                 return false;
 
+            Profiler.BeginSample("Decompress");
             //UnityEngine.Debug.Log("@@Extracting Shipnode!! Stack: " + Environment.StackTrace);
             string s = ObjectSerializer.UnZip(_bytes);
             _node = ConfigNode.Parse(s);
@@ -56,12 +58,15 @@ namespace RP0.DataTypes
             _node = _node.nodes[0];
             //UnityEngine.Debug.Log("Resulting node:\n" + _node.ToString());
 
+            Profiler.EndSample();
             return true;
         }
 
         protected void Compress()
         {
+            Profiler.BeginSample("Compress");
             _bytes = ObjectSerializer.Zip(_node.ToString());
+            Profiler.EndSample();
         }
 
         public void CompressAndRelease()

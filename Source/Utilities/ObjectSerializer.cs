@@ -53,18 +53,14 @@ namespace RP0
 
             byte[] input = System.Text.Encoding.UTF8.GetBytes(text);
 
-            using (Stream memOutput = new MemoryStream())
+            using (var memOutput = new MemoryStream())
             {
                 var zip = new Ionic.Zip.ZipFile();
                 zip.CompressionLevel = Ionic.Zlib.CompressionLevel.BestCompression;
                 zip.AddEntry("a", input);
                 zip.Save(memOutput);
 
-                byte[] bytes = new byte[memOutput.Length];
-                memOutput.Seek(0, SeekOrigin.Begin);
-                memOutput.Read(bytes, 0, bytes.Length);
-
-                return bytes;
+                return memOutput.ToArray();
             }
         }
 
@@ -73,16 +69,12 @@ namespace RP0
             if (bytes == null)
                 return null;
 
-            using (Stream memInput = new MemoryStream(bytes))
+            using (var memInput = new MemoryStream(bytes))
+            using (var zipStream = new Ionic.Zip.ZipInputStream(memInput))
+            using (var reader = new StreamReader(zipStream))
             {
-                using (var zipStream = new Ionic.Zip.ZipInputStream(memInput))
-                {
-                    using (StreamReader reader = new StreamReader(zipStream))
-                    {
-                        zipStream.GetNextEntry();
-                        return reader.ReadToEnd();
-                    }
-                }
+                zipStream.GetNextEntry();
+                return reader.ReadToEnd();
             }
         }
     }

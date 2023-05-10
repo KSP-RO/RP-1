@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
+using UnityEngine.Profiling;
 
 namespace KerbalConstructionTime
 {
@@ -177,10 +178,13 @@ namespace KerbalConstructionTime
 
         public BuildListVessel(ShipConstruct s, string ls, string flagURL)
         {
+            Profiler.BeginSample("BuildListVessel ctor");
             _ship = s;
             CacheClamps(s.parts);
 
+            Profiler.BeginSample("SaveShip");
             ShipNodeCompressed.Node = s.SaveShip();
+            Profiler.EndSample();
             StorePartNames(s.parts);
             // Override KSP sizing of the ship construct
             ShipSize = Utilities.GetShipSize(s, true);
@@ -200,6 +204,7 @@ namespace KerbalConstructionTime
             numStageParts = 0;
             stagePartCost = 0d;
 
+            Profiler.BeginSample("StageCosts");
             foreach (Part p in s.Parts)
             {
                 if (p.stagingOn)
@@ -210,6 +215,7 @@ namespace KerbalConstructionTime
                 }
             }
             numStages = stages.Count;
+            Profiler.EndSample();
 
             launchSite = ls;
             progress = 0;
@@ -249,6 +255,7 @@ namespace KerbalConstructionTime
 
             integrationPoints = Formula.GetIntegrationBP(this);
             integrationCost = (float)Formula.GetIntegrationCost(this);
+            Profiler.EndSample();
         }
 
         public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, EditorFacility editorFacility, bool isHuman)
@@ -648,6 +655,7 @@ namespace KerbalConstructionTime
 
         private void CacheClamps(List<Part> parts)
         {
+            Profiler.BeginSample("CacheClamps");
             clampState = ClampsState.NoClamps;
 
             foreach (var p in parts)
@@ -658,6 +666,7 @@ namespace KerbalConstructionTime
                     break;
                 }
             }
+            Profiler.EndSample();
         }
 
         private void UpdateRFTanks()
@@ -680,16 +689,21 @@ namespace KerbalConstructionTime
 
         private bool AreTanksFull(List<Part> parts)
         {
+            Profiler.BeginSample("AreTanksFull");
             foreach (var p in parts)
             {
                 foreach (var r in p.Resources)
                 {
-                    if (r.flowState && GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(r.resourceName))
-                        if (Math.Abs(r.amount - r.maxAmount) >= 1)
-                            return false;
+                    if (r.flowState && GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(r.resourceName) &&
+                        Math.Abs(r.amount - r.maxAmount) >= 1)
+                    {
+                        Profiler.EndSample();
+                        return false;
+                    }
                 }
             }
 
+            Profiler.EndSample();
             return true;
         }
 
@@ -714,9 +728,11 @@ namespace KerbalConstructionTime
 
         private void StorePartNames(List<Part> parts)
         {
+            Profiler.BeginSample("StorePartNames");
             partNames.Clear();
             foreach (var p in parts)
                 partNames.Add(p.partInfo.name);
+            Profiler.EndSample();
         }
 
         public bool IsCrewable() => isCrewable;
@@ -916,6 +932,7 @@ namespace KerbalConstructionTime
 
         public double GetEffectiveCost(List<Part> parts)
         {
+            Profiler.BeginSample("GetEffectiveCost");
             resourceAmounts.Clear();
             globalTags.Clear();
             double totalEffectiveCost = 0;
@@ -928,6 +945,7 @@ namespace KerbalConstructionTime
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
+            Profiler.EndSample();
             return multipliedCost;
         }
 

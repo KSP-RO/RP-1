@@ -136,6 +136,7 @@ namespace KerbalConstructionTime
 
         public static float GetTotalVesselCost(List<Part> parts, bool includeFuel = true)
         {
+            Profiler.BeginSample("SaveShip");
             float total = 0f;
             float resCost = 0f;
             int count = parts.Count;
@@ -157,6 +158,7 @@ namespace KerbalConstructionTime
             if (includeFuel)
                 total += resCost;
 
+            Profiler.EndSample();
             return total;
         }
 
@@ -188,6 +190,7 @@ namespace KerbalConstructionTime
 
         public static float GetShipMass(this ShipConstruct sc, bool excludeClamps, out float dryMass, out float fuelMass)
         {
+            Profiler.BeginSample("GetShipMass");
             dryMass = 0f;
             fuelMass = 0f;
             foreach (var part in sc.parts)
@@ -211,6 +214,7 @@ namespace KerbalConstructionTime
                 dryMass += partDryMass;
                 fuelMass += partFuelMass;
             }
+            Profiler.EndSample();
             return dryMass + fuelMass;
         }
 
@@ -220,10 +224,11 @@ namespace KerbalConstructionTime
             if (ship.parts.Count == 0)
                 return Vector3.zero;
 
+            Profiler.BeginSample("GetShipSize");
+
             Bounds craftBounds = new Bounds();
             Vector3 rootPos = ship.parts[0].orgPos;
             craftBounds.center = rootPos;
-
 
             List<Bounds> pBounds = new List<Bounds>();
             Vector3 sz;
@@ -257,6 +262,7 @@ namespace KerbalConstructionTime
             }
             craftBounds = PartGeometryUtil.MergeBounds(pBounds.ToArray(), ship.parts[0].transform.root);
 
+            Profiler.EndSample();
             return craftBounds.size;
         }
 

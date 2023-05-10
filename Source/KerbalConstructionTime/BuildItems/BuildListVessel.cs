@@ -189,7 +189,6 @@ namespace KerbalConstructionTime
             // Override KSP sizing of the ship construct
             ShipSize = Utilities.GetShipSize(s, true);
             ShipNodeCompressed.Node.SetValue("size", KSPUtil.WriteVector(ShipSize));
-            ShipNodeCompressed.CompressAndRelease();
             shipName = s.shipName;
             cost = Utilities.GetTotalVesselCost(s.parts, true);
             emptyCost = Utilities.GetTotalVesselCost(s.parts, false);

@@ -176,19 +176,19 @@ namespace KerbalConstructionTime
 
         public BuildListVessel() { }
 
-        public BuildListVessel(ShipConstruct s, string ls, string flagURL)
+        public BuildListVessel(ShipConstruct s, string ls, string flagURL, bool storeConstruct)
         {
             Profiler.BeginSample("BuildListVessel ctor");
             _ship = s;
             CacheClamps(s.parts);
 
-            Profiler.BeginSample("SaveShip");
-            ShipNodeCompressed.Node = s.SaveShip();
-            Profiler.EndSample();
             StorePartNames(s.parts);
             // Override KSP sizing of the ship construct
             ShipSize = Utilities.GetShipSize(s, true);
-            ShipNodeCompressed.Node.SetValue("size", KSPUtil.WriteVector(ShipSize));
+
+            if (storeConstruct)
+                StoreShipConstruct(s);
+
             shipName = s.shipName;
             cost = Utilities.GetTotalVesselCost(s.parts, true);
             emptyCost = Utilities.GetTotalVesselCost(s.parts, false);
@@ -375,6 +375,20 @@ namespace KerbalConstructionTime
             return cn;
         }
 
+        private void StoreShipConstruct(ShipConstruct s)
+        {
+            if (s == null)
+            {
+                Debug.LogError("[RP-0] BLV: Tried to store a null shipconstruct. Probably copying a vessel outside the editor and the source had a null shipnode.");
+                return;
+            }
+
+            Profiler.BeginSample("SaveShip");
+            ShipNodeCompressed.Node = s.SaveShip();
+            Profiler.EndSample();
+            ShipNodeCompressed.Node.SetValue("size", KSPUtil.WriteVector(ShipSize));
+        }
+
         public void RecalculateFromNode(bool setValues = true)
         {
             bool oldHR = humanRated;
@@ -461,7 +475,10 @@ namespace KerbalConstructionTime
             ret.globalTags = globalTags.Clone();
             ret.partNames = partNames.Clone();
             ret.resourceAmounts = resourceAmounts.Clone();
-            ret.ShipNodeCompressed.Copy(ShipNodeCompressed);
+            if (ShipNodeCompressed.IsEmpty)
+                ret.StoreShipConstruct(EditorLogic.fetch?.ship);
+            else
+                ret.ShipNodeCompressed.Copy(ShipNodeCompressed);
             ret.shipID = Guid.NewGuid();
             ret.KCTPersistentID = Guid.NewGuid().ToString("N");
             ret.mass = mass;

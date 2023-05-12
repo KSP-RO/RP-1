@@ -602,7 +602,7 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
+            var blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
             {
                 shipName = EditorLogic.fetch.shipNameField.text
             };
@@ -668,7 +668,7 @@ namespace KerbalConstructionTime
         {
             // Load the current editor state as a fresh BuildListVessel
             string launchSite = EditorLogic.fetch.launchSiteName;
-            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL)
+            var postEditShip = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
             {
                 shipName = EditorLogic.fetch.shipNameField.text,
                 FacilityBuiltIn = editableShip.FacilityBuiltIn,
@@ -1003,7 +1003,7 @@ namespace KerbalConstructionTime
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
-            KerbalConstructionTime.Instance.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL);
+            KerbalConstructionTime.Instance.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
             // override LC in case of vessel editing
             KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 

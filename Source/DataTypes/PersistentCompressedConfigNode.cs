@@ -35,6 +35,8 @@ namespace RP0.DataTypes
             }
         }
 
+        public bool IsEmpty => _node == null && _bytes == null;
+
         public PersistentCompressedConfigNode() { }
 
         public PersistentCompressedConfigNode(ConfigNode node, bool compress)
@@ -199,7 +201,9 @@ namespace RP0.DataTypes
             {
                 if (_node == null)
                 {
-                    Decompress();
+                    if (!Decompress())
+                        return _node;
+
                     Version gameVersion = new Version(Versioning.version_major, Versioning.version_minor, Versioning.Revision);
 
                     ConfigNode newNode = KSPUpgradePipeline.Pipeline.Run(_node, SaveUpgradePipeline.LoadContext.Craft, gameVersion, out bool runSuccess, out string runInfo);

@@ -104,7 +104,7 @@ namespace RP0.Programs
             gameObject.SetActive(true);
 
             var shownYears = Math.Ceiling(_program.DurationYears * 1.33);
-            var points = (int)Math.Round(shownYears * 12);
+            var points = (int)Math.Round(shownYears * 24);
             var xValues = new double[points];
             var yValues = new double[points];
 
@@ -172,11 +172,12 @@ namespace RP0.Programs
                 newMaxBounds = Math.Max(newMaxBounds, yValues.Max());
             }
 
-            double realMin = Math.Min(Math.Floor(newMinBounds), 0);
-            double realMax = Math.Max(Math.Ceiling(newMaxBounds), 1000);
+            newMinBounds = Math.Min(Math.Floor(newMinBounds), 0);
+            newMaxBounds *= 1.005;    // Need to give the Y axis a tiny bit larger max value to make sure data points do not go outside the visible area
+            newMaxBounds = Math.Max(Math.Ceiling(newMaxBounds), 1000);
 
             _graph.Clear();
-            _graph.SetBoundaries(lowerBound, upperBound, realMin, realMax);
+            _graph.SetBoundaries(lowerBound, upperBound, newMinBounds, newMaxBounds);
             _graph.SetGridScaleUsingValues(1, 1000);
 
             for (int i = 0; i < data.yValues.Count; i++)
@@ -184,14 +185,14 @@ namespace RP0.Programs
                                data.xValues,
                                data.yValues[i],
                                data.lineColors[i],
-                               1,
+                               2,
                                data.lineNameVisible[i]);
 
             if (_program.IsActive)
             {
                 _graph.AddLine("elapsedDuration",
                                new double[] { elapsedDuration, elapsedDuration },
-                               new double[] { 0, realMax },
+                               new double[] { 0, newMaxBounds },
                                Color.green,
                                1,
                                false);
@@ -199,7 +200,7 @@ namespace RP0.Programs
 
             _graph.AddLine("nominalDuration",
                            new double[] { nominalDuration, nominalDuration },
-                           new double[] { 0, realMax },
+                           new double[] { 0, newMaxBounds },
                            Color.red,
                            1,
                            false);

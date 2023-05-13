@@ -125,6 +125,10 @@ namespace RP0.Programs
             return pen * mult;
         }
 
+        [Persistent(isPersistant = false)]
+        public float repToConfidence = -1f;
+        public float RepToConfidence => repToConfidence >= 0f ? repToConfidence : ProgramHandler.Settings.repToConfidence;
+
         public List<string> programsToDisableOnAccept = new List<string>();
 
         public List<string> optionalContracts = new List<string>();
@@ -186,6 +190,7 @@ namespace RP0.Programs
             optionalContracts = toCopy.optionalContracts;
             speed = toCopy.speed;
             confidenceCosts = toCopy.confidenceCosts;
+            repToConfidence = toCopy.repToConfidence;
         }
 
         public override string ToString() => $"{name} ({(IsComplete ? "Complete" : IsActive ? "Active" : "Inactive")})";

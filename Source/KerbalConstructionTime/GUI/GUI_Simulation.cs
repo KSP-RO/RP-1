@@ -31,7 +31,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowSimulationGUI = false;
                 Utilities.DisableSimulationLocks();
-                var facility = KerbalConstructionTimeData.Instance.LaunchedVessel.Type == BuildListVessel.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
+                var facility = KerbalConstructionTimeData.Instance.LaunchedVessel.FacilityBuiltIn;
                 FlightDriver.RevertToPrelaunch(facility);
                 _centralWindowPosition.height = 1;
             }

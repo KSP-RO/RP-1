@@ -194,17 +194,17 @@ namespace RP0.Programs
             }
         }
 
-        public bool IsContractOptional(ConfiguredContract cc)
+        public float RepToConfidenceForContract(ConfiguredContract cc)
         {
             foreach (Program p in ActivePrograms)
             {
                 if (p.optionalContracts.Contains(cc.contractType.name))
                 {
-                    return true;
+                    return p.RepToConfidence;
                 }
             }
 
-            return false;
+            return 0f;
         }
 
         private void OnContractAccept(Contract data)
@@ -242,13 +242,14 @@ namespace RP0.Programs
                     KerbalConstructionTime.KerbalConstructionTimeData.Instance.Applicants += applicants;
 
                 // Handle Confidence
-                if (IsContractOptional(cc))
+                float repToConf = RepToConfidenceForContract(cc);
+                if (repToConf > 0f)
                 {
                     float rep = 0;
                     foreach (var param in cc.AllParameters)
                         if (param.Optional && param.ReputationCompletion > 0 && param.State == ParameterState.Complete)
                             rep += param.ReputationCompletion;
-                    Confidence.Instance.AddConfidence(Settings.repToConfidence * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
+                    Confidence.Instance.AddConfidence(repToConf * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
                 }
             }
         }

@@ -56,9 +56,9 @@ namespace RP0.Harmony
             if (_contract == null)
                 return true;
 
-            if (Programs.ProgramHandler.Instance != null && Programs.ProgramHandler.Instance.IsContractOptional(_contract))
+            if (Programs.ProgramHandler.Instance != null && Programs.ProgramHandler.Instance.RepToConfidenceForContract(_contract) is float repToConf && repToConf > 0f)
             {
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ContractReward, 0d, 0d, 0d, _contract.ReputationCompletion * Programs.ProgramHandler.Settings.repToConfidence, 0d);
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ContractReward, 0d, 0d, 0d, _contract.ReputationCompletion * repToConf, 0d);
                 value += $"<color={CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence)}>{CurrencyModifierQueryRP0.SpriteString(CurrencyRP0.Confidence)} {cmq.GetTotal(CurrencyRP0.Confidence):N0} {cmq.GetEffectDeltaText(CurrencyRP0.Confidence, "N0", CurrencyModifierQuery.TextStyling.OnGUI)}  </color>";
             }
             if (KerbalConstructionTime.PresetManager.Instance != null)

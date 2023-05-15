@@ -17040,9 +17040,9 @@
     {
         "name": "XLR35-RM-1",
         "title": "XLR35-RM-1",
-        "description": "Modified XLR11 used on RTV-A-2 Hiroc missile in Project MX-774. Higher performance. Includes gimbal assembly.",
+        "description": "Modified XLR11 used on RTV-A-2 Hiroc missile in Project MX-774. Higher performance, single use. Includes gimbal assembly.",
         "mod": "Engine_Config",
-        "cost": "200",
+        "cost": 100,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",

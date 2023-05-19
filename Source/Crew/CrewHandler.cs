@@ -340,6 +340,9 @@ namespace RP0.Crew
 
         public bool NautHasTrainingForPart(ProtoCrewMember pcm, string partName)
         {
+            if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
+                return true;
+
             TrainingDatabase.SynonymReplace(partName, out partName);
 
             FlightLog.Entry ent = pcm.careerLog.Last();

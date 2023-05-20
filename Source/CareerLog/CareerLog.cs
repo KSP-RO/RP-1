@@ -872,7 +872,10 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            CurrentPeriod.NumNautsKilled++;
+            if (!HighLogic.CurrentGame.CrewRoster.Tourist.Any(c => c.name == data.sender))    // Do not count tourist/test animal deaths
+            {
+                CurrentPeriod.NumNautsKilled++;
+            }
         }
 
         private string GetContractInternalName(Contract c)

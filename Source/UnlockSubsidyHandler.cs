@@ -341,10 +341,13 @@ namespace RP0
                 parentSubsidyTotal += amount;
             }
 
-            foreach (var parent in parentList)
+            if (parentSubsidyTotal > 0d)
             {
-                double portion = _cacheDict[parent] / parentSubsidyTotal * cost;
-                _SpendSubsidy(parent, portion, false, dict);
+                foreach (var parent in parentList)
+                {
+                    double portion = _cacheDict[parent] / parentSubsidyTotal * cost;
+                    _SpendSubsidy(parent, portion, false, dict);
+                }
             }
         }
 

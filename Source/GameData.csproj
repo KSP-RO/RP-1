@@ -79,6 +79,9 @@
     <Content Include="..\GameData\RP-0\Contracts\StockContracts.cfg">
       <Link>Contracts\StockContracts.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\SupportPreview.cfg">
+      <Link>Contracts\SupportPreview.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\TestSubjectRemove.cfg">
       <Link>Contracts\TestSubjectRemove.cfg</Link>
     </Content>
@@ -93,6 +96,45 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg">
       <Link>Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Heavy)\Downrange6000-Heavy.cfg">
+      <Link>Contracts\Early Satellites (Heavy)\Downrange6000-Heavy.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Heavy)\Downrange7500-Heavy.cfg">
+      <Link>Contracts\Early Satellites (Heavy)\Downrange7500-Heavy.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Heavy)\FirstBioSat-Heavy.cfg">
+      <Link>Contracts\Early Satellites (Heavy)\FirstBioSat-Heavy.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Heavy)\FirstSatellite-Heavy.cfg">
+      <Link>Contracts\Early Satellites (Heavy)\FirstSatellite-Heavy.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Heavy)\FirstScienceSat-Heavy.cfg">
+      <Link>Contracts\Early Satellites (Heavy)\FirstScienceSat-Heavy.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\AtmosphereAnalysis.cfg">
+      <Link>Contracts\Early Satellites (Light)\AtmosphereAnalysis.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\Downrange6000.cfg">
+      <Link>Contracts\Early Satellites (Light)\Downrange6000.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\Downrange7500.cfg">
+      <Link>Contracts\Early Satellites (Light)\Downrange7500.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\FirstPolarSat.cfg">
+      <Link>Contracts\Early Satellites (Light)\FirstPolarSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\FirstSatellite.cfg">
+      <Link>Contracts\Early Satellites (Light)\FirstSatellite.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\FirstScienceSat.cfg">
+      <Link>Contracts\Early Satellites (Light)\FirstScienceSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\FirstSolarSat.cfg">
+      <Link>Contracts\Early Satellites (Light)\FirstSolarSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Light)\FirstSunSyncSat.cfg">
+      <Link>Contracts\Early Satellites (Light)\FirstSunSyncSat.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Earth Crewed\Docking.cfg">
       <Link>Contracts\Earth Crewed\Docking.cfg</Link>
@@ -133,23 +175,8 @@
     <Content Include="..\GameData\RP-0\Contracts\Earth Crewed\SuborbitalTestFlight.cfg">
       <Link>Contracts\Earth Crewed\SuborbitalTestFlight.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\AtmosphereAnalysis.cfg">
-      <Link>Contracts\Earth Satellites\AtmosphereAnalysis.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\ComTestSat.cfg">
       <Link>Contracts\Earth Satellites\ComTestSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\Downrange6000-Heavy.cfg">
-      <Link>Contracts\Earth Satellites\Downrange6000-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\Downrange6000.cfg">
-      <Link>Contracts\Earth Satellites\Downrange6000.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\Downrange7500-Heavy.cfg">
-      <Link>Contracts\Earth Satellites\Downrange7500-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\Downrange7500.cfg">
-      <Link>Contracts\Earth Satellites\Downrange7500.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\EarlyComNetwork3.cfg">
       <Link>Contracts\Earth Satellites\EarlyComNetwork3.cfg</Link>
@@ -159,9 +186,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\EarlyComSat.cfg">
       <Link>Contracts\Earth Satellites\EarlyComSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstBioSat-Heavy.cfg">
-      <Link>Contracts\Earth Satellites\FirstBioSat-Heavy.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstComSat.cfg">
       <Link>Contracts\Earth Satellites\FirstComSat.cfg</Link>
@@ -174,27 +198,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstNavSat.cfg">
       <Link>Contracts\Earth Satellites\FirstNavSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstPolarSat.cfg">
-      <Link>Contracts\Earth Satellites\FirstPolarSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstSatellite-Heavy.cfg">
-      <Link>Contracts\Earth Satellites\FirstSatellite-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstSatellite.cfg">
-      <Link>Contracts\Earth Satellites\FirstSatellite.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstScienceSat-Heavy.cfg">
-      <Link>Contracts\Earth Satellites\FirstScienceSat-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstScienceSat.cfg">
-      <Link>Contracts\Earth Satellites\FirstScienceSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstSolarSat.cfg">
-      <Link>Contracts\Earth Satellites\FirstSolarSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstSunSyncSat.cfg">
-      <Link>Contracts\Earth Satellites\FirstSunSyncSat.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Earth Satellites\FirstTundraSat.cfg">
       <Link>Contracts\Earth Satellites\FirstTundraSat.cfg</Link>
@@ -876,6 +879,9 @@
     </Content>
     <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersScientists.cfg">
       <Link>Strategies\Leaders\LeadersScientists.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Strategies\Leaders\LeadersSubcontractors.cfg">
+      <Link>Strategies\Leaders\LeadersSubcontractors.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Tooling\SSPX.cfg">
       <Link>Tooling\SSPX.cfg</Link>

@@ -223,7 +223,7 @@ namespace KerbalConstructionTime
                     KCTDebug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
                 }
 
-                // This will only fire the first time, because we make it invalid afterwards.
+                // This will only fire the first time, because we make it invalid afterwards by clearing the BLV
                 if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid)
                 {
                     dataModule.Data.FacilityBuiltIn = KerbalConstructionTimeData.Instance.LaunchedVessel.FacilityBuiltIn;
@@ -238,12 +238,9 @@ namespace KerbalConstructionTime
 
             AssignCrewToCurrentVessel();
 
+            // This only fires the first time because we clear the BLV afterwards.
             if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid)
             {
-                // We needn't check for simulated flight anymore because
-                // we store these things on the scenario, not static, now.
-                //if (!KerbalConstructionTimeData.Instance.IsSimulatedFlight)
-                //{
                 LCItem vesselLC = KerbalConstructionTimeData.Instance.LaunchedVessel.LC;
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
                 if (KerbalConstructionTimeData.Instance.LaunchedVessel.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
@@ -269,7 +266,6 @@ namespace KerbalConstructionTime
                     // This clears the guids (and changes the pointer, so the object is distinct from what we passed above) but keeps the rest
                     KerbalConstructionTimeData.Instance.AirlaunchParams = new AirlaunchParams(KerbalConstructionTimeData.Instance.AirlaunchParams);
                 }
-                //}
                 KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
             }
         }

@@ -31,7 +31,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowSimulationGUI = false;
                 Utilities.DisableSimulationLocks();
-                var facility = KerbalConstructionTimeData.Instance.LaunchedVessel.FacilityBuiltIn;
+                var facility = ShipConstruction.ShipType; // This uses stock behavior because the LaunchedVessel is no longer valid.
                 FlightDriver.RevertToPrelaunch(facility);
                 _centralWindowPosition.height = 1;
             }

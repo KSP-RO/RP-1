@@ -165,7 +165,7 @@ namespace RP0
                 return false;
 
             // Check deactivation
-            double nameDeactivate = ActivatedStrategies.ValueOrDefault(Name);
+            double nameDeactivate = removeOnDeactivate ? ActivatedStrategies.ValueOrDefault(Name) : 0d;
             double tagDeactivate = 0d;
             if (!string.IsNullOrEmpty(removeOnDeactivateTag))
                 tagDeactivate = ActivatedStrategies.ValueOrDefault(removeOnDeactivateTag);

@@ -54,7 +54,7 @@ namespace KerbalConstructionTime
         {
             double buildPoints = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
             BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            double rateWithCurEngis = Utilities.GetBuildRate(0, type, KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+            double rateWithCurEngis = Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
 
@@ -253,7 +253,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
-            double rateWithCurEngis = Utilities.GetBuildRate(0, editedVessel.Type, editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+            double rateWithCurEngis = Utilities.GetBuildRate(editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * editedVessel.LC.Efficiency * editedVessel.LC.StrategyRateMultiplier;
 
             RenderBuildRateInputRow(fullVesselBP, rateWithCurEngis);

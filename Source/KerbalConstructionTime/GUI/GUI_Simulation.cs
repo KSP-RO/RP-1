@@ -225,11 +225,8 @@ namespace KerbalConstructionTime
             string tempFile = KSPUtil.ApplicationRootPath + "saves/" + HighLogic.SaveFolder + "/Ships/temp.craft";
             Utilities.MakeSimulationSave();
 
-            Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-
-            // Previously we were doing a copy via KerbalConstructionTime.Instance.EditorVessel.CreateCopy()
-            // but for sanity we're going to recreate from scratch. Hopefully this will not either add appreciable delay (unlikely during a scene transition)
-            // or cause other issues.
+            // Create the LaunchedVessel fresh instead of cloning the EditorVessel, since it's possible that the player
+            // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
             KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
             KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;

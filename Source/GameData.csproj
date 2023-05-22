@@ -259,44 +259,44 @@
     <Content Include="..\GameData\RP-0\Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg">
       <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarFlyby.cfg">
-      <Link>Contracts\Lunar Uncrewed\LunarFlyby.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarFlyby.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarImpactor.cfg">
-      <Link>Contracts\Lunar Uncrewed\LunarImpactor.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactor.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarImpactor.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarImpactorOptional.cfg">
-      <Link>Contracts\Lunar Uncrewed\LunarImpactorOptional.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactorOptional.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarImpactorOptional.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarOrbiter.cfg">
-      <Link>Contracts\Lunar Uncrewed\LunarOrbiter.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarOrbiter.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarOrbiter.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\LunarOrbiterOptional.cfg">
-      <Link>Contracts\Lunar Uncrewed\LunarOrbiterOptional.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLanding.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonLanding.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonLanding.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonLanding.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingFarSide.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonLandingFarSide.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonLandingFarSide.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonLandingFarSide.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingFarSideOptional.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonLandingFarSideOptional.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonLandingFarSideOptional.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonLandingFarSideOptional.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingOptional.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonLandingOptional.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonLandingOptional.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonLandingOptional.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonLandingReturn.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonLandingReturn.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonLandingReturn.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonLandingReturn.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonOrbiter.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonOrbiter.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonOrbiter.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonOrbiter.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonOrbiterOptional.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonOrbiterOptional.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonOrbiterOptional.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonOrbiterOptional.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Lunar Uncrewed\MoonRover.cfg">
-      <Link>Contracts\Lunar Uncrewed\MoonRover.cfg</Link>
+    <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonRover.cfg">
+      <Link>Contracts\Lunar Surface Probes\MoonRover.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Mars\Deimos Flyby.cfg">
       <Link>Contracts\Mars\Deimos Flyby.cfg</Link>

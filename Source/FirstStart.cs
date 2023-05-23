@@ -15,15 +15,11 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public bool isFirstLoad = true;
 
-        [KSPField(isPersistant = true)]
-        public bool isFirstLoadTemp = true;    // For migration, remove at a later time
-
         private void Start()
         {
-            if (isFirstLoad || isFirstLoadTemp)
+            if (isFirstLoad)
             {
                 isFirstLoad = false;
-                isFirstLoadTemp = false;
 
                 UnlockStartingPartsTechNode();
 

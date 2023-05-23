@@ -1,15 +1,14 @@
 ﻿using KSP.UI;
 using KSP.UI.Screens;
+using RP0;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UniLinq;
 using System.Reflection;
 using System.Text;
+using UniLinq;
 using UnityEngine;
 using UnityEngine.Profiling;
-using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -37,8 +36,6 @@ namespace KerbalConstructionTime
         internal const string _icon_settings = _iconPath + "KCT_setting";
 
         public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
-
-        
 
         public static string GetPartNameFromNode(ConfigNode part)
         {
@@ -298,47 +295,6 @@ namespace KerbalConstructionTime
             return bs;
         }
 
-        public static string GetTweakScaleSize(ProtoPartSnapshot part)
-        {
-            string partSize = string.Empty;
-            if (part?.modules?.Find(mod => mod.moduleName == "TweakScale") is ProtoPartModuleSnapshot tweakscale)
-            {
-                ConfigNode tsCN = tweakscale.moduleValues;
-                string defaultScale = tsCN.GetValue("defaultScale");
-                string currentScale = tsCN.GetValue("currentScale");
-                if (!defaultScale.Equals(currentScale))
-                    partSize = "," + currentScale;
-            }
-            return partSize;
-        }
-
-        public static string GetTweakScaleSize(ConfigNode part)
-        {
-            string partSize = string.Empty;
-            if (part.HasNode("MODULE") &&
-                part.GetNodes("MODULE").FirstOrDefault(m => m.GetValue("name") == "TweakScale") is ConfigNode tsCN)
-            {
-                string defaultScale = tsCN.GetValue("defaultScale");
-                string currentScale = tsCN.GetValue("currentScale");
-                if (!defaultScale.Equals(currentScale))
-                    partSize = "," + currentScale;
-            }
-            return partSize;
-        }
-
-        public static string GetTweakScaleSize(Part part)
-        {
-            string partSize = "";
-            if (part?.Modules?.GetModule("TweakScale") is PartModule tweakscale)
-            {
-                object defaultScale = tweakscale.Fields.GetValue("defaultScale");
-                object currentScale = tweakscale.Fields.GetValue("currentScale");
-                if (!defaultScale.Equals(currentScale))
-                    partSize = "," + currentScale.ToString();
-            }
-            return partSize;
-        }
-
         /// <summary>
         /// Tests to see if two ConfigNodes have the same information. Currently requires same ordering of subnodes
         /// </summary>
@@ -370,42 +326,6 @@ namespace KerbalConstructionTime
             return true;
         }
 
-        public static string GetStockButtonTexturePath()
-        {
-            if (KCTEvents.Instance.KCTButtonStockImportant && DateTime.Now.CompareTo(_startedFlashing.AddSeconds(0)) > 0 && DateTime.Now.Millisecond < 500)
-                return _icon_KCT_Off_38;
-            else if (KCTEvents.Instance.KCTButtonStockImportant && DateTime.Now.CompareTo(_startedFlashing.AddSeconds(3)) > 0)
-            {
-                KCTEvents.Instance.KCTButtonStockImportant = false;
-                return _icon_KCT_On_38;
-            }
-            //The normal icon
-            else
-                return _icon_KCT_On_38;
-        }
-
-        public static string GetButtonTexturePath()
-        {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
-                return _icon_KCT_Off_24;
-
-            string textureReturn;
-            //Flash for up to 3 seconds, at half second intervals per icon
-            if (KCTEvents.Instance.KCTButtonStockImportant && DateTime.Now.CompareTo(_startedFlashing.AddSeconds(3)) < 0 && DateTime.Now.Millisecond < 500)
-                textureReturn = _icon_KCT_Off;
-            //If it's been longer than 3 seconds, set Important to false and stop flashing
-            else if (KCTEvents.Instance.KCTButtonStockImportant && DateTime.Now.CompareTo(_startedFlashing.AddSeconds(3)) > 0)
-            {
-                KCTEvents.Instance.KCTButtonStockImportant = false;
-                textureReturn = _icon_KCT_On;
-            }
-            //The normal icon
-            else
-                textureReturn = _icon_KCT_On;
-
-            return textureReturn + "-24";
-        }
-
         public static bool CurrentGameHasScience()
         {
             return HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX;
@@ -434,18 +354,6 @@ namespace KerbalConstructionTime
         public static double GetUT()
         {
             return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
-        }
-
-        public static string AddScienceWithMessage(float science, TransactionReasons reason)
-        {
-            if (science > 0)
-            {
-                ResearchAndDevelopment.Instance.AddScience(science, reason);
-                var message = new ScreenMessage($"{science} science added.", 4f, ScreenMessageStyle.UPPER_LEFT);
-                ScreenMessages.PostScreenMessage(message);
-                return message.ToString();
-            }
-            return string.Empty;
         }
 
         public static void MoveVesselToWarehouse(BuildListVessel ship)
@@ -724,26 +632,6 @@ namespace KerbalConstructionTime
             HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
-        public static Dictionary<string, ProtoTechNode> GetUnlockedProtoTechNodes()
-        {
-            if (ResearchAndDevelopment.Instance == null)
-                return new Dictionary<string, ProtoTechNode>();
-
-            if (ResearchAndDevelopment.Instance.protoTechNodes.Count > 0)
-                return ResearchAndDevelopment.Instance.protoTechNodes;
-
-            var protoTechNodes = new Dictionary<string, ProtoTechNode>();
-            // get the nodes that have been researched from ResearchAndDevelopment
-            foreach (ConfigNode cn in ResearchAndDevelopment.Instance.snapshot.GetData().GetNodes("Tech"))
-            {
-                // save proto nodes that have been researched
-                ProtoTechNode protoTechNode = new ProtoTechNode(cn);
-                protoTechNodes.Add(protoTechNode.techID, protoTechNode);
-            }
-
-            return protoTechNodes;
-        }
-
         public static void GetShipEditProgress(BuildListVessel ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
         {
             double origTotalBP;
@@ -938,16 +826,6 @@ namespace KerbalConstructionTime
             KCT_GUI.HideAll();
         }
 
-        public static object GetMemberInfoValue(MemberInfo member, object sourceObject)
-        {
-            object newVal;
-            if (member is FieldInfo info)
-                newVal = info.GetValue(sourceObject);
-            else
-                newVal = ((PropertyInfo)member).GetValue(sourceObject, null);
-            return newVal;
-        }
-
         public static List<string> GetLaunchSites(bool isVAB)
         {
             EditorDriver.editorFacility = isVAB ? EditorFacility.VAB : EditorFacility.SPH;
@@ -1035,44 +913,6 @@ namespace KerbalConstructionTime
             return (1 - error) <= (d1 / d2) && (d1 / d2) <= (1 + error);
         }
 
-        public static float GetParachuteDragFromPart(AvailablePart parachute)
-        {
-            foreach (AvailablePart.ModuleInfo mi in parachute.moduleInfos)
-            {
-                if (mi.info.Contains("Fully-Deployed Drag"))
-                {
-                    string[] split = mi.info.Split(new char[] { ':', '\n' });
-                    //TODO: Get SR code and put that in here, maybe with TryParse instead of Parse
-                    for (int i = 0; i < split.Length; i++)
-                    {
-                        if (split[i].Contains("Fully-Deployed Drag"))
-                        {
-                            if (!float.TryParse(split[i + 1], out float drag))
-                            {
-                                string[] split2 = split[i + 1].Split('>');
-                                if (!float.TryParse(split2[1], out drag))
-                                {
-                                    KCTDebug.Log("Failure trying to read parachute data. Assuming 500 drag.");
-                                    drag = 500;
-                                }
-                            }
-                            return drag;
-                        }
-                    }
-                }
-            }
-            return 0;
-        }
-
-        public static bool IsUnmannedCommand(AvailablePart part)
-        {
-            foreach (AvailablePart.ModuleInfo mi in part.moduleInfos)
-            {
-                if (mi.info.Contains("Unmanned")) return true;
-            }
-            return false;
-        }
-
         public static bool ReconditioningActive(LCItem LC, string launchSite = "LaunchPad")
         {
             if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
@@ -1127,34 +967,6 @@ namespace KerbalConstructionTime
             return null;
         }
 
-        public static void AddToDict(Dictionary<string, int> dict, string key, int value)
-        {
-            if (value <= 0) return;
-            if (!dict.ContainsKey(key))
-                dict.Add(key, value);
-            else
-                dict[key] += value;
-        }
-
-        public static bool RemoveFromDict(Dictionary<string, int> dict, string key, int value)
-        {
-            if (!dict.ContainsKey(key))
-                return false;
-            else if (dict[key] < value)
-                return false;
-            else
-            {
-                dict[key] -= value;
-                return true;
-            }
-        }
-
-        public static bool PartIsUnlocked(ConfigNode partNode)
-        {
-            string partName = GetPartNameFromNode(partNode);
-            return PartIsUnlocked(partName);
-        }
-
         public static bool PartIsUnlocked(string partName)
         {
             if (partName == null) return false;
@@ -1183,32 +995,6 @@ namespace KerbalConstructionTime
             if (partInfoByName == null) return false;
 
             return ResearchAndDevelopment.IsExperimentalPart(partInfoByName);
-        }
-
-        public static bool PartIsExperimental(ConfigNode partNode)
-        {
-            string partName = GetPartNameFromNode(partNode);
-            return PartIsExperimental(partName);
-        }
-
-        public static bool PartIsProcedural(ConfigNode part)
-        {
-            ConfigNode[] modules = part.GetNodes("MODULE");
-            if (modules == null)
-                return false;
-            foreach (ConfigNode mod in modules)
-            {
-                if (mod.HasValue("name") && mod.GetValue("name").IndexOf("procedural", StringComparison.OrdinalIgnoreCase) >= 0)
-                    return true;
-            }
-            return false;
-        }
-
-        public static bool PartIsProcedural(ProtoPartSnapshot part)
-        {
-            if (part.modules != null)
-                return part.modules.Find(m => m?.moduleName?.IndexOf("procedural", StringComparison.OrdinalIgnoreCase) >= 0) != null;
-            return false;
         }
 
         public static bool PartIsProcedural(Part part)
@@ -1767,9 +1553,6 @@ namespace KerbalConstructionTime
             return slist.Values.ToList();
         }
 
- 
-
-
         public static Dictionary<AvailablePart, PartPurchasability> GetPartsWithPurchasability(List<Part> parts)
         {
             var res = new Dictionary<AvailablePart, PartPurchasability>();
@@ -1878,25 +1661,6 @@ namespace KerbalConstructionTime
         public static GUIContent GetColonFormattedTimeWithTooltip(double t, string identifier, double extraTime = 0, bool showEst = false)
         {
             return new GUIContent(showEst ? $"Est: {GetColonFormattedTime(t, extraTime, false)}" : GetColonFormattedTime(t, extraTime, false), $"{identifier}¶{GetColonFormattedTime(t, extraTime, true)}");
-        }
-
-        public static string GetTechUnlockTime(TechItem tech)
-        {
-            double totalTime = 0d;
-            double nodeTime = 0d;
-            for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count; ++i)
-            {
-                TechItem techItem = KerbalConstructionTimeData.Instance.TechList[i];
-                nodeTime = techItem.GetTimeLeftEst(totalTime);
-                totalTime += nodeTime;
-                if (techItem == tech)
-                    break;
-            }
-
-            if (KCTGameStates.Settings.UseDates)
-                return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime, 0, true)})";
-            else
-                return $"Node will unlock: {GetFormattedTime(totalTime)} (duration: {GetColonFormattedTime(nodeTime)})";
         }
 
         private const double ApplicantsPow = 0.92d;

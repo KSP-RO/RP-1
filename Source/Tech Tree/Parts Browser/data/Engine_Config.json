@@ -17234,7 +17234,7 @@
         "spacecraft": "Agena B",
         "engine_config": "Agena",
         "upgrade": true,
-        "entry_cost_mods": "Model8081, PumpReignition",
+        "entry_cost_mods": "Model8081",
         "identical_part_name": "",
         "module_tags": []
     },

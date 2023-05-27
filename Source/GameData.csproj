@@ -97,6 +97,21 @@
     <Content Include="..\GameData\RP-0\Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg">
       <Link>Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarFlyby.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactor.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarImpactor.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactorOptional.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarImpactorOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarOrbiter.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarOrbiter.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg">
+      <Link>Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-0\Contracts\Early Satellites (Heavy)\Downrange6000-Heavy.cfg">
       <Link>Contracts\Early Satellites (Heavy)\Downrange6000-Heavy.cfg</Link>
     </Content>
@@ -258,21 +273,6 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg">
       <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarFlyby.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactor.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarImpactor.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarImpactorOptional.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarImpactorOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarOrbiter.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarOrbiter.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-0\Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Lunar Surface Probes\MoonLanding.cfg">
       <Link>Contracts\Lunar Surface Probes\MoonLanding.cfg</Link>
@@ -531,6 +531,27 @@
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Space Stations\Power Module Station.cfg">
       <Link>Contracts\Space Stations\Power Module Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Spaceplanes\DockingPlane.cfg">
+      <Link>Contracts\Spaceplanes\DockingPlane.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Spaceplanes\FirstPlaneOrbit.cfg">
+      <Link>Contracts\Spaceplanes\FirstPlaneOrbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Spaceplanes\OrbitalPlane1.cfg">
+      <Link>Contracts\Spaceplanes\OrbitalPlane1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Spaceplanes\OrbitalPlane2.cfg">
+      <Link>Contracts\Spaceplanes\OrbitalPlane2.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Spaceplanes\OrbitalPlane3.cfg">
+      <Link>Contracts\Spaceplanes\OrbitalPlane3.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Spaceplanes\RendezvousPlane.cfg">
+      <Link>Contracts\Spaceplanes\RendezvousPlane.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-0\Contracts\Spaceplanes\SuborbitalPlaneCrewed.cfg">
+      <Link>Contracts\Spaceplanes\SuborbitalPlaneCrewed.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-0\Contracts\Venus\Venus Landing.cfg">
       <Link>Contracts\Venus\Venus Landing.cfg</Link>

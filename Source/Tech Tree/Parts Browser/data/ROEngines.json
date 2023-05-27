@@ -2827,7 +2827,7 @@
         "spacecraft": "Juno IV",
         "engine_config": "Juno45k",
         "upgrade": false,
-        "entry_cost_mods": "Juno45k",
+        "entry_cost_mods": "Juno45k-BI",
         "identical_part_name": "Juno45k",
         "module_tags": [
             "EngineLiquidPF",
@@ -2851,7 +2851,7 @@
         "spacecraft": "Juno IV",
         "engine_config": "Juno6k",
         "upgrade": false,
-        "entry_cost_mods": "Juno6k",
+        "entry_cost_mods": "Juno6k-BI",
         "identical_part_name": "Juno6k",
         "module_tags": [
             "EngineLiquidPF",

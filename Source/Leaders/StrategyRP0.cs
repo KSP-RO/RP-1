@@ -139,7 +139,10 @@ namespace RP0
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
             if (recalcRates)
+            {
                 KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
+                Programs.ProgramHandler.Instance.ClampFunding();
+            }
         }
 
         /// <summary>
@@ -170,6 +173,7 @@ namespace RP0
             Unregister();
 
             KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
+            Programs.ProgramHandler.Instance.ClampFunding();
 
             return true;
         }

@@ -295,6 +295,17 @@ namespace RP0.Programs
             return Math.Max(0, funds2 - fundsPaidOut);
         }
 
+        /// <summary>
+        /// This clamps current program fund tracking to expected. It is used when leaders change
+        /// (which may change program durations)
+        /// </summary>
+        public void ClampFunding()
+        {
+            double calculatedLastTotalFunds = GetFundsAtTime(lastPaymentUT - acceptedUT);
+            if (fundsPaidOut > calculatedLastTotalFunds + 100d || fundsPaidOut < calculatedLastTotalFunds - 100d) // with slop
+                fundsPaidOut = calculatedLastTotalFunds;
+        }
+
         public void ProcessFunding()
         {
             if (TotalFunding < 1) return;

@@ -59,6 +59,7 @@
     <Compile Include="GameplayTips.cs" />
     <Compile Include="HarmonyPatcher.cs" />
     <Compile Include="Harmony\BaseCrewAssignmentDialog.cs" />
+    <Compile Include="StartupPopup.cs" />
     <Compile Include="LoadingScreenChanger.cs" />
     <Compile Include="Maintenance\MaintenanceSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />

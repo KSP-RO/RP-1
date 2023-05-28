@@ -15,7 +15,10 @@
 	},
 	"depends" : [
 		{ "name" : "ModuleManager" },
-		{ "name" : "RealismOverhaul" },
+		{
+			"name" : "RealismOverhaul",
+			"max_version" : "v15.99.0.0"
+		},
 		{ "name" : "SXTContinued" },
 		{ "name" : "ContractConfigurator" },
 		{ "name" : "CustomBarnKit" },
